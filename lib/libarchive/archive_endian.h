@@ -39,17 +39,28 @@ name|defined
 argument_list|(
 name|__sgi
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
 name|inline
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|inline
+value|__inline
 end_define
 
 begin_endif

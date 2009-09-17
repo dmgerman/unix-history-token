@@ -4,7 +4,7 @@ comment|/* rsa_pss.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2005.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2005.  */
 end_comment
 
 begin_comment
@@ -182,7 +182,7 @@ index|]
 decl_stmt|;
 name|hLen
 operator|=
-name|EVP_MD_size
+name|M_EVP_MD_size
 argument_list|(
 name|Hash
 argument_list|)
@@ -687,7 +687,7 @@ name|ctx
 decl_stmt|;
 name|hLen
 operator|=
-name|EVP_MD_size
+name|M_EVP_MD_size
 argument_list|(
 name|Hash
 argument_list|)

@@ -65,7 +65,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config.h"
+file|"config.h"
 end_include
 
 begin_else
@@ -152,11 +152,16 @@ directive|include
 file|<inttypes.h>
 end_include
 
-begin_elif
-elif|#
-directive|elif
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|HAVE_STDINT_H
-end_elif
+end_if
 
 begin_include
 include|#

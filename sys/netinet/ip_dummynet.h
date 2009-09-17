@@ -185,6 +185,14 @@ modifier|*
 name|rule
 decl_stmt|;
 comment|/* matching rule */
+name|uint32_t
+name|rule_id
+decl_stmt|;
+comment|/* matching rule id */
+name|uint32_t
+name|chain_id
+decl_stmt|;
+comment|/* ruleset id */
 name|int
 name|dn_dir
 decl_stmt|;
@@ -282,10 +290,15 @@ decl_stmt|;
 name|u_int
 name|len_bytes
 decl_stmt|;
-name|u_long
+comment|/*      * When we emulate MAC overheads, or channel unavailability due      * to other traffic on a shared medium, we augment the packet at      * the head of the queue with an 'extra_bits' field representsing      * the additional delay the packet will be subject to:      *		extra_bits = bw*unavailable_time.      * With large bandwidth and large delays, extra_bits (and also numbytes)      * can become very large, so better play safe and use 64 bit      */
+name|uint64_t
 name|numbytes
 decl_stmt|;
 comment|/* credit for transmission (dynamic queues) */
+name|int64_t
+name|extra_bits
+decl_stmt|;
+comment|/* extra bits simulating unavailable channel */
 name|u_int64_t
 name|tot_pkts
 decl_stmt|;
@@ -314,7 +327,7 @@ name|random
 decl_stmt|;
 comment|/* random value (scaled) */
 name|dn_key
-name|q_time
+name|idle_time
 decl_stmt|;
 comment|/* start of queue idle time */
 comment|/* WF2Q+ support */
@@ -387,6 +400,11 @@ directive|define
 name|DN_NOERROR
 value|0x0010
 comment|/* do not report ENOBUFS on drops  */
+define|#
+directive|define
+name|DN_HAS_PROFILE
+value|0x0020
+comment|/* the pipe has a delay profile. */
 define|#
 directive|define
 name|DN_IS_PIPE
@@ -605,14 +623,23 @@ name|int
 name|sum
 decl_stmt|;
 comment|/* sum of weights of all active sessions */
-name|int
+comment|/* Same as in dn_flow_queue, numbytes can become large */
+name|int64_t
 name|numbytes
 decl_stmt|;
 comment|/* bits I can transmit (more or less). */
+name|uint64_t
+name|burst
+decl_stmt|;
+comment|/* burst size, scaled: bits * hz */
 name|dn_key
 name|sched_time
 decl_stmt|;
 comment|/* time pipe was scheduled in ready_heap */
+name|dn_key
+name|idle_time
+decl_stmt|;
+comment|/* start of pipe idle time */
 comment|/*      * When the tx clock come from an interface (if_name[0] != '\0'), its name      * is stored below, whereas the ifp is filled when the rule is configured.      */
 name|char
 name|if_name
@@ -634,6 +661,56 @@ name|dn_flow_set
 name|fs
 decl_stmt|;
 comment|/* used with fixed-rate flows */
+comment|/* fields to simulate a delay profile */
+define|#
+directive|define
+name|ED_MAX_NAME_LEN
+value|32
+name|char
+name|name
+index|[
+name|ED_MAX_NAME_LEN
+index|]
+decl_stmt|;
+name|int
+name|loss_level
+decl_stmt|;
+name|int
+name|samples_no
+decl_stmt|;
+name|int
+modifier|*
+name|samples
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* dn_pipe_max is used to pass pipe configuration from userland onto  * kernel space and back  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_MAX_SAMPLES_NO
+value|1024
+end_define
+
+begin_struct
+struct|struct
+name|dn_pipe_max
+block|{
+name|struct
+name|dn_pipe
+name|pipe
+decl_stmt|;
+name|int
+name|samples
+index|[
+name|ED_MAX_SAMPLES_NO
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -654,101 +731,17 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_typedef
-typedef|typedef
-name|int
-name|ip_dn_ctl_t
-parameter_list|(
-name|struct
-name|sockopt
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_comment
-comment|/* raw_ip.c */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|ip_dn_ruledel_t
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/* ip_fw.c */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|ip_dn_io_t
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|dir
-parameter_list|,
-name|struct
-name|ip_fw_args
-modifier|*
-name|fwa
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|ip_dn_ctl_t
-modifier|*
-name|ip_dn_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ip_dn_ruledel_t
-modifier|*
-name|ip_dn_ruledel_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ip_dn_io_t
-modifier|*
-name|ip_dn_io_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|DUMMYNET_LOADED
-value|(ip_dn_io_ptr != NULL)
-end_define
-
-begin_comment
-comment|/*  * Return the IPFW rule associated with the dummynet tag; if any.  * Make sure that the dummynet tag is not reused by lower layers.  */
+comment|/*  * Return the dummynet tag; if any.  * Make sure that the dummynet tag is not reused by lower layers.  */
 end_comment
 
 begin_expr_stmt
 specifier|static
 name|__inline
 expr|struct
-name|ip_fw
+name|dn_pkt_tag
 operator|*
-name|ip_dn_claim_rule
+name|ip_dn_claim_tag
 argument_list|(
 argument|struct mbuf *m
 argument_list|)
@@ -782,7 +775,6 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-operator|(
 expr|struct
 name|dn_pkt_tag
 operator|*
@@ -792,9 +784,6 @@ name|mtag
 operator|+
 literal|1
 operator|)
-operator|)
-operator|->
-name|rule
 operator|)
 return|;
 block|}

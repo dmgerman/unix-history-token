@@ -27,7 +27,10 @@ modifier|*
 name|data
 decl_stmt|;
 name|int
-name|partition
+name|pnum
+decl_stmt|;
+name|int
+name|ptype
 decl_stmt|;
 block|}
 name|disk
@@ -44,6 +47,20 @@ define|#
 directive|define
 name|d_disk
 value|d_kind.disk
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTYPE_BSDLABEL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTYPE_GPT
+value|2
 end_define
 
 begin_comment

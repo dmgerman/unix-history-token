@@ -994,8 +994,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_HWREV_8102EL_SPIN1
+value|0x24c00000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_HWREV_8168D
 value|0x28000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8168DP
+value|0x28800000
 end_define
 
 begin_define
@@ -4556,6 +4570,10 @@ define|#
 directive|define
 name|RL_FLAG_MSI
 value|0x0001
+define|#
+directive|define
+name|RL_FLAG_AUTOPAD
+value|0x0002
 define|#
 directive|define
 name|RL_FLAG_PHYWAKE

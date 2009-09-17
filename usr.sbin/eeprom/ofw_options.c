@@ -129,6 +129,7 @@ modifier|*
 name|ex_handler
 function_decl|)
 parameter_list|(
+specifier|const
 name|struct
 name|ofwo_extabent
 modifier|*
@@ -155,6 +156,7 @@ specifier|static
 name|int
 name|ofwo_oemlogo
 parameter_list|(
+specifier|const
 name|struct
 name|ofwo_extabent
 modifier|*
@@ -179,6 +181,7 @@ specifier|static
 name|int
 name|ofwo_secmode
 parameter_list|(
+specifier|const
 name|struct
 name|ofwo_extabent
 modifier|*
@@ -203,6 +206,7 @@ specifier|static
 name|int
 name|ofwo_secpwd
 parameter_list|(
+specifier|const
 name|struct
 name|ofwo_extabent
 modifier|*
@@ -224,8 +228,10 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|ofwo_extabent
+specifier|const
 name|ofwo_extab
 index|[]
 init|=
@@ -330,6 +336,7 @@ specifier|static
 name|int
 name|ofwo_oemlogo
 parameter_list|(
+specifier|const
 name|struct
 name|ofwo_extabent
 modifier|*
@@ -561,6 +568,7 @@ specifier|static
 name|int
 name|ofwo_secmode
 parameter_list|(
+specifier|const
 name|struct
 name|ofwo_extabent
 modifier|*
@@ -758,6 +766,7 @@ specifier|static
 name|int
 name|ofwo_secpwd
 parameter_list|(
+specifier|const
 name|struct
 name|ofwo_extabent
 modifier|*
@@ -765,15 +774,12 @@ name|exent
 parameter_list|,
 name|int
 name|fd
-name|__unused
 parameter_list|,
 specifier|const
 name|void
 modifier|*
 name|buf
-name|__unused
 parameter_list|,
-name|__unused
 name|int
 name|buflen
 parameter_list|,
@@ -1395,6 +1401,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+specifier|const
 name|struct
 name|ofwo_extabent
 modifier|*
@@ -1618,6 +1625,7 @@ name|pblen
 decl_stmt|,
 name|rv
 decl_stmt|;
+specifier|const
 name|struct
 name|ofwo_extabent
 modifier|*

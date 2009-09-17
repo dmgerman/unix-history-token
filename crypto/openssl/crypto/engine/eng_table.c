@@ -412,7 +412,7 @@ name|fnd
 operator|->
 name|uptodate
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|fnd
 operator|->
@@ -466,6 +466,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* A registration shouldn't add duplciate entries */
+operator|(
+name|void
+operator|)
 name|sk_ENGINE_delete_ptr
 argument_list|(
 name|fnd
@@ -496,7 +499,7 @@ name|fnd
 operator|->
 name|uptodate
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -543,6 +546,12 @@ operator|->
 name|funct
 operator|=
 name|e
+expr_stmt|;
+name|fnd
+operator|->
+name|uptodate
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|nids
@@ -602,6 +611,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sk_ENGINE_delete
 argument_list|(
 name|pile
@@ -611,12 +623,11 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* "touch" this ENGINE_CIPHER */
 name|pile
 operator|->
 name|uptodate
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 block|}
 if|if

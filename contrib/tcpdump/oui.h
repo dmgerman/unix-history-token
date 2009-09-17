@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/oui.h,v 1.3.2.1 2005/04/17 01:20:56 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/oui.h,v 1.7.2.1 2008-01-09 09:44:39 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -133,6 +133,39 @@ end_define
 
 begin_comment
 comment|/* Hewlett-Packard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_IEEE_8021_PRIVATE
+value|0x0080c2
+end_define
+
+begin_comment
+comment|/* IEEE 802.1 Organisation Specific - Annex F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_IEEE_8023_PRIVATE
+value|0x00120f
+end_define
+
+begin_comment
+comment|/* IEEE 802.3 Organisation Specific - Annex G */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUI_TIA
+value|0x0012bb
+end_define
+
+begin_comment
+comment|/* TIA - Telecommunications Industry Association - ANSI/TIA-1057- 2006 */
 end_comment
 
 begin_comment

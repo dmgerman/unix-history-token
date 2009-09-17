@@ -114,17 +114,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|NRECORDS
-value|50
-end_define
-
-begin_comment
-comment|/* size of circular trace buffer */
-end_comment
-
 begin_decl_stmt
 name|int
 name|tracelevel
@@ -175,6 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|file_trace
 decl_stmt|;
@@ -1029,6 +1019,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|off_msgs
 index|[
 name|MAX_TRACELEVEL
@@ -1048,6 +1039,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|on_msgs
 index|[
 name|MAX_TRACELEVEL
@@ -1917,6 +1909,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bits
 name|if_bits
@@ -1952,6 +1945,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bits
 name|is_bits
@@ -2235,6 +2229,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bits
 name|rs_bits
@@ -4339,22 +4334,14 @@ argument_list|,
 name|ftrace
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|ifp
-operator|=
-name|ifnet
-init|;
-name|ifp
-operator|!=
-literal|0
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|int_list
+argument_list|)
 name|trace_if
 argument_list|(
 literal|""

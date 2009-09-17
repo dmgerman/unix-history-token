@@ -6130,7 +6130,7 @@ comment|/* filterarg	*/
 name|NULL
 argument_list|,
 comment|/* maxsize	*/
-name|MAXPHYS
+name|ADV_MAXPHYS
 argument_list|,
 comment|/* nsegments	*/
 name|max_sg

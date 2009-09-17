@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cam/cam_queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam_xpt.h>
 end_include
 

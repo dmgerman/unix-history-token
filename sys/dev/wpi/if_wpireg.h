@@ -1019,9 +1019,6 @@ block|{
 name|uint32_t
 name|flags
 decl_stmt|;
-if|#
-directive|if
-literal|0
 define|#
 directive|define
 name|WPI_RX_NO_CRC_ERR
@@ -1035,8 +1032,6 @@ define|#
 directive|define
 name|WPI_RX_NOERROR
 value|(WPI_RX_NO_CRC_ERR | WPI_RX_NO_OVFL_ERR)
-endif|#
-directive|endif
 name|uint64_t
 name|tstamp
 decl_stmt|;

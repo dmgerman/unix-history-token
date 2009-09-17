@@ -160,6 +160,10 @@ parameter_list|,
 name|vm_prot_t
 parameter_list|,
 name|vm_ooffset_t
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -250,27 +254,24 @@ specifier|static
 name|vm_object_t
 name|dead_pager_alloc
 parameter_list|(
-name|handle
-parameter_list|,
-name|size
-parameter_list|,
-name|prot
-parameter_list|,
-name|off
-parameter_list|)
 name|void
 modifier|*
 name|handle
-decl_stmt|;
+parameter_list|,
 name|vm_ooffset_t
 name|size
-decl_stmt|;
+parameter_list|,
 name|vm_prot_t
 name|prot
-decl_stmt|;
+parameter_list|,
 name|vm_ooffset_t
 name|off
-decl_stmt|;
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
 block|{
 return|return
 name|NULL
@@ -471,7 +472,11 @@ block|,
 comment|/* OBJT_PHYS */
 operator|&
 name|deadpagerops
+block|,
 comment|/* OBJT_DEAD */
+operator|&
+name|sgpagerops
+comment|/* OBJT_SG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -757,6 +762,11 @@ name|prot
 parameter_list|,
 name|vm_ooffset_t
 name|off
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
 block|{
 name|vm_object_t
@@ -794,6 +804,8 @@ argument_list|,
 name|prot
 argument_list|,
 name|off
+argument_list|,
+name|cred
 argument_list|)
 expr_stmt|;
 else|else

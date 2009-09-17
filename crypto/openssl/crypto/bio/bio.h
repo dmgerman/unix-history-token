@@ -165,6 +165,11 @@ name|BIO_TYPE_DGRAM
 value|(21|0x0400|0x0100)
 define|#
 directive|define
+name|BIO_TYPE_COMP
+value|(23|0x0200)
+comment|/* filter */
+define|#
+directive|define
 name|BIO_TYPE_DESCRIPTOR
 value|0x0100
 comment|/* socket, fd, connect or accept */
@@ -277,7 +282,7 @@ define|#
 directive|define
 name|BIO_CTRL_DGRAM_SET_CONNECTED
 value|32
-comment|/* allow for an externally 										  * connected socket to be 										  * passed in */
+comment|/* allow for an externally 					  * connected socket to be 					  * passed in */
 define|#
 directive|define
 name|BIO_CTRL_DGRAM_SET_RECV_TIMEOUT
@@ -329,12 +334,12 @@ define|#
 directive|define
 name|BIO_CTRL_DGRAM_SET_MTU
 value|42
-comment|/* set cached value for 											  * MTU. want to use this                                               * if asking the kernel                                               * fails */
+comment|/* set cached value for 					      * MTU. want to use this 					      * if asking the kernel 					      * fails */
 define|#
 directive|define
 name|BIO_CTRL_DGRAM_MTU_EXCEEDED
 value|43
-comment|/* check whether the MTU 											  * was exceed in the 											  * previous write 											  * operation */
+comment|/* check whether the MTU 					      * was exceed in the 					      * previous write 					      * operation */
 define|#
 directive|define
 name|BIO_CTRL_DGRAM_SET_PEER

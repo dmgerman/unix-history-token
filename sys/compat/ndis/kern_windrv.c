@@ -133,13 +133,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<legacy/dev/usb/usb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<legacy/dev/usb/usbdi.h>
+file|<dev/usb/usb.h>
 end_include
 
 begin_include
@@ -1961,11 +1955,20 @@ argument_list|,
 name|TRUE
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|new
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 comment|/* 	 * Set up a fake image pointer to avoid false matches 	 * in windrv_lookup(). 	 */
 name|drv
 operator|->

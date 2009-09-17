@@ -63,6 +63,30 @@ directive|include
 file|<net80211/ieee80211_ioctl.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|RSN_VERSION
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WPA_VERSION
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WPA_OUI_TYPE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WME_OUI_TYPE
+end_undef
+
 begin_include
 include|#
 directive|include
@@ -102,7 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"l2_packet.h"
+file|"l2_packet/l2_packet.h"
 end_include
 
 begin_include
@@ -120,7 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"radius.h"
+file|"radius/radius.h"
 end_include
 
 begin_include
@@ -145,11 +169,6 @@ begin_struct
 struct|struct
 name|bsd_driver_data
 block|{
-name|struct
-name|driver_ops
-name|ops
-decl_stmt|;
-comment|/* base class */
 name|struct
 name|hostapd_data
 modifier|*
@@ -191,7 +210,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|driver_ops
+name|wpa_driver_ops
 name|bsd_driver_ops
 decl_stmt|;
 end_decl_stmt
@@ -629,9 +648,9 @@ name|struct
 name|ifreq
 name|ifr
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_VERBOSE
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: flags=0x%x\n"
 argument_list|,
@@ -793,77 +812,6 @@ operator|-
 literal|1
 return|;
 block|}
-if|if
-condition|(
-name|flags
-operator|>
-literal|0
-condition|)
-block|{
-name|memset
-argument_list|(
-operator|&
-name|ifr
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ifr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|ifr
-operator|.
-name|ifr_name
-argument_list|,
-name|IFNAMSIZ
-argument_list|,
-literal|"%s"
-argument_list|,
-name|drv
-operator|->
-name|iface
-argument_list|)
-expr_stmt|;
-name|ifr
-operator|.
-name|ifr_mtu
-operator|=
-name|HOSTAPD_MTU
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|drv
-operator|->
-name|ioctl_sock
-argument_list|,
-name|SIOCSIFMTU
-argument_list|,
-operator|&
-name|ifr
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"ioctl[SIOCSIFMTU]"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Setting MTU failed - trying to survive with "
-literal|"current value\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 return|return
 literal|0
 return|;
@@ -934,9 +882,9 @@ name|hapd
 operator|->
 name|conf
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_VERBOSE
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: enabled=%d\n"
 argument_list|,
@@ -1108,9 +1056,9 @@ name|drv
 operator|->
 name|hapd
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: enabled=%d\n"
 argument_list|,
@@ -1170,9 +1118,9 @@ name|struct
 name|ieee80211req_mlme
 name|mlme
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_VERBOSE
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: addr=%s authorized=%d\n"
 argument_list|,
@@ -1252,6 +1200,9 @@ specifier|const
 name|u8
 modifier|*
 name|addr
+parameter_list|,
+name|int
+name|total_flags
 parameter_list|,
 name|int
 name|flags_or
@@ -1341,9 +1292,9 @@ name|struct
 name|ieee80211req_del_key
 name|wk
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: addr=%s key_idx=%d\n"
 argument_list|,
@@ -1510,9 +1461,9 @@ argument_list|,
 name|key_idx
 argument_list|)
 return|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: alg=%s addr=%s key_idx=%d\n"
 argument_list|,
@@ -1782,9 +1733,9 @@ name|struct
 name|ieee80211req_key
 name|wk
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: addr=%s idx=%d\n"
 argument_list|,
@@ -2099,9 +2050,9 @@ name|struct
 name|ieee80211req_sta_stats
 name|stats
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: addr=%s\n"
 argument_list|,
@@ -2256,9 +2207,9 @@ name|i_len
 operator|=
 name|ie_len
 expr_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: set WPA+RSN ie (len %d)\n"
 argument_list|,
@@ -2338,9 +2289,9 @@ name|struct
 name|ieee80211req_mlme
 name|mlme
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: addr=%s reason_code=%d\n"
 argument_list|,
@@ -2434,9 +2385,9 @@ name|struct
 name|ieee80211req_mlme
 name|mlme
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: addr=%s reason_code=%d\n"
 argument_list|,
@@ -2849,6 +2800,10 @@ operator|.
 name|wpa_ie
 argument_list|,
 name|ielen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3909,9 +3864,9 @@ argument_list|,
 name|len
 argument_list|)
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: ssid=\"%.*s\"\n"
 argument_list|,
@@ -3967,9 +3922,9 @@ name|drv
 operator|->
 name|hapd
 decl_stmt|;
-name|HOSTAPD_DEBUG
+name|wpa_printf
 argument_list|(
-name|HOSTAPD_DEBUG_MINIMAL
+name|MSG_DEBUG
 argument_list|,
 literal|"%s: ssid=\"%.*s\"\n"
 argument_list|,
@@ -4331,7 +4286,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
+modifier|*
 name|bsd_init
 parameter_list|(
 name|struct
@@ -4384,12 +4340,6 @@ operator|*
 name|drv
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|drv
-operator|->
-name|ops
-operator|=
-name|bsd_driver_ops
 expr_stmt|;
 name|drv
 operator|->
@@ -4541,17 +4491,8 @@ name|IFF_UP
 argument_list|)
 expr_stmt|;
 comment|/* mark down during setup */
-name|hapd
-operator|->
-name|driver
-operator|=
-operator|&
-name|drv
-operator|->
-name|ops
-expr_stmt|;
 return|return
-literal|0
+name|drv
 return|;
 name|bad
 label|:
@@ -4599,8 +4540,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|-
-literal|1
+name|NULL
 return|;
 block|}
 end_function
@@ -4622,14 +4562,6 @@ name|drv
 init|=
 name|priv
 decl_stmt|;
-name|drv
-operator|->
-name|hapd
-operator|->
-name|driver
-operator|=
-name|NULL
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4680,11 +4612,10 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|struct
-name|driver_ops
-name|bsd_driver_ops
+name|wpa_driver_ops
+name|wpa_driver_bsd_ops
 init|=
 block|{
 operator|.
@@ -4810,26 +4741,6 @@ directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|void
-name|bsd_driver_register
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|driver_register
-argument_list|(
-name|bsd_driver_ops
-operator|.
-name|name
-argument_list|,
-operator|&
-name|bsd_driver_ops
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 end_unit
 

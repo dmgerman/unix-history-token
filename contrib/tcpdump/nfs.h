@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/nfs.h,v 1.7 2002/12/11 07:13:55 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/nfs.h,v 1.8.2.1 2007-11-18 03:24:55 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: nfs.h,v 1.1 1996/05/23 22:49:53 fvdl Exp $	*/
+comment|/*	NetBSD: nfs.h,v 1.1 1996/05/23 22:49:53 fvdl Exp 	*/
 end_comment
 
 begin_comment
@@ -1444,26 +1444,6 @@ name|nfs_uquad
 name|nfsuint64
 typedef|;
 end_typedef
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX - this doesn't seemed to be used and it doesn't work        * with non-gcc, so comment it out for now.        */
-end_comment
-
-begin_comment
-comment|/*  * Used to convert between two u_longs and a u_quad_t.  */
-end_comment
-
-begin_endif
-unit|union nfs_quadconvert { 	u_int32_t lval[2]; 	u_int64_t qval; }; typedef union nfs_quadconvert	nfsquad_t;
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * NFS Version 3 special file number.  */

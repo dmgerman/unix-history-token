@@ -2826,12 +2826,6 @@ name|nve_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_output
-operator|=
-name|ether_output
-expr_stmt|;
-name|ifp
-operator|->
 name|if_start
 operator|=
 name|nve_ifstart
@@ -3056,6 +3050,11 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|NVE_LOCK
 argument_list|(
 name|sc
@@ -3077,11 +3076,6 @@ operator|&
 name|sc
 operator|->
 name|stat_callout
-argument_list|)
-expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -5627,7 +5621,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Setup multicast filter */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -5708,7 +5702,7 @@ name|mcaddr
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)

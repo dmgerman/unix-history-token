@@ -164,6 +164,12 @@ name|vm_pindex_t
 name|lastr
 decl_stmt|;
 comment|/* last read */
+name|struct
+name|uidinfo
+modifier|*
+name|uip
+decl_stmt|;
+comment|/* tmp storage for creator ref */
 block|}
 struct|;
 end_struct
@@ -316,6 +322,13 @@ begin_comment
 comment|/* Bottom-up stacks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_WIRE_SKIPPED
+value|0x4000
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -400,19 +413,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-name|void
-name|vm_map_entry_free_freelist
-parameter_list|(
-name|vm_map_t
-name|map
-parameter_list|,
-name|vm_map_entry_t
-name|freelist
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -475,6 +475,9 @@ name|pmap_t
 name|pmap
 decl_stmt|;
 comment|/* (c) Physical map */
+name|vm_map_entry_t
+name|deferred_freelist
+decl_stmt|;
 define|#
 directive|define
 name|min_offset
@@ -1109,6 +1112,20 @@ name|MAP_STACK_GROWS_UP
 value|0x2000
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAP_ACC_CHARGED
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ACC_NO_CHARGE
+value|0x8000
+end_define
+
 begin_comment
 comment|/*  * vm_fault option flags  */
 end_comment
@@ -1292,9 +1309,6 @@ parameter_list|,
 name|vm_offset_t
 parameter_list|,
 name|vm_offset_t
-parameter_list|,
-name|vm_map_entry_t
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

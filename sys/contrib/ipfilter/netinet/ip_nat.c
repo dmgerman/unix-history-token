@@ -3948,6 +3948,38 @@ return|;
 block|}
 else|#
 directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500034
+operator|)
+if|if
+condition|(
+name|securelevel_ge
+argument_list|(
+name|curthread
+operator|->
+name|td_ucred
+argument_list|,
+literal|3
+argument_list|)
+operator|&&
+operator|(
+name|mode
+operator|&
+name|FWRITE
+operator|)
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -3963,6 +3995,8 @@ name|FWRITE
 operator|)
 condition|)
 block|{
+endif|#
+directive|endif
 return|return
 name|EPERM
 return|;
@@ -5313,57 +5347,18 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_siocaddnat                                              */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == success, != 0 == failure                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  n(I)       - pointer to new NAT rule                        */
-end_comment
-
-begin_comment
 comment|/*              np(I)      - pointer to where to insert new NAT rule        */
-end_comment
-
-begin_comment
 comment|/*              getlock(I) - flag indicating if lock on ipf_nat is held     */
-end_comment
-
-begin_comment
 comment|/* Mutex Locks: ipf_natio                                                   */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Handle SIOCADNAT.  Resolve and calculate details inside the NAT rule     */
-end_comment
-
-begin_comment
 comment|/* from information passed to the kernel, then add it  to the appropriate   */
-end_comment
-
-begin_comment
 comment|/* NAT rule table(s).                                                       */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_siocaddnat
@@ -5382,15 +5377,9 @@ decl|*
 modifier|*
 name|np
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|int
 name|getlock
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|error
@@ -6042,45 +6031,15 @@ return|return
 name|error
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_resolvrule                                              */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  n(I)  - pointer to NAT rule                                 */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Handle SIOCADNAT.  Resolve and calculate details inside the NAT rule     */
-end_comment
-
-begin_comment
 comment|/* from information passed to the kernel, then add it  to the appropriate   */
-end_comment
-
-begin_comment
 comment|/* NAT rule table(s).                                                       */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_resolverule
@@ -6257,57 +6216,18 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_siocdelnat                                              */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == success, != 0 == failure                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  n(I)       - pointer to new NAT rule                        */
-end_comment
-
-begin_comment
 comment|/*              np(I)      - pointer to where to insert new NAT rule        */
-end_comment
-
-begin_comment
 comment|/*              getlock(I) - flag indicating if lock on ipf_nat is held     */
-end_comment
-
-begin_comment
 comment|/* Mutex Locks: ipf_natio                                                   */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Handle SIOCADNAT.  Resolve and calculate details inside the NAT rule     */
-end_comment
-
-begin_comment
 comment|/* from information passed to the kernel, then add it  to the appropriate   */
-end_comment
-
-begin_comment
 comment|/* NAT rule table(s).                                                       */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|nat_siocdelnat
@@ -6326,15 +6246,9 @@ decl|*
 modifier|*
 name|np
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|int
 name|getlock
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -6572,53 +6486,17 @@ expr_stmt|;
 comment|/* READ/WRITE */
 block|}
 block|}
-end_block
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natgetsz                                                 */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == success, != 0 is the error value.                */
-end_comment
-
-begin_comment
 comment|/* Parameters:  data(I) - pointer to natget structure with kernel pointer   */
-end_comment
-
-begin_comment
 comment|/*                        get the size of.                                  */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Handle SIOCSTGSZ.                                                        */
-end_comment
-
-begin_comment
 comment|/* Return the size of the nat list entry to be copied back to user space.   */
-end_comment
-
-begin_comment
 comment|/* The size of the entry is stored in the ng_sz field and the enture natget */
-end_comment
-
-begin_comment
 comment|/* structure is copied back to the user.                                    */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|fr_natgetsz
@@ -6882,49 +6760,16 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natgetent                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == success, != 0 is the error value.                */
-end_comment
-
-begin_comment
 comment|/* Parameters:  data(I) - pointer to natget structure with kernel pointer   */
-end_comment
-
-begin_comment
 comment|/*                        to NAT structure to copy out.                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Handle SIOCSTGET.                                                        */
-end_comment
-
-begin_comment
 comment|/* Copies out NAT entry to user space.  Any additional data held for a      */
-end_comment
-
-begin_comment
 comment|/* proxy is also copied, as to is the NAT rule which was responsible for it */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|fr_natgetent
@@ -7434,57 +7279,18 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natputent                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == success, != 0 is the error value.                */
-end_comment
-
-begin_comment
 comment|/* Parameters:  data(I) -     pointer to natget structure with NAT          */
-end_comment
-
-begin_comment
 comment|/*                            structure information to load into the kernel */
-end_comment
-
-begin_comment
 comment|/*              getlock(I) - flag indicating whether or not a write lock    */
-end_comment
-
-begin_comment
 comment|/*                           on ipf_nat is already held.                    */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Handle SIOCSTPUT.                                                        */
-end_comment
-
-begin_comment
 comment|/* Loads a NAT table entry from user space, including a NAT rule, proxy and */
-end_comment
-
-begin_comment
 comment|/* firewall rule data structures, if pointers to them indicate so.          */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|fr_natputent
@@ -8778,49 +8584,16 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_delete                                                  */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  natd(I)    - pointer to NAT structure to delete             */
-end_comment
-
-begin_comment
 comment|/*              logtype(I) - type of LOG record to create before deleting   */
-end_comment
-
-begin_comment
 comment|/* Write Lock:  ipf_nat                                                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Delete a nat entry from the various lists and table.  If NAT logging is  */
-end_comment
-
-begin_comment
 comment|/* enabled then generate a NAT log record for this event.                   */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|nat_delete
 parameter_list|(
@@ -9395,45 +9168,15 @@ name|nat
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_flushtable                                              */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - number of NAT rules deleted                           */
-end_comment
-
-begin_comment
 comment|/* Parameters:  Nil                                                         */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Deletes all currently active NAT sessions.  In deleting each NAT entry a */
-end_comment
-
-begin_comment
 comment|/* log record should be emitted in nat_delete() if NAT logging is enabled.  */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/*  * nat_flushtable - clear the NAT table of all mapping entries.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_flushtable
@@ -9543,45 +9286,15 @@ return|return
 name|j
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_clearlist                                               */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - number of NAT/RDR rules deleted                       */
-end_comment
-
-begin_comment
 comment|/* Parameters:  Nil                                                         */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Delete all rules in the current list of rules.  There is nothing elegant */
-end_comment
-
-begin_comment
 comment|/* about this cleanup: simply free all entries on the list of rules and     */
-end_comment
-
-begin_comment
 comment|/* clear out the tables used for hashed NAT rule lookups.                   */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_clearlist
@@ -9757,61 +9470,19 @@ return|return
 name|i
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_newmap                                                  */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - -1 == error, 0 == success                             */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I) - pointer to packet information                      */
-end_comment
-
-begin_comment
 comment|/*              nat(I) - pointer to NAT entry                               */
-end_comment
-
-begin_comment
 comment|/*              ni(I)  - pointer to structure with misc. information needed */
-end_comment
-
-begin_comment
 comment|/*                       to create new NAT entry.                           */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Given an empty NAT structure, populate it with new information about a   */
-end_comment
-
-begin_comment
 comment|/* new NAT session, as defined by the matching NAT rule.                    */
-end_comment
-
-begin_comment
 comment|/* ni.nai_ip is passed in uninitialised and must be set, in host byte order,*/
-end_comment
-
-begin_comment
 comment|/* to the new IP address for the translation.                               */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|INLINE
 name|int
@@ -11217,57 +10888,18 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_newrdr                                                  */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - -1 == error, 0 == success (no move), 1 == success and */
-end_comment
-
-begin_comment
 comment|/*                    allow rule to be moved if IPN_ROUNDR is set.          */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I) - pointer to packet information                      */
-end_comment
-
-begin_comment
 comment|/*              nat(I) - pointer to NAT entry                               */
-end_comment
-
-begin_comment
 comment|/*              ni(I)  - pointer to structure with misc. information needed */
-end_comment
-
-begin_comment
 comment|/*                       to create new NAT entry.                           */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* ni.nai_ip is passed in uninitialised and must be set, in host byte order,*/
-end_comment
-
-begin_comment
 comment|/* to the new IP address for the translation.                               */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|INLINE
 name|int
@@ -12222,97 +11854,28 @@ return|return
 name|move
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_new                                                     */
-end_comment
-
-begin_comment
 comment|/* Returns:     nat_t* - NULL == failure to create new NAT structure,       */
-end_comment
-
-begin_comment
 comment|/*                       else pointer to new NAT structure                  */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)       - pointer to packet information                */
-end_comment
-
-begin_comment
 comment|/*              np(I)        - pointer to NAT rule                          */
-end_comment
-
-begin_comment
 comment|/*              natsave(I)   - pointer to where to store NAT struct pointer */
-end_comment
-
-begin_comment
 comment|/*              flags(I)     - flags describing the current packet          */
-end_comment
-
-begin_comment
 comment|/*              direction(I) - direction of packet (in/out)                 */
-end_comment
-
-begin_comment
 comment|/* Write Lock:  ipf_nat                                                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Attempts to create a new NAT entry.  Does not actually change the packet */
-end_comment
-
-begin_comment
 comment|/* in any way.                                                              */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* This fucntion is in three main parts: (1) deal with creating a new NAT   */
-end_comment
-
-begin_comment
 comment|/* structure for a "MAP" rule (outgoing NAT translation); (2) deal with     */
-end_comment
-
-begin_comment
 comment|/* creating a new NAT structure for a "RDR" rule (incoming NAT translation) */
-end_comment
-
-begin_comment
 comment|/* and (3) building that structure and putting it into the NAT table(s).    */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* NOTE: natsave should NOT be used top point back to an ipstate_t struct   */
-end_comment
-
-begin_comment
 comment|/*       as it can result in memory being corrupted.                        */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|nat_t
 modifier|*
 name|nat_new
@@ -13380,61 +12943,19 @@ return|return
 name|nat
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_finalise                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == sucess, -1 == failure                            */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I) - pointer to packet information                      */
-end_comment
-
-begin_comment
 comment|/*              nat(I) - pointer to NAT entry                               */
-end_comment
-
-begin_comment
 comment|/*              ni(I)  - pointer to structure with misc. information needed */
-end_comment
-
-begin_comment
 comment|/*                       to create new NAT entry.                           */
-end_comment
-
-begin_comment
 comment|/* Write Lock:  ipf_nat                                                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* This is the tail end of constructing a new NAT entry and is the same     */
-end_comment
-
-begin_comment
 comment|/* for both IPv4 and IPv6.                                                  */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/*ARGSUSED*/
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_finalise
@@ -13792,49 +13313,16 @@ operator|-
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:   nat_insert                                                   */
-end_comment
-
-begin_comment
 comment|/* Returns:    int - 0 == sucess, -1 == failure                             */
-end_comment
-
-begin_comment
 comment|/* Parameters: nat(I) - pointer to NAT structure                            */
-end_comment
-
-begin_comment
 comment|/*             rev(I) - flag indicating forward/reverse direction of packet */
-end_comment
-
-begin_comment
 comment|/* Write Lock: ipf_nat                                                      */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Insert a NAT entry into the hash tables for searching and add it to the  */
-end_comment
-
-begin_comment
 comment|/* list of active NAT entries.  Adjust global counters when complete.       */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|int
 name|nat_insert
 parameter_list|(
@@ -14446,49 +13934,16 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_icmperrorlookup                                         */
-end_comment
-
-begin_comment
 comment|/* Returns:     nat_t* - point to matching NAT structure                    */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I) - pointer to packet information                      */
-end_comment
-
-begin_comment
 comment|/*              dir(I) - direction of packet (in/out)                       */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Check if the ICMP error message is related to an existing TCP, UDP or    */
-end_comment
-
-begin_comment
 comment|/* ICMP query nat entry.  It is assumed that the packet is already of the   */
-end_comment
-
-begin_comment
 comment|/* the required length.                                                     */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|nat_t
 modifier|*
 name|nat_icmperrorlookup
@@ -15147,61 +14602,19 @@ name|ip_src
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_icmperror                                               */
-end_comment
-
-begin_comment
 comment|/* Returns:     nat_t* - point to matching NAT structure                    */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)    - pointer to packet information                   */
-end_comment
-
-begin_comment
 comment|/*              nflags(I) - NAT flags for this packet                       */
-end_comment
-
-begin_comment
 comment|/*              dir(I)    - direction of packet (in/out)                    */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Fix up an ICMP packet which is an error message for an existing NAT      */
-end_comment
-
-begin_comment
 comment|/* session.  This will correct both packet header data and checksums.       */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* This should *ONLY* be used for incoming ICMP error packets to make sure  */
-end_comment
-
-begin_comment
 comment|/* a NAT'd ICMP packet gets correctly recognised.                           */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|nat_t
 modifier|*
 name|nat_icmperror
@@ -16087,101 +15500,29 @@ return|return
 name|nat
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * NB: these lookups don't lock access to the list, it assumed that it has  * already been done!  */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_inlookup                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     nat_t* - NULL == no match,                                  */
-end_comment
-
-begin_comment
 comment|/*                       else pointer to matching NAT entry                 */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)    - pointer to packet information                   */
-end_comment
-
-begin_comment
 comment|/*              flags(I)  - NAT flags for this packet                       */
-end_comment
-
-begin_comment
 comment|/*              p(I)      - protocol for this packet                        */
-end_comment
-
-begin_comment
 comment|/*              src(I)    - source IP address                               */
-end_comment
-
-begin_comment
 comment|/*              mapdst(I) - destination IP address                          */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Lookup a nat entry based on the mapped destination ip address/port and   */
-end_comment
-
-begin_comment
 comment|/* real source address/port.  We use this lookup when receiving a packet,   */
-end_comment
-
-begin_comment
 comment|/* we're looking for a table entry, based on the destination address.       */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* NOTE: THE PACKET BEING CHECKED (IF FOUND) HAS A MAPPING ALREADY.         */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* NOTE: IT IS ASSUMED THAT ipf_nat IS ONLY HELD WITH A READ LOCK WHEN      */
-end_comment
-
-begin_comment
 comment|/*       THIS FUNCTION IS CALLED WITH NAT_SEARCH SET IN nflags.             */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* flags   -> relevant are IPN_UDP/IPN_TCP/IPN_ICMPQUERY that indicate if   */
-end_comment
-
-begin_comment
 comment|/*            the packet is of said protocol                                */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|nat_t
 modifier|*
 name|nat_inlookup
@@ -16949,49 +16290,16 @@ return|return
 name|nat
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_tabmove                                                 */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  nat(I) - pointer to NAT structure                           */
-end_comment
-
-begin_comment
 comment|/* Write Lock:  ipf_nat                                                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* This function is only called for TCP/UDP NAT table entries where the     */
-end_comment
-
-begin_comment
 comment|/* original was placed in the table without hashing on the ports and we now */
-end_comment
-
-begin_comment
 comment|/* want to include hashing on port numbers.                                 */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|nat_tabmove
@@ -17369,101 +16677,29 @@ index|]
 operator|++
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_outlookup                                               */
-end_comment
-
-begin_comment
 comment|/* Returns:     nat_t* - NULL == no match,                                  */
-end_comment
-
-begin_comment
 comment|/*                       else pointer to matching NAT entry                 */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)   - pointer to packet information                    */
-end_comment
-
-begin_comment
 comment|/*              flags(I) - NAT flags for this packet                        */
-end_comment
-
-begin_comment
 comment|/*              p(I)     - protocol for this packet                         */
-end_comment
-
-begin_comment
 comment|/*              src(I)   - source IP address                                */
-end_comment
-
-begin_comment
 comment|/*              dst(I)   - destination IP address                           */
-end_comment
-
-begin_comment
 comment|/*              rw(I)    - 1 == write lock on ipf_nat held, 0 == read lock. */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Lookup a nat entry based on the source 'real' ip address/port and        */
-end_comment
-
-begin_comment
 comment|/* destination address/port.  We use this lookup when sending a packet out, */
-end_comment
-
-begin_comment
 comment|/* we're looking for a table entry, based on the source address.            */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* NOTE: THE PACKET BEING CHECKED (IF FOUND) HAS A MAPPING ALREADY.         */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* NOTE: IT IS ASSUMED THAT ipf_nat IS ONLY HELD WITH A READ LOCK WHEN      */
-end_comment
-
-begin_comment
 comment|/*       THIS FUNCTION IS CALLED WITH NAT_SEARCH SET IN nflags.             */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* flags   -> relevant are IPN_UDP/IPN_TCP/IPN_ICMPQUERY that indicate if   */
-end_comment
-
-begin_comment
 comment|/*            the packet is of said protocol                                */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|nat_t
 modifier|*
 name|nat_outlookup
@@ -18202,85 +17438,25 @@ return|return
 name|nat
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_lookupredir                                             */
-end_comment
-
-begin_comment
 comment|/* Returns:     nat_t* - NULL == no match,                                  */
-end_comment
-
-begin_comment
 comment|/*                       else pointer to matching NAT entry                 */
-end_comment
-
-begin_comment
 comment|/* Parameters:  np(I) - pointer to description of packet to find NAT table  */
-end_comment
-
-begin_comment
 comment|/*                      entry for.                                          */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Lookup the NAT tables to search for a matching redirect                  */
-end_comment
-
-begin_comment
 comment|/* The contents of natlookup_t should imitate those found in a packet that  */
-end_comment
-
-begin_comment
 comment|/* would be translated - ie a packet coming in for RDR or going out for MAP.*/
-end_comment
-
-begin_comment
 comment|/* We can do the lookup in one of two ways, imitating an inbound or         */
-end_comment
-
-begin_comment
 comment|/* outbound  packet.  By default we assume outbound, unless IPN_IN is set.  */
-end_comment
-
-begin_comment
 comment|/* For IN, the fields are set as follows:                                   */
-end_comment
-
-begin_comment
 comment|/*     nl_real* = source information                                        */
-end_comment
-
-begin_comment
 comment|/*     nl_out* = destination information (translated)                       */
-end_comment
-
-begin_comment
 comment|/* For an out packet, the fields are set like this:                         */
-end_comment
-
-begin_comment
 comment|/*     nl_in* = source information (untranslated)                           */
-end_comment
-
-begin_comment
 comment|/*     nl_out* = destination information (translated)                       */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|nat_t
 modifier|*
 name|nat_lookupredir
@@ -18645,45 +17821,15 @@ return|return
 name|nat
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_match                                                   */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == no match, 1 == match                             */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)   - pointer to packet information                    */
-end_comment
-
-begin_comment
 comment|/*              np(I)    - pointer to NAT rule                              */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Pull the matching of a packet against a NAT rule out of that complex     */
-end_comment
-
-begin_comment
 comment|/* loop inside fr_checknatin() and lay it out properly in its own function. */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_match
@@ -18973,45 +18119,15 @@ name|ft
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_update                                                  */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  nat(I)    - pointer to NAT structure                        */
-end_comment
-
-begin_comment
 comment|/*              np(I)     - pointer to NAT rule                             */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Updates the lifetime of a NAT table entry for non-TCP packets.  Must be  */
-end_comment
-
-begin_comment
 comment|/* called with fin_rev updated - i.e. after calling nat_proto().            */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|nat_update
 parameter_list|(
@@ -19323,69 +18439,21 @@ name|nat_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_checknatout                                              */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - -1 == packet failed NAT checks so block it,           */
-end_comment
-
-begin_comment
 comment|/*                     0 == no packet translation occurred,                 */
-end_comment
-
-begin_comment
 comment|/*                     1 == packet was successfully translated.             */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)   - pointer to packet information                    */
-end_comment
-
-begin_comment
 comment|/*              passp(I) - pointer to filtering result flags                */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Check to see if an outcoming packet should be changed.  ICMP packets are */
-end_comment
-
-begin_comment
 comment|/* first checked to see if they match an existing entry (if an error),      */
-end_comment
-
-begin_comment
 comment|/* otherwise a search of the current NAT table is made.  If neither results */
-end_comment
-
-begin_comment
 comment|/* in a match then a search for a matching NAT rule is made.  Create a new  */
-end_comment
-
-begin_comment
 comment|/* NAT entry if a we matched a NAT rule.  Lastly, actually change the       */
-end_comment
-
-begin_comment
 comment|/* packet header(s) as required.                                            */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|int
 name|fr_checknatout
 parameter_list|(
@@ -20182,53 +19250,17 @@ return|return
 name|rval
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natout                                                   */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - -1 == packet failed NAT checks so block it,           */
-end_comment
-
-begin_comment
 comment|/*                     1 == packet was successfully translated.             */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)    - pointer to packet information                   */
-end_comment
-
-begin_comment
 comment|/*              nat(I)    - pointer to NAT structure                        */
-end_comment
-
-begin_comment
 comment|/*              natadd(I) - flag indicating if it is safe to add frag cache */
-end_comment
-
-begin_comment
 comment|/*              nflags(I) - NAT flags set for this packet                   */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Translate a packet coming "out" on an interface.                         */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|int
 name|fr_natout
 parameter_list|(
@@ -20774,69 +19806,21 @@ return|return
 name|i
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_checknatin                                               */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - -1 == packet failed NAT checks so block it,           */
-end_comment
-
-begin_comment
 comment|/*                     0 == no packet translation occurred,                 */
-end_comment
-
-begin_comment
 comment|/*                     1 == packet was successfully translated.             */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)   - pointer to packet information                    */
-end_comment
-
-begin_comment
 comment|/*              passp(I) - pointer to filtering result flags                */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Check to see if an incoming packet should be changed.  ICMP packets are  */
-end_comment
-
-begin_comment
 comment|/* first checked to see if they match an existing entry (if an error),      */
-end_comment
-
-begin_comment
 comment|/* otherwise a search of the current NAT table is made.  If neither results */
-end_comment
-
-begin_comment
 comment|/* in a match then a search for a matching NAT rule is made.  Create a new  */
-end_comment
-
-begin_comment
 comment|/* NAT entry if a we matched a NAT rule.  Lastly, actually change the       */
-end_comment
-
-begin_comment
 comment|/* packet header(s) as required.                                            */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|int
 name|fr_checknatin
 parameter_list|(
@@ -21586,57 +20570,18 @@ return|return
 name|rval
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natin                                                    */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - -1 == packet failed NAT checks so block it,           */
-end_comment
-
-begin_comment
 comment|/*                     1 == packet was successfully translated.             */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)    - pointer to packet information                   */
-end_comment
-
-begin_comment
 comment|/*              nat(I)    - pointer to NAT structure                        */
-end_comment
-
-begin_comment
 comment|/*              natadd(I) - flag indicating if it is safe to add frag cache */
-end_comment
-
-begin_comment
 comment|/*              nflags(I) - NAT flags set for this packet                   */
-end_comment
-
-begin_comment
 comment|/* Locks Held:  ipf_nat (READ)                                              */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Translate a packet coming "in" on an interface.                          */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|int
 name|fr_natin
 parameter_list|(
@@ -22144,65 +21089,20 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_proto                                                   */
-end_comment
-
-begin_comment
 comment|/* Returns:     u_short* - pointer to transport header checksum to update,  */
-end_comment
-
-begin_comment
 comment|/*                         NULL if the transport protocol is not recognised */
-end_comment
-
-begin_comment
 comment|/*                         as needing a checksum update.                    */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I)    - pointer to packet information                   */
-end_comment
-
-begin_comment
 comment|/*              nat(I)    - pointer to NAT structure                        */
-end_comment
-
-begin_comment
 comment|/*              nflags(I) - NAT flags set for this packet                   */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Return the pointer to the checksum field for each protocol so understood.*/
-end_comment
-
-begin_comment
 comment|/* If support for making other changes to a protocol header is required,    */
-end_comment
-
-begin_comment
 comment|/* that is not strictly 'address' translation, such as clamping the MSS in  */
-end_comment
-
-begin_comment
 comment|/* TCP down to a specific value, then do it from here.                      */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|u_short
 modifier|*
 name|nat_proto
@@ -22405,37 +21305,13 @@ return|return
 name|csump
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natunload                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  Nil                                                         */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Free all memory used by NAT structures allocated at runtime.             */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|fr_natunload
 parameter_list|()
@@ -22809,41 +21685,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natexpire                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  Nil                                                         */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Check all of the timeout queues for entries at the top which need to be  */
-end_comment
-
-begin_comment
 comment|/* expired.                                                                 */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|fr_natexpire
 parameter_list|()
@@ -23099,41 +21948,14 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natsync                                                  */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  ifp(I) - pointer to network interface                       */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Walk through all of the currently active NAT sessions, looking for those */
-end_comment
-
-begin_comment
 comment|/* which need to have their translated address updated.                     */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|fr_natsync
 parameter_list|(
@@ -23595,41 +22417,14 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_icmpquerytype4                                          */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 1 == success, 0 == failure                            */
-end_comment
-
-begin_comment
 comment|/* Parameters:  icmptype(I) - ICMP type number                              */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Tests to see if the ICMP type number passed is a query/response type or  */
-end_comment
-
-begin_comment
 comment|/* not.                                                                     */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_icmpquerytype4
@@ -23681,41 +22476,14 @@ literal|0
 return|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_log                                                     */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  nat(I)  - pointer to NAT structure                          */
-end_comment
-
-begin_comment
 comment|/*              type(I) - type of log entry to create                       */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Creates a NAT log entry.                                                 */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|nat_log
 parameter_list|(
@@ -23995,50 +22763,20 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
-end_if
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_ifdetach                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  ifp(I) - pointer to network interface                       */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Compatibility interface for OpenBSD to trigger the correct updating of   */
-end_comment
-
-begin_comment
 comment|/* interface references within IPFilter.                                    */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|nat_ifdetach
 parameter_list|(
@@ -24056,42 +22794,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_ipnatderef                                               */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  isp(I) - pointer to pointer to NAT rule                     */
-end_comment
-
-begin_comment
 comment|/* Write Locks: ipf_nat                                                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|fr_ipnatderef
 parameter_list|(
@@ -24200,73 +22911,22 @@ endif|#
 directive|endif
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natderef                                                 */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  isp(I) - pointer to pointer to NAT table entry              */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Decrement the reference counter for this NAT table entry and free it if  */
-end_comment
-
-begin_comment
 comment|/* there are no more things using it.                                       */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* IF nat_ref == 1 when this function is called, then we have an orphan nat */
-end_comment
-
-begin_comment
 comment|/* structure *because* it only gets called on paths _after_ nat_ref has been*/
-end_comment
-
-begin_comment
 comment|/* incremented.  If nat_ref == 1 then we shouldn't decrement it here        */
-end_comment
-
-begin_comment
 comment|/* because nat_delete() will do that and send nat_ref to -1.                */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Holding the lock on nat_lock is required to serialise nat_delete() being */
-end_comment
-
-begin_comment
 comment|/* called from a NAT flush ioctl with a deref happening because of a packet.*/
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|fr_natderef
 parameter_list|(
@@ -24352,49 +23012,16 @@ name|ipf_nat
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_natclone                                                 */
-end_comment
-
-begin_comment
 comment|/* Returns:     ipstate_t* - NULL == cloning failed,                        */
-end_comment
-
-begin_comment
 comment|/*                           else pointer to new state structure            */
-end_comment
-
-begin_comment
 comment|/* Parameters:  fin(I) - pointer to packet information                      */
-end_comment
-
-begin_comment
 comment|/*              is(I)  - pointer to master state structure                  */
-end_comment
-
-begin_comment
 comment|/* Write Lock:  ipf_nat                                                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Create a "duplcate" state table entry from the master.                   */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|nat_t
 modifier|*
@@ -24693,61 +23320,19 @@ return|return
 name|clone
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:   nat_wildok                                                   */
-end_comment
-
-begin_comment
 comment|/* Returns:    int - 1 == packet's ports match wildcards                    */
-end_comment
-
-begin_comment
 comment|/*                   0 == packet's ports don't match wildcards              */
-end_comment
-
-begin_comment
 comment|/* Parameters: nat(I)   - NAT entry                                         */
-end_comment
-
-begin_comment
 comment|/*             sport(I) - source port                                       */
-end_comment
-
-begin_comment
 comment|/*             dport(I) - destination port                                  */
-end_comment
-
-begin_comment
 comment|/*             flags(I) - wildcard flags                                    */
-end_comment
-
-begin_comment
 comment|/*             dir(I)   - packet direction                                  */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Use NAT entry and packet direction to determine which combination of     */
-end_comment
-
-begin_comment
 comment|/* wildcard flags should be used.                                           */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_wildok
@@ -24970,57 +23555,18 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_mssclamp                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  tcp(I)    - pointer to TCP header                           */
-end_comment
-
-begin_comment
 comment|/*              maxmss(I) - value to clamp the TCP MSS to                   */
-end_comment
-
-begin_comment
 comment|/*              fin(I)    - pointer to packet information                   */
-end_comment
-
-begin_comment
 comment|/*              csump(I)  - pointer to TCP checksum                         */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Check for MSS option and clamp it if necessary.  If found and changed,   */
-end_comment
-
-begin_comment
 comment|/* then the TCP header checksum will be updated to reflect the change in    */
-end_comment
-
-begin_comment
 comment|/* the MSS.                                                                 */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|nat_mssclamp
@@ -25264,49 +23810,16 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    fr_setnatqueue                                              */
-end_comment
-
-begin_comment
 comment|/* Returns:     Nil                                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  nat(I)- pointer to NAT structure                            */
-end_comment
-
-begin_comment
 comment|/*              rev(I) - forward(0) or reverse(1) direction                 */
-end_comment
-
-begin_comment
 comment|/* Locks:       ipf_nat (read or write)                                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Put the NAT entry on its default queue entry, using rev as a helped in   */
-end_comment
-
-begin_comment
 comment|/* determining which queue it should be placed on.                          */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 name|void
 name|fr_setnatqueue
 parameter_list|(
@@ -25453,61 +23966,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_getnext                                                 */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == ok, else error                                   */
-end_comment
-
-begin_comment
 comment|/* Parameters:  t(I)   - pointer to ipftoken structure                      */
-end_comment
-
-begin_comment
 comment|/*              itp(I) - pointer to ipfgeniter_t structure                  */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Fetch the next nat/ipnat structure pointer from the linked list and      */
-end_comment
-
-begin_comment
 comment|/* copy it out to the storage space pointed to by itp_data.  The next item  */
-end_comment
-
-begin_comment
 comment|/* in the list to look at is put back in the ipftoken struture.             */
-end_comment
-
-begin_comment
 comment|/* If we call ipf_freetoken, the accompanying pointer is set to NULL because*/
-end_comment
-
-begin_comment
 comment|/* ipf_freetoken will call a deref function for us and we dont want to call */
-end_comment
-
-begin_comment
 comment|/* that twice (second time would be in the second switch statement below.   */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_getnext
@@ -26210,53 +24681,17 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_iterator                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == ok, else error                                   */
-end_comment
-
-begin_comment
 comment|/* Parameters:  token(I) - pointer to ipftoken structure                    */
-end_comment
-
-begin_comment
 comment|/*              itp(I) - pointer to ipfgeniter_t structure                  */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* This function acts as a handler for the SIOCGENITER ioctls that use a    */
-end_comment
-
-begin_comment
 comment|/* generic structure to iterate through a list.  There are three different  */
-end_comment
-
-begin_comment
 comment|/* linked lists of NAT related information to go through: NAT rules, active */
-end_comment
-
-begin_comment
 comment|/* NAT mappings and the NAT fragment cache.                                 */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_iterator
@@ -26377,77 +24812,23 @@ return|return
 name|error
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_extraflush                                              */
-end_comment
-
-begin_comment
 comment|/* Returns:     int - 0 == success, -1 == failure                           */
-end_comment
-
-begin_comment
 comment|/* Parameters:  which(I) - how to flush the active NAT table                */
-end_comment
-
-begin_comment
 comment|/* Write Locks: ipf_nat                                                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Flush nat tables.  Three actions currently defined:                      */
-end_comment
-
-begin_comment
 comment|/* which == 0 : flush all nat table entries                                 */
-end_comment
-
-begin_comment
 comment|/* which == 1 : flush TCP connections which have started to close but are   */
-end_comment
-
-begin_comment
 comment|/*	      stuck for some reason.                                        */
-end_comment
-
-begin_comment
 comment|/* which == 2 : flush TCP connections which have been idle for a long time, */
-end_comment
-
-begin_comment
 comment|/*	      starting at> 4 days idle and working back in successive half-*/
-end_comment
-
-begin_comment
 comment|/*	      days to at most 12 hours old.  If this fails to free enough   */
-end_comment
-
-begin_comment
 comment|/*            slots then work backwards in half hour slots to 30 minutes.   */
-end_comment
-
-begin_comment
 comment|/*            If that too fails, then work backwards in 30 second intervals */
-end_comment
-
-begin_comment
 comment|/*            for the last 30 minutes to at worst 30 seconds idle.          */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_extraflush
@@ -26886,53 +25267,17 @@ return|return
 name|removed
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_flush_entry                                             */
-end_comment
-
-begin_comment
 comment|/* Returns:     0 - always succeeds                                         */
-end_comment
-
-begin_comment
 comment|/* Parameters:  entry(I) - pointer to NAT entry                             */
-end_comment
-
-begin_comment
 comment|/* Write Locks: ipf_nat                                                     */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* This function is a stepping stone between ipf_queueflush() and           */
-end_comment
-
-begin_comment
 comment|/* nat_dlete().  It is used so we can provide a uniform interface via the   */
-end_comment
-
-begin_comment
 comment|/* ipf_queueflush() function.  Since the nat_delete() function returns void */
-end_comment
-
-begin_comment
 comment|/* we translate that to mean it always succeeds in deleting something.      */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_flush_entry
@@ -26955,41 +25300,14 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
 comment|/* Function:    nat_gettable                                                */
-end_comment
-
-begin_comment
 comment|/* Returns:     int     - 0 = success, else error                           */
-end_comment
-
-begin_comment
 comment|/* Parameters:  data(I) - pointer to ioctl data                             */
-end_comment
-
-begin_comment
 comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* This function handles ioctl requests for tables of nat information.      */
-end_comment
-
-begin_comment
 comment|/* At present the only table it deals with is the hash bucket statistics.   */
-end_comment
-
-begin_comment
 comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|nat_gettable

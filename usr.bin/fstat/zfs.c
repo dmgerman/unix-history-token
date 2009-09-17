@@ -21,6 +21,12 @@ directive|include
 file|<sys/mount.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -153,7 +159,7 @@ name|LOCATION_ZPHYS
 parameter_list|(
 name|zsize
 parameter_list|)
-value|((zsize) - (2 * sizeof(void *)))
+value|((zsize) - (2 * sizeof(void *) + sizeof(struct task)))
 end_define
 
 begin_function
@@ -433,6 +439,9 @@ name|fsid
 operator|=
 operator|(
 name|long
+operator|)
+operator|(
+name|uint32_t
 operator|)
 name|mount
 operator|.

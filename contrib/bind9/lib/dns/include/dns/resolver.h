@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.h,v 1.40.18.11 2006/02/01 22:39:17 marka Exp $ */
+comment|/* $Id: resolver.h,v 1.60.56.3 2009/01/29 22:40:35 jinmei Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  *  * \brief  * This is the BIND 9 resolver, the module responsible for resolving DNS  * requests by iteratively querying authoritative servers and following  * referrals.  This is a "full resolver", not to be confused with  * the stub resolvers most people associate with the word "resolver".  * The full resolver is part of the caching name server or resolver  * daemon the stub resolver talks to.  *  * MP:  *\li	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	RFCs:	1034, 1035, 2181, TBS  *\li	Drafts:	TBS  */
+comment|/*! \file dns/resolver.h  *  * \brief  * This is the BIND 9 resolver, the module responsible for resolving DNS  * requests by iteratively querying authoritative servers and following  * referrals.  This is a "full resolver", not to be confused with  * the stub resolvers most people associate with the word "resolver".  * The full resolver is part of the caching name server or resolver  * daemon the stub resolver talks to.  *  * MP:  *\li	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	RFCs:	1034, 1035, 2181, TBS  *\li	Drafts:	TBS  */
 end_comment
 
 begin_include
@@ -190,7 +190,18 @@ value|0x40
 end_define
 
 begin_comment
-comment|/*%< Advertise a 512 byte 						          UDP buffer. */
+comment|/*%< Advertise a 512 byte 							  UDP buffer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_FETCHOPT_WANTNSID
+value|0x80
+end_define
+
+begin_comment
+comment|/*%< Request NSID */
 end_comment
 
 begin_define
@@ -212,6 +223,80 @@ define|#
 directive|define
 name|DNS_FETCHOPT_EDNSVERSIONSHIFT
 value|24
+end_define
+
+begin_comment
+comment|/*  * Upper bounds of class of query RTT (ms).  Corresponds to  * dns_resstatscounter_queryrttX statistics counters.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS0
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS0STR
+value|"10"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS1
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS1STR
+value|"100"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS2
+value|500
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS2STR
+value|"500"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS3
+value|800
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS3STR
+value|"800"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS4
+value|1600
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_RESOLVER_QRYRTTCLASS4STR
+value|"1600"
 end_define
 
 begin_comment
@@ -281,7 +366,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Create a resolver.  *  * Notes:  *  *\li	Generally, applications should not create a resolver directly, but  *	should instead call dns_view_createresolver().  *  *\li	No options are currently defined.  *  * Requires:  *  *\li	'view' is a valid view.  *  *\li	'taskmgr' is a valid task manager.  *  *\li	'ntasks'> 0.  *  *\li	'socketmgr' is a valid socket manager.  *  *\li	'timermgr' is a valid timer manager.  *  *\li	'dispatchv4' is a valid dispatcher with an IPv4 UDP socket, or is NULL.  *  *\li	'dispatchv6' is a valid dispatcher with an IPv6 UDP socket, or is NULL.  *  *\li	resp != NULL&& *resp == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS				On success.  *  *\li	Anything else				Failure.  */
+comment|/*%<  * Create a resolver.  *  * Notes:  *  *\li	Generally, applications should not create a resolver directly, but  *	should instead call dns_view_createresolver().  *  * Requires:  *  *\li	'view' is a valid view.  *  *\li	'taskmgr' is a valid task manager.  *  *\li	'ntasks'> 0.  *  *\li	'socketmgr' is a valid socket manager.  *  *\li	'timermgr' is a valid timer manager.  *  *\li	'dispatchv4' is a valid dispatcher with an IPv4 UDP socket, or is NULL.  *  *\li	'dispatchv6' is a valid dispatcher with an IPv6 UDP socket, or is NULL.  *  *\li	resp != NULL&& *resp == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS				On success.  *  *\li	Anything else				Failure.  */
 end_comment
 
 begin_function_decl
@@ -537,6 +622,39 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Destroy 'fetch'.  *  * Requires:  *  *\li	'*fetchp' is a valid fetch.  *  *\li	The caller has received the FETCHDONE event (either because the  *	fetch completed or because dns_resolver_cancelfetch() was called).  *  * Ensures:  *  *\li	*fetchp == NULL.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_resolver_logfetch
+parameter_list|(
+name|dns_fetch_t
+modifier|*
+name|fetch
+parameter_list|,
+name|isc_log_t
+modifier|*
+name|lctx
+parameter_list|,
+name|isc_logcategory_t
+modifier|*
+name|category
+parameter_list|,
+name|isc_logmodule_t
+modifier|*
+name|module
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+name|isc_boolean_t
+name|duplicateok
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Dump a log message on internal state at the completion of given 'fetch'.  * 'lctx', 'category', 'module', and 'level' are used to write the log message.  * By default, only one log message is written even if the corresponding fetch  * context serves multiple clients; if 'duplicateok' is true the suppression  * is disabled and the message can be written every time this function is  * called.  *  * Requires:  *  *\li	'fetch' is a valid fetch, and has completed.  */
 end_comment
 
 begin_function_decl
@@ -892,6 +1010,18 @@ name|resolver
 parameter_list|,
 name|isc_boolean_t
 name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|int
+name|dns_resolver_getoptions
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
 parameter_list|)
 function_decl|;
 end_function_decl

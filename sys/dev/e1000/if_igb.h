@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -243,7 +243,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGB_MAX_INTR
+name|IGB_MAX_LOOP
 value|10
 end_define
 
@@ -309,42 +309,6 @@ directive|define
 name|IGB_EEPROM_APME
 value|0x400;
 end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_INTS_PER_SEC
-value|8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_ITR
-value|1000000000/(MAX_INTS_PER_SEC * 256)
-end_define
-
-begin_comment
-comment|/* Code compatilbility between 6 and 7 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ETHER_BPF_MTAP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ETHER_BPF_MTAP
-value|BPF_MTAP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * TDBA/RDBA should be aligned on 16 byte boundary. But TDLEN/RDLEN should be  * multiple of 128 bytes. So we align TDBA/RDBA on 128 byte boundary. This will  * also optimize cache line size effect. H/W supports up to cache line size 128.  */
@@ -537,6 +501,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|IGB_VFTA_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_BR_SIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* ring buf size */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IGB_TSO_SIZE
 value|(65535 + sizeof(struct ether_vlan_header))
 end_define
@@ -555,6 +537,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IGB_HDR_BUF
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
 name|ETH_ZLEN
 value|60
 end_define
@@ -566,16 +555,66 @@ name|ETH_ADDR_LEN
 value|6
 end_define
 
+begin_comment
+comment|/* Offload bits in mbuf flag */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
 begin_define
 define|#
 directive|define
 name|CSUM_OFFLOAD
-value|7
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP|CSUM_SCTP)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CSUM_OFFLOAD
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Offload bits in mbuf flag */
+comment|/* Header split codes for get_buf */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_HEADER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_PAYLOAD
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_BOTH
+value|3
+end_define
 
 begin_comment
 comment|/*  * Interrupt Moderation parameters  */
@@ -609,12 +648,6 @@ name|IGB_LINK_ITR
 value|2000
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IGB_TIMESYNC
-end_ifdef
-
 begin_comment
 comment|/* Precision Time Sync (IEEE 1588) defines */
 end_comment
@@ -643,113 +676,6 @@ end_define
 begin_comment
 comment|/* UDP port for the protocol */
 end_comment
-
-begin_comment
-comment|/* TIMESYNC IOCTL defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGB_TIMESYNC_READTS
-value|_IOWR('i', 127, struct igb_tsync_read)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_TIMESTAMP
-value|5
-end_define
-
-begin_comment
-comment|/* A unique return value */
-end_comment
-
-begin_comment
-comment|/* Used in the READTS IOCTL */
-end_comment
-
-begin_struct
-struct|struct
-name|igb_tsync_read
-block|{
-name|int
-name|read_current_time
-decl_stmt|;
-name|struct
-name|timespec
-name|system_time
-decl_stmt|;
-name|u64
-name|network_time
-decl_stmt|;
-name|u64
-name|rx_stamp
-decl_stmt|;
-name|u64
-name|tx_stamp
-decl_stmt|;
-name|u16
-name|seqid
-decl_stmt|;
-name|unsigned
-name|char
-name|srcid
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|int
-name|rx_valid
-decl_stmt|;
-name|int
-name|tx_valid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IGB_TIMESYNC */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|adapter
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* forward reference */
-end_comment
-
-begin_struct
-struct|struct
-name|igb_int_delay_info
-block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-decl_stmt|;
-comment|/* Back-pointer to the adapter struct */
-name|int
-name|offset
-decl_stmt|;
-comment|/* Register offset to read/write */
-name|int
-name|value
-decl_stmt|;
-comment|/* Current value in usecs */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Bus dma allocation structure used by  * e1000_dma_malloc and e1000_dma_free.  */
@@ -841,14 +767,35 @@ name|u16
 name|tx_avail
 decl_stmt|;
 name|struct
-name|igb_buffer
+name|igb_tx_buffer
 modifier|*
 name|tx_buffers
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+endif|#
+directive|endif
 name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
 comment|/* dma tag for tx */
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|void
+modifier|*
+name|tag
+decl_stmt|;
 name|u32
 name|watchdog_timer
 decl_stmt|;
@@ -903,6 +850,12 @@ name|struct
 name|lro_ctrl
 name|lro
 decl_stmt|;
+name|bool
+name|lro_enabled
+decl_stmt|;
+name|bool
+name|hdr_split
+decl_stmt|;
 name|struct
 name|task
 name|rx_task
@@ -925,7 +878,7 @@ name|u32
 name|next_to_check
 decl_stmt|;
 name|struct
-name|igb_buffer
+name|igb_rx_buffer
 modifier|*
 name|rx_buffers
 decl_stmt|;
@@ -953,9 +906,21 @@ decl_stmt|;
 name|u32
 name|eitr_setting
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|void
+modifier|*
+name|tag
+decl_stmt|;
 comment|/* Soft stats */
 name|u64
 name|rx_irq
+decl_stmt|;
+name|u64
+name|rx_split_packets
 decl_stmt|;
 name|u64
 name|rx_packets
@@ -1004,22 +969,10 @@ name|struct
 name|resource
 modifier|*
 name|res
-index|[
-name|IGB_MSIX_VEC
-index|]
 decl_stmt|;
 name|void
 modifier|*
 name|tag
-index|[
-name|IGB_MSIX_VEC
-index|]
-decl_stmt|;
-name|int
-name|rid
-index|[
-name|IGB_MSIX_VEC
-index|]
 decl_stmt|;
 name|u32
 name|eims_mask
@@ -1075,11 +1028,17 @@ modifier|*
 name|tq
 decl_stmt|;
 comment|/* private task queue */
+name|u16
+name|num_queues
+decl_stmt|;
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
 name|eventhandler_tag
 name|vlan_detach
+decl_stmt|;
+name|u32
+name|num_vlans
 decl_stmt|;
 comment|/* Management and WOL features */
 name|int
@@ -1110,9 +1069,6 @@ decl_stmt|;
 name|u16
 name|num_tx_desc
 decl_stmt|;
-name|u16
-name|num_tx_queues
-decl_stmt|;
 name|u32
 name|txd_cmd
 decl_stmt|;
@@ -1122,17 +1078,20 @@ name|rx_ring
 modifier|*
 name|rx_rings
 decl_stmt|;
-name|u16
-name|num_rx_desc
+name|bool
+name|rx_hdr_split
 decl_stmt|;
 name|u16
-name|num_rx_queues
+name|num_rx_desc
 decl_stmt|;
 name|int
 name|rx_process_limit
 decl_stmt|;
 name|u32
-name|rx_buffer_len
+name|rx_mbuf_sz
+decl_stmt|;
+name|u32
+name|rx_mask
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
@@ -1141,11 +1100,15 @@ name|dropped_pkts
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_alloc_failed
+name|mbuf_defrag_failed
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_cluster_failed
+name|mbuf_header_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_packet_failed
 decl_stmt|;
 name|unsigned
 name|long
@@ -1168,15 +1131,23 @@ name|in_detach
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|IGB_TIMESYNC
-name|u64
-name|last_stamp
+name|IGB_IEEE1588
+comment|/* IEEE 1588 precision time support */
+name|struct
+name|cyclecounter
+name|cycles
 decl_stmt|;
-name|u64
-name|last_sec
+name|struct
+name|nettimer
+name|clock
 decl_stmt|;
-name|u32
-name|last_ns
+name|struct
+name|nettime_compare
+name|compare
+decl_stmt|;
+name|struct
+name|hwtstamp_ctrl
+name|hwtstamp
 decl_stmt|;
 endif|#
 directive|endif
@@ -1224,7 +1195,7 @@ end_typedef
 
 begin_struct
 struct|struct
-name|igb_buffer
+name|igb_tx_buffer
 block|{
 name|int
 name|next_eop
@@ -1234,6 +1205,28 @@ name|struct
 name|mbuf
 modifier|*
 name|m_head
+decl_stmt|;
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+comment|/* bus_dma map for packet */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|igb_rx_buffer
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m_head
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m_pack
 decl_stmt|;
 name|bus_dmamap_t
 name|map
@@ -1304,6 +1297,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_lock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_TRYLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_trylock(&(_sc)->tx_mtx)
 end_define
 
 begin_define

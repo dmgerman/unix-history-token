@@ -202,12 +202,23 @@ directive|include
 file|<dev/mii/miivar.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MII_ADDR_BASE
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|MV_PHY_ADDR_BASE
+name|MII_ADDR_BASE
 value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -333,7 +344,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mge_miibus_writereg
 parameter_list|(
 name|device_t
@@ -535,7 +546,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mge_intr_rx_locked
 parameter_list|(
 name|struct
@@ -1512,6 +1523,10 @@ operator|||
 name|d
 operator|==
 name|MV_DEV_MV78100
+operator|||
+name|d
+operator|==
+name|MV_DEV_MV78100_Z0
 condition|)
 block|{
 name|sc
@@ -3320,7 +3335,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mge_poll
 parameter_list|(
 name|struct
@@ -3350,6 +3365,11 @@ name|int_cause
 decl_stmt|,
 name|int_cause_ext
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|MGE_GLOBAL_LOCK
 argument_list|(
 name|sc
@@ -3372,7 +3392,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -3445,6 +3469,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|mge_intr_rx_locked
 argument_list|(
 name|sc
@@ -3457,6 +3483,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -3642,6 +3673,12 @@ expr_stmt|;
 name|sc
 operator|->
 name|tx_desc_used_idx
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|tx_desc_used_count
 operator|=
 literal|0
 expr_stmt|;
@@ -4778,6 +4815,12 @@ name|tx_desc_used_idx
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|tx_desc_used_count
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Enable RX descriptors */
 for|for
 control|(
@@ -5239,7 +5282,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mge_intr_rx_locked
 parameter_list|(
 name|struct
@@ -5275,6 +5318,11 @@ name|struct
 name|mbuf
 modifier|*
 name|mb
+decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 name|MGE_RECEIVE_LOCK_ASSERT
 argument_list|(
@@ -5341,19 +5389,6 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|sc
-operator|->
-name|rx_desc_curr
-operator|=
-operator|(
-operator|++
-name|sc
-operator|->
-name|rx_desc_curr
-operator|%
-name|MGE_RX_DESC_NUM
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|dw
@@ -5408,6 +5443,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mb
+operator|==
+name|NULL
+condition|)
+comment|/* Give up if no mbufs */
+break|break;
 name|mb
 operator|->
 name|m_len
@@ -5461,6 +5504,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 name|dw
 operator|->
@@ -5479,6 +5525,19 @@ operator|=
 name|MGE_RX_ENABLE_INT
 operator||
 name|MGE_DMA_OWNED
+expr_stmt|;
+name|sc
+operator|->
+name|rx_desc_curr
+operator|=
+operator|(
+operator|++
+name|sc
+operator|->
+name|rx_desc_curr
+operator|%
+name|MGE_RX_DESC_NUM
+operator|)
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -5506,7 +5565,11 @@ operator|-=
 literal|1
 expr_stmt|;
 block|}
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -6308,11 +6371,11 @@ block|{
 name|uint32_t
 name|retries
 decl_stmt|;
-comment|/* 	 * We assume static PHY address<=> device unit mapping: 	 * PHY Address = MV_PHY_ADDR_BASE + devce unit. 	 * This is true for most Marvell boards. 	 *  	 * Code below grants proper PHY detection on each device 	 * unit. 	 */
+comment|/* 	 * We assume static PHY address<=> device unit mapping: 	 * PHY Address = MII_ADDR_BASE + devce unit. 	 * This is true for most Marvell boards. 	 *  	 * Code below grants proper PHY detection on each device 	 * unit. 	 */
 if|if
 condition|(
 operator|(
-name|MV_PHY_ADDR_BASE
+name|MII_ADDR_BASE
 operator|+
 name|device_get_unit
 argument_list|(
@@ -6408,7 +6471,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mge_miibus_writereg
 parameter_list|(
 name|device_t
@@ -6430,7 +6493,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|MV_PHY_ADDR_BASE
+name|MII_ADDR_BASE
 operator|+
 name|device_get_unit
 argument_list|(
@@ -6440,7 +6503,11 @@ operator|)
 operator|!=
 name|phy
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|MGE_WRITE
 argument_list|(
 name|sc_mge0
@@ -6508,6 +6575,11 @@ argument_list|,
 literal|"Timeout while writing to PHY\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -7406,10 +7478,14 @@ condition|(
 name|sc
 operator|->
 name|tx_desc_used_idx
-operator|<
+operator|!=
 name|sc
 operator|->
 name|tx_desc_curr
+operator|&&
+name|sc
+operator|->
+name|tx_desc_used_count
 condition|)
 block|{
 comment|/* Get the descriptor */
@@ -7470,6 +7546,11 @@ name|tx_desc_used_idx
 operator|)
 operator|%
 name|MGE_TX_DESC_NUM
+expr_stmt|;
+name|sc
+operator|->
+name|tx_desc_used_count
+operator|--
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -8781,7 +8862,7 @@ name|omt
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -8896,7 +8977,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)

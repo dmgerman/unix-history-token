@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -173,12 +167,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netipsec/ipsec.h>
 end_include
 
@@ -257,29 +245,28 @@ begin_comment
 comment|/*  * We can control the acceptance of IP4 packets by altering the sysctl  * net.inet.ipip.allow value.  Zero means drop them, all else is acceptance.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipip_allow
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|ipipstat
+argument_list|,
 name|ipipstat
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -290,12 +277,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_ipip
 argument_list|,
 name|OID_AUTO
@@ -304,7 +287,11 @@ name|ipip_allow
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipip_allow
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -314,12 +301,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_ipip
 argument_list|,
 name|IPSECCTL_STATS
@@ -328,7 +311,11 @@ name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipipstat
+argument_list|)
 argument_list|,
 name|ipipstat
 argument_list|,
@@ -504,22 +491,17 @@ modifier|*
 name|gifp
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+endif|#
+directive|endif
 specifier|register
 name|struct
 name|ifnet
@@ -1139,7 +1121,7 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -1215,7 +1197,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return;
@@ -1280,7 +1262,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return;
@@ -1291,7 +1273,7 @@ directive|endif
 comment|/* INET6 */
 block|}
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}
@@ -1498,22 +1480,6 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INET */
 name|struct
 name|secasvar
 modifier|*
@@ -2922,10 +2888,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|V_ipip_allow
-operator|=
-literal|0
-expr_stmt|;
 name|xform_register
 argument_list|(
 operator|&

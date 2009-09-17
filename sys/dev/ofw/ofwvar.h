@@ -6,17 +6,17 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_OFW_OFWVAR_H_
+name|_DEV_OFW_OFWVAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_OFW_OFWVAR_H_
+name|_DEV_OFW_OFWVAR_H_
 end_define
 
 begin_comment
-comment|/*  * An Open Firmware client implementation is declared with a kernel object and  * an associated method table, similar to a device driver.  *  * e.g.  *  * static ofw_method_t fdt_methods[] = {  *	OFWMETHOD(ofw_init,		fdt_init),  *	OFWMETHOD(ofw_finddevice,	fdt_finddevice),  *  ...  *	OFWMETHOD(ofw_nextprop,		fdt_nextprop),  *	{ 0, 0 }  * };  *  * static ofw_def_t ofw_fdt = {  * 	"ofw_fdt",  *	fdt_methods,  *	sizeof(fdt_softc),	// or 0 if no softc  * };  *  * OFW_DEF(ofw_fdt);  */
+comment|/*  * An Open Firmware client implementation is declared with a kernel object and  * an associated method table, similar to a device driver.  *  * e.g.  *  * static ofw_method_t fdt_methods[] = {  *	OFWMETHOD(ofw_init,		fdt_init),  *	OFWMETHOD(ofw_finddevice,	fdt_finddevice),  *  ...  *	OFWMETHOD(ofw_nextprop,		fdt_nextprop),  *	{ 0, 0 }  * };  *  * static ofw_def_t ofw_fdt = {  *	"ofw_fdt",  *	fdt_methods,  *	sizeof(fdt_softc),	// or 0 if no softc  * };  *  * OFW_DEF(ofw_fdt);  */
 end_comment
 
 begin_include
@@ -43,7 +43,7 @@ modifier|*
 name|ofw_iptr
 decl_stmt|;
 comment|/* instance data pointer */
-comment|/* 	 * Opaque data that can be overlaid with an instance-private 	 * structure. OFW code can test that this is large enough at 	 * compile time with a sizeof() test againt it's softc. There 	 * is also a run-time test when the MMU kernel object is 	 * registered. 	 */
+comment|/* 	 * Opaque data that can be overlaid with an instance-private 	 * structure.  OFW code can test that this is large enough at 	 * compile time with a sizeof() test againt it's softc.  There 	 * is also a run-time test when the MMU kernel object is 	 * registered. 	 */
 define|#
 directive|define
 name|OFW_OPAQUESZ
@@ -105,7 +105,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _OFW_OFWVAR_H_ */
+comment|/* _DEV_OFW_OFWVAR_H_ */
 end_comment
 
 end_unit

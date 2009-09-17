@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_hid.h>
+file|<dev/usb/usbhid.h>
 end_include
 
 begin_include

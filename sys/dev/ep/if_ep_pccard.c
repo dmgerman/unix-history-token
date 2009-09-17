@@ -160,6 +160,17 @@ begin_comment
 comment|/* Roadrunner */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EP_CHIP_C1
+value|3
+end_define
+
+begin_comment
+comment|/* 3c1 */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -177,7 +188,7 @@ argument_list|,
 literal|3C1
 argument_list|)
 block|,
-name|EP_CHIP_589
+name|EP_CHIP_C1
 block|}
 block|,
 block|{
@@ -565,27 +576,8 @@ name|pp
 operator|->
 name|chipset
 operator|==
-name|EP_CHIP_589
+name|EP_CHIP_574
 condition|)
-block|{
-name|sc
-operator|->
-name|epb
-operator|.
-name|mii_trans
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|epb
-operator|.
-name|cmd_off
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
 block|{
 name|sc
 operator|->
@@ -602,6 +594,25 @@ operator|.
 name|cmd_off
 operator|=
 literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|epb
+operator|.
+name|mii_trans
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|epb
+operator|.
+name|cmd_off
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -629,6 +640,20 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|pp
+operator|->
+name|chipset
+operator|==
+name|EP_CHIP_C1
+condition|)
+name|sc
+operator|->
+name|stat
+operator||=
+name|F_HAS_TX_PLL
+expr_stmt|;
 comment|/* ROM size = 0, ROM base = 0 */
 comment|/* For now, ignore AUTO SELECT feature of 3C589B and later. */
 name|error

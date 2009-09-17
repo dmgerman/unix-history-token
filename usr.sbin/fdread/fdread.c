@@ -629,32 +629,6 @@ argument_list|,
 literal|"ioctl(FD_GTYPE) failed -- not a floppy?"
 argument_list|)
 expr_stmt|;
-name|fdopts
-operator|=
-name|FDOPT_NOERRLOG
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|FD_SOPTS
-argument_list|,
-operator|&
-name|fdopts
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-name|EX_OSERR
-argument_list|,
-literal|"ioctl(FD_SOPTS, FDOPT_NOERRLOG)"
-argument_list|)
-expr_stmt|;
 name|secsize
 operator|=
 literal|128
@@ -1378,8 +1352,6 @@ name|int
 name|rv
 init|=
 literal|0
-decl_stmt|,
-name|fdopts
 decl_stmt|;
 name|unsigned
 name|int
@@ -1417,32 +1389,6 @@ argument_list|(
 name|EX_OSERR
 argument_list|,
 literal|"ioctl(FD_GTYPE) failed -- not a floppy?"
-argument_list|)
-expr_stmt|;
-name|fdopts
-operator|=
-name|FDOPT_NOERRLOG
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|FD_SOPTS
-argument_list|,
-operator|&
-name|fdopts
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-name|EX_OSERR
-argument_list|,
-literal|"ioctl(FD_SOPTS, FDOPT_NOERRLOG)"
 argument_list|)
 expr_stmt|;
 for|for

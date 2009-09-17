@@ -339,6 +339,12 @@ modifier|*
 name|tdev
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|inited
+condition|)
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&

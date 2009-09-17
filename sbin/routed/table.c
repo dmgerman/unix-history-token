@@ -152,6 +152,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|void
+name|rtbad
+parameter_list|(
+name|struct
+name|rt_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|radix_node_head
@@ -222,6 +234,7 @@ comment|/* zap any old routes through this gateway */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|naddr
 name|age_bad_gate
 decl_stmt|;
@@ -232,6 +245,7 @@ comment|/* It is desirable to "aggregate" routes, to combine differing routes of
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ag_info
 name|ag_slots
@@ -2007,13 +2021,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|NAME0_LEN
-value|14
-end_define
-
 begin_function
 specifier|static
 specifier|const
@@ -2029,6 +2036,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|rtm_types
 index|[]
 init|=
@@ -6863,11 +6871,6 @@ argument_list|()
 expr_stmt|;
 name|rn_inithead
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|rhead
 argument_list|,
@@ -8097,6 +8100,7 @@ comment|/* Get rid of a bad route, and try to switch to a replacement.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rtbad
 parameter_list|(
@@ -8207,22 +8211,14 @@ name|RS_LOCAL
 condition|)
 block|{
 comment|/* Is this the route through loopback for the interface? 		 * If so, see if it is used by any other interfaces, such 		 * as a point-to-point interface with the same local address. 		 */
-for|for
-control|(
-name|ifp
-operator|=
-name|ifnet
-init|;
-name|ifp
-operator|!=
-literal|0
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|int_list
+argument_list|)
 block|{
 comment|/* Retain it if another interface needs it. 			 */
 if|if
@@ -8270,22 +8266,14 @@ operator|&
 name|RS_NET_SYN
 condition|)
 block|{
-for|for
-control|(
-name|ifp
-operator|=
-name|ifnet
-init|;
-name|ifp
-operator|!=
-literal|0
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|int_list
+argument_list|)
 block|{
 if|if
 condition|(
@@ -8913,20 +8901,14 @@ operator|)
 operator|)
 expr_stmt|;
 comment|/* Check for dead IS_REMOTE interfaces by timing their 	 * transmissions. 	 */
-for|for
-control|(
-name|ifp
-operator|=
-name|ifnet
-init|;
-name|ifp
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|int_list
+argument_list|)
 block|{
 if|if
 condition|(
@@ -9001,7 +8983,10 @@ operator|->
 name|int_dstaddr
 argument_list|)
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 name|now
 operator|.
 name|tv_sec
@@ -9009,11 +8994,14 @@ operator|-
 name|ifp
 operator|->
 name|int_act_time
-operator|)
+argument_list|)
 operator|/
 literal|60
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 name|now
 operator|.
 name|tv_sec
@@ -9021,7 +9009,7 @@ operator|-
 name|ifp
 operator|->
 name|int_act_time
-operator|)
+argument_list|)
 operator|%
 literal|60
 argument_list|)

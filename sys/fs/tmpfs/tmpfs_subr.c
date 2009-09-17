@@ -164,11 +164,6 @@ name|dev_t
 name|rdev
 parameter_list|,
 name|struct
-name|thread
-modifier|*
-name|p
-parameter_list|,
-name|struct
 name|tmpfs_node
 modifier|*
 modifier|*
@@ -509,6 +504,9 @@ argument_list|,
 name|VM_PROT_DEFAULT
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
+comment|/* XXXKIB - tmpfs needs swap reservation */
 argument_list|)
 expr_stmt|;
 name|nnode
@@ -997,11 +995,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -1062,7 +1055,7 @@ name|LK_INTERLOCK
 operator||
 name|LK_RETRY
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 name|vdrop
@@ -1696,10 +1689,6 @@ name|vap
 operator|->
 name|va_rdev
 argument_list|,
-name|cnp
-operator|->
-name|cn_thread
-argument_list|,
 operator|&
 name|node
 argument_list|)
@@ -1766,10 +1755,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|vpp
-argument_list|,
-name|cnp
-operator|->
-name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if

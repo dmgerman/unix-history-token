@@ -93,9 +93,9 @@ decl_stmt|;
 comment|/* Number of inode table blocks per group */
 name|unsigned
 name|long
-name|s_db_per_group
+name|s_gdb_count
 decl_stmt|;
-comment|/* Number of descriptor blocks per group */
+comment|/* Number of group descriptor blocks */
 name|unsigned
 name|long
 name|s_desc_per_block
@@ -106,16 +106,6 @@ name|long
 name|s_groups_count
 decl_stmt|;
 comment|/* Number of groups in the fs */
-name|unsigned
-name|long
-name|s_first_inode
-decl_stmt|;
-comment|/* First inode on fs */
-name|unsigned
-name|int
-name|s_inode_size
-decl_stmt|;
-comment|/* Size for inode with extra data */
 name|struct
 name|buffer_head
 modifier|*
@@ -172,20 +162,28 @@ index|[
 name|EXT2_MAX_GROUP_LOADED
 index|]
 decl_stmt|;
-name|int
-name|s_rename_lock
-decl_stmt|;
 name|unsigned
 name|long
 name|s_mount_opt
 decl_stmt|;
-name|unsigned
-name|short
+ifdef|#
+directive|ifdef
+name|notyet
+name|uid_t
 name|s_resuid
 decl_stmt|;
+name|gid_t
+name|s_resgid
+decl_stmt|;
+endif|#
+directive|endif
 name|unsigned
 name|short
-name|s_resgid
+name|s_inode_size
+decl_stmt|;
+name|unsigned
+name|int
+name|s_first_ino
 decl_stmt|;
 name|unsigned
 name|short

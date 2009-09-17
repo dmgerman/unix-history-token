@@ -288,6 +288,24 @@ comment|/* Non-cacheable */
 end_comment
 
 begin_comment
+comment|/* Page level cache control fields used to determine the PAT type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_PDE_CACHE
+value|(PG_PDE_PAT | PG_NC_PWT | PG_NC_PCD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PTE_CACHE
+value|(PG_PTE_PAT | PG_NC_PWT | PG_NC_PCD)
+end_define
+
+begin_comment
 comment|/*  * Promotion to a 2 or 4MB (PDE) page mapping requires that the corresponding  * 4KB (PTE) page mappings have identical settings for the following fields:  */
 end_comment
 
@@ -641,7 +659,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Address of current and alternate address space page table maps  * and directories.  */
+comment|/*  * Address of current address space page table maps and directories.  */
 end_comment
 
 begin_ifdef
@@ -704,17 +722,6 @@ end_decl_stmt
 begin_comment
 comment|/* physical address of "Idle" state directory */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * virtual address to page table entry and  * to physical address.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
@@ -1558,47 +1565,16 @@ name|pt_entry_t
 name|pte
 parameter_list|)
 block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-asm|__asm __volatile(
-literal|"xchgl %0,%1"
-operator|:
-literal|"=m"
-operator|(
-operator|*
-name|ptep
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|r
-operator|)
-operator|:
-literal|"1"
+asm|__asm volatile("xchgl %0, %1" : "+m" (*ptep), "+r" (pte));
+return|return
 operator|(
 name|pte
 operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|ptep
-operator|)
-block|)
-function|;
+return|;
+block|}
 end_function
 
-begin_return
-return|return
-operator|(
-name|r
-operator|)
-return|;
-end_return
-
 begin_define
-unit|}
 define|#
 directive|define
 name|pte_load_clear
@@ -1609,7 +1585,7 @@ value|atomic_readandclear_int(pte)
 end_define
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|void
 name|pte_store
@@ -1697,6 +1673,9 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
+name|int
+name|pat_mode
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1960,51 +1939,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|NPPROVMTRR
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPRO_VMTRRphysBase0
-value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPRO_VMTRRphysMask0
-value|0x201
-end_define
-
-begin_struct
-struct|struct
-name|ppro_vmtrr
-block|{
-name|u_int64_t
-name|base
-decl_stmt|,
-name|mask
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ppro_vmtrr
-name|PPro_vmtrr
-index|[
-name|NPPROVMTRR
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|extern
 name|caddr_t
@@ -2079,6 +2013,16 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|pmap_page_get_memattr
+parameter_list|(
+name|m
+parameter_list|)
+value|((vm_memattr_t)(m)->md.pat_mode)
+end_define
+
+begin_define
+define|#
+directive|define
 name|pmap_unmapbios
 parameter_list|(
 name|va
@@ -2093,6 +2037,19 @@ name|void
 name|pmap_bootstrap
 parameter_list|(
 name|vm_paddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmap_cache_bits
+parameter_list|(
+name|int
+name|mode
+parameter_list|,
+name|boolean_t
+name|is_pde
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2205,6 +2162,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_page_set_memattr
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|vm_memattr_t
+name|ma
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_unmapdev
 parameter_list|(
 name|vm_offset_t
@@ -2274,6 +2244,17 @@ name|void
 name|pmap_invalidate_cache
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_invalidate_cache_range
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl

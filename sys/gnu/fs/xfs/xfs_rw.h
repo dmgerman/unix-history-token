@@ -426,7 +426,7 @@ name|bhv_desc_t
 modifier|*
 name|bdp
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|xfs_flock64_t

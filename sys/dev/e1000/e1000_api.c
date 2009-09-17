@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -555,11 +555,24 @@ break|break;
 case|case
 name|E1000_DEV_ID_82574L
 case|:
+case|case
+name|E1000_DEV_ID_82574LA
+case|:
 name|mac
 operator|->
 name|type
 operator|=
 name|e1000_82574
+expr_stmt|;
+break|break;
+case|case
+name|E1000_DEV_ID_82583V
+case|:
+name|mac
+operator|->
+name|type
+operator|=
+name|e1000_82583
 expr_stmt|;
 break|break;
 case|case
@@ -666,6 +679,25 @@ name|e1000_ich10lan
 expr_stmt|;
 break|break;
 case|case
+name|E1000_DEV_ID_PCH_D_HV_DM
+case|:
+case|case
+name|E1000_DEV_ID_PCH_D_HV_DC
+case|:
+case|case
+name|E1000_DEV_ID_PCH_M_HV_LM
+case|:
+case|case
+name|E1000_DEV_ID_PCH_M_HV_LC
+case|:
+name|mac
+operator|->
+name|type
+operator|=
+name|e1000_pchlan
+expr_stmt|;
+break|break;
+case|case
 name|E1000_DEV_ID_82575EB_COPPER
 case|:
 case|case
@@ -673,6 +705,9 @@ name|E1000_DEV_ID_82575EB_FIBER_SERDES
 case|:
 case|case
 name|E1000_DEV_ID_82575GB_QUAD_COPPER
+case|:
+case|case
+name|E1000_DEV_ID_82575GB_QUAD_COPPER_PM
 case|:
 name|mac
 operator|->
@@ -692,6 +727,12 @@ name|E1000_DEV_ID_82576_SERDES
 case|:
 case|case
 name|E1000_DEV_ID_82576_QUAD_COPPER
+case|:
+case|case
+name|E1000_DEV_ID_82576_NS
+case|:
+case|case
+name|E1000_DEV_ID_82576_SERDES_QUAD
 case|:
 name|mac
 operator|->
@@ -877,6 +918,9 @@ case|:
 case|case
 name|e1000_82574
 case|:
+case|case
+name|e1000_82583
+case|:
 name|e1000_init_function_pointers_82571
 argument_list|(
 name|hw
@@ -900,6 +944,9 @@ name|e1000_ich9lan
 case|:
 case|case
 name|e1000_ich10lan
+case|:
+case|case
+name|e1000_pchlan
 case|:
 name|e1000_init_function_pointers_ich8lan
 argument_list|(
@@ -1123,7 +1170,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_update_mc_addr_list - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  @rar_used_count: the first RAR register free to program  *  @rar_count: total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  Currently no func pointer  *  exists and all implementations are handled in the generic version of this  *  function.  **/
+comment|/**  *  e1000_update_mc_addr_list - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  *  Updates the Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  **/
 end_comment
 
 begin_function
@@ -1141,12 +1188,6 @@ name|mc_addr_list
 parameter_list|,
 name|u32
 name|mc_addr_count
-parameter_list|,
-name|u32
-name|rar_used_count
-parameter_list|,
-name|u32
-name|rar_count
 parameter_list|)
 block|{
 if|if
@@ -1172,10 +1213,6 @@ argument_list|,
 name|mc_addr_list
 argument_list|,
 name|mc_addr_count
-argument_list|,
-name|rar_used_count
-argument_list|,
-name|rar_count
 argument_list|)
 expr_stmt|;
 block|}
@@ -1623,6 +1660,48 @@ operator|.
 name|ops
 operator|.
 name|blink_led
+argument_list|(
+name|hw
+argument_list|)
+return|;
+return|return
+name|E1000_SUCCESS
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_id_led_init - store LED configurations in SW  *  @hw: pointer to the HW structure  *  *  Initializes the LED config in SW. This is a function pointer entry point  *  called by drivers.  **/
+end_comment
+
+begin_function
+name|s32
+name|e1000_id_led_init
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|id_led_init
+condition|)
+return|return
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|id_led_init
 argument_list|(
 name|hw
 argument_list|)

@@ -35,12 +35,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|bio
-struct_decl|;
-end_struct_decl
-
 begin_typedef
 typedef|typedef
 name|void
@@ -64,6 +58,10 @@ parameter_list|,
 name|vm_prot_t
 parameter_list|,
 name|vm_ooffset_t
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -225,6 +223,14 @@ name|physpagerops
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pagerops
+name|sgpagerops
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * get/put return values  * OK	 operation was successful  * BAD	 specified data was out of the accepted range  * FAIL	 specified data was in range, but doesn't exist  * PEND	 operations was initiated but not completed  * ERROR error while accessing data that is in range and exists  * AGAIN temporary resource shortage prevented operation from happening  */
 end_comment
@@ -363,6 +369,10 @@ parameter_list|,
 name|vm_prot_t
 parameter_list|,
 name|vm_ooffset_t
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

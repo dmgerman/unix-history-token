@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
@@ -319,14 +319,21 @@ name|filterops
 name|apm_readfiltops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|apmreadfiltdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|apmreadfilt
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1206,7 +1213,7 @@ name|sel_read
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|clone
@@ -1217,12 +1224,6 @@ name|si_note
 argument_list|,
 operator|&
 name|acpi_mutex
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The acpi device is always managed by devd(8) and is considered 	 * writable (i.e., ack is required to allow suspend to proceed.) 	 */
@@ -1301,7 +1302,8 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)
@@ -1384,7 +1386,8 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)
@@ -1507,7 +1510,8 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)
@@ -2060,7 +2064,8 @@ parameter_list|,
 name|int
 name|events
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)

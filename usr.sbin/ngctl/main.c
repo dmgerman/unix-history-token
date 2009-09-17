@@ -314,6 +314,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|sig_atomic_t
 name|unblock
 decl_stmt|;

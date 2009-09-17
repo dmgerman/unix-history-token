@@ -174,6 +174,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IP1000PHY_ANAR_CSMA
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
 name|IP1000PHY_ANAR_10T
 value|0x0020
 end_define

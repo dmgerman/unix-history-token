@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2007 Hans Petter Selasky<hselasky@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007 Hans Petter Selasky<hselasky@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ specifier|const
 name|void
 modifier|*
 function_decl|(
-name|usb2_temp_get_string_desc_t
+name|usb_temp_get_string_desc_t
 function_decl|)
 parameter_list|(
 name|uint16_t
@@ -47,12 +47,12 @@ specifier|const
 name|void
 modifier|*
 function_decl|(
-name|usb2_temp_get_vendor_desc_t
+name|usb_temp_get_vendor_desc_t
 function_decl|)
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_device_request
+name|usb_device_request
 modifier|*
 name|req
 parameter_list|)
@@ -61,7 +61,7 @@ end_typedef
 
 begin_struct
 struct|struct
-name|usb2_temp_packet_size
+name|usb_temp_packet_size
 block|{
 name|uint16_t
 name|mps
@@ -75,7 +75,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_interval
+name|usb_temp_interval
 block|{
 name|uint8_t
 name|bInterval
@@ -89,7 +89,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 block|{
 specifier|const
 name|void
@@ -99,13 +99,13 @@ name|ppRawDesc
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_temp_packet_size
+name|usb_temp_packet_size
 modifier|*
 name|pPacketSize
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_temp_interval
+name|usb_temp_interval
 modifier|*
 name|pIntervals
 decl_stmt|;
@@ -123,7 +123,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 block|{
 specifier|const
 name|void
@@ -133,7 +133,7 @@ name|ppRawDesc
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_temp_endpoint_desc
+name|usb_temp_endpoint_desc
 modifier|*
 modifier|*
 name|ppEndpoints
@@ -159,11 +159,11 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_config_desc
+name|usb_temp_config_desc
 block|{
 specifier|const
 name|struct
-name|usb2_temp_interface_desc
+name|usb_temp_interface_desc
 modifier|*
 modifier|*
 name|ppIfaceDesc
@@ -183,19 +183,19 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_device_desc
+name|usb_temp_device_desc
 block|{
-name|usb2_temp_get_string_desc_t
+name|usb_temp_get_string_desc_t
 modifier|*
 name|getStringDesc
 decl_stmt|;
-name|usb2_temp_get_vendor_desc_t
+name|usb_temp_get_vendor_desc_t
 modifier|*
 name|getVendorDesc
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_temp_config_desc
+name|usb_temp_config_desc
 modifier|*
 modifier|*
 name|ppConfigDesc
@@ -233,21 +233,21 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_temp_data
+name|usb_temp_data
 block|{
 specifier|const
 name|struct
-name|usb2_temp_device_desc
+name|usb_temp_device_desc
 modifier|*
 name|tdd
 decl_stmt|;
 name|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 name|udd
 decl_stmt|;
 comment|/* device descriptor */
 name|struct
-name|usb2_device_qualifier
+name|usb_device_qualifier
 name|udq
 decl_stmt|;
 comment|/* device qualifier */
@@ -263,8 +263,8 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|usb2_temp_device_desc
-name|usb2_template_cdce
+name|usb_temp_device_desc
+name|usb_template_cdce
 decl_stmt|;
 end_decl_stmt
 
@@ -272,8 +272,8 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|usb2_temp_device_desc
-name|usb2_template_msc
+name|usb_temp_device_desc
+name|usb_template_msc
 decl_stmt|;
 end_decl_stmt
 
@@ -285,8 +285,8 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|usb2_temp_device_desc
-name|usb2_template_mtp
+name|usb_temp_device_desc
+name|usb_template_mtp
 decl_stmt|;
 end_decl_stmt
 

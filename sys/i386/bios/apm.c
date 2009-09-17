@@ -233,6 +233,12 @@ directive|include
 file|<i386/bios/apm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<isa/rtc.h>
+end_include
+
 begin_comment
 comment|/* Used by the apm_saver screen saver module */
 end_comment
@@ -5614,6 +5620,9 @@ argument_list|,
 literal|"cbb cv"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|device_get_flags
@@ -5623,10 +5632,12 @@ argument_list|)
 operator|&
 literal|0x20
 condition|)
-name|statclock_disable
+name|atrtcclock_disable
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|initialized

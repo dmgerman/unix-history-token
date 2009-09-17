@@ -1285,7 +1285,8 @@ argument_list|,
 name|int
 name|fmt
 argument_list|,
-name|d_thread_t
+expr|struct
+name|thread
 operator|*
 name|proc
 argument_list|)
@@ -1422,7 +1423,8 @@ argument_list|,
 name|int
 name|fmt
 argument_list|,
-name|d_thread_t
+expr|struct
+name|thread
 operator|*
 name|proc
 argument_list|)
@@ -1568,7 +1570,8 @@ argument_list|,
 name|int
 name|flags
 argument_list|,
-name|d_thread_t
+expr|struct
+name|thread
 operator|*
 name|proc
 argument_list|)

@@ -350,6 +350,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|LOADER_GPT_SUPPORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|LOADER_ZFS_SUPPORT
 argument_list|)
 name|heap_top

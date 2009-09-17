@@ -193,12 +193,6 @@ directive|include
 file|<ddb/db_output.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/db_machdep.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -207,13 +201,13 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|acorn26
+name|KDB
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<machine/machdep.h>
+file|<machine/db_machdep.h>
 end_include
 
 begin_endif

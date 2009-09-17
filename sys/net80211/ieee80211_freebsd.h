@@ -45,6 +45,18 @@ directive|include
 file|<sys/rwlock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
+end_include
+
 begin_comment
 comment|/*  * Common state locking definitions.  */
 end_comment
@@ -312,22 +324,6 @@ define|\
 value|mtx_unlock(IEEE80211_NODE_ITERATE_LOCK_OBJ(_nt))
 end_define
 
-begin_define
-define|#
-directive|define
-name|_AGEQ_ENQUEUE
-parameter_list|(
-name|_ifq
-parameter_list|,
-name|_m
-parameter_list|,
-name|_qlen
-parameter_list|,
-name|_age
-parameter_list|)
-value|do {		\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ifq)->ifq_tail != NULL) { 			\ 		_age -= M_AGE_GET((_ifq)->ifq_head);		\ 		(_ifq)->ifq_tail->m_nextpkt = (_m);		\ 	} else { 						\ 		(_ifq)->ifq_head = (_m); 			\ 	}							\ 	M_AGE_SET(_m, _age);					\ 	(_ifq)->ifq_tail = (_m); 				\ 	(_qlen) = ++(_ifq)->ifq_len; 				\ } while (0)
-end_define
-
 begin_comment
 comment|/*  * Power-save queue definitions.   */
 end_comment
@@ -350,7 +346,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_psq)->psq_lock, _name, "802.11 ps q", MTX_DEF);
+value|mtx_init(&(_psq)->psq_lock, _name, "802.11 ps q", MTX_DEF)
 end_define
 
 begin_define
@@ -431,87 +427,58 @@ comment|/* IF_PREPEND_LIST */
 end_comment
 
 begin_comment
-comment|/* XXX temporary */
+comment|/*  * Age queue definitions.  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mtx
+name|ieee80211_ageq_lock_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_NODE_WDSQ_INIT
+name|IEEE80211_AGEQ_INIT
 parameter_list|(
-name|_ni
+name|_aq
 parameter_list|,
 name|_name
 parameter_list|)
-value|do {		\ 	mtx_init(&(_ni)->ni_wdsq.ifq_mtx, _name, "802.11 wds queue", MTX_DEF);\ 	(_ni)->ni_wdsq.ifq_maxlen = IEEE80211_PS_MAX_QUEUE;	\ } while (0)
+define|\
+value|mtx_init(&(_aq)->aq_lock, _name, "802.11 age q", MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_NODE_WDSQ_DESTROY
+name|IEEE80211_AGEQ_DESTROY
 parameter_list|(
-name|_ni
+name|_aq
 parameter_list|)
-value|do { \ 	mtx_destroy(&(_ni)->ni_wdsq.ifq_mtx); \ } while (0)
+value|mtx_destroy(&(_aq)->aq_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_NODE_WDSQ_QLEN
+name|IEEE80211_AGEQ_LOCK
 parameter_list|(
-name|_ni
+name|_aq
 parameter_list|)
-value|_IF_QLEN(&(_ni)->ni_wdsq)
+value|mtx_lock(&(_aq)->aq_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_NODE_WDSQ_LOCK
+name|IEEE80211_AGEQ_UNLOCK
 parameter_list|(
-name|_ni
+name|_aq
 parameter_list|)
-value|IF_LOCK(&(_ni)->ni_wdsq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_NODE_WDSQ_UNLOCK
-parameter_list|(
-name|_ni
-parameter_list|)
-value|IF_UNLOCK(&(_ni)->ni_wdsq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_IEEE80211_NODE_WDSQ_DEQUEUE_HEAD
-parameter_list|(
-name|_ni
-parameter_list|,
-name|_m
-parameter_list|)
-value|do {		\ 	_IF_DEQUEUE(&(_ni)->ni_wdsq, m);			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_IEEE80211_NODE_WDSQ_ENQUEUE
-parameter_list|(
-name|_ni
-parameter_list|,
-name|_m
-parameter_list|,
-name|_qlen
-parameter_list|,
-name|_age
-parameter_list|)
-value|do {	\ 	_AGEQ_ENQUEUE(&ni->ni_wdsq, _m, _qlen, _age);		\ } while (0)
+value|mtx_unlock(&(_aq)->aq_lock)
 end_define
 
 begin_comment
@@ -789,20 +756,6 @@ parameter_list|)
 value|time_after_eq(b,a)
 end_define
 
-begin_define
-define|#
-directive|define
-name|memmove
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|n
-parameter_list|)
-value|ovbcopy(src, dst, n)
-end_define
-
 begin_function_decl
 name|struct
 name|mbuf
@@ -836,17 +789,6 @@ end_define
 
 begin_comment
 comment|/* 802.11 encap done */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_WDS
-value|M_PROTO2
-end_define
-
-begin_comment
-comment|/* WDS frame */
 end_comment
 
 begin_define
@@ -920,7 +862,7 @@ define|#
 directive|define
 name|M_80211_TX
 define|\
-value|(M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_ENCAP|M_WDS|M_EAPOL|M_PWR_SAV|\ 	 M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
+value|(M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_ENCAP|M_EAPOL|M_PWR_SAV|\ 	 M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
 end_define
 
 begin_comment
@@ -976,6 +918,22 @@ define|#
 directive|define
 name|M_80211_RX
 value|(M_AMPDU|M_WEP|M_AMPDU_MPDU)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MBUF_TX_FLAG_BITS
+define|\
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_ENCAP\6M_WEP\7M_EAPOL" \ 	"\10M_PWR_SAV\11M_MORE_DATA\12M_BCAST\13M_MCAST\14M_FRAG\15M_FIRSTFRAG" \ 	"\16M_LASTFRAG\17M_SKIP_FIREWALL\20M_FREELIST\21M_VLANTAG\22M_PROMISC" \ 	"\23M_NOFREE\24M_FF\25M_TXCB\26M_AMPDU_MPDU\27M_FLOWID"
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MBUF_RX_FLAG_BITS
+define|\
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_AMPDU\6M_WEP\7M_PROTO3" \ 	"\10M_PROTO4\11M_PROTO5\12M_BCAST\13M_MCAST\14M_FRAG\15M_FIRSTFRAG" \ 	"\16M_LASTFRAG\17M_SKIP_FIREWALL\20M_FREELIST\21M_VLANTAG\22M_PROMISC" \ 	"\23M_NOFREE\24M_PROTO6\25M_PROTO7\26M_AMPDU_MPDU\27M_FLOWID"
 end_define
 
 begin_comment
@@ -1041,6 +999,33 @@ parameter_list|,
 name|adj
 parameter_list|)
 value|(m->m_pkthdr.csum_data -= adj)
+end_define
+
+begin_comment
+comment|/*  * Store the sequence number.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SEQNO_SET
+parameter_list|(
+name|m
+parameter_list|,
+name|seqno
+parameter_list|)
+define|\
+value|((m)->m_pkthdr.tso_segsz = (seqno))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_SEQNO_GET
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_pkthdr.tso_segsz)
 end_define
 
 begin_define
@@ -1205,6 +1190,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_wlan
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|int
+name|ieee80211_sysctl_msecs_ticks
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|ieee80211_load_module
@@ -1354,6 +1356,88 @@ define|\
 value|_IEEE80211_POLICY_MODULE(rate, alg, version);				\ static void								\ alg##_modevent(int type)						\ {									\
 comment|/* XXX nothing to do until the rate control framework arrives */
 value|\ }									\ TEXT_SET(rate##_set, alg##_modevent)
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211req
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|int
+name|ieee80211_ioctl_getfunc
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211req
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|SET_DECLARE
+argument_list|(
+name|ieee80211_ioctl_getset
+argument_list|,
+name|ieee80211_ioctl_getfunc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOCTL_GET
+parameter_list|(
+name|_name
+parameter_list|,
+name|_get
+parameter_list|)
+value|TEXT_SET(ieee80211_ioctl_getset, _get)
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|ieee80211_ioctl_setfunc
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211req
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|SET_DECLARE
+argument_list|(
+name|ieee80211_ioctl_setset
+argument_list|,
+name|ieee80211_ioctl_setfunc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOCTL_SET
+parameter_list|(
+name|_name
+parameter_list|,
+name|_set
+parameter_list|)
+value|TEXT_SET(ieee80211_ioctl_setset, _set)
 end_define
 
 begin_endif

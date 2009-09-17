@@ -9057,12 +9057,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TODO
-end_ifdef
-
 begin_comment
 comment|/*  * Retrieve a files ACL  */
 end_comment
@@ -9504,15 +9498,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TODO */
-end_comment
-
 begin_function
 name|int
 name|zfs_vsec_2_aclp
@@ -9807,12 +9792,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TODO
-end_ifdef
 
 begin_comment
 comment|/*  * Set a files ACL  */
@@ -10395,15 +10374,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TODO */
-end_comment
 
 begin_comment
 comment|/*  * working_mode returns the permissions that were not granted  */
@@ -11206,6 +11176,27 @@ name|VDIR
 operator|)
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* 	 * In FreeBSD, we don't care about permissions of individual ADS. 	 * Note that not checking them is not just an optimization - without 	 * this shortcut, EA operations may bogusly fail with EACCES. 	 */
+if|if
+condition|(
+name|zp
+operator|->
+name|z_phys
+operator|->
+name|zp_flags
+operator|&
+name|ZFS_XATTR
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 comment|/* 	 * If attribute then validate against base file 	 */
 if|if
 condition|(
@@ -11299,6 +11290,8 @@ name|ACE_READ_NAMED_ATTRS
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

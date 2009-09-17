@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -41,6 +41,25 @@ include|#
 directive|include
 file|<sys/systm.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/buf_ring.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -114,28 +133,18 @@ directive|include
 file|<sys/taskqueue.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700029
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/eventhandler.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_endif
@@ -302,7 +311,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"6.9.6"
+literal|"6.9.14"
 decl_stmt|;
 end_decl_stmt
 
@@ -945,6 +954,18 @@ block|,
 block|{
 literal|0x8086
 block|,
+name|E1000_DEV_ID_82583V
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 name|E1000_DEV_ID_80003ES2LAN_COPPER_SPT
 block|,
 name|PCI_ANY_ID
@@ -1197,6 +1218,18 @@ block|,
 block|{
 literal|0x8086
 block|,
+name|E1000_DEV_ID_82574LA
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 name|E1000_DEV_ID_ICH10_R_BM_LM
 block|,
 name|PCI_ANY_ID
@@ -1375,6 +1408,63 @@ name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
+begin_function_decl
+specifier|static
+name|int
+name|em_mq_start
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|em_mq_start_locked
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|em_qflush
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1925,6 +2015,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700029
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -1958,6 +2056,23 @@ name|u16
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|em_setup_vlan_hw_support
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2250,45 +2365,6 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EM_TIMESYNC
-end_ifdef
-
-begin_comment
-comment|/* Precision Time sync support */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|em_tsync_init
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|em_tsync_disable
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|EM_LEGACY_IRQ
 end_ifdef
 
@@ -2392,46 +2468,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|em_add_rx_process_limit
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|em_handle_rxtx
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|,
-name|int
-name|pending
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|em_handle_rx
 parameter_list|(
 name|void
@@ -2462,6 +2498,21 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|em_handle_rxtx
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|pending
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|em_handle_link
 parameter_list|(
 name|void
@@ -2474,13 +2525,38 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|em_add_rx_process_limit
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* EM_LEGACY_IRQ */
+comment|/* ~EM_LEGACY_IRQ */
 end_comment
 
 begin_ifdef
@@ -2933,6 +3009,44 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Flow control setting - default to FULL */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|em_fc_setting
+init|=
+name|e1000_fc_full
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.em.fc_setting"
+argument_list|,
+operator|&
+name|em_fc_setting
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* ** Shadow VFTA table, this is needed because ** the real vlan filter table gets cleared during ** a soft reset and the driver needs to be able ** to repopulate it. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u32
+name|em_shadow_vfta
+index|[
+name|EM_VFTA_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Global used in WOL setup with multiport cards */
 end_comment
 
@@ -3381,7 +3495,7 @@ name|mac
 operator|.
 name|type
 operator|==
-name|e1000_ich10lan
+name|e1000_ich9lan
 operator|)
 operator|||
 operator|(
@@ -3393,7 +3507,7 @@ name|mac
 operator|.
 name|type
 operator|==
-name|e1000_ich9lan
+name|e1000_ich10lan
 operator|)
 condition|)
 block|{
@@ -4088,6 +4202,15 @@ name|rxdma
 operator|.
 name|dma_vaddr
 expr_stmt|;
+comment|/* 	** Start from a known state, this is 	** important in reading the nvm and 	** mac from that. 	*/
+name|e1000_reset_hw
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|)
+expr_stmt|;
 comment|/* Make sure we have a good EEPROM before we read from it */
 if|if
 condition|(
@@ -4131,30 +4254,6 @@ goto|goto
 name|err_hw_init
 goto|;
 block|}
-block|}
-comment|/* Initialize the hardware */
-if|if
-condition|(
-name|em_hardware_init
-argument_list|(
-name|adapter
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Unable to initialize the hardware\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-goto|goto
-name|err_hw_init
-goto|;
 block|}
 comment|/* Copy the permanent MAC address out of the EEPROM */
 if|if
@@ -4206,6 +4305,30 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Invalid MAC address\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|err_hw_init
+goto|;
+block|}
+comment|/* Initialize the hardware */
+if|if
+condition|(
+name|em_hardware_init
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Unable to initialize the hardware\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4593,6 +4716,11 @@ name|pcix_82544
 operator|=
 name|FALSE
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700029
 comment|/* Register for VLAN events */
 name|adapter
 operator|->
@@ -4604,7 +4732,7 @@ name|vlan_config
 argument_list|,
 name|em_register_vlan
 argument_list|,
-literal|0
+name|adapter
 argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
@@ -4619,11 +4747,13 @@ name|vlan_unconfig
 argument_list|,
 name|em_unregister_vlan
 argument_list|,
-literal|0
+name|adapter
 argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Tell the stack that the interface is not active */
 name|adapter
 operator|->
@@ -4876,6 +5006,18 @@ name|mac
 operator|.
 name|type
 operator|==
+name|e1000_82583
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
 name|e1000_ich8lan
 operator|)
 operator|||
@@ -4966,6 +5108,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700029
 comment|/* Unregister VLAN events */
 if|if
 condition|(
@@ -5001,6 +5148,8 @@ operator|->
 name|vlan_detach
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ether_ifdetach
 argument_list|(
 name|adapter
@@ -5204,6 +5353,18 @@ name|mac
 operator|.
 name|type
 operator|==
+name|e1000_82583
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
 name|e1000_ich8lan
 operator|)
 operator|||
@@ -5356,6 +5517,519 @@ argument_list|)
 return|;
 block|}
 comment|/*********************************************************************  *  Transmit entry point  *  *  em_start is called by the stack to initiate a transmit.  *  The driver will remain in this routine as long as there are  *  packets to transmit and transmit resources are available.  *  In case resources are not available stack is notified and  *  the packet is requeued.  **********************************************************************/
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+specifier|static
+name|int
+name|em_mq_start_locked
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|next
+decl_stmt|;
+name|int
+name|error
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|EM_TX_LOCK_ASSERT
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+comment|/* To allow being called from a tasklet */
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|process
+goto|;
+if|if
+condition|(
+operator|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+operator|(
+name|IFF_DRV_RUNNING
+operator||
+name|IFF_DRV_OACTIVE
+operator|)
+operator|)
+operator|!=
+name|IFF_DRV_RUNNING
+operator|)
+operator|||
+operator|(
+operator|!
+name|adapter
+operator|->
+name|link_active
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|drbr_enqueue
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|drbr_empty
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|)
+operator|&&
+operator|(
+name|adapter
+operator|->
+name|num_tx_desc_avail
+operator|>
+name|EM_TX_OP_THRESHOLD
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|em_xmit
+argument_list|(
+name|adapter
+argument_list|,
+operator|&
+name|m
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+name|error
+operator|=
+name|drbr_enqueue
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+else|else
+block|{
+comment|/* 			 * We've bypassed the buf ring so we need to update 			 * ifp directly 			 */
+name|drbr_stats_update
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+expr_stmt|;
+comment|/* 			** Send a copy of the frame to the BPF 			** listener and set the watchdog on. 			*/
+name|ETHER_BPF_MTAP
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|watchdog_timer
+operator|=
+name|EM_TX_TIMEOUT
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|drbr_enqueue
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|,
+name|m
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|process
+label|:
+if|if
+condition|(
+name|drbr_empty
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* Process the queue */
+while|while
+condition|(
+name|TRUE
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
+name|next
+operator|=
+name|drbr_dequeue
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|next
+operator|==
+name|NULL
+condition|)
+break|break;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|em_xmit
+argument_list|(
+name|adapter
+argument_list|,
+operator|&
+name|next
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|next
+operator|!=
+name|NULL
+condition|)
+name|error
+operator|=
+name|drbr_enqueue
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|drbr_stats_update
+argument_list|(
+name|ifp
+argument_list|,
+name|next
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|,
+name|next
+operator|->
+name|m_flags
+argument_list|)
+expr_stmt|;
+name|ETHER_BPF_MTAP
+argument_list|(
+name|ifp
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+comment|/* Set the watchdog */
+name|adapter
+operator|->
+name|watchdog_timer
+operator|=
+name|EM_TX_TIMEOUT
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_tx_desc_avail
+operator|<=
+name|EM_TX_OP_THRESHOLD
+condition|)
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_OACTIVE
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+comment|/* ** Multiqueue capable stack interface, this is not ** yet truely multiqueue, but that is coming... */
+specifier|static
+name|int
+name|em_mq_start
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|EM_TX_TRYLOCK
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+name|error
+operator|=
+name|em_mq_start_locked
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|EM_TX_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|error
+operator|=
+name|drbr_enqueue
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+specifier|static
+name|void
+name|em_qflush
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+operator|(
+expr|struct
+name|adapter
+operator|*
+operator|)
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|EM_TX_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|m
+operator|=
+name|buf_ring_dequeue_sc
+argument_list|(
+name|adapter
+operator|->
+name|br
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|if_qflush
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|EM_TX_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* FreeBSD_version */
 specifier|static
 name|void
 name|em_start_locked
@@ -5492,6 +6166,21 @@ operator|=
 name|EM_TX_TIMEOUT
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_tx_desc_avail
+operator|<=
+name|EM_TX_OP_THRESHOLD
+condition|)
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_OACTIVE
+expr_stmt|;
+return|return;
 block|}
 specifier|static
 name|void
@@ -5664,6 +6353,17 @@ name|adapter
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_NOARP
+operator|)
+condition|)
 name|arp_ifinit
 argument_list|(
 name|ifp
@@ -5780,6 +6480,9 @@ break|break;
 comment|/* Adapters that do not support jumbo frames */
 case|case
 name|e1000_82542
+case|:
+case|case
+name|e1000_82583
 case|:
 case|case
 name|e1000_ich8lan
@@ -6334,397 +7037,6 @@ endif|#
 directive|endif
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-comment|/* 	** IOCTL support for Precision Time (IEEE 1588) Support 	*/
-case|case
-name|EM_TIMESYNC_READTS
-case|:
-block|{
-name|u32
-name|rx_ctl
-decl_stmt|,
-name|tx_ctl
-decl_stmt|;
-name|struct
-name|em_tsync_read
-modifier|*
-name|tdata
-decl_stmt|;
-name|tdata
-operator|=
-operator|(
-expr|struct
-name|em_tsync_read
-operator|*
-operator|)
-name|ifr
-operator|->
-name|ifr_data
-expr_stmt|;
-name|IOCTL_DEBUGOUT
-argument_list|(
-literal|"Reading Timestamp\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tdata
-operator|->
-name|read_current_time
-condition|)
-block|{
-name|getnanotime
-argument_list|(
-operator|&
-name|tdata
-operator|->
-name|system_time
-argument_list|)
-expr_stmt|;
-name|tdata
-operator|->
-name|network_time
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_SYSTIML
-argument_list|)
-expr_stmt|;
-name|tdata
-operator|->
-name|network_time
-operator||=
-operator|(
-name|u64
-operator|)
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_SYSTIMH
-argument_list|)
-operator|<<
-literal|32
-expr_stmt|;
-block|}
-name|rx_ctl
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_TSYNCRXCTL
-argument_list|)
-expr_stmt|;
-name|tx_ctl
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_TSYNCTXCTL
-argument_list|)
-expr_stmt|;
-name|IOCTL_DEBUGOUT1
-argument_list|(
-literal|"RX_CTL value = %u\n"
-argument_list|,
-name|rx_ctl
-argument_list|)
-expr_stmt|;
-name|IOCTL_DEBUGOUT1
-argument_list|(
-literal|"TX_CTL value = %u\n"
-argument_list|,
-name|tx_ctl
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rx_ctl
-operator|&
-literal|0x1
-condition|)
-block|{
-name|IOCTL_DEBUGOUT
-argument_list|(
-literal|"RX timestamp is valid\n"
-argument_list|)
-expr_stmt|;
-name|u32
-name|tmp
-decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|tmp_cp
-decl_stmt|;
-name|tdata
-operator|->
-name|rx_valid
-operator|=
-literal|1
-expr_stmt|;
-name|tdata
-operator|->
-name|rx_stamp
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_RXSTMPL
-argument_list|)
-expr_stmt|;
-name|tdata
-operator|->
-name|rx_stamp
-operator||=
-operator|(
-name|u64
-operator|)
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_RXSTMPH
-argument_list|)
-operator|<<
-literal|32
-expr_stmt|;
-name|tmp
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_RXSATRL
-argument_list|)
-expr_stmt|;
-name|tmp_cp
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|&
-name|tmp
-expr_stmt|;
-name|tdata
-operator|->
-name|srcid
-index|[
-literal|0
-index|]
-operator|=
-name|tmp_cp
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|tdata
-operator|->
-name|srcid
-index|[
-literal|1
-index|]
-operator|=
-name|tmp_cp
-index|[
-literal|1
-index|]
-expr_stmt|;
-name|tdata
-operator|->
-name|srcid
-index|[
-literal|2
-index|]
-operator|=
-name|tmp_cp
-index|[
-literal|2
-index|]
-expr_stmt|;
-name|tdata
-operator|->
-name|srcid
-index|[
-literal|3
-index|]
-operator|=
-name|tmp_cp
-index|[
-literal|3
-index|]
-expr_stmt|;
-name|tmp
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_RXSATRH
-argument_list|)
-expr_stmt|;
-name|tmp_cp
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|&
-name|tmp
-expr_stmt|;
-name|tdata
-operator|->
-name|srcid
-index|[
-literal|4
-index|]
-operator|=
-name|tmp_cp
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|tdata
-operator|->
-name|srcid
-index|[
-literal|5
-index|]
-operator|=
-name|tmp_cp
-index|[
-literal|1
-index|]
-expr_stmt|;
-name|tdata
-operator|->
-name|seqid
-operator|=
-name|tmp
-operator|>>
-literal|16
-expr_stmt|;
-name|tdata
-operator|->
-name|seqid
-operator|=
-name|htons
-argument_list|(
-name|tdata
-operator|->
-name|seqid
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|tdata
-operator|->
-name|rx_valid
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|tx_ctl
-operator|&
-literal|0x1
-condition|)
-block|{
-name|IOCTL_DEBUGOUT
-argument_list|(
-literal|"TX timestamp is valid\n"
-argument_list|)
-expr_stmt|;
-name|tdata
-operator|->
-name|tx_valid
-operator|=
-literal|1
-expr_stmt|;
-name|tdata
-operator|->
-name|tx_stamp
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_TXSTMPL
-argument_list|)
-expr_stmt|;
-name|tdata
-operator|->
-name|tx_stamp
-operator||=
-operator|(
-name|u64
-operator|)
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_TXSTMPH
-argument_list|)
-operator|<<
-literal|32
-expr_stmt|;
-block|}
-else|else
-name|tdata
-operator|->
-name|tx_valid
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* EM_TIMESYNC */
 default|default:
 name|error
 operator|=
@@ -7016,6 +7328,9 @@ break|break;
 case|case
 name|e1000_82574
 case|:
+case|case
+name|e1000_82583
+case|:
 name|pba
 operator|=
 name|E1000_PBA_20K
@@ -7028,15 +7343,6 @@ case|:
 case|case
 name|e1000_ich10lan
 case|:
-define|#
-directive|define
-name|E1000_PBA_10K
-value|0x000A
-name|pba
-operator|=
-name|E1000_PBA_10K
-expr_stmt|;
-break|break;
 case|case
 name|e1000_ich8lan
 case|:
@@ -7207,28 +7513,18 @@ argument_list|,
 name|ETHERTYPE_VLAN
 argument_list|)
 expr_stmt|;
-comment|/* New register interface replaces this but 	   waiting on kernel support to be added */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700029
 if|if
 condition|(
-operator|(
 name|ifp
 operator|->
 name|if_capenable
 operator|&
 name|IFCAP_VLAN_HWTAGGING
-operator|)
-operator|&&
-operator|(
-operator|(
-name|ifp
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_VLAN_HWFILTER
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 name|u32
@@ -7263,6 +7559,16 @@ name|ctrl
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* Use real VLAN Filter support */
+name|em_setup_vlan_hw_support
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Set hardware offload abilities */
 name|ifp
 operator|->
@@ -7510,43 +7816,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-comment|/* Initializae IEEE 1588 Precision Time hardware */
-if|if
-condition|(
-operator|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_82574
-operator|)
-operator|||
-operator|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_ich10lan
-operator|)
-condition|)
-name|em_tsync_init
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Don't reset the phy next time init gets called */
 name|adapter
 operator|->
@@ -7596,7 +7865,7 @@ directive|ifdef
 name|DEVICE_POLLING
 comment|/*********************************************************************  *  *  Legacy polling routine    *  *********************************************************************/
 specifier|static
-name|void
+name|int
 name|em_poll
 parameter_list|(
 name|struct
@@ -7623,6 +7892,10 @@ name|if_softc
 decl_stmt|;
 name|u32
 name|reg_icr
+decl_stmt|,
+name|rx_done
+init|=
+literal|0
 decl_stmt|;
 name|EM_CORE_LOCK
 argument_list|(
@@ -7647,7 +7920,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_done
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -7723,6 +8000,8 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|rx_done
+operator|=
 name|em_rxeof
 argument_list|(
 name|adapter
@@ -7740,6 +8019,32 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+if|if
+condition|(
+operator|!
+name|drbr_empty
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|)
+condition|)
+name|em_mq_start_locked
+argument_list|(
+name|ifp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|!
@@ -7748,7 +8053,7 @@ argument_list|(
 operator|&
 name|ifp
 operator|->
-name|if_snd
+name|snd
 argument_list|)
 condition|)
 name|em_start_locked
@@ -7756,11 +8061,18 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|EM_TX_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_done
+operator|)
+return|;
 block|}
 endif|#
 directive|endif
@@ -7811,12 +8123,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 name|reg_icr
 operator|=
 name|E1000_READ_REG
@@ -7831,6 +8137,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|reg_icr
+operator|&
+name|E1000_ICR_RXO
+condition|)
+name|adapter
+operator|->
+name|rx_overruns
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|reg_icr
+operator|==
+literal|0xffffffff
+operator|)
+operator|||
+operator|(
+name|reg_icr
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|adapter
 operator|->
 name|hw
@@ -7848,68 +8178,26 @@ name|E1000_ICR_INT_ASSERTED
 operator|)
 operator|==
 literal|0
+operator|)
 condition|)
-break|break;
-elseif|else
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
-name|reg_icr
-operator|==
-literal|0
-condition|)
-break|break;
-comment|/* 		 * XXX: some laptops trigger several spurious interrupts 		 * on em(4) when in the resume cycle. The ICR register 		 * reports all-ones value in this case. Processing such 		 * interrupts would lead to a freeze. I don't know why. 		 */
-if|if
-condition|(
-name|reg_icr
-operator|==
-literal|0xffffffff
-condition|)
-break|break;
-name|EM_CORE_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|(
 name|ifp
 operator|->
 name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
 condition|)
-block|{
-name|em_rxeof
-argument_list|(
-name|adapter
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|EM_TX_LOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-name|em_txeof
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-name|EM_TX_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-block|}
-name|EM_CORE_LOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-comment|/* Link status change */
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|reg_icr
@@ -7964,20 +8252,29 @@ argument_list|,
 name|adapter
 argument_list|)
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
-if|if
-condition|(
-name|reg_icr
-operator|&
-name|E1000_ICR_RXO
-condition|)
+name|EM_TX_LOCK
+argument_list|(
 name|adapter
-operator|->
-name|rx_overruns
-operator|++
+argument_list|)
 expr_stmt|;
-block|}
-name|EM_CORE_UNLOCK
+name|em_txeof
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|em_rxeof
+argument_list|(
+name|adapter
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|em_txeof
 argument_list|(
 name|adapter
 argument_list|)
@@ -7999,11 +8296,24 @@ operator|->
 name|if_snd
 argument_list|)
 condition|)
-name|em_start
+name|em_start_locked
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|EM_TX_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+name|EM_CORE_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 else|#
 directive|else
@@ -8165,6 +8475,32 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+if|if
+condition|(
+operator|!
+name|drbr_empty
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|)
+condition|)
+name|em_mq_start_locked
+argument_list|(
+name|ifp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|!
@@ -8173,7 +8509,7 @@ argument_list|(
 operator|&
 name|ifp
 operator|->
-name|if_snd
+name|snd
 argument_list|)
 condition|)
 name|em_start_locked
@@ -8181,6 +8517,8 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|EM_TX_UNLOCK
 argument_list|(
 name|adapter
@@ -8192,140 +8530,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-block|}
-specifier|static
-name|void
-name|em_handle_rx
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|,
-name|int
-name|pending
-parameter_list|)
-block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-init|=
-name|context
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|adapter
-operator|->
-name|ifp
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-operator|)
-operator|&&
-operator|(
-name|em_rxeof
-argument_list|(
-name|adapter
-argument_list|,
-name|adapter
-operator|->
-name|rx_process_limit
-argument_list|)
-operator|!=
-literal|0
-operator|)
-condition|)
-name|taskqueue_enqueue
-argument_list|(
-name|adapter
-operator|->
-name|tq
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|rx_task
-argument_list|)
-expr_stmt|;
-block|}
-specifier|static
-name|void
-name|em_handle_tx
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|,
-name|int
-name|pending
-parameter_list|)
-block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-init|=
-name|context
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|adapter
-operator|->
-name|ifp
-decl_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-condition|)
-block|{
-name|EM_TX_LOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-name|em_txeof
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|IFQ_DRV_IS_EMPTY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-condition|)
-name|em_start_locked
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|EM_TX_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/*********************************************************************  *  *  Fast Legacy/MSI Combined Interrupt Service routine    *  *********************************************************************/
 if|#
@@ -8757,6 +8961,172 @@ name|E1000_IMS_LSC
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+specifier|static
+name|void
+name|em_handle_rx
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|pending
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|context
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|adapter
+operator|->
+name|ifp
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|&&
+operator|(
+name|em_rxeof
+argument_list|(
+name|adapter
+argument_list|,
+name|adapter
+operator|->
+name|rx_process_limit
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+name|taskqueue_enqueue
+argument_list|(
+name|adapter
+operator|->
+name|tq
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|rx_task
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|void
+name|em_handle_tx
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|pending
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|context
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|adapter
+operator|->
+name|ifp
+decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|EM_TX_TRYLOCK
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
+return|return;
+name|em_txeof
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+if|if
+condition|(
+operator|!
+name|drbr_empty
+argument_list|(
+name|ifp
+argument_list|,
+name|adapter
+operator|->
+name|br
+argument_list|)
+condition|)
+name|em_mq_start_locked
+argument_list|(
+name|ifp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|snd
+argument_list|)
+condition|)
+name|em_start_locked
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|EM_TX_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -9573,27 +9943,6 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-name|ENOMEM
-condition|)
-block|{
-name|adapter
-operator|->
-name|no_tx_dma_setup
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
 condition|)
 block|{
 name|adapter
@@ -9623,25 +9972,6 @@ elseif|else
 if|if
 condition|(
 name|error
-operator|==
-name|ENOMEM
-condition|)
-block|{
-name|adapter
-operator|->
-name|no_tx_dma_setup
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|error
 operator|!=
 literal|0
 condition|)
@@ -9650,17 +9980,6 @@ name|adapter
 operator|->
 name|no_tx_dma_setup
 operator|++
-expr_stmt|;
-name|m_freem
-argument_list|(
-operator|*
-name|m_headp
-argument_list|)
-expr_stmt|;
-operator|*
-name|m_headp
-operator|=
-name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -9794,10 +10113,6 @@ block|}
 elseif|else
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|EM_TIMESYNC
-comment|/* 	** Timesync needs to check the packet header  	** so call checksum code to do so, but don't 	** penalize the code if not defined. 	*/
 if|if
 condition|(
 name|m_head
@@ -9808,8 +10123,6 @@ name|csum_flags
 operator|&
 name|CSUM_OFFLOAD
 condition|)
-endif|#
-directive|endif
 name|em_transmit_checksum_setup
 argument_list|(
 name|adapter
@@ -10599,28 +10912,6 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-if|if
-condition|(
-name|ctxd
-operator|->
-name|upper
-operator|.
-name|data
-operator|&
-name|E1000_TXD_EXTCMD_TSTAMP
-condition|)
-block|{
-name|HW_DEBUGOUT
-argument_list|(
-literal|"@@@ Timestamp bit is set in transmit descriptor\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -11372,12 +11663,10 @@ init|=
 literal|0
 decl_stmt|;
 name|u8
+modifier|*
 name|mta
-index|[
-literal|512
-index|]
 decl_stmt|;
-comment|/* Largest MTS is 4096 bits */
+comment|/* Multicast array memory */
 name|int
 name|mcnt
 init|=
@@ -11463,7 +11752,41 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_LOCK
+comment|/* Allocate temporary memory to setup array */
+name|mta
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|u8
+argument_list|)
+operator|*
+operator|(
+name|ETH_ADDR_LEN
+operator|*
+name|MAX_NUM_MULTICAST_ADDRESSES
+operator|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mta
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"em_set_multi memory failure\n"
+argument_list|)
+expr_stmt|;
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -11524,7 +11847,7 @@ name|mcnt
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -11576,16 +11899,6 @@ argument_list|,
 name|mta
 argument_list|,
 name|mcnt
-argument_list|,
-literal|1
-argument_list|,
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|rar_entry_count
 argument_list|)
 expr_stmt|;
 if|if
@@ -11664,6 +11977,13 @@ name|hw
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|mta
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*********************************************************************  *  Timer routine  *  *  This routine checks for link status and updates statistics.  *  **********************************************************************/
 specifier|static
@@ -11694,6 +12014,18 @@ decl_stmt|;
 name|EM_CORE_LOCK_ASSERT
 argument_list|(
 name|adapter
+argument_list|)
+expr_stmt|;
+name|taskqueue_enqueue
+argument_list|(
+name|adapter
+operator|->
+name|tq
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|rxtx_task
 argument_list|)
 expr_stmt|;
 name|em_update_link_status
@@ -12213,43 +12545,6 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-comment|/* Disable IEEE 1588 Time hardware */
-if|if
-condition|(
-operator|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_82574
-operator|)
-operator|||
-operator|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_ich10lan
-operator|)
-condition|)
-name|em_tsync_disable
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|e1000_reset_hw
 argument_list|(
 operator|&
@@ -13171,6 +13466,10 @@ argument|TASK_INIT(&adapter->rx_task,
 literal|0
 argument|, em_handle_rx, adapter); 	TASK_INIT(&adapter->tx_task,
 literal|0
+argument|, em_handle_tx, adapter);
+comment|/* 	 * Handle compatibility for msi case for deferral due to 	 * trylock failure 	 */
+argument|TASK_INIT(&adapter->rxtx_task,
+literal|0
 argument|, em_handle_tx, adapter); 	TASK_INIT(&adapter->link_task,
 literal|0
 argument|, em_handle_link, adapter); 	adapter->tq = taskqueue_create_fast(
@@ -13251,7 +13550,7 @@ argument|) { 		device_printf(dev,
 literal|"Failed to register TX handler"
 argument|); 		return (error); 	}  	return (
 literal|0
-argument|); }  static void em_free_pci_resources(struct adapter *adapter) { 	device_t dev = adapter->dev;
+argument|); }   static void em_free_pci_resources(struct adapter *adapter) { 	device_t dev = adapter->dev;
 comment|/* Make sure the for loop below runs once */
 argument|if (adapter->msi ==
 literal|0
@@ -13264,7 +13563,7 @@ literal|0
 argument|; i< adapter->msi; i++) { 		if (adapter->tag[i] != NULL) { 			bus_teardown_intr(dev, adapter->res[i], 			    adapter->tag[i]); 			adapter->tag[i] = NULL; 		} 		if (adapter->res[i] != NULL) { 			bus_release_resource(dev, SYS_RES_IRQ, 			    adapter->rid[i], adapter->res[i]); 		} 	}  	if (adapter->msi) 		pci_release_msi(dev);  	if (adapter->msix != NULL) 		bus_release_resource(dev, SYS_RES_MEMORY, 		    PCIR_BAR(EM_MSIX_BAR), adapter->msix);  	if (adapter->memory != NULL) 		bus_release_resource(dev, SYS_RES_MEMORY, 		    PCIR_BAR(
 literal|0
 argument|), adapter->memory);  	if (adapter->flash != NULL) 		bus_release_resource(dev, SYS_RES_MEMORY, 		    EM_FLASH, adapter->flash);  	if (adapter->ioport != NULL) 		bus_release_resource(dev, SYS_RES_IOPORT, 		    adapter->io_rid, adapter->ioport); }
-comment|/*  * Setup MSI/X  */
+comment|/*  * Setup MSI or MSI/X  */
 argument|static int em_setup_msix(struct adapter *adapter) { 	device_t dev = adapter->dev; 	int val =
 literal|0
 argument|;  	if (adapter->hw.mac.type< e1000_82571) 		return (
@@ -13305,7 +13604,7 @@ argument|);
 comment|/* Issue a global reset */
 argument|e1000_reset_hw(&adapter->hw);
 comment|/* Get control from any management/hw control */
-argument|if (((adapter->hw.mac.type == e1000_82573) || 	    (adapter->hw.mac.type == e1000_ich8lan) || 	    (adapter->hw.mac.type == e1000_ich10lan) || 	    (adapter->hw.mac.type == e1000_ich9lan))&& 	    e1000_check_mng_mode(&adapter->hw)) 		em_get_hw_control(adapter);
+argument|if (((adapter->hw.mac.type == e1000_82573) || 	    (adapter->hw.mac.type == e1000_82583) || 	    (adapter->hw.mac.type == e1000_ich8lan) || 	    (adapter->hw.mac.type == e1000_ich10lan) || 	    (adapter->hw.mac.type == e1000_ich9lan))&& 	    e1000_check_mng_mode(&adapter->hw)) 		em_get_hw_control(adapter);
 comment|/* When hardware is reset, fifo_head is also reset */
 argument|adapter->tx_fifo_head =
 literal|0
@@ -13327,7 +13626,13 @@ argument|); 	adapter->hw.fc.low_water = adapter->hw.fc.high_water -
 literal|1500
 argument|;  	if (adapter->hw.mac.type == e1000_80003es2lan) 		adapter->hw.fc.pause_time =
 literal|0xFFFF
-argument|; 	else 		adapter->hw.fc.pause_time = EM_FC_PAUSE_TIME; 	adapter->hw.fc.send_xon = TRUE; 	adapter->hw.fc.requested_mode = e1000_fc_full;  	if (e1000_init_hw(&adapter->hw)<
+argument|; 	else 		adapter->hw.fc.pause_time = EM_FC_PAUSE_TIME; 	adapter->hw.fc.send_xon = TRUE;
+comment|/* Set Flow control, use the tunable location if sane */
+argument|if ((em_fc_setting>=
+literal|0
+argument|) || (em_fc_setting<
+literal|4
+argument|))                 adapter->hw.fc.requested_mode = em_fc_setting;         else                 adapter->hw.fc.requested_mode = e1000_fc_none;   	if (e1000_init_hw(&adapter->hw)<
 literal|0
 argument|) { 		device_printf(dev,
 literal|"Hardware Initialization Failed\n"
@@ -13345,7 +13650,19 @@ argument|); 	ifp->if_snd.ifq_drv_maxlen = adapter->num_tx_desc -
 literal|1
 argument|; 	IFQ_SET_READY(&ifp->if_snd);  	ether_ifattach(ifp, adapter->hw.mac.addr);  	ifp->if_capabilities = ifp->if_capenable =
 literal|0
-argument|;  	if (adapter->hw.mac.type>= e1000_82543) { 		int version_cap;
+argument|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+comment|/* Multiqueue tx functions */
+argument|ifp->if_transmit = em_mq_start; 	ifp->if_qflush = em_qflush; 	adapter->br = buf_ring_alloc(
+literal|4096
+argument|, M_DEVBUF, M_WAITOK,&adapter->tx_mtx);
+endif|#
+directive|endif
+argument|if (adapter->hw.mac.type>= e1000_82543) { 		int version_cap;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -13609,13 +13926,20 @@ argument|static void em_free_transmit_structures(struct adapter *adapter) { 	str
 literal|"free_transmit_structures: begin"
 argument|);  	if (adapter->tx_buffer_area != NULL) { 		for (int i =
 literal|0
-argument|; i< adapter->num_tx_desc; i++) { 			tx_buffer =&adapter->tx_buffer_area[i]; 			if (tx_buffer->m_head != NULL) { 				bus_dmamap_sync(adapter->txtag, tx_buffer->map, 				    BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(adapter->txtag, 				    tx_buffer->map); 				m_freem(tx_buffer->m_head); 				tx_buffer->m_head = NULL; 			} else if (tx_buffer->map != NULL) 				bus_dmamap_unload(adapter->txtag, 				    tx_buffer->map); 			if (tx_buffer->map != NULL) { 				bus_dmamap_destroy(adapter->txtag, 				    tx_buffer->map); 				tx_buffer->map = NULL; 			} 		} 	} 	if (adapter->tx_buffer_area != NULL) { 		free(adapter->tx_buffer_area, M_DEVBUF); 		adapter->tx_buffer_area = NULL; 	} 	if (adapter->txtag != NULL) { 		bus_dma_tag_destroy(adapter->txtag); 		adapter->txtag = NULL; 	} }
-comment|/*********************************************************************  *  *  The offload context needs to be set when we transfer the first  *  packet of a particular protocol (TCP/UDP). This routine has been  *  enhanced to deal with inserted VLAN headers, and IPV6 (not complete)  *  **********************************************************************/
-argument|static void em_transmit_checksum_setup(struct adapter *adapter, struct mbuf *mp,     u32 *txd_upper, u32 *txd_lower) { 	struct e1000_context_desc *TXD; 	struct em_buffer *tx_buffer; 	struct ether_vlan_header *eh; 	struct ip *ip = NULL; 	struct ip6_hdr *ip6; 	struct tcp_hdr *th; 	int curr_txd, ehdrlen; 	u32 cmd, hdr_len, ip_hlen; 	u16 etype; 	u8 ipproto;  	cmd = hdr_len = ipproto =
+argument|; i< adapter->num_tx_desc; i++) { 			tx_buffer =&adapter->tx_buffer_area[i]; 			if (tx_buffer->m_head != NULL) { 				bus_dmamap_sync(adapter->txtag, tx_buffer->map, 				    BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(adapter->txtag, 				    tx_buffer->map); 				m_freem(tx_buffer->m_head); 				tx_buffer->m_head = NULL; 			} else if (tx_buffer->map != NULL) 				bus_dmamap_unload(adapter->txtag, 				    tx_buffer->map); 			if (tx_buffer->map != NULL) { 				bus_dmamap_destroy(adapter->txtag, 				    tx_buffer->map); 				tx_buffer->map = NULL; 			} 		} 	} 	if (adapter->tx_buffer_area != NULL) { 		free(adapter->tx_buffer_area, M_DEVBUF); 		adapter->tx_buffer_area = NULL; 	} 	if (adapter->txtag != NULL) { 		bus_dma_tag_destroy(adapter->txtag); 		adapter->txtag = NULL; 	}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+argument|if (adapter->br != NULL)         	buf_ring_free(adapter->br, M_DEVBUF);
+endif|#
+directive|endif
+argument|}
+comment|/*********************************************************************  *  *  The offload context needs to be set when we transfer the first  *  packet of a particular protocol (TCP/UDP). This routine has been  *  enhanced to deal with inserted VLAN headers, and IPV6 (not complete)  *  *  Added back the old method of keeping the current context type  *  and not setting if unnecessary, as this is reported to be a  *  big performance win.  -jfv  **********************************************************************/
+argument|static void em_transmit_checksum_setup(struct adapter *adapter, struct mbuf *mp,     u32 *txd_upper, u32 *txd_lower) { 	struct e1000_context_desc *TXD = NULL; 	struct em_buffer *tx_buffer; 	struct ether_vlan_header *eh; 	struct ip *ip = NULL; 	struct ip6_hdr *ip6; 	int curr_txd, ehdrlen; 	u32 cmd, hdr_len, ip_hlen; 	u16 etype; 	u8 ipproto;   	cmd = hdr_len = ipproto =
 literal|0
-argument|;
-comment|/* Setup checksum offload context. */
-argument|curr_txd = adapter->next_avail_tx_desc; 	tx_buffer =&adapter->tx_buffer_area[curr_txd]; 	TXD = (struct e1000_context_desc *)&adapter->tx_desc_base[curr_txd];
+argument|; 	curr_txd = adapter->next_avail_tx_desc;
 comment|/* 	 * Determine where frame payload starts. 	 * Jump over vlan headers if already present, 	 * helpful for QinQ too. 	 */
 argument|eh = mtod(mp, struct ether_vlan_header *); 	if (eh->evl_encap_proto == htons(ETHERTYPE_VLAN)) { 		etype = ntohs(eh->evl_proto); 		ehdrlen = ETHER_HDR_LEN + ETHER_VLAN_ENCAP_LEN; 	} else { 		etype = ntohs(eh->evl_encap_proto); 		ehdrlen = ETHER_HDR_LEN; 	}
 comment|/* 	 * We only support TCP/UDP for IPv4 and IPv6 for the moment. 	 * TODO: Support SCTP too when it hits the tree. 	 */
@@ -13625,7 +13949,7 @@ argument|;
 comment|/* Setup of IP header checksum. */
 argument|if (mp->m_pkthdr.csum_flags& CSUM_IP) {
 comment|/* 			 * Start offset for header checksum calculation. 			 * End offset for header checksum calculation. 			 * Offset of place to put the checksum. 			 */
-argument|TXD->lower_setup.ip_fields.ipcss = ehdrlen; 			TXD->lower_setup.ip_fields.ipcse = 			    htole16(ehdrlen + ip_hlen); 			TXD->lower_setup.ip_fields.ipcso = 			    ehdrlen + offsetof(struct ip, ip_sum); 			cmd |= E1000_TXD_CMD_IP; 			*txd_upper |= E1000_TXD_POPTS_IXSM<<
+argument|TXD = (struct e1000_context_desc *)&adapter->tx_desc_base[curr_txd]; 			TXD->lower_setup.ip_fields.ipcss = ehdrlen; 			TXD->lower_setup.ip_fields.ipcse = 			    htole16(ehdrlen + ip_hlen); 			TXD->lower_setup.ip_fields.ipcso = 			    ehdrlen + offsetof(struct ip, ip_sum); 			cmd |= E1000_TXD_CMD_IP; 			*txd_upper |= E1000_TXD_POPTS_IXSM<<
 literal|8
 argument|; 		}  		if (mp->m_len< ehdrlen + ip_hlen) 			return;
 comment|/* failure */
@@ -13634,55 +13958,31 @@ comment|/* XXX: No header stacking. */
 argument|if (mp->m_len< ehdrlen + ip_hlen) 			return;
 comment|/* failure */
 comment|/* IPv6 doesn't have a header checksum. */
-argument|hdr_len = ehdrlen + ip_hlen; 		ipproto = ip6->ip6_nxt;  		break;
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-argument|case ETHERTYPE_IEEE1588: 		*txd_upper |= E1000_TXD_EXTCMD_TSTAMP; 		break;
-endif|#
-directive|endif
-argument|default: 		*txd_upper =
+argument|hdr_len = ehdrlen + ip_hlen; 		ipproto = ip6->ip6_nxt;  		break; 	default: 		*txd_upper =
 literal|0
 argument|; 		*txd_lower =
 literal|0
-argument|; 		return; 	}  	switch (ipproto) { 	case IPPROTO_TCP: 		if (mp->m_pkthdr.csum_flags& CSUM_TCP) {
+argument|; 		return; 	}  	switch (ipproto) { 	case IPPROTO_TCP: 		if (mp->m_pkthdr.csum_flags& CSUM_TCP) { 			*txd_lower = E1000_TXD_CMD_DEXT | E1000_TXD_DTYP_D; 			*txd_upper |= E1000_TXD_POPTS_TXSM<<
+literal|8
+argument|;
+comment|/* no need for context if already set */
+argument|if (adapter->last_hw_offload == CSUM_TCP) 				return; 			adapter->last_hw_offload = CSUM_TCP;
 comment|/* 			 * Start offset for payload checksum calculation. 			 * End offset for payload checksum calculation. 			 * Offset of place to put the checksum. 			 */
-argument|th = (struct tcp_hdr *)(mp->m_data + hdr_len); 			TXD->upper_setup.tcp_fields.tucss = hdr_len; 			TXD->upper_setup.tcp_fields.tucse = htole16(
+argument|TXD = (struct e1000_context_desc *)&adapter->tx_desc_base[curr_txd]; 			TXD->upper_setup.tcp_fields.tucss = hdr_len; 			TXD->upper_setup.tcp_fields.tucse = htole16(
 literal|0
-argument|); 			TXD->upper_setup.tcp_fields.tucso = 			    hdr_len + offsetof(struct tcphdr, th_sum); 			cmd |= E1000_TXD_CMD_TCP; 			*txd_upper |= E1000_TXD_POPTS_TXSM<<
+argument|); 			TXD->upper_setup.tcp_fields.tucso = 			    hdr_len + offsetof(struct tcphdr, th_sum); 			cmd |= E1000_TXD_CMD_TCP; 		} 		break; 	case IPPROTO_UDP: 	{ 		if (mp->m_pkthdr.csum_flags& CSUM_UDP) { 			*txd_lower = E1000_TXD_CMD_DEXT | E1000_TXD_DTYP_D; 			*txd_upper |= E1000_TXD_POPTS_TXSM<<
 literal|8
-argument|; 		} 		break; 	case IPPROTO_UDP: 	{
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-argument|void *hdr = (caddr_t) ip + ip_hlen; 		struct udphdr *uh = (struct udphdr *)hdr;  		if (uh->uh_dport == htons(TSYNC_PORT)) { 			*txd_upper |= E1000_TXD_EXTCMD_TSTAMP; 			IOCTL_DEBUGOUT(
-literal|"@@@ Sending Event Packet\n"
-argument|); 		}
-endif|#
-directive|endif
-argument|if (mp->m_pkthdr.csum_flags& CSUM_UDP) {
+argument|;
+comment|/* no need for context if already set */
+argument|if (adapter->last_hw_offload == CSUM_UDP) 				return; 			adapter->last_hw_offload = CSUM_UDP;
 comment|/* 			 * Start offset for header checksum calculation. 			 * End offset for header checksum calculation. 			 * Offset of place to put the checksum. 			 */
-argument|TXD->upper_setup.tcp_fields.tucss = hdr_len; 			TXD->upper_setup.tcp_fields.tucse = htole16(
+argument|TXD = (struct e1000_context_desc *)&adapter->tx_desc_base[curr_txd]; 			TXD->upper_setup.tcp_fields.tucss = hdr_len; 			TXD->upper_setup.tcp_fields.tucse = htole16(
 literal|0
-argument|); 			TXD->upper_setup.tcp_fields.tucso = 			    hdr_len + offsetof(struct udphdr, uh_sum); 			*txd_upper |= E1000_TXD_POPTS_TXSM<<
-literal|8
-argument|; 		}
+argument|); 			TXD->upper_setup.tcp_fields.tucso = 			    hdr_len + offsetof(struct udphdr, uh_sum); 		}
 comment|/* Fall Thru */
-argument|} 	default: 		break; 	}
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-comment|/* 	** We might be here just for TIMESYNC 	** which means we don't need the context 	** descriptor. 	*/
-argument|if (!mp->m_pkthdr.csum_flags& CSUM_OFFLOAD) 		return;
-endif|#
-directive|endif
-argument|*txd_lower = E1000_TXD_CMD_DEXT |
-comment|/* Extended descr type */
-argument|E1000_TXD_DTYP_D;
-comment|/* Data descr */
-argument|TXD->tcp_seg_setup.data = htole32(
+argument|} 	default: 		break; 	}  	TXD->tcp_seg_setup.data = htole32(
 literal|0
-argument|); 	TXD->cmd_and_length = 	    htole32(adapter->txd_cmd | E1000_TXD_CMD_DEXT | cmd); 	tx_buffer->m_head = NULL; 	tx_buffer->next_eop = -
+argument|); 	TXD->cmd_and_length = 	    htole32(adapter->txd_cmd | E1000_TXD_CMD_DEXT | cmd); 	tx_buffer =&adapter->tx_buffer_area[curr_txd]; 	tx_buffer->m_head = NULL; 	tx_buffer->next_eop = -
 literal|1
 argument|;  	if (++curr_txd == adapter->num_tx_desc) 		curr_txd =
 literal|0
@@ -13792,7 +14092,9 @@ endif|#
 directive|endif
 comment|/* __FreeBSD_version>= 700000 */
 comment|/**********************************************************************  *  *  Examine each tx_buffer in the used queue. If the hardware is done  *  processing the packet then free associated resources. The  *  tx_buffer is put back on the free queue.  *  **********************************************************************/
-argument|static void em_txeof(struct adapter *adapter) {         int first, last, done, num_avail;         struct em_buffer *tx_buffer;         struct e1000_tx_desc   *tx_desc, *eop_desc; 	struct ifnet   *ifp = adapter->ifp;  	EM_TX_LOCK_ASSERT(adapter);          if (adapter->num_tx_desc_avail == adapter->num_tx_desc)                 return;          num_avail = adapter->num_tx_desc_avail;         first = adapter->next_tx_to_clean;         tx_desc =&adapter->tx_desc_base[first];         tx_buffer =&adapter->tx_buffer_area[first]; 	last = tx_buffer->next_eop;         eop_desc =&adapter->tx_desc_base[last];
+argument|static void em_txeof(struct adapter *adapter) {         int first, last, done, num_avail; 	u32 cleaned =
+literal|0
+argument|;         struct em_buffer *tx_buffer;         struct e1000_tx_desc   *tx_desc, *eop_desc; 	struct ifnet   *ifp = adapter->ifp;  	EM_TX_LOCK_ASSERT(adapter);          if (adapter->num_tx_desc_avail == adapter->num_tx_desc)                 return;          num_avail = adapter->num_tx_desc_avail;         first = adapter->next_tx_to_clean;         tx_desc =&adapter->tx_desc_base[first];         tx_buffer =&adapter->tx_buffer_area[first]; 	last = tx_buffer->next_eop;         eop_desc =&adapter->tx_desc_base[last];
 comment|/* 	 * What this does is get the index of the 	 * first descriptor AFTER the EOP of the  	 * first packet, that way we can do the 	 * simple comparison on the inner while loop. 	 */
 argument|if (++last == adapter->num_tx_desc)  		last =
 literal|0
@@ -13804,7 +14106,7 @@ argument|;                 	tx_desc->lower.data =
 literal|0
 argument|;                 	tx_desc->buffer_addr =
 literal|0
-argument|;                 	num_avail++;  			if (tx_buffer->m_head) { 				ifp->if_opackets++; 				bus_dmamap_sync(adapter->txtag, 				    tx_buffer->map, 				    BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(adapter->txtag, 				    tx_buffer->map);                          	m_freem(tx_buffer->m_head);                         	tx_buffer->m_head = NULL;                 	} 			tx_buffer->next_eop = -
+argument|;                 	++num_avail; ++cleaned;  			if (tx_buffer->m_head) { 				ifp->if_opackets++; 				bus_dmamap_sync(adapter->txtag, 				    tx_buffer->map, 				    BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(adapter->txtag, 				    tx_buffer->map);                          	m_freem(tx_buffer->m_head);                         	tx_buffer->m_head = NULL;                 	} 			tx_buffer->next_eop = -
 literal|1
 argument|;  	                if (++first == adapter->num_tx_desc) 				first =
 literal|0
@@ -13817,14 +14119,12 @@ comment|/* Get new done point */
 argument|if (++last == adapter->num_tx_desc) last =
 literal|0
 argument|; 			done = last; 		} else 			break;         }         bus_dmamap_sync(adapter->txdma.dma_tag, adapter->txdma.dma_map,             BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);          adapter->next_tx_to_clean = first;
-comment|/*          * If we have enough room, clear IFF_DRV_OACTIVE to tell the stack          * that it is OK to send packets.          * If there are no pending descriptors, clear the timeout. Otherwise,          * if some descriptors have been freed, restart the timeout.          */
-argument|if (num_avail> EM_TX_CLEANUP_THRESHOLD) {                                 ifp->if_drv_flags&= ~IFF_DRV_OACTIVE;
-comment|/* All clean, turn off the timer */
-argument|if (num_avail == adapter->num_tx_desc) { 			adapter->watchdog_timer =
+comment|/*          * If we have enough room, clear IFF_DRV_OACTIVE to          * tell the stack that it is OK to send packets.          * If there are no pending descriptors, clear the timeout.          */
+argument|if (num_avail> EM_TX_CLEANUP_THRESHOLD) {                                 ifp->if_drv_flags&= ~IFF_DRV_OACTIVE;                 if (num_avail == adapter->num_tx_desc) { 			adapter->watchdog_timer =
 literal|0
-argument|; 		} else
-comment|/* Some cleaned, reset the timer */
-argument|if (num_avail != adapter->num_tx_desc_avail) 			adapter->watchdog_timer = EM_TX_TIMEOUT;         }         adapter->num_tx_desc_avail = num_avail; 	return; }
+argument|;         		adapter->num_tx_desc_avail = num_avail; 			return; 		}          }
+comment|/* If any descriptors cleaned, reset the watchdog */
+argument|if (cleaned) 		adapter->watchdog_timer = EM_TX_TIMEOUT;         adapter->num_tx_desc_avail = num_avail; 	return; }
 comment|/*********************************************************************  *  *  When Link is lost sometimes there is work still in the TX ring  *  which will result in a watchdog, rather than allow that do an  *  attempted cleanup and then reinit here. Note that this has been  *  seens mostly with fiber adapters.  *  **********************************************************************/
 argument|static void em_tx_purge(struct adapter *adapter) { 	if ((!adapter->link_active)&& (adapter->watchdog_timer)) { 		EM_TX_LOCK(adapter); 		em_txeof(adapter); 		EM_TX_UNLOCK(adapter); 		if (adapter->watchdog_timer) {
 comment|/* Still not clean? */
@@ -13996,14 +14296,14 @@ comment|/* Cleanup any existing buffers */
 argument|if (adapter->rx_buffer_area != NULL) { 		rx_buffer = adapter->rx_buffer_area; 		for (i =
 literal|0
 argument|; i< adapter->num_rx_desc; i++, rx_buffer++) { 			if (rx_buffer->m_head != NULL) { 				bus_dmamap_sync(adapter->rxtag, rx_buffer->map, 				    BUS_DMASYNC_POSTREAD); 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 				m_freem(rx_buffer->m_head); 				rx_buffer->m_head = NULL; 			} else if (rx_buffer->map != NULL) 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 			if (rx_buffer->map != NULL) { 				bus_dmamap_destroy(adapter->rxtag, 				    rx_buffer->map); 				rx_buffer->map = NULL; 			} 		} 	}  	if (adapter->rx_buffer_area != NULL) { 		free(adapter->rx_buffer_area, M_DEVBUF); 		adapter->rx_buffer_area = NULL; 	}  	if (adapter->rxtag != NULL) { 		bus_dma_tag_destroy(adapter->rxtag); 		adapter->rxtag = NULL; 	} }
-comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *  *********************************************************************/
+comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *    *  For polling we also now return the number of cleaned packets  *********************************************************************/
 argument|static int em_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
 literal|0
 argument|, eop =
 literal|0
-argument|; 	u16 		len, desc_len, prev_len_adj; 	int		i; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		EM_RX_UNLOCK(adapter); 		return (
+argument|; 	u16 		len, desc_len, prev_len_adj; 	int		i, rx_sent =
 literal|0
-argument|); 	}  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
+argument|; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		EM_RX_UNLOCK(adapter); 		return (rx_sent); 	}  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
 literal|0
 argument|)&& 	    (ifp->if_drv_flags& IFF_DRV_RUNNING)) { 		struct mbuf *m = NULL;  		mp = adapter->rx_buffer_area[i].m_head;
 comment|/* 		 * Can't defer bus_dmamap_sync(9) because TBI_ACCEPT 		 * needs to access the last received byte in the mbuf. 		 */
@@ -14073,9 +14373,9 @@ argument|; 		bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 		 
 comment|/* Advance our pointers to the next descriptor. */
 argument|if (++i == adapter->num_rx_desc) 			i =
 literal|0
-argument|; 		if (m != NULL) { 			adapter->next_rx_desc_to_check = i;
-comment|/* Unlock for call into stack */
-argument|EM_RX_UNLOCK(adapter); 			(*ifp->if_input)(ifp, m); 			EM_RX_LOCK(adapter); 			i = adapter->next_rx_desc_to_check; 		} 		current_desc =&adapter->rx_desc_base[i]; 	} 	adapter->next_rx_desc_to_check = i;
+argument|;
+comment|/* Call into the stack */
+argument|if (m != NULL) { 			adapter->next_rx_desc_to_check = i; 			EM_RX_UNLOCK(adapter); 			(*ifp->if_input)(ifp, m); 			EM_RX_LOCK(adapter); 			rx_sent++; 			i = adapter->next_rx_desc_to_check; 		} 		current_desc =&adapter->rx_desc_base[i]; 	} 	adapter->next_rx_desc_to_check = i;
 comment|/* Advance the E1000's Receive Queue #0  "Tail Pointer". */
 argument|if (--i<
 literal|0
@@ -14083,11 +14383,7 @@ argument|) 		i = adapter->num_rx_desc -
 literal|1
 argument|; 	E1000_WRITE_REG(&adapter->hw, E1000_RDT(
 literal|0
-argument|), i); 	EM_RX_UNLOCK(adapter); 	if (!((current_desc->status)& E1000_RXD_STAT_DD)) 		return (
-literal|0
-argument|);  	return (
-literal|1
-argument|); }
+argument|), i); 	EM_RX_UNLOCK(adapter); 	return (rx_sent); }
 ifndef|#
 directive|ifndef
 name|__NO_STRICT_ALIGNMENT
@@ -14115,40 +14411,66 @@ comment|/* Did it pass? */
 argument|if (!(rx_desc->errors& E1000_RXD_ERR_TCPE)) { 			mp->m_pkthdr.csum_flags |= 			(CSUM_DATA_VALID | CSUM_PSEUDO_HDR); 			mp->m_pkthdr.csum_data = htons(
 literal|0xffff
 argument|); 		} 	} }
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700029
 comment|/*  * This routine is run via an vlan  * config EVENT  */
-argument|static void em_register_vlan(void *unused, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		ctrl, rctl, index, vfta;  	ctrl = E1000_READ_REG(&adapter->hw, E1000_CTRL); 	ctrl |= E1000_CTRL_VME; 	E1000_WRITE_REG(&adapter->hw, E1000_CTRL, ctrl);
-comment|/* Setup for Hardware Filter */
-argument|rctl = E1000_READ_REG(&adapter->hw, E1000_RCTL); 	rctl |= E1000_RCTL_VFE; 	rctl&= ~E1000_RCTL_CFIEN; 	E1000_WRITE_REG(&adapter->hw, E1000_RCTL, rctl);
-comment|/* Make entry in the hardware filter table */
-argument|index = ((vtag>>
+argument|static void em_register_vlan(void *arg, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		index, bit;  	if (ifp->if_softc !=  arg)
+comment|/* Not our event */
+argument|return;  	if ((vtag ==
+literal|0
+argument|) || (vtag>
+literal|4095
+argument|))
+comment|/* Invalid ID */
+argument|return;  	index = (vtag>>
 literal|5
 argument|)&
 literal|0x7F
-argument|); 	vfta = E1000_READ_REG_ARRAY(&adapter->hw, E1000_VFTA, index); 	vfta |= (
-literal|1
-argument|<< (vtag&
+argument|; 	bit = vtag&
 literal|0x1F
-argument|)); 	E1000_WRITE_REG_ARRAY(&adapter->hw, E1000_VFTA, index, vfta);
-comment|/* Update the frame size */
-argument|E1000_WRITE_REG(&adapter->hw, E1000_RLPML, 	    adapter->max_frame_size + VLAN_TAG_SIZE);  }
+argument|; 	em_shadow_vfta[index] |= (
+literal|1
+argument|<< bit); 	++adapter->num_vlans;
+comment|/* Re-init to load the changes */
+argument|em_init(adapter); }
 comment|/*  * This routine is run via an vlan  * unconfig EVENT  */
-argument|static void em_unregister_vlan(void *unused, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		index, vfta;
-comment|/* Remove entry in the hardware filter table */
-argument|index = ((vtag>>
+argument|static void em_unregister_vlan(void *arg, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		index, bit;  	if (ifp->if_softc !=  arg) 		return;  	if ((vtag ==
+literal|0
+argument|) || (vtag>
+literal|4095
+argument|))
+comment|/* Invalid */
+argument|return;  	index = (vtag>>
 literal|5
 argument|)&
 literal|0x7F
-argument|); 	vfta = E1000_READ_REG_ARRAY(&adapter->hw, E1000_VFTA, index); 	vfta&= ~(
-literal|1
-argument|<< (vtag&
+argument|; 	bit = vtag&
 literal|0x1F
-argument|)); 	E1000_WRITE_REG_ARRAY(&adapter->hw, E1000_VFTA, index, vfta);
-comment|/* Have all vlans unregistered? */
-argument|if (adapter->ifp->if_vlantrunk == NULL) { 		u32 rctl;
-comment|/* Turn off the filter table */
-argument|rctl = E1000_READ_REG(&adapter->hw, E1000_RCTL); 		rctl&= ~E1000_RCTL_VFE; 		rctl |= E1000_RCTL_CFIEN; 		E1000_WRITE_REG(&adapter->hw, E1000_RCTL, rctl);
-comment|/* Reset the frame size */
-argument|E1000_WRITE_REG(&adapter->hw, E1000_RLPML, 		    adapter->max_frame_size); 	} }  static void em_enable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw; 	u32 ims_mask = IMS_ENABLE_MASK;  	if (adapter->msix) { 		E1000_WRITE_REG(hw, EM_EIAC, EM_MSIX_MASK); 		ims_mask |= EM_MSIX_MASK; 	}  	E1000_WRITE_REG(hw, E1000_IMS, ims_mask); }  static void em_disable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw;  	if (adapter->msix) 		E1000_WRITE_REG(hw, EM_EIAC,
+argument|; 	em_shadow_vfta[index]&= ~(
+literal|1
+argument|<< bit); 	--adapter->num_vlans;
+comment|/* Re-init to load the changes */
+argument|em_init(adapter); }  static void em_setup_vlan_hw_support(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw; 	u32             reg;
+comment|/* 	** We get here thru init_locked, meaning 	** a soft reset, this has already cleared 	** the VFTA and other state, so if there 	** have been no vlan's registered do nothing. 	*/
+argument|if (adapter->num_vlans ==
+literal|0
+argument|)                 return;
+comment|/* 	** A soft reset zero's out the VFTA, so 	** we need to repopulate it now. 	*/
+argument|for (int i =
+literal|0
+argument|; i< EM_VFTA_SIZE; i++)                 if (em_shadow_vfta[i] !=
+literal|0
+argument|) 			E1000_WRITE_REG_ARRAY(hw, E1000_VFTA,                             i, em_shadow_vfta[i]);  	reg = E1000_READ_REG(hw, E1000_CTRL); 	reg |= E1000_CTRL_VME; 	E1000_WRITE_REG(hw, E1000_CTRL, reg);
+comment|/* Enable the Filter Table */
+argument|reg = E1000_READ_REG(hw, E1000_RCTL); 	reg&= ~E1000_RCTL_CFIEN; 	reg |= E1000_RCTL_VFE; 	E1000_WRITE_REG(hw, E1000_RCTL, reg);
+comment|/* Update the frame size */
+argument|E1000_WRITE_REG(&adapter->hw, E1000_RLPML, 	    adapter->max_frame_size + VLAN_TAG_SIZE); }
+endif|#
+directive|endif
+argument|static void em_enable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw; 	u32 ims_mask = IMS_ENABLE_MASK;  	if (adapter->msix) { 		E1000_WRITE_REG(hw, EM_EIAC, EM_MSIX_MASK); 		ims_mask |= EM_MSIX_MASK; 	}  	E1000_WRITE_REG(hw, E1000_IMS, ims_mask); }  static void em_disable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw;  	if (adapter->msix) 		E1000_WRITE_REG(hw, EM_EIAC,
 literal|0
 argument|); 	E1000_WRITE_REG(&adapter->hw, E1000_IMC,
 literal|0xffffffff
@@ -14465,87 +14787,12 @@ ifndef|#
 directive|ifndef
 name|EM_LEGACY_IRQ
 argument|static void em_add_rx_process_limit(struct adapter *adapter, const char *name, 	const char *description, int *limit, int value) { 	*limit = value; 	SYSCTL_ADD_INT(device_get_sysctl_ctx(adapter->dev), 	    SYSCTL_CHILDREN(device_get_sysctl_tree(adapter->dev)), 	    OID_AUTO, name, CTLTYPE_INT|CTLFLAG_RW, limit, value, description); }
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|EM_TIMESYNC
-comment|/*  * Initialize the Time Sync Feature  */
-argument|static int em_tsync_init(struct adapter *adapter) { 	device_t	dev = adapter->dev; 	u32		tx_ctl, rx_ctl;   	E1000_WRITE_REG(&adapter->hw, E1000_TIMINCA, (
-literal|1
-argument|<<
-literal|24
-argument|) |
-literal|20833
-argument|/PICOSECS_PER_TICK);  	adapter->last_stamp =  E1000_READ_REG(&adapter->hw, E1000_SYSTIML); 	adapter->last_stamp |= (u64)E1000_READ_REG(&adapter->hw, 	    E1000_SYSTIMH)<<
-literal|32ULL
-argument|;
-comment|/* Enable the TX side */
-argument|tx_ctl =  E1000_READ_REG(&adapter->hw, E1000_TSYNCTXCTL); 	tx_ctl |=
-literal|0x10
-argument|; 	E1000_WRITE_REG(&adapter->hw, E1000_TSYNCTXCTL, tx_ctl); 	E1000_WRITE_FLUSH(&adapter->hw);  	tx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCTXCTL); 	if ((tx_ctl&
-literal|0x10
-argument|) ==
-literal|0
-argument|) {      		device_printf(dev,
-literal|"Failed to enable TX timestamping\n"
-argument|); 		return (ENXIO); 	}
-comment|/* Enable RX */
-argument|rx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCRXCTL); 	rx_ctl |=
-literal|0x10
-argument|;
-comment|/* Enable the feature */
-argument|rx_ctl |=
-literal|0x0a
-argument|;
-comment|/* This value turns on Ver 1 and 2 */
-argument|E1000_WRITE_REG(&adapter->hw, E1000_TSYNCRXCTL, rx_ctl);
-comment|/* 	 * Ethertype Stamping (Ethertype = 0x88F7) 	 */
-argument|E1000_WRITE_REG(&adapter->hw, E1000_RXMTRL, htonl(
-literal|0x440088f7
-argument|));
-comment|/* 	 * Source Port Queue Filter Setup: 	 *  this is for UDP port filtering  	 */
-argument|E1000_WRITE_REG(&adapter->hw, E1000_RXUDP, htons(TSYNC_PORT));
-comment|/* Protocol = UDP, enable Timestamp, and filter on source/protocol */
-argument|E1000_WRITE_FLUSH(&adapter->hw);  	rx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCRXCTL); 	if ((rx_ctl&
-literal|0x10
-argument|) ==
-literal|0
-argument|) {      		device_printf(dev,
-literal|"Failed to enable RX timestamping\n"
-argument|); 		return (ENXIO); 	}   	device_printf(dev,
-literal|"IEEE 1588 Precision Time Protocol enabled\n"
-argument|);  	return (
-literal|0
-argument|); }
-comment|/*  * Disable the Time Sync Feature  */
-argument|static void em_tsync_disable(struct adapter *adapter) { 	u32		tx_ctl, rx_ctl;   	tx_ctl =  E1000_READ_REG(&adapter->hw, E1000_TSYNCTXCTL); 	tx_ctl&= ~
-literal|0x10
-argument|; 	E1000_WRITE_REG(&adapter->hw, E1000_TSYNCTXCTL, tx_ctl); 	E1000_WRITE_FLUSH(&adapter->hw);
-comment|/* Invalidate TX Timestamp */
-argument|E1000_READ_REG(&adapter->hw, E1000_TXSTMPH);   	tx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCTXCTL); 	if (tx_ctl&
-literal|0x10
-argument|)      		HW_DEBUGOUT(
-literal|"Failed to disable TX timestamping\n"
-argument|);     	rx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCRXCTL); 	rx_ctl&= ~
-literal|0x10
-argument|;     	E1000_WRITE_REG(&adapter->hw, E1000_TSYNCRXCTL, rx_ctl); 	E1000_WRITE_FLUSH(&adapter->hw);
-comment|/* Invalidate RX Timestamp */
-argument|E1000_READ_REG(&adapter->hw, E1000_RXSATRH);   	rx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCRXCTL); 	if (rx_ctl&
-literal|0x10
-argument|) 		HW_DEBUGOUT(
-literal|"Failed to disable RX timestamping\n"
-argument|);   	return; }
 end_function
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* EM_TIMESYNC */
-end_comment
 
 end_unit
 

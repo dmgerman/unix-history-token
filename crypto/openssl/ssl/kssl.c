@@ -4210,6 +4210,8 @@ name|text
 argument_list|,
 name|KSSL_ERR_MAX
 argument_list|,
+literal|"%s"
+argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
@@ -10233,12 +10235,10 @@ end_if
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
+modifier|*
 name|dummy
 init|=
-operator|(
-name|int
-operator|)
 operator|&
 name|dummy
 decl_stmt|;

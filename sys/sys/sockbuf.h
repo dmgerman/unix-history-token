@@ -359,6 +359,28 @@ name|short
 name|sb_flags
 decl_stmt|;
 comment|/* (c/d) flags, see below */
+name|int
+function_decl|(
+modifier|*
+name|sb_upcall
+function_decl|)
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* (c/d) */
+name|void
+modifier|*
+name|sb_upcallarg
+decl_stmt|;
+comment|/* (c/d) */
 block|}
 struct|;
 end_struct

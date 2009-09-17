@@ -432,12 +432,8 @@ name|dev
 argument_list|,
 literal|"ata"
 argument_list|,
-name|devclass_find_free_unit
-argument_list|(
-name|ata_devclass
-argument_list|,
-literal|0
-argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

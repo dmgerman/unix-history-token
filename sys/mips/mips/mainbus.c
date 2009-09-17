@@ -274,7 +274,9 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
+name|driver_filter_t
+parameter_list|,
+name|void
 function_decl|(
 modifier|*
 function_decl|)
@@ -1305,7 +1307,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
+name|driver_filter_t
+name|filter
+parameter_list|,
+name|void
 function_decl|(
 modifier|*
 name|ihand

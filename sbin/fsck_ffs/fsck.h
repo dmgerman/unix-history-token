@@ -1263,7 +1263,8 @@ comment|/* number of files in use */
 end_comment
 
 begin_decl_stmt
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|got_siginfo
 decl_stmt|;
 end_decl_stmt
@@ -1273,7 +1274,8 @@ comment|/* received a SIGINFO */
 end_comment
 
 begin_decl_stmt
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|got_sigalarm
 decl_stmt|;
 end_decl_stmt

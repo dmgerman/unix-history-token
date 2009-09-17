@@ -477,11 +477,12 @@ break|break;
 case|case
 name|IPI_STOP
 case|:
+comment|/* 			 * IPI_STOP_HARD is mapped to IPI_STOP so it is not 			 * necessary to add it in the switch. 			 */
 name|CTR0
 argument_list|(
 name|KTR_SMP
 argument_list|,
-literal|"IPI_STOP"
+literal|"IPI_STOP or IPI_STOP_HARD"
 argument_list|)
 expr_stmt|;
 name|atomic_set_int
@@ -788,6 +789,10 @@ name|pcpu
 modifier|*
 name|pcpu
 decl_stmt|;
+name|void
+modifier|*
+name|dpcpu
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -800,6 +805,19 @@ argument_list|(
 literal|"smp_start_secondary: starting cpu %d\n"
 argument_list|,
 name|cpuid
+argument_list|)
+expr_stmt|;
+name|dpcpu
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|DPCPU_SIZE
 argument_list|)
 expr_stmt|;
 name|pcpu_init
@@ -817,6 +835,13 @@ argument_list|(
 expr|struct
 name|pcpu
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+name|dpcpu
+argument_list|,
+name|cpuid
 argument_list|)
 expr_stmt|;
 if|if

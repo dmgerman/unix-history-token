@@ -2825,10 +2825,6 @@ name|int
 name|accumulate
 decl_stmt|;
 name|int
-name|r
-init|=
-literal|0
-decl_stmt|,
 name|error
 decl_stmt|;
 name|struct
@@ -2941,6 +2937,18 @@ operator|&
 name|ad
 argument_list|)
 expr_stmt|;
+comment|/* If we cannot figure out the packet, ignore it. */
+if|if
+condition|(
+name|error
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|PKT_ALIAS_IGNORED
+operator|)
+return|;
 comment|/* If UDP checksum is not zero, then adjust since destination port */
 comment|/* is being unaliased and destination address is being altered.    */
 if|if
@@ -3108,19 +3116,6 @@ name|ip_dst
 operator|=
 name|original_address
 expr_stmt|;
-comment|/* 		 * If we cannot figure out the packet, ignore it. 		 */
-if|if
-condition|(
-name|r
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|PKT_ALIAS_IGNORED
-operator|)
-return|;
-else|else
 return|return
 operator|(
 name|PKT_ALIAS_OK
@@ -4968,10 +4963,6 @@ begin_comment
 comment|/* Outside World Access  	PacketAliasSaveFragment() 	PacketAliasGetFragment() 	PacketAliasFragmentIn() 	PacketAliasIn() 	PacketAliasOut() 	PacketUnaliasOut()  (prototypes in alias.h) */
 end_comment
 
-begin_comment
-comment|// XXX ip free
-end_comment
-
 begin_function
 name|int
 name|LibAliasSaveFragment
@@ -5063,10 +5054,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// XXX ip free
-end_comment
 
 begin_function
 name|char
@@ -5174,10 +5161,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// XXX ip free
-end_comment
 
 begin_function
 name|void

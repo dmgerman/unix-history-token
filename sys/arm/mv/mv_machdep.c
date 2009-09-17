@@ -291,6 +291,12 @@ begin_comment
 comment|/* XXX eventually this should be eliminated */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<arm/mv/mvwin.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -523,6 +529,21 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_offset_t
 name|physical_pages
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_offset_t
+name|pmap_bootstrap_lastaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|pmap_devmap
+modifier|*
+name|pmap_devmap_bootstrap_table
 decl_stmt|;
 end_decl_stmt
 
@@ -1630,6 +1651,10 @@ name|struct
 name|pv_addr
 name|kernel_l1pt
 decl_stmt|;
+name|struct
+name|pv_addr
+name|dpcpu
+decl_stmt|;
 name|vm_offset_t
 name|freemempos
 decl_stmt|,
@@ -1871,18 +1896,20 @@ literal|1
 condition|)
 empty_stmt|;
 comment|/* Platform-specific initialisation */
-if|if
-condition|(
-name|platform_pmap_init
-argument_list|()
-operator|!=
+name|pmap_bootstrap_lastaddr
+operator|=
+name|MV_BASE
+operator|-
+name|ARM_NOCACHE_KVA_SIZE
+expr_stmt|;
+name|pmap_devmap_bootstrap_table
+operator|=
+operator|&
+name|pmap_devmap
+index|[
 literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+index|]
+expr_stmt|;
 name|pcpu_init
 argument_list|(
 name|pcpup
@@ -2110,6 +2137,29 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Allocate dynamic per-cpu area. */
+name|valloc_pages
+argument_list|(
+name|dpcpu
+argument_list|,
+name|DPCPU_SIZE
+operator|/
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|dpcpu
+operator|.
+name|pv_va
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Allocate stacks for all modes */
 name|valloc_pages
 argument_list|(
@@ -2297,22 +2347,22 @@ argument_list|,
 name|PTE_PAGETABLE
 argument_list|)
 expr_stmt|;
-comment|/* Map allocated stacks and msgbuf */
+comment|/* Map allocated DPCPU, stacks and msgbuf */
 name|pmap_map_chunk
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|irqstack
+name|dpcpu
 operator|.
 name|pv_va
 argument_list|,
-name|irqstack
+name|dpcpu
 operator|.
 name|pv_pa
 argument_list|,
 name|freemempos
 operator|-
-name|irqstack
+name|dpcpu
 operator|.
 name|pv_va
 argument_list|,

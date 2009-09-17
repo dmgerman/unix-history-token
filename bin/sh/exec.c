@@ -729,6 +729,7 @@ name|p
 operator|++
 control|)
 empty_stmt|;
+comment|/* nothing */
 name|len
 operator|=
 name|p
@@ -1264,11 +1265,14 @@ name|name
 operator|=
 name|commandtext
 argument_list|(
+name|getfuncnode
+argument_list|(
 name|cmdp
 operator|->
 name|param
 operator|.
 name|func
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|out1c
@@ -2613,7 +2617,7 @@ name|cmdp
 operator|->
 name|next
 expr_stmt|;
-name|freefunc
+name|unreffunc
 argument_list|(
 name|cmdp
 operator|->
@@ -2922,7 +2926,7 @@ operator|==
 name|CMDFUNCTION
 condition|)
 block|{
-name|freefunc
+name|unreffunc
 argument_list|(
 name|cmdp
 operator|->
@@ -3047,7 +3051,7 @@ operator|==
 name|CMDFUNCTION
 condition|)
 block|{
-name|freefunc
+name|unreffunc
 argument_list|(
 name|cmdp
 operator|->
@@ -3311,6 +3315,14 @@ name|cmdp
 operator|->
 name|param
 expr_stmt|;
+name|entry
+operator|.
+name|special
+operator|=
+name|cmdp
+operator|->
+name|special
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3571,6 +3583,23 @@ condition|)
 name|out1fmt
 argument_list|(
 literal|"%s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|entry
+operator|.
+name|special
+condition|)
+name|out1fmt
+argument_list|(
+literal|"%s is a special shell builtin\n"
 argument_list|,
 name|argv
 index|[

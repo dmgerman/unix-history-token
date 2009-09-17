@@ -1504,6 +1504,13 @@ literal|"PCI Bus"
 block|}
 block|,
 block|{
+literal|0x080ad041
+comment|/* PNP0A08 */
+block|,
+literal|"PCIe Bus"
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}

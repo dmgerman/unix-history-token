@@ -44,6 +44,13 @@ parameter_list|)
 value|(*(_a)& 0x01)
 end_define
 
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|ieee80211_seq
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* IEEE 802.11 PLCP header */
 end_comment
@@ -519,6 +526,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_FC0_SUBTYPE_BA
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FC0_SUBTYPE_PS_POLL
 value|0xa0
 end_define
@@ -686,6 +700,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IS_DSTODS
+parameter_list|(
+name|wh
+parameter_list|)
+define|\
+value|(((wh)->i_fc[1]& IEEE80211_FC1_DIR_MASK) == IEEE80211_FC1_DIR_DSTODS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FC1_MORE_FRAG
 value|0x04
 end_define
@@ -824,6 +849,13 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_NWID_LEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHID_LEN
 value|32
 end_define
 
@@ -1400,12 +1432,34 @@ end_struct
 begin_define
 define|#
 directive|define
-name|IEEE80211_ACTION_CAT_QOS
+name|IEEE80211_ACTION_CAT_SM
 value|0
 end_define
 
 begin_comment
+comment|/* Spectrum Management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_QOS
+value|1
+end_define
+
+begin_comment
 comment|/* QoS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_DLS
+value|2
+end_define
+
+begin_comment
+comment|/* DLS */
 end_comment
 
 begin_define
@@ -1428,6 +1482,17 @@ end_define
 
 begin_comment
 comment|/* HT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACTION_CAT_VENDOR
+value|127
+end_define
+
+begin_comment
+comment|/* Vendor Specific */
 end_comment
 
 begin_define
@@ -3426,7 +3491,7 @@ name|IEEE80211_ELEMID_SUPPCHAN
 init|=
 literal|36
 block|,
-name|IEEE80211_ELEMID_CHANSWITCHANN
+name|IEEE80211_ELEMID_CSA
 init|=
 literal|37
 block|,
@@ -3479,6 +3544,81 @@ init|=
 literal|221
 block|,
 comment|/* vendor private */
+comment|/* 	 * 802.11s IEs based on D3.0 spec and were not assigned by 	 * ANA. Beware changing them because some of them are being 	 * kept compatible with Linux. 	 */
+name|IEEE80211_ELEMID_MESHCONF
+init|=
+literal|51
+block|,
+name|IEEE80211_ELEMID_MESHID
+init|=
+literal|52
+block|,
+name|IEEE80211_ELEMID_MESHLINK
+init|=
+literal|35
+block|,
+name|IEEE80211_ELEMID_MESHCNGST
+init|=
+literal|36
+block|,
+name|IEEE80211_ELEMID_MESHPEER
+init|=
+literal|55
+block|,
+name|IEEE80211_ELEMID_MESHCSA
+init|=
+literal|38
+block|,
+name|IEEE80211_ELEMID_MESHTIM
+init|=
+literal|39
+block|,
+name|IEEE80211_ELEMID_MESHAWAKEW
+init|=
+literal|40
+block|,
+name|IEEE80211_ELEMID_MESHBEACONT
+init|=
+literal|41
+block|,
+name|IEEE80211_ELEMID_MESHPANN
+init|=
+literal|48
+block|,
+name|IEEE80211_ELEMID_MESHRANN
+init|=
+literal|49
+block|,
+name|IEEE80211_ELEMID_MESHPREQ
+init|=
+literal|68
+block|,
+name|IEEE80211_ELEMID_MESHPREP
+init|=
+literal|69
+block|,
+name|IEEE80211_ELEMID_MESHPERR
+init|=
+literal|70
+block|,
+name|IEEE80211_ELEMID_MESHPU
+init|=
+literal|53
+block|,
+name|IEEE80211_ELEMID_MESHPUC
+init|=
+literal|54
+block|,
+name|IEEE80211_ELEMID_MESHAH
+init|=
+literal|60
+block|,
+comment|/* Abbreviated Handshake */
+name|IEEE80211_ELEMID_MESHPEERVER
+init|=
+literal|80
+block|,
+comment|/* Peering Protocol Version */
 block|}
 enum|;
 end_enum
@@ -3615,94 +3755,22 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Atheros advanced capability information element.  */
+comment|/*  * Note the min acceptable CSA count is used to guard against  * malicious CSA injection in station mode.  Defining this value  * as other than 0 violates the 11h spec.  */
 end_comment
 
-begin_struct
-struct|struct
-name|ieee80211_ath_ie
-block|{
-name|uint8_t
-name|ath_id
-decl_stmt|;
-comment|/* IEEE80211_ELEMID_VENDOR */
-name|uint8_t
-name|ath_len
-decl_stmt|;
-comment|/* length in bytes */
-name|uint8_t
-name|ath_oui
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* 0x00, 0x03, 0x7f */
-name|uint8_t
-name|ath_oui_type
-decl_stmt|;
-comment|/* OUI type */
-name|uint8_t
-name|ath_oui_subtype
-decl_stmt|;
-comment|/* OUI subtype */
-name|uint8_t
-name|ath_version
-decl_stmt|;
-comment|/* spec revision */
-name|uint8_t
-name|ath_capability
-decl_stmt|;
-comment|/* capability info */
+begin_define
 define|#
 directive|define
-name|ATHEROS_CAP_TURBO_PRIME
-value|0x01
-comment|/* dynamic turbo--aka Turbo' */
+name|IEEE80211_CSA_COUNT_MIN
+value|2
+end_define
+
+begin_define
 define|#
 directive|define
-name|ATHEROS_CAP_COMPRESSION
-value|0x02
-comment|/* data compression */
-define|#
-directive|define
-name|ATHEROS_CAP_FAST_FRAME
-value|0x04
-comment|/* fast (jumbo) frames */
-define|#
-directive|define
-name|ATHEROS_CAP_XR
-value|0x08
-comment|/* Xtended Range support */
-define|#
-directive|define
-name|ATHEROS_CAP_AR
-value|0x10
-comment|/* Advanded Radar support */
-define|#
-directive|define
-name|ATHEROS_CAP_BURST
-value|0x20
-comment|/* Bursting - not negotiated */
-define|#
-directive|define
-name|ATHEROS_CAP_WME
-value|0x40
-comment|/* CWMin tuning */
-define|#
-directive|define
-name|ATHEROS_CAP_BOOST
-value|0x80
-comment|/* use turbo/!turbo mode */
-name|uint8_t
-name|ath_defkeyix
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
+name|IEEE80211_CSA_COUNT_MAX
+value|255
+end_define
 
 begin_comment
 comment|/* rate set entries are in .5 Mb/s units, and potentially marked as basic */
@@ -3773,19 +3841,31 @@ name|ATH_OUI_TYPE
 value|0x01
 end_define
 
+begin_comment
+comment|/* Atheros protocol ie */
+end_comment
+
+begin_comment
+comment|/* NB: Atheros allocated the OUI for this purpose ~2005 but beware ... */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ATH_OUI_SUBTYPE
-value|0x01
+name|TDMA_OUI
+value|ATH_OUI
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_OUI_VERSION
-value|0x00
+name|TDMA_OUI_TYPE
+value|0x02
 end_define
+
+begin_comment
+comment|/* TDMA protocol ie */
+end_comment
 
 begin_define
 define|#
@@ -4304,6 +4384,52 @@ init|=
 literal|39
 block|,
 comment|/* 11e */
+comment|/* values not yet allocated by ANA */
+name|IEEE80211_REASON_PEER_LINK_CANCELED
+init|=
+literal|2
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_MAX_PEERS
+init|=
+literal|3
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CPVIOLATION
+init|=
+literal|4
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CLOSE_RCVD
+init|=
+literal|5
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_MAX_RETRIES
+init|=
+literal|6
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CONFIRM_TIMEOUT
+init|=
+literal|7
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_INVALID_GTK
+init|=
+literal|8
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_INCONS_PARAMS
+init|=
+literal|9
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_INVALID_SECURITY
+init|=
+literal|10
+block|,
+comment|/* 11s */
 name|IEEE80211_STATUS_SUCCESS
 init|=
 literal|0
@@ -4388,6 +4514,11 @@ init|=
 literal|26
 block|,
 comment|/* 11g */
+name|IEEE80211_STATUS_MISSING_HT_CAPS
+init|=
+literal|27
+block|,
+comment|/* 11n D3.0 */
 name|IEEE80211_STATUS_INVALID_IE
 init|=
 literal|40
@@ -4826,271 +4957,6 @@ define|#
 directive|define
 name|IEEE80211_DUR_DS_EIFS
 value|(IEEE80211_DUR_DS_SIFS + \ 				 IEEE80211_DUR_DS_SLOW_ACK + \ 				 IEEE80211_DUR_DS_LONG_PREAMBLE + \ 				 IEEE80211_DUR_DS_SLOW_PLCPHDR + \ 				 IEEE80211_DUR_DIFS)
-end_define
-
-begin_comment
-comment|/*  * Atheros fast-frame encapsulation format.  * FF max payload:  * 802.2 + FFHDR + HPAD + 802.3 + 802.2 + 1500 + SPAD + 802.3 + 802.2 + 1500:  *   8   +   4   +  4   +   14  +   8   + 1500 +  6   +   14  +   8   + 1500  * = 3066  */
-end_comment
-
-begin_comment
-comment|/* fast frame header is 32-bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_PROTO
-value|0x0000003f
-end_define
-
-begin_comment
-comment|/* protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_PROTO_S
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_FTYPE
-value|0x000000c0
-end_define
-
-begin_comment
-comment|/* frame type */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_FTYPE_S
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_HLEN32
-value|0x00000300
-end_define
-
-begin_comment
-comment|/* optional hdr length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_HLEN32_S
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_SEQNUM
-value|0x001ffc00
-end_define
-
-begin_comment
-comment|/* sequence number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_SEQNUM_S
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_OFFSET
-value|0xffe00000
-end_define
-
-begin_comment
-comment|/* offset to 2nd payload */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_OFFSET_S
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_MAX_HDR_PAD
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_MAX_SEP_PAD
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_MAX_HDR
-value|30
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_PROTO_L2TUNNEL
-value|0
-end_define
-
-begin_comment
-comment|/* L2 tunnel protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_ETH_TYPE
-value|0x88bd
-end_define
-
-begin_comment
-comment|/* Ether type for encapsulated frames */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_SNAP_ORGCODE_0
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_SNAP_ORGCODE_1
-value|0x03
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_FF_SNAP_ORGCODE_2
-value|0x7f
-end_define
-
-begin_struct
-struct|struct
-name|ieee80211_tdma_param
-block|{
-name|u_int8_t
-name|tdma_id
-decl_stmt|;
-comment|/* IEEE80211_ELEMID_VENDOR */
-name|u_int8_t
-name|tdma_len
-decl_stmt|;
-name|u_int8_t
-name|tdma_oui
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* 0x00, 0x03, 0x7f */
-name|u_int8_t
-name|tdma_type
-decl_stmt|;
-comment|/* OUI type */
-name|u_int8_t
-name|tdma_subtype
-decl_stmt|;
-comment|/* OUI subtype */
-name|u_int8_t
-name|tdma_version
-decl_stmt|;
-comment|/* spec revision */
-name|u_int8_t
-name|tdma_slot
-decl_stmt|;
-comment|/* station slot # */
-name|u_int8_t
-name|tdma_slotcnt
-decl_stmt|;
-comment|/* bss slot count */
-name|u_int16_t
-name|tdma_slotlen
-decl_stmt|;
-comment|/* bss slot len (100us) */
-name|u_int8_t
-name|tdma_bintval
-decl_stmt|;
-comment|/* beacon interval (superframes) */
-name|u_int8_t
-name|tdma_inuse
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* slot occupancy map */
-name|u_int8_t
-name|tdma_pad
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u_int8_t
-name|tdma_tstamp
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* timestamp from last beacon */
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
-comment|/* NB: Atheros allocated the OUI for this purpose ~3 years ago but beware ... */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDMA_OUI
-value|ATH_OUI
-end_define
-
-begin_define
-define|#
-directive|define
-name|TDMA_OUI_TYPE
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|TDMA_SUBTYPE_PARAM
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|TDMA_VERSION
-value|2
 end_define
 
 begin_endif

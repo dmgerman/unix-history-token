@@ -82,6 +82,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|vnet
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Kernel structure per socket.  * Contains send and receive buffer queues,  * handle on protocol and pointer to protocol  * private data and error information.  */
 end_comment
@@ -92,6 +98,12 @@ name|u_quad_t
 name|so_gen_t
 typedef|;
 end_typedef
+
+begin_struct_decl
+struct_decl|struct
+name|socket
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*-  * Locking key to struct socket:  * (a) constant after allocation, no locking required.  * (b) locked by SOCK_LOCK(so).  * (c) locked by SOCKBUF_LOCK(&so->so_rcv).  * (d) locked by SOCKBUF_LOCK(&so->so_snd).  * (e) locked by ACCEPT_LOCK().  * (f) not locked since integer reads/writes are atomic.  * (g) used only as a sleep/wakeup address, no value.  * (h) locked by global mutex so_global_mtx.  */
@@ -130,6 +142,12 @@ modifier|*
 name|so_pcb
 decl_stmt|;
 comment|/* protocol control block */
+name|struct
+name|vnet
+modifier|*
+name|so_vnet
+decl_stmt|;
+comment|/* network stack instance */
 name|struct
 name|protosw
 modifier|*
@@ -209,26 +227,6 @@ name|sockbuf
 name|so_rcv
 decl_stmt|,
 name|so_snd
-decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|so_upcall
-function_decl|)
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|void
-modifier|*
-name|so_upcallarg
 decl_stmt|;
 name|struct
 name|ucred
@@ -566,12 +564,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|soreadabledata
+parameter_list|(
+name|so
+parameter_list|)
+define|\
+value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
+end_define
+
+begin_define
+define|#
+directive|define
 name|soreadable
 parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	((so)->so_rcv.sb_state& SBS_CANTRCVMORE) || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
+value|(soreadabledata(so) || ((so)->so_rcv.sb_state& SBS_CANTRCVMORE))
 end_define
 
 begin_comment
@@ -677,7 +686,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|accf_callback
@@ -823,6 +832,42 @@ struct_decl|struct
 name|uio
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* 'which' values for socket upcalls. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_RCV
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SO_SND
+value|2
+end_define
+
+begin_comment
+comment|/* Return values for socket upcalls. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SU_OK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SU_ISCONNECTED
+value|1
+end_define
 
 begin_comment
 comment|/*  * From uipc_socket and friends  */
@@ -1245,6 +1290,45 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|soreceive_stream
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+modifier|*
+name|paddr
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mp0
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|controlp
+parameter_list|,
+name|int
+modifier|*
+name|flagsp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|soreceive_dgram
 parameter_list|(
 name|struct
@@ -1499,6 +1583,56 @@ name|struct
 name|xsocket
 modifier|*
 name|xso
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|soupcall_clear
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|int
+name|which
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|soupcall_set
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|int
+name|which
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

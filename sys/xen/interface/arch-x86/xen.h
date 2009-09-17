@@ -45,6 +45,12 @@ else|#
 directive|else
 end_else
 
+begin_error
+error|#
+directive|error
+literal|"using old handle"
+end_error
+
 begin_define
 define|#
 directive|define
@@ -168,7 +174,7 @@ end_elif
 begin_include
 include|#
 directive|include
-file|"xen-x86_64.h"
+file|<xen/interface/arch-x86/xen-x86_64.h>
 end_include
 
 begin_endif

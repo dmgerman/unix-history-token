@@ -69,6 +69,260 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/*  * Define a set for pcpu data.  *   * We don't use SET_DECLARE because it defines the set as 'a' when we  * want 'aw'.  GCC considers uninitialized data in a seperate section  * writable and there is no generic zero initializer that works for  * structs and scalars.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uintptr_t
+modifier|*
+name|__start_set_pcpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uintptr_t
+modifier|*
+name|__stop_set_pcpu
+decl_stmt|;
+end_decl_stmt
+
+begin_asm
+asm|__asm__(
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+asm|".section set_pcpu, \"aw\", %progbits\n"
+else|#
+directive|else
+asm|".section set_pcpu, \"aw\", @progbits\n"
+endif|#
+directive|endif
+asm|"\t.p2align " __XSTRING(CACHE_LINE_SHIFT) "\n" 	"\t.previous");
+end_asm
+
+begin_comment
+comment|/*  * Array of dynamic pcpu base offsets.  Indexed by id.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uintptr_t
+name|dpcpu_off
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Convenience defines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPCPU_START
+value|(uintptr_t)&__start_set_pcpu
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_STOP
+value|(uintptr_t)&__stop_set_pcpu
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_BYTES
+value|(DPCPU_STOP - DPCPU_START)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_MODMIN
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_SIZE
+value|roundup2(DPCPU_BYTES, PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_MODSIZE
+value|(DPCPU_SIZE - (DPCPU_BYTES - DPCPU_MODMIN))
+end_define
+
+begin_comment
+comment|/*  * Declaration and definition.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPCPU_NAME
+parameter_list|(
+name|n
+parameter_list|)
+value|pcpu_entry_##n
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_DECLARE
+parameter_list|(
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|extern t DPCPU_NAME(n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_DEFINE
+parameter_list|(
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|t DPCPU_NAME(n) __section("set_pcpu") __used
+end_define
+
+begin_comment
+comment|/*  * Accessors with a given base.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_DPCPU_PTR
+parameter_list|(
+name|b
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(__typeof(DPCPU_NAME(n))*)((b) + (uintptr_t)&DPCPU_NAME(n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_DPCPU_GET
+parameter_list|(
+name|b
+parameter_list|,
+name|n
+parameter_list|)
+value|(*_DPCPU_PTR(b, n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_DPCPU_SET
+parameter_list|(
+name|b
+parameter_list|,
+name|n
+parameter_list|,
+name|v
+parameter_list|)
+value|(*_DPCPU_PTR(b, n) = v)
+end_define
+
+begin_comment
+comment|/*  * Accessors for the current cpu.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPCPU_PTR
+parameter_list|(
+name|n
+parameter_list|)
+value|_DPCPU_PTR(PCPU_GET(dynamic), n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_GET
+parameter_list|(
+name|n
+parameter_list|)
+value|(*DPCPU_PTR(n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_SET
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|)
+value|(*DPCPU_PTR(n) = v)
+end_define
+
+begin_comment
+comment|/*  * Accessors for remote cpus.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPCPU_ID_PTR
+parameter_list|(
+name|i
+parameter_list|,
+name|n
+parameter_list|)
+value|_DPCPU_PTR(dpcpu_off[(i)], n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_ID_GET
+parameter_list|(
+name|i
+parameter_list|,
+name|n
+parameter_list|)
+value|(*DPCPU_ID_PTR(i, n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_ID_SET
+parameter_list|(
+name|i
+parameter_list|,
+name|n
+parameter_list|,
+name|v
+parameter_list|)
+value|(*DPCPU_ID_PTR(i, n) = v)
+end_define
+
+begin_comment
 comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and  can define rm_queue in _rm_lock.h */
 end_comment
 
@@ -168,19 +422,6 @@ name|pc_spinlocks
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KTR_PERCPU
-name|int
-name|pc_ktr_idx
-decl_stmt|;
-comment|/* Index into trace table */
-name|char
-modifier|*
-name|pc_ktr_buf
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|KTR
 name|char
 name|pc_name
@@ -208,15 +449,28 @@ name|device
 modifier|*
 name|pc_device
 decl_stmt|;
+name|void
+modifier|*
+name|pc_netisr
+decl_stmt|;
+comment|/* netisr SWI cookie. */
 comment|/*  	 * Stuff for read mostly lock 	 *  	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
 name|struct
 name|rm_queue
 name|pc_rm_queue
 decl_stmt|;
+comment|/* 	 * Dynamic per-cpu data area. 	 */
+name|uintptr_t
+name|pc_dynamic
+decl_stmt|;
 comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu. Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g. lsof, part of gtop) define _KERNEL and include this 	 * header. While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields contants. 	 * If only to make kernel debugging easier... 	 */
 name|PCPU_MD_FIELDS
 expr_stmt|;
 block|}
+name|__aligned
+argument_list|(
+literal|128
+argument_list|)
 struct|;
 end_struct
 
@@ -275,6 +529,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|curvidata
+value|PCPU_GET(vidata)
+end_define
 
 begin_comment
 comment|/*  * Machine dependent callouts.  cpu_pcpu_init() is responsible for  * initializing machine dependent fields of struct pcpu, and  * db_show_mdpcpu() is responsible for handling machine dependent  * fields for the DDB 'show pcpu' command.  */
@@ -360,6 +621,59 @@ name|cpuid
 parameter_list|,
 name|size_t
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|dpcpu_alloc
+parameter_list|(
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dpcpu_copy
+parameter_list|(
+name|void
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dpcpu_free
+parameter_list|(
+name|void
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dpcpu_init
+parameter_list|(
+name|void
+modifier|*
+name|dpcpu
+parameter_list|,
+name|int
+name|cpuid
 parameter_list|)
 function_decl|;
 end_function_decl

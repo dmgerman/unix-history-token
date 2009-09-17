@@ -44,21 +44,21 @@ begin_define
 define|#
 directive|define
 name|COPYRIGHT
-value|"(c) 2000-2004. HighPoint Technologies, Inc."
+value|"(c) 2000-2007. HighPoint Technologies, Inc."
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRIVER_NAME
-value|"RocketRAID 182x SATA Controller driver"
+value|"RocketRAID 18xx SATA Controller driver"
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONTROLLER_NAME
-value|"RocketRAID 182x SATA Controller"
+value|"RocketRAID 18xx SATA Controller"
 end_define
 
 begin_define
@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|HPT_INTERFACE_VERSION
-value|0x01000003
+value|0x01010000
 end_define
 
 begin_define
@@ -900,6 +900,68 @@ name|pDev
 parameter_list|,
 name|UCHAR
 name|NewMode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|HPTLIBAPI
+name|fDeSetTCQ
+parameter_list|(
+name|PDevice
+name|pDev
+parameter_list|,
+name|int
+name|enable
+parameter_list|,
+name|int
+name|depth
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|HPTLIBAPI
+name|fDeSetNCQ
+parameter_list|(
+name|PDevice
+name|pDev
+parameter_list|,
+name|int
+name|enable
+parameter_list|,
+name|int
+name|depth
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|HPTLIBAPI
+name|fDeSetWriteCache
+parameter_list|(
+name|PDevice
+name|pDev
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|HPTLIBAPI
+name|fDeSetReadAhead
+parameter_list|(
+name|PDevice
+name|pDev
+parameter_list|,
+name|int
+name|enable
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1014,7 +1014,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|io
+name|irq
 operator|==
 name|NULL
 condition|)

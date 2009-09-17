@@ -1,64 +1,70 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 1.104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acparser.h>
+file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/amlcode.h>
+file|<contrib/dev/acpica/include/acparser.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdebug.h>
+file|<contrib/dev/acpica/include/amlcode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdisasm.h>
+file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdispat.h>
+file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acnamesp.h>
+file|<contrib/dev/acpica/include/acdispat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/actables.h>
+file|<contrib/dev/acpica/include/acnamesp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acapps.h>
+file|<contrib/dev/acpica/include/actables.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acapps.h>
 end_include
 
 begin_include
@@ -144,6 +150,53 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|AdAddExternalsToNamespace
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|UINT32
+name|AdMethodExternalCount
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AdDeferredParse
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT8
+modifier|*
+name|Aml
+parameter_list|,
+name|UINT32
+name|AmlLength
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AdParseDeferredOps
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Root
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -209,7 +262,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiNsLoadTable
 parameter_list|(
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|TableIndex
 parameter_list|,
 name|ACPI_NAMESPACE_NODE
@@ -342,9 +395,39 @@ operator|=
 name|AcpiOsInitialize
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+name|Status
+operator|=
 name|AcpiUtInitGlobals
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 name|Status
 operator|=
 name|AcpiUtMutexInitialize
@@ -359,7 +442,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 name|Status
@@ -376,7 +461,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 comment|/* Setup the Table Manager (cheat - there is no RSDT) */
@@ -399,13 +486,15 @@ operator|=
 name|LocalTables
 expr_stmt|;
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AdAddExternalsToNamespace  *  * PARAMETERS:  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AdAddExternalsToNamespace  *  * PARAMETERS:  *  * RETURN:      None  *  * DESCRIPTION:  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -609,6 +698,10 @@ name|DisasmFilename
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|ExternalFilename
+decl_stmt|;
 name|FILE
 modifier|*
 name|File
@@ -618,12 +711,21 @@ decl_stmt|;
 name|ACPI_TABLE_HEADER
 modifier|*
 name|Table
+init|=
+name|NULL
 decl_stmt|;
 name|ACPI_TABLE_HEADER
 modifier|*
 name|ExternalTable
 decl_stmt|;
-comment|/*      * Input:  AML Code from either a file,      *         or via GetTables (memory or registry)      */
+name|ACPI_OWNER_ID
+name|OwnerId
+decl_stmt|;
+name|ACPI_EXTERNAL_LIST
+modifier|*
+name|NextExternal
+decl_stmt|;
+comment|/*      * Input: AML Code from either a file,      *        or via GetTables (memory or registry)      */
 if|if
 condition|(
 name|Filename
@@ -651,16 +753,31 @@ return|return
 name|Status
 return|;
 block|}
+comment|/*          * External filenames separated by commas          * Example: iasl -e file1,file2,file3 -d xxx.aml          */
 if|if
 condition|(
 name|Gbl_ExternalFilename
+condition|)
+block|{
+name|ExternalFilename
+operator|=
+name|strtok
+argument_list|(
+name|Gbl_ExternalFilename
+argument_list|,
+literal|","
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|ExternalFilename
 condition|)
 block|{
 name|Status
 operator|=
 name|AcpiDbGetTableFromFile
 argument_list|(
-name|Gbl_ExternalFilename
+name|ExternalFilename
 argument_list|,
 operator|&
 name|ExternalTable
@@ -677,6 +794,104 @@ block|{
 return|return
 name|Status
 return|;
+block|}
+comment|/* Load external table for symbol resolution */
+if|if
+condition|(
+name|ExternalTable
+condition|)
+block|{
+name|Status
+operator|=
+name|AdParseTable
+argument_list|(
+name|ExternalTable
+argument_list|,
+operator|&
+name|OwnerId
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not parse external ACPI tables, %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|Status
+return|;
+block|}
+comment|/*                      * Load namespace from names created within control methods                      * Set owner id of nodes in external table                      */
+name|AcpiDmFinishNamespaceLoad
+argument_list|(
+name|AcpiGbl_ParseOpRoot
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|,
+name|OwnerId
+argument_list|)
+expr_stmt|;
+name|AcpiPsDeleteParseTree
+argument_list|(
+name|AcpiGbl_ParseOpRoot
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Next external file name */
+name|ExternalFilename
+operator|=
+name|strtok
+argument_list|(
+name|NULL
+argument_list|,
+literal|","
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Clear external list generated by Scope in external tables */
+while|while
+condition|(
+name|AcpiGbl_ExternalList
+condition|)
+block|{
+name|NextExternal
+operator|=
+name|AcpiGbl_ExternalList
+operator|->
+name|Next
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|AcpiGbl_ExternalList
+operator|->
+name|Path
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|AcpiGbl_ExternalList
+argument_list|)
+expr_stmt|;
+name|AcpiGbl_ExternalList
+operator|=
+name|NextExternal
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -910,6 +1125,13 @@ operator|=
 name|AdParseTable
 argument_list|(
 name|Table
+argument_list|,
+operator|&
+name|OwnerId
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -964,6 +1186,8 @@ argument_list|(
 name|AcpiGbl_ParseOpRoot
 argument_list|,
 name|AcpiGbl_RootNode
+argument_list|,
+name|OwnerId
 argument_list|)
 expr_stmt|;
 comment|/*          * Cross reference the namespace here, in order to generate External() statements          */
@@ -972,6 +1196,8 @@ argument_list|(
 name|AcpiGbl_ParseOpRoot
 argument_list|,
 name|AcpiGbl_RootNode
+argument_list|,
+name|OwnerId
 argument_list|)
 expr_stmt|;
 if|if
@@ -999,30 +1225,6 @@ argument_list|,
 name|AcpiGbl_RootNode
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|AslCompilerdebug
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"/**** After second load and resource conversion\n"
-argument_list|)
-expr_stmt|;
-name|LsSetupNsList
-argument_list|(
-name|File
-argument_list|)
-expr_stmt|;
-name|LsDisplayNamespace
-argument_list|()
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"*****/\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*          * If we found any external control methods, we must reparse the entire          * tree with the new information (namely, the number of arguments per          * method)          */
 if|if
 condition|(
@@ -1107,11 +1309,18 @@ expr_stmt|;
 name|AdAddExternalsToNamespace
 argument_list|()
 expr_stmt|;
+comment|/* Parse table. No need to reload it, however (FALSE) */
 name|Status
 operator|=
 name|AdParseTable
 argument_list|(
 name|Table
+argument_list|,
+name|NULL
+argument_list|,
+name|FALSE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1141,6 +1350,24 @@ condition|(
 name|AslCompilerdebug
 condition|)
 block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"/**** After second load and resource conversion\n"
+argument_list|)
+expr_stmt|;
+name|LsSetupNsList
+argument_list|(
+name|File
+argument_list|)
+expr_stmt|;
+name|LsDisplayNamespace
+argument_list|()
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"*****/\n"
+argument_list|)
+expr_stmt|;
 name|AcpiDmDumpTree
 argument_list|(
 name|AcpiGbl_ParseOpRoot
@@ -1174,6 +1401,34 @@ block|}
 block|}
 name|Cleanup
 label|:
+if|if
+condition|(
+name|Table
+operator|&&
+operator|!
+name|AcpiUtIsAmlTable
+argument_list|(
+name|Table
+argument_list|)
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
+name|Table
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|DisasmFilename
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
+name|DisasmFilename
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|OutToFile
@@ -1210,8 +1465,14 @@ argument_list|(
 name|AcpiGbl_ParseOpRoot
 argument_list|)
 expr_stmt|;
+name|AcpiGbl_ParseOpRoot
+operator|=
+name|NULL
+expr_stmt|;
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 end_function
@@ -1293,6 +1554,10 @@ name|char
 modifier|*
 name|NewFilename
 decl_stmt|;
+name|UINT8
+name|Checksum
+decl_stmt|;
+comment|/*      * Print file header and dump original table header      */
 name|AdDisassemblerHeader
 argument_list|(
 name|Filename
@@ -1325,13 +1590,114 @@ operator|->
 name|Length
 argument_list|)
 expr_stmt|;
+comment|/* Print and validate the revision */
 name|AcpiOsPrintf
 argument_list|(
-literal|" *     Revision         0x%2.2X\n"
+literal|" *     Revision         0x%2.2X"
 argument_list|,
 name|Table
 operator|->
 name|Revision
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|Table
+operator|->
+name|Revision
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|" **** Invalid Revision"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+comment|/* Revision of DSDT controls the ACPI integer width */
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Table
+operator|->
+name|Signature
+argument_list|,
+name|ACPI_SIG_DSDT
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" **** ACPI 1.0, no 64-bit math support"
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+default|default:
+break|break;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* Print and validate the table checksum */
+name|AcpiOsPrintf
+argument_list|(
+literal|" *     Checksum         0x%2.2X"
+argument_list|,
+name|Table
+operator|->
+name|Checksum
+argument_list|)
+expr_stmt|;
+name|Checksum
+operator|=
+name|AcpiTbChecksum
+argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|UINT8
+argument_list|,
+name|Table
+argument_list|)
+argument_list|,
+name|Table
+operator|->
+name|Length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Checksum
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" **** Incorrect checksum, should be 0x%2.2X"
+argument_list|,
+call|(
+name|UINT8
+call|)
+argument_list|(
+name|Table
+operator|->
+name|Checksum
+operator|-
+name|Checksum
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1367,7 +1733,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" *     Creator ID       \"%.4s\"\n"
+literal|" *     Compiler ID      \"%.4s\"\n"
 argument_list|,
 name|Table
 operator|->
@@ -1376,7 +1742,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" *     Creator Revision 0x%8.8X (%u)\n"
+literal|" *     Compiler Version 0x%8.8X (%u)\n"
 argument_list|,
 name|Table
 operator|->
@@ -1462,6 +1828,11 @@ argument_list|,
 name|Table
 operator|->
 name|OemRevision
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|NewFilename
 argument_list|)
 expr_stmt|;
 block|}
@@ -2135,6 +2506,9 @@ case|:
 case|case
 name|AML_CREATE_FIELD_OP
 case|:
+case|case
+name|AML_BANK_FIELD_OP
+case|:
 comment|/* Nothing to do in these cases */
 break|break;
 default|default:
@@ -2210,7 +2584,7 @@ decl_stmt|;
 name|UINT32
 name|PointerSize
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|TableIndex
 decl_stmt|;
 if|if
@@ -2252,6 +2626,24 @@ expr_stmt|;
 return|return
 name|AE_NO_ACPI_TABLES
 return|;
+block|}
+else|else
+block|{
+name|AdWriteTable
+argument_list|(
+name|NewTable
+argument_list|,
+name|NewTable
+operator|->
+name|Length
+argument_list|,
+name|ACPI_SIG_RSDT
+argument_list|,
+name|NewTable
+operator|->
+name|OemTableId
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2445,7 +2837,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdParseTable  *  * PARAMETERS:  Table           - Pointer to the raw table  *  * RETURN:      Status  *  * DESCRIPTION: Parse the DSDT.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdParseTable  *  * PARAMETERS:  Table           - Pointer to the raw table  *              OwnerId         - Returned OwnerId of the table  *              LoadTable       - If add table to the global table list  *              External        - If this is an external table  *  * RETURN:      Status  *  * DESCRIPTION: Parse the DSDT.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -2455,6 +2847,16 @@ parameter_list|(
 name|ACPI_TABLE_HEADER
 modifier|*
 name|Table
+parameter_list|,
+name|ACPI_OWNER_ID
+modifier|*
+name|OwnerId
+parameter_list|,
+name|BOOLEAN
+name|LoadTable
+parameter_list|,
+name|BOOLEAN
+name|External
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -2473,7 +2875,7 @@ decl_stmt|;
 name|UINT32
 name|AmlLength
 decl_stmt|;
-name|ACPI_NATIVE_UINT
+name|UINT32
 name|TableIndex
 decl_stmt|;
 if|if
@@ -2635,13 +3037,27 @@ return|return
 name|Status
 return|;
 block|}
+comment|/* If LoadTable is FALSE, we are parsing the last loaded table */
+name|TableIndex
+operator|=
+name|AcpiGbl_RootTableList
+operator|.
+name|Count
+operator|-
+literal|1
+expr_stmt|;
 comment|/* Pass 2 */
+if|if
+condition|(
+name|LoadTable
+condition|)
+block|{
 name|Status
 operator|=
 name|AcpiTbStoreTable
 argument_list|(
 operator|(
-name|ACPI_NATIVE_UINT
+name|ACPI_PHYSICAL_ADDRESS
 operator|)
 name|Table
 argument_list|,
@@ -2669,6 +3085,53 @@ return|return
 name|Status
 return|;
 block|}
+name|Status
+operator|=
+name|AcpiTbAllocateOwnerId
+argument_list|(
+name|TableIndex
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+name|Status
+return|;
+block|}
+if|if
+condition|(
+name|OwnerId
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiTbGetOwnerId
+argument_list|(
+name|TableIndex
+argument_list|,
+name|OwnerId
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+name|Status
+return|;
+block|}
+block|}
+block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -2690,7 +3153,9 @@ name|AcpiNsOneCompleteParse
 argument_list|(
 name|ACPI_IMODE_LOAD_PASS2
 argument_list|,
-literal|0
+name|TableIndex
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2705,6 +3170,16 @@ return|return
 operator|(
 name|Status
 operator|)
+return|;
+block|}
+comment|/* No need to parse control methods of external table */
+if|if
+condition|(
+name|External
+condition|)
+block|{
+return|return
+name|AE_OK
 return|;
 block|}
 comment|/* Pass 3: Parse control methods and link their parse trees into the main parse tree */

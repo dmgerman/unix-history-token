@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * This file contains fallback-compatibility code for the old FreeBSD  * USB stack.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HID_COMPAT7
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -213,6 +219,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HID_COMPAT7 */
+end_comment
 
 end_unit
 

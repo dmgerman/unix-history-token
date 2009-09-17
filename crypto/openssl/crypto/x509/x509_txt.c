@@ -313,7 +313,7 @@ name|X509_V_ERR_PROXY_CERTIFICATES_NOT_ALLOWED
 case|:
 return|return
 operator|(
-literal|"proxy cerificates not allowed, please set the appropriate flag"
+literal|"proxy certificates not allowed, please set the appropriate flag"
 operator|)
 return|;
 case|case

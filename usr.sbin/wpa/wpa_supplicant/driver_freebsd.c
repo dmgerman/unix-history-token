@@ -60,24 +60,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wpa_supplicant.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"l2_packet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"wpa.h"
+file|"ieee802_11_defs.h"
 end_include
-
-begin_comment
-comment|/* XXX for RSN_INFO_ELEM */
-end_comment
 
 begin_include
 include|#
@@ -2181,7 +2171,7 @@ index|[
 literal|0
 index|]
 operator|==
-name|RSN_INFO_ELEM
+name|WLAN_EID_RSN
 condition|?
 literal|2
 else|:

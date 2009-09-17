@@ -481,9 +481,11 @@ begin_comment
 comment|/* Define if you have the function `closefrom'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CLOSEFROM */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CLOSEFROM
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<config.h> header file. */

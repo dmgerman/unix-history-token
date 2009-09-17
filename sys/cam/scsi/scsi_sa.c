@@ -630,21 +630,6 @@ name|sa_quirks
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* units are bits 4-7, 16-21 (1024 units) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SAUNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-define|\
-value|(((dev2unit(DEV)& 0xF0)>> 4) |  ((dev2unit(DEV)& 0x3f0000)>> 16))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -652,7 +637,7 @@ name|SAMODE
 parameter_list|(
 name|z
 parameter_list|)
-value|((dev2unit(z)& 0x3))
+value|(dev2unit(z)& 0x3)
 end_define
 
 begin_define
@@ -662,7 +647,7 @@ name|SADENSITY
 parameter_list|(
 name|z
 parameter_list|)
-value|(((dev2unit(z)>> 2)& 0x3))
+value|((dev2unit(z)>> 2)& 0x3)
 end_define
 
 begin_define
@@ -672,7 +657,7 @@ name|SA_IS_CTRL
 parameter_list|(
 name|z
 parameter_list|)
-value|(dev2unit(z)& (1<< 29))
+value|(dev2unit(z)& (1<< 4))
 end_define
 
 begin_define
@@ -717,14 +702,12 @@ name|SAMINOR
 parameter_list|(
 name|ctl
 parameter_list|,
-name|unit
-parameter_list|,
 name|mode
 parameter_list|,
 name|access
 parameter_list|)
 define|\
-value|((ctl<< 29) | ((unit& 0x3f0)<< 16) | ((unit& 0xf)<< 4) | \ 	(mode<< 0x2) | (access& 0x3))
+value|((ctl<< 4) | (mode<< 2) | (access& 0x3))
 end_define
 
 begin_define
@@ -1980,18 +1963,8 @@ modifier|*
 name|softc
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
-name|unit
-operator|=
-name|SAUNIT
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|periph
 operator|=
 operator|(
@@ -2046,11 +2019,12 @@ operator||
 name|CAM_DEBUG_INFO
 argument_list|,
 operator|(
-literal|"saopen(%d): dev=0x%x softc=0x%x\n"
+literal|"saopen(%s): softc=0x%x\n"
 operator|,
-name|unit
-operator|,
-name|unit
+name|devtoname
+argument_list|(
+name|dev
+argument_list|)
 operator|,
 name|softc
 operator|->
@@ -2303,8 +2277,6 @@ modifier|*
 name|softc
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|mode
 decl_stmt|,
 name|error
@@ -2318,13 +2290,6 @@ name|closedbits
 init|=
 name|SA_FLAG_OPEN
 decl_stmt|;
-name|unit
-operator|=
-name|SAUNIT
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|mode
 operator|=
 name|SAMODE
@@ -2381,11 +2346,12 @@ operator||
 name|CAM_DEBUG_INFO
 argument_list|,
 operator|(
-literal|"saclose(%d): dev=0x%x softc=0x%x\n"
+literal|"saclose(%s): softc=0x%x\n"
 operator|,
-name|unit
-operator|,
-name|unit
+name|devtoname
+argument_list|(
+name|dev
+argument_list|)
 operator|,
 name|softc
 operator|->
@@ -5817,6 +5783,15 @@ condition|)
 break|break;
 if|if
 condition|(
+name|cgd
+operator|->
+name|protocol
+operator|!=
+name|PROTO_SCSI
+condition|)
+break|break;
+if|if
+condition|(
 name|SID_TYPE
 argument_list|(
 operator|&
@@ -6227,10 +6202,6 @@ name|SAMINOR
 argument_list|(
 name|SA_CTLDEV
 argument_list|,
-name|periph
-operator|->
-name|unit_number
-argument_list|,
 literal|0
 argument_list|,
 name|SA_ATYPE_R
@@ -6297,10 +6268,6 @@ name|SAMINOR
 argument_list|(
 name|SA_NOT_CTLDEV
 argument_list|,
-name|periph
-operator|->
-name|unit_number
-argument_list|,
 name|i
 argument_list|,
 name|SA_ATYPE_R
@@ -6360,10 +6327,6 @@ name|SAMINOR
 argument_list|(
 name|SA_NOT_CTLDEV
 argument_list|,
-name|periph
-operator|->
-name|unit_number
-argument_list|,
 name|i
 argument_list|,
 name|SA_ATYPE_NR
@@ -6422,10 +6385,6 @@ argument_list|,
 name|SAMINOR
 argument_list|(
 name|SA_NOT_CTLDEV
-argument_list|,
-name|periph
-operator|->
-name|unit_number
 argument_list|,
 name|i
 argument_list|,

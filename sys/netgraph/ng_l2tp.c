@@ -1269,24 +1269,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* memmove macro */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|memmove
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|l
-parameter_list|)
-value|bcopy(s, d, l)
-end_define
-
-begin_comment
 comment|/* Whether to use m_copypacket() or m_dup() */
 end_comment
 

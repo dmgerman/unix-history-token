@@ -15,54 +15,6 @@ directive|define
 name|_NFSCLIENT_NFSMOUNT_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NFS_LEGACYRPC
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|RPC_SUCCESS
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|RPC_PROGUNAVAIL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|RPC_PROCUNAVAIL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|AUTH_OK
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|AUTH_BADCRED
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|AUTH_BADVERF
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|AUTH_TOOWEAK
-end_undef
-
 begin_include
 include|#
 directive|include
@@ -86,54 +38,6 @@ include|#
 directive|include
 file|<rpc/rpcsec_gss.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS_LEGACYRPC
-end_ifdef
-
-begin_struct
-struct|struct
-name|nfs_tcp_mountstate
-block|{
-name|int
-name|rpcresid
-decl_stmt|;
-define|#
-directive|define
-name|NFS_TCP_EXPECT_RPCMARKER
-value|0x0001
-comment|/* Expect to see a RPC/TCP marker next */
-define|#
-directive|define
-name|NFS_TCP_FORCE_RECONNECT
-value|0x0002
-comment|/* Force a TCP reconnect */
-define|#
-directive|define
-name|NFS_TCP_WAIT_WRITE_DRAIN
-value|0x0004
-comment|/* Waiting for socket writers to finish */
-name|int
-name|flags
-decl_stmt|;
-name|int
-name|sock_send_inprog
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Mount structure.  * One allocated on every NFS mount.  * Holds NFS specific information for mount.  */
@@ -176,22 +80,6 @@ name|int
 name|nm_fhsize
 decl_stmt|;
 comment|/* Size of root file handle */
-name|struct
-name|rpcclnt
-name|nm_rpcclnt
-decl_stmt|;
-comment|/* rpc state */
-ifdef|#
-directive|ifdef
-name|NFS_LEGACYRPC
-name|struct
-name|socket
-modifier|*
-name|nm_so
-decl_stmt|;
-comment|/* Rpc socket */
-endif|#
-directive|endif
 name|int
 name|nm_sotype
 decl_stmt|;
@@ -218,35 +106,6 @@ name|int
 name|nm_retry
 decl_stmt|;
 comment|/* Max retries */
-ifdef|#
-directive|ifdef
-name|NFS_LEGACYRPC
-name|int
-name|nm_srtt
-index|[
-name|NFS_MAX_TIMER
-index|]
-decl_stmt|,
-comment|/* RTT Timers for rpcs */
-name|nm_sdrtt
-index|[
-name|NFS_MAX_TIMER
-index|]
-decl_stmt|;
-name|int
-name|nm_sent
-decl_stmt|;
-comment|/* Request send count */
-name|int
-name|nm_cwnd
-decl_stmt|;
-comment|/* Request send window */
-name|int
-name|nm_timeouts
-decl_stmt|;
-comment|/* Request timeouts */
-endif|#
-directive|endif
 name|int
 name|nm_deadthresh
 decl_stmt|;
@@ -331,15 +190,6 @@ name|int
 name|nm_tprintf_delay
 decl_stmt|;
 comment|/* interval for messages */
-ifdef|#
-directive|ifdef
-name|NFS_LEGACYRPC
-name|struct
-name|nfs_tcp_mountstate
-name|nm_nfstcpstate
-decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|nm_hostname
 index|[
@@ -347,9 +197,6 @@ name|MNAMELEN
 index|]
 decl_stmt|;
 comment|/* server's name */
-ifndef|#
-directive|ifndef
-name|NFS_LEGACYRPC
 name|int
 name|nm_secflavor
 decl_stmt|;
@@ -378,8 +225,6 @@ name|gss_OID
 name|nm_mech_oid
 decl_stmt|;
 comment|/* OID of selected GSS-API mechanism */
-endif|#
-directive|endif
 comment|/* NFSv4 */
 name|uint64_t
 name|nm_clientid
@@ -455,6 +300,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|NFS_PCATCH
+value|(PCATCH | PBDRY)
+end_define
 
 begin_endif
 endif|#

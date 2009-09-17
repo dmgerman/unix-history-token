@@ -3810,7 +3810,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* struct ndis_physaddr { #ifdef __i386__ 	uint64_t		np_quad; #endif #ifdef __amd64__ 	uint32_t		np_low; 	uint32_t		np_high; #define np_quad np_low #endif #ifdef notdef 	uint32_t		np_low; 	uint32_t		np_high; #endif }; */
+comment|/* struct ndis_physaddr { #ifdef __i386__ 	uint64_t		np_quad; #endif #ifdef __amd64__ 	uint32_t		np_low; 	uint32_t		np_high; #define	np_quad np_low #endif #ifdef notdef 	uint32_t		np_low; 	uint32_t		np_high; #endif }; */
 end_comment
 
 begin_typedef
@@ -7258,16 +7258,6 @@ name|void
 name|NdisMSleep
 parameter_list|(
 name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ndis_cancel_timerlist
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

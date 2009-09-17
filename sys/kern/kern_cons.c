@@ -455,16 +455,19 @@ argument_list|(
 name|cn
 argument_list|)
 expr_stmt|;
+comment|/* Skip cons_consdev. */
 if|if
 condition|(
 name|cn
 operator|->
-name|cn_probe
+name|cn_ops
 operator|==
 name|NULL
 condition|)
 continue|continue;
 name|cn
+operator|->
+name|cn_ops
 operator|->
 name|cn_probe
 argument_list|(
@@ -508,6 +511,8 @@ block|{
 comment|/* 			 * Initialize console, and attach to it. 			 */
 name|cn
 operator|->
+name|cn_ops
+operator|->
 name|cn_init
 argument_list|(
 name|cn
@@ -539,6 +544,8 @@ literal|0
 condition|)
 block|{
 name|best_cn
+operator|->
+name|cn_ops
 operator|->
 name|cn_init
 argument_list|(
@@ -859,7 +866,7 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * XXX 		 * syscons gets really confused if console resources are 		 * freed after the system has initialized. 		 */
-block|if (cn->cn_term != NULL) 			cn->cn_term(cn);
+block|if (cn->cn_term != NULL) 			cn->cn_ops->cn_term(cn);
 endif|#
 directive|endif
 return|return;
@@ -1382,13 +1389,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|int
-name|ocn_mute
-decl_stmt|;
-name|ocn_mute
-operator|=
-name|cn_mute
-expr_stmt|;
 name|error
 operator|=
 name|sysctl_handle_int
@@ -1573,27 +1573,11 @@ name|CN_FLAG_NODEBUG
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|cn
-operator|->
-name|cn_checkc
-operator|!=
-name|NULL
-condition|)
 name|c
 operator|=
 name|cn
 operator|->
-name|cn_checkc
-argument_list|(
-name|cn
-argument_list|)
-expr_stmt|;
-else|else
-name|c
-operator|=
-name|cn
+name|cn_ops
 operator|->
 name|cn_getc
 argument_list|(
@@ -1607,13 +1591,11 @@ operator|!=
 operator|-
 literal|1
 condition|)
-block|{
 return|return
 operator|(
 name|c
 operator|)
 return|;
-block|}
 block|}
 block|}
 return|return
@@ -1694,6 +1676,8 @@ literal|'\n'
 condition|)
 name|cn
 operator|->
+name|cn_ops
+operator|->
 name|cn_putc
 argument_list|(
 name|cn
@@ -1702,6 +1686,8 @@ literal|'\r'
 argument_list|)
 expr_stmt|;
 name|cn
+operator|->
+name|cn_ops
 operator|->
 name|cn_putc
 argument_list|(

@@ -84,6 +84,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|preadateof
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pungetc
 parameter_list|(

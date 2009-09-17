@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: netaddr.h,v 1.25.18.5 2005/07/28 04:58:47 marka Exp $ */
+comment|/* $Id: netaddr.h,v 1.35.332.2 2009/01/18 23:47:41 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \file */
+comment|/*! \file isc/netaddr.h */
 end_comment
 
 begin_include
@@ -146,6 +146,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*%<  * Compare network addresses 'a' and 'b'.  Return #ISC_TRUE if  * they are equal, #ISC_FALSE if not.  */
+end_comment
+
 begin_function_decl
 name|isc_boolean_t
 name|isc_netaddr_eqprefix
@@ -168,7 +172,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Compare the 'prefixlen' most significant bits of the network  * addresses 'a' and 'b'.  Return #ISC_TRUE if they are equal,  * #ISC_FALSE if not.  */
+comment|/*%<  * Compare the 'prefixlen' most significant bits of the network  * addresses 'a' and 'b'.  If 'b''s scope is zero then 'a''s scope is  * ignored.  Return #ISC_TRUE if they are equal, #ISC_FALSE if not.  */
 end_comment
 
 begin_function_decl
@@ -467,7 +471,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Test whether the netaddr 'na' and 'prefixlen' are consistant.  * e.g. prefixlen within range.  *      na does not have bits set which are not covered by the prefixlen.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_RANGE		prefixlen out of range  *	ISC_R_NOTIMPLENTED	unsupported family  *	ISC_R_FAILURE		extra bits.  */
+comment|/*  * Test whether the netaddr 'na' and 'prefixlen' are consistant.  * e.g. prefixlen within range.  *      na does not have bits set which are not covered by the prefixlen.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_RANGE		prefixlen out of range  *	ISC_R_NOTIMPLEMENTED	unsupported family  *	ISC_R_FAILURE		extra bits.  */
 end_comment
 
 begin_macro

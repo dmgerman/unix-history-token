@@ -514,7 +514,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_char
+name|u_int
 modifier|*
 name|result
 parameter_list|)
@@ -919,7 +919,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|spibus
 argument_list|,
-name|at91_spi
+name|spi
 argument_list|,
 name|spibus_driver
 argument_list|,

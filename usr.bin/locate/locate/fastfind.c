@@ -604,25 +604,6 @@ comment|/* init bigram table */
 ifdef|#
 directive|ifdef
 name|FF_MMAP
-if|if
-condition|(
-name|len
-operator|<
-operator|(
-literal|2
-operator|*
-name|NBG
-operator|)
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"database too small: %s"
-argument_list|,
-name|database
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|c
@@ -949,6 +930,25 @@ operator|-
 name|OFFSET
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|count
+operator|<
+literal|0
+operator|||
+name|count
+operator|>
+name|MAXPATHLEN
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"corrupted database: %s"
+argument_list|,
+name|database
+argument_list|)
+expr_stmt|;
 comment|/* overlay old path */
 name|p
 operator|=

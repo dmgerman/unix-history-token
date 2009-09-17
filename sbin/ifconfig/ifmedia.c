@@ -274,7 +274,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((x)& (IFM_IEEE80211_ADHOC | IFM_IEEE80211_HOSTAP | \ 	 IFM_IEEE80211_IBSS | IFM_IEEE80211_WDS | IFM_IEEE80211_MONITOR))
+value|((x)& (IFM_IEEE80211_ADHOC | IFM_IEEE80211_HOSTAP | \ 	 IFM_IEEE80211_IBSS | IFM_IEEE80211_WDS | IFM_IEEE80211_MONITOR | \ 	 IFM_IEEE80211_MBSS))
 end_define
 
 begin_define
@@ -1385,6 +1385,9 @@ literal|0
 operator|||
 name|inst
 operator|>
+operator|(
+name|int
+operator|)
 name|IFM_INST_MAX
 condition|)
 name|errx
@@ -3775,7 +3778,7 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(sizeof(a) / sizeof(a[0]))
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for

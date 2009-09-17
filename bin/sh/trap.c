@@ -978,6 +978,63 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check if we have any traps enabled.  */
+end_comment
+
+begin_function
+name|int
+name|have_traps
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|char
+modifier|*
+specifier|volatile
+modifier|*
+name|tp
+decl_stmt|;
+for|for
+control|(
+name|tp
+operator|=
+name|trap
+init|;
+name|tp
+operator|<=
+operator|&
+name|trap
+index|[
+name|NSIG
+operator|-
+literal|1
+index|]
+condition|;
+name|tp
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|tp
+operator|&&
+operator|*
+operator|*
+name|tp
+condition|)
+comment|/* trap not NULL or SIG_IGN */
+return|return
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Set the signal handler for the specified signal.  The routine figures  * out what it should be set to.  */
 end_comment
 
@@ -1691,6 +1748,8 @@ name|trap
 index|[
 name|i
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|exitstatus
@@ -1882,6 +1941,8 @@ expr_stmt|;
 name|evalstring
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -94,6 +94,20 @@ name|CPUCTL_UPDATE
 value|_IOWR('c', 4, cpuctl_update_args_t)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPUCTL_MSRSBIT
+value|_IOWR('c', 5, cpuctl_msr_args_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUCTL_MSRCBIT
+value|_IOWR('c', 6, cpuctl_msr_args_t)
+end_define
+
 begin_endif
 endif|#
 directive|endif

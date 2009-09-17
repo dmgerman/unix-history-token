@@ -87,6 +87,17 @@ end_comment
 
 begin_function_decl
 name|int
+name|ip_checkrouteralert
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ip_dooptions
 parameter_list|(
 name|struct

@@ -213,6 +213,9 @@ operator|)
 return|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -249,6 +252,8 @@ operator|)
 return|;
 block|}
 break|break;
+endif|#
+directive|endif
 default|default:
 name|warnx
 argument_list|(
@@ -305,6 +310,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function
 name|int
 name|priv_netinet_ipsec_policy6_bypass_setup
@@ -337,6 +348,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -434,6 +450,9 @@ operator|)
 return|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -470,6 +489,8 @@ operator|)
 return|;
 block|}
 break|break;
+endif|#
+directive|endif
 default|default:
 name|warnx
 argument_list|(
@@ -526,6 +547,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function
 name|int
 name|priv_netinet_ipsec_policy6_entrust_setup
@@ -558,6 +585,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -744,6 +776,9 @@ operator|=
 name|IP_IPSEC_POLICY
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -756,6 +791,8 @@ operator|=
 name|IPV6_IPSEC_POLICY
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|warnx
 argument_list|(
@@ -895,6 +932,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function
 name|void
 name|priv_netinet_ipsec_policy6_bypass
@@ -924,6 +967,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -969,6 +1017,9 @@ operator|=
 name|IP_IPSEC_POLICY
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -981,6 +1032,8 @@ operator|=
 name|IPV6_IPSEC_POLICY
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|warnx
 argument_list|(
@@ -1117,6 +1170,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function
 name|void
 name|priv_netinet_ipsec_policy6_entrust
@@ -1146,6 +1205,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

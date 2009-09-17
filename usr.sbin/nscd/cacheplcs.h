@@ -21,18 +21,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
 begin_comment
 comment|/* common policy definitions */
 end_comment
@@ -94,7 +82,9 @@ function_decl|(
 modifier|*
 name|create_item_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 name|void
 function_decl|(
@@ -341,17 +331,17 @@ comment|/* fifo policy routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_policy_
 modifier|*
 name|init_cache_fifo_policy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_cache_fifo_policy
 parameter_list|(
@@ -367,17 +357,17 @@ comment|/* lru policy routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_policy_
 modifier|*
 name|init_cache_lru_policy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_cache_lru_policy
 parameter_list|(
@@ -393,17 +383,17 @@ comment|/* lfu policy routines */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cache_policy_
 modifier|*
 name|init_cache_lfu_policy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|destroy_cache_lfu_policy
 parameter_list|(

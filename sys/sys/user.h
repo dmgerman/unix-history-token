@@ -193,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_INT
-value|10
+value|9
 end_define
 
 begin_define
@@ -429,6 +429,17 @@ end_define
 begin_comment
 comment|/* size of returned ki_login */
 end_comment
+
+begin_comment
+comment|/*  * Steal a bit from ki_cr_flags (cr_flags is never used) to indicate  * that the cred had more than KI_NGROUPS groups.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_CRF_GRP_OVERFLOW
+value|0x80000000
+end_define
 
 begin_struct
 struct|struct
@@ -748,6 +759,10 @@ name|KI_NSPARE_INT
 index|]
 decl_stmt|;
 comment|/* spare room for growth */
+name|u_int
+name|ki_cr_flags
+decl_stmt|;
+comment|/* Credential flags */
 name|int
 name|ki_jid
 decl_stmt|;
@@ -1440,6 +1455,13 @@ define|#
 directive|define
 name|KVME_TYPE_DEAD
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|KVME_TYPE_SG
+value|7
 end_define
 
 begin_define

@@ -51,6 +51,19 @@ directive|if
 name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|)
 name|skipping
 argument_list|(
 literal|"archive_write_disk interface"
@@ -67,6 +80,9 @@ name|struct
 name|archive
 modifier|*
 name|a
+decl_stmt|;
+name|int
+name|fd
 decl_stmt|;
 comment|/* Force the umask to something predictable. */
 name|umask
@@ -87,6 +103,40 @@ literal|0555
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Can we? */
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"dir/testfile"
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+argument_list|,
+literal|0777
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* Apparently, we can, so the test below won't work. */
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|skipping
+argument_list|(
+literal|"Can't test writing to non-writable directory"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Try to extract a regular file into the directory above. */
 name|assert
 argument_list|(

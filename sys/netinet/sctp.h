@@ -1526,21 +1526,6 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* EY nr_sack all bit - All bit is the 2nd LSB of nr_sack chunk flags*/
-end_comment
-
-begin_comment
-comment|/* if All bit is set in an nr-sack chunk, then all nr gap acks gap acks*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_NR_SACK_ALL_BIT
-value|0x02
-end_define
-
-begin_comment
 comment|/* CMT DAC algorithm SACK flag */
 end_comment
 
@@ -2153,6 +2138,13 @@ define|#
 directive|define
 name|SCTP_LOG_AT_SEND_2_OUTQ
 value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_TRY_ADVANCE
+value|0x10000000
 end_define
 
 begin_undef

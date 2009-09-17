@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -214,35 +214,48 @@ define|\
 value|((sav->flags& SADB_X_EXT_OLD) ? 16 : AH_HMAC_HASHLEN)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ah_enable
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/* control flow of packets with AH */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ah_cleartos
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|ahstat
-name|ahstat
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* clear ip_tos when doing AH calc */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
+name|ahstat
+argument_list|,
+name|ahstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -253,12 +266,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_ah
 argument_list|,
 name|OID_AUTO
@@ -267,7 +276,11 @@ name|ah_enable
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ah_enable
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -277,12 +290,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_ah
 argument_list|,
 name|OID_AUTO
@@ -291,7 +300,11 @@ name|ah_cleartos
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ah_cleartos
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -301,12 +314,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_ah
 argument_list|,
 name|IPSECCTL_STATS
@@ -315,7 +324,11 @@ name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ahstat
+argument_list|)
 argument_list|,
 name|ahstat
 argument_list|,
@@ -572,11 +585,6 @@ modifier|*
 name|cria
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|auth_hash
 modifier|*
@@ -843,11 +851,6 @@ modifier|*
 name|xsp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|cryptoini
 name|cria
@@ -988,11 +991,6 @@ name|int
 name|out
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -2200,11 +2198,6 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|auth_hash
 modifier|*
@@ -3113,11 +3106,6 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|rplen
 decl_stmt|,
@@ -3874,11 +3862,6 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|secasvar
 modifier|*
@@ -5096,11 +5079,6 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|skip
 decl_stmt|,
@@ -5550,16 +5528,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|V_ah_enable
-operator|=
-literal|1
-expr_stmt|;
-comment|/* control flow of packets with AH */
-name|V_ah_cleartos
-operator|=
-literal|1
-expr_stmt|;
-comment|/* clear ip_tos when doing AH calc */
 name|xform_register
 argument_list|(
 operator|&

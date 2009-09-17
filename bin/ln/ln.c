@@ -87,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -156,6 +162,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Pflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Create hard links to symlinks. */
+end_comment
+
+begin_decl_stmt
+name|int
 name|sflag
 decl_stmt|;
 end_decl_stmt
@@ -183,28 +199,6 @@ end_decl_stmt
 begin_comment
 comment|/* Warn if symlink target does not 					 * exist, and -f is not enabled. */
 end_comment
-
-begin_comment
-comment|/* System link call. */
-end_comment
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|linkf
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|char
@@ -343,10 +337,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-name|linkf
-operator|=
-name|link
-expr_stmt|;
 name|exit
 argument_list|(
 name|linkit
@@ -377,7 +367,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Ffhinsvw"
+literal|"FLPfhinsvw"
 argument_list|)
 operator|)
 operator|!=
@@ -393,6 +383,22 @@ case|case
 literal|'F'
 case|:
 name|Fflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+name|Pflag
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|Pflag
 operator|=
 literal|1
 expr_stmt|;
@@ -475,14 +481,6 @@ expr_stmt|;
 name|argc
 operator|-=
 name|optind
-expr_stmt|;
-name|linkf
-operator|=
-name|sflag
-condition|?
-name|symlink
-else|:
-name|link
 expr_stmt|;
 name|linkch
 operator|=
@@ -747,13 +745,19 @@ block|{
 comment|/* If source doesn't exist, quit now. */
 if|if
 condition|(
+operator|(
+name|Pflag
+condition|?
+name|lstat
+else|:
 name|stat
-argument_list|(
+operator|)
+operator|(
 name|source
-argument_list|,
+operator|,
 operator|&
 name|sb
-argument_list|)
+operator|)
 condition|)
 block|{
 name|warn
@@ -1233,14 +1237,30 @@ block|}
 comment|/* Attempt the link. */
 if|if
 condition|(
-call|(
-modifier|*
-name|linkf
-call|)
+name|sflag
+condition|?
+name|symlink
 argument_list|(
 name|source
 argument_list|,
 name|target
+argument_list|)
+else|:
+name|linkat
+argument_list|(
+name|AT_FDCWD
+argument_list|,
+name|source
+argument_list|,
+name|AT_FDCWD
+argument_list|,
+name|target
+argument_list|,
+name|Pflag
+condition|?
+literal|0
+else|:
+name|AT_SYMLINK_FOLLOW
 argument_list|)
 condition|)
 block|{
@@ -1299,9 +1319,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ln [-s [-F]] [-f | -i] [-hnv] source_file [target_file]"
+literal|"usage: ln [-s [-F] | -L | -P] [-f | -i] [-hnv] source_file [target_file]"
 argument_list|,
-literal|"       ln [-s [-F]] [-f | -i] [-hnv] source_file ... target_dir"
+literal|"       ln [-s [-F] | -L | -P] [-f | -i] [-hnv] source_file ... target_dir"
 argument_list|,
 literal|"       link source_file target_file"
 argument_list|)

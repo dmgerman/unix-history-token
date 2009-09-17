@@ -13,17 +13,27 @@ directive|include
 file|"file.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
+begin_macro
+name|FILE_RCSID
+argument_list|(
+literal|"@(#)$File: print.c,v 1.66 2009/02/03 20:27:51 christos Exp $"
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_include
 include|#
@@ -65,28 +75,6 @@ include|#
 directive|include
 file|<time.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_macro
-name|FILE_RCSID
-argument_list|(
-literal|"@(#)$File: print.c,v 1.63 2008/02/17 19:28:54 rrt Exp $"
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint */
-end_comment
 
 begin_define
 define|#
@@ -228,13 +216,16 @@ argument_list|,
 literal|"%c%u),"
 argument_list|,
 operator|(
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|m
 operator|->
 name|in_op
 operator|&
 name|FILE_OPS_MASK
-operator|)
+argument_list|)
 operator|<
 name|SZOF
 argument_list|(
@@ -460,13 +451,16 @@ else|else
 block|{
 if|if
 condition|(
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|m
 operator|->
 name|mask_op
 operator|&
 name|FILE_OPS_MASK
-operator|)
+argument_list|)
 operator|<
 name|SZOF
 argument_list|(

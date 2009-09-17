@@ -165,20 +165,9 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>=
+operator|<
 literal|800044
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1164,11 +1153,6 @@ name|vnet_iter
 argument_list|)
 expr_stmt|;
 comment|/* XXX CURVNET_SET_QUIET() ? */
-name|INIT_VNET_NET
-argument_list|(
-name|vnet_iter
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp

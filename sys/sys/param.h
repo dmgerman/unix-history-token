@@ -47,7 +47,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*   * __FreeBSD_version numbers are documented in the Porter's Handbook.  * If you bump the version for any reason, you should update the documentation  * there.  * Currently this lives here:  *  *	doc/en_US.ISO8859-1/books/porters-handbook/book.sgml  *  * scheme is:<major><two digit minor>Rxx  *		'R' is 0 if release branch or x.0-CURRENT before RELENG_*_0  *		is created, otherwise 1.  */
+comment|/*   * __FreeBSD_version numbers are documented in the Porter's Handbook.  * If you bump the version for any reason, you should update the documentation  * there.  * Currently this lives here:  *  *	doc/en_US.ISO8859-1/books/porters-handbook/book.sgml  *  * scheme is:<major><two digit minor>Rxx  *		'R' is in the range 0 to 4 if this is a release branch or  *		x.0-CURRENT before RELENG_*_0 is created, otherwise 'R' is  *		in the range 5 to 9.  */
 end_comment
 
 begin_undef
@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|800063
+value|900001
 end_define
 
 begin_comment
@@ -153,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|NGROUPS
-value|NGROUPS_MAX
+value|(NGROUPS_MAX+1)
 end_define
 
 begin_comment
@@ -337,12 +337,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_NO_NAMESPACE_POLLUTION
-end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -661,15 +655,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _NO_NAMESPACE_POLLUTION */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -697,6 +682,17 @@ end_define
 
 begin_comment
 comment|/* OR'd with pri to stop re-entry of interlock mutex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PBDRY
+value|0x400
+end_define
+
+begin_comment
+comment|/* for PCATCH stop is done on the user boundary */
 end_comment
 
 begin_define
@@ -752,39 +748,6 @@ end_define
 
 begin_comment
 comment|/* non-existent device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CBLOCK
-value|128
-end_define
-
-begin_comment
-comment|/* Clist block size, must be a power of 2. */
-end_comment
-
-begin_comment
-comment|/* Data chars/clist. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CBSIZE
-value|(CBLOCK - sizeof(struct cblock *))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CROUND
-value|(CBLOCK - 1)
-end_define
-
-begin_comment
-comment|/* Clist rounding. */
 end_comment
 
 begin_comment

@@ -3770,7 +3770,7 @@ end_struct_decl
 begin_typedef
 typedef|typedef
 name|int
-name|vdev_read_t
+name|vdev_phys_read_t
 parameter_list|(
 name|struct
 name|vdev
@@ -3787,6 +3787,34 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
+name|bytes
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|vdev_read_t
+parameter_list|(
+name|struct
+name|vdev
+modifier|*
+name|vdev
+parameter_list|,
+specifier|const
+name|blkptr_t
+modifier|*
+name|bp
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|off_t
+name|offset
 parameter_list|,
 name|size_t
 name|bytes
@@ -3842,15 +3870,32 @@ name|int
 name|v_id
 decl_stmt|;
 comment|/* index in parent */
+name|int
+name|v_ashift
+decl_stmt|;
+comment|/* offset to block shift */
+name|int
+name|v_nparity
+decl_stmt|;
+comment|/* # parity for raidz */
+name|int
+name|v_nchildren
+decl_stmt|;
+comment|/* # children */
 name|vdev_state_t
 name|v_state
 decl_stmt|;
 comment|/* current state */
+name|vdev_phys_read_t
+modifier|*
+name|v_phys_read
+decl_stmt|;
+comment|/* read from raw leaf vdev */
 name|vdev_read_t
 modifier|*
 name|v_read
 decl_stmt|;
-comment|/* function to read from this vdev */
+comment|/* read from vdev */
 name|void
 modifier|*
 name|v_read_priv

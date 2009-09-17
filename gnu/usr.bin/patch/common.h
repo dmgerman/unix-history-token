@@ -134,6 +134,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|Strncpy
+value|(void)strncpy
+end_define
+
+begin_define
+define|#
+directive|define
 name|Strlcat
 value|(void)strlcat
 end_define
@@ -285,7 +292,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXLINELEN
+name|INITLINELEN
 value|4096
 end_define
 
@@ -543,15 +550,24 @@ end_decl_stmt
 begin_decl_stmt
 name|EXT
 name|char
+modifier|*
 name|buf
-index|[
-name|MAXLINELEN
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* general purpose buffer */
+end_comment
+
+begin_decl_stmt
+name|EXT
+name|size_t
+name|buf_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of the general purpose buffer */
 end_comment
 
 begin_function_decl

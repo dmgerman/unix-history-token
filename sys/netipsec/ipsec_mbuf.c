@@ -40,13 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -87,11 +87,6 @@ modifier|*
 name|off
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -566,11 +561,6 @@ name|int
 name|n
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 specifier|register
 name|struct
 name|mbuf
@@ -885,11 +875,6 @@ name|int
 name|hlen
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|mbuf
 modifier|*

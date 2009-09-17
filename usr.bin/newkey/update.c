@@ -193,36 +193,6 @@ literal|"updaters"
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|char
-name|PKFILE
-index|[]
-init|=
-literal|"/etc/publickey"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* YP */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|YP
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -1012,6 +982,7 @@ name|op
 parameter_list|,
 name|u_int
 name|keylen
+name|__unused
 parameter_list|,
 name|char
 modifier|*
@@ -1019,6 +990,7 @@ name|key
 parameter_list|,
 name|u_int
 name|datalen
+name|__unused
 parameter_list|,
 name|char
 modifier|*

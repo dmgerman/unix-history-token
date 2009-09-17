@@ -1453,6 +1453,8 @@ modifier|*
 parameter_list|,
 name|uint32_t
 name|gpio
+parameter_list|,
+name|HAL_GPIO_MUX_TYPE
 parameter_list|)
 function_decl|;
 end_function_decl

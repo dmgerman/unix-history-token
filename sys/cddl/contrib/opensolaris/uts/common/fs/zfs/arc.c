@@ -92,6 +92,12 @@ directive|include
 file|<sys/sdt.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_pageout.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|kmutex_t
@@ -189,6 +195,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|arc_min_prefetch_lifespan
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|zfs_prefetch_disable
 decl_stmt|;
 end_decl_stmt
 
@@ -8041,7 +8054,29 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
+name|arc_buf_t
+modifier|*
+name|tmp_arc_eviction_list
+decl_stmt|;
+comment|/* 	 * Move list over to avoid LOR 	 */
+name|restart
+label|:
 name|mutex_enter
+argument_list|(
+operator|&
+name|arc_eviction_mtx
+argument_list|)
+expr_stmt|;
+name|tmp_arc_eviction_list
+operator|=
+name|arc_eviction_list
+expr_stmt|;
+name|arc_eviction_list
+operator|=
+name|NULL
+expr_stmt|;
+name|mutex_exit
 argument_list|(
 operator|&
 name|arc_eviction_mtx
@@ -8049,7 +8084,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|arc_eviction_list
+name|tmp_arc_eviction_list
 operator|!=
 name|NULL
 condition|)
@@ -8058,9 +8093,9 @@ name|arc_buf_t
 modifier|*
 name|buf
 init|=
-name|arc_eviction_list
+name|tmp_arc_eviction_list
 decl_stmt|;
-name|arc_eviction_list
+name|tmp_arc_eviction_list
 operator|=
 name|buf
 operator|->
@@ -8088,12 +8123,6 @@ operator|&
 name|buf
 operator|->
 name|b_lock
-argument_list|)
-expr_stmt|;
-name|mutex_exit
-argument_list|(
-operator|&
-name|arc_eviction_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -8135,19 +8164,16 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|mutex_enter
-argument_list|(
-operator|&
-name|arc_eviction_mtx
-argument_list|)
-expr_stmt|;
 block|}
-name|mutex_exit
-argument_list|(
-operator|&
-name|arc_eviction_mtx
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|arc_eviction_list
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|restart
+goto|;
 block|}
 end_function
 
@@ -8527,6 +8553,24 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|_KERNEL
+comment|/* 	 * If pages are needed or we're within 2048 pages  	 * of needing to page need to reclaim 	 */
+if|if
+condition|(
+name|vm_pages_needed
+operator|||
+operator|(
+name|vm_paging_target
+argument_list|()
+operator|>
+operator|-
+literal|2048
+operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|needfree
@@ -15529,6 +15573,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|prefetch_tunable_set
+init|=
+literal|0
+decl_stmt|;
 name|mutex_init
 argument_list|(
 operator|&
@@ -16281,6 +16330,88 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
+if|if
+condition|(
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vfs.zfs.prefetch_disable"
+argument_list|,
+operator|&
+name|zfs_prefetch_disable
+argument_list|)
+condition|)
+name|prefetch_tunable_set
+operator|=
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+if|if
+condition|(
+name|prefetch_tunable_set
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ZFS NOTICE: Prefetch is disabled by default on i386 "
+literal|"-- to enable,\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"            add \"vfs.zfs.prefetch_disable=0\" "
+literal|"to /boot/loader.conf.\n"
+argument_list|)
+expr_stmt|;
+name|zfs_prefetch_disable
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|physmem
+operator|*
+name|PAGESIZE
+operator|)
+operator|<
+operator|(
+literal|1ULL
+operator|<<
+literal|32
+operator|)
+operator|)
+operator|&&
+name|prefetch_tunable_set
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ZFS NOTICE: Prefetch is disabled by default if less "
+literal|"than 4GB of RAM is present;\n"
+literal|"            to enable, add \"vfs.zfs.prefetch_disable=0\" "
+literal|"to /boot/loader.conf.\n"
+argument_list|)
+expr_stmt|;
+name|zfs_prefetch_disable
+operator|=
+literal|1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Warn about ZFS memory and address space requirements. */
 if|if
 condition|(

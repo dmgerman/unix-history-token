@@ -914,7 +914,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|dc_rxeof
 parameter_list|(
 name|struct
@@ -1749,24 +1749,6 @@ name|devclass_t
 name|dc_devclass
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|dc
-argument_list|,
-name|cardbus
-argument_list|,
-name|dc_driver
-argument_list|,
-name|dc_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
@@ -5196,7 +5178,7 @@ argument_list|,
 name|DC_NETCFG_RX_ALLMULTI
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -5259,7 +5241,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -5596,7 +5578,7 @@ operator|)
 condition|)
 return|return;
 comment|/* Now program new ones. */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -5699,7 +5681,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -5979,7 +5961,7 @@ operator|)
 condition|)
 return|return;
 comment|/* now program new ones */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -6055,7 +6037,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -6327,7 +6309,7 @@ argument_list|,
 name|DC_NETCFG_RX_ALLMULTI
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -6390,7 +6372,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -12802,7 +12784,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dc_rxeof
 parameter_list|(
 name|struct
@@ -12833,8 +12815,8 @@ name|int
 name|i
 decl_stmt|,
 name|total_len
-init|=
-literal|0
+decl_stmt|,
+name|rx_npkts
 decl_stmt|;
 name|u_int32_t
 name|rxstat
@@ -12857,6 +12839,14 @@ operator|->
 name|dc_cdata
 operator|.
 name|dc_rx_prod
+expr_stmt|;
+name|total_len
+operator|=
+literal|0
+expr_stmt|;
+name|rx_npkts
+operator|=
+literal|0
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -13142,7 +13132,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 block|}
 block|}
@@ -13284,6 +13278,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -13293,6 +13290,11 @@ name|dc_rx_prod
 operator|=
 name|i
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -14281,7 +14283,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dc_poll
 parameter_list|(
 name|struct
@@ -14306,6 +14308,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|DC_LOCK
 argument_list|(
 name|sc
@@ -14328,7 +14335,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 name|sc
 operator|->
@@ -14336,6 +14347,8 @@ name|rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|dc_rxeof
 argument_list|(
 name|sc
@@ -14418,7 +14431,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 comment|/* ack what we have */
 name|CSR_WRITE_4
@@ -14550,6 +14567,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

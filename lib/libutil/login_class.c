@@ -264,6 +264,14 @@ name|RLIMIT_NPTS
 block|}
 block|,
 block|{
+literal|"swapuse"
+block|,
+name|login_getcapsize
+block|,
+name|RLIMIT_SWAP
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

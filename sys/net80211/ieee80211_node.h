@@ -36,7 +36,7 @@ comment|/* for aggregation state */
 end_comment
 
 begin_comment
-comment|/*  * Each ieee80211com instance has a single timer that fires every  * IEEE80211_INACT_WAIT seconds to handle "inactivity processing".  * This is used to do node inactivity processing when operating  * as an AP or in adhoc mode.  For inactivity processing each node  * has a timeout set in it's ni_inact field that is decremented  * on each timeout and the node is reclaimed when the counter goes  * to zero.  We use different inactivity timeout values depending  * on whether the node is associated and authorized (either by  * 802.1x or open/shared key authentication) or associated but yet  * to be authorized.  The latter timeout is shorter to more aggressively  * reclaim nodes that leave part way through the 802.1x exchange.  */
+comment|/*  * Each ieee80211com instance has a single timer that fires every  * IEEE80211_INACT_WAIT seconds to handle "inactivity processing".  * This is used to do node inactivity processing when operating  * as an AP, adhoc or mesh mode.  For inactivity processing each node  * has a timeout set in it's ni_inact field that is decremented  * on each timeout and the node is reclaimed when the counter goes  * to zero.  We use different inactivity timeout values depending  * on whether the node is associated and authorized (either by  * 802.1x or open/shared key authentication) or associated but yet  * to be authorized.  The latter timeout is shorter to more aggressively  * reclaim nodes that leave part way through the 802.1x exchange.  */
 end_comment
 
 begin_define
@@ -135,6 +135,10 @@ value|32
 end_define
 
 begin_comment
+comment|/* NB: hash size must be pow2 */
+end_comment
+
+begin_comment
 comment|/* simple hash is enough for variation of macaddr */
 end_comment
 
@@ -143,6 +147,8 @@ define|#
 directive|define
 name|IEEE80211_NODE_HASH
 parameter_list|(
+name|ic
+parameter_list|,
 name|addr
 parameter_list|)
 define|\
@@ -168,7 +174,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Information element ``blob''.  We use this structure  * to capture management frame payloads that need to be  * retained.  Information elemnts within the payload that  * we need to consult have references recorded.  */
+comment|/*  * Information element ``blob''.  We use this structure  * to capture management frame payloads that need to be  * retained.  Information elements within the payload that  * we need to consult have references recorded.  */
 end_comment
 
 begin_struct
@@ -211,6 +217,18 @@ modifier|*
 name|tdma_ie
 decl_stmt|;
 comment|/* captured TDMA ie */
+name|uint8_t
+modifier|*
+name|meshid_ie
+decl_stmt|;
+comment|/* captured MESH ID ie */
+name|uint8_t
+modifier|*
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 comment|/* NB: these must be the last members of this structure */
 name|uint8_t
 modifier|*
@@ -224,6 +242,55 @@ comment|/* data size in bytes */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * 802.11s (Mesh) Peer Link FSM state.  */
+end_comment
+
+begin_enum
+enum|enum
+name|ieee80211_mesh_mlstate
+block|{
+name|IEEE80211_NODE_MESH_IDLE
+init|=
+literal|0
+block|,
+name|IEEE80211_NODE_MESH_OPENSNT
+init|=
+literal|1
+block|,
+comment|/* open frame sent */
+name|IEEE80211_NODE_MESH_OPENRCV
+init|=
+literal|2
+block|,
+comment|/* open frame received */
+name|IEEE80211_NODE_MESH_CONFIRMRCV
+init|=
+literal|3
+block|,
+comment|/* confirm frame received */
+name|IEEE80211_NODE_MESH_ESTABLISHED
+init|=
+literal|4
+block|,
+comment|/* link established */
+name|IEEE80211_NODE_MESH_HOLDING
+init|=
+literal|5
+block|,
+comment|/* link closing */
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_MLSTATE_BITS
+define|\
+value|"\20\1IDLE\2OPENSNT\2OPENRCV\3CONFIRMRCV\4ESTABLISHED\5HOLDING"
+end_define
 
 begin_comment
 comment|/*  * Node specific information.  Note that drivers are expected  * to derive from this structure to add device-specific per-node  * state.  This is done by overriding the ic_node_* methods in  * the ieee80211com structure.  */
@@ -362,6 +429,16 @@ directive|define
 name|IEEE80211_NODE_ASSOCID
 value|0x020000
 comment|/* xmit requires associd */
+define|#
+directive|define
+name|IEEE80211_NODE_AMSDU_RX
+value|0x040000
+comment|/* AMSDU rx enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_AMSDU_TX
+value|0x080000
+comment|/* AMSDU tx enabled */
 name|uint16_t
 name|ni_associd
 decl_stmt|;
@@ -438,14 +515,14 @@ name|ni_ies
 decl_stmt|;
 comment|/* captured ie's */
 comment|/* tx seq per-tid */
-name|uint16_t
+name|ieee80211_seq
 name|ni_txseqs
 index|[
 name|IEEE80211_TID_SIZE
 index|]
 decl_stmt|;
 comment|/* rx seq previous per-tid*/
-name|uint16_t
+name|ieee80211_seq
 name|ni_rxseqs
 index|[
 name|IEEE80211_TID_SIZE
@@ -470,10 +547,6 @@ name|ni_ucastkey
 decl_stmt|;
 comment|/* unicast key */
 comment|/* hardware */
-name|uint32_t
-name|ni_rstamp
-decl_stmt|;
-comment|/* recv timestamp */
 name|uint32_t
 name|ni_avgrssi
 decl_stmt|;
@@ -562,6 +635,42 @@ name|uint8_t
 name|ni_dtim_count
 decl_stmt|;
 comment|/* DTIM count for last bcn */
+comment|/* 11s state */
+name|uint8_t
+name|ni_meshidlen
+decl_stmt|;
+name|uint8_t
+name|ni_meshid
+index|[
+name|IEEE80211_MESHID_LEN
+index|]
+decl_stmt|;
+name|enum
+name|ieee80211_mesh_mlstate
+name|ni_mlstate
+decl_stmt|;
+comment|/* peering management state */
+name|uint16_t
+name|ni_mllid
+decl_stmt|;
+comment|/* link local ID */
+name|uint16_t
+name|ni_mlpid
+decl_stmt|;
+comment|/* link peer ID */
+name|struct
+name|callout
+name|ni_mltimer
+decl_stmt|;
+comment|/* link mesh timer */
+name|uint8_t
+name|ni_mlrcnt
+decl_stmt|;
+comment|/* link mesh retry counter */
+name|uint8_t
+name|ni_mltval
+decl_stmt|;
+comment|/* link mesh timer value */
 comment|/* 11n state */
 name|uint16_t
 name|ni_htcap
@@ -639,12 +748,12 @@ modifier|*
 name|ni_wdsvap
 decl_stmt|;
 comment|/* associated WDS vap */
-comment|/* XXX move to vap? */
-name|struct
-name|ifqueue
-name|ni_wdsq
+name|uint64_t
+name|ni_spare
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* wds pending queue */
 block|}
 struct|;
 end_struct
@@ -683,9 +792,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_NODE_AMSDU
+define|\
+value|(IEEE80211_NODE_AMSDU_RX | IEEE80211_NODE_AMSDU_TX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_NODE_HT_ALL
 define|\
-value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU | IEEE80211_NODE_MIMO_PS | \ 	 IEEE80211_NODE_MIMO_RTS | IEEE80211_NODE_RIFS | \ 	 IEEE80211_NODE_SGI20 | IEEE80211_NODE_SGI40)
+value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU | IEEE80211_NODE_AMSDU | \ 	 IEEE80211_NODE_MIMO_PS | IEEE80211_NODE_MIMO_RTS | \ 	 IEEE80211_NODE_RIFS | IEEE80211_NODE_SGI20 | IEEE80211_NODE_SGI40)
 end_define
 
 begin_define
@@ -1007,6 +1124,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_node_setuptxparms
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee80211_node_set_chan
 parameter_list|(
 name|struct
@@ -1052,6 +1180,21 @@ name|ieee80211_sync_curchan
 parameter_list|(
 name|struct
 name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_setupcurchan
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;

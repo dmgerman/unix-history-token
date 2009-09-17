@@ -759,16 +759,6 @@ name|SES_FLAG_INITIALIZED
 value|0x04
 end_define
 
-begin_define
-define|#
-directive|define
-name|SESUNIT
-parameter_list|(
-name|x
-parameter_list|)
-value|(dev2unit((x)))
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -1191,6 +1181,15 @@ condition|)
 block|{
 break|break;
 block|}
+if|if
+condition|(
+name|cgd
+operator|->
+name|protocol
+operator|!=
+name|PROTO_SCSI
+condition|)
+break|break;
 name|inq_len
 operator|=
 name|cgd

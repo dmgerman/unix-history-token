@@ -600,6 +600,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|i386_ldt_args32
+block|{
+name|uint32_t
+name|start
+decl_stmt|;
+name|uint32_t
+name|descs
+decl_stmt|;
+name|uint32_t
+name|num
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

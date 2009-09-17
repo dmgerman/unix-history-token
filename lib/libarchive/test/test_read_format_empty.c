@@ -24,7 +24,9 @@ name|char
 name|archive
 index|[]
 init|=
-block|{ }
+block|{
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -89,10 +91,7 @@ name|a
 argument_list|,
 name|archive
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|archive
-argument_list|)
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;

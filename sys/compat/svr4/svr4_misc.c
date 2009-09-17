@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -542,7 +536,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1053,7 +1046,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|dirent
 modifier|*
@@ -1732,7 +1724,7 @@ operator|)
 name|svr4reclen
 expr_stmt|;
 block|}
-name|strcpy
+name|strlcpy
 argument_list|(
 name|svr4_dirent
 operator|.
@@ -1741,6 +1733,13 @@ argument_list|,
 name|bdp
 operator|->
 name|d_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|svr4_dirent
+operator|.
+name|d_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2331,6 +2330,10 @@ argument_list|(
 literal|"svr4_sys_getdents64: bad reclen"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cookie
+condition|)
 name|off
 operator|=
 operator|*
@@ -2338,6 +2341,11 @@ name|cookie
 operator|++
 expr_stmt|;
 comment|/* each entry points to the next */
+else|else
+name|off
+operator|+=
+name|reclen
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2437,7 +2445,7 @@ name|u_short
 operator|)
 name|svr4_reclen
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|idb
 operator|.
@@ -2446,6 +2454,13 @@ argument_list|,
 name|bdp
 operator|->
 name|d_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|idb
+operator|.
+name|d_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3197,7 +3212,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -3369,15 +3383,6 @@ operator|->
 name|name
 condition|)
 block|{
-case|case
-name|SVR4_CONFIG_UNUSED
-case|:
-operator|*
-name|retval
-operator|=
-literal|0
-expr_stmt|;
-break|break;
 case|case
 name|SVR4_CONFIG_NGROUPS
 case|:
@@ -3653,6 +3658,138 @@ break|break;
 endif|#
 directive|endif
 comment|/* NOTYET */
+case|case
+name|SVR4_CONFIG_COHERENCY
+case|:
+operator|*
+name|retval
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_SPLIT_CACHE
+case|:
+operator|*
+name|retval
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_ICACHESZ
+case|:
+operator|*
+name|retval
+operator|=
+literal|256
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_DCACHESZ
+case|:
+operator|*
+name|retval
+operator|=
+literal|256
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_ICACHELINESZ
+case|:
+operator|*
+name|retval
+operator|=
+literal|64
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_DCACHELINESZ
+case|:
+operator|*
+name|retval
+operator|=
+literal|64
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_ICACHEBLKSZ
+case|:
+operator|*
+name|retval
+operator|=
+literal|64
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_DCACHEBLKSZ
+case|:
+operator|*
+name|retval
+operator|=
+literal|64
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_DCACHETBLKSZ
+case|:
+operator|*
+name|retval
+operator|=
+literal|64
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_ICACHE_ASSOC
+case|:
+operator|*
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_DCACHE_ASSOC
+case|:
+operator|*
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX */
+break|break;
+case|case
+name|SVR4_CONFIG_MAXPID
+case|:
+operator|*
+name|retval
+operator|=
+name|PID_MAX
+expr_stmt|;
+break|break;
+case|case
+name|SVR4_CONFIG_STACK_PROT
+case|:
+operator|*
+name|retval
+operator|=
+name|PROT_READ
+operator||
+name|PROT_WRITE
+operator||
+name|PROT_EXEC
+expr_stmt|;
+break|break;
 default|default:
 return|return
 name|EINVAL
@@ -5444,7 +5581,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Ok, handle the weird cases.  Either WNOWAIT is set (meaning we 	 * just want to see if there is a process to harvest, we dont' 	 * want to actually harvest it), or WEXIT and WTRAPPED are clear 	 * meaning we want to ignore zombies.  Either way, we don't have 	 * to handle harvesting zombies here.  We do have to duplicate the 	 * other portions of kern_wait() though, especially for the 	 * WCONTINUED and WSTOPPED. 	 */
+comment|/* 	 * Ok, handle the weird cases.  Either WNOWAIT is set (meaning we 	 * just want to see if there is a process to harvest, we don't 	 * want to actually harvest it), or WEXIT and WTRAPPED are clear 	 * meaning we want to ignore zombies.  Either way, we don't have 	 * to handle harvesting zombies here.  We do have to duplicate the 	 * other portions of kern_wait() though, especially for WCONTINUED 	 * and WSTOPPED. 	 */
 name|loop
 label|:
 name|nfound
@@ -7510,9 +7647,6 @@ name|unsigned
 name|int
 name|ncopy
 decl_stmt|;
-name|int
-name|vfslocked
-decl_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -7550,14 +7684,25 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
-name|vfslocked
-operator|=
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_NO_FREE_PNBUF
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
 name|NDHASGIANT
 argument_list|(
 operator|&
 name|nd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ncopy
@@ -7619,18 +7764,6 @@ operator|&
 name|nd
 argument_list|,
 name|NDF_ONLY_PNBUF
-argument_list|)
-expr_stmt|;
-name|vput
-argument_list|(
-name|nd
-operator|.
-name|ni_vp
-argument_list|)
-expr_stmt|;
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
 argument_list|)
 expr_stmt|;
 return|return

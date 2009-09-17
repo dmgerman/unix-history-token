@@ -2681,6 +2681,17 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|ncp_IfaceAddrAdded
+argument_list|(
+name|ncp
+argument_list|,
+name|iface
+operator|->
+name|addr
+operator|+
+name|n
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;

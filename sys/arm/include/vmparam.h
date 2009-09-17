@@ -366,12 +366,6 @@ name|MAXSLP
 value|20
 end_define
 
-begin_define
-define|#
-directive|define
-name|VM_PROT_READ_IS_EXEC
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

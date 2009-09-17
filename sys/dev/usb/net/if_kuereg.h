@@ -491,7 +491,7 @@ struct|struct
 name|kue_softc
 block|{
 name|struct
-name|usb2_ether
+name|usb_ether
 name|sc_ue
 decl_stmt|;
 name|struct
@@ -503,7 +503,7 @@ name|kue_ether_desc
 name|sc_desc
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[

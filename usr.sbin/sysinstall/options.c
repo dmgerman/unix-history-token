@@ -159,6 +159,12 @@ return|return
 literal|"CDROM"
 return|;
 case|case
+name|DEVICE_TYPE_USB
+case|:
+return|return
+literal|"USB"
+return|;
+case|case
 name|DEVICE_TYPE_DOS
 case|:
 return|return

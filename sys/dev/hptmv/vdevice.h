@@ -230,7 +230,7 @@ value|0x5F
 end_define
 
 begin_comment
-comment|/*   * arrayType   */
+comment|/*  * arrayType  */
 end_comment
 
 begin_define
@@ -636,6 +636,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|FOR_EACH_VBUS
+parameter_list|(
+name|pVBus
+parameter_list|)
+define|\
+value|for(pVBus = gVBus; pVBus<&gVBus[MAX_VBUS]; pVBus++) \  #define FOR_EACH_ARRAY_ON_ALL_VBUS(pVBus, pArray, i) \ 	for(pVBus = gVBus; pVBus<&gVBus[MAX_VBUS]; pVBus++) \ 		for(i = 0; i< MAX_ARRAY_PER_VBUS; i++) \ 			if ((pArray=((PVDevice)&pVBus->_ArrayTables[i*ARRAY_VDEV_SIZE]))->u.array.dArStamp==0) continue; else
+end_define
+
+begin_define
+define|#
+directive|define
 name|FOR_EACH_DEV_ON_ALL_VBUS
 parameter_list|(
 name|pVBus
@@ -645,22 +656,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|for(pVBus = gVBus; pVBus<&gVBus[MAX_VBUS]; pVBus++) \ 		for(i = 0; i< MAX_VDEVICE_PER_VBUS; i++) \ 			if ((pVDev=pVBus->pVDevice[i])==0) continue; else
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOR_EACH_ARRAY_ON_ALL_VBUS
-parameter_list|(
-name|pVBus
-parameter_list|,
-name|pArray
-parameter_list|,
-name|i
-parameter_list|)
-define|\
-value|for(pVBus = gVBus; pVBus<&gVBus[MAX_VBUS]; pVBus++) \ 		for(i = 0; i< MAX_ARRAY_PER_VBUS; i++) \ 			if ((pArray=((PVDevice)&pVBus->_ArrayTables[i*ARRAY_VDEV_SIZE]))->u.array.dArStamp==0) continue; else
+value|FOR_EACH_VBUS(pVBus) \ 		for(i = 0; i< MAX_VDEVICE_PER_VBUS; i++) \ 			if ((pVDev=pVBus->pVDevice[i])==0) continue; else
 end_define
 
 begin_comment
@@ -702,11 +698,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/***************************************************************************  * Description:  the functions OS must provided   ***************************************************************************/
+comment|/***************************************************************************  * Description:  the functions OS must provided  ***************************************************************************/
 end_comment
 
 begin_function_decl
 name|void
+name|HPTLIBAPI
 name|OsSetDeviceTable
 parameter_list|(
 name|PDevice

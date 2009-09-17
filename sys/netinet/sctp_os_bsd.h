@@ -192,12 +192,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -279,11 +273,22 @@ directive|include
 file|<netinet/icmp_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"SCTP is not yet compatible with VIMAGE."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -381,12 +386,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/scope6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -869,7 +868,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_CHUNK_ENABLE) CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
+value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_CHUNK_ENABLE) SCTP_CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
 end_define
 
 begin_else

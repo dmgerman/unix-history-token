@@ -1439,7 +1439,7 @@ name|PROP_READONLY
 argument_list|,
 name|ZFS_TYPE_DATASET
 argument_list|,
-name|NULL
+literal|"CREATETXG"
 argument_list|)
 expr_stmt|;
 name|register_hidden

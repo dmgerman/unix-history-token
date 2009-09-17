@@ -505,6 +505,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+modifier|*
+name|dpcpu0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|pcpu0
 index|[
@@ -2225,6 +2232,13 @@ argument_list|(
 literal|"initialize msgbuf\n"
 argument_list|)
 expr_stmt|;
+name|dpcpu_init
+argument_list|(
+name|dpcpu0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|msgbufinit
 argument_list|(
 name|msgbufp
@@ -3608,6 +3622,26 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Flush the D-cache for non-DMA I/O so that the I-cache can  * be made coherent later.  */
+end_comment
+
+begin_function
+name|void
+name|cpu_flush_dcache
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+comment|/* TBD */
 block|}
 end_function
 

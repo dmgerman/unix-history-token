@@ -872,8 +872,6 @@ name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|rootvp
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -927,11 +925,6 @@ name|data
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1206,11 +1199,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1219,6 +1207,11 @@ modifier|*
 name|devvp
 decl_stmt|;
 comment|/* vnode for blk device to mount */
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 comment|/* msdosfs specific mount control block */
 name|struct
 name|msdosfsmount
@@ -1243,6 +1236,10 @@ name|char
 modifier|*
 name|from
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 if|if
 condition|(
 name|vfs_filteropt
@@ -1352,8 +1349,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1967,8 +1962,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_FORCE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2038,10 +2031,6 @@ name|struct
 name|cdev
 modifier|*
 name|dev
-init|=
-name|devvp
-operator|->
-name|v_rdev
 decl_stmt|;
 name|union
 name|bootsector
@@ -2084,6 +2073,15 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* This and pmp both used in error_exit. */
+name|pmp
+operator|=
+name|NULL
+expr_stmt|;
 name|ronly
 operator|=
 operator|(
@@ -2096,7 +2094,17 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
-comment|/* XXX: use VOP_ACCESS to check FS perms */
+name|dev
+operator|=
+name|devvp
+operator|->
+name|v_rdev
+expr_stmt|;
+name|dev_ref
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
@@ -2138,26 +2146,15 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|error_exit
+goto|;
 name|bo
 operator|=
 operator|&
 name|devvp
 operator|->
 name|v_bufobj
-expr_stmt|;
-name|bp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* This and pmp both used in error_exit. */
-name|pmp
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* 	 * Read the boot sector of the filesystem, and then check the 	 * boot signature.  If not a dos boot sector then error out. 	 * 	 * NOTE: 8192 is a magic size that works for ffs. 	 */
 name|error
@@ -3395,6 +3392,12 @@ name|pm_devvp
 operator|=
 name|devvp
 expr_stmt|;
+name|pmp
+operator|->
+name|pm_dev
+operator|=
+name|dev
+expr_stmt|;
 comment|/* 	 * Have the inuse map filled in. 	 */
 if|if
 condition|(
@@ -3618,6 +3621,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|dev_rel
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3642,11 +3650,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -3683,12 +3686,16 @@ literal|0
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 return|return
 name|error
@@ -3725,6 +3732,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 block|{
 operator|(
@@ -3958,6 +3969,13 @@ operator|->
 name|pm_devvp
 argument_list|)
 expr_stmt|;
+name|dev_rel
+argument_list|(
+name|pmp
+operator|->
+name|pm_dev
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|pmp
@@ -4012,7 +4030,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -4036,11 +4054,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -4128,11 +4141,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -4225,11 +4233,6 @@ name|mp
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -4239,6 +4242,11 @@ name|vp
 decl_stmt|,
 modifier|*
 name|nvp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|struct
 name|denode
@@ -4262,6 +4270,10 @@ name|allerror
 init|=
 literal|0
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 comment|/* 	 * If we ever switch to not updating all of the fats all the time, 	 * this would be the place to update them from the first one. 	 */
 if|if
 condition|(

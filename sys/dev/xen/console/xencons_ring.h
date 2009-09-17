@@ -15,6 +15,28 @@ directive|define
 name|_XENCONS_RING_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|CN_LOCK
+parameter_list|(
+name|l
+parameter_list|)
+define|\
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_lock_spin(&(l));			\ 		} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CN_UNLOCK
+parameter_list|(
+name|l
+parameter_list|)
+define|\
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_unlock_spin(&(l));			\ 		} while (0)
+end_define
+
 begin_function_decl
 name|int
 name|xencons_ring_init

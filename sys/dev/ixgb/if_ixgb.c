@@ -535,7 +535,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ixgb_process_receive_interrupts
 parameter_list|(
 name|struct
@@ -839,7 +839,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|if_ixgb
+name|ixgb
 argument_list|,
 name|pci
 argument_list|,
@@ -857,7 +857,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|if_ixgb
+name|ixgb
 argument_list|,
 name|pci
 argument_list|,
@@ -873,7 +873,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|if_ixgb
+name|ixgb
 argument_list|,
 name|ether
 argument_list|,
@@ -3060,7 +3060,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ixgb_poll_locked
 parameter_list|(
 name|struct
@@ -3087,6 +3087,9 @@ name|if_softc
 decl_stmt|;
 name|u_int32_t
 name|reg_icr
+decl_stmt|;
+name|int
+name|rx_npkts
 decl_stmt|;
 name|IXGB_LOCK_ASSERT
 argument_list|(
@@ -3162,6 +3165,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|rx_npkts
+operator|=
 name|ixgb_process_receive_interrupts
 argument_list|(
 name|adapter
@@ -3189,12 +3194,17 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ixgb_poll
 parameter_list|(
 name|struct
@@ -3219,6 +3229,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|IXGB_LOCK
 argument_list|(
 name|adapter
@@ -3232,6 +3247,8 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
+name|rx_npkts
+operator|=
 name|ixgb_poll_locked
 argument_list|(
 name|ifp
@@ -3246,6 +3263,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -4481,7 +4503,7 @@ argument_list|(
 literal|"ixgb_set_multi: begin"
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -4553,7 +4575,7 @@ name|mcnt
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -8521,7 +8543,7 @@ return|return;
 block|}
 comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *  *********************************************************************/
 specifier|static
-name|void
+name|int
 name|ixgb_process_receive_interrupts
 parameter_list|(
 name|struct
@@ -8578,6 +8600,11 @@ literal|0
 decl_stmt|;
 name|int
 name|eop_desc
+decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 comment|/* Pointer to the receive descriptor being examined. */
 name|struct
@@ -8648,7 +8675,11 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 while|while
 condition|(
@@ -9035,6 +9066,9 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -9319,7 +9353,11 @@ argument_list|,
 name|next_to_use
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 comment|/*********************************************************************  *  *  Verify that the hardware indicated that the checksum is valid.  *  Inform the stack about the status of checksum so that stack  *  doesn't spend time verifying the checksum.  *  *********************************************************************/
 specifier|static

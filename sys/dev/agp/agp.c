@@ -291,16 +291,6 @@ name|agp_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|KDEV2DEV
-parameter_list|(
-name|kdev
-parameter_list|)
-value|devclass_get_device(agp_devclass, dev2unit(kdev))
-end_define
-
 begin_comment
 comment|/* Helper functions for implementing chipset mini drivers. */
 end_comment
@@ -1036,10 +1026,7 @@ argument_list|(
 operator|&
 name|agp_cdevsw
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
+literal|0
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -1049,6 +1036,14 @@ literal|0600
 argument_list|,
 literal|"agpgart"
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|as_devnode
+operator|->
+name|si_drv1
+operator|=
+name|dev
 expr_stmt|;
 return|return
 literal|0
@@ -1160,7 +1155,7 @@ comment|/**  * Default AGP aperture size detection which simply returns the size
 end_comment
 
 begin_function
-name|int
+name|u_int32_t
 name|agp_generic_get_aperture
 parameter_list|(
 name|device_t
@@ -2305,10 +2300,6 @@ decl_stmt|;
 comment|/* Do some sanity checks first. */
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 operator|(
 name|offset
 operator|&
@@ -3481,10 +3472,9 @@ block|{
 name|device_t
 name|dev
 init|=
-name|KDEV2DEV
-argument_list|(
 name|kdev
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|struct
 name|agp_softc
@@ -3547,10 +3537,9 @@ block|{
 name|device_t
 name|dev
 init|=
-name|KDEV2DEV
-argument_list|(
 name|kdev
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|struct
 name|agp_softc
@@ -3666,10 +3655,9 @@ block|{
 name|device_t
 name|dev
 init|=
-name|KDEV2DEV
-argument_list|(
 name|kdev
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 switch|switch
 condition|(
@@ -3820,10 +3808,9 @@ block|{
 name|device_t
 name|dev
 init|=
-name|KDEV2DEV
-argument_list|(
 name|kdev
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|struct
 name|agp_softc

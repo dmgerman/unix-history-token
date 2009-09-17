@@ -910,6 +910,8 @@ name|OID_AUTO
 argument_list|,
 name|rules
 argument_list|,
+name|CTLFLAG_MPSAFE
+operator||
 name|CTLFLAG_RW
 argument_list|,
 name|sysctl_rule
@@ -1315,12 +1317,6 @@ block|{
 name|match
 operator|=
 operator|(
-name|cred
-operator|->
-name|cr_prison
-operator|!=
-name|NULL
-operator|&&
 name|cred
 operator|->
 name|cr_prison
@@ -2448,7 +2444,7 @@ if|if
 condition|(
 name|accmode
 operator|&
-name|VADMIN
+name|VADMIN_PERMS
 condition|)
 name|mbi
 operator||=
@@ -2458,7 +2454,7 @@ if|if
 condition|(
 name|accmode
 operator|&
-name|VSTAT
+name|VSTAT_PERMS
 condition|)
 name|mbi
 operator||=

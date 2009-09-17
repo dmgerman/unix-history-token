@@ -234,7 +234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The partially-populated reservation queue  *  * This queue enables the fast recovery of an unused cached or free small page  * from a partially-populated reservation.  The head of this queue is either  * the least-recently-populated or most-recently-depopulated reservation.  *  * Access to this queue is synchronized by the free page queue lock.  */
+comment|/*  * The partially-populated reservation queue  *  * This queue enables the fast recovery of an unused cached or free small page  * from a partially-populated reservation.  The reservation at the head of  * this queue is the least-recently-changed, partially-populated reservation.  *  * Access to this queue is synchronized by the free page queue lock.  */
 end_comment
 
 begin_expr_stmt
@@ -654,7 +654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reduces the given reservation's population count.  If the population count  * becomes zero, the reservation is destroyed.  Additionally, moves the  * reservation to the head of the partially-populated reservations queue if the  * population count is non-zero.  *  * The free page queue lock must be held.  */
+comment|/*  * Reduces the given reservation's population count.  If the population count  * becomes zero, the reservation is destroyed.  Additionally, moves the  * reservation to the tail of the partially-populated reservations queue if the  * population count is non-zero.  *  * The free page queue lock must be held.  */
 end_comment
 
 begin_function
@@ -776,7 +776,7 @@ name|inpartpopq
 operator|=
 name|TRUE
 expr_stmt|;
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|vm_rvq_partpop

@@ -1381,6 +1381,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|strcmp
 argument_list|(
 name|fs
@@ -1406,6 +1407,16 @@ operator|->
 name|fs_type
 argument_list|,
 name|FSTAB_RQ
+argument_list|)
+operator|)
+operator|||
+name|strcmp
+argument_list|(
+name|fs
+operator|->
+name|fs_vfstype
+argument_list|,
+literal|"ufs"
 argument_list|)
 condition|)
 continue|continue;
@@ -1906,7 +1917,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%c %8s\t(%6s) Last dump: Level %c, Date %s\n"
+literal|"%c %8s\t(%6s) Last dump: Level %d, Date %s\n"
 argument_list|,
 name|dumpme
 operator|&&

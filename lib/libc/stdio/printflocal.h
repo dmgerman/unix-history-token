@@ -270,9 +270,9 @@ name|ptrdiff_t
 modifier|*
 name|pptrdiffarg
 decl_stmt|;
-name|size_t
+name|ssize_t
 modifier|*
-name|psizearg
+name|pssizearg
 decl_stmt|;
 name|intmax_t
 modifier|*

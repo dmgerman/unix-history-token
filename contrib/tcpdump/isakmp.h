@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/* YIPS @(#)$Id: isakmp.h,v 1.10 2002/12/11 07:13:54 guy Exp $ */
+comment|/* YIPS @(#)$Id: isakmp.h,v 1.11 2007-08-29 02:38:14 mcr Exp $ */
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ comment|/* times */
 end_comment
 
 begin_comment
-comment|/* 3.1 ISAKMP Header Format          0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !                          Initiator                            !         !                            Cookie                             !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !                          Responder                            !         !                            Cookie                             !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !  Next Payload ! MjVer ! MnVer ! Exchange Type !     Flags     !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !                          Message ID                           !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !                            Length                             !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ */
+comment|/* 3.1 ISAKMP Header Format (IKEv1 and IKEv2)          0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !                          Initiator                            !         !                            Cookie                             !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !                          Responder                            !         !                            Cookie                             !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !  Next Payload ! MjVer ! MnVer ! Exchange Type !     Flags     !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !                          Message ID                           !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         !                            Length                             !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ */
 end_comment
 
 begin_struct
@@ -467,14 +467,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISAKMP_MAJOR_VERSION
+name|IKEv1_MAJOR_VERSION
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISAKMP_MINOR_VERSION
+name|IKEv1_MINOR_VERSION
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IKEv2_MAJOR_VERSION
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IKEv2_MINOR_VERSION
 value|0
 end_define
 
@@ -574,6 +588,50 @@ begin_comment
 comment|/* Commit Bit */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISAKMP_FLAG_extra
+value|0x04
+end_define
+
+begin_comment
+comment|/* IKEv2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISAKMP_FLAG_I
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* (I)nitiator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISAKMP_FLAG_V
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* (V)ersion   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISAKMP_FLAG_R
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* (R)esponse  */
+end_comment
+
 begin_comment
 comment|/* 3.2 Payload Generic Header          0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+         ! Next Payload  !   RESERVED    !         Payload Length        !         +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ */
 end_comment
@@ -587,9 +645,9 @@ name|np
 decl_stmt|;
 comment|/* Next Payload */
 name|u_int8_t
-name|reserved
+name|critical
 decl_stmt|;
-comment|/* RESERVED, unused, must set to 0 */
+comment|/* bit 7 - critical, rest is RESERVED */
 name|u_int16_t
 name|len
 decl_stmt|;
@@ -659,7 +717,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_sa
+name|ikev1_pl_sa
 block|{
 name|struct
 name|isakmp_gen
@@ -687,7 +745,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_p
+name|ikev1_pl_p
 block|{
 name|struct
 name|isakmp_gen
@@ -724,7 +782,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_t
+name|ikev1_pl_t
 block|{
 name|struct
 name|isakmp_gen
@@ -753,7 +811,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_ke
+name|ikev1_pl_ke
 block|{
 name|struct
 name|isakmp_gen
@@ -774,7 +832,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_id
+name|ikev1_pl_id
 block|{
 name|struct
 name|isakmp_gen
@@ -804,7 +862,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_cert
+name|ikev1_pl_cert
 block|{
 name|struct
 name|isakmp_gen
@@ -903,7 +961,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_cr
+name|ikev1_pl_cr
 block|{
 name|struct
 name|isakmp_gen
@@ -930,7 +988,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_hash
+name|ikev1_pl_hash
 block|{
 name|struct
 name|isakmp_gen
@@ -951,7 +1009,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_sig
+name|ikev1_pl_sig
 block|{
 name|struct
 name|isakmp_gen
@@ -972,7 +1030,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_nonce
+name|ikev1_pl_nonce
 block|{
 name|struct
 name|isakmp_gen
@@ -989,7 +1047,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_n
+name|ikev1_pl_n
 block|{
 name|struct
 name|isakmp_gen
@@ -1235,7 +1293,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|isakmp_pl_d
+name|ikev1_pl_d
 block|{
 name|struct
 name|isakmp_gen
@@ -1267,15 +1325,15 @@ end_escape
 
 begin_struct
 struct|struct
-name|isakmp_ph1tab
+name|ikev1_ph1tab
 block|{
 name|struct
-name|isakmp_ph1
+name|ikev1_ph1
 modifier|*
 name|head
 decl_stmt|;
 name|struct
-name|isakmp_ph1
+name|ikev1_ph1
 modifier|*
 name|tail
 decl_stmt|;
@@ -1291,12 +1349,12 @@ struct|struct
 name|isakmp_ph2tab
 block|{
 name|struct
-name|isakmp_ph2
+name|ikev1_ph2
 modifier|*
 name|head
 decl_stmt|;
 name|struct
-name|isakmp_ph2
+name|ikev1_ph2
 modifier|*
 name|tail
 decl_stmt|;
@@ -1334,6 +1392,326 @@ directive|define
 name|PFS_NONEED
 value|0
 end_define
+
+begin_comment
+comment|/* IKEv2 (RFC4306) */
+end_comment
+
+begin_comment
+comment|/* 3.3  Security Association Payload -- generic header */
+end_comment
+
+begin_comment
+comment|/* 3.3.1.  Proposal Substructure */
+end_comment
+
+begin_struct
+struct|struct
+name|ikev2_p
+block|{
+name|struct
+name|isakmp_gen
+name|h
+decl_stmt|;
+name|u_int8_t
+name|p_no
+decl_stmt|;
+comment|/* Proposal # */
+name|u_int8_t
+name|prot_id
+decl_stmt|;
+comment|/* Protocol */
+name|u_int8_t
+name|spi_size
+decl_stmt|;
+comment|/* SPI Size */
+name|u_int8_t
+name|num_t
+decl_stmt|;
+comment|/* Number of Transforms */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* 3.3.2.  Transform Substructure */
+end_comment
+
+begin_struct
+struct|struct
+name|ikev2_t
+block|{
+name|struct
+name|isakmp_gen
+name|h
+decl_stmt|;
+name|u_int8_t
+name|t_type
+decl_stmt|;
+comment|/* Transform Type (ENCR,PRF,INTEG,etc.*/
+name|u_int8_t
+name|res2
+decl_stmt|;
+comment|/* reserved byte */
+name|u_int16_t
+name|t_id
+decl_stmt|;
+comment|/* Transform ID */
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+name|ikev2_t_type
+block|{
+name|IV2_T_ENCR
+init|=
+literal|1
+block|,
+name|IV2_T_PRF
+init|=
+literal|2
+block|,
+name|IV2_T_INTEG
+init|=
+literal|3
+block|,
+name|IV2_T_DH
+init|=
+literal|4
+block|,
+name|IV2_T_ESN
+init|=
+literal|5
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/* 3.4.  Key Exchange Payload */
+end_comment
+
+begin_struct
+struct|struct
+name|ikev2_ke
+block|{
+name|struct
+name|isakmp_gen
+name|h
+decl_stmt|;
+name|u_int16_t
+name|ke_group
+decl_stmt|;
+name|u_int16_t
+name|ke_res1
+decl_stmt|;
+comment|/* KE data */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* 3.10 Notification Payload */
+end_comment
+
+begin_struct
+struct|struct
+name|ikev2_n
+block|{
+name|struct
+name|isakmp_gen
+name|h
+decl_stmt|;
+name|u_int8_t
+name|prot_id
+decl_stmt|;
+comment|/* Protocol-ID */
+name|u_int8_t
+name|spi_size
+decl_stmt|;
+comment|/* SPI Size */
+name|u_int16_t
+name|type
+decl_stmt|;
+comment|/* Notify Message Type */
+comment|/* SPI */
+comment|/* Notification Data */
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+name|ikev2_n_type
+block|{
+name|IV2_NOTIFY_UNSUPPORTED_CRITICAL_PAYLOAD
+init|=
+literal|1
+block|,
+name|IV2_NOTIFY_INVALID_IKE_SPI
+init|=
+literal|4
+block|,
+name|IV2_NOTIFY_INVALID_MAJOR_VERSION
+init|=
+literal|5
+block|,
+name|IV2_NOTIFY_INVALID_SYNTAX
+init|=
+literal|7
+block|,
+name|IV2_NOTIFY_INVALID_MESSAGE_ID
+init|=
+literal|9
+block|,
+name|IV2_NOTIFY_INVALID_SPI
+init|=
+literal|11
+block|,
+name|IV2_NOTIFY_NO_PROPOSAL_CHOSEN
+init|=
+literal|14
+block|,
+name|IV2_NOTIFY_INVALID_KE_PAYLOAD
+init|=
+literal|17
+block|,
+name|IV2_NOTIFY_AUTHENTICATION_FAILED
+init|=
+literal|24
+block|,
+name|IV2_NOTIFY_SINGLE_PAIR_REQUIRED
+init|=
+literal|34
+block|,
+name|IV2_NOTIFY_NO_ADDITIONAL_SAS
+init|=
+literal|35
+block|,
+name|IV2_NOTIFY_INTERNAL_ADDRESS_FAILURE
+init|=
+literal|36
+block|,
+name|IV2_NOTIFY_FAILED_CP_REQUIRED
+init|=
+literal|37
+block|,
+name|IV2_NOTIFY_INVALID_SELECTORS
+init|=
+literal|39
+block|,
+name|IV2_NOTIFY_INITIAL_CONTACT
+init|=
+literal|16384
+block|,
+name|IV2_NOTIFY_SET_WINDOW_SIZE
+init|=
+literal|16385
+block|,
+name|IV2_NOTIFY_ADDITIONAL_TS_POSSIBLE
+init|=
+literal|16386
+block|,
+name|IV2_NOTIFY_IPCOMP_SUPPORTED
+init|=
+literal|16387
+block|,
+name|IV2_NOTIFY_NAT_DETECTION_SOURCE_IP
+init|=
+literal|16388
+block|,
+name|IV2_NOTIFY_NAT_DETECTION_DESTINATION_IP
+init|=
+literal|16389
+block|,
+name|IV2_NOTIFY_COOKIE
+init|=
+literal|16390
+block|,
+name|IV2_NOTIFY_USE_TRANSPORT_MODE
+init|=
+literal|16391
+block|,
+name|IV2_NOTIFY_HTTP_CERT_LOOKUP_SUPPORTED
+init|=
+literal|16392
+block|,
+name|IV2_NOTIFY_REKEY_SA
+init|=
+literal|16393
+block|,
+name|IV2_NOTIFY_ESP_TFC_PADDING_NOT_SUPPORTED
+init|=
+literal|16394
+block|,
+name|IV2_NOTIFY_NON_FIRST_FRAGMENTS_ALSO
+init|=
+literal|16395
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|notify_messages
+block|{
+name|u_int16_t
+name|type
+decl_stmt|;
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* 3.8 Notification Payload */
+end_comment
+
+begin_struct
+struct|struct
+name|ikev2_auth
+block|{
+name|struct
+name|isakmp_gen
+name|h
+decl_stmt|;
+name|u_int8_t
+name|auth_method
+decl_stmt|;
+comment|/* Protocol-ID */
+name|u_int8_t
+name|reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* authentication data */
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+name|ikev2_auth_type
+block|{
+name|IV2_RSA_SIG
+init|=
+literal|1
+block|,
+name|IV2_SHARED
+init|=
+literal|2
+block|,
+name|IV2_DSS_SIG
+init|=
+literal|3
+block|, }
+enum|;
+end_enum
 
 begin_endif
 endif|#

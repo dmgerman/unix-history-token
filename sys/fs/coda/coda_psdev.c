@@ -1247,7 +1247,7 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"vcwrite: more data than asked for (%d< %d)\n"
+literal|"vcwrite: more data than asked for (%d< %zd)\n"
 operator|,
 name|vmp
 operator|->

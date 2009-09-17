@@ -104,12 +104,6 @@ begin_comment
 comment|/*  * Instruction and Data Memory Size (in words) for each NPE   */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__ixp46X
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -152,57 +146,19 @@ name|IX_NPEDL_DATA_MEMSIZE_WORDS_NPEC
 value|2048
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
-name|IX_NPEDL_INS_MEMSIZE_WORDS_NPEA
+name|IXP46X_NPEDL_INS_MEMSIZE_WORDS
 value|4096
 end_define
 
 begin_define
 define|#
 directive|define
-name|IX_NPEDL_INS_MEMSIZE_WORDS_NPEB
+name|IXP46X_NPEDL_DATA_MEMSIZE_WORDS
 value|4096
 end_define
-
-begin_define
-define|#
-directive|define
-name|IX_NPEDL_INS_MEMSIZE_WORDS_NPEC
-value|4096
-end_define
-
-begin_define
-define|#
-directive|define
-name|IX_NPEDL_DATA_MEMSIZE_WORDS_NPEA
-value|4096
-end_define
-
-begin_define
-define|#
-directive|define
-name|IX_NPEDL_DATA_MEMSIZE_WORDS_NPEB
-value|4096
-end_define
-
-begin_define
-define|#
-directive|define
-name|IX_NPEDL_DATA_MEMSIZE_WORDS_NPEC
-value|4096
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* BAR offsets */

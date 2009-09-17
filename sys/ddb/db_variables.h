@@ -109,6 +109,50 @@ name|db_eregs
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|db_varfcn_t
+name|db_var_curcpu
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* DPCPU default CPU */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|db_varfcn_t
+name|db_var_curvnet
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Default vnet */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|db_varfcn_t
+name|db_var_db_cpu
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* DPCPU active CPU */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|db_varfcn_t
+name|db_var_db_vnet
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Active vnet */
+end_comment
+
 begin_function_decl
 name|int
 name|db_read_variable

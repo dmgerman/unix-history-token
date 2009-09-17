@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -73,7 +79,7 @@ block|{
 operator|.
 name|nodename
 operator|=
-name|hostname
+literal|"unset"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -183,7 +189,9 @@ block|{
 operator|*
 name|result
 operator|=
-name|hostid
+name|prison0
+operator|.
+name|pr_hostid
 expr_stmt|;
 return|return
 operator|(

@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
 end_include
 
 begin_include
@@ -166,12 +166,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -197,6 +191,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_ifdef
@@ -625,9 +625,9 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1144,9 +1144,9 @@ literal|0
 expr_stmt|;
 name|CURVNET_SET
 argument_list|(
-name|TD_TO_VNET
+name|CRED_TO_VNET
 argument_list|(
-name|curthread
+name|cred
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2071,7 +2071,7 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2079,12 +2079,6 @@ operator|->
 name|tun_rsel
 operator|.
 name|si_note
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -2659,6 +2653,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
+name|if_addr_rlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -2754,6 +2753,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|if_addr_runlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -2996,9 +3000,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 block|{
 name|struct
@@ -4569,7 +4573,7 @@ name|TUNDEBUG
 argument_list|(
 name|ifp
 argument_list|,
-literal|"len=%d!\n"
+literal|"len=%zd!\n"
 argument_list|,
 name|uio
 operator|->

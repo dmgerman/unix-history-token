@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -71,34 +71,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|s32
-name|e1000_acquire_mac_csr_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|e1000_release_phy_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|e1000_release_mac_csr_80003es2lan
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -1268,6 +1242,15 @@ operator|.
 name|read_mac_addr
 operator|=
 name|e1000_read_mac_addr_80003es2lan
+expr_stmt|;
+comment|/* ID LED init */
+name|mac
+operator|->
+name|ops
+operator|.
+name|id_led_init
+operator|=
+name|e1000_id_led_init_generic
 expr_stmt|;
 comment|/* blink LED */
 name|mac
@@ -2859,12 +2842,20 @@ expr_stmt|;
 if|if
 condition|(
 name|index
-operator|<
+operator|>=
 name|GG82563_CABLE_LENGTH_TABLE_SIZE
 operator|+
 literal|5
 condition|)
 block|{
+name|ret_val
+operator|=
+name|E1000_ERR_PHY
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|phy
 operator|->
 name|min_cable_length
@@ -2901,14 +2892,6 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-block|}
-else|else
-block|{
-name|ret_val
-operator|=
-name|E1000_ERR_PHY
-expr_stmt|;
-block|}
 name|out
 label|:
 return|return
@@ -3160,6 +3143,8 @@ argument_list|,
 name|E1000_ICR
 argument_list|)
 expr_stmt|;
+name|ret_val
+operator|=
 name|e1000_check_alt_mac_addr_generic
 argument_list|(
 name|hw
@@ -3220,7 +3205,11 @@ expr_stmt|;
 comment|/* Initialize identification LED */
 name|ret_val
 operator|=
-name|e1000_id_led_init_generic
+name|mac
+operator|->
+name|ops
+operator|.
+name|id_led_init
 argument_list|(
 name|hw
 argument_list|)
@@ -4965,6 +4954,7 @@ comment|/**  *  e1000_read_kmrn_reg_80003es2lan - Read kumeran register  *  @hw:
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_read_kmrn_reg_80003es2lan
 parameter_list|(
@@ -5071,6 +5061,7 @@ comment|/**  *  e1000_write_kmrn_reg_80003es2lan - Write kumeran register  *  @h
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_write_kmrn_reg_80003es2lan
 parameter_list|(
@@ -5179,13 +5170,21 @@ argument_list|(
 literal|"e1000_read_mac_addr_80003es2lan"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+comment|/* 	 * If there's an alternate MAC address place it in RAR0 	 * so that it will override the Si installed default perm 	 * address. 	 */
+name|ret_val
+operator|=
 name|e1000_check_alt_mac_addr_generic
 argument_list|(
 name|hw
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
 condition|)
+goto|goto
+name|out
+goto|;
 name|ret_val
 operator|=
 name|e1000_read_mac_addr_generic
@@ -5193,6 +5192,8 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 return|return
 name|ret_val
 return|;

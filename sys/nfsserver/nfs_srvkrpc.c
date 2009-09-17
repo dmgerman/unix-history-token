@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -229,12 +235,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/nfsproto.h>
 end_include
 
@@ -262,11 +262,11 @@ directive|include
 file|<nfsserver/nfs_fha.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NFS_LEGACYRPC
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
 
 begin_expr_stmt
 specifier|static
@@ -612,37 +612,16 @@ comment|/*  * NFS server system calls  */
 end_comment
 
 begin_comment
+comment|/*  * This is now called from nfssvc() in nfs/nfs_nfssvc.c.  */
+end_comment
+
+begin_comment
 comment|/*  * Nfs server psuedo system call for the nfsd's  * Based on the flag value it either:  * - adds a socket to the selection list  * - remains in the kernel as an nfsd  * - remains in the kernel as an nfsiod  * For INET6 we suppose that nfsd provides only IN6P_IPV6_V6ONLY sockets  * and that mountd provides  *  - sockaddr with no IPv4-mapped addresses  *  - mask for both INET and INET6 families if there is IPv4-mapped overlap  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_SYSPROTO_H_
-end_ifndef
-
-begin_struct
-struct|struct
-name|nfssvc_args
-block|{
-name|int
-name|flag
-decl_stmt|;
-name|caddr_t
-name|argp
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
-name|nfssvc
+name|nfssvc_nfsserver
 parameter_list|(
 name|struct
 name|thread
@@ -671,38 +650,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-argument_list|,
-operator|(
-literal|"nfssvc(): called with Giant"
-operator|)
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|priv_check
-argument_list|(
-name|td
-argument_list|,
-name|PRIV_NFS_DAEMON
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 if|if
 condition|(
 name|uap
@@ -895,20 +842,6 @@ operator|=
 name|ENXIO
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|error
-operator|==
-name|EINTR
-operator|||
-name|error
-operator|==
-name|ERESTART
-condition|)
-name|error
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1667,6 +1600,11 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|mreq
+argument_list|)
+expr_stmt|;
 name|svcerr_weakauth
 argument_list|(
 name|rqst
@@ -1706,6 +1644,11 @@ name|nd_credflavor
 argument_list|)
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|mreq
+argument_list|)
+expr_stmt|;
 name|svcerr_weakauth
 argument_list|(
 name|rqst
@@ -2007,6 +1950,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|SVC_RELEASE
+argument_list|(
+name|xprt
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2088,18 +2036,31 @@ return|;
 block|}
 else|else
 block|{
-name|snprintf
+name|memcpy
 argument_list|(
 name|principal
+argument_list|,
+literal|"nfs@"
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|getcredhostname
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|principal
+operator|+
+literal|4
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|principal
 argument_list|)
-argument_list|,
-literal|"nfs@%s"
-argument_list|,
-name|hostname
+operator|-
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -2426,15 +2387,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !NFS_LEGACYRPC */
-end_comment
 
 end_unit
 

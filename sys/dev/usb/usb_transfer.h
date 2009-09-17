@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_TRANSFER_H_
+name|_USB_TRANSFER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_TRANSFER_H_
+name|_USB_TRANSFER_H_
 end_define
 
 begin_comment
@@ -25,14 +25,14 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_done_msg
+name|usb_done_msg
 block|{
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 name|hdr
 decl_stmt|;
 name|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 modifier|*
 name|xroot
 decl_stmt|;
@@ -40,24 +40,44 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|USB_DMATAG_TO_XROOT
+parameter_list|(
+name|dpt
+parameter_list|)
+define|\
+value|((struct usb_xfer_root *)(					\    ((uint8_t *)(dpt)) -						\    ((uint8_t *)&((struct usb_xfer_root *)0)->dma_parent_tag)))
+end_define
+
 begin_comment
 comment|/*  * The following structure is used to keep information about memory  * that should be automatically freed at the moment all USB transfers  * have been freed.  */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 block|{
 name|struct
-name|usb2_xfer_queue
+name|usb_dma_parent_tag
+name|dma_parent_tag
+decl_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+name|struct
+name|usb_xfer_queue
 name|dma_q
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 name|done_q
 decl_stmt|;
 name|struct
-name|usb2_done_msg
+name|usb_done_msg
 name|done_m
 index|[
 literal|2
@@ -68,11 +88,7 @@ name|cv
 name|cv_drain
 decl_stmt|;
 name|struct
-name|usb2_dma_parent_tag
-name|dma_parent_tag
-decl_stmt|;
-name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|done_p
 decl_stmt|;
@@ -87,56 +103,61 @@ modifier|*
 name|xfer_mtx
 decl_stmt|;
 comment|/* cannot be changed during operation */
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|dma_page_cache_start
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|dma_page_cache_end
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|xfer_page_cache_start
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|xfer_page_cache_end
 decl_stmt|;
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 decl_stmt|;
 comment|/* pointer to USB bus (cached) */
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 decl_stmt|;
 comment|/* pointer to USB device */
-name|uint32_t
+name|usb_size_t
 name|memory_size
 decl_stmt|;
-name|uint32_t
+name|usb_size_t
 name|setup_refcount
 decl_stmt|;
-name|uint32_t
-name|page_size
-decl_stmt|;
-name|uint32_t
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+name|usb_frcount_t
 name|dma_nframes
 decl_stmt|;
 comment|/* number of page caches to load */
-name|uint32_t
+name|usb_frcount_t
 name|dma_currframe
 decl_stmt|;
 comment|/* currect page cache number */
-name|uint32_t
+name|usb_frlength_t
 name|dma_frlength_0
 decl_stmt|;
 comment|/* length of page cache zero */
@@ -144,6 +165,8 @@ name|uint8_t
 name|dma_error
 decl_stmt|;
 comment|/* set if virtual memory could not be 					 * loaded */
+endif|#
+directive|endif
 name|uint8_t
 name|done_sleep
 decl_stmt|;
@@ -158,55 +181,49 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_setup_params
+name|usb_setup_params
 block|{
 name|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 modifier|*
 name|dma_tag_p
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 modifier|*
 name|dma_page_ptr
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|dma_page_cache_ptr
 decl_stmt|;
 comment|/* these will be 							 * auto-freed */
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|xfer_page_cache_ptr
 decl_stmt|;
 comment|/* these will not be 							 * auto-freed */
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|curr_xfer
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_config
+name|usb_config
 modifier|*
 name|curr_setup
 decl_stmt|;
 specifier|const
 name|struct
-name|usb2_config_sub
-modifier|*
-name|curr_setup_sub
-decl_stmt|;
-specifier|const
-name|struct
-name|usb2_pipe_methods
+name|usb_pipe_methods
 modifier|*
 name|methods
 decl_stmt|;
@@ -214,23 +231,23 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|uint32_t
+name|usb_frlength_t
 modifier|*
 name|xfer_length_ptr
 decl_stmt|;
-name|uint32_t
+name|usb_size_t
 name|size
 index|[
 literal|7
 index|]
 decl_stmt|;
-name|uint32_t
+name|usb_frlength_t
 name|bufsize
 decl_stmt|;
-name|uint32_t
+name|usb_frlength_t
 name|bufsize_max
 decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|hc_max_frame_size
 decl_stmt|;
 name|uint16_t
@@ -239,13 +256,14 @@ decl_stmt|;
 name|uint8_t
 name|hc_max_packet_count
 decl_stmt|;
-name|uint8_t
+name|enum
+name|usb_dev_speed
 name|speed
 decl_stmt|;
 name|uint8_t
 name|dma_tag_max
 decl_stmt|;
-name|usb2_error_t
+name|usb_error_t
 name|err
 decl_stmt|;
 block|}
@@ -258,26 +276,26 @@ end_comment
 
 begin_function_decl
 name|uint8_t
-name|usb2_transfer_setup_sub_malloc
+name|usbd_transfer_setup_sub_malloc
 parameter_list|(
 name|struct
-name|usb2_setup_params
+name|usb_setup_params
 modifier|*
 name|parm
 parameter_list|,
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 modifier|*
 name|ppc
 parameter_list|,
-name|uint32_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|usb_size_t
 name|align
 parameter_list|,
-name|uint32_t
+name|usb_size_t
 name|count
 parameter_list|)
 function_decl|;
@@ -285,15 +303,15 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_command_wrapper
+name|usb_command_wrapper
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -302,10 +320,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pipe_enter
+name|usbd_pipe_enter
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -314,10 +332,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pipe_start
+name|usbd_pipe_start
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|)
@@ -326,10 +344,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_transfer_dequeue
+name|usbd_transfer_dequeue
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -338,14 +356,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_transfer_done
+name|usbd_transfer_done
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
-name|usb2_error_t
+name|usb_error_t
 name|error
 parameter_list|)
 function_decl|;
@@ -353,15 +371,15 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_transfer_enqueue
+name|usbd_transfer_enqueue
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|,
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -370,10 +388,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_transfer_setup_sub
+name|usbd_transfer_setup_sub
 parameter_list|(
 name|struct
-name|usb2_setup_params
+name|usb_setup_params
 modifier|*
 name|parm
 parameter_list|)
@@ -382,10 +400,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_default_transfer_setup
+name|usbd_default_transfer_setup
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -394,61 +412,45 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_clear_data_toggle
+name|usbd_clear_data_toggle
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_do_poll
-parameter_list|(
-name|struct
-name|usb2_xfer
-modifier|*
-modifier|*
-name|ppxfer
-parameter_list|,
-name|uint16_t
-name|max
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|usb2_callback_t
-name|usb2_do_request_callback
+name|usb_callback_t
+name|usbd_do_request_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usb2_callback_t
-name|usb2_handle_request_callback
+name|usb_callback_t
+name|usb_handle_request_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usb2_callback_t
-name|usb2_do_clear_stall_callback
+name|usb_callback_t
+name|usb_do_clear_stall_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 name|void
-name|usb2_transfer_timeout_ms
+name|usbd_transfer_timeout_ms
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -463,18 +465,18 @@ modifier|*
 name|arg
 parameter_list|)
 parameter_list|,
-name|uint32_t
+name|usb_timeout_t
 name|ms
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
-name|usb2_get_dma_delay
+name|usb_timeout_t
+name|usbd_get_dma_delay
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -483,10 +485,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_transfer_power_ref
+name|usbd_transfer_power_ref
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|,
@@ -502,7 +504,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_TRANSFER_H_ */
+comment|/* _USB_TRANSFER_H_ */
 end_comment
 
 end_unit

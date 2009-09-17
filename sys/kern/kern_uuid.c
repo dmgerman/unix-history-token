@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uuid.h>
+file|<sys/jail.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
+file|<sys/uuid.h>
 end_include
 
 begin_include
@@ -231,11 +231,6 @@ modifier|*
 name|node
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -254,7 +249,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|IFNET_RLOCK
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -267,6 +270,11 @@ argument|if_link
 argument_list|)
 block|{
 comment|/* Walk the address list */
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -319,14 +327,27 @@ argument_list|,
 name|UUID_NODE_LEN
 argument_list|)
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|IFNET_RUNLOCK_NOSLEEP
+argument_list|()
+expr_stmt|;
+name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 return|return;
 block|}
 block|}
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 for|for
@@ -367,6 +388,9 @@ name|node
 operator|)
 operator||=
 literal|0x01
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function

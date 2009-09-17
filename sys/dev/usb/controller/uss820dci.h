@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2007 Hans Petter Selasky<hselasky@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007 Hans Petter Selasky<hselasky@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -1763,19 +1763,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|USS820_GET_REG
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|((reg)<< (sc)->sc_reg_shift)
-end_define
-
-begin_define
-define|#
-directive|define
 name|USS820_READ_1
 parameter_list|(
 name|sc
@@ -1783,7 +1770,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1((sc)->sc_io_tag, (sc)->sc_io_hdl, \     USS820_GET_REG(sc,reg))
+value|bus_space_read_1((sc)->sc_io_tag, (sc)->sc_io_hdl, reg)
 end_define
 
 begin_define
@@ -1798,7 +1785,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|bus_space_write_1((sc)->sc_io_tag, (sc)->sc_io_hdl, \     USS820_GET_REG(sc,reg), data)
+value|bus_space_write_1((sc)->sc_io_tag, (sc)->sc_io_hdl, reg, data)
 end_define
 
 begin_struct_decl
@@ -1842,7 +1829,7 @@ modifier|*
 name|func
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -1854,48 +1841,6 @@ name|remainder
 decl_stmt|;
 name|uint16_t
 name|max_packet_size
-decl_stmt|;
-name|uint8_t
-name|rx_stat_reg
-decl_stmt|;
-name|uint8_t
-name|tx_stat_reg
-decl_stmt|;
-name|uint8_t
-name|rx_flag_reg
-decl_stmt|;
-name|uint8_t
-name|tx_flag_reg
-decl_stmt|;
-name|uint8_t
-name|rx_fifo_reg
-decl_stmt|;
-name|uint8_t
-name|tx_fifo_reg
-decl_stmt|;
-name|uint8_t
-name|rx_count_low_reg
-decl_stmt|;
-name|uint8_t
-name|rx_count_high_reg
-decl_stmt|;
-name|uint8_t
-name|tx_count_low_reg
-decl_stmt|;
-name|uint8_t
-name|tx_count_high_reg
-decl_stmt|;
-name|uint8_t
-name|rx_cntl_reg
-decl_stmt|;
-name|uint8_t
-name|tx_cntl_reg
-decl_stmt|;
-name|uint8_t
-name|ep_reg
-decl_stmt|;
-name|uint8_t
-name|pend_reg
 decl_stmt|;
 name|uint8_t
 name|ep_index
@@ -1925,6 +1870,11 @@ name|did_stall
 range|:
 literal|1
 decl_stmt|;
+name|uint8_t
+name|did_enable
+range|:
+literal|1
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1938,7 +1888,7 @@ modifier|*
 name|func
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -1968,6 +1918,9 @@ comment|/*          * short_pkt = 0: transfer should be short terminated        
 name|uint8_t
 name|setup_alt_next
 decl_stmt|;
+name|uint8_t
+name|did_stall
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1977,15 +1930,15 @@ struct|struct
 name|uss820dci_config_desc
 block|{
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 name|confd
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 name|ifcd
 decl_stmt|;
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 name|endpd
 decl_stmt|;
 block|}
@@ -2001,7 +1954,7 @@ name|uWord
 name|wValue
 decl_stmt|;
 name|struct
-name|usb2_port_status
+name|usb_port_status
 name|ps
 decl_stmt|;
 block|}
@@ -2074,30 +2027,15 @@ struct|struct
 name|uss820dci_softc
 block|{
 name|struct
-name|usb2_bus
+name|usb_bus
 name|sc_bus
 decl_stmt|;
 name|union
 name|uss820_hub_temp
 name|sc_hub_temp
 decl_stmt|;
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|usb2_xfer
-argument_list|)
-name|sc_interrupt_list_head
-expr_stmt|;
 name|struct
-name|usb2_sw_transfer
-name|sc_root_ctrl
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|sc_root_intr
-decl_stmt|;
-name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_devices
 index|[
@@ -2140,9 +2078,6 @@ name|sc_conf
 decl_stmt|;
 comment|/* root HUB config */
 name|uint8_t
-name|sc_reg_shift
-decl_stmt|;
-name|uint8_t
 name|sc_hub_idata
 index|[
 literal|1
@@ -2161,7 +2096,7 @@ comment|/* prototypes */
 end_comment
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|uss820dci_init
 parameter_list|(
 name|struct

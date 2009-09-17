@@ -132,11 +132,33 @@ end_endif
 begin_define
 define|#
 directive|define
+name|pmap_page_get_memattr
+parameter_list|(
+name|m
+parameter_list|)
+value|VM_MEMATTR_DEFAULT
+end_define
+
+begin_define
+define|#
+directive|define
 name|pmap_page_is_mapped
 parameter_list|(
 name|m
 parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_page_set_memattr
+parameter_list|(
+name|m
+parameter_list|,
+name|ma
+parameter_list|)
+value|(void)0
 end_define
 
 begin_comment
@@ -180,6 +202,10 @@ block|{
 name|int
 name|pvh_attrs
 decl_stmt|;
+name|vm_offset_t
+name|pv_kva
+decl_stmt|;
+comment|/* first kernel VA mapping */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -319,10 +345,18 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|pmap_t
-name|kernel_pmap
+name|struct
+name|pmap
+name|kernel_pmap_store
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|kernel_pmap
+value|(&kernel_pmap_store)
+end_define
 
 begin_define
 define|#
@@ -456,13 +490,6 @@ typedef|*
 name|pv_entry_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|PV_ENTRY_NULL
-value|((pv_entry_t) 0)
-end_define
 
 begin_ifdef
 ifdef|#
@@ -2122,6 +2149,17 @@ end_define
 
 begin_comment
 comment|/* mapping is used multiple times in userland */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVF_UNMAN
+value|0x80
+end_define
+
+begin_comment
+comment|/* mapping is unmanaged */
 end_comment
 
 begin_function_decl

@@ -91,6 +91,20 @@ name|cacheline_size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ppc64
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|hw_direct_map
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|__syncicache
@@ -137,17 +151,16 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|decr_config
+name|decr_init
 parameter_list|(
-name|unsigned
-name|long
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|decr_init
+name|decr_ap_init
 parameter_list|(
 name|void
 parameter_list|)

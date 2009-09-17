@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|DS133X_DEVNAME
-value|"rtc"
+value|"ds133x_rtc"
 end_define
 
 begin_define

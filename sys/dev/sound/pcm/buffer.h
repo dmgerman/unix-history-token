@@ -109,7 +109,7 @@ name|int
 name|hp
 decl_stmt|;
 specifier|volatile
-name|u_int32_t
+name|u_int64_t
 name|total
 decl_stmt|,
 name|prev_total
@@ -126,6 +126,8 @@ decl_stmt|,
 name|spd
 decl_stmt|,
 name|bps
+decl_stmt|,
+name|align
 decl_stmt|;
 name|unsigned
 name|int
@@ -758,8 +760,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|int
+name|u_int64_t
 name|sndbuf_getblocks
 parameter_list|(
 name|struct
@@ -771,8 +772,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|int
+name|u_int64_t
 name|sndbuf_getprevblocks
 parameter_list|(
 name|struct
@@ -784,9 +784,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|int
+name|u_int64_t
 name|sndbuf_gettotal
+parameter_list|(
+name|struct
+name|snd_dbuf
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int64_t
+name|sndbuf_getprevtotal
 parameter_list|(
 name|struct
 name|snd_dbuf

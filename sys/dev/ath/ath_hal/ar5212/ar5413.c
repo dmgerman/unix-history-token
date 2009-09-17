@@ -1157,10 +1157,12 @@ expr_stmt|;
 comment|/* Optimum value for rf_pwd_iclobuf2G for PCIe chips only */
 if|if
 condition|(
-name|IS_PCIE
+name|AH_PRIVATE
 argument_list|(
 name|ah
 argument_list|)
+operator|->
+name|ah_ispcie
 condition|)
 block|{
 name|ar5212ModifyRfBuffer

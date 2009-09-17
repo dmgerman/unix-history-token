@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wpa_supplicant.h"
+file|"wpa.h"
 end_include
 
 begin_decl_stmt

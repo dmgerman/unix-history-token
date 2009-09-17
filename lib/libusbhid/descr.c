@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_ioctl.h>
+file|<dev/usb/usb_ioctl.h>
 end_include
 
 begin_include
@@ -113,6 +113,9 @@ operator|&
 name|enable
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HID_COMPAT7
 if|if
 condition|(
 name|ret
@@ -128,6 +131,8 @@ argument_list|,
 name|enable
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ret
@@ -165,6 +170,9 @@ operator|&
 name|temp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HID_COMPAT7
 if|if
 condition|(
 name|ret
@@ -179,6 +187,8 @@ name|fd
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|ret
 operator|=
 name|temp
@@ -200,7 +210,7 @@ name|fd
 parameter_list|)
 block|{
 name|struct
-name|usb2_gen_descriptor
+name|usb_gen_descriptor
 name|ugd
 decl_stmt|;
 name|report_desc_t
@@ -251,6 +261,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HID_COMPAT7
 comment|/* could not read descriptor */
 comment|/* try FreeBSD 7 compat code */
 return|return
@@ -261,6 +274,15 @@ name|fd
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * NOTE: The kernel will return a failure if  	 * "ugd_actlen" is zero. 	 */
 name|data

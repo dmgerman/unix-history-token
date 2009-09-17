@@ -171,6 +171,7 @@ name|p2
 operator|==
 name|NULL
 condition|)
+block|{
 name|ERROR
 argument_list|(
 name|disk
@@ -178,6 +179,10 @@ argument_list|,
 literal|"allocate bounce buffer"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 block|}
 name|cnt
 operator|=
@@ -416,6 +421,7 @@ name|p2
 operator|==
 name|NULL
 condition|)
+block|{
 name|ERROR
 argument_list|(
 name|disk
@@ -423,6 +429,13 @@ argument_list|,
 literal|"allocate bounce buffer"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|memcpy
 argument_list|(
 name|p2

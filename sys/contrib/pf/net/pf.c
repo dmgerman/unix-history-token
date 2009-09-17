@@ -57,12 +57,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_bpf.h"
 end_include
 
@@ -302,12 +296,6 @@ directive|include
 file|<sys/sx.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -455,23 +443,6 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -570,12 +541,6 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -6495,6 +6460,14 @@ literal|0
 decl_stmt|,
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|int
+name|locked
+decl_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -6526,16 +6499,40 @@ expr_stmt|;
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
+name|locked
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|pf_end_threads
 condition|)
 block|{
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
 name|pf_purge_expired_states
 argument_list|(
 name|pf_status
 operator|.
 name|states
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|pf_purge_expired_fragments
@@ -6543,13 +6540,13 @@ argument_list|()
 expr_stmt|;
 name|pf_purge_expired_src_nodes
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|pf_end_threads
 operator|++
 expr_stmt|;
-name|sx_sunlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|pf_consistency_lock
@@ -6577,6 +6574,78 @@ name|splsoftnet
 argument_list|()
 expr_stmt|;
 comment|/* process a fraction of the state table every second */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+operator|!
+name|pf_purge_expired_states
+argument_list|(
+literal|1
+operator|+
+operator|(
+name|pf_status
+operator|.
+name|states
+operator|/
+name|pf_default_rule
+operator|.
+name|timeout
+index|[
+name|PFTM_INTERVAL
+index|]
+operator|)
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
+name|locked
+operator|=
+literal|1
+expr_stmt|;
+name|pf_purge_expired_states
+argument_list|(
+literal|1
+operator|+
+operator|(
+name|pf_status
+operator|.
+name|states
+operator|/
+name|pf_default_rule
+operator|.
+name|timeout
+index|[
+name|PFTM_INTERVAL
+index|]
+operator|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 name|pf_purge_expired_states
 argument_list|(
 literal|1
@@ -6595,6 +6664,8 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* purge other expired types every PFTM_INTERVAL seconds */
 if|if
 condition|(
@@ -6612,11 +6683,43 @@ block|{
 name|pf_purge_expired_fragments
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|pf_purge_expired_src_nodes
 argument_list|(
-literal|0
+name|locked
+argument_list|)
+condition|)
+block|{
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
 argument_list|)
 expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
+name|locked
+operator|=
+literal|1
+expr_stmt|;
+name|pf_purge_expired_src_nodes
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|nloops
 operator|=
 literal|0
@@ -6633,6 +6736,17 @@ name|__FreeBSD__
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|locked
+condition|)
+name|sx_xunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+else|else
 name|sx_sunlock
 argument_list|(
 operator|&
@@ -6907,13 +7021,29 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_decl_stmt
+name|int
 name|pf_purge_expired_src_nodes
-parameter_list|(
+argument_list|(
 name|int
 name|waslocked
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+name|void
+name|pf_purge_expired_src_nodes
+argument_list|(
+name|int
+name|waslocked
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|struct
 name|pf_src_node
@@ -6992,26 +7122,11 @@ operator|&
 name|pf_consistency_lock
 argument_list|)
 condition|)
-block|{
-name|PF_UNLOCK
-argument_list|()
-expr_stmt|;
-name|sx_sunlock
-argument_list|(
-operator|&
-name|pf_consistency_lock
-argument_list|)
-expr_stmt|;
-name|sx_xlock
-argument_list|(
-operator|&
-name|pf_consistency_lock
-argument_list|)
-expr_stmt|;
-name|PF_LOCK
-argument_list|()
-expr_stmt|;
-block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 else|#
 directive|else
 name|rw_enter_write
@@ -7152,8 +7267,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|void
@@ -7442,9 +7567,29 @@ argument|&& 			cur->nat_rule.ptr->src_nodes<=
 literal|0
 argument|) 			pf_rm_rule(NULL, cur->nat_rule.ptr); 	if (cur->anchor.ptr != NULL) 		if (--cur->anchor.ptr->states<=
 literal|0
-argument|) 			pf_rm_rule(NULL, cur->anchor.ptr); 	pf_normalize_tcp_cleanup(cur); 	pfi_kif_unref(cur->u.s.kif, PFI_KIF_REF_STATE); 	TAILQ_REMOVE(&state_list, cur, u.s.entry_list); 	if (cur->tag) 		pf_tag_unref(cur->tag); 	pool_put(&pf_state_pl, cur); 	pf_status.fcounters[FCNT_STATE_REMOVALS]++; 	pf_status.states--; }  void pf_purge_expired_states(u_int32_t maxcheck) { 	static struct pf_state	*cur = NULL; 	struct pf_state		*next; 	int 			 locked =
+argument|) 			pf_rm_rule(NULL, cur->anchor.ptr); 	pf_normalize_tcp_cleanup(cur); 	pfi_kif_unref(cur->u.s.kif, PFI_KIF_REF_STATE); 	TAILQ_REMOVE(&state_list, cur, u.s.entry_list); 	if (cur->tag) 		pf_tag_unref(cur->tag); 	pool_put(&pf_state_pl, cur); 	pf_status.fcounters[FCNT_STATE_REMOVALS]++; 	pf_status.states--; }
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|int pf_purge_expired_states(u_int32_t maxcheck, int waslocked)
+else|#
+directive|else
+argument|void pf_purge_expired_states(u_int32_t maxcheck)
+endif|#
+directive|endif
+argument|{ 	static struct pf_state	*cur = NULL; 	struct pf_state		*next;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|int 			 locked = waslocked;
+else|#
+directive|else
+argument|int 			 locked =
 literal|0
-argument|;  	while (maxcheck--) {
+argument|;
+endif|#
+directive|endif
+argument|while (maxcheck--) {
 comment|/* wrap to start of list when we hit the end */
 argument|if (cur == NULL) { 			cur = TAILQ_FIRST(&state_list); 			if (cur == NULL) 				break;
 comment|/* list empty */
@@ -7456,7 +7601,9 @@ argument|if (! locked) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (!sx_try_upgrade(&pf_consistency_lock)) { 					 PF_UNLOCK(); 					 sx_sunlock(&pf_consistency_lock); 					 sx_xlock(&pf_consistency_lock); 					 PF_LOCK(); 				 }
+argument|if (!sx_try_upgrade(&pf_consistency_lock)) 				 	return (
+literal|0
+argument|);
 else|#
 directive|else
 argument|rw_enter_write(&pf_consistency_lock);
@@ -7470,7 +7617,9 @@ argument|pf_unlink_state(cur); 			if (! locked) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (!sx_try_upgrade(&pf_consistency_lock)) { 					 PF_UNLOCK(); 					 sx_sunlock(&pf_consistency_lock); 					 sx_xlock(&pf_consistency_lock); 					 PF_LOCK(); 				 }
+argument|if (!sx_try_upgrade(&pf_consistency_lock)) 				 	return (
+literal|0
+argument|);
 else|#
 directive|else
 argument|rw_enter_write(&pf_consistency_lock);
@@ -7478,14 +7627,16 @@ endif|#
 directive|endif
 argument|locked =
 literal|1
-argument|; 			} 			pf_free_state(cur); 		} 		cur = next; 	}  	if (locked)
+argument|; 			} 			pf_free_state(cur); 		} 		cur = next; 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|sx_downgrade(&pf_consistency_lock);
+argument|if (!waslocked&& locked) 		sx_downgrade(&pf_consistency_lock);  	return (
+literal|1
+argument|);
 else|#
 directive|else
-argument|rw_exit_write(&pf_consistency_lock);
+argument|if (locked) 		rw_exit_write(&pf_consistency_lock);
 endif|#
 directive|endif
 argument|}  int pf_tbladdr_setup(struct pf_ruleset *rs, struct pf_addr_wrap *aw) { 	if (aw->type != PF_ADDR_TABLE) 		return (
@@ -8012,7 +8163,7 @@ directive|else
 argument|pf_send_tcp(const struct pf_rule *r, sa_family_t af,
 endif|#
 directive|endif
-argument|const struct pf_addr *saddr, const struct pf_addr *daddr,     u_int16_t sport, u_int16_t dport, u_int32_t seq, u_int32_t ack,     u_int8_t flags, u_int16_t win, u_int16_t mss, u_int8_t ttl, int tag,     u_int16_t rtag, struct ether_header *eh, struct ifnet *ifp) { 	INIT_VNET_INET(curvnet); 	struct mbuf	*m; 	int		 len, tlen;
+argument|const struct pf_addr *saddr, const struct pf_addr *daddr,     u_int16_t sport, u_int16_t dport, u_int32_t seq, u_int32_t ack,     u_int8_t flags, u_int16_t win, u_int16_t mss, u_int8_t ttl, int tag,     u_int16_t rtag, struct ether_header *eh, struct ifnet *ifp) { 	struct mbuf	*m; 	int		 len, tlen;
 ifdef|#
 directive|ifdef
 name|INET
@@ -8957,7 +9108,7 @@ directive|else
 argument|pf_socket_lookup(int direction, struct pf_pdesc *pd)
 endif|#
 directive|endif
-argument|{ 	INIT_VNET_INET(curvnet); 	struct pf_addr		*saddr, *daddr; 	u_int16_t		 sport, dport;
+argument|{ 	struct pf_addr		*saddr, *daddr; 	u_int16_t		 sport, dport;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -9100,7 +9251,7 @@ argument|]; 			if (optlen<
 literal|2
 argument|) 				optlen =
 literal|2
-argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (wscale); }  u_int16_t pf_get_mss(struct mbuf *m, int off, u_int16_t th_off, sa_family_t af) { 	INIT_VNET_INET(curvnet); 	int		 hlen; 	u_int8_t	 hdr[
+argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (wscale); }  u_int16_t pf_get_mss(struct mbuf *m, int off, u_int16_t th_off, sa_family_t af) { 	int		 hlen; 	u_int8_t	 hdr[
 literal|60
 argument|]; 	u_int8_t	*opt, optlen; 	u_int16_t	 mss = V_tcp_mssdflt;  	hlen = th_off<<
 literal|2
@@ -9126,7 +9277,7 @@ argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (mss); 
 ifdef|#
 directive|ifdef
 name|INET
-argument|INIT_VNET_INET(curvnet); 	struct sockaddr_in	*dst; 	struct route		 ro;
+argument|struct sockaddr_in	*dst; 	struct route		 ro;
 endif|#
 directive|endif
 comment|/* INET */
@@ -9231,7 +9382,7 @@ directive|else
 argument|struct pf_pdesc *pd, struct pf_rule **am, struct pf_ruleset **rsm,     struct ifqueue *ifq)
 endif|#
 directive|endif
-argument|{ 	INIT_VNET_INET(curvnet); 	struct pf_rule		*nr = NULL; 	struct pf_addr		*saddr = pd->src
+argument|{ 	struct pf_rule		*nr = NULL; 	struct pf_addr		*saddr = pd->src
 argument_list|,
 argument|*daddr = pd->dst; 	struct tcphdr		*th = pd->hdr.tcp; 	u_int16_t		 bport
 argument_list|,
@@ -17853,7 +18004,7 @@ argument|RTFREE(ro.ro_rt); 	}  	return (ret); }
 ifdef|#
 directive|ifdef
 name|INET
-argument|void pf_route(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s, struct pf_pdesc *pd) { 	INIT_VNET_INET(curvnet); 	struct mbuf		*m0, *m1; 	struct route		 iproute; 	struct route		*ro = NULL; 	struct sockaddr_in	*dst; 	struct ip		*ip; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
+argument|void pf_route(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s, struct pf_pdesc *pd) { 	struct mbuf		*m0, *m1; 	struct route		 iproute; 	struct route		*ro = NULL; 	struct sockaddr_in	*dst; 	struct ip		*ip; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
 literal|0
 argument|;
 ifdef|#
@@ -17891,7 +18042,7 @@ argument|)); 		goto bad; 	}  	ip = mtod(m0, struct ip *);  	ro =&iproute; 	bzero
 literal|0
 argument|); 		if (ro->ro_rt ==
 literal|0
-argument|) { 			V_ipstat.ips_noroute++; 			goto bad; 		}  		ifp = ro->ro_rt->rt_ifp; 		ro->ro_rt->rt_use++;  		if (ro->ro_rt->rt_flags& RTF_GATEWAY) 			dst = satosin(ro->ro_rt->rt_gateway); 	} else { 		if (TAILQ_EMPTY(&r->rpool.list)) { 			DPFPRINTF(PF_DEBUG_URGENT, 			    (
+argument|) { 			KMOD_IPSTAT_INC(ips_noroute); 			goto bad; 		}  		ifp = ro->ro_rt->rt_ifp; 		ro->ro_rt->rt_use++;  		if (ro->ro_rt->rt_flags& RTF_GATEWAY) 			dst = satosin(ro->ro_rt->rt_gateway); 	} else { 		if (TAILQ_EMPTY(&r->rpool.list)) { 			DPFPRINTF(PF_DEBUG_URGENT, 			    (
 literal|"pf_route: TAILQ_EMPTY(&r->rpool.list)\n"
 argument|)); 			goto bad; 		} 		if (s == NULL) { 			pf_map_addr(AF_INET, r, (struct pf_addr *)&ip->ip_src,&naddr, NULL,&sn); 			if (!PF_AZERO(&naddr, AF_INET)) 				dst->sin_addr.s_addr = naddr.v4.s_addr; 			ifp = r->rpool.cur->kif ? 			    r->rpool.cur->kif->pfik_ifp : NULL; 		} else { 			if (!PF_AZERO(&s->rt_addr, AF_INET)) 				dst->sin_addr.s_addr = 				    s->rt_addr.v4.s_addr; 			ifp = s->rt_kif ? s->rt_kif->pfik_ifp : NULL; 		} 	} 	if (ifp == NULL) 		goto bad;  	if (oifp != ifp) {
 ifdef|#
@@ -17926,7 +18077,7 @@ argument|if (ip->ip_v == IPVERSION&& 			    (ip->ip_hl<<
 literal|2
 argument|) == sizeof(*ip)) { 				ip->ip_sum = in_cksum_hdr(ip); 			} else { 				ip->ip_sum = in_cksum(m0, ip->ip_hl<<
 literal|2
-argument|); 			} 		} 		PF_UNLOCK(); 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), ro->ro_rt); 		PF_LOCK(); 		goto done; 	}
+argument|); 			} 		} 		PF_UNLOCK(); 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), ro); 		PF_LOCK(); 		goto done; 	}
 else|#
 directive|else
 comment|/* Copied from ip_output. */
@@ -17949,17 +18100,17 @@ argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) { 		if (!(ifp->if_capabi
 comment|/* Clear */
 argument|} 	} else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) { 		if (!(ifp->if_capabilities& IFCAP_CSUM_UDPv4) || 		    ifp->if_bridge != NULL) { 			in_delayed_cksum(m0); 			m0->m_pkthdr.csum_flags&= ~M_UDPV4_CSUM_OUT;
 comment|/* Clear */
-argument|} 	}  	if (ntohs(ip->ip_len)<= ifp->if_mtu) { 		if ((ifp->if_capabilities& IFCAP_CSUM_IPv4)&& 		    ifp->if_bridge == NULL) { 			m0->m_pkthdr.csum_flags |= M_IPV4_CSUM_OUT; 			V_ipstat.ips_outhwcsum++; 		} else { 			ip->ip_sum =
+argument|} 	}  	if (ntohs(ip->ip_len)<= ifp->if_mtu) { 		if ((ifp->if_capabilities& IFCAP_CSUM_IPv4)&& 		    ifp->if_bridge == NULL) { 			m0->m_pkthdr.csum_flags |= M_IPV4_CSUM_OUT; 			KMOD_IPSTAT_INC(ips_outhwcsum); 		} else { 			ip->ip_sum =
 literal|0
 argument|; 			ip->ip_sum = in_cksum(m0, ip->ip_hl<<
 literal|2
 argument|); 		}
 comment|/* Update relevant hardware checksum stats for TCP/UDP */
-argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			V_tcpstat.tcps_outhwcsum++; 		else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) 			V_udpstat.udps_outhwcsum++; 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
+argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			KMOD_TCPSTAT_INC(tcps_outhwcsum); 		else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) 			KMOD_UDPSTAT_INC(udps_outhwcsum); 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
 endif|#
 directive|endif
 comment|/* 	 * Too large for interface; fragment if possible. 	 * Must be able to put at least 8 bytes per fragment. 	 */
-argument|if (ip->ip_off& htons(IP_DF)) { 		V_ipstat.ips_cantfrag++; 		if (r->rt != PF_DUPTO) {
+argument|if (ip->ip_off& htons(IP_DF)) { 		KMOD_IPSTAT_INC(ips_cantfrag); 		if (r->rt != PF_DUPTO) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -18011,7 +18162,7 @@ endif|#
 directive|endif
 argument|m_freem(m0); 	}  	if (error ==
 literal|0
-argument|) 		V_ipstat.ips_fragmented++;  done: 	if (r->rt != PF_DUPTO) 		*m = NULL; 	if (ro ==&iproute&& ro->ro_rt) 		RTFREE(ro->ro_rt); 	return;  bad: 	m_freem(m0); 	goto done; }
+argument|) 		KMOD_IPSTAT_INC(ips_fragmented);  done: 	if (r->rt != PF_DUPTO) 		*m = NULL; 	if (ro ==&iproute&& ro->ro_rt) 		RTFREE(ro->ro_rt); 	return;  bad: 	m_freem(m0); 	goto done; }
 endif|#
 directive|endif
 comment|/* INET */
@@ -18148,11 +18299,11 @@ directive|endif
 comment|/* INET6 */
 argument|default: 			return (
 literal|1
-argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			INIT_VNET_INET(curvnet); 			V_tcpstat.tcps_rcvbadsum++; 			break; 		    } 		case IPPROTO_UDP: 		    { 			INIT_VNET_INET(curvnet); 			V_udpstat.udps_badsum++; 			break; 		    } 		case IPPROTO_ICMP: 		    { 			INIT_VNET_INET(curvnet); 			V_icmpstat.icps_checksum++; 			break; 		    }
+argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 		    { 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		    } 		case IPPROTO_UDP: 		    { 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		    } 		case IPPROTO_ICMP: 		    { 			KMOD_ICMPSTAT_INC(icps_checksum); 			break; 		    }
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: 		    { 			INIT_VNET_INET6(curvnet); 			V_icmp6stat.icp6s_checksum++; 			break; 		    }
+argument|case IPPROTO_ICMPV6: 		    { 			KMOD_ICMP6STAT_INC(icp6s_checksum); 			break; 		    }
 endif|#
 directive|endif
 comment|/* INET6 */
@@ -18210,11 +18361,11 @@ directive|endif
 comment|/* INET6 */
 argument|default: 		return (
 literal|1
-argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			V_tcpstat.tcps_rcvbadsum++; 			break; 		case IPPROTO_UDP: 			V_udpstat.udps_badsum++; 			break; 		case IPPROTO_ICMP: 			V_icmpstat.icps_checksum++; 			break;
+argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			KMOD_TCPSTAT_INC(tcps_rcvbadsum); 			break; 		case IPPROTO_UDP: 			KMOD_UDPSTAT_INC(udps_badsum); 			break; 		case IPPROTO_ICMP: 			KMOD_ICMPSTAT_INC(icps_checksum); 			break;
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: 			V_icmp6stat.icp6s_checksum++; 			break;
+argument|case IPPROTO_ICMPV6: 			KMOD_ICMP6STAT_INC(icp6s_checksum); 			break;
 endif|#
 directive|endif
 comment|/* INET6 */

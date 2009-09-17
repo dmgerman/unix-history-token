@@ -384,8 +384,6 @@ operator|&
 name|ssc_class
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|tty_makedev

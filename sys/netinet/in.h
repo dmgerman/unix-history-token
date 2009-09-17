@@ -299,91 +299,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Avoid collision with original definition in sys/socket.h. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_STRUCT_SOCKADDR_STORAGE_DECLARED
-end_ifndef
-
-begin_comment
-comment|/*  * RFC 2553: protocol-independent placeholder for socket addresses  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_SS_MAXSIZE
-value|128U
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SS_ALIGNSIZE
-value|(sizeof(__int64_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SS_PAD1SIZE
-value|(_SS_ALIGNSIZE - sizeof(unsigned char) - \ 			    sizeof(sa_family_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SS_PAD2SIZE
-value|(_SS_MAXSIZE - sizeof(unsigned char) - \ 			    sizeof(sa_family_t) - _SS_PAD1SIZE - _SS_ALIGNSIZE)
-end_define
-
-begin_struct
-struct|struct
-name|sockaddr_storage
-block|{
-name|unsigned
-name|char
-name|ss_len
-decl_stmt|;
-comment|/* address length */
-name|sa_family_t
-name|ss_family
-decl_stmt|;
-comment|/* address family */
-name|char
-name|__ss_pad1
-index|[
-name|_SS_PAD1SIZE
-index|]
-decl_stmt|;
-name|__int64_t
-name|__ss_align
-decl_stmt|;
-comment|/* force desired struct alignment */
-name|char
-name|__ss_pad2
-index|[
-name|_SS_PAD2SIZE
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|_STRUCT_SOCKADDR_STORAGE_DECLARED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/_sockaddr_storage.h>
+end_include
 
 begin_comment
 comment|/* Socket address, internet style. */
@@ -416,11 +336,17 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifndef
+argument_list|)
+operator|&&
+name|__BSD_VISIBLE
+end_if
 
 begin_ifndef
 ifndef|#
@@ -543,7 +469,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_KERNEL */
+comment|/* !_KERNEL&& __BSD_VISIBLE */
 end_comment
 
 begin_if
@@ -2522,12 +2448,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_NONLOCALOK
+name|IP_BINDANY
 value|24
 end_define
 
 begin_comment
-comment|/* bool: allow bind to spoof non-local addresses; 					requires kernel compile option IP_NONLOCALBIND */
+comment|/* bool: allow bind to any address */
 end_comment
 
 begin_define
@@ -2957,7 +2883,44 @@ value|1024
 end_define
 
 begin_comment
-comment|/* # of filters per socket, per group */
+comment|/* XXX to be unused */
+end_comment
+
+begin_comment
+comment|/*  * Default resource limits for IPv4 multicast source filtering.  * These may be modified by sysctl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MAX_GROUP_SRC_FILTER
+value|512
+end_define
+
+begin_comment
+comment|/* sources per group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MAX_SOCK_SRC_FILTER
+value|128
+end_define
+
+begin_comment
+comment|/* sources per socket/group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MAX_SOCK_MUTE_FILTER
+value|128
+end_define
+
+begin_comment
+comment|/* XXX no longer used */
 end_comment
 
 begin_comment
@@ -3242,6 +3205,17 @@ end_function_decl
 
 begin_comment
 comment|/*  * Filter modes; also used to represent per-socket filter mode internally.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_UNDEFINED
+value|0
+end_define
+
+begin_comment
+comment|/* fmode: not yet defined */
 end_comment
 
 begin_define
@@ -3671,6 +3645,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x).s_addr == INADDR_ANY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_allhosts
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).s_addr == htonl(INADDR_ALLHOSTS_GROUP))
 end_define
 
 begin_define

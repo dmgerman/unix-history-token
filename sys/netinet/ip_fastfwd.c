@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/pfil.h>
 end_include
 
@@ -125,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -172,40 +172,30 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/vinet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/in_cksum.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipfastforward_active
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ipfastforward_active
+value|VNET(ipfastforward_active)
+end_define
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -214,7 +204,11 @@ name|fastforwarding
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipfastforward_active
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -245,11 +239,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
@@ -384,15 +373,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_noroute
-operator|++
+argument_list|)
 expr_stmt|;
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_cantforward
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -427,7 +416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to forward a packet based on the destination address.  * This is a fast path optimized for the plain forwarding case.  * If the packet is handled (and consumed) here then we return 1;  * otherwise 0 is returned and the packet should be delivered  * to ip_input for full processing.  */
+comment|/*  * Try to forward a packet based on the destination address.  * This is a fast path optimized for the plain forwarding case.  * If the packet is handled (and consumed) here then we return NULL;  * otherwise mbuf is returned and the packet should be delivered  * to ip_input for full processing.  */
 end_comment
 
 begin_function
@@ -442,11 +431,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -528,11 +512,16 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
 name|ro
-operator|.
-name|ro_rt
-operator|=
-name|NULL
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ro
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 1: check for packet drop conditions (and sanity checks) 	 */
 comment|/* 	 * Is entire packet big enough? 	 */
@@ -551,10 +540,10 @@ name|ip
 argument_list|)
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_tooshort
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|drop
@@ -591,10 +580,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_toosmall
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -622,10 +611,10 @@ operator|!=
 name|IPVERSION
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_badvers
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|drop
@@ -652,10 +641,10 @@ argument_list|)
 condition|)
 block|{
 comment|/* minimum header length */
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_badlen
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|drop
@@ -686,10 +675,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_badhlen
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -767,10 +756,10 @@ condition|(
 name|sum
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_badsum
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|drop
@@ -810,10 +799,10 @@ operator|<
 name|ip_len
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_tooshort
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|drop
@@ -908,10 +897,10 @@ operator|==
 name|IN_LOOPBACKNET
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_badaddr
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|drop
@@ -1135,10 +1124,10 @@ condition|)
 return|return
 name|m
 return|;
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_total
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 3: incoming packet firewall processing 	 */
 comment|/* 	 * Convert to host representation 	 */
@@ -1785,10 +1774,10 @@ operator|.
 name|ifq_maxlen
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_odropped
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* would send source quench here but that is depreciated */
 goto|goto
@@ -1930,9 +1919,8 @@ operator|*
 operator|)
 name|dst
 argument_list|,
+operator|&
 name|ro
-operator|.
-name|ro_rt
 argument_list|)
 expr_stmt|;
 block|}
@@ -1948,10 +1936,10 @@ operator|&
 name|IP_DF
 condition|)
 block|{
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_cantfrag
-operator|++
+argument_list|)
 expr_stmt|;
 name|icmp_error
 argument_list|(
@@ -2062,9 +2050,8 @@ operator|*
 operator|)
 name|dst
 argument_list|,
+operator|&
 name|ro
-operator|.
-name|ro_rt
 argument_list|)
 expr_stmt|;
 if|if
@@ -2117,10 +2104,10 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_fragmented
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2130,10 +2117,10 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_odropped
-operator|++
+argument_list|)
 expr_stmt|;
 else|else
 block|{
@@ -2146,15 +2133,15 @@ operator|.
 name|rmx_pksent
 operator|++
 expr_stmt|;
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_forward
-operator|++
+argument_list|)
 expr_stmt|;
-name|V_ipstat
-operator|.
+name|IPSTAT_INC
+argument_list|(
 name|ips_fastforward
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 name|consumed

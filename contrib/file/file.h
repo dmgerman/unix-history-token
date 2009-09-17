@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.108 2008/07/16 18:00:57 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.119 2009/02/04 18:24:32 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -106,6 +106,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_comment
@@ -403,14 +409,14 @@ begin_define
 define|#
 directive|define
 name|VERSIONNO
-value|6
+value|7
 end_define
 
 begin_define
 define|#
 directive|define
 name|FILE_MAGICSIZE
-value|(32 * 6)
+value|200
 end_define
 
 begin_define
@@ -536,7 +542,7 @@ define|#
 directive|define
 name|BINTEST
 value|0x20
-comment|/* test is for a binary type (set only                                    for top-level tests) */
+comment|/* test is for a binary type (set only 				   for top-level tests) */
 define|#
 directive|define
 name|TEXTTEST
@@ -720,8 +726,20 @@ name|FILE_LEDOUBLE
 value|38
 define|#
 directive|define
-name|FILE_NAMES_SIZE
+name|FILE_BEID3
 value|39
+define|#
+directive|define
+name|FILE_LEID3
+value|40
+define|#
+directive|define
+name|FILE_INDIRECT
+value|41
+define|#
+directive|define
+name|FILE_NAMES_SIZE
+value|42
 comment|/* size of array to contain all names */
 define|#
 directive|define
@@ -946,7 +964,7 @@ name|VALUETYPE
 name|value
 decl_stmt|;
 comment|/* either number or string */
-comment|/* Words 17..31 */
+comment|/* Words 17-24 */
 name|char
 name|desc
 index|[
@@ -954,7 +972,7 @@ name|MAXDESC
 index|]
 decl_stmt|;
 comment|/* description */
-comment|/* Words 32..47 */
+comment|/* Words 25-32 */
 name|char
 name|mimetype
 index|[
@@ -962,6 +980,13 @@ name|MAXDESC
 index|]
 decl_stmt|;
 comment|/* MIME type */
+comment|/* Words 33-34 */
+name|char
+name|apple
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1157,8 +1182,6 @@ comment|/* used for error checking by parse() */
 endif|#
 directive|endif
 block|}
-modifier|*
-name|li
 struct|;
 end_struct
 
@@ -1210,9 +1233,15 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+comment|/* Control magic tests. */
 name|int
-name|haderr
+name|event_flags
 decl_stmt|;
+comment|/* Note things that happened. */
+define|#
+directive|define
+name|EVENT_HAD_ERR
+value|0x01
 specifier|const
 name|char
 modifier|*
@@ -1437,6 +1466,27 @@ end_function_decl
 begin_function_decl
 name|protected
 name|int
+name|file_trycdf
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
 name|file_zmagic
 parameter_list|(
 name|struct
@@ -1474,6 +1524,79 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_ascmagic_with_encoding
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|unichar
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_encoding
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|unichar
+modifier|*
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1815,6 +1938,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__EMX__
+end_ifdef
+
+begin_function_decl
+name|protected
+name|int
+name|file_os2_apptype
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __EMX__ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1965,6 +2125,66 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRLCPY
+end_ifndef
+
+begin_function_decl
+name|size_t
+name|strlcpy
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRLCAT
+end_ifndef
+
+begin_function_decl
+name|size_t
+name|strlcat
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -2026,31 +2246,21 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
-begin_function_decl
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|rcsid
+begin_define
+define|#
+directive|define
+name|FILE_RCSID
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|id
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__used__
-end_function_decl
+define|\
+value|static const char rcsid[] __attribute__((__used__)) = id;
+end_define
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -2062,6 +2272,11 @@ parameter_list|)
 define|\
 value|static const char *rcsid(const char *p) { \ 	return rcsid(p = id); \ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

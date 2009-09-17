@@ -127,12 +127,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CG_FLAG_THREAD
+name|CG_FLAG_SMT
 value|0x02
 end_define
 
 begin_comment
 comment|/* New age htt, less crippled. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CG_FLAG_THREAD
+value|(CG_FLAG_HTT | CG_FLAG_SMT)
+end_define
+
+begin_comment
+comment|/* Any threading. */
 end_comment
 
 begin_comment
@@ -443,6 +454,38 @@ name|cpumask_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|stop_cpus_hard
+parameter_list|(
+name|cpumask_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|suspend_cpus
+parameter_list|(
+name|cpumask_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

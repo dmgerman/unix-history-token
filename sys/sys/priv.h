@@ -31,26 +31,22 @@ begin_define
 define|#
 directive|define
 name|_PRIV_LOWEST
-value|0
+value|1
 end_define
 
 begin_comment
-comment|/*  * PRIV_ROOT is a catch-all for as yet unnamed privileges.  No new  * references to this privilege should be added.  */
+comment|/*  * The remaining privileges typically correspond to one or a small  * number of specific privilege checks, and have (relatively) precise  * meanings.  They are loosely sorted into a set of base system  * privileges, such as the ability to reboot, and then loosely by  * subsystem, indicated by a subsystem name.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRIV_ROOT
+name|_PRIV_ROOT
 value|1
 end_define
 
 begin_comment
-comment|/* Catch-all during development. */
-end_comment
-
-begin_comment
-comment|/*  * The remaining privileges typically correspond to one or a small  * number of specific privilege checks, and have (relatively) precise  * meanings.  They are loosely sorted into a set of base system  * privileges, such as the ability to reboot, and then loosely by  * subsystem, indicated by a subsystem name.  */
+comment|/* Removed. */
 end_comment
 
 begin_define
@@ -232,12 +228,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_SETHOSTID
+name|_PRIV_SETHOSTID
 value|19
 end_define
 
 begin_comment
-comment|/* Can call sethostid. */
+comment|/* Removed. */
 end_comment
 
 begin_define
@@ -539,6 +535,28 @@ begin_comment
 comment|/* Attach to a jail. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_JAIL_SET
+value|111
+end_define
+
+begin_comment
+comment|/* Set jail parameters. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_JAIL_REMOVE
+value|112
+end_define
+
+begin_comment
+comment|/* Remove a jail. */
+end_comment
+
 begin_comment
 comment|/*  * Kernel environment priveleges.  */
 end_comment
@@ -824,6 +842,17 @@ begin_comment
 comment|/* Can manipulate cpusets. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_SCHED_CPUSET_INTR
+value|207
+end_define
+
+begin_comment
+comment|/* Can adjust IRQ to CPU binding. */
+end_comment
+
 begin_comment
 comment|/*  * POSIX semaphore privileges.  */
 end_comment
@@ -953,12 +982,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_TTY_PRISON
+name|_PRIV_TTY_PRISON
 value|254
 end_define
 
 begin_comment
-comment|/* Can open pts across jails. */
+comment|/* Removed. */
 end_comment
 
 begin_define
@@ -1520,6 +1549,28 @@ begin_comment
 comment|/* Can munlock(), munlockall(). */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_VM_SWAP_NOQUOTA
+value|363
+end_define
+
+begin_comment
+comment|/* 					 * Can override the global 					 * swap reservation limits. 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_VM_SWAP_NORLIMIT
+value|364
+end_define
+
+begin_comment
+comment|/* 					 * Can override the per-uid 					 * swap reservation limits. 					 */
+end_comment
+
 begin_comment
 comment|/*  * Device file system privileges.  */
 end_comment
@@ -1590,23 +1641,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_NET_PPP
+name|_PRIV_NET_PPP
 value|392
 end_define
 
 begin_comment
-comment|/* Administer PPP. */
+comment|/* Removed. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRIV_NET_SLIP
+name|_PRIV_NET_SLIP
 value|393
 end_define
 
 begin_comment
-comment|/* Administer SLIP. */
+comment|/* Removed. */
 end_comment
 
 begin_define
@@ -1849,6 +1900,28 @@ end_define
 
 begin_comment
 comment|/* Administer lagg interface. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NET_GIF
+value|416
+end_define
+
+begin_comment
+comment|/* Administer gif interface. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NET_SETIFVNET
+value|417
+end_define
+
+begin_comment
+comment|/* Move interface to vnet. */
 end_comment
 
 begin_comment
@@ -2143,6 +2216,17 @@ end_define
 
 begin_comment
 comment|/* Set certain IPv4/6 header options. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NETINET_BINDANY
+value|506
+end_define
+
+begin_comment
+comment|/* Allow bind to any address. */
 end_comment
 
 begin_comment
@@ -2505,6 +2589,58 @@ comment|/* Update cpu microcode. */
 end_comment
 
 begin_comment
+comment|/*  * Capi4BSD privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_C4B_RESET_CTLR
+value|650
+end_define
+
+begin_comment
+comment|/* Load firmware, reset controller. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_C4B_TRACE
+value|651
+end_define
+
+begin_comment
+comment|/* Unrestricted CAPI message tracing. */
+end_comment
+
+begin_comment
+comment|/*  * OpenAFS privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_AFS_ADMIN
+value|660
+end_define
+
+begin_comment
+comment|/* Can change AFS client settings. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_AFS_DAEMON
+value|661
+end_define
+
+begin_comment
+comment|/* Can become the AFS daemon. */
+end_comment
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
@@ -2512,7 +2648,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|642
+value|662
 end_define
 
 begin_comment

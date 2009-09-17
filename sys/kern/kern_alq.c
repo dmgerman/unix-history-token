@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1254,19 +1248,6 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|VOP_LEASE
-argument_list|(
-name|vp
-argument_list|,
-name|td
-argument_list|,
-name|alq
-operator|->
-name|aq_cred
-argument_list|,
-name|LEASE_WRITE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * XXX: VOP_WRITE error checks are ignored. 	 */
 ifdef|#
 directive|ifdef
@@ -1550,6 +1531,8 @@ operator|&
 name|flags
 argument_list|,
 name|cmode
+argument_list|,
+literal|0
 argument_list|,
 name|cred
 argument_list|,

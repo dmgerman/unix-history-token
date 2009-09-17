@@ -81,6 +81,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 name|ttyinq_nfast
 init|=
@@ -89,7 +90,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
@@ -111,6 +112,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 name|ttyinq_nslow
 init|=
@@ -119,7 +121,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
@@ -135,6 +137,36 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Buffered reads to userspace on input"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ttyinq_flush_secure
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tty_inq_flush_secure
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ttyinq_flush_secure
+argument_list|,
+literal|0
+argument_list|,
+literal|"Zero buffers while flushing"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1298,6 +1330,15 @@ modifier|*
 name|ti
 parameter_list|)
 block|{
+name|struct
+name|ttyinq_block
+modifier|*
+name|tib
+init|=
+name|ti
+operator|->
+name|ti_lastblock
+decl_stmt|;
 name|ti
 operator|->
 name|ti_begin
@@ -1322,25 +1363,46 @@ name|ti_end
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Zero all data in the input queue to get rid of passwords. */
+if|if
+condition|(
+name|ttyinq_flush_secure
+condition|)
+block|{
+for|for
+control|(
+name|tib
+operator|=
+name|ti
+operator|->
+name|ti_firstblock
+init|;
+name|tib
+operator|!=
+name|NULL
+condition|;
+name|tib
+operator|=
+name|tib
+operator|->
+name|tib_next
+control|)
+name|bzero
+argument_list|(
+operator|&
+name|tib
+operator|->
+name|tib_data
+argument_list|,
+sizeof|sizeof
+name|tib
+operator|->
+name|tib_data
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|void ttyinq_flush_safe(struct ttyinq *ti) { 	struct ttyinq_block *tib;  	ttyinq_flush(ti);
-comment|/* Zero all data in the input queue to make it more safe */
-end_comment
-
-begin_endif
-unit|TAILQ_FOREACH(tib,&ti->ti_list, tib_list) { 		bzero(&tib->tib_quotes, sizeof tib->tib_quotes); 		bzero(&tib->tib_data, sizeof tib->tib_data); 	} }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int

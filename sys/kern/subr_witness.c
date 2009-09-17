@@ -2191,8 +2191,8 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|w_notrunning
+index|[]
 init|=
 literal|"Witness not running\n"
 decl_stmt|;
@@ -2202,8 +2202,8 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|w_stillcold
+index|[]
 init|=
 literal|"Witness is still cold\n"
 decl_stmt|;
@@ -2383,7 +2383,7 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* 	 * Multicast - protocol locks before interface locks, after UDP locks. 	 */
+comment|/* 	 * IPv4 multicast: 	 * protocol locks before interface locks, after UDP locks. 	 */
 block|{
 literal|"udpinp"
 block|,
@@ -2418,7 +2418,56 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * IPv6 multicast: 	 * protocol locks before interface locks, after UDP locks. 	 */
+block|{
+literal|"udpinp"
+block|,
+operator|&
+name|lock_class_rw
+block|}
+block|,
+block|{
+literal|"in6_multi_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"mld_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"if_addr_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * UNIX Domain Sockets 	 */
+block|{
+literal|"unp_global_rwlock"
+block|,
+operator|&
+name|lock_class_rw
+block|}
+block|,
+block|{
+literal|"unp_list_lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
 block|{
 literal|"unp"
 block|,
@@ -2690,6 +2739,34 @@ literal|"vnode interlock"
 block|,
 operator|&
 name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+comment|/* 	 * ZFS locking 	 */
+block|{
+literal|"dn->dn_mtx"
+block|,
+operator|&
+name|lock_class_sx
+block|}
+block|,
+block|{
+literal|"dr->dt.di.dr_mtx"
+block|,
+operator|&
+name|lock_class_sx
+block|}
+block|,
+block|{
+literal|"db->db_mtx"
+block|,
+operator|&
+name|lock_class_sx
 block|}
 block|,
 block|{
@@ -7125,46 +7202,6 @@ literal|"share->uexcl"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|instance
-operator|->
-name|li_flags
-operator|&
-name|LI_NORELEASE
-operator|)
-operator|!=
-literal|0
-operator|&&
-name|witness_watch
-operator|>
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"forbidden unlock of (%s) %s @ %s:%d\n"
-argument_list|,
-name|class
-operator|->
-name|lc_name
-argument_list|,
-name|lock
-operator|->
-name|lo_name
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"lock marked norelease"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* If we are recursed, unrecurse. */
 if|if
 condition|(
@@ -7210,6 +7247,47 @@ name|li_flags
 operator|--
 expr_stmt|;
 return|return;
+block|}
+comment|/* The lock is now being dropped, check for NORELEASE flag */
+if|if
+condition|(
+operator|(
+name|instance
+operator|->
+name|li_flags
+operator|&
+name|LI_NORELEASE
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|witness_watch
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"forbidden unlock of (%s) %s @ %s:%d\n"
+argument_list|,
+name|class
+operator|->
+name|lc_name
+argument_list|,
+name|lock
+operator|->
+name|lo_name
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"lock marked norelease"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Otherwise, remove this item from the list. */
 name|s

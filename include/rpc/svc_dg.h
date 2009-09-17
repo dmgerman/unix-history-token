@@ -48,6 +48,11 @@ modifier|*
 name|su_cache
 decl_stmt|;
 comment|/* cached data, NULL if none */
+name|struct
+name|netbuf
+name|su_srcaddr
+decl_stmt|;
+comment|/* dst address of last msg */
 block|}
 struct|;
 end_struct

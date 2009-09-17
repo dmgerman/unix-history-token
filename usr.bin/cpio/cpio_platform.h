@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config.h"
+file|"config.h"
 end_include
 
 begin_else
@@ -101,10 +101,15 @@ begin_comment
 comment|/* For __FBSDID */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|__FBSDID
+argument_list|)
+end_elif
 
 begin_comment
 comment|/* Just leaving this macro replacement empty leads to a dangling semicolon. */
@@ -298,6 +303,45 @@ define|#
 directive|define
 name|__LA_DEAD
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"cpio_cygwin.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
+begin_comment
+comment|/*&& !__CYGWIN__ */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"cpio_windows.h"
+end_include
 
 begin_endif
 endif|#

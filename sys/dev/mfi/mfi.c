@@ -501,7 +501,8 @@ name|caddr_t
 parameter_list|,
 name|int
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1239,7 +1240,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int32_t
+name|uint32_t
 name|fw_state
 decl_stmt|,
 name|cur_state
@@ -1740,7 +1741,7 @@ name|max_fw_sge
 argument_list|,
 operator|(
 operator|(
-name|MAXPHYS
+name|MFI_MAXPHYS
 operator|/
 name|PAGE_SIZE
 operator|)
@@ -8776,7 +8777,8 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)
@@ -8858,7 +8860,8 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)
@@ -9895,7 +9898,8 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)
@@ -11585,7 +11589,8 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|td
 parameter_list|)

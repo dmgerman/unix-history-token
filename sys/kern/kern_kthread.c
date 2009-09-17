@@ -955,7 +955,9 @@ comment|/* Initialize our new td  */
 name|newtd
 operator|=
 name|thread_alloc
-argument_list|()
+argument_list|(
+name|pages
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1083,20 +1085,6 @@ argument_list|(
 name|p
 operator|->
 name|p_ucred
-argument_list|)
-expr_stmt|;
-comment|/* Allocate and switch to an alternate kstack if specified. */
-if|if
-condition|(
-name|pages
-operator|!=
-literal|0
-condition|)
-name|vm_thread_new_altkstack
-argument_list|(
-name|newtd
-argument_list|,
-name|pages
 argument_list|)
 expr_stmt|;
 comment|/* this code almost the same as create_thread() in kern_thr.c */

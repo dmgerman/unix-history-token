@@ -1426,6 +1426,8 @@ argument_list|,
 name|ctx
 operator|->
 name|rx_rsc
+argument_list|,
+name|tid
 argument_list|)
 expr_stmt|;
 name|vap

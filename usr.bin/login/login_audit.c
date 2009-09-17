@@ -132,7 +132,7 @@ init|=
 name|getpid
 argument_list|()
 decl_stmt|;
-name|long
+name|int
 name|au_cond
 decl_stmt|;
 comment|/* If we are not auditing, don't cut an audit record; just return. */
@@ -147,7 +147,7 @@ name|au_cond
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|au_cond
 argument_list|)
 argument_list|)
 operator|<
@@ -405,7 +405,7 @@ decl_stmt|;
 name|int
 name|aufd
 decl_stmt|;
-name|long
+name|int
 name|au_cond
 decl_stmt|;
 name|uid_t
@@ -432,7 +432,7 @@ name|au_cond
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|au_cond
 argument_list|)
 argument_list|)
 operator|<
@@ -707,7 +707,7 @@ init|=
 name|getpid
 argument_list|()
 decl_stmt|;
-name|long
+name|int
 name|au_cond
 decl_stmt|;
 comment|/* If we are not auditing, don't cut an audit record; just return. */
@@ -722,7 +722,7 @@ name|au_cond
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|int
 argument_list|)
 argument_list|)
 operator|<

@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/md5.h>
 end_include
 
@@ -119,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -173,12 +173,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
 end_include
 
 begin_endif
@@ -1330,7 +1324,7 @@ name|SPPP_LOCK_OWNED
 parameter_list|(
 name|sp
 parameter_list|)
-value|mtx_owned (&sp->mtx)
+value|mtx_owned (&(sp)->mtx)
 end_define
 
 begin_ifdef
@@ -1420,9 +1414,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4618,9 +4612,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 block|{
 name|struct
@@ -24431,6 +24425,11 @@ name|si
 operator|=
 literal|0
 expr_stmt|;
+name|if_addr_rlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -24549,6 +24548,11 @@ operator|.
 name|s_addr
 expr_stmt|;
 block|}
+name|if_addr_runlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dst
@@ -24600,11 +24604,6 @@ name|u_long
 name|src
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|STDDCL
 expr_stmt|;
 name|struct
@@ -24626,6 +24625,11 @@ comment|/* 	 * Pick the first AF_INET address from the list, 	 * aliases don't m
 name|si
 operator|=
 literal|0
+expr_stmt|;
+name|if_addr_rlock
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -24661,15 +24665,29 @@ expr_stmt|;
 if|if
 condition|(
 name|si
+operator|!=
+name|NULL
 condition|)
+block|{
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
+block|}
+name|if_addr_runlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifa
-operator|&&
-name|si
+operator|!=
+name|NULL
 condition|)
 block|{
 name|int
@@ -24732,6 +24750,9 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
+name|IN_IFADDR_WLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|ia
@@ -24754,6 +24775,9 @@ name|ia
 argument_list|,
 name|ia_hash
 argument_list|)
+expr_stmt|;
+name|IN_IFADDR_WUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* add new route */
 name|error
@@ -24793,6 +24817,11 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -24896,7 +24925,12 @@ expr_stmt|;
 comment|/* 	 * Pick the first link-local AF_INET6 address from the list, 	 * aliases don't make any sense on a p2p link anyway. 	 */
 name|si
 operator|=
-literal|0
+name|NULL
+expr_stmt|;
+name|if_addr_rlock
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -25088,6 +25122,11 @@ name|src
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|if_addr_runlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -25159,6 +25198,11 @@ name|sin6
 operator|=
 name|NULL
 expr_stmt|;
+name|if_addr_rlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -25202,14 +25246,26 @@ operator|->
 name|sin6_addr
 argument_list|)
 condition|)
+block|{
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
+block|}
+name|if_addr_runlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifa
-operator|&&
-name|sin6
+operator|!=
+name|NULL
 condition|)
 block|{
 name|int
@@ -25280,6 +25336,11 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

@@ -132,18 +132,6 @@ name|struct
 name|ieee80211_beacon_offsets
 name|wv_bo
 decl_stmt|;
-name|struct
-name|task
-name|wv_connected_task
-decl_stmt|;
-name|struct
-name|task
-name|wv_disconnected_task
-decl_stmt|;
-name|struct
-name|task
-name|wv_assoc_failed_task
-decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -163,8 +151,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|,
-name|u_int32_t
 parameter_list|)
 function_decl|;
 name|int
@@ -216,10 +202,6 @@ decl_stmt|;
 name|struct
 name|callout
 name|sc_watchdog
-decl_stmt|;
-name|struct
-name|task
-name|sc_oor_task
 decl_stmt|;
 name|int
 name|sc_unit
@@ -438,15 +420,9 @@ name|struct
 name|wi_tx_radiotap_header
 name|sc_tx_th
 decl_stmt|;
-name|int
-name|sc_tx_th_len
-decl_stmt|;
 name|struct
 name|wi_rx_radiotap_header
 name|sc_rx_th
-decl_stmt|;
-name|int
-name|sc_rx_th_len
 decl_stmt|;
 block|}
 struct|;
@@ -623,7 +599,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|wi_shutdown
 parameter_list|(
 name|device_t

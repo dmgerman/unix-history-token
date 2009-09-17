@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: types.h,v 1.109.18.12 2006/05/02 12:55:31 shane Exp $ */
+comment|/* $Id: types.h,v 1.130.50.3 2009/01/29 22:40:35 jinmei Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \file  * \brief  * Including this file gives you type declarations suitable for use in  * .h files, which lets us avoid circular type reference problems.  * \brief  * To actually use a type or get declarations of its methods, you must  * include the appropriate .h file too.  */
+comment|/*! \file dns/types.h  * \brief  * Including this file gives you type declarations suitable for use in  * .h files, which lets us avoid circular type reference problems.  * \brief  * To actually use a type or get declarations of its methods, you must  * include the appropriate .h file too.  */
 end_comment
 
 begin_include
@@ -328,6 +328,21 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|struct
+name|dns_iptable
+name|dns_iptable_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|isc_uint32_t
+name|dns_iterations_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|isc_uint16_t
 name|dns_keyflags_t
 typedef|;
@@ -622,6 +637,21 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
+name|dns_stats
+name|dns_stats_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|isc_uint32_t
+name|dns_rdatastatstype_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
 name|dns_tkeyctx
 name|dns_tkeyctx_t
 typedef|;
@@ -714,6 +744,59 @@ typedef|typedef
 name|struct
 name|dns_zt
 name|dns_zt_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * If we are not using GSSAPI, define the types we use as opaque types here.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GSSAPI
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|not_defined_gss_cred_id
+modifier|*
+name|gss_cred_id_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|not_defined_gss_ctx
+modifier|*
+name|gss_ctx_id_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|struct
+name|dst_gssapi_signverifyctx
+name|dst_gssapi_signverifyctx_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|dns_hash_sha1
+init|=
+literal|1
+block|}
+name|dns_hash_t
 typedef|;
 end_typedef
 
@@ -1137,7 +1220,7 @@ define|#
 directive|define
 name|dns_trust_glue
 value|((dns_trust_t)dns_trust_glue)
-comment|/* Answser from a non-authoritative server */
+comment|/* Answer from a non-authoritative server */
 name|dns_trust_answer
 init|=
 literal|4
@@ -1155,7 +1238,7 @@ define|#
 directive|define
 name|dns_trust_authauthority
 value|((dns_trust_t)dns_trust_authauthority)
-comment|/* Answser from an authoritative server */
+comment|/* Answer from an authoritative server */
 name|dns_trust_authanswer
 init|=
 literal|6
@@ -1186,7 +1269,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*%  * Name checking severites.  */
+comment|/*%  * Name checking severities.  */
 end_comment
 
 begin_typedef

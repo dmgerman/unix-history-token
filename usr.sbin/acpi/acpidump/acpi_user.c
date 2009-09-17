@@ -374,8 +374,7 @@ end_function
 
 begin_function
 specifier|static
-name|struct
-name|ACPIrsdp
+name|ACPI_TABLE_RSDP
 modifier|*
 name|acpi_get_rsdp
 parameter_list|(
@@ -383,8 +382,7 @@ name|u_long
 name|addr
 parameter_list|)
 block|{
-name|struct
-name|ACPIrsdp
+name|ACPI_TABLE_RSDP
 name|rsdp
 decl_stmt|;
 name|size_t
@@ -409,7 +407,7 @@ name|memcmp
 argument_list|(
 name|rsdp
 operator|.
-name|signature
+name|Signature
 argument_list|,
 literal|"RSD PTR "
 argument_list|,
@@ -437,7 +435,7 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* Run the checksum only over the version 1 header. */
+comment|/* Check the standard checksum. */
 if|if
 condition|(
 name|acpi_checksum
@@ -445,8 +443,34 @@ argument_list|(
 operator|&
 name|rsdp
 argument_list|,
-literal|20
+name|ACPI_RSDP_CHECKSUM_LENGTH
 argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* Check extended checksum if table version>= 2. */
+if|if
+condition|(
+name|rsdp
+operator|.
+name|Revision
+operator|>=
+literal|2
+operator|&&
+name|acpi_checksum
+argument_list|(
+operator|&
+name|rsdp
+argument_list|,
+name|ACPI_RSDP_XCHECKSUM_LENGTH
+argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -458,22 +482,21 @@ if|if
 condition|(
 name|rsdp
 operator|.
-name|revision
+name|Revision
 operator|==
 literal|0
 condition|)
 name|len
 operator|=
-literal|20
+name|ACPI_RSDP_REV0_SIZE
 expr_stmt|;
 else|else
 name|len
 operator|=
 name|rsdp
 operator|.
-name|length
+name|Length
 expr_stmt|;
-comment|/* XXX Should handle ACPI 2.0 RSDP extended checksum here. */
 return|return
 operator|(
 name|acpi_map_physical
@@ -489,8 +512,7 @@ end_function
 
 begin_function
 specifier|static
-name|struct
-name|ACPIrsdp
+name|ACPI_TABLE_RSDP
 modifier|*
 name|acpi_scan_rsd_ptr
 parameter_list|(
@@ -508,8 +530,7 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-name|struct
-name|ACPIrsdp
+name|ACPI_TABLE_RSDP
 modifier|*
 name|rsdp
 decl_stmt|;
@@ -521,7 +542,7 @@ decl_stmt|;
 comment|/* 	 * On ia32, scan physical memory for the RSD PTR if above failed. 	 * According to section 5.2.2 of the ACPI spec, we only consider 	 * two regions for the base address: 	 * 1. EBDA (1 KB area addressed by the 16 bit pointer at 0x40E 	 * 2. High memory (0xE0000 - 0xFFFFF) 	 */
 name|addr
 operator|=
-name|RSDP_EBDA_PTR
+name|ACPI_EBDA_PTR_LOCATION
 expr_stmt|;
 name|pread
 argument_list|(
@@ -546,7 +567,7 @@ name|end
 operator|=
 name|addr
 operator|+
-name|RSDP_EBDA_SIZE
+name|ACPI_EBDA_WINDOW_SIZE
 expr_stmt|;
 for|for
 control|(
@@ -579,13 +600,13 @@ operator|)
 return|;
 name|addr
 operator|=
-name|RSDP_HI_START
+name|ACPI_HI_RSDP_WINDOW_BASE
 expr_stmt|;
 name|end
 operator|=
 name|addr
 operator|+
-name|RSDP_HI_SIZE
+name|ACPI_HI_RSDP_WINDOW_SIZE
 expr_stmt|;
 for|for
 control|(
@@ -632,16 +653,14 @@ comment|/*  * Public interfaces  */
 end_comment
 
 begin_function
-name|struct
-name|ACPIrsdp
+name|ACPI_TABLE_RSDP
 modifier|*
 name|acpi_find_rsd_ptr
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|ACPIrsdp
+name|ACPI_TABLE_RSDP
 modifier|*
 name|rsdp
 decl_stmt|;
@@ -805,8 +824,7 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|ACPIsdt
+name|ACPI_TABLE_HEADER
 modifier|*
 name|dsdt_load_file
 parameter_list|(
@@ -815,8 +833,7 @@ modifier|*
 name|infile
 parameter_list|)
 block|{
-name|struct
-name|ACPIsdt
+name|ACPI_TABLE_HEADER
 modifier|*
 name|sdt
 decl_stmt|;
@@ -918,8 +935,7 @@ expr_stmt|;
 name|sdt
 operator|=
 operator|(
-expr|struct
-name|ACPIsdt
+name|ACPI_TABLE_HEADER
 operator|*
 operator|)
 name|dp
@@ -930,7 +946,7 @@ name|strncmp
 argument_list|(
 name|dp
 argument_list|,
-literal|"DSDT"
+name|ACPI_SIG_DSDT
 argument_list|,
 literal|4
 argument_list|)
@@ -943,7 +959,7 @@ name|sdt
 argument_list|,
 name|sdt
 operator|->
-name|len
+name|Length
 argument_list|)
 operator|!=
 literal|0

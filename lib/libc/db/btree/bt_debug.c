@@ -101,12 +101,10 @@ begin_function
 name|void
 name|__bt_dump
 parameter_list|(
-name|dbp
-parameter_list|)
 name|DB
 modifier|*
 name|dbp
-decl_stmt|;
+parameter_list|)
 block|{
 name|BTREE
 modifier|*
@@ -136,7 +134,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: pgsz %d"
+literal|"%s: pgsz %u"
 argument_list|,
 name|F_ISSET
 argument_list|(
@@ -276,7 +274,7 @@ name|bt_mp
 argument_list|,
 name|i
 argument_list|,
-literal|0
+name|MPOOL_IGNOREPIN
 argument_list|)
 operator|)
 operator|!=
@@ -285,27 +283,11 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 name|__bt_dpage
 argument_list|(
 name|h
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|h
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -317,12 +299,10 @@ begin_function
 name|void
 name|__bt_dmpage
 parameter_list|(
-name|h
-parameter_list|)
 name|PAGE
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|)
 block|{
 name|BTMETA
 modifier|*
@@ -484,17 +464,13 @@ begin_function
 name|void
 name|__bt_dnpage
 parameter_list|(
-name|dbp
-parameter_list|,
-name|pgno
-parameter_list|)
 name|DB
 modifier|*
 name|dbp
-decl_stmt|;
+parameter_list|,
 name|pgno_t
 name|pgno
-decl_stmt|;
+parameter_list|)
 block|{
 name|BTREE
 modifier|*
@@ -523,33 +499,17 @@ name|bt_mp
 argument_list|,
 name|pgno
 argument_list|,
-literal|0
+name|MPOOL_IGNOREPIN
 argument_list|)
 operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|__bt_dpage
 argument_list|(
 name|h
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|h
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -561,12 +521,10 @@ begin_function
 name|void
 name|__bt_dpage
 parameter_list|(
-name|h
-parameter_list|)
 name|PAGE
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|)
 block|{
 name|BINTERNAL
 modifier|*
@@ -600,7 +558,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    page %d: ("
+literal|"    page %u: ("
 argument_list|,
 name|h
 operator|->
@@ -683,7 +641,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tprev %2d next %2d"
+literal|"\tprev %2u next %2u"
 argument_list|,
 name|h
 operator|->
@@ -1164,12 +1122,10 @@ begin_function
 name|void
 name|__bt_stat
 parameter_list|(
-name|dbp
-parameter_list|)
 name|DB
 modifier|*
 name|dbp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|extern
 name|u_long
@@ -1253,7 +1209,7 @@ name|bt_mp
 argument_list|,
 name|i
 argument_list|,
-literal|0
+name|MPOOL_IGNOREPIN
 argument_list|)
 operator|)
 operator|!=
@@ -1262,7 +1218,6 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 switch|switch
 condition|(
 name|h
@@ -1327,21 +1282,6 @@ name|pcont
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|h
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Count the levels of the tree. */
 for|for
 control|(
@@ -1368,7 +1308,7 @@ name|bt_mp
 argument_list|,
 name|i
 argument_list|,
-literal|0
+name|MPOOL_IGNOREPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -1393,20 +1333,6 @@ condition|)
 name|levels
 operator|=
 literal|1
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|h
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1437,20 +1363,6 @@ argument_list|)
 operator|->
 name|pgno
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|h
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 operator|(
 name|void
@@ -1459,7 +1371,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%d level%s with %ld keys"
+literal|"%d level%s with %lu keys"
 argument_list|,
 name|levels
 argument_list|,
@@ -1490,7 +1402,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" (%d header count)"
+literal|" (%u header count)"
 argument_list|,
 name|t
 operator|->
@@ -1504,7 +1416,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%u pages (leaf %d, internal %d, overflow %d)\n"
+literal|"\n%u pages (leaf %u, internal %u, overflow %u)\n"
 argument_list|,
 name|pinternal
 operator|+
@@ -1526,7 +1438,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%ld cache hits, %ld cache misses\n"
+literal|"%lu cache hits, %lu cache misses\n"
 argument_list|,
 name|bt_cache_hit
 argument_list|,
@@ -1568,7 +1480,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%.0f%% leaf fill (%ld bytes used, %ld bytes free)\n"
+literal|"%.0f%% leaf fill (%lu bytes used, %lu bytes free)\n"
 argument_list|,
 operator|(
 call|(
@@ -1611,7 +1523,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%.0f%% internal fill (%ld bytes used, %ld bytes free\n"
+literal|"%.0f%% internal fill (%lu bytes used, %lu bytes free\n"
 argument_list|,
 operator|(
 call|(

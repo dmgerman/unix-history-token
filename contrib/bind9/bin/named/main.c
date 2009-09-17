@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.136.18.21 2008/10/24 01:28:08 marka Exp $ */
+comment|/* $Id: main.c,v 1.166.34.3 2009/04/03 20:18:59 marka Exp $ */
 end_comment
 
 begin_comment
@@ -557,7 +557,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Reset the assetion callback in case it is the log 		 * routines causing the assertion. 		 */
+comment|/* 		 * Reset the assertion callback in case it is the log 		 * routines causing the assertion. 		 */
 name|isc_assertion_setcallback
 argument_list|(
 name|NULL
@@ -1547,7 +1547,7 @@ argument_list|,
 name|argv
 argument_list|,
 literal|"46c:C:d:fgi:lm:n:N:p:P:"
-literal|"sS:t:u:vx:"
+literal|"sS:t:T:u:vVx:"
 argument_list|)
 operator|)
 operator|!=
@@ -1862,6 +1862,36 @@ name|isc_commandline_argument
 expr_stmt|;
 break|break;
 case|case
+literal|'T'
+case|:
+comment|/* 			 * clienttest: make clients single shot with their 			 * 	       own memory context. 			 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"clienttest"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ns_g_clienttest
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"unknown -T flag '%s\n"
+argument_list|,
+name|isc_commandline_argument
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|ns_g_username
@@ -1885,10 +1915,38 @@ literal|0
 argument_list|)
 expr_stmt|;
 case|case
+literal|'V'
+case|:
+name|printf
+argument_list|(
+literal|"BIND %s built with %s\n"
+argument_list|,
+name|ns_g_version
+argument_list|,
+name|ns_g_configargs
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+case|case
 literal|'?'
 case|:
 name|usage
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|isc_commandline_option
+operator|==
+literal|'?'
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|ns_main_earlyfatal
 argument_list|(
@@ -2549,6 +2607,21 @@ argument_list|,
 name|saved_command_line
 argument_list|)
 expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"built with %s"
+argument_list|,
+name|ns_g_configargs
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Get the initial resource limits. 	 */
 operator|(
 name|void
@@ -2690,6 +2763,31 @@ operator|=
 name|absolute_conffile
 expr_stmt|;
 block|}
+comment|/* 	 * Record the server's startup time. 	 */
+name|result
+operator|=
+name|isc_time_now
+argument_list|(
+operator|&
+name|ns_g_boottime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|ns_main_earlyfatal
+argument_list|(
+literal|"isc_time_now() failed: %s"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|create_managers
@@ -2719,7 +2817,7 @@ comment|/* xxdb_init(); */
 ifdef|#
 directive|ifdef
 name|DLZ
-comment|/* 	 * Registyer any DLZ drivers. 	 */
+comment|/* 	 * Register any DLZ drivers. 	 */
 name|result
 operator|=
 name|dlz_drivers_init
@@ -3216,19 +3314,28 @@ name|strlcat
 argument_list|(
 name|version
 argument_list|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NO_VERSION_DATE
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
 name|__DATE__
+argument_list|)
 literal|"named version: BIND "
 name|VERSION
-literal|" ("
-name|__DATE__
-literal|")"
 argument_list|,
 else|#
 directive|else
 literal|"named version: BIND "
 name|VERSION
+literal|" ("
+name|__DATE__
+literal|")"
 argument_list|,
 endif|#
 directive|endif
@@ -3399,6 +3506,15 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|isc_mem_setname
+argument_list|(
+name|ns_g_mctx
+argument_list|,
+literal|"main"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|setup
 argument_list|()
 expr_stmt|;
@@ -3562,6 +3678,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ns_g_memstatistics
+operator|&&
 name|memstats
 operator|!=
 name|NULL

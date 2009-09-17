@@ -298,6 +298,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|prefer_iomap
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.re.prefer_iomap"
+argument_list|,
+operator|&
+name|prefer_iomap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -354,8 +374,8 @@ name|RT_DEVICEID_8168
 block|,
 literal|0
 block|,
-literal|"RealTek 8168/8168B/8168C/8168CP/8168D/8111B/8111C/8111CP PCIe "
-literal|"Gigabit Ethernet"
+literal|"RealTek 8168/8168B/8168C/8168CP/8168D/8168DP/"
+literal|"8111B/8111C/8111CP/8111DP PCIe Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -596,6 +616,14 @@ literal|"8102EL"
 block|}
 block|,
 block|{
+name|RL_HWREV_8102EL_SPIN1
+block|,
+name|RL_8169
+block|,
+literal|"8102EL"
+block|}
+block|,
+block|{
 name|RL_HWREV_8168_SPIN2
 block|,
 name|RL_8169
@@ -640,7 +668,15 @@ name|RL_HWREV_8168D
 block|,
 name|RL_8169
 block|,
-literal|"8168D"
+literal|"8168D/8111D"
+block|}
+block|,
+block|{
+name|RL_HWREV_8168DP
+block|,
+name|RL_8169
+block|,
+literal|"8168DP/8111DP"
 block|}
 block|,
 block|{
@@ -818,6 +854,9 @@ parameter_list|(
 name|struct
 name|rl_softc
 modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -842,7 +881,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|re_poll
 parameter_list|(
 name|struct
@@ -859,7 +898,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|re_poll_locked
 parameter_list|(
 name|struct
@@ -1393,24 +1432,6 @@ end_expr_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|re
-argument_list|,
-name|cardbus
-argument_list|,
-name|re_driver
-argument_list|,
-name|re_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
 name|miibus
 argument_list|,
 name|re
@@ -1856,6 +1877,11 @@ operator|<<
 literal|16
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1979,6 +2005,11 @@ name|RL_PHYAR_PHYDATA
 operator|)
 operator||
 name|RL_PHYAR_BUSY
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
 argument_list|)
 expr_stmt|;
 for|for
@@ -2700,7 +2731,7 @@ goto|goto
 name|done
 goto|;
 block|}
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2780,7 +2811,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -4949,7 +4980,24 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Prefer memory space register mapping over IO space. */
+comment|/* 	 * Prefer memory space register mapping over IO space. 	 * Because RTL8169SC does not seem to work when memory mapping 	 * is used always activate io mapping.  	 */
+if|if
+condition|(
+name|devid
+operator|==
+name|RT_DEVICEID_8169SC
+condition|)
+name|prefer_iomap
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|prefer_iomap
+operator|==
+literal|0
+condition|)
+block|{
 name|sc
 operator|->
 name|rl_res_id
@@ -4985,6 +5033,25 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|rl_res_id
+operator|=
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|rl_res_type
+operator|=
+name|SYS_RES_IOPORT
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|rl_res
@@ -5012,6 +5079,10 @@ operator|->
 name|rl_res
 operator|==
 name|NULL
+operator|&&
+name|prefer_iomap
+operator|==
+literal|0
 condition|)
 block|{
 name|sc
@@ -5049,6 +5120,7 @@ argument_list|,
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -5072,7 +5144,6 @@ expr_stmt|;
 goto|goto
 name|fail
 goto|;
-block|}
 block|}
 name|sc
 operator|->
@@ -5631,6 +5702,8 @@ operator||=
 name|RL_FLAG_NOJUMBO
 operator||
 name|RL_FLAG_FASTETHER
+operator||
+name|RL_FLAG_AUTOPAD
 expr_stmt|;
 break|break;
 case|case
@@ -5656,6 +5729,9 @@ case|:
 case|case
 name|RL_HWREV_8102EL
 case|:
+case|case
+name|RL_HWREV_8102EL_SPIN1
+case|:
 name|sc
 operator|->
 name|rl_flags
@@ -5673,6 +5749,8 @@ operator||
 name|RL_FLAG_FASTETHER
 operator||
 name|RL_FLAG_CMDSTOP
+operator||
+name|RL_FLAG_AUTOPAD
 expr_stmt|;
 break|break;
 case|case
@@ -5736,6 +5814,9 @@ case|:
 case|case
 name|RL_HWREV_8168D
 case|:
+case|case
+name|RL_HWREV_8168DP
+case|:
 name|sc
 operator|->
 name|rl_flags
@@ -5749,6 +5830,8 @@ operator||
 name|RL_FLAG_MACSTAT
 operator||
 name|RL_FLAG_CMDSTOP
+operator||
+name|RL_FLAG_AUTOPAD
 expr_stmt|;
 comment|/* 		 * These controllers support jumbo frame but it seems 		 * that enabling it requires touching additional magic 		 * registers. Depending on MAC revisions some 		 * controllers need to disable checksum offload. So 		 * disable jumbo frame until I have better idea what 		 * it really requires to make it support. 		 * RTL8168C/CP : supports up to 6KB jumbo frame. 		 * RTL8111C/CP : supports up to 9KB jumbo frame. 		 */
 name|sc
@@ -8242,6 +8325,10 @@ name|struct
 name|rl_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+modifier|*
+name|rx_npktsp
 parameter_list|)
 block|{
 name|struct
@@ -8273,6 +8360,10 @@ name|int
 name|maxpkt
 init|=
 literal|16
+decl_stmt|,
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 name|RL_LOCK_ASSERT
 argument_list|(
@@ -9047,6 +9138,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 comment|/* Flush the RX DMA ring */
 name|bus_dmamap_sync
@@ -9075,6 +9169,17 @@ operator|.
 name|rl_rx_prodidx
 operator|=
 name|i
+expr_stmt|;
+if|if
+condition|(
+name|rx_npktsp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|rx_npktsp
+operator|=
+name|rx_npkts
 expr_stmt|;
 if|if
 condition|(
@@ -9481,7 +9586,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|re_poll
 parameter_list|(
 name|struct
@@ -9506,6 +9611,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|RL_LOCK
 argument_list|(
 name|sc
@@ -9519,6 +9629,8 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
+name|rx_npkts
+operator|=
 name|re_poll_locked
 argument_list|(
 name|ifp
@@ -9533,12 +9645,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|re_poll_locked
 parameter_list|(
 name|struct
@@ -9563,6 +9680,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
 name|RL_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -9577,6 +9697,9 @@ expr_stmt|;
 name|re_rxeof
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|rx_npkts
 argument_list|)
 expr_stmt|;
 name|re_txeof
@@ -9631,7 +9754,11 @@ name|status
 operator|==
 literal|0xffff
 condition|)
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 if|if
 condition|(
 name|status
@@ -9689,6 +9816,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -9904,6 +10036,8 @@ operator|=
 name|re_rxeof
 argument_list|(
 name|sc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Some chips will ignore a second TX request issued 	 * while an existing transmission is in progress. If 	 * the transmitter goes idle but there are still 	 * packets waiting to be sent, we need to restart the 	 * channel here to flush them out. This only seems to 	 * be required with the PCIe devices. 	 */
@@ -10130,7 +10264,7 @@ name|sc
 operator|->
 name|rl_flags
 operator|&
-name|RL_FLAG_DESCV2
+name|RL_FLAG_AUTOPAD
 operator|)
 operator|==
 literal|0
@@ -13009,6 +13143,8 @@ expr_stmt|;
 name|re_rxeof
 argument_list|(
 name|sc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|re_init_locked

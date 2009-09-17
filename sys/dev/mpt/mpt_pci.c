@@ -3244,11 +3244,11 @@ operator|.
 name|phys
 expr_stmt|;
 comment|/* Create a child tag for data buffers */
-comment|/* 	 * XXX: we should say that nsegs is 'unrestricted, but that 	 * XXX: tickles a horrible bug in the busdma code. Instead, 	 * XXX: we'll derive a reasonable segment limit from MAXPHYS 	 */
+comment|/* 	 * XXX: we should say that nsegs is 'unrestricted, but that 	 * XXX: tickles a horrible bug in the busdma code. Instead, 	 * XXX: we'll derive a reasonable segment limit from MPT_MAXPHYS 	 */
 name|nsegs
 operator|=
 operator|(
-name|MAXPHYS
+name|MPT_MAXPHYS
 operator|/
 name|PAGE_SIZE
 operator|)

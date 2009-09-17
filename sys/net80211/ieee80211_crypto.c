@@ -836,33 +836,72 @@ name|IEEE80211_CIPHER_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_CIPHER_WEP
+index|]
+operator|=
 literal|"wlan_wep"
 block|,
-comment|/* IEEE80211_CIPHER_WEP */
+index|[
+name|IEEE80211_CIPHER_TKIP
+index|]
+operator|=
 literal|"wlan_tkip"
 block|,
-comment|/* IEEE80211_CIPHER_TKIP */
+index|[
+name|IEEE80211_CIPHER_AES_OCB
+index|]
+operator|=
 literal|"wlan_aes_ocb"
 block|,
-comment|/* IEEE80211_CIPHER_AES_OCB */
+index|[
+name|IEEE80211_CIPHER_AES_CCM
+index|]
+operator|=
 literal|"wlan_ccmp"
 block|,
-comment|/* IEEE80211_CIPHER_AES_CCM */
+index|[
+name|IEEE80211_CIPHER_TKIPMIC
+index|]
+operator|=
 literal|"#4"
 block|,
-comment|/* reserved */
+comment|/* NB: reserved */
+index|[
+name|IEEE80211_CIPHER_CKIP
+index|]
+operator|=
 literal|"wlan_ckip"
 block|,
-comment|/* IEEE80211_CIPHER_CKIP */
+index|[
+name|IEEE80211_CIPHER_NONE
+index|]
+operator|=
 literal|"wlan_none"
-block|,
-comment|/* IEEE80211_CIPHER_NONE */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Establish a relationship between the specified key and cipher  * and, if necessary, allocate a hardware index from the driver.  * Note that when a fixed key index is required it must be specified  * and we blindly assign it w/o consulting the driver (XXX).  *  * This must be the first call applied to a key; all the other key  * routines assume wk_cipher is setup.  *  * Locking must be handled by the caller using:  *	ieee80211_key_update_begin(vap);  *	ieee80211_key_update_end(vap);  */
+comment|/* NB: there must be no overlap between user-supplied and device-owned flags */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+operator|(
+name|IEEE80211_KEY_COMMON
+operator|&
+name|IEEE80211_KEY_DEVICE
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Establish a relationship between the specified key and cipher  * and, if necessary, allocate a hardware index from the driver.  * Note that when a fixed key index is required it must be specified.  *  * This must be the first call applied to a key; all the other key  * routines assume wk_cipher is setup.  *  * Locking must be handled by the caller using:  *	ieee80211_key_update_begin(vap);  *	ieee80211_key_update_end(vap);  */
 end_comment
 
 begin_function
@@ -1060,6 +1099,15 @@ name|flags
 operator|&=
 name|IEEE80211_KEY_COMMON
 expr_stmt|;
+comment|/* NB: preserve device attributes */
+name|flags
+operator||=
+operator|(
+name|oflags
+operator|&
+name|IEEE80211_KEY_DEVICE
+operator|)
+expr_stmt|;
 comment|/* 	 * If the hardware does not support the cipher then 	 * fallback to a host-based implementation. 	 */
 if|if
 condition|(
@@ -1225,13 +1273,6 @@ operator|=
 name|keyctx
 expr_stmt|;
 block|}
-comment|/* 	 * Commit to requested usage so driver can see the flags. 	 */
-name|key
-operator|->
-name|wk_flags
-operator|=
-name|flags
-expr_stmt|;
 comment|/* 	 * Ask the driver for a key index if we don't have one. 	 * Note that entries in the global key table always have 	 * an index; this means it's safe to call this routine 	 * for these entries just to setup the reference to the 	 * cipher template.  Note also that when using software 	 * crypto we also call the driver to give us a key index. 	 */
 if|if
 condition|(

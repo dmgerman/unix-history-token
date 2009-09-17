@@ -6261,7 +6261,7 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"Are you sure you want to go into Wizard mode?\n\n"
+literal|"Are you sure you want to go into Expert mode?\n\n"
 literal|"This is an entirely undocumented feature which you are not\n"
 literal|"expected to understand!"
 argument_list|)
@@ -6682,7 +6682,7 @@ condition|)
 block|{
 name|sz
 operator|=
-literal|100
+literal|400
 operator|*
 name|ONE_MEG
 expr_stmt|;

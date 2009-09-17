@@ -361,7 +361,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|rcsdelta_appendlog
 parameter_list|(
 name|struct
@@ -377,7 +377,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|rcsdelta_appendtext
 parameter_list|(
 name|struct

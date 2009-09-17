@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Technology Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002, 2009 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Technology Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * This software was developed at the University of Cambridge Computer  * Laboratory with support from a grant from Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -16,6 +16,12 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"opt_kdtrace.h"
+end_include
 
 begin_include
 include|#
@@ -63,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -168,7 +180,7 @@ file|<security/mac/mac_policy.h>
 end_include
 
 begin_comment
-comment|/*  * Currently, sockets hold two labels: the label of the socket itself, and a  * peer label, which may be used by policies to hold a copy of the label of  * any remote endpoint.  *  * Possibly, this peer label should be maintained at the protocol layer  * (inpcb, unpcb, etc), as this would allow protocol-aware code to maintain  * the label consistently.  For example, it might be copied live from a  * remote socket for UNIX domain sockets rather than keeping a local copy on  * this endpoint, but be cached and updated based on packets received for  * TCP/IP.  */
+comment|/*  * Currently, sockets hold two labels: the label of the socket itself, and a  * peer label, which may be used by policies to hold a copy of the label of  * any remote endpoint.  *  * Possibly, this peer label should be maintained at the protocol layer  * (inpcb, unpcb, etc), as this would allow protocol-aware code to maintain  * the label consistently.  For example, it might be copied live from a  * remote socket for UNIX domain sockets rather than keeping a local copy on  * this endpoint, but be cached and updated based on packets received for  * TCP/IP.  *  * Unlike with many other object types, the lock protecting MAC labels on  * sockets (the socket lock) is not frequently held at the points in code  * where socket-related checks are called.  The MAC Framework acquires the  * lock over some entry points in order to enforce atomicity (such as label  * copies) but in other cases the policy modules will have to acquire the  * lock themselves if they use labels.  This approach (a) avoids lock  * acquisitions when policies don't require labels and (b) solves a number of  * potential lock order issues when multiple sockets are used in the same  * entry point.  */
 end_comment
 
 begin_function
@@ -207,7 +219,23 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|MAC_CHECK
+if|if
+condition|(
+name|flag
+operator|&
+name|M_WAITOK
+condition|)
+name|MAC_POLICY_CHECK
+argument_list|(
+name|socket_init_label
+argument_list|,
+name|label
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+else|else
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_init_label
 argument_list|,
@@ -221,7 +249,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_destroy_label
 argument_list|,
@@ -284,7 +312,23 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|MAC_CHECK
+if|if
+condition|(
+name|flag
+operator|&
+name|M_WAITOK
+condition|)
+name|MAC_POLICY_CHECK
+argument_list|(
+name|socketpeer_init_label
+argument_list|,
+name|label
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+else|else
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socketpeer_init_label
 argument_list|,
@@ -298,7 +342,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socketpeer_destroy_label
 argument_list|,
@@ -437,7 +481,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_destroy_label
 argument_list|,
@@ -463,7 +507,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socketpeer_destroy_label
 argument_list|,
@@ -542,7 +586,7 @@ modifier|*
 name|dest
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_copy_label
 argument_list|,
@@ -578,7 +622,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_EXTERNALIZE
+name|MAC_POLICY_EXTERNALIZE
 argument_list|(
 name|socket
 argument_list|,
@@ -624,7 +668,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_EXTERNALIZE
+name|MAC_POLICY_EXTERNALIZE
 argument_list|(
 name|socketpeer
 argument_list|,
@@ -662,7 +706,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_INTERNALIZE
+name|MAC_POLICY_INTERNALIZE
 argument_list|(
 name|socket
 argument_list|,
@@ -694,7 +738,7 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_create
 argument_list|,
@@ -725,12 +769,7 @@ modifier|*
 name|newso
 parameter_list|)
 block|{
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|oldso
-argument_list|)
-expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_newconn
 argument_list|,
@@ -776,7 +815,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_relabel
 argument_list|,
@@ -814,11 +853,13 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -826,7 +867,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socketpeer_set_from_mbuf
 argument_list|,
@@ -859,8 +900,14 @@ modifier|*
 name|newso
 parameter_list|)
 block|{
-comment|/* 	 * XXXRW: only hold the socket lock on one at a time, as one socket 	 * is the original, and one is the new.  However, it's called in both 	 * directions, so we can't assert the lock here currently. 	 */
-name|MAC_PERFORM
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socketpeer_set_from_socket
 argument_list|,
@@ -900,11 +947,13 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -912,7 +961,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|socket_create_mbuf
 argument_list|,
@@ -929,6 +978,18 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|socket_check_accept
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -948,12 +1009,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_accept
 argument_list|,
@@ -966,6 +1022,17 @@ operator|->
 name|so_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|socket_check_accept
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -974,6 +1041,20 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|socket_check_bind
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|,
+literal|"struct sockaddr *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|mac_socket_check_bind
@@ -981,7 +1062,7 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|ucred
+name|cred
 parameter_list|,
 name|struct
 name|socket
@@ -997,22 +1078,30 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_bind
 argument_list|,
-name|ucred
+name|cred
 argument_list|,
 name|so
 argument_list|,
 name|so
 operator|->
 name|so_label
+argument_list|,
+name|sa
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|socket_check_bind
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
 argument_list|,
 name|sa
 argument_list|)
@@ -1024,6 +1113,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|socket_check_connect
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|,
+literal|"struct sockaddr *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1048,12 +1151,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_connect
 argument_list|,
@@ -1068,6 +1166,19 @@ argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|socket_check_connect
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
+argument_list|,
+name|sa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1075,6 +1186,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE4
+argument_list|(
+name|socket_check_create
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1098,9 +1225,24 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_create
+argument_list|,
+name|cred
+argument_list|,
+name|domain
+argument_list|,
+name|type
+argument_list|,
+name|proto
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE4
+argument_list|(
+name|socket_check_create
+argument_list|,
+name|error
 argument_list|,
 name|cred
 argument_list|,
@@ -1118,6 +1260,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|socket_check_deliver
+argument_list|,
+literal|"struct socket *"
+argument_list|,
+literal|"struct mbuf *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1142,11 +1296,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -1154,7 +1314,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_deliver
 argument_list|,
@@ -1169,6 +1329,17 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|socket_check_deliver
+argument_list|,
+name|error
+argument_list|,
+name|so
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1176,6 +1347,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|socket_check_listen
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1195,12 +1378,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_listen
 argument_list|,
@@ -1213,6 +1391,17 @@ operator|->
 name|so_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|socket_check_listen
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1220,6 +1409,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|socket_check_poll
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1239,12 +1440,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_poll
 argument_list|,
@@ -1257,6 +1453,17 @@ operator|->
 name|so_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|socket_check_poll
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1264,6 +1471,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|socket_check_receive
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1283,12 +1502,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_receive
 argument_list|,
@@ -1301,6 +1515,17 @@ operator|->
 name|so_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|socket_check_receive
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1308,6 +1533,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|socket_check_relabel
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|,
+literal|"struct label *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1338,7 +1577,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_relabel
 argument_list|,
@@ -1353,6 +1592,19 @@ argument_list|,
 name|newlabel
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|socket_check_relabel
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
+argument_list|,
+name|newlabel
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1360,6 +1612,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|socket_check_send
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1379,12 +1643,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_send
 argument_list|,
@@ -1397,6 +1656,17 @@ operator|->
 name|so_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|socket_check_send
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1404,6 +1674,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|socket_check_stat
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1423,12 +1705,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_stat
 argument_list|,
@@ -1441,6 +1718,17 @@ operator|->
 name|so_label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|socket_check_stat
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1448,6 +1736,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|socket_check_visible
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct socket *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1467,12 +1767,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|socket_check_visible
 argument_list|,
@@ -1483,6 +1778,17 @@ argument_list|,
 name|so
 operator|->
 name|so_label
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|socket_check_visible
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|so
 argument_list|)
 expr_stmt|;
 return|return

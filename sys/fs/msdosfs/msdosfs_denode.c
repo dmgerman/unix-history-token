@@ -477,16 +477,6 @@ name|de_inode
 operator|=
 name|inode
 expr_stmt|;
-name|ldep
-operator|->
-name|de_dev
-operator|=
-name|pmp
-operator|->
-name|pm_devvp
-operator|->
-name|v_rdev
-expr_stmt|;
 name|fc_purge
 argument_list|(
 name|ldep

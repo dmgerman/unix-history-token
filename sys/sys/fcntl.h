@@ -350,80 +350,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Defined by POSIX Extended API Set Part 2 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
-
-begin_comment
-comment|/*  * Magic value that specify the use of the current working directory  * to determine the target of relative file paths in the openat() and  * similar syscalls.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_FDCWD
-value|-100
-end_define
-
-begin_comment
-comment|/*  * Miscellaneous flags for the *at() syscalls.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_EACCESS
-value|0x100
-end_define
-
-begin_comment
-comment|/* Check access using effective user and group ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_SYMLINK_NOFOLLOW
-value|0x200
-end_define
-
-begin_comment
-comment|/* Do not follow symbolic links */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_SYMLINK_FOLLOW
-value|0x400
-end_define
-
-begin_comment
-comment|/* Follow symbolic link */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_REMOVEDIR
-value|0x800
-end_define
-
-begin_comment
-comment|/* Remove directory instead of file */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Defined by POSIX 1003.1; BSD default, but must be distinct from O_RDONLY. */
 end_comment
 
@@ -509,6 +435,34 @@ directive|define
 name|FEXEC
 value|O_EXEC
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Defined by POSIX 1003.1-2008; BSD default, but reserve for future use. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
+end_if
+
+begin_define
+define|#
+directive|define
+name|O_TTY_INIT
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Restore default termios attributes */
+end_comment
 
 begin_endif
 endif|#
@@ -720,6 +674,80 @@ if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Defined by POSIX Extended API Set Part 2 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_comment
+comment|/*  * Magic value that specify the use of the current working directory  * to determine the target of relative file paths in the openat() and  * similar syscalls.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_FDCWD
+value|-100
+end_define
+
+begin_comment
+comment|/*  * Miscellaneous flags for the *at() syscalls.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_EACCESS
+value|0x100
+end_define
+
+begin_comment
+comment|/* Check access using effective user and group ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SYMLINK_NOFOLLOW
+value|0x200
+end_define
+
+begin_comment
+comment|/* Do not follow symbolic links */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_SYMLINK_FOLLOW
+value|0x400
+end_define
+
+begin_comment
+comment|/* Follow symbolic link */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_REMOVEDIR
+value|0x800
+end_define
+
+begin_comment
+comment|/* Remove directory instead of file */
+end_comment
 
 begin_endif
 endif|#
@@ -1235,6 +1263,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
+end_if
+
 begin_function_decl
 name|int
 name|openat
@@ -1251,6 +1289,11 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

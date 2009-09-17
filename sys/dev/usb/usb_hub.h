@@ -10,22 +10,22 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_HUB_H_
+name|_USB_HUB_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_HUB_H_
+name|_USB_HUB_H_
 end_define
 
 begin_comment
-comment|/*  * The following structure defines an USB port.  */
+comment|/*  * The following structure defines an USB port.   */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_port
+name|usb_port
 block|{
 name|uint8_t
 name|restartcnt
@@ -38,17 +38,11 @@ name|uint8_t
 name|device_index
 decl_stmt|;
 comment|/* zero means not valid */
-name|uint8_t
-name|usb2_mode
-range|:
-literal|1
+name|enum
+name|usb_hc_mode
+name|usb_mode
 decl_stmt|;
-comment|/* current USB mode */
-name|uint8_t
-name|unused
-range|:
-literal|7
-decl_stmt|;
+comment|/* host or device mode */
 block|}
 struct|;
 end_struct
@@ -59,7 +53,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 block|{
 name|uint16_t
 name|total_bytes
@@ -80,29 +74,34 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_hub
+name|usb_hub
 block|{
+if|#
+directive|if
+name|USB_HAVE_TT_SUPPORT
 name|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 name|fs_isoc_schedule
 index|[
 name|USB_ISOC_TIME_MAX
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|hubudev
 decl_stmt|;
 comment|/* the HUB device */
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
 modifier|*
 name|explore
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|hub
 parameter_list|)
@@ -111,7 +110,7 @@ name|void
 modifier|*
 name|hubsoftc
 decl_stmt|;
-name|uint32_t
+name|usb_size_t
 name|uframe_usage
 index|[
 name|USB_HS_MICRO_FRAMES_MAX
@@ -128,7 +127,7 @@ name|uint8_t
 name|nports
 decl_stmt|;
 name|struct
-name|usb2_port
+name|usb_port
 name|ports
 index|[
 literal|0
@@ -144,10 +143,10 @@ end_comment
 
 begin_function_decl
 name|uint8_t
-name|usb2_intr_schedule_adjust
+name|usb_intr_schedule_adjust
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -162,10 +161,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_fs_isoc_schedule_init_all
+name|usbd_fs_isoc_schedule_init_all
 parameter_list|(
 name|struct
-name|usb2_fs_isoc_schedule
+name|usb_fs_isoc_schedule
 modifier|*
 name|fss
 parameter_list|)
@@ -174,20 +173,20 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_port_set_device
+name|usb_bus_port_set_device
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
 name|struct
-name|usb2_port
+name|usb_port
 modifier|*
 name|up
 parameter_list|,
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -199,17 +198,17 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
-name|usb2_bus_port_get_device
+name|usb_bus_port_get_device
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
 name|struct
-name|usb2_port
+name|usb_port
 modifier|*
 name|up
 parameter_list|)
@@ -218,10 +217,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_needs_explore
+name|usb_needs_explore
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|,
@@ -233,7 +232,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_needs_explore_all
+name|usb_needs_explore_all
 parameter_list|(
 name|void
 parameter_list|)
@@ -242,10 +241,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_power_update
+name|usb_bus_power_update
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 parameter_list|)
@@ -254,12 +253,29 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_powerd
+name|usb_bus_powerd
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uhub_root_intr
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -270,7 +286,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_HUB_H_ */
+comment|/* _USB_HUB_H_ */
 end_comment
 
 end_unit

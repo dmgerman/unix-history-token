@@ -1674,7 +1674,7 @@ name|debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"error=%d so_error=%d uio->uio_resid=%d iov.iov_len=%zd"
+literal|"error=%d so_error=%d uio->uio_resid=%zd iov.iov_len=%zd"
 argument_list|,
 name|error
 argument_list|,
@@ -1716,7 +1716,7 @@ name|debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"error=%d so_error=%d uio->uio_resid=%d iov.iov_len=%zd so_state=%x"
+literal|"error=%d so_error=%d uio->uio_resid=%zd iov.iov_len=%zd so_state=%x"
 argument_list|,
 name|error
 argument_list|,
@@ -2289,7 +2289,7 @@ name|sdebug
 argument_list|(
 literal|4
 argument_list|,
-literal|"uio_resid=0x%x itt=0x%x bp=%p bo=%x len=%x/%x"
+literal|"uio_resid=0x%zx itt=0x%x bp=%p bo=%x len=%x/%x"
 argument_list|,
 name|uio
 operator|->

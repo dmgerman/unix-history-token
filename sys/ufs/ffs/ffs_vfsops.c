@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_quota.h"
 end_include
 
@@ -597,17 +591,17 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
 name|vnode
 modifier|*
 name|devvp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|struct
 name|ufsmount
@@ -642,6 +636,10 @@ name|char
 modifier|*
 name|fspec
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 if|if
 condition|(
 name|vfs_filteropt
@@ -1004,7 +1002,7 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Allow the curthread to 					 * ignore the suspension to 					 * synchronize on-disk state. 					 */
-name|curthread
+name|td
 operator|->
 name|td_pflags
 operator||=
@@ -1998,11 +1996,6 @@ name|data
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -4594,6 +4587,8 @@ operator||=
 name|MNTK_MPSAFE
 operator||
 name|MNTK_LOOKUP_SHARED
+operator||
+name|MNTK_EXTENDED_SHARED
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -5240,8 +5235,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|mntflags
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -5251,12 +5244,12 @@ decl_stmt|;
 name|int
 name|mntflags
 decl_stmt|;
+block|{
 name|struct
 name|thread
 modifier|*
 name|td
 decl_stmt|;
-block|{
 name|struct
 name|ufsmount
 modifier|*
@@ -5290,6 +5283,10 @@ directive|endif
 name|flags
 operator|=
 literal|0
+expr_stmt|;
+name|td
+operator|=
+name|curthread
 expr_stmt|;
 name|fs
 operator|=
@@ -5447,7 +5444,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|curthread
+name|td
 operator|->
 name|td_pflags
 operator||=
@@ -5480,10 +5477,6 @@ name|mnt_flag
 operator|&
 name|MNT_SOFTDEP
 condition|)
-block|{
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|softdep_flushfiles
@@ -5494,19 +5487,8 @@ name|flags
 argument_list|,
 name|td
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|fail
-goto|;
-block|}
+expr_stmt|;
 else|else
-block|{
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|ffs_flushfiles
@@ -5517,14 +5499,20 @@ name|flags
 argument_list|,
 name|td
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 goto|goto
 name|fail
 goto|;
-block|}
 name|UFS_LOCK
 argument_list|(
 name|ump
@@ -5624,6 +5612,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
 block|{
 name|fs
@@ -6086,8 +6078,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|sbp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -6098,11 +6088,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -6292,8 +6277,6 @@ parameter_list|(
 name|mp
 parameter_list|,
 name|waitfor
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|mount
@@ -6302,11 +6285,6 @@ name|mp
 decl_stmt|;
 name|int
 name|waitfor
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -6319,6 +6297,11 @@ name|vp
 decl_stmt|,
 modifier|*
 name|devvp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|struct
 name|inode
@@ -6376,6 +6359,10 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|fs
 operator|=
 name|ump
@@ -7215,13 +7202,8 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * FFS supports recursive and shared locking. 	 */
+comment|/* 	 * FFS supports recursive locking. 	 */
 name|VN_LOCK_AREC
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|VN_LOCK_ASHARE
 argument_list|(
 name|vp
 argument_list|)
@@ -7271,6 +7253,12 @@ operator|->
 name|i_number
 operator|=
 name|ino
+expr_stmt|;
+name|ip
+operator|->
+name|i_ea_refs
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7592,6 +7580,22 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Finish inode initialization. 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VFIFO
+condition|)
+block|{
+comment|/* FFS supports shared locking for all files except fifos. */
+name|VN_LOCK_ASHARE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Set up a generation number for this inode if it does not 	 * already have one. This should only happen on old filesystems. 	 */
 if|if
 condition|(
@@ -8439,11 +8443,6 @@ specifier|const
 name|char
 modifier|*
 name|attrname
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 ifdef|#
@@ -8462,8 +8461,6 @@ argument_list|,
 name|attrnamespace
 argument_list|,
 name|attrname
-argument_list|,
-name|td
 argument_list|)
 operator|)
 return|;
@@ -8482,8 +8479,6 @@ argument_list|,
 name|attrnamespace
 argument_list|,
 name|attrname
-argument_list|,
-name|td
 argument_list|)
 operator|)
 return|;
@@ -9025,8 +9020,19 @@ argument_list|(
 name|bp
 operator|->
 name|b_bufsize
+argument_list|,
+name|GB_NOWAIT_BD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newbp
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|normal_write
+goto|;
 comment|/* 		 * set it to be identical to the old block.  We have to 		 * set b_lblkno and BKGRDMARKER before calling bgetvp() 		 * to avoid confusing the splay tree and gbincore(). 		 */
 name|memcpy
 argument_list|(
@@ -9168,6 +9174,8 @@ name|newbp
 expr_stmt|;
 block|}
 comment|/* Let the normal bufwrite do the rest for us */
+name|normal_write
+label|:
 return|return
 operator|(
 name|bufwrite
@@ -9369,7 +9377,7 @@ name|bp
 operator|->
 name|b_bufsize
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|runningbufspace

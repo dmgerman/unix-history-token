@@ -30,8 +30,11 @@ decl_stmt|;
 name|uint16_t
 name|wr_chan_flags
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|wr_antsignal
+decl_stmt|;
+name|int8_t
+name|wr_antnoise
 decl_stmt|;
 block|}
 name|__packed
@@ -43,7 +46,7 @@ define|#
 directive|define
 name|RT2661_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_TSFT) |				\ 	 (1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL))
+value|((1<< IEEE80211_RADIOTAP_TSFT) |				\ 	 (1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL) |			\ 	 (1<< IEEE80211_RADIOTAP_DBM_ANTNOISE))
 end_define
 
 begin_struct
@@ -308,12 +311,6 @@ name|sc_invalid
 decl_stmt|;
 name|int
 name|sc_debug
-decl_stmt|;
-specifier|const
-name|struct
-name|ieee80211_rate_table
-modifier|*
-name|sc_rates
 decl_stmt|;
 comment|/*  * The same in both up to here  * ------------------------------------------------  */
 name|int

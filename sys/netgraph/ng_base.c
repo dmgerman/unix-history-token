@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -140,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -164,35 +164,6 @@ name|NG_ABI_VERSION
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE_GLOBALS
-end_ifndef
-
-begin_decl_stmt
-name|struct
-name|vnet_netgraph
-name|vnet_netgraph_0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Mutex to protect topology events. */
@@ -434,6 +405,9 @@ block|,
 literal|1
 block|,
 comment|/* refs */
+name|NULL
+block|,
+comment|/* vnet */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -577,30 +551,29 @@ begin_comment
 comment|/* XXX Don't need to initialise them because it's a LIST */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
 begin_expr_stmt
 specifier|static
-name|LIST_HEAD
+name|VNET_DEFINE
 argument_list|(
-argument_list|,
-argument|ng_node
+name|LIST_HEAD
+argument_list|(,
+name|ng_node
 argument_list|)
+argument_list|,
 name|ng_ID_hash
 index|[
 name|NG_ID_HASH_SIZE
 index|]
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ng_ID_hash
+value|VNET(ng_ID_hash)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -637,30 +610,29 @@ define|\
 value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(node,&V_ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
 begin_expr_stmt
 specifier|static
-name|LIST_HEAD
+name|VNET_DEFINE
 argument_list|(
-argument_list|,
-argument|ng_node
+name|LIST_HEAD
+argument_list|(,
+name|ng_node
 argument_list|)
+argument_list|,
 name|ng_name_hash
 index|[
 name|NG_NAME_HASH_SIZE
 index|]
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ng_name_hash
+value|VNET(ng_name_hash)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -912,21 +884,6 @@ name|ng_destroy_hook
 parameter_list|(
 name|hook_p
 name|hook
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|node_p
-name|ng_name2noderef
-parameter_list|(
-name|node_p
-name|node
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1650,23 +1607,25 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|ng_ID_t
+argument_list|,
 name|nextID
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_nextID
+value|VNET(nextID)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -2449,11 +2408,6 @@ modifier|*
 name|nodepp
 parameter_list|)
 block|{
-name|INIT_VNET_NETGRAPH
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|node_p
 name|node
 decl_stmt|;
@@ -2507,6 +2461,17 @@ name|nd_type
 operator|=
 name|type
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|node
+operator|->
+name|nd_vnet
+operator|=
+name|curvnet
+expr_stmt|;
+endif|#
+directive|endif
 name|NG_NODE_REF
 argument_list|(
 name|node
@@ -3011,11 +2976,6 @@ name|ng_ID_t
 name|ID
 parameter_list|)
 block|{
-name|INIT_VNET_NETGRAPH
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|node_p
 name|node
 decl_stmt|;
@@ -3099,11 +3059,6 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|INIT_VNET_NETGRAPH
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -3304,11 +3259,6 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|INIT_VNET_NETGRAPH
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|node_p
 name|node
 decl_stmt|;
@@ -7826,7 +7776,7 @@ operator|=
 name|NGQRW_R
 expr_stmt|;
 block|}
-comment|/* 	 * If sender or receiver requests queued delivery or stack usage 	 * level is dangerous - enqueue message. 	 */
+comment|/* 	 * If sender or receiver requests queued delivery, or call graph 	 * loops back from outbound to inbound path, or stack usage 	 * level is dangerous - enqueue message. 	 */
 if|if
 condition|(
 operator|(
@@ -7846,6 +7796,29 @@ operator|&
 name|HK_QUEUE
 operator|)
 operator|)
+condition|)
+block|{
+name|queue
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|hook
+operator|&&
+operator|(
+name|hook
+operator|->
+name|hk_flags
+operator|&
+name|HK_TO_INBOUND
+operator|)
+operator|&&
+name|curthread
+operator|->
+name|td_ng_outbound
 condition|)
 block|{
 name|queue
@@ -8790,11 +8763,6 @@ name|hook_p
 name|lasthook
 parameter_list|)
 block|{
-name|INIT_VNET_NETGRAPH
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -11962,6 +11930,64 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|vnet_netgraph_uninit
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+name|__unused
+parameter_list|)
+block|{
+if|#
+directive|if
+literal|0
+block|node_p node, last_killed = NULL;
+comment|/* XXXRW: utterly bogus. */
+block|while ((node = LIST_FIRST(&V_ng_allnodes)) != NULL) { 		if (node == last_killed) {
+comment|/* This should never happen */
+block|node->nd_flags |= NGF_REALLY_DIE; 			printf("netgraph node %s needs NGF_REALLY_DIE\n", 			    node->nd_name); 			ng_rmnode(node, NULL, NULL, 0);
+comment|/* This must never happen */
+block|if (node == LIST_FIRST(&V_ng_allnodes)) 				panic("netgraph node %s won't die", 				    node->nd_name); 		} 		ng_rmnode(node, NULL, NULL, 0); 		last_killed = node; 	}
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_expr_stmt
+name|VNET_SYSUNINIT
+argument_list|(
+name|vnet_netgraph_uninit
+argument_list|,
+name|SI_SUB_NETGRAPH
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|vnet_netgraph_uninit
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
+
 begin_comment
 comment|/*  * Handle loading and unloading for this code.  * The only thing we need to link into is the NETISR strucure.  */
 end_comment
@@ -12008,10 +12034,6 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* Initialize everything. */
-name|V_nextID
-operator|=
-literal|1
-expr_stmt|;
 name|NG_WORKLIST_LOCK_INIT
 argument_list|()
 expr_stmt|;
@@ -13022,6 +13044,13 @@ expr_stmt|;
 name|NG_WORKLIST_UNLOCK
 argument_list|()
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|node
+operator|->
+name|nd_vnet
+argument_list|)
+expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_NET
@@ -13133,6 +13162,9 @@ name|NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -14288,12 +14320,25 @@ name|item
 init|=
 name|arg
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|NGI_NODE
+argument_list|(
+name|item
+argument_list|)
+operator|->
+name|nd_vnet
+argument_list|)
+expr_stmt|;
 name|ng_snd_item
 argument_list|(
 name|item
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function

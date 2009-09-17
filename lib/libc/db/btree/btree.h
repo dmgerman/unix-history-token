@@ -771,7 +771,7 @@ name|p
 parameter_list|,
 name|i
 parameter_list|)
-value|{						\ 	t->bt_sp->pgno = p; 						\ 	t->bt_sp->index = i; 						\ 	++t->bt_sp;							\ }
+value|{						\ 	t->bt_sp->pgno = p;						\ 	t->bt_sp->index = i;						\ 	++t->bt_sp;							\ }
 define|#
 directive|define
 name|BT_POP

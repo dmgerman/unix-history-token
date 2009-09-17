@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002, 2006 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 nCircle Network Security, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2009 Apple, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was developed by Robert N. M. Watson for the TrustedBSD  * Project under contract to nCircle Network Security, Inc.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2002, 2006, 2009 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 nCircle Network Security, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2009 Apple, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was developed by Robert N. M. Watson for the TrustedBSD  * Project under contract to nCircle Network Security, Inc.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * This software was developed at the University of Cambridge Computer  * Laboratory with support from a grant from Google, Inc.   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -32,6 +32,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rmlock.h>
+end_include
+
 begin_comment
 comment|/*  * MAC Framework sysctl namespace.  */
 end_comment
@@ -58,6 +70,211 @@ end_endif
 begin_comment
 comment|/* SYSCTL_DECL */
 end_comment
+
+begin_comment
+comment|/*  * MAC Framework SDT DTrace probe namespace, macros for declaring entry  * point probes, macros for invoking them.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SDT_PROVIDER_DECLARE
+end_ifdef
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|mac
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* MAC Framework-level events. */
+end_comment
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|mac_framework
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Entry points to MAC. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_CHECK_PROBE_DEFINE4
+parameter_list|(
+name|name
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|)
+define|\
+value|SDT_PROBE_DEFINE5(mac_framework, kernel, name, mac_check_err,	\ 	    "int", arg0, arg1, arg2, arg3);				\ 	SDT_PROBE_DEFINE5(mac_framework, kernel, name, mac_check_ok,	\ 	    "int", arg0, arg1, arg2, arg3);
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_CHECK_PROBE_DEFINE3
+parameter_list|(
+name|name
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+define|\
+value|SDT_PROBE_DEFINE4(mac_framework, kernel, name, mac_check_err,	\ 	    "int", arg0, arg1, arg2);					\ 	SDT_PROBE_DEFINE4(mac_framework, kernel, name, mac_check_ok,	\ 	    "int", arg0, arg1, arg2);
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_CHECK_PROBE_DEFINE2
+parameter_list|(
+name|name
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|)
+define|\
+value|SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_check_err,	\ 	    "int", arg0, arg1);						\ 	SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_check_ok,	\ 	    "int", arg0, arg1);
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_CHECK_PROBE_DEFINE1
+parameter_list|(
+name|name
+parameter_list|,
+name|arg0
+parameter_list|)
+define|\
+value|SDT_PROBE_DEFINE2(mac_framework, kernel, name, mac_check_err,	\ 	    "int", arg0);						\ 	SDT_PROBE_DEFINE2(mac_framework, kernel, name, mac_check_ok,	\ 	    "int", arg0);
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_CHECK_PROBE4
+parameter_list|(
+name|name
+parameter_list|,
+name|error
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|)
+value|do {	\ 	if (error) {							\ 		SDT_PROBE(mac_framework, kernel, name, mac_check_err,	\ 		    error, arg0, arg1, arg2, arg3);			\ 	} else {							\ 		SDT_PROBE(mac_framework, kernel, name, mac_check_ok,	\ 		    0, arg0, arg1, arg2, arg3);				\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_CHECK_PROBE3
+parameter_list|(
+name|name
+parameter_list|,
+name|error
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+define|\
+value|MAC_CHECK_PROBE4(name, error, arg0, arg1, arg2, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_CHECK_PROBE2
+parameter_list|(
+name|name
+parameter_list|,
+name|error
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|)
+define|\
+value|MAC_CHECK_PROBE3(name, error, arg0, arg1, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_CHECK_PROBE1
+parameter_list|(
+name|name
+parameter_list|,
+name|error
+parameter_list|,
+name|arg0
+parameter_list|)
+define|\
+value|MAC_CHECK_PROBE2(name, error, arg0, 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MAC_GRANT_PROBE_DEFINE2
+parameter_list|(
+name|name
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|)
+define|\
+value|SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_err,	\ 	    "int", arg0, arg1);						\ 	SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_ok,	\ 	    "INT", arg0, arg1);
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_GRANT_PROBE2
+parameter_list|(
+name|name
+parameter_list|,
+name|error
+parameter_list|,
+name|arg0
+parameter_list|,
+name|arg1
+parameter_list|)
+value|do {		\ 	if (error) {							\ 		SDT_PROBE(mac_framework, kernel, name, mac_grant_err,	\ 		    error, arg0, arg1, 0, 0);				\ 	} else {							\ 		SDT_PROBE(mac_framework, kernel, name, mac_grant_ok,	\ 		    error, arg0, arg1, 0, 0);				\ 	}								\ } while (0)
+end_define
 
 begin_comment
 comment|/*  * MAC Framework global types and typedefs.  */
@@ -297,6 +514,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|mac_policy_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|uint64_t
 name|mac_labeled
 decl_stmt|;
@@ -329,7 +553,19 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_policy_grab_exclusive
+name|mac_policy_slock_nosleep
+parameter_list|(
+name|struct
+name|rm_priotracker
+modifier|*
+name|tracker
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mac_policy_slock_sleep
 parameter_list|(
 name|void
 parameter_list|)
@@ -338,43 +574,19 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_policy_assert_exclusive
+name|mac_policy_sunlock_nosleep
 parameter_list|(
-name|void
+name|struct
+name|rm_priotracker
+modifier|*
+name|tracker
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|mac_policy_release_exclusive
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mac_policy_list_busy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mac_policy_list_conditional_busy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mac_policy_list_unbusy
+name|mac_policy_sunlock_sleep
 parameter_list|(
 name|void
 parameter_list|)
@@ -880,47 +1092,60 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * MAC_CHECK performs the designated check by walking the policy module list  * and checking with each as to how it feels about the request.  Note that it  * returns its value via 'error' in the scope of the caller.  */
+comment|/*  * MAC Framework composition macros invoke all registered MAC policies for a  * specific entry point.  They come in two forms: one which permits policies  * to sleep/block, and another that does not.  *  * MAC_POLICY_CHECK performs the designated check by walking the policy  * module list and checking with each as to how it feels about the request.  * Note that it returns its value via 'error' in the scope of the caller.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_CHECK
+name|MAC_POLICY_CHECK
 parameter_list|(
 name|check
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {					\ 	struct mac_policy_conf *mpc;					\ 	int entrycount;							\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if ((entrycount = mac_policy_list_conditional_busy()) != 0) {	\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_list_unbusy();				\ 	}								\ } while (0)
+value|do {				\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_sleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_sunlock_sleep();				\ 	}								\ } while (0)
 end_define
-
-begin_comment
-comment|/*  * MAC_GRANT performs the designated check by walking the policy module list  * and checking with each as to how it feels about the request.  Unlike  * MAC_CHECK, it grants if any policies return '0', and otherwise returns  * EPERM.  Note that it returns its value via 'error' in the scope of the  * caller.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_GRANT
+name|MAC_POLICY_CHECK_NOSLEEP
 parameter_list|(
 name|check
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {					\ 	struct mac_policy_conf *mpc;					\ 	int entrycount;							\ 									\ 	error = EPERM;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL) {		\ 			if (mpc->mpc_ops->mpo_ ## check(args) == 0)	\ 				error = 0;				\ 		}							\ 	}								\ 	if ((entrycount = mac_policy_list_conditional_busy()) != 0) {	\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL) {	\ 				if (mpc->mpc_ops->mpo_ ## check (args)	\ 				    == 0)				\ 					error = 0;			\ 			}						\ 		}							\ 		mac_policy_list_unbusy();				\ 	}								\ } while (0)
+value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		struct rm_priotracker tracker;				\ 									\ 		mac_policy_slock_nosleep(&tracker);			\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_sunlock_nosleep(&tracker);			\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * MAC_BOOLEAN performs the designated boolean composition by walking the  * module list, invoking each instance of the operation, and combining the  * results using the passed C operator.  Note that it returns its value via  * 'result' in the scope of the caller, which should be initialized by the  * caller in a meaningful way to get a meaningful result.  */
+comment|/*  * MAC_POLICY_GRANT performs the designated check by walking the policy  * module list and checking with each as to how it feels about the request.  * Unlike MAC_POLICY_CHECK, it grants if any policies return '0', and  * otherwise returns EPERM.  Note that it returns its value via 'error' in  * the scope of the caller.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_BOOLEAN
+name|MAC_POLICY_GRANT_NOSLEEP
+parameter_list|(
+name|check
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	error = EPERM;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL) {		\ 			if (mpc->mpc_ops->mpo_ ## check(args) == 0)	\ 				error = 0;				\ 		}							\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		struct rm_priotracker tracker;				\ 									\ 		mac_policy_slock_nosleep(&tracker);			\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL) {	\ 				if (mpc->mpc_ops->mpo_ ## check (args)	\ 				    == 0)				\ 					error = 0;			\ 			}						\ 		}							\ 		mac_policy_sunlock_nosleep(&tracker);			\ 	}								\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * MAC_POLICY_BOOLEAN performs the designated boolean composition by walking  * the module list, invoking each instance of the operation, and combining  * the results using the passed C operator.  Note that it returns its value  * via 'result' in the scope of the caller, which should be initialized by  * the caller in a meaningful way to get a meaningful result.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_POLICY_BOOLEAN
 parameter_list|(
 name|operation
 parameter_list|,
@@ -929,17 +1154,32 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	struct mac_policy_conf *mpc;					\ 	int entrycount;							\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if ((entrycount = mac_policy_list_conditional_busy()) != 0) {	\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_list_unbusy();				\ 	}								\ } while (0)
+value|do {	\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_sleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_sunlock_sleep();				\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_POLICY_BOOLEAN_NOSLEEP
+parameter_list|(
+name|operation
+parameter_list|,
+name|composition
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+value|do {\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			result = result composition			\ 			    mpc->mpc_ops->mpo_ ## operation (args);	\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		struct rm_priotracker tracker;				\ 									\ 		mac_policy_slock_nosleep(&tracker);			\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				result = result composition		\ 				    mpc->mpc_ops->mpo_ ## operation	\ 				    (args);				\ 		}							\ 		mac_policy_sunlock_nosleep(&tracker);			\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * MAC_EXTERNALIZE queries each policy to see if it can generate an  * externalized version of a label element by name.  Policies declare whether  * they have matched a particular element name, parsed from the string by  * MAC_EXTERNALIZE, and an error is returned if any element is matched by no  * policy.  */
+comment|/*  * MAC_POLICY_EXTERNALIZE queries each policy to see if it can generate an  * externalized version of a label element by name.  Policies declare whether  * they have matched a particular element name, parsed from the string by  * MAC_POLICY_EXTERNALIZE, and an error is returned if any element is matched  * by no policy.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_EXTERNALIZE
+name|MAC_POLICY_EXTERNALIZE
 parameter_list|(
 name|type
 parameter_list|,
@@ -948,12 +1188,12 @@ parameter_list|,
 name|elementlist
 parameter_list|,
 name|outbuf
-parameter_list|, 		\
+parameter_list|, 	\
 name|outbuflen
 parameter_list|)
 value|do {							\ 	int claimed, first, ignorenotfound, savedlen;			\ 	char *element_name, *element_temp;				\ 	struct sbuf sb;							\ 									\ 	error = 0;							\ 	first = 1;							\ 	sbuf_new(&sb, outbuf, outbuflen, SBUF_FIXEDLEN);		\ 	element_temp = elementlist;					\ 	while ((element_name = strsep(&element_temp, ",")) != NULL) {	\ 		if (element_name[0] == '?') {				\ 			element_name++;					\ 			ignorenotfound = 1;				\ 		 } else							\ 			ignorenotfound = 0;				\ 		savedlen = sbuf_len(&sb);				\ 		if (first)						\ 			error = sbuf_printf(&sb, "%s/", element_name);	\ 		else							\ 			error = sbuf_printf(&sb, ",%s/", element_name);	\ 		if (error == -1) {					\ 			error = EINVAL;
 comment|/* XXX: E2BIG? */
-value|\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(type ## _externalize_label, label,		\ 		    element_name,&sb,&claimed);			\ 		if (error)						\ 			break;						\ 		if (claimed == 0&& ignorenotfound) {			\
+value|\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_POLICY_CHECK(type ## _externalize_label, label,	\ 		    element_name,&sb,&claimed);			\ 		if (error)						\ 			break;						\ 		if (claimed == 0&& ignorenotfound) {			\
 comment|/* Revert last label name. */
 value|\ 			sbuf_setpos(&sb, savedlen);			\ 		} else if (claimed != 1) {				\ 			error = EINVAL;
 comment|/* XXX: ENOLABEL? */
@@ -961,13 +1201,13 @@ value|\ 			break;						\ 		} else {						\ 			first = 0;					\ 		}							\ 	}			
 end_define
 
 begin_comment
-comment|/*  * MAC_INTERNALIZE presents parsed element names and data to each policy to  * see if any is willing to claim it and internalize the label data.  If no  * policies match, an error is returned.  */
+comment|/*  * MAC_POLICY_INTERNALIZE presents parsed element names and data to each  * policy to see if any is willing to claim it and internalize the label  * data.  If no policies match, an error is returned.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_INTERNALIZE
+name|MAC_POLICY_INTERNALIZE
 parameter_list|(
 name|type
 parameter_list|,
@@ -975,26 +1215,39 @@ name|label
 parameter_list|,
 name|instring
 parameter_list|)
-value|do {			\ 	char *element, *element_name, *element_data;			\ 	int claimed;							\ 									\ 	error = 0;							\ 	element = instring;						\ 	while ((element_name = strsep(&element, ",")) != NULL) {	\ 		element_data = element_name;				\ 		element_name = strsep(&element_data, "/");		\ 		if (element_data == NULL) {				\ 			error = EINVAL;					\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(type ## _internalize_label, label,		\ 		    element_name, element_data,&claimed);		\ 		if (error)						\ 			break;						\ 		if (claimed != 1) {					\
+value|do {		\ 	char *element, *element_name, *element_data;			\ 	int claimed;							\ 									\ 	error = 0;							\ 	element = instring;						\ 	while ((element_name = strsep(&element, ",")) != NULL) {	\ 		element_data = element_name;				\ 		element_name = strsep(&element_data, "/");		\ 		if (element_data == NULL) {				\ 			error = EINVAL;					\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_POLICY_CHECK(type ## _internalize_label, label,	\ 		    element_name, element_data,&claimed);		\ 		if (error)						\ 			break;						\ 		if (claimed != 1) {					\
 comment|/* XXXMAC: Another error here? */
 value|\ 			error = EINVAL;					\ 			break;						\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * MAC_PERFORM performs the designated operation by walking the policy module  * list and invoking that operation for each policy.  */
+comment|/*  * MAC_POLICY_PERFORM performs the designated operation by walking the policy  * module list and invoking that operation for each policy.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 parameter_list|(
 name|operation
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {				\ 	struct mac_policy_conf *mpc;					\ 	int entrycount;							\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			mpc->mpc_ops->mpo_ ## operation (args);		\ 	}								\ 	if ((entrycount = mac_policy_list_conditional_busy()) != 0) {	\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				mpc->mpc_ops->mpo_ ## operation (args);	\ 		}							\ 		mac_policy_list_unbusy();				\ 	}								\ } while (0)
+value|do {			\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			mpc->mpc_ops->mpo_ ## operation (args);		\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		mac_policy_slock_sleep();				\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				mpc->mpc_ops->mpo_ ## operation (args);	\ 		}							\ 		mac_policy_sunlock_sleep();				\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_POLICY_PERFORM_NOSLEEP
+parameter_list|(
+name|operation
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+value|do {		\ 	struct mac_policy_conf *mpc;					\ 									\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## operation != NULL)		\ 			mpc->mpc_ops->mpo_ ## operation (args);		\ 	}								\ 	if (!LIST_EMPTY(&mac_policy_list)) {				\ 		struct rm_priotracker tracker;				\ 									\ 		mac_policy_slock_nosleep(&tracker);			\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## operation != NULL)	\ 				mpc->mpc_ops->mpo_ ## operation (args);	\ 		}							\ 		mac_policy_sunlock_nosleep(&tracker);			\ 	}								\ } while (0)
 end_define
 
 begin_endif

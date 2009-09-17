@@ -109,7 +109,13 @@ name|vnode
 modifier|*
 name|pm_devvp
 decl_stmt|;
-comment|/* vnode for block device mntd */
+comment|/* vnode for character device mounted */
+name|struct
+name|cdev
+modifier|*
+name|pm_dev
+decl_stmt|;
+comment|/* character device mounted */
 name|struct
 name|bpb50
 name|pm_bpb

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * P4: //depot/projects/trustedbsd/openbsm/sys/bsm/audit_kevents.h#4  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2009 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * P4: //depot/projects/trustedbsd/openbsm/sys/bsm/audit_kevents.h#7  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -13,6 +13,20 @@ begin_define
 define|#
 directive|define
 name|_BSM_AUDIT_KEVENTS_H_
+end_define
+
+begin_comment
+comment|/*  * The reserved event numbers for kernel events are 1...2047 and 43001..44900.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_IS_A_KEVENT
+parameter_list|(
+name|e
+parameter_list|)
+value|(((e)> 0&& (e)< 2048) || 	\     				 ((e)> 43000&& (e)< 45000))
 end_define
 
 begin_comment
@@ -4751,6 +4765,61 @@ begin_comment
 comment|/* Darwin. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AUE_PREAD
+value|43192
+end_define
+
+begin_comment
+comment|/* Darwin/FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PWRITE
+value|43193
+end_define
+
+begin_comment
+comment|/* Darwin/FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_FSCTL
+value|43194
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_FFSCTL
+value|43195
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_LPATHCONF
+value|43196
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
 begin_comment
 comment|/*  * Darwin BSM uses a number of AUE_O_* definitions, which are aliased to the  * normal Solaris BSM identifiers.  _O_ refers to it being an old, or compat  * interface.  In most cases, Darwin has never implemented these system calls  * but picked up the fields in their system call table from their FreeBSD  * import.  Happily, these have different names than the AUE_O* definitions  * in Solaris BSM.  */
 end_comment
@@ -5400,13 +5469,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_ACCESSEXTENDED
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_ATGETMSG
 value|AUE_NULL
 end_define
@@ -5477,13 +5539,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_CHMODEXTENDED
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_CHUD
 value|AUE_NULL
 end_define
@@ -5505,21 +5560,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_FCHMODEXTENDED
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_FDATASYNC
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_FFSCTL
 value|AUE_NULL
 end_define
 
@@ -5554,13 +5595,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_FSCTL
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_FSETATTRLIST
 value|AUE_NULL
 end_define
@@ -5569,13 +5603,6 @@ begin_define
 define|#
 directive|define
 name|AUE_FSETXATTR
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_FSTATEXTENDED
 value|AUE_NULL
 end_define
 
@@ -5603,7 +5630,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_FSTAT64EXTENDED
+name|AUE_FSTAT64_EXTENDED
 value|AUE_NULL
 end_define
 
@@ -5841,13 +5868,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_LSTATEXTENDED
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_LSTATV
 value|AUE_NULL
 end_define
@@ -5862,7 +5882,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_LSTAT64EXTENDED
+name|AUE_LSTAT64_EXTENDED
 value|AUE_NULL
 end_define
 
@@ -5890,20 +5910,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_MKDIREXTENDED
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_MKFIFOEXTENDED
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_MODWATCH
 value|AUE_NULL
 end_define
@@ -5919,27 +5925,6 @@ begin_define
 define|#
 directive|define
 name|AUE_MSYNC
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_OPENEXTENDED
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_PREAD
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_PWRITE
 value|AUE_NULL
 end_define
 
@@ -6247,13 +6232,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_STATEXTENDED
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_STATFS64
 value|AUE_NULL
 end_define
@@ -6275,7 +6253,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_STAT64EXTENDED
+name|AUE_STAT64_EXTENDED
 value|AUE_NULL
 end_define
 
@@ -6297,13 +6275,6 @@ begin_define
 define|#
 directive|define
 name|AUE_TABLE
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_UMASKEXTENDED
 value|AUE_NULL
 end_define
 

@@ -71,6 +71,14 @@ name|DRM_SYSCTL_HANDLER_ARGS
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|drm_vblank_info
+name|DRM_SYSCTL_HANDLER_ARGS
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|drm_sysctl_list
@@ -113,6 +121,12 @@ block|{
 literal|"bufs"
 block|,
 name|drm_bufs_info
+block|}
+block|,
+block|{
+literal|"vblank"
+block|,
+name|drm_vblank_info
 block|}
 block|, }
 struct|;
@@ -739,8 +753,8 @@ argument_list|()
 expr_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"\nslot	 offset	      size type flags	 "
-literal|"address mtrr\n"
+literal|"\nslot offset	        size       "
+literal|"type flags address            mtrr\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -811,7 +825,7 @@ literal|"yes"
 expr_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"%4d 0x%08lx 0x%08lx %4.4s  0x%02x 0x%08lx %s\n"
+literal|"%4d 0x%016lx 0x%08lx %4.4s  0x%02x 0x%016lx %s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1316,7 +1330,7 @@ argument_list|()
 expr_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"\na dev	pid    uid	magic	  ioctls\n"
+literal|"\na dev            pid   uid      magic     ioctls\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1343,7 +1357,7 @@ index|]
 expr_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"%c %3d %5d %5d %10u %10lu\n"
+literal|"%c %-12s %5d %5d %10u %10lu\n"
 argument_list|,
 name|priv
 operator|->
@@ -1353,9 +1367,14 @@ literal|'y'
 else|:
 literal|'n'
 argument_list|,
+name|devtoname
+argument_list|(
 name|priv
 operator|->
-name|minor
+name|dev
+operator|->
+name|devnode
+argument_list|)
 argument_list|,
 name|priv
 operator|->
@@ -1393,6 +1412,143 @@ argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
+return|return
+name|retcode
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|drm_vblank_info
+name|DRM_SYSCTL_HANDLER_ARGS
+block|{
+name|struct
+name|drm_device
+modifier|*
+name|dev
+init|=
+name|arg1
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|int
+name|retcode
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|DRM_SYSCTL_PRINT
+argument_list|(
+literal|"\ncrtc ref count    last     enabled inmodeset\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|dev
+operator|->
+name|num_crtcs
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|DRM_SYSCTL_PRINT
+argument_list|(
+literal|"  %02d  %02d %08d %08d %02d      %02d\n"
+argument_list|,
+name|i
+argument_list|,
+name|atomic_load_acq_32
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|vblank
+index|[
+name|i
+index|]
+operator|.
+name|refcount
+argument_list|)
+argument_list|,
+name|atomic_load_acq_32
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|vblank
+index|[
+name|i
+index|]
+operator|.
+name|count
+argument_list|)
+argument_list|,
+name|atomic_load_acq_32
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|vblank
+index|[
+name|i
+index|]
+operator|.
+name|last
+argument_list|)
+argument_list|,
+name|atomic_load_acq_int
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|vblank
+index|[
+name|i
+index|]
+operator|.
+name|enabled
+argument_list|)
+argument_list|,
+name|atomic_load_acq_int
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|vblank
+index|[
+name|i
+index|]
+operator|.
+name|inmodeset
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+literal|""
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|done
+label|:
 return|return
 name|retcode
 return|;

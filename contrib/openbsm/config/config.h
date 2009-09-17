@@ -8,10 +8,6 @@ comment|/* config/config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `alarm' function. */
 end_comment
 
@@ -33,6 +29,10 @@ name|HAVE_AUDIT_SYSCALLS
 end_define
 
 begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/* Define if be32enc is present */
 end_comment
 
@@ -41,6 +41,10 @@ define|#
 directive|define
 name|HAVE_BE32ENC
 end_define
+
+begin_comment
+comment|/**/
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `bzero' function. */
@@ -125,6 +129,10 @@ define|#
 directive|define
 name|HAVE_FULL_QUEUE_H
 end_define
+
+begin_comment
+comment|/**/
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `gettimeofday' function. */
@@ -527,9 +535,12 @@ begin_comment
 comment|/* Define to 1 if `lstat' dereferences a symlink specified with a trailing    slash. */
 end_comment
 
-begin_comment
-comment|/* #undef LSTAT_FOLLOWS_SLASHED_SYMLINK */
-end_comment
+begin_define
+define|#
+directive|define
+name|LSTAT_FOLLOWS_SLASHED_SYMLINK
+value|1
+end_define
 
 begin_comment
 comment|/* Name of package */
@@ -572,7 +583,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"OpenBSM 1.1alpha4"
+value|"OpenBSM 1.1p2"
 end_define
 
 begin_comment
@@ -594,7 +605,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.1alpha4"
+value|"1.1p2"
 end_define
 
 begin_comment
@@ -657,6 +668,10 @@ name|USE_NATIVE_INCLUDES
 end_define
 
 begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/* Version number of package */
 end_comment
 
@@ -664,8 +679,22 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.1alpha4"
+value|"1.1p2"
 end_define
+
+begin_comment
+comment|/* Use extended API on platforms that require it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GNU_SOURCE
+end_define
+
+begin_comment
+comment|/**/
+end_comment
 
 begin_comment
 comment|/* Define to empty if `const' does not conform to ANSI C. */

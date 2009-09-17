@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Execute the following to rebuild the data for this program:    tail -n +32 test_read_format_isorr_bz2.c | /bin/sh  rm -rf /tmp/iso mkdir /tmp/iso mkdir /tmp/iso/dir echo "hello">/tmp/iso/file ln /tmp/iso/file /tmp/iso/hardlink (cd /tmp/iso; ln -s file symlink) TZ=utc touch -afhm -t 197001020000.01 /tmp/iso /tmp/iso/file /tmp/iso/dir TZ=utc touch -afhm -t 197001030000.02 /tmp/iso/symlink mkhybrid -R -uid 1 -gid 2 /tmp/iso | bzip2> test_read_format_isorr_bz2.iso.bz2 F=test_read_format_isorr_bz2.iso.bz2 uuencode $F $F> $F.uu exit 1  */
+comment|/* Execute the following command to rebuild the data for this program:    tail -n +32 test_read_format_isorr_bz2.c | /bin/sh  rm -rf /tmp/iso mkdir /tmp/iso mkdir /tmp/iso/dir echo "hello">/tmp/iso/file dd if=/dev/zero bs=1 count=12345678>>/tmp/iso/file ln /tmp/iso/file /tmp/iso/hardlink (cd /tmp/iso; ln -s file symlink) TZ=utc touch -afhm -t 197001020000.01 /tmp/iso /tmp/iso/file /tmp/iso/dir TZ=utc touch -afhm -t 197001030000.02 /tmp/iso/symlink mkhybrid -R -uid 1 -gid 2 /tmp/iso | bzip2> test_read_format_isorr_bz2.iso.bz2 F=test_read_format_isorr_bz2.iso.bz2 uuencode $F $F> $F.uu exit 1  */
 end_comment
 
 begin_macro
@@ -58,6 +58,9 @@ decl_stmt|;
 name|off_t
 name|offset
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 name|extract_reference_file
 argument_list|(
 name|refname
@@ -75,14 +78,42 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
+name|archive_read_support_compression_bzip2
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|ARCHIVE_WARN
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"bzip2 reading not fully supported on this platform"
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
-name|archive_read_support_compression_all
+name|archive_read_finish
 argument_list|(
 name|a
 argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|r
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -97,7 +128,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|0
+name|ARCHIVE_OK
 argument_list|,
 name|archive_read_open_filename
 argument_list|(
@@ -231,6 +262,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|size
 argument_list|,
 literal|0
@@ -374,7 +408,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|6
+literal|12345684
 argument_list|,
 name|archive_entry_size
 argument_list|(
@@ -403,30 +437,18 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|6
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-name|assertEqualInt
-argument_list|(
 literal|0
 argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|memcmp
+name|assertEqualMem
 argument_list|(
 name|p
 argument_list|,
 literal|"hello\n"
 argument_list|,
 literal|6
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -528,11 +550,10 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
+name|assert
 argument_list|(
-literal|6
-argument_list|,
-name|archive_entry_size
+operator|!
+name|archive_entry_size_is_set
 argument_list|(
 name|ae
 argument_list|)

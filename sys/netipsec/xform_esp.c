@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -208,40 +208,28 @@ directive|include
 file|<opencrypto/xform.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|espstat
-name|espstat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
-name|esp_max_ivlen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max iv length over all algorithms */
-end_comment
-
-begin_decl_stmt
-name|int
+argument_list|,
 name|esp_enable
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
+name|espstat
+argument_list|,
+name|espstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -252,12 +240,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_esp
 argument_list|,
 name|OID_AUTO
@@ -266,7 +250,11 @@ name|esp_enable
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|esp_enable
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -276,12 +264,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_esp
 argument_list|,
 name|IPSECCTL_STATS
@@ -290,7 +274,11 @@ name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|espstat
+argument_list|)
 argument_list|,
 name|espstat
 argument_list|,
@@ -298,6 +286,30 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* max iv length over all algorithms */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|esp_max_ivlen
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_esp_max_ivlen
+value|VNET(esp_max_ivlen)
+end_define
 
 begin_function_decl
 specifier|static
@@ -426,11 +438,6 @@ modifier|*
 name|sav
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|size_t
 name|size
 decl_stmt|;
@@ -555,11 +562,6 @@ modifier|*
 name|xsp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|enc_xform
 modifier|*
@@ -1094,11 +1096,6 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|auth_hash
 modifier|*
@@ -2089,11 +2086,6 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|u_int8_t
 name|lastthree
 index|[
@@ -3109,11 +3101,6 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|enc_xform
 modifier|*
@@ -4313,11 +4300,6 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|tdb_crypto
 modifier|*
@@ -4797,16 +4779,7 @@ parameter_list|(
 name|xform
 parameter_list|)
 define|\
-value|if (xform.blocksize> V_esp_max_ivlen)		\ 		V_esp_max_ivlen = xform.blocksize		\  	V_esp_enable = 1;
-name|V_esp_max_ivlen
-operator|=
-literal|0
-expr_stmt|;
-name|MAXIV
-argument_list|(
-name|enc_xform_des
-argument_list|)
-expr_stmt|;
+value|if (xform.blocksize> V_esp_max_ivlen)		\ 		V_esp_max_ivlen = xform.blocksize	\  	MAXIV(enc_xform_des);
 comment|/* SADB_EALG_DESCBC */
 name|MAXIV
 argument_list|(

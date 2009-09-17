@@ -1307,7 +1307,6 @@ name|int
 name|index
 parameter_list|,
 name|caddr_t
-modifier|*
 name|data
 parameter_list|)
 block|{

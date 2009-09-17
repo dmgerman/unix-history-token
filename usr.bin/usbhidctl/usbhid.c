@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_hid.h>
+file|<dev/usb/usbhid.h>
 end_include
 
 begin_decl_stmt
@@ -369,11 +369,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -381,7 +376,8 @@ argument_list|,
 literal|"usage: %s -f device "
 literal|"[-l] [-n] [-r] [-t tablefile] [-v] [-x] name ...\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -391,7 +387,8 @@ argument_list|,
 literal|"       %s -f device "
 literal|"[-l] [-n] [-r] [-t tablefile] [-v] [-x] -a\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit

@@ -109,6 +109,27 @@ name|SMAP_TYPE_ACPI_ERROR
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|SMAP_XATTR_ENABLED
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAP_XATTR_NON_VOLATILE
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAP_XATTR_MASK
+value|(SMAP_XATTR_ENABLED | SMAP_XATTR_NON_VOLATILE)
+end_define
+
 begin_struct
 struct|struct
 name|bios_smap

@@ -1471,19 +1471,6 @@ goto|goto
 name|restart
 goto|;
 block|}
-name|VOP_LEASE
-argument_list|(
-name|nd
-operator|.
-name|ni_dvp
-argument_list|,
-name|td
-argument_list|,
-name|KERNCRED
-argument_list|,
-name|LEASE_WRITE
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|VOP_CREATE
@@ -12751,7 +12738,7 @@ name|b_runningbufspace
 operator|=
 name|saved_runningbufspace
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|runningbufspace
@@ -13306,7 +13293,7 @@ name|b_runningbufspace
 operator|=
 name|saved_runningbufspace
 expr_stmt|;
-name|atomic_add_int
+name|atomic_add_long
 argument_list|(
 operator|&
 name|runningbufspace

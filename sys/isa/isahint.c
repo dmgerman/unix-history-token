@@ -562,7 +562,7 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-comment|/* 		 * Check for matching resources.  We must have at least one, 		 * and all resources specified have to match. 		 * 		 * XXX: We may want to revisit this to be more lenient and wire 		 * as long as it gets one match. 		 */
+comment|/* 		 * Check for matching resources.  We must have at 		 * least one match.  Since I/O and memory resources 		 * cannot be shared, if we get a match on either of 		 * those, ignore any mismatches in IRQs or DRQs. 		 * 		 * XXX: We may want to revisit this to be more lenient 		 * and wire as long as it gets one match. 		 */
 name|matches
 operator|=
 literal|0
@@ -584,6 +584,22 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * Floppy drive controllers are notorious for 			 * having a wide variety of resources not all 			 * of which include the first port that is 			 * specified by the hint (typically 0x3f0) 			 * (see the comment above 			 * fdc_isa_alloc_resources() in fdc_isa.c). 			 * However, they do all seem to include port + 			 * 2 (e.g. 0x3f2) so for a floppy device, look 			 * for 'value + 2' in the port resources 			 * instead of the hint value. 			 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"fdc"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|value
+operator|+=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|isa_match_resource_hint
@@ -635,6 +651,15 @@ expr_stmt|;
 else|else
 continue|continue;
 block|}
+if|if
+condition|(
+name|matches
+operator|>
+literal|0
+condition|)
+goto|goto
+name|matched
+goto|;
 if|if
 condition|(
 name|resource_long_value
@@ -703,6 +728,8 @@ expr_stmt|;
 else|else
 continue|continue;
 block|}
+name|matched
+label|:
 if|if
 condition|(
 name|matches

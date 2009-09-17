@@ -13,16 +13,28 @@ directive|include
 file|"file.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"magic.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_macro
+name|FILE_RCSID
+argument_list|(
+literal|"@(#)$File: compress.c,v 1.63 2009/03/23 14:21:51 christos Exp $"
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"magic.h"
 end_include
 
 begin_include
@@ -58,12 +70,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -134,24 +140,6 @@ include|#
 directive|include
 file|<zlib.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_macro
-name|FILE_RCSID
-argument_list|(
-literal|"@(#)$File: compress.c,v 1.57 2008/07/16 18:00:57 christos Exp $"
-argument_list|)
-end_macro
 
 begin_endif
 endif|#
@@ -327,6 +315,39 @@ literal|1
 block|}
 block|,
 comment|/* bzip2-ed */
+block|{
+literal|"LZIP"
+block|,
+literal|4
+block|,
+block|{
+literal|"lzip"
+block|,
+literal|"-cdq"
+block|,
+name|NULL
+block|}
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"\3757zXZ\0"
+block|,
+literal|6
+block|,
+block|{
+literal|"xz"
+block|,
+literal|"-cd"
+block|,
+name|NULL
+block|}
+block|,
+literal|1
+block|}
+block|,
+comment|/* XZ Utils */
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -1154,11 +1175,14 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"/tmp/file.XXXXXX"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -2540,6 +2564,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fdin
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 name|n
 return|;

@@ -869,6 +869,15 @@ operator|==
 name|NULL
 condition|)
 break|break;
+if|if
+condition|(
+name|cgd
+operator|->
+name|protocol
+operator|!=
+name|PROTO_SCSI
+condition|)
+break|break;
 comment|/* 		 * Allocate a peripheral instance for this device and 		 * start the probe process. 		 */
 name|status
 operator|=
@@ -4142,6 +4151,7 @@ name|drvstat
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 case|case
 name|CAM_SCSI_BUS_RESET
 case|:
@@ -4183,6 +4193,7 @@ name|drvstat
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 default|default:
 operator|*
 name|hoststat

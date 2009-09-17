@@ -4646,10 +4646,12 @@ decl_stmt|;
 comment|/* XXX ar5212MacStop& co. */
 if|if
 condition|(
-name|IS_PCIE
+name|AH_PRIVATE
 argument_list|(
 name|ah
 argument_list|)
+operator|->
+name|ah_ispcie
 condition|)
 block|{
 name|resetMask

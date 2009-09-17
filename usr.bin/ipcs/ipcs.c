@@ -2262,7 +2262,7 @@ name|BIGGEST
 condition|)
 name|printf
 argument_list|(
-literal|" %12d"
+literal|" %12zu"
 argument_list|,
 name|kshmptr
 operator|->

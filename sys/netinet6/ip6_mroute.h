@@ -707,7 +707,7 @@ name|struct
 name|route_in6
 name|m6_route
 decl_stmt|;
-comment|/* cached route if this is a tunnel */
+comment|/* cached route */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -985,7 +985,7 @@ modifier|*
 name|mrt6_ioctl
 function_decl|)
 parameter_list|(
-name|int
+name|u_long
 parameter_list|,
 name|caddr_t
 parameter_list|)

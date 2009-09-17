@@ -3400,7 +3400,7 @@ literal|0
 condition|)
 name|bio
 operator|->
-name|num_read
+name|num_write
 operator|+=
 name|ret
 expr_stmt|;

@@ -794,6 +794,23 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|mach64_driver_load
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|long
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|u32
 name|mach64_get_vblank_counter
 parameter_list|(

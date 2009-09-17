@@ -21,6 +21,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|toeopt
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|syncache_init
@@ -29,6 +35,26 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function_decl
+name|void
+name|syncache_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -83,9 +109,9 @@ modifier|*
 name|inc
 parameter_list|,
 name|struct
-name|tcpopt
+name|toeopt
 modifier|*
-name|to
+name|toeo
 parameter_list|,
 name|struct
 name|tcphdr
@@ -147,7 +173,7 @@ name|in_conninfo
 modifier|*
 parameter_list|,
 name|struct
-name|tcpopt
+name|toeopt
 modifier|*
 parameter_list|,
 name|struct
@@ -326,17 +352,12 @@ decl_stmt|;
 comment|/* TOE protocol block */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MAC
 name|struct
 name|label
 modifier|*
 name|sc_label
 decl_stmt|;
 comment|/* MAC label reference */
-endif|#
-directive|endif
 name|struct
 name|ucred
 modifier|*
@@ -458,6 +479,11 @@ begin_struct
 struct|struct
 name|syncache_head
 block|{
+name|struct
+name|vnet
+modifier|*
+name|sch_vnet
+decl_stmt|;
 name|struct
 name|mtx
 name|sch_mtx

@@ -740,7 +740,7 @@ decl_stmt|;
 comment|/* configuration flags */
 define|#
 directive|define
-name|SC_VESA800X600
+name|SC_VESAMODE
 value|(1<< 7)
 define|#
 directive|define
@@ -1405,6 +1405,9 @@ name|buf
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+name|kernel
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2219,6 +2222,9 @@ name|buf
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+name|kernel
 parameter_list|)
 function_decl|;
 end_function_decl

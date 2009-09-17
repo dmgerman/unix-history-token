@@ -587,31 +587,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|memmove
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|memmove
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|len
-parameter_list|)
-value|bcopy((src), (dst), (len))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|barrier
 end_ifndef
 

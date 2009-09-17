@@ -101,30 +101,6 @@ directive|include
 file|"libuboot.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|NETIF_DEBUG
-end_define
-
-begin_define
-define|#
-directive|define
-name|NETIF_VERBOSE_DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|NETIF_DEBUG
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|NETIF_VERBOSE_DEBUG
-end_undef
-
 begin_function_decl
 specifier|static
 name|int
@@ -566,7 +542,7 @@ name|eh
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"net_put: desc 0x%x, pkt 0x%x, len %d\n"
+literal|"net_put: desc %p, pkt %p, len %d\n"
 argument_list|,
 name|desc
 argument_list|,
@@ -766,7 +742,7 @@ name|NETIF_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"net_get: pkt %x, len %d, timeout %d\n"
+literal|"net_get: pkt %p, len %d, timeout %d\n"
 argument_list|,
 name|pkt
 argument_list|,

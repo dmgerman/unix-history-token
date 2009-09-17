@@ -90,10 +90,6 @@ decl_stmt|,
 name|cutlim
 decl_stmt|;
 comment|/* 	 * See strtoq for comments as to the logic used. 	 */
-name|s
-operator|=
-name|nptr
-expr_stmt|;
 do|do
 block|{
 name|c

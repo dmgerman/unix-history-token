@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * Part of this code was heavily inspired by the linux driver from  * Thomas Sailer (sailer@ife.ee.ethz.ch)  * Just about everything has been touched and reworked in some way but  * the all the underlying sequences/timing/register values are from  * Thomas' code.  * */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -783,17 +800,41 @@ name|es_fmt
 index|[]
 init|=
 block|{
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1678,7 +1719,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|es1370_mixsetrecsrc
 parameter_list|(
 name|struct
@@ -1915,11 +1956,7 @@ argument_list|,
 name|es1370_mixsetrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2745,9 +2782,12 @@ name|SCTRL_P1SEB
 expr_stmt|;
 if|if
 condition|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 condition|)
 name|es
 operator|->
@@ -2779,9 +2819,12 @@ name|SCTRL_P2SEB
 expr_stmt|;
 if|if
 condition|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 condition|)
 name|es
 operator|->
@@ -2814,9 +2857,12 @@ name|SCTRL_R1SEB
 expr_stmt|;
 if|if
 condition|(
+name|AFMT_CHANNEL
+argument_list|(
 name|format
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 condition|)
 name|es
 operator|->
@@ -2859,7 +2905,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|eschan1370_setspeed
 parameter_list|(
 name|kobj_t
@@ -3105,7 +3151,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|eschan1371_setspeed
 parameter_list|(
 name|kobj_t
@@ -3455,7 +3501,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -3463,7 +3509,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|eschan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -3937,7 +3983,7 @@ name|ch
 operator|->
 name|blksz
 operator|/
-name|sndbuf_getbps
+name|sndbuf_getalign
 argument_list|(
 name|ch
 operator|->
@@ -3961,11 +4007,14 @@ literal|0x02
 expr_stmt|;
 if|if
 condition|(
+name|AFMT_CHANNEL
+argument_list|(
 name|ch
 operator|->
 name|fmt
-operator|&
-name|AFMT_STEREO
+argument_list|)
+operator|>
+literal|1
 condition|)
 name|b
 operator||=
@@ -4494,7 +4543,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|eschan_getptr
 parameter_list|(
 name|kobj_t
@@ -4726,11 +4775,7 @@ argument_list|,
 name|eschan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4806,11 +4851,7 @@ argument_list|,
 name|eschan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6448,11 +6489,7 @@ argument_list|,
 name|es1371_wrcd
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7555,12 +7592,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
-end_ifdef
 
 begin_function
 specifier|static
@@ -8906,15 +8937,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SND_DYNSYSCTL */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -8924,9 +8946,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
 name|struct
 name|es_info
 modifier|*
@@ -9310,9 +9329,6 @@ argument_list|,
 literal|"Enable polling mode"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SND_DYNSYSCTL */
 block|}
 end_function
 

@@ -916,7 +916,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|if_ath
+name|ath
 argument_list|,
 name|pci
 argument_list|,
@@ -932,27 +932,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|if_ath
-argument_list|,
-name|cardbus
-argument_list|,
-name|ath_pci_driver
-argument_list|,
-name|ath_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|if_ath
+name|ath
 argument_list|,
 literal|1
 argument_list|)
@@ -962,7 +944,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|if_ath
+name|ath
 argument_list|,
 name|wlan
 argument_list|,

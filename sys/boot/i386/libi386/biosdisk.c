@@ -193,6 +193,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
+end_ifdef
+
 begin_struct
 struct|struct
 name|gpt_part
@@ -212,6 +218,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -235,7 +246,7 @@ decl_stmt|;
 name|int
 name|od_sec
 decl_stmt|;
-name|int
+name|daddr_t
 name|od_boff
 decl_stmt|;
 comment|/* block offset from beginning of BIOS disk */
@@ -270,10 +281,15 @@ define|#
 directive|define
 name|BD_PARTTABOK
 value|0x0010
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
 define|#
 directive|define
 name|BD_GPTOK
 value|0x0020
+endif|#
+directive|endif
 union|union
 block|{
 struct|struct
@@ -296,6 +312,9 @@ decl_stmt|;
 block|}
 name|_mbr
 struct|;
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
 struct|struct
 block|{
 name|int
@@ -309,6 +328,8 @@ decl_stmt|;
 block|}
 name|_gpt
 struct|;
+endif|#
+directive|endif
 block|}
 name|_data
 union|;
@@ -337,6 +358,12 @@ name|od_slicetab
 value|_data._mbr.mbr_slicetab
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -350,6 +377,11 @@ directive|define
 name|od_partitions
 value|_data._gpt.gpt_partitions
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * List of BIOS devices, translation from disk unit number to  * BIOS unit number.  */
@@ -458,6 +490,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -482,6 +520,11 @@ name|verbose
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -744,6 +787,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -776,6 +825,11 @@ name|od
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Translate between BIOS device numbers and our private unit numbers.  */
@@ -1427,6 +1481,9 @@ name|dev
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
 comment|/* Do we have a GPT table? */
 if|if
 condition|(
@@ -1489,9 +1546,11 @@ name|verbose
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Do we have a partition table? */
 block|}
 elseif|else
+endif|#
+directive|endif
+comment|/* Do we have a partition table? */
 if|if
 condition|(
 name|od
@@ -1731,6 +1790,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2021,6 +2086,8 @@ name|line
 argument_list|,
 literal|"%s: %08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x%s\n"
 argument_list|,
+name|prefix
+argument_list|,
 name|gp
 operator|->
 name|gp_type
@@ -2115,6 +2182,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Print information about slices on a disk.  For the size calculations we  * assume a 512 byte sector.  */
@@ -2981,6 +3053,9 @@ name|out
 goto|;
 block|}
 comment|/* Determine disk layout. */
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
 name|error
 operator|=
 name|bd_open_gpt
@@ -2994,6 +3069,8 @@ if|if
 condition|(
 name|error
 condition|)
+endif|#
+directive|endif
 name|error
 operator|=
 name|bd_open_mbr
@@ -4220,6 +4297,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -4393,6 +4476,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|part
+operator|!=
+literal|1
+operator|)
+operator|&&
+operator|(
 name|dp
 index|[
 name|i
@@ -4401,6 +4491,7 @@ operator|.
 name|dp_typ
 operator|!=
 literal|0x00
+operator|)
 condition|)
 return|return
 operator|(
@@ -5061,6 +5152,14 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|od
+operator|->
+name|od_nparts
+operator|>
+literal|0
+condition|)
 name|free
 argument_list|(
 name|od
@@ -5229,6 +5328,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -5309,6 +5413,9 @@ comment|/* XXX is this required? (especially if disk already open...) */
 block|if (od->od_flags& BD_FLOPPY) 	delay(3000000);
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|LOADER_GPT_SUPPORT
 if|if
 condition|(
 name|od
@@ -5316,6 +5423,12 @@ operator|->
 name|od_flags
 operator|&
 name|BD_GPTOK
+operator|&&
+name|od
+operator|->
+name|od_nparts
+operator|>
+literal|0
 condition|)
 name|free
 argument_list|(
@@ -5324,6 +5437,8 @@ operator|->
 name|od_partitions
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|od
@@ -5759,29 +5874,6 @@ directive|define
 name|FLOPPY_BOUNCEBUF
 value|18
 end_define
-
-begin_struct
-struct|struct
-name|edd_packet
-block|{
-name|uint16_t
-name|len
-decl_stmt|;
-name|uint16_t
-name|count
-decl_stmt|;
-name|uint16_t
-name|offset
-decl_stmt|;
-name|uint16_t
-name|seg
-decl_stmt|;
-name|uint64_t
-name|lba
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_function
 specifier|static

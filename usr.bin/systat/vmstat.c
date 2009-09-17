@@ -347,7 +347,7 @@ name|long
 modifier|*
 name|intrcnt
 decl_stmt|;
-name|int
+name|long
 name|bufspace
 decl_stmt|;
 name|int

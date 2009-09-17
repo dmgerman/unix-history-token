@@ -202,6 +202,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|regs
 index|[]
 init|=
@@ -278,6 +279,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|priv_regs
 index|[]
 init|=
@@ -354,6 +356,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|state_regs
 index|[]
 init|=
@@ -432,6 +435,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ccodes
 index|[]
 init|=
@@ -460,6 +464,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|prefetch
 index|[]
 init|=

@@ -303,8 +303,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|char
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1186,21 +1185,13 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|progname
-parameter_list|)
-name|char
-modifier|*
-name|progname
-decl_stmt|;
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: ndis_events [-a] [-d] [-v]\n"
-argument_list|,
-name|progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1311,9 +1302,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|PROGNAME
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 block|}

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/namei.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<sys/un.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -931,7 +931,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1060,7 +1059,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1142,7 +1140,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1279,7 +1276,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1416,7 +1412,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1498,7 +1493,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1627,7 +1621,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1756,7 +1749,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1838,7 +1830,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -1902,7 +1893,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*extern char ostype[], hostname[], osrelease[], version[], machine[];*/
+comment|/*extern char ostype[], osrelease[], version[], machine[];*/
 end_comment
 
 begin_function
@@ -1913,7 +1904,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2088,6 +2078,9 @@ name|td
 operator|->
 name|td_retval
 decl_stmt|;
+name|u_long
+name|hostid
+decl_stmt|;
 name|size_t
 name|len
 init|=
@@ -2096,10 +2089,9 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|1
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-comment|/* XXX NetBSD uses 256, but that seems 				     like awfully excessive kstack usage 				     for an empty string... */
 name|u_int
 name|rlen
 init|=
@@ -2125,9 +2117,23 @@ break|break;
 case|case
 name|SVR4_SI_HOSTNAME
 case|:
+name|getcredhostname
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|str
 operator|=
-name|V_hostname
+name|buf
 expr_stmt|;
 break|break;
 case|case
@@ -2163,11 +2169,77 @@ name|machine
 expr_stmt|;
 break|break;
 case|case
-name|SVR4_SI_HW_SERIAL
+name|SVR4_SI_ISALIST
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__sparc__
+argument_list|)
 name|str
 operator|=
-literal|"0"
+literal|"sparcv9 sparcv9-fsmuld sparcv8 sparcv8-fsmuld sparcv7 sparc"
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+name|str
+operator|=
+literal|"i386"
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+name|str
+operator|=
+literal|"amd64"
+expr_stmt|;
+else|#
+directive|else
+name|str
+operator|=
+literal|"unknown"
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
+name|SVR4_SI_HW_SERIAL
+case|:
+name|getcredhostid
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+operator|&
+name|hostid
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%lu"
+argument_list|,
+name|hostid
+argument_list|)
+expr_stmt|;
+name|str
+operator|=
+name|buf
 expr_stmt|;
 break|break;
 case|case
@@ -2181,18 +2253,34 @@ break|break;
 case|case
 name|SVR4_SI_SRPC_DOMAIN
 case|:
-comment|/* XXXRW: locking? */
+name|getcreddomainname
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|str
 operator|=
-name|V_domainname
+name|buf
 expr_stmt|;
 break|break;
 case|case
 name|SVR4_SI_PLATFORM
 case|:
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
 name|str
 operator|=
 literal|"i86pc"
@@ -2416,7 +2504,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2526,7 +2613,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2694,7 +2780,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2874,7 +2959,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -2969,6 +3053,8 @@ argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
 name|name
+argument_list|,
+name|FOLLOW
 argument_list|)
 expr_stmt|;
 name|free
@@ -2995,7 +3081,6 @@ name|td
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*

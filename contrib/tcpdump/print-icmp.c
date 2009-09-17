@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp.c,v 1.81.2.6 2007/09/13 17:40:18 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp.c,v 1.87 2007-09-13 17:42:31 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1924,6 +1924,10 @@ operator|=
 operator|(
 expr|struct
 name|mtu_discovery
+operator|*
+operator|)
+operator|(
+name|u_char
 operator|*
 operator|)
 operator|&

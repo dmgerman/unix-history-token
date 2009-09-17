@@ -190,6 +190,9 @@ decl_stmt|;
 name|int
 name|mpp_flags
 decl_stmt|;
+name|int
+name|mpp_cfe
+decl_stmt|;
 define|#
 directive|define
 name|MPP_MBH10302
@@ -198,6 +201,10 @@ define|#
 directive|define
 name|MPP_ANYFUNC
 value|2
+define|#
+directive|define
+name|MPP_SKIP_TO_CFE
+value|4
 block|}
 name|fe_pccard_products
 index|[]
@@ -254,6 +261,17 @@ name|PCMCIA_CARD
 argument_list|(
 name|TDK
 argument_list|,
+name|LAK_CD011
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|TDK
+argument_list|,
 name|LAK_CD021BX
 argument_list|)
 block|,
@@ -286,7 +304,9 @@ argument_list|,
 name|CNETPC
 argument_list|)
 block|,
-literal|0
+name|MPP_SKIP_TO_CFE
+block|,
+literal|2
 block|}
 block|,
 block|{
@@ -323,6 +343,21 @@ name|MPP_MBH10302
 block|}
 block|,
 comment|/* Sold by Eagle */
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|HITACHI
+argument_list|,
+name|HT_4840
+argument_list|)
+block|,
+name|MPP_MBH10302
+operator||
+name|MPP_SKIP_TO_CFE
+block|,
+literal|10
+block|}
+block|,
 block|{
 name|PCMCIA_CARD
 argument_list|(
@@ -376,6 +411,9 @@ name|struct
 name|fe_pccard_product
 modifier|*
 name|pp
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -482,6 +520,64 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|pp
+operator|->
+name|mpp_flags
+operator|&
+name|MPP_SKIP_TO_CFE
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+name|pp
+operator|->
+name|mpp_cfe
+init|;
+name|i
+operator|<
+literal|32
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|pccard_select_cfe
+argument_list|(
+name|dev
+argument_list|,
+name|i
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|good
+goto|;
+block|}
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Failed to map CFE %d or higher\n"
+argument_list|,
+name|pp
+operator|->
+name|mpp_cfe
+argument_list|)
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
+name|good
+label|:
+empty_stmt|;
 return|return
 operator|(
 literal|0
@@ -571,6 +667,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|fe
+argument_list|,
+name|pccard
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -600,10 +712,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  *      Initialize the device - called from Slot manager.  */
-end_comment
 
 begin_function
 specifier|static
@@ -1102,7 +1210,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|sn_pccard_xircom_mac
+name|fe_pccard_xircom_mac
 parameter_list|(
 specifier|const
 name|struct
@@ -1295,7 +1403,7 @@ block|,
 literal|0x00
 block|}
 block|,
-comment|/*  { FE_DLCR5, 0x80, 0x00 },       Does not work well.  */
+comment|/*		{ FE_DLCR5, 0x80, 0x00 },	Does not work well.  */
 block|{
 literal|0
 block|}
@@ -1320,7 +1428,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*          * See if C-NET(PC)C is on its address.          */
+comment|/* 	 * See if C-NET(PC)C is on its address. 	 */
 if|if
 condition|(
 operator|!
@@ -1374,7 +1482,7 @@ name|pccard_cis_scan
 argument_list|(
 name|dev
 argument_list|,
-name|sn_pccard_xircom_mac
+name|fe_pccard_xircom_mac
 argument_list|,
 name|sc
 operator|->

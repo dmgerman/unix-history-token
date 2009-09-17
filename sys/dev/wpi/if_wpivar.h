@@ -409,16 +409,12 @@ name|WPI_FLAG_HW_RADIO_OFF
 value|(1<< 0)
 define|#
 directive|define
-name|WPI_FLAG_SCANNING
+name|WPI_FLAG_BUSY
 value|(1<< 1)
 define|#
 directive|define
-name|WPI_FLAG_BUSY
-value|(1<< 2)
-define|#
-directive|define
 name|WPI_FLAG_AUTH
-value|(1<< 3)
+value|(1<< 2)
 comment|/* shared area */
 name|struct
 name|wpi_dma_info
@@ -510,15 +506,9 @@ name|struct
 name|wpi_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 name|struct
 name|wpi_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-name|int
-name|sc_txtap_len
 decl_stmt|;
 comment|/* firmware image */
 specifier|const
@@ -532,109 +522,7 @@ name|struct
 name|wpi_dma_info
 name|fw_dma
 decl_stmt|;
-comment|/* command queue related variables */
-define|#
-directive|define
-name|WPI_SCAN_START
-value|(1<<0)
-define|#
-directive|define
-name|WPI_SCAN_CURCHAN
-value|(1<<1)
-define|#
-directive|define
-name|WPI_SCAN_STOP
-value|(1<<2)
-define|#
-directive|define
-name|WPI_SET_CHAN
-value|(1<<3)
-define|#
-directive|define
-name|WPI_AUTH
-value|(1<<4)
-define|#
-directive|define
-name|WPI_RUN
-value|(1<<5)
-define|#
-directive|define
-name|WPI_SCAN_NEXT
-value|(1<<6)
-define|#
-directive|define
-name|WPI_RESTART
-value|(1<<7)
-define|#
-directive|define
-name|WPI_RF_RESTART
-value|(1<<8)
-define|#
-directive|define
-name|WPI_CMD_MAXOPS
-value|10
-comment|/* command queuing request type */
-define|#
-directive|define
-name|WPI_QUEUE_NORMAL
-value|0
-define|#
-directive|define
-name|WPI_QUEUE_CLEAR
-value|1
-name|int
-name|sc_cmd
-index|[
-name|WPI_CMD_MAXOPS
-index|]
-decl_stmt|;
-name|int
-name|sc_cmd_arg
-index|[
-name|WPI_CMD_MAXOPS
-index|]
-decl_stmt|;
-name|int
-name|sc_cmd_cur
-decl_stmt|;
-comment|/* current queued scan task */
-name|int
-name|sc_cmd_next
-decl_stmt|;
-comment|/* last queued scan task */
-name|struct
-name|mtx
-name|sc_cmdlock
-decl_stmt|;
-comment|/* Task queues used to control the driver */
-name|struct
-name|taskqueue
-modifier|*
-name|sc_tq
-decl_stmt|;
-comment|/* Main command task queue */
-name|struct
-name|taskqueue
-modifier|*
-name|sc_tq2
-decl_stmt|;
-comment|/* firmware reset task queue */
 comment|/* Tasks used by the driver */
-name|struct
-name|task
-name|sc_radioontask
-decl_stmt|;
-comment|/* enable rf transmitter task*/
-name|struct
-name|task
-name|sc_radioofftask
-decl_stmt|;
-comment|/* disable rf transmitter task*/
-name|struct
-name|task
-name|sc_opstask
-decl_stmt|;
-comment|/* operation handling task */
 name|struct
 name|task
 name|sc_restarttask
@@ -642,9 +530,9 @@ decl_stmt|;
 comment|/* reset firmware task */
 name|struct
 name|task
-name|sc_bmiss_task
+name|sc_radiotask
 decl_stmt|;
-comment|/* beacon miss */
+comment|/* reset rf task */
 comment|/* Eeprom info */
 name|uint8_t
 name|cap
@@ -728,47 +616,6 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_destroy(&(_sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_CMD_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|)
-define|\
-value|mtx_init(&(_sc)->sc_cmdlock, device_get_nameunit((_sc)->sc_dev), \ 	    NULL, MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_CMD_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->sc_cmdlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_CMD_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->sc_cmdlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_CMD_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->sc_cmdlock)
 end_define
 
 end_unit

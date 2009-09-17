@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|MAX_INITIATORS
-value|1024
+value|8
 end_define
 
 begin_define

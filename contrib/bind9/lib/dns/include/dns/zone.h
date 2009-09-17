@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.h,v 1.126.18.19 2006/08/01 03:45:21 marka Exp $ */
+comment|/* $Id: zone.h,v 1.160.50.4 2009/01/29 22:40:35 jinmei Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*! \file */
+comment|/*! \file dns/zone.h */
 end_comment
 
 begin_comment
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<dns/masterdump.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/rdatastruct.h>
 end_include
 
 begin_include
@@ -344,6 +350,39 @@ begin_comment
 comment|/*%< check dnskey KSK flag */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DNS_ZONEOPT_TRYTCPREFRESH
+value|0x01000000U
+end_define
+
+begin_comment
+comment|/*%< try tcp refresh on udp failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEOPT_NOTIFYTOSOA
+value|0x02000000U
+end_define
+
+begin_comment
+comment|/*%< Notify the SOA MNAME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEOPT_NSEC3TESTZONE
+value|0x04000000U
+end_define
+
+begin_comment
+comment|/*%< nsec3-test-zone */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -587,6 +626,21 @@ end_function_decl
 
 begin_comment
 comment|/*%<  *	Returns the current zone class.  *  * Requires:  *\li	'zone' to be a valid zone.  */
+end_comment
+
+begin_function_decl
+name|isc_uint32_t
+name|dns_zone_getserial
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Returns the current serial number of the zone.  *  * Requires:  *\li	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -982,7 +1036,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Write the zone to database if there are uncommited changes.  *  * Require:  *\li	'zone' to be a valid zone.  */
+comment|/*%<  *	Write the zone to database if there are uncommitted changes.  *  * Require:  *\li	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -1073,7 +1127,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Perform regular maintenace on the zone.  This is called as a  *	result of a zone being managed.  *  * Require  *\li	'zone' to be a valid zone.  */
+comment|/*%<  *	Perform regular maintenance on the zone.  This is called as a  *	result of a zone being managed.  *  * Require  *\li	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -1143,7 +1197,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Set the list of additional servers to be notified when  *	a zone changes.	 To clear the list use 'count = 0'.  *  * Require:  *\li	'zone' to be a valid zone.  *\li	'notify' to be non-NULL if count != 0.  *\li	'count' to be the number of notifyees.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  *	Set the list of additional servers to be notified when  *	a zone changes.	 To clear the list use 'count = 0'.  *  * Require:  *\li	'zone' to be a valid zone.  *\li	'notify' to be non-NULL if count != 0.  *\li	'count' to be the number of notifiees.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -1511,6 +1565,25 @@ end_comment
 
 begin_function_decl
 name|void
+name|dns_zone_setqueryonacl
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_acl_t
+modifier|*
+name|acl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Sets the query-on acl list for the zone.  *  * Require:  *\li	'zone' to be a valid zone.  *\li	'acl' to be a valid acl.  */
+end_comment
+
+begin_function_decl
+name|void
 name|dns_zone_setupdateacl
 parameter_list|(
 name|dns_zone_t
@@ -1596,6 +1669,22 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * 	Returns the current query acl or NULL.  *  * Require:  *\li	'zone' to be a valid zone.  *  * Returns:  *\li	acl a pointer to the acl.  *\li	NULL  */
+end_comment
+
+begin_function_decl
+name|dns_acl_t
+modifier|*
+name|dns_zone_getqueryonacl
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * 	Returns the current query-on acl or NULL.  *  * Require:  *\li	'zone' to be a valid zone.  *  * Returns:  *\li	acl a pointer to the acl.  *\li	NULL  */
 end_comment
 
 begin_function_decl
@@ -1708,6 +1797,21 @@ end_comment
 
 begin_function_decl
 name|void
+name|dns_zone_clearqueryonacl
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Clear the current query-on acl.  *  * Require:  *\li	'zone' to be a valid zone.  */
+end_comment
+
+begin_function_decl
+name|void
 name|dns_zone_clearxfracl
 parameter_list|(
 name|dns_zone_t
@@ -1733,7 +1837,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return update disabled.  */
+comment|/*%<  * Return update disabled.  * Transient unless called when running in isc_task_exclusive() mode.  */
 end_comment
 
 begin_function_decl
@@ -1751,7 +1855,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Set update disabled.  */
+comment|/*%<  * Set update disabled.  * Should only be called only when running in isc_task_exclusive() mode.  * Failure to do so may result in updates being committed after the  * call has been made.  */
 end_comment
 
 begin_function_decl
@@ -1873,7 +1977,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Tell the zone that it has recieved a NOTIFY message from another  *	server.  This may cause some zone maintainence activity to occur.  *  * Requires:  *\li	'zone' to be a valid zone.  *\li	'*from' to contain the address of the server from which 'msg'  *		was recieved.  *\li	'msg' a message with opcode NOTIFY and qr clear.  *  * Returns:  *\li	DNS_R_REFUSED  *\li	DNS_R_NOTIMP  *\li	DNS_R_FORMERR  *\li	DNS_R_SUCCESS  */
+comment|/*%<  *	Tell the zone that it has received a NOTIFY message from another  *	server.  This may cause some zone maintenance activity to occur.  *  * Requires:  *\li	'zone' to be a valid zone.  *\li	'*from' to contain the address of the server from which 'msg'  *		was received.  *\li	'msg' a message with opcode NOTIFY and qr clear.  *  * Returns:  *\li	DNS_R_REFUSED  *\li	DNS_R_NOTIMP  *\li	DNS_R_FORMERR  *\li	DNS_R_SUCCESS  */
 end_comment
 
 begin_function_decl
@@ -2066,7 +2170,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Replace the database of "zone" with a new database "db".  *  * If "dump" is ISC_TRUE, then the new zone contents are dumped  * into to the zone's master file for persistence.  When replacing  * a zone database by one just loaded from a master file, set  * "dump" to ISC_FALSE to avoid a redunant redump of the data just  * loaded.  Otherwise, it should be set to ISC_TRUE.  *  * If the "diff-on-reload" option is enabled in the configuration file,  * the differences between the old and the new database are added to the  * journal file, and the master file dump is postponed.  *  * Requires:  * \li	'zone' to be a valid zone.  *  * Returns:  * \li	DNS_R_SUCCESS  * \li	DNS_R_BADZONE	zone failed basic consistancy checks:  *			* a single SOA must exist  *			* some NS records must exist.  *	Others  */
+comment|/*%<  * Replace the database of "zone" with a new database "db".  *  * If "dump" is ISC_TRUE, then the new zone contents are dumped  * into to the zone's master file for persistence.  When replacing  * a zone database by one just loaded from a master file, set  * "dump" to ISC_FALSE to avoid a redundant redump of the data just  * loaded.  Otherwise, it should be set to ISC_TRUE.  *  * If the "diff-on-reload" option is enabled in the configuration file,  * the differences between the old and the new database are added to the  * journal file, and the master file dump is postponed.  *  * Requires:  * \li	'zone' to be a valid zone.  *  * Returns:  * \li	DNS_R_SUCCESS  * \li	DNS_R_BADZONE	zone failed basic consistency checks:  *			* a single SOA must exist  *			* some NS records must exist.  *	Others  */
 end_comment
 
 begin_function_decl
@@ -2221,7 +2325,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Set the zone's SIG validity interval.  This is the length of time  * for which DNSSEC signatures created as a result of dynamic updates  * to secure zones will remain valid, in seconds.  *  * Requires:  * \li	'zone' to be a valid zone.  */
+comment|/*%<  * Set the zone's RRSIG validity interval.  This is the length of time  * for which DNSSEC signatures created as a result of dynamic updates  * to secure zones will remain valid, in seconds.  *  * Requires:  * \li	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -2236,7 +2340,40 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Get the zone's SIG validity interval.  *  * Requires:  * \li	'zone' to be a valid zone.  */
+comment|/*%<  * Get the zone's RRSIG validity interval.  *  * Requires:  * \li	'zone' to be a valid zone.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setsigresigninginterval
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_uint32_t
+name|interval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set the zone's RRSIG re-signing interval.  A dynamic zone's RRSIG's  * will be re-signed 'interval' amount of time before they expire.  *  * Requires:  * \li	'zone' to be a valid zone.  */
+end_comment
+
+begin_function_decl
+name|isc_uint32_t
+name|dns_zone_getsigresigninginterval
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the zone's RRSIG re-signing interval.  *  * Requires:  * \li	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -2280,7 +2417,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Forward 'msg' to each master in turn until we get an answer or we  * have exausted the list of masters. 'callback' will be called with  * ISC_R_SUCCESS if we get an answer and the returned message will be  * passed as 'answer_message', otherwise a non ISC_R_SUCCESS result code  * will be passed and answer_message will be NULL.  The callback function  * is responsible for destroying 'answer_message'.  *		(callback)(callback_arg, result, answer_message);  *  * Require:  *\li	'zone' to be valid  *\li	'msg' to be valid.  *\li	'callback' to be non NULL.  * Returns:  *\li	#ISC_R_SUCCESS if the message has been forwarded,  *\li	#ISC_R_NOMEMORY  *\li	Others  */
+comment|/*%<  * Forward 'msg' to each master in turn until we get an answer or we  * have exhausted the list of masters. 'callback' will be called with  * ISC_R_SUCCESS if we get an answer and the returned message will be  * passed as 'answer_message', otherwise a non ISC_R_SUCCESS result code  * will be passed and answer_message will be NULL.  The callback function  * is responsible for destroying 'answer_message'.  *		(callback)(callback_arg, result, answer_message);  *  * Require:  *\li	'zone' to be valid  *\li	'msg' to be valid.  *\li	'callback' to be non NULL.  * Returns:  *\li	#ISC_R_SUCCESS if the message has been forwarded,  *\li	#ISC_R_NOMEMORY  *\li	Others  */
 end_comment
 
 begin_function_decl
@@ -2423,7 +2560,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Force zone maintenance of all zones managed by 'zmgr' at its  * earliest conveniene.  */
+comment|/*%<  * Force zone maintenance of all zones managed by 'zmgr' at its  * earliest convenience.  */
 end_comment
 
 begin_function_decl
@@ -2541,7 +2678,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Return the the maximum number of simultaneous transfers in allowed.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  */
+comment|/*%<  *	Return the maximum number of simultaneous transfers in allowed.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  */
 end_comment
 
 begin_function_decl
@@ -2592,7 +2729,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Set the number of simultaneous file descriptors available for   *	reading and writing masterfiles.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  *\li	'iolimit' to be positive.  */
+comment|/*%<  *	Set the number of simultaneous file descriptors available for  *	reading and writing masterfiles.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  *\li	'iolimit' to be positive.  */
 end_comment
 
 begin_function_decl
@@ -2607,7 +2744,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Get the number of simultaneous file descriptors available for   *	reading and writing masterfiles.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  */
+comment|/*%<  *	Get the number of simultaneous file descriptors available for  *	reading and writing masterfiles.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  */
 end_comment
 
 begin_function_decl
@@ -2666,6 +2803,33 @@ end_comment
 
 begin_function_decl
 name|void
+name|dns_zonemgr_unreachableadd
+parameter_list|(
+name|dns_zonemgr_t
+modifier|*
+name|zmgr
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|remote
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|local
+parameter_list|,
+name|isc_time_t
+modifier|*
+name|now
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Add the pair of addresses to the unreachable cache.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  *\li	'remote' to be a valid sockaddr.  *\li	'local' to be a valid sockaddr.  */
+end_comment
+
+begin_function_decl
+name|void
 name|dns_zone_forcereload
 parameter_list|(
 name|dns_zone_t
@@ -2709,7 +2873,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *      Make the zone keep or not keep an array of statistics  * 	counter.  *  * Requires:  *   \li   zone be a valid zone.  */
+comment|/*%<  * This function is obsoleted by dns_zone_setrequeststats().  */
 end_comment
 
 begin_function_decl
@@ -2725,7 +2889,61 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Requires:  *      zone be a valid zone.  *  * Returns:  * \li     A pointer to the zone's array of statistics counters,  *	or NULL if it has none.  */
+comment|/*%<  * This function is obsoleted by dns_zone_getrequeststats().  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setstats
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_stats_t
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set a general zone-maintenance statistics set 'stats' for 'zone'.  This  * function is expected to be called only on zone creation (when necessary).  * Once installed, it cannot be removed or replaced.  Also, there is no  * interface to get the installed stats from the zone; the caller must keep the  * stats to reference (e.g. dump) it later.  *  * Requires:  * \li	'zone' to be a valid zone and does not have a statistics set already  *	installed.  *  *\li	stats is a valid statistics supporting zone statistics counters  *	(see dns/stats.h).  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setrequeststats
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_stats_t
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set an additional statistics set to zone.  It is attached in the zone  * but is not counted in the zone module; only the caller updates the counters.  *  * Requires:  * \li	'zone' to be a valid zone.  *  *\li	stats is a valid statistics.  */
+end_comment
+
+begin_function_decl
+name|isc_stats_t
+modifier|*
+name|dns_zone_getrequeststats
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the additional statistics for zone, if one is installed.  *  * Requires:  * \li	'zone' to be a valid zone.  *  * Returns:  * \li	when available, a pointer to the statistics set installed in zone;  *	otherwise NULL.  */
 end_comment
 
 begin_function_decl
@@ -2852,7 +3070,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return the name of the zone with class and view.  *   * Requires:  *\li	'zone' to be valid.  *\li	'buf' to be non NULL.  */
+comment|/*%<  * Return the name of the zone with class and view.  *  * Requires:  *\li	'zone' to be valid.  *\li	'buf' to be non NULL.  */
 end_comment
 
 begin_function_decl
@@ -2875,7 +3093,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Check if this record meets the check-names policy.  *  * Requires:  *	'zone' to be valid.  *	'name' to be valid.  *	'rdata' to be valid.  *  * Returns:  *	DNS_R_SUCCESS		passed checks.  *	DNS_R_BADOWNERNAME	failed ownername checks.  *	DNS_R_BADNAME		failed rdata checks.  */
+comment|/*%<  * Check if this record meets the check-names policy.  *  * Requires:  *	'zone' to be valid.  *	'name' to be valid.  *	'rdata' to be valid.  *  * Returns:  *	DNS_R_SUCCESS		passed checks.  *	DNS_R_BADOWNERNAME	failed ownername checks.  *	DNS_R_BADNAME		failed rdata checks.  */
 end_comment
 
 begin_function_decl
@@ -2894,7 +3112,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Associate the zone with an additional cache.  *  * Require:  *	'zone' to be a valid zone.  *	'acache' to be a non NULL pointer.  *  * Ensures:  *	'zone' will have a reference to 'acache'  */
+comment|/*%<  *	Associate the zone with an additional cache.  *  * Require:  *	'zone' to be a valid zone.  *	'acache' to be a non NULL pointer.  *  * Ensures:  *	'zone' will have a reference to 'acache'  */
 end_comment
 
 begin_function_decl
@@ -2912,7 +3130,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Set the post load integrity callback function 'checkmx'.  *	'checkmx' will be called if the MX is not within the zone.  *  * Require:  *	'zone' to be a valid zone.  */
+comment|/*%<  *	Set the post load integrity callback function 'checkmx'.  *	'checkmx' will be called if the MX is not within the zone.  *  * Require:  *	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -2930,7 +3148,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Set the post load integrity callback function 'checksrv'.  *	'checksrv' will be called if the SRV TARGET is not within the zone.  *  * Require:  *	'zone' to be a valid zone.  */
+comment|/*%<  *	Set the post load integrity callback function 'checksrv'.  *	'checksrv' will be called if the SRV TARGET is not within the zone.  *  * Require:  *	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -2948,7 +3166,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Set the post load integrity callback function 'checkmx'.  *	'checkmx' will be called if the MX is not within the zone.  *  * Require:  *	'zone' to be a valid zone.  */
+comment|/*%<  *	Set the post load integrity callback function 'checkmx'.  *	'checkmx' will be called if the MX is not within the zone.  *  * Require:  *	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -2966,7 +3184,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the minimum delay between sets of notify messages.  *  * Requires:  *	'zone' to be valid.  */
+comment|/*%<  * Set the minimum delay between sets of notify messages.  *  * Requires:  *	'zone' to be valid.  */
 end_comment
 
 begin_function_decl
@@ -2981,7 +3199,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the minimum delay between sets of notify messages.  *  * Requires:  *	'zone' to be valid.  */
+comment|/*%<  * Get the minimum delay between sets of notify messages.  *  * Requires:  *	'zone' to be valid.  */
 end_comment
 
 begin_function_decl
@@ -3003,7 +3221,115 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the isself callback function and argument.  *  * isc_boolean_t  * isself(dns_view_t *myview, dns_tsigkey_t *mykey, isc_netaddr_t *srcaddr,  *	  isc_netaddr_t *destaddr, dns_rdataclass_t rdclass, void *arg);  *  * 'isself' returns ISC_TRUE if a non-recursive query from 'srcaddr' to  * 'destaddr' with optional key 'mykey' for class 'rdclass' would be  * delivered to 'myview'.  */
+comment|/*%<  * Set the isself callback function and argument.  *  * isc_boolean_t  * isself(dns_view_t *myview, dns_tsigkey_t *mykey, isc_netaddr_t *srcaddr,  *	  isc_netaddr_t *destaddr, dns_rdataclass_t rdclass, void *arg);  *  * 'isself' returns ISC_TRUE if a non-recursive query from 'srcaddr' to  * 'destaddr' with optional key 'mykey' for class 'rdclass' would be  * delivered to 'myview'.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setnodes
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_uint32_t
+name|nodes
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set the number of nodes that will be checked per quantum.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setsignatures
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_uint32_t
+name|signatures
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set the number of signatures that will be generated per quantum.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_signwithkey
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_secalg_t
+name|algorithm
+parameter_list|,
+name|isc_uint16_t
+name|keyid
+parameter_list|,
+name|isc_boolean_t
+name|delete
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Initiate/resume signing of the entire zone with the zone DNSKEY(s)  * that match the given algorithm and keyid.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_addnsec3chain
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_rdata_nsec3param_t
+modifier|*
+name|nsec3param
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Incrementally add a NSEC3 chain that corresponds to 'nsec3param'.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setprivatetype
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_rdatatype_t
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|dns_rdatatype_t
+name|dns_zone_getprivatetype
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Get/Set the private record type.  It is expected that these interfaces  * will not be permanent.  */
 end_comment
 
 begin_macro

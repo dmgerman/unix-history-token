@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -275,6 +275,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_SVCR
+value|0x000F0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SVT
+value|0x000F4
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_RCTL
 value|0x00100
 end_define
@@ -314,6 +328,17 @@ end_define
 
 begin_comment
 comment|/* Rx Configuration Word - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_ECC
+value|0x01100
+end_define
+
+begin_comment
+comment|/* PBA ECC Register */
 end_comment
 
 begin_define
@@ -2276,69 +2301,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_VFGPRC
-value|0x00F10
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_VFGORC
-value|0x00F18
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_VFMPRC
-value|0x00F3C
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_VFGPTC
-value|0x00F14
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_VFGOTC
-value|0x00F34
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_VFGOTLBC
-value|0x00F50
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_VFGPTLBC
-value|0x00F44
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_VFGORLBC
-value|0x00F48
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_VFGPRLBC
-value|0x00F40
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_LSECTXUT
 value|0x04300
 end_define
@@ -3502,6 +3464,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_GCR2
+value|0x05B64
+end_define
+
+begin_comment
+comment|/* PCI-Ex Control #2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_GSCL_1
 value|0x05B10
 end_define
@@ -3574,6 +3547,17 @@ end_define
 
 begin_comment
 comment|/* FW Semaphore */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SWSM2
+value|0x05B58
+end_define
+
+begin_comment
+comment|/* Driver-only SW semaphore (not used by BOOT agents) */
 end_comment
 
 begin_define
@@ -3911,17 +3895,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_VLVF
-value|0x05D00
-end_define
-
-begin_comment
-comment|/* VLAN Virtual Machine Filter - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_RPLOLR
 value|0x05AF0
 end_define
@@ -4016,6 +3989,20 @@ name|_n
 parameter_list|)
 value|(0x05AD0 + (4 * (_n)))
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VLVF
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x05D00 + (4 * (_n)))
+end_define
+
+begin_comment
+comment|/* VLAN Virtual Machine                                                        * Filter - RW */
+end_comment
 
 begin_comment
 comment|/* Time Sync */
@@ -4233,6 +4220,20 @@ end_define
 
 begin_comment
 comment|/* 5-tuple Queue Fltr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x059E0 + (4 * (_n)))
+end_define
+
+begin_comment
+comment|/* 2-tuple Queue Fltr */
 end_comment
 
 begin_define

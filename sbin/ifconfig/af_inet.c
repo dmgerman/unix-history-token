@@ -132,7 +132,7 @@ end_include
 begin_decl_stmt
 specifier|static
 name|struct
-name|ifaliasreq
+name|in_aliasreq
 name|in_addreq
 decl_stmt|;
 end_decl_stmt
@@ -641,6 +641,9 @@ name|sin_addr
 argument_list|,
 name|MIN
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|hp
 operator|->
 name|h_length
@@ -915,7 +918,7 @@ name|dstres
 parameter_list|)
 block|{
 name|struct
-name|ifaliasreq
+name|in_aliasreq
 name|addreq
 decl_stmt|;
 name|memset

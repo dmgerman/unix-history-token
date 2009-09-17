@@ -172,16 +172,16 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|u_int
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|slot
 parameter_list|,
-name|int
+name|u_int
 name|func
 parameter_list|,
-name|int
+name|u_int
 name|reg
 parameter_list|,
 name|int
@@ -218,16 +218,16 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|u_int
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|slot
 parameter_list|,
-name|int
+name|u_int
 name|func
 parameter_list|,
-name|int
+name|u_int
 name|reg
 parameter_list|,
 name|u_int32_t
@@ -2208,6 +2208,13 @@ literal|0x030ad041
 comment|/* PNP0A03 */
 block|,
 literal|"PCI Bus"
+block|}
+block|,
+block|{
+literal|0x080ad041
+comment|/* PNP0A08 */
+block|,
+literal|"PCIe Bus"
 block|}
 block|,
 block|{

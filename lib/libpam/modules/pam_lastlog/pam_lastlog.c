@@ -875,6 +875,26 @@ name|err
 goto|;
 if|if
 condition|(
+name|tty
+operator|==
+name|NULL
+condition|)
+block|{
+name|PAM_LOG
+argument_list|(
+literal|"No PAM_TTY"
+argument_list|)
+expr_stmt|;
+name|pam_err
+operator|=
+name|PAM_SERVICE_ERR
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+if|if
+condition|(
 name|strncmp
 argument_list|(
 name|tty

@@ -11,13 +11,139 @@ begin_define
 define|#
 directive|define
 name|USB_DEBUG_VAR
-value|usb2_proc_debug
+value|usb_proc_debug
 end_define
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_core.h>
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi_util.h>
 end_include
 
 begin_include
@@ -101,6 +227,22 @@ literal|800000
 operator|)
 end_if
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|proc
+modifier|*
+name|usbproc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|usb_pcount
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -115,7 +257,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|kproc_create((f), (s), (p), RFHIGHPID, 0, __VA_ARGS__)
+value|kproc_kthread_add((f), (s),&usbproc, (p), RFHIGHPID, \ 		    0, "usb", __VA_ARGS__)
 end_define
 
 begin_define
@@ -125,7 +267,7 @@ name|USB_THREAD_SUSPEND
 parameter_list|(
 name|p
 parameter_list|)
-value|kproc_suspend(p,0)
+value|kthread_suspend(p,0)
 end_define
 
 begin_define
@@ -135,7 +277,7 @@ name|USB_THREAD_EXIT
 parameter_list|(
 name|err
 parameter_list|)
-value|kproc_exit(err)
+value|kthread_exit()
 end_define
 
 begin_else
@@ -185,23 +327,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
 name|int
-name|usb2_proc_debug
+name|usb_proc_debug
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -219,7 +361,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2_proc
+name|_hw_usb_proc
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -228,7 +370,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_proc_debug
+name|usb_proc_debug
 argument_list|,
 literal|0
 argument_list|,
@@ -243,13 +385,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_process  *  * This function is the USB process dispatcher.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_process  *  * This function is the USB process dispatcher.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|usb2_process
+name|usb_process
 parameter_list|(
 name|void
 modifier|*
@@ -257,14 +399,14 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 init|=
 name|arg
 decl_stmt|;
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm
 decl_stmt|;
@@ -416,7 +558,7 @@ name|up_dsleep
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 operator|&
 name|up
@@ -431,7 +573,7 @@ name|up_msleep
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|up
@@ -450,7 +592,7 @@ name|up_ptr
 operator|=
 name|NULL
 expr_stmt|;
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|up
@@ -465,6 +607,27 @@ operator|->
 name|up_mtx
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|800000
+operator|)
+comment|/* Clear the proc pointer if this is the last thread. */
+if|if
+condition|(
+operator|--
+name|usb_pcount
+operator|==
+literal|0
+condition|)
+name|usbproc
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|USB_THREAD_EXIT
 argument_list|(
 literal|0
@@ -474,15 +637,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_proc_create  *  * This function will create a process using the given "prio" that can  * execute callbacks. The mutex pointed to by "p_mtx" will be applied  * before calling the callbacks and released after that the callback  * has returned. The structure pointed to by "up" is assumed to be  * zeroed before this function is called.  *  * Return values:  *    0: success  * Else: failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_proc_create  *  * This function will create a process using the given "prio" that can  * execute callbacks. The mutex pointed to by "p_mtx" will be applied  * before calling the callbacks and released after that the callback  * has returned. The structure pointed to by "up" is assumed to be  * zeroed before this function is called.  *  * Return values:  *    0: success  * Else: failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|int
-name|usb2_proc_create
+name|usb_proc_create
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|,
@@ -520,24 +683,24 @@ operator|->
 name|up_qhead
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|up
 operator|->
 name|up_cv
 argument_list|,
-literal|"wmsg"
+literal|"-"
 argument_list|)
 expr_stmt|;
-name|usb2_cv_init
+name|cv_init
 argument_list|(
 operator|&
 name|up
 operator|->
 name|up_drain
 argument_list|,
-literal|"dmsg"
+literal|"usbdrain"
 argument_list|)
 expr_stmt|;
 if|if
@@ -545,7 +708,7 @@ condition|(
 name|USB_THREAD_CREATE
 argument_list|(
 operator|&
-name|usb2_process
+name|usb_process
 argument_list|,
 name|up
 argument_list|,
@@ -575,6 +738,18 @@ goto|goto
 name|error
 goto|;
 block|}
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|800000
+operator|)
+name|usb_pcount
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -582,7 +757,7 @@ operator|)
 return|;
 name|error
 label|:
-name|usb2_proc_free
+name|usb_proc_free
 argument_list|(
 name|up
 argument_list|)
@@ -596,15 +771,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_proc_free  *  * NOTE: If the structure pointed to by "up" is all zero, this  * function does nothing.  *  * NOTE: Messages that are pending on the process queue will not be  * removed nor called.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_proc_free  *  * NOTE: If the structure pointed to by "up" is all zero, this  * function does nothing.  *  * NOTE: Messages that are pending on the process queue will not be  * removed nor called.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_proc_free
+name|usb_proc_free
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|)
@@ -619,12 +794,12 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|usb2_proc_drain
+name|usb_proc_drain
 argument_list|(
 name|up
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|up
@@ -632,7 +807,7 @@ operator|->
 name|up_cv
 argument_list|)
 expr_stmt|;
-name|usb2_cv_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|up
@@ -651,16 +826,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_proc_msignal  *  * This function will queue one of the passed USB process messages on  * the USB process queue. The first message that is not already queued  * will get queued. If both messages are already queued the one queued  * last will be removed from the queue and queued in the end. The USB  * process mutex must be locked when calling this function. This  * function exploits the fact that a process can only do one callback  * at a time. The message that was queued is returned.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_proc_msignal  *  * This function will queue one of the passed USB process messages on  * the USB process queue. The first message that is not already queued  * will get queued. If both messages are already queued the one queued  * last will be removed from the queue and queued in the end. The USB  * process mutex must be locked when calling this function. This  * function exploits the fact that a process can only do one callback  * at a time. The message that was queued is returned.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|usb2_proc_msignal
+name|usb_proc_msignal
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|,
@@ -674,25 +849,25 @@ name|_pm1
 parameter_list|)
 block|{
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm0
 init|=
 name|_pm0
 decl_stmt|;
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm1
 init|=
 name|_pm1
 decl_stmt|;
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm2
 decl_stmt|;
-name|uint32_t
+name|usb_size_t
 name|d
 decl_stmt|;
 name|uint8_t
@@ -935,7 +1110,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* save "cv_signal()" calls */
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|up
@@ -953,15 +1128,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_proc_is_gone  *  * Return values:  *    0: USB process is running  * Else: USB process is tearing down  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_proc_is_gone  *  * Return values:  *    0: USB process is running  * Else: USB process is tearing down  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|uint8_t
-name|usb2_proc_is_gone
+name|usb_proc_is_gone
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|)
@@ -995,15 +1170,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_proc_mwait  *  * This function will return when the USB process message pointed to  * by "pm" is no longer on a queue. This function must be called  * having "up->up_mtx" locked.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_proc_mwait  *  * This function will return when the USB process message pointed to  * by "pm" is no longer on a queue. This function must be called  * having "up->up_mtx" locked.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_proc_mwait
+name|usb_proc_mwait
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|,
@@ -1017,14 +1192,14 @@ name|_pm1
 parameter_list|)
 block|{
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm0
 init|=
 name|_pm0
 decl_stmt|;
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 modifier|*
 name|pm1
 init|=
@@ -1148,7 +1323,7 @@ name|up_dsleep
 operator|=
 literal|1
 expr_stmt|;
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|up
@@ -1165,15 +1340,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_proc_drain  *  * This function will tear down an USB process, waiting for the  * currently executing command to return.  *  * NOTE: If the structure pointed to by "up" is all zero,  * this function does nothing.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_proc_drain  *  * This function will tear down an USB process, waiting for the  * currently executing command to return.  *  * NOTE: If the structure pointed to by "up" is all zero,  * this function does nothing.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_proc_drain
+name|usb_proc_drain
 parameter_list|(
 name|struct
-name|usb2_process
+name|usb_process
 modifier|*
 name|up
 parameter_list|)
@@ -1252,7 +1427,7 @@ name|up_csleep
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_signal
+name|cv_signal
 argument_list|(
 operator|&
 name|up
@@ -1282,7 +1457,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|usb2_cv_wait
+name|cv_wait
 argument_list|(
 operator|&
 name|up
@@ -1309,7 +1484,7 @@ name|up_dsleep
 operator|=
 literal|0
 expr_stmt|;
-name|usb2_cv_broadcast
+name|cv_broadcast
 argument_list|(
 operator|&
 name|up
@@ -1331,6 +1506,69 @@ operator|->
 name|up_mtx
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usb_proc_rewakeup  *  * This function is called to re-wakeup the the given USB  * process. This usually happens after that the USB system has been in  * polling mode, like during a panic. This function must be called  * having "up->up_mtx" locked.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|usb_proc_rewakeup
+parameter_list|(
+name|struct
+name|usb_process
+modifier|*
+name|up
+parameter_list|)
+block|{
+comment|/* check if not initialised */
+if|if
+condition|(
+name|up
+operator|->
+name|up_mtx
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* check if gone */
+if|if
+condition|(
+name|up
+operator|->
+name|up_gone
+condition|)
+return|return;
+name|mtx_assert
+argument_list|(
+name|up
+operator|->
+name|up_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|up_msleep
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* re-wakeup */
+name|cv_signal
+argument_list|(
+operator|&
+name|up
+operator|->
+name|up_cv
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

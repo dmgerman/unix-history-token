@@ -126,8 +126,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVFILT_USER
+value|(-11)
+end_define
+
+begin_comment
+comment|/* User events */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVFILT_SYSCOUNT
-value|10
+value|11
 end_define
 
 begin_define
@@ -259,6 +270,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EV_RECEIPT
+value|0x0040
+end_define
+
+begin_comment
+comment|/* force EV_ERROR on success, data=0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EV_DISPATCH
+value|0x0080
+end_define
+
+begin_comment
+comment|/* disable event after reporting */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EV_SYSFLAGS
 value|0xF000
 end_define
@@ -302,6 +335,83 @@ end_define
 
 begin_comment
 comment|/* error, data contains errno */
+end_comment
+
+begin_comment
+comment|/*   * data/hint flags/masks for EVFILT_USER, shared with userspace   *   * On input, the top two bits of fflags specifies how the lower twenty four   * bits should be applied to the stored value of fflags.   *   * On output, the top two bits will always be set to NOTE_FFNOP and the   * remaining twenty four bits will contain the stored fflags value.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFNOP
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* ignore input fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFAND
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* AND fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFOR
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* OR fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFCOPY
+value|0xc0000000
+end_define
+
+begin_comment
+comment|/* copy fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFCTRLMASK
+value|0xc0000000
+end_define
+
+begin_comment
+comment|/* masks for operations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_FFLAGSMASK
+value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOTE_TRIGGER
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Cause the event to be 						   triggered for output. */
 end_comment
 
 begin_comment
@@ -594,10 +704,20 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|void
 function_decl|(
 modifier|*
-name|kl_locked
+name|kl_assert_locked
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|kl_assert_unlocked
 function_decl|)
 parameter_list|(
 name|void
@@ -638,6 +758,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Flags for knote call  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KNF_LISTLOCKED
+value|0x0001
+end_define
+
+begin_comment
+comment|/* knlist is locked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KNF_NOKQLOCK
+value|0x0002
+end_define
+
+begin_comment
+comment|/* do not keep KQ_LOCK */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -647,9 +793,9 @@ name|list
 parameter_list|,
 name|hist
 parameter_list|,
-name|lock
+name|flags
 parameter_list|)
-value|knote(list, hist, lock)
+value|knote(list, hist, flags)
 end_define
 
 begin_define
@@ -661,7 +807,7 @@ name|list
 parameter_list|,
 name|hint
 parameter_list|)
-value|knote(list, hint, 1)
+value|knote(list, hint, KNF_LISTLOCKED)
 end_define
 
 begin_define
@@ -695,6 +841,24 @@ define|#
 directive|define
 name|NOTE_SIGNAL
 value|0x08000000
+end_define
+
+begin_comment
+comment|/*  * Hint values for the optional f_touch event filter.  If f_touch is not set   * to NULL and f_isfd is zero the f_touch filter will be called with the type  * argument set to EVENT_REGISTER during a kevent() system call.  It is also  * called under the same conditions with the type argument set to EVENT_PROCESS  * when the event has been triggered.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVENT_REGISTER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVENT_PROCESS
+value|2
 end_define
 
 begin_struct
@@ -742,6 +906,26 @@ name|kn
 parameter_list|,
 name|long
 name|hint
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|f_touch
+function_decl|)
+parameter_list|(
+name|struct
+name|knote
+modifier|*
+name|kn
+parameter_list|,
+name|struct
+name|kevent
+modifier|*
+name|kev
+parameter_list|,
+name|long
+name|type
 parameter_list|)
 function_decl|;
 block|}
@@ -882,6 +1066,9 @@ name|void
 modifier|*
 name|kn_hook
 decl_stmt|;
+name|int
+name|kn_hookid
+decl_stmt|;
 define|#
 directive|define
 name|kn_id
@@ -978,6 +1165,12 @@ name|knlist
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|mtx
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|void
@@ -992,7 +1185,7 @@ name|long
 name|hint
 parameter_list|,
 name|int
-name|islocked
+name|lockflags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1120,15 +1313,43 @@ name|void
 modifier|*
 parameter_list|)
 parameter_list|,
-name|int
+name|void
 function_decl|(
 modifier|*
-name|kl_locked
+name|kl_assert_locked
 function_decl|)
 parameter_list|(
 name|void
 modifier|*
 parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|kl_assert_unlocked
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|knlist_init_mtx
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|lock
 parameter_list|)
 function_decl|;
 end_function_decl

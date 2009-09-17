@@ -107,6 +107,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -364,6 +365,10 @@ block|}
 else|else
 name|fts_options
 operator|=
+name|hflag
+condition|?
+name|FTS_PHYSICAL
+else|:
 name|FTS_LOGICAL
 expr_stmt|;
 comment|/* XXX: Why don't chflags and lchflags have compatible prototypes? */
@@ -789,6 +794,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

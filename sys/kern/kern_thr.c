@@ -696,10 +696,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|p
 operator|=
 name|td
@@ -798,7 +794,9 @@ comment|/* Initialize our td */
 name|newtd
 operator|=
 name|thread_alloc
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1184,7 +1182,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -1611,10 +1609,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_SIGNUM
 argument_list|(
-name|signum
-argument_list|,
 name|uap
 operator|->
 name|sig
@@ -1668,10 +1664,8 @@ name|ESRCH
 operator|)
 return|;
 block|}
-name|AUDIT_ARG
+name|AUDIT_ARG_PROCESS
 argument_list|(
-name|process
-argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -1895,10 +1889,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|tsp
 operator|=
 name|NULL

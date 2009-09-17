@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netipsec/ipsec.h>
 end_include
 

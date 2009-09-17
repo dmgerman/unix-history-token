@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -120,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -162,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -187,12 +181,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
 end_include
 
 begin_include
@@ -569,7 +557,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1470,9 +1458,19 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 comment|/* 	 * check if IPv4 src matches the IPv4 address derived from the 	 * local 6to4 address masked by prefixmask. 	 * success on: src = 10.1.1.1, ia6->ia_addr = 2002:0a00:.../24 	 * fail on: src = 10.1.1.1, ia6->ia_addr = 2002:0b00:.../24 	 */
 name|bzero
 argument_list|(
@@ -1525,6 +1523,14 @@ sizeof|sizeof
 argument_list|(
 name|mask
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
 argument_list|)
 expr_stmt|;
 name|a
@@ -1584,13 +1590,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|ifp
-operator|->
-name|if_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -1610,13 +1609,18 @@ name|struct
 name|in_addr
 name|in
 decl_stmt|;
+name|if_addr_rlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&ifp->if_addrlist
+argument|&ifp->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if
@@ -1702,6 +1706,16 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+name|ifa_ref
+argument_list|(
+name|ia
+argument_list|)
+expr_stmt|;
+name|if_addr_runlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 expr|struct
@@ -1711,6 +1725,11 @@ operator|)
 name|ia
 return|;
 block|}
+name|if_addr_runlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -1728,7 +1747,7 @@ name|m
 parameter_list|,
 name|dst
 parameter_list|,
-name|rt
+name|ro
 parameter_list|)
 name|struct
 name|ifnet
@@ -1746,9 +1765,9 @@ modifier|*
 name|dst
 decl_stmt|;
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 decl_stmt|;
 block|{
 name|struct
@@ -1936,6 +1955,14 @@ operator|!
 name|m
 condition|)
 block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_oerrors
@@ -2052,6 +2079,14 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -2159,6 +2194,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_oerrors
@@ -2221,6 +2264,14 @@ name|ip
 operator|->
 name|ip_src
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ifa_free
+argument_list|(
+operator|&
+name|ia6
+operator|->
+name|ia_ifa
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2661,11 +2712,6 @@ name|inifp
 decl_stmt|;
 comment|/* incoming interface */
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*
@@ -2731,6 +2777,9 @@ operator|-
 literal|1
 return|;
 comment|/* 	 * reject packets with broadcast 	 */
+name|IN_IFADDR_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ia4
@@ -2784,11 +2833,19 @@ name|sin_addr
 operator|.
 name|s_addr
 condition|)
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
 block|}
+block|}
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * perform ingress filter 	 */
 if|if
 condition|(

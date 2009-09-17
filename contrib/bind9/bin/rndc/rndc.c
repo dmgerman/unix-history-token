@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rndc.c,v 1.96.18.21 2008/10/15 03:07:19 marka Exp $ */
+comment|/* $Id: rndc.c,v 1.122.44.2 2009/01/18 23:47:35 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -720,7 +720,7 @@ literal|"This may indicate that\n"
 literal|"* the remote server is using an older version of"
 literal|" the command protocol,\n"
 literal|"* this host is not authorized to connect,\n"
-literal|"* the clocks are not syncronized, or\n"
+literal|"* the clocks are not synchronized, or\n"
 literal|"* the key is invalid."
 argument_list|)
 expr_stmt|;
@@ -1031,7 +1031,7 @@ literal|"This may indicate that\n"
 literal|"* the remote server is using an older version of"
 literal|" the command protocol,\n"
 literal|"* this host is not authorized to connect,\n"
-literal|"* the clocks are not syncronized, or\n"
+literal|"* the clocks are not synchronized, or\n"
 literal|"* the key is invalid."
 argument_list|)
 expr_stmt|;
@@ -1716,6 +1716,8 @@ argument_list|(
 operator|&
 name|ccmsg
 argument_list|,
+literal|1024
+operator|*
 literal|1024
 argument_list|)
 expr_stmt|;
@@ -3403,6 +3405,10 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|isc_commandline_errprint
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3414,7 +3420,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:k:Mmp:s:Vy:"
+literal|"b:c:hk:Mmp:s:Vy:"
 argument_list|)
 operator|)
 operator|!=
@@ -3581,6 +3587,33 @@ break|break;
 case|case
 literal|'?'
 case|:
+if|if
+condition|(
+name|isc_commandline_option
+operator|!=
+literal|'?'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: invalid argument -%c\n"
+argument_list|,
+name|program
+argument_list|,
+name|isc_commandline_option
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+case|case
+literal|'h'
+case|:
 name|usage
 argument_list|(
 literal|0
@@ -3588,15 +3621,22 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fatal
+name|fprintf
 argument_list|(
-literal|"unexpected error parsing command arguments: "
-literal|"got %c\n"
+name|stderr
 argument_list|,
-name|ch
+literal|"%s: unhandled option -%c\n"
+argument_list|,
+name|program
+argument_list|,
+name|isc_commandline_option
 argument_list|)
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|argc

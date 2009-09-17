@@ -213,7 +213,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_LIB_SPEC
-value|"							\   %{!shared:								\     %{!pg: %{pthread:-lpthread} -lc}					\     %{pg:  %{pthread:-lpthread_p} -lc_p}}				\   %{shared:								\     %{pthread:-lpthread} -lc}						\   "
+value|"							\   %{!shared:								\     %{!pg: %{pthread:-lpthread} -lc}					\     %{pg:  %{pthread:-lpthread_p} -lc_p}}				\   %{shared:								\     %{pthread:-lpthread} -lc}						\   %{fstack-protector|fstack-protector-all:-lssp_nonshared}		\   "
 end_define
 
 begin_endif

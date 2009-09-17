@@ -47,25 +47,28 @@ directive|include
 file|"libi386.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|int
+name|bios_seconds
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Return the time in seconds since the beginning of the day.  *  * If we pass midnight, don't wrap back to 0.  *  * XXX uses undocumented BCD support from libstand.  */
+comment|/*  * Return the BIOS time-of-day value.  *  * XXX uses undocumented BCD support from libstand.  */
 end_comment
 
 begin_function
-name|time_t
-name|time
+specifier|static
+name|int
+name|bios_seconds
 parameter_list|(
-name|time_t
-modifier|*
-name|t
+name|void
 parameter_list|)
 block|{
-specifier|static
-name|time_t
-name|lasttime
-decl_stmt|,
-name|now
-decl_stmt|;
 name|int
 name|hr
 decl_stmt|,
@@ -150,8 +153,8 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
-name|now
-operator|=
+return|return
+operator|(
 name|hr
 operator|*
 literal|3600
@@ -161,6 +164,35 @@ operator|*
 literal|60
 operator|+
 name|sec
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return the time in seconds since the beginning of the day.  */
+end_comment
+
+begin_function
+name|time_t
+name|time
+parameter_list|(
+name|time_t
+modifier|*
+name|t
+parameter_list|)
+block|{
+specifier|static
+name|time_t
+name|lasttime
+decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
+name|now
+operator|=
+name|bios_seconds
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

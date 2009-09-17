@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/uma.h>
+file|<net/vnet.h>
 end_include
 
 begin_include

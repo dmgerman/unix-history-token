@@ -21,6 +21,12 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/tlb.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|pmap
@@ -87,7 +93,7 @@ define|#
 directive|define
 name|PCPU_MD_BOOKE_FIELDS
 define|\
-value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	int		pc_tid_next;
+value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	uint32_t	*pc_booke_tlb_lock;				\ 	int		pc_tid_next;
 end_define
 
 begin_comment

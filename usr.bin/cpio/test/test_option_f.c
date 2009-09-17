@@ -164,6 +164,28 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Don't extract 'a*' files. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Single quotes isn't used by command.exe. */
+name|unpack
+argument_list|(
+literal|"t1"
+argument_list|,
+literal|"-f a*"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|unpack
 argument_list|(
 literal|"t1"
@@ -171,6 +193,8 @@ argument_list|,
 literal|"-f 'a*'"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assert
 argument_list|(
 literal|0
@@ -220,6 +244,28 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Don't extract 'b*' files. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Single quotes isn't used by command.exe. */
+name|unpack
+argument_list|(
+literal|"t2"
+argument_list|,
+literal|"-f b*"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|unpack
 argument_list|(
 literal|"t2"
@@ -227,6 +273,8 @@ argument_list|,
 literal|"-f 'b*'"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 literal|0

@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * Intel High Definition Audio (Controller) driver for FreeBSD. Be advised  * that this driver still in its early stage, and possible of rewrite are  * pretty much guaranteed. There are supposedly several distinct parent/child  * busses to make this "perfect", but as for now and for the sake of  * simplicity, everything is gobble up within single source.  *  * List of subsys:  *     1) HDA Controller support  *     2) HDA Codecs support, which may include  *        - HDA  *        - Modem  *        - HDMI  *     3) Widget parser - the real magic of why this driver works on so  *        many hardwares with minimal vendor specific quirk. The original  *        parser was written using Ruby and can be found at  *        http://people.freebsd.org/~ariff/HDA/parser.rb . This crude  *        ruby parser take the verbose dmesg dump as its input. Refer to  *        http://www.microsoft.com/whdc/device/audio/default.mspx for various  *        interesting documents, especially UAA (Universal Audio Architecture).  *     4) Possible vendor specific support.  *        (snd_hda_intel, snd_hda_ati, etc..)  *  * Thanks to Ahmad Ubaidah Omar @ Defenxis Sdn. Bhd. for the  * Compaq V3000 with Conexant HDA.  *  *    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *    *                                                                 *  *    *        This driver is a collaborative effort made by:           *  *    *                                                                 *  *    *          Stephane E. Potvin<sepotvin@videotron.ca>             *  *    *               Andrea Bittau<a.bittau@cs.ucl.ac.uk>             *  *    *               Wesley Morgan<morganw@chemikals.org>             *  *    *              Daniel Eischen<deischen@FreeBSD.org>              *  *    *             Maxime Guillaud<bsd-ports@mguillaud.net>           *  *    *              Ariff Abdullah<ariff@FreeBSD.org>                 *  *    *             Alexander Motin<mav@FreeBSD.org>                   *  *    *                                                                 *  *    *   ....and various people from freebsd-multimedia@FreeBSD.org    *  *    *                                                                 *  *    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -71,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090215_0128"
+value|"20090624_0136"
 end_define
 
 begin_expr_stmt
@@ -89,7 +106,7 @@ name|HDA_BOOTVERBOSE
 parameter_list|(
 name|stmt
 parameter_list|)
-value|do {			\ 	if (bootverbose != 0 || snd_verbose> 3) {	\ 		stmt					\ 	}						\ } while(0)
+value|do {			\ 	if (bootverbose != 0 || snd_verbose> 3) {	\ 		stmt					\ 	}						\ } while (0)
 end_define
 
 begin_define
@@ -99,7 +116,7 @@ name|HDA_BOOTHVERBOSE
 parameter_list|(
 name|stmt
 parameter_list|)
-value|do {			\ 	if (snd_verbose> 3) {				\ 		stmt					\ 	}						\ } while(0)
+value|do {			\ 	if (snd_verbose> 3) {				\ 		stmt					\ 	}						\ } while (0)
 end_define
 
 begin_if
@@ -313,8 +330,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_INTEL_82801J
+name|HDA_INTEL_82801JI
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x3a3e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_82801JD
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x3a6e)
 end_define
 
 begin_define
@@ -473,6 +497,34 @@ define|#
 directive|define
 name|HDA_NVIDIA_MCP79_4
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d94)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d95)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_3
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d96)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_4
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d97)
 end_define
 
 begin_define
@@ -935,6 +987,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACER_T5320_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ACER, 0x011f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACER_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ACER, 0xffff)
 end_define
@@ -1011,6 +1070,13 @@ define|#
 directive|define
 name|ASUS_M5200_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ASUS, 0x1993)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASUS_P5PL2_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x817f)
 end_define
 
 begin_define
@@ -2105,9 +2171,14 @@ name|hdac_fmt
 index|[]
 init|=
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -2132,6 +2203,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HDAC_NO_MSI
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDAC_NO_64BIT
+value|2
+end_define
+
 begin_struct
 specifier|static
 specifier|const
@@ -2144,6 +2229,9 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
+name|char
+name|flags
+decl_stmt|;
 block|}
 name|hdac_devices
 index|[]
@@ -2153,258 +2241,384 @@ block|{
 name|HDA_INTEL_82801F
 block|,
 literal|"Intel 82801F"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_63XXESB
 block|,
 literal|"Intel 631x/632xESB"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_82801G
 block|,
 literal|"Intel 82801G"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_82801H
 block|,
 literal|"Intel 82801H"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_82801I
 block|,
 literal|"Intel 82801I"
+block|,
+literal|0
 block|}
 block|,
 block|{
-name|HDA_INTEL_82801J
+name|HDA_INTEL_82801JI
 block|,
-literal|"Intel 82801J"
+literal|"Intel 82801JI"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_82801JD
+block|,
+literal|"Intel 82801JD"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_PCH
 block|,
 literal|"Intel PCH"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_INTEL_SCH
 block|,
 literal|"Intel SCH"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP51
 block|,
 literal|"NVidia MCP51"
+block|,
+name|HDAC_NO_MSI
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP55
 block|,
 literal|"NVidia MCP55"
+block|,
+name|HDAC_NO_MSI
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP61_1
 block|,
 literal|"NVidia MCP61"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP61_2
 block|,
 literal|"NVidia MCP61"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP65_1
 block|,
 literal|"NVidia MCP65"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP65_2
 block|,
 literal|"NVidia MCP65"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP67_1
 block|,
 literal|"NVidia MCP67"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP67_2
 block|,
 literal|"NVidia MCP67"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP73_1
 block|,
 literal|"NVidia MCP73"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP73_2
 block|,
 literal|"NVidia MCP73"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP78_1
 block|,
 literal|"NVidia MCP78"
+block|,
+name|HDAC_NO_64BIT
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP78_2
 block|,
 literal|"NVidia MCP78"
+block|,
+name|HDAC_NO_64BIT
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP78_3
 block|,
 literal|"NVidia MCP78"
+block|,
+name|HDAC_NO_64BIT
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP78_4
 block|,
 literal|"NVidia MCP78"
+block|,
+name|HDAC_NO_64BIT
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP79_1
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP79_2
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP79_3
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_NVIDIA_MCP79_4
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_1
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_2
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_3
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_4
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_SB450
 block|,
 literal|"ATI SB450"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_SB600
 block|,
 literal|"ATI SB600"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RS600
 block|,
 literal|"ATI RS600"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RS690
 block|,
 literal|"ATI RS690"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RS780
 block|,
 literal|"ATI RS780"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_R600
 block|,
 literal|"ATI R600"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV610
 block|,
 literal|"ATI RV610"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV620
 block|,
 literal|"ATI RV620"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV630
 block|,
 literal|"ATI RV630"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV635
 block|,
 literal|"ATI RV635"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV710
 block|,
 literal|"ATI RV710"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV730
 block|,
 literal|"ATI RV730"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV740
 block|,
 literal|"ATI RV740"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ATI_RV770
 block|,
 literal|"ATI RV770"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_VIA_VT82XX
 block|,
 literal|"VIA VT8251/8237A"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_SIS_966
 block|,
 literal|"SiS 966"
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|HDA_ULI_M5461
 block|,
 literal|"ULI M5461"
+block|,
+literal|0
 block|}
 block|,
 comment|/* Unknown */
@@ -8167,6 +8381,15 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|num_sdo
+operator|=
+name|HDAC_GCAP_NSDO
+argument_list|(
+name|gcap
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
 name|support_64bit
 operator|=
 name|HDA_FLAG_MATCH
@@ -8342,15 +8565,18 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|HDA_BOOTHVERBOSE
+name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"    CORB size: %d\n"
-argument|, sc->corb_size); 		device_printf(sc->dev,
-literal|"    RIRB size: %d\n"
-argument|, sc->rirb_size); 		device_printf(sc->dev,
-literal|"      Streams: ISS=%d OSS=%d BSS=%d\n"
-argument|, 		    sc->num_iss, sc->num_oss, sc->num_bss);
+literal|"Caps: OSS %d, ISS %d, BSS %d, "
+literal|"NSDO %d%s, CORB %d, RIRB %d\n"
+argument|, 		    sc->num_oss, sc->num_iss, sc->num_bss,
+literal|1
+argument|<< sc->num_sdo, 		    sc->support_64bit ?
+literal|", 64bit"
+argument|:
+literal|""
+argument|, 		    sc->corb_size, sc->rirb_size);
 argument_list|)
 empty_stmt|;
 return|return
@@ -8450,9 +8676,6 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-name|int
-name|lowaddr
-decl_stmt|;
 name|roundsz
 operator|=
 name|roundup2
@@ -8461,18 +8684,6 @@ name|size
 argument_list|,
 name|HDAC_DMA_ALIGNMENT
 argument_list|)
-expr_stmt|;
-name|lowaddr
-operator|=
-operator|(
-name|sc
-operator|->
-name|support_64bit
-operator|)
-condition|?
-name|BUS_SPACE_MAXADDR
-else|:
-name|BUS_SPACE_MAXADDR_32BIT
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -8490,7 +8701,12 @@ name|result
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
 argument_list|,
 comment|/* parent */
 name|HDAC_DMA_ALIGNMENT
@@ -8499,7 +8715,15 @@ comment|/* alignment */
 literal|0
 argument_list|,
 comment|/* boundary */
-name|lowaddr
+operator|(
+name|sc
+operator|->
+name|support_64bit
+operator|)
+condition|?
+name|BUS_SPACE_MAXADDR
+else|:
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -12111,6 +12335,12 @@ operator|->
 name|pci_subvendor
 operator|==
 name|ASUS_A8NVMCSM_SUBVENDOR
+operator|||
+name|sc
+operator|->
+name|pci_subvendor
+operator|==
+name|ASUS_P5PL2_SUBVENDOR
 operator|)
 condition|)
 block|{
@@ -12120,9 +12350,18 @@ name|nid
 condition|)
 block|{
 case|case
+literal|26
+case|:
+comment|/* Headphones with redirection */
+name|patch
+operator|=
+literal|"as=1 seq=15"
+expr_stmt|;
+break|break;
+case|case
 literal|28
 case|:
-comment|/* 5.1 out => 2.0 out + 2 inputs */
+comment|/* 5.1 out => 2.0 out + 1 input */
 name|patch
 operator|=
 literal|"device=Line-in as=8 seq=1"
@@ -12131,9 +12370,10 @@ break|break;
 case|case
 literal|29
 case|:
+comment|/* Can't use this as input, as the only available mic 			  * preamplifier is busy by front panel mic (nid 31). 			  * If you want to use this rear connector as mic input, 			  * you have to disable the front panel one. */
 name|patch
 operator|=
-literal|"device=Mic as=8 seq=2"
+literal|"as=0"
 expr_stmt|;
 break|break;
 case|case
@@ -12209,15 +12449,15 @@ condition|(
 name|id
 operator|==
 name|HDA_CODEC_ALC268
-operator|&&
-name|HDA_DEV_MATCH
-argument_list|(
-name|ACER_ALL_SUBVENDOR
-argument_list|,
+condition|)
+block|{
+if|if
+condition|(
 name|sc
 operator|->
 name|pci_subvendor
-argument_list|)
+operator|==
+name|ACER_T5320_SUBVENDOR
 condition|)
 block|{
 switch|switch
@@ -12226,13 +12466,15 @@ name|nid
 condition|)
 block|{
 case|case
-literal|28
+literal|20
 case|:
+comment|/* Headphones Jack */
 name|patch
 operator|=
-literal|"device=CD conn=fixed"
+literal|"as=1 seq=15"
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 if|if
@@ -14429,7 +14671,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|sndbuf_getbps
+name|sndbuf_getalign
 argument_list|(
 name|ch
 operator|->
@@ -17088,7 +17330,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|hdac_channel_setspeed
 parameter_list|(
 name|kobj_t
@@ -17418,31 +17660,23 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-if|if
-condition|(
+name|totalchn
+operator|=
+name|AFMT_CHANNEL
+argument_list|(
 name|ch
 operator|->
 name|fmt
-operator|&
-operator|(
-name|AFMT_STEREO
-operator||
-name|AFMT_AC3
-operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|totalchn
+operator|>
+literal|1
 condition|)
-block|{
 name|fmt
 operator||=
-literal|1
-expr_stmt|;
-name|totalchn
-operator|=
-literal|2
-expr_stmt|;
-block|}
-else|else
-name|totalchn
-operator|=
 literal|1
 expr_stmt|;
 name|HDAC_WRITE_2
@@ -17932,7 +18166,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -17940,7 +18174,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|hdac_channel_setblocksize
 parameter_list|(
 name|kobj_t
@@ -18298,7 +18532,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|hdac_channel_getptr
 parameter_list|(
 name|kobj_t
@@ -18510,11 +18744,7 @@ argument_list|,
 name|hdac_channel_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -19020,11 +19250,6 @@ operator|->
 name|play
 operator|>=
 literal|0
-operator|&&
-operator|!
-name|pdevinfo
-operator|->
-name|digital
 condition|)
 block|{
 name|ctl
@@ -20413,11 +20638,7 @@ argument_list|,
 name|hdac_audio_ctl_ossmixer_setrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -20498,6 +20719,19 @@ name|result
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|devid
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|uint32_t
+name|model
+decl_stmt|;
+name|uint16_t
+name|class
+decl_stmt|,
+name|subclass
 decl_stmt|;
 name|uint16_t
 name|vendor
@@ -20514,6 +20748,106 @@ argument_list|,
 name|HDA_DRV_TEST_REV
 argument_list|)
 expr_stmt|;
+name|model
+operator|=
+operator|(
+name|uint32_t
+operator|)
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|<<
+literal|16
+expr_stmt|;
+name|model
+operator||=
+operator|(
+name|uint32_t
+operator|)
+name|pci_get_vendor
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+literal|0x0000ffff
+expr_stmt|;
+name|class
+operator|=
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|subclass
+operator|=
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|HDAC_DEVICES_LEN
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|hdac_devices
+index|[
+name|i
+index|]
+operator|.
+name|model
+operator|==
+name|model
+condition|)
+block|{
+name|devid
+operator|=
+name|i
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|HDA_DEV_MATCH
+argument_list|(
+name|hdac_devices
+index|[
+name|i
+index|]
+operator|.
+name|model
+argument_list|,
+name|model
+argument_list|)
+operator|&&
+name|class
+operator|==
+name|PCIC_MULTIMEDIA
+operator|&&
+name|subclass
+operator|==
+name|PCIS_MULTIMEDIA_HDA
+condition|)
+block|{
+name|devid
+operator|=
+name|i
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|sc
 operator|=
 name|device_get_softc
@@ -20692,94 +21026,6 @@ name|polling
 operator|=
 literal|0
 expr_stmt|;
-name|result
-operator|=
-name|bus_dma_tag_create
-argument_list|(
-name|NULL
-argument_list|,
-comment|/* parent */
-name|HDAC_DMA_ALIGNMENT
-argument_list|,
-comment|/* alignment */
-literal|0
-argument_list|,
-comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
-argument_list|,
-comment|/* lowaddr */
-name|BUS_SPACE_MAXADDR
-argument_list|,
-comment|/* highaddr */
-name|NULL
-argument_list|,
-comment|/* filtfunc */
-name|NULL
-argument_list|,
-comment|/* fistfuncarg */
-name|HDA_BUFSZ_MAX
-argument_list|,
-comment|/* maxsize */
-literal|1
-argument_list|,
-comment|/* nsegments */
-name|HDA_BUFSZ_MAX
-argument_list|,
-comment|/* maxsegsz */
-literal|0
-argument_list|,
-comment|/* flags */
-name|NULL
-argument_list|,
-comment|/* lockfunc */
-name|NULL
-argument_list|,
-comment|/* lockfuncarg */
-operator|&
-name|sc
-operator|->
-name|chan_dmat
-argument_list|)
-expr_stmt|;
-comment|/* dmat */
-if|if
-condition|(
-name|result
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"%s: bus_dma_tag_create failed (%x)\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|result
-argument_list|)
-expr_stmt|;
-name|snd_mtxfree
-argument_list|(
-name|sc
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sc
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|sc
 operator|->
 name|hdabus
@@ -20859,6 +21105,37 @@ empty_stmt|;
 block|}
 if|if
 condition|(
+name|devid
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|hdac_devices
+index|[
+name|devid
+index|]
+operator|.
+name|flags
+operator|&
+name|HDAC_NO_MSI
+operator|)
+condition|)
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|HDAC_F_MSI
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|flags
+operator||=
+name|HDAC_F_MSI
+expr_stmt|;
+if|if
+condition|(
 name|resource_int_value
 argument_list|(
 name|device_get_name
@@ -20878,7 +21155,10 @@ name|i
 argument_list|)
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|i
 operator|==
 literal|0
@@ -20897,6 +21177,7 @@ name|flags
 operator||=
 name|HDAC_F_MSI
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -21211,6 +21492,29 @@ condition|)
 goto|goto
 name|hdac_attach_fail
 goto|;
+if|if
+condition|(
+name|devid
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|hdac_devices
+index|[
+name|devid
+index|]
+operator|.
+name|flags
+operator|&
+name|HDAC_NO_64BIT
+operator|)
+condition|)
+name|sc
+operator|->
+name|support_64bit
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Allocate CORB and RIRB dma memory */
 name|result
 operator|=
@@ -21273,6 +21577,91 @@ condition|)
 goto|goto
 name|hdac_attach_fail
 goto|;
+name|result
+operator|=
+name|bus_dma_tag_create
+argument_list|(
+name|bus_get_dma_tag
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+comment|/* parent */
+name|HDAC_DMA_ALIGNMENT
+argument_list|,
+comment|/* alignment */
+literal|0
+argument_list|,
+comment|/* boundary */
+operator|(
+name|sc
+operator|->
+name|support_64bit
+operator|)
+condition|?
+name|BUS_SPACE_MAXADDR
+else|:
+name|BUS_SPACE_MAXADDR_32BIT
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+comment|/* filtfunc */
+name|NULL
+argument_list|,
+comment|/* fistfuncarg */
+name|HDA_BUFSZ_MAX
+argument_list|,
+comment|/* maxsize */
+literal|1
+argument_list|,
+comment|/* nsegments */
+name|HDA_BUFSZ_MAX
+argument_list|,
+comment|/* maxsegsz */
+literal|0
+argument_list|,
+comment|/* flags */
+name|NULL
+argument_list|,
+comment|/* lockfunc */
+name|NULL
+argument_list|,
+comment|/* lockfuncarg */
+operator|&
+name|sc
+operator|->
+name|chan_dmat
+argument_list|)
+expr_stmt|;
+comment|/* dmat */
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"%s: bus_dma_tag_create failed (%x)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
+goto|goto
+name|hdac_attach_fail
+goto|;
+block|}
 comment|/* Quiesce everything */
 name|HDA_BOOTHVERBOSE
 argument_list|(
@@ -23740,128 +24129,16 @@ condition|(
 name|id
 condition|)
 block|{
-case|case
-name|HDA_CODEC_ALC883
-case|:
+if|#
+directive|if
+literal|0
+block|case HDA_CODEC_ALC883:
 comment|/* 		 * nid: 24/25 = External (jack) or Internal (fixed) Mic. 		 *              Clear vref cap for jack connectivity. 		 */
-name|w
-operator|=
-name|hdac_widget_get
-argument_list|(
-name|devinfo
-argument_list|,
-literal|24
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|w
-operator|!=
-name|NULL
-operator|&&
-name|w
-operator|->
-name|enable
-operator|!=
-literal|0
-operator|&&
-name|w
-operator|->
-name|type
-operator|==
-name|HDA_PARAM_AUDIO_WIDGET_CAP_TYPE_PIN_COMPLEX
-operator|&&
-operator|(
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|config
-operator|&
-name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_MASK
-operator|)
-operator|==
-name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_JACK
-condition|)
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|cap
-operator|&=
-operator|~
-operator|(
-name|HDA_PARAM_PIN_CAP_VREF_CTRL_100_MASK
-operator||
-name|HDA_PARAM_PIN_CAP_VREF_CTRL_80_MASK
-operator||
-name|HDA_PARAM_PIN_CAP_VREF_CTRL_50_MASK
-operator|)
-expr_stmt|;
-name|w
-operator|=
-name|hdac_widget_get
-argument_list|(
-name|devinfo
-argument_list|,
-literal|25
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|w
-operator|!=
-name|NULL
-operator|&&
-name|w
-operator|->
-name|enable
-operator|!=
-literal|0
-operator|&&
-name|w
-operator|->
-name|type
-operator|==
-name|HDA_PARAM_AUDIO_WIDGET_CAP_TYPE_PIN_COMPLEX
-operator|&&
-operator|(
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|config
-operator|&
-name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_MASK
-operator|)
-operator|==
-name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_JACK
-condition|)
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|cap
-operator|&=
-operator|~
-operator|(
-name|HDA_PARAM_PIN_CAP_VREF_CTRL_100_MASK
-operator||
-name|HDA_PARAM_PIN_CAP_VREF_CTRL_80_MASK
-operator||
-name|HDA_PARAM_PIN_CAP_VREF_CTRL_50_MASK
-operator|)
-expr_stmt|;
+block|w = hdac_widget_get(devinfo, 24); 		if (w != NULL&& w->enable != 0&& w->type == 		    HDA_PARAM_AUDIO_WIDGET_CAP_TYPE_PIN_COMPLEX&& 		    (w->wclass.pin.config& 		    HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_MASK) == 		    HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_JACK) 			w->wclass.pin.cap&= ~( 			    HDA_PARAM_PIN_CAP_VREF_CTRL_100_MASK | 			    HDA_PARAM_PIN_CAP_VREF_CTRL_80_MASK | 			    HDA_PARAM_PIN_CAP_VREF_CTRL_50_MASK); 		w = hdac_widget_get(devinfo, 25); 		if (w != NULL&& w->enable != 0&& w->type == 		    HDA_PARAM_AUDIO_WIDGET_CAP_TYPE_PIN_COMPLEX&& 		    (w->wclass.pin.config& 		    HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_MASK) == 		    HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_JACK) 			w->wclass.pin.cap&= ~( 			    HDA_PARAM_PIN_CAP_VREF_CTRL_100_MASK | 			    HDA_PARAM_PIN_CAP_VREF_CTRL_80_MASK | 			    HDA_PARAM_PIN_CAP_VREF_CTRL_50_MASK);
 comment|/* 		 * nid: 26 = Line-in, leave it alone. 		 */
-break|break;
+block|break;
+endif|#
+directive|endif
 case|case
 name|HDA_CODEC_AD1983
 case|:
@@ -24150,6 +24427,179 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* There is only one mic preamplifier, use it effectively. */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|31
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|config
+operator|&
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MASK
+operator|)
+operator|==
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MIC_IN
+condition|)
+block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|15
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|32
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|config
+operator|&
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MASK
+operator|)
+operator|==
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MIC_IN
+condition|)
+block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|15
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|subvendor
@@ -26569,10 +27019,6 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|dev
@@ -26638,10 +27084,6 @@ literal|0
 expr_stmt|;
 name|device_printf
 argument_list|(
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|dev
@@ -26651,6 +27093,42 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Fixup relative pointers after realloc */
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|sc
+operator|->
+name|num_chans
+condition|;
+name|j
+operator|++
+control|)
+name|sc
+operator|->
+name|chans
+index|[
+name|j
+index|]
+operator|.
+name|caps
+operator|.
+name|fmtlist
+operator|=
+name|sc
+operator|->
+name|chans
+index|[
+name|j
+index|]
+operator|.
+name|fmtlist
+expr_stmt|;
 block|}
 name|free
 operator|=
@@ -26680,10 +27158,6 @@ name|j
 operator|++
 control|)
 block|{
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -26695,10 +27169,6 @@ name|devinfo
 operator|=
 name|devinfo
 expr_stmt|;
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -26754,10 +27224,6 @@ name|chan
 operator|=
 name|free
 expr_stmt|;
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -26769,10 +27235,6 @@ name|as
 operator|=
 name|j
 expr_stmt|;
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -26800,10 +27262,6 @@ expr_stmt|;
 name|hdac_pcmchannel_setup
 argument_list|(
 operator|&
-name|devinfo
-operator|->
-name|codec
-operator|->
 name|sc
 operator|->
 name|chans
@@ -32418,7 +32876,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ch
 operator|->
@@ -32428,9 +32893,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
-operator||
-name|AFMT_STEREO
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -32464,7 +32934,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ch
 operator|->
@@ -32474,9 +32951,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
-operator||
-name|AFMT_STEREO
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -32496,7 +32978,14 @@ name|i
 operator|++
 index|]
 operator|=
+name|SND_FORMAT
+argument_list|(
 name|AFMT_AC3
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|ch
@@ -37379,12 +37868,6 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -38795,11 +39278,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -39559,9 +40037,6 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|device_get_sysctl_ctx
@@ -39697,8 +40172,6 @@ argument_list|,
 literal|"Dump pin states/data"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -40958,11 +41431,11 @@ literal|"+--------------------------------------+\n"
 argument|); 		hdac_dump_pcmchannels(pdevinfo); 		device_printf(dev,
 literal|"\n"
 argument|); 		device_printf(dev,
-literal|"+--------------------------------+\n"
+literal|"+-------------------------------+\n"
 argument|); 		device_printf(dev,
-literal|"| DUMPING Playback/Record Pathes |\n"
+literal|"| DUMPING Playback/Record Paths |\n"
 argument|); 		device_printf(dev,
-literal|"+--------------------------------+\n"
+literal|"+-------------------------------+\n"
 argument|); 		hdac_dump_dac(pdevinfo); 		hdac_dump_adc(pdevinfo); 		hdac_dump_mix(pdevinfo); 		device_printf(dev,
 literal|"\n"
 argument|); 		device_printf(dev,

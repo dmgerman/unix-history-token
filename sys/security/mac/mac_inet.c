@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002, 2007, 2009 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * This software was developed at the University of Cambridge Computer  * Laboratory with support from a grant from Google, Inc.   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -16,6 +16,12 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"opt_kdtrace.h"
+end_include
 
 begin_include
 include|#
@@ -57,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -192,7 +204,23 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|MAC_CHECK
+if|if
+condition|(
+name|flag
+operator|&
+name|M_WAITOK
+condition|)
+name|MAC_POLICY_CHECK
+argument_list|(
+name|inpcb_init_label
+argument_list|,
+name|label
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+else|else
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|inpcb_init_label
 argument_list|,
@@ -206,7 +234,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_destroy_label
 argument_list|,
@@ -327,7 +355,23 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|MAC_CHECK
+if|if
+condition|(
+name|flag
+operator|&
+name|M_WAITOK
+condition|)
+name|MAC_POLICY_CHECK
+argument_list|(
+name|ipq_init_label
+argument_list|,
+name|label
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+else|else
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|ipq_init_label
 argument_list|,
@@ -341,7 +385,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_destroy_label
 argument_list|,
@@ -436,7 +480,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_destroy_label
 argument_list|,
@@ -498,7 +542,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_destroy_label
 argument_list|,
@@ -564,7 +608,7 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_create
 argument_list|,
@@ -604,6 +648,13 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -611,7 +662,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_reassemble
 argument_list|,
@@ -652,6 +703,13 @@ decl_stmt|,
 modifier|*
 name|fraglabel
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|mlabel
 operator|=
 name|mac_mbuf_to_label
@@ -666,7 +724,7 @@ argument_list|(
 name|frag
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_fragment
 argument_list|,
@@ -702,6 +760,13 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -709,7 +774,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_create
 argument_list|,
@@ -752,6 +817,13 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|mlabel
 operator|=
 name|mac_mbuf_to_label
@@ -759,7 +831,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_create_mbuf
 argument_list|,
@@ -800,6 +872,17 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -811,7 +894,7 @@ name|result
 operator|=
 literal|1
 expr_stmt|;
-name|MAC_BOOLEAN
+name|MAC_POLICY_BOOLEAN_NOSLEEP
 argument_list|(
 name|ipq_match
 argument_list|,
@@ -856,6 +939,13 @@ name|label
 modifier|*
 name|mlabel
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|mlabel
 operator|=
 name|mac_mbuf_to_label
@@ -868,7 +958,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_arp_send
 argument_list|,
@@ -914,6 +1004,13 @@ decl_stmt|,
 modifier|*
 name|msendlabel
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|mrecvlabel
 operator|=
 name|mac_mbuf_to_label
@@ -928,7 +1025,7 @@ argument_list|(
 name|msend
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_icmp_reply
 argument_list|,
@@ -959,6 +1056,13 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -966,7 +1070,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_icmp_replyinplace
 argument_list|,
@@ -998,6 +1102,13 @@ name|label
 modifier|*
 name|mlabel
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|mlabel
 operator|=
 name|mac_mbuf_to_label
@@ -1010,7 +1121,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_igmp_send
 argument_list|,
@@ -1048,6 +1159,13 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -1055,7 +1173,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_tcp_reply
 argument_list|,
@@ -1087,6 +1205,13 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -1094,7 +1219,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|ipq_update
 argument_list|,
@@ -1111,6 +1236,18 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|inpcb_check_deliver
+argument_list|,
+literal|"struct inpcb *"
+argument_list|,
+literal|"struct mbuf *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1140,6 +1277,17 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -1147,7 +1295,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|inpcb_check_deliver
 argument_list|,
@@ -1162,6 +1310,17 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|inpcb_check_deliver
+argument_list|,
+name|error
+argument_list|,
+name|inp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1169,6 +1328,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|inpcb_check_visible
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct inpcb *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1193,7 +1364,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|inpcb_check_visible
 argument_list|,
@@ -1204,6 +1375,17 @@ argument_list|,
 name|inp
 operator|->
 name|inp_label
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE2
+argument_list|(
+name|inpcb_check_visible
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1239,7 +1421,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|inpcb_sosetlabel
 argument_list|,
@@ -1292,6 +1474,13 @@ argument_list|(
 name|msend
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|mrecvlabel
 operator|=
 name|mac_mbuf_to_label
@@ -1306,7 +1495,7 @@ argument_list|(
 name|msend
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_firewall_reply
 argument_list|,
@@ -1342,6 +1531,13 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|label
 operator|=
 name|mac_mbuf_to_label
@@ -1349,7 +1545,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|netinet_firewall_send
 argument_list|,
@@ -1384,7 +1580,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|syncache_destroy_label
 argument_list|,
@@ -1449,7 +1645,7 @@ name|ENOMEM
 operator|)
 return|;
 comment|/* 		 * Since we are holding the inpcb locks the policy can not 		 * allocate policy specific label storage using M_WAITOK.  So 		 * we need to do a MAC_CHECK instead of the typical 		 * MAC_PERFORM so we can propagate allocation failures back 		 * to the syncache code. 		 */
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|syncache_init_label
 argument_list|,
@@ -1464,7 +1660,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|syncache_destroy_label
 argument_list|,
@@ -1519,7 +1715,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|syncache_create
 argument_list|,
@@ -1556,6 +1752,13 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mac_policy_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|mlabel
 operator|=
 name|mac_mbuf_to_label
@@ -1563,7 +1766,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|syncache_create_mbuf
 argument_list|,

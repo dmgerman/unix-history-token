@@ -409,6 +409,10 @@ name|sctp_rtentry_t
 modifier|*
 name|ro_rt
 decl_stmt|;
+name|void
+modifier|*
+name|ro_lle
+decl_stmt|;
 name|union
 name|sctp_sockstore
 name|_l_addr
@@ -521,6 +525,10 @@ decl_stmt|;
 name|int
 name|lastsv
 decl_stmt|;
+name|int
+name|rtt
+decl_stmt|;
+comment|/* last measured rtt value in ms */
 name|unsigned
 name|int
 name|RTO
@@ -719,6 +727,9 @@ comment|/* from send */
 comment|/* ECN Nonce: Nonce Value for this chunk */
 name|uint8_t
 name|ect_nonce
+decl_stmt|;
+name|uint8_t
+name|fwd_tsn_cnt
 decl_stmt|;
 comment|/* 	 * part of the Highest sacked algorithm to be able to stroke counts 	 * on ones that are FR'd. 	 */
 name|uint32_t
@@ -1109,6 +1120,9 @@ name|sender_all_done
 decl_stmt|;
 name|uint8_t
 name|put_last_out
+decl_stmt|;
+name|uint8_t
+name|discard_rest
 decl_stmt|;
 block|}
 struct|;
@@ -1830,7 +1844,7 @@ comment|/* For CMT */
 name|struct
 name|sctp_nets
 modifier|*
-name|last_net_data_came_from
+name|last_net_cmt_send_started
 decl_stmt|;
 comment|/* last place I got a data chunk from */
 name|struct

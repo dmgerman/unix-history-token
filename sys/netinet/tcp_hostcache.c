@@ -88,13 +88,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -174,12 +180,6 @@ directive|include
 file|<netinet/tcp_hostcache.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -243,32 +243,43 @@ begin_comment
 comment|/* every 5 minutes */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|tcp_hostcache
+argument_list|,
 name|tcp_hostcache
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|callout
+argument_list|,
 name|tcp_hc_callout
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_tcp_hostcache
+value|VNET(tcp_hostcache)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_hc_callout
+value|VNET(tcp_hc_callout)
+end_define
 
 begin_function_decl
 specifier|static
@@ -338,12 +349,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -352,9 +359,13 @@ name|cachelimit
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_hostcache
 operator|.
 name|cache_limit
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -364,12 +375,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -378,9 +385,13 @@ name|hashsize
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_hostcache
 operator|.
 name|hashsize
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -390,12 +401,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -404,9 +411,13 @@ name|bucketlimit
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_hostcache
 operator|.
 name|bucket_limit
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -416,12 +427,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -430,9 +437,13 @@ name|count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_hostcache
 operator|.
 name|cache_count
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -442,12 +453,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -456,9 +463,13 @@ name|expire
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_hostcache
 operator|.
 name|expire
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -468,12 +479,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -482,9 +489,13 @@ name|prune
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_hostcache
 operator|.
 name|prune
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -494,12 +505,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_inet
-argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -508,9 +515,13 @@ name|purge
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|tcp_hostcache
 operator|.
 name|purgeall
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -613,11 +624,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -879,11 +885,39 @@ name|hz
 argument_list|,
 name|tcp_hc_purge
 argument_list|,
-literal|0
+name|curvnet
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_function
+name|void
+name|tcp_hc_destroy
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* XXX TODO walk the hashtable and free all entries  */
+name|callout_drain
+argument_list|(
+operator|&
+name|V_tcp_hc_callout
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Internal function: look up an entry in the hostcache or return NULL.  *  * If an entry has been returned, the caller becomes responsible for  * unlocking the bucket row after he is done reading/modifying the entry.  */
@@ -902,11 +936,6 @@ modifier|*
 name|inc
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|hash
 decl_stmt|;
@@ -1090,11 +1119,6 @@ modifier|*
 name|inc
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|hash
 decl_stmt|;
@@ -1247,10 +1271,10 @@ operator|.
 name|cache_count
 operator|--
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_hc_bucketoverflow
-operator|++
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -1384,10 +1408,10 @@ operator|.
 name|cache_count
 operator|++
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_hc_added
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 name|hc_entry
@@ -1414,11 +1438,6 @@ modifier|*
 name|hc_metrics_lite
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|hc_metrics
 modifier|*
@@ -1559,11 +1578,6 @@ modifier|*
 name|inc
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|hc_metrics
 modifier|*
@@ -1643,11 +1657,6 @@ name|u_long
 name|mtu
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|hc_metrics
 modifier|*
@@ -1766,11 +1775,6 @@ modifier|*
 name|hcml
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|hc_metrics
 modifier|*
@@ -1861,10 +1865,10 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_cachedrtt
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1909,10 +1913,10 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_cachedrttvar
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1957,10 +1961,10 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_cachedssthresh
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -2005,7 +2009,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* V_tcpstat.tcps_cachedbandwidth++; */
+comment|/* TCPSTAT_INC(tcps_cachedbandwidth); */
 block|}
 if|if
 condition|(
@@ -2049,7 +2053,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* V_tcpstat.tcps_cachedcwnd++; */
+comment|/* TCPSTAT_INC(tcps_cachedcwnd); */
 block|}
 if|if
 condition|(
@@ -2093,7 +2097,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* V_tcpstat.tcps_cachedsendpipe++; */
+comment|/* TCPSTAT_INC(tcps_cachedsendpipe); */
 block|}
 if|if
 condition|(
@@ -2137,7 +2141,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* V_tcpstat.tcps_cachedrecvpipe++; */
+comment|/* TCPSTAT_INC(tcps_cachedrecvpipe); */
 block|}
 name|TAILQ_REMOVE
 argument_list|(
@@ -2192,11 +2196,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|bufsize
 decl_stmt|;
@@ -2507,9 +2506,14 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|INIT_VNET_INET
+name|CURVNET_SET
 argument_list|(
-name|curvnet
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
+name|arg
 argument_list|)
 expr_stmt|;
 name|struct
@@ -2523,10 +2527,7 @@ decl_stmt|;
 name|int
 name|all
 init|=
-operator|(
-name|intptr_t
-operator|)
-name|arg
+literal|0
 decl_stmt|;
 name|int
 name|i
@@ -2681,6 +2682,9 @@ name|tcp_hc_purge
 argument_list|,
 name|arg
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function

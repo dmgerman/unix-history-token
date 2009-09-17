@@ -726,7 +726,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/pc/vesa.h>
+file|<dev/fb/vesa.h>
 end_include
 
 begin_endif
@@ -831,11 +831,21 @@ begin_comment
 comment|/* architecture dependent option */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__i386__
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_define
 define|#

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -83,13 +83,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|squished
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hit_eof
 decl_stmt|;
 end_decl_stmt
 
@@ -475,9 +468,14 @@ name|void
 name|cmd_exec
 parameter_list|()
 block|{
+if|#
+directive|if
+name|HILITE_SEARCH
 name|clear_attn
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|clear_bot
 argument_list|()
 expr_stmt|;
@@ -574,6 +572,22 @@ name|void
 name|mca_search
 parameter_list|()
 block|{
+if|#
+directive|if
+name|HILITE_SEARCH
+if|if
+condition|(
+name|search_type
+operator|&
+name|SRCH_FILTER
+condition|)
+name|mca
+operator|=
+name|A_FILTER
+expr_stmt|;
+elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|search_type
@@ -650,6 +664,23 @@ argument_list|(
 literal|"Regex-off "
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HILITE_SEARCH
+if|if
+condition|(
+name|search_type
+operator|&
+name|SRCH_FILTER
+condition|)
+name|cmd_putstr
+argument_list|(
+literal|"&/"
+argument_list|)
+expr_stmt|;
+elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|search_type
@@ -838,6 +869,26 @@ name|number
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|HILITE_SEARCH
+case|case
+name|A_FILTER
+case|:
+name|search_type
+operator|^=
+name|SRCH_NO_MATCH
+expr_stmt|;
+name|set_filter_pattern
+argument_list|(
+name|cbuf
+argument_list|,
+name|search_type
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 name|A_FIRSTCMD
 case|:
@@ -1716,6 +1767,9 @@ case|:
 case|case
 name|A_B_SEARCH
 case|:
+case|case
+name|A_FILTER
+case|:
 comment|/* 		 * Special case for search commands. 		 * Certain characters as the first char of  		 * the pattern have special meaning: 		 *	!  Toggle the NO_MATCH flag 		 *	*  Toggle the PAST_EOF flag 		 *	@  Toggle the FIRST_FILE flag 		 */
 if|if
 condition|(
@@ -1750,6 +1804,12 @@ literal|'E'
 argument_list|)
 case|:
 comment|/* ignore END of file */
+if|if
+condition|(
+name|mca
+operator|!=
+name|A_FILTER
+condition|)
 name|flag
 operator|=
 name|SRCH_PAST_EOF
@@ -1770,6 +1830,12 @@ literal|'F'
 argument_list|)
 case|:
 comment|/* FIRST file */
+if|if
+condition|(
+name|mca
+operator|!=
+name|A_FILTER
+condition|)
 name|flag
 operator|=
 name|SRCH_FIRST_FILE
@@ -1782,6 +1848,12 @@ literal|'K'
 argument_list|)
 case|:
 comment|/* KEEP position */
+if|if
+condition|(
+name|mca
+operator|!=
+name|A_FILTER
+condition|)
 name|flag
 operator|=
 name|SRCH_NO_MOVE
@@ -2091,19 +2163,16 @@ argument_list|(
 name|BOTTOM_PLUS_ONE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we've hit EOF on the last file, and the -E flag is set 	 * (or -F is set and this is the first prompt), then quit. 	 * {{ Relying on "first prompt" to detect a single-screen file 	 * fails if +G is used, for example. }} 	 */
+comment|/* 	 * If we've hit EOF on the last file and the -E flag is set, quit. 	 */
 if|if
 condition|(
-operator|(
 name|get_quit_at_eof
 argument_list|()
 operator|==
 name|OPT_ONPLUS
-operator|||
-name|quit_if_one_screen
-operator|)
 operator|&&
-name|hit_eof
+name|eof_displayed
+argument_list|()
 operator|&&
 operator|!
 operator|(
@@ -2125,18 +2194,34 @@ argument_list|(
 name|QUIT_OK
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the entire file is displayed and the -F flag is set, quit. 	 */
+if|if
+condition|(
 name|quit_if_one_screen
-operator|=
-name|FALSE
+operator|&&
+name|entire_file_displayed
+argument_list|()
+operator|&&
+operator|!
+operator|(
+name|ch_getflags
+argument_list|()
+operator|&
+name|CH_HELPFILE
+operator|)
+operator|&&
+name|next_ifile
+argument_list|(
+name|curr_ifile
+argument_list|)
+operator|==
+name|NULL_IFILE
+condition|)
+name|quit
+argument_list|(
+name|QUIT_OK
+argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* This doesn't work well because some "te"s clear the screen. */
-comment|/* 	 * If the -e flag is set and we've hit EOF on the last file, 	 * and the file is squished (shorter than the screen), quit. 	 */
-block|if (get_quit_at_eof()&& squished&& 	    next_ifile(curr_ifile) == NULL_IFILE) 		quit(QUIT_OK);
-endif|#
-directive|endif
 if|#
 directive|if
 name|MSDOS_COMPILER
@@ -2186,6 +2271,16 @@ name|p
 operator|=
 name|pr_string
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|is_filtering
+argument_list|()
+condition|)
+name|putstr
+argument_list|(
+literal|"& "
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3309,10 +3404,6 @@ name|ignore_eoi
 operator|=
 literal|1
 expr_stmt|;
-name|hit_eof
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -3722,6 +3813,41 @@ goto|goto
 name|again
 goto|;
 case|case
+name|A_FILTER
+case|:
+if|#
+directive|if
+name|HILITE_SEARCH
+name|search_type
+operator|=
+name|SRCH_FORW
+operator||
+name|SRCH_FILTER
+expr_stmt|;
+name|mca_search
+argument_list|()
+expr_stmt|;
+name|c
+operator|=
+name|getcc
+argument_list|()
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+else|#
+directive|else
+name|error
+argument_list|(
+literal|"Command not available"
+argument_list|,
+name|NULL_PARG
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+case|case
 name|A_AGAIN_SEARCH
 case|:
 comment|/* 			 * Repeat previous search. 			 */
@@ -4047,7 +4173,8 @@ condition|(
 name|get_quit_at_eof
 argument_list|()
 operator|&&
-name|hit_eof
+name|eof_displayed
+argument_list|()
 operator|&&
 operator|!
 operator|(
@@ -4644,6 +4771,9 @@ operator|==
 literal|'\r'
 condition|)
 break|break;
+name|cmd_exec
+argument_list|()
+expr_stmt|;
 name|gomark
 argument_list|(
 name|c

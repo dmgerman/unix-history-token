@@ -101,12 +101,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD5
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD7
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
-name|semid_ds
+name|semid_ds_old
 block|{
 name|struct
-name|ipc_perm
+name|ipc_perm_old
 name|sem_perm
 decl_stmt|;
 comment|/* operation permission struct */
@@ -150,6 +175,45 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|semid_ds
+block|{
+name|struct
+name|ipc_perm
+name|sem_perm
+decl_stmt|;
+comment|/* operation permission struct */
+name|struct
+name|sem
+modifier|*
+name|sem_base
+decl_stmt|;
+comment|/* pointer to first semaphore in set */
+name|unsigned
+name|short
+name|sem_nsems
+decl_stmt|;
+comment|/* number of sems in set */
+name|time_t
+name|sem_otime
+decl_stmt|;
+comment|/* last operation time */
+name|time_t
+name|sem_ctime
+decl_stmt|;
+comment|/* last change time */
+comment|/* Times measured in secs since */
+comment|/* 00:00:00 GMT, Jan. 1, 1970 */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * semop's sops parameter structure  */
 end_comment
@@ -181,6 +245,66 @@ directive|define
 name|SEM_UNDO
 value|010000
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD5
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD7
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|_WANT_SEMUN_OLD
+argument_list|)
+end_if
+
+begin_union
+union|union
+name|semun_old
+block|{
+name|int
+name|val
+decl_stmt|;
+comment|/* value for SETVAL */
+name|struct
+name|semid_ds_old
+modifier|*
+name|buf
+decl_stmt|;
+comment|/* buffer for IPC_STAT& IPC_SET */
+name|unsigned
+name|short
+modifier|*
+name|array
+decl_stmt|;
+comment|/* array for GETALL& SETALL */
+block|}
+union|;
+end_union
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * semctl's arg parameter structure  */
@@ -471,6 +595,9 @@ end_comment
 
 begin_function_decl
 name|__BEGIN_DECLS
+if|#
+directive|if
+name|__BSD_VISIBLE
 name|int
 name|semsys
 parameter_list|(
@@ -480,6 +607,11 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

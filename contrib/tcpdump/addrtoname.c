@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.108.2.9 2007/09/14 00:26:18 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.119 2007-08-08 14:06:34 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,13 +295,6 @@ define|#
 directive|define
 name|HASHNAMESIZE
 value|4096
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUFSIZE
-value|128
 end_define
 
 begin_struct
@@ -2635,6 +2628,11 @@ parameter_list|,
 specifier|const
 name|unsigned
 name|int
+name|type
+parameter_list|,
+specifier|const
+name|unsigned
+name|int
 name|len
 parameter_list|)
 block|{
@@ -2655,17 +2653,36 @@ name|tp
 decl_stmt|;
 if|if
 condition|(
+name|type
+operator|==
+name|LINKADDR_ETHER
+operator|&&
 name|len
 operator|==
 name|ETHER_ADDR_LEN
 condition|)
-comment|/* XXX not totally correct... */
+block|{
 return|return
 name|etheraddr_string
 argument_list|(
 name|ep
 argument_list|)
 return|;
+block|}
+if|if
+condition|(
+name|type
+operator|==
+name|LINKADDR_FRELAY
+condition|)
+block|{
+return|return
+name|q922_string
+argument_list|(
+name|ep
+argument_list|)
+return|;
+block|}
 name|tp
 operator|=
 name|lookup_bytestring

@@ -50,6 +50,12 @@ name|taskqueue
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * A notification callback function which is called from  * taskqueue_enqueue().  The context argument is given in the call to  * taskqueue_create().  This function would normally be used to allow the  * queue to arrange to run itself later (e.g., by scheduling a software  * interrupt or waking a kernel thread).  */
 end_comment
@@ -68,12 +74,6 @@ name|context
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|struct
@@ -169,20 +169,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|taskqueue
-modifier|*
-name|taskqueue_find
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|taskqueue_free
 parameter_list|(
@@ -226,6 +212,23 @@ name|struct
 name|taskqueue
 modifier|*
 name|queue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|taskqueue_member
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl

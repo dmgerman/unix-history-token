@@ -956,22 +956,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * A tricky piece of code that verifies the contents of a sparse  * archive entry against a description as defined at the top of this  * source file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)< (b) ? (a) : (b))
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -1354,6 +1338,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|actual
 operator|.
 name|s
@@ -1467,14 +1454,14 @@ block|{
 comment|/* Two archives that use the "GNU tar sparse format". */
 name|verify_archive_file
 argument_list|(
-literal|"test_read_format_gtar_sparse_1_13.tgz"
+literal|"test_read_format_gtar_sparse_1_13.tar"
 argument_list|,
 name|files
 argument_list|)
 expr_stmt|;
 name|verify_archive_file
 argument_list|(
-literal|"test_read_format_gtar_sparse_1_17.tgz"
+literal|"test_read_format_gtar_sparse_1_17.tar"
 argument_list|,
 name|files
 argument_list|)
@@ -1495,7 +1482,7 @@ directive|else
 comment|/* 	 * An archive created by GNU tar 1.17 using --posix --sparse-format=0.1 	 */
 name|verify_archive_file
 argument_list|(
-literal|"test_read_format_gtar_sparse_1_17_posix00.tgz"
+literal|"test_read_format_gtar_sparse_1_17_posix00.tar"
 argument_list|,
 name|files
 argument_list|)
@@ -1503,7 +1490,7 @@ expr_stmt|;
 comment|/* 	 * An archive created by GNU tar 1.17 using --posix --sparse-format=0.1 	 */
 name|verify_archive_file
 argument_list|(
-literal|"test_read_format_gtar_sparse_1_17_posix01.tgz"
+literal|"test_read_format_gtar_sparse_1_17_posix01.tar"
 argument_list|,
 name|files
 argument_list|)
@@ -1511,7 +1498,7 @@ expr_stmt|;
 comment|/* 	 * An archive created by GNU tar 1.17 using --posix --sparse-format=1.0 	 */
 name|verify_archive_file
 argument_list|(
-literal|"test_read_format_gtar_sparse_1_17_posix10.tgz"
+literal|"test_read_format_gtar_sparse_1_17_posix10.tar"
 argument_list|,
 name|files
 argument_list|)

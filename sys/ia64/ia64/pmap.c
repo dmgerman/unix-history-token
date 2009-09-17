@@ -6325,7 +6325,7 @@ name|prot
 operator|&
 name|VM_PROT_EXECUTE
 condition|)
-name|ia64_invalidate_icache
+name|ia64_sync_icache
 argument_list|(
 name|sva
 argument_list|,
@@ -6785,7 +6785,7 @@ if|if
 condition|(
 name|icache_inval
 condition|)
-name|ia64_invalidate_icache
+name|ia64_sync_icache
 argument_list|(
 name|va
 argument_list|,
@@ -7208,6 +7208,19 @@ argument_list|,
 name|managed
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|prot
+operator|&
+name|VM_PROT_EXECUTE
+condition|)
+name|ia64_sync_icache
+argument_list|(
+name|va
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -7250,6 +7263,12 @@ operator|->
 name|type
 operator|==
 name|OBJT_DEVICE
+operator|||
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_SG
 argument_list|,
 operator|(
 literal|"pmap_object_init_pt: non-device object"

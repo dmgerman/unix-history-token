@@ -137,13 +137,8 @@ name|flags
 parameter_list|,
 name|file
 parameter_list|)
-define|\
-value|{0,0,0,flags,file,{0},0,__sF+file,__sclose,__sread,__sseek,__swrite}
+value|{		\ 	._flags = (flags),		\ 	._file = (file),		\ 	._cookie = __sF + (file),	\ 	._close = __sclose,		\ 	._read = __sread,		\ 	._seek = __sseek,		\ 	._write = __swrite,		\ }
 end_define
-
-begin_comment
-comment|/*	 p r w flags file _bf z  cookie      close    read    seek    write */
-end_comment
 
 begin_comment
 comment|/* the usual - (stdin + stdout + stderr) */

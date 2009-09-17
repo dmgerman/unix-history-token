@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_ageq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_crypto.h>
 end_include
 
@@ -112,6 +118,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_phy.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_power.h>
 end_include
 
@@ -125,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<net80211/ieee80211_proto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_radiotap.h>
 end_include
 
 begin_include
@@ -401,6 +419,36 @@ name|ieee80211_tdma_param
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_rate_table
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_tx_ampdu
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_rx_ampdu
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_superg
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_frame
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|ieee80211com
@@ -442,22 +490,42 @@ name|ifmedia
 name|ic_media
 decl_stmt|;
 comment|/* interface media config */
-name|uint8_t
-name|ic_myaddr
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
 name|struct
 name|callout
 name|ic_inact
 decl_stmt|;
 comment|/* inactivity processing */
 name|struct
+name|taskqueue
+modifier|*
+name|ic_tq
+decl_stmt|;
+comment|/* deferred state thread */
+name|struct
 name|task
 name|ic_parent_task
 decl_stmt|;
 comment|/* deferred parent processing */
+name|struct
+name|task
+name|ic_promisc_task
+decl_stmt|;
+comment|/* deferred promisc update */
+name|struct
+name|task
+name|ic_mcast_task
+decl_stmt|;
+comment|/* deferred mcast update */
+name|struct
+name|task
+name|ic_chan_task
+decl_stmt|;
+comment|/* deferred channel change */
+name|struct
+name|task
+name|ic_bmiss_task
+decl_stmt|;
+comment|/* deferred beacon miss hndlr */
 name|uint32_t
 name|ic_flags
 decl_stmt|;
@@ -466,6 +534,10 @@ name|uint32_t
 name|ic_flags_ext
 decl_stmt|;
 comment|/* extended state flags */
+name|uint32_t
+name|ic_flags_ht
+decl_stmt|;
+comment|/* HT state flags */
 name|uint32_t
 name|ic_flags_ven
 decl_stmt|;
@@ -564,6 +636,13 @@ modifier|*
 name|ic_curchan
 decl_stmt|;
 comment|/* current channel */
+specifier|const
+name|struct
+name|ieee80211_rate_table
+modifier|*
+name|ic_rt
+decl_stmt|;
+comment|/* table for ic_curchan */
 name|struct
 name|ieee80211_channel
 modifier|*
@@ -599,7 +678,11 @@ modifier|*
 name|ic_csa_newchan
 decl_stmt|;
 comment|/* channel for doing CSA */
-name|int
+name|short
+name|ic_csa_mode
+decl_stmt|;
+comment|/* mode for doing CSA */
+name|short
 name|ic_csa_count
 decl_stmt|;
 comment|/* count for doing CSA */
@@ -632,6 +715,15 @@ name|ieee80211_node_table
 name|ic_sta
 decl_stmt|;
 comment|/* stations/neighbors */
+name|struct
+name|ieee80211_ageq
+name|ic_stageq
+decl_stmt|;
+comment|/* frame staging queue */
+name|uint32_t
+name|ic_hash_key
+decl_stmt|;
+comment|/* random key for mac hash */
 comment|/* XXX multi-bss: split out common/vap parts */
 name|struct
 name|ieee80211_wme_state
@@ -681,6 +773,39 @@ name|int
 name|ic_lastnonht
 decl_stmt|;
 comment|/* last time non-HT sta noted */
+comment|/* optional state for Atheros SuperG protocol extensions */
+name|struct
+name|ieee80211_superg
+modifier|*
+name|ic_superg
+decl_stmt|;
+comment|/* radiotap handling */
+name|struct
+name|ieee80211_radiotap_header
+modifier|*
+name|ic_th
+decl_stmt|;
+comment|/* tx radiotap headers */
+name|void
+modifier|*
+name|ic_txchan
+decl_stmt|;
+comment|/* channel state in ic_th */
+name|struct
+name|ieee80211_radiotap_header
+modifier|*
+name|ic_rh
+decl_stmt|;
+comment|/* rx radiotap headers */
+name|void
+modifier|*
+name|ic_rxchan
+decl_stmt|;
+comment|/* channel state in ic_rh */
+name|int
+name|ic_montaps
+decl_stmt|;
+comment|/* active monitor mode taps */
 comment|/* virtual ap create/delete */
 name|struct
 name|ieee80211vap
@@ -888,6 +1013,8 @@ specifier|const
 name|struct
 name|ieee80211_tdma_param
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* node state management */
@@ -1060,7 +1187,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* 	 * 802.11n ADDBA support.  A simple/generic implementation 	 * of A-MPDU tx aggregation is provided; the driver may 	 * override these methods to provide their own support. 	 * A-MPDU rx re-ordering happens automatically if the 	 * driver passes out-of-order frames to ieee80211_input 	 * from an assocated HT station. 	 */
-name|void
+name|int
 function_decl|(
 modifier|*
 name|ic_recv_action
@@ -1068,6 +1195,11 @@ function_decl|)
 parameter_list|(
 name|struct
 name|ieee80211_node
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame
 modifier|*
 parameter_list|,
 specifier|const
@@ -1097,11 +1229,8 @@ parameter_list|,
 name|int
 name|action
 parameter_list|,
-name|uint16_t
-name|args
-index|[
-literal|4
-index|]
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* check if A-MPDU should be enabled this station+ac */
@@ -1203,6 +1332,52 @@ name|int
 name|status
 parameter_list|)
 function_decl|;
+comment|/* start/stop doing A-MPDU rx processing for a station */
+name|int
+function_decl|(
+modifier|*
+name|ic_ampdu_rx_start
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_rx_ampdu
+modifier|*
+parameter_list|,
+name|int
+name|baparamset
+parameter_list|,
+name|int
+name|batimeout
+parameter_list|,
+name|int
+name|baseqctl
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ic_ampdu_rx_stop
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_rx_ampdu
+modifier|*
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|ic_spare
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1216,6 +1391,18 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|ieee80211_tdma_state
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_mesh_state
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_hwmp_state
 struct_decl|;
 end_struct_decl
 
@@ -1289,6 +1476,10 @@ name|iv_flags_ext
 decl_stmt|;
 comment|/* extended state flags */
 name|uint32_t
+name|iv_flags_ht
+decl_stmt|;
+comment|/* HT state flags */
+name|uint32_t
 name|iv_flags_ven
 decl_stmt|;
 comment|/* vendor state flags */
@@ -1310,22 +1501,25 @@ name|ieee80211_state
 name|iv_state
 decl_stmt|;
 comment|/* state machine state */
-name|void
-function_decl|(
-modifier|*
-name|iv_newstate_cb
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211vap
-modifier|*
-parameter_list|,
 name|enum
 name|ieee80211_state
-parameter_list|,
+name|iv_nstate
+decl_stmt|;
+comment|/* pending state */
 name|int
-parameter_list|)
-function_decl|;
+name|iv_nstate_arg
+decl_stmt|;
+comment|/* pending state arg */
+name|struct
+name|task
+name|iv_nstate_task
+decl_stmt|;
+comment|/* deferred state processing */
+name|struct
+name|task
+name|iv_swbmiss_task
+decl_stmt|;
+comment|/* deferred iv_bmiss call */
 name|struct
 name|callout
 name|iv_mgtsend
@@ -1715,6 +1909,18 @@ modifier|*
 name|iv_tdma
 decl_stmt|;
 comment|/* tdma state */
+name|struct
+name|ieee80211_mesh_state
+modifier|*
+name|iv_mesh
+decl_stmt|;
+comment|/* MBSS state */
+name|struct
+name|ieee80211_hwmp_state
+modifier|*
+name|iv_hwmp
+decl_stmt|;
+comment|/* HWMP state */
 comment|/* operate-mode detach hook */
 name|void
 function_decl|(
@@ -1743,13 +1949,8 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|int
-name|rssi
 parameter_list|,
 name|int
-name|noise
-parameter_list|,
-name|uint32_t
-name|rstamp
 parameter_list|)
 function_decl|;
 name|void
@@ -1771,8 +1972,23 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|iv_recv_ctl
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
 parameter_list|,
-name|uint32_t
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 name|void
@@ -1905,10 +2121,16 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
+name|uint64_t
+name|iv_spare
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2355,17 +2577,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_NONHT_PR
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* STATUS: non-HT sta present */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_FEXT_INACT
 value|0x00000002
 end_define
@@ -2447,6 +2658,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FEXT_4ADDR
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* CONF: apply 4-addr encap */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FEXT_NONERP_PR
 value|0x00000200
 end_define
@@ -2488,6 +2710,39 @@ begin_comment
 comment|/* CONF: 11d enabled */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_STATEWAIT
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* STATUS: awaiting state chg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_REINIT
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* STATUS: INIT state first */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_BPF
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* STATUS: BPF tap present */
+end_comment
+
 begin_comment
 comment|/* NB: immutable: should be set only when creating a vap */
 end_comment
@@ -2517,7 +2772,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FEXT_BITS
+define|\
+value|"\20\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN"
+end_define
+
+begin_comment
+comment|/* ic_flags_ht/iv_flags_ht */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_NONHT_PR
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* STATUS: non-HT sta present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_GF
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* CONF: Greenfield enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_HT
 value|0x00080000
 end_define
 
@@ -2528,7 +2817,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_AMPDU_TX
+name|IEEE80211_FHT_AMPDU_TX
 value|0x00100000
 end_define
 
@@ -2539,18 +2828,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_AMPDU_RX
+name|IEEE80211_FHT_AMPDU_RX
 value|0x00200000
 end_define
 
 begin_comment
-comment|/* CONF: A-MPDU tx supported */
+comment|/* CONF: A-MPDU rx supported */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_AMSDU_TX
+name|IEEE80211_FHT_AMSDU_TX
 value|0x00400000
 end_define
 
@@ -2561,18 +2850,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_AMSDU_RX
+name|IEEE80211_FHT_AMSDU_RX
 value|0x00800000
 end_define
 
 begin_comment
-comment|/* CONF: A-MSDU tx supported */
+comment|/* CONF: A-MSDU rx supported */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_USEHT40
+name|IEEE80211_FHT_USEHT40
 value|0x01000000
 end_define
 
@@ -2583,7 +2872,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_PUREN
+name|IEEE80211_FHT_PUREN
 value|0x02000000
 end_define
 
@@ -2594,7 +2883,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_SHORTGI20
+name|IEEE80211_FHT_SHORTGI20
 value|0x04000000
 end_define
 
@@ -2605,7 +2894,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_SHORTGI40
+name|IEEE80211_FHT_SHORTGI40
 value|0x08000000
 end_define
 
@@ -2616,7 +2905,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_HTCOMPAT
+name|IEEE80211_FHT_HTCOMPAT
 value|0x10000000
 end_define
 
@@ -2627,7 +2916,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_RIFS
+name|IEEE80211_FHT_RIFS
 value|0x20000000
 end_define
 
@@ -2638,9 +2927,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_BITS
+name|IEEE80211_FHT_STBC_TX
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* CONF: STBC tx enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_STBC_RX
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* CONF: STBC rx enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_BITS
 define|\
-value|"\20\1NONHT_PR\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\22WDSLEGACY\23PROBECHAN\24HT" \ 	"\25AMDPU_TX\26AMPDU_TX\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN" \ 	"\33SHORTGI20\34SHORTGI40\35HTCOMPAT\36RIFS"
+value|"\20\1NONHT_PR" \ 	"\23GF\24HT\25AMDPU_TX\26AMPDU_TX" \ 	"\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40" \ 	"\35HTCOMPAT\36RIFS\37STBC_TX\40STBC_RX"
 end_define
 
 begin_define
@@ -2655,7 +2966,7 @@ comment|/* ic_caps/iv_caps: device driver capabilities */
 end_comment
 
 begin_comment
-comment|/* 0x2f available */
+comment|/* 0x2e available */
 end_comment
 
 begin_define
@@ -2667,6 +2978,17 @@ end_define
 
 begin_comment
 comment|/* CAPABILITY: STA available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_8023ENCAP
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* CAPABILITY: 802.3 encap */
 end_comment
 
 begin_define
@@ -2801,6 +3123,17 @@ begin_comment
 comment|/* CAPABILITY: DFS/radar avail*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_MBSS
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: MBSS available */
+end_comment
+
 begin_comment
 comment|/* 0x7c0000 available */
 end_comment
@@ -2917,7 +3250,7 @@ define|#
 directive|define
 name|IEEE80211_C_OPMODE
 define|\
-value|(IEEE80211_C_STA | IEEE80211_C_IBSS | IEEE80211_C_HOSTAP | \ 	 IEEE80211_C_AHDEMO | IEEE80211_C_MONITOR | IEEE80211_C_WDS | \ 	 IEEE80211_C_TDMA)
+value|(IEEE80211_C_STA | IEEE80211_C_IBSS | IEEE80211_C_HOSTAP | \ 	 IEEE80211_C_AHDEMO | IEEE80211_C_MONITOR | IEEE80211_C_WDS | \ 	 IEEE80211_C_TDMA | IEEE80211_C_MBSS)
 end_define
 
 begin_define
@@ -2925,7 +3258,7 @@ define|#
 directive|define
 name|IEEE80211_C_BITS
 define|\
-value|"\20\1STA\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
+value|"\20\1STA\002803ENCAP\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\23MBSS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
 end_define
 
 begin_comment
@@ -3006,6 +3339,13 @@ parameter_list|(
 name|struct
 name|ieee80211com
 modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3341,6 +3681,273 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint32_t
+name|ieee80211_mac_hash
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+name|addr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_radiotap_attach
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_radiotap_header
+modifier|*
+name|th
+parameter_list|,
+name|int
+name|tlen
+parameter_list|,
+name|uint32_t
+name|tx_radiotap
+parameter_list|,
+name|struct
+name|ieee80211_radiotap_header
+modifier|*
+name|rh
+parameter_list|,
+name|int
+name|rlen
+parameter_list|,
+name|uint32_t
+name|rx_radiotap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_radiotap_detach
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_radiotap_vattach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_radiotap_vdetach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_radiotap_chan_change
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_radiotap_tx
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_radiotap_rx
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_radiotap_rx_all
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|ieee80211_radiotap_active
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ic
+operator|->
+name|ic_flags_ext
+operator|&
+name|IEEE80211_FEXT_BPF
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|ieee80211_radiotap_active_vap
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_BPF
+operator|)
+operator|||
+name|vap
+operator|->
+name|iv_ic
+operator|->
+name|ic_montaps
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Enqueue a task on the state thread.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ieee80211_runtask
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|struct
+name|task
+modifier|*
+name|task
+parameter_list|)
+block|{
+name|taskqueue_enqueue
+argument_list|(
+name|ic
+operator|->
+name|ic_tq
+argument_list|,
+name|task
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Wait for a queued task to complete.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ieee80211_draintask
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|struct
+name|task
+modifier|*
+name|task
+parameter_list|)
+block|{
+name|taskqueue_drain
+argument_list|(
+name|ic
+operator|->
+name|ic_tq
+argument_list|,
+name|task
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*   * Key update synchronization methods.  XXX should not be visible.  */
 end_comment
@@ -3543,7 +4150,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Calculate HT channel promotion flags for a channel.  * XXX belongs in ieee80211_ht.h but needs IEEE80211_FEXT_*  */
+comment|/*  * Calculate HT channel promotion flags for a channel.  * XXX belongs in ieee80211_ht.h but needs IEEE80211_FHT_*  */
 end_comment
 
 begin_function
@@ -3565,16 +4172,16 @@ argument_list|(
 name|c
 argument_list|)
 condition|?
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 operator||
-name|IEEE80211_FEXT_USEHT40
+name|IEEE80211_FHT_USEHT40
 else|:
 name|IEEE80211_IS_CHAN_HT
 argument_list|(
 name|c
 argument_list|)
 condition|?
-name|IEEE80211_FEXT_HT
+name|IEEE80211_FHT_HT
 else|:
 literal|0
 return|;
@@ -3582,7 +4189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Debugging facilities compiled in when IEEE80211_DEBUG is defined.  *  * The intent is that any problem in the net80211 layer can be  * diagnosed by inspecting the statistics (dumped by the wlanstats  * program) and/or the msgs generated by net80211.  Messages are  * broken into functional classes and can be controlled with the  * wlandebug program.  Certain of these msg groups are for facilities  * that are no longer part of net80211 (e.g. IEEE80211_MSG_DOT1X).  */
+comment|/*  * Debugging facilities compiled in when IEEE80211_DEBUG is defined.  *  * The intent is that any problem in the net80211 layer can be  * diagnosed by inspecting the statistics (dumped by the wlanstats  * program) and/or the msgs generated by net80211.  Messages are  * broken into functional classes and can be controlled with the  * wlandebug program.  Certain of these msg groups are for facilities  * that are no longer part of net80211 (e.g. IEEE80211_MSG_DOT1XSM).  */
 end_comment
 
 begin_define
@@ -3742,12 +4349,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MSG_DOT1X
+name|IEEE80211_MSG_HWMP
 value|0x00020000
 end_define
 
 begin_comment
-comment|/* 802.1x authenticator */
+comment|/* hybrid mesh protocol */
 end_comment
 
 begin_define
@@ -3786,12 +4393,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MSG_RADKEYS
+name|IEEE80211_MSG_MESH
 value|0x00002000
 end_define
 
 begin_comment
-comment|/* dump 802.1x keys */
+comment|/* mesh networking */
 end_comment
 
 begin_define
@@ -3942,7 +4549,7 @@ define|#
 directive|define
 name|IEEE80211_MSG_BITS
 define|\
-value|"\20\2TDMA\3IOCTL\4WDS\5ACTION\6RATECTL\7ROAM\10INACT\11DOTH\12SUPERG" \ 	"\13WME\14ACL\15WPA\16RADKEYS\17RADDUMP\20RADIUS\21DOT1XSM\22DOT1X" \ 	"\23POWER\24STATE\25OUTPUT\26SCAN\27AUTH\30ASSOC\31NODE\32ELEMID" \ 	"\33XRATE\34INPUT\35CRYPTO\36DUPMPKTS\37DEBUG\04011N"
+value|"\20\2TDMA\3IOCTL\4WDS\5ACTION\6RATECTL\7ROAM\10INACT\11DOTH\12SUPERG" \ 	"\13WME\14ACL\15WPA\16RADKEYS\17RADDUMP\20RADIUS\21DOT1XSM\22HWMP" \ 	"\23POWER\24STATE\25OUTPUT\26SCAN\27AUTH\30ASSOC\31NODE\32ELEMID" \ 	"\33XRATE\34INPUT\35CRYPTO\36DUPMPKTS\37DEBUG\04011N"
 end_define
 
 begin_ifdef

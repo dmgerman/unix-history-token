@@ -407,17 +407,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|MMAXOPTIONLEN
-value|65536
-end_define
-
-begin_comment
-comment|/* maximum length of a mount option */
-end_comment
-
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
@@ -428,17 +417,50 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|vfsoptlist
-struct_decl|;
-end_struct_decl
+begin_comment
+comment|/* Mount options list */
+end_comment
 
-begin_struct_decl
-struct_decl|struct
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|vfsoptlist
+argument_list|,
 name|vfsopt
-struct_decl|;
-end_struct_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|vfsopt
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|vfsopt
+argument_list|)
+name|link
+expr_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|void
+modifier|*
+name|value
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+name|int
+name|pos
+decl_stmt|;
+name|int
+name|seen
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
@@ -517,6 +539,10 @@ name|u_int
 name|mnt_flag
 decl_stmt|;
 comment|/* (i) flags shared with user */
+name|u_int
+name|mnt_xflag
+decl_stmt|;
+comment|/* (i) more flags shared with user */
 name|u_int
 name|mnt_noasync
 decl_stmt|;
@@ -782,7 +808,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * User specifiable flags.  */
+comment|/*  * User specifiable flags, stored in mnt_flag.  */
 end_comment
 
 begin_define
@@ -1262,6 +1288,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_EXTENDED_SHARED
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Allow shared locking for more ops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_SHARED_WRITES
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Allow shared locking for writes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_UNMOUNT
 value|0x01000000
 end_define
@@ -1328,6 +1376,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_LOOKUP_SHARED
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* FS supports shared lock lookups */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_NOKNOTE
 value|0x80000000
 end_define
@@ -1339,13 +1398,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNTK_LOOKUP_SHARED
-value|0x40000000
+name|MNT_SHARED_WRITES
+parameter_list|(
+name|mp
+parameter_list|)
+value|(((mp) != NULL)&& 	\ 				((mp)->mnt_kern_flag& MNTK_SHARED_WRITES))
 end_define
-
-begin_comment
-comment|/* FS supports shared lock lookups */
-end_comment
 
 begin_comment
 comment|/*  * Sysctl CTL_VFS definitions.  *  * Second level identifier specifies which filesystem. Second level  * identifier VFS_VFSCONF returns information about all filesystems.  * Second level identifier VFS_GENERIC is non-terminal.  */
@@ -2321,11 +2379,6 @@ name|data
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2342,11 +2395,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2369,11 +2417,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2397,11 +2440,6 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2420,11 +2458,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2441,11 +2474,6 @@ name|mp
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2585,11 +2613,6 @@ specifier|const
 name|char
 modifier|*
 name|attrname
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2603,11 +2626,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2726,10 +2744,8 @@ directive|define
 name|VFS_MOUNT
 parameter_list|(
 name|MP
-parameter_list|,
-name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_mount)(MP, P)
+value|(*(MP)->mnt_op->vfs_mount)(MP)
 end_define
 
 begin_define
@@ -2740,10 +2756,8 @@ parameter_list|(
 name|MP
 parameter_list|,
 name|FORCE
-parameter_list|,
-name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_unmount)(MP, FORCE, P)
+value|(*(MP)->mnt_op->vfs_unmount)(MP, FORCE)
 end_define
 
 begin_define
@@ -2756,11 +2770,9 @@ parameter_list|,
 name|FLAGS
 parameter_list|,
 name|VPP
-parameter_list|,
-name|P
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_root)(MP, FLAGS, VPP, P)
+value|(*(MP)->mnt_op->vfs_root)(MP, FLAGS, VPP)
 end_define
 
 begin_define
@@ -2775,10 +2787,9 @@ parameter_list|,
 name|U
 parameter_list|,
 name|A
-parameter_list|,
-name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_quotactl)(MP, C, U, A, P)
+define|\
+value|(*(MP)->mnt_op->vfs_quotactl)(MP, C, U, A)
 end_define
 
 begin_define
@@ -2789,10 +2800,8 @@ parameter_list|(
 name|MP
 parameter_list|,
 name|SBP
-parameter_list|,
-name|P
 parameter_list|)
-value|__vfs_statfs((MP), (SBP), (P))
+value|__vfs_statfs((MP), (SBP))
 end_define
 
 begin_define
@@ -2803,10 +2812,8 @@ parameter_list|(
 name|MP
 parameter_list|,
 name|WAIT
-parameter_list|,
-name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_sync)(MP, WAIT, P)
+value|(*(MP)->mnt_op->vfs_sync)(MP, WAIT)
 end_define
 
 begin_define
@@ -2876,11 +2883,9 @@ parameter_list|,
 name|NS
 parameter_list|,
 name|N
-parameter_list|,
-name|P
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_extattrctl)(MP, C, FN, NS, N, P)
+value|(*(MP)->mnt_op->vfs_extattrctl)(MP, C, FN, NS, N)
 end_define
 
 begin_define
@@ -2909,13 +2914,6 @@ define|\
 value|({if (*(MP)->mnt_op->vfs_susp_clean != NULL)		\ 	       (*(MP)->mnt_op->vfs_susp_clean)(MP); })
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|mpsafe_vfs
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -2924,7 +2922,7 @@ parameter_list|(
 name|MP
 parameter_list|)
 define|\
-value|(!mpsafe_vfs || ((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0))
+value|((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0)
 end_define
 
 begin_define
@@ -2976,7 +2974,7 @@ name|vp
 parameter_list|,
 name|hint
 parameter_list|)
-value|do					\ {									\ 	if (((vp)->v_vflag& VV_NOKNOTE) == 0)				\ 		VN_KNOTE((vp), (hint), 1);				\ } while (0)
+value|do					\ {									\ 	if (((vp)->v_vflag& VV_NOKNOTE) == 0)				\ 		VN_KNOTE((vp), (hint), KNF_LISTLOCKED);			\ } while (0)
 end_define
 
 begin_define
@@ -3293,6 +3291,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vfs_buildopts
+parameter_list|(
+name|struct
+name|uio
+modifier|*
+name|auio
+parameter_list|,
+name|struct
+name|vfsoptlist
+modifier|*
+modifier|*
+name|options
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vfs_flagopt
 parameter_list|(
 name|struct
@@ -3333,6 +3349,23 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vfs_getopt_pos
+parameter_list|(
+name|struct
+name|vfsoptlist
+modifier|*
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3395,6 +3428,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vfs_opterror
+parameter_list|(
+name|struct
+name|vfsoptlist
+modifier|*
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vfs_scanopt
 parameter_list|(
@@ -3414,6 +3466,76 @@ modifier|*
 name|fmt
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vfs_setopt
+parameter_list|(
+name|struct
+name|vfsoptlist
+modifier|*
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|value
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vfs_setopt_part
+parameter_list|(
+name|struct
+name|vfsoptlist
+modifier|*
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|value
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vfs_setopts
+parameter_list|(
+name|struct
+name|vfsoptlist
+modifier|*
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|value
 parameter_list|)
 function_decl|;
 end_function_decl

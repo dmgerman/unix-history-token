@@ -435,25 +435,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|fxp_ident
-block|{
-name|uint16_t
-name|devid
-decl_stmt|;
-name|int16_t
-name|revid
-decl_stmt|;
-comment|/* -1 matches anything */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Claim various Intel PCI device identifiers for this driver.  The  * sub-vendor and sub-device field are extensively used to identify  * particular variants, but we don't currently differentiate between  * them.  */
 end_comment
@@ -472,6 +453,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|0
+block|,
 literal|"Intel 82559 PCI/CardBus Pro/100"
 block|}
 block|,
@@ -480,6 +463,8 @@ literal|0x1030
 block|,
 operator|-
 literal|1
+block|,
+literal|0
 block|,
 literal|"Intel 82559 Pro/100 Ethernet"
 block|}
@@ -490,6 +475,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|3
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VE Ethernet"
 block|}
 block|,
@@ -498,6 +485,8 @@ literal|0x1032
 block|,
 operator|-
 literal|1
+block|,
+literal|3
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VE Ethernet"
 block|}
@@ -508,6 +497,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|3
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
 block|,
@@ -516,6 +507,8 @@ literal|0x1034
 block|,
 operator|-
 literal|1
+block|,
+literal|3
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
@@ -526,6 +519,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|3
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
 block|,
@@ -534,6 +529,8 @@ literal|0x1036
 block|,
 operator|-
 literal|1
+block|,
+literal|3
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
@@ -544,6 +541,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|3
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
 block|,
@@ -552,6 +551,8 @@ literal|0x1038
 block|,
 operator|-
 literal|1
+block|,
+literal|3
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
@@ -562,6 +563,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|4
+block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VE Ethernet"
 block|}
 block|,
@@ -570,6 +573,8 @@ literal|0x103A
 block|,
 operator|-
 literal|1
+block|,
+literal|4
 block|,
 literal|"Intel 82801DB (ICH4) Pro/100 Ethernet"
 block|}
@@ -580,6 +585,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|4
+block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VM Ethernet"
 block|}
 block|,
@@ -588,6 +595,8 @@ literal|0x103C
 block|,
 operator|-
 literal|1
+block|,
+literal|4
 block|,
 literal|"Intel 82801DB (ICH4) Pro/100 Ethernet"
 block|}
@@ -598,6 +607,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|4
+block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VE Ethernet"
 block|}
 block|,
@@ -606,6 +617,8 @@ literal|0x103E
 block|,
 operator|-
 literal|1
+block|,
+literal|4
 block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VM Ethernet"
 block|}
@@ -616,6 +629,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|5
+block|,
 literal|"Intel 82801BA (D865) Pro/100 VE Ethernet"
 block|}
 block|,
@@ -624,6 +639,8 @@ literal|0x1051
 block|,
 operator|-
 literal|1
+block|,
+literal|5
 block|,
 literal|"Intel 82562ET (ICH5/ICH5R) Pro/100 VE Ethernet"
 block|}
@@ -634,6 +651,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|0
+block|,
 literal|"Intel 82551QM Pro/100 M Mobile Connection"
 block|}
 block|,
@@ -642,6 +661,8 @@ literal|0x1064
 block|,
 operator|-
 literal|1
+block|,
+literal|6
 block|,
 literal|"Intel 82562EZ (ICH6)"
 block|}
@@ -652,6 +673,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|6
+block|,
 literal|"Intel 82562ET/EZ/GT/GZ PRO/100 VE Ethernet"
 block|}
 block|,
@@ -660,6 +683,8 @@ literal|0x1068
 block|,
 operator|-
 literal|1
+block|,
+literal|6
 block|,
 literal|"Intel 82801FBM (ICH6-M) Pro/100 VE Ethernet"
 block|}
@@ -670,6 +695,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|6
+block|,
 literal|"Intel 82562EM/EX/GX Pro/100 Ethernet"
 block|}
 block|,
@@ -678,6 +705,8 @@ literal|0x1091
 block|,
 operator|-
 literal|1
+block|,
+literal|7
 block|,
 literal|"Intel 82562GX Pro/100 Ethernet"
 block|}
@@ -688,6 +717,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|7
+block|,
 literal|"Intel Pro/100 VE Network Connection"
 block|}
 block|,
@@ -696,6 +727,8 @@ literal|0x1093
 block|,
 operator|-
 literal|1
+block|,
+literal|7
 block|,
 literal|"Intel Pro/100 VM Network Connection"
 block|}
@@ -706,6 +739,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|7
+block|,
 literal|"Intel Pro/100 946GZ (ICH7) Network Connection"
 block|}
 block|,
@@ -715,6 +750,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|0
+block|,
 literal|"Intel 82559ER Embedded 10/100 Ethernet"
 block|}
 block|,
@@ -722,6 +759,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x01
+block|,
+literal|0
 block|,
 literal|"Intel 82557 Pro/100 Ethernet"
 block|}
@@ -731,6 +770,8 @@ literal|0x1229
 block|,
 literal|0x02
 block|,
+literal|0
+block|,
 literal|"Intel 82557 Pro/100 Ethernet"
 block|}
 block|,
@@ -738,6 +779,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x03
+block|,
+literal|0
 block|,
 literal|"Intel 82557 Pro/100 Ethernet"
 block|}
@@ -747,6 +790,8 @@ literal|0x1229
 block|,
 literal|0x04
 block|,
+literal|0
+block|,
 literal|"Intel 82558 Pro/100 Ethernet"
 block|}
 block|,
@@ -754,6 +799,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x05
+block|,
+literal|0
 block|,
 literal|"Intel 82558 Pro/100 Ethernet"
 block|}
@@ -763,6 +810,8 @@ literal|0x1229
 block|,
 literal|0x06
 block|,
+literal|0
+block|,
 literal|"Intel 82559 Pro/100 Ethernet"
 block|}
 block|,
@@ -770,6 +819,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x07
+block|,
+literal|0
 block|,
 literal|"Intel 82559 Pro/100 Ethernet"
 block|}
@@ -779,6 +830,8 @@ literal|0x1229
 block|,
 literal|0x08
 block|,
+literal|0
+block|,
 literal|"Intel 82559 Pro/100 Ethernet"
 block|}
 block|,
@@ -786,6 +839,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x09
+block|,
+literal|0
 block|,
 literal|"Intel 82559ER Pro/100 Ethernet"
 block|}
@@ -795,6 +850,8 @@ literal|0x1229
 block|,
 literal|0x0c
 block|,
+literal|0
+block|,
 literal|"Intel 82550 Pro/100 Ethernet"
 block|}
 block|,
@@ -802,6 +859,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x0d
+block|,
+literal|0
 block|,
 literal|"Intel 82550 Pro/100 Ethernet"
 block|}
@@ -811,6 +870,8 @@ literal|0x1229
 block|,
 literal|0x0e
 block|,
+literal|0
+block|,
 literal|"Intel 82550 Pro/100 Ethernet"
 block|}
 block|,
@@ -818,6 +879,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x0f
+block|,
+literal|0
 block|,
 literal|"Intel 82551 Pro/100 Ethernet"
 block|}
@@ -827,6 +890,8 @@ literal|0x1229
 block|,
 literal|0x10
 block|,
+literal|0
+block|,
 literal|"Intel 82551 Pro/100 Ethernet"
 block|}
 block|,
@@ -835,6 +900,8 @@ literal|0x1229
 block|,
 operator|-
 literal|1
+block|,
+literal|0
 block|,
 literal|"Intel 82557/8/9 Pro/100 Ethernet"
 block|}
@@ -845,6 +912,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|2
+block|,
 literal|"Intel 82801BA/CAM (ICH2/3) Pro/100 Ethernet"
 block|}
 block|,
@@ -854,6 +923,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|7
+block|,
 literal|"Intel 82801GB (ICH7) 10/100 Ethernet"
 block|}
 block|,
@@ -862,6 +933,8 @@ literal|0
 block|,
 operator|-
 literal|1
+block|,
+literal|0
 block|,
 name|NULL
 block|}
@@ -967,6 +1040,19 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|struct
+name|fxp_ident
+modifier|*
+name|fxp_find_ident
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|fxp_intr
 parameter_list|(
@@ -1008,7 +1094,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fxp_intr_body
 parameter_list|(
 name|struct
@@ -1682,24 +1768,6 @@ end_expr_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|fxp
-argument_list|,
-name|cardbus
-argument_list|,
-name|fxp_driver
-argument_list|,
-name|fxp_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
 name|miibus
 argument_list|,
 name|fxp
@@ -1989,34 +2057,20 @@ parameter_list|)
 block|{
 name|int
 name|i
-init|=
-literal|10000
 decl_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|dmat
-argument_list|,
-name|map
-argument_list|,
-name|BUS_DMASYNC_POSTREAD
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|!
-operator|(
-name|le16toh
-argument_list|(
-operator|*
-name|status
-argument_list|)
-operator|&
-name|FXP_CB_STATUS_C
-operator|)
-operator|&&
-operator|--
+for|for
+control|(
 name|i
-condition|)
+operator|=
+literal|10000
+init|;
+name|i
+operator|>
+literal|0
+condition|;
+name|i
+operator|--
+control|)
 block|{
 name|DELAY
 argument_list|(
@@ -2030,8 +2084,25 @@ argument_list|,
 name|map
 argument_list|,
 name|BUS_DMASYNC_POSTREAD
+operator||
+name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|le16toh
+argument_list|(
+operator|*
+name|status
+argument_list|)
+operator|&
+name|FXP_CB_STATUS_C
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
 block|}
 if|if
 condition|(
@@ -2051,14 +2122,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Return identification string if this device is ours.  */
-end_comment
-
 begin_function
 specifier|static
-name|int
-name|fxp_probe
+name|struct
+name|fxp_ident
+modifier|*
+name|fxp_find_ident
 parameter_list|(
 name|device_t
 name|dev
@@ -2139,6 +2208,54 @@ literal|1
 operator|)
 condition|)
 block|{
+return|return
+operator|(
+name|ident
+operator|)
+return|;
+block|}
+block|}
+block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return identification string if this device is ours.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|fxp_probe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|fxp_ident
+modifier|*
+name|ident
+decl_stmt|;
+name|ident
+operator|=
+name|fxp_find_ident
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ident
+operator|!=
+name|NULL
+condition|)
+block|{
 name|device_set_desc
 argument_list|(
 name|dev
@@ -2153,8 +2270,6 @@ operator|(
 name|BUS_PROBE_DEFAULT
 operator|)
 return|;
-block|}
-block|}
 block|}
 return|return
 operator|(
@@ -2536,7 +2651,7 @@ literal|"I/O"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Reset to a stable state. 	 */
+comment|/* 	 * Put CU/RU idle state and prepare full reset. 	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -2551,6 +2666,30 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+comment|/* Full reset and disable interrupts. */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_PORT
+argument_list|,
+name|FXP_PORT_SOFTWARE_RESET
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_INTRCNTL
+argument_list|,
+name|FXP_SCB_INTR_DISABLE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Find out how large of an SEEPROM we have. 	 */
 name|fxp_autosize_eeprom
 argument_list|(
@@ -2558,6 +2697,36 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find out the chip revision; lump all 82557 revs together. 	 */
+name|sc
+operator|->
+name|ident
+operator|=
+name|fxp_find_ident
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Assume ICH controllers are 82559. */
+name|sc
+operator|->
+name|revision
+operator|=
+name|FXP_REV_82559_A0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fxp_read_eeprom
 argument_list|(
 name|sc
@@ -2596,6 +2765,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Check availability of WOL. 82559ER does not support WOL. 	 */
 if|if
 condition|(
@@ -2653,6 +2823,44 @@ operator|->
 name|flags
 operator||=
 name|FXP_FLAG_WOLCAP
+expr_stmt|;
+block|}
+comment|/* Receiver lock-up workaround detection. */
+name|fxp_read_eeprom
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|data
+argument_list|,
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|data
+operator|&
+literal|0x03
+operator|)
+operator|!=
+literal|0x03
+condition|)
+block|{
+name|sc
+operator|->
+name|flags
+operator||=
+name|FXP_FLAG_RXBUG
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Enabling Rx lock-up workaround\n"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Determine whether we must use the 503 serial interface. 	 */
@@ -2927,34 +3135,41 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Enable workarounds for certain chip revision deficiencies. 	 * 	 * Systems based on the ICH2/ICH2-M chip from Intel, and possibly 	 * some systems based a normal 82559 design, have a defect where 	 * the chip can cause a PCI protocol violation if it receives 	 * a CU_RESUME command when it is entering the IDLE state.  The 	 * workaround is to disable Dynamic Standby Mode, so the chip never 	 * deasserts CLKRUN#, and always remains in an active state. 	 * 	 * See Intel 82801BA/82801BAM Specification Update, Errata #30. 	 */
-name|i
-operator|=
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|i
-operator|==
-literal|0x2449
-operator|||
 operator|(
-name|i
-operator|>
-literal|0x1030
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|>=
+literal|2
 operator|&&
-name|i
-operator|<
-literal|0x1039
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|<=
+literal|3
 operator|)
 operator|||
+operator|(
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|==
+literal|0
+operator|&&
 name|sc
 operator|->
 name|revision
 operator|>=
 name|FXP_REV_82559_A0
+operator|)
 condition|)
 block|{
 name|fxp_read_eeprom
@@ -3375,7 +3590,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|)
 expr_stmt|;
 if|if
@@ -3387,7 +3602,63 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not create TX DMA tag\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+name|error
+operator|=
+name|bus_dma_tag_create
+argument_list|(
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+name|BUS_SPACE_MAXADDR_32BIT
+argument_list|,
+name|BUS_SPACE_MAXADDR
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|MCLBYTES
+argument_list|,
+literal|1
+argument_list|,
+name|MCLBYTES
+argument_list|,
+literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|fxp_rxmtag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not create RX DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3451,7 +3722,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not create stats DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3490,9 +3761,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not allocate stats DMA memory\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|error
 operator|=
 name|bus_dmamap_load
@@ -3534,7 +3814,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not map the stats buffer\n"
+literal|"could not load the stats DMA buffer\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3590,7 +3870,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not create TxCB DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3631,9 +3911,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not allocate TxCB DMA memory\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|error
 operator|=
 name|bus_dmamap_load
@@ -3675,7 +3964,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not map DMA memory\n"
+literal|"could not load TxCB DMA buffer\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3739,7 +4028,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not create multicast setup DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3765,6 +4054,8 @@ operator|->
 name|mcsp
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|sc
@@ -3776,9 +4067,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not allocate multicast setup DMA memory\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|error
 operator|=
 name|bus_dmamap_load
@@ -3820,7 +4120,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"can't map the multicast setup command\n"
+literal|"can't load the multicast setup DMA buffer\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3875,7 +4175,7 @@ name|bus_dmamap_create
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 literal|0
 argument_list|,
@@ -3911,7 +4211,7 @@ name|bus_dmamap_create
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 literal|0
 argument_list|,
@@ -3984,7 +4284,7 @@ name|bus_dmamap_create
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 literal|0
 argument_list|,
@@ -4833,7 +5133,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 condition|)
 block|{
 for|for
@@ -4875,7 +5175,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -4888,7 +5188,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -4907,7 +5207,7 @@ name|bus_dmamap_destroy
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -4919,13 +5219,28 @@ name|bus_dmamap_destroy
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|sc
 operator|->
 name|spare_map
 argument_list|)
 expr_stmt|;
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|fxp_rxmtag
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|fxp_txmtag
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -4965,7 +5280,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -4978,7 +5293,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -4997,7 +5312,7 @@ name|bus_dmamap_destroy
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -5009,7 +5324,7 @@ name|bus_dma_tag_destroy
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|)
 expr_stmt|;
 block|}
@@ -5126,13 +5441,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|suspended
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Do same thing as we do for suspend */
 comment|/* 	 * Stop DMA and drop transmit queue, but disable interrupts first. 	 */
 name|CSR_WRITE_1
 argument_list|(
@@ -6398,12 +6706,21 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * See if we need to suspend xmit until the multicast filter 	 * has been reprogrammed (which can only be done at the head 	 * of the command chain). 	 */
 if|if
 condition|(
-name|sc
+operator|(
+name|ifp
 operator|->
-name|need_mcsetup
+name|if_drv_flags
+operator|&
+operator|(
+name|IFF_DRV_RUNNING
+operator||
+name|IFF_DRV_OACTIVE
+operator|)
+operator|)
+operator|!=
+name|IFF_DRV_RUNNING
 condition|)
 return|return;
 if|if
@@ -6527,6 +6844,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -7145,9 +7464,27 @@ name|ip_len
 operator|=
 name|htons
 argument_list|(
-name|ifp
+name|m
 operator|->
-name|if_mtu
+name|m_pkthdr
+operator|.
+name|tso_segsz
+operator|+
+operator|(
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+operator|)
+operator|+
+operator|(
+name|tcp
+operator|->
+name|th_off
+operator|<<
+literal|2
+operator|)
 argument_list|)
 expr_stmt|;
 name|tcp
@@ -7227,7 +7564,7 @@ name|bus_dmamap_load_mbuf_sg
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -7300,7 +7637,7 @@ name|bus_dmamap_load_mbuf_sg
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -7395,7 +7732,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -7844,7 +8181,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fxp_poll
 parameter_list|(
 name|struct
@@ -7872,6 +8209,11 @@ decl_stmt|;
 name|uint8_t
 name|statack
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|FXP_LOCK
 argument_list|(
 name|sc
@@ -7894,7 +8236,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 name|statack
 operator|=
@@ -7939,7 +8285,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 comment|/* nothing to do */
 block|}
 name|tmp
@@ -7968,6 +8318,8 @@ operator||=
 name|tmp
 expr_stmt|;
 block|}
+name|rx_npkts
+operator|=
 name|fxp_intr_body
 argument_list|(
 name|sc
@@ -7984,6 +8336,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -8110,6 +8467,18 @@ argument_list|,
 name|statack
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
+condition|)
 name|fxp_intr_body
 argument_list|(
 name|sc
@@ -8168,7 +8537,9 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_POSTREAD
+operator||
+name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
 for|for
@@ -8220,7 +8591,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -8233,7 +8604,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 operator|->
@@ -8299,6 +8670,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -8310,25 +8683,12 @@ name|tx_queued
 operator|==
 literal|0
 condition|)
-block|{
 name|sc
 operator|->
 name|watchdog_timer
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|need_mcsetup
-condition|)
-name|fxp_mc_setup
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -8802,7 +9162,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fxp_intr_body
 parameter_list|(
 name|struct
@@ -8850,9 +9210,16 @@ literal|1
 else|:
 literal|0
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
 name|uint16_t
 name|status
 decl_stmt|;
+name|rx_npkts
+operator|=
+literal|0
+expr_stmt|;
 name|FXP_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -8943,7 +9310,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 comment|/* 	 * Process receiver interrupts. If a no-resource (RNR) 	 * condition exists, get whatever packets we can and 	 * re-start the receiver. 	 * 	 * When using polling, we do not process the list to completion, 	 * so when we get an RNR interrupt we must defer the restart 	 * until we hit the last buffer with the C bit set. 	 * If we run out of cycles and rfa_headm has the C bit set, 	 * record the pending RNR in the FXP_FLAG_DEFERRED_RNR flag so 	 * that the info will be used in the subsequent polling cycle. 	 */
 for|for
 control|(
@@ -8986,7 +9357,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -9263,6 +9634,26 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -9321,6 +9712,11 @@ name|FXP_SCB_COMMAND_RU_START
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -9430,7 +9826,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|FXP_FLAG_RXBUG
+condition|)
 block|{
 comment|/* 		 * Receiver's been idle for another second. 		 */
 name|sc
@@ -9523,11 +9927,24 @@ name|rx_idle_secs
 operator|=
 literal|0
 expr_stmt|;
-name|fxp_mc_setup
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fxp_init_body
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/* 	 * If there is no pending command, start another stats 	 * dump. Otherwise punt for now. 	 */
 if|if
@@ -9787,7 +10204,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 index|[
@@ -9803,7 +10220,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_txmtag
 argument_list|,
 name|txp
 index|[
@@ -9862,6 +10279,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -10017,11 +10436,6 @@ name|fxp_tx
 modifier|*
 name|txp
 decl_stmt|;
-name|struct
-name|fxp_cb_mcs
-modifier|*
-name|mcsp
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -10142,7 +10556,18 @@ argument_list|,
 name|FXP_SCB_COMMAND_CU_DUMP_ADR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attempt to load microcode if requested. 	 */
+comment|/* 	 * Attempt to load microcode if requested. 	 * For ICH based controllers do not load microcode. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|ifp
@@ -10166,114 +10591,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the multicast address list. 	 */
-if|if
-condition|(
+block|}
+comment|/* 	 * Set IFF_ALLMULTI status. It's needed in configure action 	 * command. 	 */
 name|fxp_mc_addrs
 argument_list|(
 name|sc
 argument_list|)
-condition|)
-block|{
-name|mcsp
-operator|=
-name|sc
-operator|->
-name|mcsp
 expr_stmt|;
-name|mcsp
-operator|->
-name|cb_status
-operator|=
-literal|0
-expr_stmt|;
-name|mcsp
-operator|->
-name|cb_command
-operator|=
-name|htole16
-argument_list|(
-name|FXP_CB_COMMAND_MCAS
-operator||
-name|FXP_CB_COMMAND_EL
-argument_list|)
-expr_stmt|;
-name|mcsp
-operator|->
-name|link_addr
-operator|=
-literal|0xffffffff
-expr_stmt|;
-comment|/* 	 	 * Start the multicast setup command. 		 */
-name|fxp_scb_wait
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|mcs_tag
-argument_list|,
-name|sc
-operator|->
-name|mcs_map
-argument_list|,
-name|BUS_DMASYNC_PREWRITE
-argument_list|)
-expr_stmt|;
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|FXP_CSR_SCB_GENERAL
-argument_list|,
-name|sc
-operator|->
-name|mcs_addr
-argument_list|)
-expr_stmt|;
-name|fxp_scb_cmd
-argument_list|(
-name|sc
-argument_list|,
-name|FXP_SCB_COMMAND_CU_START
-argument_list|)
-expr_stmt|;
-comment|/* ...and wait for it to complete. */
-name|fxp_dma_wait
-argument_list|(
-name|sc
-argument_list|,
-operator|&
-name|mcsp
-operator|->
-name|cb_status
-argument_list|,
-name|sc
-operator|->
-name|mcs_tag
-argument_list|,
-name|sc
-operator|->
-name|mcs_map
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|mcs_tag
-argument_list|,
-name|sc
-operator|->
-name|mcs_map
-argument_list|,
-name|BUS_DMASYNC_POSTWRITE
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * We temporarily use memory that contains the TxCB list to 	 * construct the config CB. The TxCB list memory is rebuilt 	 * later. 	 */
 name|cbp
 operator|=
@@ -10802,11 +11126,11 @@ name|cbp
 operator|->
 name|mc_all
 operator|=
-name|sc
+name|ifp
 operator|->
-name|flags
+name|if_flags
 operator|&
-name|FXP_FLAG_ALL_MCAST
+name|IFF_ALLMULTI
 condition|?
 literal|1
 else|:
@@ -10992,6 +11316,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -11032,19 +11358,6 @@ argument_list|,
 name|sc
 operator|->
 name|cbl_map
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|cbl_tag
-argument_list|,
-name|sc
-operator|->
-name|cbl_map
-argument_list|,
-name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now initialize the station address. Temporarily use the TxCB 	 * memory area like we did above for the config CB. 	 */
@@ -11116,7 +11429,22 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_GENERAL
+argument_list|,
+name|sc
+operator|->
+name|fxp_desc
+operator|.
+name|cbl_addr
 argument_list|)
 expr_stmt|;
 name|fxp_scb_cmd
@@ -11145,17 +11473,10 @@ operator|->
 name|cbl_map
 argument_list|)
 expr_stmt|;
-name|bus_dmamap_sync
+comment|/* 	 * Initialize the multicast address list. 	 */
+name|fxp_mc_setup
 argument_list|(
 name|sc
-operator|->
-name|cbl_tag
-argument_list|,
-name|sc
-operator|->
-name|cbl_map
-argument_list|,
-name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize transmit control block (TxCB) list. 	 */
@@ -11368,6 +11689,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -11394,6 +11717,19 @@ expr_stmt|;
 name|fxp_scb_wait
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_GENERAL
+argument_list|,
+name|sc
+operator|->
+name|fxp_desc
+operator|.
+name|cbl_addr
 argument_list|)
 expr_stmt|;
 name|fxp_scb_cmd
@@ -11923,7 +12259,7 @@ name|bus_dmamap_load
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|sc
 operator|->
@@ -11973,7 +12309,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -12010,7 +12346,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -12122,7 +12458,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|p_rx
 operator|->
@@ -12290,7 +12626,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|fxp_mtag
+name|fxp_rxmtag
 argument_list|,
 name|rxp
 operator|->
@@ -12587,28 +12923,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_ALLMULTI
-condition|)
-name|sc
-operator|->
-name|flags
-operator||=
-name|FXP_FLAG_ALL_MCAST
-expr_stmt|;
-else|else
-name|sc
-operator|->
-name|flags
-operator|&=
-operator|~
-name|FXP_FLAG_ALL_MCAST
-expr_stmt|;
 comment|/* 		 * If interface is marked up and not running, then start it. 		 * If it is marked down and running, stop it. 		 * XXX If it's up then re-initialize it. This is so flags 		 * such as IFF_PROMISC are handled. 		 */
 if|if
 condition|(
@@ -12619,6 +12933,60 @@ operator|&
 name|IFF_UP
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|^
+name|sc
+operator|->
+name|if_flags
+operator|)
+operator|&
+operator|(
+name|IFF_PROMISC
+operator||
+name|IFF_ALLMULTI
+operator||
+name|IFF_LINK0
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fxp_init_body
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
 name|fxp_init_body
 argument_list|(
 name|sc
@@ -12629,11 +12997,15 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
 condition|)
 name|fxp_stop
 argument_list|(
@@ -12641,6 +13013,14 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|if_flags
+operator|=
+name|ifp
+operator|->
+name|if_flags
+expr_stmt|;
 name|FXP_UNLOCK
 argument_list|(
 name|sc
@@ -12653,73 +13033,22 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-name|FXP_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_ALLMULTI
-condition|)
-name|sc
-operator|->
-name|flags
-operator||=
-name|FXP_FLAG_ALL_MCAST
-expr_stmt|;
-else|else
-name|sc
-operator|->
-name|flags
-operator|&=
-operator|~
-name|FXP_FLAG_ALL_MCAST
-expr_stmt|;
-comment|/* 		 * Multicast list has changed; set the hardware filter 		 * accordingly. 		 */
 if|if
 condition|(
 operator|(
-name|sc
+name|ifp
 operator|->
-name|flags
+name|if_drv_flags
 operator|&
-name|FXP_FLAG_ALL_MCAST
+name|IFF_DRV_RUNNING
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
-name|fxp_mc_setup
+name|fxp_init
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-comment|/* 		 * fxp_mc_setup() can set FXP_FLAG_ALL_MCAST, so check it 		 * again rather than else {}. 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|flags
-operator|&
-name|FXP_FLAG_ALL_MCAST
-condition|)
-name|fxp_init_body
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|FXP_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -13276,17 +13605,17 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|sc
+name|ifp
 operator|->
-name|flags
+name|if_flags
 operator|&
-name|FXP_FLAG_ALL_MCAST
+name|IFF_ALLMULTI
 operator|)
 operator|==
 literal|0
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -13318,11 +13647,11 @@ operator|>=
 name|MAXMCADDR
 condition|)
 block|{
-name|sc
+name|ifp
 operator|->
-name|flags
+name|if_flags
 operator||=
-name|FXP_FLAG_ALL_MCAST
+name|IFF_ALLMULTI
 expr_stmt|;
 name|nmcasts
 operator|=
@@ -13364,7 +13693,7 @@ name|nmcasts
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -13390,7 +13719,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Program the multicast filter.  *  * We have an artificial restriction that the multicast setup command  * must be the first command in the chain, so we take steps to ensure  * this. By requiring this, it allows us to keep up the performance of  * the pre-initialized command ring (esp. link pointers) by not actually  * inserting the mcsetup command in the ring - i.e. its link pointer  * points to the TxCB ring, but the mcsetup descriptor itself is not part  * of it. We then can do 'CU_START' on the mcsetup descriptor and have it  * lead into the regular TxCB ring when it completes.  *  * This function must be called at splimp.  */
+comment|/*  * Program the multicast filter.  *  * We have an artificial restriction that the multicast setup command  * must be the first command in the chain, so we take steps to ensure  * this. By requiring this, it allows us to keep up the performance of  * the pre-initialized command ring (esp. link pointers) by not actually  * inserting the mcsetup command in the ring - i.e. its link pointer  * points to the TxCB ring, but the mcsetup descriptor itself is not part  * of it. We then can do 'CU_START' on the mcsetup descriptor and have it  * lead into the regular TxCB ring when it completes.  */
 end_comment
 
 begin_function
@@ -13408,15 +13737,6 @@ name|struct
 name|fxp_cb_mcs
 modifier|*
 name|mcsp
-init|=
-name|sc
-operator|->
-name|mcsp
-decl_stmt|;
-name|struct
-name|fxp_tx
-modifier|*
-name|txp
 decl_stmt|;
 name|int
 name|count
@@ -13428,140 +13748,12 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there are queued commands, we must wait until they are all 	 * completed. If we are already waiting, then add a NOP command 	 * with interrupt option so that we're notified when all commands 	 * have been completed - fxp_start() ensures that no additional 	 * TX commands will be added when need_mcsetup is true. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|tx_queued
-condition|)
-block|{
-comment|/* 		 * need_mcsetup will be true if we are already waiting for the 		 * NOP command to be completed (see below). In this case, bail. 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|need_mcsetup
-condition|)
-return|return;
-name|sc
-operator|->
-name|need_mcsetup
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 		 * Add a NOP command with interrupt so that we are notified 		 * when all TX commands have been processed. 		 */
-name|txp
+name|mcsp
 operator|=
 name|sc
 operator|->
-name|fxp_desc
-operator|.
-name|tx_last
-operator|->
-name|tx_next
+name|mcsp
 expr_stmt|;
-name|txp
-operator|->
-name|tx_mbuf
-operator|=
-name|NULL
-expr_stmt|;
-name|txp
-operator|->
-name|tx_cb
-operator|->
-name|cb_status
-operator|=
-literal|0
-expr_stmt|;
-name|txp
-operator|->
-name|tx_cb
-operator|->
-name|cb_command
-operator|=
-name|htole16
-argument_list|(
-name|FXP_CB_COMMAND_NOP
-operator||
-name|FXP_CB_COMMAND_S
-operator||
-name|FXP_CB_COMMAND_I
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Advance the end of list forward. 		 */
-name|sc
-operator|->
-name|fxp_desc
-operator|.
-name|tx_last
-operator|->
-name|tx_cb
-operator|->
-name|cb_command
-operator|&=
-name|htole16
-argument_list|(
-operator|~
-name|FXP_CB_COMMAND_S
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|cbl_tag
-argument_list|,
-name|sc
-operator|->
-name|cbl_map
-argument_list|,
-name|BUS_DMASYNC_PREWRITE
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|fxp_desc
-operator|.
-name|tx_last
-operator|=
-name|txp
-expr_stmt|;
-name|sc
-operator|->
-name|tx_queued
-operator|++
-expr_stmt|;
-comment|/* 		 * Issue a resume in case the CU has just suspended. 		 */
-name|fxp_scb_wait
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|fxp_scb_cmd
-argument_list|(
-name|sc
-argument_list|,
-name|FXP_SCB_COMMAND_CU_RESUME
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Set a 5 second timer just in case we don't hear from the 		 * card again. 		 */
-name|sc
-operator|->
-name|watchdog_timer
-operator|=
-literal|5
-expr_stmt|;
-return|return;
-block|}
-name|sc
-operator|->
-name|need_mcsetup
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * Initialize multicast setup descriptor. 	 */
 name|mcsp
 operator|->
 name|cb_status
@@ -13576,91 +13768,21 @@ name|htole16
 argument_list|(
 name|FXP_CB_COMMAND_MCAS
 operator||
-name|FXP_CB_COMMAND_S
-operator||
-name|FXP_CB_COMMAND_I
+name|FXP_CB_COMMAND_EL
 argument_list|)
 expr_stmt|;
 name|mcsp
 operator|->
 name|link_addr
 operator|=
-name|htole32
-argument_list|(
-name|sc
-operator|->
-name|fxp_desc
-operator|.
-name|cbl_addr
-argument_list|)
+literal|0xffffffff
 expr_stmt|;
-name|txp
-operator|=
-operator|&
-name|sc
-operator|->
-name|fxp_desc
-operator|.
-name|mcs_tx
-expr_stmt|;
-name|txp
-operator|->
-name|tx_mbuf
-operator|=
-name|NULL
-expr_stmt|;
-name|txp
-operator|->
-name|tx_cb
-operator|=
-operator|(
-expr|struct
-name|fxp_cb_tx
-operator|*
-operator|)
-name|sc
-operator|->
-name|mcsp
-expr_stmt|;
-name|txp
-operator|->
-name|tx_next
-operator|=
-name|sc
-operator|->
-name|fxp_desc
-operator|.
-name|tx_list
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fxp_mc_addrs
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|fxp_desc
-operator|.
-name|tx_first
-operator|=
-name|sc
-operator|->
-name|fxp_desc
-operator|.
-name|tx_last
-operator|=
-name|txp
-expr_stmt|;
-name|sc
-operator|->
-name|tx_queued
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 	 * Wait until command unit is not active. This should never 	 * be the case when nothing is queued, but make sure anyway. 	 */
+comment|/* 	 * Wait until command unit is idle. This should never be the 	 * case when nothing is queued, but make sure anyway. 	 */
 name|count
 operator|=
 literal|100
@@ -13677,8 +13799,8 @@ argument_list|)
 operator|>>
 literal|6
 operator|)
-operator|==
-name|FXP_SCB_CUS_ACTIVE
+operator|!=
+name|FXP_SCB_CUS_IDLE
 operator|&&
 operator|--
 name|count
@@ -13722,6 +13844,8 @@ name|sc
 operator|->
 name|mcs_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -13743,13 +13867,25 @@ argument_list|,
 name|FXP_SCB_COMMAND_CU_START
 argument_list|)
 expr_stmt|;
+comment|/* ...and wait for it to complete. */
+name|fxp_dma_wait
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|mcsp
+operator|->
+name|cb_status
+argument_list|,
 name|sc
 operator|->
-name|watchdog_timer
-operator|=
-literal|2
+name|mcs_tag
+argument_list|,
+name|sc
+operator|->
+name|mcs_map
+argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14170,6 +14306,8 @@ name|sc
 operator|->
 name|cbl_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -14210,19 +14348,6 @@ argument_list|,
 name|sc
 operator|->
 name|cbl_map
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|cbl_tag
-argument_list|,
-name|sc
-operator|->
-name|cbl_map
-argument_list|,
-name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
 name|device_printf

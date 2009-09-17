@@ -1217,10 +1217,6 @@ begin_comment
 comment|/* Where interpreter should transfer control. */
 end_comment
 
-begin_comment
-comment|/*  * The following non-standard values are used in Linux ELF binaries.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1279,8 +1275,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT_COUNT
+name|AT_EXECPATH
 value|15
+end_define
+
+begin_comment
+comment|/* Path to the executable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_COUNT
+value|16
 end_define
 
 begin_comment

@@ -1559,7 +1559,11 @@ name|a
 argument_list|,
 name|tar
 argument_list|,
+literal|"tar"
+argument_list|,
 name|archive_read_format_tar_bid
+argument_list|,
+name|NULL
 argument_list|,
 name|archive_read_format_tar_read_header
 argument_list|,
@@ -3814,6 +3818,9 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|int64_t
+name|type
+decl_stmt|;
 name|char
 modifier|*
 name|acl
@@ -3881,6 +3888,7 @@ operator|(
 name|err
 operator|)
 return|;
+comment|/* Recursively read next header */
 name|err
 operator|=
 name|tar_read_header
@@ -3911,8 +3919,8 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/* Skip leading octal number. */
-comment|/* XXX TODO: Parse the octal number and sanity-check it. */
+comment|/* TODO: Examine the first characters to see if this 	 * is an AIX ACL descriptor.  We'll likely never support 	 * them, but it would be polite to recognize and warn when 	 * we do see them. */
+comment|/* Leading octal number indicates ACL type and number of entries. */
 name|p
 operator|=
 name|acl
@@ -3922,6 +3930,10 @@ operator|->
 name|acl_text
 operator|.
 name|s
+expr_stmt|;
+name|type
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -3936,9 +3948,135 @@ name|acl
 operator|+
 name|size
 condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|<
+literal|'0'
+operator|||
+operator|*
+name|p
+operator|>
+literal|'7'
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Malformed Solaris ACL attribute (invalid digit)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_WARN
+operator|)
+return|;
+block|}
+name|type
+operator|<<=
+literal|3
+expr_stmt|;
+name|type
+operator|+=
+operator|*
+name|p
+operator|-
+literal|'0'
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|>
+literal|077777777
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Malformed Solaris ACL attribute (count too large)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_WARN
+operator|)
+return|;
+block|}
 name|p
 operator|++
 expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|type
+operator|&
+operator|~
+literal|0777777
+condition|)
+block|{
+case|case
+literal|01000000
+case|:
+comment|/* POSIX.1e ACL */
+break|break;
+case|case
+literal|03000000
+case|:
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Solaris NFSv4 ACLs not supported"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_WARN
+operator|)
+return|;
+default|default:
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Malformed Solaris ACL attribute (unsupported type %o)"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_WARN
+operator|)
+return|;
+block|}
 name|p
 operator|++
 expr_stmt|;
@@ -3960,7 +4098,7 @@ name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Malformed Solaris ACL attribute"
+literal|"Malformed Solaris ACL attribute (body overflow)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3969,7 +4107,7 @@ name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
-comment|/* Skip leading octal number. */
+comment|/* ACL text is null-terminated; find the end. */
 name|size
 operator|-=
 operator|(
@@ -4020,6 +4158,24 @@ argument_list|,
 name|wp
 argument_list|,
 name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+name|ARCHIVE_OK
+condition|)
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Malformed Solaris ACL attribute (unparsable)"
 argument_list|)
 expr_stmt|;
 return|return

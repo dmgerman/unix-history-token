@@ -2017,44 +2017,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|stolen
-operator|>
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"detected %dk stolen memory\n"
-argument_list|,
-name|sc
-operator|->
-name|stolen
-operator|*
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"aperture size is %dM\n"
-argument_list|,
-name|sc
-operator|->
-name|initial_aperture
-operator|/
-literal|1024
-operator|/
-literal|1024
-argument_list|)
-expr_stmt|;
 comment|/* GATT address is already in there, make sure it's enabled */
 name|pgtblctl
 operator|=
@@ -2821,42 +2783,6 @@ literal|1024
 operator|/
 literal|4096
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|stolen
-operator|>
-literal|0
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"detected %dk stolen memory\n"
-argument_list|,
-name|sc
-operator|->
-name|stolen
-operator|*
-literal|4
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"aperture size is %dM\n"
-argument_list|,
-name|sc
-operator|->
-name|initial_aperture
-operator|/
-literal|1024
-operator|/
-literal|1024
-argument_list|)
-expr_stmt|;
 comment|/* GATT address is already in there, make sure it's enabled */
 name|pgtblctl
 operator|=
@@ -2900,6 +2826,46 @@ operator|~
 literal|1
 expr_stmt|;
 block|}
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"aperture size is %dM"
+argument_list|,
+name|sc
+operator|->
+name|initial_aperture
+operator|/
+literal|1024
+operator|/
+literal|1024
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|stolen
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|", detected %dk stolen memory\n"
+argument_list|,
+name|sc
+operator|->
+name|stolen
+operator|*
+literal|4
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 literal|0
@@ -3610,7 +3576,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|,
 name|vm_offset_t
@@ -3630,10 +3596,6 @@ decl_stmt|;
 if|if
 condition|(
 name|offset
-operator|<
-literal|0
-operator|||
-name|offset
 operator|>=
 operator|(
 name|sc
@@ -3650,8 +3612,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed: offset is 0x%08x, shift is %d, entries is %d\n"
+literal|"failed: offset is 0x%08jx, shift is %d, entries is %d\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|offset
 argument_list|,
 name|AGP_PAGE_SHIFT
@@ -3726,7 +3691,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|)
 block|{
@@ -3742,10 +3707,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 name|offset
 operator|>=
 operator|(
@@ -4409,10 +4370,6 @@ decl_stmt|;
 comment|/* Do some sanity checks first. */
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 operator|(
 name|offset
 operator|&

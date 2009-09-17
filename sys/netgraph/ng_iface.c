@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/random.h>
 end_include
 
@@ -110,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -135,6 +135,18 @@ begin_include
 include|#
 directive|include
 file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -398,9 +410,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt0
+name|ro
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -786,25 +798,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|unrhdr
-modifier|*
+operator|*
+argument_list|,
 name|ng_iface_unit
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ng_iface_unit
+value|VNET(ng_iface_unit)
+end_define
 
 begin_comment
 comment|/************************************************************************ 			HELPER STUFF  ************************************************************************/
@@ -1304,9 +1316,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt0
+name|ro
 parameter_list|)
 block|{
 name|struct
@@ -1355,6 +1367,10 @@ operator|)
 return|;
 block|}
 comment|/* Protect from deadly infinite recursion. */
+name|mtag
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1368,7 +1384,7 @@ name|MTAG_NGIF
 argument_list|,
 name|MTAG_NGIF_CALLED
 argument_list|,
-name|NULL
+name|mtag
 argument_list|)
 operator|)
 condition|)
@@ -1892,7 +1908,10 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* Send packet. If hook is not connected, 	   mbuf will get freed. */
+comment|/* Send packet. If hook is not connected, mbuf will get freed. */
+name|NG_OUTBOUND_THREAD_REF
+argument_list|()
+expr_stmt|;
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
@@ -1907,6 +1926,9 @@ argument_list|)
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+name|NG_OUTBOUND_THREAD_UNREF
+argument_list|()
 expr_stmt|;
 comment|/* Update stats. */
 if|if
@@ -2068,11 +2090,6 @@ name|node_p
 name|node
 parameter_list|)
 block|{
-name|INIT_VNET_NETGRAPH
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -2415,6 +2432,11 @@ argument_list|(
 name|hook
 argument_list|)
 expr_stmt|;
+name|NG_HOOK_SET_TO_INBOUND
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2698,6 +2720,11 @@ modifier|*
 name|ifa
 decl_stmt|;
 comment|/* Return the first configured IP address */
+name|if_addr_rlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -2797,6 +2824,11 @@ name|sin_addr
 expr_stmt|;
 break|break;
 block|}
+name|if_addr_runlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* No IP addresses on this interface? */
 if|if
 condition|(
@@ -3155,11 +3187,6 @@ name|node_p
 name|node
 parameter_list|)
 block|{
-name|INIT_VNET_NETGRAPH
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 specifier|const
 name|priv_p
 name|priv
@@ -3343,26 +3370,9 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|V_ng_iface_unit
-operator|=
-name|new_unrhdr
-argument_list|(
-literal|0
-argument_list|,
-literal|0xffff
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|delete_unrhdr
-argument_list|(
-name|V_ng_iface_unit
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|error
@@ -3378,6 +3388,82 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function
+specifier|static
+name|void
+name|vnet_ng_iface_init
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|V_ng_iface_unit
+operator|=
+name|new_unrhdr
+argument_list|(
+literal|0
+argument_list|,
+literal|0xffff
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|VNET_SYSINIT
+argument_list|(
+name|vnet_ng_iface_init
+argument_list|,
+name|SI_SUB_PSEUDO
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|vnet_ng_iface_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+name|void
+name|vnet_ng_iface_uninit
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|delete_unrhdr
+argument_list|(
+name|V_ng_iface_unit
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|VNET_SYSUNINIT
+argument_list|(
+name|vnet_ng_iface_uninit
+argument_list|,
+name|SI_SUB_PSEUDO
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|vnet_ng_iface_uninit
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -148,12 +148,6 @@ name|u_long
 name|de_flag
 decl_stmt|;
 comment|/* flag bits */
-name|struct
-name|cdev
-modifier|*
-name|de_dev
-decl_stmt|;
-comment|/* device where direntry lives */
 name|u_long
 name|de_dirclust
 decl_stmt|;

@@ -279,13 +279,11 @@ argument_list|(
 name|tmpbuf
 argument_list|)
 argument_list|,
-literal|"Built by %s@%s on date %s.\n"
+literal|"Built by %s@%s.\n"
 argument_list|,
 name|BUILD_USER
 argument_list|,
 name|BUILD_HOST
-argument_list|,
-name|BUILD_DATE
 argument_list|)
 expr_stmt|;
 name|strlcat

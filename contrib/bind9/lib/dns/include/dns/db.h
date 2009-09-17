@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: db.h,v 1.76.18.10 2007/08/28 07:20:05 tbox Exp $ */
+comment|/* $Id: db.h,v 1.93.50.3 2009/01/18 23:25:17 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  * \brief  * The DNS DB interface allows named rdatasets to be stored and retrieved.  *  * The dns_db_t type is like a "virtual class".  To actually use  * DBs, an implementation of the class is required.  *  * XXX more XXX  *  * MP:  * \li	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  * \li	No anticipated impact.  *  * Resources:  * \li	TBS  *  * Security:  * \li	No anticipated impact.  *  * Standards:  * \li	None.  */
+comment|/*! \file dns/db.h  * \brief  * The DNS DB interface allows named rdatasets to be stored and retrieved.  *  * The dns_db_t type is like a "virtual class".  To actually use  * DBs, an implementation of the class is required.  *  * XXX more XXX  *  * MP:  * \li	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  * \li	No anticipated impact.  *  * Resources:  * \li	TBS  *  * Security:  * \li	No anticipated impact.  *  * Standards:  * \li	None.  */
 end_comment
 
 begin_comment
@@ -430,8 +430,9 @@ name|dns_db_t
 modifier|*
 name|db
 parameter_list|,
-name|isc_boolean_t
-name|relative_names
+name|unsigned
+name|int
+name|options
 parameter_list|,
 name|dns_dbiterator_t
 modifier|*
@@ -670,6 +671,165 @@ modifier|*
 name|nodep
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|transfernode
+function_decl|)
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+modifier|*
+name|sourcep
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+modifier|*
+name|targetp
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|getnsec3parameters
+function_decl|)
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
+name|dns_hash_t
+modifier|*
+name|hash
+parameter_list|,
+name|isc_uint8_t
+modifier|*
+name|flags
+parameter_list|,
+name|isc_uint16_t
+modifier|*
+name|iterations
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|salt
+parameter_list|,
+name|size_t
+modifier|*
+name|salt_len
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|findnsec3node
+function_decl|)
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_boolean_t
+name|create
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+modifier|*
+name|nodep
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|setsigningtime
+function_decl|)
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|isc_stdtime_t
+name|resign
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|getsigningtime
+function_decl|)
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|resigned
+function_decl|)
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|)
+function_decl|;
+name|isc_boolean_t
+function_decl|(
+modifier|*
+name|isdnssec
+function_decl|)
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+name|dns_stats_t
+modifier|*
+function_decl|(
+modifier|*
+name|getrrsetstats
+function_decl|)
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
 block|}
 name|dns_dbmethods_t
 typedef|;
@@ -846,6 +1006,13 @@ name|DNS_DBFIND_COVERINGNSEC
 value|0x40
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_DBFIND_FORCENSEC3
+value|0x80
+end_define
+
 begin_comment
 comment|/*@}*/
 end_comment
@@ -900,6 +1067,39 @@ directive|define
 name|DNS_DBSUB_EXACT
 value|0x01
 end_define
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*%  * Iterator options  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_DB_RELATIVENAMES
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_DB_NSEC3ONLY
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_DB_NONSEC3
+value|0x4
+end_define
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 begin_comment
 comment|/*****  ***** Methods  *****/
@@ -1071,6 +1271,21 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Is 'db' secure?  *  * Requires:  *  * \li	'db' is a valid database with zone semantics.  *  * Returns:  * \li	#ISC_TRUE	'db' is secure.  * \li	#ISC_FALSE	'db' is not secure.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_db_isdnssec
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Is 'db' secure or partially secure?  *  * Requires:  *  * \li	'db' is a valid database with zone semantics.  *  * Returns:  * \li	#ISC_TRUE	'db' is secure or is partially.  * \li	#ISC_FALSE	'db' is not secure.  */
 end_comment
 
 begin_function_decl
@@ -1353,7 +1568,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Find the node with name 'name'.  *  * Notes:  * \li	If 'create' is ISC_TRUE and no node with name 'name' exists, then  *	such a node will be created.  *  * \li	This routine is for finding or creating a node with the specified  *	name.  There are no partial matches.  It is not suitable for use  *	in building responses to ordinary DNS queries; clients which wish  *	to do that should use dns_db_find() instead.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'name' is a valid, non-empty, absolute name.  *  * \li	nodep != NULL&& *nodep == NULL  *  * Ensures:  *  * \li	On success, *nodep is attached to the node with name 'name'.  *  * Returns:  *  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOTFOUND			If !create and name not found.  * \li	#ISC_R_NOMEMORY		        Can only happen if create is ISC_TRUE.  *  * \li	Other results are possible, depending upon the database  *	implementation used.  */
+comment|/*%<  * Find the node with name 'name'.  *  * Notes:  * \li	If 'create' is ISC_TRUE and no node with name 'name' exists, then  *	such a node will be created.  *  * \li	This routine is for finding or creating a node with the specified  *	name.  There are no partial matches.  It is not suitable for use  *	in building responses to ordinary DNS queries; clients which wish  *	to do that should use dns_db_find() instead.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'name' is a valid, non-empty, absolute name.  *  * \li	nodep != NULL&& *nodep == NULL  *  * Ensures:  *  * \li	On success, *nodep is attached to the node with name 'name'.  *  * Returns:  *  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOTFOUND			If !create and name not found.  * \li	#ISC_R_NOMEMORY			Can only happen if create is ISC_TRUE.  *  * \li	Other results are possible, depending upon the database  *	implementation used.  */
 end_comment
 
 begin_function_decl
@@ -1403,7 +1618,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Find the best match for 'name' and 'type' in version 'version' of 'db'.  *  * Notes:  *  * \li	If type == dns_rdataset_any, then rdataset will not be bound.  *  * \li	If 'options' does not have #DNS_DBFIND_GLUEOK set, then no glue will  *	be returned.  For zone databases, glue is as defined in RFC2181.  *	For cache databases, glue is any rdataset with a trust of  *	dns_trust_glue.  *  * \li	If 'options' does not have #DNS_DBFIND_PENDINGOK set, then no  *	pending data will be returned.  This option is only meaningful for  *	cache databases.  *  * \li	If the #DNS_DBFIND_NOWILD option is set, then wildcard matching will  *	be disabled.  This option is only meaningful for zone databases.  *  * \li	If the #DNS_DBFIND_FORCENSEC option is set, the database is assumed to  *	have NSEC records, and these will be returned when appropriate.  This  *	is only necessary when querying a database that was not secure  *	when created.  *  * \li	If the DNS_DBFIND_COVERINGNSEC option is set, then look for a  *	NSEC record that potentially covers 'name' if a answer cannot  *	be found.  Note the returned NSEC needs to be checked to ensure  *	that it is correct.  This only affects answers returned from the  *	cache.  *  * \li	To respond to a query for SIG records, the caller should create a  *	rdataset iterator and extract the signatures from each rdataset.  *  * \li	Making queries of type ANY with #DNS_DBFIND_GLUEOK is not recommended,  *	because the burden of determining whether a given rdataset is valid  *	glue or not falls upon the caller.  *  * \li	The 'now' field is ignored if 'db' is a zone database.  If 'db' is a  *	cache database, an rdataset will not be found unless it expires after  *	'now'.  Any ANY query will not match unless at least one rdataset at  *	the node expires after 'now'.  If 'now' is zero, then the current time  *	will be used.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'type' is not SIG, or a meta-RR type other than 'ANY' (e.g. 'OPT').  *  * \li	'nodep' is NULL, or nodep is a valid pointer and *nodep == NULL.  *  * \li	'foundname' is a valid name with a dedicated buffer.  *  * \li	'rdataset' is NULL, or is a valid unassociated rdataset.  *  * Ensures,  *	on a non-error completion:  *  *	\li	If nodep != NULL, then it is bound to the found node.  *  *	\li	If foundname != NULL, then it contains the full name of the  *		found node.  *  *	\li	If rdataset != NULL and type != dns_rdatatype_any, then  *		rdataset is bound to the found rdataset.  *  *	Non-error results are:  *  *	\li	#ISC_R_SUCCESS			The desired node and type were  *						found.  *  *	\li	#DNS_R_WILDCARD			The desired node and type were  *						found after performing  *						wildcard matching.  This is  *						only returned if the  *						#DNS_DBFIND_INDICATEWILD  *						option is set; otherwise  *						#ISC_R_SUCCESS is returned.  *  *	\li	#DNS_R_GLUE			The desired node and type were  *						found, but are glue.  This  *						result can only occur if  *						the DNS_DBFIND_GLUEOK option  *						is set.  This result can only  *						occur if 'db' is a zone  *						database.  If type ==  *						dns_rdatatype_any, then the  *						node returned may contain, or  *						consist entirely of invalid  *						glue (i.e. data occluded by a  *						zone cut).  The caller must  *						take care not to return invalid  *						glue to a client.  *  *	\li	#DNS_R_DELEGATION		The data requested is beneath  *						a zone cut.  node, foundname,  *						and rdataset reference the  *						NS RRset of the zone cut.  *						If 'db' is a cache database,  *						then this is the deepest known  *						delegation.  *  *	\li	#DNS_R_ZONECUT			type == dns_rdatatype_any, and  *						the desired node is a zonecut.  *						The caller must take care not  *						to return inappropriate glue  *						to a client.  This result can  *						only occur if 'db' is a zone  *						database and DNS_DBFIND_GLUEOK  *						is set.  *  *	\li	#DNS_R_DNAME			The data requested is beneath  *						a DNAME.  node, foundname,  *						and rdataset reference the  *						DNAME RRset.  *  *	\li	#DNS_R_CNAME			The rdataset requested was not  *						found, but there is a CNAME  *						at the desired name.  node,  *						foundname, and rdataset  *						reference the CNAME RRset.  *  *	\li	#DNS_R_NXDOMAIN			The desired name does not  *						exist.  *  *	\li	#DNS_R_NXRRSET			The desired name exists, but  *						the desired type does not.  *  *	\li	#ISC_R_NOTFOUND			The desired name does not  *						exist, and no delegation could  *						be found.  This result can only  *						occur if 'db' is a cache  *						database.  The caller should  *						use its nameserver(s) of last  *						resort (e.g. root hints).  *  *	\li	#DNS_R_NCACHENXDOMAIN		The desired name does not  *						exist.  'node' is bound to the  *						cache node with the desired  *						name, and 'rdataset' contains  *						the negative caching proof.  *  *	\li	#DNS_R_NCACHENXRRSET		The desired type does not  *						exist.  'node' is bound to the  *						cache node with the desired  *						name, and 'rdataset' contains  *						the negative caching proof.  *  *	\li	#DNS_R_EMPTYNAME			The name exists but there is  *						no data at the name.   *  *	\li	#DNS_R_COVERINGNSEC		The returned data is a NSEC  *						that potentially covers 'name'.  *  *	Error results:  *  *	\li	#ISC_R_NOMEMORY  *  *	\li	#DNS_R_BADDB			Data that is required to be  *						present in the DB, e.g. an NSEC  *						record in a secure zone, is not  *						present.  *  *	\li	Other results are possible, and should all be treated as  *		errors.  */
+comment|/*%<  * Find the best match for 'name' and 'type' in version 'version' of 'db'.  *  * Notes:  *  * \li	If type == dns_rdataset_any, then rdataset will not be bound.  *  * \li	If 'options' does not have #DNS_DBFIND_GLUEOK set, then no glue will  *	be returned.  For zone databases, glue is as defined in RFC2181.  *	For cache databases, glue is any rdataset with a trust of  *	dns_trust_glue.  *  * \li	If 'options' does not have #DNS_DBFIND_PENDINGOK set, then no  *	pending data will be returned.  This option is only meaningful for  *	cache databases.  *  * \li	If the #DNS_DBFIND_NOWILD option is set, then wildcard matching will  *	be disabled.  This option is only meaningful for zone databases.  *  * \li	If the #DNS_DBFIND_FORCENSEC option is set, the database is assumed to  *	have NSEC records, and these will be returned when appropriate.  This  *	is only necessary when querying a database that was not secure  *	when created.  *  * \li	If the DNS_DBFIND_COVERINGNSEC option is set, then look for a  *	NSEC record that potentially covers 'name' if a answer cannot  *	be found.  Note the returned NSEC needs to be checked to ensure  *	that it is correct.  This only affects answers returned from the  *	cache.  *  * \li	To respond to a query for SIG records, the caller should create a  *	rdataset iterator and extract the signatures from each rdataset.  *  * \li	Making queries of type ANY with #DNS_DBFIND_GLUEOK is not recommended,  *	because the burden of determining whether a given rdataset is valid  *	glue or not falls upon the caller.  *  * \li	The 'now' field is ignored if 'db' is a zone database.  If 'db' is a  *	cache database, an rdataset will not be found unless it expires after  *	'now'.  Any ANY query will not match unless at least one rdataset at  *	the node expires after 'now'.  If 'now' is zero, then the current time  *	will be used.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'type' is not SIG, or a meta-RR type other than 'ANY' (e.g. 'OPT').  *  * \li	'nodep' is NULL, or nodep is a valid pointer and *nodep == NULL.  *  * \li	'foundname' is a valid name with a dedicated buffer.  *  * \li	'rdataset' is NULL, or is a valid unassociated rdataset.  *  * Ensures,  *	on a non-error completion:  *  *	\li	If nodep != NULL, then it is bound to the found node.  *  *	\li	If foundname != NULL, then it contains the full name of the  *		found node.  *  *	\li	If rdataset != NULL and type != dns_rdatatype_any, then  *		rdataset is bound to the found rdataset.  *  *	Non-error results are:  *  *	\li	#ISC_R_SUCCESS			The desired node and type were  *						found.  *  *	\li	#DNS_R_WILDCARD			The desired node and type were  *						found after performing  *						wildcard matching.  This is  *						only returned if the  *						#DNS_DBFIND_INDICATEWILD  *						option is set; otherwise  *						#ISC_R_SUCCESS is returned.  *  *	\li	#DNS_R_GLUE			The desired node and type were  *						found, but are glue.  This  *						result can only occur if  *						the DNS_DBFIND_GLUEOK option  *						is set.  This result can only  *						occur if 'db' is a zone  *						database.  If type ==  *						dns_rdatatype_any, then the  *						node returned may contain, or  *						consist entirely of invalid  *						glue (i.e. data occluded by a  *						zone cut).  The caller must  *						take care not to return invalid  *						glue to a client.  *  *	\li	#DNS_R_DELEGATION		The data requested is beneath  *						a zone cut.  node, foundname,  *						and rdataset reference the  *						NS RRset of the zone cut.  *						If 'db' is a cache database,  *						then this is the deepest known  *						delegation.  *  *	\li	#DNS_R_ZONECUT			type == dns_rdatatype_any, and  *						the desired node is a zonecut.  *						The caller must take care not  *						to return inappropriate glue  *						to a client.  This result can  *						only occur if 'db' is a zone  *						database and DNS_DBFIND_GLUEOK  *						is set.  *  *	\li	#DNS_R_DNAME			The data requested is beneath  *						a DNAME.  node, foundname,  *						and rdataset reference the  *						DNAME RRset.  *  *	\li	#DNS_R_CNAME			The rdataset requested was not  *						found, but there is a CNAME  *						at the desired name.  node,  *						foundname, and rdataset  *						reference the CNAME RRset.  *  *	\li	#DNS_R_NXDOMAIN			The desired name does not  *						exist.  *  *	\li	#DNS_R_NXRRSET			The desired name exists, but  *						the desired type does not.  *  *	\li	#ISC_R_NOTFOUND			The desired name does not  *						exist, and no delegation could  *						be found.  This result can only  *						occur if 'db' is a cache  *						database.  The caller should  *						use its nameserver(s) of last  *						resort (e.g. root hints).  *  *	\li	#DNS_R_NCACHENXDOMAIN		The desired name does not  *						exist.  'node' is bound to the  *						cache node with the desired  *						name, and 'rdataset' contains  *						the negative caching proof.  *  *	\li	#DNS_R_NCACHENXRRSET		The desired type does not  *						exist.  'node' is bound to the  *						cache node with the desired  *						name, and 'rdataset' contains  *						the negative caching proof.  *  *	\li	#DNS_R_EMPTYNAME		The name exists but there is  *						no data at the name.  *  *	\li	#DNS_R_COVERINGNSEC		The returned data is a NSEC  *						that potentially covers 'name'.  *  *	Error results:  *  *	\li	#ISC_R_NOMEMORY  *  *	\li	#DNS_R_BADDB			Data that is required to be  *						present in the DB, e.g. an NSEC  *						record in a secure zone, is not  *						present.  *  *	\li	Other results are possible, and should all be treated as  *		errors.  */
 end_comment
 
 begin_function_decl
@@ -1494,6 +1709,31 @@ comment|/*%<  * Detach *nodep from its node.  *  * Requires:  *  * \li	'db' is a
 end_comment
 
 begin_function_decl
+name|void
+name|dns_db_transfernode
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+modifier|*
+name|sourcep
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+modifier|*
+name|targetp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Transfer a node between pointer.  *  * This is equivalent to calling dns_db_attachnode() then dns_db_detachnode().  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'*sourcep' is a valid node.  *  * \li	'targetp' points to a NULL dns_dbnode_t *.  *  * Ensures:  *  * \li	'*sourcep' is NULL.  */
+end_comment
+
+begin_function_decl
 name|isc_result_t
 name|dns_db_expirenode
 parameter_list|(
@@ -1550,8 +1790,9 @@ name|dns_db_t
 modifier|*
 name|db
 parameter_list|,
-name|isc_boolean_t
-name|relative_names
+name|unsigned
+name|int
+name|options
 parameter_list|,
 name|dns_dbiterator_t
 modifier|*
@@ -1562,7 +1803,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Create an iterator for version 'version' of 'db'.  *  * Notes:  *  * \li	If 'relative_names' is ISC_TRUE, then node names returned by the  *	iterator will be relative to the iterator's current origin.  If  *	#ISC_FALSE, then the node names will be absolute.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	iteratorp != NULL&& *iteratorp == NULL  *  * Ensures:  *  * \li	On success, *iteratorp will be a valid database iterator.  *  * Returns:  *  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOMEMORY  */
+comment|/*%<  * Create an iterator for version 'version' of 'db'.  *  * Notes:  *  * \li	One or more of the following options can be set.  *	#DNS_DB_RELATIVENAMES  *	#DNS_DB_NSEC3ONLY  *	#DNS_DB_NONSEC3  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	iteratorp != NULL&& *iteratorp == NULL  *  * Ensures:  *  * \li	On success, *iteratorp will be a valid database iterator.  *  * Returns:  *  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_comment
@@ -1641,7 +1882,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Make '*iteratorp' an rdataset iteratator for all rdatasets at 'node' in  * version 'version' of 'db'.  *  * Notes:  *  * \li	If 'version' is NULL, then the current version will be used.  *  * \li	The 'now' field is ignored if 'db' is a zone database.  If 'db' is a  *	cache database, an rdataset will not be found unless it expires after  *	'now'.  Any ANY query will not match unless at least one rdataset at  *	the node expires after 'now'.  If 'now' is zero, then the current time  *	will be used.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'node' is a valid node.  *  * \li	iteratorp != NULL&& *iteratorp == NULL  *  * Ensures:  *  * \li	On success, '*iteratorp' is a valid rdataset iterator.  *  * Returns:  *  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOTFOUND  *  * \li	Other results are possible, depending upon the database  *	implementation used.  */
+comment|/*%<  * Make '*iteratorp' an rdataset iterator for all rdatasets at 'node' in  * version 'version' of 'db'.  *  * Notes:  *  * \li	If 'version' is NULL, then the current version will be used.  *  * \li	The 'now' field is ignored if 'db' is a zone database.  If 'db' is a  *	cache database, an rdataset will not be found unless it expires after  *	'now'.  Any ANY query will not match unless at least one rdataset at  *	the node expires after 'now'.  If 'now' is zero, then the current time  *	will be used.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'node' is a valid node.  *  * \li	iteratorp != NULL&& *iteratorp == NULL  *  * Ensures:  *  * \li	On success, '*iteratorp' is a valid rdataset iterator.  *  * Returns:  *  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOTFOUND  *  * \li	Other results are possible, depending upon the database  *	implementation used.  */
 end_comment
 
 begin_function_decl
@@ -1784,7 +2025,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Enable / disable agressive cache cleaning.  */
+comment|/*%<  * Enable / disable aggressive cache cleaning.  */
 end_comment
 
 begin_function_decl
@@ -1882,7 +2123,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Remove a database implementation from the the list of supported  * implementations.  No databases of this type can be active when this  * is called.  *  * Requires:  * \li 	dbimp != NULL&& *dbimp == NULL  *  * Ensures:  *  * \li	Any memory allocated in *dbimp will be freed.  */
+comment|/*%<  * Remove a database implementation from the list of supported  * implementations.  No databases of this type can be active when this  * is called.  *  * Requires:  * \li 	dbimp != NULL&& *dbimp == NULL  *  * Ensures:  *  * \li	Any memory allocated in *dbimp will be freed.  */
 end_comment
 
 begin_function_decl
@@ -1903,6 +2144,157 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Get the origin DB node corresponding to the DB's zone.  This function  * should typically succeed unless the underlying DB implementation doesn't  * support the feature.  *  * Requires:  *  * \li	'db' is a valid zone database.  * \li	'nodep' != NULL&& '*nodep' == NULL  *  * Ensures:  * \li	On success, '*nodep' will point to the DB node of the zone's origin.  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOTFOUND - the DB implementation does not support this feature.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_db_getnsec3parameters
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
+name|dns_hash_t
+modifier|*
+name|hash
+parameter_list|,
+name|isc_uint8_t
+modifier|*
+name|flags
+parameter_list|,
+name|isc_uint16_t
+modifier|*
+name|interations
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|salt
+parameter_list|,
+name|size_t
+modifier|*
+name|salt_length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the NSEC3 parameters that are associated with this zone.  *  * Requires:  * \li	'db' is a valid zone database.  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOTFOUND - the DB implementation does not support this feature  *			  or this zone does not have NSEC3 records.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_db_findnsec3node
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_boolean_t
+name|create
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+modifier|*
+name|nodep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Find the NSEC3 node with name 'name'.  *  * Notes:  * \li	If 'create' is ISC_TRUE and no node with name 'name' exists, then  *	such a node will be created.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'name' is a valid, non-empty, absolute name.  *  * \li	nodep != NULL&& *nodep == NULL  *  * Ensures:  *  * \li	On success, *nodep is attached to the node with name 'name'.  *  * Returns:  *  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOTFOUND			If !create and name not found.  * \li	#ISC_R_NOMEMORY			Can only happen if create is ISC_TRUE.  *  * \li	Other results are possible, depending upon the database  *	implementation used.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_db_setsigningtime
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|isc_stdtime_t
+name|resign
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Sets the re-signing time associated with 'rdataset' to 'resign'.  *  * Requires:  * \li	'db' is a valid zone database.  * \li	'rdataset' to be associated with 'db'.  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOMEMORY  * \li	#ISC_R_NOTIMPLEMENTED - Not supported by this DB implementation.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_db_getsigningtime
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Return the rdataset with the earliest signing time in the zone.  * Note: the rdataset is version agnostic.  *  * Requires:  * \li	'db' is a valid zone database.  * \li	'rdataset' to be initialized but not associated.  * \li	'name' to be NULL or have a buffer associated with it.  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOTFOUND - No dataset exists.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_db_resigned
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Mark 'rdataset' as not being available to be returned by  * dns_db_getsigningtime().  If the changes associated with 'version'  * are committed this will be permanent.  If the version is not committed  * this change will be rolled back when the version is closed.  *  * Requires:  * \li	'db' is a valid zone database.  * \li	'rdataset' to be associated with 'db'.  * \li	'version' to be open for writing.  */
+end_comment
+
+begin_function_decl
+name|dns_stats_t
+modifier|*
+name|dns_db_getrrsetstats
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get statistics information counting RRsets stored in the DB, when available.  * The statistics may not be available depending on the DB implementation.  *  * Requires:  *  * \li	'db' is a valid database (zone or cache).  *  * Returns:  * \li	when available, a pointer to a statistics object created by  *	dns_rdatasetstats_create(); otherwise NULL.  */
 end_comment
 
 begin_macro

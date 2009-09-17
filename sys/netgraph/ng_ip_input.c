@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -226,6 +232,20 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_ng_outbound
+condition|)
+name|netisr_queue
+argument_list|(
+name|NETISR_IP
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+else|else
 name|netisr_dispatch
 argument_list|(
 name|NETISR_IP

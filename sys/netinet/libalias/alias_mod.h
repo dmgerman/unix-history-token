@@ -210,18 +210,11 @@ parameter_list|(
 name|struct
 name|libalias
 modifier|*
-name|la
 parameter_list|,
 comment|/* Fingerprint * function. */
 name|struct
-name|ip
-modifier|*
-name|pip
-parameter_list|,
-name|struct
 name|alias_data
 modifier|*
-name|ah
 parameter_list|)
 function_decl|;
 name|int
@@ -233,18 +226,15 @@ parameter_list|(
 name|struct
 name|libalias
 modifier|*
-name|la
 parameter_list|,
 comment|/* Aliasing * function. */
 name|struct
 name|ip
 modifier|*
-name|pip
 parameter_list|,
 name|struct
 name|alias_data
 modifier|*
-name|ah
 parameter_list|)
 function_decl|;
 name|LIST_ENTRY

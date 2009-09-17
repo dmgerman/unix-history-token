@@ -62,11 +62,7 @@ comment|/* 0-2 compat */
 end_comment
 
 begin_comment
-comment|/* 3-4 obsolete */
-end_comment
-
-begin_comment
-comment|/* 5-7 obsolete or unused */
+comment|/* 3-7 unused */
 end_comment
 
 begin_comment
@@ -74,7 +70,7 @@ comment|/* 8-10 compat */
 end_comment
 
 begin_comment
-comment|/* 11-12 obsolete or unused */
+comment|/* 11-12 unused */
 end_comment
 
 begin_define
@@ -170,7 +166,7 @@ comment|/* drn out, fls in, set */
 end_comment
 
 begin_comment
-comment|/* 23-25 obsolete or unused */
+comment|/* 23-25 unused */
 end_comment
 
 begin_define
@@ -207,11 +203,7 @@ comment|/* pts master validation */
 end_comment
 
 begin_comment
-comment|/* 29-69 free */
-end_comment
-
-begin_comment
-comment|/* 80-84 slip */
+comment|/* 29-85 unused */
 end_comment
 
 begin_define
@@ -237,7 +229,11 @@ comment|/* set ttywait timeout */
 end_comment
 
 begin_comment
-comment|/* 88 slip, ppp; conflicts */
+comment|/* 88 unused */
+end_comment
+
+begin_comment
+comment|/* 89-91 conflicts: tun and tap */
 end_comment
 
 begin_define
@@ -249,10 +245,6 @@ end_define
 
 begin_comment
 comment|/* enable/get timestamp 						 * of last input event */
-end_comment
-
-begin_comment
-comment|/* 70-90 ppp; many conflicts */
 end_comment
 
 begin_define
@@ -278,7 +270,11 @@ comment|/* modem: set wait on close */
 end_comment
 
 begin_comment
-comment|/* 90-92 tap; some conflicts */
+comment|/* 92-93 tun and tap */
+end_comment
+
+begin_comment
+comment|/* 94-97 conflicts: tun and tap */
 end_comment
 
 begin_define
@@ -312,10 +308,6 @@ end_define
 
 begin_comment
 comment|/* pty: external processing */
-end_comment
-
-begin_comment
-comment|/* 90-97 tun; some conflicts */
 end_comment
 
 begin_define
@@ -352,7 +344,7 @@ comment|/* get session id */
 end_comment
 
 begin_comment
-comment|/* 100 see consio.h */
+comment|/* 100 unused */
 end_comment
 
 begin_define
@@ -411,6 +403,10 @@ end_define
 
 begin_comment
 comment|/* get window size */
+end_comment
+
+begin_comment
+comment|/* 105 unused */
 end_comment
 
 begin_define

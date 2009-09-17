@@ -662,8 +662,6 @@ name|d_flags
 operator|=
 name|D_PSEUDO
 operator||
-name|D_NEEDGIANT
-operator||
 name|D_NEEDMINOR
 block|,
 operator|.
@@ -2030,7 +2028,7 @@ operator|->
 name|ap_queue
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|ap
@@ -2043,12 +2041,6 @@ name|AUDIT_PIPE_MTX
 argument_list|(
 name|ap
 argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|AUDIT_PIPE_LOCK_INIT

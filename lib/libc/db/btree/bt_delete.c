@@ -176,25 +176,19 @@ begin_function
 name|int
 name|__bt_delete
 parameter_list|(
-name|dbp
-parameter_list|,
-name|key
-parameter_list|,
-name|flags
-parameter_list|)
 specifier|const
 name|DB
 modifier|*
 name|dbp
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|BTREE
 modifier|*
@@ -491,25 +485,19 @@ specifier|static
 name|int
 name|__bt_stkacq
 parameter_list|(
-name|t
-parameter_list|,
-name|hp
-parameter_list|,
-name|c
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 name|PAGE
 modifier|*
 modifier|*
 name|hp
-decl_stmt|;
+parameter_list|,
 name|CURSOR
 modifier|*
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|BINTERNAL
 modifier|*
@@ -528,7 +516,7 @@ modifier|*
 name|h
 decl_stmt|;
 name|indx_t
-name|index
+name|idx
 decl_stmt|;
 name|pgno_t
 name|pgno
@@ -710,7 +698,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|index
+name|idx
 operator|=
 name|parent
 operator|->
@@ -726,7 +714,7 @@ name|h
 operator|->
 name|pgno
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 break|break;
@@ -757,7 +745,7 @@ name|GETBINTERNAL
 argument_list|(
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 name|pgno
@@ -812,7 +800,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|index
+name|idx
 operator|=
 literal|0
 expr_stmt|;
@@ -1009,7 +997,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|index
+name|idx
 operator|=
 name|parent
 operator|->
@@ -1025,7 +1013,7 @@ name|h
 operator|->
 name|pgno
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1056,7 +1044,7 @@ name|GETBINTERNAL
 argument_list|(
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 name|pgno
@@ -1102,7 +1090,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|index
+name|idx
 operator|=
 name|NEXTINDEX
 argument_list|(
@@ -1117,7 +1105,7 @@ name|t
 argument_list|,
 name|pgno
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 block|}
@@ -1207,19 +1195,15 @@ specifier|static
 name|int
 name|__bt_bdelete
 parameter_list|(
-name|t
-parameter_list|,
-name|key
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|)
 block|{
 name|EPG
 modifier|*
@@ -1580,18 +1564,14 @@ specifier|static
 name|int
 name|__bt_pdelete
 parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 name|PAGE
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|)
 block|{
 name|BINTERNAL
 modifier|*
@@ -1608,7 +1588,7 @@ decl_stmt|;
 name|indx_t
 name|cnt
 decl_stmt|,
-name|index
+name|idx
 decl_stmt|,
 modifier|*
 name|ip
@@ -1664,7 +1644,7 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-name|index
+name|idx
 operator|=
 name|parent
 operator|->
@@ -1676,7 +1656,7 @@ name|GETBINTERNAL
 argument_list|(
 name|pg
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 comment|/* Free any overflow pages. */
@@ -1727,6 +1707,7 @@ argument_list|)
 operator|==
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 name|pg
@@ -1782,6 +1763,7 @@ operator|)
 return|;
 continue|continue;
 block|}
+block|}
 else|else
 block|{
 comment|/* Pack remaining key items at the end of the page. */
@@ -1836,14 +1818,14 @@ name|pg
 operator|->
 name|linp
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
 for|for
 control|(
 name|cnt
 operator|=
-name|index
+name|idx
 operator|,
 name|ip
 operator|=
@@ -1886,7 +1868,7 @@ argument_list|(
 name|pg
 argument_list|)
 operator|-
-name|index
+name|idx
 init|;
 operator|--
 name|cnt
@@ -1989,37 +1971,29 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __bt_dleaf --  *	Delete a single record from a leaf page.  *  * Parameters:  *	t:	tree  *    key:	referenced key  *	h:	page  *	index:	index on page to delete  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  */
+comment|/*  * __bt_dleaf --  *	Delete a single record from a leaf page.  *  * Parameters:  *	t:	tree  *    key:	referenced key  *	h:	page  *	idx:	index on page to delete  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  */
 end_comment
 
 begin_function
 name|int
 name|__bt_dleaf
 parameter_list|(
-name|t
-parameter_list|,
-name|key
-parameter_list|,
-name|h
-parameter_list|,
-name|index
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 name|PAGE
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|,
 name|u_int
-name|index
-decl_stmt|;
+name|idx
+parameter_list|)
 block|{
 name|BLEAF
 modifier|*
@@ -2088,7 +2062,7 @@ name|pg
 operator|.
 name|index
 operator|==
-name|index
+name|idx
 operator|&&
 name|__bt_curdel
 argument_list|(
@@ -2098,7 +2072,7 @@ name|key
 argument_list|,
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 condition|)
 return|return
@@ -2115,7 +2089,7 @@ name|GETBLEAF
 argument_list|(
 name|h
 argument_list|,
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 if|if
@@ -2220,14 +2194,14 @@ name|h
 operator|->
 name|linp
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
 for|for
 control|(
 name|cnt
 operator|=
-name|index
+name|idx
 operator|,
 name|ip
 operator|=
@@ -2270,7 +2244,7 @@ argument_list|(
 name|h
 argument_list|)
 operator|-
-name|index
+name|idx
 init|;
 operator|--
 name|cnt
@@ -2355,7 +2329,7 @@ name|pg
 operator|.
 name|index
 operator|>
-name|index
+name|idx
 condition|)
 operator|--
 name|t
@@ -2375,7 +2349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __bt_curdel --  *	Delete the cursor.  *  * Parameters:  *	t:	tree  *    key:	referenced key (or NULL)  *	h:	page  *  index:	index on page to delete  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  */
+comment|/*  * __bt_curdel --  *	Delete the cursor.  *  * Parameters:  *	t:	tree  *    key:	referenced key (or NULL)  *	h:	page  *    idx:	index on page to delete  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  */
 end_comment
 
 begin_function
@@ -2383,30 +2357,22 @@ specifier|static
 name|int
 name|__bt_curdel
 parameter_list|(
-name|t
-parameter_list|,
-name|key
-parameter_list|,
-name|h
-parameter_list|,
-name|index
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 name|PAGE
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|,
 name|u_int
-name|index
-decl_stmt|;
+name|idx
+parameter_list|)
 block|{
 name|CURSOR
 modifier|*
@@ -2476,7 +2442,7 @@ name|e
 operator|.
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 if|if
 condition|(
@@ -2530,7 +2496,7 @@ block|}
 comment|/* Check previous key, if not at the beginning of the page. */
 if|if
 condition|(
-name|index
+name|idx
 operator|>
 literal|0
 condition|)
@@ -2545,7 +2511,7 @@ name|e
 operator|.
 name|index
 operator|=
-name|index
+name|idx
 operator|-
 literal|1
 expr_stmt|;
@@ -2579,7 +2545,7 @@ block|}
 comment|/* Check next key, if not at the end of the page. */
 if|if
 condition|(
-name|index
+name|idx
 operator|<
 name|NEXTINDEX
 argument_list|(
@@ -2599,7 +2565,7 @@ name|e
 operator|.
 name|index
 operator|=
-name|index
+name|idx
 operator|+
 literal|1
 expr_stmt|;
@@ -2633,7 +2599,7 @@ block|}
 comment|/* Check previous key if at the beginning of the page. */
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 literal|0
 operator|&&
@@ -2728,7 +2694,7 @@ block|}
 comment|/* Check next key if at the end of the page. */
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 name|NEXTINDEX
 argument_list|(
@@ -2870,7 +2836,7 @@ name|e
 operator|.
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 if|if
 condition|(
@@ -2937,18 +2903,14 @@ specifier|static
 name|int
 name|__bt_relink
 parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|)
 name|BTREE
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 name|PAGE
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|)
 block|{
 name|PAGE
 modifier|*

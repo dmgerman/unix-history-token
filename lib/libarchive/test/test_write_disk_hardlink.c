@@ -17,12 +17,62 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Execution bits, Group members bits and others bits do not work. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMASK
+value|0177
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_MASK
+value|(~0177)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|UMASK
 value|022
 end_define
+
+begin_define
+define|#
+directive|define
+name|E_MASK
+value|(~0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Exercise hardlink recreation.  *  * File permissions are chosen so that the authoritive entry  * has the correct permission and the non-authoritive versions  * are just writeable files.  */
@@ -890,6 +940,8 @@ argument_list|(
 name|st
 operator|.
 name|st_mode
+operator|&
+name|E_MASK
 argument_list|,
 operator|(
 name|S_IFREG
@@ -1010,6 +1062,8 @@ argument_list|(
 name|st
 operator|.
 name|st_mode
+operator|&
+name|E_MASK
 argument_list|,
 operator|(
 name|S_IFREG
@@ -1129,6 +1183,8 @@ argument_list|(
 name|st
 operator|.
 name|st_mode
+operator|&
+name|E_MASK
 argument_list|,
 operator|(
 name|S_IFREG
@@ -1179,6 +1235,8 @@ argument_list|(
 name|st2
 operator|.
 name|st_mode
+operator|&
+name|E_MASK
 argument_list|,
 operator|(
 name|S_IFREG
@@ -1252,6 +1310,8 @@ argument_list|(
 name|st
 operator|.
 name|st_mode
+operator|&
+name|E_MASK
 argument_list|,
 operator|(
 name|S_IFREG
@@ -1302,6 +1362,8 @@ argument_list|(
 name|st2
 operator|.
 name|st_mode
+operator|&
+name|E_MASK
 argument_list|,
 operator|(
 name|S_IFREG

@@ -684,6 +684,23 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|r128_driver_load
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|long
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|r128_driver_preclose
 parameter_list|(

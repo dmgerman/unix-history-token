@@ -2141,6 +2141,15 @@ condition|)
 break|break;
 if|if
 condition|(
+name|cgd
+operator|->
+name|protocol
+operator|!=
+name|PROTO_SCSI
+condition|)
+break|break;
+if|if
+condition|(
 name|SID_TYPE
 argument_list|(
 operator|&
@@ -10907,6 +10916,8 @@ name|free
 argument_list|(
 operator|&
 name|params
+operator|.
+name|mode_buf
 argument_list|,
 name|M_SCSICD
 argument_list|)

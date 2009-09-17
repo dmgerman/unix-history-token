@@ -4497,6 +4497,10 @@ argument_list|,
 name|sagw
 argument_list|,
 name|samask
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

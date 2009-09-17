@@ -472,50 +472,33 @@ specifier|static
 name|long
 name|median
 parameter_list|(
-name|a
-parameter_list|,
-name|eps_ptr
-parameter_list|,
-name|x
-parameter_list|,
-name|xlim
-parameter_list|,
-name|gnuf
-parameter_list|)
 name|float
 name|a
-decl_stmt|;
-comment|/* initial guess for the median */
+parameter_list|,
 name|float
 modifier|*
 name|eps_ptr
-decl_stmt|;
-comment|/* spacing near the median */
+parameter_list|,
 name|long
 modifier|*
 name|x
-decl_stmt|,
-decl|*
+parameter_list|,
+name|long
+modifier|*
 name|xlim
-decl_stmt|;
-end_function
-
-begin_comment
-comment|/* the data */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|unsigned
 name|int
 name|gnuf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+parameter_list|)
+comment|/* float a; */
+comment|/* initial guess for the median */
+comment|/* float *eps_ptr; */
+comment|/* spacing near the median */
+comment|/* long *x, *xlim; */
+comment|/* the data */
+comment|/* unsigned int gnuf; */
 comment|/* good enough estimate */
-end_comment
-
-begin_block
 block|{
 name|long
 modifier|*
@@ -1027,7 +1010,7 @@ return|return
 name|a
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -38,6 +38,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
+argument_list|,
+literal|0644
 argument_list|)
 decl_stmt|;
 name|failure
@@ -101,6 +103,10 @@ name|f
 decl_stmt|;
 name|int
 name|r
+decl_stmt|;
+name|struct
+name|stat
+name|st
 decl_stmt|;
 comment|/* Create a simple dir heirarchy; bail if anything fails. */
 if|if
@@ -551,6 +557,36 @@ literal|"test4/d1/foo"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Does bsdtar support -s option ? */
+name|systemf
+argument_list|(
+literal|"%s -cf - -s /foo/bar/ test4/d1/foo> NUL 2> check.err"
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|stat
+argument_list|(
+literal|"check.err"
+argument_list|,
+operator|&
+name|st
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|st
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+block|{
 name|systemf
 argument_list|(
 literal|"%s -cf - -s /foo/bar/ test4/d1/foo | %s -xf - -C test4_out"
@@ -607,6 +643,15 @@ argument_list|(
 literal|"test4_out2/test4/d1/bar"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|skipping
+argument_list|(
+literal|"bsdtar does not support -s option on this platform"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* TODO: Include some use of -C directory-changing within the filelist. */
 comment|/* I'm pretty sure -C within the filelist is broken on extract. */
 block|}

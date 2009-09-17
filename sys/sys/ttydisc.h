@@ -189,6 +189,26 @@ end_function_decl
 
 begin_function_decl
 name|size_t
+name|ttydisc_rint_simple
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
 name|ttydisc_rint_bypass
 parameter_list|(
 name|struct

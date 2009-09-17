@@ -320,10 +320,13 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|err_string
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -984,6 +987,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|err_string
@@ -992,6 +996,7 @@ name|int
 name|code
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|pmesg

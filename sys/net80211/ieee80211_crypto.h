@@ -246,6 +246,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_KEY_DEVICE
+comment|/* flags owned by device driver */
+define|\
+value|(IEEE80211_KEY_DEVKEY|IEEE80211_KEY_CIPHER0|IEEE80211_KEY_CIPHER1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_KEY_SWCRYPT
 define|\
 value|(IEEE80211_KEY_SWENCRYPT | IEEE80211_KEY_SWDECRYPT)
@@ -1008,6 +1017,9 @@ modifier|*
 parameter_list|,
 name|uint64_t
 name|rsc
+parameter_list|,
+name|int
+name|tid
 parameter_list|)
 function_decl|;
 end_function_decl

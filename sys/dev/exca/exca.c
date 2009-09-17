@@ -1067,7 +1067,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 if|if
 condition|(
 name|rman_get_start

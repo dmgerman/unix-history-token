@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../../config.h"
+file|"config.h"
 end_include
 
 begin_elif
@@ -46,7 +46,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_freebsd.h"
+file|"config_freebsd.h"
 end_include
 
 begin_elif
@@ -55,6 +55,12 @@ directive|elif
 name|defined
 argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
 argument_list|)
 end_elif
 
@@ -65,7 +71,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_windows.h"
+file|"config_windows.h"
 end_include
 
 begin_else
@@ -88,11 +94,66 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<dirent.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"../cpio_windows.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* In cygwin-1.7.x, the .nlinks field of directories is  * deliberately inaccurate, because to populate it requires  * stat'ing every file in the directory, which is slow.  * So, as an optimization cygwin doesn't do that in newer  * releases; all correct applications on any platform should  * never rely on it being> 1, so this optimization doesn't  * impact the operation of correctly coded applications.  * Therefore, the cpio test should not check its accuracy  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NLINKS_INACCURATE_FOR_DIRS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -130,11 +191,20 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -146,6 +216,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
 
 begin_include
 include|#
@@ -195,6 +271,12 @@ else|#
 directive|else
 end_else
 
+begin_undef
+undef|#
+directive|undef
+name|__FBSDID
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -202,11 +284,8 @@ name|__FBSDID
 parameter_list|(
 name|a
 parameter_list|)
+value|struct _undefined_hack
 end_define
-
-begin_comment
-comment|/* null */
-end_comment
 
 begin_endif
 endif|#
@@ -375,6 +454,14 @@ directive|define
 name|assertFileContents
 define|\
 value|test_setup(__FILE__, __LINE__);test_assert_file_contents
+end_define
+
+begin_define
+define|#
+directive|define
+name|assertTextFileContents
+define|\
+value|test_setup(__FILE__, __LINE__);test_assert_text_file_contents
 end_define
 
 begin_comment
@@ -641,6 +728,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|test_assert_text_file_contents
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|buff
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|f
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|test_assert_file_exists
 parameter_list|(
 specifier|const
@@ -733,6 +837,7 @@ comment|/* Pathname of exe to be tested. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|testprog

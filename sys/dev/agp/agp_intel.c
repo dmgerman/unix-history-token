@@ -1521,7 +1521,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|,
 name|vm_offset_t
@@ -1542,10 +1542,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 name|offset
 operator|>=
 operator|(
@@ -1594,7 +1590,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|)
 block|{
@@ -1612,10 +1608,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|offset
-operator|<
-literal|0
-operator|||
 name|offset
 operator|>=
 operator|(

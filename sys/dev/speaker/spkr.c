@@ -2095,7 +2095,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"spkrwrite: entering with dev = %s, count = %d\n"
+literal|"spkrwrite: entering with dev = %s, count = %zd\n"
 argument_list|,
 name|devtoname
 argument_list|(

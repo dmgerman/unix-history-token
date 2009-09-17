@@ -321,7 +321,6 @@ name|int
 name|index
 parameter_list|,
 name|caddr_t
-modifier|*
 name|data
 parameter_list|)
 block|{
@@ -459,7 +458,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|char
+name|int
 name|val
 parameter_list|)
 block|{
@@ -530,7 +529,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|char
+name|int
 name|val
 parameter_list|)
 block|{

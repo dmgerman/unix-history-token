@@ -406,6 +406,24 @@ name|ret
 operator|>=
 literal|0
 operator|&&
+name|S_ISREG
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+comment|/* Possibly a disk image, give it a try.  */
+empty_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ret
+operator|>=
+literal|0
+operator|&&
 name|S_ISCHR
 argument_list|(
 name|st

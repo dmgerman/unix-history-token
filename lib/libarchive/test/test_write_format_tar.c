@@ -123,6 +123,9 @@ name|archive_write_set_bytes_per_block
 argument_list|(
 name|a
 argument_list|,
+operator|(
+name|int
+operator|)
 name|blocksize
 argument_list|)
 argument_list|)
@@ -135,6 +138,9 @@ name|archive_write_set_bytes_in_last_block
 argument_list|(
 name|a
 argument_list|,
+operator|(
+name|int
+operator|)
 name|blocksize
 argument_list|)
 argument_list|)

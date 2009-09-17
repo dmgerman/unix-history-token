@@ -116,7 +116,7 @@ argument_list|)
 expr_stmt|;
 name|failure
 argument_list|(
-literal|"Version: %s"
+literal|"Version must start with 'bsdtar': ``%s''"
 argument_list|,
 name|p
 argument_list|)
@@ -175,7 +175,7 @@ block|}
 comment|/* Version number terminated by space. */
 name|failure
 argument_list|(
-literal|"Version: %s"
+literal|"No space after bsdtar version: ``%s''"
 argument_list|,
 name|p
 argument_list|)
@@ -215,7 +215,7 @@ name|q
 expr_stmt|;
 name|failure
 argument_list|(
-literal|"Version: %s"
+literal|"No space after bsdtar version: ``%s''"
 argument_list|,
 name|p
 argument_list|)
@@ -237,7 +237,7 @@ expr_stmt|;
 comment|/* Separator. */
 name|failure
 argument_list|(
-literal|"Version: %s"
+literal|"No `-' between bsdtar and libarchive versions: ``%s''"
 argument_list|,
 name|p
 argument_list|)
@@ -262,7 +262,7 @@ expr_stmt|;
 comment|/* libarchive name and version number */
 name|failure
 argument_list|(
-literal|"Version: %s"
+literal|"Not long enough for libarchive version: ``%s''"
 argument_list|,
 name|p
 argument_list|)
@@ -276,7 +276,7 @@ argument_list|)
 expr_stmt|;
 name|failure
 argument_list|(
-literal|"Version: %s"
+literal|"Libarchive version must start with `libarchive': ``%s''"
 argument_list|,
 name|p
 argument_list|)
@@ -358,7 +358,7 @@ condition|)
 operator|++
 name|q
 expr_stmt|;
-comment|/* All terminated by a newline. */
+comment|/* All terminated by end-of-line. */
 name|assert
 argument_list|(
 name|s
@@ -366,6 +366,27 @@ operator|>=
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Skip an optional CR character (e.g., Windows) */
+name|failure
+argument_list|(
+literal|"Version output must end with \\n or \\r\\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|q
+operator|==
+literal|'\r'
+condition|)
+block|{
+operator|++
+name|q
+expr_stmt|;
+operator|--
+name|s
+expr_stmt|;
+block|}
 name|assertEqualMem
 argument_list|(
 name|q

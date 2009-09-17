@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -63,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
 end_include
 
 begin_include
@@ -1691,7 +1691,7 @@ name|p_state
 operator|=
 name|PRS_NORMAL
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|p
@@ -1702,12 +1702,6 @@ operator|&
 name|p
 operator|->
 name|p_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
@@ -1788,6 +1782,17 @@ name|td_cpuset
 operator|=
 name|cpuset_thread0
 argument_list|()
+expr_stmt|;
+name|prison0
+operator|.
+name|pr_cpuset
+operator|=
+name|cpuset_ref
+argument_list|(
+name|td
+operator|->
+name|td_cpuset
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -1913,9 +1918,9 @@ name|p_ucred
 operator|->
 name|cr_prison
 operator|=
-name|NULL
+operator|&
+name|prison0
 expr_stmt|;
-comment|/* Don't jail it. */
 ifdef|#
 directive|ifdef
 name|AUDIT

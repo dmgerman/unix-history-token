@@ -620,9 +620,12 @@ begin_comment
 comment|/* Define to 1 if you have the `closefrom' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CLOSEFROM */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CLOSEFROM
+value|1
+end_define
 
 begin_comment
 comment|/* Define if gai_strerror() returns const char * */
@@ -832,9 +835,12 @@ begin_comment
 comment|/* Define if you have /dev/ptmx */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_DEV_PTMX */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_DEV_PTMX
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have /dev/ptc */
@@ -1114,6 +1120,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_GETGRSET */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `getlastlogxbyname' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETLASTLOGXBYNAME */
 end_comment
 
 begin_comment
@@ -2802,6 +2816,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if `sin6_scope_id' is member of `struct sockaddr_in6'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_SOCKADDR_IN6_SIN6_SCOPE_ID
+value|1
+end_define
+
+begin_comment
 comment|/* define if you have struct sockaddr_storage data type */
 end_comment
 
@@ -3648,6 +3673,14 @@ end_comment
 
 begin_comment
 comment|/* #undef KRB5 */
+end_comment
+
+begin_comment
+comment|/* Define if pututxline updates lastlog too */
+end_comment
+
+begin_comment
+comment|/* #undef LASTLOG_WRITE_PUTUTXLINE */
 end_comment
 
 begin_comment

@@ -588,7 +588,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|6000
+literal|12000
 block|,
 literal|0x0b
 block|,
@@ -609,7 +609,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|12000
+literal|24000
 block|,
 literal|0x0a
 block|,
@@ -621,7 +621,7 @@ operator||
 literal|24
 operator|)
 block|,
-literal|2
+literal|1
 block|}
 block|,
 comment|/*  18 Mb */
@@ -630,7 +630,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|18000
+literal|36000
 block|,
 literal|0x0e
 block|,
@@ -638,7 +638,7 @@ literal|0x00
 block|,
 literal|36
 block|,
-literal|2
+literal|1
 block|}
 block|,
 comment|/*  24 Mb */
@@ -647,7 +647,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|24000
+literal|48000
 block|,
 literal|0x09
 block|,
@@ -659,7 +659,7 @@ operator||
 literal|48
 operator|)
 block|,
-literal|3
+literal|2
 block|}
 block|,
 comment|/*  36 Mb */
@@ -668,7 +668,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|36000
+literal|72000
 block|,
 literal|0x0d
 block|,
@@ -676,7 +676,7 @@ literal|0x00
 block|,
 literal|72
 block|,
-literal|3
+literal|2
 block|}
 block|,
 comment|/*  48 Mb */
@@ -685,7 +685,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|48000
+literal|96000
 block|,
 literal|0x08
 block|,
@@ -693,7 +693,7 @@ literal|0x00
 block|,
 literal|96
 block|,
-literal|3
+literal|2
 block|}
 block|,
 comment|/*  54 Mb */
@@ -702,7 +702,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|54000
+literal|108000
 block|,
 literal|0x0c
 block|,
@@ -710,7 +710,7 @@ literal|0x00
 block|,
 literal|108
 block|,
-literal|3
+literal|2
 block|}
 block|}
 block|, }
@@ -738,7 +738,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|6000
+literal|12000
 block|,
 literal|0x0b
 block|,
@@ -759,7 +759,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|9000
+literal|18000
 block|,
 literal|0x0f
 block|,
@@ -776,7 +776,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|12000
+literal|24000
 block|,
 literal|0x0a
 block|,
@@ -797,7 +797,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|18000
+literal|36000
 block|,
 literal|0x0e
 block|,
@@ -814,7 +814,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|24000
+literal|48000
 block|,
 literal|0x09
 block|,
@@ -835,7 +835,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|36000
+literal|72000
 block|,
 literal|0x0d
 block|,
@@ -852,7 +852,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|48000
+literal|96000
 block|,
 literal|0x08
 block|,
@@ -869,7 +869,7 @@ name|AH_TRUE
 block|,
 name|TURBO
 block|,
-literal|54000
+literal|108000
 block|,
 literal|0x0c
 block|,

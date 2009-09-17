@@ -571,6 +571,21 @@ name|PTE_NOCACHE
 block|, 	}
 block|,
 block|{
+comment|/* CompactFlash controller. */
+name|AT91RM92_CF_BASE
+block|,
+name|AT91RM92_CF_PA_BASE
+block|,
+name|AT91RM92_CF_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -721,6 +736,10 @@ block|{
 name|struct
 name|pv_addr
 name|kernel_l1pt
+decl_stmt|;
+name|struct
+name|pv_addr
+name|dpcpu
 decl_stmt|;
 name|int
 name|loop
@@ -937,6 +956,29 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Allocate dynamic per-cpu area. */
+name|valloc_pages
+argument_list|(
+name|dpcpu
+argument_list|,
+name|DPCPU_SIZE
+operator|/
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|dpcpu
+operator|.
+name|pv_va
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Allocate stacks for all modes */
 name|valloc_pages
 argument_list|(
@@ -1128,6 +1170,28 @@ argument_list|,
 name|systempage
 operator|.
 name|pv_pa
+argument_list|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+argument_list|,
+name|PTE_CACHE
+argument_list|)
+expr_stmt|;
+comment|/* Map the DPCPU pages */
+name|pmap_map_chunk
+argument_list|(
+name|l1pagetable
+argument_list|,
+name|dpcpu
+operator|.
+name|pv_va
+argument_list|,
+name|dpcpu
+operator|.
+name|pv_pa
+argument_list|,
+name|DPCPU_SIZE
 argument_list|,
 name|VM_PROT_READ
 operator||

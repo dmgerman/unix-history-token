@@ -149,7 +149,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Per uid resource consumption  *  * Locking guide:  * (a) Constant from inception  * (b) Lockless, updated using atomics  * (c) Locked by global uihashtbl_mtx  */
+comment|/*-  * Per uid resource consumption  *  * Locking guide:  * (a) Constant from inception  * (b) Lockless, updated using atomics  * (c) Locked by global uihashtbl_mtx  * (d) Locked by the ui_vmsize_mtx  */
 end_comment
 
 begin_struct
@@ -163,6 +163,14 @@ argument_list|)
 name|ui_hash
 expr_stmt|;
 comment|/* (c) hash chain of uidinfos */
+name|struct
+name|mtx
+name|ui_vmsize_mtx
+decl_stmt|;
+name|vm_ooffset_t
+name|ui_vmsize
+decl_stmt|;
+comment|/* (d) swap reservation by uid */
 name|long
 name|ui_sbsize
 decl_stmt|;
@@ -186,6 +194,26 @@ comment|/* (b) reference count */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|UIDINFO_VMSIZE_LOCK
+parameter_list|(
+name|ui
+parameter_list|)
+value|mtx_lock(&((ui)->ui_vmsize_mtx))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIDINFO_VMSIZE_UNLOCK
+parameter_list|(
+name|ui
+parameter_list|)
+value|mtx_unlock(&((ui)->ui_vmsize_mtx))
+end_define
 
 begin_struct_decl
 struct_decl|struct

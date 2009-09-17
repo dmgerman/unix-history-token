@@ -89,31 +89,21 @@ directive|include
 file|<arm/mv/mvvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arm/mv/mvwin.h>
+end_include
+
 begin_comment
 comment|/*  * Virtual address space layout:  * -----------------------------  * 0x0000_0000 - 0xbfff_ffff	: user process  *  * 0xc040_0000 - virtual_avail	: kernel reserved (text, data, page tables  *				: structures, ARM stacks etc.)  * virtual_avail - 0xefff_ffff	: KVA (virtual_avail is typically< 0xc0a0_0000)  * 0xf000_0000 - 0xf0ff_ffff	: no-cache allocation area (16MB)  * 0xf100_0000 - 0xf10f_ffff	: SoC integrated devices registers range (1MB)  * 0xf110_0000 - 0xf11f_ffff	: PCI-Express I/O space (1MB)  * 0xf120_0000 - 0xf12f_ffff	: unused (1MB)  * 0xf130_0000 - 0xf52f_ffff	: PCI-Express memory space (64MB)  * 0xf930_0000 - 0xfffe_ffff	: unused (~172MB)  * 0xffff_0000 - 0xffff_0fff	: 'high' vectors page (4KB)  * 0xffff_1000 - 0xffff_1fff	: ARM_TP_ADDRESS/RAS page (4KB)  * 0xffff_2000 - 0xffff_ffff	: unused (~55KB)  */
 end_comment
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-name|pmap_devmap_bootstrap_table
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|pmap_bootstrap_lastaddr
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Static device mappings. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|struct
 name|pmap_devmap
@@ -203,35 +193,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|int
-name|platform_pmap_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|pmap_bootstrap_lastaddr
-operator|=
-name|MV_BASE
-operator|-
-name|ARM_NOCACHE_KVA_SIZE
-expr_stmt|;
-name|pmap_devmap_bootstrap_table
-operator|=
-operator|&
-name|pmap_devmap
-index|[
-literal|0
-index|]
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 name|void

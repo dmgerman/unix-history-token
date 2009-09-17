@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2009 Hans Petter Selasky. All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * USB Device Port register definitions, copied from ATMEGA  * documentation provided by ATMEL.  */
+comment|/*  * USB Device Port register definitions, copied from ATMEGA documentation  * provided by ATMEL.  */
 end_comment
 
 begin_ifndef
@@ -30,23 +30,32 @@ name|ATMEGA_MAX_DEVICES
 value|(USB_MIN_DEVICES + 1)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ATMEGA_HAVE_BUS_SPACE
-end_ifndef
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGTCON
+value|0xF9
+end_define
 
 begin_define
 define|#
 directive|define
-name|ATMEGA_HAVE_BUS_SPACE
-value|1
+name|ATMEGA_OTGTCON_VALUE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGTCON_PAGE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 5)
+end_define
 
 begin_define
 define|#
@@ -737,6 +746,62 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATMEGA_OTGINT
+value|0xDF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON
+value|0xDD
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_VBUSRQC
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_VBUSREQ
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_VBUSHWC
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_SRPSEL
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_SRPREQ
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_OTGCON_HNPREQ
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATMEGA_USBINT
 value|0xDA
 end_define
@@ -750,6 +815,17 @@ end_define
 
 begin_comment
 comment|/* USB VBUS interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_USBINT_IDI
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* USB ID interrupt */
 end_comment
 
 begin_define
@@ -790,6 +866,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATMEGA_USBCON_IDE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATMEGA_USBCON_OTGPADE
 value|(1<< 4)
 end_define
@@ -820,6 +903,27 @@ define|#
 directive|define
 name|ATMEGA_UHWCON_UVREGE
 value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_UHWCON_UVCONE
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_UHWCON_UIDE
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMEGA_UHWCON_UIMOD
+value|(1<< 7)
 end_define
 
 begin_define
@@ -924,7 +1028,7 @@ name|atmegadci_clocks_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 parameter_list|)
 function_decl|;
@@ -944,7 +1048,7 @@ modifier|*
 name|func
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -1000,7 +1104,7 @@ modifier|*
 name|func
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
@@ -1030,6 +1134,9 @@ comment|/*          * short_pkt = 0: transfer should be short terminated        
 name|uint8_t
 name|setup_alt_next
 decl_stmt|;
+name|uint8_t
+name|did_stall
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1039,15 +1146,15 @@ struct|struct
 name|atmegadci_config_desc
 block|{
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 name|confd
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 name|ifcd
 decl_stmt|;
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 name|endpd
 decl_stmt|;
 block|}
@@ -1063,7 +1170,7 @@ name|uWord
 name|wValue
 decl_stmt|;
 name|struct
-name|usb2_port_status
+name|usb_port_status
 name|ps
 decl_stmt|;
 block|}
@@ -1141,27 +1248,12 @@ struct|struct
 name|atmegadci_softc
 block|{
 name|struct
-name|usb2_bus
+name|usb_bus
 name|sc_bus
 decl_stmt|;
 name|union
 name|atmegadci_hub_temp
 name|sc_hub_temp
-decl_stmt|;
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|usb2_xfer
-argument_list|)
-name|sc_interrupt_list_head
-expr_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|sc_root_ctrl
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
-name|sc_root_intr
 decl_stmt|;
 comment|/* must be set by by the bus interface layer */
 name|atmegadci_clocks_t
@@ -1173,7 +1265,7 @@ modifier|*
 name|sc_clocks_off
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_devices
 index|[
@@ -1189,13 +1281,6 @@ name|void
 modifier|*
 name|sc_intr_hdl
 decl_stmt|;
-if|#
-directive|if
-operator|(
-name|ATMEGA_HAVE_BUS_SPACE
-operator|!=
-literal|0
-operator|)
 name|struct
 name|resource
 modifier|*
@@ -1207,8 +1292,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_io_hdl
 decl_stmt|;
-endif|#
-directive|endif
 name|uint8_t
 name|sc_rt_addr
 decl_stmt|;
@@ -1240,7 +1323,7 @@ comment|/* prototypes */
 end_comment
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|atmegadci_init
 parameter_list|(
 name|struct

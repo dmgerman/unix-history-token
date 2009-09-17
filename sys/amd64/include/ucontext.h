@@ -15,12 +15,37 @@ directive|define
 name|_MACHINE_UCONTEXT_H_
 end_define
 
+begin_comment
+comment|/*  * mc_trapno bits. Shall be in sync with TF_XXX.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_MC_HASSEGS
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MC_HASBASES
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MC_FLAG_MASK
+value|(_MC_HASSEGS | _MC_HASBASES)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
 name|__mcontext
 block|{
-comment|/* 	 * The first 20 fields must match the definition of 	 * sigcontext. So that we can support sigcontext 	 * and ucontext_t at the same time. 	 */
+comment|/* 	 * The first 24 fields must match the definition of 	 * sigcontext. So that we can support sigcontext 	 * and ucontext_t at the same time. 	 */
 name|__register_t
 name|mc_onstack
 decl_stmt|;
@@ -71,14 +96,26 @@ decl_stmt|;
 name|__register_t
 name|mc_r15
 decl_stmt|;
-name|__register_t
+name|__uint32_t
 name|mc_trapno
+decl_stmt|;
+name|__uint16_t
+name|mc_fs
+decl_stmt|;
+name|__uint16_t
+name|mc_gs
 decl_stmt|;
 name|__register_t
 name|mc_addr
 decl_stmt|;
-name|__register_t
+name|__uint32_t
 name|mc_flags
+decl_stmt|;
+name|__uint16_t
+name|mc_es
+decl_stmt|;
+name|__uint16_t
+name|mc_ds
 decl_stmt|;
 name|__register_t
 name|mc_err
@@ -141,10 +178,16 @@ index|]
 name|__aligned
 decl|(16
 decl_stmt|);
+name|__register_t
+name|mc_fsbase
+decl_stmt|;
+name|__register_t
+name|mc_gsbase
+decl_stmt|;
 name|long
 name|mc_spare
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}

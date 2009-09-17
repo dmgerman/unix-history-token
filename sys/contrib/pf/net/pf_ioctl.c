@@ -16,18 +16,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_inet6.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -39,16 +27,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
 
 begin_include
 include|#
@@ -270,12 +259,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -349,12 +332,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
 end_include
 
 begin_ifdef
@@ -19953,11 +19930,6 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 comment|/* 	 * IPv6 is not affected by ip_len/ip_off byte order changes. 	 */
 name|int
 name|chk
@@ -19978,11 +19950,7 @@ name|m_flags
 operator|&
 name|M_LOOP
 condition|?
-operator|&
 name|V_loif
-index|[
-literal|0
-index|]
 else|:
 name|ifp
 argument_list|,

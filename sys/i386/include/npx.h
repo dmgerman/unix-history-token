@@ -412,8 +412,7 @@ begin_function_decl
 name|void
 name|npxinit
 parameter_list|(
-name|u_short
-name|control
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../../config.h"
+file|"config.h"
 end_include
 
 begin_elif
@@ -46,7 +46,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_freebsd.h"
+file|"config_freebsd.h"
 end_include
 
 begin_elif
@@ -55,6 +55,12 @@ directive|elif
 name|defined
 argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
 argument_list|)
 end_elif
 
@@ -65,7 +71,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../config_windows.h"
+file|"config_windows.h"
 end_include
 
 begin_else
@@ -88,11 +94,55 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<dirent.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|dirent
+value|direct
+end_define
+
+begin_include
+include|#
+directive|include
+file|"../bsdtar_windows.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<direct.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -130,11 +180,20 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -170,10 +229,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* No non-FreeBSD platform will have __FBSDID, so just define it here. */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -195,6 +250,16 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* Some non-FreeBSD platforms such as newlib-derived ones like  * cygwin, have __FBSDID, so this definition must be guarded.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FBSDID
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -207,6 +272,11 @@ end_define
 begin_comment
 comment|/* null */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -758,6 +828,7 @@ comment|/* Pathname of exe to be tested. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|testprog

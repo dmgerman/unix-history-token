@@ -168,16 +168,37 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * XXX there seems to be no prefix reserved for this header, so the name  * "msg" in "struct msg" and the names of all of the nonstandard members  * (mainly "msg_pad*) are namespace pollution.  */
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD5
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD7
+argument_list|)
+end_if
 
 begin_struct
 struct|struct
-name|msqid_ds
+name|msqid_ds_old
 block|{
 name|struct
-name|ipc_perm
+name|ipc_perm_old
 name|msg_perm
 decl_stmt|;
 comment|/* msg queue permission bits */
@@ -240,6 +261,72 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * XXX there seems to be no prefix reserved for this header, so the name  * "msg" in "struct msg" and the names of all of the nonstandard members  * (mainly "msg_pad*) are namespace pollution.  */
+end_comment
+
+begin_struct
+struct|struct
+name|msqid_ds
+block|{
+name|struct
+name|ipc_perm
+name|msg_perm
+decl_stmt|;
+comment|/* msg queue permission bits */
+name|struct
+name|msg
+modifier|*
+name|msg_first
+decl_stmt|;
+comment|/* first message in the queue */
+name|struct
+name|msg
+modifier|*
+name|msg_last
+decl_stmt|;
+comment|/* last message in the queue */
+name|msglen_t
+name|msg_cbytes
+decl_stmt|;
+comment|/* number of bytes in use on the queue */
+name|msgqnum_t
+name|msg_qnum
+decl_stmt|;
+comment|/* number of msgs in the queue */
+name|msglen_t
+name|msg_qbytes
+decl_stmt|;
+comment|/* max # of bytes on the queue */
+name|pid_t
+name|msg_lspid
+decl_stmt|;
+comment|/* pid of last msgsnd() */
+name|pid_t
+name|msg_lrpid
+decl_stmt|;
+comment|/* pid of last msgrcv() */
+name|time_t
+name|msg_stime
+decl_stmt|;
+comment|/* time of last msgsnd() */
+name|time_t
+name|msg_rtime
+decl_stmt|;
+comment|/* time of last msgrcv() */
+name|time_t
+name|msg_ctime
+decl_stmt|;
+comment|/* time of last msgctl() */
 block|}
 struct|;
 end_struct

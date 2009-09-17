@@ -261,11 +261,11 @@ name|v_cache_dst
 expr_stmt|;
 comment|/* c Cache entries to us */
 name|struct
-name|vnode
+name|namecache
 modifier|*
-name|v_dd
+name|v_cache_dd
 decl_stmt|;
-comment|/* c .. vnode */
+comment|/* c Cache entry for .. vnode */
 comment|/* 	 * clustering stuff 	 */
 name|daddr_t
 name|v_cstart
@@ -559,7 +559,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do {							\ 		if (!VN_KNLIST_EMPTY(vp))			\ 			KNOTE(&vp->v_pollinfo->vpi_selinfo.si_note, (b), (a)); \ 	} while (0)
+value|do {							\ 		if (!VN_KNLIST_EMPTY(vp))			\ 			KNOTE(&vp->v_pollinfo->vpi_selinfo.si_note, (b), \ 			    (a) | KNF_NOKQLOCK);		\ 	} while (0)
 end_define
 
 begin_define
@@ -571,7 +571,7 @@ name|vp
 parameter_list|,
 name|b
 parameter_list|)
-value|VN_KNOTE(vp, b, 1)
+value|VN_KNOTE(vp, b, KNF_LISTLOCKED)
 end_define
 
 begin_define
@@ -1081,14 +1081,14 @@ comment|/* seq heuristic in upper 16 bits */
 end_comment
 
 begin_comment
-comment|/*  *  Flags for accmode_t.  */
+comment|/*  * Flags for accmode_t.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VEXEC
-value|000100
+value|000000000100
 end_define
 
 begin_comment
@@ -1099,7 +1099,7 @@ begin_define
 define|#
 directive|define
 name|VWRITE
-value|000200
+value|000000000200
 end_define
 
 begin_comment
@@ -1110,7 +1110,7 @@ begin_define
 define|#
 directive|define
 name|VREAD
-value|000400
+value|000000000400
 end_define
 
 begin_comment
@@ -1121,40 +1121,168 @@ begin_define
 define|#
 directive|define
 name|VADMIN
-value|010000
+value|000000010000
 end_define
 
 begin_comment
-comment|/* permission to administer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VSTAT
-value|020000
-end_define
-
-begin_comment
-comment|/* permission to retrieve attrs */
+comment|/* being the file owner */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VAPPEND
-value|040000
+value|000000040000
 end_define
 
 begin_comment
 comment|/* permission to write/append */
 end_comment
 
+begin_comment
+comment|/*  * VEXPLICIT_DENY makes VOP_ACCESSX(9) return EPERM or EACCES only  * if permission was denied explicitly, by a "deny" rule in NFSv4 ACL,  * and 0 otherwise.  This never happens with ordinary unix access rights  * or POSIX.1e ACLs.  Obviously, VEXPLICIT_DENY must be OR-ed with  * some other V* constant.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|VALLPERM
-value|(VEXEC | VWRITE | VREAD | VADMIN | VSTAT | VAPPEND)
+name|VEXPLICIT_DENY
+value|000000100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VREAD_NAMED_ATTRS
+value|000000200000
+end_define
+
+begin_comment
+comment|/* not used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VWRITE_NAMED_ATTRS
+value|000000400000
+end_define
+
+begin_comment
+comment|/* not used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDELETE_CHILD
+value|000001000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VREAD_ATTRIBUTES
+value|000002000000
+end_define
+
+begin_comment
+comment|/* permission to stat(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VWRITE_ATTRIBUTES
+value|000004000000
+end_define
+
+begin_comment
+comment|/* change {m,c,a}time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDELETE
+value|000010000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VREAD_ACL
+value|000020000000
+end_define
+
+begin_comment
+comment|/* read ACL and file mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VWRITE_ACL
+value|000040000000
+end_define
+
+begin_comment
+comment|/* change ACL and/or file mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VWRITE_OWNER
+value|000100000000
+end_define
+
+begin_comment
+comment|/* change file owner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSYNCHRONIZE
+value|000200000000
+end_define
+
+begin_comment
+comment|/* not used */
+end_comment
+
+begin_comment
+comment|/*  * Permissions that were traditionally granted only to the file owner.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VADMIN_PERMS
+value|(VADMIN | VWRITE_ATTRIBUTES | VWRITE_ACL | \     VWRITE_OWNER)
+end_define
+
+begin_comment
+comment|/*  * Permissions that were traditionally granted to everyone.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSTAT_PERMS
+value|(VREAD_ATTRIBUTES | VREAD_ACL)
+end_define
+
+begin_comment
+comment|/*  * Permissions that allow to change the state of the file in any way.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMODIFY_PERMS
+value|(VWRITE | VAPPEND | VADMIN_PERMS | VDELETE_CHILD | \     VDELETE)
 end_define
 
 begin_comment
@@ -1514,46 +1642,6 @@ begin_comment
 comment|/* predefined null vattr structure */
 end_comment
 
-begin_comment
-comment|/*  * Macro/function to check for client cache inconsistency w.r.t. leasing.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LEASE_READ
-value|0x1
-end_define
-
-begin_comment
-comment|/* Check lease for readers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LEASE_WRITE
-value|0x2
-end_define
-
-begin_comment
-comment|/* Check lease for modifiers */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|lease_updatetime
-function_decl|)
-parameter_list|(
-name|int
-name|deltat
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -1614,7 +1702,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|((vp)->v_vnlock->lock_object.lo_flags |= LK_CANRECURSE)
+value|((vp)->v_vnlock->lock_object.lo_flags |= LO_RECURSABLE)
 end_define
 
 begin_define
@@ -2259,6 +2347,17 @@ file|"vnode_if.h"
 end_include
 
 begin_comment
+comment|/* vn_open_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_OPEN_NOAUDIT
+value|0x00000001
+end_define
+
+begin_comment
 comment|/*  * Public vnode manipulation functions.  */
 end_comment
 
@@ -2339,21 +2438,6 @@ struct_decl|struct
 name|vnode
 struct_decl|;
 end_struct_decl
-
-begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|lease_check_hook
-function_decl|)
-parameter_list|(
-name|struct
-name|vop_lease_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* cache_* may belong in namei.h. */
@@ -2599,21 +2683,35 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lease_check
+name|speedup_syncer
 parameter_list|(
-name|struct
-name|vop_lease_args
-modifier|*
-name|ap
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|speedup_syncer
+name|vn_vptocnp
 parameter_list|(
-name|void
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|u_int
+modifier|*
+name|buflen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3151,6 +3249,9 @@ parameter_list|,
 name|int
 name|cmode
 parameter_list|,
+name|u_int
+name|vn_open_flags
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
@@ -3667,6 +3768,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vop_stdaccessx
+parameter_list|(
+name|struct
+name|vop_accessx_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_stdadvlock
 parameter_list|(
 name|struct
@@ -3707,6 +3820,18 @@ parameter_list|(
 name|struct
 name|vop_poll_args
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_stdvptocnp
+parameter_list|(
+name|struct
+name|vop_vptocnp_args
+modifier|*
+name|ap
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4408,6 +4533,17 @@ name|dp
 parameter_list|,
 name|off_t
 name|off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vfs_unixify_accmode
+parameter_list|(
+name|accmode_t
+modifier|*
+name|accmode
 parameter_list|)
 function_decl|;
 end_function_decl

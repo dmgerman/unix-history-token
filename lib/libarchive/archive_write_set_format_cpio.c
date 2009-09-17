@@ -402,6 +402,12 @@ literal|1
 expr_stmt|;
 name|a
 operator|->
+name|format_name
+operator|=
+literal|"cpio"
+expr_stmt|;
+name|a
+operator|->
 name|format_write_header
 operator|=
 name|archive_write_cpio_header
@@ -577,6 +583,9 @@ expr_stmt|;
 comment|/* 	 * TODO: Generate artificial inode numbers rather than just 	 * re-using the ones off the disk.  That way, the 18-bit c_ino 	 * field only limits the number of files in the archive. 	 */
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|archive_entry_ino
 argument_list|(
 name|entry

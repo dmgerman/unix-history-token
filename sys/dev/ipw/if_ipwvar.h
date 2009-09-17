@@ -115,8 +115,11 @@ decl_stmt|;
 name|uint16_t
 name|wr_chan_flags
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|wr_antsignal
+decl_stmt|;
+name|int8_t
+name|wr_antnoise
 decl_stmt|;
 block|}
 struct|;
@@ -127,7 +130,7 @@ define|#
 directive|define
 name|IPW_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL))
+value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL) |			\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTNOISE))
 end_define
 
 begin_struct
@@ -166,26 +169,6 @@ block|{
 name|struct
 name|ieee80211vap
 name|vap
-decl_stmt|;
-name|struct
-name|task
-name|assoc_task
-decl_stmt|;
-name|struct
-name|task
-name|disassoc_task
-decl_stmt|;
-name|struct
-name|task
-name|assoc_success_task
-decl_stmt|;
-name|struct
-name|task
-name|assoc_failed_task
-decl_stmt|;
-name|struct
-name|task
-name|scandone_task
 decl_stmt|;
 name|int
 function_decl|(
@@ -236,18 +219,6 @@ decl_stmt|;
 name|struct
 name|task
 name|sc_init_task
-decl_stmt|;
-name|struct
-name|task
-name|sc_scan_task
-decl_stmt|;
-name|struct
-name|task
-name|sc_chan_task
-decl_stmt|;
-name|struct
-name|task
-name|sc_bmiss_task
 decl_stmt|;
 name|struct
 name|callout
@@ -463,15 +434,9 @@ name|struct
 name|ipw_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 name|struct
 name|ipw_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-name|int
-name|sc_txtap_len
 decl_stmt|;
 block|}
 struct|;

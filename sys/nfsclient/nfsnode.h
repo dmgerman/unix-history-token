@@ -183,6 +183,26 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|nfs_accesscache
+block|{
+name|u_int32_t
+name|mode
+decl_stmt|;
+comment|/* ACCESS mode cache */
+name|uid_t
+name|uid
+decl_stmt|;
+comment|/* credentials having mode */
+name|time_t
+name|stamp
+decl_stmt|;
+comment|/* mode cache timestamp */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * The nfsnode is the nfs equivalent to ufs's inode. Any similarity  * is purely coincidental.  * There is a unique nfsnode allocated for each active file,  * each current directory, each mounted-on file, text file, and the root.  * An nfsnode is 'named' by its file handle. (nget/nfs_node.c)  * If this structure exceeds 256 bytes (it is currently 256 using 4.4BSD-Lite  * type definitions), file handles of> 32 bytes should probably be split out  * into a separate MALLOC()'d data structure. (Reduce the size of nfsfh_t by  * changing the definition in nfsproto.h of NFS_SMALLFH.)  * NB: Hopefully the current order of the fields is such that everything will  *     be well aligned and, therefore, tightly packed.  */
 end_comment
@@ -217,18 +237,13 @@ name|time_t
 name|n_attrstamp
 decl_stmt|;
 comment|/* Attr. cache timestamp */
-name|u_int32_t
-name|n_mode
+name|struct
+name|nfs_accesscache
+name|n_accesscache
+index|[
+name|NFS_ACCESSCACHESIZE
+index|]
 decl_stmt|;
-comment|/* ACCESS mode cache */
-name|uid_t
-name|n_modeuid
-decl_stmt|;
-comment|/* credentials having mode */
-name|time_t
-name|n_modestamp
-decl_stmt|;
-comment|/* mode cache timestamp */
 name|struct
 name|timespec
 name|n_mtime
@@ -331,14 +346,6 @@ name|nfsfh_t
 name|n_fh
 decl_stmt|;
 comment|/* Small File Handle */
-name|struct
-name|nfs4_fctx
-name|n_rfc
-decl_stmt|;
-name|struct
-name|nfs4_fctx
-name|n_wfc
-decl_stmt|;
 name|u_char
 modifier|*
 name|n_name
@@ -643,24 +650,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vop_vector
-name|nfs4_vnodeops
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|buf_ops
 name|buf_ops_nfs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|buf_ops
-name|buf_ops_nfs4
 decl_stmt|;
 end_decl_stmt
 
@@ -756,17 +747,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nfs4_removeit
-parameter_list|(
-name|struct
-name|sillyrename
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|nfs_nget
 parameter_list|(
 name|struct
@@ -806,35 +786,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint64_t
-modifier|*
-name|nfs4_getcookie
-parameter_list|(
-name|struct
-name|nfsnode
-modifier|*
-parameter_list|,
-name|off_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|nfs_invaldir
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nfs4_invaldir
 parameter_list|(
 name|struct
 name|vnode

@@ -4,7 +4,7 @@ comment|/* v3_purp.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2001.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2001.  */
 end_comment
 
 begin_comment
@@ -1373,8 +1373,14 @@ block|,
 comment|/* 291 */
 endif|#
 directive|endif
+name|NID_policy_constraints
+block|,
+comment|/* 401 */
 name|NID_proxyCertInfo
+block|,
 comment|/* 661 */
+name|NID_inhibit_any_policy
+comment|/* 748 */
 block|}
 decl_stmt|;
 name|int
@@ -1544,7 +1550,7 @@ name|x
 operator|->
 name|ex_flags
 operator||=
-name|EXFLAG_SS
+name|EXFLAG_SI
 expr_stmt|;
 comment|/* V1 should mean no extensions ... */
 if|if

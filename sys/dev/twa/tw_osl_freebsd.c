@@ -161,30 +161,27 @@ parameter_list|,
 name|TW_INT32
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|proc
 parameter_list|)
 block|{
-name|TW_INT32
-name|unit
-init|=
-name|dev2unit
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|twa_softc
 modifier|*
 name|sc
 init|=
-name|devclass_get_softc
-argument_list|(
-name|twa_devclass
-argument_list|,
-name|unit
-argument_list|)
+operator|(
+expr|struct
+name|twa_softc
+operator|*
+operator|)
+operator|(
+name|dev
+operator|->
+name|si_drv1
+operator|)
 decl_stmt|;
 name|tw_osli_dbg_dprintf
 argument_list|(
@@ -229,30 +226,27 @@ parameter_list|,
 name|TW_INT32
 name|fmt
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|proc
 parameter_list|)
 block|{
-name|TW_INT32
-name|unit
-init|=
-name|dev2unit
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|twa_softc
 modifier|*
 name|sc
 init|=
-name|devclass_get_softc
-argument_list|(
-name|twa_devclass
-argument_list|,
-name|unit
-argument_list|)
+operator|(
+expr|struct
+name|twa_softc
+operator|*
+operator|)
+operator|(
+name|dev
+operator|->
+name|si_drv1
+operator|)
 decl_stmt|;
 name|tw_osli_dbg_dprintf
 argument_list|(
@@ -301,7 +295,8 @@ parameter_list|,
 name|TW_INT32
 name|flags
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
 name|proc
 parameter_list|)
@@ -1875,10 +1870,10 @@ operator|->
 name|alignment
 argument_list|,
 comment|/* alignment */
-literal|0
+name|TW_OSLI_DMA_BOUNDARY
 argument_list|,
 comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -1956,7 +1951,7 @@ comment|/* alignment */
 literal|0
 argument_list|,
 comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -2131,7 +2126,7 @@ comment|/* alignment */
 literal|0
 argument_list|,
 comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -2211,7 +2206,7 @@ comment|/* alignment */
 literal|0
 argument_list|,
 comment|/* boundary */
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -4917,7 +4912,7 @@ block|{
 operator|*
 operator|(
 operator|(
-name|bus_addr_t
+name|TW_UINT64
 operator|*
 operator|)
 name|arg

@@ -11165,6 +11165,12 @@ name|softc
 operator|=
 name|sc
 expr_stmt|;
+name|gp
+operator|->
+name|flags
+operator||=
+name|G_GEOM_VOLATILE_BIO
+expr_stmt|;
 name|sc
 operator|->
 name|sc_geom
@@ -14456,8 +14462,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_NOWAIT
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 if|if

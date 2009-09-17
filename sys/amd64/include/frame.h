@@ -73,14 +73,26 @@ decl_stmt|;
 name|register_t
 name|tf_r15
 decl_stmt|;
-name|register_t
+name|uint32_t
 name|tf_trapno
+decl_stmt|;
+name|uint16_t
+name|tf_fs
+decl_stmt|;
+name|uint16_t
+name|tf_gs
 decl_stmt|;
 name|register_t
 name|tf_addr
 decl_stmt|;
-name|register_t
+name|uint32_t
 name|tf_flags
+decl_stmt|;
+name|uint16_t
+name|tf_es
+decl_stmt|;
+name|uint16_t
+name|tf_ds
 decl_stmt|;
 comment|/* below portion defined in hardware */
 name|register_t
@@ -104,6 +116,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TF_HASSEGS
+value|0x1
+end_define
+
+begin_comment
+comment|/* #define	_MC_HASBASES	0x2 */
+end_comment
 
 begin_endif
 endif|#

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bootp.c,v 1.78.2.9 2007/08/21 22:02:08 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bootp.c,v 1.88 2007-09-20 15:04:45 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1791,6 +1791,32 @@ name|AGENT_SUBOPTION_CIRCUIT_ID
 value|1
 end_define
 
+begin_comment
+comment|/* RFC 3046 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGENT_SUBOPTION_REMOTE_ID
+value|2
+end_define
+
+begin_comment
+comment|/* RFC 3046 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGENT_SUBOPTION_SUBSCRIBER_ID
+value|6
+end_define
+
+begin_comment
+comment|/* RFC 3993 */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1803,6 +1829,18 @@ block|{
 name|AGENT_SUBOPTION_CIRCUIT_ID
 block|,
 literal|"Circuit-ID"
+block|}
+block|,
+block|{
+name|AGENT_SUBOPTION_REMOTE_ID
+block|,
+literal|"Remote-ID"
+block|}
+block|,
+block|{
+name|AGENT_SUBOPTION_SUBSCRIBER_ID
+block|,
+literal|"Subscriber-ID"
 block|}
 block|,
 block|{
@@ -3262,6 +3300,13 @@ condition|)
 block|{
 case|case
 name|AGENT_SUBOPTION_CIRCUIT_ID
+case|:
+comment|/* fall through */
+case|case
+name|AGENT_SUBOPTION_REMOTE_ID
+case|:
+case|case
+name|AGENT_SUBOPTION_SUBSCRIBER_ID
 case|:
 name|fn_printn
 argument_list|(

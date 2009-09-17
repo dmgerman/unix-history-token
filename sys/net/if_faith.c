@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -139,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_ifdef
@@ -217,12 +217,6 @@ directive|include
 file|<netinet6/ip6_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -281,7 +275,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;
@@ -746,7 +740,7 @@ name|m
 parameter_list|,
 name|dst
 parameter_list|,
-name|rt
+name|ro
 parameter_list|)
 name|struct
 name|ifnet
@@ -764,9 +758,9 @@ modifier|*
 name|dst
 decl_stmt|;
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 decl_stmt|;
 block|{
 name|int
@@ -775,10 +769,29 @@ decl_stmt|;
 name|u_int32_t
 name|af
 decl_stmt|;
+name|struct
+name|rtentry
+modifier|*
+name|rt
+init|=
+name|NULL
+decl_stmt|;
 name|M_ASSERTPKTHDR
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|!=
+name|NULL
+condition|)
+name|rt
+operator|=
+name|ro
+operator|->
+name|ro_rt
 expr_stmt|;
 comment|/* BPF writes need to be handled specially. */
 if|if
@@ -1237,11 +1250,6 @@ modifier|*
 name|in6
 decl_stmt|;
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|rtentry
 modifier|*

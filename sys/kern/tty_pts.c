@@ -17,12 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|"opt_tty.h"
-end_include
-
 begin_comment
 comment|/* Add compatibility bits for FreeBSD. */
 end_comment
@@ -33,14 +27,8 @@ directive|define
 name|PTS_COMPAT
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_PTY
-end_ifdef
-
 begin_comment
-comment|/* Add /dev/ptyXX compat bits. */
+comment|/* Add pty(4) compat bits. */
 end_comment
 
 begin_define
@@ -48,15 +36,6 @@ define|#
 directive|define
 name|PTS_EXTERNAL
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEV_PTY */
-end_comment
 
 begin_comment
 comment|/* Add bits to make Linux binaries work. */
@@ -125,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -173,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -206,6 +197,10 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_comment
+comment|/*  * Our utmp(5) format is limited to 8-byte TTY line names.  This means  * we can at most allocate 1000 pseudo-terminals ("pts/999").  Allow  * users to increase this number, assuming they have manually increased  * UT_LINESIZE.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -215,12 +210,36 @@ name|pts_pool
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|MAXPTSDEVS
-value|999
-end_define
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|pts_maxdev
+init|=
+literal|999
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pts_maxdev
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pts_maxdev
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum amount of pts(4) pseudo-terminals"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 specifier|static
@@ -682,9 +701,15 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|iblen
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 comment|/* 		 * When possible, avoid the slow path. rint_bypass() 		 * copies all input to the input queue at once. 		 */
 name|MPASS
 argument_list|(
@@ -695,18 +720,9 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-if|if
-condition|(
-name|ttydisc_can_bypass
-argument_list|(
-name|tp
-argument_list|)
-condition|)
-block|{
-comment|/* Store data at once. */
 name|rintlen
 operator|=
-name|ttydisc_rint_bypass
+name|ttydisc_rint_simple
 argument_list|(
 name|tp
 argument_list|,
@@ -732,38 +748,6 @@ condition|)
 block|{
 comment|/* All data written. */
 break|break;
-block|}
-block|}
-else|else
-block|{
-name|error
-operator|=
-name|ttydisc_rint
-argument_list|(
-name|tp
-argument_list|,
-operator|*
-name|ibstart
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Character stored successfully. */
-name|ibstart
-operator|++
-expr_stmt|;
-name|iblen
-operator|--
-expr_stmt|;
-continue|continue;
-block|}
 block|}
 comment|/* Maybe the device isn't used anyway. */
 if|if
@@ -864,6 +848,13 @@ name|tty_unlock
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Don't account for the part of the buffer that we couldn't 	 * pass to the TTY. 	 */
+name|uio
+operator|->
+name|uio_resid
+operator|+=
+name|iblen
 expr_stmt|;
 return|return
 operator|(
@@ -1103,21 +1094,17 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|bcopy
-argument_list|(
-operator|&
+operator|*
+operator|(
+expr|struct
+name|termios
+operator|*
+operator|)
+name|data
+operator|=
 name|tp
 operator|->
 name|t_termios
-argument_list|,
-name|data
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|termios
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|tty_unlock
 argument_list|(
@@ -1501,19 +1488,17 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|events
 operator|&
 operator|(
-name|POLLHUP
-operator||
 name|POLLIN
 operator||
 name|POLLRDNORM
-operator||
-name|POLLOUT
-operator||
-name|POLLWRNORM
 operator|)
+operator|)
+operator||
+name|POLLHUP
 operator|)
 return|;
 block|}
@@ -1949,14 +1934,21 @@ name|filterops
 name|pts_kqops_read
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|pts_kqops_read_detach
 block|,
+operator|.
+name|f_event
+operator|=
 name|pts_kqops_read_event
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1967,14 +1959,21 @@ name|filterops
 name|pts_kqops_write
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|pts_kqops_write_detach
 block|,
+operator|.
+name|f_event
+operator|=
 name|pts_kqops_write_event
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2795,8 +2794,17 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTS_EXTERNAL
+end_ifndef
+
 begin_function
 specifier|static
+endif|#
+directive|endif
+comment|/* !PTS_EXTERNAL */
 name|int
 name|pts_alloc
 parameter_list|(
@@ -2917,6 +2925,36 @@ name|EAGAIN
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|unit
+operator|>
+name|pts_maxdev
+condition|)
+block|{
+name|free_unr
+argument_list|(
+name|pts_pool
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|chgptscnt
+argument_list|(
+name|uid
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EAGAIN
+operator|)
+return|;
+block|}
 comment|/* Allocate TTY and softc. */
 name|psc
 operator|=
@@ -2980,11 +3018,9 @@ operator|&
 name|pts_class
 argument_list|,
 name|psc
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|psc
@@ -2996,15 +3032,9 @@ argument_list|,
 name|tp
 operator|->
 name|t_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|psc
@@ -3016,12 +3046,6 @@ argument_list|,
 name|tp
 operator|->
 name|t_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Expose the slave device as well. */
@@ -3236,11 +3260,9 @@ operator|&
 name|pts_class
 argument_list|,
 name|psc
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|psc
@@ -3252,15 +3274,9 @@ argument_list|,
 name|tp
 operator|->
 name|t_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|psc
@@ -3272,12 +3288,6 @@ argument_list|,
 name|tp
 operator|->
 name|t_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Expose the slave device as well. */
@@ -3463,99 +3473,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PTS_COMPAT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|PTS_LINUX
-argument_list|)
-end_if
-
-begin_function
-specifier|static
-name|int
-name|ptmx_fdopen
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-parameter_list|,
-name|int
-name|fflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|file
-modifier|*
-name|fp
-parameter_list|)
-block|{
-return|return
-operator|(
-name|pts_alloc
-argument_list|(
-name|fflags
-operator|&
-operator|(
-name|FREAD
-operator||
-name|FWRITE
-operator|)
-argument_list|,
-name|td
-argument_list|,
-name|fp
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|ptmx_cdevsw
-init|=
-block|{
-operator|.
-name|d_version
-operator|=
-name|D_VERSION
-block|,
-operator|.
-name|d_fdopen
-operator|=
-name|ptmx_fdopen
-block|,
-operator|.
-name|d_name
-operator|=
-literal|"ptmx"
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PTS_COMPAT || PTS_LINUX */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -3572,41 +3489,11 @@ name|new_unrhdr
 argument_list|(
 literal|0
 argument_list|,
-name|MAXPTSDEVS
+name|INT_MAX
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PTS_COMPAT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|PTS_LINUX
-argument_list|)
-name|make_dev
-argument_list|(
-operator|&
-name|ptmx_cdevsw
-argument_list|,
-literal|0
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0666
-argument_list|,
-literal|"ptmx"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PTS_COMPAT || PTS_LINUX */
 block|}
 end_function
 

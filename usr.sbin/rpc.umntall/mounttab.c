@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
+file|<rpcsvc/mount.h>
 end_include
 
 begin_include
@@ -508,14 +508,14 @@ name|mtab_host
 argument_list|,
 name|hostp
 argument_list|,
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 argument_list|)
 expr_stmt|;
 name|mtabp
 operator|->
 name|mtab_host
 index|[
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 operator|-
 literal|1
 index|]
@@ -530,14 +530,14 @@ name|mtab_dirp
 argument_list|,
 name|dirp
 argument_list|,
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 argument_list|)
 expr_stmt|;
 name|mtabp
 operator|->
 name|mtab_dirp
 index|[
-name|RPCMNT_PATHLEN
+name|MNTPATHLEN
 operator|-
 literal|1
 index|]
@@ -936,7 +936,7 @@ name|mtabp
 operator|->
 name|mtab_host
 argument_list|,
-name|RPCMNT_NAMELEN
+name|MNTNAMLEN
 argument_list|)
 expr_stmt|;
 block|}

@@ -45,6 +45,40 @@ define|\
 value|( { register_t val;						\ 	  __asm __volatile("mfspr %0,%1" : "=r"(val) : "K"(reg));	\ 	  val; } )
 end_define
 
+begin_comment
+comment|/* The following routines allow manipulation of the full 64-bit width   * of SPRs on 64 bit CPUs in bridge mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mtspr64
+parameter_list|(
+name|reg
+parameter_list|,
+name|valhi
+parameter_list|,
+name|vallo
+parameter_list|,
+name|scratch
+parameter_list|)
+define|\
+value|__asm __volatile("						\ 		mfmsr %0; 						\ 		insrdi %0,1,1,0; 					\ 		mtmsrd %0; 						\ 		isync; 							\ 									\ 		sld %1,%1,%4;						\ 		or %1,%1,%2;						\ 		mtspr %3,%1;						\ 		srd %1,%1,%4;						\ 									\ 		clrldi %0,%0,1; 					\ 		mtmsrd %0; 						\ 		isync;"							\ 	: "=r"(scratch), "=r"(valhi) : "r"(vallo), "K"(reg), "r"(32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfspr64upper
+parameter_list|(
+name|reg
+parameter_list|,
+name|scratch
+parameter_list|)
+define|\
+value|( { register_t val;						\ 	    __asm __volatile("						\ 		mfmsr %0; 						\ 		insrdi %0,1,1,0; 					\ 		mtmsrd %0; 						\ 		isync; 							\ 									\ 		mfspr %1,%2;						\ 		srd %1,%1,%3;						\ 									\ 		clrldi %0,%0,1; 					\ 		mtmsrd %0; 						\ 		isync;" 						\ 	    : "=r"(scratch), "=r"(val) : "K"(reg), "r"(32)); 			\ 	    val; } )
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -457,6 +491,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_SCOMC
+value|0x114
+end_define
+
+begin_comment
+comment|/* ... SCOM Address Register (970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_SCOMD
+value|0x115
+end_define
+
+begin_comment
+comment|/* ... SCOM Data Register (970) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_ASR
 value|0x118
 end_define
@@ -474,28 +530,6 @@ end_define
 
 begin_comment
 comment|/* .68 External Access Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_TBL
-value|0x11c
-end_define
-
-begin_comment
-comment|/* 468 Time Base Lower */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_TBU
-value|0x11d
-end_define
-
-begin_comment
-comment|/* 468 Time Base Upper */
 end_comment
 
 begin_define
@@ -638,8 +672,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|IBM970
+value|0x0039
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM970FX
+value|0x003c
+end_define
+
+begin_define
+define|#
+directive|define
 name|IBMPOWER3
 value|0x0041
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM970MP
+value|0x0044
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM970GX
+value|0x0045
 end_define
 
 begin_define
@@ -2219,6 +2281,138 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_970MMCR0
+value|0x31b
+end_define
+
+begin_comment
+comment|/* ... Monitor Mode Control Register 0 (PPC 970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR1
+value|0x31e
+end_define
+
+begin_comment
+comment|/* ... Monitor Mode Control Register 1 (PPC 970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCRA
+value|0x312
+end_define
+
+begin_comment
+comment|/* ... Monitor Mode Control Register 2 (PPC 970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR0
+value|0x31b
+end_define
+
+begin_comment
+comment|/* ... Monitor Mode Control Register 0 (PPC 970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC1
+value|0x313
+end_define
+
+begin_comment
+comment|/* ... PMC 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC2
+value|0x314
+end_define
+
+begin_comment
+comment|/* ... PMC 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC3
+value|0x315
+end_define
+
+begin_comment
+comment|/* ... PMC 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC4
+value|0x316
+end_define
+
+begin_comment
+comment|/* ... PMC 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC5
+value|0x317
+end_define
+
+begin_comment
+comment|/* ... PMC 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC6
+value|0x318
+end_define
+
+begin_comment
+comment|/* ... PMC 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC7
+value|0x319
+end_define
+
+begin_comment
+comment|/* ... PMC 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970PMC8
+value|0x31a
+end_define
+
+begin_comment
+comment|/* ... PMC 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_MMCR0_FC
 value|0x80000000
 end_define
@@ -2421,6 +2615,34 @@ end_define
 
 begin_comment
 comment|/* PMC2 selector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR0_PMC1SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 8)
+end_define
+
+begin_comment
+comment|/* PMC1 selector (970) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_970MMCR0_PMC2SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 1)
+end_define
+
+begin_comment
+comment|/* PMC2 selector (970) */
 end_comment
 
 begin_define
@@ -3139,6 +3361,28 @@ begin_comment
 comment|/* ..8 Hardware Implementation Register 1 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SPR_HID4
+value|0x3f4
+end_define
+
+begin_comment
+comment|/* ..8 Hardware Implementation Register 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_HID5
+value|0x3f6
+end_define
+
+begin_comment
+comment|/* ..8 Hardware Implementation Register 5 */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -3409,6 +3653,17 @@ argument_list|(
 name|E500
 argument_list|)
 end_elif
+
+begin_define
+define|#
+directive|define
+name|SPR_PIR
+value|0x11e
+end_define
+
+begin_comment
+comment|/* ..8 Processor Identification Register */
+end_comment
 
 begin_define
 define|#
@@ -4805,7 +5060,7 @@ comment|/* Counter has overflowed */
 end_comment
 
 begin_comment
-comment|/* The first five countable [non-]events are common to all the PMC's */
+comment|/* The first five countable [non-]events are common to many PMC's */
 end_comment
 
 begin_define
@@ -4861,6 +5116,43 @@ end_define
 
 begin_comment
 comment|/* Instructions dispatched */
+end_comment
+
+begin_comment
+comment|/* Similar things for the 970 PMC direct counters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC970N_NONE
+value|0x8
+end_define
+
+begin_comment
+comment|/* Count nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC970N_CYCLES
+value|0xf
+end_define
+
+begin_comment
+comment|/* Processor cycles */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC970N_ICOMP
+value|0x9
+end_define
+
+begin_comment
+comment|/* Instructions completed */
 end_comment
 
 begin_if
@@ -5160,6 +5452,20 @@ define|#
 directive|define
 name|SVR_MPC8541E
 value|0x807a
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_MPC8548
+value|0x8031
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_MPC8548E
+value|0x8039
 end_define
 
 begin_define
@@ -5639,6 +5945,28 @@ end_define
 
 begin_comment
 comment|/* Instruction Cache Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_BUCSR
+value|0x3F5
+end_define
+
+begin_comment
+comment|/* ..8 Branch Unit Control and Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUCSR_BPEN
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Branch Prediction Enable */
 end_comment
 
 begin_endif

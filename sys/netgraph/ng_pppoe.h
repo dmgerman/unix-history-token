@@ -611,10 +611,6 @@ decl_stmt|;
 name|u_int16_t
 name|tag_len
 decl_stmt|;
-name|char
-name|tag_data
-index|[]
-decl_stmt|;
 block|}
 name|__packed
 struct|;
@@ -642,11 +638,6 @@ name|sid
 decl_stmt|;
 name|u_int16_t
 name|length
-decl_stmt|;
-name|struct
-name|pppoe_tag
-name|tag
-index|[]
 decl_stmt|;
 block|}
 name|__packed

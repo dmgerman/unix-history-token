@@ -4,7 +4,7 @@ comment|/* conf_mod.c */
 end_comment
 
 begin_comment
-comment|/* Written by Stephen Henson (shenson@bigfoot.com) for the OpenSSL  * project 2001.  */
+comment|/* Written by Stephen Henson (steve@openssl.org) for the OpenSSL  * project 2001.  */
 end_comment
 
 begin_comment
@@ -341,6 +341,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|vsection
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|ret
@@ -358,13 +360,7 @@ return|;
 if|if
 condition|(
 name|appname
-operator|==
-name|NULL
 condition|)
-name|appname
-operator|=
-literal|"openssl_conf"
-expr_stmt|;
 name|vsection
 operator|=
 name|NCONF_get_string
@@ -374,6 +370,33 @@ argument_list|,
 name|NULL
 argument_list|,
 name|appname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|appname
+operator|||
+operator|(
+operator|!
+name|vsection
+operator|&&
+operator|(
+name|flags
+operator|&
+name|CONF_MFLAGS_DEFAULT_SECTION
+operator|)
+operator|)
+condition|)
+name|vsection
+operator|=
+name|NCONF_get_string
+argument_list|(
+name|cnf
+argument_list|,
+name|NULL
+argument_list|,
+literal|"openssl_conf"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1609,6 +1632,9 @@ name|all
 condition|)
 continue|continue;
 comment|/* Since we're working in reverse this is OK */
+operator|(
+name|void
+operator|)
 name|sk_CONF_MODULE_delete
 argument_list|(
 name|supported_modules

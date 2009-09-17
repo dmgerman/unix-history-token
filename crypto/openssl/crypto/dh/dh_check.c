@@ -32,8 +32,14 @@ file|<openssl/dh.h>
 end_include
 
 begin_comment
-comment|/* Check that p is a safe prime and  * if g is 2, 3 or 5, check that is is a suitable generator  * where  * for 2, p mod 24 == 11  * for 3, p mod 12 == 5  * for 5, p mod 10 == 3 or 7  * should hold.  */
+comment|/* Check that p is a safe prime and  * if g is 2, 3 or 5, check that it is a suitable generator  * where  * for 2, p mod 24 == 11  * for 3, p mod 12 == 5  * for 5, p mod 10 == 3 or 7  * should hold.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
 
 begin_function
 name|int
@@ -415,6 +421,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

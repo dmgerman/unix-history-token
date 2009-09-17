@@ -121,24 +121,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|ahc_pci
-argument_list|,
-name|cardbus
-argument_list|,
-name|ahc_pci_driver
-argument_list|,
-name|ahc_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
 name|ahc_pci

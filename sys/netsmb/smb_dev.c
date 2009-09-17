@@ -1766,11 +1766,6 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"netsmb_dev: loaded\n"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -1808,11 +1803,6 @@ name|destroy_dev_drain
 argument_list|(
 operator|&
 name|nsmb_cdevsw
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"netsmb_dev: unloaded\n"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * FreeBSD pcm driver for ATI IXP 150/200/250/300 AC97 controllers  *  * Features  *	* 16bit playback / recording  *	* 32bit native playback - yay!  *	* 32bit native recording (seems broken on few hardwares)  *  * Issues / TODO:  *	* SPDIF  *	* Support for more than 2 channels.  *	* VRA ? VRM ? DRA ?  *	* 32bit native recording seems broken on few hardwares, most  *	  probably because of incomplete VRA/DRA cleanup.  *  *  * Thanks goes to:  *  *   Shaharil @ SCAN Associates whom relentlessly providing me the  *   mind blowing Acer Ferrari 4002 WLMi with this ATI IXP hardware.  *  *   Reinoud Zandijk<reinoud@NetBSD.org> (auixp), which this driver is  *   largely based upon although large part of it has been reworked. His  *   driver is the primary reference and pretty much well documented.  *  *   Takashi Iwai (ALSA snd-atiixp), for register definitions and some  *   random ninja hackery.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -369,13 +386,23 @@ name|atiixp_fmt_32bit
 index|[]
 init|=
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -389,9 +416,14 @@ name|atiixp_fmt
 index|[]
 init|=
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -646,7 +678,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|uint32_t
 name|atiixp_chan_setspeed
 parameter_list|(
 name|kobj_t
@@ -678,7 +710,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|uint32_t
 name|atiixp_chan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -733,7 +765,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|uint32_t
 name|atiixp_chan_getptr
 parameter_list|(
 name|kobj_t
@@ -1717,11 +1749,7 @@ argument_list|,
 name|atiixp_wrcd
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2229,7 +2257,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|atiixp_chan_setspeed
 parameter_list|(
 name|kobj_t
@@ -2469,7 +2497,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -2477,7 +2505,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|atiixp_chan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -3286,7 +3314,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|sndbuf_getbps
+name|sndbuf_getalign
 argument_list|(
 name|ch
 operator|->
@@ -3517,7 +3545,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|sndbuf_getbps
+name|sndbuf_getalign
 argument_list|(
 name|ch
 operator|->
@@ -3684,7 +3712,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|atiixp_chan_getptr
 parameter_list|(
 name|kobj_t
@@ -3860,11 +3888,7 @@ argument_list|,
 name|atiixp_chan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4230,12 +4254,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -4425,11 +4443,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -4863,9 +4876,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|device_get_sysctl_ctx
@@ -4911,8 +4921,6 @@ argument_list|,
 literal|"Enable polling mode"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|snprintf
 argument_list|(
 name|status

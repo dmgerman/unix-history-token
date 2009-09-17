@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_panic.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
 end_include
 
 begin_include
@@ -181,12 +181,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -1594,10 +1588,6 @@ argument_list|,
 name|howto
 argument_list|)
 expr_stmt|;
-comment|/* XXX This doesn't disable interrupts any more.  Reconsider? */
-name|splhigh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1838,6 +1828,10 @@ name|int
 name|howto
 parameter_list|)
 block|{
+comment|/* 	 * Disable interrupts on CPU0 in order to avoid fast handlers 	 * to preempt the stopping process and to deadlock against other 	 * CPUs. 	 */
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Rebooting...\n"
@@ -2152,7 +2146,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Support for poweroff delay.  */
+comment|/*  * Support for poweroff delay.  *  * Please note that setting this delay too short might power off your machine  * before the write cache on your hard disk has been flushed, leading to  * soft-updates inconsistencies.  */
 end_comment
 
 begin_ifndef
@@ -2616,39 +2610,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-end_if
-
-begin_function
-name|void
-name|dumpsys
-parameter_list|(
-name|struct
-name|dumperinfo
-modifier|*
-name|di
-name|__unused
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Kernel dumps not implemented on this architecture\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|mkdumpheader
@@ -2766,7 +2727,9 @@ name|kdh
 operator|->
 name|hostname
 argument_list|,
-name|G_hostname
+name|prison0
+operator|.
+name|pr_hostname
 argument_list|,
 sizeof|sizeof
 argument_list|(

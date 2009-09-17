@@ -295,7 +295,10 @@ index|[]
 init|=
 block|{
 operator|&
-name|g_label_ufs
+name|g_label_ufs_id
+block|,
+operator|&
+name|g_label_ufs_volume
 block|,
 operator|&
 name|g_label_iso9660
@@ -311,6 +314,12 @@ name|g_label_reiserfs
 block|,
 operator|&
 name|g_label_ntfs
+block|,
+operator|&
+name|g_label_gpt
+block|,
+operator|&
+name|g_label_gpt_uuid
 block|,
 name|NULL
 block|}
@@ -362,7 +371,7 @@ parameter_list|)
 block|{
 name|G_LABEL_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Label %s removed."
 argument_list|,
@@ -400,7 +409,7 @@ parameter_list|)
 block|{
 name|G_LABEL_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Label %s removed."
 argument_list|,
@@ -820,7 +829,7 @@ argument_list|)
 expr_stmt|;
 name|G_LABEL_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Label for provider %s is %s."
 argument_list|,
@@ -952,7 +961,7 @@ else|else
 block|{
 name|G_LABEL_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Label %s removed."
 argument_list|,

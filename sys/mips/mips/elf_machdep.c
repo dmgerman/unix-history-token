@@ -314,9 +314,15 @@ operator|=
 name|NULL
 block|,
 operator|.
+name|brand_note
+operator|=
+operator|&
+name|elf32_freebsd_brandnote
+block|,
+operator|.
 name|flags
 operator|=
-literal|0
+name|BI_BRAND_NOTE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -562,7 +568,7 @@ literal|0
 comment|/* TBD  */
 block|if (rtype == R_386_RELATIVE) {
 comment|/* A + B */
-block|addr = relocbase + addend; 			if (*where != addr) 				*where = addr; 		} 		return (0);
+block|addr = elf_relocaddr(lf, relocbase + addend); 			if (*where != addr) 				*where = addr; 		} 		return (0);
 endif|#
 directive|endif
 block|}

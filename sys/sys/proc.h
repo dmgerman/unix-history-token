@@ -325,7 +325,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by proc slock  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      q - td_contested lock  *      r - p_peers lock  *      t - thread lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by proc slock  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      q - td_contested lock  *      r - p_peers lock  *      t - thread lock  *      x - created at fork, only changes during single threading in exec  *      y - created at first aio, doesn't change until exit or exec at which  *          point we are single-threaded and only curthread changes it  *      z - zombie threads lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -645,14 +645,6 @@ name|u_int
 name|td_uticks
 decl_stmt|;
 comment|/* (t) Statclock hits in user mode. */
-name|u_int
-name|td_uuticks
-decl_stmt|;
-comment|/* (k) Statclock hits (usr), for UTS. */
-name|u_int
-name|td_usticks
-decl_stmt|;
-comment|/* (k) Statclock hits (sys), for UTS. */
 name|int
 name|td_intrval
 decl_stmt|;
@@ -705,6 +697,10 @@ name|int
 name|td_dbgflags
 decl_stmt|;
 comment|/* (c) Userland debugger flags */
+name|int
+name|td_ng_outbound
+decl_stmt|;
+comment|/* (k) Thread entered ng from above. */
 name|struct
 name|osd
 name|td_osd
@@ -803,20 +799,6 @@ name|int
 name|td_kstack_pages
 decl_stmt|;
 comment|/* (a) Size of the kstack. */
-name|struct
-name|vm_object
-modifier|*
-name|td_altkstack_obj
-decl_stmt|;
-comment|/* (a) Alternate kstack object. */
-name|vm_offset_t
-name|td_altkstack
-decl_stmt|;
-comment|/* (a) Kernel VA of alternate kstack. */
-name|int
-name|td_altkstack_pages
-decl_stmt|;
-comment|/* (a) Size of alternate kstack. */
 specifier|volatile
 name|u_int
 name|td_critnest
@@ -861,6 +843,18 @@ name|int
 name|td_errno
 decl_stmt|;
 comment|/* Error returned by last syscall. */
+name|struct
+name|vnet
+modifier|*
+name|td_vnet
+decl_stmt|;
+comment|/* (k) Effective vnet. */
+specifier|const
+name|char
+modifier|*
+name|td_vnet_lpush
+decl_stmt|;
+comment|/* (k) Debugging vnet push / pop. */
 block|}
 struct|;
 end_struct
@@ -1111,12 +1105,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED2000
+name|TDF_SBDRY
 value|0x00002000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Stop only on usermode boundary. */
 end_comment
 
 begin_define
@@ -1372,12 +1366,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED8
+name|TDP_BUFNEED
 value|0x00000008
 end_define
 
 begin_comment
-comment|/* available */
+comment|/* Do not recurse into the buf flush */
 end_comment
 
 begin_define
@@ -1598,6 +1592,17 @@ end_define
 
 begin_comment
 comment|/* Permission to ignore the MNTK_SUSPEND* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_AUDITREC
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Audit record pending on thread */
 end_comment
 
 begin_comment
@@ -2200,7 +2205,7 @@ modifier|*
 name|p_textvp
 decl_stmt|;
 comment|/* (b) Vnode of executable. */
-name|char
+name|u_int
 name|p_lock
 decl_stmt|;
 comment|/* (c) Proclock (prevent swap) count. */
@@ -2248,7 +2253,7 @@ name|kaioinfo
 modifier|*
 name|p_aioinfo
 decl_stmt|;
-comment|/* (c) ASYNC I/O info. */
+comment|/* (y) ASYNC I/O info. */
 name|struct
 name|thread
 modifier|*
@@ -4738,7 +4743,22 @@ name|thread
 modifier|*
 name|thread_alloc
 parameter_list|(
-name|void
+name|int
+name|pages
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thread_alloc_stack
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
+name|pages
 parameter_list|)
 function_decl|;
 end_function_decl

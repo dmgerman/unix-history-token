@@ -47,6 +47,20 @@ name|__Userspace__
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|SCTP_READ_LOCK_HELD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_READ_LOCK_NOT_HELD
+value|0
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -411,6 +425,9 @@ name|sb
 parameter_list|,
 name|int
 name|end
+parameter_list|,
+name|int
+name|inpread_locked
 parameter_list|,
 name|int
 name|so_locked
@@ -1059,27 +1076,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|sctp_notify_partial_delivery_indication
-parameter_list|(
-name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
-name|uint32_t
-name|error
-parameter_list|,
-name|int
-name|no_lock
-parameter_list|,
-name|uint32_t
-name|strseq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|sctp_release_pr_sctp_chunk
 parameter_list|(
@@ -1092,10 +1088,6 @@ name|sctp_tmit_chunk
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|struct
-name|sctpchunk_listhead
-modifier|*
 parameter_list|,
 name|int
 if|#
@@ -1275,7 +1267,7 @@ parameter_list|,
 name|sp
 parameter_list|)
 define|\
-value|do { \  	if (sp->data != NULL) { \                 atomic_subtract_int(&(asoc)->chunks_on_out_queue, 1); \ 		if ((asoc)->total_output_queue_size>= sp->length) { \ 			atomic_subtract_int(&(asoc)->total_output_queue_size, sp->length); \ 		} else { \ 			(asoc)->total_output_queue_size = 0; \ 		} \    	        if (stcb->sctp_socket&& ((stcb->sctp_ep->sctp_flags& SCTP_PCB_FLAGS_TCPTYPE) || \ 	            (stcb->sctp_ep->sctp_flags& SCTP_PCB_FLAGS_IN_TCPPOOL))) { \ 			if (stcb->sctp_socket->so_snd.sb_cc>= sp->length) { \ 				atomic_subtract_int(&stcb->sctp_socket->so_snd.sb_cc,sp->length); \ 			} else { \ 				stcb->sctp_socket->so_snd.sb_cc = 0; \ 			} \ 		} \         } \ } while (0)
+value|do { \  	if (sp->data != NULL) { \ 		if ((asoc)->total_output_queue_size>= sp->length) { \ 			atomic_subtract_int(&(asoc)->total_output_queue_size, sp->length); \ 		} else { \ 			(asoc)->total_output_queue_size = 0; \ 		} \    	        if (stcb->sctp_socket&& ((stcb->sctp_ep->sctp_flags& SCTP_PCB_FLAGS_TCPTYPE) || \ 	            (stcb->sctp_ep->sctp_flags& SCTP_PCB_FLAGS_IN_TCPPOOL))) { \ 			if (stcb->sctp_socket->so_snd.sb_cc>= sp->length) { \ 				atomic_subtract_int(&stcb->sctp_socket->so_snd.sb_cc,sp->length); \ 			} else { \ 				stcb->sctp_socket->so_snd.sb_cc = 0; \ 			} \ 		} \         } \ } while (0)
 end_define
 
 begin_define

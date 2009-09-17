@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|SND_DRV_VERSION
-value|2007061600
+value|2009061500
 end_define
 
 begin_endif

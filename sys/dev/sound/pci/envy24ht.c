@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * Konstantin Dimitrov's thanks list:  *  * A huge thanks goes to Spas Filipov for his friendship, support and his  * generous gift - an 'Audiotrak Prodigy HD2' audio card! I also want to  * thank Keiichi Iwasaki and his parents, because they helped Spas to get  * the card from Japan! Having hardware sample of Prodigy HD2 made adding  * support for that great card very easy and real fun and pleasure.  *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -133,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|ENVY24HT_DEFAULT_FORMAT
-value|(AFMT_STEREO | AFMT_S16_LE)
+value|SND_FORMAT(AFMT_S16_LE, 2, 0)
 end_define
 
 begin_define
@@ -689,7 +706,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|envy24htchan_setspeed
 parameter_list|(
 name|kobj_t
@@ -704,7 +721,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|envy24htchan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -734,7 +751,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int32_t
 name|envy24htchan_getptr
 parameter_list|(
 name|kobj_t
@@ -1721,13 +1738,23 @@ name|envy24ht_recfmt
 index|[]
 init|=
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1759,17 +1786,32 @@ name|envy24ht_playfmt
 index|[]
 init|=
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1828,9 +1870,14 @@ index|[]
 init|=
 block|{
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_U8
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24ht_p8u
 block|,
@@ -1838,9 +1885,14 @@ literal|2
 block|}
 block|,
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24ht_p16sl
 block|,
@@ -1848,9 +1900,14 @@ literal|4
 block|}
 block|,
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24ht_p32sl
 block|,
@@ -1877,9 +1934,14 @@ index|[]
 init|=
 block|{
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24ht_r16sl
 block|,
@@ -1887,9 +1949,14 @@ literal|4
 block|}
 block|,
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S32_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|envy24ht_r32sl
 block|,
@@ -3563,7 +3630,7 @@ directive|endif
 end_endif
 
 begin_endif
-unit|envy24ht_wrmt(sc, ENVY24HT_MT_AC97IDX, (u_int32_t)regno, 1); 	envy24ht_wrmt(sc, ENVY24HT_MT_AC97DLO, (u_int32_t)data, 2); 	envy24ht_wrmt(sc, ENVY24HT_MT_AC97CMD, ENVY24HT_MT_AC97CMD_WR, 1); 	for (i = 0; i< ENVY24HT_TIMEOUT; i++) { 		cmd = envy24ht_rdmt(sc, ENVY24HT_MT_AC97CMD, 1); 		if ((cmd& ENVY24HT_MT_AC97CMD_WR) == 0) 			break; 	}  	return 0; }  static kobj_method_t envy24ht_ac97_methods[] = { 	KOBJMETHOD(ac97_read,	envy24ht_rdcd), 	KOBJMETHOD(ac97_write,	envy24ht_wrcd), 	{0, 0} }; AC97_DECLARE(envy24ht_ac97);
+unit|envy24ht_wrmt(sc, ENVY24HT_MT_AC97IDX, (u_int32_t)regno, 1); 	envy24ht_wrmt(sc, ENVY24HT_MT_AC97DLO, (u_int32_t)data, 2); 	envy24ht_wrmt(sc, ENVY24HT_MT_AC97CMD, ENVY24HT_MT_AC97CMD_WR, 1); 	for (i = 0; i< ENVY24HT_TIMEOUT; i++) { 		cmd = envy24ht_rdmt(sc, ENVY24HT_MT_AC97CMD, 1); 		if ((cmd& ENVY24HT_MT_AC97CMD_WR) == 0) 			break; 	}  	return 0; }  static kobj_method_t envy24ht_ac97_methods[] = { 	KOBJMETHOD(ac97_read,	envy24ht_rdcd), 	KOBJMETHOD(ac97_write,	envy24ht_wrcd), 	KOBJMETHOD_END }; AC97_DECLARE(envy24ht_ac97);
 endif|#
 directive|endif
 end_endif
@@ -4757,7 +4824,7 @@ end_struct
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|envy24ht_setspeed
 parameter_list|(
 name|struct
@@ -7596,7 +7663,7 @@ return|;
 block|}
 comment|/*   IMPLEMENT NOTICE: In this driver, setspeed function only do setting   of speed information value. And real hardware speed setting is done   at start triggered(see envy24htchan_trigger()). So, at this function   is called, any value that ENVY24 can use is able to set. But, at   start triggerd, some other channel is running, and that channel's   speed isn't same with, then trigger function will fail. */
 specifier|static
-name|int
+name|u_int32_t
 name|envy24htchan_setspeed
 parameter_list|(
 name|kobj_t
@@ -7728,7 +7795,7 @@ name|speed
 return|;
 block|}
 specifier|static
-name|int
+name|u_int32_t
 name|envy24htchan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -7978,6 +8045,11 @@ decl_stmt|;
 name|int
 name|slot
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 if|#
 directive|if
 literal|0
@@ -8129,10 +8201,16 @@ name|sc
 operator|->
 name|speed
 condition|)
-return|return
+block|{
+name|error
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 if|if
 condition|(
 name|ch
@@ -8352,10 +8430,16 @@ name|run
 operator|!=
 literal|1
 condition|)
-return|return
+block|{
+name|error
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|ch
 operator|->
 name|emldma
@@ -8391,10 +8475,16 @@ name|run
 operator|!=
 literal|1
 condition|)
-return|return
+block|{
+name|error
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|ch
 operator|->
 name|emldma
@@ -8495,6 +8585,8 @@ comment|/*		else if (ch->blk == sc->blk[slot]) { 			sc->blk[slot] = ENVY24HT_SAM
 block|}
 break|break;
 block|}
+name|fail
+label|:
 name|snd_mtxunlock
 argument_list|(
 name|sc
@@ -8503,11 +8595,13 @@ name|lock
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|error
+operator|)
 return|;
 block|}
 specifier|static
-name|int
+name|u_int32_t
 name|envy24htchan_getptr
 parameter_list|(
 name|kobj_t
@@ -8536,8 +8630,7 @@ name|parent
 decl_stmt|;
 name|u_int32_t
 name|ptr
-decl_stmt|;
-name|int
+decl_stmt|,
 name|rtn
 decl_stmt|;
 if|#
@@ -8809,11 +8902,7 @@ argument_list|,
 name|envy24htchan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 name|CHANNEL_DECLARE
@@ -9396,11 +9485,7 @@ argument_list|,
 name|envy24htmixer_setrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 name|MIXER_DECLARE

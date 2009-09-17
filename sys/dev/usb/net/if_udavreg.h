@@ -933,7 +933,7 @@ name|GET_MII
 parameter_list|(
 name|sc
 parameter_list|)
-value|usb2_ether_getmii(&(sc)->sc_ue)
+value|uether_getmii(&(sc)->sc_ue)
 end_define
 
 begin_struct
@@ -970,7 +970,7 @@ struct|struct
 name|udav_softc
 block|{
 name|struct
-name|usb2_ether
+name|usb_ether
 name|sc_ue
 decl_stmt|;
 name|struct
@@ -978,7 +978,7 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[

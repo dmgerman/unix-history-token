@@ -1765,6 +1765,171 @@ value|201
 end_define
 
 begin_comment
+comment|/*  * AX.25 packet with a 1-byte KISS header; see  *  *      http://www.ax25.net/kiss.htm  *  * as per Richard Stearn<richard@rns-stearn.demon.co.uk>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_AX25_KISS
+value|202
+end_define
+
+begin_comment
+comment|/*  * LAPD packets from an ISDN channel, starting with the address field,  * with no pseudo-header.  * Requested by Varuna De Silva<varunax@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LAPD
+value|203
+end_define
+
+begin_comment
+comment|/*  * Variants of various link-layer headers, with a one-byte direction  * pseudo-header prepended - zero means "received by this host",  * non-zero (any non-zero value) means "sent by this host" - as per  * Will Barker<w.barker@zen.co.uk>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PPP_WITH_DIR
+value|204
+end_define
+
+begin_comment
+comment|/* PPP - don't confuse with DLT_PPP_WITH_DIRECTION */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_C_HDLC_WITH_DIR
+value|205
+end_define
+
+begin_comment
+comment|/* Cisco HDLC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_FRELAY_WITH_DIR
+value|206
+end_define
+
+begin_comment
+comment|/* Frame Relay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LAPB_WITH_DIR
+value|207
+end_define
+
+begin_comment
+comment|/* LAPB */
+end_comment
+
+begin_comment
+comment|/*  * 208 is reserved for an as-yet-unspecified proprietary link-layer  * type, as requested by Will Barker.  */
+end_comment
+
+begin_comment
+comment|/*  * IPMB with a Linux-specific pseudo-header; as requested by Alexey Neyman  *<avn@pigeonpoint.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IPMB_LINUX
+value|209
+end_define
+
+begin_comment
+comment|/*  * FlexRay automotive bus - http://www.flexray.com/ - as requested  * by Hannes Kaelber<hannes.kaelber@x2e.de>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_FLEXRAY
+value|210
+end_define
+
+begin_comment
+comment|/*  * Media Oriented Systems Transport (MOST) bus for multimedia  * transport - http://www.mostcooperation.com/ - as requested  * by Hannes Kaelber<hannes.kaelber@x2e.de>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_MOST
+value|211
+end_define
+
+begin_comment
+comment|/*  * Local Interconnect Network (LIN) bus for vehicle networks -  * http://www.lin-subbus.org/ - as requested by Hannes Kaelber  *<hannes.kaelber@x2e.de>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LIN
+value|212
+end_define
+
+begin_comment
+comment|/*  * X2E-private data link type used for serial line capture,  * as requested by Hannes Kaelber<hannes.kaelber@x2e.de>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_X2E_SERIAL
+value|213
+end_define
+
+begin_comment
+comment|/*  * X2E-private data link type used for the Xoraya data logger  * family, as requested by Hannes Kaelber<hannes.kaelber@x2e.de>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_X2E_XORAYA
+value|214
+end_define
+
+begin_comment
+comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing), but with the PHY-level data for non-ASK PHYs (4 octets  * of 0 as preamble, one octet of SFD, one octet of frame length+  * reserved bit, and then the MAC-layer data, starting with the  * frame control field).  *  * Requested by Max Filippov<jcmvbkbc@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IEEE802_15_4_NONASK_PHY
+value|215
+end_define
+
+begin_comment
+comment|/*  * DLT and savefile link type values are split into a class and  * a member of that class.  A class value of 0 indicates a regular  * DLT_/LINKTYPE_ value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_CLASS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x03ff0000)
+end_define
+
+begin_comment
 comment|/*  * The instruction encodings.  */
 end_comment
 

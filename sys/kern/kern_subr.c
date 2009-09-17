@@ -1842,6 +1842,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|primes
 index|[]

@@ -362,7 +362,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ubsec_shutdown
 parameter_list|(
 name|device_t
@@ -1270,6 +1270,13 @@ name|dev
 argument_list|)
 operator|==
 name|PCI_PRODUCT_BROADCOM_5823
+operator|||
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCI_PRODUCT_BROADCOM_5825
 operator|)
 condition|)
 return|return
@@ -1363,6 +1370,12 @@ name|PCI_PRODUCT_BROADCOM_5823
 case|:
 return|return
 literal|"Broadcom 5823"
+return|;
+case|case
+name|PCI_PRODUCT_BROADCOM_5825
+case|:
+return|return
+literal|"Broadcom 5825"
 return|;
 block|}
 return|return
@@ -1679,6 +1692,13 @@ name|dev
 argument_list|)
 operator|==
 name|PCI_PRODUCT_BROADCOM_5823
+operator|||
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCI_PRODUCT_BROADCOM_5825
 operator|)
 operator|)
 operator|||
@@ -2959,7 +2979,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ubsec_shutdown
 parameter_list|(
 name|device_t
@@ -2979,6 +2999,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

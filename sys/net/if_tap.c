@@ -2227,7 +2227,7 @@ operator|->
 name|tap_mtx
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|tp
@@ -2235,12 +2235,6 @@ operator|->
 name|tap_rsel
 operator|.
 name|si_note
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -2860,6 +2854,18 @@ operator|->
 name|if_softc
 decl_stmt|;
 name|struct
+name|ifreq
+modifier|*
+name|ifr
+init|=
+operator|(
+expr|struct
+name|ifreq
+operator|*
+operator|)
+name|data
+decl_stmt|;
+name|struct
 name|ifstat
 modifier|*
 name|ifs
@@ -2886,6 +2892,18 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
+break|break;
+case|case
+name|SIOCSIFMTU
+case|:
+name|ifp
+operator|->
+name|if_mtu
+operator|=
+name|ifr
+operator|->
+name|ifr_mtu
+expr_stmt|;
 break|break;
 case|case
 name|SIOCGIFSTATUS
@@ -4449,7 +4467,7 @@ condition|)
 block|{
 name|TAPDEBUG
 argument_list|(
-literal|"%s invalid packet len = %d, minor = %#x\n"
+literal|"%s invalid packet len = %zd, minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->

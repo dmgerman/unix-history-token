@@ -55,15 +55,23 @@ enum|enum
 name|devinfo_state
 block|{
 name|DIS_NOTPRESENT
+init|=
+literal|10
 block|,
 comment|/* not probed or probe failed */
 name|DIS_ALIVE
+init|=
+literal|20
 block|,
 comment|/* probe succeeded */
 name|DIS_ATTACHED
+init|=
+literal|30
 block|,
 comment|/* attach method called */
 name|DIS_BUSY
+init|=
+literal|40
 comment|/* device is open */
 block|}
 name|devinfo_state_t

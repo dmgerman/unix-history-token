@@ -331,6 +331,9 @@ name|low
 parameter_list|,
 name|char
 name|high
+parameter_list|,
+name|int
+name|err
 parameter_list|)
 block|{ }
 end_function

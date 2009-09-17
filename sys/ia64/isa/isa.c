@@ -71,47 +71,6 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_function
-name|intrmask_t
-name|isa_irq_pending
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_char
-name|irr1
-decl_stmt|;
-name|u_char
-name|irr2
-decl_stmt|;
-name|irr1
-operator|=
-name|inb
-argument_list|(
-name|IO_ICU1
-argument_list|)
-expr_stmt|;
-name|irr2
-operator|=
-name|inb
-argument_list|(
-name|IO_ICU2
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|(
-name|irr2
-operator|<<
-literal|8
-operator|)
-operator||
-name|irr1
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * This implementation simply passes the request up to the parent  * bus, which in our case is the special i386 nexus, substituting any  * configured values if the caller defaulted.  We can get away with  * this because there is no special mapping for ISA resources on an Intel  * platform.  When porting this code to another architecture, it may be  * necessary to interpose a mapping layer here.  */
 end_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004-2008 Apple Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_token.c#86 $  */
+comment|/*-  * Copyright (c) 2004-2009 Apple Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_token.c#93 $  */
 end_comment
 
 begin_include
@@ -585,7 +585,7 @@ name|pad0_16
 init|=
 literal|0
 decl_stmt|;
-name|u_int16_t
+name|u_int32_t
 name|pad0_32
 init|=
 literal|0
@@ -796,7 +796,7 @@ name|pad0_16
 init|=
 literal|0
 decl_stmt|;
-name|u_int16_t
+name|u_int32_t
 name|pad0_32
 init|=
 literal|0
@@ -1786,6 +1786,11 @@ name|t
 argument_list|,
 name|dptr
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_char
+argument_list|)
+operator|+
 literal|12
 operator|*
 sizeof|sizeof
@@ -3962,7 +3967,7 @@ argument_list|(
 name|u_int16_t
 argument_list|)
 operator|+
-literal|16
+literal|8
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3993,18 +3998,22 @@ name|ADD_U_INT16
 argument_list|(
 name|dptr
 argument_list|,
+name|au_domain_to_bsm
+argument_list|(
 name|so_domain
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* XXXRW: explicitly convert? */
 name|ADD_U_INT16
 argument_list|(
 name|dptr
 argument_list|,
+name|au_socket_type_to_bsm
+argument_list|(
 name|so_type
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* XXXRW: explicitly convert? */
 if|if
 condition|(
 name|so_domain
@@ -4203,7 +4212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * token ID                1 byte  * socket family           2 bytes  * path                    104 bytes  */
+comment|/*  * token ID                1 byte  * socket family           2 bytes  * path                    (up to) 104 bytes + NULL  (NULL terminated string)  */
 end_comment
 
 begin_function
@@ -5575,6 +5584,33 @@ block|{
 name|auditinfo_t
 name|auinfo
 decl_stmt|;
+name|auditinfo_addr_t
+name|aia
+decl_stmt|;
+comment|/* 	 * Try to use getaudit_addr(2) first.  If this kernel does not support 	 * it, then fall back on to getaudit(2). 	 */
+if|if
+condition|(
+name|getaudit_addr
+argument_list|(
+operator|&
+name|aia
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|aia
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOSYS
+condition|)
+block|{
 if|if
 condition|(
 name|getaudit
@@ -5619,6 +5655,51 @@ name|ai_asid
 argument_list|,
 operator|&
 name|auinfo
+operator|.
+name|ai_termid
+argument_list|)
+operator|)
+return|;
+block|}
+else|else
+block|{
+comment|/* getaudit_addr(2) failed for some other reason. */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+name|au_to_subject32_ex
+argument_list|(
+name|aia
+operator|.
+name|ai_auid
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|,
+name|getegid
+argument_list|()
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|getgid
+argument_list|()
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+name|aia
+operator|.
+name|ai_asid
+argument_list|,
+operator|&
+name|aia
 operator|.
 name|ai_termid
 argument_list|)
@@ -6688,10 +6769,8 @@ operator|)
 return|;
 if|if
 condition|(
-name|auditon
+name|audit_get_kaudit
 argument_list|(
-name|A_GETKAUDIT
-argument_list|,
 operator|&
 name|aia
 argument_list|,
@@ -6700,7 +6779,7 @@ argument_list|(
 name|aia
 argument_list|)
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 block|{

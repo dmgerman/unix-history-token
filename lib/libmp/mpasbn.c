@@ -539,7 +539,7 @@ end_comment
 
 begin_function
 name|void
-name|gcd
+name|mp_gcd
 parameter_list|(
 specifier|const
 name|MINT
@@ -707,7 +707,7 @@ end_function
 begin_function
 name|MINT
 modifier|*
-name|itom
+name|mp_itom
 parameter_list|(
 name|short
 name|n
@@ -804,7 +804,7 @@ end_function
 
 begin_function
 name|void
-name|madd
+name|mp_madd
 parameter_list|(
 specifier|const
 name|MINT
@@ -841,7 +841,7 @@ end_comment
 
 begin_function
 name|int
-name|mcmp
+name|mp_mcmp
 parameter_list|(
 specifier|const
 name|MINT
@@ -1029,7 +1029,7 @@ end_function
 
 begin_function
 name|void
-name|mdiv
+name|mp_mdiv
 parameter_list|(
 specifier|const
 name|MINT
@@ -1137,7 +1137,7 @@ end_function
 
 begin_function
 name|void
-name|mfree
+name|mp_mfree
 parameter_list|(
 name|MINT
 modifier|*
@@ -1160,7 +1160,7 @@ end_comment
 
 begin_function
 name|void
-name|min
+name|mp_min
 parameter_list|(
 name|MINT
 modifier|*
@@ -1279,7 +1279,7 @@ end_comment
 
 begin_function
 name|void
-name|mout
+name|mp_mout
 parameter_list|(
 specifier|const
 name|MINT
@@ -1321,7 +1321,7 @@ end_comment
 
 begin_function
 name|void
-name|move
+name|mp_move
 parameter_list|(
 specifier|const
 name|MINT
@@ -1435,7 +1435,7 @@ end_comment
 
 begin_function
 name|void
-name|msqrt
+name|mp_msqrt
 parameter_list|(
 specifier|const
 name|MINT
@@ -1798,7 +1798,7 @@ end_function
 
 begin_function
 name|void
-name|msub
+name|mp_msub
 parameter_list|(
 specifier|const
 name|MINT
@@ -2042,7 +2042,7 @@ end_function
 begin_function
 name|char
 modifier|*
-name|mtox
+name|mp_mtox
 parameter_list|(
 specifier|const
 name|MINT
@@ -2147,7 +2147,7 @@ end_function
 
 begin_function
 name|void
-name|mult
+name|mp_mult
 parameter_list|(
 specifier|const
 name|MINT
@@ -2211,7 +2211,7 @@ end_comment
 
 begin_function
 name|void
-name|pow
+name|mp_pow
 parameter_list|(
 specifier|const
 name|MINT
@@ -2317,7 +2317,7 @@ end_comment
 
 begin_function
 name|void
-name|rpow
+name|mp_rpow
 parameter_list|(
 specifier|const
 name|MINT
@@ -2627,7 +2627,7 @@ end_function
 
 begin_function
 name|void
-name|sdiv
+name|mp_sdiv
 parameter_list|(
 specifier|const
 name|MINT
@@ -2786,7 +2786,7 @@ end_function
 begin_function
 name|MINT
 modifier|*
-name|xtom
+name|mp_xtom
 parameter_list|(
 specifier|const
 name|char

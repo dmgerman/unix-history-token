@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2006 Semihalf, Marian Balakowicz<m8@semihalf.com>  * Copyright (C) 2006 Semihalf, Rafal Jaworowski<raj@semihalf.com>  * All rights reserved.  *  * Adapted for Freescale's e500 core CPUs.  * sf_buf implementation was derived from sys/arm/arm/vm_machdep.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	from: $FreeBSD$  */
+comment|/*-  * Copyright (C) 2006 Semihalf, Marian Balakowicz<m8@semihalf.com>  * Copyright (C) 2006 Semihalf, Rafal Jaworowski<raj@semihalf.com>  * All rights reserved.  *  * Adapted for Freescale's e500 core CPUs.  * sf_buf implementation was derived from sys/arm/arm/vm_machdep.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	from: $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -160,7 +160,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/powerpc.h>
+file|<machine/platform.h>
 end_include
 
 begin_include
@@ -441,7 +441,7 @@ argument_list|)
 operator|)
 operator|&
 operator|~
-literal|0x2fU
+literal|0x3fU
 operator|)
 expr_stmt|;
 name|td2
@@ -621,24 +621,15 @@ begin_comment
 comment|/*  * Intercept the return address from a freshly forked process that has NOT  * been scheduled yet.  *  * This is needed to make kernel threads stay in kernel mode.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|cpu_set_fork_handler
-argument_list|(
-name|td
-argument_list|,
-name|func
-argument_list|,
-name|arg
-argument_list|)
-decl|struct
+parameter_list|(
+name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -648,17 +639,11 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+parameter_list|,
 name|void
 modifier|*
 name|arg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|callframe
@@ -719,7 +704,7 @@ operator|)
 name|arg
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -731,42 +716,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{  }
-end_function
-
-begin_comment
-comment|/* Temporary helper */
-end_comment
-
-begin_function
-name|void
-name|cpu_throw
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|old
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|new
-parameter_list|)
-block|{
-name|cpu_switch
-argument_list|(
-name|old
-argument_list|,
-name|new
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"cpu_throw() didn't"
-argument_list|)
-expr_stmt|;
-block|}
 end_function
 
 begin_comment
@@ -1184,7 +1133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detatch mapped page and release resources back to the system.  *  * Remove a reference from the given sf_buf, adding it to the free  * list when its reference count reaches zero. A freed sf_buf still,  * however, retains its virtual-to-physical mapping until it is  * recycled or reactivated by sf_buf_alloc(9).  */
+comment|/*  * Detach mapped page and release resources back to the system.  *  * Remove a reference from the given sf_buf, adding it to the free  * list when its reference count reaches zero. A freed sf_buf still,  * however, retains its virtual-to-physical mapping until it is  * recycled or reactivated by sf_buf_alloc(9).  */
 end_comment
 
 begin_function
@@ -1366,7 +1315,7 @@ argument_list|)
 operator|)
 operator|&
 operator|~
-literal|0x2fU
+literal|0x3fU
 operator|)
 expr_stmt|;
 name|td
@@ -1684,7 +1633,7 @@ argument_list|)
 operator|)
 operator|&
 operator|~
-literal|0x1f
+literal|0x3f
 expr_stmt|;
 name|bzero
 argument_list|(

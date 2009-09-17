@@ -110,13 +110,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/actables.h>
+file|<contrib/dev/acpica/include/accommon.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/actables.h>
 end_include
 
 begin_include
@@ -2194,6 +2200,26 @@ operator|->
 name|Id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|apic
+operator|->
+name|GlobalIrqBase
+operator|>=
+name|FIRST_MSI_INT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"MADT: Ignoring bogus I/O APIC ID %u"
+argument_list|,
+name|apic
+operator|->
+name|Id
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|ioapics
 index|[
 name|apic

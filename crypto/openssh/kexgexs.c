@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexgexs.c,v 1.10 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: kexgexs.c,v 1.11 2009/01/01 21:17:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -181,7 +181,17 @@ decl_stmt|,
 name|hashlen
 decl_stmt|;
 name|int
+name|omin
+init|=
+operator|-
+literal|1
+decl_stmt|,
 name|min
+init|=
+operator|-
+literal|1
+decl_stmt|,
+name|omax
 init|=
 operator|-
 literal|1
@@ -191,11 +201,17 @@ init|=
 operator|-
 literal|1
 decl_stmt|,
-name|nbits
+name|onbits
 init|=
 operator|-
 literal|1
 decl_stmt|,
+name|nbits
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|int
 name|type
 decl_stmt|,
 name|kout
@@ -257,16 +273,22 @@ argument_list|(
 literal|"SSH2_MSG_KEX_DH_GEX_REQUEST received"
 argument_list|)
 expr_stmt|;
+name|omin
+operator|=
 name|min
 operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
+name|onbits
+operator|=
 name|nbits
 operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
+name|omax
+operator|=
 name|max
 operator|=
 name|packet_get_int
@@ -290,6 +312,24 @@ argument_list|,
 name|max
 argument_list|)
 expr_stmt|;
+name|nbits
+operator|=
+name|MAX
+argument_list|(
+name|DH_GRP_MIN
+argument_list|,
+name|nbits
+argument_list|)
+expr_stmt|;
+name|nbits
+operator|=
+name|MIN
+argument_list|(
+name|DH_GRP_MAX
+argument_list|,
+name|nbits
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SSH2_MSG_KEX_DH_GEX_REQUEST_OLD
@@ -299,20 +339,26 @@ argument_list|(
 literal|"SSH2_MSG_KEX_DH_GEX_REQUEST_OLD received"
 argument_list|)
 expr_stmt|;
+name|onbits
+operator|=
 name|nbits
 operator|=
 name|packet_get_int
 argument_list|()
 expr_stmt|;
+comment|/* unused for old GEX */
+name|omin
+operator|=
 name|min
 operator|=
 name|DH_GRP_MIN
 expr_stmt|;
+name|omax
+operator|=
 name|max
 operator|=
 name|DH_GRP_MAX
 expr_stmt|;
-comment|/* unused for old GEX */
 break|break;
 default|default:
 name|fatal
@@ -328,27 +374,27 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|max
+name|omax
 operator|<
-name|min
+name|omin
 operator|||
-name|nbits
+name|onbits
 operator|<
-name|min
+name|omin
 operator|||
-name|max
+name|omax
 operator|<
-name|nbits
+name|onbits
 condition|)
 name|fatal
 argument_list|(
 literal|"DH_GEX_REQUEST, bad parameters: %d !< %d !< %d"
 argument_list|,
-name|min
+name|omin
 argument_list|,
-name|nbits
+name|onbits
 argument_list|,
-name|max
+name|omax
 argument_list|)
 expr_stmt|;
 comment|/* Contact privileged parent */
@@ -656,7 +702,11 @@ name|type
 operator|==
 name|SSH2_MSG_KEX_DH_GEX_REQUEST_OLD
 condition|)
+name|omin
+operator|=
 name|min
+operator|=
+name|omax
 operator|=
 name|max
 operator|=
@@ -714,11 +764,11 @@ name|server_host_key_blob
 argument_list|,
 name|sbloblen
 argument_list|,
-name|min
+name|omin
 argument_list|,
-name|nbits
+name|onbits
 argument_list|,
-name|max
+name|omax
 argument_list|,
 name|dh
 operator|->

@@ -1261,14 +1261,21 @@ name|filterops
 name|mq_rfiltops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_mqdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_mqread
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1278,14 +1285,21 @@ name|filterops
 name|mq_wfiltops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_mqdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_mqwrite
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2662,11 +2676,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -2801,11 +2810,6 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -2829,7 +2833,7 @@ name|FORCECLOSE
 else|:
 literal|0
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -2862,11 +2866,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -2923,11 +2922,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 comment|/* XXX update statistics */
@@ -5176,7 +5170,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct vop_open_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	int a_mode; 	struct ucred *a_cred; 	struct thread *a_td; 	int a_fdidx; };
+unit|struct vop_open_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	int a_mode; 	struct ucred *a_cred; 	struct thread *a_td; 	struct file *a_fp; };
 endif|#
 directive|endif
 end_endif
@@ -7183,7 +7177,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|mq
@@ -7196,15 +7190,9 @@ operator|&
 name|mq
 operator|->
 name|mq_mutex
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|mq
@@ -7217,12 +7205,6 @@ operator|&
 name|mq
 operator|->
 name|mq_mutex
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|atomic_add_int

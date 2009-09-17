@@ -68,6 +68,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<camlib.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -111,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<sys/libkern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cam/cam_queue.h>
 end_include
 
 begin_include
@@ -317,6 +329,12 @@ name|CAM_REQUEUE_REQ
 block|,
 literal|"Unconditionally Re-queue Request"
 block|,	     }
+block|,
+block|{
+name|CAM_ATA_STATUS_ERROR
+block|,
+literal|"ATA Status Error"
+block|}
 block|,
 block|{
 name|CAM_IDE

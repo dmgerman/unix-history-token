@@ -422,11 +422,6 @@ name|data
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -670,11 +665,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -799,7 +789,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|from
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 name|err
@@ -896,7 +886,7 @@ name|devvp
 argument_list|,
 name|mp
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -2159,13 +2149,13 @@ name|mp
 parameter_list|,
 name|int
 name|mntflags
-parameter_list|,
+parameter_list|)
+block|{
 name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-block|{
+decl_stmt|;
 name|struct
 name|ntfsmount
 modifier|*
@@ -2184,6 +2174,10 @@ operator|(
 literal|"ntfs_unmount: unmounting...\n"
 operator|)
 argument_list|)
+expr_stmt|;
+name|td
+operator|=
+name|curthread
 expr_stmt|;
 name|ntmp
 operator|=
@@ -2473,11 +2467,6 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -2733,11 +2722,6 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct

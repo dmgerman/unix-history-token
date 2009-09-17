@@ -10,29 +10,29 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_BUS_H_
+name|_USB_BUS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_BUS_H_
+name|_USB_BUS_H_
 end_define
 
 begin_comment
-comment|/*  * The following structure defines the USB explore message sent to the  * USB explore process.  */
+comment|/*  * The following structure defines the USB explore message sent to the USB  * explore process.  */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_bus_msg
+name|usb_bus_msg
 block|{
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 name|hdr
 decl_stmt|;
 name|struct
-name|usb2_bus
+name|usb_bus
 modifier|*
 name|bus
 decl_stmt|;
@@ -46,7 +46,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_bus_stat
+name|usb_bus_stat
 block|{
 name|uint32_t
 name|uds_requests
@@ -64,23 +64,15 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_bus
+name|usb_bus
 block|{
 name|struct
-name|usb2_bus_stat
+name|usb_bus_stat
 name|stats_err
 decl_stmt|;
 name|struct
-name|usb2_bus_stat
+name|usb_bus_stat
 name|stats_ok
-decl_stmt|;
-name|struct
-name|usb2_process
-name|explore_proc
-decl_stmt|;
-name|struct
-name|usb2_process
-name|roothub_proc
 decl_stmt|;
 name|struct
 name|root_hold_token
@@ -89,37 +81,40 @@ name|bus_roothold
 decl_stmt|;
 comment|/* 	 * There are two callback processes. One for Giant locked 	 * callbacks. One for non-Giant locked callbacks. This should 	 * avoid congestion and reduce response time in most cases. 	 */
 name|struct
-name|usb2_process
+name|usb_process
 name|giant_callback_proc
 decl_stmt|;
 name|struct
-name|usb2_process
+name|usb_process
 name|non_giant_callback_proc
 decl_stmt|;
+comment|/* Explore process */
 name|struct
-name|usb2_bus_msg
+name|usb_process
+name|explore_proc
+decl_stmt|;
+comment|/* Control request process */
+name|struct
+name|usb_process
+name|control_xfer_proc
+decl_stmt|;
+name|struct
+name|usb_bus_msg
 name|explore_msg
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_bus_msg
+name|usb_bus_msg
 name|detach_msg
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_bus_msg
+name|usb_bus_msg
 name|attach_msg
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|struct
-name|usb2_bus_msg
-name|roothub_msg
 index|[
 literal|2
 index|]
@@ -130,15 +125,11 @@ name|mtx
 name|bus_mtx
 decl_stmt|;
 name|struct
-name|usb2_perm
-name|perm
-decl_stmt|;
-name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 name|intr_q
 decl_stmt|;
 name|struct
-name|usb2_callout
+name|usb_callout
 name|power_wdog
 decl_stmt|;
 comment|/* power management */
@@ -149,46 +140,45 @@ name|device_t
 name|bdev
 decl_stmt|;
 comment|/* filled by HC driver */
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 name|dma_parent_tag
 index|[
 literal|1
 index|]
 decl_stmt|;
 name|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 name|dma_tags
 index|[
 name|USB_BUS_DMA_TAG_MAX
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
-name|usb2_bus_methods
+name|usb_bus_methods
 modifier|*
 name|methods
 decl_stmt|;
 comment|/* filled by HC driver */
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 modifier|*
 name|devices
 decl_stmt|;
-name|uint32_t
+name|usb_power_mask_t
 name|hw_power_state
 decl_stmt|;
 comment|/* see USB_HW_POWER_XXX */
-name|uint32_t
+name|usb_size_t
 name|uframe_usage
 index|[
 name|USB_HS_MICRO_FRAMES_MAX
-index|]
-decl_stmt|;
-name|uint32_t
-name|transfer_count
-index|[
-literal|4
 index|]
 decl_stmt|;
 name|uint16_t
@@ -203,7 +193,8 @@ name|uint8_t
 name|driver_added_refcount
 decl_stmt|;
 comment|/* Current driver generation count */
-name|uint8_t
+name|enum
+name|usb_revision
 name|usbrev
 decl_stmt|;
 comment|/* USB revision. See "USB_REV_XXX". */
@@ -218,14 +209,14 @@ comment|/* set if USB BUS should be re-probed */
 union|union
 block|{
 name|struct
-name|usb2_hw_ep_scratch
+name|usb_hw_ep_scratch
 name|hw_ep_scratch
 index|[
 literal|1
 index|]
 decl_stmt|;
 name|struct
-name|usb2_temp_setup
+name|usb_temp_setup
 name|temp_setup
 index|[
 literal|1
@@ -253,7 +244,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_BUS_H_ */
+comment|/* _USB_BUS_H_ */
 end_comment
 
 end_unit

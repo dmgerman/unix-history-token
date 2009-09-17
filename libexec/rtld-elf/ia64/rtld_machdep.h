@@ -28,13 +28,6 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|CACHE_LINE_SIZE
-value|128
-end_define
-
 begin_comment
 comment|/*  * Macros for cracking ia64 function pointers.  */
 end_comment

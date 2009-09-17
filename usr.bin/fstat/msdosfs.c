@@ -363,9 +363,11 @@ name|fsid
 operator|=
 name|dev2udev
 argument_list|(
-name|denode
+name|mnt
+operator|->
+name|data
 operator|.
-name|de_dev
+name|pm_dev
 argument_list|)
 expr_stmt|;
 name|fsp

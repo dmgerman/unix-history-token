@@ -104,6 +104,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>
+literal|800082
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IFNET_BUF_RING
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -380,6 +402,9 @@ name|int
 name|mask
 decl_stmt|;
 comment|/* number of rx slots -1 */
+name|int
+name|mlen
+decl_stmt|;
 block|}
 name|mxge_rx_ring_t
 typedef|;
@@ -393,12 +418,34 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IFNET_BUF_RING
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+endif|#
+directive|endif
 specifier|volatile
 name|mcp_kreq_ether_send_t
 modifier|*
 name|lanai
 decl_stmt|;
 comment|/* lanai ptr for sendq	*/
+specifier|volatile
+name|uint32_t
+modifier|*
+name|send_go
+decl_stmt|;
+comment|/* doorbell for sendq */
+specifier|volatile
+name|uint32_t
+modifier|*
+name|send_stop
+decl_stmt|;
+comment|/* doorbell for sendq */
 name|mcp_kreq_ether_send_t
 modifier|*
 name|req_list
@@ -440,6 +487,16 @@ name|int
 name|max_desc
 decl_stmt|;
 comment|/* max descriptors per xmit */
+name|int
+name|queue_active
+decl_stmt|;
+comment|/* fw currently polling this queue*/
+name|int
+name|activate
+decl_stmt|;
+name|int
+name|deactivate
+decl_stmt|;
 name|int
 name|stall
 decl_stmt|;
@@ -607,6 +664,21 @@ name|irq_claim
 decl_stmt|;
 name|u_long
 name|ipackets
+decl_stmt|;
+name|u_long
+name|opackets
+decl_stmt|;
+name|u_long
+name|obytes
+decl_stmt|;
+name|u_long
+name|omcasts
+decl_stmt|;
+name|u_long
+name|oerrors
+decl_stmt|;
+name|int
+name|if_drv_flags
 decl_stmt|;
 name|struct
 name|lro_head
@@ -852,6 +924,9 @@ name|num_slices
 decl_stmt|;
 name|int
 name|rx_ring_size
+decl_stmt|;
+name|int
+name|dying
 decl_stmt|;
 name|mxge_dma_t
 name|dmabench_dma

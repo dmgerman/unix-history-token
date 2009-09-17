@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -118,7 +124,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/priv.h>
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -276,42 +282,35 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|cn_probe_t
-name|xccnprobe
+name|xc_cnprobe
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_init_t
-name|xccninit
+name|xc_cninit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cn_term_t
+name|xc_cnterm
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_getc_t
-name|xccngetc
+name|xc_cngetc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_putc_t
-name|xccnputc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|cn_putc_t
-name|xccnputc_dom0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|cn_checkc_t
-name|xccncheckc
+name|xc_cnputc
 decl_stmt|;
 end_decl_stmt
 
@@ -323,23 +322,9 @@ value|(hz/10)
 end_define
 
 begin_expr_stmt
-name|CONS_DRIVER
+name|CONSOLE_DRIVER
 argument_list|(
 name|xc
-argument_list|,
-name|xccnprobe
-argument_list|,
-name|xccninit
-argument_list|,
-name|NULL
-argument_list|,
-name|xccngetc
-argument_list|,
-name|xccncheckc
-argument_list|,
-name|xccnputc
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -495,7 +480,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&x, _name, NULL, MTX_DEF|MTX_RECURSE)
+value|mtx_init(&x, _name, NULL, MTX_SPIN|MTX_RECURSE)
 end_define
 
 begin_define
@@ -506,7 +491,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|do {											\ 				if (panicstr == NULL)					\                         mtx_lock(&(l));			\ 		} while (0)
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_lock_spin(&(l));			\ 		} while (0)
 end_define
 
 begin_define
@@ -517,7 +502,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|do {											\ 				if (panicstr == NULL)					\                         mtx_unlock(&(l));			\ 		} while (0)
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_unlock_spin(&(l));			\ 		} while (0)
 end_define
 
 begin_define
@@ -596,7 +581,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|xccnprobe
+name|xc_cnprobe
 parameter_list|(
 name|struct
 name|consdev
@@ -627,7 +612,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|xccninit
+name|xc_cninit
 parameter_list|(
 name|struct
 name|consdev
@@ -646,76 +631,22 @@ block|}
 end_function
 
 begin_function
-name|int
-name|xccngetc
+specifier|static
+name|void
+name|xc_cnterm
 parameter_list|(
 name|struct
 name|consdev
 modifier|*
-name|dev
+name|cp
 parameter_list|)
-block|{
-name|int
-name|c
-decl_stmt|;
-if|if
-condition|(
-name|xc_mute
-condition|)
-return|return
-literal|0
-return|;
-do|do
-block|{
-if|if
-condition|(
-operator|(
-name|c
-operator|=
-name|xccncheckc
-argument_list|(
-name|dev
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* polling without sleeping in Xen doesn't work well.  			 * Sleeping gives other things like clock a chance to  			 * run 			 */
-name|tsleep
-argument_list|(
-operator|&
-name|cn_mtx
-argument_list|,
-name|PWAIT
-operator||
-name|PCATCH
-argument_list|,
-literal|"console sleep"
-argument_list|,
-name|XC_POLLTIME
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-do|while
-condition|(
-name|c
-operator|==
-operator|-
-literal|1
-condition|)
-do|;
-return|return
-name|c
-return|;
-block|}
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|int
-name|xccncheckc
+name|xc_cngetc
 parameter_list|(
 name|struct
 name|consdev
@@ -759,6 +690,7 @@ name|rc
 operator|)
 condition|)
 block|{
+comment|/* if (kdb_active) printf("%s:%d\n", __func__, __LINE__); */
 comment|/* we need to return only one char */
 name|ret
 operator|=
@@ -793,7 +725,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|xccnputc
+name|xc_cnputc_domu
 parameter_list|(
 name|struct
 name|consdev
@@ -815,7 +747,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|xccnputc_dom0
+name|xc_cnputc_dom0
 parameter_list|(
 name|struct
 name|consdev
@@ -837,6 +769,46 @@ name|char
 operator|*
 operator|)
 operator|&
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|xc_cnputc
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|c
+parameter_list|)
+block|{
+if|if
+condition|(
+name|xen_start_info
+operator|->
+name|flags
+operator|&
+name|SIF_INITDOMAIN
+condition|)
+name|xc_cnputc_dom0
+argument_list|(
+name|dev
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+else|else
+name|xc_cnputc_domu
+argument_list|(
+name|dev
+argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
@@ -1050,45 +1022,12 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|xc_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|xc_softc
-operator|*
-operator|)
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|xen_start_info
-operator|->
-name|flags
-operator|&
-name|SIF_INITDOMAIN
-condition|)
-block|{
-name|xc_consdev
-operator|.
-name|cn_putc
-operator|=
-name|xccnputc_dom0
-expr_stmt|;
-block|}
 name|xccons
 operator|=
 name|tty_alloc
 argument_list|(
 operator|&
 name|xc_ttydevsw
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -1154,7 +1093,7 @@ name|NULL
 argument_list|,
 name|xencons_priv_interrupt
 argument_list|,
-name|sc
+name|NULL
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
@@ -1256,6 +1195,14 @@ decl_stmt|;
 if|if
 condition|(
 name|xen_console_up
+ifdef|#
+directive|ifdef
+name|DDB
+operator|&&
+operator|!
+name|kdb_active
+endif|#
+directive|endif
 condition|)
 block|{
 name|tty_lock
@@ -1301,6 +1248,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|CN_LOCK
+argument_list|(
+name|cn_mtx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1327,6 +1279,11 @@ name|buf
 index|[
 name|i
 index|]
+expr_stmt|;
+name|CN_UNLOCK
+argument_list|(
+name|cn_mtx
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1701,7 +1658,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|xccncheckc
+name|xc_cngetc
 argument_list|(
 name|NULL
 argument_list|)
@@ -1902,10 +1859,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 8  * tab-width: 4  * indent-tabs-mode: t  * End:  */
-end_comment
 
 end_unit
 

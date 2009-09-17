@@ -41,7 +41,7 @@ name|char
 name|name
 index|[]
 init|=
-literal|"test_compat_gtar_1.tgz"
+literal|"test_compat_gtar_1.tar"
 decl_stmt|;
 name|struct
 name|archive_entry
@@ -360,7 +360,7 @@ argument_list|(
 name|a
 argument_list|)
 argument_list|,
-name|ARCHIVE_COMPRESSION_GZIP
+name|ARCHIVE_COMPRESSION_NONE
 argument_list|)
 expr_stmt|;
 name|assertEqualInt

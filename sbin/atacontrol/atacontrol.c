@@ -621,7 +621,7 @@ name|ATA_SATA_GEN2
 condition|)
 name|printf
 argument_list|(
-literal|"Serial ATA II\n"
+literal|"SATA revision 2.x\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -635,13 +635,13 @@ name|ATA_SATA_GEN1
 condition|)
 name|printf
 argument_list|(
-literal|"Serial ATA v1.0\n"
+literal|"SATA revision 1.x\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Unknown serial ATA version\n"
+literal|"Unknown SATA revision\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -771,7 +771,7 @@ name|ATA_SATA_GEN2
 condition|)
 name|printf
 argument_list|(
-literal|"Serial ATA II\n"
+literal|"SATA revision 2.x\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -785,13 +785,13 @@ name|ATA_SATA_GEN1
 condition|)
 name|printf
 argument_list|(
-literal|"Serial ATA v1.0\n"
+literal|"SATA revision 1.x\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Unknown serial ATA version\n"
+literal|"Unknown SATA revision\n"
 argument_list|)
 expr_stmt|;
 block|}

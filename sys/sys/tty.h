@@ -281,6 +281,11 @@ decl_stmt|;
 comment|/* (t) Output wait queue. */
 name|struct
 name|cv
+name|t_outserwait
+decl_stmt|;
+comment|/* (t) Serial output wait queue. */
+name|struct
+name|cv
 name|t_bgwait
 decl_stmt|;
 comment|/* (t) Background wait queue. */
@@ -482,6 +487,24 @@ name|struct
 name|tty
 modifier|*
 name|tty_alloc
+parameter_list|(
+name|struct
+name|ttydevsw
+modifier|*
+name|tsw
+parameter_list|,
+name|void
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|tty
+modifier|*
+name|tty_alloc_mutex
 parameter_list|(
 name|struct
 name|ttydevsw
@@ -949,6 +972,26 @@ end_function_decl
 begin_comment
 comment|/* Pseudo-terminal hooks. */
 end_comment
+
+begin_function_decl
+name|int
+name|pts_alloc
+parameter_list|(
+name|int
+name|fflags
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

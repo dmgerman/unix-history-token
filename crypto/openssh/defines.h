@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.151 2008/07/04 13:10:49 djm Exp $ */
+comment|/* $Id: defines.h,v 1.153 2009/02/01 11:19:54 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -3866,6 +3866,12 @@ name|defined
 argument_list|(
 name|HAVE_SET_ID
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SECUREWARE
+argument_list|)
 end_if
 
 begin_define
@@ -4081,6 +4087,28 @@ define|#
 directive|define
 name|EWOULDBLOCK
 value|EAGAIN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INET6_ADDRSTRLEN
+end_ifndef
+
+begin_comment
+comment|/* for non IPv6 machines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INET6_ADDRSTRLEN
+value|46
 end_define
 
 begin_endif

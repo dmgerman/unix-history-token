@@ -649,11 +649,6 @@ name|cam_periph
 modifier|*
 name|periph
 decl_stmt|;
-name|struct
-name|cam_sim
-modifier|*
-name|sim
-decl_stmt|;
 name|periph
 operator|=
 operator|(
@@ -697,17 +692,6 @@ name|NULL
 condition|)
 break|break;
 comment|/* 		 * Allocate a peripheral instance for 		 * this device and start the probe 		 * process. 		 */
-name|sim
-operator|=
-name|xpt_path_sim
-argument_list|(
-name|cgd
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
 name|status
 operator|=
 name|cam_periph_alloc
@@ -2008,6 +1992,14 @@ operator|.
 name|func_code
 operator|==
 name|XPT_SCSI_IO
+operator|||
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|==
+name|XPT_ATA_IO
 operator|)
 operator|&&
 operator|(

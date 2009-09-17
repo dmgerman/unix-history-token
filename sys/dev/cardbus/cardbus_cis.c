@@ -2542,15 +2542,13 @@ block|{
 case|case
 name|PCIM_CIS_ASI_CONFIG
 case|:
-if|if
-condition|(
-name|cardbus_cis_debug
-condition|)
-name|device_printf
+name|DEVPRINTF
 argument_list|(
+operator|(
 name|cbdev
-argument_list|,
+operator|,
 literal|"CIS in PCI config space\n"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* CIS in PCI config space need no initialization */
@@ -2587,18 +2585,16 @@ operator|-
 name|PCIM_CIS_ASI_BAR0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cardbus_cis_debug
-condition|)
-name|device_printf
+name|DEVPRINTF
 argument_list|(
+operator|(
 name|cbdev
-argument_list|,
+operator|,
 literal|"CIS in BAR %#x\n"
-argument_list|,
+operator|,
 operator|*
 name|rid
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2610,15 +2606,13 @@ name|rid
 operator|=
 name|PCIR_BIOS
 expr_stmt|;
-if|if
-condition|(
-name|cardbus_cis_debug
-condition|)
-name|device_printf
+name|DEVPRINTF
 argument_list|(
+operator|(
 name|cbdev
-argument_list|,
+operator|,
 literal|"CIS in option rom\n"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2685,6 +2679,20 @@ name|NULL
 operator|)
 return|;
 block|}
+name|DEVPRINTF
+argument_list|(
+operator|(
+name|cbdev
+operator|,
+literal|"CIS Mapped to %#lx\n"
+operator|,
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -2986,18 +2994,16 @@ operator|&
 name|PCIM_CIS_ADDR_MASK
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|cardbus_cis_debug
-condition|)
-name|device_printf
+name|DEVPRINTF
 argument_list|(
+operator|(
 name|cbdev
-argument_list|,
+operator|,
 literal|"CIS offset is %#x\n"
-argument_list|,
+operator|,
 operator|*
 name|start
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3228,15 +3234,13 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|cardbus_cis_debug
-condition|)
-name|device_printf
+name|DEVPRINTF
 argument_list|(
+operator|(
 name|cbdev
-argument_list|,
-literal|"Warning: CIS pointer 0 (no CIS present)\n"
+operator|,
+literal|"Warning: CIS pointer is 0: (no CIS)\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3245,17 +3249,15 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|cardbus_cis_debug
-condition|)
-name|device_printf
+name|DEVPRINTF
 argument_list|(
+operator|(
 name|cbdev
-argument_list|,
+operator|,
 literal|"CIS pointer is %#x\n"
-argument_list|,
+operator|,
 name|start
+operator|)
 argument_list|)
 expr_stmt|;
 name|off

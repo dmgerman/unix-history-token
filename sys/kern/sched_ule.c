@@ -721,11 +721,6 @@ name|int
 name|tdq_transferable
 decl_stmt|;
 comment|/* Transferable thread count. */
-specifier|volatile
-name|int
-name|tdq_idlestate
-decl_stmt|;
-comment|/* State of the idle thread. */
 name|short
 name|tdq_switchcnt
 decl_stmt|;
@@ -1814,15 +1809,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tidle state:     %d\n"
-argument_list|,
-name|tdq
-operator|->
-name|tdq_idlestate
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"\ttimeshare idx:  %d\n"
 argument_list|,
 name|tdq
@@ -2655,10 +2641,9 @@ begin_struct
 struct|struct
 name|cpu_search
 block|{
-name|cpumask_t
+name|cpuset_t
 name|cs_mask
 decl_stmt|;
-comment|/* Mask of valid cpus. */
 name|u_int
 name|cs_load
 decl_stmt|;
@@ -2697,14 +2682,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPUMASK_FOREACH
+name|CPUSET_FOREACH
 parameter_list|(
 name|cpu
 parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|for ((cpu) = 0; (cpu)< sizeof((mask)) * 8; (cpu)++)	\ 		if ((mask)& 1<< (cpu))
+value|for ((cpu) = 0; (cpu)<= mp_maxid; (cpu)++)		\ 		if ((mask)& 1<< (cpu))
 end_define
 
 begin_function_decl
@@ -2839,15 +2824,15 @@ name|CPU_SEARCH_LOWEST
 condition|)
 if|if
 condition|(
+name|CPU_ISSET
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
 name|low
 operator|->
 name|cs_mask
-operator|&
-operator|(
-literal|1
-operator|<<
-name|cpu
-operator|)
+argument_list|)
 operator|&&
 name|tdq
 operator|->
@@ -2889,15 +2874,15 @@ name|CPU_SEARCH_HIGHEST
 condition|)
 if|if
 condition|(
+name|CPU_ISSET
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
 name|high
 operator|->
 name|cs_mask
-operator|&
-operator|(
-literal|1
-operator|<<
-name|cpu
-operator|)
+argument_list|)
 operator|&&
 name|tdq
 operator|->
@@ -3211,7 +3196,7 @@ block|{
 name|int
 name|cpu
 decl_stmt|;
-name|CPUMASK_FOREACH
+name|CPUSET_FOREACH
 argument_list|(
 argument|cpu
 argument_list|,
@@ -3353,7 +3338,7 @@ name|cpu_group
 modifier|*
 name|cg
 parameter_list|,
-name|cpumask_t
+name|cpuset_t
 name|mask
 parameter_list|,
 name|int
@@ -3421,7 +3406,7 @@ name|cpu_group
 modifier|*
 name|cg
 parameter_list|,
-name|cpumask_t
+name|cpuset_t
 name|mask
 parameter_list|,
 name|int
@@ -3488,7 +3473,7 @@ name|cpu_group
 modifier|*
 name|cg
 parameter_list|,
-name|cpumask_t
+name|cpuset_t
 name|mask
 parameter_list|,
 name|int
@@ -3601,7 +3586,7 @@ modifier|*
 name|cg
 parameter_list|)
 block|{
-name|cpumask_t
+name|cpuset_t
 name|mask
 decl_stmt|;
 name|int
@@ -3613,10 +3598,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|CPU_FILL
+argument_list|(
+operator|&
 name|mask
-operator|=
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -3682,24 +3668,22 @@ name|tdq_transferable
 operator|==
 literal|0
 condition|)
-name|mask
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
+name|CPU_CLR
+argument_list|(
 name|high
-operator|)
+argument_list|,
+operator|&
+name|mask
+argument_list|)
 expr_stmt|;
 else|else
-name|mask
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
+name|CPU_CLR
+argument_list|(
 name|low
-operator|)
+argument_list|,
+operator|&
+name|mask
+argument_list|)
 expr_stmt|;
 block|}
 for|for
@@ -4208,7 +4192,7 @@ name|tdq
 modifier|*
 name|steal
 decl_stmt|;
-name|cpumask_t
+name|cpuset_t
 name|mask
 decl_stmt|;
 name|int
@@ -4232,17 +4216,21 @@ operator|(
 literal|1
 operator|)
 return|;
+name|CPU_FILL
+argument_list|(
+operator|&
 name|mask
-operator|=
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
-name|mask
-operator|&=
-operator|~
+name|CPU_CLR
+argument_list|(
 name|PCPU_GET
 argument_list|(
-name|cpumask
+name|cpuid
+argument_list|)
+argument_list|,
+operator|&
+name|mask
 argument_list|)
 expr_stmt|;
 comment|/* We don't want to be preempted while we're iterating. */
@@ -4270,11 +4258,7 @@ name|cg
 operator|->
 name|cg_flags
 operator|&
-operator|(
-name|CG_FLAG_HTT
-operator||
 name|CG_FLAG_THREAD
-operator|)
 operator|)
 operator|==
 literal|0
@@ -4322,14 +4306,13 @@ argument_list|(
 name|cpu
 argument_list|)
 expr_stmt|;
-name|mask
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
+name|CPU_CLR
+argument_list|(
 name|cpu
-operator|)
+argument_list|,
+operator|&
+name|mask
+argument_list|)
 expr_stmt|;
 name|tdq_lock_pair
 argument_list|(
@@ -4513,16 +4496,6 @@ name|ctd
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * If the idle thread is still 'running' it's probably 		 * waiting on us to release the tdq spinlock already.  No 		 * need to ipi. 		 */
-if|if
-condition|(
-name|tdq
-operator|->
-name|tdq_idlestate
-operator|==
-name|TDQ_RUNNING
-condition|)
-return|return;
 comment|/* 		 * If the MD code has an idle wakeup routine try that before 		 * falling back to IPI. 		 */
 if|if
 condition|(
@@ -5275,7 +5248,7 @@ name|tdq
 modifier|*
 name|tdq
 decl_stmt|;
-name|cpumask_t
+name|cpuset_t
 name|mask
 decl_stmt|;
 name|int
@@ -5499,11 +5472,6 @@ operator|->
 name|td_cpuset
 operator|->
 name|cs_mask
-operator|.
-name|__bits
-index|[
-literal|0
-index|]
 expr_stmt|;
 if|if
 condition|(
@@ -6166,12 +6134,12 @@ name|balance_interval
 operator|=
 name|realstathz
 expr_stmt|;
-comment|/* 	 * Set steal thresh to log2(mp_ncpu) but no greater than 4.  This 	 * prevents excess thrashing on large machines and excess idle on 	 * smaller machines. 	 */
+comment|/* 	 * Set steal thresh to roughly log2(mp_ncpu) but no greater than 4.  	 * This prevents excess thrashing on large machines and excess idle  	 * on smaller machines. 	 */
 name|steal_thresh
 operator|=
 name|min
 argument_list|(
-name|ffs
+name|fls
 argument_list|(
 name|mp_ncpus
 argument_list|)
@@ -7633,9 +7601,12 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* This releases the lock on tdq. */
-name|TDQ_LOCK
+comment|/* 	 * Acquire both run-queue locks before placing the thread on the new 	 * run-queue to avoid deadlocks created by placing a thread with a 	 * blocked lock on the run-queue of a remote processor.  The deadlock 	 * occurs when a third processor attempts to lock the two queues in 	 * question while the target processor is spinning with its own 	 * run-queue lock held while waiting for the blocked lock to clear. 	 */
+name|tdq_lock_pair
 argument_list|(
 name|tdn
+argument_list|,
+name|tdq
 argument_list|)
 expr_stmt|;
 name|tdq_add
@@ -7654,31 +7625,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * After we unlock tdn the new cpu still can't switch into this 	 * thread until we've unblocked it in cpu_switch().  The lock 	 * pointers may match in the case of HTT cores.  Don't unlock here 	 * or we can deadlock when the other CPU runs the IPI handler. 	 */
-if|if
-condition|(
-name|TDQ_LOCKPTR
-argument_list|(
-name|tdn
-argument_list|)
-operator|!=
-name|TDQ_LOCKPTR
-argument_list|(
-name|tdq
-argument_list|)
-condition|)
-block|{
 name|TDQ_UNLOCK
 argument_list|(
 name|tdn
 argument_list|)
 expr_stmt|;
-name|TDQ_LOCK
-argument_list|(
-name|tdq
-argument_list|)
-expr_stmt|;
-block|}
 name|spinlock_exit
 argument_list|()
 expr_stmt|;
@@ -10190,6 +10141,28 @@ condition|)
 return|return;
 if|if
 condition|(
+name|TD_ON_RUNQ
+argument_list|(
+name|td
+argument_list|)
+condition|)
+block|{
+name|sched_rem
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|sched_add
+argument_list|(
+name|td
+argument_list|,
+name|SRQ_BORING
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|!
 name|TD_IS_RUNNING
 argument_list|(
@@ -10574,6 +10547,43 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TDQ_IDLESPIN
+parameter_list|(
+name|tdq
+parameter_list|)
+define|\
+value|((tdq)->tdq_cg != NULL&& ((tdq)->tdq_cg->cg_flags& CG_FLAG_THREAD) == 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TDQ_IDLESPIN
+parameter_list|(
+name|tdq
+parameter_list|)
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The actual idle process.  */
 end_comment
@@ -10603,6 +10613,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|curthread
@@ -10612,27 +10630,12 @@ operator|=
 name|TDQ_SELF
 argument_list|()
 expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
-comment|/* ULE relies on preemption for idle interruption. */
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
-name|tdq
-operator|->
-name|tdq_idlestate
-operator|=
-name|TDQ_RUNNING
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -10658,9 +10661,14 @@ name|tdq
 operator|->
 name|tdq_oldswitchcnt
 expr_stmt|;
-comment|/* 		 * If we're switching very frequently, spin while checking 		 * for load rather than entering a low power state that  		 * requires an IPI. 		 */
+comment|/* 		 * If we're switching very frequently, spin while checking 		 * for load rather than entering a low power state that  		 * may require an IPI.  However, don't do any busy 		 * loops while on SMT machines as this simply steals 		 * cycles from cores doing useful work. 		 */
 if|if
 condition|(
+name|TDQ_IDLESPIN
+argument_list|(
+name|tdq
+argument_list|)
+operator|&&
 name|switchcnt
 operator|>
 name|sched_idlespinthresh
@@ -10692,16 +10700,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * We must set our state to IDLE before checking 		 * tdq_load for the last time to avoid a race with 		 * tdq_notify(). 		 */
-if|if
-condition|(
-name|tdq
-operator|->
-name|tdq_load
-operator|==
-literal|0
-condition|)
-block|{
 name|switchcnt
 operator|=
 name|tdq
@@ -10711,12 +10709,6 @@ operator|+
 name|tdq
 operator|->
 name|tdq_oldswitchcnt
-expr_stmt|;
-name|tdq
-operator|->
-name|tdq_idlestate
-operator|=
-name|TDQ_IDLE
 expr_stmt|;
 if|if
 condition|(
@@ -10733,7 +10725,6 @@ operator|>
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|tdq
@@ -11286,7 +11277,7 @@ name|cg
 operator|->
 name|cg_flags
 operator|&
-name|CG_FLAG_THREAD
+name|CG_FLAG_SMT
 operator|)
 operator|!=
 literal|0

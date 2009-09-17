@@ -27,8 +27,11 @@ decl_stmt|;
 name|uint16_t
 name|wr_chan_flags
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|wr_antsignal
+decl_stmt|;
+name|int8_t
+name|wr_antnoise
 decl_stmt|;
 name|uint8_t
 name|wr_antenna
@@ -42,7 +45,7 @@ define|#
 directive|define
 name|IWI_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL) |			\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA))
+value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL) |			\ 	 (1<< IEEE80211_RADIOTAP_DBM_ANTNOISE) |			\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA))
 end_define
 
 begin_struct
@@ -279,18 +282,6 @@ name|struct
 name|ieee80211vap
 name|iwi_vap
 decl_stmt|;
-name|struct
-name|task
-name|iwi_authsuccess_task
-decl_stmt|;
-name|struct
-name|task
-name|iwi_assocsuccess_task
-decl_stmt|;
-name|struct
-name|task
-name|iwi_assocfailed_task
-decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -348,17 +339,6 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
-name|struct
-name|mtx
-name|sc_cmdlock
-decl_stmt|;
-name|char
-name|sc_cmdname
-index|[
-literal|12
-index|]
-decl_stmt|;
-comment|/* e.g. "iwi0_cmd" */
 name|uint8_t
 name|sc_mcast
 index|[
@@ -370,18 +350,6 @@ name|unrhdr
 modifier|*
 name|sc_unr
 decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|sc_tq
-decl_stmt|;
-comment|/* private task queue */
-name|struct
-name|taskqueue
-modifier|*
-name|sc_tq2
-decl_stmt|;
-comment|/* reset task queue */
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -556,19 +524,18 @@ decl_stmt|;
 comment|/* radio off processing */
 name|struct
 name|task
-name|sc_scanaborttask
-decl_stmt|;
-comment|/* cancel active scan */
-name|struct
-name|task
 name|sc_restarttask
 decl_stmt|;
 comment|/* restart adapter processing */
 name|struct
 name|task
-name|sc_opstask
+name|sc_disassoctask
 decl_stmt|;
-comment|/* scan / auth processing */
+name|struct
+name|task
+name|sc_wmetask
+decl_stmt|;
+comment|/* set wme parameters */
 name|unsigned
 name|int
 name|sc_softled
@@ -646,81 +613,13 @@ name|int
 name|sc_busy_timer
 decl_stmt|;
 comment|/* firmware cmd timer */
-define|#
-directive|define
-name|IWI_CMD_MAXOPS
-value|10
-name|int
-name|sc_cmd
-index|[
-name|IWI_CMD_MAXOPS
-index|]
-decl_stmt|;
-name|unsigned
-name|long
-name|sc_arg
-index|[
-name|IWI_CMD_MAXOPS
-index|]
-decl_stmt|;
-name|int
-name|sc_cmd_cur
-decl_stmt|;
-comment|/* current queued scan task */
-name|int
-name|sc_cmd_next
-decl_stmt|;
-comment|/* last queued scan task */
-define|#
-directive|define
-name|IWI_CMD_FREE
-value|0
-comment|/* for marking slots unused */
-define|#
-directive|define
-name|IWI_SCAN_START
-value|1
-define|#
-directive|define
-name|IWI_SET_CHANNEL
-value|2
-define|#
-directive|define
-name|IWI_AUTH
-value|3
-define|#
-directive|define
-name|IWI_ASSOC
-value|4
-define|#
-directive|define
-name|IWI_DISASSOC
-value|5
-define|#
-directive|define
-name|IWI_SCAN_CURCHAN
-value|6
-define|#
-directive|define
-name|IWI_SCAN_ALLCHAN
-value|7
-define|#
-directive|define
-name|IWI_SET_WME
-value|8
 name|struct
 name|iwi_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
-name|int
-name|sc_rxtap_len
-decl_stmt|;
 name|struct
 name|iwi_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-name|int
-name|sc_txtap_len
 decl_stmt|;
 block|}
 struct|;
@@ -735,7 +634,7 @@ name|_sc
 parameter_list|,
 name|_state
 parameter_list|)
-value|do {			\ 	KASSERT(_sc->fw_state == IWI_FW_IDLE,			\ 	    ("iwi firmware not idle"));				\ 	_sc->fw_state = _state;					\ 	_sc->sc_state_timer = 5;				\ 	DPRINTF(("enter %s state\n", iwi_fw_states[_state]));	\ } while (0)
+value|do {			\ 	KASSERT(_sc->fw_state == IWI_FW_IDLE,			\ 	    ("iwi firmware not idle, state %s", iwi_fw_states[_sc->fw_state]));\ 	_sc->fw_state = _state;					\ 	_sc->sc_state_timer = 5;				\ 	DPRINTF(("enter %s state\n", iwi_fw_states[_state]));	\ } while (0)
 end_define
 
 begin_define
@@ -810,46 +709,6 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|do {			\ 	if (!__waslocked)			\ 		mtx_unlock(&(sc)->sc_mtx);	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWI_CMD_LOCK_INIT
-parameter_list|(
-name|sc
-parameter_list|)
-value|do { \ 	snprintf((sc)->sc_cmdname, sizeof((sc)->sc_cmdname), "%s_cmd", \ 		device_get_nameunit((sc)->sc_dev)); \ 	mtx_init(&(sc)->sc_cmdlock, (sc)->sc_cmdname, NULL, MTX_DEF); \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWI_CMD_LOCK_DESTROY
-parameter_list|(
-name|sc
-parameter_list|)
-value|mtx_destroy(&(sc)->sc_cmdlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWI_CMD_LOCK
-parameter_list|(
-name|sc
-parameter_list|)
-value|mtx_lock(&(sc)->sc_cmdlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWI_CMD_UNLOCK
-parameter_list|(
-name|sc
-parameter_list|)
-value|mtx_unlock(&(sc)->sc_cmdlock)
 end_define
 
 end_unit

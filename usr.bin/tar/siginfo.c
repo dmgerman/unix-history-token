@@ -226,6 +226,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SIGUSR1
 comment|/* ... and treat SIGUSR1 the same way as SIGINFO. */
 name|bsdtar
 operator|->
@@ -240,6 +243,8 @@ argument_list|,
 name|siginfo_handler
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -524,6 +529,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SIGUSR1
 comment|/* And the old SIGUSR1 handler, too. */
 name|signal
 argument_list|(
@@ -536,6 +544,8 @@ operator|->
 name|sigusr1_old
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Free strings. */
 name|free
 argument_list|(

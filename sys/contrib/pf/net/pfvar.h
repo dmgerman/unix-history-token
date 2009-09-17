@@ -6891,6 +6891,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|int
+name|pf_purge_expired_src_nodes
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|pf_purge_expired_states
+parameter_list|(
+name|u_int32_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 specifier|extern
 name|void
@@ -6910,6 +6943,11 @@ name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -9314,31 +9352,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Symbol translation macros  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INIT_VNET_PF
-parameter_list|(
-name|vnet
-parameter_list|)
-define|\
-value|INIT_FROM_VNET(vnet, VNET_MOD_PF, struct vnet_pf, vnet_pf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_PF
-parameter_list|(
-name|sym
-parameter_list|)
-value|VSYM(vnet_pf, sym)
-end_define
 
 begin_endif
 endif|#

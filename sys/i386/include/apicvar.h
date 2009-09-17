@@ -67,11 +67,21 @@ value|(APIC_IO_INTS + APIC_NUM_IOINTS)
 end_define
 
 begin_comment
-comment|/*    ********************* !!! WARNING !!! ******************************  * Each local apic has an interrupt receive fifo that is two entries deep  * for each interrupt priority class (higher 4 bits of interrupt vector).  * Once the fifo is full the APIC can no longer receive interrupts for this  * class and sending IPIs from other CPUs will be blocked.  * To avoid deadlocks there should be no more than two IPI interrupts  * pending at the same time.  * Currently this is guaranteed by dividing the IPIs in two groups that have   * each at most one IPI interrupt pending. The first group is protected by the  * smp_ipi_mtx and waits for the completion of the IPI (Only one IPI user   * at a time) The second group uses a single interrupt and a bitmap to avoid  * redundant IPI interrupts.  *  * Right now IPI_STOP used by kdb shares the interrupt priority class with  * the two IPI groups mentioned above. As such IPI_STOP may cause a deadlock.  * Eventually IPI_STOP should use NMI IPIs - this would eliminate this and  * other deadlocks caused by IPI_STOP.  */
+comment|/*    ********************* !!! WARNING !!! ******************************  * Each local apic has an interrupt receive fifo that is two entries deep  * for each interrupt priority class (higher 4 bits of interrupt vector).  * Once the fifo is full the APIC can no longer receive interrupts for this  * class and sending IPIs from other CPUs will be blocked.  * To avoid deadlocks there should be no more than two IPI interrupts  * pending at the same time.  * Currently this is guaranteed by dividing the IPIs in two groups that have   * each at most one IPI interrupt pending. The first group is protected by the  * smp_ipi_mtx and waits for the completion of the IPI (Only one IPI user   * at a time) The second group uses a single interrupt and a bitmap to avoid  * redundant IPI interrupts.  */
 end_comment
 
 begin_comment
 comment|/* Interrupts for local APIC LVT entries other than the timer. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_comment
+comment|/* These are the Xen i386 APIC definitions */
 end_comment
 
 begin_define
@@ -101,82 +111,6 @@ directive|define
 name|APIC_IPI_INTS
 value|(APIC_LOCAL_INTS + 2)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPI_RENDEZVOUS
-value|(2)
-end_define
-
-begin_comment
-comment|/* Inter-CPU rendezvous. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPI_INVLTLB
-value|(3)
-end_define
-
-begin_comment
-comment|/* TLB Shootdown IPIs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPI_INVLPG
-value|(4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPI_INVLRNG
-value|(5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPI_INVLCACHE
-value|(6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPI_LAZYPMAP
-value|(7)
-end_define
-
-begin_comment
-comment|/* Lazy pmap release. */
-end_comment
-
-begin_comment
-comment|/* Vector to handle bitmap based IPIs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPI_BITMAP_VECTOR
-value|(8)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -243,10 +177,193 @@ name|IPI_BITMAP_VECTOR
 value|(APIC_IPI_INTS + 6)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* IPIs handled by IPI_BITMAPED_VECTOR  (XXX ups is there a better place?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_AST
+value|0
+end_define
+
+begin_comment
+comment|/* Generate software trap. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_PREEMPT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_HARDCLOCK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_STATCLOCK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_PROFCLOCK
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_BITMAP_LAST
+value|IPI_PROFCLOCK
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_IS_BITMAPED
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<= IPI_BITMAP_LAST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_STOP
+value|(APIC_IPI_INTS + 7)
+end_define
+
+begin_comment
+comment|/* Stop CPU until restarted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_STOP_HARD
+value|(APIC_IPI_INTS + 8)
+end_define
+
+begin_comment
+comment|/* Stop CPU with a NMI. */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* XEN */
+end_comment
+
+begin_comment
+comment|/* These are the normal i386 APIC definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_LOCAL_INTS
+value|240
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_ERROR_INT
+value|APIC_LOCAL_INTS
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_THERMAL_INT
+value|(APIC_LOCAL_INTS + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_IPI_INTS
+value|(APIC_LOCAL_INTS + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_RENDEZVOUS
+value|(APIC_IPI_INTS)
+end_define
+
+begin_comment
+comment|/* Inter-CPU rendezvous. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_INVLTLB
+value|(APIC_IPI_INTS + 1)
+end_define
+
+begin_comment
+comment|/* TLB Shootdown IPIs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_INVLPG
+value|(APIC_IPI_INTS + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_INVLRNG
+value|(APIC_IPI_INTS + 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_INVLCACHE
+value|(APIC_IPI_INTS + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_LAZYPMAP
+value|(APIC_IPI_INTS + 5)
+end_define
+
+begin_comment
+comment|/* Lazy pmap release. */
+end_comment
+
+begin_comment
+comment|/* Vector to handle bitmap based IPIs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_BITMAP_VECTOR
+value|(APIC_IPI_INTS + 6)
+end_define
 
 begin_comment
 comment|/* IPIs handled by IPI_BITMAPED_VECTOR  (XXX ups is there a better place?) */
@@ -273,8 +390,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPI_HARDCLOCK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_STATCLOCK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_PROFCLOCK
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPI_BITMAP_LAST
-value|IPI_PREEMPT
+value|IPI_PROFCLOCK
 end_define
 
 begin_define
@@ -296,6 +434,26 @@ end_define
 
 begin_comment
 comment|/* Stop CPU until restarted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_STOP_HARD
+value|(APIC_IPI_INTS + 8)
+end_define
+
+begin_comment
+comment|/* Stop CPU with a NMI. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XEN */
 end_comment
 
 begin_comment
@@ -845,12 +1003,30 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|lapic_disable_pmc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|lapic_dump
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lapic_enable_pmc
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -961,6 +1137,15 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lapic_reenable_pmc
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

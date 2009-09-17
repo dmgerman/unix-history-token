@@ -835,9 +835,6 @@ parameter_list|(
 name|ACPI_HANDLE
 name|h
 parameter_list|,
-name|UINT32
-name|fn
-parameter_list|,
 name|void
 modifier|*
 name|data
@@ -1328,6 +1325,18 @@ name|sc
 parameter_list|,
 name|int
 name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|acpi_resync_clock
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2297,6 +2306,28 @@ directive|define
 name|ACPI_DEV_BASE_ORDER
 value|10
 end_define
+
+begin_comment
+comment|/* Default maximum number of tasks to enqueue. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MAX_TASKS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_TASKS
+value|32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Default number of task queue threads to start. */

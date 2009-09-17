@@ -1485,7 +1485,7 @@ begin_define
 define|#
 directive|define
 name|NOKEY
-value|0x100
+value|0x01000000
 end_define
 
 begin_comment
@@ -1496,7 +1496,7 @@ begin_define
 define|#
 directive|define
 name|FKEY
-value|0x200
+value|0x02000000
 end_define
 
 begin_comment
@@ -1507,7 +1507,7 @@ begin_define
 define|#
 directive|define
 name|MKEY
-value|0x400
+value|0x04000000
 end_define
 
 begin_comment
@@ -1518,7 +1518,7 @@ begin_define
 define|#
 directive|define
 name|BKEY
-value|0x800
+value|0x08000000
 end_define
 
 begin_comment
@@ -1529,7 +1529,7 @@ begin_define
 define|#
 directive|define
 name|SPCLKEY
-value|0x8000
+value|0x80000000
 end_define
 
 begin_comment
@@ -1540,7 +1540,7 @@ begin_define
 define|#
 directive|define
 name|RELKEY
-value|0x4000
+value|0x40000000
 end_define
 
 begin_comment
@@ -1551,11 +1551,15 @@ begin_define
 define|#
 directive|define
 name|ERRKEY
-value|0x2000
+value|0x20000000
 end_define
 
 begin_comment
 comment|/* error			*/
+end_comment
+
+begin_comment
+comment|/*  * The top byte is used to store the flags.  This means there are 24  * bits left to store the actual character.  Because UTF-8 can encode  * 2^21 different characters, this is good enough to get Unicode  * working.  */
 end_comment
 
 begin_define
@@ -1565,7 +1569,7 @@ name|KEYCHAR
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)& 0x00ff)
+value|((c)& 0x00ffffff)
 end_define
 
 begin_define
@@ -1575,7 +1579,7 @@ name|KEYFLAGS
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)& ~0x00ff)
+value|((c)& ~0x00ffffff)
 end_define
 
 begin_endif

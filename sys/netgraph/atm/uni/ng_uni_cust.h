@@ -384,19 +384,5 @@ define|\
 value|size_t unimem_sizes[UNIMEM_TYPES] = {					\ 	[UNIMEM_INS]	= sizeof(struct uni),				\ 	[UNIMEM_ALL]	= sizeof(struct uni_all),			\ 	[UNIMEM_SIG]	= sizeof(struct sig),				\ 	[UNIMEM_CALL]	= sizeof(struct call),				\ 	[UNIMEM_PARTY]	= sizeof(struct party)				\ };
 end_define
 
-begin_define
-define|#
-directive|define
-name|memmove
-parameter_list|(
-name|T
-parameter_list|,
-name|F
-parameter_list|,
-name|L
-parameter_list|)
-value|bcopy((F), (T), (L))
-end_define
-
 end_unit
 

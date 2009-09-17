@@ -98,7 +98,7 @@ literal|"\n"
 literal|"RULE-BODY:	check-state [PARAMS] | ACTION [PARAMS] ADDR [OPTION_LIST]\n"
 literal|"ACTION:	check-state | allow | count | deny | unreach{,6} CODE |\n"
 literal|"               skipto N | {divert|tee} PORT | forward ADDR |\n"
-literal|"               pipe N | queue N | nat N | setfib FIB\n"
+literal|"               pipe N | queue N | nat N | setfib FIB | reass\n"
 literal|"PARAMS: 	[log [logamount LOGLIMIT]] [altq QUEUE_NAME]\n"
 literal|"ADDR:		[ MAC dst src ether_type ] \n"
 literal|"		[ ip from IPADDR [ PORT ] to IPADDR [ PORTLIST ] ]\n"
@@ -223,6 +223,12 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Show packet/byte count */
+name|int
+name|try_next
+init|=
+literal|0
+decl_stmt|;
+comment|/* set if pipe cmd not found */
 define|#
 directive|define
 name|WHITESP
@@ -1260,11 +1266,6 @@ operator|=
 name|p
 expr_stmt|;
 block|}
-name|int
-name|try_next
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|co

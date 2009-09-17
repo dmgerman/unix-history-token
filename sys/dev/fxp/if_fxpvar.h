@@ -301,6 +301,28 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|fxp_ident
+block|{
+name|uint16_t
+name|devid
+decl_stmt|;
+name|int16_t
+name|revid
+decl_stmt|;
+comment|/* -1 matches anything */
+name|uint8_t
+name|ich
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * NOTE: Elements are ordered for optimal cacheline behavior, and NOT  *	 for functional grouping.  */
 end_comment
@@ -336,13 +358,22 @@ name|ih
 decl_stmt|;
 comment|/* interrupt handler cookie */
 name|struct
+name|fxp_ident
+modifier|*
+name|ident
+decl_stmt|;
+name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
 name|bus_dma_tag_t
-name|fxp_mtag
+name|fxp_txmtag
 decl_stmt|;
-comment|/* bus DMA tag for mbufs */
+comment|/* bus DMA tag for Tx mbufs */
+name|bus_dma_tag_t
+name|fxp_rxmtag
+decl_stmt|;
+comment|/* bus DMA tag for Rx mbufs */
 name|bus_dma_tag_t
 name|fxp_stag
 decl_stmt|;
@@ -388,10 +419,6 @@ name|int
 name|tx_queued
 decl_stmt|;
 comment|/* # of active TxCB's */
-name|int
-name|need_mcsetup
-decl_stmt|;
-comment|/* multicast filter needs programming */
 name|struct
 name|fxp_stats
 modifier|*
@@ -469,6 +496,9 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|int
+name|if_flags
+decl_stmt|;
 name|uint8_t
 name|rfa_size
 decl_stmt|;
@@ -543,17 +573,6 @@ end_define
 
 begin_comment
 comment|/* enable long packet reception */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FXP_FLAG_ALL_MCAST
-value|0x0040
-end_define
-
-begin_comment
-comment|/* accept all multicast frames */
 end_comment
 
 begin_define
@@ -642,6 +661,17 @@ end_define
 
 begin_comment
 comment|/* WOL active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_RXBUG
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Rx lock-up bug */
 end_comment
 
 begin_comment

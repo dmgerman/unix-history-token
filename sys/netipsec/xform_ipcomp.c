@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -115,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -194,29 +194,28 @@ directive|include
 file|<opencrypto/xform.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ipcomp_enable
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|ipcompstat
+argument_list|,
 name|ipcompstat
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -227,12 +226,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_INT
+name|SYSCTL_VNET_INT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_ipcomp
 argument_list|,
 name|OID_AUTO
@@ -241,7 +236,11 @@ name|ipcomp_enable
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipcomp_enable
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -251,12 +250,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_V_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
-name|V_NET
-argument_list|,
-name|vnet_ipsec
-argument_list|,
 name|_net_inet_ipcomp
 argument_list|,
 name|IPSECCTL_STATS
@@ -265,7 +260,11 @@ name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
 name|ipcompstat
+argument_list|)
 argument_list|,
 name|ipcompstat
 argument_list|,
@@ -358,11 +357,6 @@ modifier|*
 name|xsp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|comp_algo
 modifier|*
@@ -531,11 +525,6 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|tdb_crypto
 modifier|*
@@ -884,11 +873,6 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|cryptodesc
 modifier|*
@@ -1513,11 +1497,6 @@ name|int
 name|protoff
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|secasvar
 modifier|*
@@ -2345,11 +2324,6 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|tdb_crypto
 modifier|*
@@ -2888,10 +2862,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|V_ipcomp_enable
-operator|=
-literal|0
-expr_stmt|;
 name|xform_register
 argument_list|(
 operator|&

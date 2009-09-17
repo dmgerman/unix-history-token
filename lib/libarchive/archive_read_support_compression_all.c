@@ -33,39 +33,38 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-if|#
-directive|if
-name|HAVE_BZLIB_H
+comment|/* Bzip falls back to "bunzip2" command-line */
 name|archive_read_support_compression_bzip2
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* The decompress code doesn't use an outside library. */
 name|archive_read_support_compression_compress
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|HAVE_ZLIB_H
+comment|/* Gzip decompress falls back to "gunzip" command-line. */
 name|archive_read_support_compression_gzip
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|HAVE_LZMADEC_H
-comment|/* LZMA bidding is subject to false positives because 	 * the LZMA file format has a very weak signature.  It 	 * may not be feasible to include LZMA detection here. */
-comment|/* archive_read_support_compression_lzma(a); */
-endif|#
-directive|endif
+comment|/* The LZMA file format has a very weak signature, so it 	 * may not be feasible to keep this here, but we'll try. 	 * This will come back out if there are problems. */
+comment|/* Lzma falls back to "unlzma" command-line program. */
+name|archive_read_support_compression_lzma
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+comment|/* Xz falls back to "unxz" command-line program. */
+name|archive_read_support_compression_xz
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+comment|/* Note: We always return ARCHIVE_OK here, even if some of the 	 * above return ARCHIVE_WARN.  The intent here is to enable 	 * "as much as possible."  Clients who need specific 	 * compression should enable those individually so they can 	 * verify the level of support. */
 return|return
 operator|(
 name|ARCHIVE_OK

@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
 end_include
 
 begin_include
@@ -122,18 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpc/rpcclnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfs/rpcv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/nfsproto.h>
 end_include
 
@@ -158,7 +158,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs4client/nfs4.h>
+file|<nfsclient/nfs_kdtrace.h>
 end_include
 
 begin_function_decl
@@ -369,7 +369,9 @@ literal|"nfs_getpages: called with non-merged cache vnode??\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|VM_PAGER_ERROR
+operator|)
 return|;
 block|}
 if|if
@@ -421,7 +423,9 @@ literal|"nfs_getpages: called on non-cacheable vnode??\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|VM_PAGER_ERROR
+operator|)
 return|;
 block|}
 else|else
@@ -506,36 +510,28 @@ name|count
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the requested page is partially valid, just return it and 	 * allow the pager to zero-out the blanks.  Partially valid pages 	 * can only occur at the file EOF. 	 */
-block|{
-name|vm_page_t
-name|m
-init|=
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|pages
 index|[
 name|ap
 operator|->
 name|a_reqpage
 index|]
-decl_stmt|;
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|m
 operator|->
 name|valid
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -581,15 +577,11 @@ literal|0
 operator|)
 return|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convienient and fast. 	 */
 name|bp
 operator|=
@@ -800,7 +792,9 @@ name|object
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|VM_PAGER_ERROR
+operator|)
 return|;
 block|}
 comment|/* 	 * Calculate the number of bytes read and validate only that number 	 * of bytes.  Note that due to pending writes, size may be 0.  This 	 * does not mean that the remaining data is invalid! 	 */
@@ -872,9 +866,19 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|vm_page_undirty
+name|KASSERT
 argument_list|(
 name|m
+operator|->
+name|dirty
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"nfs_getpages: page %p is dirty"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -893,7 +897,7 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
-name|vm_page_set_validclean
+name|vm_page_set_valid
 argument_list|(
 name|m
 argument_list|,
@@ -904,8 +908,21 @@ operator|-
 name|toff
 argument_list|)
 expr_stmt|;
-comment|/* handled by vm_fault now	  */
-comment|/* vm_page_zero_invalid(m, TRUE); */
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|dirty
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"nfs_getpages: page %p is dirty"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -973,7 +990,9 @@ name|object
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1606,6 +1625,28 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+condition|)
+block|{
+name|nfs_downgrade_vnlock
+argument_list|(
+name|vp
+argument_list|,
+name|old_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBADF
+operator|)
+return|;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1690,6 +1731,11 @@ operator|->
 name|n_attrstamp
 operator|=
 literal|0
+expr_stmt|;
+name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2361,8 +2407,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -2538,8 +2582,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -2675,8 +2717,6 @@ operator|=
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -2850,8 +2890,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -3009,8 +3047,6 @@ operator|=
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -4430,6 +4466,11 @@ name|n_attrstamp
 operator|=
 literal|0
 expr_stmt|;
+name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|nfs_vinvalbuf
@@ -4476,6 +4517,11 @@ operator|->
 name|n_attrstamp
 operator|=
 literal|0
+expr_stmt|;
+name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -5161,8 +5207,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -5518,7 +5562,7 @@ operator|+
 name|n
 expr_stmt|;
 block|}
-name|vfs_bio_set_validclean
+name|vfs_bio_set_valid
 argument_list|(
 name|bp
 argument_list|,
@@ -5716,7 +5760,7 @@ name|bn
 argument_list|,
 name|size
 argument_list|,
-name|PCATCH
+name|NFS_PCATCH
 argument_list|,
 literal|0
 argument_list|,
@@ -5743,8 +5787,6 @@ condition|(
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -5904,20 +5946,6 @@ argument_list|,
 literal|"nfs_vinvalbuf"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX This check stops us from needlessly doing a vinvalbuf when 	 * being called through vclean().  It is not clear that this is 	 * unsafe. 	 */
-if|if
-condition|(
-name|vp
-operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 if|if
 condition|(
 operator|(
@@ -5941,7 +5969,7 @@ condition|)
 block|{
 name|slpflag
 operator|=
-name|PCATCH
+name|NFS_PCATCH
 expr_stmt|;
 name|slptimeo
 operator|=
@@ -5968,6 +5996,29 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+condition|)
+block|{
+comment|/* 		 * Since vgonel() uses the generic vinvalbuf() to flush 		 * dirty buffers and it does not call this function, it 		 * is safe to just return OK when VI_DOOMED is set. 		 */
+name|nfs_downgrade_vnlock
+argument_list|(
+name|vp
+argument_list|,
+name|old_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 	 * Now, flush as required. 	 */
 if|if
 condition|(
@@ -6033,8 +6084,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 operator|)
@@ -6071,8 +6120,6 @@ operator|=
 name|nfs_sigintr
 argument_list|(
 name|nmp
-argument_list|,
-name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -6249,7 +6296,7 @@ name|NFSMNT_INT
 condition|)
 name|slpflag
 operator|=
-name|PCATCH
+name|NFS_PCATCH
 expr_stmt|;
 name|gotiod
 operator|=
@@ -6461,8 +6508,6 @@ name|nfs_sigintr
 argument_list|(
 name|nmp
 argument_list|,
-name|NULL
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -6487,7 +6532,7 @@ if|if
 condition|(
 name|slpflag
 operator|==
-name|PCATCH
+name|NFS_PCATCH
 condition|)
 block|{
 name|slpflag
@@ -7440,31 +7485,6 @@ name|nmp
 operator|->
 name|nm_flag
 operator|&
-name|NFSMNT_NFSV4
-operator|)
-operator|!=
-literal|0
-condition|)
-name|error
-operator|=
-name|nfs4_readdirrpc
-argument_list|(
-name|vp
-argument_list|,
-name|uiop
-argument_list|,
-name|cr
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-operator|(
-name|nmp
-operator|->
-name|nm_flag
-operator|&
 name|NFSMNT_RDIRPLUS
 operator|)
 operator|!=
@@ -7519,7 +7539,6 @@ argument_list|,
 name|cr
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * end-of-directory sets B_INVAL but does not generate an 		 * error. 		 */
 if|if
 condition|(
@@ -8077,6 +8096,11 @@ operator|->
 name|n_attrstamp
 operator|=
 literal|0
+expr_stmt|;
+name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(

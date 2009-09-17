@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -1978,10 +1972,10 @@ operator|=
 name|ng_gif_input_orphan
 expr_stmt|;
 comment|/* Create nodes for any already-existing gif interfaces */
-name|IFNET_RLOCK
+name|VNET_LIST_RLOCK
 argument_list|()
 expr_stmt|;
-name|VNET_LIST_RLOCK
+name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
 name|VNET_FOREACH
@@ -1995,11 +1989,6 @@ name|vnet_iter
 argument_list|)
 expr_stmt|;
 comment|/* XXX revisit quiet */
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
@@ -2027,10 +2016,10 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
-name|VNET_LIST_RUNLOCK
+name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|VNET_LIST_RUNLOCK
 argument_list|()
 expr_stmt|;
 break|break;

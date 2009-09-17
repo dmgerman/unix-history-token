@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.133.2.25 2007/03/02 09:20:27 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.163 2007-03-02 09:16:19 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,28 +108,6 @@ include|#
 directive|include
 file|"oui.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|IPV4
-value|1
-end_define
-
-begin_comment
-comment|/* AFI value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6
-value|2
-end_define
-
-begin_comment
-comment|/* AFI value */
-end_comment
 
 begin_comment
 comment|/*  * IS-IS is defined in ISO 10589.  Look there for protocol definitions.  */
@@ -1852,7 +1830,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* draft-ietf-isis-gmpls-extensions */
+comment|/* rfc4205 */
 end_comment
 
 begin_define
@@ -1946,12 +1924,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISIS_SUBTLV_EXT_IS_REACH_LINK_ATTRIBUTE
+value|19
+end_define
+
+begin_comment
+comment|/* draft-ietf-isis-link-attr-01 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISIS_SUBTLV_EXT_IS_REACH_LINK_PROTECTION_TYPE
 value|20
 end_define
 
 begin_comment
-comment|/* draft-ietf-isis-gmpls-extensions */
+comment|/* rfc4205 */
 end_comment
 
 begin_define
@@ -1962,7 +1951,7 @@ value|21
 end_define
 
 begin_comment
-comment|/* draft-ietf-isis-gmpls-extensions */
+comment|/* rfc4205 */
 end_comment
 
 begin_define
@@ -2036,6 +2025,12 @@ block|{
 name|ISIS_SUBTLV_EXT_IS_REACH_TE_METRIC
 block|,
 literal|"Traffic Engineering Metric"
+block|}
+block|,
+block|{
+name|ISIS_SUBTLV_EXT_IS_REACH_LINK_ATTRIBUTE
+block|,
+literal|"Link Attribute"
 block|}
 block|,
 block|{
@@ -2164,6 +2159,41 @@ block|{
 name|ISIS_SUBTLV_EXTD_IP_REACH_MGMT_PREFIX_COLOR
 block|,
 literal|"Management Prefix Color"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tok
+name|isis_subtlv_link_attribute_values
+index|[]
+init|=
+block|{
+block|{
+literal|0x01
+block|,
+literal|"Local Protection Available"
+block|}
+block|,
+block|{
+literal|0x02
+block|,
+literal|"Link excluded from local protection path"
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|"Local maintenance required"
 block|}
 block|,
 block|{
@@ -2811,14 +2841,22 @@ end_struct
 
 begin_function_decl
 specifier|static
-name|int
-name|osi_cksum
+name|void
+name|osi_print_cksum
 parameter_list|(
 specifier|const
 name|u_int8_t
 modifier|*
+name|pptr
+parameter_list|,
+name|u_int16_t
+name|checksum
 parameter_list|,
 name|u_int
+name|checksum_offset
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3967,7 +4005,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t%s PDU, hlen: %u, v: %u, lifetime: %u.%us, Segment PDU length: %u, checksum: 0x%04x "
+literal|"\n\t%s PDU, hlen: %u, v: %u, lifetime: %u.%us, Segment PDU length: %u, checksum: 0x%04x"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -4017,40 +4055,22 @@ name|cksum
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* do not attempt to verify the checksum if it is zero */
-if|if
-condition|(
+name|osi_print_cksum
+argument_list|(
+name|optr
+argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
 name|clnp_header
 operator|->
 name|cksum
 argument_list|)
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"(unverified)"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"(%s)"
 argument_list|,
-name|osi_cksum
-argument_list|(
-name|optr
+literal|7
 argument_list|,
 name|clnp_header
 operator|->
 name|length_indicator
-argument_list|)
-condition|?
-literal|"incorrect"
-else|:
-literal|"correct"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -5109,7 +5129,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", checksum: 0x%04x "
+literal|", checksum: 0x%04x"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -5119,38 +5139,20 @@ name|cksum
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* do not attempt to verify the checksum if it is zero */
-if|if
-condition|(
-name|EXTRACT_16BITS
-argument_list|(
-name|esis_header
-operator|->
-name|cksum
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"(unverified)"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"(%s)"
-argument_list|,
-name|osi_cksum
+name|osi_print_cksum
 argument_list|(
 name|pptr
 argument_list|,
-name|li
+name|EXTRACT_16BITS
+argument_list|(
+name|esis_header
+operator|->
+name|cksum
 argument_list|)
-condition|?
-literal|"incorrect"
-else|:
-literal|"correct"
+argument_list|,
+literal|7
+argument_list|,
+name|li
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6807,6 +6809,8 @@ name|u_int
 name|te_class
 decl_stmt|,
 name|priority_level
+decl_stmt|,
+name|gmpls_switch_cap
 decl_stmt|;
 union|union
 block|{
@@ -6892,7 +6896,7 @@ name|subl
 operator|==
 literal|8
 condition|)
-comment|/* draft-ietf-isis-gmpls-extensions */
+comment|/* rfc4205 */
 name|printf
 argument_list|(
 literal|", 0x%08x"
@@ -7132,6 +7136,40 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ISIS_SUBTLV_EXT_IS_REACH_LINK_ATTRIBUTE
+case|:
+if|if
+condition|(
+name|subl
+operator|==
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|", [ %s ] (0x%04x)"
+argument_list|,
+name|bittok2str
+argument_list|(
+name|isis_subtlv_link_attribute_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+name|tptr
+argument_list|)
+argument_list|)
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+name|tptr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|ISIS_SUBTLV_EXT_IS_REACH_LINK_PROTECTION_TYPE
 case|:
 if|if
@@ -7175,6 +7213,11 @@ operator|>=
 literal|36
 condition|)
 block|{
+name|gmpls_switch_cap
+operator|=
+operator|*
+name|tptr
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s  Interface Switching Capability:%s"
@@ -7187,10 +7230,7 @@ name|gmpls_switch_cap_values
 argument_list|,
 literal|"Unknown"
 argument_list|,
-operator|*
-operator|(
-name|tptr
-operator|)
+name|gmpls_switch_cap
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7273,7 +7313,113 @@ name|subl
 operator|-=
 literal|36
 expr_stmt|;
-comment|/* there is some optional stuff left to decode but this is as of yet                  not specified so just lets hexdump what is left */
+switch|switch
+condition|(
+name|gmpls_switch_cap
+condition|)
+block|{
+case|case
+name|GMPLS_PSC1
+case|:
+case|case
+name|GMPLS_PSC2
+case|:
+case|case
+name|GMPLS_PSC3
+case|:
+case|case
+name|GMPLS_PSC4
+case|:
+name|bw
+operator|.
+name|i
+operator|=
+name|EXTRACT_32BITS
+argument_list|(
+name|tptr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s  Min LSP Bandwidth: %.3f Mbps"
+argument_list|,
+name|ident
+argument_list|,
+name|bw
+operator|.
+name|f
+operator|*
+literal|8
+operator|/
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s  Interface MTU: %u"
+argument_list|,
+name|ident
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+name|tptr
+operator|+
+literal|4
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|GMPLS_TSC
+case|:
+name|bw
+operator|.
+name|i
+operator|=
+name|EXTRACT_32BITS
+argument_list|(
+name|tptr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s  Min LSP Bandwidth: %.3f Mbps"
+argument_list|,
+name|ident
+argument_list|,
+name|bw
+operator|.
+name|f
+operator|*
+literal|8
+operator|/
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s  Indication %s"
+argument_list|,
+name|ident
+argument_list|,
+name|tok2str
+argument_list|(
+name|gmpls_switch_cap_tsc_indication_values
+argument_list|,
+literal|"Unknown (%u)"
+argument_list|,
+operator|*
+operator|(
+name|tptr
+operator|+
+literal|4
+operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* there is some optional stuff left to decode but this is as of yet                    not specified so just lets hexdump what is left */
 if|if
 condition|(
 name|subl
@@ -7298,6 +7444,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 block|}
 break|break;
@@ -7824,7 +7971,7 @@ if|if
 condition|(
 name|afi
 operator|==
-name|IPV4
+name|AF_INET
 condition|)
 block|{
 if|if
@@ -7892,7 +8039,7 @@ if|if
 condition|(
 name|afi
 operator|==
-name|IPV6
+name|AF_INET6
 condition|)
 block|{
 if|if
@@ -8024,7 +8171,7 @@ if|if
 condition|(
 name|afi
 operator|==
-name|IPV4
+name|AF_INET
 condition|)
 name|printf
 argument_list|(
@@ -8047,7 +8194,7 @@ if|if
 condition|(
 name|afi
 operator|==
-name|IPV6
+name|AF_INET6
 condition|)
 name|printf
 argument_list|(
@@ -8085,7 +8232,7 @@ if|if
 condition|(
 name|afi
 operator|==
-name|IPV4
+name|AF_INET
 operator|&&
 name|ISIS_MASK_TLV_EXTD_IP_SUBTLV
 argument_list|(
@@ -8104,7 +8251,7 @@ if|if
 condition|(
 name|afi
 operator|==
-name|IPV6
+name|AF_INET6
 condition|)
 name|printf
 argument_list|(
@@ -8134,26 +8281,31 @@ directive|endif
 if|if
 condition|(
 operator|(
+name|afi
+operator|==
+name|AF_INET
+operator|&&
 name|ISIS_MASK_TLV_EXTD_IP_SUBTLV
 argument_list|(
 name|status_byte
 argument_list|)
-operator|&&
-name|afi
-operator|==
-name|IPV4
 operator|)
+ifdef|#
+directive|ifdef
+name|INET6
 operator|||
 operator|(
+name|afi
+operator|==
+name|AF_INET6
+operator|&&
 name|ISIS_MASK_TLV_EXTD_IP6_SUBTLV
 argument_list|(
 name|status_byte
 argument_list|)
-operator|&&
-name|afi
-operator|==
-name|IPV6
 operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 comment|/* assume that one prefix can hold more            than one subTLV - therefore the first byte must reflect            the aggregate bytecount of the subTLVs for this prefix         */
@@ -9412,40 +9564,7 @@ name|checksum
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* if this is a purge do not attempt to verify the checksum */
-if|if
-condition|(
-name|EXTRACT_16BITS
-argument_list|(
-name|header_lsp
-operator|->
-name|remaining_lifetime
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|EXTRACT_16BITS
-argument_list|(
-name|header_lsp
-operator|->
-name|checksum
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|" (purged)"
-argument_list|)
-expr_stmt|;
-else|else
-comment|/* verify the checksum -              * checking starts at the lsp-id field at byte position [12]              * hence the length needs to be reduced by 12 bytes */
-name|printf
-argument_list|(
-literal|" (%s)"
-argument_list|,
-operator|(
-name|osi_cksum
+name|osi_print_cksum
 argument_list|(
 operator|(
 name|u_int8_t
@@ -9455,15 +9574,18 @@ name|header_lsp
 operator|->
 name|lsp_id
 argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+name|header_lsp
+operator|->
+name|checksum
+argument_list|)
+argument_list|,
+literal|12
+argument_list|,
 name|length
 operator|-
 literal|12
-argument_list|)
-operator|)
-condition|?
-literal|"incorrect"
-else|:
-literal|"correct"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -10691,7 +10813,7 @@ name|tptr
 argument_list|,
 literal|"\n\t      "
 argument_list|,
-name|IPV4
+name|AF_INET
 argument_list|)
 expr_stmt|;
 if|if
@@ -10761,7 +10883,7 @@ name|tptr
 argument_list|,
 literal|"\n\t      "
 argument_list|,
-name|IPV4
+name|AF_INET
 argument_list|)
 expr_stmt|;
 if|if
@@ -10805,7 +10927,7 @@ name|tptr
 argument_list|,
 literal|"\n\t      "
 argument_list|,
-name|IPV6
+name|AF_INET6
 argument_list|)
 expr_stmt|;
 if|if
@@ -10875,7 +10997,7 @@ name|tptr
 argument_list|,
 literal|"\n\t      "
 argument_list|,
-name|IPV6
+name|AF_INET6
 argument_list|)
 expr_stmt|;
 if|if
@@ -11964,35 +12086,20 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* do not attempt to verify the checksum if it is zero              * most likely a HMAC-MD5 TLV is also present and              * to avoid conflicts the checksum TLV is zeroed.              * see rfc3358 for details              */
-if|if
-condition|(
+name|osi_print_cksum
+argument_list|(
+name|optr
+argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 argument_list|)
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"(unverified)"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"(%s)"
 argument_list|,
-name|osi_cksum
-argument_list|(
+name|tptr
+operator|-
 name|optr
 argument_list|,
 name|length
-argument_list|)
-condition|?
-literal|"incorrect"
-else|:
-literal|"correct"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12789,70 +12896,79 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Verify the checksum.  See 8473-1, Appendix C, section C.4.  */
-end_comment
-
 begin_function
 specifier|static
-name|int
-name|osi_cksum
+name|void
+name|osi_print_cksum
 parameter_list|(
 specifier|const
 name|u_int8_t
 modifier|*
-name|tptr
+name|pptr
+parameter_list|,
+name|u_int16_t
+name|checksum
 parameter_list|,
 name|u_int
-name|len
+name|checksum_offset
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
-name|int32_t
-name|c0
-init|=
-literal|0
-decl_stmt|,
-name|c1
-init|=
-literal|0
+name|u_int16_t
+name|calculated_checksum
 decl_stmt|;
-while|while
+comment|/* do not attempt to verify the checksum if it is zero */
+if|if
 condition|(
-operator|(
-name|int
-operator|)
-operator|--
-name|len
-operator|>=
-literal|0
+operator|!
+name|checksum
 condition|)
 block|{
-name|c0
-operator|+=
-operator|*
-name|tptr
-operator|++
-expr_stmt|;
-name|c0
-operator|%=
-literal|255
-expr_stmt|;
-name|c1
-operator|+=
-name|c0
-expr_stmt|;
-name|c1
-operator|%=
-literal|255
+name|printf
+argument_list|(
+literal|"(unverified)"
+argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|c0
-operator||
-name|c1
-operator|)
-return|;
+else|else
+block|{
+name|calculated_checksum
+operator|=
+name|create_osi_cksum
+argument_list|(
+name|pptr
+argument_list|,
+name|checksum_offset
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|checksum
+operator|==
+name|calculated_checksum
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" (correct)"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" (incorrect should be 0x%04x)"
+argument_list|,
+name|calculated_checksum
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /p/tcsh/cvsroot/tcsh/ed.h,v 3.49 2006/08/23 15:03:13 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/ed.h,v 3.50 2007/07/05 14:13:06 christos Exp $ */
 end_comment
 
 begin_comment
@@ -73,6 +73,29 @@ end_endif
 begin_comment
 comment|/* WINNT_NATIVE */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__QNXNTO__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|min
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|max
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/****************************************************************************/

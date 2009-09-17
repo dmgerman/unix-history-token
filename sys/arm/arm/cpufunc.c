@@ -760,8 +760,7 @@ comment|/* dcache_wbinv_all	*/
 name|arm9_dcache_wbinv_range
 block|,
 comment|/* dcache_wbinv_range	*/
-comment|/*XXX*/
-name|arm9_dcache_wbinv_range
+name|arm9_dcache_inv_range
 block|,
 comment|/* dcache_inv_range	*/
 name|arm9_dcache_wb_range
@@ -921,8 +920,7 @@ comment|/* dcache_wbinv_all	*/
 name|armv5_ec_dcache_wbinv_range
 block|,
 comment|/* dcache_wbinv_range	*/
-comment|/*XXX*/
-name|armv5_ec_dcache_wbinv_range
+name|armv5_ec_dcache_inv_range
 block|,
 comment|/* dcache_inv_range	*/
 name|armv5_ec_dcache_wb_range
@@ -3812,6 +3810,15 @@ name|CPU_ID_XSCALE_COREREV_MASK
 operator|)
 operator|==
 name|CPU_ID_PXA250
+operator|||
+operator|(
+name|cputype
+operator|&
+operator|~
+name|CPU_ID_XSCALE_COREREV_MASK
+operator|)
+operator|==
+name|CPU_ID_PXA27X
 operator|||
 operator|(
 name|cputype

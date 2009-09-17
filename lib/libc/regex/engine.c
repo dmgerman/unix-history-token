@@ -1313,6 +1313,18 @@ name|g
 operator|->
 name|moffset
 expr_stmt|;
+name|SP
+argument_list|(
+literal|"mloop"
+argument_list|,
+name|m
+operator|->
+name|st
+argument_list|,
+operator|*
+name|start
+argument_list|)
+expr_stmt|;
 comment|/* this loop does only one repetition except for backrefs */
 for|for
 control|(
@@ -4887,6 +4899,16 @@ argument_list|,
 name|startst
 argument_list|)
 expr_stmt|;
+name|SP
+argument_list|(
+literal|"fast"
+argument_list|,
+name|st
+argument_list|,
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
 name|st
 operator|=
 name|step
@@ -6621,6 +6643,8 @@ argument_list|,
 name|aft
 argument_list|,
 name|look
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -28,61 +28,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCI_DOMAINMAX
-value|65535
-end_define
-
-begin_comment
-comment|/* highest supported domain number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_BUSMAX
-value|255
-end_define
-
-begin_comment
-comment|/* highest supported bus number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_SLOTMAX
-value|31
-end_define
-
-begin_comment
-comment|/* highest supported slot number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_FUNCMAX
-value|7
-end_define
-
-begin_comment
-comment|/* highest supported function number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_REGMAX
-value|255
-end_define
-
-begin_comment
-comment|/* highest supported config register addr. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PCI_MAXMAPS_0
 value|6
 end_define
@@ -515,22 +460,22 @@ name|struct
 name|pcicfg_pp
 name|pp
 decl_stmt|;
-comment|/* pci power management */
+comment|/* Power management */
 name|struct
 name|pcicfg_vpd
 name|vpd
 decl_stmt|;
-comment|/* pci vital product data */
+comment|/* Vital product data */
 name|struct
 name|pcicfg_msi
 name|msi
 decl_stmt|;
-comment|/* pci msi */
+comment|/* PCI MSI */
 name|struct
 name|pcicfg_msix
 name|msix
 decl_stmt|;
-comment|/* pci msi-x */
+comment|/* PCI MSI-X */
 name|struct
 name|pcicfg_ht
 name|ht

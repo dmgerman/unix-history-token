@@ -223,7 +223,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fFnpy"
+literal|"CfFnpy"
 argument_list|)
 operator|)
 operator|!=
@@ -236,6 +236,11 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'C'
+case|:
+comment|/* for fsck_ffs compatibility */
+break|break;
 case|case
 literal|'f'
 case|:

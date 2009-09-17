@@ -286,7 +286,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|led_avila_detach
 parameter_list|(
 name|device_t
@@ -318,6 +318,11 @@ operator|->
 name|sc_led
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

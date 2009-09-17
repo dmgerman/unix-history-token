@@ -150,6 +150,28 @@ begin_comment
 comment|/* get dev. name */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FIONWRITE
+value|_IOR('f', 119, int)
+end_define
+
+begin_comment
+comment|/* get # bytes (yet) to write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIONSPACE
+value|_IOR('f', 118, int)
+end_define
+
+begin_comment
+comment|/* get space in send queue */
+end_comment
+
 begin_comment
 comment|/* Handle lseek SEEK_DATA and SEEK_HOLE for holey file knowledge. */
 end_comment

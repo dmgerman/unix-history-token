@@ -2072,7 +2072,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|static
-name|int
+name|long
 name|bufspace
 init|=
 literal|0

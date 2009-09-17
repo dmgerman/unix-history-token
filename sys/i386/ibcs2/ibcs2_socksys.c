@@ -50,25 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
 end_include
 
 begin_include
@@ -642,7 +624,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-comment|/* Get the domain name */
+comment|/* Get the domain name. */
 name|getcredhostname
 argument_list|(
 name|td
@@ -782,54 +764,35 @@ index|]
 decl_stmt|,
 name|hlen
 decl_stmt|;
-comment|/* W/out a hostname a domain-name is nonsense */
-name|mtx_lock
+comment|/* Get the domain name */
+name|getcredhostname
 argument_list|(
-operator|&
-name|hostname_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|V_hostname
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|hostname_mtx
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-comment|/* Get the host's unqualified name (strip off the domain) */
-name|snprintf
-argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
 name|hname
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|hname
 argument_list|)
-argument_list|,
-literal|"%s"
-argument_list|,
-name|V_hostname
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+comment|/* W/out a hostname a domain-name is nonsense */
+if|if
+condition|(
+name|strlen
 argument_list|(
-operator|&
-name|hostname_mtx
+name|hname
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+name|EINVAL
+return|;
+comment|/* Get the host's unqualified name (strip off the domain) */
 name|ptr
 operator|=
 name|index

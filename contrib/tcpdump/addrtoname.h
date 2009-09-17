@@ -1,11 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/addrtoname.h,v 1.18 2001/09/17 21:57:51 fenner Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1990, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/addrtoname.h,v 1.20 2007-08-08 14:06:34 hannes Exp $ (LBL)  */
 end_comment
 
 begin_comment
 comment|/* Name to address translation routines. */
 end_comment
+
+begin_enum
+enum|enum
+block|{
+name|LINKADDR_ETHER
+block|,
+name|LINKADDR_FRELAY
+block|,
+name|LINKADDR_IEEE1394
+block|,
+name|LINKADDR_ATM
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|BUFSIZE
+value|128
+end_define
 
 begin_function_decl
 specifier|extern
@@ -17,6 +38,10 @@ parameter_list|(
 specifier|const
 name|u_char
 modifier|*
+parameter_list|,
+specifier|const
+name|unsigned
+name|int
 parameter_list|,
 specifier|const
 name|unsigned

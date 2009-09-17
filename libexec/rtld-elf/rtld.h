@@ -743,7 +743,6 @@ name|long
 name|nchains
 decl_stmt|;
 comment|/* Number of chains */
-specifier|const
 name|char
 modifier|*
 name|rpath
@@ -839,11 +838,41 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Phdr is allocated and needs to be freed. */
+name|bool
+name|z_origin
+range|:
+literal|1
+decl_stmt|;
+comment|/* Process rpath and soname tokens */
+name|bool
+name|z_nodelete
+range|:
+literal|1
+decl_stmt|;
+comment|/* Do not unload the object and dependencies */
+name|bool
+name|ref_nodel
+range|:
+literal|1
+decl_stmt|;
+comment|/* Refcount increased to prevent dlclose */
+name|bool
+name|init_scanned
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object is already on init list. */
+name|bool
+name|on_fini_list
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object is already on fini list. */
 name|struct
 name|link_map
 name|linkmap
 decl_stmt|;
-comment|/* for GDB and dlinfo() */
+comment|/* For GDB and dlinfo() */
 name|Objlist
 name|dldags
 decl_stmt|;
@@ -888,7 +917,7 @@ begin_define
 define|#
 directive|define
 name|RTLD_STATIC_TLS_EXTRA
-value|64
+value|128
 end_define
 
 begin_comment

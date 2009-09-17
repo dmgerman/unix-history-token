@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  *  * Copyright (c) 2007,2008 Kip Macy kmacy@freebsd.org  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * 2. The name of Kip Macy nor the names of other  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *  ***************************************************************************/
+comment|/**************************************************************************  *  * Copyright (c) 2007-2009 Kip Macy kmacy@freebsd.org  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * 2. The name of Kip Macy nor the names of other  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *  ***************************************************************************/
 end_comment
 
 begin_ifndef
@@ -92,11 +92,17 @@ decl_stmt|;
 name|uint64_t
 name|br_drops
 decl_stmt|;
+name|uint64_t
+name|br_prod_bufs
+decl_stmt|;
+name|uint64_t
+name|br_prod_bytes
+decl_stmt|;
 comment|/* 	 * Pad out to next L2 cache line 	 */
 name|uint64_t
 name|_pad0
 index|[
-literal|13
+literal|11
 index|]
 decl_stmt|;
 specifier|volatile
@@ -141,11 +147,15 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * multi-producer safe lock-free ring buffer enqueue  *  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
 name|int
-name|buf_ring_enqueue
+name|buf_ring_enqueue_bytes
 parameter_list|(
 name|struct
 name|buf_ring
@@ -155,6 +165,9 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
+parameter_list|,
+name|int
+name|nbytes
 parameter_list|)
 block|{
 name|uint32_t
@@ -346,12 +359,20 @@ argument_list|()
 expr_stmt|;
 name|br
 operator|->
+name|br_prod_bufs
+operator|++
+expr_stmt|;
+name|br
+operator|->
+name|br_prod_bytes
+operator|+=
+name|nbytes
+expr_stmt|;
+name|br
+operator|->
 name|br_prod_tail
 operator|=
 name|prod_next
-expr_stmt|;
-name|mb
-argument_list|()
 expr_stmt|;
 name|critical_exit
 argument_list|()
@@ -359,6 +380,37 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|buf_ring_enqueue
+parameter_list|(
+name|struct
+name|buf_ring
+modifier|*
+name|br
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|)
+block|{
+return|return
+operator|(
+name|buf_ring_enqueue_bytes
+argument_list|(
+name|br
+argument_list|,
+name|buf
+argument_list|,
+literal|0
+argument_list|)
 operator|)
 return|;
 block|}
@@ -486,7 +538,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-name|mb
+name|rmb
 argument_list|()
 expr_stmt|;
 comment|/* 	 * If there are other dequeues in progress 	 * that preceeded us, we need to wait for them 	 * to complete  	 */
@@ -507,9 +559,6 @@ name|br_cons_tail
 operator|=
 name|cons_next
 expr_stmt|;
-name|mb
-argument_list|()
-expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
@@ -522,7 +571,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Single-Consumer dequeue for uses where dequeue  * is protected by a lock  */
+comment|/*  * single-consumer dequeue   * use where dequeue is protected by a lock  * e.g. a network driver's tx queue lock  */
 end_comment
 
 begin_function
@@ -542,6 +591,8 @@ name|uint32_t
 name|cons_head
 decl_stmt|,
 name|cons_next
+decl_stmt|,
+name|cons_next_next
 decl_stmt|;
 name|uint32_t
 name|prod_tail
@@ -550,9 +601,6 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|cons_head
 operator|=
 name|br
@@ -577,22 +625,68 @@ name|br
 operator|->
 name|br_cons_mask
 expr_stmt|;
+name|cons_next_next
+operator|=
+operator|(
+name|cons_head
+operator|+
+literal|2
+operator|)
+operator|&
+name|br
+operator|->
+name|br_cons_mask
+expr_stmt|;
 if|if
 condition|(
 name|cons_head
 operator|==
 name|prod_tail
 condition|)
-block|{
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|PREFETCH_DEFINED
+if|if
+condition|(
+name|cons_next
+operator|!=
+name|prod_tail
+condition|)
+block|{
+name|prefetch
+argument_list|(
+name|br
+operator|->
+name|br_ring
+index|[
+name|cons_next
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cons_next_next
+operator|!=
+name|prod_tail
+condition|)
+name|prefetch
+argument_list|(
+name|br
+operator|->
+name|br_ring
+index|[
+name|cons_next_next
+index|]
+argument_list|)
+expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|br
 operator|->
 name|br_cons_head
@@ -607,9 +701,6 @@ name|br_ring
 index|[
 name|cons_head
 index|]
-expr_stmt|;
-name|mb
-argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -665,12 +756,6 @@ name|br_cons_tail
 operator|=
 name|cons_next
 expr_stmt|;
-name|mb
-argument_list|()
-expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|buf
@@ -678,6 +763,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * return a pointer to the first entry in the ring  * without modifying it, or NULL if the ring is empty  * race-prone if not protected by a lock  */
+end_comment
 
 begin_function
 specifier|static
@@ -720,9 +809,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mb
-argument_list|()
-expr_stmt|;
+comment|/* 	 * I believe it is safe to not have a memory barrier 	 * here because we control cons and tail is worst case 	 * a lagging indicator so we worst case we might 	 * return NULL immediately after a buffer has been enqueued 	 */
 if|if
 condition|(
 name|br

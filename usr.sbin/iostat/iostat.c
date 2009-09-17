@@ -1003,8 +1003,10 @@ expr|struct
 name|devinfo
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1024,7 +1026,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc failed"
+literal|"calloc failed"
 argument_list|)
 expr_stmt|;
 name|last
@@ -1036,8 +1038,10 @@ expr|struct
 name|devinfo
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1057,33 +1061,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|cur
-operator|.
-name|dinfo
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|devinfo
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|last
-operator|.
-name|dinfo
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|devinfo
-argument_list|)
+literal|"calloc failed"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Grab all the devices.  We don't look to see if the list has 	 * changed here, since it almost certainly has.  We only look for 	 * errors. 	 */
@@ -2107,7 +2085,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%4.0Lf%5.0Lf"
+literal|"%4.0Lf %5.0Lf"
 argument_list|,
 name|cur
 operator|.
@@ -2365,7 +2343,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"      tty"
+literal|"       tty"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2528,7 +2506,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" tin tout"
+literal|" tin  tout"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2761,7 +2739,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"     tty "
+literal|"      tty "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2805,7 +2783,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"tin tout "
+literal|"tin  tout "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3462,7 +3440,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%4.0Lf%5.0Lf"
+literal|"%4.0Lf %5.0Lf"
 argument_list|,
 name|cur
 operator|.

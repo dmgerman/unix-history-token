@@ -189,12 +189,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -715,6 +709,14 @@ begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
 name|DRM_MEM_DRAWABLE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_drm
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1259,7 +1261,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int8_t *) (((unsigned long)(map)->handle) + (offset))
+value|*(volatile u_int8_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1272,7 +1274,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *) (((unsigned long)(map)->handle) + (offset))
+value|*(volatile u_int16_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1285,7 +1287,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((unsigned long)(map)->handle) + (offset))
+value|*(volatile u_int32_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1300,7 +1302,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int8_t *) (((unsigned long)(map)->handle) + (offset)) = val
+value|*(volatile u_int8_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -1315,7 +1317,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *) (((unsigned long)(map)->handle) + (offset)) = val
+value|*(volatile u_int16_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -1330,7 +1332,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((unsigned long)(map)->handle) + (offset)) = val
+value|*(volatile u_int32_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -1512,7 +1514,7 @@ parameter_list|,
 name|condition
 parameter_list|)
 define|\
-value|for ( ret = 0 ; !ret&& !(condition) ; ) {			\ 	DRM_UNLOCK();						\ 	mtx_lock(&dev->irq_lock);				\ 	if (!(condition))					\ 	   ret = -mtx_sleep(&(queue),&dev->irq_lock, 		\ 			 PZERO | PCATCH, "drmwtq", (timeout));	\ 	mtx_unlock(&dev->irq_lock);				\ 	DRM_LOCK();						\ }
+value|for ( ret = 0 ; !ret&& !(condition) ; ) {			\ 	DRM_UNLOCK();						\ 	mtx_lock(&dev->irq_lock);				\ 	if (!(condition))					\ 	    ret = -mtx_sleep(&(queue),&dev->irq_lock, 		\ 		PCATCH, "drmwtq", (timeout));			\ 	mtx_unlock(&dev->irq_lock);				\ 	DRM_LOCK();						\ }
 end_define
 
 begin_define
@@ -1574,6 +1576,20 @@ block|}
 name|drm_pci_id_list_t
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|drm_msi_blacklist_entry
+block|{
+name|int
+name|vendor
+decl_stmt|;
+name|int
+name|device
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -1917,9 +1933,6 @@ decl_stmt|;
 name|int
 name|master
 decl_stmt|;
-name|int
-name|minor
-decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
@@ -2135,16 +2148,9 @@ decl_stmt|;
 name|struct
 name|drm_dma_handle
 modifier|*
-name|sg_dmah
-decl_stmt|;
-comment|/* Handle for sg_pages   */
-name|struct
-name|drm_dma_handle
-modifier|*
 name|dmah
 decl_stmt|;
 comment|/* Handle to PCI memory  */
-comment|/* for ATI PCIGART table */
 block|}
 name|drm_sg_mem_t
 typedef|;
@@ -2228,42 +2234,6 @@ name|drm_local_map_t
 typedef|;
 end_typedef
 
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|drm_vbl_sig_list
-argument_list|,
-name|drm_vbl_sig
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|drm_vbl_sig
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|drm_vbl_sig
-argument_list|)
-name|link
-expr_stmt|;
-name|unsigned
-name|int
-name|sequence
-decl_stmt|;
-name|int
-name|signo
-decl_stmt|;
-name|int
-name|pid
-decl_stmt|;
-block|}
-name|drm_vbl_sig_t
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|drm_vblank_info
@@ -2277,11 +2247,6 @@ name|count
 decl_stmt|;
 comment|/* number of VBLANK interrupts */
 comment|/* (driver must alloc the right number of counters) */
-name|struct
-name|drm_vbl_sig_list
-name|sigs
-decl_stmt|;
-comment|/* signal list to send on VBLANK */
 name|atomic_t
 name|refcount
 decl_stmt|;
@@ -2377,6 +2342,12 @@ decl_stmt|;
 name|int
 name|table_size
 decl_stmt|;
+name|struct
+name|drm_dma_handle
+modifier|*
+name|dmah
+decl_stmt|;
+comment|/* handle for ATI PCIGART table */
 block|}
 struct|;
 end_struct
@@ -2825,7 +2796,7 @@ begin_define
 define|#
 directive|define
 name|DRM_MAX_PCI_RESOURCE
-value|3
+value|6
 end_define
 
 begin_comment
@@ -2905,9 +2876,6 @@ comment|/* protects everything else */
 name|DRM_SPINTYPE
 name|drw_lock
 decl_stmt|;
-name|DRM_SPINTYPE
-name|tsk_lock
-decl_stmt|;
 comment|/* Usage Counters */
 name|int
 name|open_count
@@ -2977,6 +2945,10 @@ name|irq_enabled
 decl_stmt|;
 comment|/* True if the irq handler is enabled */
 name|int
+name|msi_enabled
+decl_stmt|;
+comment|/* MSI enabled */
+name|int
 name|irqrid
 decl_stmt|;
 comment|/* Interrupt used by board */
@@ -3029,10 +3001,6 @@ comment|/* Last current context		   */
 name|int
 name|vblank_disable_allowed
 decl_stmt|;
-name|atomic_t
-name|vbl_signal_pending
-decl_stmt|;
-comment|/* number of signals pending on all crtcs */
 name|struct
 name|callout
 name|vblank_disable_timer
@@ -3101,22 +3069,6 @@ argument|bsd_drm_drawable_info
 argument_list|)
 name|drw_head
 expr_stmt|;
-name|struct
-name|task
-name|locked_task
-decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|locked_task_call
-function_decl|)
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 end_struct
@@ -3221,7 +3173,7 @@ name|int
 name|drm_probe
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|,
 name|drm_pci_id_list_t
 modifier|*
@@ -3235,7 +3187,7 @@ name|int
 name|drm_attach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|,
 name|drm_pci_id_list_t
 modifier|*
@@ -3260,7 +3212,7 @@ name|int
 name|drm_detach
 parameter_list|(
 name|device_t
-name|nbdev
+name|kdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3932,6 +3884,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|drm_vblank_cleanup
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|drm_vblank_wait
 parameter_list|(
@@ -3959,21 +3923,6 @@ name|dev
 parameter_list|,
 name|int
 name|num_crtcs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|drm_vbl_send_signals
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|,
-name|int
-name|crtc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4938,7 +4887,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|drm_addbufs_ioctl
+name|drm_addbufs
 parameter_list|(
 name|struct
 name|drm_device
@@ -5108,30 +5057,6 @@ name|struct
 name|drm_file
 modifier|*
 name|file_priv
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|drm_locked_tasklet
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|tasklet
-function_decl|)
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl

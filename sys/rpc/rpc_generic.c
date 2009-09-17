@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -3515,6 +3521,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -3574,9 +3587,14 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 name|opt
 operator|.
 name|sopt_dir
@@ -3599,6 +3617,9 @@ argument_list|,
 operator|&
 name|opt
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3645,6 +3666,13 @@ operator|=
 operator|&
 name|old
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|sosetopt
 argument_list|(
 name|so
@@ -3652,6 +3680,9 @@ argument_list|,
 operator|&
 name|opt
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 block|}

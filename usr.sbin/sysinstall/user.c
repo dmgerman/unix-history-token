@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|GID_FIELD_LEN
-value|10
+value|11
 end_define
 
 begin_define
@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|UID_FIELD_LEN
-value|10
+value|11
 end_define
 
 begin_define
@@ -736,6 +736,7 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
+name|unsigned
 name|long
 name|lgid
 decl_stmt|;
@@ -802,7 +803,7 @@ condition|)
 block|{
 name|lgid
 operator|=
-name|strtol
+name|strtoul
 argument_list|(
 name|gid
 argument_list|,
@@ -815,12 +816,12 @@ expr_stmt|;
 if|if
 condition|(
 name|lgid
-operator|<
+operator|==
 literal|0
 operator|||
 name|lgid
-operator|>=
-literal|65536
+operator|>
+name|GID_MAX
 operator|||
 operator|(
 operator|*
@@ -839,7 +840,7 @@ condition|)
 block|{
 name|feepout
 argument_list|(
-literal|"The GID must be a number between 1 and 65535."
+literal|"The GID must be a number between 1 and 4294967295."
 argument_list|)
 expr_stmt|;
 return|return
@@ -1863,6 +1864,7 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
+name|unsigned
 name|long
 name|luid
 decl_stmt|;
@@ -1936,7 +1938,7 @@ condition|)
 block|{
 name|luid
 operator|=
-name|strtol
+name|strtoul
 argument_list|(
 name|uid
 argument_list|,
@@ -1949,12 +1951,12 @@ expr_stmt|;
 if|if
 condition|(
 name|luid
-operator|<
+operator|==
 literal|0
 operator|||
 name|luid
-operator|>=
-literal|65536
+operator|>
+name|UID_MAX
 operator|||
 operator|(
 operator|*
@@ -1973,7 +1975,7 @@ condition|)
 block|{
 name|feepout
 argument_list|(
-literal|"The UID must be a number between 1 and 65535."
+literal|"The UID must be a number between 1 and 4294967295."
 argument_list|)
 expr_stmt|;
 return|return
@@ -3407,6 +3409,11 @@ expr_stmt|;
 name|CLEAR
 argument_list|(
 name|passwd
+argument_list|)
+expr_stmt|;
+name|CLEAR
+argument_list|(
+name|confpasswd
 argument_list|)
 expr_stmt|;
 name|CLEAR

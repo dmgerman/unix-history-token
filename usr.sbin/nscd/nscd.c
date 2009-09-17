@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -38,13 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -544,6 +544,8 @@ name|config_entry
 operator|->
 name|positive_cache_params
 operator|.
+name|cep
+operator|.
 name|entry_name
 argument_list|)
 expr_stmt|;
@@ -584,6 +586,8 @@ argument_list|,
 name|config_entry
 operator|->
 name|negative_cache_params
+operator|.
+name|cep
 operator|.
 name|entry_name
 argument_list|)
@@ -689,19 +693,14 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-operator|(
-expr|struct
-name|runtime_env
-operator|*
-operator|)
 name|calloc
 argument_list|(
 literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|runtime_env
+operator|*
+name|retval
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1504,6 +1503,9 @@ name|qstate
 operator|->
 name|kevent_watermark
 operator|<=
+operator|(
+name|size_t
+operator|)
 name|event_data
 operator|->
 name|data
@@ -1524,6 +1526,9 @@ name|qstate
 operator|->
 name|io_buffer_watermark
 operator|<=
+operator|(
+name|size_t
+operator|)
 name|event_data
 operator|->
 name|data
@@ -1943,10 +1948,6 @@ name|qstate
 operator|->
 name|io_buffer
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
 literal|1
@@ -2433,6 +2434,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|event_data
 operator|->
 name|ident
@@ -2735,17 +2739,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The idea of _nss_cache_cycle_prevention_function is that nsdispatch will  * search for this symbol in the executable. This symbol is the attribute of  * the caching daemon. So, if it exists, nsdispatch won't try to connect to  * the caching daemon and will just ignore the 'cache' source in the  * nsswitch.conf. This method helps to avoid cycles and organize  * self-performing requests.  */
+comment|/*  * The idea of _nss_cache_cycle_prevention_function is that nsdispatch  * will search for this symbol in the executable. This symbol is the  * attribute of the caching daemon. So, if it exists, nsdispatch won't try  * to connect to the caching daemon and will just ignore the 'cache'  * source in the nsswitch.conf. This method helps to avoid cycles and  * organize self-performing requests.  *  * (not actually a function; it used to be, but it doesn't make any  * difference, as long as it has external linkage)  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|void
+modifier|*
 name|_nss_cache_cycle_prevention_function
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -3728,17 +3730,14 @@ condition|)
 block|{
 name|threads
 operator|=
-operator|(
-name|pthread_t
-operator|*
-operator|)
 name|calloc
 argument_list|(
 literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pthread_t
+operator|*
+name|threads
 argument_list|)
 operator|*
 name|s_configuration
@@ -3764,17 +3763,12 @@ control|)
 block|{
 name|thread_args
 operator|=
-operator|(
-expr|struct
-name|processing_thread_args
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|processing_thread_args
+operator|*
+name|thread_args
 argument_list|)
 argument_list|)
 expr_stmt|;

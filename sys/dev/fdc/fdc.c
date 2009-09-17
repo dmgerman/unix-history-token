@@ -7353,20 +7353,6 @@ case|case
 name|FD_STYPE
 case|:
 comment|/* set drive type */
-if|if
-condition|(
-operator|!
-operator|(
-name|fflag
-operator|&
-name|FWRITE
-operator|)
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
 comment|/* 		 * Allow setting drive type temporarily iff 		 * currently unset.  Used for fdformat so any 		 * user can set it, and then start formatting. 		 */
 name|fd
 operator|->
@@ -7458,20 +7444,6 @@ case|case
 name|FD_SOPTS
 case|:
 comment|/* set drive options */
-if|if
-condition|(
-operator|!
-operator|(
-name|fflag
-operator|&
-name|FWRITE
-operator|)
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
 name|fd
 operator|->
 name|options

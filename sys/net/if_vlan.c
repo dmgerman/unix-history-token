@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
 
@@ -2779,22 +2773,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|if_vlan
-argument_list|,
-name|miibus
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|struct
@@ -2817,11 +2795,6 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -2838,7 +2811,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Check for<etherif>.<vlan> style interface names. */
-name|IFNET_RLOCK
+name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -2953,7 +2926,7 @@ name|t
 expr_stmt|;
 break|break;
 block|}
-name|IFNET_RUNLOCK
+name|IFNET_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 return|return
@@ -6067,7 +6040,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error

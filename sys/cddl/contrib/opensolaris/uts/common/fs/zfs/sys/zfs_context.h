@@ -91,6 +91,9 @@ directive|include
 file|<sys/rwlock.h>
 include|#
 directive|include
+file|<sys/kcondvar.h>
+include|#
+directive|include
 file|<sys/random.h>
 include|#
 directive|include

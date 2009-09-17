@@ -123,6 +123,20 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|fiodgname_arg32
+block|{
+name|int
+name|len
+decl_stmt|;
+name|caddr_t32
+name|buf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -163,6 +177,13 @@ define|#
 directive|define
 name|MDIOCLIST_32
 value|_IOC(IOC_INOUT, 'm', 3, sizeof(struct md_ioctl32) + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIODGNAME_32
+value|_IOW('f', 120, struct fiodgname_arg32)
 end_define
 
 begin_endif

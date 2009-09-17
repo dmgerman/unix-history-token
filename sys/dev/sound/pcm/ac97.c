@@ -3,6 +3,23 @@ begin_comment
 comment|/*-  * Copyright (c) 1999 Cameron Grant<cg@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -4821,7 +4838,7 @@ modifier|*
 name|codec
 decl_stmt|;
 name|int
-name|eapdinv
+name|i
 decl_stmt|;
 name|codec
 operator|=
@@ -4924,15 +4941,12 @@ argument_list|,
 literal|"eapdinv"
 argument_list|,
 operator|&
-name|eapdinv
+name|i
 argument_list|)
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|eapdinv
+operator|&&
+name|i
 operator|!=
 literal|0
 condition|)
@@ -4942,7 +4956,44 @@ name|flags
 operator||=
 name|AC97_F_EAPD_INV
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"softpcmvol"
+argument_list|,
+operator|&
+name|i
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|i
+operator|!=
+literal|0
+condition|)
+name|pcm_setflags
+argument_list|(
+name|dev
+argument_list|,
+name|pcm_getflags
+argument_list|(
+name|dev
+argument_list|)
+operator||
+name|SD_F_SOFTPCMVOL
+argument_list|)
+expr_stmt|;
 return|return
 name|codec
 return|;
@@ -5043,12 +5094,6 @@ end_function
 begin_comment
 comment|/* -------------------------------------------------------------------- */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
-end_ifdef
 
 begin_function
 specifier|static
@@ -5237,11 +5282,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -5253,9 +5293,6 @@ modifier|*
 name|codec
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
 name|u_int16_t
 name|orig
 decl_stmt|,
@@ -5382,8 +5419,6 @@ argument_list|,
 literal|"AC97 External Amplifier"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -5612,15 +5647,6 @@ case|case
 literal|0x434d4983
 case|:
 comment|/* CMI9761 */
-name|ac97_wrcd
-argument_list|(
-name|codec
-argument_list|,
-name|AC97_MIX_PCM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -5663,6 +5689,26 @@ break|break;
 default|default:
 break|break;
 block|}
+if|if
+condition|(
+name|pcm_getflags
+argument_list|(
+name|codec
+operator|->
+name|dev
+argument_list|)
+operator|&
+name|SD_F_SOFTPCMVOL
+condition|)
+name|ac97_wrcd
+argument_list|(
+name|codec
+argument_list|,
+name|AC97_MIX_PCM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -5907,7 +5953,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|u_int32_t
 name|ac97mix_setrecsrc
 parameter_list|(
 name|struct
@@ -5982,12 +6028,11 @@ operator|==
 literal|0
 operator|)
 condition|?
-literal|1
+literal|1U
 operator|<<
 name|i
 else|:
-operator|-
-literal|1
+literal|0xffffffffU
 return|;
 block|}
 end_function
@@ -6034,11 +6079,7 @@ argument_list|,
 name|ac97mix_setrecsrc
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -11044,7 +11044,7 @@ end_if
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fbsd_poll
 parameter_list|(
 name|struct
@@ -11280,7 +11280,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
 parameter_list|)
 function_decl|;

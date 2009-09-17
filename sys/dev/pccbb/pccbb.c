@@ -512,7 +512,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|cbb_cardbus_reset
+name|cbb_cardbus_reset_power
 parameter_list|(
 name|device_t
 name|brdev
@@ -3703,7 +3703,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|cbb_cardbus_reset
+name|cbb_cardbus_reset_power
 parameter_list|(
 name|device_t
 name|brdev
@@ -3927,7 +3927,7 @@ operator|(
 name|err
 operator|)
 return|;
-name|cbb_cardbus_reset
+name|cbb_cardbus_reset_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -3963,7 +3963,7 @@ argument_list|,
 name|CARD_OFF
 argument_list|)
 expr_stmt|;
-name|cbb_cardbus_reset
+name|cbb_cardbus_reset_power
 argument_list|(
 name|brdev
 argument_list|,

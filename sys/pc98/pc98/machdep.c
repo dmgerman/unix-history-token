@@ -408,6 +408,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -1209,6 +1215,9 @@ name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
 name|cpu_setregs
+argument_list|()
+expr_stmt|;
+name|mca_init
 argument_list|()
 expr_stmt|;
 block|}
@@ -2885,6 +2894,11 @@ name|trapframe
 modifier|*
 name|regs
 decl_stmt|;
+name|struct
+name|segment_descriptor
+modifier|*
+name|sdp
+decl_stmt|;
 name|int
 name|sig
 decl_stmt|;
@@ -3141,6 +3155,61 @@ name|fpstate_drop
 argument_list|(
 name|td
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Unconditionally fill the fsbase and gsbase into the mcontext. 	 */
+name|sdp
+operator|=
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_gsd
+expr_stmt|;
+name|sf
+operator|.
+name|sf_uc
+operator|.
+name|uc_mcontext
+operator|.
+name|mc_fsbase
+operator|=
+name|sdp
+operator|->
+name|sd_hibase
+operator|<<
+literal|24
+operator||
+name|sdp
+operator|->
+name|sd_lobase
+expr_stmt|;
+name|sdp
+operator|=
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_fsd
+expr_stmt|;
+name|sf
+operator|.
+name|sf_uc
+operator|.
+name|uc_mcontext
+operator|.
+name|mc_gsbase
+operator|=
+name|sdp
+operator|->
+name|sd_hibase
+operator|<<
+literal|24
+operator||
+name|sdp
+operator|->
+name|sd_lobase
 expr_stmt|;
 comment|/* Allocate space for the signal handler context. */
 if|if
@@ -5474,6 +5543,26 @@ block|{ }
 end_function
 
 begin_comment
+comment|/*  * Flush the D-cache for non-DMA I/O so that the I-cache can  * be made coherent later.  */
+end_comment
+
+begin_function
+name|void
+name|cpu_flush_dcache
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+comment|/* Not applicable */
+block|}
+end_function
+
+begin_comment
 comment|/* Get current clock frequency for the given cpu id. */
 end_comment
 
@@ -5798,7 +5887,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Clear registers on exec  */
+comment|/*  * Reset registers to default values on exec.  */
 end_comment
 
 begin_function
@@ -6042,6 +6131,12 @@ name|pcb_flags
 operator|&=
 operator|~
 name|FP_SOFTFP
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_initial_npxcw
+operator|=
+name|__INITIAL_NPXCW__
 expr_stmt|;
 comment|/* 	 * Drop the FP state if we hold it, so that the process gets a 	 * clean FP state if it uses the FPU again. 	 */
 name|fpstate_drop
@@ -6297,261 +6392,446 @@ init|=
 block|{
 comment|/* GNULL_SEL	0 Null Descriptor */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0x0
 block|,
-comment|/* length */
+operator|.
+name|ssd_type
+operator|=
 literal|0
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GPRIV_SEL	1 SMP Per-Processor Private Data Descriptor */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GUFS_SEL	2 %fs Descriptor for user */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 name|SEL_UPL
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GUGS_SEL	3 %gs Descriptor for user */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 name|SEL_UPL
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GCODE_SEL	4 Code Descriptor for kernel */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMERA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GDATA_SEL	5 Data Descriptor for kernel */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GUCODE_SEL	6 Code Descriptor for user */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMERA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 name|SEL_UPL
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GUDATA_SEL	7 Data Descriptor for user */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 name|SEL_UPL
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GBIOSLOWMEM_SEL 8 BIOS access to realmode segment 0x40, must be #8 in GDT */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x400
 block|,
-comment|/* segment base address */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GPROC0_SEL	9 Proc 0 Tss Descriptor */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address */
+operator|.
+name|ssd_limit
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6560,35 +6840,55 @@ argument_list|)
 operator|-
 literal|1
 block|,
-comment|/* length  */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_SYS386TSS
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* unused - default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GLDT_SEL	10 LDT Descriptor */
 block|{
+operator|.
+name|ssd_base
+operator|=
 operator|(
 name|int
 operator|)
 name|ldt
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 sizeof|sizeof
 argument_list|(
 name|ldt
@@ -6596,35 +6896,55 @@ argument_list|)
 operator|-
 literal|1
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_SYSLDT
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 name|SEL_UPL
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* unused - default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GUSERLDT_SEL	11 User LDT Descriptor per process */
 block|{
+operator|.
+name|ssd_base
+operator|=
 operator|(
 name|int
 operator|)
 name|ldt
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 operator|(
 literal|512
 operator|*
@@ -6637,36 +6957,56 @@ operator|-
 literal|1
 operator|)
 block|,
-comment|/* length */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_SYSLDT
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* unused - default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GPANIC_SEL	12 Panic Tss Descriptor */
 block|{
+operator|.
+name|ssd_base
+operator|=
 operator|(
 name|int
 operator|)
 operator|&
 name|dblfault_tss
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6675,193 +7015,328 @@ argument_list|)
 operator|-
 literal|1
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_SYS386TSS
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* unused - default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GBIOSCODE32_SEL 13 BIOS 32-bit interface (32bit Code) */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0
 block|,
-comment|/* segment base address (overwritten)  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMERA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GBIOSCODE16_SEL 14 BIOS 32-bit interface (16bit Code) */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0
 block|,
-comment|/* segment base address (overwritten)  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMERA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GBIOSDATA_SEL 15 BIOS 32-bit interface (Data) */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0
 block|,
-comment|/* segment base address (overwritten) */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GBIOSUTIL_SEL 16 BIOS 16-bit interface (Utility) */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0
 block|,
-comment|/* segment base address (overwritten) */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GBIOSARGS_SEL 17 BIOS 16-bit interface (Arguments) */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0
 block|,
-comment|/* segment base address (overwritten) */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* GNDIS_SEL	18 NDIS Descriptor */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0x0
 block|,
-comment|/* length */
+operator|.
+name|ssd_type
+operator|=
 literal|0
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|, }
 decl_stmt|;
@@ -6877,170 +7352,290 @@ init|=
 block|{
 comment|/* Null Descriptor - overwritten by call gate */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0x0
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 literal|0
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* Null Descriptor - overwritten by call gate */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0x0
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 literal|0
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* Null Descriptor - overwritten by call gate */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0x0
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 literal|0
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* Code Descriptor for user */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMERA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 name|SEL_UPL
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* Null Descriptor - overwritten by call gate */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0x0
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 literal|0
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|0
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|0
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|0
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
 comment|/* Data Descriptor for user */
 block|{
+operator|.
+name|ssd_base
+operator|=
 literal|0x0
 block|,
-comment|/* segment base address  */
+operator|.
+name|ssd_limit
+operator|=
 literal|0xfffff
 block|,
-comment|/* length - all address space */
+operator|.
+name|ssd_type
+operator|=
 name|SDT_MEMRWA
 block|,
-comment|/* segment type */
+operator|.
+name|ssd_dpl
+operator|=
 name|SEL_UPL
 block|,
-comment|/* segment descriptor priority level */
+operator|.
+name|ssd_p
+operator|=
 literal|1
 block|,
-comment|/* segment descriptor present */
+operator|.
+name|ssd_xx
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_xx1
+operator|=
 literal|0
 block|,
+operator|.
+name|ssd_def32
+operator|=
 literal|1
 block|,
-comment|/* default 32 vs 16 bit size */
+operator|.
+name|ssd_gran
+operator|=
 literal|1
-comment|/* limit granularity (byte/page units)*/
 block|}
 block|, }
 decl_stmt|;
@@ -8673,6 +9268,9 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
+name|int
+name|pa
+decl_stmt|;
 name|thread0
 operator|.
 name|td_kstack
@@ -9000,6 +9598,50 @@ expr|struct
 name|pcpu
 argument_list|)
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|pa
+operator|=
+name|first
+init|;
+name|pa
+operator|<
+name|first
+operator|+
+name|DPCPU_SIZE
+condition|;
+name|pa
+operator|+=
+name|PAGE_SIZE
+control|)
+name|pmap_kenter
+argument_list|(
+name|pa
+operator|+
+name|KERNBASE
+argument_list|,
+name|pa
+argument_list|)
+expr_stmt|;
+name|dpcpu_init
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|first
+operator|+
+name|KERNBASE
+operator|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|first
+operator|+=
+name|DPCPU_SIZE
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
@@ -11487,6 +12129,11 @@ name|trapframe
 modifier|*
 name|tp
 decl_stmt|;
+name|struct
+name|segment_descriptor
+modifier|*
+name|sdp
+decl_stmt|;
 name|tp
 operator|=
 name|td
@@ -11702,6 +12349,52 @@ name|td
 argument_list|,
 name|mcp
 argument_list|)
+expr_stmt|;
+name|sdp
+operator|=
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_gsd
+expr_stmt|;
+name|mcp
+operator|->
+name|mc_fsbase
+operator|=
+name|sdp
+operator|->
+name|sd_hibase
+operator|<<
+literal|24
+operator||
+name|sdp
+operator|->
+name|sd_lobase
+expr_stmt|;
+name|sdp
+operator|=
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_fsd
+expr_stmt|;
+name|mcp
+operator|->
+name|mc_gsbase
+operator|=
+name|sdp
+operator|->
+name|sd_hibase
+operator|<<
+literal|24
+operator||
+name|sdp
+operator|->
+name|sd_lobase
 expr_stmt|;
 return|return
 operator|(
@@ -13203,20 +13896,8 @@ name|KDB
 end_ifdef
 
 begin_comment
-comment|/*  * Provide inb() and outb() as functions.  They are normally only  * available as macros calling inlined functions, thus cannot be  * called from the debugger.  *  * The actual code is stolen from<machine/cpufunc.h>, and de-inlined.  */
+comment|/*  * Provide inb() and outb() as functions.  They are normally only available as  * inline functions, thus cannot be called from the debugger.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|inb
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|outb
-end_undef
 
 begin_comment
 comment|/* silence compiler warnings */
@@ -13224,18 +13905,18 @@ end_comment
 
 begin_function_decl
 name|u_char
-name|inb
+name|inb_
 parameter_list|(
-name|u_int
+name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|outb
+name|outb_
 parameter_list|(
-name|u_int
+name|u_short
 parameter_list|,
 name|u_char
 parameter_list|)
@@ -13244,45 +13925,39 @@ end_function_decl
 
 begin_function
 name|u_char
-name|inb
+name|inb_
 parameter_list|(
-name|u_int
+name|u_short
 name|port
 parameter_list|)
 block|{
-name|u_char
-name|data
-decl_stmt|;
-comment|/* 	 * We use %%dx and not %1 here because i/o is done at %dx and not at 	 * %edx, while gcc generates inferior code (movw instead of movl) 	 * if we tell it to load (u_short) port. 	 */
-asm|__asm __volatile("inb %%dx,%0" : "=a" (data) : "d" (port));
 return|return
-operator|(
-name|data
-operator|)
+name|inb
+argument_list|(
+name|port
+argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
 name|void
-name|outb
+name|outb_
 parameter_list|(
-name|u_int
+name|u_short
 name|port
 parameter_list|,
 name|u_char
 name|data
 parameter_list|)
 block|{
-name|u_char
-name|al
-decl_stmt|;
-comment|/* 	 * Use an unnecessary assignment to help gcc's register allocator. 	 * This make a large difference for gcc-1.40 and a tiny difference 	 * for gcc-2.6.0.  For gcc-1.40, al had to be ``asm("ax")'' for 	 * best results.  gcc-2.6.0 can't handle this. 	 */
-name|al
-operator|=
+name|outb
+argument_list|(
+name|port
+argument_list|,
 name|data
+argument_list|)
 expr_stmt|;
-asm|__asm __volatile("outb %0,%%dx" : : "a" (al), "d" (port));
 block|}
 end_function
 

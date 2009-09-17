@@ -242,6 +242,9 @@ decl_stmt|;
 name|uint32_t
 name|sctp_enable_sack_immediately
 decl_stmt|;
+name|uint32_t
+name|sctp_vtag_time_wait
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -2212,7 +2215,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_NAT_FRIENDLY_INITS
+name|SCTPCTL_NAT_FRIENDLY_INITS_DESC
 value|"Enable sending of the nat-friendly SCTP option on INITs."
 end_define
 
@@ -2235,6 +2238,38 @@ define|#
 directive|define
 name|SCTPCTL_NAT_FRIENDLY_INITS_DEFAULT
 value|SCTPCTL_NAT_FRIENDLY_INITS_MIN
+end_define
+
+begin_comment
+comment|/* Vtag tiem wait bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_TIME_WAIT_DESC
+value|"Vtag time wait time 0 disables."
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_TIME_WAIT_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_TIME_WAIT_MAX
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_TIME_WAIT_DEFAULT
+value|SCTP_TIME_WAIT
 end_define
 
 begin_if

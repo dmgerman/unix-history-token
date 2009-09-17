@@ -1773,7 +1773,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* now program new ones */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -1835,7 +1835,7 @@ literal|0xF
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)

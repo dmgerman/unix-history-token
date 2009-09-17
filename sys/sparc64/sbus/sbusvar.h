@@ -45,49 +45,77 @@ begin_define
 define|#
 directive|define
 name|SBUS_BURST_1
-value|0x1
+value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBUS_BURST_2
-value|0x2
+value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBUS_BURST_4
-value|0x4
+value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBUS_BURST_8
-value|0x8
+value|(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBUS_BURST_16
-value|0x10
+value|(1<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBUS_BURST_32
-value|0x20
+value|(1<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBUS_BURST_64
-value|0x40
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUS_BURST_MASK
+value|((1<< SBUS_BURST_SIZE) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUS_BURST_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUS_BURST64_MASK
+value|(SBUS_BURST_MASK<< SBUS_BURST64_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUS_BURST64_SHIFT
+value|16
 end_define
 
 begin_comment
@@ -99,7 +127,15 @@ define|#
 directive|define
 name|SBUS_BURST_DEF
 define|\
-value|(SBUS_BURST_1 | SBUS_BURST_2 | SBUS_BURST_4 | SBUS_BURST_8 | 	\ 	SBUS_BURST_16)
+value|(SBUS_BURST_1 | SBUS_BURST_2 | SBUS_BURST_4 | SBUS_BURST_8 | 	\ 	SBUS_BURST_16 | SBUS_BURST_32 | SBUS_BURST_64)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUS_BURST64_DEF
+define|\
+value|(SBUS_BURST_8 | SBUS_BURST_16 | SBUS_BURST_32 | SBUS_BURST_64)
 end_define
 
 begin_enum

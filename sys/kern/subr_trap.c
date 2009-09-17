@@ -23,12 +23,6 @@ directive|include
 file|"opt_ktrace.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_mac.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -869,6 +863,8 @@ operator|=
 name|cursig
 argument_list|(
 name|td
+argument_list|,
+name|SIG_STOP_ALLOWED
 argument_list|)
 operator|)
 operator|!=

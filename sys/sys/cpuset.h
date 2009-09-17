@@ -165,6 +165,16 @@ parameter_list|)
 value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(p)->__bits[__i] = 0;			\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_FILL
+parameter_list|(
+name|p
+parameter_list|)
+value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(p)->__bits[__i] = -1;			\ } while (0)
+end_define
+
 begin_comment
 comment|/* Is p empty. */
 end_comment
@@ -479,13 +489,13 @@ end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|prison
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|thread
+name|proc
 struct_decl|;
 end_struct_decl
 
@@ -542,7 +552,7 @@ name|int
 name|cpuset_create_root
 parameter_list|(
 name|struct
-name|thread
+name|prison
 modifier|*
 parameter_list|,
 name|struct

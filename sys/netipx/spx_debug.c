@@ -114,6 +114,12 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|INET
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TCPDEBUG
 end_ifdef
 
@@ -143,6 +149,11 @@ name|int
 name|spx_debx
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

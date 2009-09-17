@@ -53,9 +53,9 @@ end_include
 begin_expr_stmt
 name|__COPYRIGHT
 argument_list|(
-literal|"@(#) Copyright (c) 1983, 1988, 1993\n"
+literal|"@(#) Copyright (c) 1983, 1988, 1993 "
 literal|"The Regents of the University of California."
-literal|"  All rights reserved.\n"
+literal|"  All rights reserved."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -136,6 +136,7 @@ comment|/* system address */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|myname
 index|[
@@ -147,6 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 decl_stmt|;
@@ -169,6 +171,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ipforwarding
 init|=
@@ -181,6 +184,7 @@ comment|/* kernel forwarding on */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|default_gateway
 decl_stmt|;
@@ -191,6 +195,7 @@ comment|/* 1=advertise default */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|background
 init|=
@@ -255,7 +260,13 @@ begin_decl_stmt
 name|struct
 name|timeval
 name|clk
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|timeval
 name|prev_clk
 decl_stmt|;
 end_decl_stmt
@@ -297,6 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|next_bcast
@@ -324,6 +336,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|flush_kern_timer
@@ -331,12 +344,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|fd_set
 name|fdbits
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sock_max
 decl_stmt|;
@@ -356,6 +371,7 @@ comment|/* RIP socket */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|interface
 modifier|*
@@ -411,6 +427,29 @@ parameter_list|,
 name|struct
 name|timeval
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sigalrm
+parameter_list|(
+name|int
+name|s
+name|UNUSED
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sigterm
+parameter_list|(
+name|int
+name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2212,27 +2251,22 @@ name|n
 operator|--
 expr_stmt|;
 block|}
-for|for
-control|(
-name|ifp
-operator|=
-name|ifnet
-init|;
-name|n
-operator|>
-literal|0
-operator|&&
-literal|0
-operator|!=
-name|ifp
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|int_list
+argument_list|)
 block|{
+if|if
+condition|(
+name|n
+operator|<=
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|ifp
@@ -2275,6 +2309,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sigalrm
 parameter_list|(
@@ -2305,6 +2340,7 @@ comment|/* watch for fatal signals */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sigterm
 parameter_list|(
@@ -2400,22 +2436,14 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-for|for
-control|(
-name|ifp
-operator|=
-name|ifnet
-init|;
-literal|0
-operator|!=
-name|ifp
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|int_list
+argument_list|)
 block|{
 if|if
 condition|(
@@ -2971,22 +2999,14 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* get non-broadcast sockets to listen to queries. 		 */
-for|for
-control|(
-name|ifp
-operator|=
-name|ifnet
-init|;
-name|ifp
-operator|!=
-literal|0
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|int_list
+argument_list|)
 block|{
 if|if
 condition|(
@@ -3256,22 +3276,14 @@ literal|"turn on RIP"
 argument_list|)
 expr_stmt|;
 comment|/* Close all of the query sockets so that we can open 		 * the main socket.  SO_REUSEPORT is not a solution, 		 * since that would let two daemons bind to the broadcast 		 * socket. 		 */
-for|for
-control|(
-name|ifp
-operator|=
-name|ifnet
-init|;
-name|ifp
-operator|!=
-literal|0
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|int_list
+argument_list|)
 block|{
 if|if
 condition|(
@@ -3337,22 +3349,14 @@ name|tv_sec
 operator|+
 name|MIN_WAITTIME
 expr_stmt|;
-for|for
-control|(
-name|ifp
-operator|=
-name|ifnet
-init|;
-name|ifp
-operator|!=
-literal|0
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&ifnet
+argument_list|,
+argument|int_list
+argument_list|)
 block|{
 name|ifp
 operator|->

@@ -645,6 +645,13 @@ name|_PC_MAC_PRESENT
 value|63
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PC_ACL_NFS4
+value|64
+end_define
+
 begin_endif
 endif|#
 directive|endif

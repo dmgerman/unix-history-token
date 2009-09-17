@@ -546,11 +546,15 @@ define|\
 value|do {						\ 		if (bootverbose)			\ 			device_printf(dev, __VA_ARGS__);\ 	} while (0)
 end_define
 
+begin_comment
+comment|/*  * Disable the watchdog timeout SMI handler.  *  * Apparently, some BIOSes install handlers that reset or disable the  * watchdog timer instead of resetting the system, so we disable the SMI  * (by clearing the SMI_TCO_EN bit of the SMI_EN register) to prevent this  * from happening.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
 name|void
-name|ichwd_intr_enable
+name|ichwd_smi_disable
 parameter_list|(
 name|struct
 name|ichwd_softc
@@ -578,11 +582,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Enable the watchdog timeout SMI handler.  See above for details.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
 name|void
-name|ichwd_intr_disable
+name|ichwd_smi_enable
 parameter_list|(
 name|struct
 name|ichwd_softc
@@ -609,6 +617,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Reset the watchdog status bits.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -621,6 +633,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+comment|/* 	 * The watchdog status bits are set to 1 by the hardware to 	 * indicate various conditions.  They can be cleared by software 	 * by writing a 1, not a 0. 	 */
 name|ichwd_write_tco_2
 argument_list|(
 name|sc
@@ -630,6 +643,7 @@ argument_list|,
 name|TCO_TIMEOUT
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX The datasheet says that TCO_SECOND_TO_STS must be cleared 	 * before TCO_BOOT_STS, not the other way around. 	 */
 name|ichwd_write_tco_2
 argument_list|(
 name|sc
@@ -650,6 +664,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Enable the watchdog timer by clearing the TCO_TMR_HALT bit in the  * TCO1_CNT register.  This is complicated by the need to preserve bit 9  * of that same register, and the requirement that all other bits must be  * written back as zero.  */
+end_comment
 
 begin_function
 specifier|static
@@ -707,6 +725,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Disable the watchdog timer.  See above for details.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -762,6 +784,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Reload the watchdog timer: writing anything to any of the lower five  * bits of the TCO_RLD register reloads the timer from the last value  * written to TCO_TMR.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -812,6 +838,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Set the initial timeout value.  Note that this must always be followed  * by a reload.  */
+end_comment
 
 begin_function
 specifier|static
@@ -907,11 +937,11 @@ if|if
 condition|(
 name|timeout
 operator|>
-literal|0x0bff
+literal|0x03ff
 condition|)
 name|timeout
 operator|=
-literal|0x0bff
+literal|0x03ff
 expr_stmt|;
 name|tmr_val16
 operator||=
@@ -1099,7 +1129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Watchdog event handler.  */
+comment|/*  * Watchdog event handler - called by the framework to enable or disable  * the watchdog or change the initial timeout value.  */
 end_comment
 
 begin_function
@@ -1882,7 +1912,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|device_printf
+name|ichwd_verbose_printf
 argument_list|(
 name|dev
 argument_list|,
@@ -1898,6 +1928,7 @@ operator|->
 name|ich_version
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX we should check the status registers (specifically, the 	 * TCO_SECOND_TO_STS bit in the TCO2_STS register) to see if we 	 * just came back from a watchdog-induced reset, and let the user 	 * know. 	 */
 comment|/* reset the watchdog status registers */
 name|ichwd_sts_reset
 argument_list|(
@@ -1926,8 +1957,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* enable watchdog timeout interrupts */
-name|ichwd_intr_enable
+comment|/* disable the SMI handler */
+name|ichwd_smi_disable
 argument_list|(
 name|sc
 argument_list|)
@@ -2061,8 +2092,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* disable watchdog timeout interrupts */
-name|ichwd_intr_disable
+comment|/* enable the SMI handler */
+name|ichwd_smi_enable
 argument_list|(
 name|sc
 argument_list|)
@@ -2237,68 +2268,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|int
-name|ichwd_modevent
-parameter_list|(
-name|module_t
-name|mode
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|void
-modifier|*
-name|data
-parameter_list|)
-block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-switch|switch
-condition|(
-name|type
-condition|)
-block|{
-case|case
-name|MOD_LOAD
-case|:
-name|printf
-argument_list|(
-literal|"ichwd module loaded\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MOD_UNLOAD
-case|:
-name|printf
-argument_list|(
-literal|"ichwd module unloaded\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MOD_SHUTDOWN
-case|:
-name|printf
-argument_list|(
-literal|"ichwd module shutting down\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_function
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -2310,7 +2279,7 @@ name|ichwd_driver
 argument_list|,
 name|ichwd_devclass
 argument_list|,
-name|ichwd_modevent
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

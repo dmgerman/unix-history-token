@@ -18,13 +18,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_SERIAL_H_
+name|_USB_SERIAL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_SERIAL_H_
+name|_USB_SERIAL_H_
 end_define
 
 begin_include
@@ -85,19 +85,19 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device
+name|usb_device
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_com_softc
+name|ucom_softc
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device_request
+name|usb_device_request
 struct_decl|;
 end_struct_decl
 
@@ -108,21 +108,21 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * NOTE: There is no guarantee that "usb2_com_cfg_close()" will  * be called after "usb2_com_cfg_open()" if the device is detached  * while it is open!  */
+comment|/*  * NOTE: There is no guarantee that "ucom_cfg_close()" will  * be called after "ucom_cfg_open()" if the device is detached  * while it is open!  */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_com_callback
+name|ucom_callback
 block|{
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_cfg_get_status
+name|ucom_cfg_get_status
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -137,11 +137,11 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_cfg_set_dtr
+name|ucom_cfg_set_dtr
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -150,11 +150,11 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_cfg_set_rts
+name|ucom_cfg_set_rts
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -163,11 +163,11 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_cfg_set_break
+name|ucom_cfg_set_break
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint8_t
@@ -176,11 +176,11 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_cfg_param
+name|ucom_cfg_param
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -191,44 +191,44 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_cfg_open
+name|ucom_cfg_open
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_cfg_close
+name|ucom_cfg_close
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|usb2_com_pre_open
+name|ucom_pre_open
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|usb2_com_pre_param
+name|ucom_pre_param
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -239,11 +239,11 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|usb2_com_ioctl
+name|ucom_ioctl
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -260,55 +260,55 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_start_read
+name|ucom_start_read
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_stop_read
+name|ucom_stop_read
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_start_write
+name|ucom_start_write
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_stop_write
+name|ucom_stop_write
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|usb2_com_tty_name
+name|ucom_tty_name
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|char
@@ -427,14 +427,14 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_com_cfg_task
+name|ucom_cfg_task
 block|{
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 name|hdr
 decl_stmt|;
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -444,14 +444,14 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_com_param_task
+name|ucom_param_task
 block|{
 name|struct
-name|usb2_proc_msg
+name|usb_proc_msg
 name|hdr
 decl_stmt|;
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -465,10 +465,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_com_super_softc
+name|ucom_super_softc
 block|{
 name|struct
-name|usb2_process
+name|usb_process
 name|sc_tq
 decl_stmt|;
 block|}
@@ -477,46 +477,46 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_com_softc
+name|ucom_softc
 block|{
 comment|/* 	 * NOTE: To avoid loosing level change information we use two 	 * tasks instead of one for all commands. 	 * 	 * Level changes are transitions like: 	 * 	 * ON->OFF 	 * OFF->ON 	 * OPEN->CLOSE 	 * CLOSE->OPEN 	 */
 name|struct
-name|usb2_com_cfg_task
+name|ucom_cfg_task
 name|sc_start_task
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_com_cfg_task
+name|ucom_cfg_task
 name|sc_open_task
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_com_cfg_task
+name|ucom_cfg_task
 name|sc_close_task
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_com_cfg_task
+name|ucom_cfg_task
 name|sc_line_state_task
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_com_cfg_task
+name|ucom_cfg_task
 name|sc_status_task
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|struct
-name|usb2_com_param_task
+name|ucom_param_task
 name|sc_param_task
 index|[
 literal|2
@@ -526,14 +526,20 @@ name|struct
 name|cv
 name|sc_cv
 decl_stmt|;
+comment|/* Used to set "UCOM_FLAG_GP_DATA" flag: */
+name|struct
+name|usb_proc_msg
+modifier|*
+name|sc_last_start_xfer
+decl_stmt|;
 specifier|const
 name|struct
-name|usb2_com_callback
+name|ucom_callback
 modifier|*
 name|sc_callback
 decl_stmt|;
 name|struct
-name|usb2_com_super_softc
+name|ucom_super_softc
 modifier|*
 name|sc_super
 decl_stmt|;
@@ -583,11 +589,6 @@ directive|define
 name|UCOM_FLAG_GP_DATA
 value|0x08
 comment|/* set if get and put data is possible */
-define|#
-directive|define
-name|UCOM_FLAG_WR_START
-value|0x10
-comment|/* set if write start was issued */
 define|#
 directive|define
 name|UCOM_FLAG_LL_READY
@@ -643,7 +644,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|usb2_com_cfg_do_request
+name|ucom_cfg_do_request
 parameter_list|(
 name|udev
 parameter_list|,
@@ -658,19 +659,19 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|usb2_do_request_proc(udev,&(com)->sc_super->sc_tq,req,ptr,flags,NULL,timo)
+value|usbd_do_request_proc(udev,&(com)->sc_super->sc_tq,req,ptr,flags,NULL,timo)
 end_define
 
 begin_function_decl
 name|int
-name|usb2_com_attach
+name|ucom_attach
 parameter_list|(
 name|struct
-name|usb2_com_super_softc
+name|ucom_super_softc
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -680,7 +681,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|usb2_com_callback
+name|ucom_callback
 modifier|*
 name|callback
 parameter_list|,
@@ -693,14 +694,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_com_detach
+name|ucom_detach
 parameter_list|(
 name|struct
-name|usb2_com_super_softc
+name|ucom_super_softc
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -710,10 +711,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_com_status_change
+name|ucom_status_change
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -721,14 +722,14 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_com_get_data
+name|ucom_get_data
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -743,14 +744,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_com_put_data
+name|ucom_put_data
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|,
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -762,10 +763,10 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_com_cfg_is_gone
+name|ucom_cfg_is_gone
 parameter_list|(
 name|struct
-name|usb2_com_softc
+name|ucom_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -777,7 +778,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_SERIAL_H_ */
+comment|/* _USB_SERIAL_H_ */
 end_comment
 
 end_unit

@@ -493,12 +493,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFF_NEEDSGIANT
-value|0x100000
+name|IFF_DYING
+value|0x200000
 end_define
 
 begin_comment
-comment|/* (i) hold Giant over if_start calls */
+comment|/* (n) interface is winding down */
 end_comment
 
 begin_comment
@@ -539,7 +539,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_NEEDSGIANT)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING)
 end_define
 
 begin_comment
@@ -819,6 +819,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_POLLING_NOCOUNT
+value|0x20000
+end_define
+
+begin_comment
+comment|/* polling ticks cannot be fragmented */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define
@@ -1079,6 +1090,9 @@ name|short
 name|ifru_index
 decl_stmt|;
 name|int
+name|ifru_jid
+decl_stmt|;
+name|int
 name|ifru_metric
 decl_stmt|;
 name|int
@@ -1127,6 +1141,11 @@ directive|define
 name|ifr_flagshigh
 value|ifr_ifru.ifru_flags[1]
 comment|/* flags (high 16 bits) */
+define|#
+directive|define
+name|ifr_jid
+value|ifr_ifru.ifru_jid
+comment|/* jail/vnet */
 define|#
 directive|define
 name|ifr_metric

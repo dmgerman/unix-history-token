@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|HZ_VM
-value|10
+value|100
 end_define
 
 begin_endif
@@ -320,7 +320,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|maxswzone
 decl_stmt|;
 end_decl_stmt
@@ -330,7 +330,7 @@ comment|/* max swmeta KVA storage */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|maxbcache
 decl_stmt|;
 end_decl_stmt
@@ -340,7 +340,7 @@ comment|/* max buffer cache KVA storage */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|maxpipekva
 decl_stmt|;
 end_decl_stmt
@@ -435,13 +435,76 @@ name|hz
 argument_list|,
 literal|0
 argument_list|,
-literal|"ticks/second"
+literal|"Number of clock ticks per second"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ncallout
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ncallout
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of pre-allocated timer events"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nbuf
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|nbuf
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of buffers in the buffer cache"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nswbuf
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|nswbuf
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of swap buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
 argument_list|(
 name|_kern
 argument_list|,
@@ -456,13 +519,13 @@ name|maxswzone
 argument_list|,
 literal|0
 argument_list|,
-literal|"max swmeta KVA storage"
+literal|"Maximum memory for swap metadata"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_kern
 argument_list|,
@@ -477,7 +540,7 @@ name|maxbcache
 argument_list|,
 literal|0
 argument_list|,
-literal|"max buffer cache KVA storage"
+literal|"Maximum value of vfs.maxbufspace"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -498,7 +561,7 @@ name|maxtsiz
 argument_list|,
 literal|0
 argument_list|,
-literal|"max text size"
+literal|"Maximum text size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -519,7 +582,7 @@ name|dfldsiz
 argument_list|,
 literal|0
 argument_list|,
-literal|"initial data size limit"
+literal|"Initial data size limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -540,7 +603,7 @@ name|maxdsiz
 argument_list|,
 literal|0
 argument_list|,
-literal|"max data size"
+literal|"Maximum data size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -561,7 +624,7 @@ name|dflssiz
 argument_list|,
 literal|0
 argument_list|,
-literal|"initial stack size limit"
+literal|"Initial stack size limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -582,7 +645,7 @@ name|maxssiz
 argument_list|,
 literal|0
 argument_list|,
-literal|"max stack size"
+literal|"Maximum stack size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -603,7 +666,7 @@ name|sgrowsiz
 argument_list|,
 literal|0
 argument_list|,
-literal|"amount to grow stack"
+literal|"Amount to grow stack on a stack fault"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -953,7 +1016,7 @@ name|VM_SWZONE_SIZE_MAX
 expr_stmt|;
 endif|#
 directive|endif
-name|TUNABLE_INT_FETCH
+name|TUNABLE_LONG_FETCH
 argument_list|(
 literal|"kern.maxswzone"
 argument_list|,
@@ -970,7 +1033,7 @@ name|VM_BCACHE_SIZE_MAX
 expr_stmt|;
 endif|#
 directive|endif
-name|TUNABLE_INT_FETCH
+name|TUNABLE_LONG_FETCH
 argument_list|(
 literal|"kern.maxbcache"
 argument_list|,
@@ -1251,7 +1314,7 @@ literal|512
 operator|*
 literal|1024
 expr_stmt|;
-name|TUNABLE_INT_FETCH
+name|TUNABLE_LONG_FETCH
 argument_list|(
 literal|"kern.ipc.maxpipekva"
 argument_list|,

@@ -12,7 +12,7 @@ name|TZFILE_H
 end_define
 
 begin_comment
-comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-05 by Arthur David Olson (arthur_david_olson@nih.gov). ** ** $FreeBSD$ */
+comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-05 by Arthur David Olson. ** ** $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ name|NOID
 end_ifndef
 
 begin_comment
-comment|/* static char	tzfilehid[] = "@(#)tzfile.h	7.14"; */
+comment|/* static char	tzfilehid[] = "@(#)tzfile.h	8.1"; */
 end_comment
 
 begin_endif
@@ -154,12 +154,19 @@ index|]
 decl_stmt|;
 comment|/* TZ_MAGIC */
 name|char
-name|tzh_reserved
+name|tzh_version
 index|[
-literal|16
+literal|1
 index|]
 decl_stmt|;
-comment|/* reserved for future use */
+comment|/* '\0' or '2' as of 2005 */
+name|char
+name|tzh_reserved
+index|[
+literal|15
+index|]
+decl_stmt|;
+comment|/* reserved--must be zero */
 name|char
 name|tzh_ttisgmtcnt
 index|[
@@ -211,6 +218,10 @@ comment|/* ** . . .followed by. . . ** **	tzh_timecnt (char [4])s		coded transit
 end_comment
 
 begin_comment
+comment|/* ** If tzh_version is '2' or greater, the above is followed by a second instance ** of tzhead and a second instance of the data in which each coded transition ** time uses 8 rather than 4 chars, ** then a POSIX-TZ-environment-variable-style string for use in handling ** instants after the last transition time stored in the file ** (with nothing between the newlines if there is no POSIX representation for ** such instants). */
+end_comment
+
+begin_comment
 comment|/* ** In the current implementation, "tzset()" refuses to deal with files that ** exceed any of the limits below. */
 end_comment
 
@@ -220,15 +231,11 @@ directive|ifndef
 name|TZ_MAX_TIMES
 end_ifndef
 
-begin_comment
-comment|/* ** The TZ_MAX_TIMES value below is enough to handle a bit more than a ** year's worth of solar time (corrected daily to the nearest second) or ** 138 years of Pacific Presidential Election time ** (where there are three time zone transitions every fourth year). */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|TZ_MAX_TIMES
-value|370
+value|1200
 end_define
 
 begin_endif
@@ -279,7 +286,7 @@ name|NOSOLAR
 end_ifdef
 
 begin_comment
-comment|/* ** Must be at least 14 for Europe/Riga as of Jan 12 1995, ** as noted by Earl Chew<earl@hpato.aus.hp.com>. */
+comment|/* ** Must be at least 14 for Europe/Riga as of Jan 12 1995, ** as noted by Earl Chew. */
 end_comment
 
 begin_define
@@ -584,10 +591,6 @@ name|EPOCH_WDAY
 value|TM_THURSDAY
 end_define
 
-begin_comment
-comment|/* ** Accurate only for the past couple of centuries; ** that will probably do. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -598,87 +601,21 @@ parameter_list|)
 value|(((y) % 4) == 0&& (((y) % 100) != 0 || ((y) % 400) == 0))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USG
-end_ifndef
-
 begin_comment
-comment|/* ** Use of the underscored variants may cause problems if you move your code to ** certain System-V-based systems; for maximum portability, use the ** underscore-free variants.  The underscored variants are provided for ** backward compatibility only; they may disappear from future versions of ** this file. */
+comment|/* ** Since everything in isleap is modulo 400 (or a factor of 400), we know that **	isleap(y) == isleap(y % 400) ** and so **	isleap(a + b) == isleap((a + b) % 400) ** or **	isleap(a + b) == isleap(a % 400 + b % 400) ** This is true even if % means modulo rather than Fortran remainder ** (which is allowed by C89 but not C99). ** We use this to avoid addition overflow problems. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SECS_PER_MIN
-value|SECSPERMIN
+name|isleap_sum
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|isleap((a) % 400 + (b) % 400)
 end_define
-
-begin_define
-define|#
-directive|define
-name|MINS_PER_HOUR
-value|MINSPERHOUR
-end_define
-
-begin_define
-define|#
-directive|define
-name|HOURS_PER_DAY
-value|HOURSPERDAY
-end_define
-
-begin_define
-define|#
-directive|define
-name|DAYS_PER_WEEK
-value|DAYSPERWEEK
-end_define
-
-begin_define
-define|#
-directive|define
-name|DAYS_PER_NYEAR
-value|DAYSPERNYEAR
-end_define
-
-begin_define
-define|#
-directive|define
-name|DAYS_PER_LYEAR
-value|DAYSPERLYEAR
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECS_PER_HOUR
-value|SECSPERHOUR
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECS_PER_DAY
-value|SECSPERDAY
-end_define
-
-begin_define
-define|#
-directive|define
-name|MONS_PER_YEAR
-value|MONSPERYEAR
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined USG */
-end_comment
 
 begin_endif
 endif|#

@@ -118,6 +118,12 @@ name|cfi_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|devclass_t
+name|cfi_diskclass
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|uint32_t
 name|cfi_read
@@ -1341,6 +1347,21 @@ operator|->
 name|si_drv1
 operator|=
 name|sc
+expr_stmt|;
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
+literal|"cfid"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|bus_generic_attach
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

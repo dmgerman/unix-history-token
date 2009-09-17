@@ -34,14 +34,14 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.15f"
+value|"1.16f"
 end_define
 
 begin_define
 define|#
 directive|define
 name|COPYRIGHT
-value|"Copyright (c) 2004-2008 Chelsio Communications"
+value|"Copyright (c) 2004-2009 Chelsio Communications"
 end_define
 
 begin_endif

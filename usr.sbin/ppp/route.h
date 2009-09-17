@@ -387,6 +387,16 @@ specifier|const
 name|struct
 name|sockaddr
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

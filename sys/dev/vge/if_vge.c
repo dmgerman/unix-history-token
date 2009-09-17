@@ -494,7 +494,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|vge_rxeof
 parameter_list|(
 name|struct
@@ -977,24 +977,6 @@ argument_list|(
 name|vge
 argument_list|,
 name|pci
-argument_list|,
-name|vge_driver
-argument_list|,
-name|vge_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|vge
-argument_list|,
-name|cardbus
 argument_list|,
 name|vge_driver
 argument_list|,
@@ -2441,7 +2423,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Now program new ones */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2602,7 +2584,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2805,21 +2787,9 @@ name|vge_type
 modifier|*
 name|t
 decl_stmt|;
-name|struct
-name|vge_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|t
 operator|=
 name|vge_devs
-expr_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -5663,7 +5633,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|vge_rxeof
 parameter_list|(
 name|sc
@@ -6403,7 +6373,11 @@ argument_list|,
 name|lim
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|lim
+operator|)
+return|;
 block|}
 end_function
 
@@ -6810,7 +6784,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|vge_poll
 parameter_list|(
 name|struct
@@ -6834,6 +6808,11 @@ init|=
 name|ifp
 operator|->
 name|if_softc
+decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 name|VGE_LOCK
 argument_list|(
@@ -6860,6 +6839,8 @@ name|rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|vge_rxeof
 argument_list|(
 name|sc
@@ -6997,6 +6978,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

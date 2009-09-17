@@ -9,11 +9,42 @@ directive|include
 file|"test.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/utime.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<utime.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|__FBSDID
@@ -413,11 +444,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
-argument_list|,
-literal|8
 argument_list|,
 literal|"copy-no-a.err"
 argument_list|)
@@ -488,11 +517,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
-argument_list|,
-literal|8
 argument_list|,
 literal|"copy-no-a.err"
 argument_list|)
@@ -560,11 +587,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
-argument_list|,
-literal|8
 argument_list|,
 literal|"copy-a.err"
 argument_list|)
@@ -635,11 +660,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
-argument_list|,
-literal|8
 argument_list|,
 literal|"copy-a.err"
 argument_list|)

@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vimage.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -192,12 +192,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/icmp6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -321,6 +315,12 @@ parameter_list|)
 value|((p) == IPPROTO_ESP ? (x)++ : \ 			    (p) == IPPROTO_AH ? (y)++ : (z)++)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -339,6 +339,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ipsec_common_input gets called when an IPsec-protected packet  * is received by IPv4 or IPv6.  It's job is to find the right SA  * and call the appropriate transform.  The transform callback  * takes care of further processing (like ingress filtering).  */
@@ -367,11 +372,6 @@ name|int
 name|sproto
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|union
 name|sockaddr_union
 name|dst_address
@@ -387,6 +387,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC_NAT_T
+name|struct
+name|m_tag
+modifier|*
+name|tag
+decl_stmt|;
+endif|#
+directive|endif
 name|IPSEC_ISTAT
 argument_list|(
 name|sproto
@@ -717,6 +727,51 @@ operator|.
 name|sin_addr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC_NAT_T
+comment|/* Find the source port for NAT-T; see udp*_espdecap. */
+name|tag
+operator|=
+name|m_tag_find
+argument_list|(
+name|m
+argument_list|,
+name|PACKET_TAG_IPSEC_NAT_T_PORTS
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tag
+operator|!=
+name|NULL
+condition|)
+name|dst_address
+operator|.
+name|sin
+operator|.
+name|sin_port
+operator|=
+operator|(
+operator|(
+name|u_int16_t
+operator|*
+operator|)
+operator|(
+name|tag
+operator|+
+literal|1
+operator|)
+operator|)
+index|[
+literal|1
+index|]
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* IPSEC_NAT_T */
 break|break;
 endif|#
 directive|endif
@@ -1266,11 +1321,6 @@ modifier|*
 name|mt
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|prot
 decl_stmt|,
@@ -2299,9 +2349,14 @@ condition|(
 operator|(
 name|error
 operator|=
-name|netisr_queue
+name|netisr_queue_src
 argument_list|(
 name|NETISR_IP
+argument_list|,
+operator|(
+name|uintptr_t
+operator|)
+name|sav
 argument_list|,
 name|m
 argument_list|)
@@ -2417,11 +2472,6 @@ name|int
 name|proto
 parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|l
 init|=
@@ -2702,16 +2752,6 @@ modifier|*
 name|mt
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|int
 name|prot
 decl_stmt|,

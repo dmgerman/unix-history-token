@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -2423,6 +2423,9 @@ name|int
 name|cmdflags
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|CMD_HISTORY
 name|curr_mlist
 operator|=
 operator|(
@@ -2449,6 +2452,8 @@ name|curr_mp
 operator|=
 name|curr_mlist
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4388,6 +4393,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|CMD_HISTORY
+end_if
+
 begin_comment
 comment|/*  * Return the last (most recent) string in the current command history.  */
 end_comment
@@ -4423,6 +4434,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -5108,7 +5124,59 @@ return|return;
 if|#
 directive|if
 name|HAVE_FCHMOD
+block|{
 comment|/* Make history file readable only by owner. */
+name|int
+name|do_chmod
+init|=
+literal|1
+decl_stmt|;
+if|#
+directive|if
+name|HAVE_STAT
+name|struct
+name|stat
+name|statbuf
+decl_stmt|;
+name|int
+name|r
+init|=
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+operator|&
+name|statbuf
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|r
+operator|<
+literal|0
+operator|||
+operator|!
+name|S_ISREG
+argument_list|(
+name|statbuf
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+comment|/* Don't chmod if not a regular file. */
+name|do_chmod
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|do_chmod
+condition|)
 name|fchmod
 argument_list|(
 name|fileno
@@ -5119,6 +5187,7 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|fprintf

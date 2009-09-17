@@ -950,7 +950,9 @@ begin_function
 name|int
 name|arm_get_next_irq
 parameter_list|(
-name|void
+name|int
+name|last
+name|__unused
 parameter_list|)
 block|{
 name|uint32_t

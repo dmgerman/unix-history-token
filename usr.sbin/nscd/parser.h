@@ -16,7 +16,6 @@ name|__NSCD_PARSER_H__
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|parse_config_file
 parameter_list|(

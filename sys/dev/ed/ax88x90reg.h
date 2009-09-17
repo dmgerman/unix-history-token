@@ -28,7 +28,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_AX88X90_MII_DIROUT
+name|ED_AX88X90_MII_DIRIN
 value|0x02
 end_define
 

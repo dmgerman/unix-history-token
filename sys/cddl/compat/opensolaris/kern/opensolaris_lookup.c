@@ -242,12 +242,6 @@ name|int
 name|lktype
 parameter_list|)
 block|{
-name|kthread_t
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
 name|vnode_t
 modifier|*
 name|cvp
@@ -323,8 +317,6 @@ name|lktype
 argument_list|,
 operator|&
 name|tvp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

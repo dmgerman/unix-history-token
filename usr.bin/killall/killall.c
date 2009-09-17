@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/user.h>
 end_include
 
@@ -57,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<jail.h>
 end_include
 
 begin_include
@@ -138,7 +150,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: killall [-delmsvz] [-help] [-j jid]\n"
+literal|"usage: killall [-delmsvz] [-help] [-j jail]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -649,39 +661,30 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"must specify jid"
+literal|"must specify jail"
 argument_list|)
 expr_stmt|;
 name|jid
 operator|=
-name|strtol
+name|jail_getid
 argument_list|(
 operator|*
 name|av
-argument_list|,
-operator|&
-name|ep
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|*
-name|av
-operator|||
-operator|*
-name|ep
+name|jid
+operator|<
+literal|0
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"illegal jid: %s"
+literal|"%s"
 argument_list|,
-operator|*
-name|av
+name|jail_errmsg
 argument_list|)
 expr_stmt|;
 if|if
@@ -698,7 +701,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"jail_attach(): %d"
+literal|"jail_attach(%d)"
 argument_list|,
 name|jid
 argument_list|)

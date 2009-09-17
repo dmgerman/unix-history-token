@@ -517,6 +517,22 @@ literal|"SSLv3 read server certificate request B"
 expr_stmt|;
 break|break;
 case|case
+name|SSL3_ST_CR_SESSION_TICKET_A
+case|:
+name|str
+operator|=
+literal|"SSLv3 read server session ticket A"
+expr_stmt|;
+break|break;
+case|case
+name|SSL3_ST_CR_SESSION_TICKET_B
+case|:
+name|str
+operator|=
+literal|"SSLv3 read server session ticket B"
+expr_stmt|;
+break|break;
+case|case
 name|SSL3_ST_CR_SRVR_DONE_A
 case|:
 name|str
@@ -805,6 +821,22 @@ case|:
 name|str
 operator|=
 literal|"SSLv3 write certificate request B"
+expr_stmt|;
+break|break;
+case|case
+name|SSL3_ST_SW_SESSION_TICKET_A
+case|:
+name|str
+operator|=
+literal|"SSLv3 write session ticket A"
+expr_stmt|;
+break|break;
+case|case
+name|SSL3_ST_SW_SESSION_TICKET_B
+case|:
+name|str
+operator|=
+literal|"SSLv3 write session ticket B"
 expr_stmt|;
 break|break;
 case|case

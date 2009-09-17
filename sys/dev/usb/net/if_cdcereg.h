@@ -40,11 +40,13 @@ end_comment
 begin_enum
 enum|enum
 block|{
-name|CDCE_BULK_A
+name|CDCE_BULK_RX
 block|,
-name|CDCE_BULK_B
+name|CDCE_BULK_TX
 block|,
-name|CDCE_INTR
+name|CDCE_INTR_RX
+block|,
+name|CDCE_INTR_TX
 block|,
 name|CDCE_N_TRANSFER
 block|, }
@@ -56,7 +58,7 @@ struct|struct
 name|cdce_softc
 block|{
 name|struct
-name|usb2_ether
+name|usb_ether
 name|sc_ue
 decl_stmt|;
 name|struct
@@ -64,7 +66,7 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|sc_xfer
 index|[

@@ -450,11 +450,9 @@ argument_list|)
 condition|)
 return|return;
 comment|/* Verify that nothing went to stderr. */
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"2 blocks\n"
-argument_list|,
-literal|9
 argument_list|,
 literal|"newc.err"
 argument_list|)
@@ -518,6 +516,38 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* ino */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Group members bits and others bits do not work. */
+name|assertEqualInt
+argument_list|(
+literal|0x8180
+argument_list|,
+name|from_hex
+argument_list|(
+name|e
+operator|+
+literal|14
+argument_list|,
+literal|8
+argument_list|)
+operator|&
+literal|0xffc0
+argument_list|)
+expr_stmt|;
+comment|/* Mode */
+else|#
+directive|else
 name|assertEqualInt
 argument_list|(
 literal|0x81a4
@@ -533,6 +563,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Mode */
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|from_hex
@@ -826,6 +858,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* ino */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* On Windows, symbolic link and group members bits and  	 * others bits do not work. */
 name|assertEqualInt
 argument_list|(
 literal|0xa1ff
@@ -841,6 +886,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Mode */
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|from_hex
@@ -919,6 +966,33 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Almost same as first entry. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Symbolic link does not work. */
+name|assertEqualMem
+argument_list|(
+name|e
+operator|+
+literal|54
+argument_list|,
+literal|"0000000a"
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+comment|/* File size */
+else|#
+directive|else
 name|assertEqualMem
 argument_list|(
 name|e
@@ -931,6 +1005,8 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* File size */
+endif|#
+directive|endif
 name|fs
 operator|=
 name|from_hex
@@ -1066,6 +1142,18 @@ literal|10
 argument_list|)
 expr_stmt|;
 comment|/* Name contents */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|assertEqualMem
 argument_list|(
 name|e
@@ -1080,6 +1168,8 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* symlink target */
+endif|#
+directive|endif
 name|e
 operator|+=
 literal|110
@@ -1124,6 +1214,38 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* ino */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Group members bits and others bits do not work. */
+name|assertEqualInt
+argument_list|(
+literal|0x41c0
+argument_list|,
+name|from_hex
+argument_list|(
+name|e
+operator|+
+literal|14
+argument_list|,
+literal|8
+argument_list|)
+operator|&
+literal|0xffc0
+argument_list|)
+expr_stmt|;
+comment|/* Mode */
+else|#
+directive|else
 name|assertEqualInt
 argument_list|(
 literal|0x41fd
@@ -1139,6 +1261,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Mode */
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|from_hex
@@ -1170,6 +1294,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* gid */
+ifndef|#
+directive|ifndef
+name|NLINKS_INACCURATE_FOR_DIRS
 name|assertEqualMem
 argument_list|(
 name|e
@@ -1182,6 +1309,8 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* nlink */
+endif|#
+directive|endif
 name|t2
 operator|=
 name|from_hex
@@ -1416,6 +1545,38 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* ino */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Group members bits and others bits do not work. */
+name|assertEqualInt
+argument_list|(
+literal|0x8180
+argument_list|,
+name|from_hex
+argument_list|(
+name|e
+operator|+
+literal|14
+argument_list|,
+literal|8
+argument_list|)
+operator|&
+literal|0xffc0
+argument_list|)
+expr_stmt|;
+comment|/* Mode */
+else|#
+directive|else
 name|assertEqualInt
 argument_list|(
 literal|0x81a4
@@ -1431,6 +1592,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Mode */
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|from_hex

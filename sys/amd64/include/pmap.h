@@ -605,7 +605,7 @@ value|(3)
 end_define
 
 begin_comment
-comment|/*  * Address of current and alternate address space page table maps  * and directories.  * XXX it might be saner to just direct map all of physical memory  * into the kernel using 2MB pages.  We have enough space to do  * it (2^47 bits of KVM, while current max physical addressability  * is 2^40 physical bits).  Then we can get rid of the evil hole  * in the page tables and the evil overlapping.  */
+comment|/*  * Address of current address space page table maps and directories.  */
 end_comment
 
 begin_ifdef
@@ -694,17 +694,6 @@ end_decl_stmt
 begin_comment
 comment|/* physical address of kernel level 4 */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * virtual address to page table entry and  * to physical address.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
@@ -908,9 +897,16 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
+name|int
+name|pat_mode
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * The kernel virtual address (KVA) of the level 4 page table page is always  * within the direct map (DMAP) region.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -1155,51 +1151,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|NPPROVMTRR
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPRO_VMTRRphysBase0
-value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPRO_VMTRRphysMask0
-value|0x201
-end_define
-
-begin_struct
-struct|struct
-name|ppro_vmtrr
-block|{
-name|u_int64_t
-name|base
-decl_stmt|,
-name|mask
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ppro_vmtrr
-name|PPro_vmtrr
-index|[
-name|NPPROVMTRR
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|extern
 name|caddr_t
@@ -1244,6 +1195,16 @@ name|vm_offset_t
 name|virtual_end
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|pmap_page_get_memattr
+parameter_list|(
+name|m
+parameter_list|)
+value|((vm_memattr_t)(m)->md.pat_mode)
+end_define
 
 begin_define
 define|#
@@ -1378,6 +1339,19 @@ name|pmap_page_is_mapped
 parameter_list|(
 name|vm_page_t
 name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_page_set_memattr
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|vm_memattr_t
+name|ma
 parameter_list|)
 function_decl|;
 end_function_decl

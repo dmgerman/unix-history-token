@@ -125,16 +125,6 @@ begin_comment
 comment|/*  * Delay n microseconds.  */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|ath_hal_delay
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -142,7 +132,7 @@ name|OS_DELAY
 parameter_list|(
 name|_n
 parameter_list|)
-value|ath_hal_delay(_n)
+value|DELAY(_n)
 end_define
 
 begin_define
@@ -161,21 +151,8 @@ name|_a
 parameter_list|,
 name|_n
 parameter_list|)
-value|ath_hal_memzero((_a), (_n))
+value|bzero((_a), (_n))
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|ath_hal_memzero
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -188,26 +165,8 @@ name|_s
 parameter_list|,
 name|_n
 parameter_list|)
-value|ath_hal_memcpy(_d,_s,_n)
+value|memcpy(_d,_s,_n)
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|ath_hal_memcpy
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -225,30 +184,59 @@ name|ath_hal
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-specifier|extern
-name|u_int32_t
-name|ath_hal_getuptime
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*  * The hardware registers are native little-endian byte order.  * Big-endian hosts are handled by enabling hardware byte-swap  * of register reads and writes at reset.  But the PCI clock  * domain registers are not byte swapped!  Thus, on big-endian  * platforms we have to explicitly byte-swap those registers.  * OS_REG_UNSWAPPED identifies the registers that need special handling.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_BYTE_ORDER
+operator|==
+name|_BIG_ENDIAN
+end_if
 
 begin_define
 define|#
 directive|define
-name|OS_GETUPTIME
+name|OS_REG_UNSWAPPED
 parameter_list|(
-name|_ah
+name|_reg
 parameter_list|)
-value|ath_hal_getuptime(_ah)
+define|\
+value|(((_reg)>= 0x4000&& (_reg)< 0x5000) || \ 	 ((_reg)>= 0x7000&& (_reg)< 0x8000))
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/*  * Register read/write operations are either handled through  * platform-dependent routines (or when debugging is enabled  * with AH_DEBUG); or they are inline expanded using the macros  * defined below.  For public builds we inline expand only for  * platforms where it is certain what the requirements are to  * read/write registers--typically they are memory-mapped and  * no explicit synchronization or memory invalidation operations  * are required (e.g. i386).  */
+comment|/* _BYTE_ORDER == _LITTLE_ENDIAN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_REG_UNSWAPPED
+parameter_list|(
+name|_reg
+parameter_list|)
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _BYTE_ORDER */
+end_comment
+
+begin_comment
+comment|/*  * Register read/write operations are either handled through  * platform-dependent routines (or when debugging is enabled  * with AH_DEBUG); or they are inline expanded using the macros  * defined below.  */
 end_comment
 
 begin_if
@@ -340,20 +328,6 @@ begin_comment
 comment|/*  * The hardware registers are native little-endian byte order.  * Big-endian hosts are handled by enabling hardware byte-swap  * of register reads and writes at reset.  But the PCI clock  * domain registers are not byte swapped!  Thus, on big-endian  * platforms we have to explicitly byte-swap those registers.  * Most of this code is collapsed at compile time because the  * register values are constants.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|AH_LITTLE_ENDIAN
-value|1234
-end_define
-
-begin_define
-define|#
-directive|define
-name|AH_BIG_ENDIAN
-value|4321
-end_define
-
 begin_if
 if|#
 directive|if
@@ -361,17 +335,6 @@ name|_BYTE_ORDER
 operator|==
 name|_BIG_ENDIAN
 end_if
-
-begin_define
-define|#
-directive|define
-name|OS_REG_UNSWAPPED
-parameter_list|(
-name|_reg
-parameter_list|)
-define|\
-value|(((_reg)>= 0x4000&& (_reg)< 0x5000) || \ 	 ((_reg)>= 0x7000&& (_reg)< 0x8000))
-end_define
 
 begin_define
 define|#
@@ -408,16 +371,6 @@ end_else
 begin_comment
 comment|/* _BYTE_ORDER == _LITTLE_ENDIAN */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|OS_REG_UNSWAPPED
-parameter_list|(
-name|_reg
-parameter_list|)
-value|(0)
-end_define
 
 begin_define
 define|#

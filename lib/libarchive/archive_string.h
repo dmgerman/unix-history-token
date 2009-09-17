@@ -143,37 +143,6 @@ value|__archive_strappend_char
 end_define
 
 begin_comment
-comment|/* Append an integer in the specified base (2<= base<= 16). */
-end_comment
-
-begin_function_decl
-name|struct
-name|archive_string
-modifier|*
-name|__archive_strappend_int
-parameter_list|(
-name|struct
-name|archive_string
-modifier|*
-name|as
-parameter_list|,
-name|int
-name|d
-parameter_list|,
-name|int
-name|base
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|archive_strappend_int
-value|__archive_strappend_int
-end_define
-
-begin_comment
 comment|/* Convert a wide-char string to UTF-8 and append the result. */
 end_comment
 
@@ -357,6 +326,10 @@ begin_comment
 comment|/* Append C string, which may lack trailing \0. */
 end_comment
 
+begin_comment
+comment|/* The source is declared void * here because this gets used with  * "signed char *", "unsigned char *" and "char *" arguments.  * Declaring it "char *" as with some of the other functions just  * leads to a lot of extra casts. */
+end_comment
+
 begin_function_decl
 name|struct
 name|archive_string
@@ -368,7 +341,7 @@ name|archive_string
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|size_t

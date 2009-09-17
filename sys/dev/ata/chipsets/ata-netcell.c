@@ -242,7 +242,9 @@ operator|=
 name|ata_netcell_chipinit
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
 return|;
 block|}
 return|return

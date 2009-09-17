@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pmckern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pmclog.h>
 end_include
 
@@ -2413,6 +2419,15 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+comment|/* 	 * As long as it is possible to get a LOR between pmc_sx lock and 	 * proctree/allproc sx locks used for adding a new process, assure 	 * the former is not held here. 	 */
+name|sx_assert
+argument_list|(
+operator|&
+name|pmc_sx
+argument_list|,
+name|SA_UNLOCKED
+argument_list|)
+expr_stmt|;
 name|PMCDBG
 argument_list|(
 name|LOG

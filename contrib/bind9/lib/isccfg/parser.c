@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: parser.c,v 1.112.18.11 2006/02/28 03:10:49 marka Exp $ */
+comment|/* $Id: parser.c,v 1.129 2008/09/25 04:02:39 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -5856,6 +5856,112 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return the length of a list object.  If obj is NULL or is not  * a list, return 0.  */
+end_comment
+
+begin_function
+name|unsigned
+name|int
+name|cfg_list_length
+parameter_list|(
+specifier|const
+name|cfg_obj_t
+modifier|*
+name|obj
+parameter_list|,
+name|isc_boolean_t
+name|recurse
+parameter_list|)
+block|{
+specifier|const
+name|cfg_listelt_t
+modifier|*
+name|elt
+decl_stmt|;
+name|unsigned
+name|int
+name|count
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|obj
+operator|==
+name|NULL
+operator|||
+operator|!
+name|cfg_obj_islist
+argument_list|(
+name|obj
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0U
+operator|)
+return|;
+for|for
+control|(
+name|elt
+operator|=
+name|cfg_list_first
+argument_list|(
+name|obj
+argument_list|)
+init|;
+name|elt
+operator|!=
+name|NULL
+condition|;
+name|elt
+operator|=
+name|cfg_list_next
+argument_list|(
+name|elt
+argument_list|)
+control|)
+block|{
+if|if
+condition|(
+name|recurse
+operator|&&
+name|cfg_obj_islist
+argument_list|(
+name|elt
+operator|->
+name|obj
+argument_list|)
+condition|)
+block|{
+name|count
+operator|+=
+name|cfg_list_length
+argument_list|(
+name|elt
+operator|->
+name|obj
+argument_list|,
+name|recurse
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|count
+operator|++
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+name|count
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|const
 name|cfg_obj_t
@@ -6924,7 +7030,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse a map identified by a string name.  E.g., "name { foo 1; }".    * Used for the "key" and "channel" statements.  */
+comment|/*  * Parse a map identified by a string name.  E.g., "name { foo 1; }".  * Used for the "key" and "channel" statements.  */
 end_comment
 
 begin_function
@@ -7468,6 +7574,12 @@ block|{
 name|CFG_CLAUSEFLAG_NEWDEFAULT
 block|,
 literal|"default changed"
+block|}
+block|,
+block|{
+name|CFG_CLAUSEFLAG_TESTONLY
+block|,
+literal|"test only"
 block|}
 block|,
 block|{
@@ -8569,7 +8681,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Try interpreting the current token as a network address.  *  * If CFG_ADDR_WILDOK is set in flags, "*" can be used as a wildcard  * and at least one of CFG_ADDR_V4OK and CFG_ADDR_V6OK must also be set.  The  * "*" is interpreted as the IPv4 wildcard address if CFG_ADDR_V4OK is   * set (including the case where CFG_ADDR_V4OK and CFG_ADDR_V6OK are both set),  * and the IPv6 wildcard address otherwise.  */
+comment|/*  * Try interpreting the current token as a network address.  *  * If CFG_ADDR_WILDOK is set in flags, "*" can be used as a wildcard  * and at least one of CFG_ADDR_V4OK and CFG_ADDR_V6OK must also be set.  The  * "*" is interpreted as the IPv4 wildcard address if CFG_ADDR_V4OK is  * set (including the case where CFG_ADDR_V4OK and CFG_ADDR_V6OK are both set),  * and the IPv6 wildcard address otherwise.  */
 end_comment
 
 begin_function

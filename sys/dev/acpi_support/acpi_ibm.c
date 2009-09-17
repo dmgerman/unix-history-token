@@ -54,7 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
 begin_include
@@ -1462,11 +1468,6 @@ name|acpi_ibm_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|acpi_softc
-modifier|*
-name|acpi_sc
-decl_stmt|;
 name|devclass_t
 name|ec_devclass
 decl_stmt|;
@@ -1500,13 +1501,6 @@ operator|->
 name|handle
 operator|=
 name|acpi_get_handle
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|acpi_sc
-operator|=
-name|acpi_device_get_parent_softc
 argument_list|(
 name|dev
 argument_list|)

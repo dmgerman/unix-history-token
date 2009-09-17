@@ -339,6 +339,9 @@ else|#
 directive|else
 name|assertEqualInt
 argument_list|(
+operator|(
+name|int
+operator|)
 name|used
 argument_list|,
 literal|1024

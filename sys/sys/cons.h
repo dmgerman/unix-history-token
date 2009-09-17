@@ -77,18 +77,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
-name|cn_checkc_t
-parameter_list|(
-name|struct
-name|consdev
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|void
 name|cn_putc_t
 parameter_list|(
@@ -103,7 +91,7 @@ end_typedef
 
 begin_struct
 struct|struct
-name|consdev
+name|consdev_ops
 block|{
 name|cn_probe_t
 modifier|*
@@ -125,16 +113,26 @@ modifier|*
 name|cn_getc
 decl_stmt|;
 comment|/* kernel getchar interface */
-name|cn_checkc_t
-modifier|*
-name|cn_checkc
-decl_stmt|;
-comment|/* kernel "return char if available" interface */
 name|cn_putc_t
 modifier|*
 name|cn_putc
 decl_stmt|;
 comment|/* kernel putchar interface */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|consdev
+block|{
+specifier|const
+name|struct
+name|consdev_ops
+modifier|*
+name|cn_ops
+decl_stmt|;
+comment|/* console device operations. */
 name|short
 name|cn_pri
 decl_stmt|;
@@ -280,26 +278,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CONS_DRIVER
+name|CONSOLE_DEVICE
 parameter_list|(
 name|name
 parameter_list|,
-name|probe
+name|ops
 parameter_list|,
-name|init
-parameter_list|,
-name|term
-parameter_list|,
-name|getc
-parameter_list|,
-name|checkc
-parameter_list|,
-name|putc
-parameter_list|,
-name|dbctl
+name|arg
 parameter_list|)
 define|\
-value|static struct consdev name##_consdev = {			\ 		probe, init, term, getc, checkc, putc			\ 	};								\ 	DATA_SET(cons_set, name##_consdev)
+value|static struct consdev name = {					\ 		.cn_ops =&ops,						\ 		.cn_arg = (arg),					\ 	};								\ 	DATA_SET(cons_set, name)
 end_define
 
 begin_define
@@ -310,7 +298,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static struct consdev name##_consdev = {			\ 		.cn_probe = name##_cnprobe,				\ 		.cn_init = name##_cninit,				\ 		.cn_term = name##_cnterm,				\ 		.cn_getc = name##_cngetc,				\ 		.cn_putc = name##_cnputc,				\ 	};								\ 	DATA_SET(cons_set, name##_consdev)
+value|static const struct consdev_ops name##_consdev_ops = {		\ 		.cn_probe = name##_cnprobe,				\ 		.cn_init = name##_cninit,				\ 		.cn_term = name##_cnterm,				\ 		.cn_getc = name##_cngetc,				\ 		.cn_putc = name##_cnputc,				\ 	};								\ 	CONSOLE_DEVICE(name##_consdev, name##_consdev_ops, NULL)
 end_define
 
 begin_comment

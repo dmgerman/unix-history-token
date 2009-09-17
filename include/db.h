@@ -71,7 +71,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|pgno_t
 typedef|;
 end_typedef
@@ -89,7 +89,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int16_t
+name|uint16_t
 name|indx_t
 typedef|;
 end_typedef
@@ -107,7 +107,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|recno_t
 typedef|;
 end_typedef
@@ -400,7 +400,8 @@ specifier|const
 name|DBT
 modifier|*
 parameter_list|,
-name|u_int
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -421,7 +422,8 @@ parameter_list|,
 name|DBT
 modifier|*
 parameter_list|,
-name|u_int
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -442,7 +444,8 @@ specifier|const
 name|DBT
 modifier|*
 parameter_list|,
-name|u_int
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -462,7 +465,8 @@ parameter_list|,
 name|DBT
 modifier|*
 parameter_list|,
-name|u_int
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -476,7 +480,8 @@ name|struct
 name|__db
 modifier|*
 parameter_list|,
-name|u_int
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 name|void
@@ -528,10 +533,12 @@ directive|define
 name|R_DUP
 value|0x01
 comment|/* duplicate keys */
-name|u_long
+name|unsigned
+name|long
 name|flags
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
@@ -543,7 +550,8 @@ name|int
 name|minkeypage
 decl_stmt|;
 comment|/* minimum keys per page */
-name|u_int
+name|unsigned
+name|int
 name|psize
 decl_stmt|;
 comment|/* page size */
@@ -610,23 +618,27 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int
+name|unsigned
+name|int
 name|bsize
 decl_stmt|;
 comment|/* bucket size */
-name|u_int
+name|unsigned
+name|int
 name|ffactor
 decl_stmt|;
 comment|/* fill factor */
-name|u_int
+name|unsigned
+name|int
 name|nelem
 decl_stmt|;
 comment|/* number of elements */
-name|u_int
+name|unsigned
+name|int
 name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
-name|u_int32_t
+name|uint32_t
 comment|/* hash function */
 function_decl|(
 modifier|*
@@ -672,14 +684,17 @@ directive|define
 name|R_SNAPSHOT
 value|0x04
 comment|/* snapshot the input */
-name|u_long
+name|unsigned
+name|long
 name|flags
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
-name|u_int
+name|unsigned
+name|int
 name|psize
 decl_stmt|;
 comment|/* page size */
@@ -691,7 +706,8 @@ name|size_t
 name|reclen
 decl_stmt|;
 comment|/* record length (fixed-length records) */
-name|u_char
+name|unsigned
+name|char
 name|bval
 decl_stmt|;
 comment|/* delimiting byte (variable-length records */
@@ -722,7 +738,7 @@ name|M_32_SWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{							\ 	u_int32_t _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[3];				\ 	((char *)&a)[1] = ((char *)&_tmp)[2];				\ 	((char *)&a)[2] = ((char *)&_tmp)[1];				\ 	((char *)&a)[3] = ((char *)&_tmp)[0];				\ }
+value|{							\ 	uint32_t _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[3];				\ 	((char *)&a)[1] = ((char *)&_tmp)[2];				\ 	((char *)&a)[2] = ((char *)&_tmp)[1];				\ 	((char *)&a)[3] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -732,7 +748,7 @@ name|P_32_SWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{							\ 	u_int32_t _tmp = *(u_int32_t *)a;				\ 	((char *)a)[0] = ((char *)&_tmp)[3];				\ 	((char *)a)[1] = ((char *)&_tmp)[2];				\ 	((char *)a)[2] = ((char *)&_tmp)[1];				\ 	((char *)a)[3] = ((char *)&_tmp)[0];				\ }
+value|{							\ 	uint32_t _tmp = *(uint32_t *)a;					\ 	((char *)a)[0] = ((char *)&_tmp)[3];				\ 	((char *)a)[1] = ((char *)&_tmp)[2];				\ 	((char *)a)[2] = ((char *)&_tmp)[1];				\ 	((char *)a)[3] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -758,7 +774,7 @@ name|M_16_SWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{							\ 	u_int16_t _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[1];				\ 	((char *)&a)[1] = ((char *)&_tmp)[0];				\ }
+value|{							\ 	uint16_t _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[1];				\ 	((char *)&a)[1] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -768,7 +784,7 @@ name|P_16_SWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{							\ 	u_int16_t _tmp = *(u_int16_t *)a;				\ 	((char *)a)[0] = ((char *)&_tmp)[1];				\ 	((char *)a)[1] = ((char *)&_tmp)[0];				\ }
+value|{							\ 	uint16_t _tmp = *(uint16_t *)a;					\ 	((char *)a)[0] = ((char *)&_tmp)[1];				\ 	((char *)a)[1] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -790,6 +806,9 @@ end_endif
 
 begin_function_decl
 name|__BEGIN_DECLS
+if|#
+directive|if
+name|__BSD_VISIBLE
 name|DB
 modifier|*
 name|dbopen
@@ -810,6 +829,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

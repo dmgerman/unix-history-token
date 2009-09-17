@@ -17,10 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * MPsafe: alfred  */
-end_comment
-
 begin_include
 include|#
 directive|include

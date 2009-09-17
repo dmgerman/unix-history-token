@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -30,6 +30,25 @@ include|#
 directive|include
 file|<sys/systm.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/buf_ring.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -166,6 +185,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp_lro.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/udp.h>
 end_include
 
@@ -262,13 +287,36 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ixgbe_api.h"
+file|<sys/smp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_lro.h"
+file|<machine/smp.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXGBE_IEEE1588
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ieee1588.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"ixgbe_api.h"
 end_include
 
 begin_comment
@@ -283,7 +331,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_TXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -315,7 +363,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_RXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -569,8 +617,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_MAX_SCATTER
+name|IXGBE_82598_SCATTER
 value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_82599_SCATTER
+value|32
 end_define
 
 begin_define
@@ -611,6 +666,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_VFTA_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_BR_SIZE
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
 name|CSUM_OFFLOAD
 value|7
 end_define
@@ -620,26 +689,17 @@ comment|/* Bits in csum flags */
 end_comment
 
 begin_comment
-comment|/* The number of MSIX messages the 82598 supports */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_MSGS
-value|18
-end_define
-
-begin_comment
 comment|/* For 6.X code compatibility */
 end_comment
 
 begin_if
 if|#
 directive|if
-name|__FreeBSD_version
-operator|<
-literal|700000
+operator|!
+name|defined
+argument_list|(
+name|ETHER_BPF_MTAP
+argument_list|)
 end_if
 
 begin_define
@@ -648,6 +708,19 @@ directive|define
 name|ETHER_BPF_MTAP
 value|BPF_MTAP
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+end_if
 
 begin_define
 define|#
@@ -661,18 +734,6 @@ define|#
 directive|define
 name|IFCAP_TSO4
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILTER_STRAY
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILTER_HANDLED
 end_define
 
 begin_endif
@@ -738,17 +799,6 @@ value|3
 end_define
 
 begin_comment
-comment|/* Used for auto RX queue configuration */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mp_ncpus
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  *****************************************************************************  * vendor_info_array  *   * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *   *****************************************************************************  */
 end_comment
 
@@ -786,6 +836,9 @@ begin_struct
 struct|struct
 name|ixgbe_tx_buf
 block|{
+name|u32
+name|eop_index
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -876,9 +929,6 @@ name|u32
 name|msix
 decl_stmt|;
 name|u32
-name|eims
-decl_stmt|;
-name|u32
 name|watchdog_timer
 decl_stmt|;
 name|union
@@ -930,6 +980,28 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* Interrupt resources */
+name|void
+modifier|*
+name|tag
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
 comment|/* Soft Stats */
 name|u32
 name|no_tx_desc_avail
@@ -971,9 +1043,6 @@ name|u32
 name|msix
 decl_stmt|;
 name|u32
-name|eims
-decl_stmt|;
-name|u32
 name|payload
 decl_stmt|;
 name|struct
@@ -997,6 +1066,12 @@ decl_stmt|;
 name|struct
 name|lro_ctrl
 name|lro
+decl_stmt|;
+name|bool
+name|lro_enabled
+decl_stmt|;
+name|bool
+name|hdr_split
 decl_stmt|;
 name|unsigned
 name|int
@@ -1039,6 +1114,16 @@ decl_stmt|;
 comment|/* Used for AIM calc */
 name|u32
 name|eitr_setting
+decl_stmt|;
+comment|/* Interrupt resources */
+name|void
+modifier|*
+name|tag
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
 decl_stmt|;
 comment|/* Soft stats */
 name|u64
@@ -1093,27 +1178,15 @@ name|resource
 modifier|*
 name|msix_mem
 decl_stmt|;
-comment|/* 	 * Interrupt resources: 	 *  Oplin has 20 MSIX messages 	 *  so allocate that for now. 	 */
+comment|/* 	 * Interrupt resources: this set is 	 * either used for legacy, or for Link 	 * when doing MSIX 	 */
 name|void
 modifier|*
 name|tag
-index|[
-name|IXGBE_MSGS
-index|]
 decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|res
-index|[
-name|IXGBE_MSGS
-index|]
-decl_stmt|;
-name|int
-name|rid
-index|[
-name|IXGBE_MSGS
-index|]
 decl_stmt|;
 name|struct
 name|ifmedia
@@ -1133,6 +1206,18 @@ name|struct
 name|mtx
 name|core_mtx
 decl_stmt|;
+name|eventhandler_tag
+name|vlan_attach
+decl_stmt|;
+name|eventhandler_tag
+name|vlan_detach
+decl_stmt|;
+name|u32
+name|num_vlans
+decl_stmt|;
+name|u16
+name|num_queues
+decl_stmt|;
 comment|/* Info about the board itself */
 name|u32
 name|part_num
@@ -1148,6 +1233,9 @@ name|max_frame_size
 decl_stmt|;
 name|u32
 name|link_speed
+decl_stmt|;
+name|bool
+name|link_up
 decl_stmt|;
 name|u32
 name|linkvec
@@ -1168,9 +1256,29 @@ comment|/* Mbuf cluster size */
 name|u32
 name|rx_mbuf_sz
 decl_stmt|;
-comment|/* Check for missing optics */
+comment|/* Support for pluggable optics */
 name|bool
 name|sfp_probe
+decl_stmt|;
+name|struct
+name|task
+name|link_task
+decl_stmt|;
+comment|/* Link tasklet */
+name|struct
+name|task
+name|mod_task
+decl_stmt|;
+comment|/* SFP tasklet */
+name|struct
+name|task
+name|msf_task
+decl_stmt|;
+comment|/* Multispeed Fiber tasklet */
+name|struct
+name|taskqueue
+modifier|*
+name|tq
 decl_stmt|;
 comment|/* 	 * Transmit rings: 	 *	Allocated at run time, an array of rings. 	 */
 name|struct
@@ -1181,9 +1289,6 @@ decl_stmt|;
 name|int
 name|num_tx_desc
 decl_stmt|;
-name|int
-name|num_tx_queues
-decl_stmt|;
 comment|/* 	 * Receive rings: 	 *	Allocated at run time, an array of rings. 	 */
 name|struct
 name|rx_ring
@@ -1193,15 +1298,34 @@ decl_stmt|;
 name|int
 name|num_rx_desc
 decl_stmt|;
-name|int
-name|num_rx_queues
-decl_stmt|;
-name|u32
+name|u64
 name|rx_mask
 decl_stmt|;
 name|u32
 name|rx_process_limit
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IXGBE_IEEE1588
+comment|/* IEEE 1588 precision time support */
+name|struct
+name|cyclecounter
+name|cycles
+decl_stmt|;
+name|struct
+name|nettimer
+name|clock
+decl_stmt|;
+name|struct
+name|nettime_compare
+name|compare
+decl_stmt|;
+name|struct
+name|hwtstamp_ctrl
+name|hwtstamp
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Misc stats maintained by the driver */
 name|unsigned
 name|long
@@ -1246,6 +1370,42 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Precision Time Sync (IEEE 1588) defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_IEEE1588
+value|0x88F7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PICOSECS_PER_TICK
+value|20833
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSYNC_UDP_PORT
+value|319
+end_define
+
+begin_comment
+comment|/* UDP port for the protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ADVTXD_TSTAMP
+value|0x00080000
+end_define
 
 begin_define
 define|#
@@ -1313,6 +1473,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_TX_TRYLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_trylock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_RX_LOCK
 parameter_list|(
 name|_sc
@@ -1369,6 +1539,56 @@ name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|ixgbe_is_sfp
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|ixgbe_phy_sfp_avago
+case|:
+case|case
+name|ixgbe_phy_sfp_ftl
+case|:
+case|case
+name|ixgbe_phy_sfp_intel
+case|:
+case|case
+name|ixgbe_phy_sfp_unknown
+case|:
+case|case
+name|ixgbe_phy_tw_tyco
+case|:
+case|case
+name|ixgbe_phy_tw_unknown
+case|:
+return|return
+name|TRUE
+return|;
+default|default:
+return|return
+name|FALSE
+return|;
+block|}
+block|}
+end_function
 
 begin_endif
 endif|#

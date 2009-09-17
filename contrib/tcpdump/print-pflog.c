@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pflog.c,v 1.13.2.4 2007/09/13 17:18:10 gianluca Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pflog.c,v 1.16 2007-09-12 19:36:18 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,22 +66,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WIN32
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

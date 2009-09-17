@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -143,7 +149,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*   * To support usage of rmlock in CVs and msleep  * yet another list for the priority tracker  * would be needed.  * Using this lock for cv and msleep also does  * not seem very useful  */
+comment|/*  * To support usage of rmlock in CVs and msleep yet another list for the  * priority tracker would be needed.  Using this lock for cv and msleep also  * does not seem very useful  */
 end_comment
 
 begin_function
@@ -190,6 +196,36 @@ name|how
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|int
+name|owner_rm
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+modifier|*
+name|owner
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -247,7 +283,18 @@ operator|.
 name|lc_unlock
 operator|=
 name|unlock_rm
-block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+operator|.
+name|lc_owner
+operator|=
+name|owner_rm
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -314,6 +361,42 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+end_ifdef
+
+begin_function
+specifier|static
+name|int
+name|owner_rm
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+modifier|*
+name|owner
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"owner_rm called"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -338,7 +421,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Add or remove tracker from per cpu list.  * The per cpu list can be traversed at any time in forward  * direction from an interrupt on the *local* cpu.  */
+comment|/*  * Add or remove tracker from per cpu list.  *  * The per cpu list can be traversed at any time in forward direction from an  * interrupt on the *local* cpu.  */
 end_comment
 
 begin_function
@@ -391,7 +474,7 @@ name|rmq_next
 operator|=
 name|next
 expr_stmt|;
-comment|/* rmq_prev is not used during froward traversal */
+comment|/* rmq_prev is not used during froward traversal. */
 name|next
 operator|->
 name|rmq_prev
@@ -401,7 +484,7 @@ name|tracker
 operator|->
 name|rmp_cpuQueue
 expr_stmt|;
-comment|/* Update pointer to first element */
+comment|/* Update pointer to first element. */
 name|pc
 operator|->
 name|pc_rm_queue
@@ -457,14 +540,14 @@ name|rmp_cpuQueue
 operator|.
 name|rmq_prev
 expr_stmt|;
-comment|/* Not used during forward traversal */
+comment|/* Not used during forward traversal. */
 name|next
 operator|->
 name|rmq_prev
 operator|=
 name|prev
 expr_stmt|;
-comment|/* Remove from list */
+comment|/* Remove from list. */
 name|prev
 operator|->
 name|rmq_next
@@ -593,13 +676,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
 begin_function
 name|void
-name|rm_init
+name|rm_init_flags
 parameter_list|(
 name|struct
 name|rmlock
@@ -615,6 +697,36 @@ name|int
 name|opts
 parameter_list|)
 block|{
+name|int
+name|liflags
+decl_stmt|;
+name|liflags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|opts
+operator|&
+name|RM_NOWITNESS
+operator|)
+condition|)
+name|liflags
+operator||=
+name|LO_WITNESS
+expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+name|RM_RECURSE
+condition|)
+name|liflags
+operator||=
+name|LO_RECURSABLE
+expr_stmt|;
 name|rm
 operator|->
 name|rm_noreadtoken
@@ -638,7 +750,7 @@ name|rm_lock
 argument_list|,
 name|name
 argument_list|,
-literal|"RM_MTX"
+literal|"rmlock_mtx"
 argument_list|,
 name|MTX_NOWITNESS
 argument_list|)
@@ -657,13 +769,34 @@ name|name
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|opts
-operator|&
-name|LO_RECURSABLE
-operator|)
-operator||
-name|LO_WITNESS
+name|liflags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|rm_init
+parameter_list|(
+name|struct
+name|rmlock
+modifier|*
+name|rm
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|rm_init_flags
+argument_list|(
+name|rm
+argument_list|,
+name|name
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -747,6 +880,36 @@ argument_list|,
 name|args
 operator|->
 name|ra_desc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|rm_sysinit_flags
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|rm_args_flags
+modifier|*
+name|args
+init|=
+name|arg
+decl_stmt|;
+name|rm_init_flags
+argument_list|(
+name|args
+operator|->
+name|ra_rm
+argument_list|,
+name|args
+operator|->
+name|ra_desc
 argument_list|,
 name|args
 operator|->
@@ -797,7 +960,7 @@ argument_list|(
 name|curcpu
 argument_list|)
 expr_stmt|;
-comment|/* Check if we just need to do a proper critical_exit */
+comment|/* Check if we just need to do a proper critical_exit. */
 if|if
 condition|(
 literal|0
@@ -812,7 +975,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* Remove our tracker from the per cpu list */
+comment|/* Remove our tracker from the per cpu list. */
 name|rm_tracker_remove
 argument_list|(
 name|pc
@@ -820,7 +983,7 @@ argument_list|,
 name|tracker
 argument_list|)
 expr_stmt|;
-comment|/* Check to see if the IPI granted us the lock after all */
+comment|/* Check to see if the IPI granted us the lock after all. */
 if|if
 condition|(
 name|tracker
@@ -828,7 +991,7 @@ operator|->
 name|rmp_flags
 condition|)
 block|{
-comment|/* Just add back tracker - we hold the lock */
+comment|/* Just add back tracker - we hold the lock. */
 name|rm_tracker_add
 argument_list|(
 name|pc
@@ -841,7 +1004,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * We allow readers to aquire a lock even if a writer 	 * is blocked if the lock is recursive and the reader 	 * already holds the lock 	 */
+comment|/* 	 * We allow readers to aquire a lock even if a writer is blocked if 	 * the lock is recursive and the reader already holds the lock. 	 */
 if|if
 condition|(
 operator|(
@@ -857,7 +1020,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Just grand the lock if this thread already have a tracker 		 * for this lock on the per cpu queue 		 */
+comment|/* 		 * Just grand the lock if this thread already have a tracker 		 * for this lock on the per cpu queue. 		 */
 for|for
 control|(
 name|queue
@@ -1007,7 +1170,6 @@ operator|->
 name|rm_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1082,12 +1244,9 @@ argument_list|,
 name|tracker
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_pinned
-operator|++
+name|sched_pin
+argument_list|()
 expr_stmt|;
-comment|/*  sched_pin(); */
 name|compiler_memory_barrier
 argument_list|()
 expr_stmt|;
@@ -1096,7 +1255,7 @@ operator|->
 name|td_critnest
 operator|--
 expr_stmt|;
-comment|/*  	 * Fast path to combine two common conditions 	 * into a single conditional jump 	 */
+comment|/* 	 * Fast path to combine two common conditions into a single 	 * conditional jump. 	 */
 if|if
 condition|(
 literal|0
@@ -1111,10 +1270,8 @@ operator|->
 name|rm_noreadtoken
 operator|)
 condition|)
-block|{
 return|return;
-block|}
-comment|/* We do not have a read token and need to acquire one */
+comment|/* We do not have a read token and need to acquire one. */
 name|_rm_rlock_hard
 argument_list|(
 name|rm
@@ -1164,9 +1321,7 @@ name|tracker
 operator|->
 name|rmp_flags
 condition|)
-block|{
 return|return;
-block|}
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1319,12 +1474,9 @@ operator|->
 name|td_critnest
 operator|--
 expr_stmt|;
-name|td
-operator|->
-name|td_pinned
-operator|--
+name|sched_unpin
+argument_list|()
 expr_stmt|;
-comment|/*  sched_unpin(); */
 if|if
 condition|(
 literal|0
@@ -1394,7 +1546,7 @@ name|rm_noreadtoken
 operator|=
 literal|1
 expr_stmt|;
-comment|/*  		 * Assumes rm->rm_noreadtoken update is visible  		 * on other CPUs before rm_cleanIPI is called 		 */
+comment|/* 		 * Assumes rm->rm_noreadtoken update is visible on other CPUs 		 * before rm_cleanIPI is called. 		 */
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1826,7 +1978,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*   * Just strip out file and line arguments if no lock debugging is enabled  * in the kernel - we are called from a kernel module. */
+comment|/*  * Just strip out file and line arguments if no lock debugging is enabled in  * the kernel - we are called from a kernel module.  */
 end_comment
 
 begin_function

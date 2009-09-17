@@ -200,7 +200,7 @@ argument|pv_entry
 argument_list|)
 name|pm_pvlist
 expr_stmt|;
-comment|/* list of mappings in 							 * pmap */
+comment|/* list of mappings in 						 * pmap */
 name|int
 name|pm_active
 decl_stmt|;
@@ -294,13 +294,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|pmap_t
-name|kernel_pmap
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -309,6 +302,21 @@ parameter_list|(
 name|va
 parameter_list|)
 value|pmap_kextract(((vm_offset_t) (va)))
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pmap
+name|kernel_pmap_store
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|kernel_pmap
+value|(&kernel_pmap_store)
 end_define
 
 begin_define
@@ -499,20 +507,6 @@ end_endif
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
-name|avail_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|avail_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
 name|phys_avail
 index|[]
 decl_stmt|;
@@ -576,11 +570,33 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|pmap_page_get_memattr
+parameter_list|(
+name|m
+parameter_list|)
+value|VM_MEMATTR_DEFAULT
+end_define
+
+begin_define
+define|#
+directive|define
 name|pmap_page_is_mapped
 parameter_list|(
 name|m
 parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_page_set_memattr
+parameter_list|(
+name|m
+parameter_list|,
+name|ma
+parameter_list|)
+value|(void)0
 end_define
 
 begin_function_decl

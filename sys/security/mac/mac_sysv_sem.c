@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2009 Robert N. M. Watson  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * This software was developed at the University of Cambridge Computer  * Laboratory with support from a grant from Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -16,6 +16,12 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"opt_kdtrace.h"
+end_include
 
 begin_include
 include|#
@@ -92,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -141,7 +153,7 @@ argument_list|(
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM
 argument_list|(
 name|sysvsem_init_label
 argument_list|,
@@ -200,7 +212,7 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|sysvsem_destroy_label
 argument_list|,
@@ -266,7 +278,7 @@ modifier|*
 name|semakptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|sysvsem_create
 argument_list|,
@@ -292,7 +304,7 @@ modifier|*
 name|semakptr
 parameter_list|)
 block|{
-name|MAC_PERFORM
+name|MAC_POLICY_PERFORM_NOSLEEP
 argument_list|(
 name|sysvsem_cleanup
 argument_list|,
@@ -303,6 +315,20 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|sysvsem_check_semctl
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct semid_kernel *"
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -325,7 +351,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|sysvsem_check_semctl
 argument_list|,
@@ -340,6 +366,19 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|sysvsem_check_semctl
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|semakptr
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -347,6 +386,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE2
+argument_list|(
+name|sysvsem_check_semget
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct semid_kernel *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -366,7 +417,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|sysvsem_check_semget
 argument_list|,
@@ -386,6 +437,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MAC_CHECK_PROBE_DEFINE3
+argument_list|(
+name|sysvsem_check_semop
+argument_list|,
+literal|"struct ucred *"
+argument_list|,
+literal|"struct semid_kernel *"
+argument_list|,
+literal|"size_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -408,7 +473,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|MAC_CHECK
+name|MAC_POLICY_CHECK_NOSLEEP
 argument_list|(
 name|sysvsem_check_semop
 argument_list|,
@@ -419,6 +484,19 @@ argument_list|,
 name|semakptr
 operator|->
 name|label
+argument_list|,
+name|accesstype
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK_PROBE3
+argument_list|(
+name|sysvsem_check_semop
+argument_list|,
+name|error
+argument_list|,
+name|cred
+argument_list|,
+name|semakptr
 argument_list|,
 name|accesstype
 argument_list|)

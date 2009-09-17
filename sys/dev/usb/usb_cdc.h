@@ -176,7 +176,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_cdc_header_descriptor
+name|usb_cdc_header_descriptor
 block|{
 name|uByte
 name|bLength
@@ -197,7 +197,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_cdc_cm_descriptor
+name|usb_cdc_cm_descriptor
 block|{
 name|uByte
 name|bLength
@@ -229,7 +229,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_cdc_acm_descriptor
+name|usb_cdc_acm_descriptor
 block|{
 name|uByte
 name|bLength
@@ -266,7 +266,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_cdc_union_descriptor
+name|usb_cdc_union_descriptor
 block|{
 name|uByte
 name|bLength
@@ -293,7 +293,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usb2_cdc_ethernet_descriptor
+name|usb_cdc_ethernet_descriptor
 block|{
 name|uByte
 name|bLength
@@ -431,7 +431,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_cdc_abstract_state
+name|usb_cdc_abstract_state
 block|{
 name|uWord
 name|wState
@@ -458,7 +458,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_cdc_line_state
+name|usb_cdc_line_state
 block|{
 name|uDWord
 name|dwDTERate
@@ -518,7 +518,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_cdc_notification
+name|usb_cdc_notification
 block|{
 name|uByte
 name|bmRequestType

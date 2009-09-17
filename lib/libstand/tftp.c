@@ -1243,8 +1243,6 @@ operator|=
 name|tftp_makereq
 argument_list|(
 name|tftpfile
-argument_list|,
-name|path
 argument_list|)
 expr_stmt|;
 if|if

@@ -348,10 +348,18 @@ operator|=
 name|NULL
 block|,
 operator|.
+name|brand_note
+operator|=
+operator|&
+name|elf64_freebsd_brandnote
+block|,
+operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
-block|, }
+operator||
+name|BI_BRAND_NOTE
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -418,10 +426,18 @@ operator|=
 name|NULL
 block|,
 operator|.
+name|brand_note
+operator|=
+operator|&
+name|elf64_freebsd_brandnote
+block|,
+operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
-block|, }
+operator||
+name|BI_BRAND_NOTE
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -922,9 +938,14 @@ condition|)
 operator|*
 name|where
 operator|=
+name|elf_relocaddr
+argument_list|(
+name|lf
+argument_list|,
 name|relocbase
 operator|+
 name|addend
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1362,7 +1383,7 @@ operator|++
 name|ph
 expr_stmt|;
 block|}
-comment|/* Invalidate the I-cache, but not for the kernel itself. */
+comment|/* 	 * Make the I-cache coherent, but don't worry obout the kernel 	 * itself because the loader needs to do that. 	 */
 if|if
 condition|(
 name|lf
@@ -1371,7 +1392,7 @@ name|id
 operator|!=
 literal|1
 condition|)
-name|ia64_invalidate_icache
+name|ia64_sync_icache
 argument_list|(
 operator|(
 name|uintptr_t

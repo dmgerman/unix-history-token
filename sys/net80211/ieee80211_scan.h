@@ -16,7 +16,7 @@ name|_NET80211_IEEE80211_SCAN_H_
 end_define
 
 begin_comment
-comment|/*  * 802.11 scanning support.  *  * Scanning is the procedure by which a station locates a bss to join  * (infrastructure/ibss mode), or a channel to use (when operating as  * an ap or ibss master).  Scans are either "active" or "passive".  An  * active scan causes one or more probe request frames to be sent on  * visiting each channel.  A passive request causes each channel in the  * scan set to be visited but no frames to be transmitted; the station  * only listens for traffic.  Note that active scanning may still need  * to listen for traffic before sending probe request frames depending  * on regulatory constraints; the 802.11 layer handles this by generating  * a callback when scanning on a ``passive channel'' when the  * IEEE80211_FEXT_PROBECHAN flag is set.  *  * A scan operation involves constructing a set of channels to inspec  * (the scan set), visiting each channel and collecting information  * (e.g. what bss are present), and then analyzing the results to make  * decisions like which bss to join.  This process needs to be as fast  * as possible so we do things like intelligently construct scan sets  * and dwell on a channel only as long as necessary.  The scan code also  * maintains a cache of recent scan results and uses it to bypass scanning  * whenever possible.  The scan cache is also used to enable roaming  * between access points when operating in infrastructure mode.  *  * Scanning is handled with pluggable modules that implement "policy"  * per-operating mode.  The core scanning support provides an  * instrastructure to support these modules and exports a common api  * to the rest of the 802.11 layer.  Policy modules decide what  * channels to visit, what state to record to make decisions (e.g. ap  * mode scanning for auto channel selection keeps significantly less  * state than sta mode scanning for an ap to associate to), and selects  * the final station/channel to return as the result of a scan.  *  * Scanning is done synchronously when initially bringing a vap to an  * operational state and optionally in the background to maintain the  * scan cache for doing roaming and rogue ap monitoring.  Scanning is  * not tied to the 802.11 state machine that governs vaps though there  * is linkage to the IEEE80211_SCAN state.  Only one vap at a time may  * be scanning; this scheduling policy is handled in ieee80211_new_state  * and is invisible to the scanning code. */
+comment|/*  * 802.11 scanning support.  *  * Scanning is the procedure by which a station locates a bss to join  * (infrastructure/ibss mode), or a channel to use (when operating as  * an ap or ibss master).  Scans are either "active" or "passive".  An  * active scan causes one or more probe request frames to be sent on  * visiting each channel.  A passive request causes each channel in the  * scan set to be visited but no frames to be transmitted; the station  * only listens for traffic.  Note that active scanning may still need  * to listen for traffic before sending probe request frames depending  * on regulatory constraints; the 802.11 layer handles this by generating  * a callback when scanning on a ``passive channel'' when the  * IEEE80211_FEXT_PROBECHAN flag is set.  *  * A scan operation involves constructing a set of channels to inspect  * (the scan set), visiting each channel and collecting information  * (e.g. what bss are present), and then analyzing the results to make  * decisions like which bss to join.  This process needs to be as fast  * as possible so we do things like intelligently construct scan sets  * and dwell on a channel only as long as necessary.  The scan code also  * maintains a cache of recent scan results and uses it to bypass scanning  * whenever possible.  The scan cache is also used to enable roaming  * between access points when operating in infrastructure mode.  *  * Scanning is handled with pluggable modules that implement "policy"  * per-operating mode.  The core scanning support provides an  * instrastructure to support these modules and exports a common api  * to the rest of the 802.11 layer.  Policy modules decide what  * channels to visit, what state to record to make decisions (e.g. ap  * mode scanning for auto channel selection keeps significantly less  * state than sta mode scanning for an ap to associate to), and selects  * the final station/channel to return as the result of a scan.  *  * Scanning is done synchronously when initially bringing a vap to an  * operational state and optionally in the background to maintain the  * scan cache for doing roaming and rogue ap monitoring.  Scanning is  * not tied to the 802.11 state machine that governs vaps though there  * is linkage to the IEEE80211_SCAN state.  Only one vap at a time may  * be scanning; this scheduling policy is handled in ieee80211_new_state  * and is invisible to the scanning code. */
 end_comment
 
 begin_define
@@ -78,6 +78,11 @@ name|struct
 name|ieee80211vap
 modifier|*
 name|ss_vap
+decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ss_ic
 decl_stmt|;
 specifier|const
 name|struct
@@ -464,9 +469,6 @@ name|rssi
 parameter_list|,
 name|int
 name|noise
-parameter_list|,
-name|int
-name|rstamp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -624,6 +626,11 @@ init|=
 literal|0x40
 block|,
 comment|/* invalid beacon interval */
+name|IEEE80211_BPARSE_CSA_INVALID
+init|=
+literal|0x80
+block|,
+comment|/* invalid CSA ie */
 block|}
 enum|;
 end_enum
@@ -734,6 +741,25 @@ name|uint8_t
 modifier|*
 name|tdma
 decl_stmt|;
+name|uint8_t
+modifier|*
+name|csa
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|meshid
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|meshconf
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|spare
+index|[
+literal|3
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -783,10 +809,6 @@ operator|+
 name|IEEE80211_RATE_MAXSIZE
 index|]
 decl_stmt|;
-name|uint32_t
-name|se_rstamp
-decl_stmt|;
-comment|/* recv timestamp */
 union|union
 block|{
 name|uint8_t
@@ -851,6 +873,14 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* captured country code */
+name|uint8_t
+name|se_meshid
+index|[
+literal|2
+operator|+
+name|IEEE80211_MESHID_LEN
+index|]
+decl_stmt|;
 name|struct
 name|ieee80211_ies
 name|se_ies
@@ -1023,9 +1053,6 @@ name|rssi
 parameter_list|,
 name|int
 name|noise
-parameter_list|,
-name|int
-name|rstamp
 parameter_list|)
 function_decl|;
 comment|/* age and/or purge entries in the cache */
@@ -1097,6 +1124,42 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|scan_spare0
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|scan_spare1
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|scan_spare2
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|scan_spare4
+function_decl|)
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 block|}

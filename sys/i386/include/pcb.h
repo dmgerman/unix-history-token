@@ -89,6 +89,9 @@ name|union
 name|savefpu
 name|pcb_save
 decl_stmt|;
+name|uint16_t
+name|pcb_initial_npxcw
+decl_stmt|;
 name|u_int
 name|pcb_flags
 decl_stmt|;

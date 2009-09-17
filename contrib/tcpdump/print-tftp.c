@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tftp.c,v 1.37.2.1 2007/09/14 01:03:12 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tftp.c,v 1.38.2.1 2008-04-11 16:44:17 gianluca Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,7 @@ block|}
 block|,
 comment|/* acknowledgement */
 block|{
-name|ERROR
+name|TFTP_ERROR
 block|,
 literal|"ERROR"
 block|}
@@ -549,7 +549,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ERROR
+name|TFTP_ERROR
 case|:
 comment|/* Print error code string */
 name|TCHECK

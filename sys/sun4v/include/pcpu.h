@@ -56,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|PCPU_MD_FIELDS_PAD
-value|(4 - (PCPU_NAME_LEN + 7) / 8)
+value|(3 - (PCPU_NAME_LEN + 7) / 8)
 end_define
 
 begin_else
@@ -68,7 +68,7 @@ begin_define
 define|#
 directive|define
 name|PCPU_MD_FIELDS_PAD
-value|4
+value|3
 end_define
 
 begin_endif
@@ -97,6 +97,14 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|dpcpu0
+decl_stmt|;
+end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct

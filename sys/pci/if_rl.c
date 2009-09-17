@@ -792,7 +792,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|rl_poll
 parameter_list|(
 name|struct
@@ -812,7 +812,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|rl_poll_locked
 parameter_list|(
 name|struct
@@ -890,7 +890,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|rl_rxeof
 parameter_list|(
 name|struct
@@ -2901,7 +2901,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* now program new ones */
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -2984,7 +2984,7 @@ name|mcnt
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -5326,7 +5326,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|rl_rxeof
 parameter_list|(
 name|struct
@@ -5360,6 +5360,11 @@ literal|0
 decl_stmt|;
 name|int
 name|wrap
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|rx_npkts
 init|=
 literal|0
 decl_stmt|;
@@ -5564,7 +5569,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 comment|/* No errors; receive the packet. */
 name|rx_bytes
@@ -5789,8 +5798,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 block|}
 comment|/* No need to sync Rx memory block as we didn't modify it. */
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -6620,7 +6637,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|rl_poll
 parameter_list|(
 name|struct
@@ -6645,6 +6662,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 name|RL_LOCK
 argument_list|(
 name|sc
@@ -6658,6 +6680,8 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
+name|rx_npkts
+operator|=
 name|rl_poll_locked
 argument_list|(
 name|ifp
@@ -6672,12 +6696,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|rl_poll_locked
 parameter_list|(
 name|struct
@@ -6702,6 +6731,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
 name|RL_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -6713,6 +6745,8 @@ name|rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|rl_rxeof
 argument_list|(
 name|sc
@@ -6765,7 +6799,11 @@ name|status
 operator|==
 literal|0xffff
 condition|)
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 if|if
 condition|(
 name|status
@@ -6794,6 +6832,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 

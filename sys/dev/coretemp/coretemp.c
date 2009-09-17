@@ -109,6 +109,13 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|TZ_ZEROC
+value|2732
+end_define
+
 begin_struct
 struct|struct
 name|coretemp_softc
@@ -606,9 +613,9 @@ literal|0
 argument_list|,
 name|coretemp_get_temp_sysctl
 argument_list|,
-literal|"I"
+literal|"IK"
 argument_list|,
-literal|"Current temperature in degC"
+literal|"Current temperature"
 argument_list|)
 expr_stmt|;
 return|return
@@ -877,6 +884,10 @@ name|coretemp_get_temp
 argument_list|(
 name|dev
 argument_list|)
+operator|*
+literal|10
+operator|+
+name|TZ_ZEROC
 expr_stmt|;
 return|return
 operator|(

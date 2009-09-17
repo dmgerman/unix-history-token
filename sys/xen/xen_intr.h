@@ -95,19 +95,12 @@ value|((_x) - DYNIRQ_BASE)
 end_define
 
 begin_comment
-comment|/* Dynamic binding of event channels and VIRQ sources to Linux IRQ space. */
+comment|/*   * Dynamic binding of event channels and VIRQ sources to guest IRQ space.  */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|unbind_from_irq
-parameter_list|(
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*  * Bind a caller port event channel to an interrupt handler. If  * successful, the guest IRQ number is returned in *irqp. Return zero  * on success or errno otherwise.  */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -142,6 +135,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Bind a listening port to an interrupt handler. If successful, the  * guest IRQ number is returned in *irqp. Return zero on success or  * errno otherwise.  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int
@@ -174,6 +171,10 @@ name|irqp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Bind a VIRQ to an interrupt handler. If successful, the guest IRQ  * number is returned in *irqp. Return zero on success or errno  * otherwise.  */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -215,6 +216,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Bind an IPI to an interrupt handler. If successful, the guest  * IRQ number is returned in *irqp. Return zero on success or errno  * otherwise.  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int
@@ -234,7 +239,7 @@ modifier|*
 name|devname
 parameter_list|,
 name|driver_filter_t
-name|handler
+name|filter
 parameter_list|,
 name|unsigned
 name|long
@@ -247,6 +252,10 @@ name|irqp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Bind an interdomain event channel to an interrupt handler. If  * successful, the guest IRQ number is returned in *irqp. Return zero  * on success or errno otherwise.  */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -284,6 +293,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Unbind an interrupt handler using the guest IRQ number returned  * when it was bound.  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
@@ -291,7 +304,7 @@ name|unbind_from_irqhandler
 parameter_list|(
 name|unsigned
 name|int
-name|evtchn
+name|irq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -302,6 +315,7 @@ name|__inline__
 name|int
 name|irq_cannonicalize
 parameter_list|(
+name|unsigned
 name|int
 name|irq
 parameter_list|)

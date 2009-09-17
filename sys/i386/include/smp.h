@@ -200,24 +200,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* global data in identcpu.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cpu_cores
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cpu_logical
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* IPI handlers */
 end_comment
 
@@ -312,10 +294,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ipi_nmi_handler
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ipi_selected
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|cpus
 parameter_list|,
 name|u_int
@@ -397,7 +388,7 @@ begin_function_decl
 name|void
 name|smp_masked_invlpg
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|mask
 parameter_list|,
 name|vm_offset_t
@@ -423,7 +414,7 @@ begin_function_decl
 name|void
 name|smp_masked_invlpg_range
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|mask
 parameter_list|,
 name|vm_offset_t
@@ -448,31 +439,11 @@ begin_function_decl
 name|void
 name|smp_masked_invltlb
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|mask
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STOP_NMI
-end_ifdef
-
-begin_function_decl
-name|int
-name|ipi_nmi_handler
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

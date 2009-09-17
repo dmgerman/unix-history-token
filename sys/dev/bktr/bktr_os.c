@@ -2281,7 +2281,7 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IRQ
+name|SYS_RES_MEMORY
 argument_list|,
 name|bktr
 operator|->

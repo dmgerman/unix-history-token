@@ -128,12 +128,6 @@ directive|include
 file|<sys/jail.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vimage.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -161,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -307,12 +307,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_offload.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/vinet.h>
 end_include
 
 begin_comment
@@ -640,18 +634,6 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
@@ -700,7 +682,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 condition|)
@@ -710,7 +692,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 condition|)
@@ -759,7 +741,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|||
@@ -811,13 +793,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -906,13 +881,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -1022,7 +990,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -1115,13 +1083,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -1227,7 +1188,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -1428,13 +1389,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -1487,7 +1441,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -1638,13 +1592,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -1697,7 +1644,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -1879,13 +1826,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -2020,7 +1960,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -2129,13 +2069,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -2241,7 +2174,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -2510,13 +2443,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -2569,7 +2495,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -2648,13 +2574,6 @@ modifier|*
 name|nam
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -2731,7 +2650,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -2914,7 +2833,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -3060,13 +2979,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -3119,7 +3031,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -3156,6 +3068,17 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|inp
+operator|->
+name|inp_flags
+operator|&
+name|INP_DROPPED
+operator|)
+condition|)
 name|error
 operator|=
 name|tcp_output_disconnect
@@ -3253,7 +3176,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -3343,13 +3266,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -3436,7 +3352,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -3675,9 +3591,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|tp
-operator|!=
-name|NULL
+operator|!
+operator|(
+name|inp
+operator|->
+name|inp_flags
+operator|&
+name|INP_DROPPED
+operator|)
 condition|)
 block|{
 if|if
@@ -3977,13 +3898,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -4047,7 +3961,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -4056,7 +3970,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4091,7 +4005,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4115,7 +4029,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator||=
 name|INP_SOCKREF
 expr_stmt|;
@@ -4149,13 +4063,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -4219,7 +4126,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_TIMEWAIT
 operator|)
@@ -4228,7 +4135,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4261,7 +4168,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -4285,7 +4192,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator||=
 name|INP_SOCKREF
 expr_stmt|;
@@ -4373,7 +4280,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -4771,13 +4678,6 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|in_addr
 name|laddr
@@ -4941,10 +4841,10 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_connattempt
-operator|++
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -5037,13 +4937,6 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -5058,7 +4951,6 @@ name|nam
 decl_stmt|;
 name|struct
 name|in6_addr
-modifier|*
 name|addr6
 decl_stmt|;
 name|int
@@ -5155,6 +5047,7 @@ operator|->
 name|in6p_laddr
 argument_list|)
 condition|?
+operator|&
 name|addr6
 else|:
 operator|&
@@ -5192,7 +5085,6 @@ name|inp
 operator|->
 name|in6p_laddr
 operator|=
-operator|*
 name|addr6
 expr_stmt|;
 name|inp
@@ -5263,11 +5155,7 @@ operator|->
 name|request_r_scale
 operator|)
 operator|<
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
+name|sb_max
 condition|)
 name|tp
 operator|->
@@ -5279,10 +5167,10 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|V_tcpstat
-operator|.
+name|TCPSTAT_INC
+argument_list|(
 name|tcps_connattempt
-operator|++
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -5597,7 +5485,7 @@ name|INP_WLOCK_RECHECK
 parameter_list|(
 name|inp
 parameter_list|)
-value|do {					\ 	INP_WLOCK(inp);							\ 	if (inp->inp_vflag& (INP_TIMEWAIT | INP_DROPPED)) {		\ 		INP_WUNLOCK(inp);					\ 		return (ECONNRESET);					\ 	}								\ 	tp = intotcpcb(inp);						\ } while(0)
+value|do {					\ 	INP_WLOCK(inp);							\ 	if (inp->inp_flags& (INP_TIMEWAIT | INP_DROPPED)) {		\ 		INP_WUNLOCK(inp);					\ 		return (ECONNRESET);					\ 	}								\ 	tp = intotcpcb(inp);						\ } while(0)
 end_define
 
 begin_function
@@ -5615,13 +5503,6 @@ modifier|*
 name|sopt
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -5741,7 +5622,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 operator|(
 name|INP_TIMEWAIT
@@ -6429,13 +6310,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|tcpcb
 modifier|*
@@ -6675,18 +6549,6 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
@@ -6792,7 +6654,7 @@ operator|!
 operator|(
 name|inp
 operator|->
-name|inp_vflag
+name|inp_flags
 operator|&
 name|INP_DROPPED
 operator|)
@@ -6821,20 +6683,6 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|INIT_VNET_INET
-argument_list|(
-name|tp
-operator|->
-name|t_inpcb
-operator|->
-name|inp_vnet
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
@@ -8095,7 +7943,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_maxopd: %u   t_rcvtime: %lu   t_startime: %lu\n"
+literal|"t_maxopd: %u   t_rcvtime: %u   t_startime: %u\n"
 argument_list|,
 name|tp
 operator|->
@@ -8117,7 +7965,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_rttime: %d   t_rtsq: 0x%08x   t_bw_rtttime: %d\n"
+literal|"t_rttime: %u   t_rtsq: 0x%08x   t_bw_rtttime: %u\n"
 argument_list|,
 name|tp
 operator|->
@@ -8267,7 +8115,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"ts_recent: %u   ts_recent_age: %lu\n"
+literal|"ts_recent: %u   ts_recent_age: %u\n"
 argument_list|,
 name|tp
 operator|->
@@ -8309,7 +8157,7 @@ expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"snd_ssthresh_prev: %lu   snd_recover_prev: 0x%08x   "
-literal|"t_badrxtwin: %lu\n"
+literal|"t_badrxtwin: %u\n"
 argument_list|,
 name|tp
 operator|->

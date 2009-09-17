@@ -242,7 +242,7 @@ block|{
 name|u_int
 name|result
 decl_stmt|;
-asm|__asm __volatile("bsfl %1,%0" : "=r" (result) : "rm" (mask));
+asm|__asm("bsfl %1,%0" : "=r" (result) : "rm" (mask) : "cc");
 return|return
 operator|(
 name|result
@@ -264,12 +264,26 @@ block|{
 name|u_int
 name|result
 decl_stmt|;
-asm|__asm __volatile("bsrl %1,%0" : "=r" (result) : "rm" (mask));
+asm|__asm("bsrl %1,%0" : "=r" (result) : "rm" (mask) : "cc");
 return|return
 operator|(
 name|result
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|clflush
+parameter_list|(
+name|u_long
+name|addr
+parameter_list|)
+block|{
+asm|__asm __volatile("clflush %0" : : "m" (*(char *)addr));
 block|}
 end_function
 
@@ -494,6 +508,19 @@ asm|__asm __volatile("mwait;" : :"a" (hints), "c" (extensions));
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|mfence
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("mfence" : : : "memory");
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -605,82 +632,11 @@ asm|__asm __volatile("hlt");
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GNUCLIKE_BUILTIN_CONSTANT_P
-argument_list|)
-operator|||
-name|__GNUCLIKE_ASM
-operator|<
-literal|3
-end_if
-
-begin_define
-define|#
-directive|define
-name|inb
-parameter_list|(
-name|port
-parameter_list|)
-value|inbv(port)
-end_define
-
-begin_define
-define|#
-directive|define
-name|outb
-parameter_list|(
-name|port
-parameter_list|,
-name|data
-parameter_list|)
-value|outbv(port, data)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __GNUCLIKE_BUILTIN_CONSTANT_P&& __GNUCLIKE_ASM>= 3 */
-end_comment
-
-begin_comment
-comment|/*  * The following complications are to get around gcc not having a  * constraint letter for the range 0..255.  We still put "d" in the  * constraint because "i" isn't a valid constraint when the port  * isn't constant.  This only matters for -O0 because otherwise  * the non-working version gets optimized away.  *   * Use an expression-statement instead of a conditional expression  * because gcc-2.6.0 would promote the operands of the conditional  * and produce poor code for "if ((inb(var)& const1) == const2)".  *  * The unnecessary test `(port)< 0x10000' is to generate a warning if  * the `port' has type u_short or smaller.  Such types are pessimal.  * This actually only works for signed types.  The range check is  * careful to avoid generating warnings.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|inb
-parameter_list|(
-name|port
-parameter_list|)
-value|__extension__ ({					\ 	u_char	_data;							\ 	if (__builtin_constant_p(port)&& ((port)& 0xffff)< 0x100	\&& (port)< 0x10000)					\ 		_data = inbc(port);					\ 	else								\ 		_data = inbv(port);					\ 	_data; })
-end_define
-
-begin_define
-define|#
-directive|define
-name|outb
-parameter_list|(
-name|port
-parameter_list|,
-name|data
-parameter_list|)
-value|(						\ 	__builtin_constant_p(port)&& ((port)& 0xffff)< 0x100		\&& (port)< 0x10000						\ 	? outbc(port, data) : outbv(port, data))
-end_define
-
 begin_function
 specifier|static
 name|__inline
 name|u_char
-name|inbc
+name|inb
 parameter_list|(
 name|u_int
 name|port
@@ -689,56 +645,7 @@ block|{
 name|u_char
 name|data
 decl_stmt|;
-asm|__asm __volatile("inb %1,%0" : "=a" (data) : "id" ((u_short)(port)));
-return|return
-operator|(
-name|data
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|outbc
-parameter_list|(
-name|u_int
-name|port
-parameter_list|,
-name|u_char
-name|data
-parameter_list|)
-block|{
-asm|__asm __volatile("outb %0,%1" : : "a" (data), "id" ((u_short)(port)));
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __GNUCLIKE_BUILTIN_CONSTANT_P&& __GNUCLIKE_ASM>= 3*/
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|u_char
-name|inbv
-parameter_list|(
-name|u_int
-name|port
-parameter_list|)
-block|{
-name|u_char
-name|data
-decl_stmt|;
-comment|/* 	 * We use %%dx and not %1 here because i/o is done at %dx and not at 	 * %edx, while gcc generates inferior code (movw instead of movl) 	 * if we tell it to load (u_short) port. 	 */
-asm|__asm __volatile("inb %%dx,%0" : "=a" (data) : "d" (port));
+asm|__asm volatile("inb %w1, %0" : "=a" (data) : "Nd" (port));
 return|return
 operator|(
 name|data
@@ -760,7 +667,7 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
-asm|__asm __volatile("inl %%dx,%0" : "=a" (data) : "d" (port));
+asm|__asm volatile("inl %w1, %0" : "=a" (data) : "Nd" (port));
 return|return
 operator|(
 name|data
@@ -912,7 +819,7 @@ block|{
 name|u_short
 name|data
 decl_stmt|;
-asm|__asm __volatile("inw %%dx,%0" : "=a" (data) : "d" (port));
+asm|__asm volatile("inw %w1, %0" : "=a" (data) : "Nd" (port));
 return|return
 operator|(
 name|data
@@ -925,7 +832,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|outbv
+name|outb
 parameter_list|(
 name|u_int
 name|port
@@ -934,15 +841,7 @@ name|u_char
 name|data
 parameter_list|)
 block|{
-name|u_char
-name|al
-decl_stmt|;
-comment|/* 	 * Use an unnecessary assignment to help gcc's register allocator. 	 * This make a large difference for gcc-1.40 and a tiny difference 	 * for gcc-2.6.0.  For gcc-1.40, al had to be ``asm("ax")'' for 	 * best results.  gcc-2.6.0 can't handle this. 	 */
-name|al
-operator|=
-name|data
-expr_stmt|;
-asm|__asm __volatile("outb %0,%%dx" : : "a" (al), "d" (port));
+asm|__asm __volatile("outb %0, %w1" : : "a" (data), "Nd" (port));
 block|}
 end_function
 
@@ -959,8 +858,7 @@ name|u_int
 name|data
 parameter_list|)
 block|{
-comment|/* 	 * outl() and outw() aren't used much so we haven't looked at 	 * possible micro-optimizations such as the unnecessary 	 * assignment for them. 	 */
-asm|__asm __volatile("outl %0,%%dx" : : "a" (data), "d" (port));
+asm|__asm volatile("outl %0, %w1" : : "a" (data), "Nd" (port));
 block|}
 end_function
 
@@ -1091,7 +989,7 @@ name|u_short
 name|data
 parameter_list|)
 block|{
-asm|__asm __volatile("outw %0,%%dx" : : "a" (data), "d" (port));
+asm|__asm volatile("outw %0, %w1" : : "a" (data), "Nd" (port));
 block|}
 end_function
 
@@ -1951,6 +1849,62 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|u_char
+name|read_cyrix_reg
+parameter_list|(
+name|u_char
+name|reg
+parameter_list|)
+block|{
+name|outb
+argument_list|(
+literal|0x22
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+return|return
+name|inb
+argument_list|(
+literal|0x23
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|write_cyrix_reg
+parameter_list|(
+name|u_char
+name|reg
+parameter_list|,
+name|u_char
+name|data
+parameter_list|)
+block|{
+name|outb
+argument_list|(
+literal|0x22
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+literal|0x23
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|register_t
 name|intr_disable
 parameter_list|(
@@ -2627,6 +2581,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_char
+name|read_cyrix_reg
+parameter_list|(
+name|u_char
+name|reg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|read_eflags
 parameter_list|(
@@ -2694,6 +2658,19 @@ name|void
 name|wbinvd
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|write_cyrix_reg
+parameter_list|(
+name|u_char
+name|reg
+parameter_list|,
+name|u_char
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl

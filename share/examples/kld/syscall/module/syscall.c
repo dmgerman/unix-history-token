@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -76,7 +70,9 @@ literal|"hello kernel\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -176,7 +172,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

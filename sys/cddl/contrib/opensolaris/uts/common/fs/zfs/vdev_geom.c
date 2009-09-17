@@ -929,6 +929,23 @@ name|bio
 modifier|*
 name|bp
 decl_stmt|;
+name|thread_lock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|sched_prio
+argument_list|(
+name|curthread
+argument_list|,
+name|PRIBIO
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|ctx
 operator|=
 name|arg
@@ -995,10 +1012,8 @@ operator|->
 name|gc_queue_mtx
 argument_list|)
 expr_stmt|;
-name|kproc_exit
-argument_list|(
-literal|0
-argument_list|)
+name|kthread_exit
+argument_list|()
 expr_stmt|;
 block|}
 name|msleep
@@ -2635,11 +2650,14 @@ name|cp
 operator|->
 name|provider
 expr_stmt|;
-name|kproc_create
+name|kproc_kthread_add
 argument_list|(
 name|vdev_geom_worker
 argument_list|,
 name|ctx
+argument_list|,
+operator|&
+name|zfsproc
 argument_list|,
 name|NULL
 argument_list|,
@@ -2647,7 +2665,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"vdev:worker %s"
+literal|"zfskern"
+argument_list|,
+literal|"vdev %s"
 argument_list|,
 name|pp
 operator|->

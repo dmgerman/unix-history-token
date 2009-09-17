@@ -1227,7 +1227,7 @@ name|IFF_ALLMULTI
 expr_stmt|;
 endif|#
 directive|endif
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|PDQ_IFNET
 argument_list|(
@@ -1374,7 +1374,7 @@ name|num_addrs
 operator|--
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|PDQ_IFNET
 argument_list|(

@@ -120,7 +120,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*-  * Macros for type conversion:  * mtod(m, t)	-- Convert mbuf pointer to data pointer of correct type.  * dtom(x)	-- Convert data pointer within mbuf to mbuf pointer (XXX).  */
+comment|/*-  * Macro for type conversion: convert mbuf pointer to data pointer of correct  * type:  *  * mtod(m, t)	-- Convert mbuf pointer to data pointer of correct type.  */
 end_comment
 
 begin_define
@@ -133,16 +133,6 @@ parameter_list|,
 name|t
 parameter_list|)
 value|((t)((m)->m_data))
-end_define
-
-begin_define
-define|#
-directive|define
-name|dtom
-parameter_list|(
-name|x
-parameter_list|)
-value|((struct mbuf *)((intptr_t)(x)& ~(MSIZE-1)))
 end_define
 
 begin_comment
@@ -337,10 +327,19 @@ name|u_int16_t
 name|tso_segsz
 decl_stmt|;
 comment|/* TSO segment size */
+union|union
+block|{
 name|u_int16_t
-name|ether_vtag
+name|vt_vtag
 decl_stmt|;
 comment|/* Ethernet 802.1p+q vlan tag */
+name|u_int16_t
+name|vt_nrecs
+decl_stmt|;
+comment|/* # of IGMPv3 records in this chain */
+block|}
+name|PH_vt
+union|;
 name|SLIST_HEAD
 argument_list|(
 argument|packet_tags
@@ -353,6 +352,13 @@ comment|/* list of packet tags */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ether_vtag
+value|PH_vt.vt_vtag
+end_define
 
 begin_comment
 comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  */
@@ -783,6 +789,17 @@ end_define
 
 begin_comment
 comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FLOWID
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* flowid is valid */
 end_comment
 
 begin_comment
@@ -1560,6 +1577,35 @@ begin_comment
 comment|/* XXX */
 end_comment
 
+begin_function_decl
+specifier|static
+name|__inline
+name|int
+name|m_init
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|int
+name|how
+parameter_list|,
+name|short
+name|type
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 specifier|static
 name|__inline
@@ -1657,6 +1703,21 @@ name|m
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|int
+name|m_pkthdr_init
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|how
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -1817,6 +1878,114 @@ block|}
 return|return
 operator|(
 name|zone
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Initialize an mbuf with linear storage.  *  * Inline because the consumer text overhead will be roughly the same to  * initialize or call a function with this many parameters and M_PKTHDR  * should go away with constant propagation for !MGETHDR.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|m_init
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|int
+name|how
+parameter_list|,
+name|short
+name|type
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|m
+operator|->
+name|m_next
+operator|=
+name|NULL
+expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
+name|m
+operator|->
+name|m_data
+operator|=
+name|m
+operator|->
+name|m_dat
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|=
+name|flags
+expr_stmt|;
+name|m
+operator|->
+name|m_type
+operator|=
+name|type
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|M_PKTHDR
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|m_pkthdr_init
+argument_list|(
+name|m
+argument_list|,
+name|how
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -3489,6 +3658,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|m_mbuftouio
+parameter_list|(
+name|struct
+name|uio
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|m_move_pkthdr
 parameter_list|(
@@ -3906,6 +4092,17 @@ end_define
 
 begin_comment
 comment|/* CARP info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_NAT_T_PORTS
+value|29
+end_define
+
+begin_comment
+comment|/* two uint16_t */
 end_comment
 
 begin_comment

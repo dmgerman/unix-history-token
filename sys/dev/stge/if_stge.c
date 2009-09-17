@@ -727,7 +727,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|stge_rxeof
 parameter_list|(
 name|struct
@@ -1010,7 +1010,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|stge_poll
 parameter_list|(
 name|struct
@@ -8414,7 +8414,7 @@ end_comment
 
 begin_function
 unit|static
-name|void
+name|int
 name|stge_rxeof
 parameter_list|(
 name|struct
@@ -8451,11 +8451,17 @@ name|int
 name|cons
 decl_stmt|,
 name|prog
+decl_stmt|,
+name|rx_npkts
 decl_stmt|;
 name|STGE_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|rx_npkts
+operator|=
+literal|0
 expr_stmt|;
 name|ifp
 operator|=
@@ -9092,6 +9098,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 name|STGE_RXCHAIN_RESET
 argument_list|(
 name|sc
@@ -9135,6 +9144,11 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -9146,7 +9160,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|stge_poll
 parameter_list|(
 name|struct
@@ -9170,6 +9184,13 @@ decl_stmt|;
 name|uint16_t
 name|status
 decl_stmt|;
+name|int
+name|rx_npkts
+decl_stmt|;
+name|rx_npkts
+operator|=
+literal|0
+expr_stmt|;
 name|sc
 operator|=
 name|ifp
@@ -9199,7 +9220,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 name|sc
 operator|->
@@ -9209,6 +9234,8 @@ name|stge_rxcycles
 operator|=
 name|count
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|stge_rxeof
 argument_list|(
 name|sc
@@ -9323,6 +9350,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -12464,7 +12496,7 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|sc
 operator|->
@@ -12535,7 +12567,7 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)

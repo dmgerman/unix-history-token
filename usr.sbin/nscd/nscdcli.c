@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/event.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/event.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -268,10 +268,17 @@ name|connection
 operator|->
 name|sockfd
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|data
 operator|+
 name|result
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|eventlist
 operator|.
 name|data
@@ -280,6 +287,9 @@ name|data_size
 operator|-
 name|result
 condition|?
+operator|(
+name|size_t
+operator|)
 name|eventlist
 operator|.
 name|data
@@ -461,10 +471,17 @@ name|connection
 operator|->
 name|sockfd
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|data
 operator|+
 name|result
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|eventlist
 operator|.
 name|data
@@ -473,6 +490,9 @@ name|data_size
 operator|-
 name|result
 condition|?
+operator|(
+name|size_t
+operator|)
 name|eventlist
 operator|.
 name|data
@@ -1023,8 +1043,8 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|nscd_connection_
+operator|*
+name|retval
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -140,13 +140,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_fs.h>
+file|<gnu/fs/ext2fs/ext2_fs_sb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_fs_sb.h>
+file|<gnu/fs/ext2fs/ext2_fs.h>
 end_include
 
 begin_function_decl
@@ -350,20 +350,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|bsd_malloc
-value|malloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|bsd_free
-value|free
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -455,20 +441,11 @@ specifier|static
 name|int
 name|ext2_mount
 parameter_list|(
-name|mp
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vfsoptlist
@@ -481,6 +458,11 @@ modifier|*
 name|devvp
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
 name|ext2mount
 modifier|*
 name|ump
@@ -491,6 +473,19 @@ name|struct
 name|ext2_sb_info
 modifier|*
 name|fs
+decl_stmt|;
+name|struct
+name|nameidata
+name|nd
+decl_stmt|,
+modifier|*
+name|ndp
+init|=
+operator|&
+name|nd
+decl_stmt|;
+name|accmode_t
+name|accmode
 decl_stmt|;
 name|char
 modifier|*
@@ -506,19 +501,10 @@ name|flags
 decl_stmt|,
 name|len
 decl_stmt|;
-name|accmode_t
-name|accmode
-decl_stmt|;
-name|struct
-name|nameidata
-name|nd
-decl_stmt|,
-modifier|*
-name|ndp
-init|=
-operator|&
-name|nd
-decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|opts
 operator|=
 name|mp
@@ -670,8 +656,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1372,7 +1356,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * checks that the data in the descriptor blocks make sense  * this is taken from ext2/super.c  */
+comment|/*  * Checks that the data in the descriptor blocks make sense  * this is taken from ext2/super.c.  */
 end_comment
 
 begin_function
@@ -1386,13 +1370,12 @@ modifier|*
 name|sb
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|int
-name|desc_block
+name|struct
+name|ext2_group_desc
+modifier|*
+name|gdp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|unsigned
 name|long
@@ -1404,14 +1387,14 @@ name|s_es
 operator|->
 name|s_first_data_block
 decl_stmt|;
-name|struct
-name|ext2_group_desc
-modifier|*
-name|gdp
+name|int
+name|desc_block
 init|=
-name|NULL
+literal|0
 decl_stmt|;
-comment|/* ext2_debug ("Checking group descriptors"); */
+name|int
+name|i
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -1497,7 +1480,9 @@ name|bg_block_bitmap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1538,7 +1523,9 @@ name|bg_inode_bitmap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1583,7 +1570,9 @@ name|bg_inode_table
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|block
@@ -1598,7 +1587,9 @@ operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1608,25 +1599,19 @@ specifier|static
 name|int
 name|ext2_check_sb_compat
 parameter_list|(
-name|es
-parameter_list|,
-name|dev
-parameter_list|,
-name|ronly
-parameter_list|)
 name|struct
 name|ext2_super_block
 modifier|*
 name|es
-decl_stmt|;
+parameter_list|,
 name|struct
 name|cdev
 modifier|*
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|ronly
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1711,7 +1696,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: R/W mount of %s denied due to unsupported optional features\n"
+literal|"WARNING: R/W mount of %s denied due to "
+literal|"unsupported optional features\n"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -1735,7 +1721,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * this computes the fields of the  ext2_sb_info structure from the  * data in the ext2_super_block structure read in  */
+comment|/*  * This computes the fields of the  ext2_sb_info structure from the  * data in the ext2_super_block structure read in.  */
 end_comment
 
 begin_function
@@ -1743,27 +1729,21 @@ specifier|static
 name|int
 name|compute_sb_data
 parameter_list|(
-name|devvp
-parameter_list|,
-name|es
-parameter_list|,
-name|fs
-parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|devvp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ext2_super_block
 modifier|*
 name|es
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ext2_sb_info
 modifier|*
 name|fs
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|db_count
@@ -1781,26 +1761,6 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* XXX for now */
-if|#
-directive|if
-literal|1
-define|#
-directive|define
-name|V
-parameter_list|(
-name|v
-parameter_list|)
-else|#
-directive|else
-define|#
-directive|define
-name|V
-parameter_list|(
-name|v
-parameter_list|)
-value|printf(#v"= %lu\n", (unsigned long)fs->v);
-endif|#
-directive|endif
 name|fs
 operator|->
 name|s_blocksize
@@ -1811,10 +1771,6 @@ name|es
 operator|->
 name|s_log_block_size
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_blocksize
-argument_list|)
 name|fs
 operator|->
 name|s_bshift
@@ -1825,10 +1781,6 @@ name|es
 operator|->
 name|s_log_block_size
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_bshift
-argument_list|)
 name|fs
 operator|->
 name|s_fsbtodb
@@ -1839,10 +1791,6 @@ name|s_log_block_size
 operator|+
 literal|1
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_fsbtodb
-argument_list|)
 name|fs
 operator|->
 name|s_qbmask
@@ -1853,23 +1801,16 @@ name|s_blocksize
 operator|-
 literal|1
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_qbmask
-argument_list|)
 name|fs
 operator|->
 name|s_blocksize_bits
 operator|=
-name|EXT2_BLOCK_SIZE_BITS
-argument_list|(
 name|es
-argument_list|)
+operator|->
+name|s_log_block_size
+operator|+
+literal|10
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_blocksize_bits
-argument_list|)
 name|fs
 operator|->
 name|s_frag_size
@@ -1880,10 +1821,6 @@ name|es
 operator|->
 name|s_log_frag_size
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_frag_size
-argument_list|)
 if|if
 condition|(
 name|fs
@@ -1902,10 +1839,6 @@ name|fs
 operator|->
 name|s_frag_size
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_frags_per_block
-argument_list|)
 name|fs
 operator|->
 name|s_blocks_per_group
@@ -1914,10 +1847,6 @@ name|es
 operator|->
 name|s_blocks_per_group
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_blocks_per_group
-argument_list|)
 name|fs
 operator|->
 name|s_frags_per_group
@@ -1926,10 +1855,6 @@ name|es
 operator|->
 name|s_frags_per_group
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_frags_per_group
-argument_list|)
 name|fs
 operator|->
 name|s_inodes_per_group
@@ -1938,35 +1863,96 @@ name|es
 operator|->
 name|s_inodes_per_group
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_inodes_per_group
-argument_list|)
+if|if
+condition|(
+name|es
+operator|->
+name|s_rev_level
+operator|==
+name|EXT2_GOOD_OLD_REV
+condition|)
+block|{
+name|fs
+operator|->
+name|s_first_ino
+operator|=
+name|EXT2_GOOD_OLD_FIRST_INO
+expr_stmt|;
 name|fs
 operator|->
 name|s_inode_size
 operator|=
-name|es
-operator|->
-name|s_inode_size
+name|EXT2_GOOD_OLD_INODE_SIZE
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_inode_size
-argument_list|)
+block|}
+else|else
+block|{
 name|fs
 operator|->
-name|s_first_inode
+name|s_first_ino
 operator|=
 name|es
 operator|->
 name|s_first_ino
 expr_stmt|;
-name|V
+name|fs
+operator|->
+name|s_inode_size
+operator|=
+name|es
+operator|->
+name|s_inode_size
+expr_stmt|;
+comment|/* 		 * Simple sanity check for superblock inode size value. 		 */
+if|if
+condition|(
+name|fs
+operator|->
+name|s_inode_size
+operator|<
+name|EXT2_GOOD_OLD_INODE_SIZE
+operator|||
+name|fs
+operator|->
+name|s_inode_size
+operator|>
+name|fs
+operator|->
+name|s_blocksize
+operator|||
+operator|(
+name|fs
+operator|->
+name|s_inode_size
+operator|&
+operator|(
+name|fs
+operator|->
+name|s_inode_size
+operator|-
+literal|1
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
 argument_list|(
-name|s_first_inode
+literal|"EXT2-fs: invalid inode size %d\n"
+argument_list|,
+name|fs
+operator|->
+name|s_inode_size
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
+block|}
 name|fs
 operator|->
 name|s_inodes_per_block
@@ -1980,10 +1966,6 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_inodes_per_block
-argument_list|)
 name|fs
 operator|->
 name|s_itb_per_group
@@ -1996,10 +1978,6 @@ name|fs
 operator|->
 name|s_inodes_per_block
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_itb_per_group
-argument_list|)
 name|fs
 operator|->
 name|s_desc_per_block
@@ -2014,10 +1992,6 @@ expr|struct
 name|ext2_group_desc
 argument_list|)
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_desc_per_block
-argument_list|)
 comment|/* s_resuid / s_resgid ? */
 name|fs
 operator|->
@@ -2045,10 +2019,6 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_groups_count
-argument_list|)
 name|db_count
 operator|=
 operator|(
@@ -2071,19 +2041,15 @@ argument_list|)
 expr_stmt|;
 name|fs
 operator|->
-name|s_db_per_group
+name|s_gdb_count
 operator|=
 name|db_count
 expr_stmt|;
-name|V
-argument_list|(
-argument|s_db_per_group
-argument_list|)
 name|fs
 operator|->
 name|s_group_desc
 operator|=
-name|bsd_malloc
+name|malloc
 argument_list|(
 name|db_count
 operator|*
@@ -2099,7 +2065,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* adjust logic_sb_block */
+comment|/* 	 * Adjust logic_sb_block. 	 * Godmar thinks: if the blocksize is greater than 1024, then 	 * the superblock is logically part of block zero. 	 */
 if|if
 condition|(
 name|fs
@@ -2108,7 +2074,6 @@ name|s_blocksize
 operator|>
 name|SBSIZE
 condition|)
-comment|/* Godmar thinks: if the blocksize is greater than 1024, then 	   the superblock is logically part of block zero. 	 */
 name|logic_sb_block
 operator|=
 literal|0
@@ -2187,7 +2152,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|bsd_free
+name|free
 argument_list|(
 name|fs
 operator|->
@@ -2198,13 +2163,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"EXT2-fs: unable to read group descriptors (%d)\n"
+literal|"EXT2-fs: unable to read group descriptors"
+literal|" (%d)\n"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 name|LCK_BUF
@@ -2238,7 +2206,7 @@ name|ULCK_BUF
 argument_list|(
 argument|fs->s_group_desc[j]
 argument_list|)
-name|bsd_free
+name|free
 argument_list|(
 name|fs
 operator|->
@@ -2254,7 +2222,9 @@ literal|"unable to read group descriptors\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 for|for
@@ -2352,7 +2322,9 @@ operator|=
 literal|0x7fffffffffffffff
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2591,7 +2563,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 ifdef|#
@@ -2846,7 +2820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common code for mount and mountroot  */
+comment|/*  * Common code for mount and mountroot.  */
 end_comment
 
 begin_function
@@ -2854,20 +2828,16 @@ specifier|static
 name|int
 name|ext2_mountfs
 parameter_list|(
-name|devvp
-parameter_list|,
-name|mp
-parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|devvp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ext2mount
@@ -3205,7 +3175,7 @@ block|}
 block|}
 name|ump
 operator|=
-name|bsd_malloc
+name|malloc
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -3228,12 +3198,12 @@ expr|*
 name|ump
 argument_list|)
 expr_stmt|;
-comment|/* I don't know whether this is the right strategy. Note that 	   we dynamically allocate both an ext2_sb_info and an ext2_super_block 	   while Linux keeps the super block in a locked buffer 	 */
+comment|/* 	 * I don't know whether this is the right strategy. Note that 	 * we dynamically allocate both an ext2_sb_info and an ext2_super_block 	 * while Linux keeps the super block in a locked buffer. 	 */
 name|ump
 operator|->
 name|um_e2fs
 operator|=
-name|bsd_malloc
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3252,7 +3222,7 @@ name|um_e2fs
 operator|->
 name|s_es
 operator|=
-name|bsd_malloc
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3332,7 +3302,7 @@ operator|=
 name|ronly
 expr_stmt|;
 comment|/* ronly is set according to mnt_flags */
-comment|/* if the fs is not mounted read-only, make sure the super block is 	   always written back on a sync() 	 */
+comment|/* 	 * If the fs is not mounted read-only, make sure the super block is 	 * always written back on a sync(). 	 */
 name|fs
 operator|->
 name|s_wasvalid
@@ -3468,7 +3438,7 @@ name|um_cp
 operator|=
 name|cp
 expr_stmt|;
-comment|/* setting those two parameters allowed us to use 	   ufs_bmap w/o changse ! 	*/
+comment|/* 	 * Setting those two parameters allowed us to use 	 * ufs_bmap w/o changse! 	 */
 name|ump
 operator|->
 name|um_nindir
@@ -3558,7 +3528,7 @@ condition|(
 name|ump
 condition|)
 block|{
-name|bsd_free
+name|free
 argument_list|(
 name|ump
 operator|->
@@ -3569,7 +3539,7 @@ argument_list|,
 name|M_EXT2MNT
 argument_list|)
 expr_stmt|;
-name|bsd_free
+name|free
 argument_list|(
 name|ump
 operator|->
@@ -3578,7 +3548,7 @@ argument_list|,
 name|M_EXT2MNT
 argument_list|)
 expr_stmt|;
-name|bsd_free
+name|free
 argument_list|(
 name|ump
 argument_list|,
@@ -3601,7 +3571,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * unmount system call  */
+comment|/*  * Unmount system call.  */
 end_comment
 
 begin_function
@@ -3609,25 +3579,14 @@ specifier|static
 name|int
 name|ext2_unmount
 parameter_list|(
-name|mp
-parameter_list|,
-name|mntflags
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|int
 name|mntflags
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ext2mount
@@ -3688,7 +3647,7 @@ name|mp
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 operator|)
 operator|!=
@@ -3758,7 +3717,7 @@ name|i
 operator|<
 name|fs
 operator|->
-name|s_db_per_group
+name|s_gdb_count
 condition|;
 name|i
 operator|++
@@ -3767,7 +3726,7 @@ name|ULCK_BUF
 argument_list|(
 argument|fs->s_group_desc[i]
 argument_list|)
-name|bsd_free
+name|free
 argument_list|(
 name|fs
 operator|->
@@ -3855,7 +3814,7 @@ operator|->
 name|um_devvp
 argument_list|)
 expr_stmt|;
-name|bsd_free
+name|free
 argument_list|(
 name|fs
 operator|->
@@ -3864,14 +3823,14 @@ argument_list|,
 name|M_EXT2MNT
 argument_list|)
 expr_stmt|;
-name|bsd_free
+name|free
 argument_list|(
 name|fs
 argument_list|,
 name|M_EXT2MNT
 argument_list|)
 expr_stmt|;
-name|bsd_free
+name|free
 argument_list|(
 name|ump
 argument_list|,
@@ -3918,25 +3877,19 @@ specifier|static
 name|int
 name|ext2_flushfiles
 parameter_list|(
-name|mp
-parameter_list|,
-name|flags
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -3963,7 +3916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get file system statistics.  * taken from ext2/super.c ext2_statfs  */
+comment|/*  * Get file system statistics.  * taken from ext2/super.c ext2_statfs.  */
 end_comment
 
 begin_function
@@ -3971,32 +3924,17 @@ specifier|static
 name|int
 name|ext2_statfs
 parameter_list|(
-name|mp
-parameter_list|,
-name|sbp
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|statfs
 modifier|*
 name|sbp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
+parameter_list|)
 block|{
-name|unsigned
-name|long
-name|overhead
-decl_stmt|;
 name|struct
 name|ext2mount
 modifier|*
@@ -4011,6 +3949,10 @@ name|struct
 name|ext2_super_block
 modifier|*
 name|es
+decl_stmt|;
+name|unsigned
+name|long
+name|overhead
 decl_stmt|;
 name|int
 name|i
@@ -4110,7 +4052,7 @@ literal|1
 operator|+
 name|fs
 operator|->
-name|s_db_per_group
+name|s_gdb_count
 operator|)
 operator|+
 comment|/* Inode bitmap, block bitmap, and inode table: */
@@ -4209,25 +4151,14 @@ specifier|static
 name|int
 name|ext2_sync
 parameter_list|(
-name|mp
-parameter_list|,
-name|waitfor
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|int
 name|waitfor
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -4236,6 +4167,11 @@ name|mvp
 decl_stmt|,
 modifier|*
 name|vp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|struct
 name|inode
@@ -4264,6 +4200,10 @@ name|allerror
 init|=
 literal|0
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|fs
 operator|=
 name|ump
@@ -4610,31 +4550,23 @@ specifier|static
 name|int
 name|ext2_vget
 parameter_list|(
-name|mp
-parameter_list|,
-name|ino
-parameter_list|,
-name|flags
-parameter_list|,
-name|vpp
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|ino_t
 name|ino
-decl_stmt|;
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ext2_sb_info
@@ -4666,6 +4598,11 @@ name|cdev
 modifier|*
 name|dev
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -4673,11 +4610,6 @@ name|error
 decl_stmt|;
 name|int
 name|used_blocks
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 name|td
 operator|=
@@ -4895,12 +4827,6 @@ name|error
 operator|)
 return|;
 comment|/* Read in the disk contents for the inode, copy into the inode. */
-if|#
-directive|if
-literal|0
-block|printf("ext2_vget(%d) dbn= %lu ", ino, fsbtodb(fs, ino_to_fsba(fs, ino)));
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -5031,7 +4957,7 @@ name|i_prealloc_block
 operator|=
 literal|0
 expr_stmt|;
-comment|/* now we want to make sure that block pointers for unused            blocks are zeroed out - ext2_balloc depends on this 	   although for regular files and directories only 	*/
+comment|/* 	 * Now we want to make sure that block pointers for unused 	 * blocks are zeroed out - ext2_balloc depends on this 	 * although for regular files and directories only 	 */
 if|if
 condition|(
 name|S_ISDIR
@@ -5206,28 +5132,22 @@ specifier|static
 name|int
 name|ext2_fhtovp
 parameter_list|(
-name|mp
-parameter_list|,
-name|fhp
-parameter_list|,
-name|vpp
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|fid
 modifier|*
 name|fhp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|inode
@@ -5407,18 +5327,14 @@ specifier|static
 name|int
 name|ext2_sbupdate
 parameter_list|(
-name|mp
-parameter_list|,
-name|waitfor
-parameter_list|)
 name|struct
 name|ext2mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|int
 name|waitfor
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ext2_sb_info
@@ -5448,7 +5364,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* printf("\nupdating superblock, waitfor=%s\n", waitfor == MNT_WAIT ? "yes":"no"); */
 name|bp
 operator|=
 name|getblk
@@ -5508,7 +5423,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The buffers for group descriptors, inode bitmaps and block bitmaps 	 * are not busy at this point and are (hopefully) written by the 	 * usual sync mechanism. No need to write them here 		 */
+comment|/* 	 * The buffers for group descriptors, inode bitmaps and block bitmaps 	 * are not busy at this point and are (hopefully) written by the 	 * usual sync mechanism. No need to write them here. 	 */
 return|return
 operator|(
 name|error
@@ -5526,33 +5441,20 @@ specifier|static
 name|int
 name|ext2_root
 parameter_list|(
-name|mp
-parameter_list|,
-name|flags
-parameter_list|,
-name|vpp
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode

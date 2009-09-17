@@ -87,16 +87,44 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
+name|archive_read_support_compression_gzip
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|ARCHIVE_WARN
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"gzip reading not fully supported on this platform"
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_OK
+argument_list|,
+name|archive_read_finish
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_all
-argument_list|(
-name|a
-argument_list|)
+name|r
 argument_list|)
 expr_stmt|;
 name|assertEqualIntA
@@ -147,16 +175,6 @@ operator|++
 name|i
 control|)
 block|{
-name|r
-operator|=
-name|archive_read_next_header
-argument_list|(
-name|a
-argument_list|,
-operator|&
-name|ae
-argument_list|)
-expr_stmt|;
 name|failure
 argument_list|(
 literal|"Could not read file %d (%s) from %s"
@@ -177,7 +195,13 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|r
+name|archive_read_next_header
+argument_list|(
+name|a
+argument_list|,
+operator|&
+name|ae
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -235,6 +259,16 @@ argument_list|,
 name|ARCHIVE_COMPRESSION_GZIP
 argument_list|)
 expr_stmt|;
+name|assertEqualString
+argument_list|(
+name|archive_compression_name
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
+literal|"gzip"
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 name|archive_format
@@ -255,18 +289,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_read_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
@@ -277,8 +299,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -293,7 +313,11 @@ begin_block
 block|{
 comment|/* This sample has been 'split', each piece compressed separately, 	 * then concatenated.  Gunzip will emit the concatenated result. */
 comment|/* Not supported in libarchive 2.6 and earlier */
-comment|/* verify("test_compat_gzip_1.tgz"); */
+name|verify
+argument_list|(
+literal|"test_compat_gzip_1.tgz"
+argument_list|)
+expr_stmt|;
 comment|/* This sample has been compressed as a single stream, but then 	 * some unrelated garbage text has been appended to the end. */
 name|verify
 argument_list|(

@@ -43,11 +43,13 @@ name|strlcat
 parameter_list|(
 name|char
 modifier|*
+name|__restrict
 name|dst
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|src
 parameter_list|,
 name|size_t

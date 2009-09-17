@@ -261,6 +261,12 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/xen/xen_clock_util.h>
+end_include
+
 begin_comment
 comment|/*  * 32-bit time_t's can't reach leap years before 1904 or after 2036, so we  * can use a simple formula for leap years.  */
 end_comment
@@ -414,12 +420,6 @@ name|int
 name|psdiv
 init|=
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|statclock_disable
 decl_stmt|;
 end_decl_stmt
 
@@ -810,6 +810,36 @@ name|wc_version
 operator|)
 condition|)
 do|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|add_uptime_to_wallclock
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|timespec
+name|ut
+decl_stmt|;
+name|xen_fetch_uptime
+argument_list|(
+operator|&
+name|ut
+argument_list|)
+expr_stmt|;
+name|timespecadd
+argument_list|(
+operator|&
+name|shadow_tv
+argument_list|,
+operator|&
+name|ut
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1252,7 +1282,15 @@ operator|->
 name|wc_version
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"[XEN] hypervisor wallclock nudged; nudging TOD.\n"
+argument_list|)
+expr_stmt|;
 name|update_wallclock
+argument_list|()
+expr_stmt|;
+name|add_uptime_to_wallclock
 argument_list|()
 expr_stmt|;
 name|tc_setclock
@@ -1868,6 +1906,9 @@ decl_stmt|;
 name|update_wallclock
 argument_list|()
 expr_stmt|;
+name|add_uptime_to_wallclock
+argument_list|()
+expr_stmt|;
 name|RTC_LOCK
 expr_stmt|;
 if|if
@@ -2071,6 +2112,9 @@ name|op
 argument_list|)
 expr_stmt|;
 name|update_wallclock
+argument_list|()
+expr_stmt|;
+name|add_uptime_to_wallclock
 argument_list|()
 expr_stmt|;
 block|}

@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -404,10 +398,8 @@ decl_stmt|,
 modifier|*
 name|sdp
 decl_stmt|;
-name|AUDIT_ARG
+name|AUDIT_ARG_CMD
 argument_list|(
-name|cmd
-argument_list|,
 name|uap
 operator|->
 name|op

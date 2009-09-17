@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1630,17 +1624,6 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
-name|VOP_LEASE
-argument_list|(
-name|acct_vp
-argument_list|,
-name|td
-argument_list|,
-name|acct_cred
-argument_list|,
-name|LEASE_WRITE
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|vn_rdwr
@@ -1675,11 +1658,7 @@ name|acct_cred
 argument_list|,
 name|NOCRED
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -2260,8 +2239,6 @@ name|v_mount
 argument_list|,
 operator|&
 name|sb
-argument_list|,
-name|curthread
 argument_list|)
 operator|<
 literal|0

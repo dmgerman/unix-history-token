@@ -9,6 +9,24 @@ directive|include
 file|"file.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_macro
+name|FILE_RCSID
+argument_list|(
+literal|"@(#)$File: readelf.c,v 1.81 2008/11/04 16:38:28 christos Exp $"
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -61,24 +79,6 @@ include|#
 directive|include
 file|"magic.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_macro
-name|FILE_RCSID
-argument_list|(
-literal|"@(#)$File: readelf.c,v 1.76 2008/07/16 18:00:57 christos Exp $"
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -3849,7 +3849,7 @@ condition|(
 name|noff
 operator|>=
 operator|(
-name|size_t
+name|off_t
 operator|)
 name|xsh_size
 condition|)
@@ -4022,6 +4022,7 @@ decl_stmt|;
 name|char
 name|cbuf
 index|[
+comment|/*CONSTCOND*/
 name|MAX
 argument_list|(
 sizeof|sizeof
@@ -4041,7 +4042,7 @@ name|xcap_sizeof
 operator|)
 operator|>=
 operator|(
-name|size_t
+name|off_t
 operator|)
 name|xsh_size
 condition|)
@@ -4123,8 +4124,18 @@ argument_list|,
 literal|", with unknown capability "
 literal|"0x%llx = 0x%llx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|xcap_tag
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|xcap_val
 argument_list|)
 operator|==
@@ -4323,6 +4334,11 @@ name|ms
 argument_list|,
 literal|" unknown hardware capability 0x%llx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cap_hw1
 argument_list|)
 operator|==
@@ -4344,6 +4360,11 @@ name|ms
 argument_list|,
 literal|" hardware capability 0x%llx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cap_hw1
 argument_list|)
 operator|==
@@ -4410,6 +4431,11 @@ name|ms
 argument_list|,
 literal|", with unknown software capability 0x%llx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cap_sf1
 argument_list|)
 operator|==
@@ -5074,7 +5100,11 @@ name|ms
 operator|->
 name|flags
 operator|&
+operator|(
 name|MAGIC_MIME
+operator||
+name|MAGIC_APPLE
+operator|)
 condition|)
 return|return
 literal|0

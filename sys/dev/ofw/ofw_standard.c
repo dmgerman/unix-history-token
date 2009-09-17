@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/openfirm.h>
+file|<dev/ofw/ofwvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/ofw/ofwvar.h>
+file|<dev/ofw/openfirm.h>
 end_include
 
 begin_include
@@ -265,10 +265,12 @@ parameter_list|,
 name|phandle_t
 name|package
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|propname
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buf
@@ -474,7 +476,7 @@ parameter_list|,
 name|ihandle_t
 name|instance
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|pos
 parameter_list|)
 function_decl|;
@@ -770,7 +772,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Initialiser */
+comment|/* Initializer */
 end_comment
 
 begin_function
@@ -988,14 +990,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|status
 operator|=
 name|args
@@ -1017,6 +1017,7 @@ condition|)
 name|returns
 index|[
 name|j
+operator|++
 index|]
 operator|=
 name|args
@@ -1723,10 +1724,12 @@ parameter_list|,
 name|phandle_t
 name|package
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|propname
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buf
@@ -2568,14 +2571,12 @@ name|instance
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|args
@@ -2878,7 +2879,7 @@ parameter_list|,
 name|ihandle_t
 name|instance
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|pos
 parameter_list|)
 block|{

@@ -338,6 +338,16 @@ init|=
 literal|36
 block|,
 comment|/* can MAC hang */
+name|HAL_CAP_INTRMASK
+init|=
+literal|37
+block|,
+comment|/* bitmask of supported interrupts */
+name|HAL_CAP_BSSIDMATCH
+init|=
+literal|38
+block|,
+comment|/* hardware has disable bssid match */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -768,6 +778,11 @@ init|=
 literal|0x00000400
 block|,
 comment|/* Allow compressed BAR */
+name|HAL_RX_FILTER_BSSID
+init|=
+literal|0x00000800
+block|,
+comment|/* Disable BSSID match */
 block|}
 name|HAL_RX_FILTER
 typedef|;
@@ -863,7 +878,6 @@ name|HAL_INT_BNR
 init|=
 literal|0x00100000
 block|,
-comment|/* Non-common mapping */
 name|HAL_INT_TIM
 init|=
 literal|0x00200000
@@ -891,6 +905,11 @@ comment|/* Non-common mapping */
 name|HAL_INT_TSFOOR
 init|=
 literal|0x04000000
+block|,
+comment|/* Non-common mapping */
+name|HAL_INT_TBTT
+init|=
+literal|0x08000000
 block|,
 comment|/* Non-common mapping */
 name|HAL_INT_CST
@@ -922,6 +941,8 @@ operator||
 name|HAL_INT_DTIMSYNC
 operator||
 name|HAL_INT_CABEND
+operator||
+name|HAL_INT_TBTT
 block|,
 comment|/* Interrupt bits that map directly to ISR/IMR bits */
 name|HAL_INT_COMMON
@@ -934,9 +955,9 @@ name|HAL_INT_RXEOL
 operator||
 name|HAL_INT_RXORN
 operator||
-name|HAL_INT_TXURN
-operator||
 name|HAL_INT_TXDESC
+operator||
+name|HAL_INT_TXURN
 operator||
 name|HAL_INT_MIB
 operator||
@@ -948,9 +969,67 @@ name|HAL_INT_SWBA
 operator||
 name|HAL_INT_BMISS
 operator||
+name|HAL_INT_BNR
+operator||
 name|HAL_INT_GPIO
 block|, }
 name|HAL_INT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_GPIO_MUX_OUTPUT
+init|=
+literal|0
+block|,
+name|HAL_GPIO_MUX_PCIE_ATTENTION_LED
+init|=
+literal|1
+block|,
+name|HAL_GPIO_MUX_PCIE_POWER_LED
+init|=
+literal|2
+block|,
+name|HAL_GPIO_MUX_TX_FRAME
+init|=
+literal|3
+block|,
+name|HAL_GPIO_MUX_RX_CLEAR_EXTERNAL
+init|=
+literal|4
+block|,
+name|HAL_GPIO_MUX_MAC_NETWORK_LED
+init|=
+literal|5
+block|,
+name|HAL_GPIO_MUX_MAC_POWER_LED
+init|=
+literal|6
+block|}
+name|HAL_GPIO_MUX_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_GPIO_INTR_LOW
+init|=
+literal|0
+block|,
+name|HAL_GPIO_INTR_HIGH
+init|=
+literal|1
+block|,
+name|HAL_GPIO_INTR_DISABLE
+init|=
+literal|2
+block|}
+name|HAL_GPIO_INTR_TYPE
 typedef|;
 end_typedef
 
@@ -1713,15 +1792,6 @@ name|uint32_t
 name|ah_magic
 decl_stmt|;
 comment|/* consistency check magic number */
-name|uint32_t
-name|ah_abi
-decl_stmt|;
-comment|/* HAL ABI version */
-define|#
-directive|define
-name|HAL_ABI_VERSION
-value|0x08112800
-comment|/* YYMMDDnn */
 name|uint16_t
 name|ah_devid
 decl_stmt|;
@@ -1837,6 +1907,33 @@ name|__ahdecl
 function_decl|(
 modifier|*
 name|ah_disable
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_configPCIE
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_BOOL
+name|restore
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_disablePCIE
 function_decl|)
 parameter_list|(
 name|struct
@@ -2728,6 +2825,8 @@ modifier|*
 parameter_list|,
 name|uint32_t
 name|gpio
+parameter_list|,
+name|HAL_GPIO_MUX_TYPE
 parameter_list|)
 function_decl|;
 name|HAL_BOOL
@@ -3381,6 +3480,34 @@ parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|status
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ath_hal_mac_name
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ath_hal_rf_name
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -116,7 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/accommon.h>
 end_include
 
 begin_include
@@ -235,10 +241,6 @@ name|int
 name|cpu_non_c3
 decl_stmt|;
 comment|/* Index of lowest non-C3 state. */
-name|int
-name|cpu_short_slp
-decl_stmt|;
-comment|/* Count of< 1us sleeps. */
 name|u_int
 name|cpu_cx_stats
 index|[
@@ -2892,21 +2894,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* Update the largest cx_count seen so far */
-if|if
-condition|(
-name|sc
-operator|->
-name|cpu_cx_count
-operator|>
-name|cpu_cx_count
-condition|)
-name|cpu_cx_count
-operator|=
-name|sc
-operator|->
-name|cpu_cx_count
-expr_stmt|;
 block|}
 end_function
 
@@ -3541,6 +3528,20 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|cpu_cx_count
+operator|>
+name|cpu_cx_count
+condition|)
+name|cpu_cx_count
+operator|=
+name|sc
+operator|->
+name|cpu_cx_count
+expr_stmt|;
 block|}
 comment|/* 	 * Find the highest Cx state common to all CPUs 	 * in the system, taking quirks into account. 	 */
 for|for
@@ -4083,109 +4084,8 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * If we slept 100 us or more, use the lowest Cx state.  Otherwise,      * find the lowest state that has a latency less than or equal to      * the length of our last sleep.      */
+comment|/* Find the lowest state that has small enough latency. */
 name|cx_next_idx
-operator|=
-name|sc
-operator|->
-name|cpu_cx_lowest
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|cpu_prev_sleep
-operator|<
-literal|100
-condition|)
-block|{
-comment|/* 	 * If we sleep too short all the time, this system may not implement 	 * C2/3 correctly (i.e. reads return immediately).  In this case, 	 * back off and use the next higher level. 	 * It seems that when you have a dual core cpu (like the Intel Core Duo) 	 * that both cores will get out of C3 state as soon as one of them 	 * requires it. This breaks the sleep detection logic as the sleep 	 * counter is local to each cpu. Disable the sleep logic for now as a 	 * workaround if there's more than one CPU. The right fix would probably 	 * be to add quirks for system that don't really support C3 state. 	 */
-if|if
-condition|(
-name|mp_ncpus
-operator|<
-literal|2
-operator|&&
-name|sc
-operator|->
-name|cpu_prev_sleep
-operator|<=
-literal|1
-condition|)
-block|{
-name|sc
-operator|->
-name|cpu_short_slp
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|cpu_short_slp
-operator|==
-literal|1000
-operator|&&
-name|sc
-operator|->
-name|cpu_cx_lowest
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|cpu_non_c3
-operator|==
-name|sc
-operator|->
-name|cpu_cx_lowest
-operator|&&
-name|sc
-operator|->
-name|cpu_non_c3
-operator|!=
-literal|0
-condition|)
-name|sc
-operator|->
-name|cpu_non_c3
-operator|--
-expr_stmt|;
-name|sc
-operator|->
-name|cpu_cx_lowest
-operator|--
-expr_stmt|;
-name|sc
-operator|->
-name|cpu_short_slp
-operator|=
-literal|0
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|cpu_dev
-argument_list|,
-literal|"too many short sleeps, backing off to C%d\n"
-argument_list|,
-name|sc
-operator|->
-name|cpu_cx_lowest
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-name|sc
-operator|->
-name|cpu_short_slp
 operator|=
 literal|0
 expr_stmt|;
@@ -4204,6 +4104,7 @@ condition|;
 name|i
 operator|--
 control|)
+block|{
 if|if
 condition|(
 name|sc
@@ -4214,6 +4115,8 @@ name|i
 index|]
 operator|.
 name|trans_lat
+operator|*
+literal|3
 operator|<=
 name|sc
 operator|->
@@ -4239,7 +4142,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiGetRegister
+name|AcpiReadBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_STATUS
 argument_list|,
@@ -4254,7 +4157,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_STATUS
 argument_list|,
@@ -4306,7 +4209,7 @@ literal|"acpi_cpu_idle: C0 sleep"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Execute HLT (or equivalent) and wait for an interrupt.  We can't      * calculate the time spent in C1 since the place we wake up is an      * ISR.  Assume we slept one quantum and return.      */
+comment|/*      * Execute HLT (or equivalent) and wait for an interrupt.  We can't      * calculate the time spent in C1 since the place we wake up is an      * ISR.  Assume we slept half of quantum and return.      */
 if|if
 condition|(
 name|cx_next
@@ -4320,9 +4223,19 @@ name|sc
 operator|->
 name|cpu_prev_sleep
 operator|=
-literal|1000000
+operator|(
+name|sc
+operator|->
+name|cpu_prev_sleep
+operator|*
+literal|3
+operator|+
+literal|500000
 operator|/
 name|hz
+operator|)
+operator|/
+literal|4
 expr_stmt|;
 name|acpi_cpu_c1
 argument_list|()
@@ -4350,14 +4263,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_ARB_DISABLE
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_RLD
 argument_list|,
@@ -4371,10 +4284,8 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/*      * Read from P_LVLx to enter C2(+), checking time spent asleep.      * Use the ACPI timer for measuring sleep time.  Since we need to      * get the time very close to the CPU start/stop clock logic, this      * is the only reliable time source.      */
-name|AcpiHwLowLevelRead
+name|AcpiHwRead
 argument_list|(
-literal|32
-argument_list|,
 operator|&
 name|start_time
 argument_list|,
@@ -4394,10 +4305,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/*      * Read the end time twice.  Since it may take an arbitrary time      * to enter the idle state, the first read may be executed before      * the processor has stopped.  Doing it again provides enough      * margin that we are certain to have a correct value.      */
-name|AcpiHwLowLevelRead
+name|AcpiHwRead
 argument_list|(
-literal|32
-argument_list|,
 operator|&
 name|end_time
 argument_list|,
@@ -4407,10 +4316,8 @@ operator|.
 name|XPmTimerBlock
 argument_list|)
 expr_stmt|;
-name|AcpiHwLowLevelRead
+name|AcpiHwRead
 argument_list|(
-literal|32
-argument_list|,
 operator|&
 name|end_time
 argument_list|,
@@ -4438,14 +4345,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_ARB_DISABLE
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_RLD
 argument_list|,
@@ -4456,7 +4363,7 @@ block|}
 name|ACPI_ENABLE_IRQS
 argument_list|()
 expr_stmt|;
-comment|/* Find the actual time asleep in microseconds, minus overhead. */
+comment|/* Find the actual time asleep in microseconds. */
 name|end_time
 operator|=
 name|acpi_TimerDelta
@@ -4470,14 +4377,20 @@ name|sc
 operator|->
 name|cpu_prev_sleep
 operator|=
+operator|(
+name|sc
+operator|->
+name|cpu_prev_sleep
+operator|*
+literal|3
+operator|+
 name|PM_USEC
 argument_list|(
 name|end_time
 argument_list|)
-operator|-
-name|cx_next
-operator|->
-name|trans_lat
+operator|)
+operator|/
+literal|4
 expr_stmt|;
 block|}
 end_function
@@ -4813,7 +4726,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiGetRegister
+name|AcpiReadBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_RLD
 argument_list|,
@@ -4835,7 +4748,7 @@ literal|"acpi_cpu: PIIX4: reset BRLD_EN_BM\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiSetRegister
+name|AcpiWriteBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_RLD
 argument_list|,
@@ -5021,10 +4934,22 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"0%% "
+literal|"0.00%% "
 argument_list|)
 expr_stmt|;
 block|}
+name|sbuf_printf
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+literal|"last %dus"
+argument_list|,
+name|sc
+operator|->
+name|cpu_prev_sleep
+argument_list|)
+expr_stmt|;
 name|sbuf_trim
 argument_list|(
 operator|&

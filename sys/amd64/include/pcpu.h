@@ -32,6 +32,91 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XEN
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|XENHVM
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NR_VIRQS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NR_VIRQS
+value|24
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NR_IPIS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NR_IPIS
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XENHVM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCPU_XEN_FIELDS
+define|\
+value|;								\ 	unsigned int pc_last_processed_l1i;				\ 	unsigned int pc_last_processed_l2i
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PCPU_XEN_FIELDS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The SMP parts are setup in pmap.c and locore.s for the BSP, and  * mp_machdep.c sets up the data for the AP's to "see" when they awake.  * The reason for doing it via a struct is so that an array of pointers  * to each CPU's data can be set up for things like "check curproc on all  * other processors"  */
 end_comment
@@ -45,11 +130,23 @@ value|char	pc_monitorbuf[128] __aligned(128);
 comment|/* cache line */
 value|\ 	struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
-value|\ 	struct	pmap *pc_curpmap;					\ 	struct	amd64tss *pc_tssp;					\ 	register_t pc_rsp0;						\ 	register_t pc_scratch_rsp;
+value|\ 	struct	pmap *pc_curpmap;					\ 	struct	amd64tss *pc_tssp;
+comment|/* TSS segment active on CPU */
+value|\ 	struct	amd64tss *pc_commontssp;
+comment|/* Common TSS for the CPU */
+value|\ 	register_t pc_rsp0;						\ 	register_t pc_scratch_rsp;
 comment|/* User %rsp in syscall */
 value|\ 	u_int	pc_apic_id;						\ 	u_int   pc_acpi_id;
 comment|/* ACPI CPU id */
-value|\ 	struct user_segment_descriptor	*pc_gs32p
+value|\
+comment|/* Pointer to the CPU %fs descriptor */
+value|\ 	struct user_segment_descriptor	*pc_fs32p;			\
+comment|/* Pointer to the CPU %gs descriptor */
+value|\ 	struct user_segment_descriptor	*pc_gs32p;			\
+comment|/* Pointer to the CPU LDT descriptor */
+value|\ 	struct system_segment_descriptor *pc_ldt;			\
+comment|/* Pointer to the CPU TSS descriptor */
+value|\ 	struct system_segment_descriptor *pc_tss			\ 	PCPU_XEN_FIELDS
 end_define
 
 begin_ifdef

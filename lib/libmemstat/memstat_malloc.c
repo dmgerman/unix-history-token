@@ -1260,6 +1260,11 @@ modifier|*
 name|mtsp
 decl_stmt|;
 name|struct
+name|malloc_type_internal
+modifier|*
+name|mtip
+decl_stmt|;
+name|struct
 name|malloc_type
 name|type
 decl_stmt|,
@@ -1550,16 +1555,22 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 		 * Take advantage of explicit knowledge that 		 * malloc_type_internal is simply an array of statistics 		 * structures of number MAXCPU.  Since our compile-time 		 * value for MAXCPU may differ from the kernel's, we 		 * populate our own array. 		 */
+comment|/* 		 * Since our compile-time value for MAXCPU may differ from the 		 * kernel's, we populate our own array. 		 */
+name|mtip
+operator|=
+name|type
+operator|.
+name|ks_handle
+expr_stmt|;
 name|ret
 operator|=
 name|kread
 argument_list|(
 name|kvm
 argument_list|,
-name|type
-operator|.
-name|ks_handle
+name|mtip
+operator|->
+name|mti_stats
 argument_list|,
 name|mts
 argument_list|,

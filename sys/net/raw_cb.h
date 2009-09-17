@@ -84,28 +84,27 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_extern
-extern|extern LIST_HEAD(rawcb_list_head
-operator|,
-extern|rawcb
-end_extern
-
 begin_expr_stmt
-unit|)
+name|VNET_DECLARE
+argument_list|(
+name|LIST_HEAD
+argument_list|(
+name|rawcb_list_head
+argument_list|,
+name|rawcb
+argument_list|)
+argument_list|,
 name|rawcb_list
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_rawcb_list
+value|VNET(rawcb_list)
+end_define
 
 begin_decl_stmt
 specifier|extern

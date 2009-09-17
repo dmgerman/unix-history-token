@@ -1028,6 +1028,8 @@ operator|=
 name|osd_jail_register
 argument_list|(
 name|zone_destroy
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

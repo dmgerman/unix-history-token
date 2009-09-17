@@ -1152,6 +1152,24 @@ value|mtx_assert(&sigio_lock, type)
 end_define
 
 begin_comment
+comment|/* stop_allowed parameter for cursig */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_STOP_ALLOWED
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_STOP_NOT_ALLOWED
+value|101
+end_define
+
+begin_comment
 comment|/*  * Machine-independent functions:  */
 end_comment
 
@@ -1163,6 +1181,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|stop_allowed
 parameter_list|)
 function_decl|;
 end_function_decl

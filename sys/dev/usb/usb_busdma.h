@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_BUSDMA_H_
+name|_USB_BUSDMA_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_BUSDMA_H_
+name|_USB_BUSDMA_H_
 end_define
 
 begin_include
@@ -51,12 +51,6 @@ end_define
 begin_comment
 comment|/* use system PAGE_SIZE */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
 
 begin_if
 if|#
@@ -102,24 +96,25 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* structure prototypes */
 end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_xfer_root
+name|usb_xfer_root
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|usb_dma_tag
 struct_decl|;
 end_struct_decl
 
@@ -131,11 +126,11 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_dma_callback_t
+name|usb_dma_callback_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|)
@@ -148,8 +143,11 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_page
+name|usb_page
 block|{
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|bus_size_t
 name|physaddr
 decl_stmt|;
@@ -158,6 +156,8 @@ modifier|*
 name|buffer
 decl_stmt|;
 comment|/* non Kernel Virtual Address */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -168,16 +168,21 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_page_search
+name|usb_page_search
 block|{
 name|void
 modifier|*
 name|buffer
 decl_stmt|;
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|bus_size_t
 name|physaddr
 decl_stmt|;
-name|uint32_t
+endif|#
+directive|endif
+name|usb_size_t
 name|length
 decl_stmt|;
 block|}
@@ -190,41 +195,26 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_page_cache
+name|usb_page_cache
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|bus_dma_tag_t
-name|tag
-decl_stmt|;
-name|bus_dmamap_t
-name|map
-decl_stmt|;
-name|bus_dma_segment_t
-modifier|*
-name|p_seg
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
-name|usb2_page
+name|usb_page
 modifier|*
 name|page_start
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|tag_parent
 decl_stmt|;
@@ -234,18 +224,13 @@ modifier|*
 name|buffer
 decl_stmt|;
 comment|/* virtual buffer pointer */
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|int
-name|n_seg
-decl_stmt|;
-endif|#
-directive|endif
-name|uint32_t
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+name|usb_size_t
 name|page_offset_buf
 decl_stmt|;
-name|uint32_t
+name|usb_size_t
 name|page_offset_end
 decl_stmt|;
 name|uint8_t
@@ -260,6 +245,8 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if we can have multiple 					 * segments */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -268,13 +255,16 @@ begin_comment
 comment|/*  * The following structure describes the parent USB DMA tag.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
+
 begin_struct
 struct|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|struct
 name|cv
 name|cv
@@ -283,8 +273,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* internal condition variable */
-endif|#
-directive|endif
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
@@ -295,19 +283,13 @@ modifier|*
 name|mtx
 decl_stmt|;
 comment|/* private mutex, always set */
-name|struct
-name|usb2_xfer_root
-modifier|*
-name|info
-decl_stmt|;
-comment|/* used by the callback function */
-name|usb2_dma_callback_t
+name|usb_dma_callback_t
 modifier|*
 name|func
 decl_stmt|;
 comment|/* load complete callback function */
 name|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 modifier|*
 name|utag_first
 decl_stmt|;
@@ -328,48 +310,79 @@ block|}
 struct|;
 end_struct
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|usb_dma_parent_tag
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* empty struct */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The following structure describes an USB DMA tag.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
+end_if
+
 begin_struct
 struct|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 block|{
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|bus_dma_segment_t
-modifier|*
-name|p_seg
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|tag_parent
 decl_stmt|;
 name|bus_dma_tag_t
 name|tag
 decl_stmt|;
-name|uint32_t
+name|usb_size_t
 name|align
 decl_stmt|;
-name|uint32_t
+name|usb_size_t
 name|size
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|uint32_t
-name|n_seg
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|usb_dma_tag
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* empty struct */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* function prototypes */
@@ -377,10 +390,10 @@ end_comment
 
 begin_function_decl
 name|int
-name|usb2_uiomove
+name|usb_uiomove
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
@@ -389,10 +402,10 @@ name|uio
 modifier|*
 name|uio
 parameter_list|,
-name|uint32_t
+name|usb_frlength_t
 name|pc_offset
 parameter_list|,
-name|uint32_t
+name|usb_frlength_t
 name|len
 parameter_list|)
 function_decl|;
@@ -400,19 +413,19 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 modifier|*
-name|usb2_dma_tag_find
+name|usb_dma_tag_find
 parameter_list|(
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|,
-name|uint32_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|usb_size_t
 name|align
 parameter_list|)
 function_decl|;
@@ -420,22 +433,22 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_pc_alloc_mem
+name|usb_pc_alloc_mem
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
 name|struct
-name|usb2_page
+name|usb_page
 modifier|*
 name|pg
 parameter_list|,
-name|uint32_t
+name|usb_size_t
 name|size
 parameter_list|,
-name|uint32_t
+name|usb_size_t
 name|align
 parameter_list|)
 function_decl|;
@@ -443,14 +456,14 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_pc_dmamap_create
+name|usb_pc_dmamap_create
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|uint32_t
+name|usb_size_t
 name|size
 parameter_list|)
 function_decl|;
@@ -458,14 +471,14 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
-name|usb2_pc_load_mem
+name|usb_pc_load_mem
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|,
-name|uint32_t
+name|usb_size_t
 name|size
 parameter_list|,
 name|uint8_t
@@ -476,10 +489,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bdma_done_event
+name|usb_bdma_done_event
 parameter_list|(
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|)
@@ -488,10 +501,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bdma_post_sync
+name|usb_bdma_post_sync
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -500,10 +513,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bdma_pre_sync
+name|usb_bdma_pre_sync
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -512,10 +525,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bdma_work_loop
+name|usb_bdma_work_loop
 parameter_list|(
 name|struct
-name|usb2_xfer_queue
+name|usb_xfer_queue
 modifier|*
 name|pq
 parameter_list|)
@@ -524,123 +537,15 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bzero
+name|usb_dma_tag_setup
 parameter_list|(
 name|struct
-name|usb2_page_cache
-modifier|*
-name|cache
-parameter_list|,
-name|uint32_t
-name|offset
-parameter_list|,
-name|uint32_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_copy_in
-parameter_list|(
-name|struct
-name|usb2_page_cache
-modifier|*
-name|cache
-parameter_list|,
-name|uint32_t
-name|offset
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|uint32_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|usb2_copy_in_user
-parameter_list|(
-name|struct
-name|usb2_page_cache
-modifier|*
-name|cache
-parameter_list|,
-name|uint32_t
-name|offset
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|uint32_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_copy_out
-parameter_list|(
-name|struct
-name|usb2_page_cache
-modifier|*
-name|cache
-parameter_list|,
-name|uint32_t
-name|offset
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|uint32_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|usb2_copy_out_user
-parameter_list|(
-name|struct
-name|usb2_page_cache
-modifier|*
-name|cache
-parameter_list|,
-name|uint32_t
-name|offset
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|uint32_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_dma_tag_setup
-parameter_list|(
-name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|,
 name|struct
-name|usb2_dma_tag
+name|usb_dma_tag
 modifier|*
 name|udt
 parameter_list|,
@@ -652,14 +557,9 @@ name|mtx
 modifier|*
 name|mtx
 parameter_list|,
-name|usb2_dma_callback_t
+name|usb_dma_callback_t
 modifier|*
 name|func
-parameter_list|,
-name|struct
-name|usb2_xfer_root
-modifier|*
-name|info
 parameter_list|,
 name|uint8_t
 name|ndmabits
@@ -672,10 +572,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dma_tag_unsetup
+name|usb_dma_tag_unsetup
 parameter_list|(
 name|struct
-name|usb2_dma_parent_tag
+name|usb_dma_parent_tag
 modifier|*
 name|udpt
 parameter_list|)
@@ -684,56 +584,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_get_page
+name|usb_pc_cpu_flush
 parameter_list|(
 name|struct
-name|usb2_page_cache
-modifier|*
-name|pc
-parameter_list|,
-name|uint32_t
-name|offset
-parameter_list|,
-name|struct
-name|usb2_page_search
-modifier|*
-name|res
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_m_copy_in
-parameter_list|(
-name|struct
-name|usb2_page_cache
-modifier|*
-name|cache
-parameter_list|,
-name|uint32_t
-name|dst_offset
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|uint32_t
-name|src_offset
-parameter_list|,
-name|uint32_t
-name|src_len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_pc_cpu_flush
-parameter_list|(
-name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)
@@ -742,10 +596,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pc_cpu_invalidate
+name|usb_pc_cpu_invalidate
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)
@@ -754,10 +608,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pc_dmamap_destroy
+name|usb_pc_dmamap_destroy
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)
@@ -766,10 +620,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_pc_free_mem
+name|usb_pc_free_mem
 parameter_list|(
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|pc
 parameter_list|)
@@ -782,7 +636,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_BUSDMA_H_ */
+comment|/* _USB_BUSDMA_H_ */
 end_comment
 
 end_unit

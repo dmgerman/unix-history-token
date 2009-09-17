@@ -155,7 +155,7 @@ name|NID_dsaWithSHA
 block|,
 name|SHA_DIGEST_LENGTH
 block|,
-literal|0
+name|EVP_MD_FLAG_FIPS
 block|,
 name|init
 block|,

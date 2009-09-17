@@ -166,7 +166,14 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{ }
+block|{
+comment|/* Throw away the high FP registers. */
+name|ia64_highfp_drop
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1452,15 +1459,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{
-comment|/* XXX: Should this be in cpu_thread_exit() instead? */
-comment|/* Throw away the high FP registers. */
-name|ia64_highfp_drop
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment

@@ -280,6 +280,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -790,9 +796,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-ifdef|#
-directive|ifdef
-name|STOP_NMI
 comment|/* Handler for NMI IPIs used for stopping CPUs. */
 if|if
 condition|(
@@ -812,9 +815,6 @@ goto|goto
 name|out
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* STOP_NMI */
 endif|#
 directive|endif
 comment|/* SMP */
@@ -865,6 +865,30 @@ name|out
 goto|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|type
+operator|==
+name|T_MCHK
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|mca_intr
+argument_list|()
+condition|)
+name|trap_fatal
+argument_list|(
+name|frame
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
@@ -1416,6 +1440,11 @@ block|{
 comment|/* 					 * Autodetect. 					 * This check also covers the images 					 * without the ABI-tag ELF note. 					 */
 if|if
 condition|(
+name|SV_CURPROC_ABI
+argument_list|()
+operator|==
+name|SV_ABI_FREEBSD
+operator|&&
 name|p
 operator|->
 name|p_osrel
@@ -1546,7 +1575,6 @@ else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
-comment|/* XXX Giant */
 if|if
 condition|(
 name|isa_nmi
@@ -2082,7 +2110,6 @@ name|out
 goto|;
 block|}
 comment|/* 			 * Ignore debug register trace traps due to 			 * accesses in the user's address space, which 			 * can happen under several conditions such as 			 * if a user sets a watchpoint on a buffer and 			 * then passes that buffer to a system call. 			 * We still want to get TRCTRAPS for addresses 			 * in kernel space because that is useful when 			 * debugging the kernel. 			 */
-comment|/* XXX Giant */
 if|if
 condition|(
 name|user_dbreg_trap
@@ -2182,7 +2209,6 @@ goto|;
 else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
-comment|/* XXX Giant */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
 condition|(
@@ -3533,7 +3559,6 @@ operator|->
 name|sv_prepsyscall
 condition|)
 block|{
-comment|/* 		 * The prep code is MP aware. 		 */
 call|(
 modifier|*
 name|p
@@ -3557,7 +3582,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Need to check if this is a 32 bit or 64 bit syscall. 		 * fuword is MP aware. 		 */
+comment|/* 		 * Need to check if this is a 32 bit or 64 bit syscall. 		 */
 if|if
 condition|(
 name|code
@@ -3663,7 +3688,6 @@ name|callp
 operator|->
 name|sy_narg
 expr_stmt|;
-comment|/* 	 * copyin and the ktrsyscall()/ktrsysret() code is MP-aware 	 */
 if|if
 condition|(
 name|params

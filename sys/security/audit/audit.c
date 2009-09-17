@@ -290,6 +290,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_AUDITGIDSET
+argument_list|,
+literal|"audit_gidset"
+argument_list|,
+literal|"Audit GID set storage"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_security
@@ -406,13 +418,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|size_t
+name|int
 name|audit_q_len
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|size_t
+name|int
 name|audit_pre_q_len
 decl_stmt|;
 end_decl_stmt
@@ -990,6 +1002,31 @@ argument_list|,
 name|M_AUDITTEXT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ar
+operator|->
+name|k_ar
+operator|.
+name|ar_arg_groups
+operator|.
+name|gidset
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|ar
+operator|->
+name|k_ar
+operator|.
+name|ar_arg_groups
+operator|.
+name|gidset
+argument_list|,
+name|M_AUDITGIDSET
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1469,6 +1506,7 @@ name|sorf
 operator|=
 name|AU_PRS_SUCCESS
 expr_stmt|;
+comment|/* 	 * syscalls.master sometimes contains a prototype event number, which 	 * we will transform into a more specific event number now that we 	 * have more complete information gathered during the system call. 	 */
 switch|switch
 condition|(
 name|ar
@@ -1481,7 +1519,6 @@ block|{
 case|case
 name|AUE_OPEN_RWTC
 case|:
-comment|/* 		 * The open syscall always writes a AUE_OPEN_RWTC event; 		 * change it to the proper type of event based on the flags 		 * and the error value. 		 */
 name|ar
 operator|->
 name|k_ar
@@ -1489,6 +1526,27 @@ operator|.
 name|ar_event
 operator|=
 name|audit_flags_and_error_to_openevent
+argument_list|(
+name|ar
+operator|->
+name|k_ar
+operator|.
+name|ar_arg_fflags
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AUE_OPENAT_RWTC
+case|:
+name|ar
+operator|->
+name|k_ar
+operator|.
+name|ar_event
+operator|=
+name|audit_flags_and_error_to_openatevent
 argument_list|(
 name|ar
 operator|->
@@ -1817,6 +1875,23 @@ literal|"audit_syscall_enter: td->td_ar != NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_AUDITREC
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"audit_syscall_enter: TDP_AUDITREC set"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * In FreeBSD, each ABI has its own system call table, and hence 	 * mapping of system call codes to audit events.  Convert the code to 	 * an audit event identifier using the process system call table 	 * reference.  In Darwin, there's only one, so we use the global 	 * symbol for the system call table.  No audit record is generated 	 * for bad system calls, as no operation has been performed. 	 */
 if|if
 condition|(
@@ -1950,6 +2025,20 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|td_ar
+operator|!=
+name|NULL
+condition|)
+name|td
+operator|->
+name|td_pflags
+operator||=
+name|TDP_AUDITREC
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1967,6 +2056,7 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
+block|{
 name|td
 operator|->
 name|td_ar
@@ -1978,6 +2068,21 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|td_ar
+operator|!=
+name|NULL
+condition|)
+name|td
+operator|->
+name|td_pflags
+operator||=
+name|TDP_AUDITREC
+expr_stmt|;
+block|}
 else|else
 name|td
 operator|->
@@ -2044,6 +2149,13 @@ operator|->
 name|td_ar
 operator|=
 name|NULL
+expr_stmt|;
+name|td
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_AUDITREC
 expr_stmt|;
 block|}
 end_function
@@ -2231,6 +2343,23 @@ name|NULL
 argument_list|,
 operator|(
 literal|"audit_thread_free: td_ar != NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_AUDITREC
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"audit_thread_free: TDP_AUDITREC set"
 operator|)
 argument_list|)
 expr_stmt|;

@@ -3,6 +3,23 @@ begin_comment
 comment|/*-  * Copyright (c) 2000 Katsurajima Naoto<raven@katsurajima.seya.yokohama.jp>  * Copyright (c) 2001 Cameron Grant<cg@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_snd.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -354,7 +371,7 @@ name|ICH_DEBUG
 parameter_list|(
 name|stmt
 parameter_list|)
-value|do {	\ 	stmt				\ } while(0)
+value|do {	\ 	stmt				\ } while (0)
 end_define
 
 begin_else
@@ -884,9 +901,14 @@ name|ich_fmt
 index|[]
 init|=
 block|{
-name|AFMT_STEREO
-operator||
+name|SND_FORMAT
+argument_list|(
 name|AFMT_S16_LE
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 block|,
 literal|0
 block|}
@@ -1297,7 +1319,7 @@ parameter_list|,
 name|int
 name|regno
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|data
 parameter_list|)
 block|{
@@ -1366,11 +1388,7 @@ argument_list|,
 name|ich_wrcd
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2224,7 +2242,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|ichchan_setspeed
 parameter_list|(
 name|kobj_t
@@ -2368,7 +2386,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|ichchan_setblocksize
 parameter_list|(
 name|kobj_t
@@ -2645,7 +2663,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|ichchan_getptr
 parameter_list|(
 name|kobj_t
@@ -2834,11 +2852,7 @@ argument_list|,
 name|ichchan_getcaps
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3239,9 +3253,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SND_DYNSYSCTL
 comment|/* XXX: this should move to a device specific sysctl "dev.pcm.X.yyy" 	   via device_get_sysctl_*() as discussed on multimedia@ in msg-id<861wujij2q.fsf@xps.des.no> */
 name|SYSCTL_ADD_INT
 argument_list|(
@@ -3278,9 +3289,6 @@ argument_list|,
 literal|"AC97 link rate (default = 48000)"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SND_DYNSYSCTL */
 return|return
 operator|(
 literal|0
@@ -4925,6 +4933,10 @@ case|case
 literal|0x203a161f
 case|:
 comment|/* Gateway 4028GZ */
+case|case
+literal|0x203e161f
+case|:
+comment|/* Gateway 3520GZ/M210 */
 case|case
 literal|0x204c161f
 case|:

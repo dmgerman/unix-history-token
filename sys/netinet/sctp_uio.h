@@ -157,10 +157,10 @@ begin_struct
 struct|struct
 name|sctp_initmsg
 block|{
-name|uint32_t
+name|uint16_t
 name|sinit_num_ostreams
 decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|sinit_max_instreams
 decl_stmt|;
 name|uint16_t
@@ -207,9 +207,6 @@ name|sinfo_ssn
 decl_stmt|;
 name|uint16_t
 name|sinfo_flags
-decl_stmt|;
-name|uint16_t
-name|sinfo_pr_policy
 decl_stmt|;
 name|uint32_t
 name|sinfo_ppid
@@ -1956,13 +1953,13 @@ name|cwnd_new_value
 decl_stmt|;
 comment|/* cwnd in k */
 name|uint32_t
+name|pseudo_cumack
+decl_stmt|;
+name|uint16_t
 name|inflight
 decl_stmt|;
 comment|/* flightsize in k */
-name|uint32_t
-name|pseudo_cumack
-decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|cwnd_augment
 decl_stmt|;
 comment|/* increment to it */
@@ -2596,6 +2593,11 @@ begin_struct
 struct|struct
 name|sctpstat
 block|{
+name|struct
+name|sctp_timeval
+name|sctps_discontinuitytime
+decl_stmt|;
+comment|/* sctpStats 18 							 * (TimeStamp) */
 comment|/* MIB according to RFC 3873 */
 name|uint32_t
 name|sctps_currestab
@@ -3111,11 +3113,13 @@ name|uint32_t
 name|sctps_fwdtsn_map_over
 decl_stmt|;
 comment|/* number of map array over-runs via 					 * fwd-tsn's */
-name|struct
-name|sctp_timeval
-name|sctps_discontinuitytime
+name|uint32_t
+name|sctps_reserved
+index|[
+literal|32
+index|]
 decl_stmt|;
-comment|/* sctpStats 18 							 * (TimeStamp) */
+comment|/* Future ABI compat - remove int's 					 * from here when adding new */
 block|}
 struct|;
 end_struct
@@ -3313,7 +3317,7 @@ decl_stmt|;
 name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
@@ -3427,7 +3431,7 @@ comment|/* sctpAssocEntry 1   */
 name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
@@ -3455,7 +3459,7 @@ comment|/* sctpAssocLocalAddrEntry 3   */
 name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */
@@ -3521,9 +3525,12 @@ name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 8   */
 name|uint32_t
+name|rtt
+decl_stmt|;
+name|uint32_t
 name|extra_padding
 index|[
-literal|8
+literal|32
 index|]
 decl_stmt|;
 comment|/* future */

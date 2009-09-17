@@ -10,14 +10,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PARAM_H_
+name|_MIPS_INCLUDE_PARAM_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PARAM_H_
+name|_MIPS_INCLUDE_PARAM_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/_align.h>
+end_include
 
 begin_include
 include|#
@@ -186,35 +192,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_ALIGNBYTES
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ALIGN
-parameter_list|(
-name|p
-parameter_list|)
-value|(((u_int)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALIGNED_POINTER
-parameter_list|(
-name|p
-parameter_list|,
-name|t
-parameter_list|)
-value|((((u_int32_t)(p))& (sizeof (t) - 1)) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ALIGNBYTES
 value|_ALIGNBYTES
 end_define
@@ -227,6 +204,40 @@ parameter_list|(
 name|p
 parameter_list|)
 value|_ALIGN(p)
+end_define
+
+begin_comment
+comment|/*  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALIGNED_POINTER
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|)
+value|((((unsigned)(p))& (sizeof (t) - 1)) == 0)
+end_define
+
+begin_comment
+comment|/*  * CACHE_LINE_SIZE is the compile-time maximum cache line size for an  * architecture.  It should be used with appropriate caution.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CACHE_LINE_SHIFT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHE_LINE_SIZE
+value|(1<< CACHE_LINE_SHIFT)
 end_define
 
 begin_define
@@ -577,7 +588,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_PARAM_H_ */
+comment|/* !_MIPS_INCLUDE_PARAM_H_ */
 end_comment
 
 end_unit

@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_DYNAMIC_H_
+name|_USB_DYNAMIC_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_DYNAMIC_H_
+name|_USB_DYNAMIC_H_
 end_define
 
 begin_comment
@@ -25,19 +25,19 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device
+name|usb_device
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_lookup_info
+name|usbd_lookup_info
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device_request
+name|usb_device_request
 struct_decl|;
 end_struct_decl
 
@@ -47,13 +47,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
-name|usb2_temp_setup_by_index_t
+name|usb_temp_setup_by_index_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
@@ -65,18 +65,18 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|usb2_error_t
+name|usb_error_t
 function_decl|(
-name|usb2_test_huawei_autoinst_t
+name|usb_test_huawei_autoinst_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|,
 name|struct
-name|usb2_attach_arg
+name|usb_attach_arg
 modifier|*
 name|uaa
 parameter_list|)
@@ -87,12 +87,12 @@ begin_typedef
 typedef|typedef
 name|uint8_t
 function_decl|(
-name|usb2_test_quirk_t
+name|usb_test_quirk_t
 function_decl|)
 parameter_list|(
 specifier|const
 name|struct
-name|usb2_lookup_info
+name|usbd_lookup_info
 modifier|*
 name|info
 parameter_list|,
@@ -106,7 +106,7 @@ begin_typedef
 typedef|typedef
 name|int
 function_decl|(
-name|usb2_quirk_ioctl_t
+name|usb_quirk_ioctl_t
 function_decl|)
 parameter_list|(
 name|unsigned
@@ -131,41 +131,11 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|usb2_temp_get_desc_t
+name|usb_temp_unsetup_t
 function_decl|)
 parameter_list|(
 name|struct
-name|usb2_device
-modifier|*
-name|udev
-parameter_list|,
-name|struct
-name|usb2_device_request
-modifier|*
-name|req
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-modifier|*
-name|pPtr
-parameter_list|,
-name|uint16_t
-modifier|*
-name|pLength
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-name|usb2_temp_unsetup_t
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -178,56 +148,56 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|usb2_temp_get_desc_t
+name|usb_handle_req_t
 modifier|*
-name|usb2_temp_get_desc_p
+name|usb_temp_get_desc_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_temp_setup_by_index_t
+name|usb_temp_setup_by_index_t
 modifier|*
-name|usb2_temp_setup_by_index_p
+name|usb_temp_setup_by_index_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_temp_unsetup_t
+name|usb_temp_unsetup_t
 modifier|*
-name|usb2_temp_unsetup_p
+name|usb_temp_unsetup_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_test_quirk_t
+name|usb_test_quirk_t
 modifier|*
-name|usb2_test_quirk_p
+name|usb_test_quirk_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_test_huawei_autoinst_t
+name|usb_test_huawei_autoinst_t
 modifier|*
-name|usb2_test_huawei_autoinst_p
+name|usb_test_huawei_autoinst_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|usb2_quirk_ioctl_t
+name|usb_quirk_ioctl_t
 modifier|*
-name|usb2_quirk_ioctl_p
+name|usb_quirk_ioctl_p
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|devclass_t
-name|usb2_devclass_ptr
+name|usb_devclass_ptr
 decl_stmt|;
 end_decl_stmt
 
@@ -237,7 +207,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|usb2_test_huawei_unload
+name|usb_test_huawei_unload
 parameter_list|(
 name|void
 modifier|*
@@ -247,7 +217,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_temp_unload
+name|usb_temp_unload
 parameter_list|(
 name|void
 modifier|*
@@ -257,7 +227,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_quirk_unload
+name|usb_quirk_unload
 parameter_list|(
 name|void
 modifier|*
@@ -267,26 +237,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_bus_unload
+name|usb_bus_unload
 parameter_list|(
 name|void
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint8_t
-name|usb2_test_quirk
-parameter_list|(
-specifier|const
-name|struct
-name|usb2_attach_arg
-modifier|*
-name|uaa
-parameter_list|,
-name|uint16_t
-name|quirk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -297,7 +251,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_DYNAMIC_H_ */
+comment|/* _USB_DYNAMIC_H_ */
 end_comment
 
 end_unit

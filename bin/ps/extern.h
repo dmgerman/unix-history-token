@@ -449,6 +449,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|s_comm
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|s_label
 parameter_list|(
 name|KINFO

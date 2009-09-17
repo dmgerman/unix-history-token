@@ -23,11 +23,11 @@ begin_define
 define|#
 directive|define
 name|UHCI_MAX_DEVICES
-value|USB_MAX_DEVICES
+value|MIN(USB_MAX_DEVICES, 128)
 end_define
 
 begin_comment
-comment|/* PCI config registers */
+comment|/* PCI config registers  */
 end_comment
 
 begin_define
@@ -735,12 +735,12 @@ modifier|*
 name|obj_next
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|page_cache
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|fix_pc
 decl_stmt|;
@@ -854,7 +854,7 @@ modifier|*
 name|e_next
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 modifier|*
 name|page_cache
 decl_stmt|;
@@ -968,15 +968,15 @@ struct|struct
 name|uhci_config_desc
 block|{
 name|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 name|confd
 decl_stmt|;
 name|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 name|ifcd
 decl_stmt|;
 name|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 name|endpd
 decl_stmt|;
 block|}
@@ -989,16 +989,12 @@ union|union
 name|uhci_hub_desc
 block|{
 name|struct
-name|usb2_status
+name|usb_status
 name|stat
 decl_stmt|;
 name|struct
-name|usb2_port_status
+name|usb_port_status
 name|ps
-decl_stmt|;
-name|struct
-name|usb2_device_descriptor
-name|devd
 decl_stmt|;
 name|uint8_t
 name|temp
@@ -1015,79 +1011,79 @@ struct|struct
 name|uhci_hw_softc
 block|{
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 name|pframes_pc
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 name|isoc_start_pc
 index|[
 name|UHCI_VFRAMELIST_COUNT
 index|]
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 name|intr_start_pc
 index|[
 name|UHCI_IFRAMELIST_COUNT
 index|]
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 name|ls_ctl_start_pc
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 name|fs_ctl_start_pc
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 name|bulk_start_pc
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 name|last_qh_pc
 decl_stmt|;
 name|struct
-name|usb2_page_cache
+name|usb_page_cache
 name|last_td_pc
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 name|pframes_pg
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 name|isoc_start_pg
 index|[
 name|UHCI_VFRAMELIST_COUNT
 index|]
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 name|intr_start_pg
 index|[
 name|UHCI_IFRAMELIST_COUNT
 index|]
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 name|ls_ctl_start_pg
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 name|fs_ctl_start_pg
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 name|bulk_start_pg
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 name|last_qh_pg
 decl_stmt|;
 name|struct
-name|usb2_page
+name|usb_page
 name|last_td_pg
 decl_stmt|;
 block|}
@@ -1104,7 +1100,7 @@ name|uhci_hw_softc
 name|sc_hw
 decl_stmt|;
 name|struct
-name|usb2_bus
+name|usb_bus
 name|sc_bus
 decl_stmt|;
 comment|/* base device */
@@ -1113,21 +1109,18 @@ name|uhci_hub_desc
 name|sc_hub_desc
 decl_stmt|;
 name|struct
-name|usb2_sw_transfer
-name|sc_root_ctrl
-decl_stmt|;
-name|struct
-name|usb2_sw_transfer
+name|usb_callout
 name|sc_root_intr
 decl_stmt|;
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|sc_devices
 index|[
 name|UHCI_MAX_DEVICES
 index|]
 decl_stmt|;
+comment|/* pointer to last TD for isochronous */
 name|struct
 name|uhci_td
 modifier|*
@@ -1136,7 +1129,7 @@ index|[
 name|UHCI_VFRAMELIST_COUNT
 index|]
 decl_stmt|;
-comment|/* pointer to last TD 								 * for isochronous */
+comment|/* pointer to last QH for interrupt */
 name|struct
 name|uhci_qh
 modifier|*
@@ -1145,25 +1138,24 @@ index|[
 name|UHCI_IFRAMELIST_COUNT
 index|]
 decl_stmt|;
-comment|/* pointer to last QH 								 * for interrupt */
+comment|/* pointer to last QH for low speed control */
 name|struct
 name|uhci_qh
 modifier|*
 name|sc_ls_ctl_p_last
 decl_stmt|;
-comment|/* pointer to last QH for low 						 * speed control */
+comment|/* pointer to last QH for full speed control */
 name|struct
 name|uhci_qh
 modifier|*
 name|sc_fs_ctl_p_last
 decl_stmt|;
-comment|/* pointer to last QH for full 						 * speed control */
+comment|/* pointer to last QH for bulk */
 name|struct
 name|uhci_qh
 modifier|*
 name|sc_bulk_p_last
 decl_stmt|;
-comment|/* pointer to last QH for bulk */
 name|struct
 name|uhci_qh
 modifier|*
@@ -1256,13 +1248,13 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-name|usb2_bus_mem_cb_t
+name|usb_bus_mem_cb_t
 name|uhci_iterate_hw_softc
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|usb2_error_t
+name|usb_error_t
 name|uhci_init
 parameter_list|(
 name|uhci_softc_t

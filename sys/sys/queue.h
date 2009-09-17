@@ -22,7 +22,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/*  * This file defines four types of data structures: singly-linked lists,  * singly-linked tail queues, lists and tail queues.  *  * A singly-linked list is headed by a single forward pointer. The elements  * are singly linked for minimum space and pointer manipulation overhead at  * the expense of O(n) removal for arbitrary elements. New elements can be  * added to the list after an existing element or at the head of the list.  * Elements being removed from the head of the list should use the explicit  * macro for this purpose for optimum efficiency. A singly-linked list may  * only be traversed in the forward direction.  Singly-linked lists are ideal  * for applications with large datasets and few or no removals or for  * implementing a LIFO queue.  *  * A singly-linked tail queue is headed by a pair of pointers, one to the  * head of the list and the other to the tail of the list. The elements are  * singly linked for minimum space and pointer manipulation overhead at the  * expense of O(n) removal for arbitrary elements. New elements can be added  * to the list after an existing element, at the head of the list, or at the  * end of the list. Elements being removed from the head of the tail queue  * should use the explicit macro for this purpose for optimum efficiency.  * A singly-linked tail queue may only be traversed in the forward direction.  * Singly-linked tail queues are ideal for applications with large datasets  * and few or no removals or for implementing a FIFO queue.  *  * A list is headed by a single forward pointer (or an array of forward  * pointers for a hash table header). The elements are doubly linked  * so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before  * or after an existing element or at the head of the list. A list  * may only be traversed in the forward direction.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  *  * For details on the use of these macros, see the queue(3) manual page.  *  *  *				SLIST	LIST	STAILQ	TAILQ  * _HEAD			+	+	+	+  * _HEAD_INITIALIZER		+	+	+	+  * _ENTRY			+	+	+	+  * _INIT			+	+	+	+  * _EMPTY			+	+	+	+  * _FIRST			+	+	+	+  * _NEXT			+	+	+	+  * _PREV			-	-	-	+  * _LAST			-	-	+	+  * _FOREACH			+	+	+	+  * _FOREACH_SAFE		+	+	+	+  * _FOREACH_REVERSE		-	-	-	+  * _FOREACH_REVERSE_SAFE	-	-	-	+  * _INSERT_HEAD			+	+	+	+  * _INSERT_BEFORE		-	+	-	+  * _INSERT_AFTER		+	+	+	+  * _INSERT_TAIL			-	-	+	+  * _CONCAT			-	-	+	+  * _REMOVE_HEAD			+	-	+	-  * _REMOVE_NEXT			+	-	+	-  * _REMOVE			+	+	+	+  *  */
+comment|/*  * This file defines four types of data structures: singly-linked lists,  * singly-linked tail queues, lists and tail queues.  *  * A singly-linked list is headed by a single forward pointer. The elements  * are singly linked for minimum space and pointer manipulation overhead at  * the expense of O(n) removal for arbitrary elements. New elements can be  * added to the list after an existing element or at the head of the list.  * Elements being removed from the head of the list should use the explicit  * macro for this purpose for optimum efficiency. A singly-linked list may  * only be traversed in the forward direction.  Singly-linked lists are ideal  * for applications with large datasets and few or no removals or for  * implementing a LIFO queue.  *  * A singly-linked tail queue is headed by a pair of pointers, one to the  * head of the list and the other to the tail of the list. The elements are  * singly linked for minimum space and pointer manipulation overhead at the  * expense of O(n) removal for arbitrary elements. New elements can be added  * to the list after an existing element, at the head of the list, or at the  * end of the list. Elements being removed from the head of the tail queue  * should use the explicit macro for this purpose for optimum efficiency.  * A singly-linked tail queue may only be traversed in the forward direction.  * Singly-linked tail queues are ideal for applications with large datasets  * and few or no removals or for implementing a FIFO queue.  *  * A list is headed by a single forward pointer (or an array of forward  * pointers for a hash table header). The elements are doubly linked  * so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before  * or after an existing element or at the head of the list. A list  * may only be traversed in the forward direction.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  *  * For details on the use of these macros, see the queue(3) manual page.  *  *  *				SLIST	LIST	STAILQ	TAILQ  * _HEAD			+	+	+	+  * _HEAD_INITIALIZER		+	+	+	+  * _ENTRY			+	+	+	+  * _INIT			+	+	+	+  * _EMPTY			+	+	+	+  * _FIRST			+	+	+	+  * _NEXT			+	+	+	+  * _PREV			-	-	-	+  * _LAST			-	-	+	+  * _FOREACH			+	+	+	+  * _FOREACH_SAFE		+	+	+	+  * _FOREACH_REVERSE		-	-	-	+  * _FOREACH_REVERSE_SAFE	-	-	-	+  * _INSERT_HEAD			+	+	+	+  * _INSERT_BEFORE		-	+	-	+  * _INSERT_AFTER		+	+	+	+  * _INSERT_TAIL			-	-	+	+  * _CONCAT			-	-	+	+  * _REMOVE_AFTER		+	-	+	-  * _REMOVE_HEAD			+	-	+	-  * _REMOVE			+	+	+	+  *  */
 end_comment
 
 begin_ifdef
@@ -320,16 +320,14 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (SLIST_FIRST((head)) == (elm)) {				\ 		SLIST_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = SLIST_FIRST((head));		\ 		while (SLIST_NEXT(curelm, field) != (elm))		\ 			curelm = SLIST_NEXT(curelm, field);		\ 		SLIST_REMOVE_NEXT(head, curelm, field);			\ 	}								\ 	TRASHIT((elm)->field.sle_next);					\ } while (0)
+value|do {			\ 	if (SLIST_FIRST((head)) == (elm)) {				\ 		SLIST_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = SLIST_FIRST((head));		\ 		while (SLIST_NEXT(curelm, field) != (elm))		\ 			curelm = SLIST_NEXT(curelm, field);		\ 		SLIST_REMOVE_AFTER(curelm, field);			\ 	}								\ 	TRASHIT((elm)->field.sle_next);					\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SLIST_REMOVE_NEXT
+name|SLIST_REMOVE_AFTER
 parameter_list|(
-name|head
-parameter_list|,
 name|elm
 parameter_list|,
 name|field
@@ -556,7 +554,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (STAILQ_FIRST((head)) == (elm)) {				\ 		STAILQ_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = STAILQ_FIRST((head));		\ 		while (STAILQ_NEXT(curelm, field) != (elm))		\ 			curelm = STAILQ_NEXT(curelm, field);		\ 		STAILQ_REMOVE_NEXT(head, curelm, field);		\ 	}								\ 	TRASHIT((elm)->field.stqe_next);				\ } while (0)
+value|do {			\ 	if (STAILQ_FIRST((head)) == (elm)) {				\ 		STAILQ_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = STAILQ_FIRST((head));		\ 		while (STAILQ_NEXT(curelm, field) != (elm))		\ 			curelm = STAILQ_NEXT(curelm, field);		\ 		STAILQ_REMOVE_AFTER(head, curelm, field);		\ 	}								\ 	TRASHIT((elm)->field.stqe_next);				\ } while (0)
 end_define
 
 begin_define
@@ -574,7 +572,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|STAILQ_REMOVE_NEXT
+name|STAILQ_REMOVE_AFTER
 parameter_list|(
 name|head
 parameter_list|,
@@ -583,6 +581,20 @@ parameter_list|,
 name|field
 parameter_list|)
 value|do {			\ 	if ((STAILQ_NEXT(elm, field) =					\ 	     STAILQ_NEXT(STAILQ_NEXT(elm, field), field)) == NULL)	\ 		(head)->stqh_last =&STAILQ_NEXT((elm), field);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STAILQ_SWAP
+parameter_list|(
+name|head1
+parameter_list|,
+name|head2
+parameter_list|,
+name|type
+parameter_list|)
+value|do {				\ 	struct type *swap_first = STAILQ_FIRST(head1);			\ 	struct type **swap_last = (head1)->stqh_last;			\ 	STAILQ_FIRST(head1) = STAILQ_FIRST(head2);			\ 	(head1)->stqh_last = (head2)->stqh_last;			\ 	STAILQ_FIRST(head2) = swap_first;				\ 	(head2)->stqh_last = swap_last;					\ 	if (STAILQ_EMPTY(head1))					\ 		(head1)->stqh_last =&STAILQ_FIRST(head1);		\ 	if (STAILQ_EMPTY(head2))					\ 		(head2)->stqh_last =&STAILQ_FIRST(head2);		\ } while (0)
 end_define
 
 begin_comment
@@ -859,6 +871,22 @@ parameter_list|,
 name|field
 parameter_list|)
 value|do {					\ 	QMD_LIST_CHECK_NEXT(elm, field);				\ 	QMD_LIST_CHECK_PREV(elm, field);				\ 	if (LIST_NEXT((elm), field) != NULL)				\ 		LIST_NEXT((elm), field)->field.le_prev = 		\ 		    (elm)->field.le_prev;				\ 	*(elm)->field.le_prev = LIST_NEXT((elm), field);		\ 	TRASHIT((elm)->field.le_next);					\ 	TRASHIT((elm)->field.le_prev);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIST_SWAP
+parameter_list|(
+name|head1
+parameter_list|,
+name|head2
+parameter_list|,
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+value|do {			\ 	struct type *swap_tmp = LIST_FIRST((head1));			\ 	LIST_FIRST((head1)) = LIST_FIRST((head2));			\ 	LIST_FIRST((head2)) = swap_tmp;					\ 	if ((swap_tmp = LIST_FIRST((head1))) != NULL)			\ 		swap_tmp->field.le_prev =&LIST_FIRST((head1));		\ 	if ((swap_tmp = LIST_FIRST((head2))) != NULL)			\ 		swap_tmp->field.le_prev =&LIST_FIRST((head2));		\ } while (0)
 end_define
 
 begin_comment
@@ -1258,212 +1286,21 @@ parameter_list|)
 value|do {				\ 	QMD_TAILQ_CHECK_NEXT(elm, field);				\ 	QMD_TAILQ_CHECK_PREV(elm, field);				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else {								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ 	TRASHIT((elm)->field.tqe_next);					\ 	TRASHIT((elm)->field.tqe_prev);					\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * XXX insque() and remque() are an old way of handling certain queues.  * They bogusly assumes that all queue heads look alike.  */
-end_comment
-
-begin_struct
-struct|struct
-name|quehead
-block|{
-name|struct
-name|quehead
-modifier|*
-name|qh_link
-decl_stmt|;
-name|struct
-name|quehead
-modifier|*
-name|qh_rlink
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__CC_SUPPORTS___INLINE
-end_ifdef
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|insque
+begin_define
+define|#
+directive|define
+name|TAILQ_SWAP
 parameter_list|(
-name|void
-modifier|*
-name|a
+name|head1
 parameter_list|,
-name|void
-modifier|*
-name|b
-parameter_list|)
-block|{
-name|struct
-name|quehead
-modifier|*
-name|element
-init|=
-operator|(
-expr|struct
-name|quehead
-operator|*
-operator|)
-name|a
-decl_stmt|,
-modifier|*
-name|head
-init|=
-operator|(
-expr|struct
-name|quehead
-operator|*
-operator|)
-name|b
-decl_stmt|;
-name|element
-operator|->
-name|qh_link
-operator|=
-name|head
-operator|->
-name|qh_link
-expr_stmt|;
-name|element
-operator|->
-name|qh_rlink
-operator|=
-name|head
-expr_stmt|;
-name|head
-operator|->
-name|qh_link
-operator|=
-name|element
-expr_stmt|;
-name|element
-operator|->
-name|qh_link
-operator|->
-name|qh_rlink
-operator|=
-name|element
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|remque
-parameter_list|(
-name|void
-modifier|*
-name|a
-parameter_list|)
-block|{
-name|struct
-name|quehead
-modifier|*
-name|element
-init|=
-operator|(
-expr|struct
-name|quehead
-operator|*
-operator|)
-name|a
-decl_stmt|;
-name|element
-operator|->
-name|qh_link
-operator|->
-name|qh_rlink
-operator|=
-name|element
-operator|->
-name|qh_rlink
-expr_stmt|;
-name|element
-operator|->
-name|qh_rlink
-operator|->
-name|qh_link
-operator|=
-name|element
-operator|->
-name|qh_link
-expr_stmt|;
-name|element
-operator|->
-name|qh_rlink
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__CC_SUPPORTS___INLINE */
-end_comment
-
-begin_function_decl
-name|void
-name|insque
-parameter_list|(
-name|void
-modifier|*
-name|a
+name|head2
 parameter_list|,
-name|void
-modifier|*
-name|b
+name|type
+parameter_list|,
+name|field
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|remque
-parameter_list|(
-name|void
-modifier|*
-name|a
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __CC_SUPPORTS___INLINE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
+value|do {			\ 	struct type *swap_first = (head1)->tqh_first;			\ 	struct type **swap_last = (head1)->tqh_last;			\ 	(head1)->tqh_first = (head2)->tqh_first;			\ 	(head1)->tqh_last = (head2)->tqh_last;				\ 	(head2)->tqh_first = swap_first;				\ 	(head2)->tqh_last = swap_last;					\ 	if ((swap_first = (head1)->tqh_first) != NULL)			\ 		swap_first->field.tqe_prev =&(head1)->tqh_first;	\ 	else								\ 		(head1)->tqh_last =&(head1)->tqh_first;		\ 	if ((swap_first = (head2)->tqh_first) != NULL)			\ 		swap_first->field.tqe_prev =&(head2)->tqh_first;	\ 	else								\ 		(head2)->tqh_last =&(head2)->tqh_first;		\ } while (0)
+end_define
 
 begin_endif
 endif|#

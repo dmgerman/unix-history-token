@@ -14,20 +14,261 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_STANDARD_H_
+name|_USB_STANDARD_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_STANDARD_H_
+name|_USB_STANDARD_H_
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_usb.h"
+end_include
+
+begin_comment
+comment|/* Declare parent SYSCTL USB node. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_usb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_USB
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_USBDEV
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_USBHC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<dev/usb/usb_endian.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_freebsd.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|USB_STACK_VERSION
+value|2000
+end_define
+
+begin_comment
+comment|/* 2.0 */
+end_comment
+
+begin_comment
+comment|/* Definition of some hardcoded USB constants. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_IPACKET
+value|8
+end_define
+
+begin_comment
+comment|/* initial USB packet size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_EP_MAX
+value|(2*16)
+end_define
+
+begin_comment
+comment|/* hardcoded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_ROOT_HUB_ADDR
+value|1
+end_define
+
+begin_comment
+comment|/* index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_MIN_DEVICES
+value|2
+end_define
+
+begin_comment
+comment|/* unused + root HUB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_UNCONFIG_INDEX
+value|0xFF
+end_define
+
+begin_comment
+comment|/* internal use only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_IFACE_INDEX_ANY
+value|0xFF
+end_define
+
+begin_comment
+comment|/* internal use only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_START_ADDR
+value|0
+end_define
+
+begin_comment
+comment|/* default USB device BUS address 					 * after USB bus reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_CONTROL_ENDPOINT
+value|0
+end_define
+
+begin_comment
+comment|/* default control endpoint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_FRAMES_PER_SECOND_FS
+value|1000
+end_define
+
+begin_comment
+comment|/* full speed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_FRAMES_PER_SECOND_HS
+value|8000
+end_define
+
+begin_comment
+comment|/* high speed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_FS_BYTES_PER_HS_UFRAME
+value|188
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_HS_MICRO_FRAMES_MAX
+value|8
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_ISOC_TIME_MAX
+value|128
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
 
 begin_comment
 comment|/*  * Minimum time a device needs to be powered down to go through a  * power cycle. These values are not in the USB specification.  */
@@ -392,7 +633,7 @@ comment|/* ms */
 end_comment
 
 begin_comment
-comment|/*  * USB record layout in memory:  *  * - USB config 0  *   - USB interfaces  *     - USB alternative interfaces  *       - USB pipes  *  * - USB config 1  *   - USB interfaces  *     - USB alternative interfaces  *       - USB pipes  */
+comment|/*  * USB record layout in memory:  *  * - USB config 0  *   - USB interfaces  *     - USB alternative interfaces  *       - USB endpoints  *  * - USB config 1  *   - USB interfaces  *     - USB alternative interfaces  *       - USB endpoints  */
 end_comment
 
 begin_comment
@@ -401,7 +642,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|usb2_device_request
+name|usb_device_request
 block|{
 name|uByte
 name|bmRequestType
@@ -422,6 +663,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_device_request
+name|usb_device_request_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -1186,7 +1435,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_descriptor
+name|usb_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1202,9 +1451,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_descriptor
+name|usb_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_device_descriptor
+name|usb_device_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1276,13 +1533,21 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_device_descriptor
+name|usb_device_descriptor_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Binary Device Object Store (BOS) */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_bos_descriptor
+name|usb_bos_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1301,13 +1566,21 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_bos_descriptor
+name|usb_bos_descriptor_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Binary Device Object Store Capability */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_bos_cap_descriptor
+name|usb_bos_cap_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1344,9 +1617,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_bos_cap_descriptor
+name|usb_bos_cap_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_devcap_usb2ext_descriptor
+name|usb_devcap_usb2ext_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1369,9 +1650,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_devcap_usb2ext_descriptor
+name|usb_devcap_usb2ext_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_devcap_ss_descriptor
+name|usb_devcap_ss_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1402,9 +1691,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_devcap_ss_descriptor
+name|usb_devcap_ss_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_devcap_container_id_descriptor
+name|usb_devcap_container_id_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1425,6 +1722,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_devcap_container_id_descriptor
+name|usb_devcap_container_id_descriptor_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Device class codes */
@@ -1516,7 +1821,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_config_descriptor
+name|usb_config_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1568,9 +1873,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_config_descriptor
+name|usb_config_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_interface_descriptor
+name|usb_interface_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1604,9 +1917,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_interface_descriptor
+name|usb_interface_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_interface_assoc_descriptor
+name|usb_interface_assoc_descriptor
 block|{
 name|uByte
 name|bLength
@@ -1636,6 +1957,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_interface_assoc_descriptor
+name|usb_interface_assoc_descriptor_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Interface class codes */
@@ -2214,6 +2543,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|UICLASS_IAD
+value|0xEF
+end_define
+
+begin_comment
+comment|/* Interface Association Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UICLASS_APPL_SPEC
 value|0xfe
 end_define
@@ -2262,7 +2602,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_endpoint_descriptor
+name|usb_endpoint_descriptor
 block|{
 name|uByte
 name|bLength
@@ -2293,10 +2633,22 @@ define|#
 directive|define
 name|UE_DIR_IN
 value|0x80
+comment|/* IN-token endpoint, fixed */
 define|#
 directive|define
 name|UE_DIR_OUT
 value|0x00
+comment|/* OUT-token endpoint, fixed */
+define|#
+directive|define
+name|UE_DIR_RX
+value|0xfd
+comment|/* for internal use only! */
+define|#
+directive|define
+name|UE_DIR_TX
+value|0xfe
+comment|/* for internal use only! */
 define|#
 directive|define
 name|UE_DIR_ANY
@@ -2397,9 +2749,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_endpoint_descriptor
+name|usb_endpoint_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_endpoint_ss_comp_descriptor
+name|usb_endpoint_ss_comp_descriptor
 block|{
 name|uByte
 name|bLength
@@ -2421,9 +2781,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_endpoint_ss_comp_descriptor
+name|usb_endpoint_ss_comp_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_string_descriptor
+name|usb_string_descriptor
 block|{
 name|uByte
 name|bLength
@@ -2445,6 +2813,14 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_string_descriptor
+name|usb_string_descriptor_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -2460,7 +2836,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_hub_descriptor
+name|usb_hub_descriptor
 block|{
 name|uByte
 name|bDescLength
@@ -2574,9 +2950,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_hub_descriptor
+name|usb_hub_descriptor_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_hub_ss_descriptor
+name|usb_hub_ss_descriptor
 block|{
 name|uByte
 name|bDescLength
@@ -2616,13 +3000,21 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_hub_ss_descriptor
+name|usb_hub_ss_descriptor_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* minimum HUB descriptor (8-ports maximum) */
 end_comment
 
 begin_struct
 struct|struct
-name|usb2_hub_descriptor_min
+name|usb_hub_descriptor_min
 block|{
 name|uByte
 name|bDescLength
@@ -2659,9 +3051,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_hub_descriptor_min
+name|usb_hub_descriptor_min_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_device_qualifier
+name|usb_device_qualifier
 block|{
 name|uByte
 name|bLength
@@ -2695,9 +3095,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_device_qualifier
+name|usb_device_qualifier_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_otg_descriptor
+name|usb_otg_descriptor
 block|{
 name|uByte
 name|bLength
@@ -2720,6 +3128,14 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_otg_descriptor
+name|usb_otg_descriptor_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* OTG feature selectors */
@@ -2748,7 +3164,7 @@ end_define
 
 begin_struct
 struct|struct
-name|usb2_status
+name|usb_status
 block|{
 name|uWord
 name|wStatus
@@ -2772,9 +3188,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_status
+name|usb_status_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_hub_status
+name|usb_hub_status
 block|{
 name|uWord
 name|wHubStatus
@@ -2795,9 +3219,17 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_hub_status
+name|usb_hub_status_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|usb2_port_status
+name|usb_port_status
 block|{
 name|uWord
 name|wPortStatus
@@ -2875,13 +3307,136 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|usb_port_status
+name|usb_port_status_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * The "USB_SPEED" macros defines all the supported USB speeds.  */
+end_comment
+
+begin_enum
+enum|enum
+name|usb_dev_speed
+block|{
+name|USB_SPEED_VARIABLE
+block|,
+name|USB_SPEED_LOW
+block|,
+name|USB_SPEED_FULL
+block|,
+name|USB_SPEED_HIGH
+block|,
+name|USB_SPEED_SUPER
+block|, }
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|USB_SPEED_MAX
+value|(USB_SPEED_SUPER+1)
+end_define
+
+begin_comment
+comment|/*  * The "USB_REV" macros defines all the supported USB revisions.  */
+end_comment
+
+begin_enum
+enum|enum
+name|usb_revision
+block|{
+name|USB_REV_UNKNOWN
+block|,
+name|USB_REV_PRE_1_0
+block|,
+name|USB_REV_1_0
+block|,
+name|USB_REV_1_1
+block|,
+name|USB_REV_2_0
+block|,
+name|USB_REV_2_5
+block|,
+name|USB_REV_3_0
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|USB_REV_MAX
+value|(USB_REV_3_0+1)
+end_define
+
+begin_comment
+comment|/*  * Supported host contoller modes.  */
+end_comment
+
+begin_enum
+enum|enum
+name|usb_hc_mode
+block|{
+name|USB_MODE_HOST
+block|,
+comment|/* initiates transfers */
+name|USB_MODE_DEVICE
+block|,
+comment|/* bus transfer target */
+name|USB_MODE_DUAL
+comment|/* can be host or device */
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|USB_MODE_MAX
+value|(USB_MODE_DUAL+1)
+end_define
+
+begin_comment
+comment|/*  * The "USB_MODE" macros defines all the supported device states.  */
+end_comment
+
+begin_enum
+enum|enum
+name|usb_dev_state
+block|{
+name|USB_STATE_DETACHED
+block|,
+name|USB_STATE_ATTACHED
+block|,
+name|USB_STATE_POWERED
+block|,
+name|USB_STATE_ADDRESSED
+block|,
+name|USB_STATE_CONFIGURED
+block|, }
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|USB_STATE_MAX
+value|(USB_STATE_CONFIGURED+1)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_STANDARD_H_ */
+comment|/* _USB_STANDARD_H_ */
 end_comment
 
 end_unit

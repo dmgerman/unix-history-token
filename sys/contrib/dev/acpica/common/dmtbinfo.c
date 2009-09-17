@@ -1,22 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dmtbinfo - Table info for non-AML tables  *              $Revision: 1.13 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dmtbinfo - Table info for non-AML tables  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2007, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acpi.h>
+file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/acdisasm.h>
+file|<contrib/dev/acpica/include/accommon.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
 begin_comment
@@ -94,6 +100,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_BERT_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_TABLE_BERT,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_CPEP_OFFSET
 parameter_list|(
 name|f
@@ -134,11 +150,51 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_EINJ_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_TABLE_EINJ,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ERST_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_TABLE_ERST,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_TABLE_HEST,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_HPET_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
 value|(UINT8) ACPI_OFFSET (ACPI_TABLE_HPET,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IVRS_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_TABLE_IVRS,f)
 end_define
 
 begin_define
@@ -159,6 +215,16 @@ parameter_list|(
 name|f
 parameter_list|)
 value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MCFG,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSCT_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MSCT,f)
 end_define
 
 begin_define
@@ -224,6 +290,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_UEFI_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_TABLE_UEFI,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WAET_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WAET,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WDAT_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WDAT,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_WDRT_OFFSET
 parameter_list|(
 name|f
@@ -232,7 +328,7 @@ value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WDRT,f)
 end_define
 
 begin_comment
-comment|/* Sub-tables */
+comment|/* Subtables */
 end_comment
 
 begin_define
@@ -348,6 +444,196 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_DMAR2_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_DMAR_ATSR,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DMAR3_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_DMAR_RHSA,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EINJ0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_WHEA_HEADER,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_MACHINE_CHECK,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST1_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_CORRECTED,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST2_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_NMI,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST6_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_HEST_AER_ROOT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST7_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_HEST_AER,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST8_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_HEST_AER_BRIDGE,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST9_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_HEST_GENERIC,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HESTN_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_HEST_NOTIFY,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HESTB_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_ERROR_BANK,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IVRSH_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_IVRS_HEADER,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IVRS0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_IVRS_HARDWARE,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IVRS1_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_IVRS_MEMORY,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IVRSD_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DE_HEADER,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IVRS8A_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DEVICE8A,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IVRS8B_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DEVICE8B,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IVRS8C_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DEVICE8C,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_MADT0_OFFSET
 parameter_list|(
 name|f
@@ -438,6 +724,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_MADT9_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MADT10_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC_NMI,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_MADTH_OFFSET
 parameter_list|(
 name|f
@@ -458,6 +764,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_MSCT0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_MSCT_PROXIMITY,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SRATH_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_SUBTABLE_HEADER,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_SRAT0_OFFSET
 parameter_list|(
 name|f
@@ -473,6 +799,26 @@ parameter_list|(
 name|f
 parameter_list|)
 value|(UINT8) ACPI_OFFSET (ACPI_SRAT_MEM_AFFINITY,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SRAT2_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_SRAT_X2APIC_CPU_AFFINITY,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WDAT0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT8) ACPI_OFFSET (ACPI_WDAT_ENTRY,f)
 end_define
 
 begin_comment
@@ -560,6 +906,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_SRAT2_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_SRAT_X2APIC_CPU_AFFINITY,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_MADT_FLAG_OFFSET
 parameter_list|(
 name|f
@@ -639,6 +997,30 @@ parameter_list|,
 name|o
 parameter_list|)
 value|ACPI_FLAG_OFFSET (ACPI_MADT_INTERRUPT_SOURCE,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MADT9_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_MADT_LOCAL_X2APIC,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MADT10_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_MADT_LOCAL_X2APIC_NMI,f,o)
 end_define
 
 begin_comment
@@ -1057,7 +1439,7 @@ argument_list|(
 name|FirmwareWakingVector
 argument_list|)
 block|,
-literal|"Firmware Waking Vector(32)"
+literal|"32 Firmware Waking Vector"
 block|}
 block|,
 block|{
@@ -1096,6 +1478,19 @@ literal|"S4BIOS Support Present"
 block|}
 block|,
 block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_FACS_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"64-bit Wake Supported (V2)"
+block|}
+block|,
+block|{
 name|ACPI_DMT_UINT64
 block|,
 name|ACPI_FACS_OFFSET
@@ -1103,7 +1498,7 @@ argument_list|(
 name|XFirmwareWakingVector
 argument_list|)
 block|,
-literal|"Firmware Waking Vector(64)"
+literal|"64 Firmware Waking Vector"
 block|}
 block|,
 block|{
@@ -1115,6 +1510,44 @@ name|Version
 argument_list|)
 block|,
 literal|"Version"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT24
+block|,
+name|ACPI_FACS_OFFSET
+argument_list|(
+name|Reserved
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_FACS_OFFSET
+argument_list|(
+name|OspmFlags
+argument_list|)
+block|,
+literal|"OspmFlags (decoded below)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_FACS_FLAG_OFFSET
+argument_list|(
+name|OspmFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"64-bit Wake Env Required (V2)"
 block|}
 block|,
 block|{
@@ -1130,6 +1563,10 @@ end_decl_stmt
 
 begin_comment
 comment|/*******************************************************************************  *  * FADT - Fixed ACPI Description Table (Signature is FACP)  *  ******************************************************************************/
+end_comment
+
+begin_comment
+comment|/* ACPI 1.0 FADT (Version 1) */
 end_comment
 
 begin_decl_stmt
@@ -1172,7 +1609,7 @@ literal|"Model"
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT8
+name|ACPI_DMT_FADTPM
 block|,
 name|ACPI_FADT_OFFSET
 argument_list|(
@@ -1531,7 +1968,73 @@ argument_list|(
 name|BootFlags
 argument_list|)
 block|,
-literal|"Boot Architecture Flags"
+literal|"Boot Flags (decoded below)"
+block|}
+block|,
+comment|/* Boot Architecture Flags byte 0 */
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|BootFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Legacy Devices Supported (V2)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|BootFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"8042 Present on ports 60/64 (V2)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG2
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|BootFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"VGA Not Present (V4)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG3
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|BootFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"MSI Not Supported (V4)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG4
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|BootFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"PCIe ASPM Not Supported (V4)"
 block|}
 block|,
 block|{
@@ -1567,7 +2070,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"WBINVD is operational"
+literal|"WBINVD instruction is operational (V1)"
 block|}
 block|,
 block|{
@@ -1580,7 +2083,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"WBINVD does not invalidate"
+literal|"WBINVD flushes all caches (V1)"
 block|}
 block|,
 block|{
@@ -1593,7 +2096,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"All CPUs support C1"
+literal|"All CPUs support C1 (V1)"
 block|}
 block|,
 block|{
@@ -1606,7 +2109,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"C2 works on MP system"
+literal|"C2 works on MP system (V1)"
 block|}
 block|,
 block|{
@@ -1619,7 +2122,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"Power button is generic"
+literal|"Control Method Power Button (V1)"
 block|}
 block|,
 block|{
@@ -1632,7 +2135,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"Sleep button is generic"
+literal|"Control Method Sleep Button (V1)"
 block|}
 block|,
 block|{
@@ -1645,7 +2148,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"RTC wakeup not fixed"
+literal|"RTC wake not in fixed reg space (V1)"
 block|}
 block|,
 block|{
@@ -1658,7 +2161,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"RTC wakeup/S4 not possible"
+literal|"RTC can wake system from S4 (V1)"
 block|}
 block|,
 comment|/* Flags byte 1 */
@@ -1672,7 +2175,7 @@ argument_list|,
 literal|1
 argument_list|)
 block|,
-literal|"32-bit PM Timer"
+literal|"32-bit PM Timer (V1)"
 block|}
 block|,
 block|{
@@ -1685,7 +2188,138 @@ argument_list|,
 literal|1
 argument_list|)
 block|,
-literal|"Docking Supported"
+literal|"Docking Supported (V1)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG2
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|1
+argument_list|)
+block|,
+literal|"Reset Register Supported (V2)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG3
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|1
+argument_list|)
+block|,
+literal|"Sealed Case (V3)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG4
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|1
+argument_list|)
+block|,
+literal|"Headless - No Video (V3)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG5
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|1
+argument_list|)
+block|,
+literal|"Use native instr after SLP_TYPx (V3)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG6
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|1
+argument_list|)
+block|,
+literal|"PCIEXP_WAK Bits Supported (V4)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG7
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|1
+argument_list|)
+block|,
+literal|"Use Platform Timer (V4)"
+block|}
+block|,
+comment|/* Flags byte 2 */
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|2
+argument_list|)
+block|,
+literal|"RTC_STS valid on S4 wake (V4)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|2
+argument_list|)
+block|,
+literal|"Remote Power-on capable (V4)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG2
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|2
+argument_list|)
+block|,
+literal|"Use APIC Cluster Model (V4)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG3
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|2
+argument_list|)
+block|,
+literal|"Use APIC Physical Destination Mode (V4)"
 block|}
 block|,
 block|{
@@ -1700,7 +2334,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ACPI 2.0+ Extensions */
+comment|/* ACPI 1.0 MS Extensions (FADT version 2) */
 end_comment
 
 begin_decl_stmt
@@ -1710,136 +2344,62 @@ index|[]
 init|=
 block|{
 block|{
-name|ACPI_DMT_FLAG2
+name|ACPI_DMT_GAS
 block|,
-name|ACPI_FADT_FLAG_OFFSET
+name|ACPI_FADT_OFFSET
 argument_list|(
-name|Flags
-argument_list|,
-literal|1
+name|ResetRegister
 argument_list|)
 block|,
-literal|"Reset Register Supported"
+literal|"Reset Register"
 block|}
 block|,
 block|{
-name|ACPI_DMT_FLAG3
+name|ACPI_DMT_UINT8
 block|,
-name|ACPI_FADT_FLAG_OFFSET
+name|ACPI_FADT_OFFSET
 argument_list|(
-name|Flags
-argument_list|,
-literal|1
+name|ResetValue
 argument_list|)
 block|,
-literal|"Sealed Case"
+literal|"Value to cause reset"
 block|}
 block|,
 block|{
-name|ACPI_DMT_FLAG4
+name|ACPI_DMT_UINT24
 block|,
-name|ACPI_FADT_FLAG_OFFSET
+name|ACPI_FADT_OFFSET
 argument_list|(
-name|Flags
-argument_list|,
-literal|1
+name|Reserved4
+index|[
+literal|0
+index|]
 argument_list|)
 block|,
-literal|"Headless - No Video"
+literal|"Reserved"
 block|}
 block|,
 block|{
-name|ACPI_DMT_FLAG5
+name|ACPI_DMT_EXIT
 block|,
-name|ACPI_FADT_FLAG_OFFSET
-argument_list|(
-name|Flags
-argument_list|,
-literal|1
-argument_list|)
+literal|0
 block|,
-literal|"Native instr after SLP_TYP"
+name|NULL
 block|}
-block|,
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ACPI 2.0+ Extensions (FADT version 3+) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoFadt3
+index|[]
+init|=
 block|{
-name|ACPI_DMT_FLAG6
-block|,
-name|ACPI_FADT_FLAG_OFFSET
-argument_list|(
-name|Flags
-argument_list|,
-literal|1
-argument_list|)
-block|,
-literal|"PCIEXP_WAK Supported"
-block|}
-block|,
-block|{
-name|ACPI_DMT_FLAG7
-block|,
-name|ACPI_FADT_FLAG_OFFSET
-argument_list|(
-name|Flags
-argument_list|,
-literal|1
-argument_list|)
-block|,
-literal|"Use Platform Timer"
-block|}
-block|,
-comment|/* Flags byte 2 */
-block|{
-name|ACPI_DMT_FLAG0
-block|,
-name|ACPI_FADT_FLAG_OFFSET
-argument_list|(
-name|Flags
-argument_list|,
-literal|2
-argument_list|)
-block|,
-literal|"RTC_STS valid after S4"
-block|}
-block|,
-block|{
-name|ACPI_DMT_FLAG1
-block|,
-name|ACPI_FADT_FLAG_OFFSET
-argument_list|(
-name|Flags
-argument_list|,
-literal|2
-argument_list|)
-block|,
-literal|"Remote Power-on capable"
-block|}
-block|,
-block|{
-name|ACPI_DMT_FLAG2
-block|,
-name|ACPI_FADT_FLAG_OFFSET
-argument_list|(
-name|Flags
-argument_list|,
-literal|2
-argument_list|)
-block|,
-literal|"APIC Cluster Model"
-block|}
-block|,
-block|{
-name|ACPI_DMT_FLAG3
-block|,
-name|ACPI_FADT_FLAG_OFFSET
-argument_list|(
-name|Flags
-argument_list|,
-literal|2
-argument_list|)
-block|,
-literal|"APIC Physical Dest Mode"
-block|}
-block|,
 block|{
 name|ACPI_DMT_GAS
 block|,
@@ -2006,7 +2566,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Common sub-table header (one per sub-table) */
+comment|/* Common Subtable header (one per Subtable) */
 end_comment
 
 begin_decl_stmt
@@ -2016,7 +2576,7 @@ index|[]
 init|=
 block|{
 block|{
-name|ACPI_DMT_UINT8
+name|ACPI_DMT_ASF
 block|,
 name|ACPI_ASF0_OFFSET
 argument_list|(
@@ -2025,7 +2585,7 @@ operator|.
 name|Type
 argument_list|)
 block|,
-literal|"Sub-Table Type"
+literal|"Subtable Type"
 block|}
 block|,
 block|{
@@ -2091,7 +2651,7 @@ name|ACPI_DMT_UINT8
 block|,
 name|ACPI_ASF0_OFFSET
 argument_list|(
-name|MinResetValue
+name|MinPollInterval
 argument_list|)
 block|,
 literal|"Minimum Polling Interval"
@@ -2113,7 +2673,7 @@ name|ACPI_DMT_UINT32
 block|,
 name|ACPI_ASF0_OFFSET
 argument_list|(
-name|SystemId
+name|MfgId
 argument_list|)
 block|,
 literal|"Manufacturer ID"
@@ -2637,6 +3197,49 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*******************************************************************************  *  * BERT -  Boot Error Record table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoBert
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_BERT_OFFSET
+argument_list|(
+name|RegionLength
+argument_list|)
+block|,
+literal|"Boot Error Region Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_BERT_OFFSET
+argument_list|(
+name|Address
+argument_list|)
+block|,
+literal|"Boot Error Region Address"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * BOOT - Simple Boot Flag Table  *  ******************************************************************************/
 end_comment
 
@@ -2725,10 +3328,12 @@ name|ACPI_DMT_UINT8
 block|,
 name|ACPI_CPEP0_OFFSET
 argument_list|(
+name|Header
+operator|.
 name|Type
 argument_list|)
 block|,
-literal|"Sub-Table Type"
+literal|"Subtable Type"
 block|}
 block|,
 block|{
@@ -2736,6 +3341,8 @@ name|ACPI_DMT_UINT8
 block|,
 name|ACPI_CPEP0_OFFSET
 argument_list|(
+name|Header
+operator|.
 name|Length
 argument_list|)
 block|,
@@ -2865,6 +3472,17 @@ literal|"Host Address Width"
 block|}
 block|,
 block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_DMAR_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags"
+block|}
+block|,
+block|{
 name|ACPI_DMT_EXIT
 block|,
 literal|0
@@ -2876,7 +3494,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Common sub-table header (one per sub-table) */
+comment|/* Common Subtable header (one per Subtable) */
 end_comment
 
 begin_decl_stmt
@@ -2895,7 +3513,7 @@ operator|.
 name|Type
 argument_list|)
 block|,
-literal|"Sub-Table Type"
+literal|"Subtable Type"
 block|}
 block|,
 block|{
@@ -2909,35 +3527,6 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT8
-block|,
-name|ACPI_DMAR0_OFFSET
-argument_list|(
-name|Header
-operator|.
-name|Flags
-argument_list|)
-block|,
-literal|"Flags"
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT24
-block|,
-name|ACPI_DMAR0_OFFSET
-argument_list|(
-name|Header
-operator|.
-name|Reserved
-index|[
-literal|0
-index|]
-argument_list|)
-block|,
-literal|"Reserved"
 block|}
 block|,
 block|{
@@ -2984,14 +3573,25 @@ literal|"Entry Length"
 block|}
 block|,
 block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_DMARS_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
 name|ACPI_DMT_UINT8
 block|,
 name|ACPI_DMARS_OFFSET
 argument_list|(
-name|Segment
+name|EnumerationId
 argument_list|)
 block|,
-literal|"PCI Segment Number"
+literal|"Enumeration ID"
 block|}
 block|,
 block|{
@@ -3017,7 +3617,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* DMAR sub-tables */
+comment|/* DMAR Subtables */
 end_comment
 
 begin_comment
@@ -3030,6 +3630,39 @@ name|AcpiDmTableInfoDmar0
 index|[]
 init|=
 block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_DMAR0_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_DMAR0_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_DMAR0_OFFSET
+argument_list|(
+name|Segment
+argument_list|)
+block|,
+literal|"PCI Segment Number"
+block|}
+block|,
 block|{
 name|ACPI_DMT_UINT64
 block|,
@@ -3053,7 +3686,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1: Reserved Memory Defininition */
+comment|/* 1: Reserved Memory Definition */
 end_comment
 
 begin_decl_stmt
@@ -3063,11 +3696,33 @@ index|[]
 init|=
 block|{
 block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_DMAR1_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_DMAR1_OFFSET
+argument_list|(
+name|Segment
+argument_list|)
+block|,
+literal|"PCI Segment Number"
+block|}
+block|,
+block|{
 name|ACPI_DMT_UINT64
 block|,
 name|ACPI_DMAR1_OFFSET
 argument_list|(
-name|Address
+name|BaseAddress
 argument_list|)
 block|,
 literal|"Base Address"
@@ -3082,6 +3737,114 @@ name|EndAddress
 argument_list|)
 block|,
 literal|"End Address (limit)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 2: Root Port ATS Capability Definition */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoDmar2
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_DMAR2_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_DMAR2_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_DMAR2_OFFSET
+argument_list|(
+name|Segment
+argument_list|)
+block|,
+literal|"PCI Segment Number"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 3: Remapping Hardware Static Affinity Structure */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoDmar3
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_DMAR3_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_DMAR3_OFFSET
+argument_list|(
+name|BaseAddress
+argument_list|)
+block|,
+literal|"Base Address"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_DMAR3_OFFSET
+argument_list|(
+name|ProximityDomain
+argument_list|)
+block|,
+literal|"Proximity Domain"
 block|}
 block|,
 block|{
@@ -3175,6 +3938,1061 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*******************************************************************************  *  * EINJ - Error Injection table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoEinj
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_EINJ_OFFSET
+argument_list|(
+name|HeaderLength
+argument_list|)
+block|,
+literal|"Injection Header Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_EINJ_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT24
+block|,
+name|ACPI_EINJ_OFFSET
+argument_list|(
+name|Reserved
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_EINJ_OFFSET
+argument_list|(
+name|Entries
+argument_list|)
+block|,
+literal|"Injection Entry Count"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoEinj0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_EINJ0_OFFSET
+argument_list|(
+name|Action
+argument_list|)
+block|,
+literal|"Action"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_EINJ0_OFFSET
+argument_list|(
+name|Instruction
+argument_list|)
+block|,
+literal|"Instruction"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_EINJ0_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_EINJ0_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_EINJ0_OFFSET
+argument_list|(
+name|RegisterRegion
+argument_list|)
+block|,
+literal|"Register Region"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_EINJ0_OFFSET
+argument_list|(
+name|Value
+argument_list|)
+block|,
+literal|"Value"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_EINJ0_OFFSET
+argument_list|(
+name|Mask
+argument_list|)
+block|,
+literal|"Mask"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * ERST - Error Record Serialization table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoErst
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_ERST_OFFSET
+argument_list|(
+name|HeaderLength
+argument_list|)
+block|,
+literal|"Serialization Header Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_ERST_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_ERST_OFFSET
+argument_list|(
+name|Entries
+argument_list|)
+block|,
+literal|"Instruction Entry Count"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * HEST - Hardware Error Source table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST_OFFSET
+argument_list|(
+name|ErrorSourceCount
+argument_list|)
+block|,
+literal|"Error Source Count"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Common HEST structures for subtables */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DM_HEST_HEADER
+define|\
+value|{ACPI_DMT_HEST,     ACPI_HEST0_OFFSET (Header.Type),            "Subtable Type"}, \     {ACPI_DMT_UINT16,   ACPI_HEST0_OFFSET (Header.SourceId),        "Source Id"}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DM_HEST_AER
+define|\
+value|{ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Reserved1),              "Reserved"}, \     {ACPI_DMT_UINT8,    ACPI_HEST6_OFFSET (Aer.Flags),                  "Flags"}, \     {ACPI_DMT_UINT8,    ACPI_HEST6_OFFSET (Aer.Enabled),                "Enabled"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.RecordsToPreallocate),   "Records To Preallocate"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.MaxSectionsPerRecord),   "Max Sections Per Record"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.Bus),                    "Bus"}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Device),                 "Device"}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Function),               "Function"}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.DeviceControl),          "DeviceControl"}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Reserved2),              "Reserved"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.UncorrectableMask),      "Uncorrectable Mask"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.UncorrectableSeverity),  "Uncorrectable Severity"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.CorrectableMask),        "Correctable Mask"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.AdvancedCapabilities),   "Advanced Capabilities"}
+end_define
+
+begin_comment
+comment|/* HEST Subtables */
+end_comment
+
+begin_comment
+comment|/* 0: IA32 Machine Check Exception */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest0
+index|[]
+init|=
+block|{
+name|ACPI_DM_HEST_HEADER
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_HEST0_OFFSET
+argument_list|(
+name|Reserved1
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST0_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST0_OFFSET
+argument_list|(
+name|Enabled
+argument_list|)
+block|,
+literal|"Enabled"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST0_OFFSET
+argument_list|(
+name|RecordsToPreallocate
+argument_list|)
+block|,
+literal|"Records To Preallocate"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST0_OFFSET
+argument_list|(
+name|MaxSectionsPerRecord
+argument_list|)
+block|,
+literal|"Max Sections Per Record"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_HEST0_OFFSET
+argument_list|(
+name|GlobalCapabilityData
+argument_list|)
+block|,
+literal|"Global Capability Data"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_HEST0_OFFSET
+argument_list|(
+name|GlobalControlData
+argument_list|)
+block|,
+literal|"Global Control Data"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST0_OFFSET
+argument_list|(
+name|NumHardwareBanks
+argument_list|)
+block|,
+literal|"Num Hardware Banks"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT56
+block|,
+name|ACPI_HEST0_OFFSET
+argument_list|(
+name|Reserved3
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1: IA32 Corrected Machine Check */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest1
+index|[]
+init|=
+block|{
+name|ACPI_DM_HEST_HEADER
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_HEST1_OFFSET
+argument_list|(
+name|Reserved1
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST1_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST1_OFFSET
+argument_list|(
+name|Enabled
+argument_list|)
+block|,
+literal|"Enabled"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST1_OFFSET
+argument_list|(
+name|RecordsToPreallocate
+argument_list|)
+block|,
+literal|"Records To Preallocate"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST1_OFFSET
+argument_list|(
+name|MaxSectionsPerRecord
+argument_list|)
+block|,
+literal|"Max Sections Per Record"
+block|}
+block|,
+block|{
+name|ACPI_DMT_HESTNTFY
+block|,
+name|ACPI_HEST1_OFFSET
+argument_list|(
+name|Notify
+argument_list|)
+block|,
+literal|"Notify"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST1_OFFSET
+argument_list|(
+name|NumHardwareBanks
+argument_list|)
+block|,
+literal|"Num Hardware Banks"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT24
+block|,
+name|ACPI_HEST1_OFFSET
+argument_list|(
+name|Reserved2
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 2: IA32 Non-Maskable Interrupt */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest2
+index|[]
+init|=
+block|{
+name|ACPI_DM_HEST_HEADER
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST2_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST2_OFFSET
+argument_list|(
+name|RecordsToPreallocate
+argument_list|)
+block|,
+literal|"Records To Preallocate"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST2_OFFSET
+argument_list|(
+name|MaxSectionsPerRecord
+argument_list|)
+block|,
+literal|"Max Sections Per Record"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST2_OFFSET
+argument_list|(
+name|MaxRawDataLength
+argument_list|)
+block|,
+literal|"Max Raw Data Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 6: PCI Express Root Port AER */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest6
+index|[]
+init|=
+block|{
+name|ACPI_DM_HEST_HEADER
+block|,
+name|ACPI_DM_HEST_AER
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST6_OFFSET
+argument_list|(
+name|RootErrorCommand
+argument_list|)
+block|,
+literal|"Root Error Command"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 7: PCI Express AER (AER Endpoint) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest7
+index|[]
+init|=
+block|{
+name|ACPI_DM_HEST_HEADER
+block|,
+name|ACPI_DM_HEST_AER
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 8: PCI Express/PCI-X Bridge AER */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest8
+index|[]
+init|=
+block|{
+name|ACPI_DM_HEST_HEADER
+block|,
+name|ACPI_DM_HEST_AER
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST8_OFFSET
+argument_list|(
+name|UncorrectableMask2
+argument_list|)
+block|,
+literal|"2nd Uncorrectable Mask"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST8_OFFSET
+argument_list|(
+name|UncorrectableSeverity2
+argument_list|)
+block|,
+literal|"2nd Uncorrectable Severity"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST8_OFFSET
+argument_list|(
+name|AdvancedCapabilities2
+argument_list|)
+block|,
+literal|"2nd Advanced Capabilities"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 9: Generic Hardware Error Source */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHest9
+index|[]
+init|=
+block|{
+name|ACPI_DM_HEST_HEADER
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_HEST9_OFFSET
+argument_list|(
+name|RelatedSourceId
+argument_list|)
+block|,
+literal|"Related Source Id"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST9_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HEST9_OFFSET
+argument_list|(
+name|Enabled
+argument_list|)
+block|,
+literal|"Enabled"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST9_OFFSET
+argument_list|(
+name|RecordsToPreallocate
+argument_list|)
+block|,
+literal|"Records To Preallocate"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST9_OFFSET
+argument_list|(
+name|MaxSectionsPerRecord
+argument_list|)
+block|,
+literal|"Max Sections Per Record"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST9_OFFSET
+argument_list|(
+name|MaxRawDataLength
+argument_list|)
+block|,
+literal|"Max Raw Data Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_HEST9_OFFSET
+argument_list|(
+name|ErrorStatusAddress
+argument_list|)
+block|,
+literal|"Error Status Address"
+block|}
+block|,
+block|{
+name|ACPI_DMT_HESTNTFY
+block|,
+name|ACPI_HEST9_OFFSET
+argument_list|(
+name|Notify
+argument_list|)
+block|,
+literal|"Notify"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HEST9_OFFSET
+argument_list|(
+name|ErrorBlockLength
+argument_list|)
+block|,
+literal|"Error Status Block Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHestNotify
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_HESTNTYP
+block|,
+name|ACPI_HESTN_OFFSET
+argument_list|(
+name|Type
+argument_list|)
+block|,
+literal|"Notify Type"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HESTN_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Notify Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_HESTN_OFFSET
+argument_list|(
+name|ConfigWriteEnable
+argument_list|)
+block|,
+literal|"Configuration Write Enable"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTN_OFFSET
+argument_list|(
+name|PollInterval
+argument_list|)
+block|,
+literal|"PollInterval"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTN_OFFSET
+argument_list|(
+name|Vector
+argument_list|)
+block|,
+literal|"Vector"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTN_OFFSET
+argument_list|(
+name|PollingThresholdValue
+argument_list|)
+block|,
+literal|"Polling Threshold Value"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTN_OFFSET
+argument_list|(
+name|PollingThresholdWindow
+argument_list|)
+block|,
+literal|"Polling Threshold Window"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTN_OFFSET
+argument_list|(
+name|ErrorThresholdValue
+argument_list|)
+block|,
+literal|"Error Threshold Value"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTN_OFFSET
+argument_list|(
+name|ErrorThresholdWindow
+argument_list|)
+block|,
+literal|"Error Threshold Window"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * IA32 Error Bank(s) - Follows the ACPI_HEST_IA_MACHINE_CHECK and  * ACPI_HEST_IA_CORRECTED structures.  */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoHestBank
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HESTB_OFFSET
+argument_list|(
+name|BankNumber
+argument_list|)
+block|,
+literal|"Bank Number"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HESTB_OFFSET
+argument_list|(
+name|ClearStatusOnInit
+argument_list|)
+block|,
+literal|"Clear Status On Init"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HESTB_OFFSET
+argument_list|(
+name|StatusFormat
+argument_list|)
+block|,
+literal|"Status Format"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_HESTB_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTB_OFFSET
+argument_list|(
+name|ControlRegister
+argument_list|)
+block|,
+literal|"Control Register"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_HESTB_OFFSET
+argument_list|(
+name|ControlData
+argument_list|)
+block|,
+literal|"Control Data"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTB_OFFSET
+argument_list|(
+name|StatusRegister
+argument_list|)
+block|,
+literal|"Status Register"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTB_OFFSET
+argument_list|(
+name|AddressRegister
+argument_list|)
+block|,
+literal|"Address Register"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_HESTB_OFFSET
+argument_list|(
+name|MiscRegister
+argument_list|)
+block|,
+literal|"Misc Register"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * HPET - High Precision Event Timer table  *  ******************************************************************************/
 end_comment
 
@@ -3249,7 +5067,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"Page Protect"
+literal|"4K Page Protect"
 block|}
 block|,
 block|{
@@ -3262,20 +5080,441 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-literal|"4K Page Protect"
+literal|"64K Page Protect"
 block|}
 block|,
 block|{
-name|ACPI_DMT_FLAG2
+name|ACPI_DMT_EXIT
 block|,
-name|ACPI_HPET_FLAG_OFFSET
-argument_list|(
-name|Flags
-argument_list|,
 literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * IVRS - I/O Virtualization Reporting Structure  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIvrs
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IVRS_OFFSET
+argument_list|(
+name|Info
 argument_list|)
 block|,
-literal|"64K Page Protect"
+literal|"Virtualization Info"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_IVRS_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Common Subtable header (one per Subtable) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIvrsHdr
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_IVRS
+block|,
+name|ACPI_IVRSH_OFFSET
+argument_list|(
+name|Type
+argument_list|)
+block|,
+literal|"Subtable Type"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_IVRSH_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_IVRSH_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_IVRSH_OFFSET
+argument_list|(
+name|DeviceId
+argument_list|)
+block|,
+literal|"DeviceId"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IVRS subtables */
+end_comment
+
+begin_comment
+comment|/* 0x10: I/O Virtualization Hardware Definition (IVHD) Block */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIvrs0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_IVRS0_OFFSET
+argument_list|(
+name|CapabilityOffset
+argument_list|)
+block|,
+literal|"Capability Offset"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_IVRS0_OFFSET
+argument_list|(
+name|BaseAddress
+argument_list|)
+block|,
+literal|"Base Address"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_IVRS0_OFFSET
+argument_list|(
+name|PciSegmentGroup
+argument_list|)
+block|,
+literal|"PCI Segment Group"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_IVRS0_OFFSET
+argument_list|(
+name|Info
+argument_list|)
+block|,
+literal|"Virtualization Info"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IVRS0_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0x20, 0x21, 0x22: I/O Virtualization Memory Definition (IVMD) Block */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIvrs1
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_IVRS1_OFFSET
+argument_list|(
+name|AuxData
+argument_list|)
+block|,
+literal|"Auxiliary Data"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_IVRS1_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_IVRS1_OFFSET
+argument_list|(
+name|StartAddress
+argument_list|)
+block|,
+literal|"Start Address"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_IVRS1_OFFSET
+argument_list|(
+name|MemoryLength
+argument_list|)
+block|,
+literal|"Memory Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Device entry header for IVHD block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DMT_IVRS_DE_HEADER
+define|\
+value|{ACPI_DMT_UINT8,    ACPI_IVRSD_OFFSET (Type),                   "Entry Type"}, \     {ACPI_DMT_UINT16,   ACPI_IVRSD_OFFSET (Id),                     "Device ID"}, \     {ACPI_DMT_UINT8,    ACPI_IVRSD_OFFSET (DataSetting),            "Data Setting"}
+end_define
+
+begin_comment
+comment|/* 4-byte device entry */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIvrs4
+index|[]
+init|=
+block|{
+name|ACPI_DMT_IVRS_DE_HEADER
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 8-byte device entry */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIvrs8a
+index|[]
+init|=
+block|{
+name|ACPI_DMT_IVRS_DE_HEADER
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_IVRS8A_OFFSET
+argument_list|(
+name|Reserved1
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_IVRS8A_OFFSET
+argument_list|(
+name|UsedId
+argument_list|)
+block|,
+literal|"Source Used Device ID"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_IVRS8A_OFFSET
+argument_list|(
+name|Reserved2
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 8-byte device entry */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIvrs8b
+index|[]
+init|=
+block|{
+name|ACPI_DMT_IVRS_DE_HEADER
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IVRS8B_OFFSET
+argument_list|(
+name|ExtendedData
+argument_list|)
+block|,
+literal|"Extended Data"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 8-byte device entry */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoIvrs8c
+index|[]
+init|=
+block|{
+name|ACPI_DMT_IVRS_DE_HEADER
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_IVRS8C_OFFSET
+argument_list|(
+name|Handle
+argument_list|)
+block|,
+literal|"Handle"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_IVRS8C_OFFSET
+argument_list|(
+name|UsedId
+argument_list|)
+block|,
+literal|"Source Used Device ID"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_IVRS8C_OFFSET
+argument_list|(
+name|Variety
+argument_list|)
+block|,
+literal|"Variety"
 block|}
 block|,
 block|{
@@ -3346,7 +5585,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Common sub-table header (one per sub-table) */
+comment|/* Common Subtable header (one per Subtable) */
 end_comment
 
 begin_decl_stmt
@@ -3363,7 +5602,7 @@ argument_list|(
 name|Type
 argument_list|)
 block|,
-literal|"Sub-Table Type"
+literal|"Subtable Type"
 block|}
 block|,
 block|{
@@ -3389,7 +5628,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* MADT sub-tables */
+comment|/* MADT Subtables */
 end_comment
 
 begin_comment
@@ -4125,7 +6364,179 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * MCFG - PCI Memory Mapped Configuration table and sub-table  *  ******************************************************************************/
+comment|/* 9: Processor Local X2_APIC (ACPI 4.0) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMadt9
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MADT9_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT9_OFFSET
+argument_list|(
+name|LocalApicId
+argument_list|)
+block|,
+literal|"Processor x2Apic ID"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT9_OFFSET
+argument_list|(
+name|LapicFlags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_MADT9_FLAG_OFFSET
+argument_list|(
+name|LapicFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Processor Enabled"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT9_OFFSET
+argument_list|(
+name|Uid
+argument_list|)
+block|,
+literal|"Processor UID"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 10: Local X2_APIC NMI (ACPI 4.0) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMadt10
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MADT10_OFFSET
+argument_list|(
+name|IntiFlags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAGS0
+block|,
+name|ACPI_MADT10_FLAG_OFFSET
+argument_list|(
+name|IntiFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Polarity"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAGS2
+block|,
+name|ACPI_MADT10_FLAG_OFFSET
+argument_list|(
+name|IntiFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Trigger Mode"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT10_OFFSET
+argument_list|(
+name|Uid
+argument_list|)
+block|,
+literal|"Processor UID"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MADT10_OFFSET
+argument_list|(
+name|Lint
+argument_list|)
+block|,
+literal|"Interrupt Input LINT"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT24
+block|,
+name|ACPI_MADT10_OFFSET
+argument_list|(
+name|Reserved
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * MCFG - PCI Memory Mapped Configuration table and Subtable  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -4232,6 +6643,158 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*******************************************************************************  *  * MSCT - Maximum System Characteristics Table (ACPI 4.0)  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMsct
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MSCT_OFFSET
+argument_list|(
+name|ProximityOffset
+argument_list|)
+block|,
+literal|"Proximity Offset"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MSCT_OFFSET
+argument_list|(
+name|MaxProximityDomains
+argument_list|)
+block|,
+literal|"Max Proximity Domains"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MSCT_OFFSET
+argument_list|(
+name|MaxClockDomains
+argument_list|)
+block|,
+literal|"Max Clock Domains"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_MSCT_OFFSET
+argument_list|(
+name|MaxAddress
+argument_list|)
+block|,
+literal|"Max Physical Address"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Subtable - Maximum Proximity Domain Information. Version 1 */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMsct0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MSCT0_OFFSET
+argument_list|(
+name|Revision
+argument_list|)
+block|,
+literal|"Revision"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MSCT0_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Length"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MSCT0_OFFSET
+argument_list|(
+name|RangeStart
+argument_list|)
+block|,
+literal|"Domain Range Start"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MSCT0_OFFSET
+argument_list|(
+name|RangeEnd
+argument_list|)
+block|,
+literal|"Domain Range End"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MSCT0_OFFSET
+argument_list|(
+name|ProcessorCapacity
+argument_list|)
+block|,
+literal|"Processor Capacity"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_MSCT0_OFFSET
+argument_list|(
+name|MemoryCapacity
+argument_list|)
+block|,
+literal|"Memory Capacity"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * SBST - Smart Battery Specification Table  *  ******************************************************************************/
 end_comment
 
@@ -4274,6 +6837,27 @@ block|,
 literal|"Critical Level"
 block|}
 block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * SLIC - Software Licensing Description Table. NOT FULLY IMPLEMENTED  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoSlic
+index|[]
+init|=
+block|{
 block|{
 name|ACPI_DMT_EXIT
 block|,
@@ -4576,10 +7160,10 @@ name|ACPI_DMT_UINT8
 block|,
 name|ACPI_SPMI_OFFSET
 argument_list|(
-name|Reserved
+name|InterfaceType
 argument_list|)
 block|,
-literal|"Reserved"
+literal|"Interface Type"
 block|}
 block|,
 block|{
@@ -4587,10 +7171,10 @@ name|ACPI_DMT_UINT8
 block|,
 name|ACPI_SPMI_OFFSET
 argument_list|(
-name|InterfaceType
+name|Reserved
 argument_list|)
 block|,
-literal|"Interface Type"
+literal|"Reserved"
 block|}
 block|,
 block|{
@@ -4715,6 +7299,17 @@ literal|"PCI Function"
 block|}
 block|,
 block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_SPMI_OFFSET
+argument_list|(
+name|Reserved2
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
 name|ACPI_DMT_EXIT
 block|,
 literal|0
@@ -4726,7 +7321,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * SRAT - System Resource Affinity Table and sub-tables  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * SRAT - System Resource Affinity Table and Subtables  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -4768,38 +7363,63 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Common Subtable header (one per Subtable) */
+end_comment
+
 begin_decl_stmt
 name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoSrat0
+name|AcpiDmTableInfoSratHdr
 index|[]
 init|=
 block|{
 block|{
 name|ACPI_DMT_SRAT
 block|,
-name|ACPI_SRAT0_OFFSET
+name|ACPI_SRATH_OFFSET
 argument_list|(
-name|Header
-operator|.
 name|Type
 argument_list|)
 block|,
-literal|"Sub-Table Type"
+literal|"Subtable Type"
 block|}
 block|,
 block|{
 name|ACPI_DMT_UINT8
 block|,
-name|ACPI_SRAT0_OFFSET
+name|ACPI_SRATH_OFFSET
 argument_list|(
-name|Header
-operator|.
 name|Length
 argument_list|)
 block|,
 literal|"Length"
 block|}
 block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SRAT Subtables */
+end_comment
+
+begin_comment
+comment|/* 0: Processor Local APIC/SAPIC Affinity */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoSrat0
+index|[]
+init|=
+block|{
 block|{
 name|ACPI_DMT_UINT8
 block|,
@@ -4893,38 +7513,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* 1: Memory Affinity */
+end_comment
+
 begin_decl_stmt
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoSrat1
 index|[]
 init|=
 block|{
-block|{
-name|ACPI_DMT_SRAT
-block|,
-name|ACPI_SRAT1_OFFSET
-argument_list|(
-name|Header
-operator|.
-name|Type
-argument_list|)
-block|,
-literal|"Sub-Table Type"
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT8
-block|,
-name|ACPI_SRAT1_OFFSET
-argument_list|(
-name|Header
-operator|.
-name|Length
-argument_list|)
-block|,
-literal|"Length"
-block|}
-block|,
 block|{
 name|ACPI_DMT_UINT32
 block|,
@@ -4974,10 +7572,10 @@ name|ACPI_DMT_UINT32
 block|,
 name|ACPI_SRAT1_OFFSET
 argument_list|(
-name|MemoryType
+name|Reserved1
 argument_list|)
 block|,
-literal|"Memory Type"
+literal|"Reserved"
 block|}
 block|,
 block|{
@@ -5035,7 +7633,107 @@ name|ACPI_DMT_UINT64
 block|,
 name|ACPI_SRAT1_OFFSET
 argument_list|(
-name|Reserved1
+name|Reserved2
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 2: Processor Local X2_APIC Affinity (ACPI 4.0) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoSrat2
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_SRAT2_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_SRAT2_OFFSET
+argument_list|(
+name|ProximityDomain
+argument_list|)
+block|,
+literal|"Proximity Domain"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_SRAT2_OFFSET
+argument_list|(
+name|ApicId
+argument_list|)
+block|,
+literal|"Apic ID"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_SRAT2_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_SRAT2_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Enabled"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_SRAT2_OFFSET
+argument_list|(
+name|ClockDomain
+argument_list|)
+block|,
+literal|"Clock Domain"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_SRAT2_OFFSET
+argument_list|(
+name|Reserved2
 argument_list|)
 block|,
 literal|"Reserved"
@@ -5107,19 +7805,119 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * WDRT - Watchdog Resource Table  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * UEFI - UEFI Boot optimization Table  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
 name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoWdrt
+name|AcpiDmTableInfoUefi
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_BUF16
+block|,
+name|ACPI_UEFI_OFFSET
+argument_list|(
+name|Identifier
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"UUID Identifier"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_UEFI_OFFSET
+argument_list|(
+name|DataOffset
+argument_list|)
+block|,
+literal|"Data Offset"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * WAET - Windows ACPI Emulated devices Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoWaet
 index|[]
 init|=
 block|{
 block|{
 name|ACPI_DMT_UINT32
 block|,
-name|ACPI_WDRT_OFFSET
+name|ACPI_WAET_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_WAET_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"RTC needs no INT ack"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_WAET_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"PM timer, one read only"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * WDAT - Watchdog Action Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoWdat
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_WDAT_OFFSET
 argument_list|(
 name|HeaderLength
 argument_list|)
@@ -5130,12 +7928,302 @@ block|,
 block|{
 name|ACPI_DMT_UINT8
 block|,
-name|ACPI_WDRT_OFFSET
+name|ACPI_WDAT_OFFSET
 argument_list|(
 name|PciSegment
 argument_list|)
 block|,
 literal|"PCI Segment"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|PciBus
+argument_list|)
+block|,
+literal|"PCI Bus"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|PciDevice
+argument_list|)
+block|,
+literal|"PCI Device"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|PciFunction
+argument_list|)
+block|,
+literal|"PCI Function"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT24
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|Reserved
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|TimerPeriod
+argument_list|)
+block|,
+literal|"Timer Period"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|MaxCount
+argument_list|)
+block|,
+literal|"Max Count"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|MinCount
+argument_list|)
+block|,
+literal|"Min Count"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Enabled"
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG7
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Stopped When Asleep"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT24
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|Reserved2
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_WDAT_OFFSET
+argument_list|(
+name|Entries
+argument_list|)
+block|,
+literal|"Watchdog Entry Count"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* WDAT Subtables - Watchdog Instruction Entries */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoWdat0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_WDAT0_OFFSET
+argument_list|(
+name|Action
+argument_list|)
+block|,
+literal|"Watchdog Action"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_WDAT0_OFFSET
+argument_list|(
+name|Instruction
+argument_list|)
+block|,
+literal|"Instruction"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_WDAT0_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_WDAT0_OFFSET
+argument_list|(
+name|RegisterRegion
+argument_list|)
+block|,
+literal|"Register Region"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_WDAT0_OFFSET
+argument_list|(
+name|Value
+argument_list|)
+block|,
+literal|"Value"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_WDAT0_OFFSET
+argument_list|(
+name|Mask
+argument_list|)
+block|,
+literal|"Register Mask"
+block|}
+block|,
+block|{
+name|ACPI_DMT_EXIT
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * WDRT - Watchdog Resource Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoWdrt
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_WDRT_OFFSET
+argument_list|(
+name|ControlRegister
+argument_list|)
+block|,
+literal|"Control Register"
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_WDRT_OFFSET
+argument_list|(
+name|CountRegister
+argument_list|)
+block|,
+literal|"Count Register"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_WDRT_OFFSET
+argument_list|(
+name|PciDeviceId
+argument_list|)
+block|,
+literal|"PCI Device ID"
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_WDRT_OFFSET
+argument_list|(
+name|PciVendorId
+argument_list|)
+block|,
+literal|"PCI Vendor ID"
 block|}
 block|,
 block|{
@@ -5172,18 +8260,18 @@ literal|"PCI Function"
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT32
+name|ACPI_DMT_UINT8
 block|,
 name|ACPI_WDRT_OFFSET
 argument_list|(
-name|TimerPeriod
+name|PciSegment
 argument_list|)
 block|,
-literal|"Timer Period"
+literal|"PCI Segment"
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT32
+name|ACPI_DMT_UINT16
 block|,
 name|ACPI_WDRT_OFFSET
 argument_list|(
@@ -5194,72 +8282,14 @@ literal|"Max Count"
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT32
-block|,
-name|ACPI_WDRT_OFFSET
-argument_list|(
-name|MinCount
-argument_list|)
-block|,
-literal|"Min Count"
-block|}
-block|,
-block|{
 name|ACPI_DMT_UINT8
 block|,
 name|ACPI_WDRT_OFFSET
 argument_list|(
-name|Flags
+name|Units
 argument_list|)
 block|,
-literal|"Flags (decoded below)"
-block|}
-block|,
-block|{
-name|ACPI_DMT_FLAG0
-block|,
-name|ACPI_WDRT_OFFSET
-argument_list|(
-name|Flags
-argument_list|)
-block|,
-literal|"Enabled"
-block|}
-block|,
-block|{
-name|ACPI_DMT_FLAG7
-block|,
-name|ACPI_WDRT_OFFSET
-argument_list|(
-name|Flags
-argument_list|)
-block|,
-literal|"Stopped When Asleep"
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT24
-block|,
-name|ACPI_WDRT_OFFSET
-argument_list|(
-name|Reserved
-index|[
-literal|0
-index|]
-argument_list|)
-block|,
-literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT32
-block|,
-name|ACPI_WDRT_OFFSET
-argument_list|(
-name|Entries
-argument_list|)
-block|,
-literal|"Watchdog Entries"
+literal|"Counter Units"
 block|}
 block|,
 block|{

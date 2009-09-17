@@ -14,26 +14,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_USB2_DEBUG_H_
+name|_USB_DEBUG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_USB2_DEBUG_H_
+name|_USB_DEBUG_H_
 end_define
-
-begin_comment
-comment|/* Declare parent SYSCTL USB node. */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_hw_usb2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Declare global USB debug variable. */
@@ -42,31 +30,9 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|usb2_debug
+name|usb_debug
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Force debugging until further */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USB_DEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|USB_DEBUG
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Check if USB debugging is enabled. */
@@ -149,34 +115,34 @@ end_endif
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_interface
+name|usb_interface
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_device
+name|usb_device
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_pipe
+name|usb_endpoint
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|usb2_xfer
+name|usb_xfer
 struct_decl|;
 end_struct_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_iface
+name|usb_dump_iface
 parameter_list|(
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 parameter_list|)
@@ -185,10 +151,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_device
+name|usb_dump_device
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
@@ -197,34 +163,34 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_queue
+name|usb_dump_queue
 parameter_list|(
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_pipe
+name|usb_dump_endpoint
 parameter_list|(
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|usb2_dump_xfer
+name|usb_dump_xfer
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
@@ -237,7 +203,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USB2_DEBUG_H_ */
+comment|/* _USB_DEBUG_H_ */
 end_comment
 
 end_unit

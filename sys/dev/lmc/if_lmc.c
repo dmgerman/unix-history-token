@@ -317,6 +317,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -20214,7 +20220,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fbsd_poll
 parameter_list|(
 name|struct
@@ -20284,7 +20290,9 @@ argument_list|,
 name|TLP_INT_TXRX
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 endif|#
 directive|endif
@@ -20305,6 +20313,9 @@ name|POLL_AND_CHECK_STATUS
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -23229,9 +23240,9 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|rtentry
+name|route
 modifier|*
-name|rt
+name|ro
 parameter_list|)
 block|{
 name|softc_t
@@ -24383,6 +24394,12 @@ operator|->
 name|if_capabilities
 operator||=
 name|IFCAP_POLLING
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator||=
+name|IFCAP_POLLING_NOCOUNT
 expr_stmt|;
 if|#
 directive|if
@@ -28620,7 +28637,7 @@ name|devclass
 decl_stmt|;
 name|DRIVER_MODULE
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 name|pci
 argument_list|,
@@ -28635,14 +28652,14 @@ argument_list|)
 expr_stmt|;
 name|MODULE_VERSION
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
 name|MODULE_DEPEND
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 name|pci
 argument_list|,
@@ -28658,7 +28675,7 @@ directive|if
 name|NETGRAPH
 name|MODULE_DEPEND
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 name|netgraph
 argument_list|,
@@ -28676,7 +28693,7 @@ directive|if
 name|NSPPP
 name|MODULE_DEPEND
 argument_list|(
-name|if_lmc
+name|lmc
 argument_list|,
 name|sppp
 argument_list|,

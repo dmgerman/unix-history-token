@@ -796,7 +796,7 @@ name|sp_lock
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_destroy
+name|mtx_unlock
 argument_list|(
 operator|&
 name|pool
@@ -821,6 +821,14 @@ name|xprt
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_destroy
+argument_list|(
+operator|&
+name|pool
+operator|->
+name|sp_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pool
@@ -1218,6 +1226,11 @@ name|xprt
 operator|->
 name|xp_pool
 decl_stmt|;
+name|SVC_ACQUIRE
+argument_list|(
+name|xprt
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1283,6 +1296,19 @@ name|xprt
 operator|->
 name|xp_pool
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|xprt
+operator|->
+name|xp_registered
+operator|==
+name|TRUE
+argument_list|,
+operator|(
+literal|"xprt_unregister_locked: not registered"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xprt
@@ -1355,6 +1381,26 @@ operator|->
 name|sp_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xprt
+operator|->
+name|xp_registered
+operator|==
+name|FALSE
+condition|)
+block|{
+comment|/* Already unregistered by another thread */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|pool
+operator|->
+name|sp_lock
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|xprt_unregister_locked
 argument_list|(
 name|xprt
@@ -1511,6 +1557,14 @@ name|xprt
 operator|->
 name|xp_pool
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|pool
+operator|->
+name|sp_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1520,9 +1574,7 @@ name|xp_registered
 condition|)
 block|{
 comment|/* 		 * Race with xprt_unregister - we lose. 		 */
-return|return;
-block|}
-name|mtx_lock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|pool
@@ -1530,6 +1582,8 @@ operator|->
 name|sp_lock
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!

@@ -255,6 +255,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_PATH_DEFTAPE
+value|"\\\\.\\tape0"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -281,6 +308,8 @@ begin_function_decl
 name|time_t
 name|get_date
 parameter_list|(
+name|time_t
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -396,6 +425,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 comment|/* 	 * Use a pointer for consistency, but stack-allocated storage 	 * for ease of cleanup. 	 */
 name|bsdtar
 operator|=
@@ -427,6 +459,28 @@ name|option_o
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Make sure open() function will be used with a binary mode. */
+comment|/* on cygwin, we need something similar, but instead link against */
+comment|/* a special startup object, binmode.o */
+name|_set_fmode
+argument_list|(
+name|_O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Need bsdtar->progname before calling bsdtar_warnc. */
 if|if
 condition|(
@@ -443,6 +497,32 @@ literal|"bsdtar"
 expr_stmt|;
 else|else
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+name|bsdtar
+operator|->
+name|progname
+operator|=
+name|strrchr
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|'\\'
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|bsdtar
 operator|->
 name|progname
@@ -455,6 +535,8 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bsdtar
@@ -477,6 +559,12 @@ operator|*
 name|argv
 expr_stmt|;
 block|}
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|setlocale
@@ -577,11 +665,10 @@ expr_stmt|;
 comment|/* Defaults for root user: */
 if|if
 condition|(
+name|bsdtar_is_privileged
+argument_list|(
 name|bsdtar
-operator|->
-name|user_uid
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* --same-owner */
@@ -792,6 +879,18 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_OPTIONS
+case|:
+name|bsdtar
+operator|->
+name|option_options
+operator|=
+name|bsdtar
+operator|->
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 comment|/* SUSv2 */
@@ -968,6 +1067,63 @@ endif|#
 directive|endif
 break|break;
 case|case
+literal|'J'
+case|:
+comment|/* GNU tar 1.21 and later */
+if|#
+directive|if
+name|HAVE_LIBLZMA
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|create_compression
+operator|!=
+literal|'\0'
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Can't specify both -%c and -%c"
+argument_list|,
+name|opt
+argument_list|,
+name|bsdtar
+operator|->
+name|create_compression
+argument_list|)
+expr_stmt|;
+name|bsdtar
+operator|->
+name|create_compression
+operator|=
+name|opt
+expr_stmt|;
+else|#
+directive|else
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"xz compression not supported by this version of bsdtar"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
 literal|'k'
 case|:
 comment|/* GNU tar */
@@ -1013,6 +1169,62 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_LZMA
+case|:
+if|#
+directive|if
+name|HAVE_LIBLZMA
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|create_compression
+operator|!=
+literal|'\0'
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Can't specify both -%c and -%c"
+argument_list|,
+name|opt
+argument_list|,
+name|bsdtar
+operator|->
+name|create_compression
+argument_list|)
+expr_stmt|;
+name|bsdtar
+operator|->
+name|create_compression
+operator|=
+name|opt
+expr_stmt|;
+else|#
+directive|else
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"lzma compression not supported by this version of bsdtar"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
 literal|'m'
 case|:
 comment|/* SUSv2 */
@@ -1046,6 +1258,8 @@ name|newer_ctime_sec
 operator|=
 name|get_date
 argument_list|(
+name|now
+argument_list|,
 name|bsdtar
 operator|->
 name|optarg
@@ -1119,6 +1333,8 @@ name|newer_mtime_sec
 operator|=
 name|get_date
 argument_list|(
+name|now
+argument_list|,
 name|bsdtar
 operator|->
 name|optarg
@@ -1426,6 +1642,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+break|break;
+case|case
+name|OPTION_SAME_OWNER
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_OWNER
+expr_stmt|;
 break|break;
 case|case
 name|OPTION_STRIP_COMPONENTS
@@ -2400,7 +2627,7 @@ literal|"  -v    Verbose\n"
 literal|"  -w    Interactive\n"
 literal|"Create: %p -c [options] [<file> |<dir> | @<archive> | -C<dir> ]\n"
 literal|"<file>,<dir>  add these items to archive\n"
-literal|"  -z, -j  Compress archive with gzip/bzip2\n"
+literal|"  -z, -j, -J, --lzma  Compress archive with gzip/bzip2/xz/lzma\n"
 literal|"  --format {ustar|pax|cpio|shar}  Select archive format\n"
 literal|"  --exclude<pattern>  Skip files that match pattern\n"
 literal|"  -C<dir>  Change to<dir> before processing remaining files\n"

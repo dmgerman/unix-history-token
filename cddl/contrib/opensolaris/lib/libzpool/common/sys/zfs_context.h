@@ -759,6 +759,13 @@ parameter_list|(
 name|mp
 parameter_list|)
 value|zmutex_destroy((kmutex_t *)(mp))
+define|#
+directive|define
+name|mutex_owned
+parameter_list|(
+name|mp
+parameter_list|)
+value|zmutex_owned((kmutex_t *)(mp))
 specifier|extern
 name|void
 name|zmutex_init
@@ -771,6 +778,15 @@ function_decl|;
 specifier|extern
 name|void
 name|zmutex_destroy
+parameter_list|(
+name|kmutex_t
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zmutex_owned
 parameter_list|(
 name|kmutex_t
 modifier|*
@@ -1605,6 +1621,15 @@ directive|define
 name|VN_RELE
 parameter_list|(
 name|vp
+parameter_list|)
+value|vn_close(vp, 0, NULL, NULL)
+define|#
+directive|define
+name|VN_RELE_ASYNC
+parameter_list|(
+name|vp
+parameter_list|,
+name|taskq
 parameter_list|)
 value|vn_close(vp, 0, NULL, NULL)
 define|#

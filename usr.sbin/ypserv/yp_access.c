@@ -589,7 +589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Access control functions.  *  * yp_access() checks the mapname and client host address and watches for  * the following things:  *  * - If the client is referencing one of the master.passwd.* maps, it must  *   be using a privileged port to make its RPC to us. If it is, then we can  *   assume that the caller is root and allow the RPC to succeed. If it  *   isn't access is denied.  *  * - The client's IP address is checked against the securenets rules.  *   There are two kinds of securenets support: the built-in support,  *   which is very simple and depends on the presence of a  *   /var/yp/securenets file, and tcp-wrapper support, which requires  *   Wietse Venema's libwrap.a and tcpd.h. (Since the tcp-wrapper  *   package does not ship with FreeBSD, we use the built-in support  *   by default. Users can recompile the server with the tcp-wrapper library  *   if they already have it installed and want to use hosts.allow and  *   hosts.deny to control access instead of having a separate securenets  *   file.)  *  *   If no /var/yp/securenets file is present, the host access checks  *   are bypassed and all hosts are allowed to connect.  *  * The yp_validdomain() function checks the domain specified by the caller  * to make sure it's actually served by this server. This is more a sanity  * check than an a security check, but this seems to be the best place for  * it.  */
+comment|/*  * Access control functions.  *  * yp_access() checks the mapname and client host address and watches for  * the following things:  *  * - If the client is referencing one of the master.passwd.* or shadow.* maps,  *   it must be using a privileged port to make its RPC to us. If it is, then  *   we can assume that the caller is root and allow the RPC to succeed. If it  *   isn't access is denied.  *  * - The client's IP address is checked against the securenets rules.  *   There are two kinds of securenets support: the built-in support,  *   which is very simple and depends on the presence of a  *   /var/yp/securenets file, and tcp-wrapper support, which requires  *   Wietse Venema's libwrap.a and tcpd.h. (Since the tcp-wrapper  *   package does not ship with FreeBSD, we use the built-in support  *   by default. Users can recompile the server with the tcp-wrapper library  *   if they already have it installed and want to use hosts.allow and  *   hosts.deny to control access instead of having a separate securenets  *   file.)  *  *   If no /var/yp/securenets file is present, the host access checks  *   are bypassed and all hosts are allowed to connect.  *  * The yp_validdomain() function checks the domain specified by the caller  * to make sure it's actually served by this server. This is more a sanity  * check than an a security check, but this seems to be the best place for  * it.  */
 end_comment
 
 begin_ifdef
@@ -892,6 +892,13 @@ argument_list|(
 name|map
 argument_list|,
 literal|"master.passwd."
+argument_list|)
+operator|||
+name|strstr
+argument_list|(
+name|map
+argument_list|,
+literal|"shadow."
 argument_list|)
 operator|||
 endif|#

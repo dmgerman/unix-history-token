@@ -18,7 +18,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DBG
+name|DEBUG
 end_ifdef
 
 begin_define
@@ -203,8 +203,6 @@ name|ULONG
 typedef|,
 modifier|*
 name|PULONG
-typedef|,
-name|LBA_T
 typedef|;
 end_typedef
 
@@ -240,6 +238,8 @@ name|unsigned
 name|long
 name|long
 name|HPT_U64
+typedef|,
+name|LBA_T
 typedef|;
 end_typedef
 

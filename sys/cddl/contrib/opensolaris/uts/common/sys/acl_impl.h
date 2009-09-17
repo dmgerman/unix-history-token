@@ -59,12 +59,12 @@ name|ACE_T
 init|=
 literal|1
 block|}
-name|acl_type_t
+name|zfs_acl_type_t
 typedef|;
 struct|struct
 name|acl_info
 block|{
-name|acl_type_t
+name|zfs_acl_type_t
 name|acl_type
 decl_stmt|;
 comment|/* style of acl */

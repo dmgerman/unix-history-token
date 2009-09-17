@@ -561,9 +561,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
-name|TODO
 name|int
 name|zfs_getacl
 parameter_list|(
@@ -596,8 +593,6 @@ name|cred_t
 modifier|*
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
 name|void
 name|zfs_acl_rele
 parameter_list|(

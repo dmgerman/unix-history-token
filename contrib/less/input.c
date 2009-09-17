@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -135,6 +135,8 @@ decl_stmt|;
 name|int
 name|backchars
 decl_stmt|;
+name|get_forw_line
+label|:
 if|if
 condition|(
 name|curr_pos
@@ -159,6 +161,9 @@ condition|(
 name|hilite_search
 operator|==
 name|OPT_ONPLUS
+operator|||
+name|is_filtering
+argument_list|()
 operator|||
 name|status_col
 condition|)
@@ -200,6 +205,7 @@ name|NULL_POSITION
 operator|)
 return|;
 block|}
+comment|/* 	 * Step back to the beginning of the line. 	 */
 name|base_pos
 operator|=
 name|curr_pos
@@ -256,6 +262,7 @@ operator|--
 name|base_pos
 expr_stmt|;
 block|}
+comment|/* 	 * Read forward again to the position we should start at. 	 */
 name|prewind
 argument_list|()
 expr_stmt|;
@@ -272,9 +279,13 @@ argument_list|(
 name|base_pos
 argument_list|)
 expr_stmt|;
+name|new_pos
+operator|=
+name|base_pos
+expr_stmt|;
 while|while
 condition|(
-name|base_pos
+name|new_pos
 operator|<
 name|curr_pos
 condition|)
@@ -305,10 +316,10 @@ name|pappend
 argument_list|(
 name|c
 argument_list|,
-name|base_pos
+name|new_pos
 argument_list|)
 expr_stmt|;
-name|base_pos
+name|new_pos
 operator|++
 expr_stmt|;
 if|if
@@ -321,7 +332,7 @@ block|{
 name|pshift_all
 argument_list|()
 expr_stmt|;
-name|base_pos
+name|new_pos
 operator|-=
 name|backchars
 expr_stmt|;
@@ -349,6 +360,7 @@ expr_stmt|;
 name|pshift_all
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Read the first character to display. 	 */
 name|c
 operator|=
 name|ch_forw_get
@@ -382,6 +394,7 @@ operator|==
 literal|'\r'
 operator|)
 expr_stmt|;
+comment|/* 	 * Read each character in the line and append to the line buffer. 	 */
 for|for
 control|(
 init|;
@@ -555,8 +568,55 @@ block|}
 name|pdone
 argument_list|(
 name|endline
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HILITE_SEARCH
+if|if
+condition|(
+name|is_filtered
+argument_list|(
+name|base_pos
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * We don't want to display this line. 		 * Get the next line. 		 */
+name|curr_pos
+operator|=
+name|new_pos
+expr_stmt|;
+goto|goto
+name|get_forw_line
+goto|;
+block|}
+if|if
+condition|(
+name|status_col
+operator|&&
+name|is_hilited
+argument_list|(
+name|base_pos
+argument_list|,
+name|ch_tell
+argument_list|()
+operator|-
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|set_status_col
+argument_list|(
+literal|'*'
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|squeeze
@@ -640,6 +700,8 @@ name|POSITION
 name|new_pos
 decl_stmt|,
 name|begin_new_pos
+decl_stmt|,
+name|base_pos
 decl_stmt|;
 name|int
 name|c
@@ -650,6 +712,8 @@ decl_stmt|;
 name|int
 name|backchars
 decl_stmt|;
+name|get_back_line
+label|:
 if|if
 condition|(
 name|curr_pos
@@ -679,6 +743,9 @@ condition|(
 name|hilite_search
 operator|==
 name|OPT_ONPLUS
+operator|||
+name|is_filtering
+argument_list|()
 operator|||
 name|status_col
 condition|)
@@ -860,7 +927,7 @@ literal|'\n'
 condition|)
 block|{
 comment|/* 			 * This is the newline ending the previous line. 			 * We have hit the beginning of the line. 			 */
-name|new_pos
+name|base_pos
 operator|=
 name|ch_tell
 argument_list|()
@@ -877,7 +944,7 @@ name|EOI
 condition|)
 block|{
 comment|/* 			 * We have hit the beginning of the file. 			 * This must be the first line in the file. 			 * This must, of course, be the beginning of the line. 			 */
-name|new_pos
+name|base_pos
 operator|=
 name|ch_tell
 argument_list|()
@@ -886,6 +953,10 @@ break|break;
 block|}
 block|}
 comment|/* 	 * Now scan forwards from the beginning of this line. 	 * We keep discarding "printable lines" (based on screen width) 	 * until we reach the curr_pos. 	 * 	 * {{ This algorithm is pretty inefficient if the lines 	 *    are much longer than the screen width,  	 *    but I don't know of any better way. }} 	 */
+name|new_pos
+operator|=
+name|base_pos
+expr_stmt|;
 if|if
 condition|(
 name|ch_seek
@@ -1074,8 +1145,55 @@ do|;
 name|pdone
 argument_list|(
 name|endline
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HILITE_SEARCH
+if|if
+condition|(
+name|is_filtered
+argument_list|(
+name|base_pos
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * We don't want to display this line. 		 * Get the previous line. 		 */
+name|curr_pos
+operator|=
+name|begin_new_pos
+expr_stmt|;
+goto|goto
+name|get_back_line
+goto|;
+block|}
+if|if
+condition|(
+name|status_col
+operator|&&
+name|is_hilited
+argument_list|(
+name|base_pos
+argument_list|,
+name|ch_tell
+argument_list|()
+operator|-
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|set_status_col
+argument_list|(
+literal|'*'
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|begin_new_pos

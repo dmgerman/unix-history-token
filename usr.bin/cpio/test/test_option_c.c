@@ -318,11 +318,9 @@ name|testprog
 argument_list|)
 expr_stmt|;
 comment|/* Verify that nothing went to stderr. */
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
-argument_list|,
-literal|8
 argument_list|,
 literal|"basic.err"
 argument_list|)
@@ -441,6 +439,33 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Group members bits and others bits do not work. */
+name|assertEqualMem
+argument_list|(
+name|e
+operator|+
+literal|18
+argument_list|,
+literal|"100666"
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Mode */
+else|#
+directive|else
 name|assertEqualMem
 argument_list|(
 name|e
@@ -453,6 +478,8 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* Mode */
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|from_octal
@@ -660,6 +687,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* ino */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* On Windows, symbolic link and group members bits and  	 * others bits do not work. */
 name|assertEqualMem
 argument_list|(
 name|e
@@ -672,6 +712,8 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* Mode */
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|from_octal
@@ -783,6 +825,33 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* Name size */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* On Windows, symbolic link does not work. */
+name|assertEqualMem
+argument_list|(
+name|e
+operator|+
+literal|65
+argument_list|,
+literal|"00000000012"
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+comment|/* File size */
+else|#
+directive|else
 name|assertEqualMem
 argument_list|(
 name|e
@@ -795,6 +864,8 @@ literal|11
 argument_list|)
 expr_stmt|;
 comment|/* File size */
+endif|#
+directive|endif
 name|assertEqualMem
 argument_list|(
 name|e
@@ -807,6 +878,37 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* Name contents */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* On Windows, symbolic link does not work. */
+name|assertEqualMem
+argument_list|(
+name|e
+operator|+
+literal|84
+argument_list|,
+literal|"123456789\0"
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+comment|/* File contents. */
+name|e
+operator|+=
+literal|94
+expr_stmt|;
+else|#
+directive|else
 name|assertEqualMem
 argument_list|(
 name|e
@@ -823,6 +925,8 @@ name|e
 operator|+=
 literal|88
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Second entry is "dir" */
 name|assert
 argument_list|(
@@ -902,6 +1006,33 @@ literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* Group members bits and others bits do not work. */
+name|assertEqualMem
+argument_list|(
+name|e
+operator|+
+literal|18
+argument_list|,
+literal|"040777"
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* Mode */
+else|#
+directive|else
 name|assertEqualMem
 argument_list|(
 name|e
@@ -914,6 +1045,8 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* Mode */
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|from_octal
@@ -958,6 +1091,9 @@ literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NLINKS_INACCURATE_FOR_DIRS
 name|assertEqualMem
 argument_list|(
 name|e
@@ -970,6 +1106,8 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* Nlink */
+endif|#
+directive|endif
 name|t
 operator|=
 name|from_octal

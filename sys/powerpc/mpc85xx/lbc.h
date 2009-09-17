@@ -62,7 +62,7 @@ name|LBC85XX_BR
 parameter_list|(
 name|n
 parameter_list|)
-value|(OCP85XX_LBC_OFF + (8 * n))
+value|(8 * n)
 end_define
 
 begin_define
@@ -72,21 +72,21 @@ name|LBC85XX_OR
 parameter_list|(
 name|n
 parameter_list|)
-value|(OCP85XX_LBC_OFF + 4 + (8 * n))
+value|(4 + (8 * n))
 end_define
 
 begin_define
 define|#
 directive|define
 name|LBC85XX_LBCR
-value|(OCP85XX_LBC_OFF + 0xd0)
+value|(0xd0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LBC85XX_LCRR
-value|(OCP85XX_LBC_OFF + 0xd4)
+value|(0xd4)
 end_define
 
 begin_comment

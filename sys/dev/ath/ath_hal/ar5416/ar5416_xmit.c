@@ -2045,8 +2045,6 @@ name|ds_ctl3
 argument_list|,
 name|AR_XmitRate1
 argument_list|)
-operator||
-name|HAL_TXSTAT_ALTRATE
 expr_stmt|;
 break|break;
 case|case
@@ -2064,8 +2062,6 @@ name|ds_ctl3
 argument_list|,
 name|AR_XmitRate2
 argument_list|)
-operator||
-name|HAL_TXSTAT_ALTRATE
 expr_stmt|;
 break|break;
 case|case
@@ -2083,8 +2079,6 @@ name|ds_ctl3
 argument_list|,
 name|AR_XmitRate3
 argument_list|)
-operator||
-name|HAL_TXSTAT_ALTRATE
 expr_stmt|;
 break|break;
 block|}

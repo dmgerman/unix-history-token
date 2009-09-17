@@ -232,11 +232,7 @@ argument_list|,
 name|ofw_bus_gen_get_type
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -391,8 +387,6 @@ modifier|*
 name|dinfo
 decl_stmt|;
 name|phandle_t
-name|node
-decl_stmt|,
 name|child
 decl_stmt|;
 name|device_t
@@ -443,20 +437,16 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attach those children represented in the device tree. 	 */
-name|node
-operator|=
-name|ofw_bus_get_node
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|child
 operator|=
 name|OF_child
 argument_list|(
-name|node
+name|ofw_bus_get_node
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 init|;
 name|child
@@ -471,6 +461,27 @@ name|child
 argument_list|)
 control|)
 block|{
+comment|/* 		 * Try to get the I2C address first from the i2c-address 		 * property, then try the reg property.  It moves around 		 * on different systems. 		 */
+if|if
+condition|(
+name|OF_getprop
+argument_list|(
+name|child
+argument_list|,
+literal|"i2c-address"
+argument_list|,
+operator|&
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
 if|if
 condition|(
 name|OF_getprop
@@ -669,7 +680,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* NULL all the OFW-related parts of the ivars for non-OFW children */
+comment|/* 	 * NULL all the OFW-related parts of the ivars for non-OFW 	 * children. 	 */
 name|devi
 operator|->
 name|opd_obdinfo

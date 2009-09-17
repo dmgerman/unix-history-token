@@ -10,13 +10,127 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_defs.h>
+file|<dev/usb/usbdi.h>
 end_include
 
 begin_include
@@ -55,13 +169,25 @@ directive|include
 file|<dev/usb/usb_transfer.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ddb/db_sym.h>
+end_include
+
 begin_comment
 comment|/*  * Define this unconditionally in case a kernel module is loaded that  * has been compiled with debugging options.  */
 end_comment
 
 begin_decl_stmt
 name|int
-name|usb2_debug
+name|usb_debug
 init|=
 literal|0
 decl_stmt|;
@@ -74,7 +200,7 @@ name|_hw
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|usb2
+name|usb
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -88,7 +214,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw_usb2
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -97,7 +223,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|usb2_debug
+name|usb_debug
 argument_list|,
 literal|0
 argument_list|,
@@ -107,22 +233,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_iface  *  * This function dumps information about an USB interface.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_iface  *  * This function dumps information about an USB interface.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_iface
+name|usb_dump_iface
 parameter_list|(
 name|struct
-name|usb2_interface
+name|usb_interface
 modifier|*
 name|iface
 parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_iface: iface=%p\n"
+literal|"usb_dump_iface: iface=%p\n"
 argument_list|,
 name|iface
 argument_list|)
@@ -155,22 +281,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_device  *  * This function dumps information about an USB device.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_device  *  * This function dumps information about an USB device.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_device
+name|usb_dump_device
 parameter_list|(
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_device: dev=%p\n"
+literal|"usb_dump_device: dev=%p\n"
 argument_list|,
 name|udev
 argument_list|)
@@ -229,36 +355,36 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_queue  *  * This function dumps the USB transfer that are queued up on an USB pipe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_queue  *  * This function dumps the USB transfer that are queued up on an USB endpoint.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_queue
+name|usb_dump_queue
 parameter_list|(
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"usb2_dump_queue: pipe=%p xfer: "
+literal|"usb_dump_queue: endpoint=%p xfer: "
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|xfer
 argument_list|,
-argument|&pipe->pipe_q.head
+argument|&ep->endpoint_q.head
 argument_list|,
 argument|wait_entry
 argument_list|)
@@ -280,51 +406,51 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_pipe  *  * This function dumps information about an USB pipe.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_endpoint  *  * This function dumps information about an USB endpoint.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_pipe
+name|usb_dump_endpoint
 parameter_list|(
 name|struct
-name|usb2_pipe
+name|usb_endpoint
 modifier|*
-name|pipe
+name|ep
 parameter_list|)
 block|{
 if|if
 condition|(
-name|pipe
+name|ep
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_pipe: pipe=%p"
+literal|"usb_dump_endpoint: endpoint=%p"
 argument_list|,
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|" edesc=%p isoc_next=%d toggle_next=%d"
 argument_list|,
-name|pipe
+name|ep
 operator|->
 name|edesc
 argument_list|,
-name|pipe
+name|ep
 operator|->
 name|isoc_next
 argument_list|,
-name|pipe
+name|ep
 operator|->
 name|toggle_next
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pipe
+name|ep
 operator|->
 name|edesc
 condition|)
@@ -333,7 +459,7 @@ name|printf
 argument_list|(
 literal|" bEndpointAddress=0x%02x"
 argument_list|,
-name|pipe
+name|ep
 operator|->
 name|edesc
 operator|->
@@ -346,9 +472,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|usb2_dump_queue
+name|usb_dump_queue
 argument_list|(
-name|pipe
+name|ep
 argument_list|)
 expr_stmt|;
 block|}
@@ -356,7 +482,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"usb2_dump_pipe: pipe=NULL\n"
+literal|"usb_dump_endpoint: endpoint=NULL\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -364,27 +490,27 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_dump_xfer  *  * This function dumps information about an USB transfer.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_dump_xfer  *  * This function dumps information about an USB transfer.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usb2_dump_xfer
+name|usb_dump_xfer
 parameter_list|(
 name|struct
-name|usb2_xfer
+name|usb_xfer
 modifier|*
 name|xfer
 parameter_list|)
 block|{
 name|struct
-name|usb2_device
+name|usb_device
 modifier|*
 name|udev
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"usb2_dump_xfer: xfer=%p\n"
+literal|"usb_dump_xfer: xfer=%p\n"
 argument_list|,
 name|xfer
 argument_list|)
@@ -402,14 +528,14 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|==
 name|NULL
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xfer %p: pipe=NULL\n"
+literal|"xfer %p: endpoint=NULL\n"
 argument_list|,
 name|xfer
 argument_list|)
@@ -427,7 +553,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"xfer %p: udev=%p vid=0x%04x pid=0x%04x addr=%d "
-literal|"pipe=%p ep=0x%02x attr=0x%02x\n"
+literal|"endpoint=%p ep=0x%02x attr=0x%02x\n"
 argument_list|,
 name|xfer
 argument_list|,
@@ -457,11 +583,11 @@ name|address
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -469,7 +595,7 @@ name|bEndpointAddress
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->

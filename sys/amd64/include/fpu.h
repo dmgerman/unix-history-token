@@ -185,7 +185,7 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
-name|int
+name|void
 name|fpudna
 parameter_list|(
 name|void

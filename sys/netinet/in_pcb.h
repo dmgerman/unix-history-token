@@ -39,12 +39,6 @@ directive|include
 file|<sys/_rwlock.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -55,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_endif
@@ -370,6 +370,10 @@ name|int
 name|inp_flags
 decl_stmt|;
 comment|/* (i) generic IP/datagram flags */
+name|int
+name|inp_flags2
+decl_stmt|;
+comment|/* (i) generic IP/datagram flags #2*/
 name|u_char
 name|inp_vflag
 decl_stmt|;
@@ -387,9 +391,9 @@ name|inp_ip_minttl
 decl_stmt|;
 comment|/* (i) minimum TTL or drop */
 name|uint32_t
-name|inp_ispare1
+name|inp_flowid
 decl_stmt|;
-comment|/* (x) connection id / queue id */
+comment|/* (x) flow id / queue id */
 name|u_int
 name|inp_refcount
 decl_stmt|;
@@ -398,10 +402,17 @@ name|void
 modifier|*
 name|inp_pspare
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 comment|/* (x) rtentry / general use */
+name|u_int
+name|inp_ispare
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* general use */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
@@ -501,6 +512,18 @@ name|inp_gencnt
 decl_stmt|;
 comment|/* (c) generation count */
 name|struct
+name|llentry
+modifier|*
+name|inp_lle
+decl_stmt|;
+comment|/* cached L2 information */
+name|struct
+name|rtentry
+modifier|*
+name|inp_rt
+decl_stmt|;
+comment|/* cached L3 information */
+name|struct
 name|rwlock
 name|inp_lock
 decl_stmt|;
@@ -585,22 +608,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|in6p_ip6_nxt
-value|inp_ip_p
-end_define
-
-begin_define
-define|#
-directive|define
 name|in6p_flowinfo
 value|inp_flow
-end_define
-
-begin_define
-define|#
-directive|define
-name|in6p_vflag
-value|inp_vflag
 end_define
 
 begin_define
@@ -641,57 +650,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|in6p_flags
-value|inp_flags
+name|inp_vnet
+value|inp_pcbinfo->ipi_vnet
 end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|in6p_socket
-value|inp_socket
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|in6p_lport
-value|inp_lport
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|in6p_fport
-value|inp_fport
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|in6p_ppcb
-value|inp_ppcb
-end_define
-
-begin_comment
-comment|/* for KAME src sync over BSD*'s */
-end_comment
 
 begin_comment
 comment|/*  * The range of the generation count, as used in this implementation, is 9e19.  * We would have to create 300 billion connections per second for this number  * to roll over in a year.  This seems sufficiently unlikely that we simply  * don't concern ourselves with that possibility.  */
@@ -843,7 +804,13 @@ name|struct
 name|rwlock
 name|ipi_lock
 decl_stmt|;
-comment|/* 	 * vimage 1 	 * general use 1 	 */
+comment|/* 	 * Pointer to network stack instance 	 */
+name|struct
+name|vnet
+modifier|*
+name|ipi_vnet
+decl_stmt|;
+comment|/* 	 * general use 2 	 */
 name|void
 modifier|*
 name|ipi_pspare
@@ -938,6 +905,36 @@ parameter_list|(
 name|inp
 parameter_list|)
 value|rw_wunlock(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_TRY_UPGRADE
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_try_upgrade(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_DOWNGRADE
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_downgrade(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_WLOCKED
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_wowned(&(inp)->inp_lock)
 end_define
 
 begin_define
@@ -1374,7 +1371,7 @@ value|(ntohs((lport))& (mask))
 end_define
 
 begin_comment
-comment|/*  * Flags for inp_vflags -- historically version flags only, but now quite a  * bit more due to an overflow of inp_flag, leading to some locking ambiguity  * as some bits are stable from initial allocation, and others may change.  */
+comment|/*  * Flags for inp_vflags -- historically version flags only  */
 end_comment
 
 begin_define
@@ -1402,59 +1399,15 @@ begin_comment
 comment|/* opened under IPv6 protocol */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INP_TIMEWAIT
-value|0x8
-end_define
-
 begin_comment
-comment|/* inpcb in TIMEWAIT, ppcb is tcptw */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INP_ONESBCAST
-value|0x10
-end_define
-
-begin_comment
-comment|/* send all-ones broadcast */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INP_DROPPED
-value|0x20
-end_define
-
-begin_comment
-comment|/* protocol drop flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INP_SOCKREF
-value|0x40
-end_define
-
-begin_comment
-comment|/* strong socket reference */
-end_comment
-
-begin_comment
-comment|/*  * Flags for inp_flag.  */
+comment|/*  * Flags for inp_flags.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INP_RECVOPTS
-value|0x01
+value|0x00000001
 end_define
 
 begin_comment
@@ -1465,7 +1418,7 @@ begin_define
 define|#
 directive|define
 name|INP_RECVRETOPTS
-value|0x02
+value|0x00000002
 end_define
 
 begin_comment
@@ -1476,7 +1429,7 @@ begin_define
 define|#
 directive|define
 name|INP_RECVDSTADDR
-value|0x04
+value|0x00000004
 end_define
 
 begin_comment
@@ -1487,7 +1440,7 @@ begin_define
 define|#
 directive|define
 name|INP_HDRINCL
-value|0x08
+value|0x00000008
 end_define
 
 begin_comment
@@ -1498,7 +1451,7 @@ begin_define
 define|#
 directive|define
 name|INP_HIGHPORT
-value|0x10
+value|0x00000010
 end_define
 
 begin_comment
@@ -1509,7 +1462,7 @@ begin_define
 define|#
 directive|define
 name|INP_LOWPORT
-value|0x20
+value|0x00000020
 end_define
 
 begin_comment
@@ -1520,7 +1473,7 @@ begin_define
 define|#
 directive|define
 name|INP_ANONPORT
-value|0x40
+value|0x00000040
 end_define
 
 begin_comment
@@ -1531,7 +1484,7 @@ begin_define
 define|#
 directive|define
 name|INP_RECVIF
-value|0x80
+value|0x00000080
 end_define
 
 begin_comment
@@ -1542,7 +1495,7 @@ begin_define
 define|#
 directive|define
 name|INP_MTUDISC
-value|0x100
+value|0x00000100
 end_define
 
 begin_comment
@@ -1553,7 +1506,7 @@ begin_define
 define|#
 directive|define
 name|INP_FAITH
-value|0x200
+value|0x00000200
 end_define
 
 begin_comment
@@ -1564,7 +1517,7 @@ begin_define
 define|#
 directive|define
 name|INP_RECVTTL
-value|0x400
+value|0x00000400
 end_define
 
 begin_comment
@@ -1575,7 +1528,7 @@ begin_define
 define|#
 directive|define
 name|INP_DONTFRAG
-value|0x800
+value|0x00000800
 end_define
 
 begin_comment
@@ -1585,23 +1538,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INP_NONLOCALOK
-value|0x1000
+name|INP_BINDANY
+value|0x00001000
 end_define
 
 begin_comment
-comment|/* Allow bind to spoof any address */
+comment|/* allow bind to any address */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INP_INHASHLIST
+value|0x00002000
+end_define
+
 begin_comment
-comment|/* - requires options IP_NONLOCALBIND */
+comment|/* in_pcbinshash() has been called */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IN6P_IPV6_V6ONLY
-value|0x008000
+value|0x00008000
 end_define
 
 begin_comment
@@ -1612,7 +1572,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_PKTINFO
-value|0x010000
+value|0x00010000
 end_define
 
 begin_comment
@@ -1623,7 +1583,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_HOPLIMIT
-value|0x020000
+value|0x00020000
 end_define
 
 begin_comment
@@ -1634,7 +1594,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_HOPOPTS
-value|0x040000
+value|0x00040000
 end_define
 
 begin_comment
@@ -1645,7 +1605,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_DSTOPTS
-value|0x080000
+value|0x00080000
 end_define
 
 begin_comment
@@ -1656,7 +1616,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_RTHDR
-value|0x100000
+value|0x00100000
 end_define
 
 begin_comment
@@ -1667,7 +1627,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_RTHDRDSTOPTS
-value|0x200000
+value|0x00200000
 end_define
 
 begin_comment
@@ -1678,7 +1638,7 @@ begin_define
 define|#
 directive|define
 name|IN6P_TCLASS
-value|0x400000
+value|0x00400000
 end_define
 
 begin_comment
@@ -1689,11 +1649,77 @@ begin_define
 define|#
 directive|define
 name|IN6P_AUTOFLOWLABEL
-value|0x800000
+value|0x00800000
 end_define
 
 begin_comment
 comment|/* attach flowlabel automatically */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_TIMEWAIT
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* in TIMEWAIT, ppcb is tcptw */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_ONESBCAST
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* send all-ones broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_DROPPED
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* protocol drop flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_SOCKREF
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* strong socket reference */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_SW_FLOWID
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* software generated flow id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_HW_FLOWID
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* hardware generated flow id */
 end_comment
 
 begin_define
@@ -1725,68 +1751,30 @@ name|INP_CONTROLOPTS
 value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL|IN6P_RFC2292|\ 				 IN6P_MTU)
 end_define
 
-begin_define
-define|#
-directive|define
-name|INP_UNMAPPABLEOPTS
-value|(IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR|\ 				 IN6P_TCLASS|IN6P_AUTOFLOWLABEL)
-end_define
-
 begin_comment
-comment|/* for KAME src sync over BSD*'s */
+comment|/*  * Flags for inp_flags2.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IN6P_HIGHPORT
-value|INP_HIGHPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_LOWPORT
-value|INP_LOWPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_ANONPORT
-value|INP_ANONPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_RECVIF
-value|INP_RECVIF
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_MTUDISC
-value|INP_MTUDISC
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_FAITH
-value|INP_FAITH
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_CONTROLOPTS
-value|INP_CONTROLOPTS
+name|INP_LLE_VALID
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* 	 * socket AF version is {newer than,or include} 	 * actual datagram AF version 	 */
+comment|/* cached lle is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RT_VALID
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* cached rtentry is valid */
 end_comment
 
 begin_define
@@ -1848,107 +1836,226 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_reservedhigh
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_reservedlow
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_lowfirstauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_lowlastauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_firstauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_lastauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_hifirstauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_hilastauto
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_randomized
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_randomcps
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_randomtime
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_stoprandom
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ipport_tcpallocs
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|V_ipport_reservedhigh
+value|VNET(ipport_reservedhigh)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_reservedlow
+value|VNET(ipport_reservedlow)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_lowfirstauto
+value|VNET(ipport_lowfirstauto)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_lowlastauto
+value|VNET(ipport_lowlastauto)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_firstauto
+value|VNET(ipport_firstauto)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_lastauto
+value|VNET(ipport_lastauto)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_hifirstauto
+value|VNET(ipport_hifirstauto)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_hilastauto
+value|VNET(ipport_hilastauto)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_randomized
+value|VNET(ipport_randomized)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_randomcps
+value|VNET(ipport_randomcps)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_randomtime
+value|VNET(ipport_randomtime)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_stoprandom
+value|VNET(ipport_stoprandom)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipport_tcpallocs
+value|VNET(ipport_tcpallocs)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -2338,47 +2445,11 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|in_pcbremlists
-parameter_list|(
-name|struct
-name|inpcb
-modifier|*
-name|inp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ipport_tick
 parameter_list|(
 name|void
 modifier|*
 name|xtp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Debugging routines compiled in when DDB is present.  */
-end_comment
-
-begin_function_decl
-name|void
-name|db_print_inpcb
-parameter_list|(
-name|struct
-name|inpcb
-modifier|*
-name|inp
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|indent
 parameter_list|)
 function_decl|;
 end_function_decl

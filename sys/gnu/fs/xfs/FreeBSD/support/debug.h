@@ -329,19 +329,6 @@ parameter_list|)
 value|((EX)?((void)0):assfail(#EX, __FILE__, __LINE__))
 end_define
 
-begin_define
-define|#
-directive|define
-name|debug_stop_all_cpus
-parameter_list|(
-name|param
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* param is "cpumask_t *" */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

@@ -26,6 +26,10 @@ end_macro
 
 begin_block
 block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|int
 name|r
 decl_stmt|;
@@ -39,7 +43,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s -it< test_option_t.cpio>t.out 2>t.err"
+literal|"%s -it< test_option_t.cpio>it.out 2>it.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -51,11 +55,59 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
 argument_list|,
-literal|8
+literal|"it.err"
+argument_list|)
+expr_stmt|;
+name|extract_reference_file
+argument_list|(
+literal|"test_option_t.stdout"
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|slurpfile
+argument_list|(
+name|NULL
+argument_list|,
+literal|"test_option_t.stdout"
+argument_list|)
+expr_stmt|;
+name|assertTextFileContents
+argument_list|(
+name|p
+argument_list|,
+literal|"it.out"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* We accept plain "-t" as a synonym for "-it" */
+name|r
+operator|=
+name|systemf
+argument_list|(
+literal|"%s -t< test_option_t.cpio>t.out 2>t.err"
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|r
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|assertTextFileContents
+argument_list|(
+literal|"1 block\n"
 argument_list|,
 literal|"t.err"
 argument_list|)
@@ -65,11 +117,43 @@ argument_list|(
 literal|"test_option_t.stdout"
 argument_list|)
 expr_stmt|;
-name|assertEqualFile
+name|p
+operator|=
+name|slurpfile
 argument_list|(
-literal|"t.out"
+name|NULL
 argument_list|,
 literal|"test_option_t.stdout"
+argument_list|)
+expr_stmt|;
+name|assertTextFileContents
+argument_list|(
+name|p
+argument_list|,
+literal|"t.out"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* But "-ot" is an error. */
+name|assert
+argument_list|(
+literal|0
+operator|!=
+name|systemf
+argument_list|(
+literal|"%s -ot< test_option_t.cpio>ot.out 2>ot.err"
+argument_list|,
+name|testprog
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"ot.out"
 argument_list|)
 expr_stmt|;
 comment|/* List reference archive verbosely, make sure the TOC is correct. */
@@ -89,11 +173,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|assertFileContents
+name|assertTextFileContents
 argument_list|(
 literal|"1 block\n"
-argument_list|,
-literal|8
 argument_list|,
 literal|"tv.err"
 argument_list|)
@@ -103,11 +185,57 @@ argument_list|(
 literal|"test_option_tv.stdout"
 argument_list|)
 expr_stmt|;
-name|assertEqualFile
+comment|/* This doesn't work because the usernames on different systems 	 * are different and cpio now looks up numeric UIDs on 	 * the local system. */
+comment|/* assertEqualFile("tv.out", "test_option_tv.stdout"); */
+comment|/* List reference archive with numeric IDs, verify TOC is correct. */
+name|r
+operator|=
+name|systemf
 argument_list|(
-literal|"tv.out"
+literal|"%s -itnv< test_option_t.cpio>itnv.out 2>itnv.err"
 argument_list|,
-literal|"test_option_tv.stdout"
+name|testprog
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|r
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|assertTextFileContents
+argument_list|(
+literal|"1 block\n"
+argument_list|,
+literal|"itnv.err"
+argument_list|)
+expr_stmt|;
+name|extract_reference_file
+argument_list|(
+literal|"test_option_tnv.stdout"
+argument_list|)
+expr_stmt|;
+comment|/* This does work because numeric IDs come from archive. */
+comment|/* Unfortunately, the timestamp still gets localized, so 	 * we can't just compare against a fixed result. */
+comment|/* TODO: Fix this. */
+comment|/* assertEqualFile("itnv.out", "test_option_tnv.stdout"); */
+comment|/* But "-n" without "-t" is an error. */
+name|assert
+argument_list|(
+literal|0
+operator|!=
+name|systemf
+argument_list|(
+literal|"%s -in< test_option_t.cpio>in.out 2>in.err"
+argument_list|,
+name|testprog
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"in.out"
 argument_list|)
 expr_stmt|;
 block|}

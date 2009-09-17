@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ldp.c,v 1.8.2.10 2007/02/26 13:31:33 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ldp.c,v 1.20 2006-06-23 02:03:09 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"af.h"
+file|"l2vpn.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"l2vpn.h"
+file|"af.h"
 end_include
 
 begin_comment
@@ -422,6 +422,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LDP_TLV_ADDRESS_LIST_AFNUM_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|LDP_TLV_HOP_COUNT
 value|0x0103
 end_define
@@ -544,6 +551,17 @@ directive|define
 name|LDP_TLV_LABEL_REQUEST_MSG_ID
 value|0x0600
 end_define
+
+begin_define
+define|#
+directive|define
+name|LDP_TLV_MTU
+value|0x0601
+end_define
+
+begin_comment
+comment|/* rfc 3988 */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -672,6 +690,12 @@ block|{
 name|LDP_TLV_LABEL_REQUEST_MSG_ID
 block|,
 literal|"Label Request Message ID"
+block|}
+block|,
+block|{
+name|LDP_TLV_MTU
+block|,
+literal|"MTU"
 block|}
 block|,
 block|{
@@ -893,13 +917,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|AFNUM_LEN
-value|2
-end_define
 
 begin_function_decl
 name|int
@@ -1197,29 +1214,34 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-name|AFNUM_LEN
+name|LDP_TLV_ADDRESS_LIST_AFNUM_LEN
 expr_stmt|;
 name|tlv_tlen
 operator|-=
-name|AFNUM_LEN
+name|LDP_TLV_ADDRESS_LIST_AFNUM_LEN
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t      Address Family: "
+literal|"\n\t      Address Family: %s, addresses"
+argument_list|,
+name|tok2str
+argument_list|(
+name|af_values
+argument_list|,
+literal|"Unknown (%u)"
+argument_list|,
+name|af
+argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|af
-operator|==
-name|AFNUM_INET
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"IPv4, addresses:"
-argument_list|)
-expr_stmt|;
+case|case
+name|AFNUM_INET
+case|:
 while|while
 condition|(
 name|tlv_tlen
@@ -1258,23 +1280,13 @@ name|in_addr
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+break|break;
 ifdef|#
 directive|ifdef
 name|INET6
-elseif|else
-if|if
-condition|(
-name|af
-operator|==
+case|case
 name|AFNUM_INET6
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"IPv6, addresses:"
-argument_list|)
-expr_stmt|;
+case|:
 while|while
 condition|(
 name|tlv_tlen
@@ -1313,9 +1325,13 @@ name|in6_addr
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+break|break;
 endif|#
 directive|endif
+default|default:
+comment|/* unknown AF */
+break|break;
+block|}
 break|break;
 case|case
 name|LDP_TLV_COMMON_SESSION
@@ -1951,6 +1967,20 @@ argument_list|(
 literal|", Recovery Time: %ums"
 argument_list|,
 name|ui
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LDP_TLV_MTU
+case|:
+name|printf
+argument_list|(
+literal|"\n\t      MTU: %u"
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+name|tptr
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

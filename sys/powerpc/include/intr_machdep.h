@@ -29,6 +29,13 @@ name|pic
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|device_t
+name|pic8259
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|trapframe
@@ -48,6 +55,15 @@ parameter_list|(
 name|device_t
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|powerpc_register_8259
+parameter_list|(
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

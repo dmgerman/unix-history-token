@@ -1641,6 +1641,17 @@ begin_comment
 comment|/* Don't create a buf if not found. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GB_NOWAIT_BD
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Do not wait for bufdaemon */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1660,7 +1671,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|maxswzone
 decl_stmt|;
 end_decl_stmt
@@ -1671,7 +1682,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|maxbcache
 decl_stmt|;
 end_decl_stmt
@@ -1682,14 +1693,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|runningbufspace
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|hibufspace
 decl_stmt|;
 end_decl_stmt
@@ -2144,6 +2155,8 @@ modifier|*
 name|geteblk
 parameter_list|(
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2260,7 +2273,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vfs_bio_set_validclean
+name|vfs_bio_set_valid
 parameter_list|(
 name|struct
 name|buf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -123,6 +123,12 @@ block|{
 literal|"examine"
 block|,
 name|A_EXAMINE
+block|}
+block|,
+block|{
+literal|"filter"
+block|,
+name|A_FILTER
 block|}
 block|,
 block|{
@@ -2122,7 +2128,7 @@ name|str
 parameter_list|,
 name|pat
 parameter_list|)
-value|(strncmp(str,pat,strlen(pat)-1) == 0)
+value|(strncmp(str,pat,strlen(pat)) == 0)
 if|if
 condition|(
 name|PREFIX
