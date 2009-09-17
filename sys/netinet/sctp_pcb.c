@@ -99,12 +99,16 @@ directive|include
 file|<netinet/udp.h>
 end_include
 
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|sctp_base_info
+argument_list|,
 name|system_base_info
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* FIX: we don't handle multiple link local scopes */
@@ -164,8 +168,6 @@ name|tmp_a
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -200,8 +202,6 @@ name|tmp_b
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -8676,8 +8676,6 @@ name|from6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -8870,8 +8868,6 @@ name|to6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -10171,8 +10167,6 @@ name|inp_ip_ttl
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ip_defttl
 argument_list|)
 expr_stmt|;
@@ -12171,8 +12165,6 @@ name|sin6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -12660,8 +12652,6 @@ name|first
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_hifirstauto
 argument_list|)
 expr_stmt|;
@@ -12669,8 +12659,6 @@ name|last
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_hilastauto
 argument_list|)
 expr_stmt|;
@@ -12737,8 +12725,6 @@ name|first
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_lowfirstauto
 argument_list|)
 expr_stmt|;
@@ -12746,8 +12732,6 @@ name|last
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_lowlastauto
 argument_list|)
 expr_stmt|;
@@ -12758,8 +12742,6 @@ name|first
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_firstauto
 argument_list|)
 expr_stmt|;
@@ -12767,8 +12749,6 @@ name|last
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_lastauto
 argument_list|)
 expr_stmt|;
@@ -17121,8 +17101,6 @@ name|sin6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)

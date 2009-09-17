@@ -2432,8 +2432,6 @@ name|inp_ip_ttl
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ip_defttl
 argument_list|)
 expr_stmt|;
