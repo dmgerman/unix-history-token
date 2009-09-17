@@ -1598,15 +1598,29 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CISS_BOARD_UNKNWON
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|CISS_BOARD_SA5
-value|(1<<0)
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|CISS_BOARD_SA5B
-value|(1<<1)
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_BOARD_NOMSI
+value|(1<<4)
 end_define
 
 begin_struct
@@ -1637,6 +1651,8 @@ block|,
 literal|0x4070
 block|,
 name|CISS_BOARD_SA5
+operator||
+name|CISS_BOARD_NOMSI
 block|,
 literal|"Compaq Smart Array 5300"
 block|}
@@ -1647,6 +1663,8 @@ block|,
 literal|0x4080
 block|,
 name|CISS_BOARD_SA5B
+operator||
+name|CISS_BOARD_NOMSI
 block|,
 literal|"Compaq Smart Array 5i"
 block|}
@@ -1657,6 +1675,8 @@ block|,
 literal|0x4082
 block|,
 name|CISS_BOARD_SA5B
+operator||
+name|CISS_BOARD_NOMSI
 block|,
 literal|"Compaq Smart Array 532"
 block|}
@@ -1667,6 +1687,8 @@ block|,
 literal|0x4083
 block|,
 name|CISS_BOARD_SA5B
+operator||
+name|CISS_BOARD_NOMSI
 block|,
 literal|"HP Smart Array 5312"
 block|}
@@ -3325,11 +3347,6 @@ operator|->
 name|supported_methods
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 block|}
 switch|switch
 condition|(
@@ -3367,9 +3384,13 @@ name|setup
 label|:
 if|if
 condition|(
+operator|(
 name|supported_methods
 operator|&
 name|CISS_TRANSPORT_METHOD_PERF
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|method
@@ -3820,7 +3841,7 @@ comment|/* filter, filterarg */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsize */
-name|CISS_COMMAND_SG_LENGTH
+name|CISS_MAX_SG_ELEMENTS
 argument_list|,
 comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
@@ -3882,7 +3903,7 @@ argument_list|,
 comment|/* filter, filterarg */
 name|MAXBSIZE
 argument_list|,
-name|CISS_COMMAND_SG_LENGTH
+name|CISS_MAX_SG_ELEMENTS
 argument_list|,
 comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
@@ -3928,7 +3949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/************************************************************************  * Setup MSI/MSIX operation (Performant only)  * Four interrupts are available, but we only use 1 right now.  */
+comment|/************************************************************************  * Setup MSI/MSIX operation (Performant only)  * Four interrupts are available, but we only use 1 right now.  If MSI-X  * isn't avaialble, try using MSI instead.  */
 end_comment
 
 begin_function
@@ -3942,29 +3963,15 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|uint32_t
-name|id
-decl_stmt|;
 name|int
 name|val
 decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* Weed out devices that don't actually support MSI */
-name|id
+name|i
 operator|=
-operator|(
-name|pci_get_subvendor
-argument_list|(
-name|sc
-operator|->
-name|ciss_dev
-argument_list|)
-operator|<<
-literal|16
-operator|)
-operator||
-name|pci_get_subdevice
+name|ciss_lookup
 argument_list|(
 name|sc
 operator|->
@@ -3973,35 +3980,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|id
-operator|==
-literal|0x0e114070
-operator|)
-operator|||
-operator|(
-name|id
-operator|==
-literal|0x0e114080
-operator|)
-operator|||
-operator|(
-name|id
-operator|==
-literal|0x0e114082
-operator|)
-operator|||
-operator|(
-name|id
-operator|==
-literal|0x0e114083
-operator|)
+name|ciss_vendor_data
+index|[
+name|i
+index|]
+operator|.
+name|flags
+operator|&
+name|CISS_BOARD_NOMSI
 condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/*      * Only need to use the minimum number of MSI vectors, as the driver      * doesn't support directed MSIX interrupts.      */
 name|val
 operator|=
 name|pci_msix_count
@@ -4017,11 +4010,39 @@ name|val
 operator|<
 name|CISS_MSI_COUNT
 condition|)
+block|{
+name|val
+operator|=
+name|pci_msi_count
+argument_list|(
+name|sc
+operator|->
+name|ciss_dev
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|ciss_dev
+argument_list|,
+literal|"got %d MSI messages]\n"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|<
+name|CISS_MSI_COUNT
+condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|val
 operator|=
 name|MIN
@@ -4045,22 +4066,54 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|pci_alloc_msi
+argument_list|(
+name|sc
+operator|->
+name|ciss_dev
+argument_list|,
+operator|&
+name|val
+argument_list|)
+operator|!=
+literal|0
+condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|sc
 operator|->
 name|ciss_msi
 operator|=
 name|val
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ciss_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"Using MSIX interrupt\n"
+literal|"Using %d MSIX interrupt%s\n"
+argument_list|,
+name|val
+argument_list|,
+operator|(
+name|val
+operator|!=
+literal|1
+operator|)
+condition|?
+literal|"s"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 for|for
@@ -4071,7 +4124,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|CISS_MSI_COUNT
+name|val
 condition|;
 name|i
 operator|++
@@ -4965,10 +5018,9 @@ condition|)
 break|break;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -5270,6 +5322,40 @@ name|cr
 operator|->
 name|cr_tag
 operator|=
+name|i
+expr_stmt|;
+name|cr
+operator|->
+name|cr_cc
+operator|=
+operator|(
+expr|struct
+name|ciss_command
+operator|*
+operator|)
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|sc
+operator|->
+name|ciss_command
+operator|+
+name|CISS_COMMAND_ALLOC_SIZE
+operator|*
+name|i
+operator|)
+expr_stmt|;
+name|cr
+operator|->
+name|cr_ccphys
+operator|=
+name|sc
+operator|->
+name|ciss_command_phys
+operator|+
+name|CISS_COMMAND_ALLOC_SIZE
+operator|*
 name|i
 expr_stmt|;
 name|bus_dmamap_create
@@ -5924,10 +6010,9 @@ block|}
 comment|/*      * Build the Report Logical/Physical LUNs command.      */
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cr
 operator|->
@@ -7405,10 +7490,9 @@ name|out
 goto|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cr
 operator|->
@@ -7725,10 +7809,9 @@ name|out
 goto|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -8152,10 +8235,9 @@ name|out
 goto|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -8499,10 +8581,9 @@ name|out
 goto|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -9362,10 +9443,9 @@ name|error
 decl_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|debug
 argument_list|(
@@ -9536,10 +9616,9 @@ operator|)
 expr_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -9675,10 +9754,9 @@ operator|)
 expr_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -10125,10 +10203,9 @@ argument_list|)
 expr_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|ce
 operator|=
@@ -10737,7 +10814,7 @@ comment|/* build the abort command */
 end_comment
 
 begin_comment
-unit|cc = CISS_FIND_COMMAND(cr);     cc->header.address.mode.mode = CISS_HDR_ADDRESS_MODE_PERIPHERAL;
+unit|cc = cr->cr_cc;     cc->header.address.mode.mode = CISS_HDR_ADDRESS_MODE_PERIPHERAL;
 comment|/* addressing? */
 end_comment
 
@@ -10877,10 +10954,9 @@ decl_stmt|;
 comment|/*      * Clean up the command structure.      *      * Note that we set up the error_info structure here, since the      * length can be overwritten by any command.      */
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -10921,10 +10997,9 @@ literal|0
 expr_stmt|;
 name|cmdphys
 operator|=
-name|CISS_FIND_COMMANDPHYS
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_ccphys
 expr_stmt|;
 name|cc
 operator|->
@@ -11184,10 +11259,9 @@ name|CISS_REQ_DATAIN
 expr_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -11471,10 +11545,9 @@ argument_list|)
 expr_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 comment|/*      * Allocate an in-kernel databuffer if required, copy in user data.      */
 name|mtx_unlock
@@ -11986,10 +12059,9 @@ name|CISS_TL_SIMPLE_POST_CMD
 argument_list|(
 name|sc
 argument_list|,
-name|CISS_FIND_COMMANDPHYS
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_ccphys
 argument_list|)
 expr_stmt|;
 block|}
@@ -12061,10 +12133,9 @@ name|cr_sc
 expr_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 for|for
 control|(
@@ -12305,10 +12376,9 @@ name|CISS_TL_SIMPLE_POST_CMD
 argument_list|(
 name|sc
 argument_list|,
-name|CISS_FIND_COMMANDPHYS
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_ccphys
 argument_list|)
 expr_stmt|;
 block|}
@@ -14063,10 +14133,9 @@ block|}
 comment|/*      * Build the command.      */
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cr
 operator|->
@@ -14796,10 +14865,9 @@ name|cr_sc
 expr_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|ce
 operator|=
@@ -15663,10 +15731,9 @@ condition|)
 block|{
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cr
 operator|->
@@ -15960,10 +16027,9 @@ condition|)
 continue|continue;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|ce
 operator|=
@@ -16232,10 +16298,9 @@ expr_stmt|;
 comment|/* (re)build the notify event command */
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -16541,10 +16606,9 @@ argument_list|)
 expr_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cn
 operator|=
@@ -16909,10 +16973,9 @@ expr_stmt|;
 comment|/* build the CDB */
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|cc
 operator|->
@@ -18826,10 +18889,9 @@ name|cr_sc
 expr_stmt|;
 name|cc
 operator|=
-name|CISS_FIND_COMMAND
-argument_list|(
 name|cr
-argument_list|)
+operator|->
+name|cr_cc
 expr_stmt|;
 name|ciss_printf
 argument_list|(

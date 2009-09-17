@@ -2694,7 +2694,7 @@ name|sc
 parameter_list|,
 name|cr
 parameter_list|)
-value|CISS_TL_SIMPLE_WRITE(sc, CISS_TL_SIMPLE_IPQ, CISS_FIND_COMMANDPHYS(cr) | (cr)->cr_sg_tag)
+value|CISS_TL_SIMPLE_WRITE(sc, CISS_TL_SIMPLE_IPQ, cr->cr_ccphys | (cr)->cr_sg_tag)
 end_define
 
 begin_define
