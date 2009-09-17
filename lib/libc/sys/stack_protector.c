@@ -500,6 +500,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PIC
+end_ifdef
+
 begin_expr_stmt
 name|__sym_compat
 argument_list|(
@@ -512,6 +518,26 @@ literal|.0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__stack_chk_fail
+argument_list|,
+name|__stack_chk_fail_local
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
