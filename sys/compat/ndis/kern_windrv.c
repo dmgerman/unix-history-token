@@ -133,6 +133,18 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<legacy/dev/usb/usb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<legacy/dev/usb/usbdi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/ndis/pe_var.h>
 end_include
 
@@ -1238,7 +1250,22 @@ operator|(
 name|ENOEXEC
 operator|)
 return|;
-comment|/* Dynamically link the HAL.dll routines -- also required. */
+comment|/* Dynamically link the HAL.dll routines -- optional. */
+if|if
+condition|(
+name|pe_get_import_descriptor
+argument_list|(
+name|img
+argument_list|,
+operator|&
+name|imp_desc
+argument_list|,
+literal|"HAL"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|pe_patch_imports
@@ -1255,6 +1282,7 @@ operator|(
 name|ENOEXEC
 operator|)
 return|;
+block|}
 comment|/* Dynamically link ntoskrnl.exe -- optional. */
 if|if
 condition|(
@@ -3451,11 +3479,6 @@ name|dummy
 decl_stmt|;
 block|{
 name|struct
-name|thread
-modifier|*
-name|t
-decl_stmt|;
-name|struct
 name|x86desc
 modifier|*
 name|gdt
@@ -3467,10 +3490,6 @@ decl_stmt|;
 name|uint16_t
 name|ltable
 decl_stmt|;
-name|t
-operator|=
-name|curthread
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&

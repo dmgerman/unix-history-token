@@ -7384,7 +7384,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|EAGAIN
+name|EBUSY
 operator|)
 return|;
 return|return

@@ -3382,13 +3382,11 @@ name|is_posix
 operator|=
 name|TRUE
 expr_stmt|;
-name|Var_Set
+name|Var_SetGlobal
 argument_list|(
 literal|"%POSIX"
 argument_list|,
 literal|"1003.2"
-argument_list|,
-name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4637,6 +4635,20 @@ name|ctxt
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|line
+argument_list|,
+name|MAKE_JOB_PREFIX
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|Job_SetPrefix
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

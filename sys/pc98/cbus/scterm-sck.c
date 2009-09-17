@@ -54,14 +54,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/syscons/sctermvar.h>
+file|<pc98/cbus/sctermvar.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SC_DUMB_TERMINAL
-end_ifndef
 
 begin_define
 define|#
@@ -6084,15 +6078,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SC_DUMB_TERMINAL */
-end_comment
 
 end_unit
 

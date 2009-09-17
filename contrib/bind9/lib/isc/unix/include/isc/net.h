@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: net.h,v 1.39.18.4 2005/04/27 05:02:37 sra Exp $ */
+comment|/* $Id: net.h,v 1.39.18.6 2008/06/24 23:45:55 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -196,7 +196,7 @@ name|s6_addr
 end_ifdef
 
 begin_comment
-comment|/*%  * Required for some pre RFC2133 implementations.  * IN6ADDR_ANY_INIT and IN6ADDR_LOOPBACK_INIT were added in  * draft-ietf-ipngwg-bsd-api-04.txt or draft-ietf-ipngwg-bsd-api-05.txt.    * If 's6_addr' is defined then assume that there is a union and three  * levels otherwise assume two levels required.  */
+comment|/*%  * Required for some pre RFC2133 implementations.  * IN6ADDR_ANY_INIT and IN6ADDR_LOOPBACK_INIT were added in  * draft-ietf-ipngwg-bsd-api-04.txt or draft-ietf-ipngwg-bsd-api-05.txt.  * If 's6_addr' is defined then assume that there is a union and three  * levels otherwise assume two levels required.  */
 end_comment
 
 begin_define
@@ -619,7 +619,7 @@ name|IN6_IS_ADDR_GEOGRAPHIC
 end_undef
 
 begin_comment
-comment|/*!   * \brief  * Fix UnixWare 7.1.1's broken IN6_IS_ADDR_* definitions.  */
+comment|/*!  * \brief  * Fix UnixWare 7.1.1's broken IN6_IS_ADDR_* definitions.  */
 end_comment
 
 begin_define
@@ -924,6 +924,28 @@ end_function_decl
 
 begin_comment
 comment|/*  * Returns whether UNIX domain sockets are supported.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_net_getudpportrange
+parameter_list|(
+name|int
+name|af
+parameter_list|,
+name|in_port_t
+modifier|*
+name|low
+parameter_list|,
+name|in_port_t
+modifier|*
+name|high
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Returns system's default range of ephemeral UDP ports, if defined.  * If the range is not available or unknown, ISC_NET_PORTRANGELOW and  * ISC_NET_PORTRANGEHIGH will be returned.  *  * Requires:  *  *\li	'low' and 'high' must be non NULL.  *  * Returns:  *  *\li	*low and *high will be the ports specifying the low and high ends of  *	the range.  */
 end_comment
 
 begin_ifdef

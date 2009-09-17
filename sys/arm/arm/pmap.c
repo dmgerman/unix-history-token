@@ -11344,8 +11344,6 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|ptep
-decl_stmt|,
-name|pte
 decl_stmt|;
 name|struct
 name|l2_bucket
@@ -11518,11 +11516,6 @@ operator|->
 name|pv_va
 argument_list|)
 index|]
-expr_stmt|;
-name|pte
-operator|=
-operator|*
-name|ptep
 expr_stmt|;
 operator|*
 name|ptep

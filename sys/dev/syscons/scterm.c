@@ -53,12 +53,6 @@ directive|include
 file|<dev/syscons/syscons.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/syscons/sctermvar.h>
-end_include
-
 begin_expr_stmt
 name|SET_DECLARE
 argument_list|(

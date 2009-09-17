@@ -1470,7 +1470,7 @@ condition|)
 block|{
 name|wpa_printf
 argument_list|(
-name|MSG_DEBUG
+name|MSG_ERROR
 argument_list|,
 literal|"CTRL: Invalid group "
 literal|"'%s'"

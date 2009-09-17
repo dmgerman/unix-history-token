@@ -19,6 +19,13 @@ directive|define
 name|_EHCI_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|EHCI_MAX_DEVICES
+value|USB_MAX_DEVICES
+end_define
+
 begin_comment
 comment|/* PCI config registers */
 end_comment
@@ -1064,6 +1071,94 @@ directive|define
 name|EHCI_PS_CLEAR
 value|(EHCI_PS_OCC | EHCI_PS_PEC | EHCI_PS_CSC)
 end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_USBMODE
+value|0x68
+end_define
+
+begin_comment
+comment|/* RW USB Device mode register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_CM
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* R/WO Controller Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_CM_IDLE
+value|0x0
+end_define
+
+begin_comment
+comment|/* Idle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_CM_HOST
+value|0x3
+end_define
+
+begin_comment
+comment|/* Host Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_ES
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* R/WO Endian Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_ES_LE
+value|0x0
+end_define
+
+begin_comment
+comment|/* Little-endian byte alignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_ES_BE
+value|0x4
+end_define
+
+begin_comment
+comment|/* Big-endian byte alignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_SDIS
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* R/WO Stream Disable Mode */
+end_comment
 
 begin_define
 define|#
@@ -2489,10 +2584,6 @@ name|sc_bus
 decl_stmt|;
 comment|/* base device */
 name|struct
-name|usb2_config_td
-name|sc_config_td
-decl_stmt|;
-name|struct
 name|usb2_callout
 name|sc_tmo_pcd
 decl_stmt|;
@@ -2507,6 +2598,14 @@ decl_stmt|;
 name|struct
 name|usb2_sw_transfer
 name|sc_root_intr
+decl_stmt|;
+name|struct
+name|usb2_device
+modifier|*
+name|sc_devices
+index|[
+name|EHCI_MAX_DEVICES
+index|]
 decl_stmt|;
 name|struct
 name|resource
@@ -2551,9 +2650,6 @@ name|void
 modifier|*
 name|sc_intr_hdl
 decl_stmt|;
-name|device_t
-name|sc_dev
-decl_stmt|;
 name|bus_size_t
 name|sc_io_size
 decl_stmt|;
@@ -2588,17 +2684,32 @@ define|#
 directive|define
 name|EHCI_SCFLG_SETMODE
 value|0x0001
-comment|/* set bridge mode again after init 					 * (Marvell) */
+comment|/* set bridge mode again after init */
 define|#
 directive|define
 name|EHCI_SCFLG_FORCESPEED
 value|0x0002
-comment|/* force speed (Marvell) */
+comment|/* force speed */
 define|#
 directive|define
 name|EHCI_SCFLG_NORESTERM
 value|0x0004
-comment|/* don't terminate reset sequence 					 * (Marvell) */
+comment|/* don't terminate reset sequence */
+define|#
+directive|define
+name|EHCI_SCFLG_BIGEDESC
+value|0x0008
+comment|/* big-endian byte order descriptors */
+define|#
+directive|define
+name|EHCI_SCFLG_BIGEMMIO
+value|0x0010
+comment|/* big-endian byte order MMIO */
+define|#
+directive|define
+name|EHCI_SCFLG_TT
+value|0x0020
+comment|/* transaction translator present */
 name|uint8_t
 name|sc_offs
 decl_stmt|;

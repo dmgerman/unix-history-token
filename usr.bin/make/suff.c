@@ -1221,6 +1221,13 @@ modifier|*
 name|t
 decl_stmt|;
 comment|/* target suffix */
+name|s
+operator|=
+name|t
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* silence gcc */
 name|gn
 operator|=
 name|SuffTransFind
@@ -1997,13 +2004,11 @@ operator|&
 name|inIncludes
 argument_list|)
 expr_stmt|;
-name|Var_Set
+name|Var_SetGlobal
 argument_list|(
 literal|".INCLUDES"
 argument_list|,
 name|ptr
-argument_list|,
-name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 name|free
@@ -2021,13 +2026,11 @@ operator|&
 name|inLibs
 argument_list|)
 expr_stmt|;
-name|Var_Set
+name|Var_SetGlobal
 argument_list|(
 literal|".LIBS"
 argument_list|,
 name|ptr
-argument_list|,
-name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 name|free

@@ -524,14 +524,20 @@ begin_define
 define|#
 directive|define
 name|EXT2_INODE_SIZE
-value|128
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_inode_size)
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXT2_FIRST_INO
-value|11
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_first_inode)
 end_define
 
 begin_endif

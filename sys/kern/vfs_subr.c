@@ -1553,6 +1553,19 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: mp %p with flags %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|mp
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -1577,6 +1590,12 @@ condition|(
 name|flags
 operator|&
 name|MBF_NOWAIT
+operator|||
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_REFEXPIRE
 condition|)
 block|{
 name|MNT_REL
@@ -1587,6 +1606,15 @@ expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: failed busying before sleeping"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1651,6 +1679,15 @@ operator|&
 name|mountlist_mtx
 argument_list|)
 expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: failed busying after sleep"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
@@ -1701,6 +1738,17 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: mp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -1709,6 +1757,19 @@ expr_stmt|;
 name|MNT_REL
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mp
+operator|->
+name|mnt_lockref
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"negative mnt_lockref"
+operator|)
 argument_list|)
 expr_stmt|;
 name|mp
@@ -1742,6 +1803,15 @@ operator|->
 name|mnt_kern_flag
 operator|&
 name|MNTK_UNMOUNT
+argument_list|)
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: waking up waiters"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|mp
@@ -1788,6 +1858,17 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: fsid %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|fsid
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1866,6 +1947,17 @@ operator|&
 name|mountlist_mtx
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: lookup failed for %p id"
+argument_list|,
+name|__func__
+argument_list|,
+name|fsid
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -1902,6 +1994,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: fsid %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|fsid
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1989,6 +2092,17 @@ operator|)
 return|;
 block|}
 block|}
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: lookup failed for %p id"
+argument_list|,
+name|__func__
+argument_list|,
+name|fsid
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -2200,6 +2314,17 @@ decl_stmt|;
 name|int
 name|mtype
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: mp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3255,6 +3380,8 @@ name|nmp
 decl_stmt|;
 name|int
 name|done
+decl_stmt|,
+name|vfslocked
 decl_stmt|;
 name|struct
 name|proc
@@ -3272,12 +3399,6 @@ argument_list|,
 name|p
 argument_list|,
 name|SHUTDOWN_PRI_FIRST
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 for|for
@@ -3384,9 +3505,6 @@ operator|=
 name|nmp
 control|)
 block|{
-name|int
-name|vfsunlocked
-decl_stmt|;
 if|if
 condition|(
 name|vfs_busy
@@ -3410,30 +3528,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-operator|!
-name|VFS_NEEDSGIANT
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
 name|mp
 argument_list|)
-condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-name|vfsunlocked
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|vfsunlocked
-operator|=
-literal|0
 expr_stmt|;
 name|done
 operator|+=
@@ -3442,14 +3542,9 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vfsunlocked
-condition|)
-name|mtx_lock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -3580,11 +3675,13 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_VFS
 argument_list|,
-literal|"vdestroy vp %p"
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
 argument_list|,
 name|vp
 argument_list|)
@@ -3902,11 +3999,13 @@ name|mount
 modifier|*
 name|vnmp
 decl_stmt|;
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_VFS
 argument_list|,
-literal|"vtryrecycle: trying vp %p"
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
 argument_list|,
 name|vp
 argument_list|)
@@ -3940,11 +4039,24 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: impossible to recycle, vp %p lock is already held"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+block|}
 comment|/* 	 * Don't recycle if its filesystem is being suspended. 	 */
 if|if
 condition|(
@@ -3966,6 +4078,17 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: impossible to recycle, cannot start the write for %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -3997,6 +4120,17 @@ expr_stmt|;
 name|vn_finished_write
 argument_list|(
 name|vnmp
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: impossible to recycle, %p is already referenced"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -4032,15 +4166,6 @@ expr_stmt|;
 name|vn_finished_write
 argument_list|(
 name|vnmp
-argument_list|)
-expr_stmt|;
-name|CTR1
-argument_list|(
-name|KTR_VFS
-argument_list|,
-literal|"vtryrecycle: recycled vp %p"
-argument_list|,
-name|vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -4093,6 +4218,19 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: mp %p with tag %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|mp
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4454,17 +4592,6 @@ operator||=
 name|VV_NOKNOTE
 expr_stmt|;
 block|}
-name|CTR2
-argument_list|(
-name|KTR_VFS
-argument_list|,
-literal|"getnewvnode: mp %p vp %p"
-argument_list|,
-name|mp
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -5173,6 +5300,18 @@ operator|->
 name|bo_object
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|flags
+operator|&
+operator|(
+name|V_ALT
+operator||
+name|V_NORMAL
+operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|VM_OBJECT_LOCK
@@ -5294,11 +5433,13 @@ name|int
 name|slptimeo
 parameter_list|)
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_VFS
 argument_list|,
-literal|"vinvalbuf vp %p flags %d"
+literal|"%s: vp %p with flags %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|vp
 argument_list|,
@@ -5754,14 +5895,23 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
-name|CTR2
+name|CTR5
 argument_list|(
 name|KTR_VFS
 argument_list|,
-literal|"vtruncbuf vp %p length %jd"
+literal|"%s: vp %p with cred %p and block %d:%ju"
+argument_list|,
+name|__func__
 argument_list|,
 name|vp
 argument_list|,
+name|cred
+argument_list|,
+name|blksize
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|length
 argument_list|)
 expr_stmt|;
@@ -9064,21 +9214,15 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|CTR3
+name|CTR2
 argument_list|(
 name|KTR_VFS
 argument_list|,
-literal|"v_incr_usecount: vp %p holdcnt %d usecount %d\n"
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
 argument_list|,
 name|vp
-argument_list|,
-name|vp
-operator|->
-name|v_holdcnt
-argument_list|,
-name|vp
-operator|->
-name|v_usecount
 argument_list|)
 expr_stmt|;
 name|vp
@@ -9138,21 +9282,15 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|CTR3
+name|CTR2
 argument_list|(
 name|KTR_VFS
 argument_list|,
-literal|"v_upgrade_usecount: vp %p holdcnt %d usecount %d\n"
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
 argument_list|,
 name|vp
-argument_list|,
-name|vp
-operator|->
-name|v_holdcnt
-argument_list|,
-name|vp
-operator|->
-name|v_usecount
 argument_list|)
 expr_stmt|;
 name|vp
@@ -9207,23 +9345,6 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|CTR3
-argument_list|(
-name|KTR_VFS
-argument_list|,
-literal|"v_decr_usecount: vp %p holdcnt %d usecount %d\n"
-argument_list|,
-name|vp
-argument_list|,
-name|vp
-operator|->
-name|v_holdcnt
-argument_list|,
-name|vp
-operator|->
-name|v_usecount
-argument_list|)
-expr_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -9244,6 +9365,17 @@ argument_list|,
 operator|(
 literal|"v_decr_usecount: negative usecount"
 operator|)
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 name|vp
@@ -9303,23 +9435,6 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|CTR3
-argument_list|(
-name|KTR_VFS
-argument_list|,
-literal|"v_decr_useonly: vp %p holdcnt %d usecount %d\n"
-argument_list|,
-name|vp
-argument_list|,
-name|vp
-operator|->
-name|v_holdcnt
-argument_list|,
-name|vp
-operator|->
-name|v_usecount
-argument_list|)
-expr_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -9340,6 +9455,17 @@ argument_list|,
 operator|(
 literal|"v_decr_useonly: negative usecount"
 operator|)
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 name|vp
@@ -9432,6 +9558,19 @@ literal|"vget: invalid lock operation"
 operator|)
 argument_list|)
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p with flags %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9472,6 +9611,17 @@ condition|)
 block|{
 name|vdrop
 argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: impossible to lock vnode %p"
+argument_list|,
+name|__func__
+argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
@@ -9582,6 +9732,17 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|VI_LOCK
 argument_list|(
 name|vp
@@ -9710,6 +9871,17 @@ literal|"vrele: missed vn_close"
 operator|)
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -9774,6 +9946,17 @@ literal|"vrele: negative ref cnt"
 argument_list|)
 expr_stmt|;
 block|}
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: return vnode %p to the freelist"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We want to hold the vnode until the inactive finishes to 	 * prevent vgone() races.  We drop the use count here and the 	 * hold count below when we're done. 	 */
 name|v_decr_useonly
 argument_list|(
@@ -9925,6 +10108,17 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|VI_LOCK
 argument_list|(
 name|vp
@@ -10024,6 +10218,17 @@ literal|"vput: negative ref cnt"
 argument_list|)
 expr_stmt|;
 block|}
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: return to freelist the vnode %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We want to hold the vnode until the inactive finishes to 	 * prevent vgone() races.  We drop the use count here and the 	 * hold count below when we're done. 	 */
 name|v_decr_useonly
 argument_list|(
@@ -10178,6 +10383,17 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_holdcnt
@@ -10246,6 +10462,17 @@ argument_list|,
 literal|"vdropl"
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -10286,6 +10513,17 @@ operator|&
 name|VI_DOOMED
 condition|)
 block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: destroying the vnode %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 name|vdestroy
 argument_list|(
 name|vp
@@ -10359,6 +10597,17 @@ argument_list|,
 operator|(
 literal|"vinactive: recursed on VI_DOINGINACT"
 operator|)
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 name|vp
@@ -10510,13 +10759,19 @@ literal|0
 decl_stmt|,
 name|error
 decl_stmt|;
-name|CTR1
+name|CTR4
 argument_list|(
 name|KTR_VFS
 argument_list|,
-literal|"vflush: mp %p"
+literal|"%s: mp %p with rootrefs %d and flags %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|mp
+argument_list|,
+name|rootrefs
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -10566,11 +10821,24 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vfs_root lookup failed with %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|vput
 argument_list|(
 name|rootvp
@@ -10973,11 +11241,24 @@ if|if
 condition|(
 name|busy
 condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: failing as %d vnodes are busy"
+argument_list|,
+name|__func__
+argument_list|,
+name|busy
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
+block|}
 for|for
 control|(
 init|;
@@ -11028,6 +11309,17 @@ argument_list|(
 name|vp
 argument_list|,
 literal|"vrecycle"
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 name|recycled
@@ -11133,15 +11425,6 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-name|CTR1
-argument_list|(
-name|KTR_VFS
-argument_list|,
-literal|"vgonel: vp %p"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
@@ -11169,6 +11452,17 @@ literal|"vgonel: vp %p has no reference."
 operator|,
 name|vp
 operator|)
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 name|td
@@ -12204,11 +12498,6 @@ argument_list|(
 name|vp
 operator|->
 name|v_vnlock
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14307,6 +14596,15 @@ literal|"vfs_unmountall: NULL curthread"
 operator|)
 argument_list|)
 expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: unmounting all filesystems"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|curthread
@@ -14445,6 +14743,17 @@ name|vm_object
 modifier|*
 name|obj
 decl_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: mp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -14615,15 +14924,6 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|CTR1
-argument_list|(
-name|KTR_VFS
-argument_list|,
-literal|"vfree vp %p"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -14704,6 +15004,17 @@ literal|"vfree: Freeing doomed vnode"
 operator|)
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -14777,15 +15088,6 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|CTR1
-argument_list|(
-name|KTR_VFS
-argument_list|,
-literal|"vbusy vp %p"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -14825,6 +15127,17 @@ argument_list|,
 operator|(
 literal|"vbusy: vnode already reclaimed."
 operator|)
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -19280,7 +19593,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark for update the access time of the file if the filesystem  * supports VA_MARK_ATIME.  This functionality is used by execve  * and mmap, so we want to avoid the synchronous I/O implied by  * directly setting va_atime for the sake of efficiency.  */
+comment|/*  * Mark for update the access time of the file if the filesystem  * supports VOP_MARKATIME.  This functionality is used by execve and  * mmap, so we want to avoid the I/O implied by directly setting  * va_atime for the sake of efficiency.  */
 end_comment
 
 begin_function
@@ -19298,10 +19611,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|struct
-name|vattr
-name|atimeattr
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -19320,33 +19629,14 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|VATTR_NULL
-argument_list|(
-operator|&
-name|atimeattr
-argument_list|)
-expr_stmt|;
-name|atimeattr
-operator|.
-name|va_vaflags
-operator||=
-name|VA_MARK_ATIME
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|VOP_SETATTR
+name|VOP_MARKATIME
 argument_list|(
 name|vp
-argument_list|,
-operator|&
-name|atimeattr
-argument_list|,
-name|cred
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

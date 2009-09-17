@@ -176,6 +176,10 @@ directive|ifdef
 name|ARM_USE_SMALL_ALLOC
 end_ifdef
 
+begin_comment
+comment|/*   * ARM_KERN_DIRECTMAP is used to make sure there's enough space between  * VM_MAXUSER_ADDRESS and KERNBASE to map the whole memory.  * It has to be a compile-time constant, even if arm_init_smallalloc(),  * which will do the mapping, gets the real amount of memory at runtime,  * because VM_MAXUSER_ADDRESS is a constant.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

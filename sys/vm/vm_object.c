@@ -2344,7 +2344,7 @@ literal|0
 argument_list|,
 operator|(
 literal|"vm_object_terminate: freeing busy page %p "
-literal|"p->busy = %d, p->flags %x\n"
+literal|"p->busy = %d, p->oflags %x\n"
 operator|,
 name|p
 operator|,
@@ -2354,7 +2354,7 @@ name|busy
 operator|,
 name|p
 operator|->
-name|flags
+name|oflags
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4640,11 +4640,7 @@ name|source
 operator|->
 name|flags
 operator|&
-operator|(
-name|OBJ_NEEDGIANT
-operator||
 name|OBJ_COLORED
-operator|)
 expr_stmt|;
 name|result
 operator|->
@@ -4675,18 +4671,6 @@ operator|)
 operator|-
 literal|1
 operator|)
-expr_stmt|;
-else|#
-directive|else
-name|result
-operator|->
-name|flags
-operator||=
-name|source
-operator|->
-name|flags
-operator|&
-name|OBJ_NEEDGIANT
 expr_stmt|;
 endif|#
 directive|endif
@@ -4939,16 +4923,6 @@ operator|=
 name|source
 expr_stmt|;
 block|}
-name|new_object
-operator|->
-name|flags
-operator||=
-name|orig_object
-operator|->
-name|flags
-operator|&
-name|OBJ_NEEDGIANT
-expr_stmt|;
 name|retry
 label|:
 if|if
@@ -6451,9 +6425,6 @@ argument_list|)
 expr_stmt|;
 name|again
 label|:
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6516,6 +6487,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Assert: the variable p is either (1) the page with the 	 * least pindex greater than or equal to the parameter pindex 	 * or (2) NULL. 	 */
 for|for
 control|(

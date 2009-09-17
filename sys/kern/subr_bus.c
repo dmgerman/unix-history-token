@@ -1087,7 +1087,7 @@ name|name
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|""
 argument_list|)
@@ -1400,7 +1400,7 @@ argument_list|)
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|""
 argument_list|)
@@ -1695,7 +1695,7 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -3441,15 +3441,13 @@ begin_comment
 comment|/* End of /dev/devctl code */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|device
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|bus_data_devices
 expr_stmt|;
 end_expr_stmt
@@ -3464,16 +3462,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kobj_method_t
 name|null_methods
 index|[]
 init|=
 block|{
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6740,7 +6735,7 @@ name|child
 operator|->
 name|devclass
 operator|!=
-literal|0
+name|NULL
 operator|)
 decl_stmt|;
 name|GIANT_REQUIRED
@@ -6850,6 +6845,9 @@ condition|(
 operator|!
 name|hasclass
 condition|)
+block|{
+if|if
+condition|(
 name|device_set_devclass
 argument_list|(
 name|child
@@ -6860,7 +6858,25 @@ name|driver
 operator|->
 name|name
 argument_list|)
+condition|)
+block|{
+name|PDEBUG
+argument_list|(
+operator|(
+literal|"Unable to set device class"
+operator|)
+argument_list|)
 expr_stmt|;
+name|device_set_driver
+argument_list|(
+name|child
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+block|}
 comment|/* Fetch any flags for the device before probing. */
 name|resource_int_value
 argument_list|(
@@ -7041,6 +7057,9 @@ name|child
 operator|->
 name|devclass
 condition|)
+block|{
+name|result
+operator|=
 name|device_set_devclass
 argument_list|(
 name|child
@@ -7052,6 +7071,18 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
 name|device_set_driver
 argument_list|(
 name|child
@@ -7518,7 +7549,7 @@ if|if
 condition|(
 name|name
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -13350,6 +13381,18 @@ parameter_list|,
 name|device_t
 name|child
 parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|irq
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -13463,11 +13506,7 @@ argument_list|,
 name|root_child_present
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -13641,7 +13680,7 @@ literal|"rootbus"
 block|,
 name|root_bus_module_handler
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

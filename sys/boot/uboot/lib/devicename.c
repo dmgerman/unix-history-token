@@ -742,7 +742,6 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-comment|/* XXX device length constant? */
 switch|switch
 condition|(
 name|dev

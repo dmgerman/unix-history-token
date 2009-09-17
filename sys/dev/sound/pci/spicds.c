@@ -1102,7 +1102,7 @@ name|codec
 argument_list|,
 literal|0x00
 argument_list|,
-literal|0x0f
+literal|0x8f
 argument_list|)
 expr_stmt|;
 comment|/* I2S, 24bit, power-up */
@@ -1402,7 +1402,8 @@ expr_stmt|;
 break|break;
 case|case
 name|SPICDS_TYPE_AK4381
-operator|||
+case|:
+case|case
 name|SPICDS_TYPE_AK4396
 case|:
 name|right

@@ -378,27 +378,19 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 name|ng_l2cap_lp_untimeout
 argument_list|(
 name|con
 argument_list|)
-operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|ng_l2cap_free_con
 argument_list|(
 name|con
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Do not free connection if ng_l2cap_lp_untimeout() failed 		 * let timeout handler deal with it. Always return error to 		 * the caller. 		 */
 block|}
 return|return
 operator|(
@@ -726,13 +718,11 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|EMSGSIZE
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|)
+return|;
 block|}
 name|ep
 operator|=
@@ -790,13 +780,11 @@ operator|->
 name|con_handle
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|EEXIST
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|)
+return|;
 block|}
 comment|/* Check if lower layer protocol is still connected */
 if|if
@@ -831,13 +819,11 @@ argument_list|,
 name|NG_L2CAP_HOOK_HCI
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|ENOTCONN
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|)
+return|;
 block|}
 comment|/* Create and intialize new connection descriptor */
 name|con
@@ -858,15 +844,11 @@ name|con
 operator|==
 name|NULL
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+operator|)
+return|;
 comment|/* Create and send LP_ConnectRsp event */
 name|NG_MKMESSAGE
 argument_list|(
@@ -897,13 +879,11 @@ argument_list|(
 name|con
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|)
+return|;
 block|}
 name|rp
 operator|=
@@ -987,28 +967,20 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 name|ng_l2cap_lp_untimeout
 argument_list|(
 name|con
 argument_list|)
-operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
 name|ng_l2cap_free_con
 argument_list|(
 name|con
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Do not free connection if ng_l2cap_lp_untimeout() failed 		 * let timeout handler deal with it. Always return error to 		 * the caller. 		 */
 block|}
-name|out
-label|:
 return|return
 operator|(
 name|error
@@ -1018,7 +990,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ng_hci_lp_con_ind */
+comment|/* ng_l2cap_lp_con_ind */
 end_comment
 
 begin_comment

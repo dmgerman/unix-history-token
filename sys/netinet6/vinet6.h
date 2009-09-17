@@ -98,6 +98,7 @@ name|struct
 name|route_in6
 name|_ip6_forward_rt
 decl_stmt|;
+comment|/* XXX remove */
 name|struct
 name|in6_addrpolicy
 name|_defaultaddrpolicy
@@ -165,9 +166,8 @@ decl_stmt|;
 name|int
 name|_nd6_allocated
 decl_stmt|;
-name|struct
-name|llinfo_nd6
-name|_llinfo_nd6
+name|int
+name|_nd6_onlink_ns_rfc4861
 decl_stmt|;
 name|struct
 name|nd_drhead
@@ -202,7 +202,8 @@ decl_stmt|;
 name|int
 name|_icmp6errpps_count
 decl_stmt|;
-name|int
+name|struct
+name|timeval
 name|_icmp6errppslim_last
 decl_stmt|;
 name|int
@@ -260,9 +261,6 @@ name|time_t
 name|_ip6_log_time
 decl_stmt|;
 name|int
-name|_nd6_onlink_ns_rfc4861
-decl_stmt|;
-name|int
 name|_pmtu_expire
 decl_stmt|;
 name|int
@@ -301,15 +299,19 @@ decl_stmt|;
 name|int
 name|_ip6_forward_srcrt
 decl_stmt|;
+comment|/* XXX remove */
 name|int
 name|_ip6_sourcecheck
 decl_stmt|;
+comment|/* XXX remove */
 name|int
 name|_ip6_sourcecheck_interval
 decl_stmt|;
+comment|/* XXX remove */
 name|int
 name|_ip6_ours_check_algorithm
 decl_stmt|;
+comment|/* XXX remove */
 name|int
 name|_nd6_prune
 decl_stmt|;
@@ -383,6 +385,36 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnet_inet6
+name|vnet_inet6_0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -587,20 +619,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_ip6_forward_rt
-value|VNET_INET6(ip6_forward_rt)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip6_forward_srcrt
-value|VNET_INET6(ip6_forward_srcrt)
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_ip6_forwarding
 value|VNET_INET6(ip6_forwarding)
 end_define
@@ -671,13 +689,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_ip6_ours_check_algorithm
-value|VNET_INET6(ip6_ours_check_algorithm)
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_ip6_prefer_tempaddr
 value|VNET_INET6(ip6_prefer_tempaddr)
 end_define
@@ -694,20 +705,6 @@ define|#
 directive|define
 name|V_ip6_sendredirects
 value|VNET_INET6(ip6_sendredirects)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip6_sourcecheck
-value|VNET_INET6(ip6_sourcecheck)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip6_sourcecheck_interval
-value|VNET_INET6(ip6_sourcecheck_interval)
 end_define
 
 begin_define

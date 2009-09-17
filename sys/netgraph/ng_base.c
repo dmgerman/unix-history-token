@@ -110,6 +110,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -146,6 +164,35 @@ name|NG_ABI_VERSION
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+name|struct
+name|vnet_netgraph
+name|vnet_netgraph_0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Mutex to protect topology events. */
@@ -530,6 +577,12 @@ begin_comment
 comment|/* XXX Don't need to initialise them because it's a LIST */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
@@ -543,6 +596,11 @@ name|NG_ID_HASH_SIZE
 index|]
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -579,6 +637,12 @@ define|\
 value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(node,&V_ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
@@ -592,6 +656,11 @@ name|NG_NAME_HASH_SIZE
 index|]
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -700,9 +769,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ngintr
+name|ngthread
 parameter_list|(
 name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1104,6 +1174,24 @@ name|NG_WORKLIST_UNLOCK
 parameter_list|()
 define|\
 value|mtx_unlock(&ng_worklist_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_WORKLIST_SLEEP
+parameter_list|()
+define|\
+value|mtx_sleep(&ng_worklist,&ng_worklist_mtx, PI_NET, "sleep", 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_WORKLIST_WAKEUP
+parameter_list|()
+define|\
+value|wakeup_one(&ng_worklist)
 end_define
 
 begin_ifdef
@@ -1562,14 +1650,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|ng_ID_t
 name|nextID
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -5435,13 +5532,10 @@ end_comment
 
 begin_function
 name|int
-name|ng_rmnode_flags
+name|ng_rmnode_self
 parameter_list|(
 name|node_p
 name|node
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|int
@@ -5480,7 +5574,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|ng_send_fn1
+name|ng_send_fn
 argument_list|(
 name|node
 argument_list|,
@@ -5492,34 +5586,11 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
-argument_list|,
-name|flags
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|ng_rmnode_self
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ng_rmnode_flags
-argument_list|(
-name|node
-argument_list|,
-name|NG_NOFLAGS
-argument_list|)
 operator|)
 return|;
 block|}
@@ -11003,6 +11074,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|numthreads
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of queue threads */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|maxalloc
 init|=
 literal|4096
@@ -11025,6 +11109,38 @@ end_decl_stmt
 begin_comment
 comment|/* limit the damage of a DoS */
 end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.graph.threads"
+argument_list|,
+operator|&
+name|numthreads
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_graph
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|threads
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|numthreads
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of queue processing threads"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|TUNABLE_INT
@@ -11866,7 +11982,19 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|error
 init|=
 literal|0
@@ -11880,6 +12008,10 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* Initialize everything. */
+name|V_nextID
+operator|=
+literal|1
+expr_stmt|;
 name|NG_WORKLIST_LOCK_INIT
 argument_list|()
 expr_stmt|;
@@ -12024,21 +12156,70 @@ argument_list|,
 name|maxdata
 argument_list|)
 expr_stmt|;
-name|netisr_register
+comment|/* Autoconfigure number of threads. */
+if|if
+condition|(
+name|numthreads
+operator|<=
+literal|0
+condition|)
+name|numthreads
+operator|=
+name|mp_ncpus
+expr_stmt|;
+comment|/* Create threads. */
+name|p
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* start with no process */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|numthreads
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|kproc_kthread_add
 argument_list|(
-name|NETISR_NETGRAPH
-argument_list|,
-operator|(
-name|netisr_t
-operator|*
-operator|)
-name|ngintr
+name|ngthread
 argument_list|,
 name|NULL
 argument_list|,
+operator|&
+name|p
+argument_list|,
+operator|&
+name|td
+argument_list|,
+name|RFHIGHPID
+argument_list|,
 literal|0
+argument_list|,
+literal|"ng_queue"
+argument_list|,
+literal|"ng_queue%d"
+argument_list|,
+name|i
 argument_list|)
+condition|)
+block|{
+name|numthreads
+operator|=
+name|i
 expr_stmt|;
+break|break;
+block|}
+block|}
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -12785,19 +12966,17 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* NETISR thread enters here */
-end_comment
-
-begin_comment
-comment|/*  * Pick a node off the list of nodes with work,  * try get an item to process off it.  * If there are no more, remove the node from the list.  */
+comment|/*  * Pick a node off the list of nodes with work,  * try get an item to process off it. Remove the node from the list.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|ngintr
+name|ngthread
 parameter_list|(
 name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 for|for
@@ -12813,6 +12992,9 @@ comment|/* Get node from the worklist. */
 name|NG_WORKLIST_LOCK
 argument_list|()
 expr_stmt|;
+while|while
+condition|(
+operator|(
 name|node
 operator|=
 name|STAILQ_FIRST
@@ -12820,18 +13002,13 @@ argument_list|(
 operator|&
 name|ng_worklist
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|node
+operator|)
+operator|==
+name|NULL
 condition|)
-block|{
-name|NG_WORKLIST_UNLOCK
+name|NG_WORKLIST_SLEEP
 argument_list|()
 expr_stmt|;
-break|break;
-block|}
 name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -13034,11 +13211,6 @@ expr_stmt|;
 name|NG_WORKLIST_UNLOCK
 argument_list|()
 expr_stmt|;
-name|schednetisr
-argument_list|(
-name|NETISR_NETGRAPH
-argument_list|)
-expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_NET
@@ -13053,6 +13225,9 @@ name|nd_ID
 argument_list|,
 name|node
 argument_list|)
+expr_stmt|;
+name|NG_WORKLIST_WAKEUP
+argument_list|()
 expr_stmt|;
 block|}
 else|else

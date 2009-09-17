@@ -2332,9 +2332,12 @@ begin_comment
 comment|/* Define to 1 if you have the `strndup' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRNDUP */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRNDUP
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strpbrk' function. */

@@ -1476,6 +1476,14 @@ name|aes_utf8
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|aes
+operator|->
+name|aes_wcs
+operator|!=
+name|NULL
+condition|)
 name|aes
 operator|->
 name|aes_set

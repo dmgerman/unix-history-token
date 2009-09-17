@@ -776,7 +776,7 @@ name|bt
 argument_list|,
 literal|0
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 expr_stmt|;
 name|autoboot

@@ -1030,13 +1030,23 @@ comment|/* output debugging info */
 end_comment
 
 begin_decl_stmt
-name|char
-name|catastrophicflag
+name|int
+name|inoopt
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* run in catastrophic mode */
+comment|/* trim out unused inodes */
+end_comment
+
+begin_decl_stmt
+name|char
+name|ckclean
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* only do work if not cleanly unmounted */
 end_comment
 
 begin_decl_stmt
@@ -1563,7 +1573,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|check_cgmagic
 parameter_list|(
 name|int
@@ -1922,6 +1932,9 @@ name|getnextinode
 parameter_list|(
 name|ino_t
 name|inumber
+parameter_list|,
+name|int
+name|rebuildcg
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -121,8 +121,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
+name|int
 name|getline
 parameter_list|(
 name|char

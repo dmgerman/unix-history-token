@@ -40,7 +40,7 @@ decl_stmt|;
 name|int
 name|ndig
 decl_stmt|;
-name|unsigned
+name|size_t
 name|bufsize
 decl_stmt|;
 else|#
@@ -58,7 +58,7 @@ parameter_list|,
 name|int
 name|ndig
 parameter_list|,
-name|unsigned
+name|size_t
 name|bufsize
 parameter_list|)
 endif|#
@@ -66,7 +66,7 @@ directive|endif
 block|{
 specifier|static
 name|FPI
-name|fpi
+name|fpi0
 init|=
 block|{
 literal|24
@@ -122,6 +122,20 @@ name|i
 decl_stmt|,
 name|mode
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|Honor_FLT_ROUNDS
+include|#
+directive|include
+file|"gdtoa_fltrnds.h"
+else|#
+directive|else
+define|#
+directive|define
+name|fpi
+value|&fpi0
+endif|#
+directive|endif
 if|if
 condition|(
 name|ndig
@@ -346,7 +360,6 @@ name|s
 operator|=
 name|gdtoa
 argument_list|(
-operator|&
 name|fpi
 argument_list|,
 name|ex
@@ -379,6 +392,8 @@ argument_list|,
 name|decpt
 argument_list|,
 name|sign
+argument_list|,
+name|bufsize
 argument_list|)
 return|;
 block|}

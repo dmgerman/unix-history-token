@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: update.c,v 1.109.18.23 2007/08/28 07:20:01 tbox Exp $ */
+comment|/* $Id: update.c,v 1.109.18.27 2008/02/07 03:16:08 marka Exp $ */
 end_comment
 
 begin_include
@@ -253,7 +253,7 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|do {							\ 		const char *_what = "failed";			\ 		result = (code);				\ 		switch (result) {				\ 		case DNS_R_NXDOMAIN:				\ 		case DNS_R_YXDOMAIN:				\ 		case DNS_R_YXRRSET:				\ 		case DNS_R_NXRRSET:				\ 			_what = "unsuccessful";			\ 		}						\ 		update_log(client, zone, LOGLEVEL_PROTOCOL,   	\ 			      "update %s: %s (%s)", _what,	\ 		      	      msg, isc_result_totext(result));	\ 		if (result != ISC_R_SUCCESS) goto failure;	\ 	} while (0)
+value|do {							\ 		const char *_what = "failed";			\ 		result = (code);				\ 		switch (result) {				\ 		case DNS_R_NXDOMAIN:				\ 		case DNS_R_YXDOMAIN:				\ 		case DNS_R_YXRRSET:				\ 		case DNS_R_NXRRSET:				\ 			_what = "unsuccessful";			\ 		}						\ 		update_log(client, zone, LOGLEVEL_PROTOCOL,   	\ 			      "update %s: %s (%s)", _what,	\ 			      msg, isc_result_totext(result));	\ 		if (result != ISC_R_SUCCESS) goto failure;	\ 	} while (0)
 end_define
 
 begin_define
@@ -2942,22 +2942,38 @@ name|result
 operator|==
 name|ISC_R_NOTFOUND
 condition|)
+block|{
+name|dns_diff_clear
+argument_list|(
+operator|&
+name|trash
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|DNS_R_NXRRSET
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
+block|{
+name|dns_diff_clear
+argument_list|(
+operator|&
+name|trash
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|result
 operator|)
 return|;
+block|}
 comment|/* A new unique type begins here. */
 while|while
 condition|(
@@ -3073,6 +3089,12 @@ name|db
 argument_list|,
 operator|&
 name|node
+argument_list|)
+expr_stmt|;
+name|dns_diff_clear
+argument_list|(
+operator|&
+name|trash
 argument_list|)
 expr_stmt|;
 return|return
@@ -6392,6 +6414,14 @@ specifier|static
 name|isc_result_t
 name|add_sigs
 parameter_list|(
+name|ns_client_t
+modifier|*
+name|client
+parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
 name|dns_db_t
 modifier|*
 name|db
@@ -6465,6 +6495,11 @@ comment|/* XXX */
 name|unsigned
 name|int
 name|i
+decl_stmt|;
+name|isc_boolean_t
+name|added_sig
+init|=
+name|ISC_FALSE
 decl_stmt|;
 name|dns_rdataset_init
 argument_list|(
@@ -6645,6 +6680,33 @@ argument_list|(
 operator|&
 name|sig_rdata
 argument_list|)
+expr_stmt|;
+name|added_sig
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|added_sig
+condition|)
+block|{
+name|update_log
+argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"found no private keys, "
+literal|"unable to generate any signatures"
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|ISC_R_NOTFOUND
 expr_stmt|;
 block|}
 name|failure
@@ -7180,6 +7242,10 @@ name|CHECK
 argument_list|(
 name|add_sigs
 argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
 name|db
 argument_list|,
 name|newver
@@ -7993,6 +8059,10 @@ name|CHECK
 argument_list|(
 name|add_sigs
 argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
 name|db
 argument_list|,
 name|newver

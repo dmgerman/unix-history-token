@@ -159,12 +159,6 @@ return|return
 literal|"CDROM"
 return|;
 case|case
-name|DEVICE_TYPE_TAPE
-case|:
-return|return
-literal|"Tape"
-return|;
-case|case
 name|DEVICE_TYPE_DOS
 case|:
 return|return
@@ -382,20 +376,6 @@ block|,
 name|NULL
 block|,
 name|VAR_TRY_RTSOL
-block|,
-name|varCheck
-block|}
-block|,
-block|{
-literal|"Skip PCCARD"
-block|,
-literal|"Skip PC Card probing, do not use PC Card devices for installation"
-block|,
-name|OPT_IS_VAR
-block|,
-name|NULL
-block|,
-name|VAR_SKIP_PCCARD
 block|,
 name|varCheck
 block|}

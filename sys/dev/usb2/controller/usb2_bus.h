@@ -79,6 +79,24 @@ name|usb2_process
 name|explore_proc
 decl_stmt|;
 name|struct
+name|usb2_process
+name|roothub_proc
+decl_stmt|;
+name|struct
+name|root_hold_token
+modifier|*
+name|bus_roothold
+decl_stmt|;
+comment|/* 	 * There are two callback processes. One for Giant locked 	 * callbacks. One for non-Giant locked callbacks. This should 	 * avoid congestion and reduce response time in most cases. 	 */
+name|struct
+name|usb2_process
+name|giant_callback_proc
+decl_stmt|;
+name|struct
+name|usb2_process
+name|non_giant_callback_proc
+decl_stmt|;
+name|struct
 name|usb2_bus_msg
 name|explore_msg
 index|[
@@ -93,10 +111,24 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
+name|usb2_bus_msg
+name|attach_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|usb2_bus_msg
+name|roothub_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* 	 * This mutex protects the USB hardware: 	 */
+name|struct
 name|mtx
 name|bus_mtx
 decl_stmt|;
-comment|/* This mutex protects the USB 					 * hardware */
 name|struct
 name|usb2_perm
 name|perm
@@ -104,6 +136,14 @@ decl_stmt|;
 name|struct
 name|usb2_xfer_queue
 name|intr_q
+decl_stmt|;
+name|struct
+name|usb2_callout
+name|power_wdog
+decl_stmt|;
+comment|/* power management */
+name|device_t
+name|parent
 decl_stmt|;
 name|device_t
 name|bdev
@@ -132,11 +172,13 @@ comment|/* filled by HC driver */
 name|struct
 name|usb2_device
 modifier|*
+modifier|*
 name|devices
-index|[
-name|USB_MAX_DEVICES
-index|]
 decl_stmt|;
+name|uint32_t
+name|hw_power_state
+decl_stmt|;
+comment|/* see USB_HW_POWER_XXX */
 name|uint32_t
 name|uframe_usage
 index|[

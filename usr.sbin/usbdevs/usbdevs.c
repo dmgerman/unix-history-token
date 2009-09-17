@@ -190,7 +190,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-a addr] [-d] [-f dev] [-v]\n"
+literal|"usage: %s [-a addr] [-d] [-f dev] [-o] [-v]\n"
 argument_list|,
 name|getprogname
 argument_list|()

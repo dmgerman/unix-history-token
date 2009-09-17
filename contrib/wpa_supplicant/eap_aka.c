@@ -1379,6 +1379,8 @@ argument_list|,
 name|data
 operator|->
 name|res_len
+operator|*
+literal|8
 argument_list|,
 name|data
 operator|->

@@ -148,7 +148,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -572,7 +572,6 @@ argument_list|,
 name|std
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

@@ -24,7 +24,7 @@ name|ARCHIVE_ENDIAN_H_INCLUDED
 end_define
 
 begin_comment
-comment|/* Watcom C++ doesn't support 'inline' in C code.  (For any version?) */
+comment|/*  * Disabling inline keyword for compilers known to choke on it:  * - Watcom C++ in C code.  (For any version?)  * - SGI MIPSpro  * - Microsoft Visual C++ 6.0 (supposedly newer versions too)  */
 end_comment
 
 begin_if
@@ -34,26 +34,12 @@ name|defined
 argument_list|(
 name|__WATCOMC__
 argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Visual C++ 6.0 doesn't support 'inline' in C code.  (Does VC7? VC8?) */
-end_comment
-
-begin_if
-if|#
-directive|if
+operator|||
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|_MSC_VER

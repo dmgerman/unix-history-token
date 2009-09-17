@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.92 2007/11/08 00:31:37 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.108 2008/07/16 18:00:57 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -116,6 +116,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_define
@@ -257,6 +263,37 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__GNUC__
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__attribute__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MIN
 end_ifndef
 
@@ -270,6 +307,29 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(((a)< (b)) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)> (b)) ? (a) : (b))
 end_define
 
 begin_endif
@@ -307,7 +367,7 @@ value|8192
 end_define
 
 begin_comment
-comment|/* max entries in /etc/magic */
+comment|/* max entries in any one magic file 				   or directory */
 end_comment
 
 begin_define
@@ -318,7 +378,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* max leng of text description */
+comment|/* max leng of text description/MIME type */
 end_comment
 
 begin_define
@@ -343,14 +403,14 @@ begin_define
 define|#
 directive|define
 name|VERSIONNO
-value|4
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|FILE_MAGICSIZE
-value|(32 * 4)
+value|(32 * 6)
 end_define
 
 begin_define
@@ -374,6 +434,67 @@ name|FILE_COMPILE
 value|2
 end_define
 
+begin_union
+union|union
+name|VALUETYPE
+block|{
+name|uint8_t
+name|b
+decl_stmt|;
+name|uint16_t
+name|h
+decl_stmt|;
+name|uint32_t
+name|l
+decl_stmt|;
+name|uint64_t
+name|q
+decl_stmt|;
+name|uint8_t
+name|hs
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* 2 bytes of a fixed-endian "short" */
+name|uint8_t
+name|hl
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* 4 bytes of a fixed-endian "long" */
+name|uint8_t
+name|hq
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 8 bytes of a fixed-endian "quad" */
+name|char
+name|s
+index|[
+name|MAXstring
+index|]
+decl_stmt|;
+comment|/* the search string or regex pattern */
+name|unsigned
+name|char
+name|us
+index|[
+name|MAXstring
+index|]
+decl_stmt|;
+name|float
+name|f
+decl_stmt|;
+name|double
+name|d
+decl_stmt|;
+block|}
+union|;
+end_union
+
 begin_struct
 struct|struct
 name|magic
@@ -384,32 +505,46 @@ name|cont_level
 decl_stmt|;
 comment|/* level of ">" */
 name|uint8_t
-name|nospflag
-decl_stmt|;
-comment|/* supress space character */
-name|uint8_t
 name|flag
 decl_stmt|;
 define|#
 directive|define
 name|INDIR
-value|1
+value|0x01
 comment|/* if '(...)' appears */
 define|#
 directive|define
 name|OFFADD
-value|2
+value|0x02
 comment|/* if '>&' or '>...(&' appears */
 define|#
 directive|define
 name|INDIROFFADD
-value|4
+value|0x04
 comment|/* if '>&(' appears */
 define|#
 directive|define
 name|UNSIGNED
-value|8
+value|0x08
 comment|/* comparison is unsigned */
+define|#
+directive|define
+name|NOSPACE
+value|0x10
+comment|/* suppress space character before output */
+define|#
+directive|define
+name|BINTEST
+value|0x20
+comment|/* test is for a binary type (set only                                    for top-level tests) */
+define|#
+directive|define
+name|TEXTTEST
+value|0
+comment|/* for passing to file_softmagic */
+name|uint8_t
+name|factor
+decl_stmt|;
 comment|/* Word 2 */
 name|uint8_t
 name|reln
@@ -422,11 +557,11 @@ comment|/* length of string value, if any */
 name|uint8_t
 name|type
 decl_stmt|;
-comment|/* int, short, long or string. */
+comment|/* comparison type (FILE_*) */
 name|uint8_t
 name|in_type
 decl_stmt|;
-comment|/* type of indirrection */
+comment|/* type of indirection */
 define|#
 directive|define
 name|FILE_INVALID
@@ -641,19 +776,36 @@ name|uint8_t
 name|cond
 decl_stmt|;
 comment|/* conditional type */
-name|uint8_t
-name|dummy1
-decl_stmt|;
 else|#
 directive|else
 name|uint8_t
-name|dummy1
-decl_stmt|;
-name|uint8_t
-name|dummy2
+name|dummy
 decl_stmt|;
 endif|#
 directive|endif
+name|uint8_t
+name|factor_op
+decl_stmt|;
+define|#
+directive|define
+name|FILE_FACTOR_OP_PLUS
+value|'+'
+define|#
+directive|define
+name|FILE_FACTOR_OP_MINUS
+value|'-'
+define|#
+directive|define
+name|FILE_FACTOR_OP_TIMES
+value|'*'
+define|#
+directive|define
+name|FILE_FACTOR_OP_DIV
+value|'/'
+define|#
+directive|define
+name|FILE_FACTOR_OP_NONE
+value|'\0'
 define|#
 directive|define
 name|FILE_OPS
@@ -782,65 +934,17 @@ name|num_mask
 value|_u._mask
 define|#
 directive|define
-name|str_count
+name|str_range
 value|_u._s._count
 define|#
 directive|define
 name|str_flags
 value|_u._s._flags
 comment|/* Words 9-16 */
-union|union
+name|union
 name|VALUETYPE
-block|{
-name|uint8_t
-name|b
-decl_stmt|;
-name|uint16_t
-name|h
-decl_stmt|;
-name|uint32_t
-name|l
-decl_stmt|;
-name|uint64_t
-name|q
-decl_stmt|;
-name|uint8_t
-name|hs
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* 2 bytes of a fixed-endian "short" */
-name|uint8_t
-name|hl
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* 4 bytes of a fixed-endian "long" */
-name|uint8_t
-name|hq
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* 8 bytes of a fixed-endian "quad" */
-name|char
-name|s
-index|[
-name|MAXstring
-index|]
-decl_stmt|;
-comment|/* the search string or regex pattern */
-name|float
-name|f
-decl_stmt|;
-name|double
-name|d
-decl_stmt|;
-block|}
 name|value
-union|;
+decl_stmt|;
 comment|/* either number or string */
 comment|/* Words 17..31 */
 name|char
@@ -850,6 +954,14 @@ name|MAXDESC
 index|]
 decl_stmt|;
 comment|/* description */
+comment|/* Words 32..47 */
+name|char
+name|mimetype
+index|[
+name|MAXDESC
+index|]
+decl_stmt|;
+comment|/* MIME type */
 block|}
 struct|;
 end_struct
@@ -941,6 +1053,13 @@ name|STRING_IGNORE_CASE
 value|(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|STRING_DEFAULT_RANGE
+value|100
+end_define
+
 begin_comment
 comment|/* list of magic entries */
 end_comment
@@ -975,21 +1094,47 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CAST
+parameter_list|(
+name|T
+parameter_list|,
+name|b
+parameter_list|)
+value|static_cast<T>(b)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CAST
+parameter_list|(
+name|T
+parameter_list|,
+name|b
+parameter_list|)
+value|(b)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
-struct|struct
-name|magic_set
-block|{
-name|struct
-name|mlist
-modifier|*
-name|mlist
-decl_stmt|;
-struct|struct
-name|cont
-block|{
-name|size_t
-name|len
-decl_stmt|;
 struct|struct
 name|level_info
 block|{
@@ -1015,35 +1160,44 @@ block|}
 modifier|*
 name|li
 struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|magic_set
+block|{
+name|struct
+name|mlist
+modifier|*
+name|mlist
+decl_stmt|;
+struct|struct
+name|cont
+block|{
+name|size_t
+name|len
+decl_stmt|;
+name|struct
+name|level_info
+modifier|*
+name|li
+decl_stmt|;
 block|}
 name|c
 struct|;
 struct|struct
 name|out
 block|{
-comment|/* Accumulation buffer */
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
-name|size_t
-name|left
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
-comment|/* Printable buffer */
+comment|/* Accumulation buffer */
 name|char
 modifier|*
 name|pbuf
 decl_stmt|;
-name|size_t
-name|psize
-decl_stmt|;
+comment|/* Printable buffer */
 block|}
 name|o
 struct|;
@@ -1092,6 +1246,7 @@ comment|/* match length */
 block|}
 name|search
 struct|;
+comment|/* FIXME: Make the string dynamically allocated so that e.g. 	   strings matched in files can be longer than MAXstring */
 name|union
 name|VALUETYPE
 name|ms_value
@@ -1100,6 +1255,18 @@ comment|/* either number or string */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Type for Unicode characters */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|unichar
+typedef|;
+end_typedef
 
 begin_struct_decl
 struct_decl|struct
@@ -1188,6 +1355,24 @@ end_function_decl
 begin_function_decl
 name|protected
 name|int
+name|file_vprintf
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|va_list
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
 name|file_printf
 parameter_list|(
 name|struct
@@ -1200,8 +1385,21 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|protected
@@ -1314,6 +1512,8 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1429,8 +1629,21 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|protected
@@ -1447,8 +1660,21 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|protected
@@ -1465,8 +1691,21 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|protected
@@ -1551,6 +1790,27 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_looks_utf8
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|unichar
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1650,21 +1910,50 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HAVE_SNPRINTF
+name|HAVE_VASPRINTF
 end_ifndef
 
 begin_function_decl
 name|int
-name|snprintf
+name|vasprintf
 parameter_list|(
 name|char
 modifier|*
-parameter_list|,
-name|size_t
+modifier|*
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|va_list
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ASPRINTF
+end_ifndef
+
+begin_function_decl
+name|int
+name|asprintf
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|ptr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format_string
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -1725,6 +2014,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|rcsid
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__used__
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1735,6 +2062,25 @@ parameter_list|)
 define|\
 value|static const char *rcsid(const char *p) { \ 	return rcsid(p = id); \ }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FILE_RCSID
+parameter_list|(
+name|id
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

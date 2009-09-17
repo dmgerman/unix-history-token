@@ -34,7 +34,7 @@ decl_stmt|;
 name|struct
 name|usb2_xfer_root
 modifier|*
-name|usb2_root
+name|xroot
 decl_stmt|;
 block|}
 struct|;
@@ -73,8 +73,10 @@ name|dma_parent_tag
 decl_stmt|;
 name|struct
 name|usb2_process
+modifier|*
 name|done_p
 decl_stmt|;
+comment|/* pointer to callback process */
 name|void
 modifier|*
 name|memory_base
@@ -82,8 +84,9 @@ decl_stmt|;
 name|struct
 name|mtx
 modifier|*
-name|priv_mtx
+name|xfer_mtx
 decl_stmt|;
+comment|/* cannot be changed during operation */
 name|struct
 name|usb2_page_cache
 modifier|*
@@ -109,6 +112,13 @@ name|usb2_bus
 modifier|*
 name|bus
 decl_stmt|;
+comment|/* pointer to USB bus (cached) */
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+decl_stmt|;
+comment|/* pointer to USB device */
 name|uint32_t
 name|memory_size
 decl_stmt|;
@@ -245,18 +255,6 @@ end_struct
 begin_comment
 comment|/* function prototypes */
 end_comment
-
-begin_function_decl
-name|uint8_t
-name|usb2_transfer_pending
-parameter_list|(
-name|struct
-name|usb2_xfer
-modifier|*
-name|xfer
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|uint8_t
@@ -467,6 +465,33 @@ parameter_list|)
 parameter_list|,
 name|uint32_t
 name|ms
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|usb2_get_dma_delay
+parameter_list|(
+name|struct
+name|usb2_bus
+modifier|*
+name|bus
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb2_transfer_power_ref
+parameter_list|(
+name|struct
+name|usb2_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|int
+name|val
 parameter_list|)
 function_decl|;
 end_function_decl

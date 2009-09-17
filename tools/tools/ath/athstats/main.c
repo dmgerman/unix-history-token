@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * Simple Atheros-specific tool to inspect and monitor network traffic  * statistics.  *  *	athstats [-i interface] [-l] [-o fmtstring] [interval]  *  * (default interface is ath0).  If interval is specified a rolling output  * a la netstat -i is displayed every interval seconds.  The format of  * the rolling display can be controlled a la ps.  The -l option will  * print a list of all possible statistics for use with the -o option.  */
+comment|/*  * Simple Atheros-specific tool to inspect and monitor network traffic  * statistics.  *  *	athstats [-i interface] [-z] [-l] [-o fmtstring] [interval]  *  * (default interface is ath0).  If interval is specified a rolling output  * a la netstat -i is displayed every interval seconds.  The format of  * the rolling display can be controlled a la ps.  The -l option will  * print a list of all possible statistics for use with the -o option.  */
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ literal|"ani"
 block|,
 literal|"avgbrssi,avgrssi,avgtxrssi,NI,SI,step,owsd,cwst,NI+,NI-,SI+,SI-,OFDM,CCK,LISTEN"
 block|}
+block|,
+block|{
+literal|"tdma"
+block|,
+literal|"input,output,bexmit,tdmau,tdmadj,crcerr,phyerr,phytor,rssi,noise,rate"
+block|}
 block|, }
 struct|;
 end_struct
@@ -140,17 +146,9 @@ index|]
 operator|.
 name|fmt
 return|;
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"unknown tag \%s\""
-argument_list|,
+return|return
 name|tag
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
+return|;
 undef|#
 directive|undef
 name|N
@@ -247,7 +245,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:lo:"
+literal|"i:lo:z"
 argument_list|)
 operator|)
 operator|!=
@@ -304,13 +302,24 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'z'
+case|:
+name|wf
+operator|->
+name|zerostats
+argument_list|(
+name|wf
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|errx
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"usage: %s [-a] [-i ifname] [-l] [-o fmt] [interval]\n"
+literal|"usage: %s [-a] [-i ifname] [-l] [-o fmt] [-z] [interval]\n"
 argument_list|,
 name|argv
 index|[

@@ -77,6 +77,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_ROOT_HUB_ADDR
+value|1
+end_define
+
+begin_comment
+comment|/* index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_MIN_DEVICES
+value|2
+end_define
+
+begin_comment
+comment|/* unused + root HUB */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_MAX_DEVICES
 value|USB_DEV_MAX
 end_define
@@ -201,7 +223,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"Misconfigured limits #1"
+literal|"There cannot be less FIFOs than USB endpoints."
 end_error
 
 begin_endif
@@ -222,7 +244,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"Misconfigured limits #2"
+literal|"Number of FIFOs must be odd."
 end_error
 
 begin_endif
@@ -247,7 +269,49 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"Misconfigured limits #3"
+literal|"Number of hardware USB endpoints cannot be less than 32."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|USB_MAX_DEVICES
+operator|<
+name|USB_MIN_DEVICES
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Minimum number of devices is greater than maximum number of devices."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|USB_ROOT_HUB_ADDR
+operator|>=
+name|USB_MIN_DEVICES
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"The root hub address must be less than USB_MIN_DEVICES."
 end_error
 
 begin_endif

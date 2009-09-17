@@ -23561,7 +23561,7 @@ name|tulip_setup_tag
 argument_list|,
 name|sc
 operator|->
-name|tulip_setupdata
+name|tulip_setupbuf
 argument_list|,
 name|sc
 operator|->

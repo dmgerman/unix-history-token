@@ -1092,6 +1092,9 @@ name|ac
 operator|->
 name|contents
 decl_stmt|;
+if|if
+condition|(
+operator|!
 name|assertEqualIntA
 argument_list|(
 name|a
@@ -1106,7 +1109,20 @@ operator|&
 name|ae
 argument_list|)
 argument_list|)
+condition|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|==
+name|archive_read_finish
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|failure
 argument_list|(
 literal|"Name mismatch in archive %s"

@@ -33,12 +33,6 @@ directive|define
 name|__crc32c_h__
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCTP_USE_ADLER32
-end_ifndef
-
 begin_if
 if|#
 directive|if
@@ -55,41 +49,24 @@ end_if
 
 begin_function_decl
 name|uint32_t
-name|update_crc32
+name|sctp_calculate_cksum
 parameter_list|(
-name|uint32_t
-parameter_list|,
-name|unsigned
-name|char
+name|struct
+name|mbuf
 modifier|*
 parameter_list|,
-name|unsigned
-name|int
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
-name|old_update_crc32
+name|void
+name|sctp_delayed_cksum
 parameter_list|(
-name|uint32_t
-parameter_list|,
-name|unsigned
-name|char
+name|struct
+name|mbuf
 modifier|*
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|sctp_csum_finalize
-parameter_list|(
-name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -101,15 +78,6 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !SCTP_USE_ADLER32 */
 end_comment
 
 begin_endif

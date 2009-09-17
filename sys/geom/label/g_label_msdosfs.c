@@ -657,9 +657,9 @@ name|size
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pfat_bsbpb
+name|pfat_entry
 operator|->
-name|BS_VolLab
+name|DIR_Name
 argument_list|)
 operator|+
 literal|1

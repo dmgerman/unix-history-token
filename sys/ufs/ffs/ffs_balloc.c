@@ -424,6 +424,8 @@ name|fs
 operator|->
 name|fs_bsize
 argument_list|,
+name|flags
+argument_list|,
 name|cred
 argument_list|,
 operator|&
@@ -775,6 +777,8 @@ name|osize
 argument_list|,
 name|nsize
 argument_list|,
+name|flags
+argument_list|,
 name|cred
 argument_list|,
 operator|&
@@ -890,6 +894,8 @@ index|]
 argument_list|)
 argument_list|,
 name|nsize
+argument_list|,
+name|flags
 argument_list|,
 name|cred
 argument_list|,
@@ -1148,6 +1154,8 @@ operator|)
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+name|flags
 argument_list|,
 name|cred
 argument_list|,
@@ -1479,6 +1487,8 @@ name|fs
 operator|->
 name|fs_bsize
 argument_list|,
+name|flags
+argument_list|,
 name|cred
 argument_list|,
 operator|&
@@ -1765,6 +1775,8 @@ operator|)
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+name|flags
 argument_list|,
 name|cred
 argument_list|,
@@ -2784,6 +2796,8 @@ name|fs
 operator|->
 name|fs_bsize
 argument_list|,
+name|flags
+argument_list|,
 name|cred
 argument_list|,
 operator|&
@@ -2877,8 +2891,6 @@ operator|->
 name|i_flag
 operator||=
 name|IN_CHANGE
-operator||
-name|IN_UPDATE
 expr_stmt|;
 if|if
 condition|(
@@ -3147,6 +3159,8 @@ name|osize
 argument_list|,
 name|nsize
 argument_list|,
+name|flags
+argument_list|,
 name|cred
 argument_list|,
 operator|&
@@ -3269,6 +3283,8 @@ argument_list|)
 argument_list|,
 name|nsize
 argument_list|,
+name|flags
+argument_list|,
 name|cred
 argument_list|,
 operator|&
@@ -3378,8 +3394,6 @@ operator|->
 name|i_flag
 operator||=
 name|IN_CHANGE
-operator||
-name|IN_UPDATE
 expr_stmt|;
 operator|*
 name|bpp
@@ -3491,6 +3505,8 @@ operator|)
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+name|flags
 argument_list|,
 name|cred
 argument_list|,
@@ -3843,6 +3859,8 @@ name|osize
 argument_list|,
 name|nsize
 argument_list|,
+name|flags
+argument_list|,
 name|cred
 argument_list|,
 operator|&
@@ -3958,6 +3976,8 @@ index|]
 argument_list|)
 argument_list|,
 name|nsize
+argument_list|,
+name|flags
 argument_list|,
 name|cred
 argument_list|,
@@ -4216,6 +4236,8 @@ operator|)
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+name|flags
 argument_list|,
 name|cred
 argument_list|,
@@ -4547,6 +4569,8 @@ name|fs
 operator|->
 name|fs_bsize
 argument_list|,
+name|flags
+argument_list|,
 name|cred
 argument_list|,
 operator|&
@@ -4833,6 +4857,8 @@ operator|)
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+name|flags
 argument_list|,
 name|cred
 argument_list|,

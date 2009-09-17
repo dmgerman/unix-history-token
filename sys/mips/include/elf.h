@@ -23,15 +23,11 @@ begin_comment
 comment|/* Information taken from MIPS ABI supplemental */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/elf32.h>
-end_include
-
-begin_comment
-comment|/* Definitions common to all 32 bit architectures. */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ELF_WORD_SIZE
+end_ifndef
 
 begin_define
 define|#
@@ -42,6 +38,31 @@ end_define
 
 begin_comment
 comment|/* Used by<sys/elf_generic.h> */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/elf32.h>
+end_include
+
+begin_comment
+comment|/* Definitions common to all 32 bit architectures. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/elf64.h>
+end_include
+
+begin_comment
+comment|/* Definitions common to all 64 bit architectures. */
 end_comment
 
 begin_include
@@ -480,6 +501,43 @@ name|Elf32_gptab
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+union|union
+block|{
+struct|struct
+block|{
+name|Elf64_Word
+name|gt_current_g_value
+decl_stmt|;
+comment|/* -G val used in compilation */
+name|Elf64_Word
+name|gt_unused
+decl_stmt|;
+comment|/* Not used */
+block|}
+name|gt_header
+struct|;
+comment|/* First entry in section */
+struct|struct
+block|{
+name|Elf64_Word
+name|gt_g_value
+decl_stmt|;
+comment|/* If this val were used for -G */
+name|Elf64_Word
+name|gt_bytes
+decl_stmt|;
+comment|/* This many bytes would be used */
+block|}
+name|gt_entry
+struct|;
+comment|/* Subsequent entries in section */
+block|}
+name|Elf64_gptab
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Entry found in sections of type SHT_MIPS_REGINFO.  */
 end_comment
@@ -505,6 +563,30 @@ decl_stmt|;
 comment|/* $gp register value */
 block|}
 name|Elf32_RegInfo
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|Elf64_Word
+name|ri_gprmask
+decl_stmt|;
+comment|/* General registers used */
+name|Elf64_Word
+name|ri_cprmask
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Coprocessor registers used */
+name|Elf64_Sword
+name|ri_gp_value
+decl_stmt|;
+comment|/* $gp register value */
+block|}
+name|Elf64_RegInfo
 typedef|;
 end_typedef
 
@@ -699,6 +781,150 @@ begin_comment
 comment|/* lower 16 bit GOT entry for function */
 end_comment
 
+begin_comment
+comment|/*  * These are from the 64-bit Irix ELF ABI  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_SHIFT5
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_SHIFT6
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_64
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_GOT_DISP
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_GOT_PAGE
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_GOT_OFST
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_GOT_HI16
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_GOT_LO16
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_SUB
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_INSERT_A
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_INSERT_B
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_DELETE
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_HIGHER
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_HIGHEST
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_SCN_DISP
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_REL16
+value|33
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_ADD_IMMEDIATE
+value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_PJUMP
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_ERLGOT
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_MIPS_max
+value|37
+end_define
+
 begin_define
 define|#
 directive|define
@@ -713,12 +939,37 @@ begin_comment
 comment|/* Define "machine" characteristics */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|==
+literal|32
+end_if
+
 begin_define
 define|#
 directive|define
 name|ELF_TARG_CLASS
 value|ELFCLASS32
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_CLASS
+value|ELFCLASS64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -779,7 +1030,7 @@ decl_stmt|;
 comment|/* Entry type. */
 union|union
 block|{
-name|long
+name|int
 name|a_val
 decl_stmt|;
 comment|/* Integer value. */
@@ -803,6 +1054,44 @@ name|a_un
 union|;
 block|}
 name|Elf32_Auxinfo
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* Auxiliary vector entry on initial stack */
+name|long
+name|a_type
+decl_stmt|;
+comment|/* Entry type. */
+union|union
+block|{
+name|long
+name|a_val
+decl_stmt|;
+comment|/* Integer value. */
+name|void
+modifier|*
+name|a_ptr
+decl_stmt|;
+comment|/* Address. */
+name|void
+function_decl|(
+modifier|*
+name|a_fcn
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Function pointer (not used). */
+block|}
+name|a_un
+union|;
+block|}
+name|Elf64_Auxinfo
 typedef|;
 end_typedef
 
@@ -926,32 +1215,6 @@ end_define
 
 begin_comment
 comment|/* Where interpreter should transfer control. */
-end_comment
-
-begin_comment
-comment|/*  * The following non-standard values are used for passing information  * from John Polstra's testbed program to the dynamic linker.  These  * are expected to go away soon.  *  * Unfortunately, these overlap the Linux non-standard values, so they  * must not be used in the same context.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_BRK
-value|10
-end_define
-
-begin_comment
-comment|/* Starting point for sbrk and brk. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_DEBUG
-value|11
-end_define
-
-begin_comment
-comment|/* Debugging level. */
 end_comment
 
 begin_comment

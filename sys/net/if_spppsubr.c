@@ -1300,8 +1300,7 @@ name|SPPP_LOCK
 parameter_list|(
 name|sp
 parameter_list|)
-define|\
-value|do { \ 		    if (!(SP2IFP(sp)->if_flags& IFF_NEEDSGIANT)) \ 			mtx_lock (&(sp)->mtx); \ 		} while (0)
+value|mtx_lock (&(sp)->mtx)
 end_define
 
 begin_define
@@ -1311,8 +1310,7 @@ name|SPPP_UNLOCK
 parameter_list|(
 name|sp
 parameter_list|)
-define|\
-value|do { \ 		    if (!(SP2IFP(sp)->if_flags& IFF_NEEDSGIANT)) \ 			mtx_unlock (&(sp)->mtx); \ 		} while (0)
+value|mtx_unlock (&(sp)->mtx)
 end_define
 
 begin_define
@@ -1322,8 +1320,7 @@ name|SPPP_LOCK_ASSERT
 parameter_list|(
 name|sp
 parameter_list|)
-define|\
-value|do { \ 		    if (!(SP2IFP(sp)->if_flags& IFF_NEEDSGIANT)) \ 			mtx_assert (&(sp)->mtx, MA_OWNED); \ 		} while (0)
+value|mtx_assert (&(sp)->mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -1333,8 +1330,7 @@ name|SPPP_LOCK_OWNED
 parameter_list|(
 name|sp
 parameter_list|)
-define|\
-value|(!(SP2IFP(sp)->if_flags& IFF_NEEDSGIANT)&& \ 		 mtx_owned (&sp->mtx))
+value|mtx_owned (&sp->mtx)
 end_define
 
 begin_ifdef
@@ -5588,16 +5584,6 @@ name|sp
 operator|->
 name|keepalive_callout
 argument_list|,
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_NEEDSGIANT
-operator|)
-condition|?
-literal|0
-else|:
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
@@ -5840,16 +5826,6 @@ name|sp
 operator|->
 name|ifstart_callout
 argument_list|,
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_NEEDSGIANT
-operator|)
-condition|?
-literal|0
-else|:
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
@@ -11609,19 +11585,6 @@ index|[
 name|IDX_LCP
 index|]
 argument_list|,
-operator|(
-name|SP2IFP
-argument_list|(
-name|sp
-argument_list|)
-operator|->
-name|if_flags
-operator|&
-name|IFF_NEEDSGIANT
-operator|)
-condition|?
-literal|0
-else|:
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
@@ -15035,19 +14998,6 @@ index|[
 name|IDX_IPCP
 index|]
 argument_list|,
-operator|(
-name|SP2IFP
-argument_list|(
-name|sp
-argument_list|)
-operator|->
-name|if_flags
-operator|&
-name|IFF_NEEDSGIANT
-operator|)
-condition|?
-literal|0
-else|:
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
@@ -17604,19 +17554,6 @@ index|[
 name|IDX_IPV6CP
 index|]
 argument_list|,
-operator|(
-name|SP2IFP
-argument_list|(
-name|sp
-argument_list|)
-operator|->
-name|if_flags
-operator|&
-name|IFF_NEEDSGIANT
-operator|)
-condition|?
-literal|0
-else|:
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
@@ -21268,19 +21205,6 @@ index|[
 name|IDX_CHAP
 index|]
 argument_list|,
-operator|(
-name|SP2IFP
-argument_list|(
-name|sp
-argument_list|)
-operator|->
-name|if_flags
-operator|&
-name|IFF_NEEDSGIANT
-operator|)
-condition|?
-literal|0
-else|:
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
@@ -22993,19 +22917,6 @@ index|[
 name|IDX_PAP
 index|]
 argument_list|,
-operator|(
-name|SP2IFP
-argument_list|(
-name|sp
-argument_list|)
-operator|->
-name|if_flags
-operator|&
-name|IFF_NEEDSGIANT
-operator|)
-condition|?
-literal|0
-else|:
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
@@ -23016,19 +22927,6 @@ name|sp
 operator|->
 name|pap_my_to_ch
 argument_list|,
-operator|(
-name|SP2IFP
-argument_list|(
-name|sp
-argument_list|)
-operator|->
-name|if_flags
-operator|&
-name|IFF_NEEDSGIANT
-operator|)
-condition|?
-literal|0
-else|:
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;

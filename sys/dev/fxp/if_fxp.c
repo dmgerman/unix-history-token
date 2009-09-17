@@ -77,7 +77,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -1429,7 +1441,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fxp_miibus_writereg
 parameter_list|(
 name|device_t
@@ -7428,7 +7440,7 @@ name|tbd
 index|[
 name|i
 operator|+
-literal|2
+literal|1
 index|]
 operator|.
 name|tb_addr
@@ -7449,7 +7461,7 @@ name|tbd
 index|[
 name|i
 operator|+
-literal|2
+literal|1
 index|]
 operator|.
 name|tb_size
@@ -7528,8 +7540,6 @@ operator|->
 name|tbd
 index|[
 name|nseg
-operator|+
-literal|1
 index|]
 operator|.
 name|tb_size
@@ -7588,7 +7598,7 @@ literal|1
 index|]
 operator|.
 name|tb_size
-operator|=
+operator||=
 name|htole32
 argument_list|(
 name|tcp_payload
@@ -11951,6 +11961,14 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|rxp
+operator|->
+name|rx_mbuf
+operator|!=
+name|NULL
+condition|)
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -12396,7 +12414,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fxp_miibus_writereg
 parameter_list|(
 name|device_t
@@ -12494,6 +12512,11 @@ argument_list|,
 literal|"fxp_miibus_writereg: timed out\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

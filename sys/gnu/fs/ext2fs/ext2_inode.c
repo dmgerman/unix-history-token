@@ -292,6 +292,9 @@ operator|->
 name|b_data
 operator|+
 name|EXT2_INODE_SIZE
+argument_list|(
+name|fs
+argument_list|)
 operator|*
 name|ino_to_fsbo
 argument_list|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in MAGIC must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * $File: names.h,v 1.29 2007/12/27 20:30:35 christos Exp $  */
+comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in MAGIC must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * $File: names.h,v 1.32 2008/02/11 00:19:29 rrt Exp $  */
 end_comment
 
 begin_comment
@@ -174,15 +174,17 @@ specifier|static
 specifier|const
 struct|struct
 block|{
-specifier|const
 name|char
-modifier|*
 name|human
+index|[
+literal|48
+index|]
 decl_stmt|;
-specifier|const
 name|char
-modifier|*
 name|mime
+index|[
+literal|16
+index|]
 decl_stmt|;
 block|}
 name|types
@@ -278,12 +280,6 @@ literal|"cannot happen error on names.h/types"
 block|,
 literal|"error/x-error"
 block|}
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
 block|}
 struct|;
 end_struct
@@ -294,13 +290,15 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|names
 block|{
-specifier|const
 name|char
-modifier|*
 name|name
+index|[
+literal|14
+index|]
 decl_stmt|;
 name|short
 name|type
@@ -463,55 +461,6 @@ block|,
 name|L_MAKE
 block|}
 block|,
-comment|/* Too many files of text have these words in them.  Find another way  * to recognize Fortrash.  */
-ifdef|#
-directive|ifdef
-name|NOTDEF
-block|{
-literal|"subroutine"
-block|,
-name|L_FORT
-block|}
-block|,
-block|{
-literal|"function"
-block|,
-name|L_FORT
-block|}
-block|,
-block|{
-literal|"block"
-block|,
-name|L_FORT
-block|}
-block|,
-block|{
-literal|"common"
-block|,
-name|L_FORT
-block|}
-block|,
-block|{
-literal|"dimension"
-block|,
-name|L_FORT
-block|}
-block|,
-block|{
-literal|"integer"
-block|,
-name|L_FORT
-block|}
-block|,
-block|{
-literal|"data"
-block|,
-name|L_FORT
-block|}
-block|,
-endif|#
-directive|endif
-comment|/*NOTDEF*/
 block|{
 literal|".ascii"
 block|,
@@ -657,11 +606,11 @@ name|L_HTML
 block|}
 block|,
 block|{
-name|NULL
+literal|"<!--"
 block|,
-literal|0
+name|L_HTML
 block|}
-block|}
+block|, }
 struct|;
 end_struct
 
@@ -669,7 +618,7 @@ begin_define
 define|#
 directive|define
 name|NNAMES
-value|((sizeof(names)/sizeof(struct names)) - 1)
+value|(sizeof(names)/sizeof(struct names))
 end_define
 
 end_unit

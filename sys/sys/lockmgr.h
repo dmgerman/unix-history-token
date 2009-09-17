@@ -930,18 +930,6 @@ name|KA_NOTRECURSED
 value|LA_NOTRECURSED
 end_define
 
-begin_define
-define|#
-directive|define
-name|KA_HELD
-end_define
-
-begin_define
-define|#
-directive|define
-name|KA_UNHELD
-end_define
-
 begin_endif
 endif|#
 directive|endif

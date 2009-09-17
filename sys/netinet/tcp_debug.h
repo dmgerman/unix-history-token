@@ -19,9 +19,10 @@ begin_struct
 struct|struct
 name|tcp_debug
 block|{
-name|n_time
+name|uint32_t
 name|td_time
 decl_stmt|;
+comment|/* network format */
 name|short
 name|td_act
 decl_stmt|;

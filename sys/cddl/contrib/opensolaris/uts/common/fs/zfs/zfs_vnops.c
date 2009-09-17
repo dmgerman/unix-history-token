@@ -19973,6 +19973,8 @@ name|NOFOLLOW
 operator||
 name|LOCKLEAF
 operator||
+name|LOCKSHARED
+operator||
 name|MPSAFE
 argument_list|,
 name|UIO_SYSSPACE

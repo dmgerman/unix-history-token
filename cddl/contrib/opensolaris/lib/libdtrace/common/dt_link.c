@@ -9143,27 +9143,11 @@ decl_stmt|;
 else|#
 directive|else
 comment|/* 		 * Arches which are 32-bit only just use the normal 		 * library path. 		 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-name|int
-name|use_32
-init|=
-literal|1
-decl_stmt|;
-comment|/* use /usr/lib/... -sson */
-else|#
-directive|else
 name|int
 name|use_32
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 operator|(
@@ -9182,9 +9166,9 @@ literal|"/usr/lib%s/dtrace/drti.o"
 argument_list|,
 name|use_32
 condition|?
-literal|""
-else|:
 literal|"32"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|len

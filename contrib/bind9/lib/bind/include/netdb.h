@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1980, 1983, 1988, 1993  * -  * Copyright (c) 1980, 1
 end_comment
 
 begin_comment
-comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 1.15.18.6 2006/10/02 01:23:09 marka Exp $  */
+comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 1.15.18.7 2008/02/28 05:49:37 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -2559,7 +2559,6 @@ name|setnetgrent_r
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|,

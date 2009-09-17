@@ -1154,7 +1154,7 @@ value|do {				\ 	if (audit_enabled) {						\ 		audit_syscall_enter(code, td);			
 end_define
 
 begin_comment
-comment|/*  * Wrap the audit_syscall_exit() function so that it is called only when  * auditing is enabled, or we have a audit record on the thread.  It is  * possible that an audit record was begun before auditing was turned off.  */
+comment|/*  * Wrap the audit_syscall_exit() function so that it is called only when  * we have a audit record on the thread.  Audit records can persist after  * auditing is disabled, so we don't just check audit_enabled here.  */
 end_comment
 
 begin_define
@@ -1166,7 +1166,7 @@ name|error
 parameter_list|,
 name|td
 parameter_list|)
-value|do {				\ 	if (audit_enabled || (td->td_ar != NULL))			\ 		audit_syscall_exit(error, td);				\ } while (0)
+value|do {				\ 	if (td->td_ar != NULL)						\ 		audit_syscall_exit(error, td);				\ } while (0)
 end_define
 
 begin_comment

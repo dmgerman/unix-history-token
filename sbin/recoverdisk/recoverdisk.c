@@ -1347,7 +1347,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"\n%jd %zu failed %d\n"
+literal|"\n%jd %zu failed (%s)\n"
 argument_list|,
 name|lp
 operator|->
@@ -1355,8 +1355,21 @@ name|start
 argument_list|,
 name|i
 argument_list|,
+name|strerror
+argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENXIO
+condition|)
+name|aborting
+operator|=
+literal|1
 expr_stmt|;
 name|new_lump
 argument_list|(

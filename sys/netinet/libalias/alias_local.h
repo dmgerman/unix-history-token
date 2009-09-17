@@ -72,6 +72,23 @@ name|INADDR_NONE
 value|0xffffffff
 end_define
 
+begin_include
+include|#
+directive|include
+file|<netinet/libalias/alias_sctp.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"alias_sctp.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -278,9 +295,43 @@ name|u_short
 name|true_port
 decl_stmt|;
 comment|/* in host byte order. */
+comment|/* 	 * sctp code support 	 */
+comment|/* counts associations that have progressed to UP and not yet removed */
+name|int
+name|sctpLinkCount
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
+comment|/* timing queue for keeping track of association timeouts */
+name|struct
+name|sctp_nat_timer
+name|sctpNatTimer
+decl_stmt|;
+comment|/* size of hash table used in this instance */
+name|u_int
+name|sctpNatTableSize
+decl_stmt|;
+comment|/*   * local look up table sorted by l_vtag/l_port   */
+name|LIST_HEAD
+argument_list|(
+name|sctpNatTableL
+argument_list|,
+name|sctp_nat_assoc
+argument_list|)
+operator|*
+name|sctpTableLocal
+expr_stmt|;
+comment|/*   * global look up table sorted by g_vtag/g_port   */
+name|LIST_HEAD
+argument_list|(
+name|sctpNatTableG
+argument_list|,
+name|sctp_nat_assoc
+argument_list|)
+operator|*
+name|sctpTableGlobal
+expr_stmt|;
 comment|/*  	 * avoid races in libalias: every public function has to use it. 	 */
 name|struct
 name|mtx
@@ -428,6 +479,54 @@ end_define
 begin_comment
 comment|/* Prototypes */
 end_comment
+
+begin_comment
+comment|/*  * SctpFunction prototypes  *   */
+end_comment
+
+begin_function_decl
+name|void
+name|AliasSctpInit
+parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AliasSctpTerm
+parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|SctpAlias
+parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
+name|ip
+modifier|*
+name|ip
+parameter_list|,
+name|int
+name|direction
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * We do not calculate TCP checksums when libalias is a kernel  * module, since it has no idea about checksum offloading.  * If TCP data has changed, then we just set checksum to zero,  * and caller must recalculate it himself.  * In case if libalias will edit UDP data, the same approach  * should be used.  */
@@ -950,6 +1049,24 @@ parameter_list|,
 name|struct
 name|in_addr
 name|_original_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|in_addr
+name|FindSctpRedirectAddress
+parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
+name|sctp_nat_msg
+modifier|*
+name|sm
 parameter_list|)
 function_decl|;
 end_function_decl

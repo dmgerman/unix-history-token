@@ -2486,6 +2486,12 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|tp
+operator|->
+name|t_bytes_acked
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)

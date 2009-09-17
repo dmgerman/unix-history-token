@@ -110,6 +110,11 @@ name|struct
 name|__siov
 name|iov
 decl_stmt|;
+specifier|const
+name|wchar_t
+modifier|*
+name|wsp
+decl_stmt|;
 name|FLOCKFILE
 argument_list|(
 name|fp
@@ -155,6 +160,10 @@ name|buf
 expr_stmt|;
 do|do
 block|{
+name|wsp
+operator|=
+name|ws
+expr_stmt|;
 name|nbytes
 operator|=
 name|__wcsnrtombs
@@ -162,7 +171,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|&
-name|ws
+name|wsp
 argument_list|,
 name|SIZE_T_MAX
 argument_list|,

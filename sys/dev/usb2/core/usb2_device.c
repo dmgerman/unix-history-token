@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_define
@@ -170,20 +170,16 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|uint8_t
-name|iface_index
 parameter_list|,
 name|struct
 name|usb2_endpoint_descriptor
 modifier|*
-name|edesc
 parameter_list|,
 name|struct
 name|usb2_pipe
 modifier|*
-name|pipe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -196,13 +192,10 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|uint8_t
-name|iface_index
 parameter_list|,
 name|uint8_t
-name|iface_mask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -215,7 +208,6 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -228,14 +220,11 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|device_t
 modifier|*
-name|ppdev
 parameter_list|,
 name|uint8_t
-name|free_subdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -248,12 +237,10 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|struct
 name|usb2_attach_arg
 modifier|*
-name|uaa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -266,12 +253,10 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|struct
 name|usb2_attach_arg
 modifier|*
-name|uaa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -284,13 +269,10 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|device_t
-name|dev
 parameter_list|,
 name|uint8_t
-name|do_suspend
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -316,7 +298,6 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -329,13 +310,10 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|uint8_t
-name|iface_index
 parameter_list|,
 name|uint8_t
-name|alt_index
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -353,7 +331,6 @@ parameter_list|,
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -366,92 +343,13 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|uint8_t
-name|iface_index
 parameter_list|,
 name|uint8_t
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* static structures */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint8_t
-name|usb2_hub_speed_combs
-index|[
-name|USB_SPEED_MAX
-index|]
-index|[
-name|USB_SPEED_MAX
-index|]
-init|=
-block|{
-comment|/* HUB */
-comment|/* subdevice */
-index|[
-name|USB_SPEED_HIGH
-index|]
-index|[
-name|USB_SPEED_HIGH
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_HIGH
-index|]
-index|[
-name|USB_SPEED_FULL
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_HIGH
-index|]
-index|[
-name|USB_SPEED_LOW
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_FULL
-index|]
-index|[
-name|USB_SPEED_FULL
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_FULL
-index|]
-index|[
-name|USB_SPEED_LOW
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_LOW
-index|]
-index|[
-name|USB_SPEED_LOW
-index|]
-operator|=
-literal|1
-block|, }
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* This variable is global to allow easy access to it: */
@@ -1217,7 +1115,6 @@ name|bus
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1294,7 +1191,6 @@ name|pipe
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1849,7 +1745,6 @@ name|curr_config_index
 operator|=
 name|USB_UNCONFIG_INDEX
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3186,7 +3081,6 @@ argument_list|(
 literal|"An USB driver would not detach!\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3363,7 +3257,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3679,7 +3572,6 @@ operator|=
 name|parent_index
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3835,7 +3727,6 @@ name|udev
 operator|->
 name|curr_config_no
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4314,12 +4205,11 @@ literal|"Resume"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_suspend_resume_device  *  * The following function will suspend or resume the USB device.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_suspend_resume  *  * The following function will suspend or resume the USB device.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4557,7 +4447,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4654,39 +4543,44 @@ argument_list|,
 name|usb2_mode
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Find an unused device index. In USB Host mode this is the 	 * same as the device address. 	 * 	 * NOTE: Index 1 is reserved for the Root HUB. 	 */
+comment|/* 	 * Find an unused device index. In USB Host mode this is the 	 * same as the device address. 	 * 	 * Device index zero is not used and device index 1 should 	 * always be the root hub. 	 */
 for|for
 control|(
 name|device_index
 operator|=
 name|USB_ROOT_HUB_ADDR
 init|;
+operator|(
 name|device_index
 operator|!=
-name|USB_MAX_DEVICES
-condition|;
-name|device_index
-operator|++
-control|)
-block|{
-if|if
-condition|(
+name|bus
+operator|->
+name|devices_max
+operator|)
+operator|&&
+operator|(
 name|bus
 operator|->
 name|devices
 index|[
 name|device_index
 index|]
-operator|==
+operator|!=
 name|NULL
-condition|)
-break|break;
-block|}
+operator|)
+condition|;
+name|device_index
+operator|++
+control|)
+comment|/* nop */
+empty_stmt|;
 if|if
 condition|(
 name|device_index
 operator|==
-name|USB_MAX_DEVICES
+name|bus
+operator|->
+name|devices_max
 condition|)
 block|{
 name|device_printf
@@ -4920,11 +4814,20 @@ name|uint32_t
 operator|)
 name|ticks
 expr_stmt|;
+comment|/* 	 * We need to force the power mode to "on" because there are plenty 	 * of USB devices out there that do not work very well with 	 * automatic suspend and resume! 	 */
 name|udev
 operator|->
 name|power_mode
 operator|=
 name|USB_POWER_MODE_ON
+expr_stmt|;
+name|udev
+operator|->
+name|pwr_save
+operator|.
+name|last_xfer_time
+operator|=
+name|ticks
 expr_stmt|;
 comment|/* we are not ready yet */
 name|udev
@@ -5023,62 +4926,13 @@ name|usb2_mode
 operator|=
 name|usb2_mode
 expr_stmt|;
-comment|/* check speed combination */
+comment|/* speed combination should be checked by the parent HUB */
 name|hub
 operator|=
 name|udev
 operator|->
 name|parent_hub
 expr_stmt|;
-if|if
-condition|(
-name|hub
-condition|)
-block|{
-if|if
-condition|(
-name|usb2_hub_speed_combs
-index|[
-name|hub
-operator|->
-name|speed
-index|]
-index|[
-name|speed
-index|]
-operator|==
-literal|0
-condition|)
-block|{
-if|#
-directive|if
-name|USB_DEBUG
-name|printf
-argument_list|(
-literal|"%s: the selected subdevice and HUB speed "
-literal|"combination is not supported %d/%d.\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|speed
-argument_list|,
-name|hub
-operator|->
-name|speed
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* reject this combination */
-name|err
-operator|=
-name|USB_ERR_INVAL
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
-block|}
 comment|/* search for our High Speed USB HUB, if any */
 name|adev
 operator|=
@@ -5213,7 +5067,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
 name|USB_SET_ADDRESS_SETTLE
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5316,9 +5173,26 @@ operator|->
 name|address
 argument_list|)
 expr_stmt|;
+comment|/* XXX try to re-enumerate the device */
+name|err
+operator|=
+name|usb2_req_re_enumerate
+argument_list|(
+name|udev
+argument_list|,
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 name|DPRINTF
 argument_list|(
@@ -5761,6 +5635,11 @@ decl_stmt|;
 name|uint8_t
 name|config_quirk
 decl_stmt|;
+name|uint8_t
+name|set_config_failed
+init|=
+literal|0
+decl_stmt|;
 comment|/* 		 * Most USB devices should attach to config index 0 by 		 * default 		 */
 if|if
 condition|(
@@ -5919,12 +5798,55 @@ condition|(
 name|err
 condition|)
 block|{
+if|if
+condition|(
+name|udev
+operator|->
+name|ddesc
+operator|.
+name|bNumConfigurations
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|set_config_failed
+condition|)
+block|{
+name|set_config_failed
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX try to re-enumerate the device */
+name|err
+operator|=
+name|usb2_req_re_enumerate
+argument_list|(
+name|udev
+argument_list|,
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+goto|goto
+name|repeat_set_config
+goto|;
+block|}
 name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
 literal|"Failure selecting "
-literal|"configuration index %u: %s, port %u, addr %u\n"
+literal|"configuration index %u: %s, port %u, "
+literal|"addr %u (ignored)\n"
 argument_list|,
 name|config_index
 argument_list|,
@@ -5941,6 +5863,12 @@ name|udev
 operator|->
 name|address
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* 			 * Some USB devices do not have any 			 * configurations. Ignore any set config 			 * failures! 			 */
+name|err
+operator|=
+literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -6048,7 +5976,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_test_huawei
+name|usb2_test_huawei_autoinst_p
 argument_list|(
 name|udev
 argument_list|,
@@ -6298,6 +6226,33 @@ name|udev
 operator|->
 name|bus
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"ugen%u.%u:<%s> at %s (disconnected)\n"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|bus
+operator|->
+name|bdev
+argument_list|)
+argument_list|,
+name|udev
+operator|->
+name|device_index
+argument_list|,
+name|udev
+operator|->
+name|manufacturer
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|bus
+operator|->
+name|bdev
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Destroy UGEN symlink, if any 	 */
 if|if
 condition|(
@@ -6436,11 +6391,53 @@ argument_list|,
 name|USB_DEFAULT_XFER_MAX
 argument_list|)
 expr_stmt|;
+comment|/* template unsetup, if any */
 call|(
 name|usb2_temp_unsetup_p
 call|)
 argument_list|(
 name|udev
+argument_list|)
+expr_stmt|;
+comment|/*  	 * Make sure that our clear-stall messages are not queued 	 * anywhere: 	 */
+name|USB_BUS_LOCK
+argument_list|(
+name|udev
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
+name|usb2_proc_mwait
+argument_list|(
+operator|&
+name|udev
+operator|->
+name|bus
+operator|->
+name|non_giant_callback_proc
+argument_list|,
+operator|&
+name|udev
+operator|->
+name|cs_msg
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|udev
+operator|->
+name|cs_msg
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|udev
+operator|->
+name|bus
 argument_list|)
 expr_stmt|;
 name|sx_destroy
@@ -6490,7 +6487,6 @@ argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6927,7 +6923,6 @@ name|address
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6982,13 +6977,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devtable.h>
+file|"usbdevs_data.h"
 end_include
 
 begin_endif
@@ -7351,9 +7346,38 @@ name|product_id
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Returns:  * See: USB_MODE_XXX  */
+end_comment
+
+begin_function
+name|uint8_t
+name|usb2_get_mode
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb2_mode
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns:  * See: USB_SPEED_XXX  */
+end_comment
 
 begin_function
 name|uint8_t
@@ -7372,6 +7396,46 @@ operator|->
 name|speed
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|uint32_t
+name|usb2_get_isoc_fps
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+block|{
+empty_stmt|;
+comment|/* indent fix */
+switch|switch
+condition|(
+name|udev
+operator|->
+name|speed
+condition|)
+block|{
+case|case
+name|USB_SPEED_LOW
+case|:
+case|case
+name|USB_SPEED_FULL
+case|:
+return|return
+operator|(
+literal|1000
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|8000
+operator|)
+return|;
+block|}
 block|}
 end_function
 
@@ -7852,7 +7916,6 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8022,7 +8085,70 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usb2_peer_can_wakeup  *  * Return values:  * 0: Peer cannot do resume signalling.  * Else: Peer can do resume signalling.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|uint8_t
+name|usb2_peer_can_wakeup
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+block|{
+specifier|const
+name|struct
+name|usb2_config_descriptor
+modifier|*
+name|cdp
+decl_stmt|;
+name|cdp
+operator|=
+name|udev
+operator|->
+name|cdesc
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cdp
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb2_mode
+operator|==
+name|USB_MODE_HOST
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|cdp
+operator|->
+name|bmAttributes
+operator|&
+name|UC_REMOTE_WAKEUP
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* not supported */
 block|}
 end_function
 

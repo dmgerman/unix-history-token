@@ -506,5 +506,13 @@ name|udf_zone_ds
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vop_vector
+name|udf_fifoops
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

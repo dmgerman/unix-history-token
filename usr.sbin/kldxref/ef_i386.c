@@ -71,7 +71,7 @@ name|len
 parameter_list|,
 name|void
 modifier|*
-name|dest
+name|_dest
 parameter_list|)
 block|{
 name|Elf_Addr
@@ -96,6 +96,12 @@ specifier|const
 name|Elf_Rela
 modifier|*
 name|rela
+decl_stmt|;
+name|char
+modifier|*
+name|dest
+init|=
+name|_dest
 decl_stmt|;
 switch|switch
 condition|(

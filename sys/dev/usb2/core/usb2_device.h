@@ -202,6 +202,41 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The following structure is used for power-save purposes. The data  * in this structure is protected by the USB BUS lock.  */
+end_comment
+
+begin_struct
+struct|struct
+name|usb2_power_save
+block|{
+name|int
+name|last_xfer_time
+decl_stmt|;
+comment|/* copy of "ticks" */
+name|uint32_t
+name|type_refs
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* transfer reference count */
+name|uint32_t
+name|read_refs
+decl_stmt|;
+comment|/* data read references */
+name|uint32_t
+name|write_refs
+decl_stmt|;
+comment|/* data write references */
+name|uint8_t
+name|suspended
+decl_stmt|;
+comment|/* set if USB device is suspended */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * The following structure defines an USB device. There exists one of  * these structures for every USB device.  */
 end_comment
 
@@ -261,6 +296,11 @@ index|[
 name|USB_EP_MAX
 index|]
 decl_stmt|;
+name|struct
+name|usb2_power_save
+name|pwr_save
+decl_stmt|;
+comment|/* power save data */
 name|struct
 name|usb2_bus
 modifier|*
@@ -699,6 +739,18 @@ name|struct
 name|usb_device
 modifier|*
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+name|usb2_peer_can_wakeup
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
 parameter_list|)
 function_decl|;
 end_function_decl

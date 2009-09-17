@@ -424,6 +424,8 @@ name|bpref
 parameter_list|,
 name|size
 parameter_list|,
+name|flags
+parameter_list|,
 name|cred
 parameter_list|,
 name|bnp
@@ -440,6 +442,8 @@ name|bpref
 decl_stmt|;
 name|int
 name|size
+decl_stmt|,
+name|flags
 decl_stmt|;
 name|struct
 name|ucred
@@ -792,6 +796,19 @@ operator|+
 name|delta
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IO_EXT
+condition|)
+name|ip
+operator|->
+name|i_flag
+operator||=
+name|IN_CHANGE
+expr_stmt|;
+else|else
 name|ip
 operator|->
 name|i_flag
@@ -946,6 +963,8 @@ name|osize
 parameter_list|,
 name|nsize
 parameter_list|,
+name|flags
+parameter_list|,
 name|cred
 parameter_list|,
 name|bpp
@@ -968,6 +987,8 @@ name|int
 name|osize
 decl_stmt|,
 name|nsize
+decl_stmt|,
+name|flags
 decl_stmt|;
 name|struct
 name|ucred
@@ -1465,6 +1486,19 @@ operator|+
 name|delta
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IO_EXT
+condition|)
+name|ip
+operator|->
+name|i_flag
+operator||=
+name|IN_CHANGE
+expr_stmt|;
+else|else
 name|ip
 operator|->
 name|i_flag
@@ -1855,6 +1889,19 @@ operator|+
 name|delta
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IO_EXT
+condition|)
+name|ip
+operator|->
+name|i_flag
+operator||=
+name|IN_CHANGE
+expr_stmt|;
+else|else
 name|ip
 operator|->
 name|i_flag
@@ -9940,8 +9987,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VCHR
+operator|==
+name|VREG
 condition|)
 block|{
 comment|/* devvp is a snapshot */
@@ -10271,8 +10318,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VCHR
+operator|==
+name|VREG
 condition|)
 block|{
 name|UFS_UNLOCK
@@ -11157,8 +11204,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VCHR
+operator|==
+name|VREG
 condition|)
 block|{
 comment|/* devvp is a snapshot */
@@ -11577,8 +11624,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VCHR
+operator|==
+name|VREG
 condition|)
 block|{
 comment|/* devvp is a snapshot */

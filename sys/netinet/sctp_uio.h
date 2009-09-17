@@ -115,6 +115,9 @@ name|uint8_t
 name|sctp_authentication_event
 decl_stmt|;
 name|uint8_t
+name|sctp_sender_dry_event
+decl_stmt|;
+name|uint8_t
 name|sctp_stream_reset_events
 decl_stmt|;
 block|}
@@ -429,12 +432,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_PR_POLICY_VALID
+name|SCTP_SACK_IMMEDIATELY
 value|0x4000
 end_define
 
 begin_comment
-comment|/* pr sctp policy valid */
+comment|/* Set I-Bit */
 end_comment
 
 begin_define
@@ -444,7 +447,7 @@ name|INVALID_SINFO_FLAG
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& 0xffffff00 \& ~(SCTP_EOF | SCTP_ABORT | SCTP_UNORDERED |\ 				        SCTP_ADDR_OVER | SCTP_SENDALL | SCTP_EOR)) != 0)
+value|(((x)& 0xffffff00 \& ~(SCTP_EOF | SCTP_ABORT | SCTP_UNORDERED |\ 				        SCTP_ADDR_OVER | SCTP_SENDALL | SCTP_EOR |\ 					SCTP_SACK_IMMEDIATELY)) != 0)
 end_define
 
 begin_comment
@@ -1166,6 +1169,40 @@ name|SCTP_AUTH_NEWKEY
 value|0x0001
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_AUTH_NO_AUTH
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_AUTH_FREE_KEY
+value|0x0003
+end_define
+
+begin_struct
+struct|struct
+name|sctp_sender_dry_event
+block|{
+name|uint16_t
+name|sender_dry_type
+decl_stmt|;
+name|uint16_t
+name|sender_dry_flags
+decl_stmt|;
+name|uint32_t
+name|sender_dry_length
+decl_stmt|;
+name|sctp_assoc_t
+name|sender_dry_assoc_id
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * stream reset event  */
 end_comment
@@ -1235,6 +1272,13 @@ name|SCTP_STRRESET_FAILED
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_STRRESET_ADD_STREAM
+value|0x0020
+end_define
+
 begin_comment
 comment|/* SCTP notification event */
 end_comment
@@ -1300,6 +1344,10 @@ decl_stmt|;
 name|struct
 name|sctp_authkey_event
 name|sn_auth_event
+decl_stmt|;
+name|struct
+name|sctp_sender_dry_event
+name|sn_sender_dry_event
 decl_stmt|;
 name|struct
 name|sctp_stream_reset_event
@@ -1385,6 +1433,13 @@ define|#
 directive|define
 name|SCTP_STREAM_RESET_EVENT
 value|0x0009
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SENDER_DRY_EVENT
+value|0x000a
 end_define
 
 begin_comment
@@ -1855,6 +1910,9 @@ begin_struct
 struct|struct
 name|sctp_assoc_ids
 block|{
+name|uint32_t
+name|gaids_number_of_ids
+decl_stmt|;
 name|sctp_assoc_t
 name|gaids_assoc_id
 index|[
@@ -1997,6 +2055,13 @@ define|#
 directive|define
 name|SCTP_RESET_TSN
 value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RESET_ADD_STREAMS
+value|0x0005
 end_define
 
 begin_struct
@@ -2671,6 +2736,15 @@ name|uint32_t
 name|sctps_recvexpressm
 decl_stmt|;
 comment|/* total fast path multi-part data */
+name|uint32_t
+name|sctps_recvnocrc
+decl_stmt|;
+name|uint32_t
+name|sctps_recvswcrc
+decl_stmt|;
+name|uint32_t
+name|sctps_recvhwcrc
+decl_stmt|;
 comment|/* output statistics: */
 name|uint32_t
 name|sctps_sendpackets
@@ -2712,6 +2786,15 @@ name|uint32_t
 name|sctps_senderrors
 decl_stmt|;
 comment|/* ip_output error counter */
+name|uint32_t
+name|sctps_sendnocrc
+decl_stmt|;
+name|uint32_t
+name|sctps_sendswcrc
+decl_stmt|;
+name|uint32_t
+name|sctps_sendhwcrc
+decl_stmt|;
 comment|/* PCKDROPREP statistics: */
 name|uint32_t
 name|sctps_pdrpfmbox
@@ -3019,7 +3102,7 @@ comment|/* Number of unread message abandonded 					 * by close */
 name|uint32_t
 name|sctps_send_burst_avoid
 decl_stmt|;
-comment|/* Send burst avoidance, 						 * already max burst inflight 						 * to net */
+comment|/* Unused */
 name|uint32_t
 name|sctps_send_cwnd_avoid
 decl_stmt|;
@@ -3227,6 +3310,13 @@ decl_stmt|;
 name|uint16_t
 name|maxqlen
 decl_stmt|;
+name|uint32_t
+name|extra_padding
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future */
 block|}
 struct|;
 end_struct
@@ -3307,9 +3397,6 @@ name|uint32_t
 name|mtu
 decl_stmt|;
 name|uint32_t
-name|peers_rwnd
-decl_stmt|;
-name|uint32_t
 name|refcnt
 decl_stmt|;
 name|uint16_t
@@ -3330,6 +3417,20 @@ name|sctp_timeval
 name|discontinuity_time
 decl_stmt|;
 comment|/* sctpAssocEntry 17  */
+name|uint32_t
+name|peers_rwnd
+decl_stmt|;
+name|sctp_assoc_t
+name|assoc_id
+decl_stmt|;
+comment|/* sctpAssocEntry 1   */
+name|uint32_t
+name|extra_padding
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future */
 block|}
 struct|;
 end_struct
@@ -3351,6 +3452,13 @@ name|sctp_timeval
 name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalAddrEntry 3   */
+name|uint32_t
+name|extra_padding
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future */
 block|}
 struct|;
 end_struct
@@ -3412,6 +3520,13 @@ name|sctp_timeval
 name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 8   */
+name|uint32_t
+name|extra_padding
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* future */
 block|}
 struct|;
 end_struct

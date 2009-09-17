@@ -116,6 +116,12 @@ directive|include
 file|<netinet/sctp_uio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/udp.h>
+end_include
+
 begin_function
 name|void
 name|sctp_early_fr_timer
@@ -3459,8 +3465,8 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 continue|continue;
+block|}
 block|}
 if|if
 condition|(
@@ -3523,8 +3529,8 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 continue|continue;
+block|}
 block|}
 if|if
 condition|(
@@ -5039,8 +5045,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+comment|/* 						 * Less than 0 means we lost 						 * the assoc 						 */
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -5243,8 +5252,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+comment|/* Return less than 0 means we lost the association */
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 comment|/* 	 * Special case for cookie-echo'ed case, we don't do output but must 	 * await the COOKIE-ACK before retransmission 	 */
@@ -8318,6 +8330,22 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|net
+operator|->
+name|port
+condition|)
+block|{
+name|mtu
+operator|-=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udphdr
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mtu

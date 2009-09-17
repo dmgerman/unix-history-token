@@ -123,10 +123,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Local routines  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|device_method_t

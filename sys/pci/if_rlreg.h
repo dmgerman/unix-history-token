@@ -806,6 +806,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_MACDBG
+value|0x006D
+end_define
+
+begin_comment
+comment|/* 8 bits, 8168C SPIN2 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_GPIO
+value|0x006E
+end_define
+
+begin_comment
+comment|/* 8 bits, 8168C SPIN2 only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_MAXRXPKTLEN
 value|0x00DA
 end_define
@@ -937,14 +959,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RL_HWREV_8110S
+name|RL_HWREV_8169S
 value|0x00800000
 end_define
 
 begin_define
 define|#
 directive|define
-name|RL_HWREV_8169S
+name|RL_HWREV_8110S
 value|0x04000000
 end_define
 
@@ -1114,6 +1136,13 @@ define|#
 directive|define
 name|RL_HWREV_8169_8110SBL
 value|0x7CC00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8169_8110SCE
+value|0x98000000
 end_define
 
 begin_define
@@ -1814,6 +1843,13 @@ define|#
 directive|define
 name|RL_CMD_RESET
 value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_CMD_STOPREQ
+value|0x0080
 end_define
 
 begin_comment
@@ -4159,7 +4195,7 @@ begin_define
 define|#
 directive|define
 name|RL_MSI_MESSAGES
-value|2
+value|1
 end_define
 
 begin_define
@@ -4522,10 +4558,6 @@ name|RL_FLAG_MSI
 value|0x0001
 define|#
 directive|define
-name|RL_FLAG_INVMAR
-value|0x0004
-define|#
-directive|define
 name|RL_FLAG_PHYWAKE
 value|0x0008
 define|#
@@ -4544,6 +4576,30 @@ define|#
 directive|define
 name|RL_FLAG_MACSTAT
 value|0x0080
+define|#
+directive|define
+name|RL_FLAG_FASTETHER
+value|0x0100
+define|#
+directive|define
+name|RL_FLAG_CMDSTOP
+value|0x0200
+define|#
+directive|define
+name|RL_FLAG_MACRESET
+value|0x0400
+define|#
+directive|define
+name|RL_FLAG_WOLRXENB
+value|0x1000
+define|#
+directive|define
+name|RL_FLAG_MACSLEEP
+value|0x2000
+define|#
+directive|define
+name|RL_FLAG_PCIE
+value|0x4000
 define|#
 directive|define
 name|RL_FLAG_LINK
@@ -4780,6 +4836,13 @@ define|#
 directive|define
 name|RL_TIMEOUT
 value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_PHY_TIMEOUT
+value|2000
 end_define
 
 begin_comment

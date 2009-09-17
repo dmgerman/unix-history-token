@@ -413,14 +413,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|int
-name|hw_float
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -432,12 +424,11 @@ name|floatingpoint
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|hw_float
+name|NULL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
-literal|"Floatingpoint instructions executed in hardware"
+literal|"Floating point instructions executed in hardware"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1190,6 +1181,9 @@ decl_stmt|;
 name|register_t
 name|s
 decl_stmt|;
+name|u_short
+name|control
+decl_stmt|;
 if|if
 condition|(
 name|PCPU_GET
@@ -1306,6 +1300,26 @@ operator|&
 name|fpu_cleanstate
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pcb
+operator|->
+name|pcb_flags
+operator|&
+name|PCB_32BIT
+condition|)
+block|{
+name|control
+operator|=
+name|__INITIAL_FPUCW_I386__
+expr_stmt|;
+name|fldcw
+argument_list|(
+operator|&
+name|control
+argument_list|)
+expr_stmt|;
+block|}
 name|pcb
 operator|->
 name|pcb_flags

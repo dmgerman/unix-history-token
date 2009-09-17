@@ -1286,11 +1286,9 @@ name|len
 expr_stmt|;
 name|err
 operator|=
-call|(
 name|ifp
 operator|->
 name|if_transmit
-call|)
 argument_list|(
 name|ifp
 argument_list|,
@@ -3790,7 +3788,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|ni
 operator|->
@@ -3904,6 +3902,13 @@ operator|->
 name|ni_flags
 operator||=
 name|IEEE80211_NODE_AREF
+expr_stmt|;
+comment|/* 	 * Mark the node as requiring a valid association id 	 * before outbound traffic is permitted. 	 */
+name|ni
+operator|->
+name|ni_flags
+operator||=
+name|IEEE80211_NODE_ASSOCID
 expr_stmt|;
 if|if
 condition|(
@@ -4437,6 +4442,13 @@ operator|->
 name|ni_flags
 operator||=
 name|IEEE80211_NODE_AREF
+expr_stmt|;
+comment|/* 		 * Mark the node as requiring a valid associatio id 		 * before outbound traffic is permitted. 		 */
+name|ni
+operator|->
+name|ni_flags
+operator||=
+name|IEEE80211_NODE_ASSOCID
 expr_stmt|;
 name|IEEE80211_RSSI_LPF
 argument_list|(
@@ -8651,7 +8663,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|ni
 operator|->

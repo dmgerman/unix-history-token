@@ -340,19 +340,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/evtchn.h>
+file|<xen/evtchn.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen_intr.h>
+file|<xen/xen_intr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
@@ -585,6 +585,17 @@ name|int
 name|cpu_apic_ids
 index|[
 name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|apic_cpuids
+index|[
+name|MAX_APIC_ID
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1140,6 +1151,13 @@ literal|0
 index|]
 operator|=
 name|boot_cpu_id
+expr_stmt|;
+name|apic_cpuids
+index|[
+name|boot_cpu_id
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|assign_cpu_ids
 argument_list|()
@@ -1768,6 +1786,10 @@ block|{
 name|int
 name|rc
 decl_stmt|;
+name|unsigned
+name|int
+name|irq
+decl_stmt|;
 name|per_cpu
 argument_list|(
 name|resched_irq
@@ -1817,6 +1839,9 @@ operator||
 name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
+argument_list|,
+operator|&
+name|irq
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1837,7 +1862,7 @@ argument_list|,
 name|cpu
 argument_list|)
 operator|=
-name|rc
+name|irq
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -1871,6 +1896,9 @@ operator||
 name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
+argument_list|,
+operator|&
+name|irq
 argument_list|)
 expr_stmt|;
 if|if
@@ -1889,7 +1917,7 @@ argument_list|,
 name|cpu
 argument_list|)
 operator|=
-name|rc
+name|irq
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1950,8 +1978,6 @@ name|resched_irq
 argument_list|,
 name|cpu
 argument_list|)
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1973,8 +1999,6 @@ name|callfunc_irq
 argument_list|,
 name|cpu
 argument_list|)
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -2612,6 +2636,13 @@ name|mp_ncpus
 index|]
 operator|=
 name|i
+expr_stmt|;
+name|apic_cpuids
+index|[
+name|i
+index|]
+operator|=
+name|mp_ncpus
 expr_stmt|;
 name|mp_ncpus
 operator|++

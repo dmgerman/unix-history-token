@@ -50,6 +50,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * There is a dead lock with vfork and closing of pseudo-ports.  * So we have to be sneaky about error reporting.  */
 end_comment

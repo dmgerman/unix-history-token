@@ -206,6 +206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|dom_mtx
@@ -386,6 +387,13 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Protocol switch methods fall into three categories: mandatory, 	 * mandatory but protosw_init() provides a default, and optional. 	 * 	 * For true protocols (i.e., pru_attach != NULL), KASSERT truly 	 * mandatory methods with no defaults, and initialize defaults for 	 * other mandatory methods if the protocol hasn't defined an 	 * implementation (NULL function pointer). 	 */
+if|#
+directive|if
+literal|0
+block|if (pu->pru_attach != NULL) { 		KASSERT(pu->pru_abort != NULL, 		    ("protosw_init: %ssw[%d] pru_abort NULL", 		    pr->pr_domain->dom_name, 		    (int)(pr - pr->pr_domain->dom_protosw))); 		KASSERT(pu->pru_send != NULL, 		    ("protosw_init: %ssw[%d] pru_send NULL", 		    pr->pr_domain->dom_name, 		    (int)(pr - pr->pr_domain->dom_protosw))); 	}
+endif|#
+directive|endif
 define|#
 directive|define
 name|DEFAULT
@@ -402,6 +410,15 @@ operator|->
 name|pru_accept
 argument_list|,
 name|pru_accept_notsupp
+argument_list|)
+expr_stmt|;
+name|DEFAULT
+argument_list|(
+name|pu
+operator|->
+name|pru_bind
+argument_list|,
+name|pru_bind_notsupp
 argument_list|)
 expr_stmt|;
 name|DEFAULT
@@ -435,9 +452,27 @@ name|DEFAULT
 argument_list|(
 name|pu
 operator|->
+name|pru_disconnect
+argument_list|,
+name|pru_disconnect_notsupp
+argument_list|)
+expr_stmt|;
+name|DEFAULT
+argument_list|(
+name|pu
+operator|->
 name|pru_listen
 argument_list|,
 name|pru_listen_notsupp
+argument_list|)
+expr_stmt|;
+name|DEFAULT
+argument_list|(
+name|pu
+operator|->
+name|pru_peeraddr
+argument_list|,
+name|pru_peeraddr_notsupp
 argument_list|)
 expr_stmt|;
 name|DEFAULT
@@ -465,6 +500,24 @@ operator|->
 name|pru_sense
 argument_list|,
 name|pru_sense_null
+argument_list|)
+expr_stmt|;
+name|DEFAULT
+argument_list|(
+name|pu
+operator|->
+name|pru_shutdown
+argument_list|,
+name|pru_shutdown_notsupp
+argument_list|)
+expr_stmt|;
+name|DEFAULT
+argument_list|(
+name|pu
+operator|->
+name|pru_sockaddr
+argument_list|,
+name|pru_sockaddr_notsupp
 argument_list|)
 expr_stmt|;
 name|DEFAULT
@@ -1316,7 +1369,7 @@ comment|/* 	 * Protect us against races when two protocol registrations for 	 * 
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 comment|/* The new protocol must not yet exist. */
@@ -1364,7 +1417,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1407,7 +1460,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1434,7 +1487,7 @@ comment|/* Job is done, no more protection required. */
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Initialize and activate the protocol. */
@@ -1557,7 +1610,7 @@ comment|/* Lock out everyone else while we are manipulating the protosw. */
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 comment|/* The protocol must exist and only once. */
@@ -1608,7 +1661,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1636,7 +1689,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1696,12 +1749,6 @@ name|NULL
 expr_stmt|;
 name|dpr
 operator|->
-name|pr_ousrreq
-operator|=
-name|NULL
-expr_stmt|;
-name|dpr
-operator|->
 name|pr_init
 operator|=
 name|NULL
@@ -1735,7 +1782,7 @@ comment|/* Job is done, not more protection required. */
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return

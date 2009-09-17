@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/snoop.h>
 end_include
 
@@ -418,14 +424,6 @@ argument_list|,
 name|M_WAITOK
 operator||
 name|M_ZERO
-argument_list|)
-expr_stmt|;
-name|ttyoutq_init
-argument_list|(
-operator|&
-name|ss
-operator|->
-name|snp_outq
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -982,6 +980,8 @@ operator|->
 name|snp_tty
 argument_list|,
 name|td
+operator|->
+name|td_proc
 argument_list|,
 operator|*
 operator|(

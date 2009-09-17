@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081123_0118"
+value|"20090215_0128"
 end_define
 
 begin_expr_stmt
@@ -165,43 +165,6 @@ name|sc
 parameter_list|)
 value|mtx_owned((sc)->lock)
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|HDAC_MSI_ENABLED
-end_undef
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700026
-operator|||
-expr|\
-operator|(
-name|__FreeBSD_version
-operator|<
-literal|700000
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|602106
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HDAC_MSI_ENABLED
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -357,6 +320,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_PCH
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x3b56)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_SCH
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x811b)
 end_define
@@ -438,6 +408,76 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_NVIDIA_MCP78_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0774)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP78_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0775)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP78_3
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0776)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP78_4
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0777)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP73_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x07fc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP73_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x07fd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP79_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP79_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP79_3
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP79_4
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_NVIDIA_ALL
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0xffff)
 end_define
@@ -465,6 +505,97 @@ define|#
 directive|define
 name|HDA_ATI_SB600
 value|HDA_MODEL_CONSTRUCT(ATI, 0x4383)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RS600
+value|HDA_MODEL_CONSTRUCT(ATI, 0x793b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RS690
+value|HDA_MODEL_CONSTRUCT(ATI, 0x7919)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RS780
+value|HDA_MODEL_CONSTRUCT(ATI, 0x960f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_R600
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV630
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV610
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV670
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV635
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV620
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV770
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV730
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa38)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV710
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV740
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa48)
 end_define
 
 begin_define
@@ -522,6 +653,31 @@ define|#
 directive|define
 name|HDA_SIS_ALL
 value|HDA_MODEL_CONSTRUCT(SIS, 0xffff)
+end_define
+
+begin_comment
+comment|/* ULI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ULI_VENDORID
+value|0x10b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ULI_M5461
+value|HDA_MODEL_CONSTRUCT(ULI, 0x5461)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ULI_ALL
+value|HDA_MODEL_CONSTRUCT(ULI, 0xffff)
 end_define
 
 begin_comment
@@ -2030,6 +2186,12 @@ literal|"Intel 82801J"
 block|}
 block|,
 block|{
+name|HDA_INTEL_PCH
+block|,
+literal|"Intel PCH"
+block|}
+block|,
+block|{
 name|HDA_INTEL_SCH
 block|,
 literal|"Intel SCH"
@@ -2084,6 +2246,66 @@ literal|"NVidia MCP67"
 block|}
 block|,
 block|{
+name|HDA_NVIDIA_MCP73_1
+block|,
+literal|"NVidia MCP73"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP73_2
+block|,
+literal|"NVidia MCP73"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP78_1
+block|,
+literal|"NVidia MCP78"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP78_2
+block|,
+literal|"NVidia MCP78"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP78_3
+block|,
+literal|"NVidia MCP78"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP78_4
+block|,
+literal|"NVidia MCP78"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP79_1
+block|,
+literal|"NVidia MCP79"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP79_2
+block|,
+literal|"NVidia MCP79"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP79_3
+block|,
+literal|"NVidia MCP79"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP79_4
+block|,
+literal|"NVidia MCP79"
+block|}
+block|,
+block|{
 name|HDA_ATI_SB450
 block|,
 literal|"ATI SB450"
@@ -2096,6 +2318,78 @@ literal|"ATI SB600"
 block|}
 block|,
 block|{
+name|HDA_ATI_RS600
+block|,
+literal|"ATI RS600"
+block|}
+block|,
+block|{
+name|HDA_ATI_RS690
+block|,
+literal|"ATI RS690"
+block|}
+block|,
+block|{
+name|HDA_ATI_RS780
+block|,
+literal|"ATI RS780"
+block|}
+block|,
+block|{
+name|HDA_ATI_R600
+block|,
+literal|"ATI R600"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV610
+block|,
+literal|"ATI RV610"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV620
+block|,
+literal|"ATI RV620"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV630
+block|,
+literal|"ATI RV630"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV635
+block|,
+literal|"ATI RV635"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV710
+block|,
+literal|"ATI RV710"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV730
+block|,
+literal|"ATI RV730"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV740
+block|,
+literal|"ATI RV740"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV770
+block|,
+literal|"ATI RV770"
+block|}
+block|,
+block|{
 name|HDA_VIA_VT82XX
 block|,
 literal|"VIA VT8251/8237A"
@@ -2105,6 +2399,12 @@ block|{
 name|HDA_SIS_966
 block|,
 literal|"SiS 966"
+block|}
+block|,
+block|{
+name|HDA_ULI_M5461
+block|,
+literal|"ULI M5461"
 block|}
 block|,
 comment|/* Unknown */
@@ -2136,6 +2436,12 @@ block|{
 name|HDA_SIS_ALL
 block|,
 literal|"SiS (Unknown)"
+block|}
+block|,
+block|{
+name|HDA_ULI_ALL
+block|,
+literal|"ULI (Unknown)"
 block|}
 block|, }
 struct|;
@@ -2870,6 +3176,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_AD1884A
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x184a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1882
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1882)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1883
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1883)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1884
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1884)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1984A
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x194a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1984B
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x194b)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_AD1981HD
 value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1981)
 end_define
@@ -2898,6 +3246,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_AD1987
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1987)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_AD1988
 value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1988)
 end_define
@@ -2907,6 +3262,20 @@ define|#
 directive|define
 name|HDA_CODEC_AD1988B
 value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x198b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1882A
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x882a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1989B
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x989b)
 end_define
 
 begin_define
@@ -3348,6 +3717,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_SII1390
+value|HDA_CODEC_CONSTRUCT(SII, 0x1390)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_SII1392
+value|HDA_CODEC_CONSTRUCT(SII, 0x1392)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_SIIXXXX
 value|HDA_CODEC_CONSTRUCT(SII, 0xffff)
 end_define
@@ -3371,7 +3754,7 @@ value|HDA_CODEC_CONSTRUCT(AGERE, 0xffff)
 end_define
 
 begin_comment
-comment|/*  * Conexant  *  * Ok, the truth is, I don't have any idea at all whether  * it is "Venice" or "Waikiki" or other unnamed CXyadayada. The only  * place that tell me it is "Venice" is from its Windows driver INF.  *  *  Venice - CX?????  * Waikiki - CX20551-22  */
+comment|/* Conexant */
 end_comment
 
 begin_define
@@ -3384,15 +3767,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_CXVENICE
+name|HDA_CODEC_CX20549
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5045)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_CXWAIKIKI
+name|HDA_CODEC_CX20551
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5047)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20561
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5051)
 end_define
 
 begin_define
@@ -3493,6 +3883,174 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_VT1708B_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe720)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe721)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_2
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe722)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_3
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe723)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_4
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe724)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_5
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe725)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_6
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe726)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_7
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe727)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0x1397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_2
+value|HDA_CODEC_CONSTRUCT(VIA, 0x2397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_3
+value|HDA_CODEC_CONSTRUCT(VIA, 0x3397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_4
+value|HDA_CODEC_CONSTRUCT(VIA, 0x4397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_5
+value|HDA_CODEC_CONSTRUCT(VIA, 0x5397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_6
+value|HDA_CODEC_CONSTRUCT(VIA, 0x6397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_7
+value|HDA_CODEC_CONSTRUCT(VIA, 0x7397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0x1398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_2
+value|HDA_CODEC_CONSTRUCT(VIA, 0x2398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_3
+value|HDA_CODEC_CONSTRUCT(VIA, 0x3398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_4
+value|HDA_CODEC_CONSTRUCT(VIA, 0x4398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_5
+value|HDA_CODEC_CONSTRUCT(VIA, 0x5398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_6
+value|HDA_CODEC_CONSTRUCT(VIA, 0x6398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_7
+value|HDA_CODEC_CONSTRUCT(VIA, 0x7398)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_VTXXXX
 value|HDA_CODEC_CONSTRUCT(VIA, 0xffff)
 end_define
@@ -3500,6 +4058,34 @@ end_define
 begin_comment
 comment|/* ATI */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIRS600_1
+value|HDA_CODEC_CONSTRUCT(ATI, 0x793c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIRS600_2
+value|HDA_CODEC_CONSTRUCT(ATI, 0x7919)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIRS690
+value|HDA_CODEC_CONSTRUCT(ATI, 0x791a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIR6XX
+value|HDA_CODEC_CONSTRUCT(ATI, 0xaa01)
+end_define
 
 begin_define
 define|#
@@ -3515,6 +4101,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIAMCP78
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP78_2
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0006)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP7A
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0007)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP67
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP73
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x8001)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAXXXX
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0xffff)
 end_define
@@ -3522,6 +4143,34 @@ end_define
 begin_comment
 comment|/* INTEL */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELG45_1
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2801)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELG45_2
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2802)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELG45_3
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2803)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELG45_4
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
+end_define
 
 begin_define
 define|#
@@ -3654,6 +4303,36 @@ literal|"Realtek ALC889"
 block|}
 block|,
 block|{
+name|HDA_CODEC_AD1882
+block|,
+literal|"Analog Devices AD1882"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1882A
+block|,
+literal|"Analog Devices AD1882A"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1883
+block|,
+literal|"Analog Devices AD1883"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1884
+block|,
+literal|"Analog Devices AD1884"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1884A
+block|,
+literal|"Analog Devices AD1884A"
+block|}
+block|,
+block|{
 name|HDA_CODEC_AD1981HD
 block|,
 literal|"Analog Devices AD1981HD"
@@ -3672,21 +4351,45 @@ literal|"Analog Devices AD1984"
 block|}
 block|,
 block|{
+name|HDA_CODEC_AD1984A
+block|,
+literal|"Analog Devices AD1984A"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1984B
+block|,
+literal|"Analog Devices AD1984B"
+block|}
+block|,
+block|{
 name|HDA_CODEC_AD1986A
 block|,
 literal|"Analog Devices AD1986A"
 block|}
 block|,
 block|{
+name|HDA_CODEC_AD1987
+block|,
+literal|"Analog Devices AD1987"
+block|}
+block|,
+block|{
 name|HDA_CODEC_AD1988
 block|,
-literal|"Analog Devices AD1988"
+literal|"Analog Devices AD1988A"
 block|}
 block|,
 block|{
 name|HDA_CODEC_AD1988B
 block|,
 literal|"Analog Devices AD1988B"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1989B
+block|,
+literal|"Analog Devices AD1989B"
 block|}
 block|,
 block|{
@@ -4002,15 +4705,21 @@ literal|"IDT 92HD83C1X"
 block|}
 block|,
 block|{
-name|HDA_CODEC_CXVENICE
+name|HDA_CODEC_CX20549
 block|,
-literal|"Conexant Venice"
+literal|"Conexant CX20549 (Venice)"
 block|}
 block|,
 block|{
-name|HDA_CODEC_CXWAIKIKI
+name|HDA_CODEC_CX20551
 block|,
-literal|"Conexant Waikiki"
+literal|"Conexant CX20551 (Waikiki)"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20561
+block|,
+literal|"Conexant CX20561 (Hermosa)"
 block|}
 block|,
 block|{
@@ -4083,6 +4792,240 @@ block|{
 name|HDA_CODEC_VT1709_7
 block|,
 literal|"VIA VT1709_7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_0
+block|,
+literal|"VIA VT1708B_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_1
+block|,
+literal|"VIA VT1708B_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_2
+block|,
+literal|"VIA VT1708B_2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_3
+block|,
+literal|"VIA VT1708B_3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_4
+block|,
+literal|"VIA VT1708B_4"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_5
+block|,
+literal|"VIA VT1708B_5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_6
+block|,
+literal|"VIA VT1708B_6"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_7
+block|,
+literal|"VIA VT1708B_7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_0
+block|,
+literal|"VIA VT1708S_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_1
+block|,
+literal|"VIA VT1708S_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_2
+block|,
+literal|"VIA VT1708S_2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_3
+block|,
+literal|"VIA VT1708S_3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_4
+block|,
+literal|"VIA VT1708S_4"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_5
+block|,
+literal|"VIA VT1708S_5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_6
+block|,
+literal|"VIA VT1708S_6"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_7
+block|,
+literal|"VIA VT1708S_7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_0
+block|,
+literal|"VIA VT1702_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_1
+block|,
+literal|"VIA VT1702_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_2
+block|,
+literal|"VIA VT1702_2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_3
+block|,
+literal|"VIA VT1702_3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_4
+block|,
+literal|"VIA VT1702_4"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_5
+block|,
+literal|"VIA VT1702_5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_6
+block|,
+literal|"VIA VT1702_6"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_7
+block|,
+literal|"VIA VT1702_7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIRS600_1
+block|,
+literal|"ATI RS600 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIRS600_2
+block|,
+literal|"ATI RS600 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIRS690
+block|,
+literal|"ATI RS690/780 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIR6XX
+block|,
+literal|"ATI R6xx HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP67
+block|,
+literal|"NVidia MCP67 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP73
+block|,
+literal|"NVidia MCP73 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP78
+block|,
+literal|"NVidia MCP78 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP78_2
+block|,
+literal|"NVidia MCP78 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP7A
+block|,
+literal|"NVidia MCP7A HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELG45_1
+block|,
+literal|"Intel G45 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELG45_2
+block|,
+literal|"Intel G45 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELG45_3
+block|,
+literal|"Intel G45 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELG45_4
+block|,
+literal|"Intel G45 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_SII1390
+block|,
+literal|"Silicon Image SiI1390 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_SII1392
+block|,
+literal|"Silicon Image SiI1392 HDMI"
 block|}
 block|,
 comment|/* Unknown codec */
@@ -8119,9 +9062,6 @@ name|irq_rid
 operator|=
 literal|0x0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HDAC_MSI_ENABLED
 if|if
 condition|(
 operator|(
@@ -8164,8 +9104,6 @@ operator|=
 literal|0x1
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|sc
 operator|->
 name|flags
@@ -8372,19 +9310,8 @@ operator|->
 name|irq_res
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HDAC_MSI_ENABLED
 if|if
 condition|(
-operator|(
-name|sc
-operator|->
-name|flags
-operator|&
-name|HDAC_F_MSI
-operator|)
-operator|&&
 name|irq
 operator|->
 name|irq_rid
@@ -8398,8 +9325,6 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|irq
 operator|->
 name|irq_handle
@@ -10921,7 +11846,7 @@ if|if
 condition|(
 name|id
 operator|==
-name|HDA_CODEC_CXVENICE
+name|HDA_CODEC_CX20549
 operator|&&
 name|sc
 operator|->
@@ -10997,7 +11922,7 @@ if|if
 condition|(
 name|id
 operator|==
-name|HDA_CODEC_CXWAIKIKI
+name|HDA_CODEC_CX20551
 operator|&&
 name|sc
 operator|->
@@ -11559,9 +12484,6 @@ specifier|const
 name|char
 modifier|*
 name|devstr
-decl_stmt|,
-modifier|*
-name|connstr
 decl_stmt|;
 name|nid_t
 name|cad
@@ -11580,6 +12502,11 @@ init|=
 name|w
 operator|->
 name|nid
+decl_stmt|;
+name|int
+name|conn
+decl_stmt|,
+name|color
 decl_stmt|;
 name|config
 operator|=
@@ -11704,10 +12631,8 @@ operator|>>
 name|HDA_CONFIG_DEFAULTCONF_DEVICE_SHIFT
 index|]
 expr_stmt|;
-name|connstr
+name|conn
 operator|=
-name|HDA_CONNS
-index|[
 operator|(
 name|config
 operator|&
@@ -11715,7 +12640,16 @@ name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_MASK
 operator|)
 operator|>>
 name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_SHIFT
-index|]
+expr_stmt|;
+name|color
+operator|=
+operator|(
+name|config
+operator|&
+name|HDA_CONFIG_DEFAULTCONF_COLOR_MASK
+operator|)
+operator|>>
+name|HDA_CONFIG_DEFAULTCONF_COLOR_SHIFT
 expr_stmt|;
 name|strlcat
 argument_list|(
@@ -11765,13 +12699,67 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|conn
+operator|==
+literal|0
+operator|&&
+name|color
+operator|!=
+literal|0
+operator|&&
+name|color
+operator|!=
+literal|15
+condition|)
+block|{
 name|strlcat
 argument_list|(
 name|w
 operator|->
 name|name
 argument_list|,
-name|connstr
+name|HDA_COLORS
+index|[
+name|color
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|w
+operator|->
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strlcat
+argument_list|(
+name|w
+operator|->
+name|name
+argument_list|,
+literal|" "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|w
+operator|->
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|strlcat
+argument_list|(
+name|w
+operator|->
+name|name
+argument_list|,
+name|HDA_CONNS
+index|[
+name|conn
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -11908,10 +12896,31 @@ name|id
 condition|)
 block|{
 case|case
+name|HDA_CODEC_AD1882
+case|:
+case|case
+name|HDA_CODEC_AD1883
+case|:
+case|case
+name|HDA_CODEC_AD1984
+case|:
+case|case
+name|HDA_CODEC_AD1984A
+case|:
+case|case
+name|HDA_CODEC_AD1984B
+case|:
+case|case
+name|HDA_CODEC_AD1987
+case|:
+case|case
 name|HDA_CODEC_AD1988
 case|:
 case|case
 name|HDA_CODEC_AD1988B
+case|:
+case|case
+name|HDA_CODEC_AD1989B
 case|:
 name|beeper
 operator|=
@@ -19848,9 +20857,6 @@ argument|));
 argument_list|)
 empty_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|HDAC_MSI_ENABLED
 if|if
 condition|(
 name|resource_int_value
@@ -19874,30 +20880,21 @@ operator|==
 literal|0
 operator|&&
 name|i
-operator|!=
-literal|0
-operator|&&
-name|pci_msi_count
-argument_list|(
-name|dev
-argument_list|)
 operator|==
-literal|1
+literal|0
 condition|)
-name|sc
-operator|->
-name|flags
-operator||=
-name|HDAC_F_MSI
-expr_stmt|;
-else|else
-endif|#
-directive|endif
 name|sc
 operator|->
 name|flags
 operator|&=
 operator|~
+name|HDAC_F_MSI
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|flags
+operator||=
 name|HDAC_F_MSI
 expr_stmt|;
 if|#
@@ -22577,7 +23574,7 @@ block|,
 block|{
 name|HDA_MATCH_ALL
 block|,
-name|HDA_CODEC_CXVENICE
+name|HDA_CODEC_CX20549
 block|,
 literal|0
 block|,
@@ -22866,8 +23863,293 @@ expr_stmt|;
 comment|/* 		 * nid: 26 = Line-in, leave it alone. 		 */
 break|break;
 case|case
+name|HDA_CODEC_AD1983
+case|:
+comment|/* 		 * This codec has several possible usages, but none 		 * fit the parser best. Help parser to choose better. 		 */
+comment|/* Disable direct unmixed playback to get pcm volume. */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Disable mic and line selectors. */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|13
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Disable recording from mono playback mix. */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|20
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 name|HDA_CODEC_AD1986A
 case|:
+comment|/* 		 * This codec has overcomplicated input mixing. 		 * Make some cleaning there. 		 */
+comment|/* Disable input mono mixer. Not needed and not supported. */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|43
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|enable
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Disable any with any input mixing mesh. Use separately. */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|39
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|enable
+operator|=
+literal|0
+expr_stmt|;
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|40
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|enable
+operator|=
+literal|0
+expr_stmt|;
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|41
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|enable
+operator|=
+literal|0
+expr_stmt|;
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|42
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|enable
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Disable duplicate mixer node connector. */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|15
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|subvendor
@@ -24065,7 +25347,7 @@ name|i
 operator|++
 control|)
 empty_stmt|;
-comment|/* Check if there is no any left. If so - we succeded. */
+comment|/* Check if there is no any left. If so - we succeeded. */
 if|if
 condition|(
 name|i
@@ -24240,7 +25522,7 @@ index|]
 operator|=
 name|res
 expr_stmt|;
-comment|/* We succeded, so call next. */
+comment|/* We succeeded, so call next. */
 if|if
 condition|(
 name|hdac_audio_trace_as_out
@@ -26974,7 +28256,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-comment|/* Disable crossassociatement connections. */
+comment|/* Disable crossassociatement and unwanted crosschannel connections. */
 comment|/* ... using selectors */
 for|for
 control|(
@@ -27101,6 +28383,16 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|cw
+operator|->
+name|bindas
+operator|==
+operator|-
+literal|2
+condition|)
+continue|continue;
+if|if
+condition|(
 name|w
 operator|->
 name|bindas
@@ -27108,13 +28400,18 @@ operator|==
 name|cw
 operator|->
 name|bindas
-operator|||
+operator|&&
+operator|(
+name|w
+operator|->
+name|bindseqmask
+operator|&
 name|cw
 operator|->
-name|bindas
-operator|==
-operator|-
-literal|2
+name|bindseqmask
+operator|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 name|w
@@ -27207,6 +28504,22 @@ operator|->
 name|childwidget
 operator|->
 name|bindas
+operator|||
+operator|(
+name|ctl
+operator|->
+name|widget
+operator|->
+name|bindseqmask
+operator|&
+name|ctl
+operator|->
+name|childwidget
+operator|->
+name|bindseqmask
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ctl
@@ -29154,7 +30467,7 @@ block|{
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
-literal|"Association %d (%d) trace succeded\n"
+literal|"Association %d (%d) trace succeeded\n"
 argument|, 				    j, as[j].index);
 argument_list|)
 empty_stmt|;
@@ -29931,6 +31244,113 @@ end_function
 begin_function
 specifier|static
 name|void
+name|hdac_audio_ctl_commit
+parameter_list|(
+name|struct
+name|hdac_devinfo
+modifier|*
+name|devinfo
+parameter_list|)
+block|{
+name|struct
+name|hdac_audio_ctl
+modifier|*
+name|ctl
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|z
+decl_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|ctl
+operator|=
+name|hdac_audio_ctl_each
+argument_list|(
+name|devinfo
+argument_list|,
+operator|&
+name|i
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|ctl
+operator|->
+name|enable
+operator|==
+literal|0
+operator|||
+name|ctl
+operator|->
+name|ossmask
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Mute disabled and mixer controllable controls. 			 * Last will be initialized by mixer_init(). 			 * This expected to reduce click on startup. */
+name|hdac_audio_ctl_amp_set
+argument_list|(
+name|ctl
+argument_list|,
+name|HDA_AMP_MUTE_ALL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* Init fixed controls to 0dB amplification. */
+name|z
+operator|=
+name|ctl
+operator|->
+name|offset
+expr_stmt|;
+if|if
+condition|(
+name|z
+operator|>
+name|ctl
+operator|->
+name|step
+condition|)
+name|z
+operator|=
+name|ctl
+operator|->
+name|step
+expr_stmt|;
+name|hdac_audio_ctl_amp_set
+argument_list|(
+name|ctl
+argument_list|,
+name|HDA_AMP_MUTE_NONE
+argument_list|,
+name|z
+argument_list|,
+name|z
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|hdac_audio_commit
 parameter_list|(
 name|struct
@@ -30009,6 +31429,171 @@ argument_list|,
 name|cad
 argument_list|)
 expr_stmt|;
+comment|/* Commit controls. */
+name|hdac_audio_ctl_commit
+argument_list|(
+name|devinfo
+argument_list|)
+expr_stmt|;
+comment|/* Commit selectors, pins and EAPD. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|devinfo
+operator|->
+name|nodecnt
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|w
+operator|=
+operator|&
+name|devinfo
+operator|->
+name|widget
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|==
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+name|w
+operator|->
+name|selconn
+operator|==
+operator|-
+literal|1
+condition|)
+name|w
+operator|->
+name|selconn
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|nconns
+operator|>
+literal|0
+condition|)
+name|hdac_widget_connection_select
+argument_list|(
+name|w
+argument_list|,
+name|w
+operator|->
+name|selconn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|type
+operator|==
+name|HDA_PARAM_AUDIO_WIDGET_CAP_TYPE_PIN_COMPLEX
+condition|)
+block|{
+name|hdac_command
+argument_list|(
+name|sc
+argument_list|,
+name|HDA_CMD_SET_PIN_WIDGET_CTRL
+argument_list|(
+name|cad
+argument_list|,
+name|w
+operator|->
+name|nid
+argument_list|,
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|ctrl
+argument_list|)
+argument_list|,
+name|cad
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|w
+operator|->
+name|param
+operator|.
+name|eapdbtl
+operator|!=
+name|HDAC_INVALID
+condition|)
+block|{
+name|uint32_t
+name|val
+decl_stmt|;
+name|val
+operator|=
+name|w
+operator|->
+name|param
+operator|.
+name|eapdbtl
+expr_stmt|;
+if|if
+condition|(
+name|devinfo
+operator|->
+name|function
+operator|.
+name|audio
+operator|.
+name|quirks
+operator|&
+name|HDA_QUIRK_EAPDINV
+condition|)
+name|val
+operator|^=
+name|HDA_CMD_SET_EAPD_BTL_ENABLE_EAPD
+expr_stmt|;
+name|hdac_command
+argument_list|(
+name|sc
+argument_list|,
+name|HDA_CMD_SET_EAPD_BTL_ENABLE
+argument_list|(
+name|cad
+argument_list|,
+name|w
+operator|->
+name|nid
+argument_list|,
+name|val
+argument_list|)
+argument_list|,
+name|cad
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Commit GPIOs. */
 name|gdata
 operator|=
 literal|0
@@ -30215,264 +31800,6 @@ name|gdata
 argument_list|)
 argument_list|,
 name|cad
-argument_list|)
-expr_stmt|;
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|devinfo
-operator|->
-name|nodecnt
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|w
-operator|=
-operator|&
-name|devinfo
-operator|->
-name|widget
-index|[
-name|i
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|w
-operator|==
-name|NULL
-condition|)
-continue|continue;
-if|if
-condition|(
-name|w
-operator|->
-name|selconn
-operator|==
-operator|-
-literal|1
-condition|)
-name|w
-operator|->
-name|selconn
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|w
-operator|->
-name|nconns
-operator|>
-literal|0
-condition|)
-name|hdac_widget_connection_select
-argument_list|(
-name|w
-argument_list|,
-name|w
-operator|->
-name|selconn
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|w
-operator|->
-name|type
-operator|==
-name|HDA_PARAM_AUDIO_WIDGET_CAP_TYPE_PIN_COMPLEX
-condition|)
-block|{
-name|hdac_command
-argument_list|(
-name|sc
-argument_list|,
-name|HDA_CMD_SET_PIN_WIDGET_CTRL
-argument_list|(
-name|cad
-argument_list|,
-name|w
-operator|->
-name|nid
-argument_list|,
-name|w
-operator|->
-name|wclass
-operator|.
-name|pin
-operator|.
-name|ctrl
-argument_list|)
-argument_list|,
-name|cad
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|w
-operator|->
-name|param
-operator|.
-name|eapdbtl
-operator|!=
-name|HDAC_INVALID
-condition|)
-block|{
-name|uint32_t
-name|val
-decl_stmt|;
-name|val
-operator|=
-name|w
-operator|->
-name|param
-operator|.
-name|eapdbtl
-expr_stmt|;
-if|if
-condition|(
-name|devinfo
-operator|->
-name|function
-operator|.
-name|audio
-operator|.
-name|quirks
-operator|&
-name|HDA_QUIRK_EAPDINV
-condition|)
-name|val
-operator|^=
-name|HDA_CMD_SET_EAPD_BTL_ENABLE_EAPD
-expr_stmt|;
-name|hdac_command
-argument_list|(
-name|sc
-argument_list|,
-name|HDA_CMD_SET_EAPD_BTL_ENABLE
-argument_list|(
-name|cad
-argument_list|,
-name|w
-operator|->
-name|nid
-argument_list|,
-name|val
-argument_list|)
-argument_list|,
-name|cad
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|hdac_audio_ctl_commit
-parameter_list|(
-name|struct
-name|hdac_devinfo
-modifier|*
-name|devinfo
-parameter_list|)
-block|{
-name|struct
-name|hdac_audio_ctl
-modifier|*
-name|ctl
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|z
-decl_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|ctl
-operator|=
-name|hdac_audio_ctl_each
-argument_list|(
-name|devinfo
-argument_list|,
-operator|&
-name|i
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|ctl
-operator|->
-name|enable
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Mute disabled controls. */
-name|hdac_audio_ctl_amp_set
-argument_list|(
-name|ctl
-argument_list|,
-name|HDA_AMP_MUTE_ALL
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* Init controls to 0dB amplification. */
-name|z
-operator|=
-name|ctl
-operator|->
-name|offset
-expr_stmt|;
-if|if
-condition|(
-name|z
-operator|>
-name|ctl
-operator|->
-name|step
-condition|)
-name|z
-operator|=
-name|ctl
-operator|->
-name|step
-expr_stmt|;
-name|hdac_audio_ctl_amp_set
-argument_list|(
-name|ctl
-argument_list|,
-name|HDA_AMP_MUTE_NONE
-argument_list|,
-name|z
-argument_list|,
-name|z
 argument_list|)
 expr_stmt|;
 block|}
@@ -35987,7 +37314,7 @@ operator|.
 name|key
 argument_list|)
 condition|)
-break|break;
+continue|continue;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|printf(
@@ -38054,18 +39381,6 @@ expr_stmt|;
 name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"Ctls commit...\n"
-argument|);
-argument_list|)
-empty_stmt|;
-name|hdac_audio_ctl_commit
-argument_list|(
-name|devinfo
-argument_list|)
-expr_stmt|;
-name|HDA_BOOTHVERBOSE
-argument_list|(
-argument|device_printf(sc->dev,
 literal|"HP switch init...\n"
 argument|);
 argument_list|)
@@ -38981,18 +40296,6 @@ argument|);
 argument_list|)
 empty_stmt|;
 name|hdac_audio_commit
-argument_list|(
-name|devinfo
-argument_list|)
-expr_stmt|;
-name|HDA_BOOTHVERBOSE
-argument_list|(
-argument|device_printf(dev,
-literal|"Ctls commit...\n"
-argument|);
-argument_list|)
-empty_stmt|;
-name|hdac_audio_ctl_commit
 argument_list|(
 name|devinfo
 argument_list|)

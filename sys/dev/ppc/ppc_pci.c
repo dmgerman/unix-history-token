@@ -133,16 +133,9 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_setup_intr
+name|bus_write_ivar
 argument_list|,
-name|ppc_setup_intr
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_teardown_intr
-argument_list|,
-name|ppc_teardown_intr
+name|ppc_write_ivar
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -276,6 +269,14 @@ block|{
 literal|0x2020131f
 block|,
 literal|"SIIG Cyber Parallel PCI (20x family)"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x05111407
+block|,
+literal|"Lava SP BIDIR Parallel PCI"
 block|,
 literal|0x10
 block|}

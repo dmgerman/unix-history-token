@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_sw_transfer.h>
 end_include
 
@@ -129,7 +123,7 @@ end_struct
 begin_function
 specifier|static
 name|void
-name|musbotg_vbus_interrupt
+name|musbotg_vbus_poll
 parameter_list|(
 name|struct
 name|musbotg_super_softc
@@ -144,29 +138,16 @@ literal|1
 decl_stmt|;
 comment|/* fake VBUS on - TODO */
 comment|/* just forward it */
-call|(
-name|sc
-operator|->
-name|sc_otg
-operator|.
-name|sc_bus
-operator|.
-name|methods
-operator|->
-name|vbus_interrupt
-call|)
+name|musbotg_vbus_interrupt
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_otg
-operator|.
-name|sc_bus
 argument_list|,
 name|vbus_val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -186,7 +167,6 @@ literal|0
 block|struct musbotg_super_softc *sc = arg;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -206,7 +186,6 @@ literal|0
 block|struct musbotg_super_softc *sc = arg;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -259,19 +238,6 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* setup MUSB OTG USB controller interface softc */
 name|sc
 operator|->
@@ -298,6 +264,41 @@ operator|.
 name|sc_clocks_arg
 operator|=
 name|sc
+expr_stmt|;
+comment|/* initialise some bus fields */
+name|sc
+operator|->
+name|sc_otg
+operator|.
+name|sc_bus
+operator|.
+name|parent
+operator|=
+name|dev
+expr_stmt|;
+name|sc
+operator|->
+name|sc_otg
+operator|.
+name|sc_bus
+operator|.
+name|devices
+operator|=
+name|sc
+operator|->
+name|sc_otg
+operator|.
+name|sc_devices
+expr_stmt|;
+name|sc
+operator|->
+name|sc_otg
+operator|.
+name|sc_bus
+operator|.
+name|devices_max
+operator|=
+name|MUSB2_MAX_DEVICES
 expr_stmt|;
 comment|/* get all DMA memory */
 if|if
@@ -505,51 +506,6 @@ operator|.
 name|sc_bus
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|usb2_config_td_setup
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_otg
-operator|.
-name|sc_config_td
-argument_list|,
-name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_otg
-operator|.
-name|sc_bus
-operator|.
-name|bus_mtx
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"could not setup config thread!\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|error
-goto|;
-block|}
 if|#
 directive|if
 operator|(
@@ -686,7 +642,7 @@ block|}
 else|else
 block|{
 comment|/* poll VBUS one time */
-name|musbotg_vbus_interrupt
+name|musbotg_vbus_poll
 argument_list|(
 name|sc
 argument_list|)
@@ -897,16 +853,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|usb2_config_td_unsetup
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_otg
-operator|.
-name|sc_config_td
-argument_list|)
-expr_stmt|;
 name|usb2_bus_mem_free_all
 argument_list|(
 operator|&

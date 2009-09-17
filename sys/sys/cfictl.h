@@ -46,6 +46,65 @@ name|CFIOCQRY
 value|_IOWR('q', 0, struct cfiocqry)
 end_define
 
+begin_comment
+comment|/* Intel StrataFlash Protection Register support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFIOCGFACTORYPR
+value|_IOR('q', 1, uint64_t)
+end_define
+
+begin_comment
+comment|/* get factory protection reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFIOCGOEMPR
+value|_IOR('q', 2, uint64_t)
+end_define
+
+begin_comment
+comment|/* get oem protection reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFIOCSOEMPR
+value|_IOW('q', 3, uint64_t)
+end_define
+
+begin_comment
+comment|/* set oem protection reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFIOCGPLR
+value|_IOR('q', 4, uint32_t)
+end_define
+
+begin_comment
+comment|/* get protection lock reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFIOCSPLR
+value|_IO('q', 5)
+end_define
+
+begin_comment
+comment|/* set protection log reg */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

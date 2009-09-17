@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
@@ -400,17 +400,6 @@ directive|define
 name|UMASS_GONE
 value|((struct umass_softc *)1)
 end_define
-
-begin_define
-define|#
-directive|define
-name|UMASS_MAXUNIT
-value|64
-end_define
-
-begin_comment
-comment|/* XXX temporary */
-end_comment
 
 begin_define
 define|#
@@ -1303,6 +1292,20 @@ name|NO_GETMAXLUN
 block|}
 block|,
 block|{
+name|USB_VENDOR_ALCOR
+block|,
+name|USB_PRODUCT_ALCOR_TRANSCEND
+block|,
+name|RID_WILDCARD
+block|,
+name|UMASS_PROTO_SCSI
+operator||
+name|UMASS_PROTO_BBB
+block|,
+name|NO_GETMAXLUN
+block|}
+block|,
+block|{
 name|USB_VENDOR_ASAHIOPTICAL
 block|,
 name|USB_PRODUCT_ASAHIOPTICAL_OPTIO230
@@ -2041,6 +2044,20 @@ block|,
 name|NO_INQUIRY
 operator||
 name|IGNORE_RESIDUE
+block|}
+block|,
+block|{
+name|USB_VENDOR_MYSON
+block|,
+name|USB_PRODUCT_MYSON_STARREADER
+block|,
+name|RID_WILDCARD
+block|,
+name|UMASS_PROTO_SCSI
+operator||
+name|UMASS_PROTO_BBB
+block|,
+name|NO_SYNCHRONIZE_CACHE
 block|}
 block|,
 block|{
@@ -3104,6 +3121,22 @@ name|NO_QUIRKS
 block|}
 block|,
 block|{
+name|USB_VENDOR_MEIZU
+block|,
+name|USB_PRODUCT_MEIZU_M6_SL
+block|,
+name|RID_WILDCARD
+block|,
+name|UMASS_PROTO_SCSI
+operator||
+name|UMASS_PROTO_BBB
+block|,
+name|NO_INQUIRY
+operator||
+name|NO_SYNCHRONIZE_CACHE
+block|}
+block|,
+block|{
 name|VID_EOT
 block|,
 name|PID_EOT
@@ -3450,7 +3483,6 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3463,7 +3495,6 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3476,7 +3507,6 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3489,13 +3519,10 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|,
 name|uint8_t
-name|next_xfer
 parameter_list|,
 name|uint8_t
-name|stall_xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3508,29 +3535,22 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
-name|dir
 parameter_list|,
 name|void
 modifier|*
-name|data_ptr
 parameter_list|,
 name|uint32_t
-name|data_len
 parameter_list|,
 name|uint32_t
-name|data_timeout
 parameter_list|,
 name|umass_callback_t
 modifier|*
-name|callback
 parameter_list|,
 name|union
 name|ccb
 modifier|*
-name|ccb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3543,7 +3563,6 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3556,7 +3575,6 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3569,13 +3587,10 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|,
 name|uint8_t
-name|next_xfer
 parameter_list|,
 name|uint8_t
-name|stall_xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3588,7 +3603,6 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3601,12 +3615,10 @@ parameter_list|(
 name|struct
 name|cam_periph
 modifier|*
-name|periph
 parameter_list|,
 name|union
 name|ccb
 modifier|*
-name|ccb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3619,7 +3631,6 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3632,7 +3643,6 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3645,7 +3655,6 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3658,12 +3667,10 @@ parameter_list|(
 name|struct
 name|cam_sim
 modifier|*
-name|sim
 parameter_list|,
 name|union
 name|ccb
 modifier|*
-name|ccb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3676,7 +3683,6 @@ parameter_list|(
 name|struct
 name|cam_sim
 modifier|*
-name|sim
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3689,18 +3695,14 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|union
 name|ccb
 modifier|*
-name|ccb
 parameter_list|,
 name|uint32_t
-name|residue
 parameter_list|,
 name|uint8_t
-name|status
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3713,18 +3715,14 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|union
 name|ccb
 modifier|*
-name|ccb
 parameter_list|,
 name|uint32_t
-name|residue
 parameter_list|,
 name|uint8_t
-name|status
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3737,18 +3735,14 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|union
 name|ccb
 modifier|*
-name|ccb
 parameter_list|,
 name|uint32_t
-name|residue
 parameter_list|,
 name|uint8_t
-name|status
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3761,14 +3755,11 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
 modifier|*
-name|cmd_ptr
 parameter_list|,
 name|uint8_t
-name|cmd_len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3781,14 +3772,11 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
 modifier|*
-name|cmd_ptr
 parameter_list|,
 name|uint8_t
-name|cmd_len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3801,14 +3789,11 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
 modifier|*
-name|cmd_ptr
 parameter_list|,
 name|uint8_t
-name|cmd_len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3821,14 +3806,11 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
 modifier|*
-name|cmd_ptr
 parameter_list|,
 name|uint8_t
-name|cmd_len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3841,14 +3823,11 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
 modifier|*
-name|cmd
 parameter_list|,
 name|uint8_t
-name|cmdlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3861,39 +3840,15 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|union
 name|ccb
 modifier|*
-name|ccb
 parameter_list|,
 name|uint8_t
 modifier|*
-name|cmd
 parameter_list|,
 name|uint8_t
-name|cmdlen
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|umass_driver_loaded
-parameter_list|(
-name|struct
-name|module
-modifier|*
-name|mod
-parameter_list|,
-name|int
-name|what
-parameter_list|,
-name|void
-modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3912,11 +3867,9 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|umass_bbb_cbw_t
 modifier|*
-name|cbw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3929,11 +3882,9 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|umass_bbb_csw_t
 modifier|*
-name|csw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3946,14 +3897,11 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|void
 modifier|*
-name|cmd
 parameter_list|,
 name|uint8_t
-name|cmdlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3966,17 +3914,13 @@ parameter_list|(
 name|struct
 name|umass_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
 modifier|*
-name|buffer
 parameter_list|,
 name|uint32_t
-name|buflen
 parameter_list|,
 name|uint32_t
-name|printlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5240,26 +5184,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|cam_sim
-modifier|*
-name|umass_sim
-index|[
-name|UMASS_MAXUNIT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|umass_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|devclass_t
 name|umass_devclass
 decl_stmt|;
@@ -5342,7 +5266,7 @@ name|umass_driver
 argument_list|,
 name|umass_devclass
 argument_list|,
-name|umass_driver_loaded
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -6027,44 +5951,6 @@ decl_stmt|;
 name|int32_t
 name|err
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|>=
-name|UMASS_MAXUNIT
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Maxunit(%u) limit reached!\n"
-argument_list|,
-name|UMASS_MAXUNIT
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 comment|/* 	 * NOTE: the softc struct is bzero-ed in device_set_driver. 	 * We can safely call umass_detach without specifically 	 * initializing the struct. 	 */
 name|sc
 operator|->
@@ -6129,6 +6015,25 @@ expr_stmt|;
 name|device_set_usb2_desc
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 comment|/* get interface index */
@@ -6386,7 +6291,9 @@ argument_list|,
 name|sc
 argument_list|,
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 comment|/* skip reset first time */
@@ -6451,7 +6358,9 @@ argument_list|,
 name|sc
 argument_list|,
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 comment|/* skip reset first time */
@@ -6621,7 +6530,7 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
-name|USB_MS_HZ
+name|hz
 argument_list|)
 expr_stmt|;
 comment|/* register the SIM */
@@ -6726,7 +6635,9 @@ operator|)
 name|mtx_lock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6746,7 +6657,9 @@ operator|)
 name|mtx_unlock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6882,7 +6795,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6951,7 +6863,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6995,7 +6906,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7018,7 +6928,9 @@ decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -7080,7 +6992,6 @@ name|STATUS_WIRE_FAILED
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7136,7 +7047,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7324,7 +7234,6 @@ argument_list|,
 name|UMASS_T_BBB_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7348,7 +7257,6 @@ argument_list|,
 name|UMASS_T_BBB_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8068,7 +7976,6 @@ argument_list|,
 name|UMASS_T_BBB_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8341,7 +8248,6 @@ argument_list|,
 name|UMASS_T_BBB_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9116,7 +9022,6 @@ name|ccb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -9335,7 +9240,6 @@ name|STATUS_CMD_UNKNOWN
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -9595,7 +9499,6 @@ argument_list|,
 name|UMASS_T_CBI_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9646,7 +9549,6 @@ argument_list|,
 name|UMASS_T_CBI_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9670,7 +9572,6 @@ argument_list|,
 name|UMASS_T_CBI_STATUS
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10239,6 +10140,29 @@ name|sc_transfer
 operator|.
 name|data_timeout
 expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags
+operator|.
+name|ext_buffer
+condition|)
+block|{
+name|usb2_set_frame_data
+argument_list|(
+name|xfer
+argument_list|,
+name|sc
+operator|->
+name|sc_transfer
+operator|.
+name|data_ptr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|xfer
 operator|->
 name|frlengths
@@ -10319,7 +10243,6 @@ argument_list|,
 name|UMASS_T_CBI_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10603,7 +10526,6 @@ argument_list|,
 name|UMASS_T_CBI_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11005,33 +10927,6 @@ modifier|*
 name|devq
 decl_stmt|;
 comment|/* Per device Queue */
-if|if
-condition|(
-name|umass_sim
-index|[
-name|sc
-operator|->
-name|sc_unit
-index|]
-operator|!=
-name|NULL
-condition|)
-block|{
-name|sc
-operator|->
-name|sc_sim
-operator|=
-name|umass_sim
-index|[
-name|sc
-operator|->
-name|sc_unit
-index|]
-expr_stmt|;
-goto|goto
-name|register_only
-goto|;
-block|}
 comment|/* 	 * A HBA is attached to the CAM layer. 	 * 	 * The CAM layer will then after a while start probing for devices on 	 * the bus. The number of SIMs is limited to one. 	 */
 name|devq
 operator|=
@@ -11084,7 +10979,9 @@ operator|>=
 literal|700037
 operator|)
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 comment|/* mutex */
 argument_list|,
 endif|#
@@ -11118,28 +11015,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|umass_sim
-index|[
-name|sc
-operator|->
-name|sc_unit
-index|]
-operator|=
-name|sc
-operator|->
-name|sc_sim
-expr_stmt|;
-name|register_only
-label|:
-comment|/* update the softc pointer */
-name|sc
-operator|->
-name|sc_sim
-operator|->
-name|softc
-operator|=
-name|sc
-expr_stmt|;
 if|#
 directive|if
 operator|(
@@ -11150,7 +11025,9 @@ operator|)
 name|mtx_lock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11185,7 +11062,9 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -11222,7 +11101,9 @@ operator|)
 name|mtx_unlock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11245,7 +11126,9 @@ operator|)
 name|mtx_unlock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11357,7 +11240,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11447,7 +11329,9 @@ operator|)
 name|mtx_lock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11486,7 +11370,9 @@ operator|)
 name|mtx_unlock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11553,13 +11439,14 @@ operator|)
 name|mtx_unlock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* The scan is in progress now. */
-return|return;
 block|}
 end_function
 
@@ -11626,7 +11513,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -11650,6 +11536,8 @@ condition|(
 name|sc
 operator|->
 name|sc_sim
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -11665,15 +11553,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* NOTYET */
-block|cam_sim_free(sc->sc_sim,
-comment|/* free_devq */
-block|TRUE);
-else|#
-directive|else
 comment|/* accessing the softc is not possible after this */
 name|sc
 operator|->
@@ -11683,8 +11562,16 @@ name|softc
 operator|=
 name|UMASS_GONE
 expr_stmt|;
-endif|#
-directive|endif
+name|cam_sim_free
+argument_list|(
+name|sc
+operator|->
+name|sc_sim
+argument_list|,
+comment|/* free_devq */
+name|TRUE
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -11705,7 +11592,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -11780,7 +11666,9 @@ operator|)
 name|mtx_lock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -13131,7 +13019,9 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|umass_mtx
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -13191,7 +13081,6 @@ argument_list|,
 name|UMASS_T_MAX
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13809,7 +13698,6 @@ name|ccb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13874,7 +13762,6 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15170,7 +15057,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15282,7 +15168,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15404,7 +15289,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15586,7 +15470,6 @@ argument_list|,
 name|s3
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15594,111 +15477,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function
-specifier|static
-name|int
-name|umass_driver_loaded
-parameter_list|(
-name|struct
-name|module
-modifier|*
-name|mod
-parameter_list|,
-name|int
-name|what
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|uint16_t
-name|x
-decl_stmt|;
-switch|switch
-condition|(
-name|what
-condition|)
-block|{
-case|case
-name|MOD_LOAD
-case|:
-name|mtx_init
-argument_list|(
-operator|&
-name|umass_mtx
-argument_list|,
-literal|"UMASS lock"
-argument_list|,
-name|NULL
-argument_list|,
-operator|(
-name|MTX_DEF
-operator||
-name|MTX_RECURSE
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MOD_UNLOAD
-case|:
-for|for
-control|(
-name|x
-operator|=
-literal|0
-init|;
-name|x
-operator|!=
-name|UMASS_MAXUNIT
-condition|;
-name|x
-operator|++
-control|)
-block|{
-comment|/* cleanup */
-if|if
-condition|(
-name|umass_sim
-index|[
-name|x
-index|]
-condition|)
-name|cam_sim_free
-argument_list|(
-name|umass_sim
-index|[
-name|x
-index|]
-argument_list|,
-comment|/* free_devq */
-name|TRUE
-argument_list|)
-expr_stmt|;
-block|}
-name|mtx_destroy
-argument_list|(
-operator|&
-name|umass_mtx
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 

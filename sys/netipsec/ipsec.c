@@ -334,6 +334,35 @@ directive|include
 file|<opencrypto/cryptodev.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+name|struct
+name|vnet_ipsec
+name|vnet_ipsec_0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -341,7 +370,7 @@ name|VIMAGE_GLOBALS
 end_ifdef
 
 begin_comment
-comment|/* NB: name changed so netstat doesn't use it */
+comment|/* NB: name changed so netstat doesn't use it. */
 end_comment
 
 begin_decl_stmt
@@ -1134,7 +1163,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|ipsec4_setspidx_inpcb
+name|ipsec_setspidx_inpcb
 name|__P
 argument_list|(
 operator|(
@@ -1145,42 +1174,10 @@ operator|,
 expr|struct
 name|inpcb
 operator|*
-name|pcb
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ipsec6_setspidx_in6pcb
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|,
-expr|struct
-name|in6pcb
-operator|*
-name|pcb
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1331,59 +1328,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|ipsec_set_policy
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|secpolicy
-operator|*
-operator|*
-name|pcb_sp
-operator|,
-name|int
-name|optname
-operator|,
-name|caddr_t
-name|request
-operator|,
-name|size_t
-name|len
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ipsec_get_policy
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|secpolicy
-operator|*
-name|pcb_sp
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|*
-name|mp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|vshiftl
 name|__P
@@ -1396,21 +1340,6 @@ operator|,
 name|int
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|size_t
-name|ipsec_hdrsiz
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|secpolicy
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1647,7 +1576,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|sp
+operator|)
 return|;
 block|}
 end_function
@@ -1757,7 +1688,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|sp
+operator|)
 return|;
 block|}
 end_function
@@ -1767,36 +1700,29 @@ comment|/*  * For OUTBOUND packet having a socket. Searching SPD for packet,  * 
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|secpolicy
 modifier|*
 name|ipsec_getpolicybysock
 parameter_list|(
-name|m
-parameter_list|,
-name|dir
-parameter_list|,
-name|inp
-parameter_list|,
-name|error
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|dir
-decl_stmt|;
+parameter_list|,
 name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|error
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -1807,8 +1733,6 @@ name|struct
 name|inpcbpolicy
 modifier|*
 name|pcbsp
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|secpolicy
@@ -1817,7 +1741,7 @@ name|currsp
 init|=
 name|NULL
 decl_stmt|;
-comment|/* policy on socket */
+comment|/* Policy on socket. */
 name|struct
 name|secpolicy
 modifier|*
@@ -1873,73 +1797,33 @@ name|dir
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* set spidx in pcb */
-if|if
-condition|(
-name|inp
-operator|->
-name|inp_vflag
-operator|&
-name|INP_IPV6PROTO
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|INET6
+comment|/* Set spidx in pcb. */
 operator|*
 name|error
 operator|=
-name|ipsec6_setspidx_in6pcb
+name|ipsec_setspidx_inpcb
 argument_list|(
 name|m
 argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-name|pcbsp
-operator|=
-name|inp
-operator|->
-name|in6p_sp
-expr_stmt|;
-else|#
-directive|else
-operator|*
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/* should not happen */
-endif|#
-directive|endif
-block|}
-else|else
-block|{
-operator|*
-name|error
-operator|=
-name|ipsec4_setspidx_inpcb
-argument_list|(
-name|m
-argument_list|,
-name|inp
-argument_list|)
-expr_stmt|;
-name|pcbsp
-operator|=
-name|inp
-operator|->
-name|inp_sp
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*
 name|error
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
+name|pcbsp
+operator|=
+name|inp
+operator|->
+name|inp_sp
+expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
 name|pcbsp
@@ -1995,7 +1879,7 @@ operator|->
 name|priv
 condition|)
 block|{
-comment|/* when privilieged socket */
+comment|/* When privilieged socket. */
 switch|switch
 condition|(
 name|currsp
@@ -2022,7 +1906,7 @@ break|break;
 case|case
 name|IPSEC_POLICY_ENTRUST
 case|:
-comment|/* look for a policy in SPD */
+comment|/* Look for a policy in SPD. */
 name|sp
 operator|=
 name|KEY_ALLOCSP
@@ -2041,7 +1925,7 @@ name|sp
 operator|==
 name|NULL
 condition|)
-comment|/* no SP found */
+comment|/* No SP found. */
 name|sp
 operator|=
 name|KEY_ALLOCSP_DEFAULT
@@ -2070,13 +1954,15 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 block|}
 else|else
 block|{
-comment|/* unpriv, SPD has policy */
+comment|/* Unpriv, SPD has policy. */
 name|sp
 operator|=
 name|KEY_ALLOCSP
@@ -2096,7 +1982,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* no SP found */
+comment|/* No SP found. */
 switch|switch
 condition|(
 name|currsp
@@ -2129,7 +2015,9 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 case|case
 name|IPSEC_POLICY_ENTRUST
@@ -2176,7 +2064,9 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 block|}
@@ -2227,7 +2117,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|sp
+operator|)
 return|;
 block|}
 end_function
@@ -2242,29 +2134,21 @@ name|secpolicy
 modifier|*
 name|ipsec_getpolicybyaddr
 parameter_list|(
-name|m
-parameter_list|,
-name|dir
-parameter_list|,
-name|flag
-parameter_list|,
-name|error
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|dir
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|error
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -2375,7 +2259,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|spidx
@@ -2401,7 +2287,7 @@ name|sp
 operator|==
 name|NULL
 condition|)
-comment|/* no SP found, use system default */
+comment|/* No SP found, use system default. */
 name|sp
 operator|=
 name|KEY_ALLOCSP_DEFAULT
@@ -2419,7 +2305,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|sp
+operator|)
 return|;
 block|}
 end_function
@@ -2430,35 +2318,26 @@ name|secpolicy
 modifier|*
 name|ipsec4_checkpolicy
 parameter_list|(
-name|m
-parameter_list|,
-name|dir
-parameter_list|,
-name|flag
-parameter_list|,
-name|error
-parameter_list|,
-name|inp
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|dir
-decl_stmt|,
+parameter_list|,
+name|u_int
 name|flag
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|error
-decl_stmt|;
+parameter_list|,
 name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -2533,7 +2412,9 @@ name|ips_out_inval
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|IPSEC_ASSERT
@@ -2573,7 +2454,7 @@ operator|->
 name|policy
 argument_list|)
 expr_stmt|;
-comment|/* fall thru... */
+comment|/* FALLTHROUGH */
 case|case
 name|IPSEC_POLICY_DISCARD
 case|:
@@ -2588,7 +2469,7 @@ operator|=
 operator|-
 name|EINVAL
 expr_stmt|;
-comment|/* packet is discarded by caller */
+comment|/* Packet is discarded by caller. */
 break|break;
 case|case
 name|IPSEC_POLICY_BYPASS
@@ -2606,7 +2487,7 @@ name|sp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* NB: force NULL result */
+comment|/* NB: force NULL result. */
 break|break;
 case|case
 name|IPSEC_POLICY_IPSEC
@@ -2619,7 +2500,7 @@ name|req
 operator|==
 name|NULL
 condition|)
-comment|/* acquire an SA */
+comment|/* Acquire a SA. */
 operator|*
 name|error
 operator|=
@@ -2650,7 +2531,9 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|sp
+operator|)
 return|;
 block|}
 end_function
@@ -2658,40 +2541,36 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ipsec4_setspidx_inpcb
+name|ipsec_setspidx_inpcb
 parameter_list|(
-name|m
-parameter_list|,
-name|pcb
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|inpcb
 modifier|*
-name|pcb
-decl_stmt|;
+name|inp
+parameter_list|)
 block|{
 name|int
 name|error
 decl_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|pcb
+name|inp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"null pcb"
+literal|"null inp"
 operator|)
 argument_list|)
 expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|!=
@@ -2704,7 +2583,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2712,7 +2591,7 @@ name|sp_out
 operator|!=
 name|NULL
 operator|&&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2732,7 +2611,7 @@ argument_list|(
 name|m
 argument_list|,
 operator|&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2750,7 +2629,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2762,7 +2641,7 @@ name|dir
 operator|=
 name|IPSEC_DIR_INBOUND
 expr_stmt|;
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2770,7 +2649,7 @@ name|sp_out
 operator|->
 name|spidx
 operator|=
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2778,7 +2657,7 @@ name|sp_in
 operator|->
 name|spidx
 expr_stmt|;
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2796,7 +2675,7 @@ block|{
 name|bzero
 argument_list|(
 operator|&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2806,7 +2685,7 @@ name|spidx
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2819,7 +2698,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2829,7 +2708,7 @@ name|spidx
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2841,253 +2720,15 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_function
-specifier|static
-name|int
-name|ipsec6_setspidx_in6pcb
-parameter_list|(
-name|m
-parameter_list|,
-name|pcb
-parameter_list|)
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-name|struct
-name|in6pcb
-modifier|*
-name|pcb
-decl_stmt|;
-block|{
-comment|//INIT_VNET_IPSEC(curvnet);
-name|struct
-name|secpolicyindex
-modifier|*
-name|spidx
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|IPSEC_ASSERT
-argument_list|(
-name|pcb
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"null pcb"
-operator|)
-argument_list|)
-expr_stmt|;
-name|IPSEC_ASSERT
-argument_list|(
-name|pcb
-operator|->
-name|in6p_sp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"null inp_sp"
-operator|)
-argument_list|)
-expr_stmt|;
-name|IPSEC_ASSERT
-argument_list|(
-name|pcb
-operator|->
-name|in6p_sp
-operator|->
-name|sp_out
-operator|!=
-name|NULL
-operator|&&
-name|pcb
-operator|->
-name|in6p_sp
-operator|->
-name|sp_in
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"null sp_in || sp_out"
-operator|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|pcb
-operator|->
-name|in6p_sp
-operator|->
-name|sp_in
-operator|->
-name|spidx
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|spidx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|pcb
-operator|->
-name|in6p_sp
-operator|->
-name|sp_out
-operator|->
-name|spidx
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|spidx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|spidx
-operator|=
-operator|&
-name|pcb
-operator|->
-name|in6p_sp
-operator|->
-name|sp_in
-operator|->
-name|spidx
-expr_stmt|;
-name|error
-operator|=
-name|ipsec_setspidx
-argument_list|(
-name|m
-argument_list|,
-name|spidx
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|bad
-goto|;
-name|spidx
-operator|->
-name|dir
-operator|=
-name|IPSEC_DIR_INBOUND
-expr_stmt|;
-name|spidx
-operator|=
-operator|&
-name|pcb
-operator|->
-name|in6p_sp
-operator|->
-name|sp_out
-operator|->
-name|spidx
-expr_stmt|;
-name|error
-operator|=
-name|ipsec_setspidx
-argument_list|(
-name|m
-argument_list|,
-name|spidx
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|bad
-goto|;
-name|spidx
-operator|->
-name|dir
-operator|=
-name|IPSEC_DIR_OUTBOUND
-expr_stmt|;
-return|return
-literal|0
-return|;
-name|bad
-label|:
-name|bzero
-argument_list|(
-operator|&
-name|pcb
-operator|->
-name|in6p_sp
-operator|->
-name|sp_in
-operator|->
-name|spidx
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|spidx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|pcb
-operator|->
-name|in6p_sp
-operator|->
-name|sp_out
-operator|->
-name|spidx
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|spidx
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|error
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
-comment|/*  * configure security policy index (src/dst/proto/sport/dport)  * by looking at the content of mbuf.  * the caller is responsible for error recovery (like clearing up spidx).  */
+comment|/*  * Configure security policy index (src/dst/proto/sport/dport)  * by looking at the content of mbuf.  * The caller is responsible for error recovery (like clearing up spidx).  */
 end_comment
 
 begin_function
@@ -3095,25 +2736,19 @@ specifier|static
 name|int
 name|ipsec_setspidx
 parameter_list|(
-name|m
-parameter_list|,
-name|spidx
-parameter_list|,
-name|needport
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|secpolicyindex
 modifier|*
 name|spidx
-decl_stmt|;
+parameter_list|,
 name|int
 name|needport
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -3156,7 +2791,7 @@ literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * validate m->m_pkthdr.len.  we see incorrect length if we 	 * mistakenly call this function with inconsistent mbuf chain 	 * (like 4.4BSD tcp/udp processing).  XXX should we panic here? 	 */
+comment|/* 	 * Validate m->m_pkthdr.len.  We see incorrect length if we 	 * mistakenly call this function with inconsistent mbuf chain 	 * (like 4.4BSD tcp/udp processing).  XXX Should we panic here? 	 */
 name|len
 operator|=
 literal|0
@@ -3213,7 +2848,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 if|if
@@ -3250,7 +2887,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 if|if
@@ -3346,7 +2985,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|ipsec4_get_ulp
 argument_list|(
@@ -3358,7 +2999,9 @@ name|needport
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -3401,7 +3044,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|error
@@ -3418,7 +3063,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|ipsec6_get_ulp
 argument_list|(
@@ -3430,7 +3077,9 @@ name|needport
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 endif|#
 directive|endif
@@ -3451,7 +3100,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -3482,7 +3133,7 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
-comment|/* sanity check */
+comment|/* Sanity check. */
 name|IPSEC_ASSERT
 argument_list|(
 name|m
@@ -3513,7 +3164,7 @@ literal|"packet too short"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* NB: ip_input() flips it into host endian XXX need more checking */
+comment|/* NB: ip_input() flips it into host endian. XXX Need more checking. */
 if|if
 condition|(
 name|m
@@ -3869,7 +3520,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* XXX sigh, this works but is totally bogus */
+comment|/* XXX Sigh, this works but is totally bogus. */
 name|m_copydata
 argument_list|(
 name|m
@@ -3911,7 +3562,7 @@ case|case
 name|IPPROTO_ICMP
 case|:
 default|default:
-comment|/* XXX intermediate headers??? */
+comment|/* XXX Intermediate headers??? */
 name|spidx
 operator|->
 name|ul_proto
@@ -3957,7 +3608,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* assumes that m is sane */
+comment|/* Assumes that m is sane. */
 end_comment
 
 begin_function
@@ -4174,7 +3825,9 @@ operator|<<
 literal|3
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4190,25 +3843,19 @@ specifier|static
 name|void
 name|ipsec6_get_ulp
 parameter_list|(
-name|m
-parameter_list|,
-name|spidx
-parameter_list|,
-name|needport
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|secpolicyindex
 modifier|*
 name|spidx
-decl_stmt|;
+parameter_list|,
 name|int
 name|needport
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -4232,7 +3879,7 @@ name|struct
 name|icmp6_hdr
 name|ih
 decl_stmt|;
-comment|/* sanity check */
+comment|/* Sanity check. */
 if|if
 condition|(
 name|m
@@ -4255,7 +3902,7 @@ literal|"%s:\n"
 argument|, __func__); kdebug_mbuf(m)
 argument_list|)
 empty_stmt|;
-comment|/* set default */
+comment|/* Set default. */
 name|spidx
 operator|->
 name|ul_proto
@@ -4601,7 +4248,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* XXX intermediate headers??? */
+comment|/* XXX Intermediate headers??? */
 name|spidx
 operator|->
 name|ul_proto
@@ -4614,7 +4261,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* assumes that m is sane */
+comment|/* Assumes that m is sane. */
 end_comment
 
 begin_function
@@ -4622,20 +4269,16 @@ specifier|static
 name|int
 name|ipsec6_setspidx_ipaddr
 parameter_list|(
-name|m
-parameter_list|,
-name|spidx
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|secpolicyindex
 modifier|*
 name|spidx
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ip6_hdr
@@ -4923,7 +4566,9 @@ operator|<<
 literal|3
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4938,13 +4583,11 @@ specifier|static
 name|void
 name|ipsec_delpcbpolicy
 parameter_list|(
-name|p
-parameter_list|)
 name|struct
 name|inpcbpolicy
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|free
 argument_list|(
@@ -4957,28 +4600,24 @@ block|}
 end_function
 
 begin_comment
-comment|/* initialize policy in PCB */
+comment|/* Initialize policy in PCB. */
 end_comment
 
 begin_function
 name|int
 name|ipsec_init_policy
 parameter_list|(
-name|so
-parameter_list|,
-name|pcb_sp
-parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|,
 name|struct
 name|inpcbpolicy
 modifier|*
 modifier|*
 name|pcb_sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -4990,7 +4629,7 @@ name|inpcbpolicy
 modifier|*
 name|new
 decl_stmt|;
-comment|/* sanity check. */
+comment|/* Sanity check. */
 if|if
 condition|(
 name|so
@@ -5049,7 +4688,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|new
@@ -5081,7 +4722,9 @@ name|new
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|new
@@ -5128,7 +4771,9 @@ name|new
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|new
@@ -5153,34 +4798,31 @@ operator|=
 name|new
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* copy old ipsec policy into new */
+comment|/* Copy old IPsec policy into new. */
 end_comment
 
 begin_function
 name|int
 name|ipsec_copy_policy
 parameter_list|(
-name|old
-parameter_list|,
-name|new
-parameter_list|)
 name|struct
 name|inpcbpolicy
 modifier|*
 name|old
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|inpcbpolicy
+modifier|*
 name|new
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|secpolicy
@@ -5218,7 +4860,9 @@ expr_stmt|;
 block|}
 else|else
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 name|sp
 operator|=
@@ -5251,7 +4895,9 @@ expr_stmt|;
 block|}
 else|else
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 name|new
 operator|->
@@ -5262,10 +4908,12 @@ operator|->
 name|priv
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -5310,7 +4958,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|p
+operator|)
 return|;
 block|}
 end_function
@@ -5341,7 +4991,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* deep-copy a policy in PCB */
+comment|/* Deep-copy a policy in PCB. */
 end_comment
 
 begin_function
@@ -5351,13 +5001,11 @@ name|secpolicy
 modifier|*
 name|ipsec_deepcopy_policy
 parameter_list|(
-name|src
-parameter_list|)
 name|struct
 name|secpolicy
 modifier|*
 name|src
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ipsecrequest
@@ -5394,7 +5042,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|dst
 operator|=
@@ -5408,9 +5058,11 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
-comment|/* 	 * deep-copy IPsec request chain.  This is required since struct 	 * ipsecrequest is not reference counted. 	 */
+comment|/* 	 * Deep-copy IPsec request chain.  This is required since struct 	 * ipsecrequest is not reference counted. 	 */
 name|q
 operator|=
 operator|&
@@ -5613,9 +5265,11 @@ name|src
 operator|->
 name|policy
 expr_stmt|;
-comment|/* do not touch the refcnt fields */
+comment|/* Do not touch the refcnt fields. */
 return|return
+operator|(
 name|dst
+operator|)
 return|;
 name|fail
 label|:
@@ -5649,50 +5303,42 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* set policy and ipsec request if present. */
+comment|/* Set policy and IPsec request if present. */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|ipsec_set_policy
+name|ipsec_set_policy_internal
 parameter_list|(
-name|pcb_sp
-parameter_list|,
-name|optname
-parameter_list|,
-name|request
-parameter_list|,
-name|len
-parameter_list|,
-name|cred
-parameter_list|)
 name|struct
 name|secpolicy
 modifier|*
 modifier|*
 name|pcb_sp
-decl_stmt|;
+parameter_list|,
 name|int
 name|optname
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|request
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -5714,7 +5360,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* sanity check. */
+comment|/* Sanity check. */
 if|if
 condition|(
 name|pcb_sp
@@ -5731,7 +5377,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -5744,7 +5392,9 @@ name|xpl
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|xpl
 operator|=
@@ -5764,8 +5414,8 @@ literal|"%s: passed policy\n"
 argument|, __func__); 		kdebug_sadb_x_policy((struct sadb_ext *)xpl)
 argument_list|)
 empty_stmt|;
-comment|/* check policy type */
-comment|/* ipsec_set_policy() accepts IPSEC, ENTRUST and BYPASS. */
+comment|/* Check policy type. */
+comment|/* ipsec_set_policy_internal() accepts IPSEC, ENTRUST and BYPASS. */
 if|if
 condition|(
 name|xpl
@@ -5781,9 +5431,11 @@ operator|==
 name|IPSEC_POLICY_NONE
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
-comment|/* check privileged socket */
+comment|/* Check privileged socket. */
 if|if
 condition|(
 name|cred
@@ -5813,10 +5465,12 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|EACCES
+operator|)
 return|;
 block|}
-comment|/* allocation new SP entry */
+comment|/* Allocating new SP entry. */
 if|if
 condition|(
 operator|(
@@ -5836,7 +5490,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|newsp
 operator|->
@@ -5844,7 +5500,7 @@ name|state
 operator|=
 name|IPSEC_SPSTATE_ALIVE
 expr_stmt|;
-comment|/* clear old SP and set new SP */
+comment|/* Clear old SP and set new SP. */
 name|KEY_FREESP
 argument_list|(
 name|pcb_sp
@@ -5865,41 +5521,213 @@ argument|, __func__); 		kdebug_secpolicy(newsp)
 argument_list|)
 empty_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|ipsec_get_policy
+name|ipsec_set_policy
 parameter_list|(
-name|pcb_sp
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|,
-name|mp
+name|int
+name|optname
+parameter_list|,
+name|caddr_t
+name|request
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
-name|struct
-name|secpolicy
-modifier|*
-name|pcb_sp
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
-decl_stmt|;
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
-comment|/* sanity check. */
+name|struct
+name|sadb_x_policy
+modifier|*
+name|xpl
+decl_stmt|;
+name|struct
+name|secpolicy
+modifier|*
+modifier|*
+name|pcb_sp
+decl_stmt|;
+comment|/* Sanity check. */
 if|if
 condition|(
+name|inp
+operator|==
+name|NULL
+operator|||
+name|request
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
+name|len
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|xpl
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|xpl
+operator|=
+operator|(
+expr|struct
+name|sadb_x_policy
+operator|*
+operator|)
+name|request
+expr_stmt|;
+comment|/* Select direction. */
+switch|switch
+condition|(
+name|xpl
+operator|->
+name|sadb_x_policy_dir
+condition|)
+block|{
+case|case
+name|IPSEC_DIR_INBOUND
+case|:
 name|pcb_sp
+operator|=
+operator|&
+name|inp
+operator|->
+name|inp_sp
+operator|->
+name|sp_in
+expr_stmt|;
+break|break;
+case|case
+name|IPSEC_DIR_OUTBOUND
+case|:
+name|pcb_sp
+operator|=
+operator|&
+name|inp
+operator|->
+name|inp_sp
+operator|->
+name|sp_out
+expr_stmt|;
+break|break;
+default|default:
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
+literal|"%s: invalid direction=%u\n"
+operator|,
+name|__func__
+operator|,
+name|xpl
+operator|->
+name|sadb_x_policy_dir
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|ipsec_set_policy_internal
+argument_list|(
+name|pcb_sp
+argument_list|,
+name|optname
+argument_list|,
+name|request
+argument_list|,
+name|len
+argument_list|,
+name|cred
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ipsec_get_policy
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|,
+name|caddr_t
+name|request
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mp
+parameter_list|)
+block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|struct
+name|sadb_x_policy
+modifier|*
+name|xpl
+decl_stmt|;
+name|struct
+name|secpolicy
+modifier|*
+name|pcb_sp
+decl_stmt|;
+comment|/* Sanity check. */
+if|if
+condition|(
+name|inp
+operator|==
+name|NULL
+operator|||
+name|request
 operator|==
 name|NULL
 operator|||
@@ -5908,7 +5736,112 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
+return|;
+name|IPSEC_ASSERT
+argument_list|(
+name|inp
+operator|->
+name|inp_sp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"null inp_sp"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|xpl
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|xpl
+operator|=
+operator|(
+expr|struct
+name|sadb_x_policy
+operator|*
+operator|)
+name|request
+expr_stmt|;
+comment|/* Select direction. */
+switch|switch
+condition|(
+name|xpl
+operator|->
+name|sadb_x_policy_dir
+condition|)
+block|{
+case|case
+name|IPSEC_DIR_INBOUND
+case|:
+name|pcb_sp
+operator|=
+name|inp
+operator|->
+name|inp_sp
+operator|->
+name|sp_in
+expr_stmt|;
+break|break;
+case|case
+name|IPSEC_DIR_OUTBOUND
+case|:
+name|pcb_sp
+operator|=
+name|inp
+operator|->
+name|inp_sp
+operator|->
+name|sp_out
+expr_stmt|;
+break|break;
+default|default:
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
+literal|"%s: invalid direction=%u\n"
+operator|,
+name|__func__
+operator|,
+name|xpl
+operator|->
+name|sadb_x_policy_dir
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+comment|/* Sanity check. Should be an IPSEC_ASSERT. */
+if|if
+condition|(
+name|pcb_sp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
 return|;
 operator|*
 name|mp
@@ -5937,7 +5870,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 operator|(
@@ -5959,344 +5894,26 @@ argument|, __func__); kdebug_mbuf(*mp)
 argument_list|)
 empty_stmt|;
 return|return
+operator|(
 literal|0
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|ipsec4_set_policy
-parameter_list|(
-name|inp
-parameter_list|,
-name|optname
-parameter_list|,
-name|request
-parameter_list|,
-name|len
-parameter_list|,
-name|cred
-parameter_list|)
-name|struct
-name|inpcb
-modifier|*
-name|inp
-decl_stmt|;
-name|int
-name|optname
-decl_stmt|;
-name|caddr_t
-name|request
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|struct
-name|sadb_x_policy
-modifier|*
-name|xpl
-decl_stmt|;
-name|struct
-name|secpolicy
-modifier|*
-modifier|*
-name|pcb_sp
-decl_stmt|;
-comment|/* sanity check. */
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-operator|||
-name|request
-operator|==
-name|NULL
-condition|)
-return|return
-name|EINVAL
-return|;
-if|if
-condition|(
-name|len
-operator|<
-sizeof|sizeof
-argument_list|(
-operator|*
-name|xpl
-argument_list|)
-condition|)
-return|return
-name|EINVAL
-return|;
-name|xpl
-operator|=
-operator|(
-expr|struct
-name|sadb_x_policy
-operator|*
 operator|)
-name|request
-expr_stmt|;
-comment|/* select direction */
-switch|switch
-condition|(
-name|xpl
-operator|->
-name|sadb_x_policy_dir
-condition|)
-block|{
-case|case
-name|IPSEC_DIR_INBOUND
-case|:
-name|pcb_sp
-operator|=
-operator|&
-name|inp
-operator|->
-name|inp_sp
-operator|->
-name|sp_in
-expr_stmt|;
-break|break;
-case|case
-name|IPSEC_DIR_OUTBOUND
-case|:
-name|pcb_sp
-operator|=
-operator|&
-name|inp
-operator|->
-name|inp_sp
-operator|->
-name|sp_out
-expr_stmt|;
-break|break;
-default|default:
-name|ipseclog
-argument_list|(
-operator|(
-name|LOG_ERR
-operator|,
-literal|"%s: invalid direction=%u\n"
-operator|,
-name|__func__
-operator|,
-name|xpl
-operator|->
-name|sadb_x_policy_dir
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-return|return
-name|ipsec_set_policy
-argument_list|(
-name|pcb_sp
-argument_list|,
-name|optname
-argument_list|,
-name|request
-argument_list|,
-name|len
-argument_list|,
-name|cred
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|ipsec4_get_policy
-parameter_list|(
-name|inp
-parameter_list|,
-name|request
-parameter_list|,
-name|len
-parameter_list|,
-name|mp
-parameter_list|)
-name|struct
-name|inpcb
-modifier|*
-name|inp
-decl_stmt|;
-name|caddr_t
-name|request
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
-decl_stmt|;
-block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|struct
-name|sadb_x_policy
-modifier|*
-name|xpl
-decl_stmt|;
-name|struct
-name|secpolicy
-modifier|*
-name|pcb_sp
-decl_stmt|;
-comment|/* sanity check. */
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-operator|||
-name|request
-operator|==
-name|NULL
-operator|||
-name|mp
-operator|==
-name|NULL
-condition|)
-return|return
-name|EINVAL
-return|;
-name|IPSEC_ASSERT
-argument_list|(
-name|inp
-operator|->
-name|inp_sp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"null inp_sp"
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-sizeof|sizeof
-argument_list|(
-operator|*
-name|xpl
-argument_list|)
-condition|)
-return|return
-name|EINVAL
-return|;
-name|xpl
-operator|=
-operator|(
-expr|struct
-name|sadb_x_policy
-operator|*
-operator|)
-name|request
-expr_stmt|;
-comment|/* select direction */
-switch|switch
-condition|(
-name|xpl
-operator|->
-name|sadb_x_policy_dir
-condition|)
-block|{
-case|case
-name|IPSEC_DIR_INBOUND
-case|:
-name|pcb_sp
-operator|=
-name|inp
-operator|->
-name|inp_sp
-operator|->
-name|sp_in
-expr_stmt|;
-break|break;
-case|case
-name|IPSEC_DIR_OUTBOUND
-case|:
-name|pcb_sp
-operator|=
-name|inp
-operator|->
-name|inp_sp
-operator|->
-name|sp_out
-expr_stmt|;
-break|break;
-default|default:
-name|ipseclog
-argument_list|(
-operator|(
-name|LOG_ERR
-operator|,
-literal|"%s: invalid direction=%u\n"
-operator|,
-name|__func__
-operator|,
-name|xpl
-operator|->
-name|sadb_x_policy_dir
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-return|return
-name|ipsec_get_policy
-argument_list|(
-name|pcb_sp
-argument_list|,
-name|mp
-argument_list|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* delete policy in PCB */
+comment|/* Delete policy in PCB. */
 end_comment
 
 begin_function
 name|int
 name|ipsec_delete_pcbpolicy
 parameter_list|(
-name|inp
-parameter_list|)
 name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
+parameter_list|)
 block|{
 name|IPSEC_ASSERT
 argument_list|(
@@ -6318,7 +5935,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -6374,355 +5993,26 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_function
-name|int
-name|ipsec6_set_policy
-parameter_list|(
-name|in6p
-parameter_list|,
-name|optname
-parameter_list|,
-name|request
-parameter_list|,
-name|len
-parameter_list|,
-name|cred
-parameter_list|)
-name|struct
-name|in6pcb
-modifier|*
-name|in6p
-decl_stmt|;
-name|int
-name|optname
-decl_stmt|;
-name|caddr_t
-name|request
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|struct
-name|sadb_x_policy
-modifier|*
-name|xpl
-decl_stmt|;
-name|struct
-name|secpolicy
-modifier|*
-modifier|*
-name|pcb_sp
-decl_stmt|;
-comment|/* sanity check. */
-if|if
-condition|(
-name|in6p
-operator|==
-name|NULL
-operator|||
-name|request
-operator|==
-name|NULL
-condition|)
-return|return
-name|EINVAL
-return|;
-if|if
-condition|(
-name|len
-operator|<
-sizeof|sizeof
-argument_list|(
-operator|*
-name|xpl
-argument_list|)
-condition|)
-return|return
-name|EINVAL
-return|;
-name|xpl
-operator|=
-operator|(
-expr|struct
-name|sadb_x_policy
-operator|*
-operator|)
-name|request
-expr_stmt|;
-comment|/* select direction */
-switch|switch
-condition|(
-name|xpl
-operator|->
-name|sadb_x_policy_dir
-condition|)
-block|{
-case|case
-name|IPSEC_DIR_INBOUND
-case|:
-name|pcb_sp
-operator|=
-operator|&
-name|in6p
-operator|->
-name|in6p_sp
-operator|->
-name|sp_in
-expr_stmt|;
-break|break;
-case|case
-name|IPSEC_DIR_OUTBOUND
-case|:
-name|pcb_sp
-operator|=
-operator|&
-name|in6p
-operator|->
-name|in6p_sp
-operator|->
-name|sp_out
-expr_stmt|;
-break|break;
-default|default:
-name|ipseclog
-argument_list|(
-operator|(
-name|LOG_ERR
-operator|,
-literal|"%s: invalid direction=%u\n"
-operator|,
-name|__func__
-operator|,
-name|xpl
-operator|->
-name|sadb_x_policy_dir
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-return|return
-name|ipsec_set_policy
-argument_list|(
-name|pcb_sp
-argument_list|,
-name|optname
-argument_list|,
-name|request
-argument_list|,
-name|len
-argument_list|,
-name|cred
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|ipsec6_get_policy
-parameter_list|(
-name|in6p
-parameter_list|,
-name|request
-parameter_list|,
-name|len
-parameter_list|,
-name|mp
-parameter_list|)
-name|struct
-name|in6pcb
-modifier|*
-name|in6p
-decl_stmt|;
-name|caddr_t
-name|request
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
-decl_stmt|;
-block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|struct
-name|sadb_x_policy
-modifier|*
-name|xpl
-decl_stmt|;
-name|struct
-name|secpolicy
-modifier|*
-name|pcb_sp
-decl_stmt|;
-comment|/* sanity check. */
-if|if
-condition|(
-name|in6p
-operator|==
-name|NULL
-operator|||
-name|request
-operator|==
-name|NULL
-operator|||
-name|mp
-operator|==
-name|NULL
-condition|)
-return|return
-name|EINVAL
-return|;
-name|IPSEC_ASSERT
-argument_list|(
-name|in6p
-operator|->
-name|in6p_sp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"null in6p_sp"
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-sizeof|sizeof
-argument_list|(
-operator|*
-name|xpl
-argument_list|)
-condition|)
-return|return
-name|EINVAL
-return|;
-name|xpl
-operator|=
-operator|(
-expr|struct
-name|sadb_x_policy
-operator|*
-operator|)
-name|request
-expr_stmt|;
-comment|/* select direction */
-switch|switch
-condition|(
-name|xpl
-operator|->
-name|sadb_x_policy_dir
-condition|)
-block|{
-case|case
-name|IPSEC_DIR_INBOUND
-case|:
-name|pcb_sp
-operator|=
-name|in6p
-operator|->
-name|in6p_sp
-operator|->
-name|sp_in
-expr_stmt|;
-break|break;
-case|case
-name|IPSEC_DIR_OUTBOUND
-case|:
-name|pcb_sp
-operator|=
-name|in6p
-operator|->
-name|in6p_sp
-operator|->
-name|sp_out
-expr_stmt|;
-break|break;
-default|default:
-name|ipseclog
-argument_list|(
-operator|(
-name|LOG_ERR
-operator|,
-literal|"%s: invalid direction=%u\n"
-operator|,
-name|__func__
-operator|,
-name|xpl
-operator|->
-name|sadb_x_policy_dir
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-return|return
-name|ipsec_get_policy
-argument_list|(
-name|pcb_sp
-argument_list|,
-name|mp
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
-comment|/*  * return current level.  * Either IPSEC_LEVEL_USE or IPSEC_LEVEL_REQUIRE are always returned.  */
+comment|/*  * Return current level.  * Either IPSEC_LEVEL_USE or IPSEC_LEVEL_REQUIRE are always returned.  */
 end_comment
 
 begin_function
 name|u_int
 name|ipsec_get_reqlevel
 parameter_list|(
-name|isr
-parameter_list|)
 name|struct
 name|ipsecrequest
 modifier|*
 name|isr
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -6816,7 +6106,7 @@ name|sa_family
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX note that we have ipseclog() expanded here - code sync issue */
+comment|/* XXX Note that we have ipseclog() expanded here - code sync issue. */
 define|#
 directive|define
 name|IPSEC_CHECK_DEFAULT
@@ -6825,7 +6115,7 @@ name|lev
 parameter_list|)
 define|\
 value|(((lev) != IPSEC_LEVEL_USE&& (lev) != IPSEC_LEVEL_REQUIRE	      \&& (lev) != IPSEC_LEVEL_UNIQUE)			      \ 		? (V_ipsec_debug						      \ 			? log(LOG_INFO, "fixed system default level " #lev ":%d->%d\n",\ 				(lev), IPSEC_LEVEL_REQUIRE)		      \ 			: 0),						      \ 			(lev) = IPSEC_LEVEL_REQUIRE,			      \ 			(lev)						      \ 		: (lev))
-comment|/* set default level */
+comment|/* Set default level. */
 switch|switch
 condition|(
 operator|(
@@ -6946,7 +6236,7 @@ block|}
 undef|#
 directive|undef
 name|IPSEC_CHECK_DEFAULT
-comment|/* set level */
+comment|/* Set level. */
 switch|switch
 condition|(
 name|isr
@@ -7015,7 +6305,7 @@ break|break;
 case|case
 name|IPPROTO_IPCOMP
 case|:
-comment|/* 			 * we don't really care, as IPcomp document says that 			 * we shouldn't compress small packets 			 */
+comment|/* 			 * We don't really care, as IPcomp document says that 			 * we shouldn't compress small packets. 			 */
 name|level
 operator|=
 name|IPSEC_LEVEL_USE
@@ -7072,7 +6362,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|level
+operator|)
 return|;
 block|}
 end_function
@@ -7118,7 +6410,7 @@ literal|"%s: using SP\n"
 argument|, __func__); kdebug_secpolicy(sp)
 argument_list|)
 empty_stmt|;
-comment|/* check policy */
+comment|/* Check policy. */
 switch|switch
 condition|(
 name|sp
@@ -7130,7 +6422,9 @@ case|case
 name|IPSEC_POLICY_DISCARD
 case|:
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 case|case
 name|IPSEC_POLICY_BYPASS
@@ -7139,7 +6433,9 @@ case|case
 name|IPSEC_POLICY_NONE
 case|:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|IPSEC_ASSERT
@@ -7159,7 +6455,7 @@ name|policy
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX should compare policy against ipsec header history */
+comment|/* XXX Should compare policy against IPsec header history. */
 name|need_auth
 operator|=
 literal|0
@@ -7235,7 +6531,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -7285,7 +6583,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 break|break;
@@ -7326,52 +6626,44 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 break|break;
 case|case
 name|IPPROTO_IPCOMP
 case|:
-comment|/* 			 * we don't really care, as IPcomp document 			 * says that we shouldn't compress small 			 * packets, IPComp policy should always be 			 * treated as being in "use" level. 			 */
+comment|/* 			 * We don't really care, as IPcomp document 			 * says that we shouldn't compress small 			 * packets.  IPComp policy should always be 			 * treated as being in "use" level. 			 */
 break|break;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* valid */
+comment|/* Valid. */
 block|}
 end_function
 
-begin_comment
-comment|/*  * Check AH/ESP integrity.  * This function is called from tcp_input(), udp_input(),  * and {ah,esp}4_input for tunnel mode  */
-end_comment
-
 begin_function
+specifier|static
 name|int
-name|ipsec4_in_reject
+name|ipsec46_in_reject
 parameter_list|(
-name|m
-parameter_list|,
-name|inp
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
+parameter_list|)
 block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -7394,7 +6686,7 @@ literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
+comment|/* 	 * Get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
 if|if
 condition|(
 name|inp
@@ -7444,6 +6736,65 @@ argument_list|(
 name|sp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|KEY_FREESP
+argument_list|(
+operator|&
+name|sp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|result
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX Should be panic? 				 * -> No, there may be error. */
+block|}
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Check AH/ESP integrity.  * This function is called from tcp_input(), udp_input(),  * and {ah,esp}4_input for tunnel mode.  */
+end_comment
+
+begin_function
+name|int
+name|ipsec4_in_reject
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|)
+block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|int
+name|result
+decl_stmt|;
+name|result
+operator|=
+name|ipsec46_in_reject
+argument_list|(
+name|m
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7455,23 +6806,10 @@ operator|.
 name|ips_in_polvio
 operator|++
 expr_stmt|;
-name|KEY_FREESP
-argument_list|(
-operator|&
-name|sp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|result
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX should be panic ? 				 * -> No, there may be error. */
-block|}
 return|return
+operator|(
 name|result
+operator|)
 return|;
 block|}
 end_function
@@ -7483,107 +6821,39 @@ name|INET6
 end_ifdef
 
 begin_comment
-comment|/*  * Check AH/ESP integrity.  * This function is called from tcp6_input(), udp6_input(),  * and {ah,esp}6_input for tunnel mode  */
+comment|/*  * Check AH/ESP integrity.  * This function is called from tcp6_input(), udp6_input(),  * and {ah,esp}6_input for tunnel mode.  */
 end_comment
 
 begin_function
 name|int
 name|ipsec6_in_reject
 parameter_list|(
-name|m
-parameter_list|,
-name|inp
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
-name|struct
-name|secpolicy
-modifier|*
-name|sp
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-comment|/* sanity check */
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
-comment|/* XXX should be panic ? */
-comment|/* get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
-name|sp
-operator|=
-name|ipsec_getpolicybyaddr
-argument_list|(
-name|m
-argument_list|,
-name|IPSEC_DIR_INBOUND
-argument_list|,
-name|IP_FORWARDING
-argument_list|,
-operator|&
-name|error
-argument_list|)
-expr_stmt|;
-else|else
-name|sp
-operator|=
-name|ipsec_getpolicybysock
-argument_list|(
-name|m
-argument_list|,
-name|IPSEC_DIR_INBOUND
-argument_list|,
-name|inp
-argument_list|,
-operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|!=
-name|NULL
-condition|)
-block|{
 name|result
 operator|=
-name|ipsec_in_reject
+name|ipsec46_in_reject
 argument_list|(
-name|sp
-argument_list|,
 name|m
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7595,22 +6865,10 @@ operator|.
 name|ips_in_polvio
 operator|++
 expr_stmt|;
-name|KEY_FREESP
-argument_list|(
-operator|&
-name|sp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|result
-operator|=
-literal|0
-expr_stmt|;
-block|}
 return|return
+operator|(
 name|result
+operator|)
 return|;
 block|}
 end_function
@@ -7621,13 +6879,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * compute the byte size to be occupied by IPsec header.  * in case it is tunneled, it includes the size of outer IP header.  * NOTE: SP passed is free in this function.  */
+comment|/*  * Compute the byte size to be occupied by IPsec header.  * In case it is tunnelled, it includes the size of outer IP header.  * NOTE: SP passed is freed in this function.  */
 end_comment
 
 begin_function
 specifier|static
 name|size_t
-name|ipsec_hdrsiz
+name|ipsec_hdrsiz_internal
 parameter_list|(
 name|struct
 name|secpolicy
@@ -7646,7 +6904,7 @@ modifier|*
 name|isr
 decl_stmt|;
 name|size_t
-name|siz
+name|size
 decl_stmt|;
 name|KEYDEBUG
 argument_list|(
@@ -7674,7 +6932,9 @@ case|case
 name|IPSEC_POLICY_NONE
 case|:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|IPSEC_ASSERT
@@ -7694,7 +6954,7 @@ name|policy
 operator|)
 argument_list|)
 expr_stmt|;
-name|siz
+name|size
 operator|=
 literal|0
 expr_stmt|;
@@ -7855,194 +7115,40 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|siz
+name|size
 operator|+=
 name|clen
 expr_stmt|;
 block|}
 return|return
-name|siz
+operator|(
+name|size
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* This function is called from ip_forward() and ipsec4_hdrsize_tcp(). */
+comment|/*   * This function is called from ipsec_hdrsiz_tcp(), ip_ipsec_mtu(),  * disabled ip6_ipsec_mtu() and ip6_forward().  */
 end_comment
 
 begin_function
 name|size_t
-name|ipsec4_hdrsiz
+name|ipsec_hdrsiz
 parameter_list|(
-name|m
-parameter_list|,
-name|dir
-parameter_list|,
-name|inp
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|dir
-decl_stmt|;
+parameter_list|,
 name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
-block|{
-name|INIT_VNET_IPSEC
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
-name|struct
-name|secpolicy
-modifier|*
-name|sp
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
-name|IPSEC_ASSERT
-argument_list|(
-name|m
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"null mbuf"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
-name|sp
-operator|=
-name|ipsec_getpolicybyaddr
-argument_list|(
-name|m
-argument_list|,
-name|dir
-argument_list|,
-name|IP_FORWARDING
-argument_list|,
-operator|&
-name|error
-argument_list|)
-expr_stmt|;
-else|else
-name|sp
-operator|=
-name|ipsec_getpolicybysock
-argument_list|(
-name|m
-argument_list|,
-name|dir
-argument_list|,
-name|inp
-argument_list|,
-operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|!=
-name|NULL
-condition|)
-block|{
-name|size
-operator|=
-name|ipsec_hdrsiz
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-name|KEYDEBUG
-argument_list|(
-name|KEYDEBUG_IPSEC_DATA
-argument_list|,
-name|printf
-argument_list|(
-literal|"%s: size:%lu.\n"
-argument_list|,
-name|__func__
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|size
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|KEY_FREESP
-argument_list|(
-operator|&
-name|sp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|size
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX should be panic ? 				 * -> No, we are called w/o knowing if 				 *    IPsec processing is needed. */
-block|}
-return|return
-name|size
-return|;
-block|}
-end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_comment
-comment|/* This function is called from ipsec6_hdrsize_tcp(),  * and maybe from ip6_forward.()  */
-end_comment
-
-begin_function
-name|size_t
-name|ipsec6_hdrsiz
-parameter_list|(
-name|m
-parameter_list|,
-name|dir
-parameter_list|,
-name|in6p
 parameter_list|)
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-name|u_int
-name|dir
-decl_stmt|;
-name|struct
-name|in6pcb
-modifier|*
-name|in6p
-decl_stmt|;
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -8071,28 +7177,10 @@ literal|"null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-name|IPSEC_ASSERT
-argument_list|(
-name|in6p
-operator|==
-name|NULL
-operator|||
-name|in6p
-operator|->
-name|in6p_socket
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"socket w/o inpcb"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* get SP for this packet */
-comment|/* XXX Is it right to call with IP_FORWARDING. */
+comment|/* Get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec_getpolicybyaddr() with IP_FORWARDING flag. 	 */
 if|if
 condition|(
-name|in6p
+name|inp
 operator|==
 name|NULL
 condition|)
@@ -8119,7 +7207,7 @@ name|m
 argument_list|,
 name|dir
 argument_list|,
-name|in6p
+name|inp
 argument_list|,
 operator|&
 name|error
@@ -8128,15 +7216,13 @@ expr_stmt|;
 if|if
 condition|(
 name|sp
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-literal|0
-return|;
+block|{
 name|size
 operator|=
-name|ipsec_hdrsiz
+name|ipsec_hdrsiz_internal
 argument_list|(
 name|sp
 argument_list|)
@@ -8165,41 +7251,39 @@ operator|&
 name|sp
 argument_list|)
 expr_stmt|;
-return|return
+block|}
+else|else
+block|{
 name|size
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX Should be panic? 				 * -> No, we are called w/o knowing if 				 *    IPsec processing is needed. */
+block|}
+return|return
+operator|(
+name|size
+operator|)
 return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*INET6*/
-end_comment
-
-begin_comment
-comment|/*  * Check the variable replay window.  * ipsec_chkreplay() performs replay check before ICV verification.  * ipsec_updatereplay() updates replay bitmap.  This must be called after  * ICV verification (it also performs replay check, which is usually done  * beforehand).  * 0 (zero) is returned if packet disallowed, 1 if packet permitted.  *  * based on RFC 2401.  */
+comment|/*  * Check the variable replay window.  * ipsec_chkreplay() performs replay check before ICV verification.  * ipsec_updatereplay() updates replay bitmap.  This must be called after  * ICV verification (it also performs replay check, which is usually done  * beforehand).  * 0 (zero) is returned if packet disallowed, 1 if packet permitted.  *  * Based on RFC 2401.  */
 end_comment
 
 begin_function
 name|int
 name|ipsec_chkreplay
 parameter_list|(
-name|seq
-parameter_list|,
-name|sav
-parameter_list|)
 name|u_int32_t
 name|seq
-decl_stmt|;
+parameter_list|,
 name|struct
 name|secasvar
 modifier|*
 name|sav
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -8216,11 +7300,11 @@ decl_stmt|;
 name|u_int32_t
 name|wsizeb
 decl_stmt|;
-comment|/* constant: bits of window size */
+comment|/* Constant: bits of window size. */
 name|int
 name|frlast
 decl_stmt|;
-comment|/* constant: last frame */
+comment|/* Constant: last frame. */
 name|IPSEC_ASSERT
 argument_list|(
 name|sav
@@ -8260,10 +7344,12 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
-comment|/* no need to check replay. */
-comment|/* constant */
+comment|/* No need to check replay. */
+comment|/* Constant. */
 name|frlast
 operator|=
 name|replay
@@ -8280,7 +7366,7 @@ name|wsize
 operator|<<
 literal|3
 expr_stmt|;
-comment|/* sequence number of 0 is invalid */
+comment|/* Sequence number of 0 is invalid. */
 if|if
 condition|(
 name|seq
@@ -8288,9 +7374,11 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* first time is always okay */
+comment|/* First time is always okay. */
 if|if
 condition|(
 name|replay
@@ -8300,7 +7388,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -8311,9 +7401,11 @@ operator|->
 name|lastseq
 condition|)
 block|{
-comment|/* larger sequences are okay */
+comment|/* Larger sequences are okay. */
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 else|else
@@ -8327,7 +7419,7 @@ name|lastseq
 operator|-
 name|seq
 expr_stmt|;
-comment|/* over range to check, i.e. too old or wrapped */
+comment|/* Over range to check, i.e. too old or wrapped. */
 if|if
 condition|(
 name|diff
@@ -8335,7 +7427,9 @@ operator|>=
 name|wsizeb
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|fr
 operator|=
@@ -8345,7 +7439,7 @@ name|diff
 operator|/
 literal|8
 expr_stmt|;
-comment|/* this packet already seen ? */
+comment|/* This packet already seen? */
 if|if
 condition|(
 operator|(
@@ -8368,36 +7462,36 @@ operator|)
 operator|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* out of order but good */
+comment|/* Out of order but good. */
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * check replay counter whether to update or not.  * OUT:	0:	OK  *	1:	NG  */
+comment|/*  * Check replay counter whether to update or not.  * OUT:	0:	OK  *	1:	NG  */
 end_comment
 
 begin_function
 name|int
 name|ipsec_updatereplay
 parameter_list|(
-name|seq
-parameter_list|,
-name|sav
-parameter_list|)
 name|u_int32_t
 name|seq
-decl_stmt|;
+parameter_list|,
 name|struct
 name|secasvar
 modifier|*
 name|sav
-decl_stmt|;
+parameter_list|)
 block|{
 name|INIT_VNET_IPSEC
 argument_list|(
@@ -8418,11 +7512,11 @@ decl_stmt|;
 name|u_int32_t
 name|wsizeb
 decl_stmt|;
-comment|/* constant: bits of window size */
+comment|/* Constant: bits of window size. */
 name|int
 name|frlast
 decl_stmt|;
-comment|/* constant: last frame */
+comment|/* Constant: last frame. */
 name|IPSEC_ASSERT
 argument_list|(
 name|sav
@@ -8464,8 +7558,8 @@ condition|)
 goto|goto
 name|ok
 goto|;
-comment|/* no need to check replay. */
-comment|/* constant */
+comment|/* No need to check replay. */
+comment|/* Constant. */
 name|frlast
 operator|=
 name|replay
@@ -8482,7 +7576,7 @@ name|wsize
 operator|<<
 literal|3
 expr_stmt|;
-comment|/* sequence number of 0 is invalid */
+comment|/* Sequence number of 0 is invalid. */
 if|if
 condition|(
 name|seq
@@ -8490,9 +7584,11 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
-comment|/* first time */
+comment|/* First time. */
 if|if
 condition|(
 name|replay
@@ -8552,7 +7648,7 @@ name|replay
 operator|->
 name|lastseq
 expr_stmt|;
-comment|/* new larger sequence number */
+comment|/* New larger sequence number. */
 if|if
 condition|(
 name|diff
@@ -8560,8 +7656,8 @@ operator|<
 name|wsizeb
 condition|)
 block|{
-comment|/* In window */
-comment|/* set bit for this packet */
+comment|/* In window. */
+comment|/* Set bit for this packet. */
 name|vshiftl
 argument_list|(
 name|replay
@@ -8589,7 +7685,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* this packet has a "way larger" */
+comment|/* This packet has a "way larger". */
 name|bzero
 argument_list|(
 name|replay
@@ -8619,7 +7715,7 @@ name|lastseq
 operator|=
 name|seq
 expr_stmt|;
-comment|/* larger is good */
+comment|/* Larger is good. */
 block|}
 else|else
 block|{
@@ -8632,7 +7728,7 @@ name|lastseq
 operator|-
 name|seq
 expr_stmt|;
-comment|/* over range to check, i.e. too old or wrapped */
+comment|/* Over range to check, i.e. too old or wrapped. */
 if|if
 condition|(
 name|diff
@@ -8640,7 +7736,9 @@ operator|>=
 name|wsizeb
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 name|fr
 operator|=
@@ -8650,7 +7748,7 @@ name|diff
 operator|/
 literal|8
 expr_stmt|;
-comment|/* this packet already seen ? */
+comment|/* This packet already seen? */
 if|if
 condition|(
 operator|(
@@ -8673,9 +7771,11 @@ operator|)
 operator|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
-comment|/* mark as seen */
+comment|/* Mark as seen. */
 operator|(
 name|replay
 operator|->
@@ -8695,7 +7795,7 @@ literal|8
 operator|)
 operator|)
 expr_stmt|;
-comment|/* out of order but good */
+comment|/* Out of order but good. */
 block|}
 name|ok
 label|:
@@ -8709,13 +7809,13 @@ operator|~
 literal|0
 condition|)
 block|{
-comment|/* set overflow flag */
+comment|/* Set overflow flag. */
 name|replay
 operator|->
 name|overflow
 operator|++
 expr_stmt|;
-comment|/* don't increment, no more packets accepted */
+comment|/* Don't increment, no more packets accepted. */
 if|if
 condition|(
 operator|(
@@ -8729,7 +7829,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 name|ipseclog
 argument_list|(
@@ -8758,13 +7860,15 @@ name|count
 operator|++
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * shift variable length buffer to left.  * IN:	bitmap: pointer to the buffer  * 	nbit:	the number of to shift.  *	wsize:	buffer size (bytes).  */
+comment|/*  * Shift variable length buffer to left.  * IN:	bitmap: pointer to the buffer  * 	nbit:	the number of to shift.  *	wsize:	buffer size (bytes).  */
 end_comment
 
 begin_function
@@ -8772,22 +7876,17 @@ specifier|static
 name|void
 name|vshiftl
 parameter_list|(
-name|bitmap
-parameter_list|,
-name|nbit
-parameter_list|,
-name|wsize
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|bitmap
-decl_stmt|;
+parameter_list|,
 name|int
 name|nbit
-decl_stmt|,
+parameter_list|,
+name|int
 name|wsize
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
@@ -8887,7 +7986,6 @@ name|over
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -8940,7 +8038,7 @@ name|i
 init|=
 literal|3
 decl_stmt|;
-comment|/* XXX-BZ returns static buffer. */
+comment|/* XXX-BZ Returns static buffer. */
 name|i
 operator|=
 operator|(
@@ -9042,6 +8140,7 @@ case|case
 name|AF_INET
 case|:
 return|return
+operator|(
 name|inet_ntoa4
 argument_list|(
 name|sa
@@ -9050,6 +8149,7 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|)
+operator|)
 return|;
 endif|#
 directive|endif
@@ -9061,6 +8161,7 @@ case|case
 name|AF_INET6
 case|:
 return|return
+operator|(
 name|ip6_sprintf
 argument_list|(
 name|ip6buf
@@ -9072,13 +8173,16 @@ name|sin6
 operator|.
 name|sin6_addr
 argument_list|)
+operator|)
 return|;
 endif|#
 directive|endif
 comment|/* INET6 */
 default|default:
 return|return
+operator|(
 literal|"(unknown address family)"
+operator|)
 return|;
 block|}
 block|}
@@ -9090,13 +8194,11 @@ name|char
 modifier|*
 name|ipsec_logsastr
 parameter_list|(
-name|sav
-parameter_list|)
 name|struct
 name|secasvar
 modifier|*
 name|sav
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -9180,7 +8282,7 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
-comment|/* NB: only use ipsec_address on one address at a time */
+comment|/* NB: only use ipsec_address on one address at a time. */
 name|snprintf
 argument_list|(
 name|p
@@ -9244,7 +8346,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|buf
+operator|)
 return|;
 block|}
 end_function
@@ -9253,13 +8357,11 @@ begin_function
 name|void
 name|ipsec_dumpmbuf
 parameter_list|(
-name|m
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|totlen
@@ -9386,7 +8488,7 @@ name|refcnt
 operator|=
 literal|1
 expr_stmt|;
-comment|/* NB: disallow free */
+comment|/* NB: disallow free. */
 block|}
 end_function
 
@@ -9407,7 +8509,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* XXX this stuff doesn't belong here... */
+comment|/* XXX This stuff doesn't belong here... */
 end_comment
 
 begin_decl_stmt
@@ -9478,9 +8580,11 @@ name|tdb_xform
 operator|!=
 name|NULL
 condition|)
-comment|/* previously initialized */
+comment|/* Previously initialized. */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 for|for
 control|(
@@ -9505,6 +8609,7 @@ operator|==
 name|xftype
 condition|)
 return|return
+operator|(
 call|(
 modifier|*
 name|xsp
@@ -9516,9 +8621,12 @@ name|sav
 argument_list|,
 name|xsp
 argument_list|)
+operator|)
 return|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 end_function

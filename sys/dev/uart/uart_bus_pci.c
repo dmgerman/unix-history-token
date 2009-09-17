@@ -506,6 +506,20 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x1407
+block|,
+literal|0x0510
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Lava SP Serial 550 PCI"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x1409
 block|,
 literal|0x7168

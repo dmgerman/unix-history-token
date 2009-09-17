@@ -2439,6 +2439,17 @@ literal|"VIA C7 Esther"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|0x6f0
+case|:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"VIA Nano"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|strcpy
 argument_list|(
@@ -3067,16 +3078,24 @@ literal|"\004ExtAPIC"
 comment|/* Extended APIC register */
 literal|"\005CR8"
 comment|/* CR8 in legacy mode */
-literal|"\006<b5>"
-literal|"\007<b6>"
-literal|"\010<b7>"
+literal|"\006ABM"
+comment|/* LZCNT instruction */
+literal|"\007SSE4A"
+comment|/* SSE4A */
+literal|"\010MAS"
+comment|/* Misaligned SSE mode */
 literal|"\011Prefetch"
 comment|/* 3DNow! Prefetch/PrefetchW */
-literal|"\012<b9>"
-literal|"\013<b10>"
-literal|"\014<b11>"
-literal|"\015<b12>"
-literal|"\016<b13>"
+literal|"\012OSVW"
+comment|/* OS visible workaround */
+literal|"\013IBS"
+comment|/* Instruction based sampling */
+literal|"\014SSE5"
+comment|/* SSE5 */
+literal|"\015SKINIT"
+comment|/* SKINIT/STGI */
+literal|"\016WDT"
+comment|/* Watchdog timer */
 literal|"\017<b14>"
 literal|"\020<b15>"
 literal|"\021<b16>"
@@ -3098,6 +3117,15 @@ literal|"\040<b31>"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_CENTAUR
+condition|)
+name|print_via_padlock_info
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3190,6 +3218,41 @@ argument_list|)
 operator|>=
 literal|0x3
 operator|)
+condition|)
+name|tsc_is_invariant
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|CPU_VENDOR_CENTAUR
+case|:
+if|if
+condition|(
+name|I386_CPU_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|0x6
+operator|&&
+name|I386_CPU_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|>=
+literal|0xf
+operator|&&
+operator|(
+name|rdmsr
+argument_list|(
+literal|0x1203
+argument_list|)
+operator|&
+literal|0x100000000ULL
+operator|)
+operator|==
+literal|0
 condition|)
 name|tsc_is_invariant
 operator|=
@@ -3407,15 +3470,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-if|if
-condition|(
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_CENTAUR
-condition|)
-name|print_via_padlock_info
-argument_list|()
-expr_stmt|;
 comment|/* Avoid ugly blank lines: only print newline when we have to. */
 if|if
 condition|(
@@ -6021,6 +6075,9 @@ literal|0x6a0
 case|:
 case|case
 literal|0x6d0
+case|:
+case|case
+literal|0x6f0
 case|:
 break|break;
 default|default:

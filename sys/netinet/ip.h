@@ -592,12 +592,13 @@ directive|endif
 union|union
 name|ipt_timestamp
 block|{
-name|n_long
+name|uint32_t
 name|ipt_time
 index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* network format */
 struct|struct
 name|ipt_ta
 block|{
@@ -605,9 +606,10 @@ name|struct
 name|in_addr
 name|ipt_addr
 decl_stmt|;
-name|n_long
+name|uint32_t
 name|ipt_time
 decl_stmt|;
+comment|/* network format */
 block|}
 name|ipt_ta
 index|[

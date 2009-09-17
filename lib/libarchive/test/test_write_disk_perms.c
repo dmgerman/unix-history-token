@@ -1237,9 +1237,9 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * Current user must belong to at least two groups or 		 * else we can't test setting the GID to another group. 		 */
-name|printf
+name|skipping
 argument_list|(
-literal|"Current user can't test gid restore: must belong to more than one group.\n"
+literal|"Current user can't test gid restore: must belong to more than one group."
 argument_list|)
 expr_stmt|;
 block|}

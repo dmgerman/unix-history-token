@@ -228,6 +228,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -375,6 +381,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/scope6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -693,57 +705,6 @@ begin_comment
 comment|/* then define the macro(s) that hook into the vimage macros */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|800044
-operator|&&
-name|defined
-argument_list|(
-name|VIMAGE
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|VSYMNAME
-parameter_list|(
-name|__MODULE
-parameter_list|)
-value|vnet_ ## __MODULE
-end_define
-
-begin_define
-define|#
-directive|define
-name|MODULE_GLOBAL
-parameter_list|(
-name|__MODULE
-parameter_list|,
-name|__SYMBOL
-parameter_list|)
-value|VSYM(VSYMNAME(__MODULE), __SYMBOL)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -755,33 +716,6 @@ name|__SYMBOL
 parameter_list|)
 value|V_ ## __SYMBOL
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MODULE_GLOBAL
-parameter_list|(
-name|__MODULE
-parameter_list|,
-name|__SYMBOL
-parameter_list|)
-value|(__SYMBOL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *  */
@@ -2274,6 +2208,61 @@ define|#
 directive|define
 name|MD5_Final
 value|MD5Final
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SCTP_DECREMENT_AND_CHECK_REFCOUNT
+parameter_list|(
+name|addr
+parameter_list|)
+value|(atomic_fetchadd_int(addr, -1) == 1)
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SCTP_SAVE_ATOMIC_DECREMENT
+parameter_list|(
+name|addr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|{ \ 	int32_t oldval; \ 	oldval = atomic_fetchadd_int(addr, -val); \ 	if (oldval< val) { \ 		panic("Counter goes negative"); \ 	} \ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCTP_SAVE_ATOMIC_DECREMENT
+parameter_list|(
+name|addr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|{ \ 	int32_t oldval; \ 	oldval = atomic_fetchadd_int(addr, -val); \ 	if (oldval< val) { \ 		*addr = 0; \ 	} \ }
 end_define
 
 begin_endif

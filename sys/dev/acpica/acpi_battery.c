@@ -742,6 +742,10 @@ operator|->
 name|dvol
 operator|!=
 literal|0
+operator|&&
+name|dev
+operator|==
+name|NULL
 condition|)
 block|{
 name|bst

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.c,v 1.410.18.52 2007/08/30 05:15:03 marka Exp $ */
+comment|/* $Id: zone.c,v 1.410.18.55 2008/10/24 01:43:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -8510,6 +8510,11 @@ name|char
 modifier|*
 name|what
 decl_stmt|;
+name|isc_boolean_t
+name|required
+init|=
+name|ISC_FALSE
+decl_stmt|;
 if|if
 condition|(
 name|dns_name_issubdomain
@@ -8519,10 +8524,16 @@ argument_list|,
 name|owner
 argument_list|)
 condition|)
+block|{
 name|what
 operator|=
 literal|"REQUIRED GLUE "
 expr_stmt|;
+name|required
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -8544,6 +8555,8 @@ condition|(
 name|result
 operator|!=
 name|DNS_R_DELEGATION
+operator|||
+name|required
 operator|||
 name|DNS_ZONE_OPTION
 argument_list|(
@@ -13730,7 +13743,7 @@ argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
-comment|/*  	 * The refresh code assumes that 'masters' wouldn't change under it. 	 * If it will change then kill off any current refresh in progress 	 * and update the masters info.  If it won't change then we can just 	 * unlock and exit. 	 */
+comment|/* 	 * The refresh code assumes that 'masters' wouldn't change under it. 	 * If it will change then kill off any current refresh in progress 	 * and update the masters info.  If it won't change then we can just 	 * unlock and exit. 	 */
 if|if
 condition|(
 name|count
@@ -37439,7 +37452,7 @@ name|dns_zone_log
 argument_list|(
 name|zone
 argument_list|,
-name|ISC_LOG_INFO
+name|ISC_LOG_WARNING
 argument_list|,
 literal|"saved '%s' as '%s'"
 argument_list|,

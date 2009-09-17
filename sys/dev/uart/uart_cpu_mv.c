@@ -233,7 +233,7 @@ name|di
 operator|->
 name|baudrate
 operator|=
-literal|115200
+literal|0
 expr_stmt|;
 name|di
 operator|->

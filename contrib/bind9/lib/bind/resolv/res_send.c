@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.9.18.8 2006/10/16 23:00:58 marka Exp $"
+literal|"$Id: res_send.c,v 1.9.18.10 2008/01/27 02:06:26 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1271,7 +1271,7 @@ name|gotsomewhere
 decl_stmt|,
 name|terrno
 decl_stmt|,
-name|try
+name|tries
 decl_stmt|,
 name|v_circuit
 decl_stmt|,
@@ -1996,17 +1996,17 @@ block|}
 comment|/* 	 * Send request, RETRY times, or until successful. 	 */
 for|for
 control|(
-name|try
+name|tries
 operator|=
 literal|0
 init|;
-name|try
+name|tries
 operator|<
 name|statp
 operator|->
 name|retry
 condition|;
-name|try
+name|tries
 operator|++
 control|)
 block|{
@@ -2232,7 +2232,7 @@ name|v_circuit
 condition|)
 block|{
 comment|/* Use VC; at most one attempt per server. */
-name|try
+name|tries
 operator|=
 name|statp
 operator|->
@@ -2303,7 +2303,7 @@ name|terrno
 argument_list|,
 name|ns
 argument_list|,
-name|try
+name|tries
 argument_list|,
 operator|&
 name|v_circuit
@@ -2881,6 +2881,16 @@ name|void
 modifier|*
 name|tmp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SO_NOSIGPIPE
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+endif|#
+directive|endif
 name|nsap
 operator|=
 name|get_nsaddr
@@ -3123,6 +3133,34 @@ operator|)
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|SO_NOSIGPIPE
+comment|/* 		 * Disable generation of SIGPIPE when writing to a closed 		 * socket.  Write should return -1 and set errno to EPIPE 		 * instead.  		 * 		 * Push on even if setsockopt(SO_NOSIGPIPE) fails. 		 */
+operator|(
+name|void
+operator|)
+name|setsockopt
+argument_list|(
+name|statp
+operator|->
+name|_vcsock
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_NOSIGPIPE
+argument_list|,
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|errno
 operator|=
 literal|0
@@ -3717,7 +3755,7 @@ name|int
 name|ns
 parameter_list|,
 name|int
-name|try
+name|tries
 parameter_list|,
 name|int
 modifier|*
@@ -4140,7 +4178,7 @@ name|statp
 operator|->
 name|retrans
 operator|<<
-name|try
+name|tries
 operator|)
 expr_stmt|;
 if|if

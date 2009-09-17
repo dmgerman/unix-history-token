@@ -449,6 +449,9 @@ name|vfc_list
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this filesystem has a sysctl node under vfs 	 * (i.e. vfs.xxfs), then change the oid number of that node to  	 * match the filesystem's type number.  This allows user code 	 * which uses the type number to read sysctl variables defined 	 * by the filesystem to continue working. Since the oids are 	 * in a sorted list, we need to make sure the order is 	 * preserved by re-registering the oid after modifying its 	 * number. 	 */
+name|sysctl_lock
+argument_list|()
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|oidp
@@ -491,7 +494,11 @@ argument_list|(
 name|oidp
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
+name|sysctl_unlock
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Initialise unused ``struct vfsops'' fields, to use 	 * the vfs_std*() functions.  Note, we need the mount 	 * and unmount operations, at the least.  The check 	 * for vfsops available is just a debugging aid. 	 */
 name|KASSERT
 argument_list|(

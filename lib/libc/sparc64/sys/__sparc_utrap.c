@@ -339,6 +339,7 @@ begin_function
 name|void
 name|__utrap_kill_self
 parameter_list|(
+name|int
 name|sig
 parameter_list|)
 block|{

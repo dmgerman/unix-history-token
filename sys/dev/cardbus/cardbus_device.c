@@ -404,11 +404,6 @@ name|cbp
 parameter_list|)
 block|{
 name|struct
-name|cardbus_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
 name|tuple_callbacks
 name|cb
 index|[]
@@ -423,13 +418,6 @@ name|cardbus_build_cis
 block|}
 block|}
 decl_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|parent
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|cardbus_parse_cis

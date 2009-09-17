@@ -241,7 +241,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|fstype
 argument_list|,

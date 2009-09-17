@@ -46,20 +46,6 @@ name|USB_DEBUG_VAR
 value|musbotgdebug
 end_define
 
-begin_define
-define|#
-directive|define
-name|usb2_config_td_cc
-value|musbotg_config_copy
-end_define
-
-begin_define
-define|#
-directive|define
-name|usb2_config_td_softc
-value|musbotg_softc
-end_define
-
 begin_include
 include|#
 directive|include
@@ -82,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|<dev/usb2/core/usb2_process.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb2/core/usb2_config_td.h>
 end_include
 
 begin_include
@@ -329,10 +309,8 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|,
 name|usb2_error_t
-name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -345,7 +323,6 @@ parameter_list|(
 name|struct
 name|usb2_bus
 modifier|*
-name|bus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -358,7 +335,6 @@ parameter_list|(
 name|struct
 name|musbotg_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -371,7 +347,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -384,7 +359,6 @@ parameter_list|(
 name|struct
 name|musbotg_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -400,13 +374,6 @@ begin_decl_stmt
 specifier|static
 name|usb2_sw_transfer_func_t
 name|musbotg_root_ctrl_done
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|usb2_config_td_command_t
-name|musbotg_root_ctrl_task
 decl_stmt|;
 end_decl_stmt
 
@@ -534,7 +501,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -600,7 +566,6 @@ literal|0
 expr_stmt|;
 comment|/* XXX enable Transceiver */
 block|}
-return|return;
 block|}
 end_function
 
@@ -661,7 +626,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -714,7 +678,6 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -762,7 +725,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -803,7 +765,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -823,9 +784,14 @@ name|musbotg_softc
 modifier|*
 name|sc
 init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|uint8_t
 name|temp
@@ -852,6 +818,8 @@ operator|=
 name|mtx_owned
 argument_list|(
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|xfer_mtx
 argument_list|)
@@ -907,7 +875,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|8
+name|hz
+operator|/
+literal|125
 argument_list|)
 expr_stmt|;
 block|}
@@ -934,34 +904,6 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|musbotg_rem_wakeup_set
-parameter_list|(
-name|struct
-name|usb2_device
-modifier|*
-name|udev
-parameter_list|,
-name|uint8_t
-name|is_on
-parameter_list|)
-block|{
-name|DPRINTFN
-argument_list|(
-literal|4
-argument_list|,
-literal|"is_on=%u\n"
-argument_list|,
-name|is_on
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1001,7 +943,6 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3815,9 +3756,14 @@ name|done
 label|:
 name|sc
 operator|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 comment|/* compute all actual lengths */
 name|musbotg_standard_done
@@ -3876,34 +3822,22 @@ name|repeat
 goto|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|musbotg_vbus_interrupt
 parameter_list|(
 name|struct
-name|usb2_bus
+name|musbotg_softc
 modifier|*
-name|bus
+name|sc
 parameter_list|,
 name|uint8_t
 name|is_on
 parameter_list|)
 block|{
-name|struct
-name|musbotg_softc
-modifier|*
-name|sc
-init|=
-name|MUSBOTG_BUS2SC
-argument_list|(
-name|bus
-argument_list|)
-decl_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|4
@@ -4031,7 +3965,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4427,7 +4360,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4530,7 +4462,6 @@ name|temp
 operator|->
 name|setup_alt_next
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4589,6 +4520,8 @@ argument_list|,
 name|usb2_get_speed
 argument_list|(
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|udev
 argument_list|)
@@ -4659,9 +4592,14 @@ literal|0
 expr_stmt|;
 name|sc
 operator|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 name|ep_no
 operator|=
@@ -5015,7 +4953,6 @@ name|td_transfer_last
 operator|=
 name|td
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5036,15 +4973,6 @@ name|xfer
 init|=
 name|arg
 decl_stmt|;
-name|struct
-name|musbotg_softc
-modifier|*
-name|sc
-init|=
-name|xfer
-operator|->
-name|usb2_sc
-decl_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -5056,10 +4984,11 @@ argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
-operator|&
-name|sc
+name|xfer
 operator|->
-name|sc_bus
+name|xroot
+operator|->
+name|bus
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -5072,15 +5001,6 @@ argument_list|,
 name|USB_ERR_TIMEOUT
 argument_list|)
 expr_stmt|;
-name|USB_BUS_UNLOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5103,9 +5023,14 @@ name|musbotg_softc
 modifier|*
 name|sc
 init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|uint16_t
 name|temp
@@ -5257,7 +5182,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -5308,7 +5232,7 @@ argument_list|(
 operator|&
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 operator|->
@@ -5341,7 +5265,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -5366,9 +5289,14 @@ name|musbotg_softc
 modifier|*
 name|sc
 init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -5812,7 +5740,6 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5838,7 +5765,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -5894,7 +5821,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6024,7 +5950,6 @@ name|MUSB2_MASK_CSRL_RXSENDSTALL
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6645,7 +6570,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -6766,7 +6690,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6866,7 +6789,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* disable all interrupts */
@@ -6915,7 +6840,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|10
+name|hz
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
 comment|/* disable double packet buffering */
@@ -7544,7 +7471,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7623,7 +7549,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7664,7 +7589,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7705,7 +7629,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7785,7 +7708,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7826,7 +7748,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7906,7 +7827,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7947,7 +7867,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8027,7 +7946,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8047,9 +7965,14 @@ name|musbotg_softc
 modifier|*
 name|sc
 init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|uint32_t
 name|temp
@@ -8109,6 +8032,8 @@ condition|(
 name|usb2_get_speed
 argument_list|(
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|udev
 argument_list|)
@@ -8243,7 +8168,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8264,7 +8188,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8342,9 +8265,14 @@ name|musbotg_softc
 modifier|*
 name|sc
 init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -8373,7 +8301,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8834,9 +8761,14 @@ name|musbotg_softc
 modifier|*
 name|sc
 init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|sc
 operator|->
@@ -8846,24 +8778,15 @@ name|xfer
 operator|=
 name|xfer
 expr_stmt|;
-name|usb2_config_td_queue_command
+name|usb2_bus_roothub_exec
 argument_list|(
-operator|&
-name|sc
+name|xfer
 operator|->
-name|sc_config_td
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|musbotg_root_ctrl_task
-argument_list|,
-literal|0
-argument_list|,
-literal|0
+name|xroot
+operator|->
+name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8873,25 +8796,19 @@ name|void
 name|musbotg_root_ctrl_task
 parameter_list|(
 name|struct
-name|musbotg_softc
+name|usb2_bus
 modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|musbotg_config_copy
-modifier|*
-name|cc
-parameter_list|,
-name|uint16_t
-name|refcount
+name|bus
 parameter_list|)
 block|{
 name|musbotg_root_ctrl_poll
 argument_list|(
-name|sc
+name|MUSBOTG_BUS2SC
+argument_list|(
+name|bus
+argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8916,9 +8833,14 @@ name|musbotg_softc
 modifier|*
 name|sc
 init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|uint16_t
 name|value
@@ -9020,6 +8942,8 @@ operator|=
 name|mtx_owned
 argument_list|(
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|xfer_mtx
 argument_list|)
@@ -10315,7 +10239,6 @@ operator|&
 name|musbotg_root_ctrl_done
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10393,9 +10316,14 @@ name|musbotg_softc
 modifier|*
 name|sc
 init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -10424,7 +10352,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10459,9 +10386,14 @@ name|musbotg_softc
 modifier|*
 name|sc
 init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|sc
 operator|->
@@ -10471,7 +10403,6 @@ name|xfer
 operator|=
 name|xfer
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10570,13 +10501,6 @@ operator|=
 name|parm
 operator|->
 name|curr_xfer
-expr_stmt|;
-comment|/* 	 * setup xfer 	 */
-name|xfer
-operator|->
-name|usb2_sc
-operator|=
-name|sc
 expr_stmt|;
 comment|/* 	 * NOTE: This driver does not use any of the parameters that 	 * are computed from the following values. Just set some 	 * reasonable dummies: 	 */
 name|parm
@@ -10909,7 +10833,6 @@ index|]
 operator|=
 name|last_obj
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11145,7 +11068,6 @@ comment|/* do nothing */
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -11198,16 +11120,10 @@ operator|&
 name|musbotg_clear_stall
 block|,
 operator|.
-name|vbus_interrupt
+name|roothub_exec
 operator|=
 operator|&
-name|musbotg_vbus_interrupt
-block|,
-operator|.
-name|rem_wakeup_set
-operator|=
-operator|&
-name|musbotg_rem_wakeup_set
+name|musbotg_root_ctrl_task
 block|, }
 decl_stmt|;
 end_decl_stmt

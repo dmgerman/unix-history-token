@@ -314,6 +314,36 @@ block|}
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__mips__
+block|{
+literal|"FreeBSD ELF"
+block|,
+name|mips_syscall_entry
+block|,
+name|mips_syscall_exit
+block|}
+block|,
+block|{
+literal|"FreeBSD ELF32"
+block|,
+name|mips_syscall_entry
+block|,
+name|mips_syscall_exit
+block|}
+block|,
+block|{
+literal|"FreeBSD ELF64"
+block|,
+name|mips_syscall_entry
+block|,
+name|mips_syscall_exit
+block|}
+block|,
+comment|// XXX
+endif|#
+directive|endif
 block|{
 literal|0
 block|,

@@ -217,7 +217,6 @@ parameter_list|(
 name|struct
 name|usb_device
 modifier|*
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -230,14 +229,11 @@ parameter_list|(
 name|struct
 name|urb
 modifier|*
-name|urb
 parameter_list|,
 name|uint32_t
-name|timeout
 parameter_list|,
 name|uint16_t
 modifier|*
-name|p_actlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -254,12 +250,10 @@ specifier|const
 name|struct
 name|usb_device_id
 modifier|*
-name|id
 parameter_list|,
 name|struct
 name|usb2_attach_arg
 modifier|*
-name|uaa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -274,7 +268,6 @@ parameter_list|(
 name|struct
 name|usb_linux_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -289,10 +282,8 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -305,12 +296,10 @@ parameter_list|(
 name|struct
 name|usb_device
 modifier|*
-name|dev
 parameter_list|,
 name|struct
 name|usb_interface
 modifier|*
-name|iface
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -323,7 +312,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -336,10 +324,8 @@ parameter_list|(
 name|struct
 name|urb
 modifier|*
-name|urb
 parameter_list|,
 name|uint8_t
-name|drain
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1029,19 +1015,6 @@ name|id
 init|=
 name|NULL
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1597,24 +1570,36 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-return|return
-operator|(
-operator|(
+empty_stmt|;
+comment|/* indent fix */
+switch|switch
+condition|(
 name|usb2_get_speed
 argument_list|(
 name|dev
 operator|->
 name|bsd_udev
 argument_list|)
-operator|==
-name|USB_SPEED_HIGH
-operator|)
-condition|?
-name|USB_MAX_HIGH_SPEED_ISOC_FRAMES
-else|:
+condition|)
+block|{
+case|case
+name|USB_SPEED_LOW
+case|:
+case|case
+name|USB_SPEED_FULL
+case|:
+return|return
+operator|(
 name|USB_MAX_FULL_SPEED_ISOC_FRAMES
 operator|)
 return|;
+default|default:
+return|return
+operator|(
+name|USB_MAX_HIGH_SPEED_ISOC_FRAMES
+operator|)
+return|;
+block|}
 block|}
 end_function
 
@@ -1873,7 +1858,6 @@ name|xfer
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4633,7 +4617,6 @@ expr_stmt|;
 name|usb2_needs_explore_all
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4719,7 +4702,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4805,7 +4787,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4840,7 +4821,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4890,7 +4870,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4928,7 +4907,6 @@ name|urb
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4958,7 +4936,6 @@ condition|)
 block|{
 comment|/* ignore */
 block|}
-return|return;
 block|}
 end_function
 
@@ -4986,7 +4963,6 @@ name|bsd_priv_sc
 operator|=
 name|data
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5100,7 +5076,6 @@ name|uhi
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5144,7 +5119,6 @@ operator|&=
 operator|~
 name|URB_WAIT_WAKEUP
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5197,7 +5171,6 @@ name|urb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

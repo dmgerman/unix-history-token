@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rootns.c,v 1.26.18.5 2007/10/31 03:02:45 tbox Exp $ */
+comment|/* $Id: rootns.c,v 1.26.18.7 2008/02/05 23:46:09 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -138,8 +138,6 @@ init|=
 literal|";\n"
 literal|"; Internet Root Nameservers\n"
 literal|";\n"
-literal|"; Thu Sep 23 17:57:37 PDT 1999\n"
-literal|";\n"
 literal|"$TTL 518400\n"
 literal|".                       518400  IN      NS      A.ROOT-SERVERS.NET.\n"
 literal|".                       518400  IN      NS      B.ROOT-SERVERS.NET.\n"
@@ -155,18 +153,24 @@ literal|".                       518400  IN      NS      K.ROOT-SERVERS.NET.\n"
 literal|".                       518400  IN      NS      L.ROOT-SERVERS.NET.\n"
 literal|".                       518400  IN      NS      M.ROOT-SERVERS.NET.\n"
 literal|"A.ROOT-SERVERS.NET.     3600000 IN      A       198.41.0.4\n"
+literal|"A.ROOT-SERVERS.NET.     3600000 IN      AAAA    2001:503:BA3E::2:30\n"
 literal|"B.ROOT-SERVERS.NET.     3600000 IN      A       192.228.79.201\n"
 literal|"C.ROOT-SERVERS.NET.     3600000 IN      A       192.33.4.12\n"
 literal|"D.ROOT-SERVERS.NET.     3600000 IN      A       128.8.10.90\n"
 literal|"E.ROOT-SERVERS.NET.     3600000 IN      A       192.203.230.10\n"
 literal|"F.ROOT-SERVERS.NET.     3600000 IN      A       192.5.5.241\n"
+literal|"F.ROOT-SERVERS.NET.     3600000 IN      AAAA    2001:500:2F::F\n"
 literal|"G.ROOT-SERVERS.NET.     3600000 IN      A       192.112.36.4\n"
 literal|"H.ROOT-SERVERS.NET.     3600000 IN      A       128.63.2.53\n"
+literal|"H.ROOT-SERVERS.NET.     3600000 IN      AAAA    2001:500:1::803F:235\n"
 literal|"I.ROOT-SERVERS.NET.     3600000 IN      A       192.36.148.17\n"
 literal|"J.ROOT-SERVERS.NET.     3600000 IN      A       192.58.128.30\n"
+literal|"J.ROOT-SERVERS.NET.     3600000 IN      AAAA    2001:503:C27::2:30\n"
 literal|"K.ROOT-SERVERS.NET.     3600000 IN      A       193.0.14.129\n"
+literal|"K.ROOT-SERVERS.NET.     3600000 IN      AAAA    2001:7FD::1\n"
 literal|"L.ROOT-SERVERS.NET.     3600000 IN      A       199.7.83.42\n"
 literal|"M.ROOT-SERVERS.NET.     3600000 IN      A       202.12.27.33\n"
+literal|"M.ROOT-SERVERS.NET.     3600000 IN      AAAA    2001:DC3::35\n"
 decl_stmt|;
 end_decl_stmt
 

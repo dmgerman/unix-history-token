@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.1.6.11 2006/11/07 21:28:49 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.1.6.11.58.1 2008/12/24 00:21:22 marka Exp $  */
 end_comment
 
 begin_ifdef
@@ -1113,8 +1113,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-literal|0
+operator|!=
+literal|1
 condition|)
 return|return
 operator|(

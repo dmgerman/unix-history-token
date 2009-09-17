@@ -329,6 +329,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|u_int
+name|cpu_id
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

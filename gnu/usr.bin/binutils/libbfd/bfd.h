@@ -102,6 +102,11 @@ name|defined
 argument_list|(
 name|__arm__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
 define|#
 directive|define
 name|BFD_HOST_64BIT_LONG

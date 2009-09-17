@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: mutex.c,v 1.8.18.4 2005/07/12 01:22:32 marka Exp $ */
+comment|/* $Id: mutex.c,v 1.8.18.6 2008/04/04 23:46:02 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ parameter_list|,
 name|uvp
 parameter_list|)
 define|\
-value|do {                                                            \                 (vvp)->tv_sec += (uvp)->tv_sec;                         \                 (vvp)->tv_usec += (uvp)->tv_usec;                       \                 if ((vvp)->tv_usec>= 1000000) {                        \                         (vvp)->tv_sec++;                                \                         (vvp)->tv_usec -= 1000000;                      \                 }                                                       \         } while (0)
+value|do {                                                            \ 		(vvp)->tv_sec += (uvp)->tv_sec;                         \ 		(vvp)->tv_usec += (uvp)->tv_usec;                       \ 		if ((vvp)->tv_usec>= 1000000) {                        \ 			(vvp)->tv_sec++;                                \ 			(vvp)->tv_usec -= 1000000;                      \ 		}                                                       \ 	} while (0)
 end_define
 
 begin_define
@@ -106,7 +106,7 @@ parameter_list|,
 name|uvp
 parameter_list|)
 define|\
-value|do {                                                            \                 (vvp)->tv_sec -= (uvp)->tv_sec;                         \                 (vvp)->tv_usec -= (uvp)->tv_usec;                       \                 if ((vvp)->tv_usec< 0) {                               \                         (vvp)->tv_sec--;                                \                         (vvp)->tv_usec += 1000000;                      \                 }                                                       \         } while (0)
+value|do {                                                            \ 		(vvp)->tv_sec -= (uvp)->tv_sec;                         \ 		(vvp)->tv_usec -= (uvp)->tv_usec;                       \ 		if ((vvp)->tv_usec< 0) {                               \ 			(vvp)->tv_sec--;                                \ 			(vvp)->tv_usec += 1000000;                      \ 		}                                                       \ 	} while (0)
 end_define
 
 begin_comment
@@ -191,20 +191,40 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISC_MUTEX_PROFTABLESIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|TABLESIZE
-value|(8 * 1024)
+name|ISC_MUTEX_PROFTABLESIZE
+value|(16 * 1024)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
 name|isc_mutexstats_t
 name|stats
 index|[
-name|TABLESIZE
+name|ISC_MUTEX_PROFTABLESIZE
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|stats_next
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -299,68 +319,18 @@ name|stats_init
 operator|==
 name|ISC_FALSE
 condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|TABLESIZE
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|stats
-index|[
-name|i
-index|]
-operator|.
-name|file
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|stats_init
 operator|=
 name|ISC_TRUE
 expr_stmt|;
-block|}
-name|mp
-operator|->
-name|stats
-operator|=
-name|NULL
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
+comment|/* 	 * If all statistics entries have been used, give up and trigger an 	 * assertion failure.  There would be no other way to deal with this 	 * because we'd like to keep record of all locks for the purpose of 	 * debugging and the number of necessary locks is unpredictable. 	 * If this failure is triggered while debugging, named should be 	 * rebuilt with an increased ISC_MUTEX_PROFTABLESIZE. 	 */
+name|RUNTIME_CHECK
+argument_list|(
+name|stats_next
 operator|<
-name|TABLESIZE
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|stats
-index|[
-name|i
-index|]
-operator|.
-name|file
-operator|==
-name|NULL
-condition|)
-block|{
+name|ISC_MUTEX_PROFTABLESIZE
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|stats
@@ -368,20 +338,9 @@ operator|=
 operator|&
 name|stats
 index|[
-name|i
+name|stats_next
+operator|++
 index|]
-expr_stmt|;
-break|break;
-block|}
-block|}
-name|RUNTIME_CHECK
-argument_list|(
-name|mp
-operator|->
-name|stats
-operator|!=
-name|NULL
-argument_list|)
 expr_stmt|;
 name|RUNTIME_CHECK
 argument_list|(
@@ -933,24 +892,12 @@ literal|0
 init|;
 name|i
 operator|<
-name|TABLESIZE
+name|stats_next
 condition|;
 name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|stats
-index|[
-name|i
-index|]
-operator|.
-name|file
-operator|==
-name|NULL
-condition|)
-continue|continue;
 name|fprintf
 argument_list|(
 name|fp
@@ -1249,6 +1196,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|ISC_MUTEX_DEBUG
+operator|&&
+name|defined
+argument_list|(
+name|PTHREAD_MUTEX_ERRORCHECK
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|ISC_MUTEX_PROFILE
+end_if
+
 begin_function
 name|isc_result_t
 name|isc__mutex_init
@@ -1343,6 +1307,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

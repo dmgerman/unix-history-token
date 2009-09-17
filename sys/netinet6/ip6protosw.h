@@ -234,39 +234,6 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* user-protocol hook */
-name|int
-argument_list|(
-argument|*pr_usrreq
-argument_list|)
-comment|/* user request: see list below */
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-operator|,
-name|int
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|,
-expr|struct
-name|thread
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* utility hooks */
 name|void
 argument_list|(

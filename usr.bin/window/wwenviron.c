@@ -89,6 +89,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_comment
 comment|/*  * Set up the environment of this process to run in window 'wp'.  */
 end_comment

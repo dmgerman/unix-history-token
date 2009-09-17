@@ -95,12 +95,14 @@ comment|/* ICMP_REDIRECT */
 struct|struct
 name|ih_idseq
 block|{
-name|n_short
+name|uint16_t
 name|icd_id
 decl_stmt|;
-name|n_short
+comment|/* network format */
+name|uint16_t
 name|icd_seq
 decl_stmt|;
+comment|/* network format */
 block|}
 name|ih_idseq
 struct|;
@@ -111,12 +113,14 @@ comment|/* ICMP_UNREACH_NEEDFRAG -- Path MTU Discovery (RFC1191) */
 struct|struct
 name|ih_pmtu
 block|{
-name|n_short
+name|uint16_t
 name|ipm_void
 decl_stmt|;
-name|n_short
+comment|/* network format */
+name|uint16_t
 name|ipm_nextmtu
 decl_stmt|;
+comment|/* network format */
 block|}
 name|ih_pmtu
 struct|;
@@ -184,15 +188,16 @@ struct|struct
 name|id_ts
 block|{
 comment|/* ICMP Timestamp */
-name|n_time
+comment|/* 			 * The next 3 fields are in network format, 			 * milliseconds since 00:00 GMT 			 */
+name|uint32_t
 name|its_otime
 decl_stmt|;
 comment|/* Originate */
-name|n_time
+name|uint32_t
 name|its_rtime
 decl_stmt|;
 comment|/* Receive */
-name|n_time
+name|uint32_t
 name|its_ttime
 decl_stmt|;
 comment|/* Transmit */
@@ -277,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|ICMP_TSLEN
-value|(8 + 3 * sizeof (n_time))
+value|(8 + 3 * sizeof (uint32_t))
 end_define
 
 begin_comment
@@ -965,7 +970,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|n_long
+name|uint32_t
 parameter_list|,
 name|int
 parameter_list|)

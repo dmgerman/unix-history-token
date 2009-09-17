@@ -28,6 +28,8 @@ argument_list|,
 name|nd
 argument_list|,
 name|y9
+argument_list|,
+name|dplen
 argument_list|)
 name|CONST
 name|char
@@ -38,6 +40,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|dplen
+decl_stmt|,
 name|nd0
 decl_stmt|,
 name|nd
@@ -70,6 +74,9 @@ name|nd
 operator|,
 name|ULong
 name|y9
+operator|,
+name|int
+name|dplen
 operator|)
 endif|#
 directive|endif
@@ -257,13 +264,16 @@ name|nd0
 condition|)
 do|;
 name|s
-operator|++
+operator|+=
+name|dplen
 expr_stmt|;
 block|}
 else|else
 name|s
 operator|+=
-literal|10
+name|dplen
+operator|+
+literal|9
 expr_stmt|;
 end_if
 

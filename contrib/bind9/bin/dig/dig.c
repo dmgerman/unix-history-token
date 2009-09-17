@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dig.c,v 1.186.18.29 2007/08/28 07:19:55 tbox Exp $ */
+comment|/* $Id: dig.c,v 1.186.18.33 2008/10/15 02:19:18 marka Exp $ */
 end_comment
 
 begin_comment
@@ -164,7 +164,7 @@ name|b
 parameter_list|,
 name|s
 parameter_list|)
-value|{ 				\ 	if (strlen(s)>= isc_buffer_availablelength(b)) \  		return (ISC_R_NOSPACE); 		\ 	else 						\ 		isc_buffer_putstr(b, s); 		\ }
+value|{ 				\ 	if (strlen(s)>= isc_buffer_availablelength(b)) \ 		return (ISC_R_NOSPACE); 		\ 	else 						\ 		isc_buffer_putstr(b, s); 		\ }
 end_define
 
 begin_define
@@ -276,6 +276,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|opcodetext
 index|[]
 init|=
@@ -324,6 +325,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|rcodetext
 index|[]
 init|=
@@ -468,8 +470,8 @@ literal|"        q-class  is one of (in,hs,ch,...) [default: in]\n"
 literal|"        q-type   is one of (a,any,mx,ns,soa,hinfo,axfr,txt,...) [default:a]\n"
 literal|"                 (Use ixfr=version for type ixfr)\n"
 literal|"        q-opt    is one of:\n"
-literal|"                 -x dot-notation     (shortcut for in-addr lookups)\n"
-literal|"                 -i                  (IP6.INT reverse IPv6 lookups)\n"
+literal|"                 -x dot-notation     (shortcut for reverse lookups)\n"
+literal|"                 -i                  (use IP6.INT for IPv6 reverse lookups)\n"
 literal|"                 -f filename         (batch mode)\n"
 literal|"                 -b address[#port]   (bind to source address/port)\n"
 literal|"                 -p port             (specify port number)\n"
@@ -480,6 +482,7 @@ literal|"                 -k keyfile          (specify tsig key file)\n"
 literal|"                 -y [hmac:]name:key  (specify named base64 tsig key)\n"
 literal|"                 -4                  (use IPv4 query transport only)\n"
 literal|"                 -6                  (use IPv6 query transport only)\n"
+literal|"                 -m                  (enable memory usage debugging)\n"
 literal|"        d-opt    is of the form +keyword[=value], where keyword is:\n"
 literal|"                 +[no]vc             (TCP mode)\n"
 literal|"                 +[no]tcp            (TCP mode, alternate syntax)\n"

@@ -449,7 +449,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|unsigned
 name|int
 name|ae_detach
 parameter_list|(
@@ -3912,7 +3911,6 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
 name|int
 name|ae_detach
 parameter_list|(
@@ -5726,24 +5724,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|bus_dma_tag_t
-name|bustag
-decl_stmt|;
 name|bus_addr_t
 name|busaddr
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|bustag
-operator|=
-name|bus_get_dma_tag
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Create parent DMA tag. 	 */
 name|error
 operator|=
@@ -9432,14 +9418,20 @@ if|if
 condition|(
 name|size
 operator|<
-literal|0
+operator|(
+name|ETHER_MIN_LEN
+operator|-
+name|ETHER_CRC_LEN
+operator|-
+name|ETHER_VLAN_ENCAP_LEN
+operator|)
 condition|)
 block|{
 name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"Negative length packet received."
+literal|"Runt frame received."
 argument_list|)
 expr_stmt|;
 return|return

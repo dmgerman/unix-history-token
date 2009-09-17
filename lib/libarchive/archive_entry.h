@@ -1719,7 +1719,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/*  * Utility to match up hardlinks.  *  * The 'struct archive_entry_linkresolver' is a cache of archive entries  * for files with multiple links.  Here's how to use it:  *   1. Create a lookup object with archive_entry_linkresolver_new()  *   2. Tell it the archive format you're using.  *   3. Hand each archive_entry to archive_entry_linkify().  *      That function will return 0, 1, or 2 entries that should  *      be written.  *   4. Call archive_entry_linkify(resolver, NULL) until  *      no more entries are returned.  *   5. Call archive_entry_link_resolver_free(resolver) to free resources.  *  * The entries returned have their hardlink and size fields updated  * appropriately.  If an entry is passed in that does not refer to  * a file with multiple links, it is returned unchanged.  The intention  * is that you should be able to simply filter all entries through  * this machine.  *  * To make things more efficient, be sure that each entry has a valid  * nlinks value.  The hardlink cache uses this to track when all links  * have been found.  If the nlinks value is zero, it will keep every  * name in the cache indefinitely, which can use a lot of memory.  *  * Note that archive_entry_size() is reset to zero if the file  * body should not be written to the archive.  Pay attention!  */
-name|__LA_DECL
 struct_decl|struct
 name|archive_entry_linkresolver
 struct_decl|;

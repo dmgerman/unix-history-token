@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Apple Inc.  * Copyright (c) 2006 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_user.c#18 $  */
+comment|/*-  * Copyright (c) 2004 Apple Inc.  * Copyright (c) 2006 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_user.c#19 $  */
 end_comment
 
 begin_include
@@ -21,11 +21,22 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<pthread.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -91,6 +102,12 @@ literal|":"
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|pthread_mutex_t
@@ -99,6 +116,11 @@ init|=
 name|PTHREAD_MUTEX_INITIALIZER
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Parse one line from the audit_user file into the au_user_ent structure.  */
@@ -310,21 +332,31 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_lock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|setauuser_locked
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -339,12 +371,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_lock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|fp
@@ -362,12 +399,17 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -519,12 +561,17 @@ name|au_user_ent
 modifier|*
 name|up
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_lock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|up
 operator|=
 name|getauuserent_r_locked
@@ -532,12 +579,17 @@ argument_list|(
 name|u
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|up
@@ -643,12 +695,17 @@ operator|(
 name|NULL
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_lock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|setauuser_locked
 argument_list|()
 expr_stmt|;
@@ -680,12 +737,17 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|u
@@ -693,12 +755,17 @@ operator|)
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL

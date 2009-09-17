@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -395,6 +395,12 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_tdma_param
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|ieee80211com
@@ -417,11 +423,6 @@ argument_list|)
 name|ic_vaps
 expr_stmt|;
 comment|/* list of vap instances */
-name|struct
-name|ieee80211_stats
-name|ic_stats
-decl_stmt|;
-comment|/* statistics */
 name|int
 name|ic_headroom
 decl_stmt|;
@@ -537,8 +538,6 @@ name|ieee80211_channel
 name|ic_channels
 index|[
 name|IEEE80211_CHAN_MAX
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|uint8_t
@@ -756,6 +755,8 @@ name|ieee80211com
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|struct
@@ -870,6 +871,23 @@ name|ieee80211_node
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+comment|/* TDMA update notification */
+name|void
+function_decl|(
+modifier|*
+name|ic_tdma_update
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_tdma_param
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* node state management */
@@ -1192,6 +1210,12 @@ end_struct
 begin_struct_decl
 struct_decl|struct
 name|ieee80211_aclator
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_tdma_state
 struct_decl|;
 end_struct_decl
 
@@ -1685,6 +1709,12 @@ modifier|*
 name|iv_as
 decl_stmt|;
 comment|/* private aclator state */
+name|struct
+name|ieee80211_tdma_state
+modifier|*
+name|iv_tdma
+decl_stmt|;
+comment|/* tdma state */
 comment|/* operate-mode detach hook */
 name|void
 function_decl|(
@@ -2279,6 +2309,14 @@ begin_comment
 comment|/* CONF: Dynamic WDS enabled */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_BITS
+define|\
+value|"\20\1TURBOP\2COMP\3FF\4BURST\5PRIVACY\6PUREG\10SCAN\11ASCAN\12SIBSS" \ 	"\13SHSLOT\14PMGTON\15DESBSSID\16WME\17BGSCAN\20SWRETRY\21TXPOW_FIXED" \ 	"\22IBSSON\23SHPREAMBLE\24DATAPAD\25USEPROT\26USERBARKER\27CSAPENDING" \ 	"\30WPA1\31WPA2\32DROPUNENC\33COUNTERM\34HIDESSID\35NOBRIDG\36PCF" \ 	"\37DOTH\40DWDS"
+end_define
+
 begin_comment
 comment|/* Atheros protocol-specific flags */
 end_comment
@@ -2597,6 +2635,21 @@ begin_comment
 comment|/* CONF: RIFS enabled */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_BITS
+define|\
+value|"\20\1NONHT_PR\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\22WDSLEGACY\23PROBECHAN\24HT" \ 	"\25AMDPU_TX\26AMPDU_TX\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN" \ 	"\33SHORTGI20\34SHORTGI40\35HTCOMPAT\36RIFS"
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FVEN_BITS
+value|"\20"
+end_define
+
 begin_comment
 comment|/* ic_caps/iv_caps: device driver capabilities */
 end_comment
@@ -2844,6 +2897,17 @@ begin_comment
 comment|/* CAPABILITY: tx fragments */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_TDMA
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: TDMA avail */
+end_comment
+
 begin_comment
 comment|/* XXX protection/barker? */
 end_comment
@@ -2853,7 +2917,15 @@ define|#
 directive|define
 name|IEEE80211_C_OPMODE
 define|\
-value|(IEEE80211_C_STA | IEEE80211_C_IBSS | IEEE80211_C_HOSTAP | \ 	 IEEE80211_C_AHDEMO | IEEE80211_C_MONITOR | IEEE80211_C_WDS)
+value|(IEEE80211_C_STA | IEEE80211_C_IBSS | IEEE80211_C_HOSTAP | \ 	 IEEE80211_C_AHDEMO | IEEE80211_C_MONITOR | IEEE80211_C_WDS | \ 	 IEEE80211_C_TDMA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_BITS
+define|\
+value|"\20\1STA\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
 end_define
 
 begin_comment
@@ -2918,6 +2990,14 @@ end_define
 begin_comment
 comment|/* CAPABILITY: RIFS support */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_HTCAP_BITS
+define|\
+value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\21AMPDU\22AMSDU\23HT\24SMPS\25RIFS"
+end_define
 
 begin_function_decl
 name|void
@@ -3838,6 +3918,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_MSG_TDMA
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* TDMA handling */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_MSG_ANY
 value|0xffffffff
 end_define
@@ -3845,6 +3936,14 @@ end_define
 begin_comment
 comment|/* anything */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_BITS
+define|\
+value|"\20\2TDMA\3IOCTL\4WDS\5ACTION\6RATECTL\7ROAM\10INACT\11DOTH\12SUPERG" \ 	"\13WME\14ACL\15WPA\16RADKEYS\17RADDUMP\20RADIUS\21DOT1XSM\22DOT1X" \ 	"\23POWER\24STATE\25OUTPUT\26SCAN\27AUTH\30ASSOC\31NODE\32ELEMID" \ 	"\33XRATE\34INPUT\35CRYPTO\36DUPMPKTS\37DEBUG\04011N"
+end_define
 
 begin_ifdef
 ifdef|#

@@ -1305,20 +1305,11 @@ if|if
 condition|(
 operator|*
 name|ep
-operator|!=
+operator|==
 literal|'.'
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"line %d: invalid time %s"
-argument_list|,
-name|lineno
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
+block|{
+comment|/* Note: we require exactly nine 				 * digits after the decimal point. */
 name|val
 operator|=
 name|ep
@@ -1340,6 +1331,16 @@ name|ep
 argument_list|,
 literal|10
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|ip
+operator|->
+name|st_mtimespec
+operator|.
+name|tv_nsec
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(

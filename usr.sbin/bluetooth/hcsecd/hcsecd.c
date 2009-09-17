@@ -567,9 +567,7 @@ expr_stmt|;
 if|if
 condition|(
 name|detach
-condition|)
-if|if
-condition|(
+operator|&&
 name|daemon
 argument_list|(
 literal|0

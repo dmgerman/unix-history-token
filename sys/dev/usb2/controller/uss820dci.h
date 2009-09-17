@@ -22,6 +22,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|USS820_MAX_DEVICES
+value|(USB_MIN_DEVICES + 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USS820_EP_MAX
 value|8
 end_define
@@ -2090,8 +2097,12 @@ name|usb2_sw_transfer
 name|sc_root_intr
 decl_stmt|;
 name|struct
-name|usb2_config_td
-name|sc_config_td
+name|usb2_device
+modifier|*
+name|sc_devices
+index|[
+name|USS820_MAX_DEVICES
+index|]
 decl_stmt|;
 name|struct
 name|resource

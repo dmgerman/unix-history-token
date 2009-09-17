@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -242,7 +242,7 @@ name|_stcb
 parameter_list|,
 name|_strmoq
 parameter_list|)
-value|{ \ 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_strmoq), (_strmoq)); \ 	SCTP_DECR_STRMOQ_COUNT(); \ }
+value|{ \ 	if ((_strmoq)->holds_key_ref) { \ 		sctp_auth_key_release(stcb, sp->auth_keyid); \ 		(_strmoq)->holds_key_ref = 0; \ 	} \ 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_strmoq), (_strmoq)); \ 	SCTP_DECR_STRMOQ_COUNT(); \ }
 end_define
 
 begin_define
@@ -254,7 +254,7 @@ name|_stcb
 parameter_list|,
 name|_strmoq
 parameter_list|)
-value|{ \ 	(_strmoq) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_strmoq), struct sctp_stream_queue_pending); \ 	if ((_strmoq)) { \ 		SCTP_INCR_STRMOQ_COUNT(); \  	} \ }
+value|{ \ 	(_strmoq) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_strmoq), struct sctp_stream_queue_pending); \ 	if ((_strmoq)) { \ 		SCTP_INCR_STRMOQ_COUNT(); \ 		(_strmoq)->holds_key_ref = 0; \  	} \ }
 end_define
 
 begin_define
@@ -266,7 +266,7 @@ name|_stcb
 parameter_list|,
 name|_chk
 parameter_list|)
-value|{ \         if(_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \                (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 	 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \           } \         } else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
+value|{ \ 	if ((_chk)->holds_key_ref) {\ 		sctp_auth_key_release((_stcb), (_chk)->auth_keyid); \ 		(_chk)->holds_key_ref = 0; \ 	} \         if(_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \                (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 	 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \           } \         } else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
 end_define
 
 begin_define
@@ -278,7 +278,7 @@ name|_stcb
 parameter_list|,
 name|_chk
 parameter_list|)
-value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_chunks))  { \ 		(_chk) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_chunk), struct sctp_tmit_chunk); \ 		if ((_chk)) { \ 			SCTP_INCR_CHK_COUNT(); \                         (_chk)->whoTo = NULL; \ 		} \ 	} else { \ 		(_chk) = TAILQ_FIRST(&(_stcb)->asoc.free_chunks); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		atomic_subtract_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \                 SCTP_STAT_INCR(sctps_cached_chk); \ 		(_stcb)->asoc.free_chunk_cnt--; \ 	} \ }
+value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_chunks))  { \ 		(_chk) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_chunk), struct sctp_tmit_chunk); \ 		if ((_chk)) { \ 			SCTP_INCR_CHK_COUNT(); \                         (_chk)->whoTo = NULL; \ 			(_chk)->holds_key_ref = 0; \ 		} \ 	} else { \ 		(_chk) = TAILQ_FIRST(&(_stcb)->asoc.free_chunks); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		atomic_subtract_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \ 		(_chk)->holds_key_ref = 0; \                 SCTP_STAT_INCR(sctps_cached_chk); \ 		(_stcb)->asoc.free_chunk_cnt--; \ 	} \ }
 end_define
 
 begin_define
@@ -288,14 +288,8 @@ name|sctp_free_remote_addr
 parameter_list|(
 name|__net
 parameter_list|)
-value|{ \ 	if ((__net)) {  \ 		if (atomic_fetchadd_int(&(__net)->ref_count, -1) == 1) { \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->fr_timer.timer); \                         if ((__net)->ro.ro_rt) { \ 				RTFREE((__net)->ro.ro_rt); \ 				(__net)->ro.ro_rt = NULL; \                         } \ 			if ((__net)->src_addr_selected) { \ 				sctp_free_ifa((__net)->ro._s_addr); \ 				(__net)->ro._s_addr = NULL; \ 			} \                         (__net)->src_addr_selected = 0; \ 			(__net)->dest_state = SCTP_ADDR_NOT_REACHABLE; \ 			SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_net), (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
+value|{ \ 	if ((__net)) {  \ 		if (SCTP_DECREMENT_AND_CHECK_REFCOUNT(&(__net)->ref_count)) { \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->fr_timer.timer); \                         if ((__net)->ro.ro_rt) { \ 				RTFREE((__net)->ro.ro_rt); \ 				(__net)->ro.ro_rt = NULL; \                         } \ 			if ((__net)->src_addr_selected) { \ 				sctp_free_ifa((__net)->ro._s_addr); \ 				(__net)->ro._s_addr = NULL; \ 			} \                         (__net)->src_addr_selected = 0; \ 			(__net)->dest_state = SCTP_ADDR_NOT_REACHABLE; \ 			SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_net), (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
 
 begin_define
 define|#
@@ -310,34 +304,8 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	uint32_t val; \ 	val = atomic_fetchadd_int(&(sb)->sb_cc,-(SCTP_BUF_LEN((m)))); \ 	if (val< SCTP_BUF_LEN((m))) { \ 	   panic("sb_cc goes negative"); \ 	} \ 	val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \ 	if (val< MSIZE) { \ 	    panic("sb_mbcnt goes negative"); \ 	} \ 	if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\ 	  val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-(SCTP_BUF_LEN((m)))); \ 	  if (val< SCTP_BUF_LEN((m))) {\ 	     panic("stcb->sb_cc goes negative"); \ 	  } \ 	  val = atomic_fetchadd_int(&(stcb)->asoc.my_rwnd_control_len,-(MSIZE)); \ 	  if (val< MSIZE) { \ 	     panic("asoc->mbcnt goes negative"); \ 	  } \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
+value|{ \ 	SCTP_SAVE_ATOMIC_DECREMENT(&(sb)->sb_cc, SCTP_BUF_LEN((m))); \ 	SCTP_SAVE_ATOMIC_DECREMENT(&(sb)->sb_mbcnt, MSIZE); \ 	if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\ 		SCTP_SAVE_ATOMIC_DECREMENT(&(stcb)->asoc.sb_cc, SCTP_BUF_LEN((m))); \ 		SCTP_SAVE_ATOMIC_DECREMENT(&(stcb)->asoc.my_rwnd_control_len, MSIZE); \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|sctp_sbfree
-parameter_list|(
-name|ctl
-parameter_list|,
-name|stcb
-parameter_list|,
-name|sb
-parameter_list|,
-name|m
-parameter_list|)
-value|{ \ 	uint32_t val; \ 	val = atomic_fetchadd_int(&(sb)->sb_cc,-(SCTP_BUF_LEN((m)))); \ 	if (val< SCTP_BUF_LEN((m))) { \ 	    (sb)->sb_cc = 0;\ 	} \ 	val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \ 	if (val< MSIZE) { \ 	    (sb)->sb_mbcnt = 0; \ 	} \ 	if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\ 	  val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-(SCTP_BUF_LEN((m)))); \ 	  if (val< SCTP_BUF_LEN((m))) {\ 	      (stcb)->asoc.sb_cc = 0; \ 	  } \ 	  val = atomic_fetchadd_int(&(stcb)->asoc.my_rwnd_control_len,-(MSIZE)); \ 	  if (val< MSIZE) { \ 	     (stcb)->asoc.my_rwnd_control_len = 0; \ 	  } \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

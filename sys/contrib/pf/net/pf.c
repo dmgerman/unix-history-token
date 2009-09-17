@@ -9156,7 +9156,9 @@ argument|rtalloc_ign(&ro, (RTF_CLONING | RTF_PRCLONING));
 else|#
 directive|else
 comment|/* !RTF_PRCLONING */
-argument|in_rtalloc_ign(&ro, RTF_CLONING,
+argument|in_rtalloc_ign(&ro,
+literal|0
+argument|,
 literal|0
 argument|);
 endif|#
@@ -9185,7 +9187,9 @@ argument|rtalloc_ign((struct route *)&ro6, 		    (RTF_CLONING | RTF_PRCLONING));
 else|#
 directive|else
 comment|/* !RTF_PRCLONING */
-argument|rtalloc_ign((struct route *)&ro6, RTF_CLONING);
+argument|rtalloc_ign((struct route *)&ro6,
+literal|0
+argument|);
 endif|#
 directive|endif
 else|#
@@ -17737,9 +17741,13 @@ directive|ifdef
 name|__FreeBSD__
 comment|/* XXX MRT not always INET */
 comment|/* stick with table 0 though */
-argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro, RTF_CLONING,
+argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
 literal|0
-argument|); 	else 		rtalloc_ign((struct route *)&ro, RTF_CLONING);
+argument|,
+literal|0
+argument|); 	else 		rtalloc_ign((struct route *)&ro,
+literal|0
+argument|);
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
@@ -17814,9 +17822,13 @@ argument|rtalloc_ign((struct route *)&ro, (RTF_CLONING|RTF_PRCLONING));
 else|#
 directive|else
 comment|/* !RTF_PRCLONING */
-argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro, RTF_CLONING,
+argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
 literal|0
-argument|); 	else 		rtalloc_ign((struct route *)&ro, RTF_CLONING);
+argument|,
+literal|0
+argument|); 	else 		rtalloc_ign((struct route *)&ro,
+literal|0
+argument|);
 endif|#
 directive|endif
 else|#

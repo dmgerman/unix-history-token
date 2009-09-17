@@ -1416,16 +1416,25 @@ name|kmdp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Initialize Open Firmware (needed for console). 	 */
-name|OF_init
-argument_list|(
-name|vec
-argument_list|)
-expr_stmt|;
 comment|/* 	 * XXX 	 */
 name|bootverbose
 operator|=
 literal|1
+expr_stmt|;
+comment|/* 	 * Set up Open Firmware entry points 	 */
+name|ofw_tba
+operator|=
+name|rdpr
+argument_list|(
+name|tba
+argument_list|)
+expr_stmt|;
+name|ofw_vec
+operator|=
+operator|(
+name|u_long
+operator|)
+name|vec
 expr_stmt|;
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be before the 	 * console is inited so cninit gets the right value of boothowto. 	 */
 if|if
@@ -1527,6 +1536,19 @@ literal|1
 expr_stmt|;
 name|init_param1
 argument_list|()
+expr_stmt|;
+comment|/* 	 * Initialize Open Firmware (needed for console). 	 */
+name|OF_install
+argument_list|(
+name|OFW_STD_DIRECT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|OF_init
+argument_list|(
+name|ofw_entry
+argument_list|)
 expr_stmt|;
 name|root
 operator|=
@@ -2277,32 +2299,6 @@ name|BVPRINTF
 argument_list|(
 literal|"sparc64_init done\n"
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|set_openfirm_callback
-parameter_list|(
-name|ofw_vec_t
-modifier|*
-name|vec
-parameter_list|)
-block|{
-name|ofw_tba
-operator|=
-name|rdpr
-argument_list|(
-name|tba
-argument_list|)
-expr_stmt|;
-name|ofw_vec
-operator|=
-operator|(
-name|u_long
-operator|)
-name|vec
 expr_stmt|;
 block|}
 end_function

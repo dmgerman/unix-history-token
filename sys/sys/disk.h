@@ -217,6 +217,17 @@ begin_comment
 comment|/*- 	 * Store the provider name, given a device path, in a buffer. The buffer 	 * must be at least MAXPATHLEN bytes long. 	 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DIOCGPROVIDERALIAS
+value|_IOR('d', 139, char[MAXPATHLEN])
+end_define
+
+begin_comment
+comment|/*- 	 * Store the provider alias, if present, in a buffer. The buffer must 	 * be at least MAXPATHLEN bytes long. 	 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

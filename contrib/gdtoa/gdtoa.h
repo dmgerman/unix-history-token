@@ -25,6 +25,16 @@ directive|include
 file|"arith.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|/* for size_t */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -477,7 +487,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|unsigned
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -496,7 +506,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|unsigned
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -515,7 +525,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|unsigned
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -534,7 +544,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|unsigned
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -553,7 +563,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|unsigned
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -572,7 +582,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|unsigned
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;

@@ -495,15 +495,6 @@ expr_stmt|;
 name|mips_init
 argument_list|()
 expr_stmt|;
-comment|/* Set counter_freq for tick_init_params() */
-name|platform_counter_freq
-operator|=
-literal|175
-operator|*
-literal|1000
-operator|*
-literal|1000
-expr_stmt|;
 name|mips_timer_init_params
 argument_list|(
 name|platform_counter_freq

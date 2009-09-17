@@ -1360,13 +1360,13 @@ literal|0x7fffff
 block|,
 literal|0x438
 block|,
-literal|0x20
-block|,
 literal|0x10
+block|,
+literal|0x20
 block|,
 literal|0x400
 block|,
-literal|0x00
+literal|0x01
 block|,
 literal|0x00
 block|,
@@ -1467,7 +1467,7 @@ literal|0xc1
 block|,
 literal|0x3fff85
 block|,
-literal|0x72
+literal|0x400072
 block|,
 literal|0x4000fa
 block|,
@@ -1502,9 +1502,9 @@ literal|0xf8
 block|,
 literal|0xc1
 block|,
-literal|0x3fff85
+literal|0x3fff05
 block|,
-literal|0x72
+literal|0x4000f0
 block|,
 literal|0x4000fa
 block|,
@@ -1634,6 +1634,43 @@ block|,
 operator|&
 name|spi_codec
 block|,         }
+block|,
+block|{
+literal|"Envy24HT-S audio (Terrasoniq TS22PCI)"
+block|,
+literal|0x153b
+block|,
+literal|0x117b
+block|,
+literal|0x10
+block|,
+literal|0x80
+block|,
+literal|0xf0
+block|,
+literal|0xc3
+block|,
+literal|0x7ffbc7
+block|,
+literal|0x7fffff
+block|,
+literal|0x438
+block|,
+literal|0x10
+block|,
+literal|0x20
+block|,
+literal|0x400
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0
+block|,
+operator|&
+name|spi_codec
+block|, 	}
 block|,
 block|{
 literal|"Envy24HT audio (Generic)"

@@ -113,7 +113,8 @@ specifier|static
 name|int
 name|maxpts
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -121,15 +122,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|curpts
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|pts_valid
 init|=
 literal|0
 decl_stmt|;
@@ -326,10 +318,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|pts_valid
-operator|==
-literal|1
-operator|&&
 name|curpts
 operator|<=
 name|maxpts
@@ -1137,6 +1125,11 @@ name|dirent
 modifier|*
 name|dp
 decl_stmt|;
+name|maxpts
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1194,10 +1187,6 @@ name|dp
 operator|->
 name|d_name
 argument_list|)
-expr_stmt|;
-name|pts_valid
-operator|=
-literal|1
 expr_stmt|;
 name|curpts
 operator|=
@@ -1263,9 +1252,10 @@ block|{
 name|int
 name|rval
 decl_stmt|;
-name|pts_valid
+name|maxpts
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 comment|/*          * NB: Don't free `line' because getttynam() 	 * may still be referencing it 	 */
 if|if

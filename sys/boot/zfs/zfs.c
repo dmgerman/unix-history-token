@@ -2131,11 +2131,6 @@ name|dev
 operator|->
 name|d_unit
 expr_stmt|;
-name|free
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 literal|0
@@ -2177,6 +2172,11 @@ operator|->
 name|f_devdata
 operator|=
 name|spa
+expr_stmt|;
+name|free
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

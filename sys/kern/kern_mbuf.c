@@ -176,6 +176,10 @@ name|mbstat
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * tunable_mbinit() has to be run before init_maxsockets() thus  * the SYSINIT order below is SI_ORDER_MIDDLE while init_maxsockets()  * runs at SI_ORDER_ANY.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -237,7 +241,7 @@ name|tunable_mbinit
 argument_list|,
 name|SI_SUB_TUNABLES
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|tunable_mbinit
 argument_list|,
@@ -245,10 +249,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* XXX: These should be tuneables. Can't change UMA limits on the fly. */
-end_comment
 
 begin_function
 specifier|static
@@ -1671,6 +1671,14 @@ name|ether_vtag
 operator|=
 literal|0
 expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+operator|=
+literal|0
+expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -2771,6 +2779,14 @@ operator|->
 name|m_pkthdr
 operator|.
 name|ether_vtag
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
 operator|=
 literal|0
 expr_stmt|;

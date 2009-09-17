@@ -174,7 +174,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"IXP425 GPIO-Based I2C Interface"
+literal|"IXP4XX GPIO-Based I2C Interface"
 argument_list|)
 expr_stmt|;
 return|return

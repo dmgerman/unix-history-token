@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rbt.c,v 1.128.18.7 2005/10/13 01:26:06 marka Exp $ */
+comment|/* $Id: rbt.c,v 1.128.18.10 2008/03/31 13:32:59 fdupont Exp $ */
 end_comment
 
 begin_comment
@@ -2955,7 +2955,7 @@ argument_list|)
 expr_stmt|;
 name|hashagain
 label|:
-comment|/*  			 * Hash includes tail. 			 */
+comment|/* 			 * Hash includes tail. 			 */
 name|dns_name_getlabelsequence
 argument_list|(
 name|name
@@ -7506,27 +7506,6 @@ goto|;
 block|}
 if|if
 condition|(
-name|RIGHT
-argument_list|(
-name|node
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|node
-operator|=
-name|RIGHT
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-goto|goto
-name|traverse
-goto|;
-block|}
-if|if
-condition|(
 name|DOWN
 argument_list|(
 name|node
@@ -7575,7 +7554,7 @@ operator|->
 name|deleter_arg
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: we don't call unhash_node() here as we are destroying 	 * the complete rbt tree.           */
+comment|/* 	 * Note: we don't call unhash_node() here as we are destroying 	 * the complete rbt tree. 	 */
 if|#
 directive|if
 name|DNS_RBT_USEMAGIC
@@ -7593,6 +7572,25 @@ name|PARENT
 argument_list|(
 name|node
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|RIGHT
+argument_list|(
+name|node
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|PARENT
+argument_list|(
+name|RIGHT
+argument_list|(
+name|node
+argument_list|)
+argument_list|)
+operator|=
+name|parent
 expr_stmt|;
 if|if
 condition|(
@@ -7615,7 +7613,10 @@ argument_list|(
 name|parent
 argument_list|)
 operator|=
-name|NULL
+name|RIGHT
+argument_list|(
+name|node
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -7632,26 +7633,20 @@ argument_list|(
 name|parent
 argument_list|)
 operator|=
-name|NULL
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|RIGHT
 argument_list|(
-name|parent
-argument_list|)
-operator|==
 name|node
-condition|)
-name|RIGHT
-argument_list|(
-name|parent
 argument_list|)
-operator|=
-name|NULL
 expr_stmt|;
 block|}
+else|else
+name|parent
+operator|=
+name|RIGHT
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|isc_mem_put
 argument_list|(
 name|rbt
@@ -8175,6 +8170,22 @@ operator|->
 name|level_matches
 operator|=
 literal|0
+expr_stmt|;
+name|memset
+argument_list|(
+name|chain
+operator|->
+name|levels
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|chain
+operator|->
+name|levels
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|chain
 operator|->

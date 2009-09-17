@@ -1841,10 +1841,6 @@ name|Lst
 name|examine
 decl_stmt|;
 comment|/* List of targets to examine */
-name|int
-name|errors
-decl_stmt|;
-comment|/* Number of errors the Job module reports */
 name|LstNode
 modifier|*
 name|ln
@@ -2040,28 +2036,10 @@ name|MakeStartJobs
 argument_list|()
 expr_stmt|;
 block|}
-name|errors
-operator|=
 name|Job_Finish
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Print the final status of each target. E.g. if it wasn't made 	 * because some inferior reported an error. 	 */
-name|errors
-operator|=
-operator|(
-operator|(
-name|errors
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|numNodes
-operator|!=
-literal|0
-operator|)
-operator|)
-expr_stmt|;
 name|LST_FOREACH
 argument_list|(
 argument|ln
@@ -2075,7 +2053,17 @@ argument_list|(
 name|ln
 argument_list|)
 argument_list|,
-name|errors
+operator|(
+name|makeErrors
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|numNodes
+operator|!=
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

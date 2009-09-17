@@ -56,6 +56,12 @@ directive|include
 file|"char.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_comment
 comment|/* zz|zapple|perfect apple:\ 	:am:pt:co#80:li#24:le=^H:nd=^F:up=^K:do=^J:\ 	:ho=\E0:ll=\E1:cm=\E=%+ %+ :ch=\E<%+ :cv=\E>%+ :\ 	:cl=\E4:ce=\E2:cd=\E3:rp=\E@%.%+ :\ 	:so=\E+:se=\E-:\ 	:dc=\Ec:DC=\EC%+ :ic=\Ei:IC=\EI%+ :\ 	:al=\Ea:AL=\EA%+ :dl=\Ed:DL=\ED%+ :\ 	:sf=\Ef:SF=\EF%+ :sr=\Er:SR=\ER%+ :cs=\E?%+ %+ :\ 	:is=\E-\ET : */
 end_comment

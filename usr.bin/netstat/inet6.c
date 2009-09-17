@@ -1602,20 +1602,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|p1a
-argument_list|(
-name|ip6s_forward_cachehit
-argument_list|,
-literal|"\t%ju forward cache hit\n"
-argument_list|)
-expr_stmt|;
-name|p1a
-argument_list|(
-name|ip6s_forward_cachemiss
-argument_list|,
-literal|"\t%ju forward cache miss\n"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"\tSource addresses selection rule applied:\n"
@@ -2589,7 +2575,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|printf(m, (uintmax_t)icmp6stat.f)
+value|if (icmp6stat.f || sflag<= 1) \     printf(m, (uintmax_t)icmp6stat.f)
 name|p
 argument_list|(
 name|icp6s_error
@@ -3620,7 +3606,7 @@ name|p
 argument_list|(
 name|rip6s_isum
 argument_list|,
-literal|"\t%ju checksum calcuration%s on inbound\n"
+literal|"\t%ju checksum calculation%s on inbound\n"
 argument_list|)
 expr_stmt|;
 name|p

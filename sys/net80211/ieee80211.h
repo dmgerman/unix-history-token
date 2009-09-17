@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -2281,6 +2281,14 @@ begin_comment
 comment|/* bits 14-15 are reserved */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CAPINFO_BITS
+define|\
+value|"\20\1ESS\2IBSS\3CF_POLLABLE\4CF_POLLREQ\5PRIVACY\6SHORT_PREAMBLE" \ 	"\7PBCC\10CHNL_AGILITY\11SPECTRUM_MGMT\13SHORT_SLOTTIME\14RSN" \ 	"\16DSSOFDM"
+end_define
+
 begin_comment
 comment|/*  * 802.11i/WPA information element (maximally sized).  */
 end_comment
@@ -2665,6 +2673,14 @@ end_define
 begin_comment
 comment|/* L-SIG TXOP prot */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTCAP_BITS
+define|\
+value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\13DELBA\14AMSDU(7935)\15DSSSCCK40\16PSMP\1740INTOLERANT" \ 	"\20LSIGTXOPPROT"
+end_define
 
 begin_comment
 comment|/* HT parameters (hc_param) */
@@ -3729,6 +3745,14 @@ define|#
 directive|define
 name|IEEE80211_ERP_LONG_PREAMBLE
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ERP_BITS
+define|\
+value|"\20\1NON_ERP_PRESENT\2USE_PROTECTION\3LONG_PREAMBLE"
 end_define
 
 begin_define
@@ -4964,6 +4988,109 @@ define|#
 directive|define
 name|ATH_FF_SNAP_ORGCODE_2
 value|0x7f
+end_define
+
+begin_struct
+struct|struct
+name|ieee80211_tdma_param
+block|{
+name|u_int8_t
+name|tdma_id
+decl_stmt|;
+comment|/* IEEE80211_ELEMID_VENDOR */
+name|u_int8_t
+name|tdma_len
+decl_stmt|;
+name|u_int8_t
+name|tdma_oui
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* 0x00, 0x03, 0x7f */
+name|u_int8_t
+name|tdma_type
+decl_stmt|;
+comment|/* OUI type */
+name|u_int8_t
+name|tdma_subtype
+decl_stmt|;
+comment|/* OUI subtype */
+name|u_int8_t
+name|tdma_version
+decl_stmt|;
+comment|/* spec revision */
+name|u_int8_t
+name|tdma_slot
+decl_stmt|;
+comment|/* station slot # */
+name|u_int8_t
+name|tdma_slotcnt
+decl_stmt|;
+comment|/* bss slot count */
+name|u_int16_t
+name|tdma_slotlen
+decl_stmt|;
+comment|/* bss slot len (100us) */
+name|u_int8_t
+name|tdma_bintval
+decl_stmt|;
+comment|/* beacon interval (superframes) */
+name|u_int8_t
+name|tdma_inuse
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* slot occupancy map */
+name|u_int8_t
+name|tdma_pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|tdma_tstamp
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* timestamp from last beacon */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* NB: Atheros allocated the OUI for this purpose ~3 years ago but beware ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA_OUI
+value|ATH_OUI
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_OUI_TYPE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_SUBTYPE_PARAM
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|TDMA_VERSION
+value|2
 end_define
 
 begin_endif

@@ -97,6 +97,13 @@ name|CMI8738B_PCI_ID
 value|0x011213f6
 end_define
 
+begin_define
+define|#
+directive|define
+name|CMI120_USB_ID
+value|0x01030d8c
+end_define
+
 begin_comment
 comment|/* Buffer size max is 64k for permitted DMA boundaries */
 end_comment
@@ -4310,6 +4317,19 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"CMedia CMI8738B"
+argument_list|)
+expr_stmt|;
+return|return
+name|BUS_PROBE_DEFAULT
+return|;
+case|case
+name|CMI120_USB_ID
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"CMedia CMI120"
 argument_list|)
 expr_stmt|;
 return|return

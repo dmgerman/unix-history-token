@@ -15,6 +15,18 @@ directive|define
 name|__PPCREG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_comment
 comment|/*  * Parallel Port Chipset type.  */
 end_comment
@@ -320,17 +332,50 @@ name|void
 modifier|*
 name|intr_cookie
 decl_stmt|;
-name|struct
-name|intr_event
-modifier|*
-name|ppc_intr_event
+name|ppc_intr_handler
+name|ppc_intr_hook
 decl_stmt|;
-name|int
-name|ppc_child_handlers
+name|void
+modifier|*
+name|ppc_intr_arg
+decl_stmt|;
+name|struct
+name|mtx
+name|ppc_lock
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PPC_LOCK
+parameter_list|(
+name|data
+parameter_list|)
+value|mtx_lock(&(data)->ppc_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_UNLOCK
+parameter_list|(
+name|data
+parameter_list|)
+value|mtx_unlock(&(data)->ppc_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_ASSERT_LOCKED
+parameter_list|(
+name|data
+parameter_list|)
+value|mtx_assert(&(data)->ppc_lock, MA_OWNED)
+end_define
 
 begin_comment
 comment|/*  * Parallel Port Chipset registers.  */

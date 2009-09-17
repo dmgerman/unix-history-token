@@ -6567,7 +6567,9 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"dqget: free dquot isn't"
+literal|"dqget: free dquot isn't %p"
+argument_list|,
+name|dq
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -7183,6 +7185,8 @@ block|}
 name|DQH_UNLOCK
 argument_list|()
 expr_stmt|;
+name|sync
+label|:
 operator|(
 name|void
 operator|)
@@ -7210,6 +7214,32 @@ name|DQH_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return;
+block|}
+comment|/* 	 * The dq may become dirty after it is synced but before it is 	 * put to the free list. Checking the DQ_MOD there without 	 * locking dq should be safe since no other references to the 	 * dq exist. 	 */
+if|if
+condition|(
+operator|(
+name|dq
+operator|->
+name|dq_flags
+operator|&
+name|DQ_MOD
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|dq
+operator|->
+name|dq_cnt
+operator|++
+expr_stmt|;
+name|DQH_UNLOCK
+argument_list|()
+expr_stmt|;
+goto|goto
+name|sync
+goto|;
 block|}
 name|TAILQ_INSERT_TAIL
 argument_list|(

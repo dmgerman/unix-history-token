@@ -131,29 +131,40 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Flag values. */
+comment|/* Flag values */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DMF_LOADED
-value|1
+value|(1<< 0)
 end_define
 
 begin_comment
-comment|/* Map is loaded */
+comment|/* Map is loaded. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DMF_COHERENT
-value|2
+value|(1<< 1)
 end_define
 
 begin_comment
-comment|/* Coherent mapping requested */
+comment|/* Coherent mapping requested. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMF_STREAMED
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Streaming cache used. */
 end_comment
 
 begin_function_decl

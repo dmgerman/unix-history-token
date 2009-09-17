@@ -243,6 +243,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -257,6 +263,11 @@ name|eventhandler_tag
 name|ifaddr_event_tag
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -364,12 +375,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_lock
+name|IF_ADDR_LOCK
 argument_list|(
-operator|&
 name|ifp
-operator|->
-name|if_addr_mtx
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -432,12 +440,9 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|IF_ADDR_UNLOCK
 argument_list|(
-operator|&
 name|ifp
-operator|->
-name|if_addr_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -1439,6 +1444,24 @@ name|mcl
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|==
+name|PKT_ALIAS_RESPOND
+condition|)
+block|{
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_SKIP_FIREWALL
+expr_stmt|;
+name|retval
+operator|=
+name|PKT_ALIAS_OK
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|retval

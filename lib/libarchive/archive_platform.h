@@ -30,32 +30,14 @@ name|__LIBARCHIVE_BUILD
 value|1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_WIN32
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"config_windows.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"archive_windows.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|PLATFORM_CONFIG_H
 argument_list|)
-end_elif
+end_if
 
 begin_comment
 comment|/* Use hand-built config.h in environments that need it. */

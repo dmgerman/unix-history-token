@@ -2017,7 +2017,7 @@ name|bsdtar
 argument_list|,
 literal|0
 argument_list|,
-literal|"Invalid substituion, skipping entry"
+literal|"Invalid substitution, skipping entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2109,7 +2109,7 @@ name|bsdtar
 argument_list|,
 literal|0
 argument_list|,
-literal|"Invalid substituion, skipping entry"
+literal|"Invalid substitution, skipping entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2178,7 +2178,7 @@ name|bsdtar
 argument_list|,
 literal|0
 argument_list|,
-literal|"Invalid substituion, skipping entry"
+literal|"Invalid substitution, skipping entry"
 argument_list|)
 expr_stmt|;
 return|return

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: interfacemgr.c,v 1.76.18.8.44.3 2008/07/23 23:16:43 marka Exp $ */
+comment|/* $Id: interfacemgr.c,v 1.76.18.11 2008/07/23 23:33:02 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1427,7 +1427,7 @@ goto|goto
 name|tcp_listen_failure
 goto|;
 block|}
-comment|/*  	 * If/when there a multiple filters listen to the 	 * result. 	 */
+comment|/* 	 * If/when there a multiple filters listen to the 	 * result. 	 */
 operator|(
 name|void
 operator|)
@@ -3974,7 +3974,7 @@ argument_list|(
 name|mgr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Warn if we are not listening on any interface, unless 	 * we're in lwresd-only mode, in which case that is to  	 * be expected. 	 */
+comment|/* 	 * Warn if we are not listening on any interface, unless 	 * we're in lwresd-only mode, in which case that is to 	 * be expected. 	 */
 if|if
 condition|(
 name|ext_listen

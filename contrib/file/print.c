@@ -75,7 +75,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: print.c,v 1.61 2007/12/27 16:35:59 christos Exp $"
+literal|"@(#)$File: print.c,v 1.63 2008/02/17 19:28:54 rrt Exp $"
 argument_list|)
 end_macro
 
@@ -439,7 +439,7 @@ if|if
 condition|(
 name|m
 operator|->
-name|str_count
+name|str_range
 condition|)
 operator|(
 name|void
@@ -452,7 +452,7 @@ literal|"/%u"
 argument_list|,
 name|m
 operator|->
-name|str_count
+name|str_range
 argument_list|)
 expr_stmt|;
 block|}
@@ -922,13 +922,6 @@ block|{
 name|va_list
 name|va
 decl_stmt|;
-name|va_start
-argument_list|(
-name|va
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
 comment|/* cuz we use stdout for most, stderr here */
 operator|(
 name|void
@@ -938,6 +931,12 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ms
+operator|->
+name|file
+condition|)
 operator|(
 name|void
 operator|)
@@ -945,7 +944,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, %lu: Warning "
+literal|"%s, %lu: "
 argument_list|,
 name|ms
 operator|->
@@ -958,6 +957,23 @@ operator|)
 name|ms
 operator|->
 name|line
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: "
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|va
+argument_list|,
+name|f
 argument_list|)
 expr_stmt|;
 operator|(

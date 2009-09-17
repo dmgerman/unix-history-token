@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
@@ -1491,19 +1491,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 name|device_set_usb2_desc
 argument_list|(
 name|dev
@@ -2148,7 +2135,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2322,7 +2308,6 @@ argument_list|,
 name|ATAUSB_T_BBB_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2346,7 +2331,6 @@ argument_list|,
 name|ATAUSB_T_BBB_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2951,7 +2935,6 @@ argument_list|,
 name|ATAUSB_T_BBB_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3169,7 +3152,6 @@ argument_list|,
 name|ATAUSB_T_BBB_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3615,9 +3597,13 @@ name|ata_request
 operator|=
 name|NULL
 expr_stmt|;
-name|USB_XFER_UNLOCK
+comment|/* drop the USB transfer lock while doing the ATA interrupt */
+name|mtx_unlock
 argument_list|(
-name|xfer
+operator|&
+name|sc
+operator|->
+name|locked_mtx
 argument_list|)
 expr_stmt|;
 name|ata_interrupt
@@ -3630,9 +3616,12 @@ name|parent
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_XFER_LOCK
+name|mtx_lock
 argument_list|(
-name|xfer
+operator|&
+name|sc
+operator|->
+name|locked_mtx
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3785,7 +3774,6 @@ name|locked_mtx
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3851,7 +3839,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4968,7 +4955,6 @@ name|mode
 operator|=
 name|ATA_USB1
 expr_stmt|;
-return|return;
 block|}
 end_function
 

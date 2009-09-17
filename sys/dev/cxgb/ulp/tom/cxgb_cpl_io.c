@@ -15323,12 +15323,6 @@ literal|1
 expr_stmt|;
 name|inc
 operator|.
-name|inc_isipv6
-operator|=
-literal|0
-expr_stmt|;
-name|inc
-operator|.
 name|inc_len
 operator|=
 literal|0
@@ -17103,12 +17097,6 @@ operator|.
 name|th_flags
 operator|=
 name|TH_ACK
-expr_stmt|;
-name|inc
-operator|.
-name|inc_isipv6
-operator|=
-literal|0
 expr_stmt|;
 name|inc
 operator|.

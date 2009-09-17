@@ -273,21 +273,6 @@ comment|/* Count of defined aux entry types. */
 end_comment
 
 begin_comment
-comment|/* Used in John Polstra's testbed stuff. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_DEBUG
-value|14
-end_define
-
-begin_comment
-comment|/* Debugging level. */
-end_comment
-
-begin_comment
 comment|/*  * Relocation types.  */
 end_comment
 

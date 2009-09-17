@@ -1294,7 +1294,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_AHCI_P_CMD_SLUMPER
+name|ATA_AHCI_P_CMD_SLUMBER
 value|0x60000000
 end_define
 
@@ -2709,6 +2709,10 @@ name|int
 name|unit
 decl_stmt|;
 comment|/* physical channel */
+name|int
+name|attached
+decl_stmt|;
+comment|/* channel is attached */
 name|struct
 name|ata_resource
 name|r_io
@@ -2832,6 +2836,11 @@ modifier|*
 name|running
 decl_stmt|;
 comment|/* currently running request */
+name|struct
+name|task
+name|conntask
+decl_stmt|;
+comment|/* PHY events handling task */
 block|}
 struct|;
 end_struct
@@ -3002,7 +3011,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|ata_interrupt
 parameter_list|(
 name|void

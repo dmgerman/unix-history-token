@@ -686,6 +686,13 @@ argument_list|,
 name|sbus_get_dma_tag
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_child_pnpinfo_str
+argument_list|,
+name|ofw_bus_gen_child_pnpinfo_str
+argument_list|)
+block|,
 comment|/* ofw_bus interface */
 name|DEVMETHOD
 argument_list|(

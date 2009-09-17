@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipprotosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netipsec/ah_var.h>
 end_include
 
@@ -272,6 +266,36 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnet_ipsec
+name|vnet_ipsec_0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Symbol translation macros  */

@@ -74,6 +74,18 @@ name|mac
 index|[]
 parameter_list|)
 function_decl|;
+comment|/* zero in-kernel statistics */
+name|void
+function_decl|(
+modifier|*
+name|zerostats
+function_decl|)
+parameter_list|(
+name|struct
+name|athstatfoo
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

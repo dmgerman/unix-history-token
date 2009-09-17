@@ -314,7 +314,7 @@ name|in_rtalloc_ign
 argument_list|(
 name|ro
 argument_list|,
-name|RTF_CLONING
+literal|0
 argument_list|,
 name|M_GETFIB
 argument_list|(

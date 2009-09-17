@@ -21,6 +21,10 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_comment
+comment|/*  * Lock key:  *   (c) container lock (e.g. jail's pr_mtx) and/or osd_object_lock  *   (l) osd_list_lock  */
+end_comment
+
 begin_struct
 struct|struct
 name|osd
@@ -28,17 +32,20 @@ block|{
 name|u_int
 name|osd_nslots
 decl_stmt|;
+comment|/* (c) */
 name|void
 modifier|*
 modifier|*
 name|osd_slots
 decl_stmt|;
+comment|/* (c) */
 name|LIST_ENTRY
 argument_list|(
 argument|osd
 argument_list|)
 name|osd_next
 expr_stmt|;
+comment|/* (l) */
 block|}
 struct|;
 end_struct
@@ -92,6 +99,25 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|osd_method_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|obj
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_function_decl
 name|int
 name|osd_register
@@ -101,6 +127,10 @@ name|type
 parameter_list|,
 name|osd_destructor_t
 name|destructor
+parameter_list|,
+name|osd_method_t
+modifier|*
+name|methods
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -178,6 +208,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|osd_call
+parameter_list|(
+name|u_int
+name|type
+parameter_list|,
+name|u_int
+name|method
+parameter_list|,
+name|void
+modifier|*
+name|obj
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|osd_exit
 parameter_list|(
@@ -200,7 +251,7 @@ parameter_list|(
 name|destructor
 parameter_list|)
 define|\
-value|osd_register(OSD_THREAD, (destructor))
+value|osd_register(OSD_THREAD, (destructor), NULL)
 end_define
 
 begin_define
@@ -257,6 +308,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|osd_thread_call
+parameter_list|(
+name|td
+parameter_list|,
+name|method
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|osd_call(OSD_THREAD, (method), (td), (data))
+end_define
+
+begin_define
+define|#
+directive|define
 name|osd_thread_exit
 parameter_list|(
 name|td
@@ -273,7 +339,7 @@ parameter_list|(
 name|destructor
 parameter_list|)
 define|\
-value|osd_register(OSD_JAIL, (destructor))
+value|osd_register(OSD_JAIL, (destructor), NULL)
 end_define
 
 begin_define
@@ -326,6 +392,21 @@ name|slot
 parameter_list|)
 define|\
 value|osd_del(OSD_JAIL,&(pr)->pr_osd, (slot))
+end_define
+
+begin_define
+define|#
+directive|define
+name|osd_jail_call
+parameter_list|(
+name|pr
+parameter_list|,
+name|method
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|osd_call(OSD_JAIL, (method), (pr), (data))
 end_define
 
 begin_define

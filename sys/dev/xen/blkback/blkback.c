@@ -5463,7 +5463,7 @@ name|blkif
 operator|->
 name|major
 operator|=
-name|umajor
+name|major
 argument_list|(
 name|vattr
 operator|.
@@ -5474,7 +5474,7 @@ name|blkif
 operator|->
 name|minor
 operator|=
-name|uminor
+name|minor
 argument_list|(
 name|vattr
 operator|.

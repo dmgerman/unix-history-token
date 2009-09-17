@@ -65,6 +65,26 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|usb2_error_t
+function_decl|(
+name|usb2_test_huawei_autoinst_t
+function_decl|)
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|,
+name|struct
+name|usb2_attach_arg
+modifier|*
+name|uaa
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|uint8_t
 function_decl|(
 name|usb2_test_quirk_t
@@ -190,6 +210,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|usb2_test_huawei_autoinst_t
+modifier|*
+name|usb2_test_huawei_autoinst_p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|usb2_quirk_ioctl_t
 modifier|*
 name|usb2_quirk_ioctl_p
@@ -206,6 +234,16 @@ end_decl_stmt
 begin_comment
 comment|/* function prototypes */
 end_comment
+
+begin_function_decl
+name|void
+name|usb2_test_huawei_unload
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

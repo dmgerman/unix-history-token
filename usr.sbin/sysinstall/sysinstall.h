@@ -107,11 +107,6 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__amd64__
 argument_list|)
 end_if
@@ -151,26 +146,6 @@ begin_define
 define|#
 directive|define
 name|WITH_SLICES
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|WITH_LINUX
 end_define
 
 begin_endif
@@ -387,13 +362,6 @@ define|#
 directive|define
 name|VAR_DIST_SRC
 value|"distSRC"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_DIST_X11
-value|"distX11"
 end_define
 
 begin_define
@@ -833,13 +801,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_OSF1_ENABLE
-value|"osf1_enable"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VAR_RPCBIND_ENABLE
 value|"rpcbind_enable"
 end_define
@@ -980,13 +941,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_SKIP_PCCARD
-value|"skipPCCARD"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VAR_UFS_PATH
 value|"ufs"
 end_define
@@ -1017,13 +971,6 @@ define|#
 directive|define
 name|VAR_HOME_SIZE
 value|"homeSize"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_XORG_CONFIG
-value|"_xorgconfig"
 end_define
 
 begin_define
@@ -1405,8 +1352,6 @@ block|,
 name|DEVICE_TYPE_NETWORK
 block|,
 name|DEVICE_TYPE_CDROM
-block|,
-name|DEVICE_TYPE_TAPE
 block|,
 name|DEVICE_TYPE_DOS
 block|,
@@ -2145,18 +2090,6 @@ begin_decl_stmt
 specifier|extern
 name|unsigned
 name|int
-name|XOrgDists
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Which X.Org dists we want			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
 name|KernelDists
 decl_stmt|;
 end_decl_stmt
@@ -2429,17 +2362,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* FTP media menu				*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuMediaTape
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Tape media menu				*/
 end_comment
 
 begin_decl_stmt
@@ -3184,29 +3106,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|int
-name|configOSF1
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|extern
 name|int
@@ -3904,18 +3803,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|distSetXDeveloper
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|distSetKernDeveloper
 parameter_list|(
 name|dialogMenuItem
@@ -3928,31 +3815,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|distSetXKernDeveloper
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|distSetUser
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|distSetXUser
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -5265,18 +5128,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|mediaSetTape
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|mediaSetFTP
 parameter_list|(
 name|dialogMenuItem
@@ -6529,20 +6380,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* pccard.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|pccardInitialize
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* system.c */
 end_comment
 
@@ -6746,54 +6583,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|/* tape.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|Boolean
-name|mediaInitTape
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|FILE
-modifier|*
-name|mediaGetTape
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|,
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|Boolean
-name|probe
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mediaShutdownTape
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* tcpip.c */

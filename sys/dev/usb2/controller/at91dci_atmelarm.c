@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_sw_transfer.h>
 end_include
 
@@ -221,7 +215,7 @@ end_struct
 begin_function
 specifier|static
 name|void
-name|at91_vbus_interrupt
+name|at91_vbus_poll
 parameter_list|(
 name|struct
 name|at91_udp_softc
@@ -253,29 +247,16 @@ argument_list|,
 name|VBUS_MASK
 argument_list|)
 expr_stmt|;
-call|(
-name|sc
-operator|->
-name|sc_dci
-operator|.
-name|sc_bus
-operator|.
-name|methods
-operator|->
-name|vbus_interrupt
-call|)
+name|at91dci_vbus_interrupt
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_dci
-operator|.
-name|sc_bus
 argument_list|,
 name|vbus_val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -310,7 +291,6 @@ operator|->
 name|sc_fclk
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -345,7 +325,6 @@ operator|->
 name|sc_iclk
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -366,7 +345,6 @@ argument_list|,
 name|PULLUP_MASK
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -387,7 +365,6 @@ argument_list|,
 name|PULLUP_MASK
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -440,19 +417,6 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* setup AT9100 USB device controller interface softc */
 name|sc
 operator|->
@@ -505,6 +469,41 @@ operator|.
 name|sc_pull_arg
 operator|=
 name|sc
+expr_stmt|;
+comment|/* initialise some bus fields */
+name|sc
+operator|->
+name|sc_dci
+operator|.
+name|sc_bus
+operator|.
+name|parent
+operator|=
+name|dev
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dci
+operator|.
+name|sc_bus
+operator|.
+name|devices
+operator|=
+name|sc
+operator|->
+name|sc_dci
+operator|.
+name|sc_devices
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dci
+operator|.
+name|sc_bus
+operator|.
+name|devices_max
+operator|=
+name|AT91_MAX_DEVICES
 expr_stmt|;
 comment|/* get all DMA memory */
 if|if
@@ -593,7 +592,9 @@ name|usb2_pause_mtx
 argument_list|(
 name|NULL
 argument_list|,
-literal|10
+name|hz
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
 name|sc
@@ -827,51 +828,6 @@ operator|.
 name|sc_bus
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|usb2_config_td_setup
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_dci
-operator|.
-name|sc_config_td
-argument_list|,
-name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_dci
-operator|.
-name|sc_bus
-operator|.
-name|bus_mtx
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"could not setup config thread!\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|error
-goto|;
-block|}
 if|#
 directive|if
 operator|(
@@ -993,7 +949,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|at91_vbus_interrupt
+name|at91_vbus_poll
 argument_list|,
 name|sc
 argument_list|,
@@ -1023,7 +979,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|at91_vbus_interrupt
+name|at91_vbus_poll
 argument_list|,
 name|sc
 argument_list|,
@@ -1092,7 +1048,7 @@ block|}
 else|else
 block|{
 comment|/* poll VBUS one time */
-name|at91_vbus_interrupt
+name|at91_vbus_poll
 argument_list|(
 name|sc
 argument_list|)
@@ -1409,16 +1365,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|usb2_config_td_unsetup
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_dci
-operator|.
-name|sc_config_td
-argument_list|)
-expr_stmt|;
 name|usb2_bus_mem_free_all
 argument_list|(
 operator|&

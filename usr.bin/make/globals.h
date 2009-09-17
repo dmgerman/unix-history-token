@@ -115,6 +115,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|makeErrors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of targets not remade due to errors */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|Boolean
 name|jobsRunning
 decl_stmt|;
@@ -166,6 +177,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* True if should print extra cruft */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|beQuiet
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if want quiet headers with -j */
 end_comment
 
 begin_decl_stmt

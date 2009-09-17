@@ -39,21 +39,16 @@ begin_function
 name|int
 name|strcoll
 parameter_list|(
-name|s
-parameter_list|,
-name|s2
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|len
@@ -333,7 +328,7 @@ return|return
 name|ret
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

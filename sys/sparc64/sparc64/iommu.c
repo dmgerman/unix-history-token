@@ -3328,7 +3328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * IOMMU DVMA operations, common to PCI and SBus.  */
+comment|/*  * IOMMU DVMA operations, common to PCI and SBus  */
 end_comment
 
 begin_function
@@ -3392,19 +3392,17 @@ decl_stmt|;
 name|vm_paddr_t
 name|curaddr
 decl_stmt|;
-name|int
-name|error
-decl_stmt|,
-name|sgcnt
-decl_stmt|,
-name|firstpg
-decl_stmt|,
-name|stream
-decl_stmt|;
 name|pmap_t
 name|pmap
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|firstpg
+decl_stmt|,
+name|sgcnt
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -3515,8 +3513,17 @@ name|firstpg
 operator|=
 literal|1
 expr_stmt|;
-name|stream
-operator|=
+name|map
+operator|->
+name|dm_flags
+operator|&=
+operator|~
+name|DMF_STREAMED
+expr_stmt|;
+name|map
+operator|->
+name|dm_flags
+operator||=
 name|iommu_use_streaming
 argument_list|(
 name|is
@@ -3525,6 +3532,12 @@ name|map
 argument_list|,
 name|buflen
 argument_list|)
+operator|!=
+literal|0
+condition|?
+name|DMF_STREAMED
+else|:
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -3605,7 +3618,15 @@ argument_list|(
 name|curaddr
 argument_list|)
 argument_list|,
-name|stream
+operator|(
+name|map
+operator|->
+name|dm_flags
+operator|&
+name|DMF_STREAMED
+operator|)
+operator|!=
+literal|0
 argument_list|,
 name|flags
 argument_list|)
@@ -4986,15 +5007,10 @@ name|map
 operator|->
 name|dm_flags
 operator|&
-name|DMF_COHERENT
+name|DMF_STREAMED
 operator|)
-operator|==
+operator|!=
 literal|0
-operator|&&
-name|IOMMU_HAS_SB
-argument_list|(
-name|is
-argument_list|)
 operator|&&
 operator|(
 operator|(

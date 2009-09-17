@@ -65,21 +65,16 @@ begin_function
 name|int
 name|strcmp
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -96,7 +91,7 @@ operator|*
 name|s1
 operator|++
 operator|==
-literal|0
+literal|'\0'
 condition|)
 return|return
 operator|(
@@ -129,7 +124,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

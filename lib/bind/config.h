@@ -487,6 +487,22 @@ comment|/* #undef BROKEN_TCP_BIND_BEFORE_CONNECT */
 end_comment
 
 begin_comment
+comment|/* Solaris hack to get select_large_fdset. */
+end_comment
+
+begin_comment
+comment|/* #undef FD_SETSIZE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `capset' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CAPSET */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -664,6 +680,30 @@ directive|define
 name|HAVE_STRING_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/capability.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_CAPABILITY_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/devpoll.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_DEVPOLL_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/dyntune.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_DYNTUNE_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/param.h> header file. */
@@ -959,6 +999,10 @@ directive|define
 name|inline
 end_define
 
+begin_comment
+comment|/**/
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -986,6 +1030,14 @@ end_comment
 
 begin_comment
 comment|/* #undef uintptr_t */
+end_comment
+
+begin_comment
+comment|/* Define to empty if the keyword `volatile' does not work. Warning: valid    code using `volatile' can become incorrect without. Disable with care. */
+end_comment
+
+begin_comment
+comment|/* #undef volatile */
 end_comment
 
 end_unit

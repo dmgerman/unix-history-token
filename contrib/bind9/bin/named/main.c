@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.136.18.17 2006/11/10 18:51:14 marka Exp $ */
+comment|/* $Id: main.c,v 1.136.18.21 2008/10/24 01:28:08 marka Exp $ */
 end_comment
 
 begin_comment
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<isc/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/print.h>
 end_include
 
 begin_include
@@ -318,6 +324,16 @@ name|version
 index|[
 literal|512
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|maxsocks
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1530,7 +1546,8 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46c:C:d:fgi:lm:n:N:p:P:st:u:vx:"
+literal|"46c:C:d:fgi:lm:n:N:p:P:"
+literal|"sS:t:u:vx:"
 argument_list|)
 operator|)
 operator|!=
@@ -1823,6 +1840,19 @@ name|ISC_TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'S'
+case|:
+name|maxsocks
+operator|=
+name|parse_int
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"max number of sockets"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 comment|/* XXXJAB should we make a copy? */
@@ -1915,23 +1945,13 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISC_PLATFORM_USETHREADS
 name|unsigned
 name|int
-name|cpus_detected
+name|socks
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|ISC_PLATFORM_USETHREADS
-name|cpus_detected
-operator|=
-name|isc_os_ncpus
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|ns_g_cpus
@@ -1940,7 +1960,7 @@ literal|0
 condition|)
 name|ns_g_cpus
 operator|=
-name|cpus_detected
+name|ns_g_cpus_detected
 expr_stmt|;
 name|isc_log_write
 argument_list|(
@@ -1954,9 +1974,9 @@ name|ISC_LOG_INFO
 argument_list|,
 literal|"found %u CPU%s, using %u worker thread%s"
 argument_list|,
-name|cpus_detected
+name|ns_g_cpus_detected
 argument_list|,
-name|cpus_detected
+name|ns_g_cpus_detected
 operator|==
 literal|1
 condition|?
@@ -2063,12 +2083,14 @@ return|;
 block|}
 name|result
 operator|=
-name|isc_socketmgr_create
+name|isc_socketmgr_create2
 argument_list|(
 name|ns_g_mctx
 argument_list|,
 operator|&
 name|ns_g_socketmgr
+argument_list|,
+name|maxsocks
 argument_list|)
 expr_stmt|;
 if|if
@@ -2097,6 +2119,39 @@ operator|(
 name|ISC_R_UNEXPECTED
 operator|)
 return|;
+block|}
+name|result
+operator|=
+name|isc_socketmgr_getmaxsockets
+argument_list|(
+name|ns_g_socketmgr
+argument_list|,
+operator|&
+name|socks
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_SERVER
+argument_list|,
+name|ISC_LOG_INFO
+argument_list|,
+literal|"using up to %u sockets"
+argument_list|,
+name|socks
+argument_list|)
+expr_stmt|;
 block|}
 name|result
 operator|=
@@ -2247,6 +2302,9 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
+name|isc_resourcevalue_t
+name|old_openfiles
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_LIBSCF
@@ -2395,6 +2453,17 @@ block|}
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_USETHREADS
+comment|/* 	 * Check for the number of cpu's before ns_os_chroot(). 	 */
+name|ns_g_cpus_detected
+operator|=
+name|isc_os_ncpus
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|ns_os_chroot
 argument_list|(
 name|ns_g_chrootdir
@@ -2525,6 +2594,56 @@ operator|&
 name|ns_g_initopenfiles
 argument_list|)
 expr_stmt|;
+comment|/* 	 * System resources cannot effectively be tuned on some systems. 	 * Raise the limit in such cases for safety. 	 */
+name|old_openfiles
+operator|=
+name|ns_g_initopenfiles
+expr_stmt|;
+name|ns_os_adjustnofile
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|isc_resource_getlimit
+argument_list|(
+name|isc_resource_openfiles
+argument_list|,
+operator|&
+name|ns_g_initopenfiles
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|old_openfiles
+operator|!=
+name|ns_g_initopenfiles
+condition|)
+block|{
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"adjusted limit on open files from "
+literal|"%"
+name|ISC_PRINT_QUADFORMAT
+literal|"u to "
+literal|"%"
+name|ISC_PRINT_QUADFORMAT
+literal|"u"
+argument_list|,
+name|old_openfiles
+argument_list|,
+name|ns_g_initopenfiles
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * If the named configuration filename is relative, prepend the current 	 * directory's name before possibly changing to another directory. 	 */
 if|if
 condition|(

@@ -356,6 +356,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -368,7 +371,8 @@ operator|&
 name|ae
 argument_list|)
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 name|assertEqualString
 argument_list|(
 name|path

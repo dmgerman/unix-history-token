@@ -263,6 +263,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Add a second master to a secondary zone.  This provides multiple data  * backends for objects with the same size.  Both masters must have  * compatible allocation flags.  Presently, UMA_ZONE_MALLOC type zones are  * the only supported.  *  * Returns:  * 	Error on failure, 0 on success.  */
+end_comment
+
+begin_function_decl
+name|int
+name|uma_zsecond_add
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|uma_zone_t
+name|master
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Definitions for uma_zcreate flags  *  * These flags share space with UMA_ZFLAGs in uma_int.h.  Be careful not to  * overlap when adding new features.  0xf0000000 is in use by uma_int.h.  */
 end_comment
 
@@ -397,6 +414,40 @@ end_define
 begin_comment
 comment|/* Use largest buckets */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_CACHESPREAD
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 					 * Spread memory start locations across 					 * all possible cache lines.  May 					 * require many virtually contiguous 					 * backend pages and can fail early. 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_VTOSLAB
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Zone uses vtoslab for lookup. */
+end_comment
+
+begin_comment
+comment|/*  * These flags are shared between the keg and zone.  In zones wishing to add  * new kegs these flags must be compatible.  Some are determined based on  * physical parameters of the request and may not be provided by the consumer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_INHERIT
+define|\
+value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_HASH |		\     UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB)
+end_define
 
 begin_comment
 comment|/* Definitions for align */

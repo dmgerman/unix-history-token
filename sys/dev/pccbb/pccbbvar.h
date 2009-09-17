@@ -133,14 +133,6 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
-name|struct
-name|cv
-name|cv
-decl_stmt|;
-name|struct
-name|cv
-name|powercv
-decl_stmt|;
 name|int
 name|cardok
 decl_stmt|;
@@ -239,9 +231,13 @@ name|cbb_softc
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|volatile
 name|int
 name|powerintr
+decl_stmt|;
+name|struct
+name|root_hold_token
+modifier|*
+name|sc_root_token
 decl_stmt|;
 block|}
 struct|;
@@ -432,7 +428,10 @@ name|int
 name|cbb_child_present
 parameter_list|(
 name|device_t
-name|self
+name|parent
+parameter_list|,
+name|device_t
+name|child
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -547,7 +546,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|uint32_t
+name|u_long
 name|flags
 parameter_list|)
 function_decl|;
@@ -580,7 +579,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cbb_power_disable_socket
 parameter_list|(
 name|device_t

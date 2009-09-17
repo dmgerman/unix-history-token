@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-signzone.c,v 1.177.18.24 2007/08/28 07:20:00 tbox Exp $ */
+comment|/* $Id: dnssec-signzone.c,v 1.177.18.26 2008/06/02 23:46:01 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -696,20 +696,6 @@ decl_stmt|,
 name|finished
 init|=
 name|ISC_FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|assigned
-init|=
-literal|0
-decl_stmt|,
-name|completed
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -5344,7 +5330,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 * Delete RRSIGs for types that no longer exist. 		 */
+comment|/* 		 * Delete RRSIGs for types that no longer exist. 		 */
 name|result
 operator|=
 name|dns_db_allrdatasets
@@ -6476,21 +6462,38 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+specifier|static
+name|unsigned
+name|int
+name|ended
+init|=
+literal|0
+decl_stmt|;
+comment|/* Protected by namelock. */
 if|if
 condition|(
 name|shuttingdown
 condition|)
 return|return;
+name|LOCK
+argument_list|(
+operator|&
+name|namelock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|finished
 condition|)
 block|{
+name|ended
+operator|++
+expr_stmt|;
 if|if
 condition|(
-name|assigned
+name|ended
 operator|==
-name|completed
+name|ntasks
 condition|)
 block|{
 name|isc_task_detach
@@ -6503,7 +6506,9 @@ name|isc_app_shutdown
 argument_list|()
 expr_stmt|;
 block|}
-return|return;
+goto|goto
+name|unlock
+goto|;
 block|}
 name|fname
 operator|=
@@ -6547,12 +6552,6 @@ expr_stmt|;
 name|found
 operator|=
 name|ISC_FALSE
-expr_stmt|;
-name|LOCK
-argument_list|(
-operator|&
-name|namelock
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -6699,23 +6698,20 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|UNLOCK
-argument_list|(
-operator|&
-name|namelock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|found
 condition|)
 block|{
+name|ended
+operator|++
+expr_stmt|;
 if|if
 condition|(
-name|assigned
+name|ended
 operator|==
-name|completed
+name|ntasks
 condition|)
 block|{
 name|isc_task_detach
@@ -6740,7 +6736,9 @@ name|dns_fixedname_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|unlock
+goto|;
 block|}
 name|sevent
 operator|=
@@ -6800,8 +6798,13 @@ name|sevent
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assigned
-operator|++
+name|unlock
+label|:
+name|UNLOCK
+argument_list|(
+operator|&
+name|namelock
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -6886,9 +6889,6 @@ operator|*
 operator|)
 name|event
 decl_stmt|;
-name|completed
-operator|++
-expr_stmt|;
 name|worker
 operator|=
 operator|(

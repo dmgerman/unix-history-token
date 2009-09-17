@@ -377,17 +377,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.inet.tcp.sack.enable"
-argument_list|,
-operator|&
-name|tcp_do_sack
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
 name|V_NET

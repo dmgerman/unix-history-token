@@ -316,6 +316,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|rw_sysinit_flags
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|rw_wowned
 parameter_list|(
@@ -778,6 +789,27 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|rw_args_flags
+block|{
+name|struct
+name|rwlock
+modifier|*
+name|ra_rw
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ra_desc
+decl_stmt|;
+name|int
+name|ra_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -791,6 +823,23 @@ name|desc
 parameter_list|)
 define|\
 value|static struct rw_args name##_args = {				\ 		(rw),							\ 		(desc),							\ 	};								\ 	SYSINIT(name##_rw_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_sysinit,&name##_args);					\ 	SYSUNINIT(name##_rw_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_destroy, (rw))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_SYSINIT_FLAGS
+parameter_list|(
+name|name
+parameter_list|,
+name|rw
+parameter_list|,
+name|desc
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|static struct rw_args_flags name##_args = {			\ 		(rw),							\ 		(desc),							\ 		(flags),						\ 	};								\ 	SYSINIT(name##_rw_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_sysinit_flags,&name##_args);				\ 	SYSUNINIT(name##_rw_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_destroy, (rw))
 end_define
 
 begin_comment

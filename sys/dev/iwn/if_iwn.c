@@ -7767,13 +7767,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|ic
-operator|->
-name|ic_stats
-operator|.
-name|is_rx_tooshort
-operator|++
-expr_stmt|;
 name|ifp
 operator|->
 name|if_ierrors
@@ -7812,13 +7805,6 @@ literal|"%s: no mbuf to restock ring\n"
 argument_list|,
 name|__func__
 argument_list|)
-expr_stmt|;
-name|ic
-operator|->
-name|ic_stats
-operator|.
-name|is_rx_nobuf
-operator|++
 expr_stmt|;
 name|ifp
 operator|->
@@ -7885,14 +7871,6 @@ argument_list|(
 name|mnew
 argument_list|)
 expr_stmt|;
-name|ic
-operator|->
-name|ic_stats
-operator|.
-name|is_rx_nobuf
-operator|++
-expr_stmt|;
-comment|/* XXX need stat */
 name|ifp
 operator|->
 name|if_ierrors

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.119.18.35 2007/09/26 04:39:45 each Exp $ */
+comment|/* $Id: validator.c,v 1.119.18.41 2008/08/21 04:59:42 marka Exp $ */
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ file|<dns/view.h>
 end_include
 
 begin_comment
-comment|/*! \file  * \brief  * Basic processing sequences.  *  * \li When called with rdataset and sigrdataset:  * validator_start -> validate -> proveunsecure -> startfinddlvsep ->  *	dlv_validator_start -> validator_start -> validate -> proveunsecure  *  * validator_start -> validate -> nsecvalidate	(secure wildcard answer)  *   * \li When called with rdataset, sigrdataset and with DNS_VALIDATOR_DLV:  * validator_start -> startfinddlvsep -> dlv_validator_start ->  *	validator_start -> validate -> proveunsecure  *  * \li When called with rdataset:  * validator_start -> proveunsecure -> startfinddlvsep ->  *	dlv_validator_start -> validator_start -> proveunsecure  *  * \li When called with rdataset and with DNS_VALIDATOR_DLV:  * validator_start -> startfinddlvsep -> dlv_validator_start ->  *	validator_start -> proveunsecure  *  * \li When called without a rdataset:  * validator_start -> nsecvalidate -> proveunsecure -> startfinddlvsep ->  *	dlv_validator_start -> validator_start -> nsecvalidate -> proveunsecure  *  * Note: there isn't a case for DNS_VALIDATOR_DLV here as we want nsecvalidate()  * to always validate the authority section even when it does not contain  * signatures.  *  * validator_start: determines what type of validation to do.  * validate: attempts to perform a positive validation.  * proveunsecure: attempts to prove the answer comes from a unsecure zone.  * nsecvalidate: attempts to prove a negative response.  * startfinddlvsep: starts the DLV record lookup.  * dlv_validator_start: resets state and restarts the lookup using the  *	DLV RRset found by startfinddlvsep.  */
+comment|/*! \file  * \brief  * Basic processing sequences.  *  * \li When called with rdataset and sigrdataset:  * validator_start -> validate -> proveunsecure -> startfinddlvsep ->  *	dlv_validator_start -> validator_start -> validate -> proveunsecure  *  * validator_start -> validate -> nsecvalidate	(secure wildcard answer)  *  * \li When called with rdataset, sigrdataset and with DNS_VALIDATOR_DLV:  * validator_start -> startfinddlvsep -> dlv_validator_start ->  *	validator_start -> validate -> proveunsecure  *  * \li When called with rdataset:  * validator_start -> proveunsecure -> startfinddlvsep ->  *	dlv_validator_start -> validator_start -> proveunsecure  *  * \li When called with rdataset and with DNS_VALIDATOR_DLV:  * validator_start -> startfinddlvsep -> dlv_validator_start ->  *	validator_start -> proveunsecure  *  * \li When called without a rdataset:  * validator_start -> nsecvalidate -> proveunsecure -> startfinddlvsep ->  *	dlv_validator_start -> validator_start -> nsecvalidate -> proveunsecure  *  * Note: there isn't a case for DNS_VALIDATOR_DLV here as we want nsecvalidate()  * to always validate the authority section even when it does not contain  * signatures.  *  * validator_start: determines what type of validation to do.  * validate: attempts to perform a positive validation.  * proveunsecure: attempts to prove the answer comes from a unsecure zone.  * nsecvalidate: attempts to prove a negative response.  * startfinddlvsep: starts the DLV record lookup.  * dlv_validator_start: resets state and restarts the lookup using the  *	DLV RRset found by startfinddlvsep.  */
 end_comment
 
 begin_define
@@ -423,6 +423,9 @@ parameter_list|(
 name|dns_validator_t
 modifier|*
 name|val
+parameter_list|,
+name|isc_boolean_t
+name|have_ds
 parameter_list|,
 name|isc_boolean_t
 name|resume
@@ -1613,6 +1616,8 @@ argument_list|(
 name|val
 argument_list|,
 name|ISC_FALSE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2009,6 +2014,8 @@ name|proveunsecure
 argument_list|(
 name|val
 argument_list|,
+name|ISC_FALSE
+argument_list|,
 name|ISC_TRUE
 argument_list|)
 expr_stmt|;
@@ -2043,12 +2050,19 @@ operator|==
 name|DNS_R_NCACHENXDOMAIN
 condition|)
 block|{
-comment|/* 		 * There is a DS which may or may not be a zone cut.  		 * In either case we are still in a secure zone resume 		 * validation. 		 */
+comment|/* 		 * There is a DS which may or may not be a zone cut. 		 * In either case we are still in a secure zone resume 		 * validation. 		 */
 name|result
 operator|=
 name|proveunsecure
 argument_list|(
 name|val
+argument_list|,
+name|ISC_TF
+argument_list|(
+name|eresult
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
 argument_list|,
 name|ISC_TRUE
 argument_list|)
@@ -2554,6 +2568,8 @@ operator|=
 name|proveunsecure
 argument_list|(
 name|val
+argument_list|,
+name|ISC_TRUE
 argument_list|,
 name|ISC_TRUE
 argument_list|)
@@ -4239,7 +4255,7 @@ name|next
 argument_list|)
 condition|)
 block|{
-comment|/*  				 * XXXMPA We could look for a parent NSEC 				 * at nsec.next and if found retest with 				 * this NSEC. 				 */
+comment|/* 				 * XXXMPA We could look for a parent NSEC 				 * at nsec.next and if found retest with 				 * this NSEC. 				 */
 name|dns_rdata_freestruct
 argument_list|(
 operator|&
@@ -4428,6 +4444,10 @@ operator|&&
 name|result
 operator|!=
 name|DNS_R_NCACHENXRRSET
+operator|&&
+name|result
+operator|!=
+name|DNS_R_EMPTYNAME
 operator|&&
 name|result
 operator|!=
@@ -5537,6 +5557,10 @@ name|DNS_R_NCACHENXRRSET
 operator|||
 name|result
 operator|==
+name|DNS_R_EMPTYNAME
+operator|||
+name|result
+operator|==
 name|DNS_R_NXDOMAIN
 operator|||
 name|result
@@ -5747,9 +5771,8 @@ operator|&
 name|rdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -5759,6 +5782,13 @@ operator|&
 name|key
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 name|keytag
@@ -5807,9 +5837,8 @@ operator|&
 name|sigrdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -5819,6 +5848,13 @@ operator|&
 name|sig
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if
@@ -6937,6 +6973,8 @@ operator|&
 name|dlvrdata
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -6946,6 +6984,13 @@ operator|&
 name|dlv
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if
@@ -7037,9 +7082,8 @@ operator|&
 name|dlvrdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -7049,6 +7093,13 @@ operator|&
 name|dlv
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if
@@ -7160,9 +7211,8 @@ operator|&
 name|keyrdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -7172,6 +7222,13 @@ operator|&
 name|key
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 name|keytag
@@ -7359,9 +7416,8 @@ operator|&
 name|sigrdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -7371,6 +7427,13 @@ operator|&
 name|sig
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if
@@ -7789,9 +7852,8 @@ operator|&
 name|sigrdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -7801,6 +7863,13 @@ operator|&
 name|sig
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 name|result
@@ -8246,6 +8315,10 @@ name|DNS_R_NCACHENXRRSET
 operator|||
 name|result
 operator|==
+name|DNS_R_EMPTYNAME
+operator|||
+name|result
+operator|==
 name|DNS_R_NXDOMAIN
 operator|||
 name|result
@@ -8414,6 +8487,8 @@ operator|&
 name|dsrdata
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -8423,6 +8498,13 @@ operator|&
 name|ds
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if
@@ -8511,9 +8593,8 @@ operator|&
 name|dsrdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -8523,6 +8604,13 @@ operator|&
 name|ds
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if
@@ -8635,9 +8723,8 @@ operator|&
 name|keyrdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -8647,6 +8734,13 @@ operator|&
 name|key
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 name|keytag
@@ -8796,9 +8890,8 @@ operator|&
 name|sigrdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -8808,6 +8901,13 @@ operator|&
 name|sig
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if
@@ -9079,7 +9179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*%  * Look for NODATA at the wildcard and NOWILDCARD proofs in the  * previously validated NSEC records.  As these proofs are mutually  * exclusive we stop when one is found.  *  * Returns  * \li	ISC_R_SUCCESS   */
+comment|/*%  * Look for NODATA at the wildcard and NOWILDCARD proofs in the  * previously validated NSEC records.  As these proofs are mutually  * exclusive we stop when one is found.  *  * Returns  * \li	ISC_R_SUCCESS  */
 end_comment
 
 begin_function
@@ -10119,6 +10219,8 @@ argument_list|(
 name|val
 argument_list|,
 name|ISC_FALSE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 operator|)
 return|;
@@ -10183,9 +10285,8 @@ operator|&
 name|dsrdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -10195,6 +10296,13 @@ operator|&
 name|ds
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if
@@ -10256,7 +10364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*%  * Callback from fetching a DLV record.  *   * Resumes the DLV lookup process.  */
+comment|/*%  * Callback from fetching a DLV record.  *  * Resumes the DLV lookup process.  */
 end_comment
 
 begin_function
@@ -10693,7 +10801,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*%  * Start the DLV lookup proccess.  *   * Returns  * \li	ISC_R_SUCCESS  * \li	DNS_R_WAIT  * \li	Others on validation failures.  */
+comment|/*%  * Start the DLV lookup proccess.  *  * Returns  * \li	ISC_R_SUCCESS  * \li	DNS_R_WAIT  * \li	Others on validation failures.  */
 end_comment
 
 begin_function
@@ -11434,6 +11542,10 @@ name|DNS_R_NXDOMAIN
 operator|&&
 name|result
 operator|!=
+name|DNS_R_EMPTYNAME
+operator|&&
+name|result
+operator|!=
 name|DNS_R_NCACHENXRRSET
 operator|&&
 name|result
@@ -11514,6 +11626,9 @@ parameter_list|(
 name|dns_validator_t
 modifier|*
 name|val
+parameter_list|,
+name|isc_boolean_t
+name|have_ds
 parameter_list|,
 name|isc_boolean_t
 name|resume
@@ -11758,8 +11873,11 @@ argument_list|,
 literal|"resuming proveunsecure"
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If we have a DS rdataset and it is secure then check if 		 * the DS rdataset has a supported algorithm combination. 		 * If not this is a insecure delegation as far as this 		 * resolver is concerned.  Fall back to DLV if available. 		 */
 if|if
 condition|(
+name|have_ds
+operator|&&
 name|val
 operator|->
 name|frdataset
@@ -11808,6 +11926,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|val
+operator|->
+name|view
+operator|->
+name|dlv
+operator|==
+name|NULL
+operator|||
+name|DLVTRIED
+argument_list|(
+name|val
+argument_list|)
+operator|)
+operator|&&
 name|val
 operator|->
 name|mustbesecure
@@ -12851,6 +12984,8 @@ argument_list|(
 name|val
 argument_list|,
 name|ISC_FALSE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -12913,6 +13048,8 @@ operator|=
 name|proveunsecure
 argument_list|(
 name|val
+argument_list|,
+name|ISC_FALSE
 argument_list|,
 name|ISC_FALSE
 argument_list|)

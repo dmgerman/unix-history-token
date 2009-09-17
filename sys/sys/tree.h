@@ -874,6 +874,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|RB_FOREACH_SAFE
+parameter_list|(
+name|x
+parameter_list|,
+name|name
+parameter_list|,
+name|head
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|for ((x) = RB_MIN(name, head);					\ 	     (x) != NULL&& ((y) = name##_RB_NEXT(x));			\ 	     (x) = (y))
+end_define
+
+begin_define
+define|#
+directive|define
 name|RB_FOREACH_REVERSE
 parameter_list|(
 name|x

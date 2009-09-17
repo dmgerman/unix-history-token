@@ -63,6 +63,12 @@ name|scope6_id
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|lltable
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|in6_ifextra
@@ -87,9 +93,24 @@ name|scope6_id
 modifier|*
 name|scope6_id
 decl_stmt|;
+name|struct
+name|lltable
+modifier|*
+name|lltable
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|LLTABLE6
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(((struct in6_ifextra *)(ifp)->if_afdata[AF_INET6])->lltable)
+end_define
 
 begin_struct
 struct|struct
@@ -1492,6 +1513,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1508,6 +1535,23 @@ name|icmp6stat
 name|icmp6stat
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|in6_maxmtu
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
 
 begin_define
 define|#
@@ -1537,14 +1581,6 @@ specifier|extern
 name|u_char
 name|inet6ctlerrmap
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|long
-name|in6_maxmtu
 decl_stmt|;
 end_decl_stmt
 

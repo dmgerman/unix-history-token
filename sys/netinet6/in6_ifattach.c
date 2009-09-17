@@ -3271,7 +3271,7 @@ name|rt
 operator|->
 name|rt_flags
 expr_stmt|;
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -3549,7 +3549,7 @@ name|sin6
 argument_list|,
 literal|0
 argument_list|,
-literal|0UL
+name|RTF_RNH_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3882,20 +3882,6 @@ name|in6_multi
 modifier|*
 name|oin6m
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"%s: purging ifp %p\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|IFF_LOCKGIANT
 argument_list|(
 name|ifp

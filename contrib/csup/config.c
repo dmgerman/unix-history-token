@@ -590,7 +590,6 @@ name|co_options
 operator||=
 name|CO_SETMODE
 expr_stmt|;
-comment|/* XXX We don't support the rsync updating algorithm yet. */
 name|coll
 operator|->
 name|co_options
@@ -2354,32 +2353,6 @@ argument_list|,
 name|cur_coll
 operator|->
 name|co_name
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|cur_coll
-operator|->
-name|co_options
-operator|&
-name|CO_CHECKOUTMODE
-operator|)
-condition|)
-block|{
-name|lprintf
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"Client only supports checkout mode\n"
 argument_list|)
 expr_stmt|;
 name|exit

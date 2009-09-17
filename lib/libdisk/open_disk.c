@@ -677,6 +677,12 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Sanitize the parameters. */
+name|Sanitize_Bios_Geom
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Calculate the number of cylinders this disk must have. If we have 	 * an obvious insanity, we set the number of cylinders to zero. 	 */
 name|o
 operator|=

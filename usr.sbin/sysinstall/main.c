@@ -408,45 +408,6 @@ literal|"modulesInitialize=1"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Initialize PC Card, if we haven't already done so. */
-ifdef|#
-directive|ifdef
-name|PCCARD_ARCH
-if|if
-condition|(
-operator|!
-name|variable_cmp
-argument_list|(
-name|VAR_SKIP_PCCARD
-argument_list|,
-literal|"YES"
-argument_list|)
-operator|&&
-name|variable_get
-argument_list|(
-name|VAR_SKIP_PCCARD
-argument_list|)
-operator|!=
-literal|1
-operator|&&
-operator|!
-name|pvariable_get
-argument_list|(
-literal|"pccardInitialize"
-argument_list|)
-condition|)
-block|{
-name|pccardInitialize
-argument_list|()
-expr_stmt|;
-name|pvariable_set
-argument_list|(
-literal|"pccardInitialize=1"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* Probe for all relevant devices on the system */
 name|deviceGetAll
 argument_list|()
@@ -720,11 +681,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__sparc64__
 argument_list|)
 operator|||
@@ -739,8 +695,7 @@ operator|||
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"Are you sure you wish to exit?  The system will reboot\n"
-literal|"(be sure to remove any floppies/CDs/DVDs from the drives)."
+literal|"Are you sure you wish to exit?  The system will reboot."
 argument_list|)
 endif|#
 directive|endif

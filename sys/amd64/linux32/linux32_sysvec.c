@@ -1290,21 +1290,6 @@ if|if
 condition|(
 name|args
 operator|->
-name|trace
-condition|)
-name|AUXARGS_ENTRY_32
-argument_list|(
-name|pos
-argument_list|,
-name|AT_DEBUG
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|args
-operator|->
 name|execfd
 operator|!=
 operator|-
@@ -1982,7 +1967,7 @@ operator|=
 name|rfs
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("movl %%es,%0" :
+asm|__asm __volatile("mov %%es,%0" :
 literal|"=rm"
 operator|(
 name|frame
@@ -1998,7 +1983,7 @@ function|;
 end_function
 
 begin_asm
-asm|__asm __volatile("movl %%ds,%0" :
+asm|__asm __volatile("mov %%ds,%0" :
 end_asm
 
 begin_expr_stmt
@@ -2850,8 +2835,8 @@ operator|=
 name|rfs
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("movl %%es,%0" : "=rm" (frame.sf_sc.sc_es));
-asm|__asm __volatile("movl %%ds,%0" : "=rm" (frame.sf_sc.sc_ds));
+asm|__asm __volatile("mov %%es,%0" : "=rm" (frame.sf_sc.sc_es));
+asm|__asm __volatile("mov %%ds,%0" : "=rm" (frame.sf_sc.sc_ds));
 name|frame
 operator|.
 name|sf_sc
@@ -4195,7 +4180,7 @@ literal|1
 decl_stmt|,
 name|len
 decl_stmt|;
-comment|/*      * The interpreter for shell scripts run from a linux binary needs      * to be located in /compat/linux if possible in order to recursively      * maintain linux path emulation.      */
+comment|/* 	* The interpreter for shell scripts run from a linux binary needs 	* to be located in /compat/linux if possible in order to recursively 	* maintain linux path emulation. 	*/
 if|if
 condition|(
 operator|(
@@ -4213,7 +4198,7 @@ operator|==
 name|SHELLMAGIC
 condition|)
 block|{
-comment|/* 	     * Run our normal shell image activator.  If it succeeds attempt 	     * to use the alternate path for the interpreter.  If an alternate 	     * path is found, use our stringspace to store it. 	     */
+comment|/* 		* Run our normal shell image activator.  If it succeeds attempt 		* to use the alternate path for the interpreter.  If an 		* alternate * path is found, use our stringspace to store it. 		*/
 if|if
 condition|(
 operator|(

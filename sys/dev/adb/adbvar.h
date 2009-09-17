@@ -45,10 +45,6 @@ name|struct
 name|intr_config_hook
 name|enum_hook
 decl_stmt|;
-name|struct
-name|mtx
-name|sc_sync_mtx
-decl_stmt|;
 specifier|volatile
 name|int
 name|sync_packet

@@ -5873,19 +5873,6 @@ end_comment
 
 begin_function_decl
 name|int
-name|ng_rmnode_flags
-parameter_list|(
-name|node_p
-name|here
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ng_rmnode_self
 parameter_list|(
 name|node_p
@@ -6367,6 +6354,36 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnet_netgraph
+name|vnet_netgraph_0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Symbol translation macros */

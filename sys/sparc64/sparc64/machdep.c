@@ -439,6 +439,18 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+name|int
+name|dtlb_slots
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|itlb_slots
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|tlb_entry
 modifier|*
@@ -1234,11 +1246,20 @@ comment|/* 	 * UltraSparc II[e,i] based systems come up with the tick interrupt 
 name|tick_stop
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Initialize Open Firmware (needed for console). 	 */
-name|OF_init
+comment|/* 	 * Set up Open Firmware entry points. 	 */
+name|ofw_tba
+operator|=
+name|rdpr
 argument_list|(
-name|vec
+name|tba
 argument_list|)
+expr_stmt|;
+name|ofw_vec
+operator|=
+operator|(
+name|u_long
+operator|)
+name|vec
 expr_stmt|;
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be before the 	 * console is inited so cninit gets the right value of boothowto. 	 */
 if|if
@@ -1330,6 +1351,19 @@ block|}
 block|}
 name|init_param1
 argument_list|()
+expr_stmt|;
+comment|/* 	 * Initialize Open Firmware (needed for console). 	 */
+name|OF_install
+argument_list|(
+name|OFW_STD_DIRECT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|OF_init
+argument_list|(
+name|ofw_entry
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Prime our per-CPU data page for use.  Note, we are using it for 	 * our stack, so don't pass the real size (PAGE_SIZE) to pcpu_init 	 * or it'll zero it out from under us. 	 */
 name|pc
@@ -1613,6 +1647,61 @@ operator|)
 name|_end
 expr_stmt|;
 block|}
+comment|/* 	 * Determine the TLB slot maxima, which are expected to be 	 * equal across all CPUs. 	 * NB: for Cheetah-class CPUs, these properties only refer 	 * to the t16s. 	 */
+if|if
+condition|(
+name|OF_getprop
+argument_list|(
+name|pc
+operator|->
+name|pc_node
+argument_list|,
+literal|"#dtlb-entries"
+argument_list|,
+operator|&
+name|dtlb_slots
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dtlb_slots
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"sparc64_init: cannot determine number of dTLB slots"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OF_getprop
+argument_list|(
+name|pc
+operator|->
+name|pc_node
+argument_list|,
+literal|"#itlb-entries"
+argument_list|,
+operator|&
+name|itlb_slots
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|itlb_slots
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"sparc64_init: cannot determine number of iTLB slots"
+argument_list|)
+expr_stmt|;
 name|cache_init
 argument_list|(
 name|pc
@@ -1918,32 +2007,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-end_function
-
-begin_function
-name|void
-name|set_openfirm_callback
-parameter_list|(
-name|ofw_vec_t
-modifier|*
-name|vec
-parameter_list|)
-block|{
-name|ofw_tba
-operator|=
-name|rdpr
-argument_list|(
-name|tba
-argument_list|)
-expr_stmt|;
-name|ofw_vec
-operator|=
-operator|(
-name|u_long
-operator|)
-name|vec
-expr_stmt|;
 block|}
 end_function
 
@@ -3215,7 +3278,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|openfirmware_exit
+name|ofw_exit
 argument_list|(
 name|args
 argument_list|)

@@ -513,6 +513,15 @@ literal|"nfssvc(): called with Giant"
 operator|)
 argument_list|)
 expr_stmt|;
+name|AUDIT_ARG
+argument_list|(
+name|cmd
+argument_list|,
+name|uap
+operator|->
+name|flag
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|priv_check

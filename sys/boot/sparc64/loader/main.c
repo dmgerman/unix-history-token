@@ -1834,8 +1834,8 @@ operator|->
 name|e_entry
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|LOADER_DEBUG
 name|pmap_print_tlb_sun4u
 argument_list|()
@@ -2419,7 +2419,7 @@ argument_list|)
 expr_stmt|;
 name|flush
 argument_list|(
-name|KERNBASE
+name|PROMBASE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2476,7 +2476,7 @@ argument_list|)
 expr_stmt|;
 name|flush
 argument_list|(
-name|KERNBASE
+name|PROMBASE
 argument_list|)
 expr_stmt|;
 name|wrpr
@@ -4041,6 +4041,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|page_sizes
 index|[]
 init|=

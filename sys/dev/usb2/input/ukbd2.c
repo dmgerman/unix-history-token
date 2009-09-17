@@ -317,17 +317,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UKBD_N_TRANSFER
-value|3
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UKBD_IN_BUF_SIZE
 value|(2*(UKBD_NMOD + (2*UKBD_NKEYCODE)))
 end_define
@@ -410,6 +399,22 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+block|{
+name|UKBD_INTR_DT
+block|,
+name|UKBD_INTR_CS
+block|,
+name|UKBD_CTRL_LED
+block|,
+name|UKBD_N_TRANSFER
+init|=
+literal|3
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -1313,7 +1318,6 @@ name|ukbd_timeout
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1326,10 +1330,8 @@ parameter_list|(
 name|struct
 name|ukbd_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
-name|leds
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1341,10 +1343,8 @@ name|ukbd_set_typematic
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|,
 name|int
-name|code
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1363,16 +1363,12 @@ parameter_list|(
 name|struct
 name|ukbd_softc
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|keycode
 parameter_list|,
 name|int
-name|shift
 parameter_list|,
 name|int
-name|up
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1389,10 +1385,8 @@ name|ukbd_read_char
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|,
 name|int
-name|wait
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1404,7 +1398,6 @@ name|ukbd_clear_state
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1416,13 +1409,10 @@ name|ukbd_ioctl
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|,
 name|u_long
-name|cmd
 parameter_list|,
 name|caddr_t
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1434,7 +1424,6 @@ name|ukbd_enable
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1446,7 +1435,6 @@ name|ukbd_disable
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1459,7 +1447,6 @@ parameter_list|(
 name|struct
 name|ukbd_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1592,7 +1579,6 @@ literal|"input buffer is full\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1637,7 +1623,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UKBD_INTR_DT
 index|]
 argument_list|)
 expr_stmt|;
@@ -2421,13 +2407,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2460,7 +2439,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UKBD_INTR_DT
 index|]
 decl_stmt|;
 if|if
@@ -2491,7 +2470,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2696,7 +2674,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UKBD_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -2773,7 +2751,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UKBD_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -3009,7 +2987,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UKBD_INTR_DT
 index|]
 operator|=
 block|{
@@ -3063,7 +3041,7 @@ name|ukbd_intr_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UKBD_INTR_CS
 index|]
 operator|=
 block|{
@@ -3121,7 +3099,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|2
+name|UKBD_CTRL_LED
 index|]
 operator|=
 block|{
@@ -3353,19 +3331,6 @@ decl_stmt|;
 name|uint16_t
 name|n
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3466,7 +3431,7 @@ argument_list|,
 operator|&
 name|Giant
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 name|err
@@ -3709,7 +3674,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UKBD_INTR_DT
 index|]
 argument_list|)
 expr_stmt|;
@@ -3719,7 +3684,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* will unlock mutex */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6463,7 +6433,6 @@ name|sc_otime
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6669,11 +6638,10 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UKBD_CTRL_LED
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

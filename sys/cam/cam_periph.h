@@ -464,6 +464,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|cam_periph_release_locked
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+name|periph
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|cam_periph_hold
 parameter_list|(

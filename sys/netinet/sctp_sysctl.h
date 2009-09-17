@@ -153,6 +153,10 @@ decl_stmt|;
 name|uint32_t
 name|sctp_cmt_use_dac
 decl_stmt|;
+comment|/* EY 5/5/08 - nr_sack flag variable */
+name|uint32_t
+name|sctp_nr_sack_on_off
+decl_stmt|;
 name|uint32_t
 name|sctp_cmt_pf
 decl_stmt|;
@@ -213,6 +217,9 @@ name|sctp_mobility_base
 decl_stmt|;
 name|uint32_t
 name|sctp_mobility_fasthandoff
+decl_stmt|;
+name|uint32_t
+name|sctp_inits_include_nat_friendly
 decl_stmt|;
 if|#
 directive|if
@@ -1399,6 +1406,38 @@ value|0
 end_define
 
 begin_comment
+comment|/* EY - nr_sack_on_off: NR_SACK on/off flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NR_SACK_ON_OFF_DESC
+value|"NR_SACK on/off flag"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NR_SACK_ON_OFF_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NR_SACK_ON_OFF_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NR_SACK_ON_OFF_DEFAULT
+value|0
+end_define
+
+begin_comment
 comment|/* cmt_use_dac: CMT DAC on/off flag */
 end_comment
 
@@ -2164,6 +2203,38 @@ define|#
 directive|define
 name|SCTPCTL_SACK_IMMEDIATELY_ENABLE_DEFAULT
 value|SCTPCTL_SACK_IMMEDIATELY_ENABLE_MIN
+end_define
+
+begin_comment
+comment|/* Enable sending of the SACK-IMMEDIATELY bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NAT_FRIENDLY_INITS
+value|"Enable sending of the nat-friendly SCTP option on INITs."
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NAT_FRIENDLY_INITS_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NAT_FRIENDLY_INITS_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NAT_FRIENDLY_INITS_DEFAULT
+value|SCTPCTL_NAT_FRIENDLY_INITS_MIN
 end_define
 
 begin_if

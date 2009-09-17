@@ -1747,6 +1747,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIS_RXSTAT_ERROR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)& (SIS_RXSTAT_RX_ABORT | SIS_RXSTAT_OVERRUN |		\ 	SIS_RXSTAT_GIANT | SIS_RXSTAT_SYMBOLERR | SIS_RXSTAT_RUNT |	\ 	SIS_RXSTAT_CRCERR | SIS_RXSTAT_ALIGNERR))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIS_DSTCLASS_REJECT
 value|0x00000000
 end_define

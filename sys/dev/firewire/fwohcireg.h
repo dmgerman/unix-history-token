@@ -1614,6 +1614,10 @@ name|OHCI_CNTL_SID
 value|(0x1<< 9)
 end_define
 
+begin_comment
+comment|/*  * defined in OHCI 1.1   * chapter 6.1  */
+end_comment
+
 begin_define
 define|#
 directive|define

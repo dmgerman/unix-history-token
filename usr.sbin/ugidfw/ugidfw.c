@@ -223,6 +223,11 @@ name|errstr
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|,
+name|charstr
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 name|struct
 name|mac_bsdextended_rule
@@ -292,11 +297,34 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|bsde_rule_to_string
+argument_list|(
+operator|&
+name|rule
+argument_list|,
+name|charstr
+argument_list|,
+name|BUFSIZ
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warnx
+argument_list|(
+literal|"Added rule, but unable to print string."
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
-literal|"Added rule %d\n"
+literal|"%d %s\n"
 argument_list|,
 name|rulenum
+argument_list|,
+name|charstr
 argument_list|)
 expr_stmt|;
 block|}

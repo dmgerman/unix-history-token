@@ -494,7 +494,7 @@ operator|!
 name|queue
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|STAILQ_INIT
 argument_list|(
@@ -943,7 +943,7 @@ else|else
 block|{
 name|prev
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -1832,7 +1832,18 @@ argument_list|(
 name|tq
 argument_list|)
 expr_stmt|;
-do|do
+while|while
+condition|(
+operator|(
+name|tq
+operator|->
+name|tq_flags
+operator|&
+name|TQ_FLAGS_ACTIVE
+operator|)
+operator|!=
+literal|0
+condition|)
 block|{
 name|taskqueue_run
 argument_list|(
@@ -1858,19 +1869,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-do|while
-condition|(
-operator|(
-name|tq
-operator|->
-name|tq_flags
-operator|&
-name|TQ_FLAGS_ACTIVE
-operator|)
-operator|!=
-literal|0
-condition|)
-do|;
 comment|/* rendezvous with thread that asked us to terminate */
 name|tq
 operator|->
@@ -1947,7 +1945,7 @@ name|swi
 argument_list|,
 name|taskqueue_swi_enqueue
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|swi_add
 argument_list|(
@@ -1977,7 +1975,7 @@ name|swi_giant
 argument_list|,
 name|taskqueue_swi_giant_enqueue
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|swi_add
 argument_list|(
@@ -2132,7 +2130,7 @@ name|fast
 argument_list|,
 name|taskqueue_fast_enqueue
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|swi_add
 argument_list|(

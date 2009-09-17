@@ -40,6 +40,13 @@ union|union
 name|sigval32
 block|{
 name|int
+name|sival_int
+decl_stmt|;
+name|u_int32_t
+name|sival_ptr
+decl_stmt|;
+comment|/* 6.0 compatibility */
+name|int
 name|sigval_int
 decl_stmt|;
 name|u_int32_t
@@ -142,6 +149,81 @@ name|__spare__
 struct|;
 block|}
 name|_reason
+union|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|osigevent32
+block|{
+name|int
+name|sigev_notify
+decl_stmt|;
+comment|/* Notification type */
+union|union
+block|{
+name|int
+name|__sigev_signo
+decl_stmt|;
+comment|/* Signal number */
+name|int
+name|__sigev_notify_kqueue
+decl_stmt|;
+block|}
+name|__sigev_u
+union|;
+name|union
+name|sigval32
+name|sigev_value
+decl_stmt|;
+comment|/* Signal value */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sigevent32
+block|{
+name|int
+name|sigev_notify
+decl_stmt|;
+comment|/* Notification type */
+name|int
+name|sigev_signo
+decl_stmt|;
+comment|/* Signal number */
+name|union
+name|sigval32
+name|sigev_value
+decl_stmt|;
+comment|/* Signal value */
+union|union
+block|{
+name|__lwpid_t
+name|_threadid
+decl_stmt|;
+struct|struct
+block|{
+name|uint32_t
+name|_function
+decl_stmt|;
+name|uint32_t
+name|_attribute
+decl_stmt|;
+block|}
+name|_sigev_thread
+struct|;
+name|uint32_t
+name|__spare__
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+name|_sigev_un
 union|;
 block|}
 struct|;

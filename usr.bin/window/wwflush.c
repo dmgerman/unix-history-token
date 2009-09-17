@@ -56,6 +56,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
 begin_macro
 name|wwflush
 argument_list|()

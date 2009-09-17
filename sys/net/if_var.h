@@ -110,6 +110,12 @@ directive|include
 file|<sys/eventhandler.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/buf_ring.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -133,6 +139,16 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_comment
@@ -527,12 +543,6 @@ name|if_bridge
 decl_stmt|;
 comment|/* bridge glue */
 name|struct
-name|lltable
-modifier|*
-name|lltables
-decl_stmt|;
-comment|/* list of L3-L2 resolution tables */
-name|struct
 name|label
 modifier|*
 name|if_label
@@ -555,8 +565,8 @@ name|int
 name|if_afdata_initialized
 decl_stmt|;
 name|struct
-name|mtx
-name|if_afdata_mtx
+name|rwlock
+name|if_afdata_lock
 decl_stmt|;
 name|struct
 name|task
@@ -605,7 +615,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* multiq/TOE 3; vimage 3; general use 4 */
+comment|/* TOE 3; vimage 3; general use 4 */
 name|void
 function_decl|(
 modifier|*
@@ -1349,7 +1359,47 @@ parameter_list|(
 name|ifp
 parameter_list|)
 define|\
-value|mtx_init(&(ifp)->if_afdata_mtx, "if_afdata", NULL, MTX_DEF)
+value|rw_init(&(ifp)->if_afdata_lock, "if_afdata")
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_WLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_wlock(&(ifp)->if_afdata_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_RLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_rlock(&(ifp)->if_afdata_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_WUNLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_wunlock(&(ifp)->if_afdata_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_RUNLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_runlock(&(ifp)->if_afdata_lock)
 end_define
 
 begin_define
@@ -1359,17 +1409,7 @@ name|IF_AFDATA_LOCK
 parameter_list|(
 name|ifp
 parameter_list|)
-value|mtx_lock(&(ifp)->if_afdata_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IF_AFDATA_TRYLOCK
-parameter_list|(
-name|ifp
-parameter_list|)
-value|mtx_trylock(&(ifp)->if_afdata_mtx)
+value|IF_AFDATA_WLOCK(ifp)
 end_define
 
 begin_define
@@ -1379,7 +1419,17 @@ name|IF_AFDATA_UNLOCK
 parameter_list|(
 name|ifp
 parameter_list|)
-value|mtx_unlock(&(ifp)->if_afdata_mtx)
+value|IF_AFDATA_WUNLOCK(ifp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_TRYLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_try_wlock(&(ifp)->if_afdata_lock)
 end_define
 
 begin_define
@@ -1389,7 +1439,27 @@ name|IF_AFDATA_DESTROY
 parameter_list|(
 name|ifp
 parameter_list|)
-value|mtx_destroy(&(ifp)->if_afdata_mtx)
+value|rw_destroy(&(ifp)->if_afdata_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_LOCK_ASSERT
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_assert(&(ifp)->if_afdata_lock, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_UNLOCK_ASSERT
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_assert(&(ifp)->if_afdata_lock, RA_UNLOCKED)
 end_define
 
 begin_define
@@ -1746,6 +1816,201 @@ define|\
 value|do {									\ 	struct mbuf *m, *n = (ifq)->ifq_drv_head;			\ 	while((m = n) != NULL) {					\ 		n = m->m_nextpkt;					\ 		m_freem(m);						\ 	}								\ 	(ifq)->ifq_drv_head = (ifq)->ifq_drv_tail = NULL;		\ 	(ifq)->ifq_drv_len = 0;						\ 	IFQ_PURGE(ifq);							\ } while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|drbr_stats_update
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+name|mflags
+parameter_list|)
+block|{
+name|ifp
+operator|->
+name|if_obytes
+operator|+=
+name|len
+expr_stmt|;
+if|if
+condition|(
+name|mflags
+operator|&
+name|M_MCAST
+condition|)
+name|ifp
+operator|->
+name|if_omcasts
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|drbr_enqueue
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|buf_ring
+modifier|*
+name|br
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|len
+init|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+decl_stmt|;
+name|int
+name|mflags
+init|=
+name|m
+operator|->
+name|m_flags
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|buf_ring_enqueue
+argument_list|(
+name|br
+argument_list|,
+name|m
+argument_list|)
+operator|)
+operator|==
+name|ENOBUFS
+condition|)
+block|{
+name|br
+operator|->
+name|br_drops
+operator|++
+expr_stmt|;
+name|_IF_DROP
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|drbr_stats_update
+argument_list|(
+name|ifp
+argument_list|,
+name|len
+argument_list|,
+name|mflags
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|drbr_free
+parameter_list|(
+name|struct
+name|buf_ring
+modifier|*
+name|br
+parameter_list|,
+name|struct
+name|malloc_type
+modifier|*
+name|type
+parameter_list|)
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|m
+operator|=
+name|buf_ring_dequeue_sc
+argument_list|(
+name|br
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|buf_ring_free
+argument_list|(
+name|br
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * 72 was chosen below because it is the size of a TCP/IP  * header (40) + the minimum mss (32).  */
 end_comment
@@ -2061,7 +2326,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mtx
+name|rwlock
 name|ifnet_lock
 decl_stmt|;
 end_decl_stmt
@@ -2072,7 +2337,7 @@ directive|define
 name|IFNET_LOCK_INIT
 parameter_list|()
 define|\
-value|mtx_init(&ifnet_lock, "ifnet", NULL, MTX_DEF | MTX_RECURSE)
+value|rw_init_flags(&ifnet_lock, "ifnet",  RW_RECURSE)
 end_define
 
 begin_define
@@ -2080,7 +2345,7 @@ define|#
 directive|define
 name|IFNET_WLOCK
 parameter_list|()
-value|mtx_lock(&ifnet_lock)
+value|rw_wlock(&ifnet_lock)
 end_define
 
 begin_define
@@ -2088,7 +2353,7 @@ define|#
 directive|define
 name|IFNET_WUNLOCK
 parameter_list|()
-value|mtx_unlock(&ifnet_lock)
+value|rw_wunlock(&ifnet_lock)
 end_define
 
 begin_define
@@ -2096,7 +2361,7 @@ define|#
 directive|define
 name|IFNET_WLOCK_ASSERT
 parameter_list|()
-value|mtx_assert(&ifnet_lock, MA_OWNED)
+value|rw_assert(&ifnet_lock, RA_LOCKED)
 end_define
 
 begin_define
@@ -2104,7 +2369,7 @@ define|#
 directive|define
 name|IFNET_RLOCK
 parameter_list|()
-value|IFNET_WLOCK()
+value|rw_rlock(&ifnet_lock)
 end_define
 
 begin_define
@@ -2112,7 +2377,7 @@ define|#
 directive|define
 name|IFNET_RUNLOCK
 parameter_list|()
-value|IFNET_WUNLOCK()
+value|rw_runlock(&ifnet_lock)
 end_define
 
 begin_struct
@@ -2173,18 +2438,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
 name|ifnethead
 name|ifnet
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ifqmaxlen
 decl_stmt|;
 end_decl_stmt
 
@@ -2205,6 +2469,18 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|if_index
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ifqmaxlen
 decl_stmt|;
 end_decl_stmt
 

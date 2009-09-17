@@ -143,6 +143,20 @@ block|, }
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|MTAG_NGIF
+value|NGM_IFACE_COOKIE
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTAG_NGIF_CALLED
+value|0 | MTAG_PERSISTENT
+end_define
+
 begin_endif
 endif|#
 directive|endif

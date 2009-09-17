@@ -5872,12 +5872,13 @@ condition|(
 operator|!
 name|reqfile
 operator|&&
-operator|!
 name|X509_verify_cert
 argument_list|(
 operator|&
 name|xsc
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|end

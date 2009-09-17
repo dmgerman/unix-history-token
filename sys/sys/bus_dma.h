@@ -147,6 +147,17 @@ value|0x200
 end_define
 
 begin_comment
+comment|/*  * The following flag is a DMA tag hint that the page offset of the  * loaded kernel virtual address must be preserved in the first  * physical segment address, when the KVA is loaded into DMA.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_DMA_KEEP_PG_OFFSET
+value|0x400
+end_define
+
+begin_comment
 comment|/* Forwards needed by prototypes below. */
 end_comment
 

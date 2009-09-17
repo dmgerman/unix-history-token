@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetgrent.c,v 1.3.18.1 2005/04/27 05:00:58 sra Exp $"
+literal|"$Id: getnetgrent.c,v 1.3.18.2 2008/02/27 00:08:30 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,16 +254,19 @@ begin_function
 name|int
 name|getnetgrent
 parameter_list|(
+name|NGR_R_CONST
 name|char
 modifier|*
 modifier|*
 name|host
 parameter_list|,
+name|NGR_R_CONST
 name|char
 modifier|*
 modifier|*
 name|user
 parameter_list|,
+name|NGR_R_CONST
 name|char
 modifier|*
 modifier|*

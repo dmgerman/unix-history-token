@@ -79,9 +79,6 @@ decl_stmt|;
 name|Elf_Size
 name|entry
 decl_stmt|;
-name|Elf_Size
-name|trace
-decl_stmt|;
 block|}
 name|__ElfN
 typedef|(

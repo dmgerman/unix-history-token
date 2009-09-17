@@ -653,6 +653,9 @@ name|used
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|assertEqualIntA
 argument_list|(
 name|a
@@ -667,7 +670,15 @@ operator|&
 name|ae
 argument_list|)
 argument_list|)
+condition|)
+block|{
+name|archive_read_finish
+argument_list|(
+name|a
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|assertEqualInt
 argument_list|(
 literal|1

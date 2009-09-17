@@ -338,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|cpu_l2cache_wbinv_all
-value|feroceon_l2cache_wbinv_all
+value|sheeva_l2cache_wbinv_all
 end_define
 
 begin_else
@@ -1869,10 +1869,6 @@ name|Elf_Addr
 name|ssym
 init|=
 literal|0
-decl_stmt|,
-name|esym
-init|=
-literal|0
 decl_stmt|;
 name|Elf_Dyn
 modifier|*
@@ -1887,8 +1883,6 @@ operator|)
 name|kstart
 expr_stmt|;
 name|ssym
-operator|=
-name|esym
 operator|=
 literal|0
 expr_stmt|;

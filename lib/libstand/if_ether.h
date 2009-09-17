@@ -489,6 +489,11 @@ modifier|*
 parameter_list|,
 name|u_char
 modifier|*
+parameter_list|,
+name|struct
+name|llentry
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -738,6 +743,11 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|u_char
+modifier|*
+parameter_list|,
+name|struct
+name|llentry
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;

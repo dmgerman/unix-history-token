@@ -3745,7 +3745,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|bzero
@@ -3799,7 +3799,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|V_ip6stat

@@ -35,6 +35,12 @@ begin_comment
 comment|/* For struct klist. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2414,6 +2420,11 @@ modifier|*
 name|p_dtrace
 decl_stmt|;
 comment|/* (*) DTrace-specific data. */
+name|struct
+name|cv
+name|p_pwait
+decl_stmt|;
+comment|/* (*) wait cv for exit/exec */
 block|}
 struct|;
 end_struct

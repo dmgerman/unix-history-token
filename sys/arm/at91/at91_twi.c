@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/iicbus/iiconf.h>
 end_include
 
@@ -519,7 +525,7 @@ name|TWI_CWGR_CKDIV
 argument_list|(
 literal|8
 operator|*
-name|AT91C_MASTER_CLOCK
+name|at91_master_clock
 operator|/
 name|TWI_FASTEST_CLOCK
 argument_list|)

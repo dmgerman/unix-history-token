@@ -599,14 +599,6 @@ name|sdl_family
 operator|==
 name|AF_LINK
 operator|&&
-operator|(
-name|rtm
-operator|->
-name|rtm_flags
-operator|&
-name|RTF_LLINFO
-operator|)
-operator|&&
 operator|!
 operator|(
 name|rtm

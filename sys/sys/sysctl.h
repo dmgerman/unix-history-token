@@ -293,6 +293,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CTLFLAG_MPSAFE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Handler is MP safe */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CTLFLAG_RDTUN
 value|(CTLFLAG_RD|CTLFLAG_TUN)
 end_define
@@ -913,7 +924,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 }, nbr, kind,		 \ 		a1, a2, #name, handler, fmt, 0, __DESCR(descr) };        \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
+value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { NULL }, nbr, kind,	 \ 		a1, a2, #name, handler, fmt, 0, __DESCR(descr) };        \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
 end_define
 
 begin_ifdef
@@ -958,6 +969,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -988,6 +1005,47 @@ parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, kind,&a1, a2, handler, fmt, descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_OID
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|kind
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,	\
+name|handler
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, kind,& mod ## _0._ ## a1, a2,	\ 	    handler, fmt, descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1068,7 +1126,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|(access),	    \ 	0, 0, handler, "N", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|(access),	    \ 	NULL, 0, handler, "N", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1136,6 +1194,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1162,6 +1226,43 @@ parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_STRING|(access), \&sym, len, sysctl_handle_string, "A", descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_STRING
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|sym
+parameter_list|,
+name|len
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_STRING|(access), \& mod ## _0._ ## sym, len, sysctl_handle_string, "A", descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1217,7 +1318,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|(access), \ 		ptr, val, sysctl_handle_int, "I", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_int, "I", descr)
 end_define
 
 begin_ifdef
@@ -1258,6 +1359,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1282,8 +1389,45 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|(access), \&sym, val, sysctl_handle_int, "I", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access), \&sym, val, sysctl_handle_int, "I", descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_INT
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|sym
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access), \& mod ## _0._ ## sym, val, sysctl_handle_int, "I", descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1312,7 +1456,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|(access),	    \ 	ptr, val, sysctl_handle_int, "I", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access),	    \ 	ptr, val, sysctl_handle_int, "I", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1339,7 +1483,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \ 		ptr, val, sysctl_handle_int, "IU", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_ifdef
@@ -1380,6 +1524,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1404,8 +1554,45 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \&sym, val, sysctl_handle_int, "IU", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \&sym, val, sysctl_handle_int, "IU", descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_UINT
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|sym
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \& mod ## _0._ ## sym, val, sysctl_handle_int, "IU", descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1434,7 +1621,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|(access),	    \ 	ptr, val, sysctl_handle_int, "IU", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access),	    \ 	ptr, val, sysctl_handle_int, "IU", __DESCR(descr))
 end_define
 
 begin_define
@@ -1457,7 +1644,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \ 		ptr, val, sysctl_handle_int, "IX", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_int, "IX", descr)
 end_define
 
 begin_define
@@ -1482,7 +1669,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|(access),	    \ 	ptr, val, sysctl_handle_int, "IX", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access),	    \ 	ptr, val, sysctl_handle_int, "IX", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1509,7 +1696,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_LONG|(access), \ 		ptr, val, sysctl_handle_long, "L", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_LONG|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_long, "L", descr)
 end_define
 
 begin_define
@@ -1532,7 +1719,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "L", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_long, "L", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1559,7 +1746,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|(access), \ 		ptr, val, sysctl_handle_long, "LU", __DESCR(descr))
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_long, "LU", __DESCR(descr))
 end_define
 
 begin_define
@@ -1582,7 +1769,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "LU", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_long, "LU", __DESCR(descr))
 end_define
 
 begin_define
@@ -1605,7 +1792,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|(access), \ 		ptr, val, sysctl_handle_long, "LX", __DESCR(descr))
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_long, "LX", __DESCR(descr))
 end_define
 
 begin_define
@@ -1628,7 +1815,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "LX", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_long, "LX", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1655,7 +1842,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_QUAD|(access), \ 		ptr, val, sysctl_handle_quad, "Q", __DESCR(descr))
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_QUAD|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_quad, "Q", __DESCR(descr))
 end_define
 
 begin_define
@@ -1678,7 +1865,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_QUAD|(access),	    \ 	ptr, 0, sysctl_handle_quad, "Q", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_QUAD|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_quad, "Q", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1802,6 +1989,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1828,6 +2021,43 @@ parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|(access), \&sym, sizeof(struct type), sysctl_handle_opaque, \ 		"S," #type, descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_STRUCT
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|sym
+parameter_list|, \
+name|type
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|(access), \& mod ## _0._ ## sym, sizeof(struct type), \ 		sysctl_handle_opaque, "S," #type, descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4092,6 +4322,24 @@ name|struct
 name|sysctl_req
 modifier|*
 name|req
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sysctl_lock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sysctl_unlock
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

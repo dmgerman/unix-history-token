@@ -62,6 +62,12 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
 comment|/*  * Context push/pop for nested command files.  */
 end_comment

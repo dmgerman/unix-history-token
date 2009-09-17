@@ -49,61 +49,11 @@ directive|include
 file|<sys/callout.h>
 end_include
 
-begin_struct
-struct|struct
-name|llinfo_nd6
-block|{
-name|struct
-name|llinfo_nd6
-modifier|*
-name|ln_next
-decl_stmt|;
-name|struct
-name|llinfo_nd6
-modifier|*
-name|ln_prev
-decl_stmt|;
-name|struct
-name|rtentry
-modifier|*
-name|ln_rt
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|ln_hold
-decl_stmt|;
-comment|/* last packet until resolved/timeout */
-name|long
-name|ln_asked
-decl_stmt|;
-comment|/* number of queries already sent for this addr */
-name|u_long
-name|ln_expire
-decl_stmt|;
-comment|/* lifetime for NDP state transition */
-name|short
-name|ln_state
-decl_stmt|;
-comment|/* reachability state */
-name|short
-name|ln_router
-decl_stmt|;
-comment|/* 2^0: ND6 router bit */
-name|int
-name|ln_byhint
-decl_stmt|;
-comment|/* # of times we made it reachable by UL hint */
-name|long
-name|ln_ntick
-decl_stmt|;
-name|struct
-name|callout
-name|ln_timer_ch
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_struct_decl
+struct_decl|struct
+name|llentry
+struct_decl|;
+end_struct_decl
 
 begin_define
 define|#
@@ -172,7 +122,7 @@ name|ND6_LLINFO_PERMANENT
 parameter_list|(
 name|n
 parameter_list|)
-value|(((n)->ln_expire == 0)&& ((n)->ln_state> ND6_LLINFO_INCOMPLETE))
+value|(((n)->la_expire == 0)&& ((n)->ln_state> ND6_LLINFO_INCOMPLETE))
 end_define
 
 begin_struct
@@ -282,6 +232,20 @@ define|#
 directive|define
 name|ND6_IFF_DONT_SET_IFROUTE
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND6_CREATE
+value|LLE_CREATE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND6_EXCLUSIVE
+value|LLE_EXCLUSIVE
 end_define
 
 begin_ifdef
@@ -1195,6 +1159,12 @@ begin_comment
 comment|/* nd6.c */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1247,14 +1217,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|llinfo_nd6
-name|llinfo_nd6
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|nd_drhead
 name|nd_defrouter
 decl_stmt|;
@@ -1281,18 +1243,6 @@ name|int
 name|nd6_onlink_ns_rfc4861
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|nd6log
-parameter_list|(
-name|x
-parameter_list|)
-value|do { if (V_nd6_debug) log x; } while (
-comment|/*CONSTCOND*/
-value|0)
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -1356,6 +1306,27 @@ end_decl_stmt
 begin_comment
 comment|/* seconds */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nd6log
+parameter_list|(
+name|x
+parameter_list|)
+value|do { if (V_nd6_debug) log x; } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
 
 begin_union
 union|union
@@ -1613,7 +1584,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|rtentry
+name|llentry
 modifier|*
 name|nd6_lookup
 name|__P
@@ -1654,7 +1625,23 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|llinfo_nd6
+name|llentry
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nd6_llinfo_settimer_locked
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|llentry
 operator|*
 operator|,
 name|long
@@ -1740,26 +1727,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|nd6_rtrequest
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
-name|rtentry
-operator|*
-operator|,
-expr|struct
-name|rt_addrinfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|nd6_ioctl
 name|__P
@@ -1779,7 +1746,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|rtentry
+name|llentry
 modifier|*
 name|nd6_cache_lladdr
 name|__P
@@ -1838,6 +1805,75 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|nd6_output_lle
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
+expr|struct
+name|ifnet
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|,
+expr|struct
+name|rtentry
+operator|*
+operator|,
+expr|struct
+name|llentry
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nd6_output_flush
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
+expr|struct
+name|ifnet
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|,
+expr|struct
+name|rtentry
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|nd6_need_cache
 name|__P
 argument_list|(
@@ -1861,10 +1897,6 @@ name|ifnet
 operator|*
 operator|,
 expr|struct
-name|rtentry
-operator|*
-operator|,
-expr|struct
 name|mbuf
 operator|*
 operator|,
@@ -1873,6 +1905,11 @@ name|sockaddr
 operator|*
 operator|,
 name|u_char
+operator|*
+operator|,
+expr|struct
+name|llentry
+operator|*
 operator|*
 operator|)
 argument_list|)
@@ -1972,7 +2009,7 @@ name|in6_addr
 operator|*
 operator|,
 expr|struct
-name|llinfo_nd6
+name|llentry
 operator|*
 operator|,
 name|int

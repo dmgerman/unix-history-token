@@ -27,8 +27,6 @@ name|int
 name|nol_event
 index|[
 name|IEEE80211_CHAN_MAX
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct

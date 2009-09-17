@@ -359,17 +359,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_ROOT_HUB_ADDR
-value|1
-end_define
-
-begin_comment
-comment|/* value */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|USB_ISOC_TIME_MAX
 value|128
 end_define
@@ -646,7 +635,7 @@ name|USB_XFER_LOCK
 parameter_list|(
 name|_x
 parameter_list|)
-value|mtx_lock((_x)->xfer_mtx)
+value|mtx_lock((_x)->xroot->xfer_mtx)
 end_define
 
 begin_define
@@ -656,7 +645,7 @@ name|USB_XFER_UNLOCK
 parameter_list|(
 name|_x
 parameter_list|)
-value|mtx_unlock((_x)->xfer_mtx)
+value|mtx_unlock((_x)->xroot->xfer_mtx)
 end_define
 
 begin_define
@@ -668,7 +657,7 @@ name|_x
 parameter_list|,
 name|_t
 parameter_list|)
-value|mtx_assert((_x)->xfer_mtx, _t)
+value|mtx_assert((_x)->xroot->xfer_mtx, _t)
 end_define
 
 begin_comment
@@ -1152,25 +1141,9 @@ name|pipe
 decl_stmt|;
 comment|/* our USB pipe */
 name|struct
-name|usb2_device
-modifier|*
-name|udev
-decl_stmt|;
-name|struct
-name|mtx
-modifier|*
-name|xfer_mtx
-decl_stmt|;
-comment|/* cannot be changed during operation */
-name|struct
 name|usb2_xfer_root
 modifier|*
-name|usb2_root
-decl_stmt|;
-comment|/* used by HC driver */
-name|void
-modifier|*
-name|usb2_sc
+name|xroot
 decl_stmt|;
 comment|/* used by HC driver */
 name|void
@@ -1671,7 +1644,31 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
+name|usb2_get_mode
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
 name|usb2_get_speed
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|usb2_get_isoc_fps
 parameter_list|(
 name|struct
 name|usb2_device
@@ -1798,6 +1795,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|usb2_transfer_set_stall
+parameter_list|(
+name|struct
+name|usb2_xfer
+modifier|*
+name|xfer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+name|usb2_transfer_pending
 parameter_list|(
 name|struct
 name|usb2_xfer
@@ -1941,6 +1950,21 @@ name|struct
 name|usb2_device
 modifier|*
 name|udev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb2_set_power_mode
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|,
+name|uint8_t
+name|power_mode
 parameter_list|)
 function_decl|;
 end_function_decl

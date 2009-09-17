@@ -2203,7 +2203,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|an_shutdown
 parameter_list|(
 name|device_t

@@ -55,65 +55,6 @@ name|USB_GENERIC_NAME
 value|"ugen"
 end_define
 
-begin_comment
-comment|/* definition of USB power mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_OFF
-value|0
-end_define
-
-begin_comment
-comment|/* turn off device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_ON
-value|1
-end_define
-
-begin_comment
-comment|/* always on */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_SAVE
-value|2
-end_define
-
-begin_comment
-comment|/* automatic suspend and resume */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_SUSPEND
-value|3
-end_define
-
-begin_comment
-comment|/* force suspend */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_RESUME
-value|4
-end_define
-
-begin_comment
-comment|/* force resume */
-end_comment
-
 begin_struct
 struct|struct
 name|usb2_read_dir
@@ -237,23 +178,6 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|usb2_device_names
-block|{
-name|char
-modifier|*
-name|udn_devnames_ptr
-decl_stmt|;
-comment|/* userland pointer to comma separated 					 * list of device names */
-name|uint16_t
-name|udn_devnames_len
-decl_stmt|;
-comment|/* maximum string length including 					 * terminating zero */
 block|}
 struct|;
 end_struct
@@ -710,7 +634,7 @@ begin_define
 define|#
 directive|define
 name|USB_GET_REPORT_DESC
-value|_IOR ('U', 21, struct usb2_gen_descriptor)
+value|_IOWR('U', 21, struct usb2_gen_descriptor)
 end_define
 
 begin_define
@@ -881,8 +805,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_GET_DEVICENAMES
-value|_IOW ('U', 121, struct usb2_device_names)
+name|USB_GET_IFACE_DRIVER
+value|_IOWR('U', 121, struct usb2_gen_descriptor)
 end_define
 
 begin_define

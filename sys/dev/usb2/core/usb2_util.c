@@ -423,12 +423,11 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	 usb2_pause_mtx - factored out code  *  * This function will delay the code by the passed number of  * milliseconds. The passed mutex "mtx" will be dropped while waiting,  * if "mtx" is not NULL. The number of milliseconds per second is 1024  * for sake of optimisation.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	 usb2_pause_mtx - factored out code  *  * This function will delay the code by the passed number of system  * ticks. The passed mutex "mtx" will be dropped while waiting, if  * "mtx" is not NULL.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -440,44 +439,10 @@ name|mtx
 modifier|*
 name|mtx
 parameter_list|,
-name|uint32_t
-name|ms
+name|int
+name|_ticks
 parameter_list|)
 block|{
-if|if
-condition|(
-name|cold
-condition|)
-block|{
-name|ms
-operator|=
-operator|(
-name|ms
-operator|+
-literal|1
-operator|)
-operator|*
-literal|1024
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|ms
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ms
-operator|=
-name|USB_MS_TO_TICKS
-argument_list|(
-name|ms
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Add one to the number of ticks so that we don't return 		 * too early! 		 */
-name|ms
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|mtx
@@ -491,15 +456,55 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cold
+condition|)
+block|{
+comment|/* convert to milliseconds */
+name|_ticks
+operator|=
+operator|(
+name|_ticks
+operator|*
+literal|1000
+operator|)
+operator|/
+name|hz
+expr_stmt|;
+comment|/* convert to microseconds, rounded up */
+name|_ticks
+operator|=
+operator|(
+name|_ticks
+operator|+
+literal|1
+operator|)
+operator|*
+literal|1000
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|_ticks
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Add one to the number of ticks so that we don't return 		 * too early! 		 */
+name|_ticks
+operator|++
+expr_stmt|;
+if|if
+condition|(
 name|pause
 argument_list|(
 literal|"USBWAIT"
 argument_list|,
-name|ms
+name|_ticks
 argument_list|)
 condition|)
 block|{
 comment|/* ignore */
+block|}
 block|}
 if|if
 condition|(
@@ -512,8 +517,6 @@ argument_list|(
 name|mtx
 argument_list|)
 expr_stmt|;
-block|}
-return|return;
 block|}
 end_function
 
@@ -558,7 +561,6 @@ condition|)
 block|{
 comment|/* ignore any errors */
 block|}
-return|return;
 block|}
 end_function
 
@@ -638,7 +640,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* kill trailing spaces */
-return|return;
 block|}
 end_function
 
@@ -881,7 +882,6 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -904,7 +904,6 @@ argument_list|(
 name|cv
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -948,7 +947,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1081,7 +1079,6 @@ argument_list|(
 name|cv
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1104,7 +1101,6 @@ argument_list|(
 name|cv
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

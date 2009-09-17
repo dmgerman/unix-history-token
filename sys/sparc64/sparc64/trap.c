@@ -181,6 +181,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/ofw_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -807,7 +813,7 @@ name|cell_t
 operator|)
 name|tba_addr
 expr_stmt|;
-name|openfirmware
+name|ofw_entry
 argument_list|(
 operator|&
 name|args

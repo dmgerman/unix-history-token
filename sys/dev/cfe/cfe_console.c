@@ -191,17 +191,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|tty
-modifier|*
-name|cfe_tp
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* XXX does cfe have to poll? */
 end_comment

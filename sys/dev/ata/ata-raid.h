@@ -205,8 +205,12 @@ name|AR_F_VIA_RAID
 value|0x2000
 define|#
 directive|define
+name|AR_F_DDF_RAID
+value|0x4000
+define|#
+directive|define
 name|AR_F_FORMAT_MASK
-value|0x3fff
+value|0x7fff
 name|u_int
 name|generation
 decl_stmt|;
@@ -514,6 +518,21 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/* DDF Information.  Metadata definitions are in another file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDF_LBA
+parameter_list|(
+name|dev
+parameter_list|)
+define|\
+value|(((struct ad_softc *)device_get_ivars(dev))->total_secs - 1)
+end_define
 
 begin_comment
 comment|/* Highpoint V2 RocketRAID Metadata */

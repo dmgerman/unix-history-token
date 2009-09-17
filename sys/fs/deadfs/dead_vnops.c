@@ -246,6 +246,11 @@ operator|=
 name|VOP_PANIC
 block|,
 operator|.
+name|vop_vptocnp
+operator|=
+name|VOP_EBADF
+block|,
+operator|.
 name|vop_write
 operator|=
 name|dead_write

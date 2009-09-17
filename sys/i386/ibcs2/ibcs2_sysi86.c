@@ -190,13 +190,11 @@ name|val
 operator|=
 name|IBCS2_FP_387
 expr_stmt|;
-comment|/* FPU hardware */
 else|else
 name|val
 operator|=
-name|IBCS2_FP_SW
+name|IBCS2_FP_NO
 expr_stmt|;
-comment|/* FPU emulator */
 if|if
 condition|(
 operator|(
@@ -246,9 +244,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|name
 index|[
 literal|0
@@ -263,14 +258,8 @@ index|]
 operator|=
 name|KERN_HOSTNAME
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|userland_sysctl
 argument_list|(
 name|td
@@ -295,16 +284,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}

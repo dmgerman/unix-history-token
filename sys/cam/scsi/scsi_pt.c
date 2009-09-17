@@ -1342,11 +1342,25 @@ name|periph
 operator|->
 name|softc
 expr_stmt|;
+name|xpt_print
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+literal|"removing device entry\n"
+argument_list|)
+expr_stmt|;
 name|devstat_remove_entry
 argument_list|(
 name|softc
 operator|->
 name|device_stats
+argument_list|)
+expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
 argument_list|)
 expr_stmt|;
 name|destroy_dev
@@ -1356,13 +1370,9 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|xpt_print
+name|cam_periph_lock
 argument_list|(
 name|periph
-operator|->
-name|path
-argument_list|,
-literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
 name|free

@@ -17189,7 +17189,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -18695,7 +18695,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -19071,8 +19071,8 @@ name|again
 goto|;
 block|}
 comment|/* 	 * Probe one of the directory entries to see if the filesystem 	 * supports VGET. 	 */
-if|if
-condition|(
+name|error
+operator|=
 name|VFS_VGET
 argument_list|(
 name|vp
@@ -19088,13 +19088,26 @@ argument_list|,
 operator|&
 name|nvp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+if|if
+condition|(
+name|error
 operator|==
 name|EOPNOTSUPP
 condition|)
-block|{
 name|error
 operator|=
 name|NFSERR_NOTSUPP
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|NFSERR_SERVERFAULT
 expr_stmt|;
 name|vrele
 argument_list|(

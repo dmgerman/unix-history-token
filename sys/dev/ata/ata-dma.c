@@ -120,17 +120,6 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|ata_dmafini
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|ata_dmasetupc_cb
 parameter_list|(
 name|void

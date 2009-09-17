@@ -229,17 +229,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAGIC_NO_CHECK_TROFF
-value|0x040000
-end_define
-
-begin_comment
-comment|/* Don't check ascii/troff */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MAGIC_NO_CHECK_TOKENS
 value|0x100000
 end_define
@@ -249,7 +238,7 @@ comment|/* Don't check ascii/tokens */
 end_comment
 
 begin_comment
-comment|/* Defined for backwards compatibility; does nothing */
+comment|/* Defined for backwards compatibility; do nothing */
 end_comment
 
 begin_define
@@ -261,6 +250,17 @@ end_define
 
 begin_comment
 comment|/* Don't check ascii/fortran */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_TROFF
+value|0x000000
+end_define
+
+begin_comment
+comment|/* Don't check ascii/troff */
 end_comment
 
 begin_ifdef

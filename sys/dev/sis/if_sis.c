@@ -6237,12 +6237,39 @@ expr_stmt|;
 comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 	 	 * comes up in the ring. 		 */
 if|if
 condition|(
-operator|!
 operator|(
-name|rxstat
+name|ifp
+operator|->
+name|if_capenable
 operator|&
-name|SIS_CMDSTS_PKT_OK
+name|IFCAP_VLAN_MTU
 operator|)
+operator|!=
+literal|0
+operator|&&
+name|total_len
+operator|<=
+operator|(
+name|ETHER_MAX_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
+operator|-
+name|ETHER_CRC_LEN
+operator|)
+condition|)
+name|rxstat
+operator|&=
+operator|~
+name|SIS_RXSTAT_GIANT
+expr_stmt|;
+if|if
+condition|(
+name|SIS_RXSTAT_ERROR
+argument_list|(
+name|rxstat
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|ifp
@@ -7135,6 +7162,8 @@ name|SIS_ISR_RX_DESC_OK
 operator||
 name|SIS_ISR_RX_OK
 operator||
+name|SIS_ISR_RX_ERR
+operator||
 name|SIS_ISR_RX_IDLE
 operator|)
 condition|)
@@ -7147,11 +7176,7 @@ if|if
 condition|(
 name|status
 operator|&
-operator|(
-name|SIS_ISR_RX_ERR
-operator||
 name|SIS_ISR_RX_OFLOW
-operator|)
 condition|)
 name|sis_rxeoc
 argument_list|(
@@ -9714,7 +9739,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sis_shutdown
 parameter_list|(
 name|device_t
@@ -9753,6 +9778,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

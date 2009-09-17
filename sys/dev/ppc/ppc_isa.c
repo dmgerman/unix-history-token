@@ -38,7 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -164,7 +176,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|ppc_attach
+name|ppc_detach
 argument_list|)
 block|,
 comment|/* bus interface */
@@ -177,16 +189,9 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_setup_intr
+name|bus_write_ivar
 argument_list|,
-name|ppc_setup_intr
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_teardown_intr
-argument_list|,
-name|ppc_teardown_intr
+name|ppc_write_ivar
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -539,6 +544,11 @@ decl_stmt|;
 name|int
 name|spin
 decl_stmt|;
+name|PPC_ASSERT_LOCKED
+argument_list|(
+name|ppc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -782,9 +792,14 @@ block|{
 comment|/* release CPU */
 name|error
 operator|=
-name|tsleep
+name|mtx_sleep
 argument_list|(
 name|ppc
+argument_list|,
+operator|&
+name|ppc
+operator|->
+name|ppc_lock
 argument_list|,
 name|PPBPRI
 operator||
@@ -910,9 +925,14 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|tsleep
+name|mtx_sleep
 argument_list|(
 name|ppc
+argument_list|,
+operator|&
+name|ppc
+operator|->
+name|ppc_lock
 argument_list|,
 name|PPBPRI
 operator||

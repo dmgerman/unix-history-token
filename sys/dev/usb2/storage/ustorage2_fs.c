@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
@@ -1470,19 +1470,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 comment|/* 	 * NOTE: the softc struct is bzero-ed in device_set_driver. 	 * We can safely call ustorage_fs_detach without specifically 	 * initializing the struct. 	 */
 name|sc
 operator|->
@@ -1926,7 +1913,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1981,7 +1967,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2759,7 +2744,6 @@ name|USTORAGE_FS_T_BBB_STATUS
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2975,7 +2959,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3214,7 +3197,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3492,7 +3474,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3677,7 +3658,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5696,37 +5676,14 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|struct
-name|ustorage_fs_lun
-modifier|*
-name|currlun
-init|=
-name|sc
-operator|->
-name|sc_transfer
-operator|.
-name|currlun
-decl_stmt|;
-name|uint8_t
-name|rc
-decl_stmt|;
-comment|/* 	 * We ignore the requested LBA and write out all dirty data buffers. 	 */
-name|rc
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|rc
-condition|)
-block|{
-name|currlun
-operator|->
-name|sense_data
-operator|=
-name|SS_WRITE_ERROR
-expr_stmt|;
-block|}
+block|struct ustorage_fs_lun *currlun = sc->sc_transfer.currlun; 	uint8_t rc;
+comment|/* 	 * We ignore the requested LBA and write out all dirty data buffers. 	 */
+block|rc = 0; 	if (rc) { 		currlun->sense_data = SS_WRITE_ERROR; 	}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

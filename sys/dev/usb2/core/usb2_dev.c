@@ -268,7 +268,6 @@ specifier|const
 name|char
 modifier|*
 modifier|*
-name|pp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -281,7 +280,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|path
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -292,12 +290,10 @@ name|int
 name|usb2_check_access
 parameter_list|(
 name|int
-name|fflags
 parameter_list|,
 name|struct
 name|usb2_perm
 modifier|*
-name|puser
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -310,20 +306,16 @@ parameter_list|(
 name|struct
 name|usb2_fifo
 modifier|*
-name|f
 parameter_list|,
 name|struct
 name|file
 modifier|*
-name|fp
 parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|,
 name|int
-name|fflags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -336,15 +328,12 @@ parameter_list|(
 name|struct
 name|usb2_fifo
 modifier|*
-name|f
 parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|,
 name|int
-name|fflags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -356,7 +345,6 @@ name|usb2_dev_init
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -368,7 +356,6 @@ name|usb2_dev_init_post
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -380,7 +367,6 @@ name|usb2_dev_uninit
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -393,19 +379,15 @@ parameter_list|(
 name|struct
 name|usb2_fifo
 modifier|*
-name|f
 parameter_list|,
 name|void
 modifier|*
-name|cp
 parameter_list|,
 name|int
-name|n
 parameter_list|,
 name|struct
 name|uio
 modifier|*
-name|uio
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -418,7 +400,6 @@ parameter_list|(
 name|struct
 name|usb2_fifo_methods
 modifier|*
-name|pm
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -430,21 +411,17 @@ name|usb2_clone
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|USB_UCRED
 name|char
 modifier|*
-name|name
 parameter_list|,
 name|int
-name|namelen
 parameter_list|,
 name|struct
 name|cdev
 modifier|*
 modifier|*
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -471,16 +448,12 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|uint8_t
-name|iface_index
 parameter_list|,
 name|uint8_t
-name|ep_index
 parameter_list|,
 name|uint8_t
-name|dir
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1173,7 +1146,6 @@ name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3088,7 +3060,6 @@ operator|&
 name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4114,7 +4085,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4584,7 +4554,6 @@ block|{
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -4884,7 +4853,6 @@ argument_list|(
 literal|"closed\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6129,7 +6097,6 @@ name|dev
 operator|=
 name|usb2_dev
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6176,7 +6143,6 @@ operator|&
 name|usb2_ugen_methods
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6206,7 +6172,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-comment|/* 	 * Create a dummy device so that we are visible. This device 	 * should never be opened. Therefore a space character is 	 * appended after the USB device name. 	 * 	 * NOTE: The permissions of this device is 0777, because we 	 * check the permissions again in the open routine against the 	 * real USB permissions which are not 0777. Else USB access 	 * will be limited to one user and one group. 	 */
+comment|/* 	 * Create a dummy device so that we are visible. This device 	 * should never be opened. Therefore a space character is 	 * appended after the USB device name. 	 * 	 * NOTE: The permissions of this device is 0666, because we 	 * check the permissions again in the open routine against the 	 * real USB permissions which are not 0666. Else USB access 	 * will be limited to one user and one group. 	 */
 name|usb2_dev
 operator|=
 name|make_dev
@@ -6220,7 +6186,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
 argument_list|,
-literal|0777
+literal|0666
 argument_list|,
 name|USB_DEVICE_NAME
 literal|" "
@@ -6269,7 +6235,6 @@ literal|"Registering clone handler failed!\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6343,7 +6308,6 @@ operator|&
 name|usb2_sym_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8605,7 +8569,6 @@ name|cv_io
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8679,7 +8642,6 @@ name|async_p
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8879,7 +8841,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* not flushing */
-return|return;
 block|}
 end_function
 
@@ -9015,7 +8976,6 @@ operator|=
 operator|&
 name|usb2_fifo_dummy_cmd
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9795,7 +9755,6 @@ name|used_q
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9865,7 +9824,6 @@ argument_list|,
 name|f_sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10089,7 +10047,6 @@ block|{
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -10253,7 +10210,6 @@ block|{
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -10356,7 +10312,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10907,7 +10862,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11122,7 +11076,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

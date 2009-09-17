@@ -1142,7 +1142,7 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-comment|/* 	 * XXX this is very, very ugly.  But I can't find a better 	 * way that won't duplicate a big amount of code from 	 * sys_open().  Ho hum... 	 * 	 * Fortunately for us, Solaris (at least 2.5.1) makes the 	 * /dev/ptmx open automatically just open a pty, that (after 	 * STREAMS I_PUSHes), is just a plain pty.  fstat() is used 	 * to get the minor device number to map to a tty. 	 *  	 * Cycle through the names. If sys_open() returns ENOENT (or 	 * ENXIO), short circuit the cycle and exit. 	 */
+comment|/* 	 * XXX this is very, very ugly.  But I can't find a better 	 * way that won't duplicate a big amount of code from 	 * sys_open().  Ho hum... 	 * 	 * Fortunately for us, Solaris (at least 2.5.1) makes the 	 * /dev/ptmx open automatically just open a pty, that (after 	 * STREAMS I_PUSHes), is just a plain pty.  fstat() is used 	 * to get the minor device number to map to a tty. 	 *  	 * Cycle through the names. If sys_open() returns ENOENT (or 	 * ENXIO), short circuit the cycle and exit. 	 * 	 * XXX: Maybe this can now be implemented by posix_openpt()? 	 */
 specifier|static
 name|char
 name|ptyname

@@ -5138,56 +5138,66 @@ begin_define
 define|#
 directive|define
 name|SVR_MPC8533
-value|0x803c0010
+value|0x803c
 end_define
 
 begin_define
 define|#
 directive|define
 name|SVR_MPC8533E
-value|0x80340010
+value|0x8034
 end_define
 
 begin_define
 define|#
 directive|define
 name|SVR_MPC8541
-value|0x80720011
+value|0x8072
 end_define
 
 begin_define
 define|#
 directive|define
 name|SVR_MPC8541E
-value|0x807a0011
+value|0x807a
 end_define
 
 begin_define
 define|#
 directive|define
 name|SVR_MPC8555
-value|0x80710011
+value|0x8071
 end_define
 
 begin_define
 define|#
 directive|define
 name|SVR_MPC8555E
-value|0x80790011
+value|0x8079
 end_define
 
 begin_define
 define|#
 directive|define
 name|SVR_MPC8572
-value|0x80e00010
+value|0x80e0
 end_define
 
 begin_define
 define|#
 directive|define
 name|SVR_MPC8572E
-value|0x80e80010
+value|0x80e8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_VER
+parameter_list|(
+name|svr
+parameter_list|)
+value|(((svr)>> 16)& 0xffff)
 end_define
 
 begin_define

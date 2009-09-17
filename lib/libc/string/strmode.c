@@ -73,17 +73,14 @@ begin_function
 name|void
 name|strmode
 parameter_list|(
+comment|/* mode_t */
+name|int
 name|mode
 parameter_list|,
-name|p
-parameter_list|)
-name|mode_t
-name|mode
-decl_stmt|;
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* print type */
 switch|switch

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -37,11 +37,15 @@ begin_comment
 comment|/* IANA assigned port number for SCTP over UDP encapsulation */
 end_comment
 
+begin_comment
+comment|/* For freebsd we cannot bind the port at  * startup. Otherwise what will happen is  * we really won't be bound. The user must  * put it into the sysctl... or we need  * to build a special timer for this to allow  * us to wait 1 second or so after the system  * comes up.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SCTP_OVER_UDP_TUNNELING_PORT
-value|9899
+value|0
 end_define
 
 begin_comment
@@ -1412,17 +1416,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Minimum number of bytes read by user before we  * condsider doing a rwnd update  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_MIN_READ_BEFORE_CONSIDERING
-value|3000
-end_define
-
-begin_comment
 comment|/*  * default HMAC for cookies, etc... use one of the AUTH HMAC id's  * SCTP_HMAC is the HMAC_ID to use  * SCTP_SIGNATURE_SIZE is the digest length  */
 end_comment
 
@@ -1446,67 +1439,6 @@ directive|define
 name|SCTP_SIGNATURE_ALOC_SIZE
 value|SCTP_SIGNATURE_SIZE
 end_define
-
-begin_comment
-comment|/* DEFINE HERE WHAT CRC YOU WANT TO USE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_USECRC_RFC2960
-value|1
-end_define
-
-begin_comment
-comment|/* #define SCTP_USECRC_FLETCHER 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_SSHCRC32 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_FASTCRC32 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_CRC32 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_TCP32 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_CRC16SMAL 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_CRC16 1 */
-end_comment
-
-begin_comment
-comment|/* #define SCTP_USECRC_MODADLER 1 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCTP_ADLER32_BASE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SCTP_ADLER32_BASE
-value|65521
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * the SCTP protocol signature this includes the version number encoded in  * the last 4 bits of the signature.  */
@@ -1658,6 +1590,24 @@ define|#
 directive|define
 name|SCTP_DATAGRAM_ACKED
 value|10010
+end_define
+
+begin_comment
+comment|/* EY  * If a tsn is nr-gapped, its first tagged as NR_MARKED and then NR_ACKED  * When yet another nr-sack is received, if a particular TSN's sent tag  * is observed to be NR_ACKED after gap-ack info is processed, this implies  * that particular TSN is reneged */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_DATAGRAM_NR_ACKED
+value|10020
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DATAGRAM_NR_MARKED
+value|20005
 end_define
 
 begin_define
@@ -1900,7 +1850,7 @@ value|0x000c
 end_define
 
 begin_comment
-comment|/* draft-ietf-stewart-strreset-xxx */
+comment|/* draft-ietf-stewart-tsvwg-strreset-xxx */
 end_comment
 
 begin_define
@@ -1929,6 +1879,13 @@ define|#
 directive|define
 name|SCTP_STR_RESET_RESPONSE
 value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STR_RESET_ADD_STREAMS
+value|0x0011
 end_define
 
 begin_define
@@ -2062,6 +2019,24 @@ define|#
 directive|define
 name|SCTP_ULP_ADAPTATION
 value|0xc006
+end_define
+
+begin_comment
+comment|/* behave-nat-draft */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_HAS_NAT_SUPPORT
+value|0xc007
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NAT_VTAGS
+value|0xc008
 end_define
 
 begin_comment
@@ -2524,6 +2499,43 @@ value|32
 end_define
 
 begin_comment
+comment|/* EY 05/13/08 - nr_sack version of the previous 3 constants */
+end_comment
+
+begin_comment
+comment|/* Maximum the nr mapping array will  grow to (TSN mapping array) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_NR_MAPPING_ARRAY
+value|512
+end_define
+
+begin_comment
+comment|/* size of the inital malloc on the nr mapping array */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_INITIAL_NR_MAPPING_ARRAY
+value|16
+end_define
+
+begin_comment
+comment|/* how much we grow the nr mapping array each call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_NR_MAPPING_ARRAY_INCR
+value|32
+end_define
+
+begin_comment
 comment|/*  * Here we define the timer types used by the implementation as arguments in  * the set/get timer type calls.  */
 end_comment
 
@@ -2774,28 +2786,6 @@ value|(((t)> SCTP_TIMER_TYPE_NONE)&& \ 					 ((t)< SCTP_TIMER_TYPE_LAST))
 end_define
 
 begin_comment
-comment|/*  * Number of ticks before the soxwakeup() event that is delayed is sent AFTER  * the accept() call  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_EVENTWAKEUP_WAIT_TICKS
-value|3000
-end_define
-
-begin_comment
-comment|/*  * Of course we really don't collect stale cookies, being folks of decerning  * taste. However we do count them, if we get too many before the association  * comes up.. we give up. Below is the constant that dictates when we give it  * up...this is a implemenation dependent treatment. In ours we do not ask  * for a extension of time, but just retry this many times...  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_MAX_STALE_COOKIES_I_COLLECT
-value|10
-end_define
-
-begin_comment
 comment|/* max number of TSN's dup'd that I will hold */
 end_comment
 
@@ -2811,35 +2801,6 @@ comment|/*  * Here we define the types used when setting the retry amounts.  */
 end_comment
 
 begin_comment
-comment|/* constants for type of set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_MAXATTEMPT_INIT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_MAXATTEMPT_SEND
-value|3
-end_define
-
-begin_comment
-comment|/* Maximum TSN's we will summarize in a drop report */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_MAX_DROP_REPORT
-value|16
-end_define
-
-begin_comment
 comment|/* How many drop re-attempts we make on  INIT/COOKIE-ECHO */
 end_comment
 
@@ -2849,21 +2810,6 @@ directive|define
 name|SCTP_RETRY_DROPPED_THRESH
 value|4
 end_define
-
-begin_comment
-comment|/*  * And the max we will keep a history of in the tcb which MUST be lower than  * 256.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_MAX_DROP_SAVE_REPORT
-value|16
-end_define
-
-begin_comment
-comment|/*  * Here we define the default timers and the default number of attemts we  * make for each respective side (send/init).  */
-end_comment
 
 begin_comment
 comment|/*  * Maxmium number of chunks a single association can have on it. Note that  * this is a squishy number since the count can run over this if the user  * sends a large message down .. the fragmented chunks don't count until  * AFTER the message is on queue.. it would be the next send that blocks  * things. This number will get tuned up at boot in the sctp_init and use the  * number of clusters as a base. This way high bandwidth environments will  * not get impacted by the lower bandwidth sending a bunch of 1 byte chunks  */
@@ -3106,41 +3052,6 @@ begin_comment
 comment|/* 10 min between raise attempts */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SCTP_DEF_PMTU_MIN
-value|600
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_MSEC_IN_A_SEC
-value|1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_USEC_IN_A_SEC
-value|1000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_NSEC_IN_A_SEC
-value|1000000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_MAX_OUTSTANDING_DG
-value|10000
-end_define
-
 begin_comment
 comment|/* How many streams I request initally by default */
 end_comment
@@ -3156,23 +3067,9 @@ begin_comment
 comment|/*  * How many smallest_mtu's need to increase before a window update sack is  * sent (should be a power of 2).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SCTP_SEG_TO_RWND_UPD
-value|32
-end_define
-
 begin_comment
 comment|/* Send window update (incr * this> hiwat). Should be a power of 2 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_SCALE_OF_RWND_TO_UPD
-value|4
-end_define
 
 begin_define
 define|#
@@ -3428,7 +3325,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_DEBUG_INDATA4
+name|SCTP_DEBUG_CRCOFFLOAD
 value|0x08000000
 end_define
 
@@ -3531,7 +3428,7 @@ value|1500
 end_define
 
 begin_comment
-comment|/* emegency default MTU */
+comment|/* emergency default MTU */
 end_comment
 
 begin_comment
@@ -3543,39 +3440,6 @@ define|#
 directive|define
 name|SCTP_MIN_RWND
 value|1500
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_WINDOW_MIN
-value|1500
-end_define
-
-begin_comment
-comment|/* smallest rwnd can be */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_WINDOW_MAX
-value|1048576
-end_define
-
-begin_comment
-comment|/* biggest I can grow rwnd to My playing 				 * around suggests a value greater than 64k 				 * does not do much, I guess via the kernel 				 * limitations on the stream/socket. */
-end_comment
-
-begin_comment
-comment|/* I can handle a 1meg re-assembly */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEFAULT_MAXMSGREASM
-value|1048576
 end_define
 
 begin_define
@@ -3829,7 +3693,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_NOTIFY_AUTH_KEY_CONFLICT
+name|SCTP_NOTIFY_AUTH_FREE_KEY
 value|26
 end_define
 
@@ -3843,8 +3707,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_NOTIFY_NO_PEER_AUTH
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NOTIFY_SENDER_DRY
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NOTIFY_STR_RESET_ADD_OK
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NOTIFY_STR_RESET_ADD_FAIL
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NOTIFY_STR_RESET_INSTREAM_ADD_OK
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_NOTIFY_MAX
-value|27
+value|32
 end_define
 
 begin_comment
@@ -4448,13 +4347,6 @@ name|SCTP_MAX_DATA_BUNDLING
 value|256
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_MAX_CONTROL_BUNDLING
-value|20
-end_define
-
 begin_comment
 comment|/* modular comparison */
 end_comment
@@ -4552,10 +4444,6 @@ directive|define
 name|SCTP_STACK_VTAG_HASH_SIZE
 value|32
 end_define
-
-begin_comment
-comment|/*  * If we use the per-endpoint model than we do not have a hash table of  * entries but instead have a single head pointer and we must crawl through  * the entire list.  */
-end_comment
 
 begin_comment
 comment|/*  * Number of seconds of time wait for a vtag.  */

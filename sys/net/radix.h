@@ -33,6 +33,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_rwlock.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -560,8 +566,8 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 name|struct
-name|mtx
-name|rnh_mtx
+name|rwlock
+name|rnh_lock
 decl_stmt|;
 comment|/* locks entire radix tree */
 endif|#
@@ -665,7 +671,7 @@ parameter_list|(
 name|rnh
 parameter_list|)
 define|\
-value|mtx_init(&(rnh)->rnh_mtx, "radix node head", NULL, MTX_DEF | MTX_RECURSE)
+value|rw_init_flags(&(rnh)->rnh_lock, "radix node head", 0)
 end_define
 
 begin_define
@@ -675,7 +681,7 @@ name|RADIX_NODE_HEAD_LOCK
 parameter_list|(
 name|rnh
 parameter_list|)
-value|mtx_lock(&(rnh)->rnh_mtx)
+value|rw_wlock(&(rnh)->rnh_lock)
 end_define
 
 begin_define
@@ -685,7 +691,37 @@ name|RADIX_NODE_HEAD_UNLOCK
 parameter_list|(
 name|rnh
 parameter_list|)
-value|mtx_unlock(&(rnh)->rnh_mtx)
+value|rw_wunlock(&(rnh)->rnh_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIX_NODE_HEAD_RLOCK
+parameter_list|(
+name|rnh
+parameter_list|)
+value|rw_rlock(&(rnh)->rnh_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIX_NODE_HEAD_RUNLOCK
+parameter_list|(
+name|rnh
+parameter_list|)
+value|rw_runlock(&(rnh)->rnh_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIX_NODE_HEAD_LOCK_TRY_UPGRADE
+parameter_list|(
+name|rnh
+parameter_list|)
+value|rw_try_upgrade(&(rnh)->rnh_lock)
 end_define
 
 begin_define
@@ -695,7 +731,7 @@ name|RADIX_NODE_HEAD_DESTROY
 parameter_list|(
 name|rnh
 parameter_list|)
-value|mtx_destroy(&(rnh)->rnh_mtx)
+value|rw_destroy(&(rnh)->rnh_lock)
 end_define
 
 begin_define
@@ -705,7 +741,17 @@ name|RADIX_NODE_HEAD_LOCK_ASSERT
 parameter_list|(
 name|rnh
 parameter_list|)
-value|mtx_assert(&(rnh)->rnh_mtx, MA_OWNED)
+value|rw_assert(&(rnh)->rnh_lock, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIX_NODE_HEAD_WLOCK_ASSERT
+parameter_list|(
+name|rnh
+parameter_list|)
+value|rw_assert(&(rnh)->rnh_lock, RA_WLOCKED)
 end_define
 
 begin_endif

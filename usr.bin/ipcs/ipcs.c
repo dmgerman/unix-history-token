@@ -1916,7 +1916,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmmax: %12d\t(max shared memory segment size)\n"
+literal|"\tshmmax: %12lu\t(max shared memory segment size)\n"
 argument_list|,
 name|shminfo
 operator|.
@@ -1925,7 +1925,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmmin: %12d\t(min shared memory segment size)\n"
+literal|"\tshmmin: %12lu\t(min shared memory segment size)\n"
 argument_list|,
 name|shminfo
 operator|.
@@ -1934,7 +1934,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmmni: %12d\t(max number of shared memory identifiers)\n"
+literal|"\tshmmni: %12lu\t(max number of shared memory identifiers)\n"
 argument_list|,
 name|shminfo
 operator|.
@@ -1943,7 +1943,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmseg: %12d\t(max shared memory segments per process)\n"
+literal|"\tshmseg: %12lu\t(max shared memory segments per process)\n"
 argument_list|,
 name|shminfo
 operator|.
@@ -1952,7 +1952,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmall: %12d\t(max amount of shared memory in pages)\n\n"
+literal|"\tshmall: %12lu\t(max amount of shared memory in pages)\n\n"
 argument_list|,
 name|shminfo
 operator|.

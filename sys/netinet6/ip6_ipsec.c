@@ -1161,7 +1161,7 @@ comment|/* count IPsec header size */
 end_comment
 
 begin_comment
-unit|ipsechdr = ipsec4_hdrsiz(m, 					 IPSEC_DIR_OUTBOUND, 					 NULL);
+unit|ipsechdr = ipsec_hdrsiz(m, IPSEC_DIR_OUTBOUND, NULL);
 comment|/* 		 * find the correct route for outer IPv4 		 * header, compute tunnel MTU. 		 */
 end_comment
 

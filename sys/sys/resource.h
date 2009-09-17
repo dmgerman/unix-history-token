@@ -356,7 +356,9 @@ specifier|static
 name|char
 modifier|*
 name|rlimit_ident
-index|[]
+index|[
+name|RLIM_NLIMITS
+index|]
 init|=
 block|{
 literal|"cpu"
@@ -380,6 +382,8 @@ block|,
 literal|"sbsize"
 block|,
 literal|"vmem"
+block|,
+literal|"npts"
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -1384,6 +1384,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Storcase (Kingston) InfoStation IFS FC2/SATA-R 201A 		 * PR: 129858 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"IFS"
+block|,
+literal|"FC2/SATA-R*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * Samsung YP-U3 mp3-player 		 * PR: 125398 		 */
 block|{
 name|T_DIRECT
@@ -2609,12 +2627,12 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-name|cam_periph_release
+name|cam_periph_unlock
 argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-name|cam_periph_unlock
+name|cam_periph_release
 argument_list|(
 name|periph
 argument_list|)
@@ -3438,6 +3456,11 @@ argument_list|,
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we can't free the sysctl tree, oh well... 	 */
 if|if
 condition|(
@@ -3472,11 +3495,6 @@ literal|"can't remove sysctl context\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|cam_periph_unlock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|disk_destroy
 argument_list|(
 name|softc
@@ -3492,16 +3510,16 @@ operator|->
 name|sendordered_c
 argument_list|)
 expr_stmt|;
-name|cam_periph_lock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|softc
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|cam_periph_lock
+argument_list|(
+name|periph
 argument_list|)
 expr_stmt|;
 block|}
@@ -3557,11 +3575,6 @@ name|ccb_getdev
 modifier|*
 name|cgd
 decl_stmt|;
-name|struct
-name|cam_sim
-modifier|*
-name|sim
-decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
@@ -3615,17 +3628,6 @@ name|T_OPTICAL
 condition|)
 break|break;
 comment|/* 		 * Allocate a peripheral instance for 		 * this device and start the probe 		 * process. 		 */
-name|sim
-operator|=
-name|xpt_path_sim
-argument_list|(
-name|cgd
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
 name|status
 operator|=
 name|cam_periph_alloc
@@ -3839,12 +3841,6 @@ operator|->
 name|unit_number
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|sysctl_ctx_init
 argument_list|(
 operator|&
@@ -3900,12 +3896,6 @@ argument_list|(
 literal|"dasysctlinit: unable to allocate sysctl tree\n"
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|cam_periph_release
 argument_list|(
 name|periph
@@ -3948,12 +3938,6 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Minimum CDB size"
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|cam_periph_release

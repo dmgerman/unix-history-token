@@ -747,11 +747,6 @@ name|int
 name|loop
 decl_stmt|;
 name|u_int
-name|kerneldatasize
-decl_stmt|,
-name|symbolsize
-decl_stmt|;
-name|u_int
 name|l1pagetable
 decl_stmt|;
 name|vm_offset_t
@@ -762,9 +757,6 @@ name|lastalloced
 decl_stmt|;
 name|vm_offset_t
 name|lastaddr
-decl_stmt|;
-name|vm_size_t
-name|pt_size
 decl_stmt|;
 name|uint32_t
 name|memsize
@@ -864,23 +856,6 @@ operator|.
 name|pv_pa
 operator|=
 name|MDROOT_ADDR
-expr_stmt|;
-name|kerneldatasize
-operator|=
-operator|(
-name|u_int32_t
-operator|)
-operator|&
-name|end
-operator|-
-operator|(
-name|u_int32_t
-operator|)
-name|KERNVIRTADDR
-expr_stmt|;
-name|symbolsize
-operator|=
-literal|0
 expr_stmt|;
 name|freemempos
 operator|=
@@ -1053,22 +1028,13 @@ name|pv_pa
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Allocate a page for the system page mapped to V0x00000000 	 * This page will just contain the system vectors and can be 	 * shared by all processes. 	 */
 name|valloc_pages
 argument_list|(
 name|systempage
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Allocate a page for the system page mapped to V0x00000000 	 * This page will just contain the system vectors and can be 	 * shared by all processes. 	 */
-name|pt_size
-operator|=
-name|round_page
-argument_list|(
-name|freemempos
-argument_list|)
-operator|-
-name|physical_freestart
 expr_stmt|;
 comment|/* Allocate stacks for all modes */
 name|valloc_pages

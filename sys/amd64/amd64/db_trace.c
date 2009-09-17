@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1644,6 +1650,27 @@ name|frame_type
 operator|=
 name|SYSCALL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_IA32
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"Xint0x80_syscall"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|frame_type
+operator|=
+name|SYSCALL
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* XXX: These are interrupts with trap frames. */
 elseif|else
 if|if

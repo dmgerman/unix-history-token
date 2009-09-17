@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: assertions.h,v 1.2.18.1 2005/04/27 05:00:50 sra Exp $  */
+comment|/*  * $Id: assertions.h,v 1.2.18.2 2008/10/15 03:57:21 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -61,6 +61,10 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/* coverity[+kill] */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|assertion_failure_callback
@@ -90,11 +94,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CHECK_ALL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__COVERITY__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -129,11 +141,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CHECK_NONE
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__COVERITY__
+argument_list|)
+end_if
 
 begin_define
 define|#

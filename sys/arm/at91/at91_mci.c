@@ -229,6 +229,19 @@ name|device_t
 name|dev
 decl_stmt|;
 name|int
+name|sc_cap
+decl_stmt|;
+define|#
+directive|define
+name|CAP_HAS_4WIRE
+value|1
+comment|/* Has 4 wire bus */
+define|#
+directive|define
+name|CAP_NEEDS_BOUNCE
+value|2
+comment|/* broken hardware needing bounce */
+name|int
 name|flags
 decl_stmt|;
 define|#
@@ -267,9 +280,6 @@ decl_stmt|;
 name|struct
 name|mmc_host
 name|host
-decl_stmt|;
-name|int
-name|wire4
 decl_stmt|;
 name|int
 name|bus_busy
@@ -763,6 +773,12 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+name|sc
+operator|->
+name|sc_cap
+operator|=
+name|CAP_NEEDS_BOUNCE
+expr_stmt|;
 name|err
 operator|=
 name|at91_mci_activate
@@ -921,8 +937,11 @@ name|host
 operator|.
 name|f_max
 operator|=
-literal|30000000
+name|at91_master_clock
+operator|/
+literal|2
 expr_stmt|;
+comment|/* Typically 30MHz */
 name|sc
 operator|->
 name|host
@@ -933,6 +952,14 @@ name|MMC_OCR_320_330
 operator||
 name|MMC_OCR_330_340
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_cap
+operator|&
+name|CAP_HAS_4WIRE
+condition|)
 name|sc
 operator|->
 name|host
@@ -940,6 +967,15 @@ operator|.
 name|caps
 operator|=
 name|MMC_CAP_4_BIT_DATA
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|host
+operator|.
+name|caps
+operator|=
+literal|0
 expr_stmt|;
 name|child
 operator|=
@@ -1296,11 +1332,6 @@ name|device_t
 name|reqdev
 parameter_list|)
 block|{
-name|uint32_t
-name|at91_master_clock
-init|=
-name|AT91C_MASTER_CLOCK
-decl_stmt|;
 name|struct
 name|at91_mci_softc
 modifier|*
@@ -1428,10 +1459,6 @@ operator|->
 name|bus_width
 operator|==
 name|bus_width_4
-operator|&&
-name|sc
-operator|->
-name|wire4
 condition|)
 name|WR4
 argument_list|(
@@ -1488,6 +1515,7 @@ operator||
 name|clkdiv
 argument_list|)
 expr_stmt|;
+comment|/* Do we need a settle time here? */
 comment|/* XXX We need to turn the device on/off here with a GPIO pin */
 return|return
 operator|(
@@ -1542,14 +1570,6 @@ name|mmc_request
 modifier|*
 name|req
 decl_stmt|;
-name|size_t
-name|block_size
-init|=
-literal|1
-operator|<<
-literal|9
-decl_stmt|;
-comment|// Fixed, per mmc/sd spec for 2GB cards
 name|void
 modifier|*
 name|vaddr
@@ -1770,7 +1790,9 @@ argument_list|,
 name|mr
 operator||
 operator|(
-name|block_size
+name|data
+operator|->
+name|len
 operator|<<
 literal|16
 operator|)
@@ -1814,17 +1836,13 @@ else|else
 block|{
 if|if
 condition|(
-name|data
+name|sc
 operator|->
-name|len
-operator|!=
-name|BBSZ
+name|sc_cap
+operator|&
+name|CAP_NEEDS_BOUNCE
 condition|)
-name|panic
-argument_list|(
-literal|"Write multiblock write support"
-argument_list|)
-expr_stmt|;
+block|{
 name|vaddr
 operator|=
 name|sc
@@ -1880,6 +1898,16 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|vaddr
+operator|=
+name|cmd
+operator|->
+name|data
+operator|->
+name|data
 expr_stmt|;
 block|}
 name|data
@@ -2545,6 +2573,15 @@ operator|->
 name|mapped
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_cap
+operator|&
+name|CAP_NEEDS_BOUNCE
+condition|)
+block|{
 name|walker
 operator|=
 operator|(
@@ -2593,6 +2630,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 comment|// Finish up the sequence...
 name|WR4
 argument_list|(
@@ -3370,6 +3408,23 @@ name|vdd
 expr_stmt|;
 break|break;
 case|case
+name|MMCBR_IVAR_CAPS
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|result
+operator|=
+name|sc
+operator|->
+name|host
+operator|.
+name|caps
+expr_stmt|;
+break|break;
+case|case
 name|MMCBR_IVAR_MAX_DATA
 case|:
 operator|*
@@ -3539,6 +3594,9 @@ name|value
 expr_stmt|;
 break|break;
 comment|/* These are read-only */
+case|case
+name|MMCBR_IVAR_CAPS
+case|:
 case|case
 name|MMCBR_IVAR_HOST_OCR
 case|:

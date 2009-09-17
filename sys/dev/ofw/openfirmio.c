@@ -879,6 +879,11 @@ argument_list|,
 name|name
 argument_list|,
 name|newname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

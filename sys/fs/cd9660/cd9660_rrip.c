@@ -1848,12 +1848,12 @@ name|iso_rdev
 operator|=
 name|makedev
 argument_list|(
-name|umajor
+name|major
 argument_list|(
 name|low
 argument_list|)
 argument_list|,
-name|uminor
+name|minor
 argument_list|(
 name|low
 argument_list|)
@@ -1872,7 +1872,7 @@ name|makedev
 argument_list|(
 name|high
 argument_list|,
-name|uminor
+name|minor
 argument_list|(
 name|low
 argument_list|)

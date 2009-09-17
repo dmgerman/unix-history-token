@@ -480,6 +480,7 @@ name|int
 name|ef_obj_get_type
 parameter_list|(
 name|elf_file_t
+name|__unused
 name|ef
 parameter_list|)
 block|{
@@ -779,6 +780,9 @@ if|if
 condition|(
 name|symidx
 operator|>=
+operator|(
+name|size_t
+operator|)
 name|ef
 operator|->
 name|ddbsymcnt

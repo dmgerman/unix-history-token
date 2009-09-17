@@ -84,6 +84,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_extern
 extern|extern LIST_HEAD(rawcb_list_head
 operator|,
@@ -95,6 +101,11 @@ unit|)
 name|rawcb_list
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

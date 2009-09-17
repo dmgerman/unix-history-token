@@ -556,24 +556,24 @@ name|dumper_t
 parameter_list|(
 name|void
 modifier|*
-name|priv
+name|_priv
 parameter_list|,
 comment|/* Private to the driver. */
 name|void
 modifier|*
-name|virtual
+name|_virtual
 parameter_list|,
 comment|/* Virtual (mapped) address. */
 name|vm_offset_t
-name|physical
+name|_physical
 parameter_list|,
 comment|/* Physical address of virtual. */
 name|off_t
-name|offset
+name|_offset
 parameter_list|,
 comment|/* Byte-offset to write at. */
 name|size_t
-name|length
+name|_length
 parameter_list|)
 function_decl|;
 end_typedef
@@ -873,13 +873,6 @@ define|#
 directive|define
 name|d_postfree_list
 value|__d_giant.postfree_list
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUMCDEVSW
-value|256
 end_define
 
 begin_struct_decl
@@ -1418,37 +1411,7 @@ name|dev2unit
 parameter_list|(
 name|d
 parameter_list|)
-value|((d) ? (d)->si_drv0 : NODEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|minor
-parameter_list|(
-name|d
-parameter_list|)
-value|((d) ? (d)->si_drv0 : NODEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|unit2minor
-parameter_list|(
-name|u
-parameter_list|)
-value|(u)
-end_define
-
-begin_define
-define|#
-directive|define
-name|minor2unit
-parameter_list|(
-name|m
-parameter_list|)
-value|(m)
+value|((d)->si_drv0)
 end_define
 
 begin_typedef

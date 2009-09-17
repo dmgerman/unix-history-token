@@ -511,7 +511,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%sSS_FDREF"
+literal|"%sSS_NOFDREF"
 argument_list|,
 name|comma
 condition|?
@@ -663,10 +663,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|comma
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|so_state
@@ -1399,15 +1395,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"pr_ousrreq: %p   "
-argument_list|,
-name|pr
-operator|->
-name|pr_ousrreq
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|"pr_init: %p\n"
 argument_list|,
 name|pr
@@ -1450,15 +1437,6 @@ expr_stmt|;
 name|db_print_indent
 argument_list|(
 name|indent
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"pr_ousrreq: %p\n"
-argument_list|,
-name|pr
-operator|->
-name|pr_ousrreq
 argument_list|)
 expr_stmt|;
 block|}

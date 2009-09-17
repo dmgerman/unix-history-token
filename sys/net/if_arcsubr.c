@@ -149,6 +149,12 @@ directive|include
 file|<net/bpf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/if_llatbl.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -369,6 +375,11 @@ decl_stmt|;
 name|int
 name|isphds
 decl_stmt|;
+name|struct
+name|llentry
+modifier|*
+name|lle
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -472,6 +483,9 @@ name|dst
 argument_list|,
 operator|&
 name|adst
+argument_list|,
+operator|&
+name|lle
 argument_list|)
 expr_stmt|;
 if|if
@@ -624,8 +638,6 @@ name|nd6_storelladdr
 argument_list|(
 name|ifp
 argument_list|,
-name|rt0
-argument_list|,
 name|m
 argument_list|,
 name|dst
@@ -636,6 +648,9 @@ operator|*
 operator|)
 operator|&
 name|adst
+argument_list|,
+operator|&
+name|lle
 argument_list|)
 expr_stmt|;
 if|if

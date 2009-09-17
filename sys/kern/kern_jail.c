@@ -1059,6 +1059,8 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1133,6 +1135,8 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1420,6 +1424,13 @@ operator|=
 name|ip4
 expr_stmt|;
 block|}
+else|else
+name|j
+operator|->
+name|ip4
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -1621,6 +1632,13 @@ operator|=
 name|ip6
 expr_stmt|;
 block|}
+else|else
+name|j
+operator|->
+name|ip6
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -3732,12 +3750,12 @@ name|INET
 end_ifdef
 
 begin_comment
-comment|/*  * Pass back primary IPv4 address of this jail.  *  * If not jailed return success but do not alter the address.  Caller has to  * make sure to intialize it correctly (INADDR_ANY).  *  * Returns 0 on success, 1 on error.  Address returned in NBO.  */
+comment|/*  * Pass back primary IPv4 address of this jail.  *  * If not jailed return success but do not alter the address.  Caller has to  * make sure to intialize it correctly (e.g. INADDR_ANY).  *  * Returns 0 on success, EAFNOSUPPORT if the jail doesn't allow IPv4.  * Address returned in NBO.  */
 end_comment
 
 begin_function
 name|int
-name|prison_getip4
+name|prison_get_ip4
 parameter_list|(
 name|struct
 name|ucred
@@ -3802,7 +3820,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+name|EAFNOSUPPORT
 operator|)
 return|;
 name|ia
@@ -3829,7 +3847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make sure our (source) address is set to something meaningful to this  * jail.  *  * Returns 0 on success, 1 on error.  Address passed in in NBO and returned  * in NBO.  */
+comment|/*  * Make sure our (source) address is set to something meaningful to this  * jail.  *  * Returns 0 if not jailed or if address belongs to jail, EADDRNOTAVAIL if  * the address doesn't belong, or EAFNOSUPPORT if the jail doesn't allow IPv4.  * Address passed in in NBO and returned in NBO.  */
 end_comment
 
 begin_function
@@ -3902,7 +3920,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+name|EAFNOSUPPORT
 operator|)
 return|;
 name|ia0
@@ -3946,7 +3964,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * In case there is only 1 IPv4 address, bind directly. 	 */
 if|if
 condition|(
 name|ia0
@@ -3954,7 +3971,11 @@ operator|.
 name|s_addr
 operator|==
 name|INADDR_ANY
-operator|&&
+condition|)
+block|{
+comment|/* 		 * In case there is only 1 IPv4 address, bind directly. 		 */
+if|if
+condition|(
 name|cred
 operator|->
 name|cr_prison
@@ -3963,7 +3984,6 @@ name|pr_ip4s
 operator|==
 literal|1
 condition|)
-block|{
 name|ia
 operator|->
 name|s_addr
@@ -3985,36 +4005,23 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|ia0
-operator|.
-name|s_addr
-operator|==
-name|INADDR_ANY
-operator|||
-name|prison_check_ip4
+return|return
+operator|(
+name|_prison_check_ip4
 argument_list|(
 name|cred
+operator|->
+name|cr_prison
 argument_list|,
 name|ia
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
-literal|1
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Rewrite destination address in case we will connect to loopback address.  *  * Returns 0 on success, 1 on error.  Address passed in in NBO and returned  * in NBO.  */
+comment|/*  * Rewrite destination address in case we will connect to loopback address.  *  * Returns 0 on success, EAFNOSUPPORT if the jail doesn't allow IPv4.  * Address passed in in NBO and returned in NBO.  */
 end_comment
 
 begin_function
@@ -4083,7 +4090,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+name|EAFNOSUPPORT
 operator|)
 return|;
 if|if
@@ -4129,7 +4136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if given address belongs to the jail referenced by cred.  *  * Returns 1 if address belongs to jail, 0 if not.  Address passed in in NBO.  */
+comment|/*  * Check if given address belongs to the jail referenced by cred/prison.  *  * Returns 0 if not jailed or if address belongs to jail, EADDRNOTAVAIL if  * the address doesn't belong, or EAFNOSUPPORT if the jail doesn't allow IPv4.  * Address passed in in NBO.  */
 end_comment
 
 begin_function
@@ -4157,19 +4164,6 @@ name|z
 decl_stmt|,
 name|d
 decl_stmt|;
-if|if
-condition|(
-name|pr
-operator|->
-name|pr_ip4
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * Check the primary IP. 	 */
 if|if
 condition|(
@@ -4188,7 +4182,7 @@ name|s_addr
 condition|)
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 comment|/* 	 * All the other IPs are sorted so we can do a binary search. 	 */
@@ -4266,13 +4260,13 @@ expr_stmt|;
 else|else
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|0
+name|EADDRNOTAVAIL
 operator|)
 return|;
 block|}
@@ -4329,7 +4323,22 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|1
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_prison
+operator|->
+name|pr_ip4
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EAFNOSUPPORT
 operator|)
 return|;
 return|return
@@ -4359,12 +4368,12 @@ name|INET6
 end_ifdef
 
 begin_comment
-comment|/*  * Pass back primary IPv6 address for this jail.  *  * If not jailed return success but do not alter the address.  Caller has to  * make sure to intialize it correctly (IN6ADDR_ANY_INIT).  *  * Returns 0 on success, 1 on error.  */
+comment|/*  * Pass back primary IPv6 address for this jail.  *  * If not jailed return success but do not alter the address.  Caller has to  * make sure to intialize it correctly (e.g. IN6ADDR_ANY_INIT).  *  * Returns 0 on success, EAFNOSUPPORT if the jail doesn't allow IPv6.  */
 end_comment
 
 begin_function
 name|int
-name|prison_getip6
+name|prison_get_ip6
 parameter_list|(
 name|struct
 name|ucred
@@ -4428,7 +4437,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+name|EAFNOSUPPORT
 operator|)
 return|;
 name|bcopy
@@ -4461,7 +4470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make sure our (source) address is set to something meaningful to this jail.  *  * v6only should be set based on (inp->inp_flags& IN6P_IPV6_V6ONLY != 0)  * when needed while binding.  *  * Returns 0 on success, 1 on error.  */
+comment|/*  * Make sure our (source) address is set to something meaningful to this jail.  *  * v6only should be set based on (inp->inp_flags& IN6P_IPV6_V6ONLY != 0)  * when needed while binding.  *  * Returns 0 if not jailed or if address belongs to jail, EADDRNOTAVAIL if  * the address doesn't belong, or EAFNOSUPPORT if the jail doesn't allow IPv6.  */
 end_comment
 
 begin_function
@@ -4533,7 +4542,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+name|EAFNOSUPPORT
 operator|)
 return|;
 if|if
@@ -4571,17 +4580,20 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * In case there is only 1 IPv6 address, and v6only is true, then 	 * bind directly. 	 */
+if|if
+condition|(
+name|IN6_IS_ADDR_UNSPECIFIED
+argument_list|(
+name|ia6
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * In case there is only 1 IPv6 address, and v6only is true, 		 * then bind directly. 		 */
 if|if
 condition|(
 name|v6only
 operator|!=
 literal|0
-operator|&&
-name|IN6_IS_ADDR_UNSPECIFIED
-argument_list|(
-name|ia6
-argument_list|)
 operator|&&
 name|cred
 operator|->
@@ -4591,7 +4603,6 @@ name|pr_ip6s
 operator|==
 literal|1
 condition|)
-block|{
 name|bcopy
 argument_list|(
 operator|&
@@ -4619,35 +4630,23 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|IN6_IS_ADDR_UNSPECIFIED
-argument_list|(
-name|ia6
-argument_list|)
-operator|||
-name|prison_check_ip6
+return|return
+operator|(
+name|_prison_check_ip6
 argument_list|(
 name|cred
+operator|->
+name|cr_prison
 argument_list|,
 name|ia6
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
-literal|1
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Rewrite destination address in case we will connect to loopback address.  *  * Returns 0 on success, 1 on error.  */
+comment|/*  * Rewrite destination address in case we will connect to loopback address.  *  * Returns 0 on success, EAFNOSUPPORT if the jail doesn't allow IPv6.  */
 end_comment
 
 begin_function
@@ -4716,7 +4715,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+name|EAFNOSUPPORT
 operator|)
 return|;
 if|if
@@ -4764,7 +4763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if given address belongs to the jail referenced by cred.  *  * Returns 1 if address belongs to jail, 0 if not.  */
+comment|/*  * Check if given address belongs to the jail referenced by cred/prison.  *  * Returns 0 if not jailed or if address belongs to jail, EADDRNOTAVAIL if  * the address doesn't belong, or EAFNOSUPPORT if the jail doesn't allow IPv6.  */
 end_comment
 
 begin_function
@@ -4792,19 +4791,6 @@ name|z
 decl_stmt|,
 name|d
 decl_stmt|;
-if|if
-condition|(
-name|pr
-operator|->
-name|pr_ip6
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * Check the primary IP. 	 */
 if|if
 condition|(
@@ -4823,7 +4809,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 comment|/* 	 * All the other IPs are sorted so we can do a binary search. 	 */
@@ -4901,13 +4887,13 @@ expr_stmt|;
 else|else
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|0
+name|EADDRNOTAVAIL
 operator|)
 return|;
 block|}
@@ -4964,7 +4950,22 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|1
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_prison
+operator|->
+name|pr_ip6
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EAFNOSUPPORT
 operator|)
 return|;
 return|return
@@ -4988,7 +4989,133 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Check if given address belongs to the jail referenced by cred (wrapper to  * prison_check_ip[46]).  *  * Returns 1 if address belongs to jail, 0 if not.  IPv4 Address passed in in  * NBO.  */
+comment|/*  * Check if a jail supports the given address family.  *  * Returns 0 if not jailed or the address family is supported, EAFNOSUPPORT  * if not.  */
+end_comment
+
+begin_function
+name|int
+name|prison_check_af
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|int
+name|af
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|cred
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: cred is NULL"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|jailed
+argument_list|(
+name|cred
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+switch|switch
+condition|(
+name|af
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET
+case|case
+name|AF_INET
+case|:
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_prison
+operator|->
+name|pr_ip4
+operator|==
+name|NULL
+condition|)
+name|error
+operator|=
+name|EAFNOSUPPORT
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_prison
+operator|->
+name|pr_ip6
+operator|==
+name|NULL
+condition|)
+name|error
+operator|=
+name|EAFNOSUPPORT
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+case|case
+name|AF_LOCAL
+case|:
+case|case
+name|AF_ROUTE
+case|:
+break|break;
+default|default:
+if|if
+condition|(
+name|jail_socket_unixiproute_only
+condition|)
+name|error
+operator|=
+name|EAFNOSUPPORT
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Check if given address belongs to the jail referenced by cred (wrapper to  * prison_check_ip[46]).  *  * Returns 0 if not jailed or if address belongs to jail, EADDRNOTAVAIL if  * the address doesn't belong, or EAFNOSUPPORT if the jail doesn't allow  * the address family.  IPv4 Address passed in in NBO.  */
 end_comment
 
 begin_function
@@ -5027,7 +5154,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|ok
+name|error
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -5055,7 +5182,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ok
+name|error
 operator|=
 literal|0
 expr_stmt|;
@@ -5081,8 +5208,8 @@ operator|*
 operator|)
 name|sa
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|prison_check_ip4
 argument_list|(
 name|cred
@@ -5092,10 +5219,6 @@ name|sai
 operator|->
 name|sin_addr
 argument_list|)
-condition|)
-name|ok
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 endif|#
@@ -5115,26 +5238,17 @@ operator|*
 operator|)
 name|sa
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|prison_check_ip6
 argument_list|(
 name|cred
 argument_list|,
-operator|(
-expr|struct
-name|in6_addr
-operator|*
-operator|)
 operator|&
 name|sai6
 operator|->
 name|sin6_addr
 argument_list|)
-condition|)
-name|ok
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 endif|#
@@ -5142,17 +5256,21 @@ directive|endif
 default|default:
 if|if
 condition|(
-operator|!
+name|jailed
+argument_list|(
+name|cred
+argument_list|)
+operator|&&
 name|jail_socket_unixiproute_only
 condition|)
-name|ok
+name|error
 operator|=
-literal|1
+name|EAFNOSUPPORT
 expr_stmt|;
 block|}
 return|return
 operator|(
-name|ok
+name|error
 operator|)
 return|;
 block|}
@@ -6501,6 +6619,8 @@ argument_list|,
 name|CTLTYPE_STRUCT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -6574,6 +6694,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -6736,7 +6858,7 @@ operator|||
 name|pr
 operator|->
 name|pr_state
-operator|>
+operator|>=
 call|(
 name|int
 call|)
@@ -6781,8 +6903,11 @@ operator|(
 name|pr
 operator|->
 name|pr_name
+index|[
+literal|0
+index|]
 operator|!=
-name|NULL
+literal|'\0'
 operator|)
 condition|?
 name|pr

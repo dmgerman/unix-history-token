@@ -603,7 +603,7 @@ operator|->
 name|sc_rres
 argument_list|)
 expr_stmt|;
-comment|/* Check that we actually have a TSEC at this address */
+comment|/* Check if we are eTSEC (enhanced TSEC) */
 name|id
 operator|=
 name|TSEC_READ
@@ -612,7 +612,27 @@ name|sc
 argument_list|,
 name|TSEC_REG_ID
 argument_list|)
-operator||
+expr_stmt|;
+name|sc
+operator|->
+name|is_etsec
+operator|=
+operator|(
+operator|(
+name|id
+operator|>>
+literal|16
+operator|)
+operator|==
+name|TSEC_ETSEC_ID
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+name|id
+operator||=
 name|TSEC_READ
 argument_list|(
 name|sc
@@ -641,11 +661,34 @@ name|id
 operator|==
 literal|0
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not identify TSEC type\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|is_etsec
+condition|)
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Enhanced Three-Speed Ethernet Controller"
+argument_list|)
+expr_stmt|;
+else|else
 name|device_set_desc
 argument_list|(
 name|dev
@@ -749,6 +792,23 @@ name|dev
 argument_list|)
 argument_list|,
 literal|"TSEC RX lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ic_lock
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"TSEC IC lock"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -1326,8 +1386,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"bus_release_resource() failed for %s intr"
-literal|", error %d\n"
+literal|"bus_release_resource() failed for %s "
+literal|"intr, error %d\n"
 argument_list|,
 name|iname
 argument_list|,
@@ -1489,6 +1549,14 @@ operator|&
 name|sc
 operator|->
 name|transmit_lock
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ic_lock
 argument_list|)
 expr_stmt|;
 return|return

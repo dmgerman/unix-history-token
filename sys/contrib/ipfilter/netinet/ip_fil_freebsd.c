@@ -1058,11 +1058,26 @@ directive|include
 file|<net/pfil.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|501108
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<netinet/ipprotosw.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We provide the fr_checkp name just to minimize changes later.  */

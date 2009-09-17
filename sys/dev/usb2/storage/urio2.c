@@ -24,7 +24,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
@@ -80,12 +80,6 @@ begin_include
 include|#
 directive|include
 file|<dev/usb2/core/usb2_process.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb2/core/usb2_config_td.h>
 end_include
 
 begin_include
@@ -979,19 +973,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 name|device_set_usb2_desc
 argument_list|(
 name|dev
@@ -1387,7 +1368,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1599,7 +1579,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1633,7 +1612,6 @@ name|URIO_T_RD
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1677,7 +1655,6 @@ name|URIO_T_RD
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1711,7 +1688,6 @@ name|URIO_T_WR
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1755,7 +1731,6 @@ name|URIO_T_WR
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1953,7 +1928,6 @@ name|fifo
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

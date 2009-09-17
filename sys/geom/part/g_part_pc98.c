@@ -272,7 +272,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|g_part_pc98_dumpconf
 parameter_list|(
 name|struct
@@ -332,6 +332,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_pc98_name
@@ -1491,7 +1492,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|g_part_pc98_dumpconf
 parameter_list|(
 name|struct
@@ -1555,11 +1556,6 @@ name|NULL
 condition|)
 block|{
 comment|/* confxml: scheme information */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 name|type
 operator|=
@@ -1695,11 +1691,6 @@ literal|0x7f7f
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1860,6 +1851,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|g_part_pc98_name
@@ -1942,6 +1934,10 @@ name|sum
 decl_stmt|;
 name|uint16_t
 name|magic
+decl_stmt|,
+name|ecyl
+decl_stmt|,
+name|scyl
 decl_stmt|;
 name|pp
 operator|=
@@ -2104,16 +2100,46 @@ if|if
 condition|(
 name|p
 index|[
-literal|2
+literal|0
 index|]
-operator|!=
+operator|==
 literal|0
 operator|||
 name|p
 index|[
-literal|3
+literal|1
 index|]
-operator|!=
+operator|==
+literal|0
+condition|)
+comment|/* !dp_mid || !dp_sid */
+continue|continue;
+name|scyl
+operator|=
+name|le16dec
+argument_list|(
+name|p
+operator|+
+literal|10
+argument_list|)
+expr_stmt|;
+name|ecyl
+operator|=
+name|le16dec
+argument_list|(
+name|p
+operator|+
+literal|14
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|scyl
+operator|==
+literal|0
+operator|||
+name|ecyl
+operator|==
 literal|0
 condition|)
 goto|goto
@@ -2123,22 +2149,29 @@ if|if
 condition|(
 name|p
 index|[
-literal|1
+literal|8
 index|]
 operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-name|le16dec
-argument_list|(
 name|p
-operator|+
-literal|10
-argument_list|)
+index|[
+literal|12
+index|]
+operator|&&
+comment|/* dp_ssect == dp_esect */
+name|p
+index|[
+literal|9
+index|]
 operator|==
-literal|0
+name|p
+index|[
+literal|13
+index|]
+operator|&&
+comment|/* dp_shd == dp_ehd */
+name|scyl
+operator|==
+name|ecyl
 condition|)
 goto|goto
 name|out

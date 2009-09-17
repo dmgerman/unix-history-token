@@ -1421,50 +1421,7 @@ file|<sys/select.h>
 end_include
 
 begin_comment
-comment|/*  * minor() gives a cookie instead of an index since we don't want to  * change the meanings of bits 0-15 or waste time and space shifting  * bits 16-31 for devices that don't use them.  *  * XXX: In the kernel we must name it umajor() and uminor(), because  * minor() is still in use by<sys/conf.h>.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|umajor
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)(((u_int)(x)>> 8)&0xff))
-end_define
-
-begin_comment
-comment|/* major number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|uminor
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)((x)&0xffff00ff))
-end_define
-
-begin_comment
-comment|/* minor number */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !_KERNEL */
+comment|/*  * minor() gives a cookie instead of an index since we don't want to  * change the meanings of bits 0-15 or waste time and space shifting  * bits 16-31 for devices that don't use them.  */
 end_comment
 
 begin_define
@@ -1493,15 +1450,6 @@ end_define
 
 begin_comment
 comment|/* minor number */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
 end_comment
 
 begin_define

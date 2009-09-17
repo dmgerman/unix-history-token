@@ -8,7 +8,7 @@ comment|/* tracked to 1.38 */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	8.3 (Berkeley) 1/12/94  *	Id: machdep.c,v 1.33 1998/09/15 10:58:54 pefo Exp  *	JNPR: machdep.c,v 1.11.2.3 2007/08/29 12:24:49 girish  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	8.3 (Berkeley) 1/12/94  *	Id: machdep.c,v 1.33 1998/09/15 10:58:54 pefo Exp  *	JNPR: machdep.c,v 1.11.2.3 2007/08/29 12:24:49  */
 end_comment
 
 begin_include
@@ -247,23 +247,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/defs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -280,6 +263,12 @@ begin_include
 include|#
 directive|include
 file|<machine/bootinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/hwfunc.h>
 end_include
 
 begin_ifdef
@@ -383,33 +372,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* see comment below */
-end_comment
-
-begin_endif
-unit|static void getmemsize(void);
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|cold
 init|=
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|Maxmem
 decl_stmt|;
 end_decl_stmt
 
@@ -716,27 +683,25 @@ condition|)
 name|bootverbose
 operator|++
 expr_stmt|;
-comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
+name|bootverbose
+operator|++
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"real memory  = %lu (%luK bytes)\n"
 argument_list|,
 name|ptoa
 argument_list|(
-name|Maxmem
+name|realmem
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
-name|Maxmem
+name|realmem
 argument_list|)
 operator|/
 literal|1024
 argument_list|)
-expr_stmt|;
-name|realmem
-operator|=
-name|Maxmem
 expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
@@ -862,12 +827,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
-empty_stmt|;
+name|platform_reset
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -915,6 +877,27 @@ empty_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|SYSCTL_STRUCT
+argument_list|(
+name|_machdep
+argument_list|,
+name|CPU_BOOTINFO
+argument_list|,
+name|bootinfo
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|bootinfo
+argument_list|,
+name|bootinfo
+argument_list|,
+literal|"Bootinfo struct: kernel filename, BIOS harddisk geometry, etc"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -958,25 +941,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PORT_TO_JMIPS */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PORT_TO_JMIPS
-end_ifdef
-
-begin_comment
-comment|/* art */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -997,46 +961,6 @@ literal|"Disable setting the real time clock to system time"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PORT_TO_JMIPS */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_STRUCT
-argument_list|(
-name|_machdep
-argument_list|,
-name|CPU_BOOTINFO
-argument_list|,
-name|bootinfo
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|bootinfo
-argument_list|,
-name|bootinfo
-argument_list|,
-literal|"Bootinfo struct: kernel filename, BIOS harddisk geometry, etc"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PORT_TO_JMIPS
-end_ifdef
-
-begin_comment
-comment|/* dchu */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1246,42 +1170,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * This code has been moved to the platform_init code.  The only  * thing that's beign done here that hasn't been moved is the wired tlb  * pool stuff.  I'm still trying to understand that feature..., since  * it maps from the end the kernel to 0x08000000 somehow.  But the stuff  * was stripped out, so it is hard to say what's going on....  */
-end_comment
-
-begin_comment
-unit|u_int32_t	 freemem_start;  static void getmemsize() { 	vm_offset_t kern_start, kern_end; 	vm_offset_t AllowMem, memsize; 	const char *cp; 	size_t sz; 	int phys_avail_cnt;
-comment|/* Determine memory layout */
-end_comment
-
-begin_comment
-unit|phys_avail_cnt = 0; 	kern_start = mips_trunc_page(MIPS_CACHED_TO_PHYS(btext)); 	if (kern_start< freemem_start) panic("kernel load address too low, overlapping with memory reserved for FPC IPC\n");  	if (kern_start> freemem_start) { 		phys_avail[phys_avail_cnt++] = freemem_start;
-comment|/* 		 * Since the stack is setup just before kern_start, 		 * leave some space for stack to grow 		 */
-end_comment
-
-begin_comment
-unit|phys_avail[phys_avail_cnt++] = kern_start - PAGE_SIZE * 3; 		MIPS_DEBUG_PRINT("phys_avail : %p - %p",	\ 		    phys_avail[phys_avail_cnt-2], phys_avail[phys_avail_cnt-1]); 	}  	kern_end = (vm_offset_t) end; 	kern_end = (vm_offset_t) mips_round_page(kern_end); 	MIPS_DEBUG_PRINT("kern_start : 0x%x, kern_end : 0x%x", btext, kern_end); 	phys_avail[phys_avail_cnt++] = MIPS_CACHED_TO_PHYS(kern_end);  	if (need_wired_tlb_page_pool) { 		mips_wired_tlb_physmem_start = MIPS_CACHED_TO_PHYS(kern_end); 		mips_wired_tlb_physmem_end = 0x08000000; 		MIPS_DEBUG_PRINT("%s: unmapped page start [0x%x]  end[0x%x]\n",\ 		   __FUNCTION__, mips_wired_tlb_physmem_start, \ 		   mips_wired_tlb_physmem_end); 		if (mips_wired_tlb_physmem_start> mips_wired_tlb_physmem_end) 		panic("Error in Page table page physical address assignment\n"); 	}  	if (bootinfo.bi_memsizes_valid) 		memsize = bootinfo.bi_basemem * 1024; 	else { 		memsize = SDRAM_MEM_SIZE; 	}
-comment|/* 	 * hw.physmem is a size in bytes; we also allow k, m, and g suffixes 	 * for the appropriate modifiers. 	 */
-end_comment
-
-begin_comment
-unit|if ((cp = getenv("hw.physmem")) != NULL) { 		vm_offset_t sanity; 		char *ep;  		sanity = AllowMem = strtouq(cp,&ep, 0); 		if ((ep != cp)&& (*ep != 0)) { 			switch(*ep) { 			case 'g': 			case 'G': 				AllowMem<<= 10; 			case 'm': 			case 'M': 				AllowMem<<= 10; 			case 'k': 			case 'K': 				AllowMem<<= 10; 				break; 			default: 				AllowMem = sanity = 0; 			} 			if (AllowMem< sanity) 				AllowMem = 0; 		} 		if (!AllowMem || (AllowMem< (kern_end - KERNBASE))) 			printf("Ignoring invalid hw.physmem size of '%s'\n", cp); 	} else 		AllowMem = 0;  	if (AllowMem) 		memsize = (memsize> AllowMem) ? AllowMem : memsize;  	phys_avail[phys_avail_cnt++] = SDRAM_ADDR_START + memsize; 	MIPS_DEBUG_PRINT("phys_avail : 0x%x - 0x%x",	\ 	    phys_avail[phys_avail_cnt-2], phys_avail[phys_avail_cnt-1]); 	phys_avail[phys_avail_cnt] = 0;  	physmem = btoc(memsize); 	Maxmem = physmem;
-comment|/* 	 * Initialize error message buffer (at high end of memory). 	 */
-end_comment
-
-begin_endif
-unit|sz = round_page(MSGBUF_SIZE); 	msgbufp = (struct msgbuf *) pmap_steal_memory(sz); 	msgbufinit(msgbufp, sz); 	printf("%s: msgbufp[size=%d] = 0x%p\n", __FUNCTION__, sz, msgbufp); }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Initialize the hardware exception vectors, and the jump table used to  * call locore cache and TLB management functions, based on the kind  * of CPU the kernel is running on.  */
@@ -1551,12 +1439,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|spinco
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|spinlock_enter
@@ -1708,22 +1590,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|cpu_idle_wakeup
-parameter_list|(
-name|int
-name|cpu
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|dumpsys
 parameter_list|(
@@ -1739,6 +1605,22 @@ argument_list|(
 literal|"Kernel dumps not implemented on this architecture\n"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|cpu_idle_wakeup
+parameter_list|(
+name|int
+name|cpu
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

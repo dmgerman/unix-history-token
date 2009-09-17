@@ -56,6 +56,12 @@ directive|include
 file|"tt.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment

@@ -149,7 +149,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.54 2007/12/02 00:28:10 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.57 2008/07/16 18:00:57 christos Exp $"
 argument_list|)
 end_macro
 
@@ -158,37 +158,35 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_expr_stmt
 name|private
-end_macro
-
-begin_struct
-struct|struct
+specifier|const
+expr|struct
 block|{
 specifier|const
 name|char
-modifier|*
 name|magic
-decl_stmt|;
+index|[
+literal|8
+index|]
+block|;
 name|size_t
 name|maglen
-decl_stmt|;
+block|;
 specifier|const
 name|char
-modifier|*
-specifier|const
+operator|*
 name|argv
 index|[
 literal|3
 index|]
-decl_stmt|;
+block|;
 name|int
 name|silent
-decl_stmt|;
-block|}
+block|; }
 name|compr
 index|[]
-init|=
+operator|=
 block|{
 block|{
 literal|"\037\235"
@@ -330,8 +328,8 @@ block|}
 block|,
 comment|/* bzip2-ed */
 block|}
-struct|;
-end_struct
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|private
@@ -1631,16 +1629,13 @@ operator|(
 operator|*
 name|newch
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|malloc
+name|CAST
 argument_list|(
-name|HOWMANY
-operator|+
+argument|unsigned char *
+argument_list|,
+argument|malloc(HOWMANY +
 literal|1
+argument|)
 argument_list|)
 operator|)
 operator|==
@@ -1878,6 +1873,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BUILTIN_DECOMPRESS
+comment|/* FIXME: This doesn't cope with bzip2 */
 if|if
 condition|(
 name|method

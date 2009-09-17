@@ -547,12 +547,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_quad_t
-name|ip6s_forward_cachehit
-decl_stmt|;
-name|u_quad_t
-name|ip6s_forward_cachemiss
-decl_stmt|;
 comment|/* number of times that each rule of source selection is applied. */
 name|u_quad_t
 name|ip6s_sources_rule
@@ -717,6 +711,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -760,17 +760,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* act as router? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_forward_srcrt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* forward src-routed? */
 end_comment
 
 begin_decl_stmt
@@ -824,6 +813,15 @@ name|ip6_v6only
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -836,6 +834,12 @@ end_decl_stmt
 begin_comment
 comment|/* multicast routing daemon */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -868,28 +872,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Maximum fragments in reassembly queue */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_sourcecheck
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Verify source interface */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_sourcecheck_interval
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Interval between log messages */
 end_comment
 
 begin_decl_stmt
@@ -967,50 +949,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ip6_anonportmin
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* minimum ephemeral port */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_anonportmax
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum ephemeral port */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_lowportmin
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* minimum reserved port */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_lowportmax
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum reserved port */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|ip6_use_tempaddr
 decl_stmt|;
 end_decl_stmt
@@ -1030,29 +968,6 @@ begin_comment
 comment|/* whether to prefer temporary addresses 					in the source address selection */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_use_defzone
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* whether to use the default scope zone 				    when unspecified */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pfil_head
-name|inet6_pfil_hook
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* packet filter hooks */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1070,6 +985,38 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_use_defzone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* whether to use the default scope zone 				    when unspecified */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pfil_head
+name|inet6_pfil_hook
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* packet filter hooks */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1961,8 +1908,6 @@ expr|struct
 name|rtentry
 operator|*
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -208,34 +208,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|checkDistXDeveloper
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-return|return
-name|IS_DEVELOPER
-argument_list|(
-name|Dists
-argument_list|,
-name|DIST_XORG
-argument_list|)
-operator|&&
-name|_IS_SET
-argument_list|(
-name|SrcDists
-argument_list|,
-name|DIST_SRC_ALL
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|checkDistKernDeveloper
 parameter_list|(
 name|dialogMenuItem
@@ -264,34 +236,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|checkDistXKernDeveloper
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-return|return
-name|IS_DEVELOPER
-argument_list|(
-name|Dists
-argument_list|,
-name|DIST_XORG
-argument_list|)
-operator|&&
-name|_IS_SET
-argument_list|(
-name|SrcDists
-argument_list|,
-name|DIST_SRC_SYS
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|checkDistUser
 parameter_list|(
 name|dialogMenuItem
@@ -305,27 +249,6 @@ argument_list|(
 name|Dists
 argument_list|,
 literal|0
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|checkDistXUser
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-return|return
-name|IS_USER
-argument_list|(
-name|Dists
-argument_list|,
-name|DIST_XORG
 argument_list|)
 return|;
 block|}
@@ -377,13 +300,6 @@ argument_list|)
 operator|&&
 name|_IS_SET
 argument_list|(
-name|XOrgDists
-argument_list|,
-name|DIST_XORG_ALL
-argument_list|)
-operator|&&
-name|_IS_SET
-argument_list|(
 name|KernelDists
 argument_list|,
 name|DIST_KERNEL_ALL
@@ -404,40 +320,6 @@ parameter_list|)
 block|{
 return|return
 name|SrcDists
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|x11FlagCheck
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|item
-parameter_list|)
-block|{
-if|if
-condition|(
-name|XOrgDists
-operator|!=
-literal|0
-condition|)
-name|Dists
-operator||=
-name|DIST_XORG
-expr_stmt|;
-else|else
-name|Dists
-operator|&=
-operator|~
-name|DIST_XORG
-expr_stmt|;
-return|return
-name|Dists
-operator|&
-name|DIST_XORG
 return|;
 block|}
 end_function
@@ -661,16 +543,6 @@ name|MenuSrcDistributions
 block|}
 block|,
 block|{
-literal|" Dists, X Developer"
-block|,
-literal|"Select X developer's distribution."
-block|,
-name|checkDistXDeveloper
-block|,
-name|distSetXDeveloper
-block|}
-block|,
-block|{
 literal|" Dists, Kern Developer"
 block|,
 literal|"Select kernel developer's distribution."
@@ -688,16 +560,6 @@ block|,
 name|checkDistUser
 block|,
 name|distSetUser
-block|}
-block|,
-block|{
-literal|" Dists, X User"
-block|,
-literal|"Select average X user distribution."
-block|,
-name|checkDistXUser
-block|,
-name|distSetXUser
 block|}
 block|,
 block|{
@@ -966,16 +828,6 @@ name|NULL
 block|,
 operator|&
 name|MenuMedia
-block|}
-block|,
-block|{
-literal|" Media, Tape"
-block|,
-literal|"Select tape installation media."
-block|,
-name|NULL
-block|,
-name|mediaSetTape
 block|}
 block|,
 block|{
@@ -4617,34 +4469,6 @@ block|}
 block|}
 block|;
 name|DMenu
-name|MenuMediaTape
-operator|=
-block|{
-name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Choose a tape drive type"
-block|,
-literal|"FreeBSD can be installed from tape drive, though this installation\n"
-literal|"method requires a certain amount of temporary storage in addition\n"
-literal|"to the space required by the distribution itself (tape drives make\n"
-literal|"poor random-access devices, so we extract _everything_ on the tape\n"
-literal|"in one pass).  If you have sufficient space for this, then you should\n"
-literal|"select one of the following tape devices detected on your system."
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-block|{
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-block|;
-name|DMenu
 name|MenuNetworkDevice
 operator|=
 block|{
@@ -4798,16 +4622,6 @@ name|mediaSetFloppy
 block|}
 block|,
 block|{
-literal|"9 Tape"
-block|,
-literal|"Install from SCSI or QIC tape"
-block|,
-name|NULL
-block|,
-name|mediaSetTape
-block|}
-block|,
-block|{
 literal|"X Options"
 block|,
 literal|"Go to the Options screen"
@@ -4870,7 +4684,7 @@ block|,
 block|{
 literal|"All"
 block|,
-literal|"All system sources, binaries and X Window System"
+literal|"All system sources and binaries"
 block|,
 name|checkDistEverything
 block|,
@@ -4918,17 +4732,7 @@ name|distSetDeveloper
 block|}
 block|,
 block|{
-literal|"5 X-Developer"
-block|,
-literal|"Same as above + X Window System"
-block|,
-name|checkDistXDeveloper
-block|,
-name|distSetXDeveloper
-block|}
-block|,
-block|{
-literal|"6 Kern-Developer"
+literal|"5 Kern-Developer"
 block|,
 literal|"Full binaries and doc, kernel sources only"
 block|,
@@ -4938,33 +4742,13 @@ name|distSetKernDeveloper
 block|}
 block|,
 block|{
-literal|"7 X-Kern-Developer"
-block|,
-literal|"Same as above + X Window System"
-block|,
-name|checkDistXKernDeveloper
-block|,
-name|distSetXKernDeveloper
-block|}
-block|,
-block|{
-literal|"8 User"
+literal|"6 User"
 block|,
 literal|"Average user - binaries and doc only"
 block|,
 name|checkDistUser
 block|,
 name|distSetUser
-block|}
-block|,
-block|{
-literal|"9 X-User"
-block|,
-literal|"Same as above + X Window System"
-block|,
-name|checkDistXUser
-block|,
-name|distSetXUser
 block|}
 block|,
 block|{
@@ -5045,7 +4829,7 @@ block|,
 block|{
 literal|"All"
 block|,
-literal|"All system sources, binaries and X Window System"
+literal|"All system sources and binaries"
 block|,
 name|NULL
 block|,
@@ -5358,29 +5142,6 @@ block|,
 literal|']'
 block|,
 name|DIST_LOCAL
-block|}
-block|,
-block|{
-literal|" X.Org"
-block|,
-literal|"The X.Org distribution"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XORG
 block|}
 block|,
 block|{
@@ -6445,14 +6206,17 @@ block|,
 literal|"overwrite me"
 block|,
 comment|/* will be disk specific label */
-literal|"FreeBSD comes with a boot selector that allows you to easily\n"
+literal|"FreeBSD comes with a boot manager that allows you to easily\n"
 literal|"select between FreeBSD and any other operating systems on your machine\n"
 literal|"at boot time.  If you have more than one drive and want to boot\n"
-literal|"from the second one, the boot selector will also make it possible\n"
+literal|"from the second one, the boot manager will also make it possible\n"
 literal|"to do so (limitations in the PC BIOS usually prevent this otherwise).\n"
-literal|"If you do not want a boot selector, or wish to replace an existing\n"
-literal|"one, select \"standard\".  If you would prefer your Master Boot\n"
-literal|"Record to remain untouched then select \"None\".\n\n"
+literal|"If you will only have FreeBSD on the machine the boot manager is\n"
+literal|"not needed and it slows down the boot while offering you the choice\n"
+literal|"of which operating system to boot.  If you do not want a boot\n"
+literal|"manager, or wish to replace an existing one, select \"standard\".\n"
+literal|"If you would prefer your Master Boot Record remain untouched then\n"
+literal|"select \"None\".\n\n"
 literal|"  NOTE:  PC-DOS users will almost certainly require \"None\"!"
 block|,
 literal|"Press F1 to read about drive setup"
@@ -6460,21 +6224,6 @@ block|,
 literal|"drives"
 block|,
 block|{
-block|{
-literal|"BootMgr"
-block|,
-literal|"Install the FreeBSD Boot Manager"
-block|,
-name|dmenuRadioCheck
-block|,
-name|dmenuSetValue
-block|,
-name|NULL
-block|,
-operator|&
-name|BootMgr
-block|}
-block|,
 block|{
 literal|"Standard"
 block|,
@@ -6496,6 +6245,29 @@ block|,
 literal|')'
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"BootMgr"
+block|,
+literal|"Install the FreeBSD Boot Manager"
+block|,
+name|dmenuRadioCheck
+block|,
+name|dmenuSetValue
+block|,
+name|NULL
+block|,
+operator|&
+name|BootMgr
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6859,53 +6631,6 @@ block|}
 block|,
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|PCCARD_ARCH
-block|{
-literal|" pccard"
-block|,
-literal|"Enable PCCARD (AKA PCMCIA) services (also laptops)"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuToggleVariable
-block|,
-name|NULL
-block|,
-literal|"pccard_enable=YES"
-block|}
-block|,
-block|{
-literal|" pccard mem"
-block|,
-literal|"Set PCCARD memory address (if enabled)"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuISetVariable
-block|,
-name|NULL
-block|,
-literal|"pccard_mem"
-block|}
-block|,
-block|{
-literal|" pccard ifconfig"
-block|,
-literal|"List of PCCARD ethernet devices to configure"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuISetVariable
-block|,
-name|NULL
-block|,
-literal|"pccard_ifconfig"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|" "
 block|,
@@ -7060,26 +6785,6 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|WITH_LINUX
-block|{
-literal|" Linux"
-block|,
-literal|"This host wants to be able to run Linux binaries."
-block|,
-name|dmenuVarCheck
-block|,
-name|configLinux
-block|,
-name|NULL
-block|,
-name|VAR_LINUX_ENABLE
-literal|"=YES"
-block|}
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|__i386__
 block|{
 literal|" SCO"
@@ -7107,26 +6812,6 @@ block|,
 name|NULL
 block|,
 literal|"svr4_enable=YES"
-block|}
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__alpha__
-block|{
-literal|" OSF/1"
-block|,
-literal|"This host wants to be able to run DEC OSF/1 binaries."
-block|,
-name|dmenuVarCheck
-block|,
-name|configOSF1
-block|,
-name|NULL
-block|,
-name|VAR_OSF1_ENABLE
-literal|"=YES"
 block|}
 block|,
 endif|#

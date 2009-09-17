@@ -24,15 +24,15 @@ comment|/*  * Physical memory map for the Intel IXP425  */
 end_comment
 
 begin_comment
-comment|/*  * CC00 00FF ---------------------------  *           SDRAM Configuration Registers  * CC00 0000 ---------------------------  *  * C800 BFFF ---------------------------  *           System and Peripheral Registers  * C800 0000 ---------------------------  *           Expansion Bus Configuration Registers  * C400 0000 ---------------------------  *           PCI Configuration and Status Registers  * C000 0000 ---------------------------  *  * 6400 0000 ---------------------------  *           Queue manager  * 6000 0000 ---------------------------  *           Expansion Bus Data  * 5000 0000 ---------------------------  *           PCI Data  * 4800 0000 ---------------------------  *  * 4000 0000 ---------------------------  *           SDRAM  * 1000 0000 ---------------------------  */
+comment|/*  * CC00 00FF ---------------------------  *           SDRAM Configuration Registers  * CC00 0000 ---------------------------  *  * C800 BFFF ---------------------------  *           System and Peripheral Registers  * C800 0000 ---------------------------  *           Expansion Bus Configuration Registers  * C400 0000 ---------------------------  *           PCI Configuration and Status Registers  * C000 0000 ---------------------------  *  * 6400 0000 ---------------------------  *           Queue manager  * 6000 0000 ---------------------------  *           Expansion Bus Data  * 5000 0000 ---------------------------  *           PCI Data  * 4800 0000 ---------------------------  *  * 4000 0000 ---------------------------  *           SDRAM  * 0000 0000 ---------------------------  */
 end_comment
 
 begin_comment
-comment|/*  * Virtual memory map for the Intel IXP425 integrated devices  */
+comment|/*  * Virtual memory map for the Intel IXP425/IXP435 integrated devices  */
 end_comment
 
 begin_comment
-comment|/*  * FFFF FFFF ---------------------------  *  * FC00 0000 ---------------------------  *           PCI Data (memory space)  * F800 0000 ---------------------------  *  * F020 1000 ---------------------------  *           SDRAM Controller  * F020 0000 ---------------------------  *  * F001 2000 ---------------------------  *           PCI Configuration and Status Registers  * F001 1000 ---------------------------  *           Expansion bus Configuration Registers  * F001 0000 ---------------------------  *           System and Peripheral Registers  *            VA F000 0000 = PA C800 0000 (SIZE 0x10000)  * F000 0000 ---------------------------  *  * 0000 0000 ---------------------------  *  */
+comment|/*  * FFFF FFFF ---------------------------  *  *           Global cache clean area  * FF00 0000 ---------------------------  *  * FE00 0000 ---------------------------  *           16M CFI Flash (on ext bus)  * FD00 0000 ---------------------------  *  * FC00 0000 ---------------------------  *           PCI Data (memory space)  * F800 0000 --------------------------- IXP425_PCI_MEM_VBASE  *  * F020 1000 ---------------------------  *           SDRAM/DDR Memory Controller  * F020 0000 --------------------------- IXP425_MCU_VBASE  *  * F001 7000 EHCI USB 2 (IXP435)  * F001 6000 EHCI USB 1 (IXP435)  * F020 6000 ---------------------------  *           Queue manager  * F001 2000 --------------------------- IXP425_QMGR_VBASE  *           PCI Configuration and Status  * F001 1000 --------------------------- IXP425_PCI_VBASE  *           Expansion Bus Configuration  * F001 0000 --------------------------- IXP425_EXP_VBASE  * F000 F000 Expansion Bus Chip Select 4  * F000 E000 Expansion Bus Chip Select 3  * F000 D000 Expansion Bus Chip Select 2  * F000 C000 Expansion Bus Chip Select 1  * F000 B000 USB (option on IXP425)  * F000 A000 MAC-B (IXP425) | MAC-C (IXP435)  * F000 9000 MAC-A  * F000 8000 NPE-C  * F000 7000 NPE-B (IXP425)  * F000 6000 NPE-A  * F000 5000 Timers  * F000 4000 GPIO Controller  * F000 3000 Interrupt Controller  * F000 2000 Performance Monitor Controller (PMC)  * F000 1000 UART 1 (IXP425)  * F000 0000 UART 0  * F000 0000 --------------------------- IXP425_IO_VBASE  *  * 0000 0000 ---------------------------  *  */
 end_comment
 
 begin_comment
@@ -142,16 +142,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXP425_MAC_A_OFFSET
+name|IXP425_MAC_B_OFFSET
 value|0x00009000UL
 end_define
+
+begin_comment
+comment|/* Ethernet MAC on NPE-B */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IXP425_MAC_B_OFFSET
+name|IXP425_MAC_C_OFFSET
 value|0x0000a000UL
 end_define
+
+begin_comment
+comment|/* Ethernet MAC on NPE-C */
+end_comment
 
 begin_define
 define|#
@@ -159,6 +167,17 @@ directive|define
 name|IXP425_USB_OFFSET
 value|0x0000b000UL
 end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_MAC_A_OFFSET
+value|0x0000c000UL
+end_define
+
+begin_comment
+comment|/* Ethernet MAC on NPE-A */
+end_comment
 
 begin_define
 define|#
@@ -256,7 +275,7 @@ comment|/*#define	IXP4XX_COM_NPORTS	8*/
 end_comment
 
 begin_comment
-comment|/*  * Timers  *  */
+comment|/*  * Timers  */
 end_comment
 
 begin_define
@@ -858,6 +877,89 @@ comment|/* NPE A */
 end_comment
 
 begin_comment
+comment|/* NB: IXP435 has an additional 32 IRQ's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_INT_STATUS2
+value|(IXP425_IRQ_VBASE + 0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_INT_ENABLE2
+value|(IXP425_IRQ_VBASE + 0x24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_INT_SELECT2
+value|(IXP425_IRQ_VBASE + 0x28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_IRQ_STATUS2
+value|(IXP425_IRQ_VBASE + 0x2C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_FIQ_STATUS2
+value|(IXP425_IRQ_VBASE + 0x30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_INT_USB0
+value|32
+end_define
+
+begin_comment
+comment|/* USB Host 2.0 Host 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_INT_USB1
+value|33
+end_define
+
+begin_comment
+comment|/* USB Host 2.0 Host 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_INT_QMGR_PER
+value|60
+end_define
+
+begin_comment
+comment|/* Queue manager parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_INT_ECC
+value|61
+end_define
+
+begin_comment
+comment|/* Single or multi-bit ECC error */
+end_comment
+
+begin_comment
 comment|/*  * software interrupt  */
 end_comment
 
@@ -901,6 +1003,13 @@ define|#
 directive|define
 name|IXP425_INT_GPIOMASK
 value|(0x3ff800c0u)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_INT_HWMASK
+value|((1<< (IXP435_INT_USB0 - 32)) | \ 				 (1<< (IXP435_INT_USB1 - 32)) | \ 				 (1<< (IXP435_INT_QMGR_PER - 32)) | \ 				 (1<< (IXP435_INT_ECC - 32)))
 end_define
 
 begin_comment
@@ -1678,7 +1787,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXP_FCTRL_USB
+name|EXP_FCTRL_USB_DEVICE
 value|(1<<1)
 end_define
 
@@ -1752,12 +1861,20 @@ name|EXP_FCTRL_NPEA
 value|(1<<11)
 end_define
 
+begin_comment
+comment|/* reset */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EXP_FCTRL_NPEB
 value|(1<<12)
 end_define
+
+begin_comment
+comment|/* reset */
+end_comment
 
 begin_define
 define|#
@@ -1766,6 +1883,10 @@ name|EXP_FCTRL_NPEC
 value|(1<<13)
 end_define
 
+begin_comment
+comment|/* reset */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1773,9 +1894,85 @@ name|EXP_FCTRL_PCI
 value|(1<<14)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_ECC_TIMESYNC
+value|(1<<15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_UTOPIA_PHY
+value|(3<<16)
+end_define
+
 begin_comment
-comment|/* XXX more stuff we don't care about */
+comment|/* PHY limit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_USB_HOST
+value|(1<<18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_NPEA_ETH
+value|(1<<19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_NPEB_ETH
+value|(1<<20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_RSA
+value|(1<<21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_MAXFREQ
+value|(3<<22)
+end_define
+
+begin_comment
+comment|/* XScale frequency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_RESVD
+value|(0xff<<24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_IXP46X_ONLY
+define|\
+value|(EXP_FCTRL_ECC_TIMESYNC | EXP_FCTRL_USB_HOST | EXP_FCTRL_NPEA_ETH | \ 	 EXP_FCTRL_NPEB_ETH | EXP_FCTRL_RSA | EXP_FCTRL_MAXFREQ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_BITS
+define|\
+value|"\20\1RCOMP\2USB\3HASH\4AES\5DES\6HDLC\7AAL\10HSS\11UTOPIA\12ETH0" \ 	"\13ETH1\17PCI\20ECC\23USB_HOST\24NPEA_ETH\25NPEB_ETH\26RSA"
+end_define
 
 begin_comment
 comment|/*  * PCI  */
@@ -1808,6 +2005,17 @@ end_define
 
 begin_comment
 comment|/* 0x1000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP425_AHB_OFFSET
+value|0x00000000UL
+end_define
+
+begin_comment
+comment|/* AHB bus */
 end_comment
 
 begin_comment
@@ -2514,6 +2722,200 @@ value|0x08
 end_define
 
 begin_comment
+comment|/*  * IXP435 DDR MCU Registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_MCU_HWBASE
+value|0xcc00e500UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_SDIR
+value|0x00
+end_define
+
+begin_comment
+comment|/* DDR SDAM Initialization Reg*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_SDCR0
+value|0x04
+end_define
+
+begin_comment
+comment|/* DDR SDRAM Control Reg 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_SDCR1
+value|0x08
+end_define
+
+begin_comment
+comment|/* DDR SDRAM Control Reg 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_SDBR
+value|0x0c
+end_define
+
+begin_comment
+comment|/* SDRAM Base Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_SBR0
+value|0x10
+end_define
+
+begin_comment
+comment|/* SDRAM Boundary Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_SBR1
+value|0x14
+end_define
+
+begin_comment
+comment|/* SDRAM Boundary Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_ECCR
+value|0x1c
+end_define
+
+begin_comment
+comment|/* ECC Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_ELOG0
+value|0x20
+end_define
+
+begin_comment
+comment|/* ECC Log Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_ELOG1
+value|0x24
+end_define
+
+begin_comment
+comment|/* ECC Log Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_ECAR0
+value|0x28
+end_define
+
+begin_comment
+comment|/* ECC Address Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_ECAR1
+value|0x2c
+end_define
+
+begin_comment
+comment|/* ECC Address Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_ECTST
+value|0x30
+end_define
+
+begin_comment
+comment|/* ECC Test Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_MCISR
+value|0x34
+end_define
+
+begin_comment
+comment|/* MC Interrupt Status Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_MPTCR
+value|0x3c
+end_define
+
+begin_comment
+comment|/* MC Port Transaction Cnt Reg*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_RFR
+value|0x48
+end_define
+
+begin_comment
+comment|/* Refresh Frequency Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCU_DDR_SDPR
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x50+(n)*4)
+end_define
+
+begin_comment
+comment|/* SDRAM Page Register 0-7 */
+end_comment
+
+begin_comment
+comment|/* NB: RCVDLY at 0x1050 and LEGOVERIDE at 0x1074 */
+end_comment
+
+begin_comment
 comment|/*  * Performance Monitoring Unit          (CP14)  *  *      CP14.0.1	Performance Monitor Control Register(PMNC)  *      CP14.1.1	Clock Counter(CCNT)  *      CP14.4.1	Interrupt Enable Register(INTEN)  *      CP14.5.1	Overflow Flag Register(FLAG)  *      CP14.8.1	Event Selection Register(EVTSEL)  *      CP14.0.2	Performance Counter Register 0(PMN0)  *      CP14.1.2	Performance Counter Register 0(PMN1)  *      CP14.2.2	Performance Counter Register 0(PMN2)  *      CP14.3.2	Performance Counter Register 0(PMN3)  */
 end_comment
 
@@ -2817,31 +3219,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXP425_MAC_A_HWBASE
-value|(IXP425_IO_HWBASE + IXP425_MAC_A_OFFSET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXP425_MAC_A_VBASE
-value|(IXP425_IO_VBASE + IXP425_MAC_A_OFFSET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXP425_MAC_A_SIZE
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Actually only 256 bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IXP425_MAC_B_HWBASE
 value|(IXP425_IO_HWBASE + IXP425_MAC_B_OFFSET)
 end_define
@@ -2857,6 +3234,56 @@ begin_define
 define|#
 directive|define
 name|IXP425_MAC_B_SIZE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Actually only 256 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP425_MAC_C_HWBASE
+value|(IXP425_IO_HWBASE + IXP425_MAC_C_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_MAC_C_VBASE
+value|(IXP425_IO_VBASE + IXP425_MAC_C_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_MAC_C_SIZE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Actually only 256 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_MAC_A_HWBASE
+value|(IXP425_IO_HWBASE + IXP435_MAC_A_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_MAC_A_VBASE
+value|(IXP425_IO_VBASE + IXP435_MAC_A_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_MAC_A_SIZE
 value|0x1000
 end_define
 
@@ -2907,6 +3334,31 @@ parameter_list|)
 define|\
 value|(IXP425_MAC_B_VBASE + (i)*IXP425_MAC_B_SIZE)
 end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_EXP_BUS_CS0_HWBASE
+value|IXP425_EXP_BUS_CSx_HWBASE(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_EXP_BUS_CS0_VBASE
+value|0xFD000000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_EXP_BUS_CS0_SIZE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* NB: 16M */
+end_comment
 
 begin_define
 define|#
@@ -2999,13 +3451,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXP425_EXP_BUS_CS0_HWBASE
-value|IXP425_EXP_BUS_CSx_HWBASE(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXP425_EXP_BUS_CS5_HWBASE
 value|IXP425_EXP_BUS_CSx_HWBASE(5)
 end_define
@@ -3023,6 +3468,158 @@ directive|define
 name|IXP425_EXP_BUS_CS7_HWBASE
 value|IXP425_EXP_BUS_CSx_HWBASE(7)
 end_define
+
+begin_comment
+comment|/*  * IXP435/Gateworks Cambria  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_GPS_HWBASE
+value|0x53FC0000UL
+end_define
+
+begin_comment
+comment|/* optional GPS Serial Port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_GPS_SIZE
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_RS485_HWBASE
+value|0x53F80000UL
+end_define
+
+begin_comment
+comment|/* optional RS485 Serial Port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_RS485_SIZE
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_OCTAL_LED_HWBASE
+value|0x53F40000UL
+end_define
+
+begin_comment
+comment|/* Octal Status LED Latch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_OCTAL_LED_SIZE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_CFSEL1_HWBASE
+value|0x53E40000UL
+end_define
+
+begin_comment
+comment|/* Compact Flash Socket Sel 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_CFSEL1_SIZE
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_CFSEL0_HWBASE
+value|0x53E00000UL
+end_define
+
+begin_comment
+comment|/* Compact Flash Socket Sel 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAMBRIA_CFSEL0_SIZE
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB1_HWBASE
+value|0xcd000000UL
+end_define
+
+begin_comment
+comment|/* USB host controller 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB1_VBASE
+value|(IXP425_QMGR_VBASE + IXP425_QMGR_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB1_SIZE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* NB: only uses 0x300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB2_HWBASE
+value|0xce000000UL
+end_define
+
+begin_comment
+comment|/* USB host controller 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB2_VBASE
+value|(IXP435_USB1_VBASE + IXP435_USB1_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP435_USB2_SIZE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* NB: only uses 0x300 */
+end_comment
 
 begin_endif
 endif|#

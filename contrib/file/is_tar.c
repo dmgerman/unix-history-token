@@ -52,7 +52,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: is_tar.c,v 1.29 2007/10/17 19:33:31 christos Exp $"
+literal|"@(#)$File: is_tar.c,v 1.31 2008/02/04 20:51:17 christos Exp $"
 argument_list|)
 end_macro
 
@@ -108,9 +108,11 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|tartype
 index|[]
+index|[
+literal|32
+index|]
 init|=
 block|{
 literal|"tar archive"
@@ -216,7 +218,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return   *	0 if the checksum is bad (i.e., probably not a tar archive),   *	1 for old UNIX tar file,  *	2 for Unix Std (POSIX) tar file.  */
+comment|/*  * Return   *	0 if the checksum is bad (i.e., probably not a tar archive),   *	1 for old UNIX tar file,  *	2 for Unix Std (POSIX) tar file,  *	3 for GNU tar file.  */
 end_comment
 
 begin_function

@@ -2263,7 +2263,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|umajor
+name|major
 argument_list|(
 name|dev
 argument_list|)
@@ -2271,7 +2271,7 @@ operator|<<
 name|NBITSMINOR64
 operator|)
 operator||
-name|uminor
+name|minor
 argument_list|(
 name|dev
 argument_list|)

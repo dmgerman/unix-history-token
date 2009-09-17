@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * IXP425 Watchdog Timer Support.  */
+comment|/*  * IXP4XX Watchdog Timer Support.  */
 end_comment
 
 begin_include
@@ -328,7 +328,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"IXP425 Watchdog Timer"
+literal|"IXP4XX Watchdog Timer"
 argument_list|)
 expr_stmt|;
 return|return

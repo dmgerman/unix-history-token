@@ -134,6 +134,7 @@ parameter_list|,
 name|int
 name|order
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -958,6 +959,7 @@ parameter_list|,
 name|int
 name|order
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name

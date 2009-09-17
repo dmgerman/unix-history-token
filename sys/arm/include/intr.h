@@ -19,6 +19,10 @@ directive|define
 name|_MACHINE_INTR_H_
 end_define
 
+begin_comment
+comment|/* XXX move to std.* files? */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -81,6 +85,12 @@ operator|||
 name|defined
 argument_list|(
 name|SOC_MV_KIRKWOOD
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_XSCALE_IXP435
 argument_list|)
 end_elif
 

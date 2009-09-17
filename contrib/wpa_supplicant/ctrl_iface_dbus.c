@@ -96,7 +96,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|DBUS_VERSION
+name|_DBUS_VERSION
 value|(DBUS_VERSION_MAJOR<< 8 | DBUS_VERSION_MINOR)
 end_define
 
@@ -115,7 +115,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|DBUS_VERSION
+name|_DBUS_VERSION
 operator|<
 name|DBUS_VER
 argument_list|(

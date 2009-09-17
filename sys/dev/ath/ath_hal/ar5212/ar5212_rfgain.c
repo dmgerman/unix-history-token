@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212_rfgain.c,v 1.2 2008/11/19 21:23:01 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1477,7 +1477,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|uint32_t
 name|ar5212GetGainFCorrection
 parameter_list|(
 name|struct
@@ -1496,14 +1496,8 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
-name|GAIN_VALUES
-modifier|*
-name|gv
-init|=
-operator|&
-name|ahp
-operator|->
-name|ah_gainValues
+name|uint32_t
+name|correction
 decl_stmt|;
 name|HALASSERT
 argument_list|(
@@ -1513,9 +1507,7 @@ name|ah
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|gv
-operator|->
-name|gainFCorrection
+name|correction
 operator|=
 literal|0
 expr_stmt|;
@@ -1540,6 +1532,16 @@ operator|==
 literal|1
 condition|)
 block|{
+specifier|const
+name|GAIN_VALUES
+modifier|*
+name|gv
+init|=
+operator|&
+name|ahp
+operator|->
+name|ah_gainValues
+decl_stmt|;
 name|uint32_t
 name|mixGain
 init|=
@@ -1579,9 +1581,7 @@ block|{
 case|case
 literal|0
 case|:
-name|gv
-operator|->
-name|gainFCorrection
+name|correction
 operator|=
 literal|0
 expr_stmt|;
@@ -1589,9 +1589,7 @@ break|break;
 case|case
 literal|1
 case|:
-name|gv
-operator|->
-name|gainFCorrection
+name|correction
 operator|=
 name|gainStep
 expr_stmt|;
@@ -1599,9 +1597,7 @@ break|break;
 case|case
 literal|2
 case|:
-name|gv
-operator|->
-name|gainFCorrection
+name|correction
 operator|=
 literal|2
 operator|*
@@ -1613,9 +1609,7 @@ break|break;
 case|case
 literal|3
 case|:
-name|gv
-operator|->
-name|gainFCorrection
+name|correction
 operator|=
 literal|2
 operator|*
@@ -1624,6 +1618,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+return|return
+name|correction
+return|;
 block|}
 end_function
 
@@ -1665,12 +1662,18 @@ name|rddata
 decl_stmt|,
 name|probeType
 decl_stmt|;
+comment|/* NB: beware of touching the BB when PHY is powered down */
 if|if
 condition|(
 operator|!
 name|gv
 operator|->
 name|active
+operator|||
+operator|!
+name|ahp
+operator|->
+name|ah_phyPowerOn
 condition|)
 return|return
 name|HAL_RFGAIN_INACTIVE
@@ -1794,28 +1797,27 @@ name|ah
 argument_list|)
 condition|)
 block|{
+name|uint32_t
+name|correct
+init|=
 name|ar5212GetGainFCorrection
 argument_list|(
 name|ah
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|gv
 operator|->
 name|currGain
 operator|>=
-name|gv
-operator|->
-name|gainFCorrection
+name|correct
 condition|)
 name|gv
 operator|->
 name|currGain
 operator|-=
-name|gv
-operator|->
-name|gainFCorrection
+name|correct
 expr_stmt|;
 else|else
 name|gv

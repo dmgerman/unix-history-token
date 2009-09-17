@@ -140,61 +140,66 @@ comment|/* Keep flags in sync with db_show_tty and pstat(8). */
 define|#
 directive|define
 name|TF_NOPREFIX
-value|0x0001
+value|0x00001
 comment|/* Don't prepend "tty" to device name. */
 define|#
 directive|define
 name|TF_INITLOCK
-value|0x0002
+value|0x00002
 comment|/* Create init/lock state devices. */
 define|#
 directive|define
 name|TF_CALLOUT
-value|0x0004
+value|0x00004
 comment|/* Create "cua" devices. */
 define|#
 directive|define
 name|TF_OPENED_IN
-value|0x0008
+value|0x00008
 comment|/* "tty" node is in use. */
 define|#
 directive|define
 name|TF_OPENED_OUT
-value|0x0010
+value|0x00010
 comment|/* "cua" node is in use. */
 define|#
 directive|define
+name|TF_OPENED_CONS
+value|0x00020
+comment|/* Device in use as console. */
+define|#
+directive|define
 name|TF_OPENED
-value|(TF_OPENED_IN|TF_OPENED_OUT)
+value|(TF_OPENED_IN|TF_OPENED_OUT|TF_OPENED_CONS)
 define|#
 directive|define
 name|TF_GONE
-value|0x0020
+value|0x00040
 comment|/* Device node is gone. */
 define|#
 directive|define
 name|TF_OPENCLOSE
-value|0x0040
+value|0x00080
 comment|/* Device is in open()/close(). */
 define|#
 directive|define
 name|TF_ASYNC
-value|0x0080
+value|0x00100
 comment|/* Asynchronous I/O enabled. */
 define|#
 directive|define
 name|TF_LITERAL
-value|0x0100
+value|0x00200
 comment|/* Accept the next character literally. */
 define|#
 directive|define
 name|TF_HIWAT_IN
-value|0x0200
+value|0x00400
 comment|/* We've reached the input watermark. */
 define|#
 directive|define
 name|TF_HIWAT_OUT
-value|0x0400
+value|0x00800
 comment|/* We've reached the output watermark. */
 define|#
 directive|define
@@ -203,28 +208,42 @@ value|(TF_HIWAT_IN|TF_HIWAT_OUT)
 define|#
 directive|define
 name|TF_STOPPED
-value|0x0800
+value|0x01000
 comment|/* Output flow control - stopped. */
 define|#
 directive|define
 name|TF_EXCLUDE
-value|0x1000
+value|0x02000
 comment|/* Exclusive access. */
 define|#
 directive|define
 name|TF_BYPASS
-value|0x2000
+value|0x04000
 comment|/* Optimized input path. */
 define|#
 directive|define
 name|TF_ZOMBIE
-value|0x4000
+value|0x08000
 comment|/* Modem disconnect received. */
 define|#
 directive|define
 name|TF_HOOK
-value|0x8000
+value|0x10000
 comment|/* TTY has hook attached. */
+define|#
+directive|define
+name|TF_BUSY_IN
+value|0x20000
+comment|/* Process busy in read() -- not supported. */
+define|#
+directive|define
+name|TF_BUSY_OUT
+value|0x40000
+comment|/* Process busy in write(). */
+define|#
+directive|define
+name|TF_BUSY
+value|(TF_BUSY_IN|TF_BUSY_OUT)
 name|unsigned
 name|int
 name|t_revokecnt

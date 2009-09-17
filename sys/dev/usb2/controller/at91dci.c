@@ -60,20 +60,6 @@ name|USB_DEBUG_VAR
 value|at91dcidebug
 end_define
 
-begin_define
-define|#
-directive|define
-name|usb2_config_td_cc
-value|at91dci_config_copy
-end_define
-
-begin_define
-define|#
-directive|define
-name|usb2_config_td_softc
-value|at91dci_softc
-end_define
-
 begin_include
 include|#
 directive|include
@@ -96,12 +82,6 @@ begin_include
 include|#
 directive|include
 file|<dev/usb2/core/usb2_process.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb2/core/usb2_config_td.h>
 end_include
 
 begin_include
@@ -329,10 +309,8 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|,
 name|usb2_error_t
-name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -345,7 +323,6 @@ parameter_list|(
 name|struct
 name|usb2_bus
 modifier|*
-name|bus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -358,7 +335,6 @@ parameter_list|(
 name|struct
 name|at91dci_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -371,7 +347,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -387,13 +362,6 @@ begin_decl_stmt
 specifier|static
 name|usb2_sw_transfer_func_t
 name|at91dci_root_ctrl_done
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|usb2_config_td_command_t
-name|at91dci_root_ctrl_task
 decl_stmt|;
 end_decl_stmt
 
@@ -744,7 +712,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -819,7 +786,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -889,7 +855,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -941,7 +906,6 @@ name|sc_pull_arg
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -986,7 +950,6 @@ name|sc_pull_arg
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -996,13 +959,27 @@ name|void
 name|at91dci_wakeup_peer
 parameter_list|(
 name|struct
+name|usb2_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+name|struct
 name|at91dci_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
-name|uint32_t
-name|temp
+init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
+decl_stmt|;
+name|uint8_t
+name|use_polling
 decl_stmt|;
 if|if
 condition|(
@@ -1018,114 +995,59 @@ condition|)
 block|{
 return|return;
 block|}
-name|temp
+name|use_polling
 operator|=
-name|AT91_UDP_READ_4
+name|mtx_owned
 argument_list|(
-name|sc
-argument_list|,
-name|AT91_UDP_GSTATE
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|xfer_mtx
 argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|temp
-operator|&
-name|AT91_UDP_GSTATE_ESR
-operator|)
-condition|)
-block|{
-return|return;
-block|}
 name|AT91_UDP_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
 name|AT91_UDP_GSTATE
 argument_list|,
-name|temp
+name|AT91_UDP_GSTATE_ESR
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|at91dci_rem_wakeup_set
-parameter_list|(
-name|struct
-name|usb2_device
-modifier|*
-name|udev
-parameter_list|,
-name|uint8_t
-name|is_on
-parameter_list|)
-block|{
-name|struct
-name|at91dci_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|uint32_t
-name|temp
-decl_stmt|;
-name|DPRINTFN
-argument_list|(
-literal|5
-argument_list|,
-literal|"is_on=%u\n"
-argument_list|,
-name|is_on
-argument_list|)
-expr_stmt|;
-name|USB_BUS_LOCK_ASSERT
-argument_list|(
-name|udev
-operator|->
-name|bus
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|sc
-operator|=
-name|AT9100_DCI_BUS2SC
-argument_list|(
-name|udev
-operator|->
-name|bus
-argument_list|)
-expr_stmt|;
-name|temp
-operator|=
-name|AT91_UDP_READ_4
-argument_list|(
-name|sc
-argument_list|,
-name|AT91_UDP_GSTATE
-argument_list|)
-expr_stmt|;
+comment|/* wait 8 milliseconds */
 if|if
 condition|(
-name|is_on
+name|use_polling
 condition|)
 block|{
-name|temp
-operator||=
-name|AT91_UDP_GSTATE_ESR
+comment|/* polling */
+name|DELAY
+argument_list|(
+literal|8000
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|temp
-operator|&=
-operator|~
-name|AT91_UDP_GSTATE_ESR
+comment|/* Wait for reset to complete. */
+name|usb2_pause_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bus_mtx
+argument_list|,
+name|hz
+operator|/
+literal|125
+argument_list|)
 expr_stmt|;
 block|}
 name|AT91_UDP_WRITE_4
@@ -1134,10 +1056,9 @@ name|sc
 argument_list|,
 name|AT91_UDP_GSTATE
 argument_list|,
-name|temp
+literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1175,7 +1096,6 @@ operator||
 name|AT91_UDP_FADDR_EN
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2766,9 +2686,14 @@ name|done
 label|:
 name|sc
 operator|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 name|temp
 operator|=
@@ -2871,34 +2796,22 @@ name|repeat
 goto|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|at91dci_vbus_interrupt
 parameter_list|(
 name|struct
-name|usb2_bus
+name|at91dci_softc
 modifier|*
-name|bus
+name|sc
 parameter_list|,
 name|uint8_t
 name|is_on
 parameter_list|)
 block|{
-name|struct
-name|at91dci_softc
-modifier|*
-name|sc
-init|=
-name|AT9100_DCI_BUS2SC
-argument_list|(
-name|bus
-argument_list|)
-decl_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|5
@@ -3026,7 +2939,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3323,7 +3235,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3432,7 +3343,6 @@ name|temp
 operator|->
 name|setup_alt_next
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3494,6 +3404,8 @@ argument_list|,
 name|usb2_get_speed
 argument_list|(
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|udev
 argument_list|)
@@ -3564,9 +3476,14 @@ literal|0
 expr_stmt|;
 name|sc
 operator|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 name|ep_no
 operator|=
@@ -4028,7 +3945,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4049,15 +3965,6 @@ name|xfer
 init|=
 name|arg
 decl_stmt|;
-name|struct
-name|at91dci_softc
-modifier|*
-name|sc
-init|=
-name|xfer
-operator|->
-name|usb2_sc
-decl_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"xfer=%p\n"
@@ -4067,10 +3974,11 @@ argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
-operator|&
-name|sc
+name|xfer
 operator|->
-name|sc_bus
+name|xroot
+operator|->
+name|bus
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -4083,15 +3991,6 @@ argument_list|,
 name|USB_ERR_TIMEOUT
 argument_list|)
 expr_stmt|;
-name|USB_BUS_UNLOCK
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4127,9 +4026,14 @@ name|at91dci_softc
 modifier|*
 name|sc
 init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|uint8_t
 name|ep_no
@@ -4168,7 +4072,7 @@ argument_list|(
 operator|&
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 operator|->
@@ -4201,7 +4105,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -4226,9 +4129,14 @@ name|at91dci_softc
 modifier|*
 name|sc
 init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -4672,7 +4580,6 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4699,9 +4606,14 @@ name|at91dci_softc
 modifier|*
 name|sc
 init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|uint8_t
 name|ep_no
@@ -4783,7 +4695,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4905,7 +4816,6 @@ argument_list|,
 name|csr_val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5247,7 +5157,6 @@ argument_list|,
 name|csr_val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5361,7 +5270,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5442,7 +5350,9 @@ name|sc_bus
 operator|.
 name|bus_mtx
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* disable and clear all interrupts */
@@ -5673,7 +5583,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5752,7 +5661,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5793,7 +5701,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5834,7 +5741,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5914,7 +5820,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5955,7 +5860,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6035,7 +5939,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6076,7 +5979,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6156,7 +6058,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6176,9 +6077,14 @@ name|at91dci_softc
 modifier|*
 name|sc
 init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|uint32_t
 name|temp
@@ -6341,7 +6247,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6362,7 +6267,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6440,9 +6344,14 @@ name|at91dci_softc
 modifier|*
 name|sc
 init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -6471,7 +6380,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6819,7 +6727,7 @@ operator||
 name|UHD_OC_INDIVIDUAL
 operator|)
 operator|>>
-literal|16
+literal|8
 block|,
 operator|.
 name|bPwrOn2PwrGood
@@ -6932,9 +6840,14 @@ name|at91dci_softc
 modifier|*
 name|sc
 init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|sc
 operator|->
@@ -6944,24 +6857,15 @@ name|xfer
 operator|=
 name|xfer
 expr_stmt|;
-name|usb2_config_td_queue_command
+name|usb2_bus_roothub_exec
 argument_list|(
-operator|&
-name|sc
+name|xfer
 operator|->
-name|sc_config_td
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|at91dci_root_ctrl_task
-argument_list|,
-literal|0
-argument_list|,
-literal|0
+name|xroot
+operator|->
+name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6971,25 +6875,19 @@ name|void
 name|at91dci_root_ctrl_task
 parameter_list|(
 name|struct
-name|at91dci_softc
+name|usb2_bus
 modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|at91dci_config_copy
-modifier|*
-name|cc
-parameter_list|,
-name|uint16_t
-name|refcount
+name|bus
 parameter_list|)
 block|{
 name|at91dci_root_ctrl_poll
 argument_list|(
-name|sc
+name|AT9100_DCI_BUS2SC
+argument_list|(
+name|bus
+argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7014,9 +6912,14 @@ name|at91dci_softc
 modifier|*
 name|sc
 init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|uint16_t
 name|value
@@ -7118,6 +7021,8 @@ operator|=
 name|mtx_owned
 argument_list|(
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|xfer_mtx
 argument_list|)
@@ -7931,7 +7836,7 @@ name|UHF_PORT_SUSPEND
 case|:
 name|at91dci_wakeup_peer
 argument_list|(
-name|sc
+name|xfer
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8401,7 +8306,6 @@ operator|&
 name|at91dci_root_ctrl_done
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8479,9 +8383,14 @@ name|at91dci_softc
 modifier|*
 name|sc
 init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -8510,7 +8419,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8545,9 +8453,14 @@ name|at91dci_softc
 modifier|*
 name|sc
 init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
 name|xfer
 operator|->
-name|usb2_sc
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|sc
 operator|->
@@ -8557,7 +8470,6 @@ name|xfer
 operator|=
 name|xfer
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8656,13 +8568,6 @@ operator|=
 name|parm
 operator|->
 name|curr_xfer
-expr_stmt|;
-comment|/* 	 * setup xfer 	 */
-name|xfer
-operator|->
-name|usb2_sc
-operator|=
-name|sc
 expr_stmt|;
 comment|/* 	 * NOTE: This driver does not use any of the parameters that 	 * are computed from the following values. Just set some 	 * reasonable dummies: 	 */
 name|parm
@@ -9013,7 +8918,6 @@ index|]
 operator|=
 name|last_obj
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9239,7 +9143,6 @@ comment|/* do nothing */
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -9292,16 +9195,10 @@ operator|&
 name|at91dci_clear_stall
 block|,
 operator|.
-name|vbus_interrupt
+name|roothub_exec
 operator|=
 operator|&
-name|at91dci_vbus_interrupt
-block|,
-operator|.
-name|rem_wakeup_set
-operator|=
-operator|&
-name|at91dci_rem_wakeup_set
+name|at91dci_root_ctrl_task
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_agp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_bus.h"
 end_include
 
@@ -2391,8 +2397,11 @@ argument_list|)
 expr_stmt|;
 name|AGP_DPF
 argument_list|(
-literal|"found page pa=%#x\n"
+literal|"found page pa=%#jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
@@ -2439,6 +2448,10 @@ name|mem
 operator|->
 name|am_obj
 argument_list|)
+expr_stmt|;
+name|i
+operator|=
+literal|0
 expr_stmt|;
 goto|goto
 name|bad
@@ -2519,14 +2532,20 @@ name|j
 decl_stmt|;
 name|AGP_DPF
 argument_list|(
-literal|"binding offset %#x to pa %#x\n"
+literal|"binding offset %#jx to pa %#jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|offset
 operator|+
 name|i
 operator|+
 name|j
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pa
 argument_list|)
 expr_stmt|;
@@ -2551,11 +2570,6 @@ name|error
 condition|)
 block|{
 comment|/* 				 * Bail out. Reverse all the mappings 				 * and unwire the pages. 				 */
-name|vm_page_wakeup
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|k
@@ -2653,17 +2667,17 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|k
 operator|=
 literal|0
 init|;
-name|i
+name|k
 operator|<
 name|mem
 operator|->
 name|am_size
 condition|;
-name|i
+name|k
 operator|+=
 name|PAGE_SIZE
 control|)
@@ -2678,8 +2692,19 @@ name|am_obj
 argument_list|,
 name|OFF_TO_IDX
 argument_list|(
-name|i
+name|k
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|>=
+name|i
+condition|)
+name|vm_page_wakeup
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues

@@ -188,7 +188,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%2d %4d %p %-8jx %s (%s)\n"
+literal|"%2d %4d %p %-8jx %s"
 argument_list|,
 name|stat
 operator|.
@@ -212,10 +212,6 @@ argument_list|,
 name|stat
 operator|.
 name|name
-argument_list|,
-name|stat
-operator|.
-name|pathname
 argument_list|)
 expr_stmt|;
 if|if
@@ -223,6 +219,15 @@ condition|(
 name|verbose
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|" (%s)\n"
+argument_list|,
+name|stat
+operator|.
+name|pathname
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\tContains modules:\n"
@@ -259,6 +264,12 @@ name|modid
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

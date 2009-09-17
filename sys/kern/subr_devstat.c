@@ -1378,7 +1378,7 @@ name|devstat
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|"Device Statistics"
 argument_list|)
@@ -1398,7 +1398,7 @@ name|CTLFLAG_RD
 operator||
 name|CTLTYPE_OPAQUE
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -1963,7 +1963,7 @@ name|devstat
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 sizeof|sizeof
 argument_list|(

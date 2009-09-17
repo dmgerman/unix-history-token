@@ -708,7 +708,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cbb_cardbus_power_disable_socket
 parameter_list|(
 name|device_t
@@ -1344,12 +1344,12 @@ literal|"Waiting for thread to die\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|cv_broadcast
+name|wakeup
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|cv
+name|intrhand
 argument_list|)
 expr_stmt|;
 name|msleep
@@ -1411,22 +1411,6 @@ operator|&
 name|sc
 operator|->
 name|mtx
-argument_list|)
-expr_stmt|;
-name|cv_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|cv
-argument_list|)
-expr_stmt|;
-name|cv_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|powercv
 argument_list|)
 expr_stmt|;
 return|return
@@ -1846,32 +1830,14 @@ name|wake
 operator|>
 literal|0
 condition|)
-block|{
-name|mtx_lock
+name|wakeup
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|mtx
+name|intrhand
 argument_list|)
 expr_stmt|;
-name|cv_signal
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|cv
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2120,6 +2086,28 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+comment|/* 		 * First time through we need to tell mountroot that we're 		 * done. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_root_token
+condition|)
+block|{
+name|root_mount_rel
+argument_list|(
+name|sc
+operator|->
+name|sc_root_token
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_root_token
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* 		 * Wait until it has been 250ms since the last time we 		 * get an interrupt.  We handle the rest of the interrupt 		 * at the top of the loop.  Although we clear the bit in the 		 * ISR, we signal sc->cv from the detach path after we've 		 * set the CBB_KTHREAD_DONE bit, so we can't do a simple 		 * 250ms sleep here. 		 * 		 * In our ISR, we turn off the card changed interrupt.  Turn 		 * them back on here before we wait for them to happen.  We 		 * turn them on/off so that we can tolerate a large latency 		 * between the time we signal cbb_event_thread and it gets 		 * a chance to run. 		 */
 name|mtx_lock
 argument_list|(
@@ -2136,19 +2124,27 @@ argument_list|,
 name|CBB_SOCKET_MASK
 argument_list|,
 name|CBB_SOCKET_MASK_CD
+operator||
+name|CBB_SOCKET_MASK_CSTS
 argument_list|)
 expr_stmt|;
-name|cv_wait
+name|msleep
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|cv
+name|intrhand
 argument_list|,
 operator|&
 name|sc
 operator|->
 name|mtx
+argument_list|,
+literal|0
+argument_list|,
+literal|"-"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|err
@@ -2173,21 +2169,25 @@ literal|0
 condition|)
 name|err
 operator|=
-name|cv_timedwait
+name|msleep
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|cv
+name|intrhand
 argument_list|,
 operator|&
 name|sc
 operator|->
 name|mtx
 argument_list|,
+literal|0
+argument_list|,
+literal|"-"
+argument_list|,
 name|hz
 operator|/
-literal|4
+literal|5
 argument_list|)
 expr_stmt|;
 block|}
@@ -3053,7 +3053,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have to mask the card change detect interrupt while 	 * we're messing with the power.  It is allowed to bounce 	 * while we're messing with power as things settle down.  In 	 * addition, we mask off the card's function interrupt by 	 * routing it via the ISA bus.  This bit generally only 	 * affects 16-bit cards.  Some bridges allow one to set 	 * another bit to have it also affect 32-bit cards.  Since 	 * 32-bit cards are required to be better behaved, we don't 	 * bother to get into those bridge specific features. 	 */
+comment|/* 	 * We have to mask the card change detect interrupt while we're 	 * messing with the power.  It is allowed to bounce while we're 	 * messing with power as things settle down.  In addition, we mask off 	 * the card's function interrupt by routing it via the ISA bus.  This 	 * bit generally only affects 16-bit cards.  Some bridges allow one to 	 * set another bit to have it also affect 32-bit cards.  Since 32-bit 	 * cards are required to be better behaved, we don't bother to get 	 * into those bridge specific features. 	 * 	 * XXX I wonder if we need to enable the READY bit interrupt in the 	 * EXCA CSC register for 16-bit cards, and disable the CD bit? 	 */
 name|mask
 operator|=
 name|cbb_get
@@ -3121,7 +3121,7 @@ name|sc
 operator|->
 name|powerintr
 expr_stmt|;
-comment|/* 		 * We have a shortish timeout of 500ms here.  Some 		 * bridges do not generate a POWER_CYCLE event for 		 * 16-bit cards.  In those cases, we have to cope the 		 * best we can, and having only a short delay is 		 * better than the alternatives. 		 */
+comment|/* 		 * We have a shortish timeout of 500ms here.  Some bridges do 		 * not generate a POWER_CYCLE event for 16-bit cards.  In 		 * those cases, we have to cope the best we can, and having 		 * only a short delay is better than the alternatives. 		 */
 name|sane
 operator|=
 literal|10
@@ -3151,17 +3151,21 @@ operator|--
 operator|>
 literal|0
 condition|)
-name|cv_timedwait
+name|msleep
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|powercv
+name|powerintr
 argument_list|,
 operator|&
 name|sc
 operator|->
 name|mtx
+argument_list|,
+literal|0
+argument_list|,
+literal|"-"
 argument_list|,
 name|hz
 operator|/
@@ -3176,7 +3180,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The TOPIC95B requires a little bit extra time to get 		 * its act together, so delay for an additional 100ms.  Also 		 * as documented below, it doesn't seem to set the POWER_CYCLE 		 * bit, so don't whine if it never came on. 		 */
+comment|/* 		 * The TOPIC95B requires a little bit extra time to get its 		 * act together, so delay for an additional 100ms.  Also as 		 * documented below, it doesn't seem to set the POWER_CYCLE 		 * bit, so don't whine if it never came on. 		 */
 if|if
 condition|(
 name|sc
@@ -3281,7 +3285,49 @@ argument_list|,
 literal|"Bad Vcc requested\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX Do we want to do something to mitigate things here? */
+comment|/* 		 * Turn off the power, and try again.  Retrigger other 		 * active interrupts via force register.  From NetBSD 		 * PR 36652, coded by me to description there. 		 */
+name|sock_ctrl
+operator|&=
+operator|~
+name|CBB_SOCKET_CTRL_VCCMASK
+expr_stmt|;
+name|sock_ctrl
+operator|&=
+operator|~
+name|CBB_SOCKET_CTRL_VPPMASK
+expr_stmt|;
+name|cbb_set
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_CONTROL
+argument_list|,
+name|sock_ctrl
+argument_list|)
+expr_stmt|;
+name|status
+operator|&=
+operator|~
+name|CBB_STATE_BAD_VCC_REQ
+expr_stmt|;
+name|status
+operator|&=
+operator|~
+name|CBB_STATE_DATA_LOST
+expr_stmt|;
+name|status
+operator||=
+name|CBB_FORCE_CV_TEST
+expr_stmt|;
+name|cbb_set
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_FORCE
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -3687,7 +3733,7 @@ name|delay
 decl_stmt|,
 name|count
 decl_stmt|;
-comment|/* 	 * Asserting reset for 20ms is necessary for most bridges.  For some 	 * reason, the Ricoh RF5C47x bridges need it asserted for 400ms. 	 */
+comment|/* 	 * Asserting reset for 20ms is necessary for most bridges.  For some 	 * reason, the Ricoh RF5C47x bridges need it asserted for 400ms.  The 	 * root cause of this is unknown, and NetBSD does the same thing. 	 */
 name|delay
 operator|=
 name|sc
@@ -3723,7 +3769,7 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  If a card exists and we're turning it on, take it out of reset. 	 */
+comment|/* 	 * If a card exists and we're turning it on, take it out of reset. 	 * After clearing reset, wait up to 1.1s for the first configuration 	 * register (vendor/product) configuration register of device 0.0 to 	 * become != 0xffffffff.  The PCMCIA PC Card Host System Specification 	 * says that when powering up the card, the PCI Spec v2.1 must be 	 * followed.  In PCI spec v2.2 Table 4-6, Trhfa (Reset High to first 	 * Config Access) is at most 2^25 clocks, or just over 1s.  Section 	 * 2.2.1 states any card not ready to participate in bus transactions 	 * must tristate its outputs.  Therefore, any access to its 	 * configuration registers must be ignored.  In that state, the config 	 * reg will read 0xffffffff.  Section 6.2.1 states a vendor id of 	 * 0xffff is invalid, so this can never match a real card.  Print a 	 * warning if it never returns a real id.  The PCMCIA PC Card 	 * Electrical Spec Section 5.2.7.1 implies only device 0 is present on 	 * a cardbus bus, so that's the only register we check here. 	 */
 if|if
 condition|(
 name|on
@@ -3739,7 +3785,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * After clearing reset, wait up to 1.1s for the first 		 * configuration register (vendor/product) configuration 		 * register of device 0.0 to become != 0xffffffff.  The PCMCIA 		 * PC Card Host System Specification says that when powering 		 * up the card, the PCI Spec v2.1 must be followed.  In PCI 		 * spec v2.2 Table 4-6, Trhfa (Reset High to first Config 		 * Access) is at most 2^25 clocks, or just over 1s.  Section 		 * 2.2.1 states any card not ready to participate in bus 		 * transactions must tristate its outputs.  Therefore, any 		 * access to its configuration registers must be ignored.  In 		 * that state, the config reg will read 0xffffffff.  Section 		 * 6.2.1 states a vendor id of 0xffff is invalid, so this can 		 * never match a real card.  Print a warning if it never 		 * returns a real id.  The PCMCIA PC Card Electrical Spec 		 * Section 5.2.7.1 implies only device 0. 		 */
+comment|/* 		 */
 name|PCI_MASK_CONFIG
 argument_list|(
 name|brdev
@@ -3900,7 +3946,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cbb_cardbus_power_disable_socket
 parameter_list|(
 name|device_t
@@ -3926,6 +3972,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -5433,7 +5484,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cbb_pcic_power_disable_socket
 parameter_list|(
 name|device_t
@@ -5536,6 +5587,11 @@ argument_list|,
 name|EXCA_INTR_ENABLE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -5590,7 +5646,6 @@ name|child
 argument_list|)
 operator|)
 return|;
-else|else
 return|return
 operator|(
 name|cbb_cardbus_power_enable_socket
@@ -5605,7 +5660,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|cbb_power_disable_socket
 parameter_list|(
 name|device_t
@@ -5633,21 +5688,26 @@ name|flags
 operator|&
 name|CBB_16BIT_CARD
 condition|)
+return|return
+operator|(
 name|cbb_pcic_power_disable_socket
 argument_list|(
 name|brdev
 argument_list|,
 name|child
 argument_list|)
-expr_stmt|;
-else|else
+operator|)
+return|;
+return|return
+operator|(
 name|cbb_cardbus_power_disable_socket
 argument_list|(
 name|brdev
 argument_list|,
 name|child
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -6211,7 +6271,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|uint32_t
+name|u_long
 name|flags
 parameter_list|)
 block|{
@@ -7023,28 +7083,12 @@ name|CBB_SOCKET_MASK_CD
 argument_list|)
 expr_stmt|;
 comment|/* Signal the thread to wakeup. */
-name|mtx_lock
+name|wakeup
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
-name|cv_signal
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|cv
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mtx
+name|intrhand
 argument_list|)
 expr_stmt|;
 name|error
@@ -7067,7 +7111,10 @@ name|int
 name|cbb_child_present
 parameter_list|(
 name|device_t
-name|self
+name|parent
+parameter_list|,
+name|device_t
+name|child
 parameter_list|)
 block|{
 name|struct
@@ -7082,7 +7129,7 @@ operator|*
 operator|)
 name|device_get_softc
 argument_list|(
-name|self
+name|parent
 argument_list|)
 decl_stmt|;
 name|uint32_t

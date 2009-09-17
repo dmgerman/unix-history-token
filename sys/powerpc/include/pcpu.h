@@ -43,6 +43,8 @@ value|int		pc_inside_intr;					\ 	struct pmap	*pc_curpmap;
 comment|/* current pmap */
 value|\ 	struct thread	*pc_fputhread;
 comment|/* current fpu user */
+value|\ 	struct thread	*pc_vecthread;
+comment|/* current vec user */
 value|\ 	uintptr_t	pc_hwref;					\ 	uint32_t	pc_pir;						\ 	int		pc_bsp:1;					\ 	int		pc_awake:1;					\ 	uint32_t	pc_ipimask;					\ 	register_t	pc_tempsave[CPUSAVE_LEN];			\ 	register_t	pc_disisave[CPUSAVE_LEN];			\ 	register_t	pc_dbsave[CPUSAVE_LEN];
 end_define
 
@@ -85,7 +87,7 @@ define|#
 directive|define
 name|PCPU_MD_BOOKE_FIELDS
 define|\
-value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;
+value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	int		pc_tid_next;
 end_define
 
 begin_comment

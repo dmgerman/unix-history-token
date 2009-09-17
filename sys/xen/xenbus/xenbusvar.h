@@ -230,9 +230,7 @@ value|((struct xenbus_transaction) { 0 })
 end_define
 
 begin_function_decl
-name|char
-modifier|*
-modifier|*
+name|int
 name|xenbus_directory
 parameter_list|(
 name|struct
@@ -253,13 +251,18 @@ name|unsigned
 name|int
 modifier|*
 name|num
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+modifier|*
+name|result
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-modifier|*
+name|int
 name|xenbus_read
 parameter_list|(
 name|struct
@@ -280,6 +283,11 @@ name|unsigned
 name|int
 modifier|*
 name|len
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|result
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -400,7 +408,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Single read and scanf: returns -errno or num scanned if> 0. */
+comment|/*  * Single read and scanf: returns errno or zero. If scancountp is  * non-null, then number of items scanned is returned in *scanncountp.  */
 end_comment
 
 begin_function_decl
@@ -421,6 +429,10 @@ name|char
 modifier|*
 name|node
 parameter_list|,
+name|int
+modifier|*
+name|scancountp
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -434,9 +446,9 @@ function_decl|(format
 parameter_list|(
 name|scanf
 parameter_list|,
-function_decl|4
-operator|,
 function_decl|5
+operator|,
+function_decl|6
 end_function_decl
 
 begin_empty_stmt
@@ -445,7 +457,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* Single printf and write: returns -errno or 0. */
+comment|/* Single printf and write: returns errno or 0. */
 end_comment
 
 begin_function_decl
@@ -490,7 +502,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* Generic read function: NULL-terminated triples of name,  * sprintf-style type string, and pointer. Returns 0 or errno.*/
+comment|/*  * Generic read function: NULL-terminated triples of name,  * sprintf-style type string, and pointer. Returns 0 or errno.  */
 end_comment
 
 begin_function_decl
@@ -591,17 +603,27 @@ comment|/* Used by xenbus_dev to borrow kernel's store connection. */
 end_comment
 
 begin_function_decl
-name|void
-modifier|*
+name|int
 name|xenbus_dev_request_and_reply
 parameter_list|(
 name|struct
 name|xsd_sockmsg
 modifier|*
 name|msg
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|result
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -613,6 +635,11 @@ parameter_list|)
 value|({			\ 	if (!IS_ERR(str)&& strlen(str) == 0) {		\ 		free(str, M_DEVBUF);				\ 		str = ERR_PTR(-ERANGE);			\ 	}						\ 	IS_ERR(str);					\ })
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -620,11 +647,11 @@ name|XENBUS_EXIST_ERR
 parameter_list|(
 name|err
 parameter_list|)
-value|((err) == -ENOENT || (err) == -ERANGE)
+value|((err) == ENOENT || (err) == ERANGE)
 end_define
 
 begin_comment
-comment|/**  * Register a watch on the given path, using the given xenbus_watch structure  * for storage, and the given callback function as the callback.  Return 0 on  * success, or -errno on error.  On success, the given path will be saved as  * watch->node, and remains the caller's to free.  On error, watch->node will  * be NULL, the device will switch to XenbusStateClosing, and the error will  * be saved in the store.  */
+comment|/**  * Register a watch on the given path, using the given xenbus_watch structure  * for storage, and the given callback function as the callback.  Return 0 on  * success, or errno on error.  On success, the given path will be saved as  * watch->node, and remains the caller's to free.  On error, watch->node will  * be NULL, the device will switch to XenbusStateClosing, and the error will  * be saved in the store.  */
 end_comment
 
 begin_function_decl
@@ -666,7 +693,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Register a watch on the given path/path2, using the given xenbus_watch  * structure for storage, and the given callback function as the callback.  * Return 0 on success, or -errno on error.  On success, the watched path  * (path/path2) will be saved as watch->node, and becomes the caller's to  * kfree().  On error, watch->node will be NULL, so the caller has nothing to  * free, the device will switch to XenbusStateClosing, and the error will be  * saved in the store.  */
+comment|/**  * Register a watch on the given path/path2, using the given xenbus_watch  * structure for storage, and the given callback function as the callback.  * Return 0 on success, or errno on error.  On success, the watched path  * (path/path2) will be saved as watch->node, and becomes the caller's to  * kfree().  On error, watch->node will be NULL, so the caller has nothing to  * free, the device will switch to XenbusStateClosing, and the error will be  * saved in the store.  */
 end_comment
 
 begin_function_decl
@@ -714,7 +741,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Advertise in the store a change of the given driver to the given new_state.  * which case this is performed inside its own transaction.  Return 0 on  * success, or -errno on error.  On error, the device will switch to  * XenbusStateClosing, and the error will be saved in the store.  */
+comment|/**  * Advertise in the store a change of the given driver to the given new_state.  * which case this is performed inside its own transaction.  Return 0 on  * success, or errno on error.  On error, the device will switch to  * XenbusStateClosing, and the error will be saved in the store.  */
 end_comment
 
 begin_function_decl
@@ -731,7 +758,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Grant access to the given ring_mfn to the peer of the given device.  Return  * 0 on success, or -errno on error.  On error, the device will switch to  * XenbusStateClosing, and the error will be saved in the store.  */
+comment|/**  * Grant access to the given ring_mfn to the peer of the given device.  * Return 0 on success, or errno on error.  On error, the device will  * switch to XenbusStateClosing, and the error will be saved in the  * store. The grant ring reference is returned in *refp.  */
 end_comment
 
 begin_function_decl
@@ -744,12 +771,16 @@ parameter_list|,
 name|unsigned
 name|long
 name|ring_mfn
+parameter_list|,
+name|int
+modifier|*
+name|refp
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Allocate an event channel for the given xenbus_device, assigning the newly  * created local port to *port.  Return 0 on success, or -errno on error.  On  * error, the device will switch to XenbusStateClosing, and the error will be  * saved in the store.  */
+comment|/**  * Allocate an event channel for the given xenbus_device, assigning the newly  * created local port to *port.  Return 0 on success, or errno on error.  On  * error, the device will switch to XenbusStateClosing, and the error will be  * saved in the store.  */
 end_comment
 
 begin_function_decl
@@ -767,7 +798,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Free an existing event channel. Returns 0 on success or -errno on error.  */
+comment|/**  * Free an existing event channel. Returns 0 on success or errno on error.  */
 end_comment
 
 begin_function_decl

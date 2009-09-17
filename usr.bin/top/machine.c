@@ -395,7 +395,7 @@ name|char
 name|smp_header_thr
 index|[]
 init|=
-literal|"  PID%s %-*.*s  THR PRI NICE   SIZE    RES STATE  C    TIME %6s COMMAND"
+literal|"  PID%s %-*.*s  THR PRI NICE   SIZE    RES STATE   C   TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,7 +406,7 @@ name|smp_header
 index|[]
 init|=
 literal|"  PID%s %-*.*s "
-literal|"PRI NICE   SIZE    RES STATE  C    TIME %6s COMMAND"
+literal|"PRI NICE   SIZE    RES STATE   C   TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 

@@ -28,7 +28,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
@@ -72,12 +72,6 @@ begin_include
 include|#
 directive|include
 file|<dev/usb2/core/usb2_process.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb2/core/usb2_config_td.h>
 end_include
 
 begin_include
@@ -193,13 +187,6 @@ name|USCANNER_IFQ_MAXLEN
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|USCANNER_N_TRANSFER
-value|4
-end_define
-
 begin_comment
 comment|/*  * Transfers stallings handling flags definition.  */
 end_comment
@@ -228,6 +215,24 @@ directive|define
 name|USCANNER_FLAG_KEEP_OPEN
 value|0x04
 end_define
+
+begin_enum
+enum|enum
+block|{
+name|USCANNER_BULK_DT_WR
+block|,
+name|USCANNER_BULK_DT_RD
+block|,
+name|USCANNER_BULK_CS_WR
+block|,
+name|USCANNER_BULK_CS_RD
+block|,
+name|USCANNER_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -430,7 +435,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|USCANNER_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -493,7 +498,7 @@ name|uscanner_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|USCANNER_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -551,7 +556,7 @@ name|uscanner_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|USCANNER_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -615,7 +620,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|USCANNER_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -1454,6 +1459,17 @@ argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
 argument|USB_PRODUCT_HP_4300C
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_HP
+argument_list|,
+argument|USB_PRODUCT_HP_4470C
 argument_list|,
 literal|0
 argument_list|)
@@ -2549,7 +2565,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|USCANNER_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2606,14 +2622,13 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|USCANNER_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2650,7 +2665,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|USCANNER_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -2681,7 +2696,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2760,7 +2774,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|USCANNER_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2829,14 +2843,13 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|USCANNER_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2873,7 +2886,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|USCANNER_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -2904,7 +2917,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3000,7 +3012,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|USCANNER_BULK_DT_RD
 index|]
 operator|->
 name|max_data_length
@@ -3033,7 +3045,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|USCANNER_BULK_DT_WR
 index|]
 operator|->
 name|max_data_length
@@ -3093,7 +3105,6 @@ name|fifo
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3129,7 +3140,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|USCANNER_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3168,7 +3179,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|USCANNER_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3207,7 +3218,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|USCANNER_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3217,7 +3228,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|USCANNER_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3256,7 +3267,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|USCANNER_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3266,7 +3277,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|USCANNER_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;

@@ -1910,6 +1910,30 @@ literal|8
 block|, 	}
 block|,
 block|{
+literal|0x1393
+block|,
+literal|0x1682
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Moxa Technologies, CP-168EL/PCIe"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_8S
+block|,
+literal|0x18
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
 literal|0x13a8
 block|,
 literal|0x0158
@@ -2096,6 +2120,28 @@ block|,
 block|{
 literal|0x1409
 block|,
+literal|0x7268
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Sunix SUN1888"
+block|,
+literal|0
+block|,
+name|PUC_PORT_2P
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x1409
+block|,
 literal|0x7168
 block|,
 literal|0xffff
@@ -2259,6 +2305,30 @@ block|,
 literal|4
 block|,
 literal|0
+block|, 	}
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x9538
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Oxford Semiconductor OX16PCI958 UARTs"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|10
+block|,
+name|PUC_PORT_8S
+block|,
+literal|0x18
+block|,
+literal|0
+block|,
+literal|8
 block|, 	}
 block|,
 block|{

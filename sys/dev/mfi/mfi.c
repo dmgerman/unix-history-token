@@ -1537,7 +1537,7 @@ name|sc
 operator|->
 name|mfi_dev
 argument_list|,
-literal|"Megaraid SAS driver Ver 2.00 \n"
+literal|"Megaraid SAS driver Ver 3.00 \n"
 argument_list|)
 expr_stmt|;
 name|mtx_init

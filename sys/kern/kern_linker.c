@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -1226,11 +1232,8 @@ operator|!=
 literal|0
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|sysctl_lock
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -1251,11 +1254,8 @@ operator|*
 name|oidp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|sysctl_unlock
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1317,11 +1317,8 @@ operator|!=
 literal|0
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|sysctl_lock
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -1342,11 +1339,8 @@ operator|*
 name|oidp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|sysctl_unlock
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1786,6 +1780,18 @@ condition|(
 name|foundfile
 condition|)
 block|{
+comment|/* 		 * If the file type has not been recognized by the last try 		 * printout a message before to fail. 		 */
+if|if
+condition|(
+name|error
+operator|==
+name|ENOSYS
+condition|)
+name|printf
+argument_list|(
+literal|"linker_load_file: Unsupported file type\n"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Format not recognized or otherwise unloadable. 		 * When loading a module that is statically built into 		 * the kernel EEXIST percolates back up as the return 		 * value.  Preserve this so that apps like sysinstall 		 * can recognize this special case and not post bogus 		 * dialog boxes. 		 */
 if|if
 condition|(
@@ -2495,7 +2501,77 @@ literal|" informing modules\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Inform any modules associated with this file. 	 */
+comment|/* 	 * Quiesce all the modules to give them a chance to veto the unload. 	 */
+name|MOD_SLOCK
+expr_stmt|;
+for|for
+control|(
+name|mod
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|file
+operator|->
+name|modules
+argument_list|)
+init|;
+name|mod
+condition|;
+name|mod
+operator|=
+name|module_getfnext
+argument_list|(
+name|mod
+argument_list|)
+control|)
+block|{
+name|error
+operator|=
+name|module_quiesce
+argument_list|(
+name|mod
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|flags
+operator|!=
+name|LINKER_UNLOAD_FORCE
+condition|)
+block|{
+name|KLD_DPF
+argument_list|(
+name|FILE
+argument_list|,
+operator|(
+literal|"linker_file_unload: module %s"
+literal|" vetoed unload\n"
+operator|,
+name|module_getname
+argument_list|(
+name|mod
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 			 * XXX: Do we need to tell all the quiesced modules 			 * that they can resume work now via a new module 			 * event? 			 */
+name|MOD_SUNLOCK
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
+name|MOD_SUNLOCK
+expr_stmt|;
+comment|/* 	 * Inform any modules associated with this file that they are 	 * being be unloaded. 	 */
 name|MOD_XLOCK
 expr_stmt|;
 for|for
@@ -2535,8 +2611,6 @@ operator|=
 name|module_unload
 argument_list|(
 name|mod
-argument_list|,
-name|flags
 argument_list|)
 operator|)
 operator|!=
@@ -2548,8 +2622,8 @@ argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_file_unload: module %p"
-literal|" vetoes unload\n"
+literal|"linker_file_unload: module %s"
+literal|" failed unload\n"
 operator|,
 name|mod
 operator|)
@@ -2620,6 +2694,16 @@ operator|&
 name|LINKER_FILE_LINKED
 condition|)
 block|{
+name|file
+operator|->
+name|flags
+operator|&=
+operator|~
+name|LINKER_FILE_LINKED
+expr_stmt|;
+name|KLD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|linker_file_sysuninit
 argument_list|(
 name|file
@@ -2629,6 +2713,9 @@ name|linker_file_unregister_sysctls
 argument_list|(
 name|file
 argument_list|)
+expr_stmt|;
+name|KLD_LOCK
+argument_list|()
 expr_stmt|;
 block|}
 name|TAILQ_REMOVE
@@ -5760,6 +5847,64 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+comment|/* 		 * If the symbol is not found in global namespace, 		 * try to look it up in the current vimage namespace. 		 */
+if|if
+condition|(
+name|lf
+operator|==
+name|NULL
+condition|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|vi_symlookup
+argument_list|(
+operator|&
+name|lookup
+argument_list|,
+name|symstr
+argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|copyout
+argument_list|(
+operator|&
+name|lookup
+argument_list|,
+name|uap
+operator|->
+name|data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lookup
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|lf
@@ -5770,6 +5915,8 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|KLD_UNLOCK
 argument_list|()

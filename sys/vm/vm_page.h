@@ -105,13 +105,13 @@ name|uint8_t
 name|pool
 decl_stmt|;
 name|u_short
-name|wire_count
-decl_stmt|;
-comment|/* wired down maps refs (P) */
-name|u_int
 name|cow
 decl_stmt|;
 comment|/* page cow mapping count */
+name|u_int
+name|wire_count
+decl_stmt|;
+comment|/* wired down maps refs (P) */
 name|short
 name|hold_count
 decl_stmt|;
@@ -1355,7 +1355,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_page_cowsetup
 parameter_list|(
 name|vm_page_t

@@ -171,7 +171,7 @@ name|vlan
 decl_stmt|;
 comment|/* VLAN TCI (id: bits 0-11, prio: 13-15 */
 name|struct
-name|rtentry
+name|llentry
 modifier|*
 name|neigh
 decl_stmt|;

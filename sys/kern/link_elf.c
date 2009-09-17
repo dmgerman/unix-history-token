@@ -3087,16 +3087,9 @@ operator|!=
 name|ET_DYN
 condition|)
 block|{
-name|link_elf_error
-argument_list|(
-name|filename
-argument_list|,
-literal|"Unsupported file type"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
-name|ENOEXEC
+name|ENOSYS
 expr_stmt|;
 goto|goto
 name|out
@@ -3289,16 +3282,9 @@ break|break;
 case|case
 name|PT_INTERP
 case|:
-name|link_elf_error
-argument_list|(
-name|filename
-argument_list|,
-literal|"Unsupported file type"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
-name|ENOEXEC
+name|ENOSYS
 expr_stmt|;
 goto|goto
 name|out

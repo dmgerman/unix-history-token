@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.h,v 1.48.18.5.12.2 2008/07/23 07:28:56 tbox Exp $ */
+comment|/* $Id: dispatch.h,v 1.48.18.9 2008/06/24 23:45:55 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -114,7 +114,7 @@ comment|/*@{*/
 end_comment
 
 begin_comment
-comment|/*%  * Attributes for added dispatchers.  *  * Values with the mask 0xffff0000 are application defined.  * Values with the mask 0x0000ffff are library defined.  *  * Insane values (like setting both TCP and UDP) are not caught.  Don't  * do that.  *  * _PRIVATE  *	The dispatcher cannot be shared.  *  * _TCP, _UDP  *	The dispatcher is a TCP or UDP socket.  *  * _IPV4, _IPV6  *	The dispatcher uses an ipv4 or ipv6 socket.  *  * _NOLISTEN  *	The dispatcher should not listen on the socket.  *  * _MAKEQUERY  *	The dispatcher can be used to issue queries to other servers, and  *	accept replies from them.  *  * _RANDOMPORT  *	Allocate UDP port randomly.  */
+comment|/*%  * Attributes for added dispatchers.  *  * Values with the mask 0xffff0000 are application defined.  * Values with the mask 0x0000ffff are library defined.  *  * Insane values (like setting both TCP and UDP) are not caught.  Don't  * do that.  *  * _PRIVATE  *	The dispatcher cannot be shared.  *  * _TCP, _UDP  *	The dispatcher is a TCP or UDP socket.  *  * _IPV4, _IPV6  *	The dispatcher uses an IPv4 or IPv6 socket.  *  * _NOLISTEN  *	The dispatcher should not listen on the socket.  *  * _MAKEQUERY  *	The dispatcher can be used to issue queries to other servers, and  *	accept replies from them.  *  * _RANDOMPORT  *	Previously used to indicate that the port of a dispatch UDP must be  *	chosen randomly.  This behavior now always applies and the attribute  *	is obsoleted.  *  * _EXCLUSIVE  *	A separate socket will be used on-demand for each transaction.  */
 end_comment
 
 begin_define
@@ -173,11 +173,15 @@ name|DNS_DISPATCHATTR_CONNECTED
 value|0x00000080U
 end_define
 
+begin_comment
+comment|/*#define DNS_DISPATCHATTR_RANDOMPORT	0x00000100U*/
+end_comment
+
 begin_define
 define|#
 directive|define
-name|DNS_DISPATCHATTR_RANDOMPORT
-value|0x00000100U
+name|DNS_DISPATCHATTR_EXCLUSIVE
+value|0x00000200U
 end_define
 
 begin_comment
@@ -275,7 +279,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Sets a list of UDP ports that won't be used when creating a udp  * dispatch with a wildcard port.  *  * Requires:  *\li	mgr is a valid dispatchmgr  *\li	portlist to be NULL or a valid port list.  */
+comment|/*%<  * This function is deprecated.  Use dns_dispatchmgr_setavailports() instead.  *  * Requires:  *\li	mgr is a valid dispatchmgr  */
 end_comment
 
 begin_function_decl
@@ -291,7 +295,30 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return the current port list.  *  * Requires:  *\li	mgr is a valid dispatchmgr  */
+comment|/*%<  * This function is deprecated and always returns NULL.  *  * Requires:  *\li	mgr is a valid dispatchmgr  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_dispatchmgr_setavailports
+parameter_list|(
+name|dns_dispatchmgr_t
+modifier|*
+name|mgr
+parameter_list|,
+name|isc_portset_t
+modifier|*
+name|v4portset
+parameter_list|,
+name|isc_portset_t
+modifier|*
+name|v6portset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Sets a list of UDP ports that can be used for outgoing UDP messages.  *  * Requires:  *\li	mgr is a valid dispatchmgr  *\li	v4portset is NULL or a valid port set  *\li	v6portset is NULL or a valid port set  */
 end_comment
 
 begin_function_decl
@@ -459,6 +486,45 @@ end_comment
 
 begin_function_decl
 name|isc_result_t
+name|dns_dispatch_addresponse2
+parameter_list|(
+name|dns_dispatch_t
+modifier|*
+name|disp
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|dest
+parameter_list|,
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|isc_taskaction_t
+name|action
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|isc_uint16_t
+modifier|*
+name|idp
+parameter_list|,
+name|dns_dispentry_t
+modifier|*
+modifier|*
+name|resp
+parameter_list|,
+name|isc_socketmgr_t
+modifier|*
+name|sockmgr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
 name|dns_dispatch_addresponse
 parameter_list|(
 name|dns_dispatch_t
@@ -493,7 +559,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Add a response entry for this dispatch.  *  * "*idp" is filled in with the assigned message ID, and *resp is filled in  * to contain the magic token used to request event flow stop.  *  * Arranges for the given task to get a callback for response packets.  When  * the event is delivered, it must be returned using dns_dispatch_freeevent()  * or through dns_dispatch_removeresponse() for another to be delivered.  *  * Requires:  *\li	"idp" be non-NULL.  *  *\li	"task" "action" and "arg" be set as appropriate.  *  *\li	"dest" be non-NULL and valid.  *  *\li	"resp" be non-NULL and *resp be NULL  *  * Ensures:  *  *\li&lt;id, dest> is a unique tuple.  That means incoming messages  *	are identifiable.  *  * Returns:  *  *\li	ISC_R_SUCCESS		-- all is well.  *\li	ISC_R_NOMEMORY		-- memory could not be allocated.  *\li	ISC_R_NOMORE		-- no more message ids can be allocated  *				   for this destination.  */
+comment|/*%<  * Add a response entry for this dispatch.  *  * "*idp" is filled in with the assigned message ID, and *resp is filled in  * to contain the magic token used to request event flow stop.  *  * Arranges for the given task to get a callback for response packets.  When  * the event is delivered, it must be returned using dns_dispatch_freeevent()  * or through dns_dispatch_removeresponse() for another to be delivered.  *  * Requires:  *\li	"idp" be non-NULL.  *  *\li	"task" "action" and "arg" be set as appropriate.  *  *\li	"dest" be non-NULL and valid.  *  *\li	"resp" be non-NULL and *resp be NULL  *  *\li	"sockmgr" be NULL or a valid socket manager.  If 'disp' has  *	the DNS_DISPATCHATTR_EXCLUSIVE attribute, this must not be NULL,  *	which also means dns_dispatch_addresponse() cannot be used.  *  * Ensures:  *  *\li&lt;id, dest> is a unique tuple.  That means incoming messages  *	are identifiable.  *  * Returns:  *  *\li	ISC_R_SUCCESS		-- all is well.  *\li	ISC_R_NOMEMORY		-- memory could not be allocated.  *\li	ISC_R_NOMORE		-- no more message ids can be allocated  *				   for this destination.  */
 end_comment
 
 begin_function_decl
@@ -514,8 +580,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Stops the flow of responses for the provided id and destination.  * If "sockevent" is non-NULL, the dispatch event and associated buffer is  * also returned to the system.  *  * Requires:  *\li	"resp" != NULL and "*resp" contain a value previously allocated  *	by dns_dispatch_addresponse();  *  *\li	May only be called from within the task given as the 'task'   * 	argument to dns_dispatch_addresponse() when allocating '*resp'.  */
+comment|/*%<  * Stops the flow of responses for the provided id and destination.  * If "sockevent" is non-NULL, the dispatch event and associated buffer is  * also returned to the system.  *  * Requires:  *\li	"resp" != NULL and "*resp" contain a value previously allocated  *	by dns_dispatch_addresponse();  *  *\li	May only be called from within the task given as the 'task'  * 	argument to dns_dispatch_addresponse() when allocating '*resp'.  */
 end_comment
+
+begin_function_decl
+name|isc_socket_t
+modifier|*
+name|dns_dispatch_getentrysocket
+parameter_list|(
+name|dns_dispentry_t
+modifier|*
+name|resp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|isc_socket_t
@@ -549,7 +627,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return the local address for this dispatch.  * This currently only works for dispatches using UDP sockets.  *  * Requires:  *\li	disp is valid.  *\li	addrp to be non null.  *  * Returns:  *\li	ISC_R_SUCCESS	  *\li	ISC_R_NOTIMPLEMENTED  */
+comment|/*%<  * Return the local address for this dispatch.  * This currently only works for dispatches using UDP sockets.  *  * Requires:  *\li	disp is valid.  *\li	addrp to be non null.  *  * Returns:  *\li	ISC_R_SUCCESS  *\li	ISC_R_NOTIMPLEMENTED  */
 end_comment
 
 begin_function_decl
@@ -565,6 +643,22 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * cancel outstanding clients  *  * Requires:  *\li	disp is valid.  */
+end_comment
+
+begin_function_decl
+name|unsigned
+name|int
+name|dns_dispatch_getattributes
+parameter_list|(
+name|dns_dispatch_t
+modifier|*
+name|disp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Return the attributes (DNS_DISPATCHATTR_xxx) of this dispatch.  Only the  * non-changeable attributes are expected to be referenced by the caller.  *  * Requires:  *\li	disp is valid.  */
 end_comment
 
 begin_function_decl
@@ -587,7 +681,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Set the bits described by "mask" to the corresponding values in  * "attributes".  *  * That is:  *  * \code  *	new = (old& ~mask) | (attributes& mask)  * \endcode  *  * This function has a side effect when #DNS_DISPATCHATTR_NOLISTEN changes.   * When the flag becomes off, the dispatch will start receiving on the  * corresponding socket.  When the flag becomes on, receive events on the  * corresponding socket will be canceled.  *  * Requires:  *\li	disp is valid.  *  *\li	attributes are reasonable for the dispatch.  That is, setting the UDP  *	attribute on a TCP socket isn't reasonable.  */
+comment|/*%<  * Set the bits described by "mask" to the corresponding values in  * "attributes".  *  * That is:  *  * \code  *	new = (old& ~mask) | (attributes& mask)  * \endcode  *  * This function has a side effect when #DNS_DISPATCHATTR_NOLISTEN changes.  * When the flag becomes off, the dispatch will start receiving on the  * corresponding socket.  When the flag becomes on, receive events on the  * corresponding socket will be canceled.  *  * Requires:  *\li	disp is valid.  *  *\li	attributes are reasonable for the dispatch.  That is, setting the UDP  *	attribute on a TCP socket isn't reasonable.  */
 end_comment
 
 begin_function_decl

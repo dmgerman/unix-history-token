@@ -377,26 +377,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
-name|rt
-operator|->
-name|rt_flags
-operator|&
-name|RTF_CLONING
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"atm_rtrequest: cloning route detected?\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
 name|gate
 operator|->
 name|sa_family
@@ -1424,17 +1404,6 @@ operator|)
 operator|!=
 literal|0
 operator|||
-operator|(
-name|rt
-operator|->
-name|rt_flags
-operator|&
-name|RTF_LLINFO
-operator|)
-operator|==
-literal|0
-operator|||
-comment|/* XXX: are we using LLINFO? */
 name|rt
 operator|->
 name|rt_gateway

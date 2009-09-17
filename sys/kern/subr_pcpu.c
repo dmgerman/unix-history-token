@@ -204,6 +204,29 @@ name|pcpu
 operator|->
 name|pc_rm_queue
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+name|snprintf
+argument_list|(
+name|pcpu
+operator|->
+name|pc_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pcpu
+operator|->
+name|pc_name
+argument_list|)
+argument_list|,
+literal|"CPU %d"
+argument_list|,
+name|cpuid
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

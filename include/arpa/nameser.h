@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  *	$Id: nameser.h,v 1.7.18.1 2005/04/27 05:00:50 sra Exp $  * $FreeBSD$  */
+comment|/*  *	$Id: nameser.h,v 1.7.18.2 2008/04/03 23:15:15 marka Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1894,7 +1894,7 @@ value|127
 end_define
 
 begin_comment
-comment|/*%  * EDNS0 extended flags, host order.  */
+comment|/*%  * EDNS0 extended flags and option codes, host order.  */
 end_comment
 
 begin_define
@@ -1902,6 +1902,13 @@ define|#
 directive|define
 name|NS_OPT_DNSSEC_OK
 value|0x8000U
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_OPT_NSID
+value|3
 end_define
 
 begin_comment

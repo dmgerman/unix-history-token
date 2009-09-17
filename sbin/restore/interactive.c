@@ -2497,6 +2497,13 @@ literal|0
 operator|)
 condition|)
 continue|continue;
+name|locname
+index|[
+name|namelen
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|namelen

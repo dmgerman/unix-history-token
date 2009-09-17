@@ -114,28 +114,22 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
+begin_struct
+struct|struct
+name|obio_pci_irq_map
+block|{
 name|int
-function_decl|(
-modifier|*
-name|obio_get_irq_t
-function_decl|)
-parameter_list|(
-name|u_int
-name|bus
-parameter_list|,
-name|u_int
-name|slot
-parameter_list|,
-name|u_int
-name|func
-parameter_list|,
-name|u_int
-name|pin
-parameter_list|)
-function_decl|;
-end_typedef
+name|opim_slot
+decl_stmt|;
+name|int
+name|opim_pin
+decl_stmt|;
+name|int
+name|opim_irq
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -175,14 +169,36 @@ decl_stmt|;
 name|int
 name|op_mem_win_attr
 decl_stmt|;
-name|obio_get_irq_t
-name|op_get_irq
+specifier|const
+name|struct
+name|obio_pci_irq_map
+modifier|*
+name|op_pci_irq_map
 decl_stmt|;
-comment|/* IRQ Mapping callback */
 name|int
 name|op_irq
 decl_stmt|;
-comment|/* used if callback is NULL */
+comment|/* used if IRQ map table is NULL */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|gpio_config
+block|{
+name|int
+name|gc_gpio
+decl_stmt|;
+comment|/* GPIO number */
+name|uint32_t
+name|gc_flags
+decl_stmt|;
+comment|/* GPIO flags */
+name|int
+name|gc_output
+decl_stmt|;
+comment|/* GPIO output value */
 block|}
 struct|;
 end_struct
@@ -225,6 +241,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
+name|struct
+name|gpio_config
+name|mv_gpio_config
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|bus_space_tag_t
 name|obio_tag
 decl_stmt|;
@@ -261,6 +287,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
+name|struct
+name|decode_win
+modifier|*
+name|xor_wins
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|cpu_wins_no
 decl_stmt|;
@@ -270,6 +306,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|idma_wins_no
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xor_wins_no
 decl_stmt|;
 end_decl_stmt
 
@@ -383,6 +426,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|platform_pmap_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|platform_mpp_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -509,6 +561,33 @@ end_function_decl
 begin_function_decl
 name|int
 name|decode_win_idma_valid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|decode_win_xor_dump
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|decode_win_xor_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|decode_win_xor_valid
 parameter_list|(
 name|void
 parameter_list|)

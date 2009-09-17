@@ -133,6 +133,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|uint32_t
+name|at91_master_clock
+init|=
+name|AT91C_MASTER_CLOCK
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int

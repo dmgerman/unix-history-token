@@ -4740,7 +4740,7 @@ name|acpi_dev
 argument_list|)
 condition|)
 block|{
-comment|/* 	 * Disable C3 support for all PIIX4 chipsets.  Some of these parts 	 * do not report the BMIDE status to the BM status register and 	 * others have a livelock bug if Type-F DMA is enabled.  Linux 	 * works around the BMIDE bug by reading the BM status directly 	 * but we take the simpler approach of disabling C3 for these 	 * parts. 	 * 	 * See erratum #18 ("C3 Power State/BMIDE and Type-F DMA 	 * Livelock") from the January 2002 PIIX4 specification update. 	 * Applies to all PIIX4 models. 	 * 	 * Also, make sure that all interrupts cause a "Stop Break" 	 * event to exit from C2 state. 	 */
+comment|/* 	 * Disable C3 support for all PIIX4 chipsets.  Some of these parts 	 * do not report the BMIDE status to the BM status register and 	 * others have a livelock bug if Type-F DMA is enabled.  Linux 	 * works around the BMIDE bug by reading the BM status directly 	 * but we take the simpler approach of disabling C3 for these 	 * parts. 	 * 	 * See erratum #18 ("C3 Power State/BMIDE and Type-F DMA 	 * Livelock") from the January 2002 PIIX4 specification update. 	 * Applies to all PIIX4 models. 	 * 	 * Also, make sure that all interrupts cause a "Stop Break" 	 * event to exit from C2 state. 	 * Also, BRLD_EN_BM (ACPI_BITREG_BUS_MASTER_RLD in ACPI-speak) 	 * should be set to zero, otherwise it causes C2 to short-sleep. 	 * PIIX4 doesn't properly support C3 and bus master activity 	 * need not break out of C2. 	 */
 case|case
 name|PCI_REVISION_A_STEP
 case|:
@@ -4793,7 +4793,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"PIIX4: enabling IRQs to generate Stop Break\n"
+literal|"acpi_cpu: PIIX4: enabling IRQs to generate Stop Break\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4810,6 +4810,36 @@ argument_list|,
 name|val
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiGetRegister
+argument_list|(
+name|ACPI_BITREG_BUS_MASTER_RLD
+argument_list|,
+operator|&
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|val
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"acpi_cpu: PIIX4: reset BRLD_EN_BM\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|AcpiSetRegister
+argument_list|(
+name|ACPI_BITREG_BUS_MASTER_RLD
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

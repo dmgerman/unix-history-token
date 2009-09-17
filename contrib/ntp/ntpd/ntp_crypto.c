@@ -6091,7 +6091,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EVP_VerifyFinal
 argument_list|(
 operator|&
@@ -6113,6 +6112,8 @@ name|siglen
 argument_list|,
 name|pkey
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 operator|(

@@ -769,7 +769,7 @@ name|MNT_REL
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
+value|do {						\ 	KASSERT((mp)->mnt_ref> 0, ("negative mnt_ref"));			\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
 end_define
 
 begin_endif
@@ -1246,6 +1246,17 @@ end_define
 
 begin_comment
 comment|/* lock draining is happening */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_REFEXPIRE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* refcount expiring is happening */
 end_comment
 
 begin_define

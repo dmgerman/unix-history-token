@@ -228,6 +228,9 @@ decl_stmt|;
 comment|/* pmap mutex */
 name|tlbtid_t
 name|pm_tid
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 comment|/* TID to identify this pmap entries in TLB */
 name|u_int
@@ -257,7 +260,7 @@ argument_list|(
 argument_list|,
 argument|ptbl_buf
 argument_list|)
-name|ptbl_list
+name|pm_ptbl_list
 expr_stmt|;
 block|}
 struct|;

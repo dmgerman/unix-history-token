@@ -217,6 +217,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|hid_get_report_id
+parameter_list|(
+name|int
+name|file
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|hid_set_immed
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Parsing of a HID report descriptor, parse.c: */
 end_comment

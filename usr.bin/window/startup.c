@@ -68,6 +68,12 @@ directive|include
 file|"local.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_macro
 name|doconfig
 argument_list|()

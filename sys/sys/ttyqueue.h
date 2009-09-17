@@ -68,14 +68,11 @@ begin_struct
 struct|struct
 name|ttyinq
 block|{
-name|TAILQ_HEAD
-argument_list|(
-argument|ttyinq_bhead
-argument_list|,
-argument|ttyinq_block
-argument_list|)
-name|ti_list
-expr_stmt|;
+name|struct
+name|ttyinq_block
+modifier|*
+name|ti_firstblock
+decl_stmt|;
 name|struct
 name|ttyinq_block
 modifier|*
@@ -134,13 +131,11 @@ begin_struct
 struct|struct
 name|ttyoutq
 block|{
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ttyoutq_block
-argument_list|)
-name|to_list
-expr_stmt|;
+name|struct
+name|ttyoutq_block
+modifier|*
+name|to_firstblock
+decl_stmt|;
 name|struct
 name|ttyoutq_block
 modifier|*
@@ -170,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|TTYOUTQ_DATASIZE
-value|(256 - sizeof(STAILQ_ENTRY(ttyoutq_block)))
+value|(256 - sizeof(struct ttyoutq_block *))
 end_define
 
 begin_ifdef
@@ -392,29 +387,6 @@ name|ti
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ttyinq_init
-parameter_list|(
-name|struct
-name|ttyinq
-modifier|*
-name|ti
-parameter_list|)
-block|{
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|ti
-operator|->
-name|ti_list
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -749,29 +721,6 @@ name|len
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ttyoutq_init
-parameter_list|(
-name|struct
-name|ttyoutq
-modifier|*
-name|to
-parameter_list|)
-block|{
-name|STAILQ_INIT
-argument_list|(
-operator|&
-name|to
-operator|->
-name|to_list
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static

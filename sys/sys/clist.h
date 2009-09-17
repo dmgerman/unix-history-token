@@ -87,13 +87,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|cfreecount
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|b_to_q

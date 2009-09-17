@@ -120,6 +120,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -146,6 +158,16 @@ include|#
 directive|include
 file|<sys/vimage.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|_NET_IF_VAR_H_
+end_define
+
+begin_comment
+comment|/* we don't want if_var.h, only if.h */
+end_comment
 
 begin_include
 include|#
@@ -175,12 +197,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
 end_include
 
 begin_include
@@ -225,6 +241,12 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|fw_enable
@@ -246,6 +268,11 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1872,6 +1899,9 @@ condition|)
 return|return
 name|ENOENT
 return|;
+operator|(
+name|void
+operator|)
 name|pfil_add_hook
 argument_list|(
 name|ipfw_check_in
@@ -1885,6 +1915,9 @@ argument_list|,
 name|pfh_inet
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pfil_add_hook
 argument_list|(
 name|ipfw_check_out
@@ -1935,6 +1968,9 @@ condition|)
 return|return
 name|ENOENT
 return|;
+operator|(
+name|void
+operator|)
 name|pfil_remove_hook
 argument_list|(
 name|ipfw_check_in
@@ -1948,6 +1984,9 @@ argument_list|,
 name|pfh_inet
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pfil_remove_hook
 argument_list|(
 name|ipfw_check_out
@@ -2004,6 +2043,9 @@ condition|)
 return|return
 name|ENOENT
 return|;
+operator|(
+name|void
+operator|)
 name|pfil_add_hook
 argument_list|(
 name|ipfw_check_in
@@ -2017,6 +2059,9 @@ argument_list|,
 name|pfh_inet6
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pfil_add_hook
 argument_list|(
 name|ipfw_check_out
@@ -2067,6 +2112,9 @@ condition|)
 return|return
 name|ENOENT
 return|;
+operator|(
+name|void
+operator|)
 name|pfil_remove_hook
 argument_list|(
 name|ipfw_check_in
@@ -2080,6 +2128,9 @@ argument_list|,
 name|pfh_inet6
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pfil_remove_hook
 argument_list|(
 name|ipfw_check_out

@@ -50,7 +50,6 @@ comment|/**  * Returns the number of bytes in the buffer.  Doesn't include the  
 end_comment
 
 begin_function
-specifier|inline
 name|size_t
 name|Buf_Size
 parameter_list|(
@@ -79,7 +78,6 @@ comment|/**  * Returns a reference to the data contained in the buffer.  *    * 
 end_comment
 
 begin_function
-specifier|inline
 name|char
 modifier|*
 name|Buf_Data
@@ -195,7 +193,6 @@ comment|/**  * Add a single byte to the buffer.  */
 end_comment
 
 begin_function
-specifier|inline
 name|void
 name|Buf_AddByte
 parameter_list|(

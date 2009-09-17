@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002, 2003, 2004, 2005 Jeffrey Roberson<jeff@FreeBSD.org>  * Copyright (c) 2004, 2005 Bosko Milekic<bmilekic@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *  */
+comment|/*-  * Copyright (c) 2002-2005, 2009 Jeffrey Roberson<jeff@FreeBSD.org>  * Copyright (c) 2004, 2005 Bosko Milekic<bmilekic@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -274,6 +274,11 @@ name|struct
 name|uma_hash
 name|uk_hash
 decl_stmt|;
+name|char
+modifier|*
+name|uk_name
+decl_stmt|;
+comment|/* Name of creating zone. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -383,10 +388,6 @@ comment|/* Internal flags */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* Simpler reference to uma_keg for internal use. */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -593,6 +594,23 @@ name|uma_slabrefcnt_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|uma_slab_t
+function_decl|(
+modifier|*
+name|uma_slaballoc
+function_decl|)
+parameter_list|(
+name|uma_zone_t
+parameter_list|,
+name|uma_keg_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * These give us the size of one free item reference within our corresponding  * uma_slab structures, so that our calculations during zone setup are correct  * regardless of what the compiler decides to do with padding the structure  * arrays within uma_slab.  */
 end_comment
@@ -610,6 +628,32 @@ directive|define
 name|UMA_FRITMREF_SZ
 value|(sizeof(struct uma_slab_refcnt) -	\     sizeof(struct uma_slab_head))
 end_define
+
+begin_struct
+struct|struct
+name|uma_klink
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|uma_klink
+argument_list|)
+name|kl_link
+expr_stmt|;
+name|uma_keg_t
+name|kl_keg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|uma_klink
+modifier|*
+name|uma_klink_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Zone management structure   *  * TODO: Optimize for cache line size  *  */
@@ -630,10 +674,6 @@ modifier|*
 name|uz_lock
 decl_stmt|;
 comment|/* Lock for the zone (keg's lock) */
-name|uma_keg_t
-name|uz_keg
-decl_stmt|;
-comment|/* Our underlying Keg */
 name|LIST_ENTRY
 argument_list|(
 argument|uma_zone
@@ -657,6 +697,23 @@ argument_list|)
 name|uz_free_bucket
 expr_stmt|;
 comment|/* Buckets for frees */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|uma_klink
+argument_list|)
+name|uz_kegs
+expr_stmt|;
+comment|/* List of kegs. */
+name|struct
+name|uma_klink
+name|uz_klink
+decl_stmt|;
+comment|/* klink for first keg. */
+name|uma_slaballoc
+name|uz_slab
+decl_stmt|;
+comment|/* Allocate a slab from the backend. */
 name|uma_ctor
 name|uz_ctor
 decl_stmt|;
@@ -685,6 +742,14 @@ name|u_int64_t
 name|uz_fails
 decl_stmt|;
 comment|/* Total number of alloc failures */
+name|u_int32_t
+name|uz_flags
+decl_stmt|;
+comment|/* Flags inherited from kegs */
+name|u_int32_t
+name|uz_size
+decl_stmt|;
+comment|/* Size inherited from kegs */
 name|uint16_t
 name|uz_fills
 decl_stmt|;
@@ -708,6 +773,39 @@ end_struct
 
 begin_comment
 comment|/*  * These flags must not overlap with the UMA_ZONE flags specified in uma.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZFLAG_BUCKET
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Bucket zone. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZFLAG_MULTI
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Multiple kegs in the zone. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZFLAG_DRAINING
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Running zone_drain. */
 end_comment
 
 begin_define
@@ -753,6 +851,13 @@ end_define
 begin_comment
 comment|/* Don't ask VM for buckets. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZFLAG_INHERIT
+value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY | \ 				    UMA_ZFLAG_BUCKET)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -813,24 +918,44 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ZONE_LOCK_INIT
+name|KEG_LOCK_INIT
 parameter_list|(
-name|z
+name|k
 parameter_list|,
 name|lc
 parameter_list|)
 define|\
-value|do {							\ 		if ((lc))					\ 			mtx_init((z)->uz_lock, (z)->uz_name,	\ 			    (z)->uz_name, MTX_DEF | MTX_DUPOK);	\ 		else						\ 			mtx_init((z)->uz_lock, (z)->uz_name,	\ 			    "UMA zone", MTX_DEF | MTX_DUPOK);	\ 	} while (0)
+value|do {							\ 		if ((lc))					\ 			mtx_init(&(k)->uk_lock, (k)->uk_name,	\ 			    (k)->uk_name, MTX_DEF | MTX_DUPOK);	\ 		else						\ 			mtx_init(&(k)->uk_lock, (k)->uk_name,	\ 			    "UMA zone", MTX_DEF | MTX_DUPOK);	\ 	} while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZONE_LOCK_FINI
+name|KEG_LOCK_FINI
 parameter_list|(
-name|z
+name|k
 parameter_list|)
-value|mtx_destroy((z)->uz_lock)
+value|mtx_destroy(&(k)->uk_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEG_LOCK
+parameter_list|(
+name|k
+parameter_list|)
+value|mtx_lock(&(k)->uk_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEG_UNLOCK
+parameter_list|(
+name|k
+parameter_list|)
+value|mtx_unlock(&(k)->uk_lock)
 end_define
 
 begin_define

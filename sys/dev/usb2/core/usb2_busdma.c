@@ -31,6 +31,13 @@ directive|include
 file|<dev/usb2/include/usb2_defs.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|USB_DEBUG_VAR
+value|usb2_debug
+end_define
+
 begin_include
 include|#
 directive|include
@@ -70,6 +77,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb2/core/usb2_debug.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb2/controller/usb2_controller.h>
 end_include
 
@@ -87,13 +100,10 @@ parameter_list|(
 name|struct
 name|usb2_dma_tag
 modifier|*
-name|udt
 parameter_list|,
 name|uint32_t
-name|size
 parameter_list|,
 name|uint32_t
-name|align
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -106,7 +116,6 @@ parameter_list|(
 name|struct
 name|usb2_dma_tag
 modifier|*
-name|udt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -124,10 +133,8 @@ name|usb2_dma_lock_cb
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|bus_dma_lock_op_t
-name|op
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -139,14 +146,11 @@ name|usb2_m_copy_in_cb
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|void
 modifier|*
-name|src
 parameter_list|,
 name|uint32_t
-name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -158,17 +162,13 @@ name|usb2_pc_alloc_mem_cb
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|bus_dma_segment_t
 modifier|*
-name|segs
 parameter_list|,
 name|int
-name|nseg
 parameter_list|,
 name|int
-name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,17 +180,13 @@ name|usb2_pc_load_mem_cb
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|bus_dma_segment_t
 modifier|*
-name|segs
 parameter_list|,
 name|int
-name|nseg
 parameter_list|,
 name|int
-name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -202,20 +198,15 @@ name|usb2_pc_common_mem_cb
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|bus_dma_segment_t
 modifier|*
-name|segs
 parameter_list|,
 name|int
-name|nseg
 parameter_list|,
 name|int
-name|error
 parameter_list|,
 name|uint8_t
-name|isload
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -238,13 +229,10 @@ name|usb2_m_copy_in_cb
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|caddr_t
-name|src
 parameter_list|,
 name|uint32_t
-name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -257,20 +245,15 @@ parameter_list|(
 name|struct
 name|usb2_page_cache
 modifier|*
-name|pc
 parameter_list|,
 name|bus_dma_segment_t
 modifier|*
-name|segs
 parameter_list|,
 name|int
-name|nseg
 parameter_list|,
 name|int
-name|error
 parameter_list|,
 name|uint8_t
-name|isload
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -464,7 +447,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -567,7 +549,6 @@ name|length
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -841,7 +822,6 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1054,7 +1034,6 @@ name|length
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1260,7 +1239,6 @@ operator|.
 name|length
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1288,7 +1266,6 @@ name|op
 parameter_list|)
 block|{
 comment|/* we use "mtx_owned()" instead of this function */
-return|return;
 block|}
 end_function
 
@@ -1393,7 +1370,7 @@ else|:
 name|size
 argument_list|,
 comment|/* flags     */
-literal|0
+name|BUS_DMA_KEEP_PG_OFFSET
 argument_list|,
 comment|/* lockfn    */
 operator|&
@@ -1418,7 +1395,6 @@ name|tag
 operator|=
 name|tag
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1444,7 +1420,6 @@ operator|->
 name|tag
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1485,7 +1460,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1526,7 +1500,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1646,6 +1619,51 @@ expr_stmt|;
 name|nseg
 operator|--
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|USB_DEBUG
+operator|!=
+literal|0
+operator|)
+if|if
+condition|(
+name|rem
+operator|!=
+operator|(
+name|USB_P2U
+argument_list|(
+name|pc
+operator|->
+name|buffer
+argument_list|)
+operator|&
+operator|(
+name|USB_PAGE_SIZE
+operator|-
+literal|1
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* 		 * This check verifies that the physical address is correct: 		 */
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"Page offset was not preserved!\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+endif|#
+directive|endif
 while|while
 condition|(
 name|nseg
@@ -1750,7 +1768,6 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2166,7 +2183,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2451,7 +2467,6 @@ operator||
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2498,7 +2513,6 @@ operator||
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2676,7 +2690,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2794,7 +2807,6 @@ name|n_seg
 operator|=
 name|nseg
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2822,7 +2834,6 @@ argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2970,6 +2981,51 @@ block|}
 name|nseg
 operator|--
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|USB_DEBUG
+operator|!=
+literal|0
+operator|)
+if|if
+condition|(
+name|rem
+operator|!=
+operator|(
+name|USB_P2U
+argument_list|(
+name|pc
+operator|->
+name|buffer
+argument_list|)
+operator|&
+operator|(
+name|USB_PAGE_SIZE
+operator|-
+literal|1
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* 		 * This check verifies that the physical address is correct: 		 */
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"Page offset was not preserved!\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+endif|#
+directive|endif
 while|while
 condition|(
 name|nseg
@@ -3078,7 +3134,6 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3673,7 +3728,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3905,7 +3959,6 @@ operator||
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3965,7 +4018,6 @@ operator||
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4180,7 +4232,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4510,7 +4561,6 @@ name|udt
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4599,7 +4649,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-return|return;
 block|}
 end_function
 
@@ -4640,13 +4689,13 @@ name|info
 operator|=
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 expr_stmt|;
 name|mtx_assert
 argument_list|(
 name|info
 operator|->
-name|priv_mtx
+name|xfer_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -4661,9 +4710,7 @@ block|{
 comment|/* some error happened */
 name|USB_BUS_LOCK
 argument_list|(
-name|xfer
-operator|->
-name|udev
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -4677,9 +4724,7 @@ argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
-name|xfer
-operator|->
-name|udev
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -4947,9 +4992,7 @@ condition|)
 block|{
 name|USB_BUS_LOCK
 argument_list|(
-name|xfer
-operator|->
-name|udev
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -4963,9 +5006,7 @@ argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
-name|xfer
-operator|->
-name|udev
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -5063,7 +5104,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5096,7 +5136,7 @@ name|mtx_assert
 argument_list|(
 name|info
 operator|->
-name|priv_mtx
+name|xfer_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -5125,7 +5165,6 @@ operator|.
 name|curr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5213,7 +5252,6 @@ name|pc
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5293,7 +5331,6 @@ name|pc
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

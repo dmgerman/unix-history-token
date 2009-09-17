@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -533,6 +533,13 @@ operator|&
 name|cnt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|freep
+operator|==
+name|NULL
+condition|)
+return|return;
 for|for
 control|(
 name|i

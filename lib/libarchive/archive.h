@@ -303,7 +303,7 @@ comment|/*  * The version number is expressed as a single integer that makes it 
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|2005005
+value|2005903
 name|__LA_DECL
 name|int
 name|archive_version_number
@@ -315,7 +315,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING
-value|"libarchive 2.5.5"
+value|"libarchive 2.5.903a"
 name|__LA_DECL
 specifier|const
 name|char
@@ -470,6 +470,7 @@ directive|if
 name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|2000000
+comment|/* Libarchive 1.0 used ssize_t for the return, which is only 32 bits  * on most 32-bit platforms; not large enough. */
 typedef|typedef
 name|__LA_SSIZE_T
 name|archive_skip_callback
@@ -486,8 +487,12 @@ name|size_t
 name|request
 parameter_list|)
 function_decl|;
-else|#
-directive|else
+elif|#
+directive|elif
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|3000000
+comment|/* Libarchive 2.0 used off_t here, but that is a bad idea on Linux and a  * few other platforms where off_t varies with build settings. */
 typedef|typedef
 name|off_t
 name|archive_skip_callback
@@ -501,6 +506,25 @@ modifier|*
 name|_client_data
 parameter_list|,
 name|off_t
+name|request
+parameter_list|)
+function_decl|;
+else|#
+directive|else
+comment|/* Libarchive 3.0 uses int64_t here, which is actually guaranteed to be  * 64 bits on every platform. */
+typedef|typedef
+name|__LA_INT64_T
+name|archive_skip_callback
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+name|_client_data
+parameter_list|,
+name|__LA_INT64_T
 name|request
 parameter_list|)
 function_decl|;
@@ -528,6 +552,12 @@ name|size_t
 name|_length
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|3000000
+comment|/* Open callback is actually never needed; remove it in libarchive 3.0. */
 typedef|typedef
 name|int
 name|archive_open_callback
@@ -541,6 +571,8 @@ modifier|*
 name|_client_data
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 typedef|typedef
 name|int
 name|archive_close_callback
@@ -575,6 +607,10 @@ define|#
 directive|define
 name|ARCHIVE_COMPRESSION_PROGRAM
 value|4
+define|#
+directive|define
+name|ARCHIVE_COMPRESSION_LZMA
+value|5
 comment|/*  * Codes returned by archive_format.  *  * Top 16 bits identifies the format family (e.g., "tar"); lower  * 16 bits indicate the variant.  This is updated by read_next_header.  * Note that the lower 16 bits will often vary from entry to entry.  * In some cases, this variation occurs as libarchive learns more about  * the archive (for example, later entries might utilize extensions that  * weren't necessary earlier in the archive; in this case, libarchive  * will change the format code to indicate the extended format that  * was used).  In other cases, it's because different tools have  * modified the archive and so different parts of the archive  * actually have slightly different formts.  (Both tar and cpio store  * format codes in each entry, so it is quite possible for each  * entry to be in a different format.)  */
 define|#
 directive|define
@@ -1014,6 +1050,11 @@ name|size_t
 parameter_list|)
 function_decl|;
 comment|/*  * A zero-copy version of archive_read_data that also exposes the file offset  * of each returned block.  Note that the client has no way to specify  * the desired size of the block.  The API does guarantee that offsets will  * be strictly increasing and that returned blocks will not overlap.  */
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|3000000
 name|__LA_DECL
 name|int
 name|archive_read_data_block
@@ -1038,6 +1079,34 @@ modifier|*
 name|offset
 parameter_list|)
 function_decl|;
+else|#
+directive|else
+name|__LA_DECL
+name|int
+name|archive_read_data_block
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+modifier|*
+name|buff
+parameter_list|,
+name|size_t
+modifier|*
+name|size
+parameter_list|,
+name|__LA_INT64_T
+modifier|*
+name|offset
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 comment|/*-  * Some convenience functions that are built on archive_read_data:  *  'skip': skips entire entry  *  'into_buffer': writes data into memory buffer that you provide  *  'into_fd': writes data to specified filedes  */
 name|__LA_DECL
 name|int
@@ -1230,10 +1299,11 @@ comment|/* Note that archive_read_finish will call archive_read_close for you. *
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER
-operator|>=
+operator|<
 literal|2000000
+comment|/* Erroneously declared to return void in libarchive 1.x */
 name|__LA_DECL
-name|int
+name|void
 name|archive_read_finish
 parameter_list|(
 name|struct
@@ -1243,10 +1313,8 @@ parameter_list|)
 function_decl|;
 else|#
 directive|else
-comment|/* Temporarily allow library to compile with either 1.x or 2.0 API. */
-comment|/* Erroneously declared to return void in libarchive 1.x */
 name|__LA_DECL
-name|void
+name|int
 name|archive_read_finish
 parameter_list|(
 name|struct
@@ -1604,26 +1672,8 @@ function_decl|;
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER
-operator|>=
+operator|<
 literal|2000000
-name|__LA_DECL
-name|__LA_SSIZE_T
-name|archive_write_data
-parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-else|#
-directive|else
-comment|/* Temporarily allow library to compile with either 1.x or 2.0 API. */
 comment|/* This was erroneously declared to return "int" in libarchive 1.x. */
 name|__LA_DECL
 name|int
@@ -1640,8 +1690,32 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
+else|#
+directive|else
+comment|/* Libarchive 2.0 and later return ssize_t here. */
+name|__LA_DECL
+name|__LA_SSIZE_T
+name|archive_write_data
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|3000000
+comment|/* Libarchive 1.x and 2.x use off_t for the argument, but that's not  * stable on Linux. */
 name|__LA_DECL
 name|__LA_SSIZE_T
 name|archive_write_data_block
@@ -1659,6 +1733,28 @@ parameter_list|,
 name|off_t
 parameter_list|)
 function_decl|;
+else|#
+directive|else
+comment|/* Libarchive 3.0 uses explicit int64_t to ensure consistent 64-bit support. */
+name|__LA_DECL
+name|__LA_SSIZE_T
+name|archive_write_data_block
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|__LA_INT64_T
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 name|__LA_DECL
 name|int
 name|archive_write_finish_entry
@@ -1680,10 +1776,11 @@ function_decl|;
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER
-operator|>=
+operator|<
 literal|2000000
+comment|/* Return value was incorrect in libarchive 1.x. */
 name|__LA_DECL
-name|int
+name|void
 name|archive_write_finish
 parameter_list|(
 name|struct
@@ -1693,10 +1790,10 @@ parameter_list|)
 function_decl|;
 else|#
 directive|else
-comment|/* Temporarily allow library to compile with either 1.x or 2.0 API. */
-comment|/* Return value was incorrect in libarchive 1.x. */
+comment|/* Libarchive 2.x and later returns an error if this fails. */
+comment|/* It can fail if the archive wasn't already closed, in which case  * archive_write_finish() will implicitly call archive_write_close(). */
 name|__LA_DECL
-name|void
+name|int
 name|archive_write_finish
 parameter_list|(
 name|struct
@@ -1974,6 +2071,30 @@ begin_undef
 undef|#
 directive|undef
 name|__LA_DECL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|__LA_GID_T
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|__LA_INT64_T
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|__LA_SSIZE_T
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|__LA_UID_T
 end_undef
 
 begin_endif

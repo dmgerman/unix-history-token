@@ -4506,6 +4506,12 @@ operator|!=
 name|AF_INET
 condition|)
 continue|continue;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|RTF_LLINFO
+argument_list|)
 comment|/* ignore ARP table entries on systems with a merged route 		 * and ARP table. 		 */
 if|if
 condition|(
@@ -4516,6 +4522,8 @@ operator|&
 name|RTF_LLINFO
 condition|)
 continue|continue;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -5285,6 +5293,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|RTF_LLINFO
+argument_list|)
 if|if
 condition|(
 name|m
@@ -5307,6 +5321,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined

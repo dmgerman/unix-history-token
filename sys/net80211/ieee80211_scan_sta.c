@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -92,6 +92,23 @@ include|#
 directive|include
 file|<net80211/ieee80211_regdomain.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_tdma.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -255,6 +272,27 @@ define|\
 value|(((const uint8_t *)(addr))[IEEE80211_ADDR_LEN - 1] % STA_HASHSIZE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_IEEE_CHAN
+value|256
+end_define
+
+begin_comment
+comment|/* max acceptable IEEE chan # */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|MAX_IEEE_CHAN
+operator|>=
+literal|256
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|sta_table
@@ -302,7 +340,7 @@ comment|/* ap-related state */
 name|int
 name|st_maxrssi
 index|[
-name|IEEE80211_CHAN_MAX
+name|MAX_IEEE_CHAN
 index|]
 decl_stmt|;
 block|}
@@ -435,6 +473,50 @@ begin_comment
 comment|/* country code mismatch */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MATCH_TDMA_NOIE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* no TDMA ie */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_TDMA_NOTMASTER
+value|0x0800
+end_define
+
+begin_comment
+comment|/* not TDMA master */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_TDMA_NOSLOT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* all TDMA slots occupied */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_TDMA_LOCAL
+value|0x2000
+end_define
+
+begin_comment
+comment|/* local address */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -546,14 +628,15 @@ name|sta_table
 modifier|*
 name|st
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|st
-argument_list|,
+operator|=
+operator|(
 expr|struct
 name|sta_table
 operator|*
-argument_list|,
+operator|)
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -680,7 +763,7 @@ operator|->
 name|st_scanlock
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|st
 argument_list|,
@@ -829,7 +912,7 @@ operator|.
 name|se_ies
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|se
 argument_list|,
@@ -998,14 +1081,15 @@ condition|)
 goto|goto
 name|found
 goto|;
-name|MALLOC
-argument_list|(
 name|se
-argument_list|,
+operator|=
+operator|(
 expr|struct
 name|sta_entry
 operator|*
-argument_list|,
+operator|)
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1711,6 +1795,22 @@ name|se_notseen
 operator|=
 literal|0
 expr_stmt|;
+name|KASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|sp
+operator|->
+name|bchan
+argument_list|)
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"bchan size"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rssi
@@ -1904,7 +2004,7 @@ name|ic_freq
 operator|==
 name|freq
 operator|&&
-name|IEEE80211_IS_CHAN_ANYG
+name|IEEE80211_IS_CHAN_G
 argument_list|(
 name|c
 argument_list|)
@@ -1945,7 +2045,7 @@ name|ic_freq
 operator|==
 name|freq
 operator|&&
-name|IEEE80211_IS_CHAN_ANYG
+name|IEEE80211_IS_CHAN_G
 argument_list|(
 name|c
 argument_list|)
@@ -1970,37 +2070,80 @@ name|IEEE80211_MODE_MAX
 index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 name|IEEE80211_CHAN_B
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 name|IEEE80211_CHAN_A
 block|,
-comment|/* IEEE80211_MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 name|IEEE80211_CHAN_B
 block|,
-comment|/* IEEE80211_MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 name|IEEE80211_CHAN_G
 block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 name|IEEE80211_CHAN_FHSS
 block|,
-comment|/* IEEE80211_MODE_FH */
+comment|/* check base channel */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 name|IEEE80211_CHAN_A
 block|,
-comment|/* IEEE80211_MODE_TURBO_A (check base channel)*/
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 name|IEEE80211_CHAN_G
 block|,
-comment|/* IEEE80211_MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 name|IEEE80211_CHAN_ST
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_HALF
+index|]
+operator|=
+name|IEEE80211_CHAN_HALF
+block|,
+index|[
+name|IEEE80211_MODE_QUARTER
+index|]
+operator|=
+name|IEEE80211_CHAN_QUARTER
+block|,
+comment|/* check legacy */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 name|IEEE80211_CHAN_A
 block|,
-comment|/* IEEE80211_MODE_11NA (check legacy) */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 name|IEEE80211_CHAN_G
-block|,
-comment|/* IEEE80211_MODE_11NG (check legacy) */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -4160,6 +4303,79 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+end_ifdef
+
+begin_function
+specifier|static
+name|int
+name|tdma_isfull
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211_tdma_param
+modifier|*
+name|tdma
+parameter_list|)
+block|{
+name|int
+name|slot
+decl_stmt|,
+name|slotcnt
+decl_stmt|;
+name|slotcnt
+operator|=
+name|tdma
+operator|->
+name|tdma_slotcnt
+expr_stmt|;
+for|for
+control|(
+name|slot
+operator|=
+name|slotcnt
+operator|-
+literal|1
+init|;
+name|slot
+operator|>=
+literal|0
+condition|;
+name|slot
+operator|--
+control|)
+if|if
+condition|(
+name|isclr
+argument_list|(
+name|tdma
+operator|->
+name|tdma_inuse
+argument_list|,
+name|slot
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IEEE80211_SUPPORT_TDMA */
+end_comment
+
 begin_comment
 comment|/*  * Test a scan candidate for suitability/compatibility.  */
 end_comment
@@ -4295,6 +4511,110 @@ name|fail
 operator||=
 name|MATCH_CAPINFO
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+block|}
+elseif|else
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_AHDEMO
+condition|)
+block|{
+comment|/* 		 * Adhoc demo network setup shouldn't really be scanning 		 * but just in case skip stations operating in IBSS or 		 * BSS mode. 		 */
+if|if
+condition|(
+name|se
+operator|->
+name|se_capinfo
+operator|&
+operator|(
+name|IEEE80211_CAPINFO_IBSS
+operator||
+name|IEEE80211_CAPINFO_ESS
+operator|)
+condition|)
+name|fail
+operator||=
+name|MATCH_CAPINFO
+expr_stmt|;
+comment|/* 		 * TDMA operation cannot coexist with a normal 802.11 network; 		 * skip if IBSS or ESS capabilities are marked and require 		 * the beacon have a TDMA ie present. 		 */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_TDMA
+condition|)
+block|{
+specifier|const
+name|struct
+name|ieee80211_tdma_param
+modifier|*
+name|tdma
+init|=
+operator|(
+specifier|const
+expr|struct
+name|ieee80211_tdma_param
+operator|*
+operator|)
+name|se
+operator|->
+name|se_ies
+operator|.
+name|tdma_ie
+decl_stmt|;
+if|if
+condition|(
+name|tdma
+operator|==
+name|NULL
+condition|)
+name|fail
+operator||=
+name|MATCH_TDMA_NOIE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|tdma
+operator|->
+name|tdma_slot
+operator|!=
+literal|0
+condition|)
+name|fail
+operator||=
+name|MATCH_TDMA_NOTMASTER
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|tdma_isfull
+argument_list|(
+name|tdma
+argument_list|)
+condition|)
+name|fail
+operator||=
+name|MATCH_TDMA_NOSLOT
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|else if (ieee80211_local_address(se->se_macaddr)) 				fail |= MATCH_TDMA_LOCAL;
+endif|#
+directive|endif
+block|}
+endif|#
+directive|endif
+comment|/* IEEE80211_SUPPORT_TDMA */
 block|}
 else|else
 block|{
@@ -4664,6 +4984,35 @@ name|MATCH_CC
 condition|?
 literal|'$'
 else|:
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+name|fail
+operator|&
+name|MATCH_TDMA_NOIE
+condition|?
+literal|'&'
+else|:
+name|fail
+operator|&
+name|MATCH_TDMA_NOTMASTER
+condition|?
+literal|':'
+else|:
+name|fail
+operator|&
+name|MATCH_TDMA_NOSLOT
+condition|?
+literal|'@'
+else|:
+name|fail
+operator|&
+name|MATCH_TDMA_LOCAL
+condition|?
+literal|'#'
+else|:
+endif|#
+directive|endif
 name|fail
 condition|?
 literal|'-'
@@ -6832,6 +7181,38 @@ literal|0
 return|;
 name|notfound
 label|:
+comment|/* NB: never auto-start a tdma network for slot !0 */
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_des_nssid
+operator|&&
+operator|(
+operator|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_TDMA
+operator|)
+operator|==
+literal|0
+operator|||
+name|ieee80211_tdma_getslot
+argument_list|(
+name|vap
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|vap
@@ -6839,6 +7220,8 @@ operator|->
 name|iv_des_nssid
 condition|)
 block|{
+endif|#
+directive|endif
 comment|/* 			 * No existing adhoc network to join and we have 			 * an ssid; start one up.  If no channel was 			 * specified, try to select a channel. 			 */
 if|if
 condition|(
@@ -7020,13 +7403,7 @@ literal|1
 return|;
 comment|/* terminate scan */
 block|}
-end_function
-
-begin_comment
 comment|/*  * Age entries in the scan cache.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|adhoc_age
@@ -7111,7 +7488,7 @@ operator|.
 name|se_ies
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|se
 argument_list|,
@@ -7129,9 +7506,6 @@ name|st_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
@@ -7210,9 +7584,6 @@ operator|=
 name|sta_assoc_success
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 specifier|static
 name|void
 name|ap_force_promisc
@@ -7257,9 +7628,6 @@ name|ic
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ap_reset_promisc
@@ -7288,9 +7656,6 @@ name|ic
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ap_start
@@ -7382,13 +7747,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Cancel an ongoing scan.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|ap_cancel
@@ -7415,13 +7774,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Pick a quiet channel to use for ap operation.  */
-end_comment
-
-begin_function
 specifier|static
 name|struct
 name|ieee80211_channel
@@ -7521,6 +7874,22 @@ operator|!=
 name|flags
 condition|)
 continue|continue;
+name|KASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|chan
+operator|->
+name|ic_ieee
+argument_list|)
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"ic_chan size"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX channel have interference */
 if|if
 condition|(
@@ -7574,13 +7943,7 @@ return|return
 name|bestchan
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Pick a quiet channel to use for ap operation.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|ap_end
@@ -7751,9 +8114,6 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
@@ -7832,13 +8192,7 @@ operator|=
 name|sta_assoc_fail
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Module glue.  */
-end_comment
-
-begin_expr_stmt
 name|IEEE80211_SCANNER_MODULE
 argument_list|(
 name|sta
@@ -7846,9 +8200,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|IEEE80211_SCANNER_ALG
 argument_list|(
 name|sta
@@ -7858,9 +8209,6 @@ argument_list|,
 name|sta_default
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|IEEE80211_SCANNER_ALG
 argument_list|(
 name|ibss
@@ -7870,9 +8218,6 @@ argument_list|,
 name|adhoc_default
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|IEEE80211_SCANNER_ALG
 argument_list|(
 name|ahdemo
@@ -7882,9 +8227,6 @@ argument_list|,
 name|adhoc_default
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|IEEE80211_SCANNER_ALG
 argument_list|(
 name|ap
@@ -7894,7 +8236,7 @@ argument_list|,
 name|ap_default
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_function
 
 end_unit
 

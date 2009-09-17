@@ -92,6 +92,9 @@ decl_stmt|;
 name|size_t
 name|length
 decl_stmt|;
+name|time_t
+name|ims_time
+decl_stmt|;
 block|}
 struct|;
 end_struct

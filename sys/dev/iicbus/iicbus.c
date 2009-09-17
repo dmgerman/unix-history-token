@@ -114,9 +114,10 @@ argument_list|,
 literal|"Philips I2C bus"
 argument_list|)
 expr_stmt|;
+comment|/* Allow other subclasses to override this driver. */
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -634,7 +635,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_char
+name|uintptr_t
 modifier|*
 name|result
 parameter_list|)
@@ -1047,6 +1048,24 @@ argument_list|(
 name|iicbus
 argument_list|,
 name|IICBUS_MODVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|iicbus
+argument_list|,
+name|iichb
+argument_list|,
+name|iicbus_driver
+argument_list|,
+name|iicbus_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt

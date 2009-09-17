@@ -77,8 +77,8 @@ name|mtx
 modifier|*
 name|mtx
 parameter_list|,
-name|uint32_t
-name|ms
+name|int
+name|_ticks
 parameter_list|)
 function_decl|;
 end_function_decl

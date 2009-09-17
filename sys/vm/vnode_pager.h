@@ -22,17 +22,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_function_decl
-name|struct
-name|vnode
-modifier|*
-name|vnode_pager_lock
-parameter_list|(
-name|vm_object_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * XXX Generic routines; currently called by badly written FS code; these  * XXX should go away soon.  */
 end_comment

@@ -1481,7 +1481,7 @@ argument_list|(
 name|physsz
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate the size of kernel virtual memory, and the size and mask 	 * for the kernel TSB. 	 */
+comment|/* 	 * Calculate the size of kernel virtual memory, and the size and mask 	 * for the kernel TSB based on the phsyical memory size but limited 	 * by letting the kernel TSB take up no more than half of the dTLB 	 * slots available for locked entries. 	 */
 name|virtsz
 operator|=
 name|roundup
@@ -1489,6 +1489,27 @@ argument_list|(
 name|physsz
 argument_list|,
 name|PAGE_SIZE_4M
+operator|<<
+operator|(
+name|PAGE_SHIFT
+operator|-
+name|TTE_SHIFT
+operator|)
+argument_list|)
+expr_stmt|;
+name|virtsz
+operator|=
+name|MIN
+argument_list|(
+name|virtsz
+argument_list|,
+operator|(
+name|dtlb_slots
+operator|/
+literal|2
+operator|*
+name|PAGE_SIZE_4M
+operator|)
 operator|<<
 operator|(
 name|PAGE_SHIFT
@@ -1522,6 +1543,46 @@ name|TTE_SHIFT
 operator|)
 operator|-
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|kernel_tlb_slots
+operator|+
+name|PCPU_PAGES
+operator|+
+name|tsb_kernel_size
+operator|/
+name|PAGE_SIZE_4M
+operator|+
+literal|1
+comment|/* PROM page */
+operator|+
+literal|1
+comment|/* spare */
+operator|>
+name|dtlb_slots
+condition|)
+name|panic
+argument_list|(
+literal|"pmap_bootstrap: insufficient dTLB entries"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kernel_tlb_slots
+operator|+
+literal|1
+comment|/* PROM page */
+operator|+
+literal|1
+comment|/* spare */
+operator|>
+name|itlb_slots
+condition|)
+name|panic
+argument_list|(
+literal|"pmap_bootstrap: insufficient iTLB entries"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate the kernel TSB and lock it in the TLB. 	 */
 name|pa

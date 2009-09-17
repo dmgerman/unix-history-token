@@ -922,17 +922,6 @@ begin_comment
 comment|/* exclusive create request */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VA_MARK_ATIME
-value|0x04
-end_define
-
-begin_comment
-comment|/* setting atime for execve/mmap */
-end_comment
-
 begin_comment
 comment|/*  * Flags for ioflag. (high 16 bits used to ask for read-ahead and  * help with write clustering)  * NB: IO_NDELAY and IO_DIRECT are linked to fcntl.h  */
 end_comment
@@ -2429,6 +2418,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cache_purge_negative
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cache_purgevfs
 parameter_list|(
 name|struct
@@ -3474,6 +3475,30 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vn_vget_ino
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|ino_t
+name|ino
+parameter_list|,
+name|int
+name|lkflags
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|rvp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vfs_cache_lookup
 parameter_list|(
 name|struct
@@ -3725,6 +3750,18 @@ end_function_decl
 begin_function_decl
 name|int
 name|vop_einval
+parameter_list|(
+name|struct
+name|vop_generic_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_enoent
 parameter_list|(
 name|struct
 name|vop_generic_args
@@ -4182,6 +4219,13 @@ define|#
 directive|define
 name|VOP_EINVAL
 value|((void*)(uintptr_t)vop_einval)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOP_ENOENT
+value|((void*)(uintptr_t)vop_enoent)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -430,10 +430,14 @@ comment|/* age when placed on stageq */
 name|int
 name|bf_nseg
 decl_stmt|;
-name|int
+name|uint16_t
 name|bf_txflags
 decl_stmt|;
 comment|/* tx descriptor flags */
+name|uint16_t
+name|bf_flags
+decl_stmt|;
+comment|/* status flags (below) */
 name|struct
 name|ath_desc
 modifier|*
@@ -493,6 +497,17 @@ argument_list|)
 name|ath_bufhead
 expr_stmt|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ATH_BUF_BUSY
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* (tx) desc owned by h/w */
+end_comment
 
 begin_comment
 comment|/*  * DMA state for tx/rx descriptors.  */
@@ -559,6 +574,14 @@ directive|define
 name|ATH_TXQ_SWQ
 value|(HAL_NUM_TX_QUEUES+1)
 comment|/* qnum for s/w only queue */
+name|u_int
+name|axq_flags
+decl_stmt|;
+define|#
+directive|define
+name|ATH_TXQ_PUTPENDING
+value|0x0001
+comment|/* ath_hal_puttxbuf pending */
 name|u_int
 name|axq_depth
 decl_stmt|;
@@ -1030,8 +1053,18 @@ comment|/* can do WME+TKIP MIC */
 name|sc_resume_up
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* on resume, start all vaps */
+name|sc_tdma
+range|:
+literal|1
+decl_stmt|,
+comment|/* TDMA in use */
+name|sc_resetcal
+range|:
+literal|1
+decl_stmt|;
+comment|/* reset cal state next trip */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -1041,22 +1074,12 @@ name|sc_eecc
 decl_stmt|;
 comment|/* country code from EEPROM */
 comment|/* rate tables */
-define|#
-directive|define
-name|IEEE80211_MODE_HALF
-value|(IEEE80211_MODE_MAX+0)
-define|#
-directive|define
-name|IEEE80211_MODE_QUARTER
-value|(IEEE80211_MODE_MAX+1)
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
 name|sc_rates
 index|[
 name|IEEE80211_MODE_MAX
-operator|+
-literal|2
 index|]
 decl_stmt|;
 specifier|const
@@ -1082,10 +1105,12 @@ name|u_int16_t
 name|sc_curaid
 decl_stmt|;
 comment|/* current association id */
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
+modifier|*
 name|sc_curchan
 decl_stmt|;
-comment|/* current h/w channel */
+comment|/* current installed channel */
 name|u_int8_t
 name|sc_curbssid
 index|[
@@ -1385,17 +1410,64 @@ name|sc_cal_ch
 decl_stmt|;
 comment|/* callout handle for cals */
 name|int
-name|sc_calinterval
+name|sc_lastlongcal
 decl_stmt|;
-comment|/* current polling interval */
+comment|/* last long cal completed */
 name|int
-name|sc_caltries
+name|sc_lastcalreset
 decl_stmt|;
-comment|/* cals at current interval */
+comment|/* last cal reset done */
 name|HAL_NODE_STATS
 name|sc_halstats
 decl_stmt|;
 comment|/* station-mode rssi stats */
+ifdef|#
+directive|ifdef
+name|ATH_SUPPORT_TDMA
+name|u_int
+name|sc_tdmadbaprep
+decl_stmt|;
+comment|/* TDMA DBA prep time */
+name|u_int
+name|sc_tdmaswbaprep
+decl_stmt|;
+comment|/* TDMA SWBA prep time */
+name|u_int
+name|sc_tdmaswba
+decl_stmt|;
+comment|/* TDMA SWBA counter */
+name|u_int32_t
+name|sc_tdmabintval
+decl_stmt|;
+comment|/* TDMA beacon interval (TU) */
+name|u_int32_t
+name|sc_tdmaguard
+decl_stmt|;
+comment|/* TDMA guard time (usec) */
+name|u_int
+name|sc_tdmaslotlen
+decl_stmt|;
+comment|/* TDMA slot length (usec) */
+name|u_int
+name|sc_tdmabintcnt
+decl_stmt|;
+comment|/* TDMA beacon intvl (slots) */
+name|struct
+name|ath_rx_status
+modifier|*
+name|sc_tdmars
+decl_stmt|;
+comment|/* TDMA status of last rx */
+name|u_int32_t
+name|sc_avgtsfdeltap
+decl_stmt|;
+comment|/* TDMA slot adjust (+) */
+name|u_int32_t
+name|sc_avgtsfdeltam
+decl_stmt|;
+comment|/* TDMA slot adjust (-) */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1613,6 +1685,17 @@ name|_pstatus
 parameter_list|)
 define|\
 value|((*(_ah)->ah_reset)((_ah), (_opmode), (_chan), (_outdoor), (_pstatus)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_macversion
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(((_ah)->ah_macVersion<< 4) | ((_ah)->ah_macRev))
 end_define
 
 begin_define
@@ -1888,6 +1971,21 @@ define|\
 value|((*(_ah)->ah_setRxDP)((_ah), (_bufaddr)))
 end_define
 
+begin_comment
+comment|/* NB: common across all chips */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_TSF_L32
+value|0x804c
+end_define
+
+begin_comment
+comment|/* MAC local clock lower 32 bits */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1896,7 +1994,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|((*(_ah)->ah_getTsf32)((_ah)))
+value|OS_REG_READ(_ah, AR_TSF_L32)
 end_define
 
 begin_define
@@ -2025,6 +2123,83 @@ define|\
 value|((*(_ah)->ah_perCalibration)((_ah), (_chan), (_iqcal)))
 end_define
 
+begin_if
+if|#
+directive|if
+name|HAL_ABI_VERSION
+operator|>=
+literal|0x08111000
+end_if
+
+begin_define
+define|#
+directive|define
+name|ath_hal_calibrateN
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|,
+name|_lcal
+parameter_list|,
+name|_isdone
+parameter_list|)
+define|\
+value|((*(_ah)->ah_perCalibrationN)((_ah), (_chan), 0x1, (_lcal), (_isdone)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_calreset
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|)
+define|\
+value|((*(_ah)->ah_resetCalValid)((_ah), (_chan)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ath_hal_calibrateN
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|,
+name|_lcal
+parameter_list|,
+name|_isdone
+parameter_list|)
+define|\
+value|ath_hal_calibrate(_ah, _chan, _isdone)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_calreset
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|)
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2062,6 +2237,19 @@ name|_ah
 parameter_list|)
 define|\
 value|((*(_ah)->ah_resetStationBeaconTimers)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_beaconsettimers
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_bt
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setBeaconTimers)((_ah), (_bt)))
 end_define
 
 begin_define
@@ -2265,6 +2453,34 @@ name|_qi
 parameter_list|)
 define|\
 value|((*(_ah)->ah_setTxQueueProps)((_ah), (_q), (_qi)))
+end_define
+
+begin_comment
+comment|/* NB: common across all chips */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_Q_TXE
+value|0x0840
+end_define
+
+begin_comment
+comment|/* MAC Transmit Queue enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_txqenabled
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_qnum
+parameter_list|)
+define|\
+value|(OS_REG_READ(_ah, AR_Q_TXE)& (1<<(_qnum)))
 end_define
 
 begin_define

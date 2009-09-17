@@ -24,7 +24,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
@@ -258,17 +258,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UMS_N_TRANSFER
-value|2
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UMS_BUTTON_MAX
 value|31
 end_define
@@ -286,6 +275,20 @@ name|i
 parameter_list|)
 value|((i)< 3 ? (((i) + 2) % 3) : (i))
 end_define
+
+begin_enum
+enum|enum
+block|{
+name|UMS_INTR_DT
+block|,
+name|UMS_INTR_CS
+block|,
+name|UMS_N_TRANSFER
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -601,15 +604,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -642,7 +636,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 decl_stmt|;
 if|if
@@ -673,7 +667,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1390,7 +1383,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMS_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -1458,7 +1451,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMS_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -1480,7 +1473,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 operator|=
 block|{
@@ -1534,7 +1527,7 @@ name|ums_intr_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UMS_INTR_CS
 index|]
 operator|=
 block|{
@@ -1905,7 +1898,7 @@ name|sc
 operator|->
 name|sc_mtx
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/*          * Force the report (non-boot) protocol.          *          * Mice without boot protocol support may choose not to implement          * Set_Protocol at all; Ignore any error.          */
@@ -2642,7 +2635,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 operator|->
 name|max_frame_size
@@ -2659,7 +2652,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 operator|->
 name|max_frame_size
@@ -3272,11 +3265,10 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3306,7 +3298,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMS_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -3316,7 +3308,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 argument_list|)
 expr_stmt|;
@@ -3328,7 +3320,6 @@ operator|->
 name|sc_callout
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3640,7 +3631,6 @@ literal|"Buffer full, discarded packet\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3668,7 +3658,6 @@ name|USB_FIFO_RX
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3823,7 +3812,6 @@ name|fifo
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

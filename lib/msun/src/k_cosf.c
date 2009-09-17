@@ -103,7 +103,7 @@ end_ifdef
 
 begin_function
 specifier|extern
-specifier|inline
+name|__gnu89_inline
 endif|#
 directive|endif
 name|float

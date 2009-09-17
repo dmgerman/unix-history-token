@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Dispatch MI pmap calls to the appropriate MMU implementation  * through a previously registered kernel object.  *  * Before pmap_bootstrap() can be called, a CPU module must have  * called pmap_mmu_install(). This may be called multiple times:  * the highest priority call will be installed as the default  * MMU handler when pmap_bootstrap() is called.  *  * It is required that kobj_machdep_init() be called before  * pmap_bootstrap() to allow the kobj subsystem to initialise. This  * in turn requires that mutex_init() has been called.  */
+comment|/*  * Dispatch MI pmap calls to the appropriate MMU implementation  * through a previously registered kernel object.  *  * Before pmap_bootstrap() can be called, a CPU module must have  * called pmap_mmu_install(). This may be called multiple times:  * the highest priority call will be installed as the default  * MMU handler when pmap_bootstrap() is called.  *  * It is required that mutex_init() be called before pmap_bootstrap(),   * as the PMAP layer makes extensive use of mutexes.  */
 end_comment
 
 begin_include

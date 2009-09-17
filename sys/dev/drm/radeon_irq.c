@@ -87,6 +87,12 @@ operator|&=
 operator|~
 name|mask
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|irq_enabled
+condition|)
 name|RADEON_WRITE
 argument_list|(
 name|RADEON_GEN_INT_CNTL
@@ -142,6 +148,12 @@ operator|&=
 operator|~
 name|mask
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|irq_enabled
+condition|)
 name|RADEON_WRITE
 argument_list|(
 name|R500_DxMODE_INT_MASK

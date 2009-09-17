@@ -2581,7 +2581,7 @@ operator|(
 name|EDESTADDRREQ
 operator|)
 return|;
-comment|/* 	 * XXX FIXME - This is FUBAR. socreate() will call soalloc(1), i.e. 	 * soalloc() is allowed to sleep in MALLOC. This creates "could sleep" 	 * WITNESS warnings. To work around this problem we will create L2CAP 	 * socket first and then check if we actually need it. Note that we  	 * will not check for errors in socreate() because if we failed to  	 * create L2CAP socket at this point we still might have already open 	 * session. 	 */
+comment|/* 	 * Note that we will not check for errors in socreate() because 	 * if we failed to create L2CAP socket at this point we still 	 * might have already open session. 	 */
 name|error
 operator|=
 name|socreate
@@ -3890,7 +3890,7 @@ operator|->
 name|pcb_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX FIXME - This is FUBAR. socreate() will call soalloc(1), i.e. 	 * soalloc() is allowed to sleep in MALLOC. This creates "could sleep" 	 * WITNESS warnings. To work around this problem we will create L2CAP 	 * socket first and then check if we actually need it. Note that we  	 * will not check for errors in socreate() because if we failed to  	 * create L2CAP socket at this point we still might have already open 	 * session. 	 */
+comment|/* 	 * Note that we will not check for errors in socreate() because 	 * if we failed to create L2CAP socket at this point we still 	 * might have already open session. 	 */
 name|socreate_error
 operator|=
 name|socreate

@@ -112,6 +112,8 @@ name|j
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|k
 decl_stmt|;
 comment|/* Initialize state with identity permutation */
 for|for
@@ -158,6 +160,8 @@ name|j
 operator|=
 name|i
 operator|=
+name|k
+operator|=
 literal|0
 init|;
 name|i
@@ -179,9 +183,7 @@ index|]
 operator|+
 name|key
 index|[
-name|i
-operator|%
-name|keylen
+name|k
 index|]
 expr_stmt|;
 name|swap_bytes
@@ -202,6 +204,17 @@ index|[
 name|j
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|k
+operator|>=
+name|keylen
+condition|)
+name|k
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}

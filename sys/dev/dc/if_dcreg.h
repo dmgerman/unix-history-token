@@ -4152,6 +4152,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|CSR_BARRIER_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|bus_space_barrier(sc->dc_btag, sc->dc_bhandle, reg, 4, flags)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DC_TIMEOUT
 value|1000
 end_define

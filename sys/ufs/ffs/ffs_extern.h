@@ -113,6 +113,8 @@ name|ufs2_daddr_t
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
@@ -461,6 +463,8 @@ parameter_list|,
 name|ufs2_daddr_t
 parameter_list|,
 name|ufs2_daddr_t
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

@@ -1289,9 +1289,6 @@ decl_stmt|;
 name|uma_zone_t
 name|zone
 decl_stmt|;
-name|uma_keg_t
-name|keg
-decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -1537,12 +1534,6 @@ index|]
 operator|.
 name|kz_zone
 expr_stmt|;
-name|keg
-operator|=
-name|zone
-operator|->
-name|uz_keg
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MALLOC_PROFILE
@@ -1573,9 +1564,9 @@ name|NULL
 condition|)
 name|size
 operator|=
-name|keg
+name|zone
 operator|->
-name|uk_size
+name|uz_size
 expr_stmt|;
 name|malloc_type_zone_allocated
 argument_list|(
@@ -1605,10 +1596,6 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|zone
-operator|=
-name|NULL
-expr_stmt|;
-name|keg
 operator|=
 name|NULL
 expr_stmt|;

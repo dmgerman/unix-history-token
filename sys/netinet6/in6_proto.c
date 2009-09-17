@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -1573,17 +1579,6 @@ name|nd6_onlink_ns_rfc4861
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
 begin_comment
 comment|/* icmp6 */
 end_comment
@@ -2494,28 +2489,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE
-end_ifndef
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.inet6.ip6.auto_linklocal"
-argument_list|,
-operator|&
-name|ip6_auto_linklocal
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_INT

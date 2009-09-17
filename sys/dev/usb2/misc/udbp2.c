@@ -28,7 +28,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/usb2_devid.h>
+file|"usbdevs.h"
 end_include
 
 begin_include
@@ -398,17 +398,13 @@ name|void
 name|udbp_bulk_read_complete
 parameter_list|(
 name|node_p
-name|node
 parameter_list|,
 name|hook_p
-name|hook
 parameter_list|,
 name|void
 modifier|*
-name|arg1
 parameter_list|,
 name|int
-name|arg2
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1285,19 +1281,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 name|device_set_usb2_desc
 argument_list|(
 name|dev
@@ -1933,7 +1916,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2088,7 +2070,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2383,7 +2364,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

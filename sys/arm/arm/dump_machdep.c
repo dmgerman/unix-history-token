@@ -669,9 +669,6 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-name|vm_offset_t
-name|va
-decl_stmt|;
 name|uint32_t
 name|pgs
 decl_stmt|;
@@ -693,10 +690,6 @@ literal|0
 expr_stmt|;
 comment|/* catch case in which chunk size is 0 */
 name|counter
-operator|=
-literal|0
-expr_stmt|;
-name|va
 operator|=
 literal|0
 expr_stmt|;

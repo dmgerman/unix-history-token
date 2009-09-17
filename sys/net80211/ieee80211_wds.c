@@ -1108,11 +1108,9 @@ name|ni
 expr_stmt|;
 name|err
 operator|=
-call|(
 name|parent
 operator|->
 name|if_transmit
-call|)
 argument_list|(
 name|parent
 argument_list|,

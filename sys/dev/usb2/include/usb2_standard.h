@@ -55,6 +55,65 @@ begin_comment
 comment|/* ms */
 end_comment
 
+begin_comment
+comment|/* Definition of software USB power modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_POWER_MODE_OFF
+value|0
+end_define
+
+begin_comment
+comment|/* turn off device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_POWER_MODE_ON
+value|1
+end_define
+
+begin_comment
+comment|/* always on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_POWER_MODE_SAVE
+value|2
+end_define
+
+begin_comment
+comment|/* automatic suspend and resume */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_POWER_MODE_SUSPEND
+value|3
+end_define
+
+begin_comment
+comment|/* force suspend */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_POWER_MODE_RESUME
+value|4
+end_define
+
+begin_comment
+comment|/* force resume */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -103,6 +162,17 @@ define|#
 directive|define
 name|USB_PORT_POWERUP_DELAY
 value|100
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PORT_RESUME_DELAY
+value|20
 end_define
 
 begin_comment
@@ -211,6 +281,17 @@ define|#
 directive|define
 name|USB_PORT_POWERUP_DELAY
 value|300
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PORT_RESUME_DELAY
+value|(20*2)
 end_define
 
 begin_comment
@@ -2743,11 +2824,6 @@ name|UPS_RESET
 value|0x0010
 define|#
 directive|define
-name|UPS_PORT_MODE_DEVICE
-value|0x0020
-comment|/* currently FreeBSD specific */
-define|#
-directive|define
 name|UPS_PORT_POWER
 value|0x0100
 define|#
@@ -2766,6 +2842,11 @@ define|#
 directive|define
 name|UPS_PORT_INDICATOR
 value|0x1000
+define|#
+directive|define
+name|UPS_PORT_MODE_DEVICE
+value|0x8000
+comment|/* currently FreeBSD specific */
 name|uWord
 name|wPortChange
 decl_stmt|;

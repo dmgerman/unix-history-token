@@ -132,6 +132,32 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Bits for kind */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_MEM_16BIT
+value|1
+end_define
+
+begin_comment
+comment|/* 1 -> 16bit 0 -> 8bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_MEM_ATTR
+value|2
+end_define
+
+begin_comment
+comment|/* 1 -> attribute mem 0 -> common */
+end_comment
+
 begin_define
 define|#
 directive|define

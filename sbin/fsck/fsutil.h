@@ -202,6 +202,13 @@ name|DO_BACKGRD
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHECK_CLEAN
+value|0x0020
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|fstab

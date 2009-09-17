@@ -145,21 +145,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TAPE
-parameter_list|(
-name|name
-parameter_list|,
-name|descr
-parameter_list|,
-name|max
-parameter_list|)
-define|\
-value|DEVICE_ENTRY(DEVICE_TYPE_TAPE, name, descr, max)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DISK
 parameter_list|(
 name|name
@@ -271,24 +256,6 @@ argument_list|(
 literal|"acd%d"
 argument_list|,
 literal|"ATAPI/IDE CDROM"
-argument_list|,
-literal|4
-argument_list|)
-block|,
-name|TAPE
-argument_list|(
-literal|"sa%d"
-argument_list|,
-literal|"SCSI tape drive"
-argument_list|,
-literal|4
-argument_list|)
-block|,
-name|TAPE
-argument_list|(
-literal|"rwt%d"
-argument_list|,
-literal|"Wangtek tape drive"
 argument_list|,
 literal|4
 argument_list|)
@@ -414,7 +381,7 @@ name|NETWORK
 argument_list|(
 literal|"ae"
 argument_list|,
-literal|"Attansic/Atheros L2 FastEthernet"
+literal|"Attansic/Atheros L2 Fast Ethernet"
 argument_list|)
 block|,
 name|NETWORK
@@ -566,6 +533,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"et"
+argument_list|,
+literal|"Agere ET1310 based PCI Express Gigabit Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"ex"
 argument_list|,
 literal|"Intel EtherExpress Pro/10 Ethernet card"
@@ -601,6 +575,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"igb"
+argument_list|,
+literal|"Intel(R) PRO/1000 PCI Express Gigabit Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"ipw"
 argument_list|,
 literal|"Intel PRO/Wireless 2100 IEEE 802.11 adapter"
@@ -615,7 +596,21 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"iwn"
+argument_list|,
+literal|"Intel Wireless WiFi Link 4965AGN IEEE 802.11n adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"ixgb"
+argument_list|,
+literal|"Intel(R) PRO/10Gb Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"ixgbe"
 argument_list|,
 literal|"Intel(R) PRO/10Gb Ethernet card"
 argument_list|)
@@ -688,6 +683,13 @@ argument_list|(
 literal|"nve"
 argument_list|,
 literal|"NVIDIA nForce MCP Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"nxge"
+argument_list|,
+literal|"Neterion Xframe 10GbE Server/Storage adapter"
 argument_list|)
 block|,
 name|NETWORK
@@ -833,6 +835,13 @@ argument_list|(
 literal|"ural"
 argument_list|,
 literal|"Ralink Technology RT2500USB 802.11 wireless adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"urtw"
+argument_list|,
+literal|"Realtek 8187L USB wireless adapter"
 argument_list|)
 block|,
 name|NETWORK
@@ -2019,104 +2028,6 @@ condition|)
 name|msgDebug
 argument_list|(
 literal|"Found a CDROM device for %s\n"
-argument_list|,
-name|try
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|DEVICE_TYPE_TAPE
-case|:
-name|fd
-operator|=
-name|deviceTry
-argument_list|(
-name|device_names
-index|[
-name|i
-index|]
-argument_list|,
-name|try
-argument_list|,
-name|j
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|>=
-literal|0
-condition|)
-block|{
-name|char
-name|n
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|n
-argument_list|,
-sizeof|sizeof
-name|n
-argument_list|,
-name|device_names
-index|[
-name|i
-index|]
-operator|.
-name|name
-argument_list|,
-name|j
-argument_list|)
-expr_stmt|;
-name|deviceRegister
-argument_list|(
-name|strdup
-argument_list|(
-name|n
-argument_list|)
-argument_list|,
-name|device_names
-index|[
-name|i
-index|]
-operator|.
-name|description
-argument_list|,
-name|strdup
-argument_list|(
-name|try
-argument_list|)
-argument_list|,
-name|DEVICE_TYPE_TAPE
-argument_list|,
-name|TRUE
-argument_list|,
-name|mediaInitTape
-argument_list|,
-name|mediaGetTape
-argument_list|,
-name|mediaShutdownTape
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Found a TAPE device for %s\n"
 argument_list|,
 name|try
 argument_list|)

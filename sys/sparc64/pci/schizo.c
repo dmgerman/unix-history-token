@@ -162,12 +162,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ofw_bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -1932,7 +1926,7 @@ operator||
 name|TOM_PCI_IOC_CPRL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hunt through all the interrupt mapping regs and register 	 * the interrupt controller for our interrupt vectors.  This 	 * is complicated by the fact that a pair of Schizo PBMs 	 * share one IGN. 	 */
+comment|/* 	 * Hunt through all the interrupt mapping regs and register 	 * the interrupt controller for our interrupt vectors.  We do 	 * this early in order to be able to catch stray interrupts. 	 * This is complicated by the fact that a pair of Schizo PBMs 	 * shares one IGN. 	 */
 name|n
 operator|=
 name|OF_getprop
@@ -2042,12 +2036,12 @@ name|i
 operator|!=
 literal|0
 condition|)
-name|panic
+name|device_printf
 argument_list|(
-literal|"%s: could not register interrupt controller "
-literal|"for INO %d (%d)"
+name|dev
 argument_list|,
-name|__func__
+literal|"could not register interrupt "
+literal|"controller for INO %d (%d)\n"
 argument_list|,
 name|n
 argument_list|,
@@ -6084,7 +6078,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure the vector is fully specified and we registered 	 * our interrupt controller for it. 	 */
+comment|/* 	 * Make sure the vector is fully specified. 	 */
 name|vec
 operator|=
 name|rman_get_start
@@ -6102,16 +6096,6 @@ operator|!=
 name|sc
 operator|->
 name|sc_ign
-operator|||
-name|intr_vectors
-index|[
-name|vec
-index|]
-operator|.
-name|iv_ic
-operator|!=
-operator|&
-name|schizo_ic
 condition|)
 block|{
 name|device_printf
@@ -6119,6 +6103,118 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"invalid interrupt vector 0x%lx\n"
+argument_list|,
+name|vec
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|intr_vectors
+index|[
+name|vec
+index|]
+operator|.
+name|iv_ic
+operator|==
+operator|&
+name|schizo_ic
+condition|)
+block|{
+comment|/* 		 * Ensure we use the right softc in case the interrupt 		 * is routed to our companion PBM for some odd reason. 		 */
+name|sc
+operator|=
+operator|(
+operator|(
+expr|struct
+name|schizo_icarg
+operator|*
+operator|)
+name|intr_vectors
+index|[
+name|vec
+index|]
+operator|.
+name|iv_icarg
+operator|)
+operator|->
+name|sica_sc
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|intr_vectors
+index|[
+name|vec
+index|]
+operator|.
+name|iv_ic
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Work around broken firmware which misses entries in 		 * the ino-bitmap. 		 */
+name|error
+operator|=
+name|schizo_intr_register
+argument_list|(
+name|sc
+argument_list|,
+name|INTINO
+argument_list|(
+name|vec
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not register interrupt "
+literal|"controller for vector 0x%lx (%d)\n"
+argument_list|,
+name|vec
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"belatedly registered as interrupt "
+literal|"controller for vector 0x%lx\n"
+argument_list|,
+name|vec
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"invalid interrupt controller for vector 0x%lx\n"
 argument_list|,
 name|vec
 argument_list|)
@@ -6503,7 +6599,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"WARNING: using devices behind PCI-PCI "
-literal|"bridges may cause data corruption"
+literal|"bridges may cause data corruption\n"
 argument_list|)
 expr_stmt|;
 return|return

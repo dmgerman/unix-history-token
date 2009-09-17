@@ -19,6 +19,12 @@ directive|define
 name|_USB2_HID_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<dev/usb2/include/usb2_endian.h>
+end_include
+
 begin_define
 define|#
 directive|define

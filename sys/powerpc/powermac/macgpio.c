@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2002 by Peter Grehan. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright 2008 by Nathan Whitehorn. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<powerpc/powermac/macgpiovar.h>
 end_include
 
 begin_comment
@@ -258,28 +264,6 @@ name|ofw_bus_get_devinfo_t
 name|macgpio_get_devinfo
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|uint8_t
-name|macgpio_read
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|macgpio_write
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|uint8_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Bus interface definition  */
@@ -725,14 +709,14 @@ name|gpio_num
 argument_list|)
 condition|)
 block|{
-name|free
-argument_list|(
+comment|/* 			 * Some early GPIO controllers don't provide GPIO 			 * numbers for GPIOs designed only to provide 			 * interrupt resources.  We should still allow these 			 * to attach, but with caution. 			 */
 name|dinfo
-argument_list|,
-name|M_MACGPIO
-argument_list|)
+operator|->
+name|gpio_num
+operator|=
+operator|-
+literal|1
 expr_stmt|;
-continue|continue;
 block|}
 name|resource_list_init
 argument_list|(
@@ -905,6 +889,14 @@ argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dinfo
+operator|->
+name|gpio_num
+operator|>=
+name|GPIO_BASE
+condition|)
 name|printf
 argument_list|(
 literal|" gpio %d"
@@ -912,8 +904,49 @@ argument_list|,
 name|dinfo
 operator|->
 name|gpio_num
+operator|-
+name|GPIO_BASE
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dinfo
+operator|->
+name|gpio_num
+operator|>=
+name|GPIO_EXTINT_BASE
+condition|)
+name|printf
+argument_list|(
+literal|" extint-gpio %d"
+argument_list|,
+name|dinfo
+operator|->
+name|gpio_num
+operator|-
+name|GPIO_EXTINT_BASE
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dinfo
+operator|->
+name|gpio_num
+operator|>=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" addr 0x%02x"
+argument_list|,
+name|dinfo
+operator|->
+name|gpio_num
+argument_list|)
+expr_stmt|;
+comment|/* should not happen */
 name|resource_list_print_type
 argument_list|(
 operator|&
@@ -1010,6 +1043,14 @@ name|child
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dinfo
+operator|->
+name|gpio_num
+operator|>=
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|" gpio %d"
@@ -1199,6 +1240,15 @@ condition|)
 return|return
 name|ENXIO
 return|;
+if|if
+condition|(
+name|dinfo
+operator|->
+name|gpio_num
+operator|>=
+literal|0
+condition|)
+block|{
 name|val
 operator|=
 name|bus_read_1
@@ -1229,6 +1279,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|bus_activate_resource
@@ -1305,6 +1356,15 @@ condition|)
 return|return
 name|ENXIO
 return|;
+if|if
+condition|(
+name|dinfo
+operator|->
+name|gpio_num
+operator|>=
+literal|0
+condition|)
+block|{
 name|val
 operator|=
 name|bus_read_1
@@ -1336,6 +1396,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|bus_deactivate_resource
@@ -1388,6 +1449,19 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dinfo
+operator|->
+name|gpio_num
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|bus_read_1
@@ -1443,6 +1517,15 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dinfo
+operator|->
+name|gpio_num
+operator|<
+literal|0
+condition|)
+return|return;
 name|bus_write_1
 argument_list|(
 name|sc

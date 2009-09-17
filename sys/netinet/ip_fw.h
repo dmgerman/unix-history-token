@@ -1726,11 +1726,11 @@ name|ip_fw_ctl_ptr
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VIMAGE
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -1801,12 +1801,6 @@ name|IPFW_LOADED
 value|(ip_fw_chk_ptr != NULL)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPFW_INTERNAL
-end_ifdef
-
 begin_struct
 struct|struct
 name|ip_fw_chain
@@ -1846,6 +1840,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFW_INTERNAL
+end_ifdef
 
 begin_define
 define|#
@@ -1969,23 +1969,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|eventhandler_entry
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Stack virtualization support.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
 
 begin_struct
 struct|struct
 name|vnet_ipfw
 block|{
-name|int
-name|_fw_one_pass
-decl_stmt|;
 name|int
 name|_fw_enable
 decl_stmt|;
@@ -2071,12 +2068,39 @@ name|struct
 name|callout
 name|_ipfw_timeout
 decl_stmt|;
-name|eventhandler_tag
+name|struct
+name|eventhandler_entry
+modifier|*
 name|_ifaddr_event_tag
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnet_ipfw
+name|vnet_ipfw_0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2106,13 +2130,6 @@ parameter_list|(
 name|sym
 parameter_list|)
 value|VSYM(vnet_ipfw, sym)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_fw_one_pass
-value|VNET_IPFW(fw_one_pass)
 end_define
 
 begin_define
