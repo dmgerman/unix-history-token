@@ -3642,12 +3642,6 @@ name|intr
 operator|=
 name|ciss_perf_msi_intr
 expr_stmt|;
-name|sc
-operator|->
-name|ciss_interrupt_mask
-operator|=
-name|CISS_TL_PERF_INTR_MSI
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3655,13 +3649,16 @@ name|intr
 operator|=
 name|ciss_perf_intr
 expr_stmt|;
+block|}
+comment|/* XXX The docs say that the 0x01 bit is only for SAS controllers. 	 * Unfortunately, there is no good way to know if this is a SAS 	 * controller.  Hopefully enabling this bit universally will work OK. 	 * It seems to work fine for SA6i controllers. 	 */
 name|sc
 operator|->
 name|ciss_interrupt_mask
 operator|=
 name|CISS_TL_PERF_INTR_OPQ
+operator||
+name|CISS_TL_PERF_INTR_MSI
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -4016,13 +4013,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|val
-operator|!=
+operator|<
 name|CISS_MSI_COUNT
-operator|)
-operator|||
+condition|)
+return|return
 operator|(
+name|EINVAL
+operator|)
+return|;
+name|val
+operator|=
+name|MIN
+argument_list|(
+name|val
+argument_list|,
+name|CISS_MSI_COUNT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|pci_alloc_msix
 argument_list|(
 name|sc
@@ -4034,7 +4044,6 @@ name|val
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 return|return
 operator|(
@@ -11468,6 +11477,14 @@ name|cr
 argument_list|)
 expr_stmt|;
 comment|/*      * Allocate an in-kernel databuffer if required, copy in user data.      */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|)
+expr_stmt|;
 name|cr
 operator|->
 name|cr_length
@@ -11512,7 +11529,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|out
+name|out_unlocked
 goto|;
 block|}
 if|if
@@ -11553,7 +11570,7 @@ name|buf_size
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out
+name|out_unlocked
 goto|;
 block|}
 block|}
@@ -11603,6 +11620,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX anything else to populate here? */
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|)
+expr_stmt|;
 comment|/*      * Run the command.      */
 if|if
 condition|(
@@ -11693,6 +11718,14 @@ name|ce
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11739,13 +11772,23 @@ name|buf_size
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out
+name|out_unlocked
 goto|;
 block|}
 comment|/* done OK */
 name|error
 operator|=
 literal|0
+expr_stmt|;
+name|out_unlocked
+label|:
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|)
 expr_stmt|;
 name|out
 label|:

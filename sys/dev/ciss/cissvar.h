@@ -387,7 +387,7 @@ begin_define
 define|#
 directive|define
 name|CISS_MAX_PHYSTGT
-value|15
+value|256
 end_define
 
 begin_define
