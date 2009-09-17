@@ -924,6 +924,7 @@ name|kevent
 modifier|*
 name|kev
 parameter_list|,
+name|unsigned
 name|long
 name|type
 parameter_list|)
