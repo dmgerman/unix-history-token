@@ -8863,7 +8863,6 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-comment|/* 	 * MCAST_JOIN_SOURCE on an exclusive membership is an error. 	 * On an existing inclusive membership, it just adds the 	 * source to the filter list. 	 */
 name|imo
 operator|=
 name|inp_findmoptions
@@ -8928,7 +8927,11 @@ operator|.
 name|ss_family
 operator|!=
 name|AF_UNSPEC
-operator|&&
+condition|)
+block|{
+comment|/* 			 * MCAST_JOIN_SOURCE on an exclusive membership 			 * is an error. On an existing inclusive membership, 			 * it just adds the source to the filter list. 			 */
+if|if
+condition|(
 name|imf
 operator|->
 name|imf_st
@@ -8947,6 +8950,7 @@ goto|goto
 name|out_inp_locked
 goto|;
 block|}
+comment|/* Throw out duplicates. */
 name|lims
 operator|=
 name|imo_match_source
@@ -8975,6 +8979,31 @@ expr_stmt|;
 goto|goto
 name|out_inp_locked
 goto|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 			 * MCAST_JOIN_GROUP on an existing inclusive 			 * membership is an error; if you want to change 			 * filter mode, you must use the userland API 			 * setsourcefilter(). 			 */
+if|if
+condition|(
+name|imf
+operator|->
+name|imf_st
+index|[
+literal|1
+index|]
+operator|==
+name|MCAST_INCLUDE
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|out_inp_locked
+goto|;
+block|}
 block|}
 block|}
 comment|/* 	 * Begin state merge transaction at socket layer. 	 */
@@ -9078,7 +9107,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Graft new source into filter list for this inpcb's 	 * membership of the group. The in_multi may not have 	 * been allocated yet if this is a new membership. 	 */
+comment|/* 	 * Graft new source into filter list for this inpcb's 	 * membership of the group. The in_multi may not have 	 * been allocated yet if this is a new membership, however, 	 * the in_mfilter slot will be allocated and must be initialized. 	 */
 if|if
 condition|(
 name|ssa
@@ -9166,6 +9195,34 @@ expr_stmt|;
 goto|goto
 name|out_imo_free
 goto|;
+block|}
+block|}
+else|else
+block|{
+comment|/* No address specified; Membership starts in EX mode */
+if|if
+condition|(
+name|is_new
+condition|)
+block|{
+name|CTR1
+argument_list|(
+name|KTR_IGMPV3
+argument_list|,
+literal|"%s: new join w/o source"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|imf_init
+argument_list|(
+name|imf
+argument_list|,
+name|MCAST_UNDEFINED
+argument_list|,
+name|MCAST_EXCLUDE
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Begin state merge transaction at IGMP layer. 	 */
@@ -9931,6 +9988,17 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EADDRNOTAVAIL
+operator|)
+return|;
 comment|/* 	 * Find the membership in the membership array. 	 */
 name|imo
 operator|=
@@ -10254,7 +10322,7 @@ condition|(
 name|is_final
 condition|)
 block|{
-comment|/* Remove the gap in the membership array. */
+comment|/* Remove the gap in the membership and filter array. */
 for|for
 control|(
 operator|++
@@ -10269,6 +10337,7 @@ condition|;
 operator|++
 name|idx
 control|)
+block|{
 name|imo
 operator|->
 name|imo_membership
@@ -10285,6 +10354,23 @@ index|[
 name|idx
 index|]
 expr_stmt|;
+name|imo
+operator|->
+name|imo_mfilters
+index|[
+name|idx
+operator|-
+literal|1
+index|]
+operator|=
+name|imo
+operator|->
+name|imo_mfilters
+index|[
+name|idx
+index|]
+expr_stmt|;
+block|}
 name|imo
 operator|->
 name|imo_num_memberships
