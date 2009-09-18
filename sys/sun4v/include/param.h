@@ -351,6 +351,17 @@ name|PAGE_MASK_MAX
 value|PAGE_MASK_4M
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXPAGESIZES
+value|1
+end_define
+
+begin_comment
+comment|/* maximum number of supported page sizes */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

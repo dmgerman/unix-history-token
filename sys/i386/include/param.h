@@ -360,6 +360,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAXPAGESIZES
+value|2
+end_define
+
+begin_comment
+comment|/* maximum number of supported page sizes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IOPAGES
 value|2
 end_define
