@@ -1542,11 +1542,11 @@ if|if
 condition|(
 name|number
 operator|<
-literal|0
+literal|0x000000
 operator|||
 name|number
 operator|>
-literal|255
+literal|0x10FFFF
 condition|)
 return|return
 operator|-

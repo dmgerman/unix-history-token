@@ -586,7 +586,7 @@ begin_struct
 struct|struct
 name|keyent_t
 block|{
-name|u_char
+name|u_int
 name|map
 index|[
 name|NUM_STATES
@@ -1435,18 +1435,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* XXX: Should have keymap_t as an argument, but that's too big for ioctl()! */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|GIO_KEYMAP
-value|_IOR('k', 6, keymap_t)
+value|_IO('k', 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PIO_KEYMAP
-value|_IOW('k', 7, keymap_t)
+value|_IO('k', 7)
 end_define
 
 begin_define
