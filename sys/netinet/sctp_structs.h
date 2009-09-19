@@ -74,6 +74,10 @@ name|void
 modifier|*
 name|net
 decl_stmt|;
+name|void
+modifier|*
+name|vnet
+decl_stmt|;
 comment|/* for sanity checking */
 name|void
 modifier|*

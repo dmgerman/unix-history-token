@@ -5989,7 +5989,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|SCTP_BASE_STATS
+name|SCTP_BASE_STATS_SYSCTL
 argument_list|,
 name|sctpstat
 argument_list|,

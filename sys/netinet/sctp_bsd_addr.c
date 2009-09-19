@@ -379,6 +379,16 @@ modifier|*
 name|v
 parameter_list|)
 block|{
+name|CURVNET_SET
+argument_list|(
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
+name|v
+argument_list|)
+expr_stmt|;
 name|SCTP_IPI_ITERATOR_WQ_LOCK
 argument_list|()
 expr_stmt|;
@@ -431,6 +441,9 @@ name|sctp_iterator_worker
 argument_list|()
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -454,7 +467,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|NULL
+name|curvnet
 argument_list|,
 operator|&
 name|SCTP_BASE_INFO
@@ -755,6 +768,12 @@ decl_stmt|;
 name|uint32_t
 name|ifa_flags
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|IFNET_RLOCK();
+endif|#
+directive|endif
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifn
@@ -981,6 +1000,12 @@ name|ifn
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+block|IFNET_RUNLOCK();
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1321,6 +1346,12 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|IFNET_RLOCK();
+endif|#
+directive|endif
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifn
@@ -1366,6 +1397,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+literal|0
+block|IFNET_RUNLOCK();
+endif|#
+directive|endif
 block|}
 end_function
 

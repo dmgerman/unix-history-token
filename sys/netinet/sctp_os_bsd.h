@@ -621,14 +621,14 @@ name|MODULE_GLOBAL
 parameter_list|(
 name|__SYMBOL
 parameter_list|)
-value|V_ ## __SYMBOL
+value|V_##__SYMBOL
 end_define
 
 begin_define
 define|#
 directive|define
 name|V_system_base_info
-value|VNET_NAME(system_base_info)
+value|VNET(system_base_info)
 end_define
 
 begin_define
@@ -651,6 +651,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_BASE_STATS_SYSCTL
+value|VNET_NAME(system_base_info.sctpstat)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_BASE_STAT
 parameter_list|(
 name|__m
@@ -665,7 +672,7 @@ name|SCTP_BASE_SYSCTL
 parameter_list|(
 name|__m
 parameter_list|)
-value|V_system_base_info.sctpsysctl.__m
+value|VNET_NAME(system_base_info.sctpsysctl.__m)
 end_define
 
 begin_define

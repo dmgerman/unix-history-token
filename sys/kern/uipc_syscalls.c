@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -10817,6 +10823,13 @@ index|]
 operator|=
 name|fd
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|head
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|so
 operator|=
 name|sonewconn
@@ -10987,6 +11000,9 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release explicitly held references before returning. 	 */
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|done
 label|:
 if|if
@@ -11368,6 +11384,13 @@ name|uap
 operator|->
 name|mlen
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sctp_lower_sosend
@@ -11403,6 +11426,9 @@ name|u_sinfo
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -11979,6 +12005,13 @@ name|auio
 operator|.
 name|uio_resid
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sctp_lower_sosend
@@ -12014,6 +12047,9 @@ name|u_sinfo
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -12626,6 +12662,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* KTRACE */
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sctp_sorecvmsg
@@ -12660,6 +12703,9 @@ name|sinfo
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
