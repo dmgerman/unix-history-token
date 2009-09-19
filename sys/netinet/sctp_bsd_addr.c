@@ -768,12 +768,9 @@ decl_stmt|;
 name|uint32_t
 name|ifa_flags
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|IFNET_RLOCK();
-endif|#
-directive|endif
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifn
@@ -1000,12 +997,9 @@ name|ifn
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|IFNET_RUNLOCK();
-endif|#
-directive|endif
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1346,12 +1340,9 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|IFNET_RLOCK();
-endif|#
-directive|endif
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifn
@@ -1397,12 +1388,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-block|IFNET_RUNLOCK();
-endif|#
-directive|endif
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
