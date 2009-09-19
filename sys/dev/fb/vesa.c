@@ -4790,7 +4790,7 @@ operator|=
 operator|(
 name|vm_offset_t
 operator|)
-name|pmap_mapdev
+name|pmap_mapdev_attr
 argument_list|(
 name|paddr
 operator|-
@@ -4799,6 +4799,8 @@ argument_list|,
 name|size
 operator|+
 name|off
+argument_list|,
+name|PAT_WRITE_COMBINING
 argument_list|)
 expr_stmt|;
 if|#
