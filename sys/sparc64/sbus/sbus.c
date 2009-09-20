@@ -521,6 +521,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
@@ -673,20 +674,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_setup_intr
-argument_list|,
-name|sbus_setup_intr
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_teardown_intr
-argument_list|,
-name|sbus_teardown_intr
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_alloc_resource
 argument_list|,
 name|sbus_alloc_resource
@@ -715,9 +702,16 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_get_resource_list
+name|bus_setup_intr
 argument_list|,
-name|sbus_get_resource_list
+name|sbus_setup_intr
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_teardown_intr
+argument_list|,
+name|sbus_teardown_intr
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -725,6 +719,13 @@ argument_list|(
 name|bus_get_resource
 argument_list|,
 name|bus_generic_rl_get_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_get_resource_list
+argument_list|,
+name|sbus_get_resource_list
 argument_list|)
 block|,
 comment|/* ofw_bus interface */
@@ -763,11 +764,7 @@ argument_list|,
 name|sbus_get_type
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -845,6 +842,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|sbus_order_first
 index|[]
 init|=
@@ -871,6 +869,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|list
 parameter_list|)
@@ -1693,14 +1692,14 @@ argument_list|,
 name|M_OFWPROP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get the SBus burst transfer size if burst transfers are supported. 	 * XXX: is the default correct? 	 */
+comment|/* 	 * Get the SBus burst transfer size if burst transfers are supported. 	 */
 if|if
 condition|(
 name|OF_getprop
 argument_list|(
 name|node
 argument_list|,
-literal|"burst-sizes"
+literal|"up-burst-sizes"
 argument_list|,
 operator|&
 name|sc
@@ -1728,6 +1727,12 @@ name|sc
 operator|->
 name|sc_burst
 operator|=
+operator|(
+name|SBUS_BURST64_DEF
+operator|<<
+name|SBUS_BURST64_SHIFT
+operator|)
+operator||
 name|SBUS_BURST_DEF
 expr_stmt|;
 comment|/* initalise the IOMMU */
@@ -4383,7 +4388,7 @@ operator|==
 name|SYS_RES_MEMORY
 condition|)
 block|{
-comment|/* 		 * Need to memory-map the device space, as some drivers depend 		 * on the virtual address being set and useable. 		 */
+comment|/* 		 * Need to memory-map the device space, as some drivers 		 * depend on the virtual address being set and usable. 		 */
 name|error
 operator|=
 name|sparc64_bus_mem_map
