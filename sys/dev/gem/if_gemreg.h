@@ -16,7 +16,7 @@ name|_IF_GEMREG_H
 end_define
 
 begin_comment
-comment|/* Register definitions for Sun GEM gigabit ethernet */
+comment|/* register definitions for Apple GMAC, Sun ERI and Sun GEM */
 end_comment
 
 begin_comment
@@ -86,82 +86,6 @@ value|0x001c
 end_define
 
 begin_comment
-comment|/*  * Second bank: this registers live at offset 0x1000 of the PCI  * mapping, and at the start of the first bank of the SBus  * version.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_PCI_BANK2_OFFSET
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_PCI_BANK2_SIZE
-value|0x14
-end_define
-
-begin_comment
-comment|/* This is the same as the GEM_STATUS reg but reading it does not clear bits. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_ERROR_STATUS
-value|0x0000
-end_define
-
-begin_comment
-comment|/* PCI error status R/C */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_ERROR_MASK
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_SBUS_CONFIG
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_BIF_CONFIG
-value|0x0008
-end_define
-
-begin_comment
-comment|/* BIF config reg */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_BIF_DIAG
-value|0x000c
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_RESET
-value|0x0010
-end_define
-
-begin_comment
-comment|/* Software reset register */
-end_comment
-
-begin_comment
 comment|/* Bits in GEM_SEB register */
 end_comment
 
@@ -169,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|GEM_SEB_ARB
-value|0x000000002
+value|0x00000002
 end_define
 
 begin_comment
@@ -180,25 +104,7 @@ begin_define
 define|#
 directive|define
 name|GEM_SEB_RXWON
-value|0x000000004
-end_define
-
-begin_comment
-comment|/* Bits in GEM_SBUS_CONFIG register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_SBUS_CFG_BMODE64
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_SBUS_CFG_PARITY
-value|0x00000200
+value|0x00000004
 end_define
 
 begin_comment
@@ -209,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|GEM_CONFIG_BURST_64
-value|0x000000000
+value|0x00000000
 end_define
 
 begin_comment
@@ -220,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|GEM_CONFIG_BURST_INF
-value|0x000000001
+value|0x00000001
 end_define
 
 begin_comment
@@ -231,14 +137,14 @@ begin_define
 define|#
 directive|define
 name|GEM_CONFIG_TXDMA_LIMIT
-value|0x00000003e
+value|0x0000003e
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_CONFIG_RXDMA_LIMIT
-value|0x0000007c0
+value|0x000007c0
 end_define
 
 begin_comment
@@ -249,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|GEM_CONFIG_RONPAULBIT
-value|0x000000800
+value|0x00000800
 end_define
 
 begin_comment
@@ -268,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|GEM_CONFIG_BUG2FIX
-value|0x000001000
+value|0x00001000
 end_define
 
 begin_comment
@@ -296,13 +202,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_STATUS_TX_COMPL
-value|0xfff800000
+name|GEM_STATUS_TX_COMPLETION_MASK
+value|0xfff80000
 end_define
 
 begin_comment
 comment|/* TX completion reg. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_STATUS_TX_COMPLETION_SHFT
+value|19
+end_define
 
 begin_comment
 comment|/*  * Interrupt bits, for both the GEM_STATUS and GEM_INTMASK regs  * Bits 0-6 auto-clear when read.  */
@@ -312,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|GEM_INTR_TX_INTME
-value|0x000000001
+value|0x00000001
 end_define
 
 begin_comment
@@ -323,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|GEM_INTR_TX_EMPTY
-value|0x000000002
+value|0x00000002
 end_define
 
 begin_comment
@@ -334,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|GEM_INTR_TX_DONE
-value|0x000000004
+value|0x00000004
 end_define
 
 begin_comment
@@ -345,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|GEM_INTR_RX_DONE
-value|0x000000010
+value|0x00000010
 end_define
 
 begin_comment
@@ -356,21 +269,21 @@ begin_define
 define|#
 directive|define
 name|GEM_INTR_RX_NOBUF
-value|0x000000020
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_INTR_RX_TAG_ERR
-value|0x000000040
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_INTR_PERR
-value|0x000000080
+value|0x00000080
 end_define
 
 begin_comment
@@ -381,7 +294,7 @@ begin_define
 define|#
 directive|define
 name|GEM_INTR_PCS
-value|0x000002000
+value|0x00002000
 end_define
 
 begin_comment
@@ -392,21 +305,21 @@ begin_define
 define|#
 directive|define
 name|GEM_INTR_TX_MAC
-value|0x000004000
+value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_INTR_RX_MAC
-value|0x000008000
+value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_INTR_MAC_CONTROL
-value|0x000010000
+value|0x00010000
 end_define
 
 begin_comment
@@ -417,14 +330,14 @@ begin_define
 define|#
 directive|define
 name|GEM_INTR_MIF
-value|0x000020000
+value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_INTR_BERR
-value|0x000040000
+value|0x00040000
 end_define
 
 begin_comment
@@ -439,14 +352,135 @@ value|"\177\020"					\ 			"b\0INTME\0b\1TXEMPTY\0b\2TXDONE\0"		\ 			"b\4RXDONE\0
 end_define
 
 begin_comment
-comment|/* GEM_ERROR_STATUS and GEM_ERROR_MASK PCI error bits */
+comment|/*  * Second bank: this registers live at offset 0x1000 of the PCI  * mapping, and at the start of the first bank of the SBus  * version.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GEM_ERROR_STAT_BADACK
-value|0x000000001
+name|GEM_PCI_BANK2_OFFSET
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_PCI_BANK2_SIZE
+value|0x14
+end_define
+
+begin_comment
+comment|/* This is the same as the GEM_STATUS reg but reading it does not clear bits. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_PCI_ERROR_STATUS
+value|0x0000
+end_define
+
+begin_comment
+comment|/* PCI error status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_PCI_ERROR_MASK
+value|0x0004
+end_define
+
+begin_comment
+comment|/* PCI error mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_PCI_BIF_CONFIG
+value|0x0008
+end_define
+
+begin_comment
+comment|/* PCI BIF configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_PCI_BIF_DIAG
+value|0x000c
+end_define
+
+begin_comment
+comment|/* PCI BIF diagnostic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_BIF_RESET
+value|0x0000
+end_define
+
+begin_comment
+comment|/* SBus BIF only software reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_CONFIG
+value|0x0004
+end_define
+
+begin_comment
+comment|/* SBus IO configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_STATUS
+value|0x0008
+end_define
+
+begin_comment
+comment|/* SBus IO status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_REVISION
+value|0x000c
+end_define
+
+begin_comment
+comment|/* SBus revision ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_RESET
+value|0x0010
+end_define
+
+begin_comment
+comment|/* software reset */
+end_comment
+
+begin_comment
+comment|/* GEM_PCI_ERROR_STATUS and GEM_PCI_ERROR_MASK error bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_PCI_ERR_STAT_BADACK
+value|0x00000001
 end_define
 
 begin_comment
@@ -456,8 +490,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_ERROR_STAT_DTRTO
-value|0x000000002
+name|GEM_PCI_ERR_STAT_DTRTO
+value|0x00000002
 end_define
 
 begin_comment
@@ -467,26 +501,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_ERROR_STAT_OTHERS
-value|0x000000004
+name|GEM_PCI_ERR_STAT_OTHERS
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|GEM_ERROR_BITS
+name|GEM_PCI_ERR_BITS
 value|"\177\020b\0ACKBAD\0b\1DTRTO\0b\2OTHER\0\0"
 end_define
 
 begin_comment
-comment|/* GEM_BIF_CONFIG register bits */
+comment|/* GEM_PCI_BIF_CONFIG register bits */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GEM_BIF_CONFIG_SLOWCLK
-value|0x000000001
+name|GEM_PCI_BIF_CNF_SLOWCLK
+value|0x00000001
 end_define
 
 begin_comment
@@ -496,8 +530,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_BIF_CONFIG_HOST_64
-value|0x000000002
+name|GEM_PCI_BIF_CNF_HOST_64
+value|0x00000002
 end_define
 
 begin_comment
@@ -507,8 +541,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_BIF_CONFIG_B64D_DIS
-value|0x000000004
+name|GEM_PCI_BIF_CNF_B64D_DS
+value|0x00000004
 end_define
 
 begin_comment
@@ -518,16 +552,149 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_BIF_CONFIG_M66EN
-value|0x000000008
+name|GEM_PCI_BIF_CNF_M66EN
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|GEM_BIF_CONFIG_BITS
+name|GEM_PCI_BIF_CNF_BITS
 value|"\177\020b\0SLOWCLK\0b\1HOST64\0"	\ 				"b\2B64DIS\0b\3M66EN\0\0"
 end_define
+
+begin_comment
+comment|/* GEM_PCI_BIF_DIAG register bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN_PCI_BIF_DIAG_BC_SM
+value|0x007f0000
+end_define
+
+begin_comment
+comment|/* burst ctrl. state machine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN_PCI_BIF_DIAG_SM
+value|0xff000000
+end_define
+
+begin_comment
+comment|/* BIF state machine */
+end_comment
+
+begin_comment
+comment|/* Bits in GEM_SBUS_CONFIG register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_CFG_BURST_32
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* 32 byte bursts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_CFG_BURST_64
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* 64 byte bursts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_CFG_BURST_128
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* 128 byte bursts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_CFG_64BIT
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* extended transfer mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_CFG_PARITY
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* enable parity checking */
+end_comment
+
+begin_comment
+comment|/* GEM_SBUS_STATUS register bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_STATUS_LERR
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* LERR from SBus slave */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_STATUS_SACK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* size ack. error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_STATUS_EACK
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* SBus ctrl. or slave error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_SBUS_STATUS_MPARITY
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* SBus master parity error */
+end_comment
 
 begin_comment
 comment|/* GEM_RESET register bits -- TX and RX self clear when complete. */
@@ -537,33 +704,33 @@ begin_define
 define|#
 directive|define
 name|GEM_RESET_TX
-value|0x000000001
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* Reset TX half */
+comment|/* Reset TX half. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GEM_RESET_RX
-value|0x000000002
+value|0x00000002
 end_define
 
 begin_comment
-comment|/* Reset RX half */
+comment|/* Reset RX half. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GEM_RESET_RSTOUT
-value|0x000000004
+name|GEM_RESET_PCI_RSTOUT
+value|0x00000004
 end_define
 
 begin_comment
-comment|/* Force PCI RSTOUT# */
+comment|/* Force PCI RSTOUT#. */
 end_comment
 
 begin_comment
@@ -571,7 +738,7 @@ comment|/* The rest of the registers live in the first bank again. */
 end_comment
 
 begin_comment
-comment|/* GEM TX DMA registers */
+comment|/* TX DMA registers */
 end_comment
 
 begin_define
@@ -873,7 +1040,7 @@ comment|/* # of last descriptor */
 end_comment
 
 begin_comment
-comment|/* GEM RX DMA registers */
+comment|/* RX DMA registers */
 end_comment
 
 begin_define
@@ -2230,7 +2397,7 @@ comment|/* Ena TX Carrier Extension */
 end_comment
 
 begin_comment
-comment|/* Carrier Extension is required for half duplex Gbps operation */
+comment|/* Carrier Extension is required for half duplex Gbps operation. */
 end_comment
 
 begin_define
@@ -2395,11 +2562,7 @@ value|"\177\020b\0TXPAUSE\0b\1RXPAUSE\0b\2NOPAUSE\0\0"
 end_define
 
 begin_comment
-comment|/* GEM MIF registers */
-end_comment
-
-begin_comment
-comment|/* Bit bang registers use low bit only. */
+comment|/*  * MIF registers  * Bit bang registers use low bit only.  */
 end_comment
 
 begin_define
@@ -2452,14 +2615,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|GEM_MIF_INTERRUPT_MASK
+name|GEM_MIF_MASK
 value|0x6214
 end_define
 
 begin_define
 define|#
 directive|define
-name|GEM_MIF_BASIC_STATUS
+name|GEM_MIF_STATUS
 value|0x6218
 end_define
 
@@ -2489,7 +2652,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* TA bit, 1 for completion */
+comment|/* TA LSB, 1 for completion */
 end_comment
 
 begin_define
@@ -2500,7 +2663,7 @@ value|0x00020000
 end_define
 
 begin_comment
-comment|/* TA bits */
+comment|/* TA MSB, 1 for instruction */
 end_comment
 
 begin_define
@@ -2518,7 +2681,7 @@ value|0x0f800000
 end_define
 
 begin_comment
-comment|/* phy address, should be 0 */
+comment|/* PHY address */
 end_comment
 
 begin_define
@@ -2583,7 +2746,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* PHY select, 0=MDIO0 */
+comment|/* PHY select, 0: MDIO_0 */
 end_comment
 
 begin_define
@@ -2627,7 +2790,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* MDIO_0 Data/MDIO_0 atached */
+comment|/* MDIO_0 attached/data */
 end_comment
 
 begin_define
@@ -2638,7 +2801,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* MDIO_1 Data/MDIO_1 atached */
+comment|/* MDIO_1 attached/data */
 end_comment
 
 begin_define
@@ -2664,25 +2827,47 @@ value|"\177\020b\0PHYSEL\0b\1POLL\0b\2BBENA\0" \ 				"b\x8MDIO0\0b\x9MDIO1\0\0"
 end_define
 
 begin_comment
-comment|/* GEM_MIF_BASIC_STATUS and GEM_MIF_INTERRUPT_MASK bits */
+comment|/* GEM_MIF_STATUS and GEM_MIF_MASK bits */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GEM_MIF_STATUS
+name|GEM_MIF_POLL_STATUS_MASK
 value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* polling status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MIF_POLL_STATUS_SHFT
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|GEM_MIF_BASIC
+name|GEM_MIF_POLL_DATA_MASK
 value|0xffff0000
 end_define
 
 begin_comment
-comment|/*  * The Basic part is the last value read in the POLL field of the config  * register.  *  * The status part indicates the bits that have changed.  */
+comment|/* polling data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MIF_POLL_DATA_SHFT
+value|8
+end_define
+
+begin_comment
+comment|/*  * The Basic part is the last value read in the POLL field of the config  * register.  * The status part indicates the bits that have changed.  */
 end_comment
 
 begin_comment
@@ -2787,7 +2972,7 @@ value|0x905c
 end_define
 
 begin_comment
-comment|/* serial link status */
+comment|/* Serialink status */
 end_comment
 
 begin_comment
@@ -2797,81 +2982,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_MII_CONTROL_RESET
-value|0x00008000
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_CONTROL_LOOPBK
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* 10-bit i/f loopback */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|GEM_MII_CONTROL_1000M
-value|0x00002000
+value|0x00000040
 end_define
 
 begin_comment
-comment|/* speed select, always 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_CONTROL_AUTONEG
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* auto negotiation enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_CONTROL_POWERDN
-value|0x00000800
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_CONTROL_ISOLATE
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* isolate phy from mii */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_CONTROL_RAN
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* restart auto negotiation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_CONTROL_FDUPLEX
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* full duplex, always 0 */
+comment|/* 1000Mbps speed select */
 end_comment
 
 begin_define
@@ -2888,6 +3004,94 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GEM_MII_CONTROL_FDUPLEX
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* full-duplex, always 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONTROL_RAN
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* restart auto-negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONTROL_ISOLATE
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* isolate PHY from MII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONTROL_POWERDN
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* power down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONTROL_AUTONEG
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* auto-negotiation enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONTROL_10_100M
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* 10/100Mbps speed select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONTROL_LOOPBK
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* 10-bit i/f loopback */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONTROL_RESET
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Reset PCS. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GEM_MII_CONTROL_BITS
 value|"\177\020b\7COLTST\0b\x8_FD\0b\x9RAN\0" \ 				"b\xaISOLATE\0b\xbPWRDWN\0b\xc_ANEG\0" \ 				"b\xdGIGE\0b\xeLOOP\0b\xfRESET\0\0"
 end_define
@@ -2899,74 +3103,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_MII_STATUS_GB_FDX
-value|0x00000400
+name|GEM_MII_STATUS_EXTCAP
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* can perform GBit FDX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_STATUS_GB_HDX
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* can perform GBit HDX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_STATUS_UNK
-value|0x00000100
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_STATUS_ANEG_CPT
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* auto negotiate compete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_STATUS_REM_FLT
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* remote fault detected */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_STATUS_ACFG
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* can auto negotiate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_STATUS_LINK_STS
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* link status */
+comment|/* extended capability */
 end_comment
 
 begin_define
@@ -2983,23 +3125,152 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_MII_STATUS_EXTCAP
-value|0x00000001
+name|GEM_MII_STATUS_LINK_STS
+value|0x00000004
 end_define
 
 begin_comment
-comment|/* extended register capability */
+comment|/* link status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_STATUS_ACFG
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* can auto-negotiate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_STATUS_REM_FLT
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* remote fault detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_STATUS_ANEG_CPT
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* auto-negotiate complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_STATUS_EXTENDED
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* extended status */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GEM_MII_STATUS_BITS
-value|"\177\020b\0EXTCAP\0b\1JABBER\0b\2LINKSTS\0" \ 				"b\3ACFG\0b\4REMFLT\0b\5ANEGCPT\0b\x9GBHDX\0" \ 				"b\xaGBFDX\0\0"
+value|"\177\020b\0EXTCAP\0b\1JABBER\0b\2LINKSTS\0" \ 				"b\3ACFG\0b\4REMFLT\0b\5ANEGCPT\0\0"
 end_define
 
 begin_comment
 comment|/* GEM_MII_ANAR and GEM_MII_ANLPAR reg bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_ANEG_FDUPLX
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* full-duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_ANEG_HDUPLX
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* half-duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_ANEG_PAUSE
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* symmetric PAUSE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_ANEG_ASM_DIR
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* asymmetric PAUSE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_ANEG_RFLT_FAIL
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* remote fault - fail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_ANEG_RFLT_OFF
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* remote fault - off-line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_ANEG_RFLT_MASK
+define|\
+value|(CAS_PCS_ANEG_RFLT_FAIL | CAS_PCS_ANEG_RFLT_OFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_ANEG_ACK
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* acknowledge */
 end_comment
 
 begin_define
@@ -3010,70 +3281,8 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* next page bit */
+comment|/* next page */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_ANEG_ACK
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* ack reception of */
-end_comment
-
-begin_comment
-comment|/* Link Partner Capability */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_ANEG_RF
-value|0x00003000
-end_define
-
-begin_comment
-comment|/* advertise remote fault cap */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_ANEG_ASYM_PAUSE
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* asymmetric pause */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_ANEG_SYM_PAUSE
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* symmetric pause */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_ANEG_HLF_DUPLX
-value|0x00000040
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_ANEG_FUL_DUPLX
-value|0x00000020
-end_define
 
 begin_define
 define|#
@@ -3089,45 +3298,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GEM_MII_CONFIG_TIMER
-value|0x0000000e
+name|GEM_MII_CONFIG_ENABLE
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* link monitor timer values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_CONFIG_ANTO
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* 10ms ANEG timer override */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_CONFIG_JS
-value|0x00000018
-end_define
-
-begin_comment
-comment|/* Jitter Study, 0 normal 						 * 1 high freq, 2 low freq */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_CONFIG_SDL
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Signal Detect active low */
+comment|/* Enable PCS. */
 end_comment
 
 begin_define
@@ -3138,18 +3314,70 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Signal Detect Override */
+comment|/* signal detect override */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GEM_MII_CONFIG_ENABLE
-value|0x00000001
+name|GEM_MII_CONFIG_SDL
+value|0x00000004
 end_define
 
 begin_comment
-comment|/* Enable PCS */
+comment|/* signal detect active-low */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONFIG_JS_NORM
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* jitter study - normal op. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONFIG_JS_HF
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* jitter study - HF test */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONFIG_JS_LF
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* jitter study - LF test */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONFIG_JS_MASK
+define|\
+value|(GEM_MII_CONFIG_JS_HF | GEM_MII_CONFIG_JS_LF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_CONFIG_ANTO
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* auto-neg. timer override */
 end_comment
 
 begin_define
@@ -3158,54 +3386,6 @@ directive|define
 name|GEM_MII_CONFIG_BITS
 value|"\177\020b\0PCSENA\0\0"
 end_define
-
-begin_comment
-comment|/*  * GEM_MII_STATE_MACHINE  * XXX These are best guesses from observed behavior.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_FSM_STOP
-value|0x00000000
-end_define
-
-begin_comment
-comment|/* stopped */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_FSM_RUN
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* running */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_FSM_UNKWN
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* unknown */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEM_MII_FSM_DONE
-value|0x00000101
-end_define
-
-begin_comment
-comment|/* complete */
-end_comment
 
 begin_comment
 comment|/*  * GEM_MII_INTERRUP_STATUS reg  * No mask register; mask with the global interrupt mask register.  */
@@ -3234,7 +3414,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* Serial link */
+comment|/* Serialink */
 end_comment
 
 begin_define
@@ -3245,7 +3425,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Use PCS via 10bit interfac */
+comment|/* SERDES via 10-bit */
 end_comment
 
 begin_define
@@ -3256,25 +3436,25 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* Use {G}MII, not PCS */
+comment|/* GMII/MII */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GEM_MII_DATAPATH_MIIOUT
+name|GEM_MII_DATAPATH_GMIIOE
 value|0x00000008
 end_define
 
 begin_comment
-comment|/* enable serial output on GMII */
+comment|/* serial output on GMII en. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GEM_MII_DATAPATH_BITS
-value|"\177\020"	\ 				"b\0SERIAL\0b\1SERDES\0b\2MII\0b\3MIIOUT\0\0"
+value|"\177\020"	\ 				"b\0SERIAL\0b\1SERDES\0b\2MII\0b\3GMIIOE\0\0"
 end_define
 
 begin_comment
@@ -3289,7 +3469,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* enable loopback at sl, logic 						 * reversed for SERDES */
+comment|/* enable loopback at SL, logic 						 * reversed for SERDES */
 end_comment
 
 begin_define
@@ -3311,14 +3491,14 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* lock reference clock */
+comment|/* lock to reference clock */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GEM_MII_SLINK_EMPHASIS
-value|0x00000008
+value|0x00000018
 end_define
 
 begin_comment
@@ -3332,6 +3512,10 @@ name|GEM_MII_SLINK_SELFTEST
 value|0x000001c0
 end_define
 
+begin_comment
+comment|/* self-test */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3340,7 +3524,51 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* Power down serial link */
+comment|/* Power down Serialink. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_SLINK_RX_ZERO
+value|0x00000c00
+end_define
+
+begin_comment
+comment|/* PLL input to Serialink. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_SLINK_RX_POLE
+value|0x00003000
+end_define
+
+begin_comment
+comment|/* PLL input to Serialink. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_SLINK_TX_ZERO
+value|0x0000c000
+end_define
+
+begin_comment
+comment|/* PLL input to Serialink. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_MII_SLINK_TX_POLE
+value|0x00030000
+end_define
+
+begin_comment
+comment|/* PLL input to Serialink. */
 end_comment
 
 begin_define
@@ -3374,7 +3602,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* waiting 500us lockrefn */
+comment|/* waiting 500us w/ lockrefn */
 end_comment
 
 begin_define
@@ -3418,7 +3646,7 @@ value|0x10000
 end_define
 
 begin_comment
-comment|/* Wired GEM PHY addresses */
+comment|/* Wired PHY addresses */
 end_comment
 
 begin_define
@@ -3436,7 +3664,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * GEM descriptor table structures  */
+comment|/*  * descriptor table structures  */
 end_comment
 
 begin_struct
@@ -3461,14 +3689,14 @@ begin_define
 define|#
 directive|define
 name|GEM_TD_BUFSIZE
-value|0x0000000000007fffLL
+value|0x0000000000007fffULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_TD_CXSUM_START
-value|0x00000000001f8000LL
+value|0x00000000001f8000ULL
 end_define
 
 begin_comment
@@ -3486,7 +3714,7 @@ begin_define
 define|#
 directive|define
 name|GEM_TD_CXSUM_STUFF
-value|0x000000001fe00000LL
+value|0x000000001fe00000ULL
 end_define
 
 begin_comment
@@ -3504,7 +3732,7 @@ begin_define
 define|#
 directive|define
 name|GEM_TD_CXSUM_ENABLE
-value|0x0000000020000000LL
+value|0x0000000020000000ULL
 end_define
 
 begin_comment
@@ -3515,21 +3743,21 @@ begin_define
 define|#
 directive|define
 name|GEM_TD_END_OF_PACKET
-value|0x0000000040000000LL
+value|0x0000000040000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_TD_START_OF_PACKET
-value|0x0000000080000000LL
+value|0x0000000080000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_TD_INTERRUPT_ME
-value|0x0000000100000000LL
+value|0x0000000100000000ULL
 end_define
 
 begin_comment
@@ -3540,7 +3768,7 @@ begin_define
 define|#
 directive|define
 name|GEM_TD_NO_CRC
-value|0x0000000200000000LL
+value|0x0000000200000000ULL
 end_define
 
 begin_comment
@@ -3559,7 +3787,7 @@ begin_define
 define|#
 directive|define
 name|GEM_RD_CHECKSUM
-value|0x000000000000ffffLL
+value|0x000000000000ffffULL
 end_define
 
 begin_comment
@@ -3570,14 +3798,14 @@ begin_define
 define|#
 directive|define
 name|GEM_RD_BUFSIZE
-value|0x000000007fff0000LL
+value|0x000000007fff0000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_RD_OWN
-value|0x0000000080000000LL
+value|0x0000000080000000ULL
 end_define
 
 begin_comment
@@ -3588,14 +3816,14 @@ begin_define
 define|#
 directive|define
 name|GEM_RD_HASHVAL
-value|0x0ffff00000000000LL
+value|0x0ffff00000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEM_RD_HASH_PASS
-value|0x1000000000000000LL
+value|0x1000000000000000ULL
 end_define
 
 begin_comment
@@ -3606,7 +3834,7 @@ begin_define
 define|#
 directive|define
 name|GEM_RD_ALTERNATE_MAC
-value|0x2000000000000000LL
+value|0x2000000000000000ULL
 end_define
 
 begin_comment
@@ -3617,7 +3845,7 @@ begin_define
 define|#
 directive|define
 name|GEM_RD_BAD_CRC
-value|0x4000000000000000LL
+value|0x4000000000000000ULL
 end_define
 
 begin_define
