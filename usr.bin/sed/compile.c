@@ -210,6 +210,8 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1710,6 +1712,8 @@ argument_list|(
 name|p
 argument_list|,
 name|re
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1943,6 +1947,9 @@ parameter_list|,
 name|char
 modifier|*
 name|d
+parameter_list|,
+name|int
+name|is_tr
 parameter_list|)
 block|{
 name|char
@@ -2135,6 +2142,15 @@ index|]
 operator|==
 literal|'\\'
 condition|)
+block|{
+if|if
+condition|(
+name|is_tr
+condition|)
+name|p
+operator|++
+expr_stmt|;
+else|else
 operator|*
 name|d
 operator|++
@@ -2143,6 +2159,7 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3532,6 +3549,8 @@ argument_list|(
 name|p
 argument_list|,
 name|old
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3560,6 +3579,8 @@ operator|-
 literal|1
 argument_list|,
 name|new
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4354,6 +4375,8 @@ argument_list|(
 name|p
 argument_list|,
 name|re
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
