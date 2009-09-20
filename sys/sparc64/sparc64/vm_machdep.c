@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  * 	from: FreeBSD: src/sys/i386/i386/vm_machdep.c,v 1.167 2001/07/12  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	from: FreeBSD: src/sys/i386/i386/vm_machdep.c,v 1.167 2001/07/12  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -19,18 +33,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -60,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -72,7 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sf_buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sched.h>
 end_include
 
 begin_include
@@ -162,13 +182,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cache.h>
+file|<machine/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
+file|<machine/cache.h>
 end_include
 
 begin_include
@@ -186,13 +206,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fsr.h>
+file|<machine/frame.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
+file|<machine/fsr.h>
 end_include
 
 begin_include
@@ -278,7 +298,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Expanded sf_freelist head. Really an SLIST_HEAD() in disguise, with the  * sf_freelist head with the sf_lock mutex.  */
+comment|/*  * Expanded sf_freelist head.  Really an SLIST_HEAD() in disguise, with the  * sf_freelist head with the sf_lock mutex.  */
 end_comment
 
 begin_struct
@@ -402,7 +422,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -414,7 +434,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -499,7 +519,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -511,7 +531,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -523,7 +543,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -1746,7 +1766,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get an sf_buf from the freelist. Will block if none are available.  */
+comment|/*  * Get an sf_buf from the freelist.  Will block if none are available.  */
 end_comment
 
 begin_function
@@ -1844,7 +1864,7 @@ expr_stmt|;
 name|sf_buf_alloc_want
 operator|--
 expr_stmt|;
-comment|/* 		 * If we got a signal, don't risk going back to sleep.  		 */
+comment|/* 		 * If we got a signal, don't risk going back to sleep. 		 */
 if|if
 condition|(
 name|error
