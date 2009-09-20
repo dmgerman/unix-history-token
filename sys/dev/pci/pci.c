@@ -11796,6 +11796,8 @@ decl_stmt|;
 name|int
 name|barlen
 decl_stmt|,
+name|basezero
+decl_stmt|,
 name|maprange
 decl_stmt|,
 name|mapsize
@@ -11865,6 +11867,23 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__PCI_BAR_ZERO_VALID
+name|basezero
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
+name|basezero
+operator|=
+name|base
+operator|==
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|maprange
 operator|=
 name|pci_maprange
@@ -11998,16 +12017,14 @@ literal|", enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If base is 0, then we have problems.  It is best to ignore 	 * such entries for the moment.  These will be allocated later if 	 * the driver specifically requests them.  However, some 	 * removable busses look better when all resources are allocated, 	 * so allow '0' to be overriden. 	 * 	 * Similarly treat maps whose values is the same as the test value 	 * read back.  These maps have had all f's written to them by the 	 * BIOS in an attempt to disable the resources. 	 */
+comment|/* 	 * If base is 0, then we have problems if this architecture does 	 * not allow that.  It is best to ignore such entries for the 	 * moment.  These will be allocated later if the driver specifically 	 * requests them.  However, some removable busses look better when 	 * all resources are allocated, so allow '0' to be overriden. 	 * 	 * Similarly treat maps whose values is the same as the test value 	 * read back.  These maps have had all f's written to them by the 	 * BIOS in an attempt to disable the resources. 	 */
 if|if
 condition|(
 operator|!
 name|force
 operator|&&
 operator|(
-name|base
-operator|==
-literal|0
+name|basezero
 operator|||
 name|map
 operator|==
@@ -12197,9 +12214,7 @@ name|mapsize
 expr_stmt|;
 if|if
 condition|(
-name|base
-operator|==
-literal|0
+name|basezero
 operator|||
 name|base
 operator|==
@@ -18627,6 +18642,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifndef|#
+directive|ifndef
+name|__PCI_BAR_ZERO_VALID
 comment|/* 		 * If this is a BAR, clear the BAR so it stops 		 * decoding before releasing the resource. 		 */
 switch|switch
 condition|(
@@ -18650,6 +18668,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 name|bus_release_resource
 argument_list|(
 name|dev

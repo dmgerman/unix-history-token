@@ -56,6 +56,12 @@ directive|ifndef
 name|_NO_NAMESPACE_POLLUTION
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|__PCI_BAR_ZERO_VALID
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
