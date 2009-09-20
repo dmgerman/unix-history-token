@@ -213,8 +213,7 @@ begin_function_decl
 name|void
 name|pmap_bootstrap
 parameter_list|(
-name|vm_offset_t
-name|ekva
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -426,13 +425,6 @@ begin_decl_stmt
 specifier|extern
 name|vm_offset_t
 name|virtual_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_paddr_t
-name|msgbuf_phys
 decl_stmt|;
 end_decl_stmt
 
