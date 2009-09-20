@@ -1471,7 +1471,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-name|openfirmware_exit
+name|cpu_shutdown
 argument_list|(
 operator|&
 name|args
