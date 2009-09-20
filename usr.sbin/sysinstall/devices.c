@@ -489,6 +489,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"cas"
+argument_list|,
+literal|"Sun Cassini/Cassini+ or NS DP83065 Saturn Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"cue"
 argument_list|,
 literal|"CATC USB Ethernet adapter"
