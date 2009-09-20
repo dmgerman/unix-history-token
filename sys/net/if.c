@@ -6121,9 +6121,9 @@ operator|)
 operator|->
 name|sdl_type
 operator|=
-name|rt
+name|ifa
 operator|->
-name|rt_ifp
+name|ifa_ifp
 operator|->
 name|if_type
 expr_stmt|;
@@ -6140,9 +6140,9 @@ operator|)
 operator|->
 name|sdl_index
 operator|=
-name|rt
+name|ifa
 operator|->
-name|rt_ifp
+name|ifa_ifp
 operator|->
 name|if_index
 expr_stmt|;
