@@ -291,7 +291,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Virtual and physical address of message buffer  */
+comment|/*  * Virtual address of message buffer  */
 end_comment
 
 begin_decl_stmt
@@ -299,12 +299,6 @@ name|struct
 name|msgbuf
 modifier|*
 name|msgbufp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_paddr_t
-name|msgbuf_phys
 decl_stmt|;
 end_decl_stmt
 
@@ -1122,8 +1116,7 @@ begin_function
 name|void
 name|pmap_bootstrap
 parameter_list|(
-name|vm_offset_t
-name|ekva
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -1631,7 +1624,7 @@ name|tsb_kernel_size
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate and map the message buffer. 	 */
-name|msgbuf_phys
+name|pa
 operator|=
 name|pmap_bootstrap_alloc
 argument_list|(
@@ -1647,7 +1640,7 @@ operator|*
 operator|)
 name|TLB_PHYS_TO_DIRECT
 argument_list|(
-name|msgbuf_phys
+name|pa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Patch the virtual address and the tsb mask into the trap table. 	 */
@@ -1809,15 +1802,14 @@ name|TD_W
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Set the start and end of KVA.  The kernel is loaded at the first 	 * available 4MB super page, so round up to the end of the page. 	 */
+comment|/* 	 * Set the start and end of KVA.  The kernel is loaded starting 	 * at the first available 4MB super page, so we advance to the 	 * end of the last one used for it. 	 */
 name|virtual_avail
 operator|=
-name|roundup2
-argument_list|(
-name|ekva
-argument_list|,
+name|KERNBASE
+operator|+
+name|kernel_tlb_slots
+operator|*
 name|PAGE_SIZE_4M
-argument_list|)
 expr_stmt|;
 name|virtual_end
 operator|=
@@ -1863,12 +1855,7 @@ name|pa
 operator|=
 name|pmap_bootstrap_alloc
 argument_list|(
-name|roundup
-argument_list|(
 name|KSTACK_PAGES
-argument_list|,
-name|DCACHE_COLORS
-argument_list|)
 operator|*
 name|PAGE_SIZE
 argument_list|)
@@ -2595,9 +2582,13 @@ name|i
 decl_stmt|;
 name|size
 operator|=
-name|round_page
+name|roundup
 argument_list|(
 name|size
+argument_list|,
+name|PAGE_SIZE
+operator|*
+name|DCACHE_COLORS
 argument_list|)
 expr_stmt|;
 for|for
@@ -4286,7 +4277,7 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_kremove: va=%#lx tp=%p data=%#lx"
+literal|"pmap_kremove_flags: va=%#lx tp=%p data=%#lx"
 argument_list|,
 name|va
 argument_list|,
@@ -6133,7 +6124,7 @@ name|CTR6
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_enter: ctx=%p m=%p va=%#lx pa=%#lx prot=%#x wired=%d"
+literal|"pmap_enter_locked: ctx=%p m=%p va=%#lx pa=%#lx prot=%#x wired=%d"
 argument_list|,
 name|pm
 operator|->
@@ -6181,7 +6172,7 @@ name|CTR0
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_enter: update"
+literal|"pmap_enter_locked: update"
 argument_list|)
 expr_stmt|;
 name|PMAP_STATS_INC
@@ -6392,7 +6383,7 @@ name|CTR0
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_enter: replace"
+literal|"pmap_enter_locked: replace"
 argument_list|)
 expr_stmt|;
 name|PMAP_STATS_INC
@@ -6425,7 +6416,7 @@ name|CTR0
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_enter: new"
+literal|"pmap_enter_locked: new"
 argument_list|)
 expr_stmt|;
 name|PMAP_STATS_INC

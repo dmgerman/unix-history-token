@@ -1197,6 +1197,9 @@ decl_stmt|;
 name|vm_offset_t
 name|end
 decl_stmt|;
+name|vm_offset_t
+name|va
+decl_stmt|;
 name|caddr_t
 name|kmdp
 decl_stmt|;
@@ -1589,11 +1592,23 @@ operator|||
 name|kmdp
 operator|==
 name|NULL
+operator|||
+name|end
+operator|==
+literal|0
+operator|||
+name|kernel_tlb_slots
+operator|==
+literal|0
+operator|||
+name|kernel_tlbs
+operator|==
+name|NULL
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sparc64_init: no loader metadata.\n"
+literal|"sparc64_init: missing loader metadata.\n"
 literal|"This probably means you are not using loader(8).\n"
 argument_list|)
 expr_stmt|;
@@ -1603,26 +1618,87 @@ literal|"sparc64_init"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Sanity check the kernel end, which is important. 	 */
-if|if
-condition|(
+comment|/* 	 * Work around the broken loader behavior of not demapping no 	 * longer used kernel TLB slots when unloading the kernel or 	 * modules. 	 */
+for|for
+control|(
+name|va
+operator|=
+name|KERNBASE
+operator|+
+operator|(
+name|kernel_tlb_slots
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE_4M
+init|;
+name|va
+operator|>=
+name|roundup2
+argument_list|(
 name|end
-operator|==
-literal|0
-condition|)
+argument_list|,
+name|PAGE_SIZE_4M
+argument_list|)
+condition|;
+name|va
+operator|-=
+name|PAGE_SIZE_4M
+control|)
 block|{
 name|printf
 argument_list|(
-literal|"sparc64_init: warning, kernel end not specified.\n"
-literal|"Attempting to continue anyway.\n"
+literal|"demapping unused kernel TLB slot (va %#lx - %#lx)\n"
+argument_list|,
+name|va
+argument_list|,
+name|va
+operator|+
+name|PAGE_SIZE_4M
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
-name|end
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|_end
+name|stxa
+argument_list|(
+name|TLB_DEMAP_VA
+argument_list|(
+name|va
+argument_list|)
+operator||
+name|TLB_DEMAP_PRIMARY
+operator||
+name|TLB_DEMAP_PAGE
+argument_list|,
+name|ASI_DMMU_DEMAP
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|stxa
+argument_list|(
+name|TLB_DEMAP_VA
+argument_list|(
+name|va
+argument_list|)
+operator||
+name|TLB_DEMAP_PRIMARY
+operator||
+name|TLB_DEMAP_PAGE
+argument_list|,
+name|ASI_IMMU_DEMAP
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|flush
+argument_list|(
+name|KERNBASE
+argument_list|)
+expr_stmt|;
+name|kernel_tlb_slots
+operator|--
 expr_stmt|;
 block|}
 comment|/* 	 * Determine the TLB slot maxima, which are expected to be 	 * equal across all CPUs. 	 * NB: for Cheetah-class CPUs, these properties only refer 	 * to the t16s. 	 */
@@ -1780,9 +1856,7 @@ endif|#
 directive|endif
 comment|/* 	 * Initialize virtual memory and calculate physmem. 	 */
 name|pmap_bootstrap
-argument_list|(
-name|end
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize tunables. 	 */
 name|init_param2
