@@ -4209,6 +4209,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FREEBSD_NAMECACHE
+name|cache_purgevfs
+argument_list|(
+name|zfsvfs
+operator|->
+name|z_parent
+operator|->
+name|z_vfs
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Close the zil. NB: Can't close the zil while zfs_inactive 	 * threads are blocked as zil_close can call zfs_inactive. 	 */
 if|if
