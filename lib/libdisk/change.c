@@ -183,30 +183,13 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|disk
-operator|->
-name|bios_cyl
-operator|*
-name|disk
-operator|->
-name|bios_hd
-operator|*
-name|disk
-operator|->
-name|bios_sect
-operator|!=
-name|disk
-operator|->
-name|chunks
-operator|->
-name|size
-condition|)
-name|sane
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
+comment|/* Disable a check on a disk size.  It's too strict. */
+block|if (disk->bios_cyl * disk->bios_hd * disk->bios_sect != 	    disk->chunks->size) 		sane = 0;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sane
