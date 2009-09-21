@@ -911,6 +911,9 @@ name|int
 name|max_mtu
 decl_stmt|;
 name|int
+name|throttle
+decl_stmt|;
+name|int
 name|tx_defrag
 decl_stmt|;
 name|int
@@ -1030,6 +1033,20 @@ define|#
 directive|define
 name|MXGE_SFP_COMPLIANCE_BYTE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGE_MIN_THROTTLE
+value|416
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGE_MAX_THROTTLE
+value|4096
 end_define
 
 begin_define
