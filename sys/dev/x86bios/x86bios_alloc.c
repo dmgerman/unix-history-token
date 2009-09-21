@@ -31,8 +31,7 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|pbiosMem
 decl_stmt|;
@@ -221,17 +220,11 @@ name|busySeg
 operator|=
 operator|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|pbuf
 operator|-
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|pbiosMem
 operator|)
 operator|/

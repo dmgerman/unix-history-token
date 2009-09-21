@@ -114,8 +114,7 @@ file|<dev/x86bios/x86bios.h>
 end_include
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|pbiosMem
 init|=
@@ -125,8 +124,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|pbiosStack
 init|=

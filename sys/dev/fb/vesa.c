@@ -3450,7 +3450,7 @@ block|}
 name|vesa_vmodetab
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|x86biosOffs
@@ -3928,7 +3928,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (vmode.v_offscreen> vmode.v_lfb) 			vesa_vmode[modes].vi_buffer_size 				= vmode.v_offscreen + vmode.v_offscreensize*1024 				      - vmode.v_lfb; 		else 			vesa_vmode[modes].vi_buffer_size 				= vmode.v_offscreen + vmode.v_offscreensize*1024;
+block|if (vmode.v_offscreen> vmode.v_lfb) 			vesa_vmode[modes].vi_buffer_size 				= vmode.v_offscreen + vmode.v_offscreensize*1024 				      - vmode.v_lfb; 		else 			vesa_vmode[modes].vi_buffer_size 				= vmode.v_offscreen + vmode.v_offscreensize * 1024;
 endif|#
 directive|endif
 name|vesa_vmode
@@ -6431,7 +6431,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int vesa_get_origin(video_adapter_t *adp, off_t *offset) { 	x86regs_t regs;  	regs.R_EAX = 0x4f05; 	regs.R_EBX = 0x10;  	x86biosCall(&regs, 0x10);  	if ((regs.R_AX& 0xff) != 0x4f) 		return 1; 	*offset = regs.DX*adp->va_window_gran;  	return 0; }
+unit|static int vesa_get_origin(video_adapter_t *adp, off_t *offset) { 	x86regs_t regs;  	regs.R_EAX = 0x4f05; 	regs.R_EBX = 0x10;  	x86biosCall(&regs, 0x10);  	if ((regs.R_AX& 0xff) != 0x4f) 		return 1; 	*offset = regs.DX * adp->va_window_gran;  	return 0; }
 endif|#
 directive|endif
 end_endif
