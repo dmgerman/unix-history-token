@@ -1053,7 +1053,7 @@ name|x86bios
 argument_list|,
 name|x86bios_mod
 argument_list|,
-name|SI_SUB_KLD
+name|SI_SUB_CPU
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
