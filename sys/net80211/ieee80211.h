@@ -3544,7 +3544,7 @@ init|=
 literal|221
 block|,
 comment|/* vendor private */
-comment|/* 	 * 802.11s IEs based on D3.0 spec and were not assigned by 	 * ANA. Beware changing them because some of them are being 	 * kept compatible with Linux. 	 */
+comment|/* 	 * 802.11s IEs based on D3.03 spec and were not assigned by 	 * ANA. Beware changing them because some of them are being 	 * kept compatible with Linux. 	 */
 name|IEEE80211_ELEMID_MESHCONF
 init|=
 literal|51
@@ -3601,11 +3601,11 @@ name|IEEE80211_ELEMID_MESHPERR
 init|=
 literal|70
 block|,
-name|IEEE80211_ELEMID_MESHPU
+name|IEEE80211_ELEMID_MESHPXU
 init|=
 literal|53
 block|,
-name|IEEE80211_ELEMID_MESHPUC
+name|IEEE80211_ELEMID_MESHPXUC
 init|=
 literal|54
 block|,
@@ -3614,11 +3614,6 @@ init|=
 literal|60
 block|,
 comment|/* Abbreviated Handshake */
-name|IEEE80211_ELEMID_MESHPEERVER
-init|=
-literal|80
-block|,
-comment|/* Peering Protocol Version */
 block|}
 enum|;
 end_enum
@@ -4428,6 +4423,21 @@ comment|/* 11s */
 name|IEEE80211_REASON_MESH_INVALID_SECURITY
 init|=
 literal|10
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_PERR_UNSPEC
+init|=
+literal|11
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_PERR_NO_FI
+init|=
+literal|12
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_PERR_DEST_UNREACH
+init|=
+literal|13
 block|,
 comment|/* 11s */
 name|IEEE80211_STATUS_SUCCESS
