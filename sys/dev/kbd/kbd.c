@@ -3461,7 +3461,7 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-name|int
+name|u_int
 name|c
 decl_stmt|;
 comment|/* assert(KBD_IS_VALID(kbd)) */
