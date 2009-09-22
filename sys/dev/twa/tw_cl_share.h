@@ -2232,7 +2232,7 @@ name|tw_cl_ctlr_handle
 modifier|*
 name|ctlr_handle
 parameter_list|,
-name|TW_INT32
+name|u_long
 name|cmd
 parameter_list|,
 name|TW_VOID
