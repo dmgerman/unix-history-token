@@ -905,8 +905,7 @@ name|kevent
 modifier|*
 name|kev
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|type
 parameter_list|)
 function_decl|;
@@ -2843,13 +2842,11 @@ name|kevent
 modifier|*
 name|kev
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|type
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|u_int
 name|ffctrl
 decl_stmt|;
 switch|switch
