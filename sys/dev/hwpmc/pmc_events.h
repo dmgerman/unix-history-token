@@ -315,7 +315,34 @@ value|PMC_EV_TSC_TSC
 end_define
 
 begin_comment
-comment|/*  * All known PMC events.  *  * PMC event numbers are allocated sparsely to allow new PMC events to  * be added to a PMC class without breaking ABI compatibility.  The  * current allocation scheme is:  *  * START	#EVENTS		DESCRIPTION  * 0		0x1000		Reserved  * 0x1000	0x0001		TSC  * 0x2000	0x0080		AMD K7 events  * 0x2080	0x0100		AMD K8 events  * 0x10000	0x0080		INTEL architectural fixed-function events  * 0x10080	0x0F80		INTEL architectural programmable events  * 0x11000	0x0080		INTEL Pentium 4 events  * 0x11080	0x0080		INTEL Pentium MMX events  * 0x11100	0x0100		INTEL Pentium Pro/P-II/P-III/Pentium-M events  */
+comment|/*  * Intel XScale events from "Intel XScale Core Developer's Manual",  * January 2004, #27347302  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PMC_EV_XSCALE
+parameter_list|()
+define|\
+value|__PMC_EV(XSCALE, IC_FETCH)		\ 	__PMC_EV(XSCALE, IC_MISS)		\ 	__PMC_EV(XSCALE, DATA_DEPENDENCY_STALL)	\ 	__PMC_EV(XSCALE, ITLB_MISS)		\ 	__PMC_EV(XSCALE, DTLB_MISS)		\ 	__PMC_EV(XSCALE, BRANCH_EXECUTED)	\ 	__PMC_EV(XSCALE, BRANCH_MISPRED)	\ 	__PMC_EV(XSCALE, INSTR_EXECUTED)	\ 	__PMC_EV(XSCALE, DC_FULL_CYCLE)		\ 	__PMC_EV(XSCALE, DC_FULL_CONTIG)	\ 	__PMC_EV(XSCALE, DC_ACCESS)		\ 	__PMC_EV(XSCALE, DC_MISS)		\ 	__PMC_EV(XSCALE, DC_WRITEBACK)		\ 	__PMC_EV(XSCALE, PC_CHANGE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_XSCALE_FIRST
+value|PMC_EV_XSCALE_IC_FETCH
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_XSCALE_LAST
+value|PMC_EV_XSCALE_PC_CHANGE
+end_define
+
+begin_comment
+comment|/*  * All known PMC events.  *  * PMC event numbers are allocated sparsely to allow new PMC events to  * be added to a PMC class without breaking ABI compatibility.  The  * current allocation scheme is:  *  * START	#EVENTS		DESCRIPTION  * 0		0x1000		Reserved  * 0x1000	0x0001		TSC  * 0x2000	0x0080		AMD K7 events  * 0x2080	0x0100		AMD K8 events  * 0x10000	0x0080		INTEL architectural fixed-function events  * 0x10080	0x0F80		INTEL architectural programmable events  * 0x11000	0x0080		INTEL Pentium 4 events  * 0x11080	0x0080		INTEL Pentium MMX events  * 0x11100	0x0100		INTEL Pentium Pro/P-II/P-III/Pentium-M events  * 0x11200	0x00FF		INTEL XScale events  */
 end_comment
 
 begin_define
@@ -324,7 +351,7 @@ directive|define
 name|__PMC_EVENTS
 parameter_list|()
 define|\
-value|__PMC_EV_BLOCK(TSC,	0x01000)	\ 	__PMC_EV_TSC()				\ 	__PMC_EV_BLOCK(K7,	0x2000)		\ 	__PMC_EV_K7()				\ 	__PMC_EV_BLOCK(K8,	0x2080)		\ 	__PMC_EV_K8()				\ 	__PMC_EV_BLOCK(IAF,	0x10000)	\ 	__PMC_EV_IAF()				\ 	__PMC_EV_BLOCK(IAP,	0x10080)	\ 	__PMC_EV_IAP()				\ 	__PMC_EV_BLOCK(P4,	0x11000)	\ 	__PMC_EV_P4()				\ 	__PMC_EV_BLOCK(P5,	0x11080)	\ 	__PMC_EV_P5()				\ 	__PMC_EV_BLOCK(P6,	0x11100)	\ 	__PMC_EV_P6()
+value|__PMC_EV_BLOCK(TSC,	0x01000)	\ 	__PMC_EV_TSC()				\ 	__PMC_EV_BLOCK(K7,	0x2000)		\ 	__PMC_EV_K7()				\ 	__PMC_EV_BLOCK(K8,	0x2080)		\ 	__PMC_EV_K8()				\ 	__PMC_EV_BLOCK(IAF,	0x10000)	\ 	__PMC_EV_IAF()				\ 	__PMC_EV_BLOCK(IAP,	0x10080)	\ 	__PMC_EV_IAP()				\ 	__PMC_EV_BLOCK(P4,	0x11000)	\ 	__PMC_EV_P4()				\ 	__PMC_EV_BLOCK(P5,	0x11080)	\ 	__PMC_EV_P5()				\ 	__PMC_EV_BLOCK(P6,	0x11100)	\ 	__PMC_EV_P6()				\ 	__PMC_EV_BLOCK(XSCALE,	0x11200)	\ 	__PMC_EV_XSCALE()
 end_define
 
 begin_define
@@ -338,7 +365,7 @@ begin_define
 define|#
 directive|define
 name|PMC_EVENT_LAST
-value|PMC_EV_P6_LAST
+value|PMC_EV_XSCALE_LAST
 end_define
 
 begin_endif
