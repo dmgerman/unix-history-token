@@ -20,6 +20,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|procfs_doosrel
+parameter_list|(
+name|PFS_FILL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|procfs_doproccmdline
 parameter_list|(
 name|PFS_FILL_ARGS
