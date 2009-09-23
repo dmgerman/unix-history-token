@@ -2109,7 +2109,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"can not if_alloc()\n"
+literal|"cannot if_alloc()\n"
 argument_list|)
 expr_stmt|;
 return|return
