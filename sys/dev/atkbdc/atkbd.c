@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/x86bios/x86bios.h>
+file|<compat/x86bios/x86bios.h>
 end_include
 
 begin_include
