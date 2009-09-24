@@ -395,7 +395,7 @@ end_function
 
 begin_function
 name|void
-name|x86biosCall
+name|x86bios_intr
 parameter_list|(
 name|struct
 name|x86regs
@@ -475,7 +475,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|x86biosOffs
+name|x86bios_offset
 parameter_list|(
 name|uint32_t
 name|offs
@@ -614,7 +614,7 @@ argument_list|)
 expr_stmt|;
 name|pbiosStack
 operator|=
-name|x86biosAlloc
+name|x86bios_alloc
 argument_list|(
 literal|1
 argument_list|,
@@ -636,7 +636,7 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|pbiosStack
 argument_list|,

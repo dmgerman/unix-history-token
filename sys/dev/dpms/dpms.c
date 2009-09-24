@@ -640,7 +640,7 @@ name|R_DI
 operator|=
 literal|0
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs

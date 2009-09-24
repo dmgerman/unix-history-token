@@ -4902,11 +4902,11 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Only some systems allow us to retrieve the keyboard repeat  	 * rate previously set via the BIOS... 	 */
-block|x86regs_t regs; 	vm_offset_t p;  	regs.R_AX = 0xc000; 	x86biosCall(&regs, 0x15); 	if ((regs.R_EFLG& PSL_C) || regs.R_AH) 		return ENODEV;         p = BIOS_PADDRTOVADDR((regs.R_ES<< 4) + regs.R_BX); 	if ((readb(p + 6)& 0x40) == 0)
+block|x86regs_t regs; 	vm_offset_t p;  	regs.R_AX = 0xc000; 	x86bios_intr(&regs, 0x15); 	if ((regs.R_EFLG& PSL_C) || regs.R_AH) 		return ENODEV;         p = BIOS_PADDRTOVADDR((regs.R_ES<< 4) + regs.R_BX); 	if ((readb(p + 6)& 0x40) == 0)
 comment|/* int 16, function 0x09 supported? */
-block|return ENODEV; 	regs.R_AX = 0x0900; 	x86biosCall(&regs, 0x16); 	if ((regs.R_AL& 0x08) == 0)
+block|return ENODEV; 	regs.R_AX = 0x0900; 	x86bios_intr(&regs, 0x16); 	if ((regs.R_AL& 0x08) == 0)
 comment|/* int 16, function 0x0306 supported? */
-block|return ENODEV; 	regs.R_AX = 0x0306; 	x86biosCall(&regs, 0x16); 	kbd->kb_delay1 = typematic_delay(regs.R_BH<< 5); 	kbd->kb_delay2 = typematic_rate(regs.R_BL); 	return 0;
+block|return ENODEV; 	regs.R_AX = 0x0306; 	x86bios_intr(&regs, 0x16); 	kbd->kb_delay1 = typematic_delay(regs.R_BH<< 5); 	kbd->kb_delay2 = typematic_rate(regs.R_BL); 	return 0;
 else|#
 directive|else
 return|return

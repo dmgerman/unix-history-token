@@ -1168,7 +1168,7 @@ literal|0x0000
 operator||
 name|mode
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -1239,7 +1239,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|x86biosAlloc
+name|x86bios_alloc
 argument_list|(
 literal|1
 argument_list|,
@@ -1265,7 +1265,7 @@ argument_list|(
 name|offs
 argument_list|)
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -1286,7 +1286,7 @@ operator|!=
 literal|0x4f
 condition|)
 block|{
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|buf
 argument_list|,
@@ -1310,7 +1310,7 @@ name|vmode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|buf
 argument_list|,
@@ -1358,7 +1358,7 @@ name|R_EBX
 operator|=
 name|mode
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -1416,7 +1416,7 @@ name|R_EBX
 operator|=
 literal|1
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -1494,7 +1494,7 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -1606,7 +1606,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|x86biosAlloc
+name|x86bios_alloc
 argument_list|(
 literal|1
 argument_list|,
@@ -1632,7 +1632,7 @@ argument_list|(
 name|offs
 argument_list|)
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -1653,7 +1653,7 @@ operator|!=
 literal|0x4f
 condition|)
 block|{
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|p
 argument_list|,
@@ -1741,7 +1741,7 @@ operator|<<
 name|bits
 expr_stmt|;
 block|}
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|p
 argument_list|,
@@ -1835,7 +1835,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|x86biosAlloc
+name|x86bios_alloc
 argument_list|(
 literal|1
 argument_list|,
@@ -1861,7 +1861,7 @@ argument_list|(
 name|offs
 argument_list|)
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -1882,7 +1882,7 @@ operator|!=
 literal|0x4f
 condition|)
 block|{
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|p
 argument_list|,
@@ -1960,7 +1960,7 @@ operator|<<
 name|bits
 expr_stmt|;
 block|}
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|p
 argument_list|,
@@ -2011,7 +2011,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|x86biosAlloc
+name|x86bios_alloc
 argument_list|(
 literal|1
 argument_list|,
@@ -2160,7 +2160,7 @@ argument_list|(
 name|offs
 argument_list|)
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -2168,7 +2168,7 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|p
 argument_list|,
@@ -2243,7 +2243,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|x86biosAlloc
+name|x86bios_alloc
 argument_list|(
 literal|1
 argument_list|,
@@ -2382,7 +2382,7 @@ argument_list|(
 name|offs
 argument_list|)
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -2390,7 +2390,7 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|p
 argument_list|,
@@ -2458,7 +2458,7 @@ name|R_EDX
 operator|=
 name|STATE_SIZE
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -2563,7 +2563,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|x86biosAlloc
+name|x86bios_alloc
 argument_list|(
 literal|1
 argument_list|,
@@ -2598,7 +2598,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -2615,7 +2615,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|p
 argument_list|,
@@ -2672,7 +2672,7 @@ name|R_EBX
 operator|=
 literal|1
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -2753,7 +2753,7 @@ name|R_ECX
 operator|=
 name|pixel
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -2836,7 +2836,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int vesa_bios_get_start(int *x, int *y) { 	x86regs_t regs;  	bzero(&regs, sizeof(regs)); 	regs.R_EAX = 0x4f07; 	regs.R_EBX = 1;  	x86biosCall(&regs, 0x10);  	if ((regs.R_AX& 0xff) != 0x4f) 		return -1;  	*x = regs.R_CX; 	*y = regs.R_DX;  	return 0; }
+unit|static int vesa_bios_get_start(int *x, int *y) { 	x86regs_t regs;  	bzero(&regs, sizeof(regs)); 	regs.R_EAX = 0x4f07; 	regs.R_EBX = 1;  	x86bios_intr(&regs, 0x10);  	if ((regs.R_AX& 0xff) != 0x4f) 		return -1;  	*x = regs.R_CX; 	*y = regs.R_DX;  	return 0; }
 endif|#
 directive|endif
 end_endif
@@ -2891,7 +2891,7 @@ name|R_ECX
 operator|=
 name|x
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -3329,7 +3329,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|x86biosAlloc
+name|x86bios_alloc
 argument_list|(
 literal|1
 argument_list|,
@@ -3382,7 +3382,7 @@ argument_list|(
 name|offs
 argument_list|)
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -3533,7 +3533,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|x86biosOffs
+name|x86bios_offset
 argument_list|(
 name|FARP
 argument_list|(
@@ -3569,7 +3569,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|x86biosOffs
+name|x86bios_offset
 argument_list|(
 name|FARP
 argument_list|(
@@ -3585,7 +3585,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|x86biosOffs
+name|x86bios_offset
 argument_list|(
 name|FARP
 argument_list|(
@@ -3601,7 +3601,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|x86biosOffs
+name|x86bios_offset
 argument_list|(
 name|FARP
 argument_list|(
@@ -3618,7 +3618,7 @@ operator|(
 name|uint16_t
 operator|*
 operator|)
-name|x86biosOffs
+name|x86bios_offset
 argument_list|(
 name|FARP
 argument_list|(
@@ -4420,7 +4420,7 @@ name|vi_mode
 operator|=
 name|EOT
 expr_stmt|;
-name|x86biosFree
+name|x86bios_free
 argument_list|(
 name|vmbuf
 argument_list|,
@@ -6596,7 +6596,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int vesa_get_origin(video_adapter_t *adp, off_t *offset) { 	x86regs_t regs;  	bzero(&regs, sizeof(regs)); 	regs.R_EAX = 0x4f05; 	regs.R_EBX = 0x10;  	x86biosCall(&regs, 0x10);  	if ((regs.R_AX& 0xff) != 0x4f) 		return 1; 	*offset = regs.DX * adp->va_window_gran;  	return 0; }
+unit|static int vesa_get_origin(video_adapter_t *adp, off_t *offset) { 	x86regs_t regs;  	bzero(&regs, sizeof(regs)); 	regs.R_EAX = 0x4f05; 	regs.R_EBX = 0x10;  	x86bios_intr(&regs, 0x10);  	if ((regs.R_AX& 0xff) != 0x4f) 		return 1; 	*offset = regs.DX * adp->va_window_gran;  	return 0; }
 endif|#
 directive|endif
 end_endif
@@ -6696,7 +6696,7 @@ name|adp
 operator|->
 name|va_window_gran
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs
@@ -6752,7 +6752,7 @@ name|adp
 operator|->
 name|va_window_gran
 expr_stmt|;
-name|x86biosCall
+name|x86bios_intr
 argument_list|(
 operator|&
 name|regs

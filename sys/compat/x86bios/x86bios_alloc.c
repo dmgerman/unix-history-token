@@ -50,7 +50,7 @@ end_decl_stmt
 begin_function
 name|void
 modifier|*
-name|x86biosAlloc
+name|x86bios_alloc
 parameter_list|(
 name|int
 name|count
@@ -200,7 +200,7 @@ end_function
 
 begin_function
 name|void
-name|x86biosFree
+name|x86bios_free
 parameter_list|(
 name|void
 modifier|*
