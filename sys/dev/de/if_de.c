@@ -742,7 +742,7 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|u_int32_t
+name|bus_addr_t
 modifier|*
 name|paddr
 decl_stmt|;
@@ -838,6 +838,8 @@ literal|0
 index|]
 operator|.
 name|ds_addr
+operator|&
+literal|0xffffffff
 expr_stmt|;
 name|desc
 operator|->
@@ -16817,6 +16819,8 @@ operator|->
 name|tulip_txinfo
 operator|.
 name|ri_dma_addr
+operator|&
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -16830,6 +16834,8 @@ operator|->
 name|tulip_rxinfo
 operator|.
 name|ri_dma_addr
+operator|&
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -20954,6 +20960,8 @@ name|segcnt
 index|]
 operator|.
 name|ds_addr
+operator|&
+literal|0xffffffff
 expr_stmt|;
 name|eop
 operator|->
@@ -20982,6 +20990,8 @@ literal|1
 index|]
 operator|.
 name|ds_addr
+operator|&
+literal|0xffffffff
 expr_stmt|;
 name|eop
 operator|->
@@ -21059,6 +21069,8 @@ name|segcnt
 index|]
 operator|.
 name|ds_addr
+operator|&
+literal|0xffffffff
 expr_stmt|;
 name|eop
 operator|->
@@ -21732,6 +21744,8 @@ operator|=
 name|sc
 operator|->
 name|tulip_setup_dma_addr
+operator|&
+literal|0xffffffff
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(

@@ -351,7 +351,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|ri_ring_map
 decl_stmt|;
-name|uint32_t
+name|bus_addr_t
 name|ri_dma_addr
 decl_stmt|;
 name|bus_dma_tag_t
@@ -1707,7 +1707,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|tulip_setup_map
 decl_stmt|;
-name|uint32_t
+name|bus_addr_t
 name|tulip_setup_dma_addr
 decl_stmt|;
 name|u_int32_t
