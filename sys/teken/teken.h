@@ -460,6 +460,9 @@ typedef|typedef
 name|teken_char_t
 name|teken_scs_t
 parameter_list|(
+name|teken_t
+modifier|*
+parameter_list|,
 name|teken_char_t
 parameter_list|)
 function_decl|;

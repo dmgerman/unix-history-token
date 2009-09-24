@@ -144,24 +144,6 @@ begin_comment
 comment|/* __FreeBSD__&& _KERNEL */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"teken.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"teken_wcwidth.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"teken_scs.h"
-end_include
-
 begin_comment
 comment|/* Private flags for t_stateflags. */
 end_comment
@@ -253,6 +235,24 @@ directive|define
 name|BLANK
 value|' '
 end_define
+
+begin_include
+include|#
+directive|include
+file|"teken.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"teken_wcwidth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"teken_scs.h"
+end_include
 
 begin_decl_stmt
 specifier|static
