@@ -609,6 +609,17 @@ block|{
 name|x86regs_t
 name|regs
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|regs
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|regs
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|regs
 operator|.
 name|R_AX
