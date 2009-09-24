@@ -18404,12 +18404,9 @@ literal|"no packet to accept"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_COPY_RXDATA
-argument_list|)
+ifndef|#
+directive|ifndef
+name|__NO_STRICT_ALIGNMENT
 comment|/* 	     * Copy the data into a new mbuf that is properly aligned.  If 	     * we fail to allocate a new mbuf, then drop the packet.  We will 	     * reuse the same rx buffer ('ms') below for another packet 	     * regardless. 	     */
 name|m0
 operator|=
@@ -18534,12 +18531,9 @@ argument_list|,
 name|M_PKTHDR
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_COPY_RXDATA
-argument_list|)
+ifndef|#
+directive|ifndef
+name|__NO_STRICT_ALIGNMENT
 name|skip_input
 label|:
 endif|#
