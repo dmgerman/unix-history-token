@@ -23576,6 +23576,17 @@ operator|->
 name|tulip_setup_map
 argument_list|)
 expr_stmt|;
+name|bus_dmamap_destroy
+argument_list|(
+name|sc
+operator|->
+name|tulip_setup_tag
+argument_list|,
+name|sc
+operator|->
+name|tulip_setup_map
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|tulip_setup_map
