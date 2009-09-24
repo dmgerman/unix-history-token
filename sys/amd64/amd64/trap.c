@@ -1829,13 +1829,21 @@ case|case
 name|T_DNA
 case|:
 comment|/* 			 * The kernel is apparently using fpu for copying. 			 * XXX this should be fatal unless the kernel has 			 * registered such use. 			 */
-name|fpudna
-argument_list|()
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"fpudna in kernel mode!\n"
 argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+name|kdb_backtrace
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|fpudna
+argument_list|()
 expr_stmt|;
 goto|goto
 name|out
