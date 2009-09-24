@@ -23174,7 +23174,7 @@ name|size_t
 name|count
 parameter_list|,
 name|bus_size_t
-name|maxsize
+name|align
 parameter_list|,
 name|int
 name|nsegs
@@ -23219,7 +23219,7 @@ name|bus_dma_tag_create
 argument_list|(
 name|NULL
 argument_list|,
-name|PAGE_SIZE
+literal|32
 argument_list|,
 literal|0
 argument_list|,
@@ -23374,7 +23374,7 @@ name|bus_dma_tag_create
 argument_list|(
 name|NULL
 argument_list|,
-literal|4
+name|align
 argument_list|,
 literal|0
 argument_list|,
@@ -23386,11 +23386,13 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|maxsize
+name|MCLBYTES
+operator|*
+name|nsegs
 argument_list|,
 name|nsegs
 argument_list|,
-name|TULIP_DATA_PER_DESC
+name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
@@ -23672,7 +23674,7 @@ name|sc
 argument_list|,
 name|TULIP_TXDESCS
 argument_list|,
-name|TULIP_DATA_PER_DESC
+literal|1
 argument_list|,
 name|TULIP_MAX_TXSEG
 argument_list|,
@@ -23704,7 +23706,7 @@ name|sc
 argument_list|,
 name|TULIP_RXDESCS
 argument_list|,
-name|MCLBYTES
+literal|4
 argument_list|,
 literal|1
 argument_list|,
@@ -23732,7 +23734,7 @@ name|bus_dma_tag_create
 argument_list|(
 name|NULL
 argument_list|,
-literal|4
+literal|32
 argument_list|,
 literal|0
 argument_list|,

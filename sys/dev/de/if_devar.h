@@ -373,13 +373,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TULIP_DATA_PER_DESC
-value|2032
-end_define
-
-begin_define
-define|#
-directive|define
 name|TULIP_TXTIMER
 value|4
 end_define
