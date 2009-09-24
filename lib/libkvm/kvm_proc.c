@@ -630,8 +630,13 @@ name|ucred
 operator|.
 name|cr_ngroups
 expr_stmt|;
-name|bcopy
+name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ucred
 operator|.
 name|cr_groups
