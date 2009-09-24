@@ -4383,6 +4383,16 @@ name|devices
 index|[
 name|i
 index|]
+operator|&&
+name|device_is_attached
+argument_list|(
+name|dc
+operator|->
+name|devices
+index|[
+name|i
+index|]
+argument_list|)
 condition|)
 name|BUS_DRIVER_ADDED
 argument_list|(
