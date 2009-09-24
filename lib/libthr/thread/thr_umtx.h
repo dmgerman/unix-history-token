@@ -978,7 +978,11 @@ operator|(
 operator|(
 name|state
 operator|&
+operator|(
 name|URWLOCK_WRITE_WAITERS
+operator||
+name|URWLOCK_READ_WAITERS
+operator|)
 operator|)
 operator|&&
 name|URWLOCK_READER_COUNT
