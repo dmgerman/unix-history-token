@@ -88,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../sys/net80211/ieee80211_ioctl.h"
+file|"../../../../sys/net80211/ieee80211_ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../sys/net80211/ieee80211_radiotap.h"
+file|"../../../../sys/net80211/ieee80211_radiotap.h"
 end_include
 
 begin_comment
