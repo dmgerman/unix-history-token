@@ -403,6 +403,7 @@ parameter_list|(
 name|teken_t
 modifier|*
 name|t
+name|__unused
 parameter_list|,
 name|teken_char_t
 name|c
