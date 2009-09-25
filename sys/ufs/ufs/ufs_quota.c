@@ -149,6 +149,24 @@ directive|include
 file|<ufs/ufs/ufs_extern.h>
 end_include
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dqblk64
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dqhdr64
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -5760,7 +5778,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine the quota file type.  */
+comment|/*  * Determine the quota file type.  *  * A 32-bit quota file is simply an array of struct dqblk32.  *  * A 64-bit quota file is a struct dqhdr64 followed by an array of struct  * dqblk64.  The header contains various magic bits which allow us to be  * reasonably confident that it is indeeda 64-bit quota file and not just  * a 32-bit quota file that just happens to "look right".  *  */
 end_comment
 
 begin_function
@@ -6640,14 +6658,9 @@ expr_stmt|;
 name|DQH_UNLOCK
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Read the requested quota record from the quota file, performing 	 * any necessary conversions. 	 * 	 * The record's offset within the file depends on the size of the 	 * record, which means we need to know whether it's a 32-bit file 	 * or a 64-bit file. 	 * 	 * Luckily, root's record is always at offset 0, and most of it is 	 * unused, so we can use it to store a magic number indicating the 	 * file format.  Due to an acute lack of imagination, this magic 	 * number, stored in the first byte of root's record and hence the 	 * first byte of the file, is 64. 	 * 	 * Another lucky break is that quotaon() always loads root's 	 * record, to get the default values for dq_btime and dq_itime, so 	 * we will always have a chance to check the file format before 	 * being asked for a "real" record. 	 */
+comment|/* 	 * Read the requested quota record from the quota file, performing 	 * any necessary conversions. 	 */
 if|if
 condition|(
-name|id
-operator|==
-literal|0
-operator|||
-operator|(
 name|ump
 operator|->
 name|um_qflags
@@ -6656,7 +6669,6 @@ name|type
 index|]
 operator|&
 name|QTF_64BIT
-operator|)
 condition|)
 block|{
 name|recsize
@@ -7937,6 +7949,10 @@ parameter_list|)
 value|(u64> UINT32_MAX ? UINT32_MAX : (uint32_t)u64)
 end_define
 
+begin_comment
+comment|/*  * Convert on-disk 32-bit host-order structure to in-memory 64-bit  * host-order structure.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -8020,6 +8036,10 @@ name|dqb_itime
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Convert on-disk 64-bit network-order structure to in-memory 64-bit  * host-order structure.  */
+end_comment
 
 begin_function
 specifier|static
@@ -8129,6 +8149,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Convert in-memory 64-bit host-order structure to on-disk 32-bit  * host-order structure.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -8236,6 +8260,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Convert in-memory host-order 64-bit structure to on-disk 64-bit  * network-order structure.  */
+end_comment
 
 begin_function
 specifier|static
@@ -8345,6 +8373,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Convert in-memory 64-bit host-order structure to in-memory 32-bit  * host-order structure.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -8452,6 +8484,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Convert in-memory 32-bit host-order structure to in-memory 64-bit  * host-order structure.  */
+end_comment
 
 begin_function
 specifier|static
