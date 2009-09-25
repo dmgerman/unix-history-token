@@ -1581,28 +1581,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-call|(
-name|uintptr_t
-call|)
-argument_list|(
-name|request
-operator|->
-name|data
-argument_list|)
-operator|&
-operator|(
-name|ch
-operator|->
-name|dma
-operator|.
-name|alignment
-operator|-
-literal|1
-operator|)
-operator|)
-operator|||
-operator|(
 name|request
 operator|->
 name|bytecount
@@ -1616,7 +1594,6 @@ name|alignment
 operator|-
 literal|1
 operator|)
-operator|)
 condition|)
 block|{
 name|device_printf
@@ -1625,7 +1602,17 @@ name|request
 operator|->
 name|dev
 argument_list|,
-literal|"FAILURE - non aligned DMA transfer attempted\n"
+literal|"FAILURE - odd-sized DMA transfer attempt %d %% %d\n"
+argument_list|,
+name|request
+operator|->
+name|bytecount
+argument_list|,
+name|ch
+operator|->
+name|dma
+operator|.
+name|alignment
 argument_list|)
 expr_stmt|;
 return|return
