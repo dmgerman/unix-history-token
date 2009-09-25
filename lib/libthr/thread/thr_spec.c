@@ -514,7 +514,40 @@ name|specific_data_count
 operator|--
 expr_stmt|;
 block|}
-comment|/* 			 * If there is a destructore, call it 			 * with the key table entry unlocked: 			 */
+elseif|else
+if|if
+condition|(
+name|curthread
+operator|->
+name|specific
+index|[
+name|key
+index|]
+operator|.
+name|data
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/*  				 * This can happen if the key is deleted via 				 * pthread_key_delete without first setting the value 				 * to NULL in all threads.  POSIX says that the 				 * destructor is not invoked in this case. 				 */
+name|curthread
+operator|->
+name|specific
+index|[
+name|key
+index|]
+operator|.
+name|data
+operator|=
+name|NULL
+expr_stmt|;
+name|curthread
+operator|->
+name|specific_data_count
+operator|--
+expr_stmt|;
+block|}
+comment|/* 			 * If there is a destructor, call it 			 * with the key table entry unlocked: 			 */
 if|if
 condition|(
 name|destructor
