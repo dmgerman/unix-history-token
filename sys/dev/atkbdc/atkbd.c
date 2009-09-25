@@ -4960,10 +4960,14 @@ name|R_FLG
 operator|&
 name|PSL_C
 operator|)
+operator|!=
+literal|0
 operator|||
 name|regs
 operator|.
 name|R_AH
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
