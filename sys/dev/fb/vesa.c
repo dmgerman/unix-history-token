@@ -5351,6 +5351,8 @@ name|info
 decl_stmt|;
 name|int
 name|len
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
