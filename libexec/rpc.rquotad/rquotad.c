@@ -910,13 +910,11 @@ operator|&
 name|getq_rslt
 argument_list|)
 condition|)
-block|{
 name|svcerr_systemerr
 argument_list|(
 name|transp
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1307,7 +1305,7 @@ operator|->
 name|fs_next
 control|)
 block|{
-comment|/* where the devise is the same as path */
+comment|/* where the device is the same as path */
 if|if
 condition|(
 name|fs
