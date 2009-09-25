@@ -99,12 +99,16 @@ directive|include
 file|<netinet/udp.h>
 end_include
 
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|sctp_base_info
+argument_list|,
 name|system_base_info
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* FIX: we don't handle multiple link local scopes */
@@ -164,8 +168,6 @@ name|tmp_a
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -200,8 +202,6 @@ name|tmp_b
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -8676,8 +8676,6 @@ name|from6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -8870,8 +8868,6 @@ name|to6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -10171,8 +10167,6 @@ name|inp_ip_ttl
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ip_defttl
 argument_list|)
 expr_stmt|;
@@ -12171,8 +12165,6 @@ name|sin6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -12660,8 +12652,6 @@ name|first
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_hifirstauto
 argument_list|)
 expr_stmt|;
@@ -12669,8 +12659,6 @@ name|last
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_hilastauto
 argument_list|)
 expr_stmt|;
@@ -12737,8 +12725,6 @@ name|first
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_lowfirstauto
 argument_list|)
 expr_stmt|;
@@ -12746,8 +12732,6 @@ name|last
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_lowlastauto
 argument_list|)
 expr_stmt|;
@@ -12758,8 +12742,6 @@ name|first
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_firstauto
 argument_list|)
 expr_stmt|;
@@ -12767,8 +12749,6 @@ name|last
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ipport_lastauto
 argument_list|)
 expr_stmt|;
@@ -17121,8 +17101,6 @@ name|sin6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -29803,23 +29781,6 @@ decl_stmt|,
 name|gap
 decl_stmt|;
 comment|/* We look for anything larger than the cum-ack + 1 */
-name|SCTP_STAT_INCR
-argument_list|(
-name|sctps_protocol_drain_calls
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_do_drain
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-return|return;
-block|}
 name|asoc
 operator|=
 operator|&
@@ -30536,6 +30497,24 @@ name|sctp_drain
 parameter_list|()
 block|{
 comment|/* 	 * We must walk the PCB lists for ALL associations here. The system 	 * is LOW on MBUF's and needs help. This is where reneging will 	 * occur. We really hope this does NOT happen! 	 */
+name|VNET_ITERATOR_DECL
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+name|VNET_LIST_RLOCK_NOSLEEP
+argument_list|()
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 name|struct
 name|sctp_inpcb
 modifier|*
@@ -30546,6 +30525,31 @@ name|sctp_tcb
 modifier|*
 name|stcb
 decl_stmt|;
+name|SCTP_STAT_INCR
+argument_list|(
+name|sctps_protocol_drain_calls
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_do_drain
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|VIMAGE
+continue|continue;
+else|#
+directive|else
+return|return;
+endif|#
+directive|endif
+block|}
 name|SCTP_INP_INFO_RLOCK
 argument_list|()
 expr_stmt|;
@@ -30599,6 +30603,13 @@ argument_list|)
 expr_stmt|;
 block|}
 name|SCTP_INP_INFO_RUNLOCK
+argument_list|()
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
+name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
 block|}

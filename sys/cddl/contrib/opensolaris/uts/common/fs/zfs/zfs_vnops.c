@@ -20663,7 +20663,7 @@ name|ACL_TYPE_NFS4
 condition|)
 return|return
 operator|(
-name|EOPNOTSUPP
+name|EINVAL
 operator|)
 return|;
 name|vsecattr
@@ -20782,7 +20782,7 @@ name|ACL_TYPE_NFS4
 condition|)
 return|return
 operator|(
-name|EOPNOTSUPP
+name|EINVAL
 operator|)
 return|;
 if|if

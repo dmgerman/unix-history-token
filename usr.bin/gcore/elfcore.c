@@ -768,7 +768,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"short read from %s:"
-literal|" wanted %zd, got %zd"
+literal|" wanted %zu, got %zd"
 argument_list|,
 name|memname
 argument_list|,
@@ -2127,7 +2127,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"short read from %s: wanted %zd, got %d"
+literal|"short read from %s: wanted %zu, got %d"
 argument_list|,
 name|name
 argument_list|,
@@ -2228,7 +2228,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"short read from %s: wanted %zd, got %d"
+literal|"short read from %s: wanted %zu, got %d"
 argument_list|,
 name|name
 argument_list|,

@@ -589,6 +589,16 @@ name|pr_init
 operator|=
 name|sctp_init
 block|,
+ifdef|#
+directive|ifdef
+name|VIMAGE
+operator|.
+name|pr_destroy
+operator|=
+name|sctp_finish
+block|,
+endif|#
+directive|endif
 operator|.
 name|pr_drain
 operator|=

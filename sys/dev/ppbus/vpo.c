@@ -687,7 +687,6 @@ argument_list|(
 name|ppbus
 argument_list|)
 expr_stmt|;
-comment|/* all went ok */
 name|vpo_cam_rescan
 argument_list|(
 name|vpo
@@ -739,6 +738,16 @@ modifier|*
 name|vpo
 parameter_list|)
 block|{
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+decl_stmt|;
 name|struct
 name|cam_path
 modifier|*
@@ -764,6 +773,11 @@ operator||
 name|M_ZERO
 argument_list|)
 decl_stmt|;
+name|ppb_lock
+argument_list|(
+name|ppbus
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xpt_create_path
@@ -789,6 +803,11 @@ name|CAM_REQ_CMP
 condition|)
 block|{
 comment|/* A failure is benign as the user can do a manual rescan */
+name|ppb_unlock
+argument_list|(
+name|ppbus
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|ccb
@@ -838,6 +857,11 @@ expr_stmt|;
 name|xpt_action
 argument_list|(
 name|ccb
+argument_list|)
+expr_stmt|;
+name|ppb_unlock
+argument_list|(
+name|ppbus
 argument_list|)
 expr_stmt|;
 comment|/* The scan is in progress now. */

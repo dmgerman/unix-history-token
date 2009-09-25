@@ -10760,7 +10760,14 @@ operator|.
 name|msfr_nsrcs
 operator|>
 name|in_mcast_maxsocksrc
-operator|||
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|msfr
 operator|.

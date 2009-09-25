@@ -655,31 +655,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|len
-operator|!=
-sizeof|sizeof
-argument_list|(
-name|afa
-argument_list|)
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"not ok 9 - setsockopt() after listen() returned wrong "
-literal|"size (%d vs expected %d)"
-argument_list|,
-name|len
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|afa
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"ok 9 - setsockopt\n"
@@ -758,7 +733,7 @@ operator|-
 literal|1
 argument_list|,
 literal|"not ok 10 - getsockopt() after setsockopet()  after "
-literal|"listen() returned wrong size (got %d expected %d)"
+literal|"listen() returned wrong size (got %d expected %zd)"
 argument_list|,
 name|len
 argument_list|,

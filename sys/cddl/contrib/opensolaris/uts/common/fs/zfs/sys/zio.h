@@ -151,7 +151,7 @@ enum|;
 define|#
 directive|define
 name|ZIO_CHECKSUM_ON_VALUE
-value|ZIO_CHECKSUM_FLETCHER_2
+value|ZIO_CHECKSUM_FLETCHER_4
 define|#
 directive|define
 name|ZIO_CHECKSUM_DEFAULT

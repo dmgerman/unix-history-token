@@ -4120,8 +4120,6 @@ name|from6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)

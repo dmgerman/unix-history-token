@@ -1794,6 +1794,10 @@ operator|)
 operator|->
 name|xi_socket
 expr_stmt|;
+name|timer
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 comment|/* Ignore sockets for protocols other than the desired one. */
 if|if
@@ -2864,6 +2868,12 @@ operator|.
 name|sb_mbmax
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|timer
+operator|!=
+name|NULL
+condition|)
 name|printf
 argument_list|(
 literal|"%4d.%02d %4d.%02d %4d.%02d %4d.%02d %4d.%02d %4d.%02d "

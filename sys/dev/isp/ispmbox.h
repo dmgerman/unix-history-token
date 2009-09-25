@@ -1361,6 +1361,127 @@ value|0x8048
 end_define
 
 begin_comment
+comment|/*  * Firmware Options. There are a lot of them.  *  * IFCOPTN - ISP Fibre Channel Option Word N  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_EQFQASYNC
+value|(1<< 13)
+end_define
+
+begin_comment
+comment|/* enable QFULL notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_EAABSRCVD
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_RJTASYNC
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* enable 8018 notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_ENAPURE
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_ENA8017
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_DISGPIO67
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_LIPLOSSIMM
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_DISF7SWTCH
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_CTIO_RETRY
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_LIPASYNC
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT1_LIPF8
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT2_LOOPBACK
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT2_ATIO3_ONLY
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCOPT3_NOPRLI
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* disable automatic sending of PRLI on local loops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCOPT3_RNDASYNC
+value|(1<< 1)
+end_define
+
+begin_comment
 comment|/*  * 2.01.31 2200 Only. Need Bit 13 in Mailbox 1 for Set Firmware Options  * mailbox command to enable this.  */
 end_comment
 
@@ -1369,6 +1490,17 @@ define|#
 directive|define
 name|ASYNC_QFULL_SENT
 value|0x8049
+end_define
+
+begin_comment
+comment|/*  * Needs to be enabled  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASYNC_AUTO_PLOGI_RJT
+value|0x8018
 end_define
 
 begin_comment

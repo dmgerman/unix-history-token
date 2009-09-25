@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -790,11 +796,25 @@ expr_stmt|;
 comment|/* make sure mapping fits into numeric range etc */
 if|if
 condition|(
+operator|(
 name|uap
 operator|->
 name|len
 operator|==
 literal|0
+operator|&&
+operator|!
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_AOUT
+argument_list|)
+operator|&&
+name|curproc
+operator|->
+name|p_osrel
+operator|>=
+literal|800104
+operator|)
 operator|||
 operator|(
 operator|(
