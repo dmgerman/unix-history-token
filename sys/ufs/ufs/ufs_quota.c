@@ -7950,7 +7950,7 @@ value|(u64> UINT32_MAX ? UINT32_MAX : (uint32_t)u64)
 end_define
 
 begin_comment
-comment|/*  * Convert on-disk 32-bit host-order structure to in-memory 64-bit  * host-order structure.  */
+comment|/*  * Convert 32-bit host-order structure to dquot.  */
 end_comment
 
 begin_function
@@ -8038,7 +8038,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert on-disk 64-bit network-order structure to in-memory 64-bit  * host-order structure.  */
+comment|/*  * Convert 64-bit network-order structure to dquot.  */
 end_comment
 
 begin_function
@@ -8150,7 +8150,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert in-memory 64-bit host-order structure to on-disk 32-bit  * host-order structure.  */
+comment|/*  * Convert dquot to 32-bit host-order structure.  */
 end_comment
 
 begin_function
@@ -8262,7 +8262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert in-memory host-order 64-bit structure to on-disk 64-bit  * network-order structure.  */
+comment|/*  * Convert dquot to 64-bit network-order structure.  */
 end_comment
 
 begin_function
@@ -8374,7 +8374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert in-memory 64-bit host-order structure to in-memory 32-bit  * host-order structure.  */
+comment|/*  * Convert 64-bit host-order structure to 32-bit host-order structure.  */
 end_comment
 
 begin_function
@@ -8486,7 +8486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert in-memory 32-bit host-order structure to in-memory 64-bit  * host-order structure.  */
+comment|/*  * Convert 32-bit host-order structure to 64-bit host-order structure.  */
 end_comment
 
 begin_function
