@@ -160,8 +160,9 @@ struct|struct
 name|x86regs
 block|{
 name|uint16_t
-name|register_cs
+name|padding
 decl_stmt|;
+comment|/* CS is unused. */
 name|uint16_t
 name|register_ds
 decl_stmt|;
@@ -211,10 +212,6 @@ decl_stmt|;
 name|union
 name|x86_register
 name|register_di
-decl_stmt|;
-name|union
-name|x86_register
-name|register_ip
 decl_stmt|;
 block|}
 struct|;
@@ -387,13 +384,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|R_IP
-value|register_ip.I16_reg.x_reg
-end_define
-
-begin_define
-define|#
-directive|define
 name|R_FLG
 value|register_flags
 end_define
@@ -433,13 +423,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|R_EIP
-value|register_ip.I32_reg.e_reg
-end_define
-
-begin_define
-define|#
-directive|define
 name|R_EFLG
 value|register_flags
 end_define
@@ -447,13 +430,6 @@ end_define
 begin_comment
 comment|/* segment registers */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|R_CS
-value|register_cs
-end_define
 
 begin_define
 define|#
@@ -524,14 +500,14 @@ begin_define
 define|#
 directive|define
 name|MAPPED_MEMORY_SIZE
-value|0xc00000
+value|(1024 * 1024)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PAGE_RESERV
-value|(4096*5)
+value|(4096 * 5)
 end_define
 
 begin_function_decl

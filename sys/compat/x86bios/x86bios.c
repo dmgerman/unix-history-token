@@ -423,8 +423,8 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Calling real mode int 0x%x "
-literal|"(ax=0x%04x bx=0x%04x cx=0x%04x dx=0x%04x)\n"
+literal|"Calling int 0x%x (ax=0x%04x bx=0x%04x "
+literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
 argument_list|,
 name|intno
 argument_list|,
@@ -443,6 +443,14 @@ argument_list|,
 name|regs
 operator|->
 name|R_DX
+argument_list|,
+name|regs
+operator|->
+name|R_ES
+argument_list|,
+name|regs
+operator|->
+name|R_DI
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
@@ -503,8 +511,8 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Exiting real mode int 0x%x "
-literal|"(ax=0x%04x bx=0x%04x cx=0x%04x dx=0x%04x)\n"
+literal|"Exiting int 0x%x (ax=0x%04x bx=0x%04x "
+literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
 argument_list|,
 name|intno
 argument_list|,
@@ -523,6 +531,14 @@ argument_list|,
 name|regs
 operator|->
 name|R_DX
+argument_list|,
+name|regs
+operator|->
+name|R_ES
+argument_list|,
+name|regs
+operator|->
+name|R_DI
 argument_list|)
 expr_stmt|;
 block|}
@@ -652,9 +668,7 @@ name|x86bios_emu
 operator|.
 name|mem_size
 operator|=
-literal|1024
-operator|*
-literal|1024
+name|MAPPED_MEMORY_SIZE
 expr_stmt|;
 name|memset
 argument_list|(
