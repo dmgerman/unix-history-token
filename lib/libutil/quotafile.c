@@ -1554,6 +1554,7 @@ case|case
 literal|32
 case|:
 return|return
+operator|(
 name|quota_read32
 argument_list|(
 name|qf
@@ -1562,11 +1563,13 @@ name|dqb
 argument_list|,
 name|id
 argument_list|)
+operator|)
 return|;
 case|case
 literal|64
 case|:
 return|return
+operator|(
 name|quota_read64
 argument_list|(
 name|qf
@@ -1575,6 +1578,7 @@ name|dqb
 argument_list|,
 name|id
 argument_list|)
+operator|)
 return|;
 default|default:
 name|errno
@@ -2151,6 +2155,7 @@ case|case
 literal|32
 case|:
 return|return
+operator|(
 name|quota_write32
 argument_list|(
 name|qf
@@ -2160,11 +2165,13 @@ name|dqbuf
 argument_list|,
 name|id
 argument_list|)
+operator|)
 return|;
 case|case
 literal|64
 case|:
 return|return
+operator|(
 name|quota_write64
 argument_list|(
 name|qf
@@ -2174,6 +2181,7 @@ name|dqbuf
 argument_list|,
 name|id
 argument_list|)
+operator|)
 return|;
 default|default:
 name|errno
@@ -2432,6 +2440,7 @@ case|case
 literal|32
 case|:
 return|return
+operator|(
 name|quota_write32
 argument_list|(
 name|qf
@@ -2440,11 +2449,13 @@ name|dqb
 argument_list|,
 name|id
 argument_list|)
+operator|)
 return|;
 case|case
 literal|64
 case|:
 return|return
+operator|(
 name|quota_write64
 argument_list|(
 name|qf
@@ -2453,6 +2464,7 @@ name|dqb
 argument_list|,
 name|id
 argument_list|)
+operator|)
 return|;
 default|default:
 name|errno
