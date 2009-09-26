@@ -2286,11 +2286,15 @@ operator|(
 operator|!
 name|reuse
 operator|&&
+operator|(
 name|tw
 operator|->
 name|tw_time
-operator|>
+operator|-
 name|ticks
+operator|)
+operator|>
+literal|0
 operator|)
 condition|)
 break|break;
