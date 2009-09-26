@@ -783,6 +783,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Color conversion. */
+end_comment
+
+begin_function_decl
+name|teken_color_t
+name|teken_256to8
+parameter_list|(
+name|teken_color_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

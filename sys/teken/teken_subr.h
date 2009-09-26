@@ -5585,6 +5585,46 @@ literal|30
 expr_stmt|;
 break|break;
 case|case
+literal|38
+case|:
+comment|/* Set foreground color: 256 color mode */
+if|if
+condition|(
+name|i
+operator|+
+literal|2
+operator|>=
+name|ncmds
+operator|||
+name|cmds
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|!=
+literal|5
+condition|)
+continue|continue;
+name|t
+operator|->
+name|t_curattr
+operator|.
+name|ta_fgcolor
+operator|=
+name|cmds
+index|[
+name|i
+operator|+
+literal|2
+index|]
+expr_stmt|;
+name|i
+operator|+=
+literal|2
+expr_stmt|;
+break|break;
+case|case
 literal|39
 case|:
 comment|/* Set default foreground color. */
@@ -5645,6 +5685,46 @@ literal|40
 expr_stmt|;
 break|break;
 case|case
+literal|48
+case|:
+comment|/* Set background color: 256 color mode */
+if|if
+condition|(
+name|i
+operator|+
+literal|2
+operator|>=
+name|ncmds
+operator|||
+name|cmds
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|!=
+literal|5
+condition|)
+continue|continue;
+name|t
+operator|->
+name|t_curattr
+operator|.
+name|ta_bgcolor
+operator|=
+name|cmds
+index|[
+name|i
+operator|+
+literal|2
+index|]
+expr_stmt|;
+name|i
+operator|+=
+literal|2
+expr_stmt|;
+break|break;
+case|case
 literal|49
 case|:
 comment|/* Set default background color. */
@@ -5659,6 +5739,96 @@ operator|->
 name|t_defattr
 operator|.
 name|ta_bgcolor
+expr_stmt|;
+break|break;
+case|case
+literal|90
+case|:
+comment|/* Set bright foreground color: black */
+case|case
+literal|91
+case|:
+comment|/* Set bright foreground color: red */
+case|case
+literal|92
+case|:
+comment|/* Set bright foreground color: green */
+case|case
+literal|93
+case|:
+comment|/* Set bright foreground color: brown */
+case|case
+literal|94
+case|:
+comment|/* Set bright foreground color: blue */
+case|case
+literal|95
+case|:
+comment|/* Set bright foreground color: magenta */
+case|case
+literal|96
+case|:
+comment|/* Set bright foreground color: cyan */
+case|case
+literal|97
+case|:
+comment|/* Set bright foreground color: white */
+name|t
+operator|->
+name|t_curattr
+operator|.
+name|ta_fgcolor
+operator|=
+name|n
+operator|-
+literal|90
+operator|+
+literal|8
+expr_stmt|;
+break|break;
+case|case
+literal|100
+case|:
+comment|/* Set bright background color: black */
+case|case
+literal|101
+case|:
+comment|/* Set bright background color: red */
+case|case
+literal|102
+case|:
+comment|/* Set bright background color: green */
+case|case
+literal|103
+case|:
+comment|/* Set bright background color: brown */
+case|case
+literal|104
+case|:
+comment|/* Set bright background color: blue */
+case|case
+literal|105
+case|:
+comment|/* Set bright background color: magenta */
+case|case
+literal|106
+case|:
+comment|/* Set bright background color: cyan */
+case|case
+literal|107
+case|:
+comment|/* Set bright background color: white */
+name|t
+operator|->
+name|t_curattr
+operator|.
+name|ta_bgcolor
+operator|=
+name|n
+operator|-
+literal|100
+operator|+
+literal|8
 expr_stmt|;
 break|break;
 default|default:
