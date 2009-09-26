@@ -144,6 +144,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|rquota_service
 parameter_list|(
@@ -160,6 +161,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sendquota
 parameter_list|(
@@ -176,17 +178,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|printerr_reply
-parameter_list|(
-name|SVCXPRT
-modifier|*
-name|transp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|initfs
 parameter_list|(
@@ -196,6 +188,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|getfsquota
 parameter_list|(
@@ -215,6 +208,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|hasquota
 parameter_list|(
@@ -265,6 +259,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|fs_stat
 modifier|*
@@ -275,6 +270,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|from_inetd
 init|=
@@ -555,6 +551,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rquota_service
 parameter_list|(
@@ -637,6 +634,7 @@ comment|/* read quota for the specified id, and send it */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sendquota
 parameter_list|(
@@ -942,107 +940,12 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|printerr_reply
-parameter_list|(
-name|SVCXPRT
-modifier|*
-name|transp
-parameter_list|)
-comment|/* when a reply to a request failed */
-block|{
-name|char
-name|name
-index|[
-name|INET6_ADDRSTRLEN
-index|]
-decl_stmt|;
-name|struct
-name|sockaddr
-modifier|*
-name|caller
-decl_stmt|;
-name|int
-name|save_errno
-decl_stmt|;
-name|save_errno
-operator|=
-name|errno
-expr_stmt|;
-name|caller
-operator|=
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|svc_getrpccaller
-argument_list|(
-name|transp
-argument_list|)
-operator|->
-name|buf
-expr_stmt|;
-name|getnameinfo
-argument_list|(
-name|caller
-argument_list|,
-name|caller
-operator|->
-name|sa_len
-argument_list|,
-name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|NI_NUMERICHOST
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|save_errno
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|==
-literal|0
-condition|)
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"couldn't send reply to %s"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-else|else
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"couldn't send reply to %s: %m"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/* initialise the fs_tab list from entries in /etc/fstab */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|initfs
 parameter_list|(
@@ -1219,6 +1122,7 @@ comment|/*  * gets the quotas for id, filesystem path.  * Return 0 if fail, 1 ot
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|getfsquota
 parameter_list|(
@@ -1498,6 +1402,7 @@ comment|/*  * Check to see if a particular quota is to be enabled.  * Comes from
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|hasquota
 parameter_list|(
