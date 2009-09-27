@@ -10392,6 +10392,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__i386__
 argument_list|)
 name|struct
@@ -10399,8 +10404,6 @@ name|apm_clone_data
 modifier|*
 name|clone
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|state
@@ -10461,17 +10464,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 comment|/* If a suspend request is already in progress, just return. */
 name|ACPI_LOCK
 argument_list|(
@@ -10505,12 +10497,6 @@ name|acpi_next_sstate
 operator|=
 name|state
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 name|STAILQ_FOREACH
 argument_list|(
 argument|clone
@@ -10563,8 +10549,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* If devd(8) is not running, immediately enter the sleep state. */
 if|if
 condition|(
@@ -10780,12 +10764,6 @@ name|sleeping
 operator|=
 name|TRUE
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 name|clone
 operator|->
 name|notify_status
@@ -10827,8 +10805,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* If all devices have voted "yes", we will suspend now. */
 if|if
 condition|(
