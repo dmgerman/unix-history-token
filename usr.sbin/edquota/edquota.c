@@ -328,12 +328,12 @@ begin_function_decl
 name|int
 name|cvtatos
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -344,16 +344,16 @@ name|char
 modifier|*
 name|cvtstoa
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int64_t
+name|uint64_t
 name|cvtblkval
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 parameter_list|,
 name|char
 parameter_list|,
@@ -365,10 +365,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int64_t
+name|uint64_t
 name|cvtinoval
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 parameter_list|,
 name|char
 parameter_list|,
@@ -576,7 +576,7 @@ name|startuid
 decl_stmt|,
 name|enduid
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|lim
 decl_stmt|;
 name|char
@@ -2654,8 +2654,11 @@ argument_list|(
 name|numbuf
 argument_list|)
 argument_list|,
-literal|"%lluk"
+literal|"%juk"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dbtokb
 argument_list|(
 name|blocks
@@ -2729,8 +2732,11 @@ argument_list|(
 name|numbuf
 argument_list|)
 argument_list|,
-literal|"%llu"
+literal|"%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inos
 argument_list|)
 expr_stmt|;
@@ -2769,7 +2775,7 @@ name|FILE
 modifier|*
 name|fd
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|hardlimit
 decl_stmt|,
 name|softlimit
@@ -2961,7 +2967,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" in use: %llu%c, limits (soft = %llu%c, hard = %llu%c)"
+literal|" in use: %ju%c, limits (soft = %ju%c, hard = %ju%c)"
 argument_list|,
 operator|&
 name|curitems
@@ -2995,7 +3001,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" in use: %llu%c, limits (soft = %llu%c hard = %llu%c"
+literal|" in use: %ju%c, limits (soft = %ju%c hard = %ju%c"
 argument_list|,
 operator|&
 name|curitems
@@ -3028,7 +3034,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" in use: %llu%c, limits (soft = %llu%c hard = %llu%c)"
+literal|" in use: %ju%c, limits (soft = %ju%c hard = %ju%c)"
 argument_list|,
 operator|&
 name|curitems
@@ -3061,7 +3067,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" in use: %llu%c, limits (soft = %llu%c, hard = %llu%c"
+literal|" in use: %ju%c, limits (soft = %ju%c, hard = %ju%c"
 argument_list|,
 operator|&
 name|curitems
@@ -3184,7 +3190,7 @@ index|[
 literal|7
 index|]
 argument_list|,
-literal|" in use: %llu%c limits (soft = %llu%c, hard = %llu%c)"
+literal|" in use: %ju%c limits (soft = %ju%c, hard = %ju%c)"
 argument_list|,
 operator|&
 name|curitems
@@ -3222,7 +3228,7 @@ index|[
 literal|7
 index|]
 argument_list|,
-literal|" in use: %llu%c limits (soft = %llu%c hard = %llu%c"
+literal|" in use: %ju%c limits (soft = %ju%c hard = %ju%c"
 argument_list|,
 operator|&
 name|curitems
@@ -3259,7 +3265,7 @@ index|[
 literal|7
 index|]
 argument_list|,
-literal|" in use: %llu%c limits (soft = %llu%c hard = %llu%c)"
+literal|" in use: %ju%c limits (soft = %ju%c hard = %ju%c)"
 argument_list|,
 operator|&
 name|curitems
@@ -3296,7 +3302,7 @@ index|[
 literal|7
 index|]
 argument_list|,
-literal|" in use: %llu%c limits (soft = %llu%c, hard = %llu%c"
+literal|" in use: %ju%c limits (soft = %ju%c, hard = %ju%c"
 argument_list|,
 operator|&
 name|curitems
@@ -3858,7 +3864,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|itime
 decl_stmt|,
 name|btime
@@ -4040,7 +4046,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" block grace period: %llu %s file grace period: %llu %s"
+literal|" block grace period: %ju %s file grace period: %ju %s"
 argument_list|,
 operator|&
 name|btime
@@ -4238,7 +4244,7 @@ name|char
 modifier|*
 name|cvtstoa
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|secs
 parameter_list|)
 block|{
@@ -4276,8 +4282,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%llu day%s"
+literal|"%ju day%s"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|secs
 argument_list|,
 name|secs
@@ -4314,8 +4323,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%llu hour%s"
+literal|"%ju hour%s"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|secs
 argument_list|,
 name|secs
@@ -4346,8 +4358,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%llu minute%s"
+literal|"%ju minute%s"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|secs
 argument_list|,
 name|secs
@@ -4365,8 +4380,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%llu second%s"
+literal|"%ju second%s"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|secs
 argument_list|,
 name|secs
@@ -4394,14 +4412,14 @@ begin_function
 name|int
 name|cvtatos
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|period
 parameter_list|,
 name|char
 modifier|*
 name|units
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|seconds
 parameter_list|)
@@ -4523,10 +4541,10 @@ comment|/*  * Convert a limit to number of disk blocks.  */
 end_comment
 
 begin_function
-name|u_int64_t
+name|uint64_t
 name|cvtblkval
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|limit
 parameter_list|,
 name|char
@@ -4671,8 +4689,12 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"%llu%c: unknown units for %s, specify none, K, M, G, T, P, or E\n"
+literal|"%ju%c: unknown units for %s, specify "
+literal|"none, K, M, G, T, P, or E\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|limit
 argument_list|,
 name|units
@@ -4695,10 +4717,10 @@ comment|/*  * Convert a limit to number of inodes.  */
 end_comment
 
 begin_function
-name|u_int64_t
+name|uint64_t
 name|cvtinoval
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|limit
 parameter_list|,
 name|char
@@ -4818,8 +4840,12 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"%llu%c: unknown units for %s, specify none, K, M, G, T, P, or E\n"
+literal|"%ju%c: unknown units for %s, specify "
+literal|"none, K, M, G, T, P, or E\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|limit
 argument_list|,
 name|units
