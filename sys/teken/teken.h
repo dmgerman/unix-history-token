@@ -401,6 +401,13 @@ parameter_list|)
 value|((pd)& 0xffff)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TP_MOUSE
+value|7
+end_define
+
 begin_typedef
 typedef|typedef
 name|void

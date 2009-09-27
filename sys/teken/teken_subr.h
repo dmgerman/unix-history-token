@@ -4634,6 +4634,20 @@ literal|"Switch to alternate buffer\n"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|1000
+case|:
+comment|/* Mouse input. */
+name|teken_funcs_param
+argument_list|(
+name|t
+argument_list|,
+name|TP_MOUSE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|teken_printf
 argument_list|(
@@ -5290,6 +5304,20 @@ comment|/* Switch to alternate buffer. */
 name|teken_printf
 argument_list|(
 literal|"Switch away from alternate buffer\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1000
+case|:
+comment|/* Mouse input. */
+name|teken_funcs_param
+argument_list|(
+name|t
+argument_list|,
+name|TP_MOUSE
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;

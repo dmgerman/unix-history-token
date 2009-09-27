@@ -4117,6 +4117,16 @@ name|value
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|TP_MOUSE
+case|:
+name|scp
+operator|->
+name|mouse_level
+operator|=
+name|value
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -4152,6 +4162,8 @@ argument_list|,
 name|buf
 argument_list|,
 name|len
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

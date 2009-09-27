@@ -1137,6 +1137,10 @@ name|int
 name|mouse_cut_end
 decl_stmt|;
 comment|/* mouse cut end pos */
+name|int
+name|mouse_level
+decl_stmt|;
+comment|/* xterm mouse protocol */
 name|struct
 name|proc
 modifier|*
@@ -2373,6 +2377,9 @@ name|p
 parameter_list|,
 name|int
 name|count
+parameter_list|,
+name|int
+name|wakeup
 parameter_list|)
 function_decl|;
 end_function_decl
