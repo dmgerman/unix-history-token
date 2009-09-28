@@ -3411,12 +3411,25 @@ name|revision
 operator|>=
 name|FXP_REV_82559_A0
 condition|)
+block|{
+comment|/* 82559ER does not support Rx checksum offloading. */
+if|if
+condition|(
+name|sc
+operator|->
+name|ident
+operator|->
+name|devid
+operator|!=
+literal|0x1209
+condition|)
 name|sc
 operator|->
 name|flags
 operator||=
 name|FXP_FLAG_82559_RXCSUM
 expr_stmt|;
+block|}
 comment|/* 	 * Enable use of extended RFDs and TCBs for 82550 	 * and later chips. Note: we need extended TXCB support 	 * too, but that's already enabled by the code above. 	 * Be careful to do this only on the right devices. 	 */
 if|if
 condition|(
