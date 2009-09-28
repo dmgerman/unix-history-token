@@ -1490,14 +1490,6 @@ name|struct
 name|usb_endpoint
 modifier|*
 name|ep_end
-init|=
-name|udev
-operator|->
-name|endpoints
-operator|+
-name|udev
-operator|->
-name|endpoints_max
 decl_stmt|;
 comment|/* be NULL safe */
 if|if
@@ -1511,6 +1503,16 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|ep_end
+operator|=
+name|udev
+operator|->
+name|endpoints
+operator|+
+name|udev
+operator|->
+name|endpoints_max
+expr_stmt|;
 comment|/* get next endpoint */
 if|if
 condition|(
