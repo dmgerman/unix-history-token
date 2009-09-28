@@ -2107,20 +2107,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|UIPROTO_CDC_AT
-value|1
+name|UISUBCLASS_NETWORK_CONTROL_MODEL
+value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|UIPROTO_CDC_ETH_512X4
-value|0x76
+name|UIPROTO_CDC_AT
+value|1
 end_define
-
-begin_comment
-comment|/* FreeBSD specific */
-end_comment
 
 begin_define
 define|#
@@ -2345,7 +2341,7 @@ begin_define
 define|#
 directive|define
 name|UISUBCLASS_DATA
-value|0
+value|0x00
 end_define
 
 begin_define
@@ -2489,6 +2485,17 @@ end_define
 
 begin_comment
 comment|/* Vendor specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UIPROTO_DATA_NCM
+value|0x01
+end_define
+
+begin_comment
+comment|/* Network Control Model */
 end_comment
 
 begin_define
