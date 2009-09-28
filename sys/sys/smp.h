@@ -429,15 +429,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|forward_roundrobin
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|restart_cpus
 parameter_list|(
