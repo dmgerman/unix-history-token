@@ -1027,12 +1027,9 @@ block|}
 block|}
 switch|switch
 condition|(
-name|MII_MODEL
-argument_list|(
 name|esc
 operator|->
 name|mii_model
-argument_list|)
 condition|)
 block|{
 case|case
