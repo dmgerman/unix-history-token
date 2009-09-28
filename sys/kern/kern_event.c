@@ -5806,7 +5806,10 @@ argument_list|(
 name|size
 operator|*
 sizeof|sizeof
+argument_list|(
+operator|*
 name|list
+argument_list|)
 argument_list|,
 name|M_KQUEUE
 argument_list|,
@@ -5872,7 +5875,10 @@ operator|->
 name|kq_knlistsize
 operator|*
 sizeof|sizeof
+argument_list|(
+operator|*
 name|list
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -5903,7 +5909,10 @@ operator|->
 name|kq_knlistsize
 operator|*
 sizeof|sizeof
+argument_list|(
+operator|*
 name|list
+argument_list|)
 argument_list|,
 operator|(
 name|size
@@ -5914,7 +5923,10 @@ name|kq_knlistsize
 operator|)
 operator|*
 sizeof|sizeof
+argument_list|(
+operator|*
 name|list
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|kq
