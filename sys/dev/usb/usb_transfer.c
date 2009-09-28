@@ -5016,7 +5016,16 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Length greater than remaining length!\n"
+literal|"Length (%d) greater than "
+literal|"remaining length (%d)!\n"
+argument_list|,
+name|len
+argument_list|,
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_rem
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5959,6 +5968,16 @@ operator|.
 name|started
 condition|)
 block|{
+comment|/* lock the BUS lock to avoid races updating flags_int */
+name|USB_BUS_LOCK
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
 name|xfer
 operator|->
 name|flags_int
@@ -5966,6 +5985,15 @@ operator|.
 name|started
 operator|=
 literal|1
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* check if the USB transfer callback is already transferring */
@@ -6054,7 +6082,26 @@ operator|.
 name|open
 condition|)
 block|{
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|started
+condition|)
+block|{
 comment|/* nothing to do except clearing the "started" flag */
+comment|/* lock the BUS lock to avoid races updating flags_int */
+name|USB_BUS_LOCK
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
 name|xfer
 operator|->
 name|flags_int
@@ -6063,6 +6110,16 @@ name|started
 operator|=
 literal|0
 expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/* try to stop the current USB transfer */
@@ -6075,13 +6132,13 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
+comment|/* override any previous error */
 name|xfer
 operator|->
 name|error
 operator|=
 name|USB_ERR_CANCELLED
 expr_stmt|;
-comment|/* override any previous error */
 comment|/* 	 * Clear "open" and "started" when both private and USB lock 	 * is locked so that we don't get a race updating "flags_int" 	 */
 name|xfer
 operator|->
@@ -7637,15 +7694,6 @@ argument_list|,
 name|xfer
 argument_list|)
 expr_stmt|;
-comment|/* only delay once */
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|did_dma_delay
-operator|=
-literal|1
-expr_stmt|;
 comment|/* queue callback for execution, again */
 name|usbd_transfer_done
 argument_list|(
@@ -7813,6 +7861,15 @@ name|DPRINTF
 argument_list|(
 literal|"not transferring\n"
 argument_list|)
+expr_stmt|;
+comment|/* end of control transfer, if any */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_act
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -8752,6 +8809,15 @@ block|{
 name|usb_timeout_t
 name|temp
 decl_stmt|;
+comment|/* only delay once */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|did_dma_delay
+operator|=
+literal|1
+expr_stmt|;
 comment|/* we can not cancel this delay */
 name|xfer
 operator|->
