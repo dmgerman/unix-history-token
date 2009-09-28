@@ -256,6 +256,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_DLINK_DGE560SX
+value|0x4002
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_DLINK_DGE560T
 value|0x4b00
 end_define
