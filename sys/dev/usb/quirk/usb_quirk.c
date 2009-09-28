@@ -515,6 +515,23 @@ argument|UQ_NONE
 argument_list|)
 block|}
 block|,
+block|{
+name|USB_QUIRK_ENTRY
+argument_list|(
+argument|USB_VENDOR_ELSA
+argument_list|,
+argument|USB_PRODUCT_ELSA_MODEM1
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xFFFF
+argument_list|,
+argument|UQ_CFG_INDEX_1
+argument_list|,
+argument|UQ_NONE
+argument_list|)
+block|}
+block|,
 comment|/* 	 * XXX The following quirks should have a more specific revision 	 * number: 	 */
 block|{
 name|USB_QUIRK_ENTRY
