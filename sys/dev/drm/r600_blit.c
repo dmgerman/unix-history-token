@@ -6520,9 +6520,13 @@ name|dev_priv
 argument_list|,
 name|COLOR_8_8_8_8
 argument_list|,
+operator|(
 name|dst_x
 operator|+
 name|cur_size
+operator|)
+operator|/
+literal|4
 argument_list|,
 name|h
 argument_list|,
