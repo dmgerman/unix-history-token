@@ -1179,6 +1179,31 @@ value|0x0300
 end_define
 
 begin_comment
+comment|/* 88E1112 page 1 fiber specific control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_FIB_TX_DIS
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_FIB_SIGDET_POLARITY
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_FIB_FORCE_LINK
+value|0x0400
+end_define
+
+begin_comment
 comment|/* 88E1112 page 2 */
 end_comment
 
