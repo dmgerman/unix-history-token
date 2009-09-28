@@ -19592,6 +19592,35 @@ argument_list|(
 name|sc_if
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|msk_hw_id
+operator|==
+name|CHIP_ID_YUKON_XL
+condition|)
+block|{
+comment|/* Clear flush mask - HW bug. */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|MR_ADDR
+argument_list|(
+name|sc_if
+operator|->
+name|msk_port
+argument_list|,
+name|RX_GMF_FL_MSK
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Flush Rx MAC FIFO on any flow control or error. */
 name|CSR_WRITE_4
 argument_list|(
@@ -19609,6 +19638,7 @@ argument_list|,
 name|GMR_FS_ANY_ERR
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Set Rx FIFO flush threshold to 64 bytes + 1 FIFO word 	 * due to hardware hang on receipt of pause frames. 	 */
 name|reg
 operator|=
