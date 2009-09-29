@@ -9035,10 +9035,9 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* IXP600& IXP700 only have 1 PATA channel */
+comment|/* IXP600 only have 1 PATA channel */
 if|if
 condition|(
-operator|(
 name|ctlr
 operator|->
 name|chip
@@ -9046,17 +9045,6 @@ operator|->
 name|chipid
 operator|==
 name|ATA_ATI_IXP600
-operator|)
-operator|||
-operator|(
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|chipid
-operator|==
-name|ATA_ATI_IXP700
-operator|)
 condition|)
 name|ctlr
 operator|->
