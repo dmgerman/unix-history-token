@@ -23,7 +23,7 @@ value|31
 end_define
 
 begin_comment
-comment|/*  * NB: all structures are__packed  so sizeof works on arm, et. al.  */
+comment|/*  * NB: all structures are __packed  so sizeof works on arm, et. al.  */
 end_comment
 
 begin_comment
@@ -426,82 +426,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Peer Version */
-end_comment
-
-begin_struct
-struct|struct
-name|ieee80211_meshpeerver_ie
-block|{
-name|uint8_t
-name|peerver_ie
-decl_stmt|;
-comment|/* IEEE80211_ELEMID_MESHPEERVER */
-name|uint8_t
-name|peerver_len
-decl_stmt|;
-name|uint8_t
-name|peerver_proto
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
-comment|/* Mesh Peering Management Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHPEERVER_PEER_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHPEERVER_PEER_VALUE
-value|0x2a
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHPEERVER_PEER
-value|{ IEEE80211_MESHPEERVER_PEER_OUI, \ 					  IEEE80211_MESHPEERVER_PEER_VALUE }
-end_define
-
-begin_comment
-comment|/* Abbreviated Handshake Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHPEERVER_AH_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHPEERVER_AH_VALUE
-value|0x2b
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHPEERVER_AH
-value|{ IEEE80211_MESHPEERVER_AH_OUI, \ 					  IEEE80211_MESHPEERVER_AH_VALUE }
-end_define
-
-begin_comment
 comment|/* Peer Link Management */
 end_comment
 
@@ -517,8 +441,12 @@ name|uint8_t
 name|peer_len
 decl_stmt|;
 name|uint8_t
-name|peer_subtype
+name|peer_proto
+index|[
+literal|4
+index|]
 decl_stmt|;
+comment|/* Peer Management Protocol */
 name|uint16_t
 name|peer_llinkid
 decl_stmt|;
@@ -554,6 +482,56 @@ comment|/* values 3-255 are reserved */
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* Mesh Peering Management Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_PEER_PROTO_OUI
+value|0x00, 0x0f, 0xac
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_PEER_PROTO_VALUE
+value|0x2a
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_PEER_PROTO
+value|{ IEEE80211_MESH_PEER_PROTO_OUI, \ 					  IEEE80211_MESH_PEER_PROTO_VALUE }
+end_define
+
+begin_comment
+comment|/* Abbreviated Handshake Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_PEER_PROTO_AH_OUI
+value|0x00, 0x0f, 0xac
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_PEER_PROTO_AH_VALUE
+value|0x2b
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_PEER_PROTO_AH
+value|{ IEEE80211_MESH_PEER_PROTO_AH_OUI, \ 					  IEEE80211_MESH_PEER_PROTO_AH_VALUE }
+end_define
 
 begin_ifdef
 ifdef|#
@@ -945,15 +923,25 @@ name|uint8_t
 name|perr_len
 decl_stmt|;
 name|uint8_t
-name|perr_mode
+name|perr_ttl
 decl_stmt|;
-comment|/* NB: reserved */
 name|uint8_t
 name|perr_ndests
 decl_stmt|;
 comment|/* Number of Destinations */
 struct|struct
 block|{
+name|uint8_t
+name|dest_flags
+decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_MESHPERR_DFLAGS_USN
+value|0x01
+define|#
+directive|define
+name|IEEE80211_MESHPERR_DFLAGS_RC
+value|0x02
 name|uint8_t
 name|dest_addr
 index|[
@@ -964,6 +952,9 @@ name|uint32_t
 name|dest_seq
 decl_stmt|;
 comment|/* HWMP Sequence Number */
+name|uint16_t
+name|dest_rcode
+decl_stmt|;
 block|}
 name|__packed
 name|perr_dests
@@ -1150,29 +1141,17 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Mesh Path Selection Action codes.  */
+comment|/*  * Mesh Path Selection Action code.  */
 end_comment
 
 begin_enum
 enum|enum
 block|{
-name|IEEE80211_ACTION_MESHPATH_REQ
+name|IEEE80211_ACTION_MESHPATH_SEL
 init|=
 literal|0
 block|,
-name|IEEE80211_ACTION_MESHPATH_REP
-init|=
-literal|1
-block|,
-name|IEEE80211_ACTION_MESHPATH_ERR
-init|=
-literal|2
-block|,
-name|IEEE80211_ACTION_MESHPATH_RANN
-init|=
-literal|3
-block|,
-comment|/* 4-255 reserved */
+comment|/* 1-255 reserved */
 block|}
 enum|;
 end_enum
@@ -1884,21 +1863,6 @@ parameter_list|(
 specifier|const
 name|struct
 name|ieee80211_mesh_proto_metric
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint8_t
-modifier|*
-name|ieee80211_add_meshpeerver
-parameter_list|(
-name|uint8_t
-modifier|*
-parameter_list|,
-name|struct
-name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
