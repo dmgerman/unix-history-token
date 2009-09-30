@@ -877,12 +877,26 @@ name|other_units
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The 'video' lock protects the hierarchy of video output devices  * (the video "bus").  The 'video_output' lock protects per-output  * data is equivalent to a softc lock for each video output.  */
+end_comment
+
 begin_expr_stmt
 name|ACPI_SERIAL_DECL
 argument_list|(
 name|video
 argument_list|,
 literal|"ACPI video"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|video_output
+argument_list|,
+literal|"ACPI video output"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1180,6 +1194,11 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|video
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|acpi_video_sysctl_tree
@@ -1213,6 +1232,11 @@ literal|"video extension control"
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_SERIAL_END
+argument_list|(
+name|video
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|device
@@ -1504,6 +1528,11 @@ argument_list|(
 name|video
 argument_list|)
 expr_stmt|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|video_output
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|vo
@@ -1610,6 +1639,11 @@ argument_list|,
 name|dss_p
 operator||
 name|DSS_COMMIT
+argument_list|)
+expr_stmt|;
+name|ACPI_SERIAL_END
+argument_list|(
+name|video_output
 argument_list|)
 expr_stmt|;
 name|ACPI_SERIAL_END
@@ -1756,6 +1790,11 @@ argument_list|(
 name|video
 argument_list|)
 expr_stmt|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|video_output
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|vo
@@ -1800,6 +1839,11 @@ name|vo_fullpower
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_SERIAL_END
+argument_list|(
+name|video_output
+argument_list|)
+expr_stmt|;
 name|ACPI_SERIAL_END
 argument_list|(
 name|video
@@ -2686,9 +2730,9 @@ name|ACPI_HANDLE
 name|handle
 parameter_list|)
 block|{
-name|ACPI_SERIAL_ASSERT
+name|ACPI_SERIAL_BEGIN
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 if|if
@@ -2800,6 +2844,11 @@ name|BCL_ECONOMY
 index|]
 expr_stmt|;
 block|}
+name|ACPI_SERIAL_END
+argument_list|(
+name|video_output
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2957,7 +3006,7 @@ name|i
 decl_stmt|;
 name|ACPI_SERIAL_ASSERT
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 if|if
@@ -3058,7 +3107,7 @@ operator|)
 return|;
 name|ACPI_SERIAL_BEGIN
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 name|state
@@ -3128,7 +3177,7 @@ name|out
 label|:
 name|ACPI_SERIAL_END
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 return|return
@@ -3174,7 +3223,7 @@ name|arg1
 expr_stmt|;
 name|ACPI_SERIAL_BEGIN
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 if|if
@@ -3343,7 +3392,7 @@ name|out
 label|:
 name|ACPI_SERIAL_END
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 return|return
@@ -3392,7 +3441,7 @@ name|arg1
 expr_stmt|;
 name|ACPI_SERIAL_BEGIN
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 if|if
@@ -3584,7 +3633,7 @@ name|out
 label|:
 name|ACPI_SERIAL_END
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 return|return
@@ -3626,7 +3675,7 @@ name|arg1
 expr_stmt|;
 name|ACPI_SERIAL_BEGIN
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 if|if
@@ -3692,7 +3741,7 @@ name|out
 label|:
 name|ACPI_SERIAL_END
 argument_list|(
-name|video
+name|video_output
 argument_list|)
 expr_stmt|;
 return|return
@@ -4493,6 +4542,11 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|video_output
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|acpi_SetInteger
@@ -4544,6 +4598,11 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|video_output
+argument_list|)
+expr_stmt|;
 name|dcs
 operator|=
 literal|0
@@ -4666,6 +4725,11 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|video_output
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|acpi_SetInteger
