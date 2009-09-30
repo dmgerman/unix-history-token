@@ -455,7 +455,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|cpu_monitor
 parameter_list|(
@@ -493,7 +493,7 @@ end_function
 
 begin_function
 unit|}  static
-specifier|inline
+name|__inline
 name|void
 name|cpu_mwait
 parameter_list|(
