@@ -3358,6 +3358,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC887
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0887)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC888
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0888)
 end_define
@@ -4502,6 +4509,12 @@ block|{
 name|HDA_CODEC_ALC885
 block|,
 literal|"Realtek ALC885"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC887
+block|,
+literal|"Realtek ALC887"
 block|}
 block|,
 block|{
@@ -33691,7 +33704,7 @@ index|]
 operator|.
 name|digital
 operator|)
-operator|==
+operator|!=
 operator|(
 operator|!
 name|as
