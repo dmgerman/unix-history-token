@@ -958,6 +958,10 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* eeprom mac address */
+name|uint16_t
+name|pectl
+decl_stmt|;
+comment|/* save PCIe CTL state */
 name|char
 name|product_code_string
 index|[
