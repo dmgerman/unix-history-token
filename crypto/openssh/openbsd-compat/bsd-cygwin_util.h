@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-cygwin_util.h,v 1.11 2004/08/30 10:42:08 dtucker Exp $ */
+comment|/* $Id: bsd-cygwin_util.h,v 1.12 2009/03/08 00:40:28 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -30,13 +30,6 @@ undef|#
 directive|undef
 name|ERROR
 end_undef
-
-begin_define
-define|#
-directive|define
-name|is_winnt
-value|(GetVersion()< 0x80000000)
-end_define
 
 begin_include
 include|#
@@ -86,33 +79,11 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|check_nt_auth
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|passwd
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|check_ntsec
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|register_9x_service
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

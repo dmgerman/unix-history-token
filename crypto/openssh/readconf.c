@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.c,v 1.176 2009/02/12 03:00:56 djm Exp $ */
+comment|/* $OpenBSD: readconf.c,v 1.177 2009/06/27 09:35:06 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -332,6 +332,8 @@ block|,
 name|oPermitLocalCommand
 block|,
 name|oVisualHostKey
+block|,
+name|oUseRoaming
 block|,
 name|oZeroKnowledgePasswordAuthentication
 block|,
@@ -880,6 +882,12 @@ block|{
 literal|"visualhostkey"
 block|,
 name|oVisualHostKey
+block|}
+block|,
+block|{
+literal|"useroaming"
+block|,
+name|oUseRoaming
 block|}
 block|,
 ifdef|#
@@ -4473,6 +4481,19 @@ goto|goto
 name|parse_flag
 goto|;
 case|case
+name|oUseRoaming
+case|:
+name|intptr
+operator|=
+operator|&
+name|options
+operator|->
+name|use_roaming
+expr_stmt|;
+goto|goto
+name|parse_flag
+goto|;
+case|case
 name|oVersionAddendum
 case|:
 name|ssh_version_set_addendum
@@ -5274,6 +5295,13 @@ expr_stmt|;
 name|options
 operator|->
 name|permit_local_command
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|options
+operator|->
+name|use_roaming
 operator|=
 operator|-
 literal|1
@@ -6191,6 +6219,21 @@ operator|->
 name|permit_local_command
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|->
+name|use_roaming
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|use_roaming
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(

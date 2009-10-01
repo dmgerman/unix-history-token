@@ -187,6 +187,14 @@ comment|/* #undef BROKEN_SNPRINTF */
 end_comment
 
 begin_comment
+comment|/* tcgetattr with ICANON may hang */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_TCGETATTR_ICANON */
+end_comment
+
+begin_comment
 comment|/* updwtmpx is broken (if present) */
 end_comment
 
@@ -346,11 +354,19 @@ value|200
 end_define
 
 begin_comment
-comment|/* f_fsid has members */
+comment|/* fsid_t has member val */
 end_comment
 
 begin_comment
 comment|/* #undef FSID_HAS_VAL */
+end_comment
+
+begin_comment
+comment|/* fsid_t has member __val */
+end_comment
+
+begin_comment
+comment|/* #undef FSID_HAS___VAL */
 end_comment
 
 begin_comment
@@ -1550,6 +1566,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_IN_ADDR_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `in_port_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_IN_PORT_T
 value|1
 end_define
 
@@ -3845,6 +3872,14 @@ comment|/* #undef NO_X11_UNIX_SOCKETS */
 end_comment
 
 begin_comment
+comment|/* Define if EVP_DigestUpdate returns void */
+end_comment
+
+begin_comment
+comment|/* #undef OPENSSL_EVP_DIGESTUPDATE_VOID */
+end_comment
+
+begin_comment
 comment|/* libcrypto is missing AES 192 and 256 bit functions */
 end_comment
 
@@ -4094,6 +4129,14 @@ end_comment
 
 begin_comment
 comment|/* #undef SSH_AUDIT_EVENTS */
+end_comment
+
+begin_comment
+comment|/* Windows is sensitive to read buffer size */
+end_comment
+
+begin_comment
+comment|/* #undef SSH_IOBUFSZ */
 end_comment
 
 begin_comment
@@ -4347,12 +4390,39 @@ comment|/* #undef WITH_SELINUX */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel and VAX). */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__BIG_ENDIAN__
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+name|__LITTLE_ENDIAN__
+end_elif
+
 begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
+comment|/* # undef WORDS_BIGENDIAN */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if xauth is found in your path */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.209 2009/02/12 03:00:56 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.213 2009/07/05 19:28:33 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -284,6 +284,12 @@ begin_include
 include|#
 directive|include
 file|"msg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"roaming.h"
 end_include
 
 begin_comment
@@ -1813,9 +1819,10 @@ name|gc
 argument_list|)
 expr_stmt|;
 block|}
-name|keep_alive_timeouts
-operator|=
+name|packet_set_alive_timeouts
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1830,8 +1837,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|++
-name|keep_alive_timeouts
+name|packet_inc_alive_timeouts
+argument_list|()
 operator|>
 name|options
 operator|.
@@ -2410,11 +2417,15 @@ parameter_list|)
 block|{
 name|int
 name|len
+decl_stmt|,
+name|cont
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|buf
 index|[
-literal|8192
+name|SSH_IOBUFSZ
 index|]
 decl_stmt|;
 comment|/* 	 * Read input from the server, and add any such data to the buffer of 	 * the packet subsystem. 	 */
@@ -2431,7 +2442,7 @@ block|{
 comment|/* Read as much as possible. */
 name|len
 operator|=
-name|read
+name|roaming_read
 argument_list|(
 name|connection_in
 argument_list|,
@@ -2441,11 +2452,18 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+operator|&
+name|cont
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|len
+operator|==
+literal|0
+operator|&&
+name|cont
 operator|==
 literal|0
 condition|)
@@ -4363,7 +4381,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|8192
+name|SSH_IOBUFSZ
 index|]
 decl_stmt|;
 comment|/* Read input from stdin. */
@@ -5599,6 +5617,33 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|compat20
+condition|)
+block|{
+name|packet_start
+argument_list|(
+name|SSH2_MSG_DISCONNECT
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+name|SSH2_DISCONNECT_BY_APPLICATION
+argument_list|)
+expr_stmt|;
+name|packet_put_cstring
+argument_list|(
+literal|"disconnected by user"
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
+name|packet_write_wait
+argument_list|()
+expr_stmt|;
+block|}
 name|channel_free_all
 argument_list|()
 expr_stmt|;

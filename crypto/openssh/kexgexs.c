@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexgexs.c,v 1.11 2009/01/01 21:17:36 djm Exp $ */
+comment|/* $OpenBSD: kexgexs.c,v 1.12 2009/06/21 07:37:15 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -840,6 +840,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* sign H */
+if|if
+condition|(
 name|PRIVSEP
 argument_list|(
 name|key_sign
@@ -856,6 +858,13 @@ name|hash
 argument_list|,
 name|hashlen
 argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"kexgex_server: key_sign failed"
 argument_list|)
 expr_stmt|;
 comment|/* destroy_sensitive_data(); */

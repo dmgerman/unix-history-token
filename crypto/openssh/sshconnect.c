@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.212 2008/10/14 18:11:33 stevesk Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.214 2009/05/28 16:50:16 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -241,6 +241,12 @@ begin_include
 include|#
 directive|include
 file|"dns.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"roaming.h"
 end_include
 
 begin_include
@@ -1882,7 +1888,6 @@ comment|/*  * Waits for the server identification string, and sends our own  * i
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ssh_exchange_identification
 parameter_list|(
@@ -2112,7 +2117,7 @@ block|}
 block|}
 name|len
 operator|=
-name|atomicio
+name|roaming_atomicio
 argument_list|(
 name|read
 argument_list|,
@@ -2508,7 +2513,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomicio
+name|roaming_atomicio
 argument_list|(
 name|vwrite
 argument_list|,

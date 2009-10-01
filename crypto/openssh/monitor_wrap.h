@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.h,v 1.21 2008/11/04 08:22:13 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.h,v 1.22 2009/03/05 07:18:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -749,7 +749,7 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|jpake_group
+name|modp_group
 struct_decl|;
 end_struct_decl
 
@@ -781,7 +781,7 @@ name|void
 name|mm_jpake_step1
 parameter_list|(
 name|struct
-name|jpake_group
+name|modp_group
 modifier|*
 parameter_list|,
 name|u_char
@@ -829,7 +829,7 @@ name|void
 name|mm_jpake_step2
 parameter_list|(
 name|struct
-name|jpake_group
+name|modp_group
 modifier|*
 parameter_list|,
 name|BIGNUM
@@ -890,7 +890,7 @@ name|void
 name|mm_jpake_key_confirm
 parameter_list|(
 name|struct
-name|jpake_group
+name|modp_group
 modifier|*
 parameter_list|,
 name|BIGNUM

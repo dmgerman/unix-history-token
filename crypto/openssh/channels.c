@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.295 2009/02/12 03:00:56 djm Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.296 2009/05/25 06:48:00 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -8289,6 +8289,9 @@ operator|-
 literal|1
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|BROKEN_TCGETATTR_ICANON
 if|if
 condition|(
 name|compat20
@@ -8354,6 +8357,8 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|buffer_consume
 argument_list|(
 operator|&
@@ -11902,9 +11907,10 @@ name|int
 name|id
 decl_stmt|;
 comment|/* Reset keepalive timeout */
-name|keep_alive_timeouts
-operator|=
+name|packet_set_alive_timeouts
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 name|id
 operator|=
