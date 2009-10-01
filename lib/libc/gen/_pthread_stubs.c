@@ -955,7 +955,7 @@ argument_list|)
 end_macro
 
 begin_macro
-name|STUB_FUNC1
+name|STUB_FUNC2
 argument_list|(
 argument|pthread_mutexattr_settype
 argument_list|,
@@ -964,6 +964,8 @@ argument_list|,
 argument|int
 argument_list|,
 argument|void *
+argument_list|,
+argument|int
 argument_list|)
 end_macro
 
