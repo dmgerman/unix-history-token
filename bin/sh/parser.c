@@ -240,17 +240,6 @@ end_comment
 begin_decl_stmt
 name|STATIC
 name|int
-name|parsebackquote
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nonzero if we are inside backquotes */
-end_comment
-
-begin_decl_stmt
-name|STATIC
-name|int
 name|doprompt
 decl_stmt|;
 end_decl_stmt
@@ -5052,9 +5041,6 @@ name|syntax
 operator|!=
 name|BASESYNTAX
 operator|&&
-operator|!
-name|parsebackquote
-operator|&&
 name|eofmark
 operator|==
 name|NULL
@@ -6238,9 +6224,6 @@ modifier|*
 modifier|*
 name|nlpp
 decl_stmt|;
-name|int
-name|savepbq
-decl_stmt|;
 name|union
 name|node
 modifier|*
@@ -6269,10 +6252,6 @@ decl_stmt|;
 name|int
 name|saveprompt
 decl_stmt|;
-name|savepbq
-operator|=
-name|parsebackquote
-expr_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -6291,10 +6270,6 @@ name|ckfree
 argument_list|(
 name|str
 argument_list|)
-expr_stmt|;
-name|parsebackquote
-operator|=
-literal|0
 expr_stmt|;
 name|handler
 operator|=
@@ -6612,10 +6587,6 @@ name|next
 operator|=
 name|NULL
 expr_stmt|;
-name|parsebackquote
-operator|=
-name|oldstyle
-expr_stmt|;
 if|if
 condition|(
 name|oldstyle
@@ -6733,10 +6704,6 @@ expr_stmt|;
 name|INTON
 expr_stmt|;
 block|}
-name|parsebackquote
-operator|=
-name|savepbq
-expr_stmt|;
 name|handler
 operator|=
 name|savehandler
