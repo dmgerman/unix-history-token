@@ -743,6 +743,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pmap_flush_pvcache
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * floating virtual pages (FPAGES)  *  * These are the reserved virtual memory areas which can be  * mapped to any physical memory.  */
 end_comment

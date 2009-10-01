@@ -808,17 +808,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|pmap_flush_pvcache
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3059,6 +3048,14 @@ name|i
 operator|++
 control|)
 block|{
+name|pmap_flush_pvcache
+argument_list|(
+name|m
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|pmap_kenter
 argument_list|(
 name|va
@@ -3077,7 +3074,7 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-name|mips_dcache_wbinv_range_index
+name|mips_dcache_inv_range
 argument_list|(
 name|origva
 argument_list|,
@@ -13537,7 +13534,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|pmap_flush_pvcache
 parameter_list|(

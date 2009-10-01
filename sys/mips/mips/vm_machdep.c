@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cache.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -1786,6 +1792,23 @@ name|nsfbufsused
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * Flush all mappings in order to have up to date  			 * physycal memory 			 */
+name|pmap_flush_pvcache
+argument_list|(
+name|sf
+operator|->
+name|m
+argument_list|)
+expr_stmt|;
+name|mips_dcache_inv_range
+argument_list|(
+name|sf
+operator|->
+name|kva
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -1974,6 +1997,16 @@ name|sf
 operator|->
 name|ref_count
 operator|--
+expr_stmt|;
+comment|/* 	 * Make sure all changes in KVA end up in physical memory 	 */
+name|mips_dcache_wbinv_range
+argument_list|(
+name|sf
+operator|->
+name|kva
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
