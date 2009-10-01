@@ -1070,19 +1070,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * XXX XEN need to check on PSL_USER is handled 	 */
-ifdef|#
-directive|ifdef
-name|XEN
-name|td2
-operator|->
-name|td_md
-operator|.
-name|md_saved_flags
-operator|=
-literal|0
-expr_stmt|;
-else|#
-directive|else
 name|td2
 operator|->
 name|td_md
@@ -1093,8 +1080,6 @@ name|PSL_KERNEL
 operator||
 name|PSL_I
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Now, cpu_switch() can schedule the new process. 	 * pcb_esp is loaded pointing to the cpu_switch() stack frame 	 * containing the return address when exiting cpu_switch. 	 * This will normally be to fork_trampoline(), which will have 	 * %ebx loaded with the new proc's pointer.  fork_trampoline() 	 * will set up a stack to call fork_return(p, frame); to complete 	 * the return to user-mode. 	 */
 block|}
 end_function
@@ -1630,19 +1615,6 @@ name|md_spinlock_count
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_saved_flags
-operator|=
-literal|0
-expr_stmt|;
-else|#
-directive|else
 name|td
 operator|->
 name|td_md
@@ -1653,8 +1625,6 @@ name|PSL_KERNEL
 operator||
 name|PSL_I
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
