@@ -2781,6 +2781,25 @@ operator|)
 operator|*
 literal|8
 expr_stmt|;
+comment|/* 	 * XXXKIB: (temporary) hack to work around traps generated when 	 * CLFLUSHing APIC registers window. 	 */
+if|if
+condition|(
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_INTEL
+operator|&&
+operator|!
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_SS
+operator|)
+condition|)
+name|cpu_feature
+operator|&=
+operator|~
+name|CPUID_CLFSH
+expr_stmt|;
 if|#
 directive|if
 name|defined
