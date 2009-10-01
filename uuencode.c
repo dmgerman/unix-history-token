@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: uuencode.c,v 1.24 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: uuencode.c,v 1.25 2009/03/05 11:30:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -49,6 +49,10 @@ directive|include
 file|"uuencode.h"
 end_include
 
+begin_comment
+comment|/*  * Encode binary 'src' of length 'srclength', writing base64-encoded text  * to 'target' of size 'targsize'. Will always nul-terminate 'target'.  * Returns the number of bytes stored in 'target' or -1 on error (inc.  * 'targsize' too small).  */
+end_comment
+
 begin_function
 name|int
 name|uuencode
@@ -83,6 +87,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Decode base64-encoded 'src' into buffer 'target' of 'targsize' bytes.  * Will skip leading and trailing whitespace. Returns the number of bytes  * stored in 'target' or -1 on error (inc. targsize too small).  */
+end_comment
 
 begin_function
 name|int

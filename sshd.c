@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.366 2009/01/22 10:02:34 djm Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.367 2009/05/28 16:50:16 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -420,6 +420,12 @@ begin_include
 include|#
 directive|include
 file|"monitor_wrap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"roaming.h"
 end_include
 
 begin_include
@@ -1581,7 +1587,7 @@ expr_stmt|;
 comment|/* Send our protocol version identification. */
 if|if
 condition|(
-name|atomicio
+name|roaming_atomicio
 argument_list|(
 name|vwrite
 argument_list|,
@@ -1649,7 +1655,7 @@ control|)
 block|{
 if|if
 condition|(
-name|atomicio
+name|roaming_atomicio
 argument_list|(
 name|read
 argument_list|,

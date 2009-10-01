@@ -378,7 +378,7 @@ begin_define
 define|#
 directive|define
 name|ANSWER_BUFFER_SIZE
-value|1024*64
+value|0xffff
 end_define
 
 begin_struct
