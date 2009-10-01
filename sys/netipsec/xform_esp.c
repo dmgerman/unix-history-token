@@ -1167,16 +1167,15 @@ literal|"null encoding xform"
 operator|)
 argument_list|)
 expr_stmt|;
-name|IPSEC_ASSERT
-argument_list|(
+comment|/* Valid IP Packet length ? */
+if|if
+condition|(
 operator|(
 name|skip
 operator|&
 literal|3
 operator|)
-operator|==
-literal|0
-operator|&&
+operator|||
 operator|(
 name|m
 operator|->
@@ -1186,11 +1185,14 @@ name|len
 operator|&
 literal|3
 operator|)
-operator|==
-literal|0
-argument_list|,
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
 operator|(
-literal|"misaligned packet, skip %u pkt len %u"
+literal|"%s: misaligned packet, skip %u pkt len %u"
+operator|,
+name|__func__
 operator|,
 name|skip
 operator|,
@@ -1202,6 +1204,20 @@ name|len
 operator|)
 argument_list|)
 expr_stmt|;
+name|V_espstat
+operator|.
+name|esps_badilen
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 comment|/* XXX don't pullup, just copy header */
 name|IP6_EXTHDR_GET
 argument_list|(
