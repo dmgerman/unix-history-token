@@ -7465,7 +7465,7 @@ name|sc
 operator|->
 name|ndis_80211
 operator|!=
-name|NULL
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -8362,7 +8362,7 @@ name|sc
 operator|->
 name|ndis_80211
 operator|!=
-name|NULL
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -8436,7 +8436,7 @@ name|sc
 operator|->
 name|ndis_80211
 operator|!=
-name|NULL
+literal|0
 operator|)
 operator|&&
 operator|(
