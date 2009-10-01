@@ -480,11 +480,6 @@ operator|&
 name|default_vnodeops
 block|,
 operator|.
-name|vop_access
-operator|=
-name|VOP_EBADF
-block|,
-operator|.
 name|vop_advlock
 operator|=
 name|fifo_advlock
