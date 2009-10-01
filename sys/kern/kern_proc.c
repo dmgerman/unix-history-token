@@ -4607,17 +4607,6 @@ name|ki_wmesg
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_name
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-condition|)
 name|strlcpy
 argument_list|(
 name|kp
