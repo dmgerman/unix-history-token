@@ -6161,6 +6161,9 @@ operator|!=
 name|ifp
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTICS
 name|log
 argument_list|(
 name|LOG_INFO
@@ -6183,6 +6186,8 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|rt
