@@ -380,6 +380,31 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Values for the pipe_present.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIPE_ACTIVE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPE_CLOSING
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPE_FINALIZED
+value|3
+end_define
+
+begin_comment
 comment|/*  * Container structure to hold the two pipe endpoints, mutex, and label  * pointer.  */
 end_comment
 
