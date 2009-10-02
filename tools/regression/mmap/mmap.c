@@ -54,7 +54,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Depending on security.bsd.mmap_zero {0, !=0}. */
+comment|/* Depending on security.bsd.map_at_zero {0, !=0}. */
 block|}
 name|tests
 index|[]
@@ -238,13 +238,13 @@ index|[
 literal|3
 index|]
 decl_stmt|,
-name|mmap_zero
+name|map_at_zero
 decl_stmt|;
 name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Get the current sysctl value of security.bsd.mmap_zero. */
+comment|/* Get the current sysctl value of security.bsd.map_at_zero. */
 name|len
 operator|=
 sizeof|sizeof
@@ -262,7 +262,7 @@ if|if
 condition|(
 name|sysctlnametomib
 argument_list|(
-literal|"security.bsd.mmap_zero"
+literal|"security.bsd.map_at_zero"
 argument_list|,
 name|mib
 argument_list|,
@@ -277,14 +277,14 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctlnametomib(security.bsd.mmap_zero)"
+literal|"sysctlnametomib(security.bsd.map_at_zero)"
 argument_list|)
 expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|mmap_zero
+name|map_at_zero
 argument_list|)
 expr_stmt|;
 if|if
@@ -296,7 +296,7 @@ argument_list|,
 literal|3
 argument_list|,
 operator|&
-name|mmap_zero
+name|map_at_zero
 argument_list|,
 operator|&
 name|len
@@ -313,15 +313,15 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl(security.bsd.mmap_zero)"
+literal|"sysctl(security.bsd.map_at_zero)"
 argument_list|)
 expr_stmt|;
 comment|/* Normalize to 0 or 1 for array access. */
-name|mmap_zero
+name|map_at_zero
 operator|=
 operator|!
 operator|!
-name|mmap_zero
+name|map_at_zero
 expr_stmt|;
 for|for
 control|(
@@ -397,7 +397,7 @@ index|]
 operator|.
 name|ok
 index|[
-name|mmap_zero
+name|map_at_zero
 index|]
 operator|!=
 literal|0
@@ -417,7 +417,7 @@ index|]
 operator|.
 name|ok
 index|[
-name|mmap_zero
+name|map_at_zero
 index|]
 operator|==
 literal|0
@@ -447,7 +447,7 @@ index|]
 operator|.
 name|ok
 index|[
-name|mmap_zero
+name|map_at_zero
 index|]
 operator|!=
 literal|1
@@ -467,7 +467,7 @@ index|]
 operator|.
 name|ok
 index|[
-name|mmap_zero
+name|map_at_zero
 index|]
 operator|==
 literal|1
