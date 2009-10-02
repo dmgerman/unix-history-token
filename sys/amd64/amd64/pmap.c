@@ -2105,6 +2105,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|TRUE
+operator|||
 operator|(
 name|amd_feature
 operator|&
@@ -2352,6 +2354,8 @@ comment|/* Now set up the direct map space using either 2MB or 1GB pages */
 comment|/* Preset PG_M and PG_A because demotion expects it */
 if|if
 condition|(
+name|TRUE
+operator|||
 operator|(
 name|amd_feature
 operator|&
