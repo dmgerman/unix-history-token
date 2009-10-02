@@ -2868,24 +2868,22 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Tell any interested parties about the new process. 	 */
-name|KNOTE_LOCKED
+name|knote_fork
 argument_list|(
 operator|&
 name|p1
 operator|->
 name|p_klist
 argument_list|,
-name|NOTE_FORK
-operator||
 name|p2
 operator|->
 name|p_pid
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Preserve synchronization semantics of vfork.  If waiting for 	 * child to exec or exit, set P_PPWAIT on child, and sleep on our 	 * proc (in case of exit). 	 */
