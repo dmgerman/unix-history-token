@@ -322,7 +322,6 @@ comment|/*  * Schedule a soft interrupt. We do this on the 0 to !0 transition  *
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|uart_sched_softih
 parameter_list|(
