@@ -2166,6 +2166,7 @@ name|vm_refcnt
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * proc0 is not expected to enter usermode, so there is no special 	 * handling for sv_minuser here, like is done for exec_new_vmspace(). 	 */
 name|vm_map_init
 argument_list|(
 operator|&
