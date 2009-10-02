@@ -4558,6 +4558,12 @@ name|f_data
 operator|=
 name|dev
 expr_stmt|;
+name|fp
+operator|->
+name|f_vnode
+operator|=
+name|vp
+expr_stmt|;
 name|FILE_UNLOCK
 argument_list|(
 name|fp
