@@ -3426,7 +3426,7 @@ operator|(
 name|NFSERR_ATTRNOTSUPP
 operator|)
 return|;
-comment|/* 	 * With NFS4 ACLs, chmod(2) may need to add additional entries. 	 * Make sure it has enough room for that - splitting every entry 	 * into two and appending "canonical six" entries at the end. 	 * Cribbed out of kern/vfs_acl.c - Rick M. 	 */
+comment|/* 	 * With NFSv4 ACLs, chmod(2) may need to add additional entries. 	 * Make sure it has enough room for that - splitting every entry 	 * into two and appending "canonical six" entries at the end. 	 * Cribbed out of kern/vfs_acl.c - Rick M. 	 */
 if|if
 condition|(
 name|aclp

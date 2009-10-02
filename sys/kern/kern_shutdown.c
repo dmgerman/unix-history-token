@@ -2146,7 +2146,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Support for poweroff delay.  */
+comment|/*  * Support for poweroff delay.  *  * Please note that setting this delay too short might power off your machine  * before the write cache on your hard disk has been flushed, leading to  * soft-updates inconsistencies.  */
 end_comment
 
 begin_ifndef

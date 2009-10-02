@@ -4510,12 +4510,6 @@ name|pru_sockaddr
 operator|=
 name|in_getsockaddr
 block|,
-if|#
-directive|if
-literal|0
-block|.pru_soreceive =	soreceive_stream,
-endif|#
-directive|endif
 operator|.
 name|pru_sosetlabel
 operator|=
@@ -4616,12 +4610,6 @@ name|pru_sockaddr
 operator|=
 name|in6_mapped_sockaddr
 block|,
-if|#
-directive|if
-literal|0
-block|.pru_soreceive =	soreceive_stream,
-endif|#
-directive|endif
 operator|.
 name|pru_sosetlabel
 operator|=

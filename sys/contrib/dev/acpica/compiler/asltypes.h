@@ -428,6 +428,25 @@ name|ASL_NUM_FILES
 value|(ASL_MAX_FILE_TYPE + 1)
 end_define
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_include_dir
+block|{
+name|char
+modifier|*
+name|Dir
+decl_stmt|;
+name|struct
+name|asl_include_dir
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ASL_INCLUDE_DIR
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* An entry in the exception list, one for each error/warning */
 end_comment

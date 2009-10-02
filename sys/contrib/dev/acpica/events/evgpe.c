@@ -925,7 +925,7 @@ expr_stmt|;
 comment|/* Read the Status Register */
 name|Status
 operator|=
-name|AcpiRead
+name|AcpiHwRead
 argument_list|(
 operator|&
 name|StatusReg
@@ -951,7 +951,7 @@ block|}
 comment|/* Read the Enable Register */
 name|Status
 operator|=
-name|AcpiRead
+name|AcpiHwRead
 argument_list|(
 operator|&
 name|EnableReg

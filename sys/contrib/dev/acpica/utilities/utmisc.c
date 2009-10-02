@@ -46,6 +46,18 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/*  * Common suffix for messages  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMMON_MSG_SUFFIX
+define|\
+value|AcpiOsPrintf (" (%8.8X/%s-%u)\n", ACPI_CA_VERSION, ModuleName, LineNumber)
+end_define
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidateException  *  * PARAMETERS:  Status       - The ACPI_STATUS code to be formatted  *  * RETURN:      A string containing the exception text. NULL if exception is  *              not valid.  *  * DESCRIPTION: This function validates and translates an ACPI exception into  *              an ASCII string.  *  ******************************************************************************/
 end_comment
 
@@ -196,6 +208,57 @@ name|char
 argument_list|,
 name|Exception
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtIsPciRootBridge  *  * PARAMETERS:  Id              - The HID/CID in string format  *  * RETURN:      TRUE if the Id is a match for a PCI/PCI-Express Root Bridge  *  * DESCRIPTION: Determine if the input ID is a PCI Root Bridge ID.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|BOOLEAN
+name|AcpiUtIsPciRootBridge
+parameter_list|(
+name|char
+modifier|*
+name|Id
+parameter_list|)
+block|{
+comment|/*      * Check if this is a PCI root bridge.      * ACPI 3.0+: check for a PCI Express root also.      */
+if|if
+condition|(
+operator|!
+operator|(
+name|ACPI_STRCMP
+argument_list|(
+name|Id
+argument_list|,
+name|PCI_ROOT_HID_STRING
+argument_list|)
+operator|)
+operator|||
+operator|!
+operator|(
+name|ACPI_STRCMP
+argument_list|(
+name|Id
+argument_list|,
+name|PCI_EXPRESS_ROOT_HID_STRING
+argument_list|)
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|FALSE
 operator|)
 return|;
 block|}
@@ -2501,16 +2564,7 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|" %8.8X %s-%u\n"
-argument_list|,
-name|ACPI_CA_VERSION
-argument_list|,
-name|ModuleName
-argument_list|,
-name|LineNumber
-argument_list|)
+name|ACPI_COMMON_MSG_SUFFIX
 expr_stmt|;
 name|va_end
 argument_list|(
@@ -2571,16 +2625,7 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|" %8.8X %s-%u\n"
-argument_list|,
-name|ACPI_CA_VERSION
-argument_list|,
-name|ModuleName
-argument_list|,
-name|LineNumber
-argument_list|)
+name|ACPI_COMMON_MSG_SUFFIX
 expr_stmt|;
 name|va_end
 argument_list|(
@@ -2633,16 +2678,7 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|" %8.8X %s-%u\n"
-argument_list|,
-name|ACPI_CA_VERSION
-argument_list|,
-name|ModuleName
-argument_list|,
-name|LineNumber
-argument_list|)
+name|ACPI_COMMON_MSG_SUFFIX
 expr_stmt|;
 name|va_end
 argument_list|(
@@ -2747,6 +2783,82 @@ argument_list|(
 argument|AcpiInfo
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtPredefinedWarning  *  * PARAMETERS:  ModuleName      - Caller's module name (for error output)  *              LineNumber      - Caller's line number (for error output)  *              Pathname        - Full pathname to the node  *              NodeFlags       - From Namespace node for the method/object  *              Format          - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Warnings for the predefined validation module. Messages are  *              only emitted the first time a problem with a particular  *              method/object is detected. This prevents a flood of error  *              messages for methods that are repeatedly evaluated.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|ACPI_INTERNAL_VAR_XFACE
+name|AcpiUtPredefinedWarning
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ModuleName
+parameter_list|,
+name|UINT32
+name|LineNumber
+parameter_list|,
+name|char
+modifier|*
+name|Pathname
+parameter_list|,
+name|UINT8
+name|NodeFlags
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Format
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|args
+decl_stmt|;
+comment|/*      * Warning messages for this method/object will be disabled after the      * first time a validation fails or an object is successfully repaired.      */
+if|if
+condition|(
+name|NodeFlags
+operator|&
+name|ANOBJ_EVALUATED
+condition|)
+block|{
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"ACPI Warning for %s: "
+argument_list|,
+name|Pathname
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|Format
+argument_list|)
+expr_stmt|;
+name|AcpiOsVprintf
+argument_list|(
+name|Format
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|ACPI_COMMON_MSG_SUFFIX
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.h,v 1.12 2008/02/28 08:22:04 dtucker Exp $ */
+comment|/* $Id: openssl-compat.h,v 1.14 2009/03/07 11:22:35 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -401,6 +401,31 @@ end_endif
 begin_comment
 comment|/* SSH_OLD_EVP */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_EVP_DIGESTUPDATE_VOID
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EVP_DigestUpdate
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|ssh_EVP_DigestUpdate((a),(b),(c))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

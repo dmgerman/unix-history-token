@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2006 Stephane E. Potvin<sepotvin@videotron.ca>  * C
 end_comment
 
 begin_comment
-comment|/*  * Intel High Definition Audio (Controller) driver for FreeBSD. Be advised  * that this driver still in its early stage, and possible of rewrite are  * pretty much guaranteed. There are supposedly several distinct parent/child  * busses to make this "perfect", but as for now and for the sake of  * simplicity, everything is gobble up within single source.  *  * List of subsys:  *     1) HDA Controller support  *     2) HDA Codecs support, which may include  *        - HDA  *        - Modem  *        - HDMI  *     3) Widget parser - the real magic of why this driver works on so  *        many hardwares with minimal vendor specific quirk. The original  *        parser was written using Ruby and can be found at  *        http://people.freebsd.org/~ariff/HDA/parser.rb . This crude  *        ruby parser take the verbose dmesg dump as its input. Refer to  *        http://www.microsoft.com/whdc/device/audio/default.mspx for various  *        interesting documents, especially UAA (Universal Audio Architecture).  *     4) Possible vendor specific support.  *        (snd_hda_intel, snd_hda_ati, etc..)  *  * Thanks to Ahmad Ubaidah Omar @ Defenxis Sdn. Bhd. for the  * Compaq V3000 with Conexant HDA.  *  *    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *    *                                                                 *  *    *        This driver is a collaborative effort made by:           *  *    *                                                                 *  *    *          Stephane E. Potvin<sepotvin@videotron.ca>             *  *    *               Andrea Bittau<a.bittau@cs.ucl.ac.uk>             *  *    *               Wesley Morgan<morganw@chemikals.org>             *  *    *              Daniel Eischen<deischen@FreeBSD.org>              *  *    *             Maxime Guillaud<bsd-ports@mguillaud.net>           *  *    *              Ariff Abdullah<ariff@FreeBSD.org>                 *  *    *             Alexander Motin<mav@FreeBSD.org>                   *  *    *                                                                 *  *    *   ....and various people from freebsd-multimedia@FreeBSD.org    *  *    *                                                                 *  *    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  */
+comment|/*  * Intel High Definition Audio (Controller) driver for FreeBSD. Be advised  * that this driver still in its early stage, and possible of rewrite are  * pretty much guaranteed. There are supposedly several distinct parent/child  * busses to make this "perfect", but as for now and for the sake of  * simplicity, everything is gobble up within single source.  *  * List of subsys:  *     1) HDA Controller support  *     2) HDA Codecs support, which may include  *        - HDA  *        - Modem  *     3) Widget parser - the real magic of why this driver works on so  *        many hardwares with minimal vendor specific quirk. The original  *        parser was written using Ruby and can be found at  *        http://people.freebsd.org/~ariff/HDA/parser.rb . This crude  *        ruby parser take the verbose dmesg dump as its input. Refer to  *        http://www.microsoft.com/whdc/device/audio/default.mspx for various  *        interesting documents, especially UAA (Universal Audio Architecture).  *     4) Possible vendor specific support.  *        (snd_hda_intel, snd_hda_ati, etc..)  *  * Thanks to Ahmad Ubaidah Omar @ Defenxis Sdn. Bhd. for the  * Compaq V3000 with Conexant HDA.  *  *    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *    *                                                                 *  *    *        This driver is a collaborative effort made by:           *  *    *                                                                 *  *    *          Stephane E. Potvin<sepotvin@videotron.ca>             *  *    *               Andrea Bittau<a.bittau@cs.ucl.ac.uk>             *  *    *               Wesley Morgan<morganw@chemikals.org>             *  *    *              Daniel Eischen<deischen@FreeBSD.org>              *  *    *             Maxime Guillaud<bsd-ports@mguillaud.net>           *  *    *              Ariff Abdullah<ariff@FreeBSD.org>                 *  *    *             Alexander Motin<mav@FreeBSD.org>                   *  *    *                                                                 *  *    *   ....and various people from freebsd-multimedia@FreeBSD.org    *  *    *                                                                 *  *    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  */
 end_comment
 
 begin_ifdef
@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090624_0136"
+value|"20090929_0137"
 end_define
 
 begin_expr_stmt
@@ -330,8 +330,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_INTEL_82801J
+name|HDA_INTEL_82801JI
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x3a3e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_82801JD
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x3a6e)
 end_define
 
 begin_define
@@ -490,6 +497,34 @@ define|#
 directive|define
 name|HDA_NVIDIA_MCP79_4
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d94)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d95)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_3
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d96)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_4
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d97)
 end_define
 
 begin_define
@@ -2243,9 +2278,17 @@ literal|0
 block|}
 block|,
 block|{
-name|HDA_INTEL_82801J
+name|HDA_INTEL_82801JI
 block|,
-literal|"Intel 82801J"
+literal|"Intel 82801JI"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_82801JD
+block|,
+literal|"Intel 82801JD"
 block|,
 literal|0
 block|}
@@ -2406,6 +2449,38 @@ block|{
 name|HDA_NVIDIA_MCP79_4
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_1
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_2
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_3
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_4
+block|,
+literal|"NVidia MCP89"
 block|,
 literal|0
 block|}
@@ -3278,6 +3353,13 @@ define|#
 directive|define
 name|HDA_CODEC_ALC885
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0885)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC887
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0887)
 end_define
 
 begin_define
@@ -4427,6 +4509,12 @@ block|{
 name|HDA_CODEC_ALC885
 block|,
 literal|"Realtek ALC885"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC887
+block|,
+literal|"Realtek ALC887"
 block|}
 block|,
 block|{
@@ -17851,6 +17939,12 @@ argument_list|,
 name|cad
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|hdac_command(sc, 		    HDA_CMD_SET_CONV_CHAN_COUNT(cad, ch->io[i], 1), cad); 		hdac_command(sc, 		    HDA_CMD_SET_HDMI_CHAN_SLOT(cad, ch->io[i], 0x00), cad); 		hdac_command(sc, 		    HDA_CMD_SET_HDMI_CHAN_SLOT(cad, ch->io[i], 0x11), cad);
+endif|#
+directive|endif
 name|chn
 operator|+=
 name|HDA_PARAM_AUDIO_WIDGET_CAP_STEREO
@@ -23175,7 +23269,7 @@ index|]
 operator|.
 name|digital
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 block|}
 comment|/* Scan associations skipping as=0. */
@@ -23490,7 +23584,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|HDA_PARAM_AUDIO_WIDGET_CAP_DIGITAL
 argument_list|(
 name|w
@@ -23500,6 +23593,20 @@ operator|.
 name|widget_cap
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|HDA_PARAM_PIN_CAP_DP
+argument_list|(
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|cap
+argument_list|)
+condition|)
 name|as
 index|[
 name|cnt
@@ -23507,8 +23614,42 @@ index|]
 operator|.
 name|digital
 operator|=
-literal|0
+literal|3
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|HDA_PARAM_PIN_CAP_HDMI
+argument_list|(
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|cap
+argument_list|)
+condition|)
+name|as
+index|[
+name|cnt
+index|]
+operator|.
+name|digital
+operator|=
+literal|2
+expr_stmt|;
+else|else
+name|as
+index|[
+name|cnt
+index|]
+operator|.
+name|digital
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* Headphones with seq=15 may mean redirection. */
 if|if
 condition|(
@@ -33476,7 +33617,7 @@ index|]
 operator|.
 name|digital
 operator|=
-literal|2
+literal|255
 expr_stmt|;
 block|}
 for|for
@@ -33546,8 +33687,10 @@ index|]
 operator|.
 name|digital
 operator|!=
-literal|2
+literal|255
 operator|&&
+operator|(
+operator|!
 name|devinfo
 operator|->
 name|function
@@ -33560,13 +33703,17 @@ name|j
 index|]
 operator|.
 name|digital
+operator|)
 operator|!=
+operator|(
+operator|!
 name|as
 index|[
 name|i
 index|]
 operator|.
 name|digital
+operator|)
 condition|)
 continue|continue;
 if|if
@@ -34705,6 +34852,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|HDA_PARAM_PIN_CAP_HDMI
+argument_list|(
+name|pincap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" HDMI"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|HDA_PARAM_PIN_CAP_VREF_CTRL
 argument_list|(
 name|pincap
@@ -34792,6 +34951,30 @@ condition|)
 name|printf
 argument_list|(
 literal|" EAPD"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HDA_PARAM_PIN_CAP_DP
+argument_list|(
+name|pincap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" DP"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HDA_PARAM_PIN_CAP_HBR
+argument_list|(
+name|pincap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" HBR"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -35517,9 +35700,9 @@ argument_list|(
 literal|" STRIPE"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|HDA_PARAM_AUDIO_WIDGET_CAP_STEREO
+name|j
+operator|=
+name|HDA_PARAM_AUDIO_WIDGET_CAP_CC
 argument_list|(
 name|w
 operator|->
@@ -35527,10 +35710,32 @@ name|param
 operator|.
 name|widget_cap
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|==
+literal|1
 condition|)
 name|printf
 argument_list|(
 literal|" STEREO"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|j
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|" %dCH"
+argument_list|,
+name|j
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|printf
@@ -41260,13 +41465,39 @@ name|pdevinfo
 operator|->
 name|index
 argument_list|,
+operator|(
 name|pdevinfo
 operator|->
 name|digital
+operator|==
+literal|3
+operator|)
+condition|?
+literal|"DisplayPort"
+else|:
+operator|(
+operator|(
+name|pdevinfo
+operator|->
+name|digital
+operator|==
+literal|2
+operator|)
+condition|?
+literal|"HDMI"
+else|:
+operator|(
+operator|(
+name|pdevinfo
+operator|->
+name|digital
+operator|)
 condition|?
 literal|"Digital"
 else|:
 literal|"Analog"
+operator|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|device_set_desc_copy

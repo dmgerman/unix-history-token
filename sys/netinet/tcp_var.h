@@ -1819,6 +1819,38 @@ end_if
 
 begin_struct
 struct|struct
+name|xtcp_timer
+block|{
+name|int
+name|tt_rexmt
+decl_stmt|;
+comment|/* retransmit timer */
+name|int
+name|tt_persist
+decl_stmt|;
+comment|/* retransmit persistence */
+name|int
+name|tt_keep
+decl_stmt|;
+comment|/* keepalive */
+name|int
+name|tt_2msl
+decl_stmt|;
+comment|/* 2*msl TIME_WAIT timer */
+name|int
+name|tt_delack
+decl_stmt|;
+comment|/* delayed ACK timer */
+name|int
+name|t_rcvtime
+decl_stmt|;
+comment|/* Time since last packet received */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|xtcpcb
 block|{
 name|size_t
@@ -1835,6 +1867,10 @@ decl_stmt|;
 name|struct
 name|xsocket
 name|xt_socket
+decl_stmt|;
+name|struct
+name|xtcp_timer
+name|xt_timer
 decl_stmt|;
 name|u_quad_t
 name|xt_alignment_hack

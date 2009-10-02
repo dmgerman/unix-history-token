@@ -4759,6 +4759,18 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|ND6_IFF_AUTO_LINKLOCAL
+name|SETFLAG
+argument_list|(
+literal|"auto_linklocal"
+argument_list|,
+name|ND6_IFF_AUTO_LINKLOCAL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|ND6_IFF_PREFER_SOURCE
 name|SETFLAG
 argument_list|(
@@ -5156,6 +5168,26 @@ condition|)
 name|printf
 argument_list|(
 literal|"accept_rtadv "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ND6_IFF_AUTO_LINKLOCAL
+if|if
+condition|(
+operator|(
+name|ND
+operator|.
+name|flags
+operator|&
+name|ND6_IFF_AUTO_LINKLOCAL
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"auto_linklocal "
 argument_list|)
 expr_stmt|;
 endif|#

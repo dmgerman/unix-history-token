@@ -327,14 +327,14 @@ begin_define
 define|#
 directive|define
 name|RFCOMM_RPN_DATA_6
-value|0x1
+value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
 name|RFCOMM_RPN_DATA_7
-value|0x2
+value|0x1
 end_define
 
 begin_define

@@ -2093,7 +2093,7 @@ name|twe_softc
 modifier|*
 name|sc
 parameter_list|,
-name|int
+name|u_long
 name|ioctlcmd
 parameter_list|,
 name|void

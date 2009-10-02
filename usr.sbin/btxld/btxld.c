@@ -2501,7 +2501,7 @@ name|ex
 argument_list|,
 name|ZMAGIC
 argument_list|,
-name|MID_ZERO
+name|MID_I386
 argument_list|,
 literal|0
 argument_list|)

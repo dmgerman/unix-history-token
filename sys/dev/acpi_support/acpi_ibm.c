@@ -1259,8 +1259,6 @@ name|ibm_ids
 index|[]
 init|=
 block|{
-literal|"IBM0057"
-block|,
 literal|"IBM0068"
 block|,
 name|NULL
@@ -1581,11 +1579,6 @@ operator|->
 name|ec_dev
 argument_list|)
 expr_stmt|;
-name|ACPI_SERIAL_BEGIN
-argument_list|(
-name|ibm
-argument_list|)
-expr_stmt|;
 comment|/* Get the sysctl tree */
 name|sc
 operator|->
@@ -1846,11 +1839,6 @@ literal|"Thermal zones"
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_SERIAL_END
-argument_list|(
-name|ibm
-argument_list|)
-expr_stmt|;
 comment|/* Handle notifies */
 name|AcpiInstallNotifyHandler
 argument_list|(

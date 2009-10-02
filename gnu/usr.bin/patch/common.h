@@ -134,6 +134,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|Strncpy
+value|(void)strncpy
+end_define
+
+begin_define
+define|#
+directive|define
 name|Strlcat
 value|(void)strlcat
 end_define

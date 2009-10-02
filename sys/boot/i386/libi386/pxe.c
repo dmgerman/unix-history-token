@@ -1282,7 +1282,7 @@ condition|(
 operator|!
 name|rootpath
 index|[
-literal|1
+literal|0
 index|]
 condition|)
 name|strcpy

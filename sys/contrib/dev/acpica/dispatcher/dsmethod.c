@@ -1397,7 +1397,21 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Delete any namespace objects created anywhere within          * the namespace by the execution of this method          */
+comment|/*          * Delete any namespace objects created anywhere within the          * namespace by the execution of this method. Unless this method          * is a module-level executable code method, in which case we          * want make the objects permanent.          */
+if|if
+condition|(
+operator|!
+operator|(
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_MODULE_LEVEL
+operator|)
+condition|)
+block|{
 name|AcpiNsDeleteNamespaceByOwner
 argument_list|(
 name|MethodDesc
@@ -1407,6 +1421,7 @@ operator|.
 name|OwnerId
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Decrement the thread count on the method */
 if|if
@@ -1501,6 +1516,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* No more threads, we can free the OwnerId */
+if|if
+condition|(
+operator|!
+operator|(
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_MODULE_LEVEL
+operator|)
+condition|)
+block|{
 name|AcpiUtReleaseOwnerId
 argument_list|(
 operator|&
@@ -1511,6 +1540,7 @@ operator|.
 name|OwnerId
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|return_VOID
 expr_stmt|;

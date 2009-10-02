@@ -835,9 +835,6 @@ parameter_list|(
 name|ACPI_HANDLE
 name|h
 parameter_list|,
-name|UINT32
-name|fn
-parameter_list|,
 name|void
 modifier|*
 name|data
@@ -1090,6 +1087,24 @@ parameter_list|)
 define|\
 value|ACPI_DEVINFO_PRESENT(x, ACPI_STA_PRESENT | ACPI_STA_FUNCTIONAL | \ 	    ACPI_STA_BATT_PRESENT)
 end_define
+
+begin_comment
+comment|/* Callback function type for walking subtables within a table. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|acpi_subtable_handler
+parameter_list|(
+name|ACPI_SUBTABLE_HEADER
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_function_decl
 name|BOOLEAN
@@ -1439,6 +1454,29 @@ name|res
 parameter_list|,
 name|u_int
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|acpi_walk_subtables
+parameter_list|(
+name|void
+modifier|*
+name|first
+parameter_list|,
+name|void
+modifier|*
+name|end
+parameter_list|,
+name|acpi_subtable_handler
+modifier|*
+name|handler
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

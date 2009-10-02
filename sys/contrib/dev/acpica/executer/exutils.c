@@ -539,35 +539,62 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEisaIdToString  *  * PARAMETERS:  NumericId       - EISA ID to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert a numeric EISA ID to string representation  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEisaIdToString  *  * PARAMETERS:  CompressedId    - EISAID to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * RETURN:      None  *  * DESCRIPTION: Convert a numeric EISAID to string representation. Return  *              buffer must be large enough to hold the string. The string  *              returned is always exactly of length ACPI_EISAID_STRING_SIZE  *              (includes null terminator). The EISAID is always 32 bits.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiExEisaIdToString
 parameter_list|(
-name|UINT32
-name|NumericId
-parameter_list|,
 name|char
 modifier|*
 name|OutString
+parameter_list|,
+name|ACPI_INTEGER
+name|CompressedId
 parameter_list|)
 block|{
 name|UINT32
-name|EisaId
+name|SwappedId
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
+comment|/* The EISAID should be a 32-bit integer */
+if|if
+condition|(
+name|CompressedId
+operator|>
+name|ACPI_UINT32_MAX
+condition|)
+block|{
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Expected EISAID is larger than 32 bits: 0x%8.8X%8.8X, truncating"
+operator|,
+name|ACPI_FORMAT_UINT64
+argument_list|(
+name|CompressedId
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Swap ID to big-endian to get contiguous bits */
-name|EisaId
+name|SwappedId
 operator|=
 name|AcpiUtDwordByteSwap
 argument_list|(
-name|NumericId
+operator|(
+name|UINT32
+operator|)
+name|CompressedId
 argument_list|)
 expr_stmt|;
+comment|/* First 3 bytes are uppercase letters. Next 4 bytes are hexadecimal */
 name|OutString
 index|[
 literal|0
@@ -577,7 +604,7 @@ call|(
 name|char
 call|)
 argument_list|(
-literal|'@'
+literal|0x40
 operator|+
 operator|(
 operator|(
@@ -585,12 +612,12 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|EisaId
+name|SwappedId
 operator|>>
 literal|26
 operator|)
 operator|&
-literal|0x1f
+literal|0x1F
 operator|)
 argument_list|)
 expr_stmt|;
@@ -603,16 +630,16 @@ call|(
 name|char
 call|)
 argument_list|(
-literal|'@'
+literal|0x40
 operator|+
 operator|(
 operator|(
-name|EisaId
+name|SwappedId
 operator|>>
 literal|21
 operator|)
 operator|&
-literal|0x1f
+literal|0x1F
 operator|)
 argument_list|)
 expr_stmt|;
@@ -625,16 +652,16 @@ call|(
 name|char
 call|)
 argument_list|(
-literal|'@'
+literal|0x40
 operator|+
 operator|(
 operator|(
-name|EisaId
+name|SwappedId
 operator|>>
 literal|16
 operator|)
 operator|&
-literal|0x1f
+literal|0x1F
 operator|)
 argument_list|)
 expr_stmt|;
@@ -648,7 +675,7 @@ argument_list|(
 operator|(
 name|ACPI_INTEGER
 operator|)
-name|EisaId
+name|SwappedId
 argument_list|,
 literal|12
 argument_list|)
@@ -663,7 +690,7 @@ argument_list|(
 operator|(
 name|ACPI_INTEGER
 operator|)
-name|EisaId
+name|SwappedId
 argument_list|,
 literal|8
 argument_list|)
@@ -678,7 +705,7 @@ argument_list|(
 operator|(
 name|ACPI_INTEGER
 operator|)
-name|EisaId
+name|SwappedId
 argument_list|,
 literal|4
 argument_list|)
@@ -693,7 +720,7 @@ argument_list|(
 operator|(
 name|ACPI_INTEGER
 operator|)
-name|EisaId
+name|SwappedId
 argument_list|,
 literal|0
 argument_list|)
@@ -709,19 +736,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExUnsignedIntegerToString  *  * PARAMETERS:  Value           - Value to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * RETURN:      None, string  *  * DESCRIPTION: Convert a number to string representation. Assumes string  *              buffer is large enough to hold the string.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExIntegerToString  *  * PARAMETERS:  OutString       - Where to put the converted string. At least  *                                21 bytes are needed to hold the largest  *                                possible 64-bit integer.  *              Value           - Value to be converted  *  * RETURN:      None, string  *  * DESCRIPTION: Convert a 64-bit integer to decimal string representation.  *              Assumes string buffer is large enough to hold the string. The  *              largest string is (ACPI_MAX64_DECIMAL_DIGITS + 1).  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiExUnsignedIntegerToString
+name|AcpiExIntegerToString
 parameter_list|(
-name|ACPI_INTEGER
-name|Value
-parameter_list|,
 name|char
 modifier|*
 name|OutString
+parameter_list|,
+name|ACPI_INTEGER
+name|Value
 parameter_list|)
 block|{
 name|UINT32

@@ -15,58 +15,15 @@ directive|define
 name|_AMD64_INCLUDE_PARAM_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/_align.h>
+end_include
+
 begin_comment
 comment|/*  * Machine dependent constants for AMD64.  */
 end_comment
-
-begin_comment
-comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value  * for all data types (int, long, ...).   The result is u_long and  * must be cast to any desired pointer type.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ALIGNBYTES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_ALIGNBYTES
-value|(sizeof(long) - 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ALIGN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_ALIGN
-parameter_list|(
-name|p
-parameter_list|)
-value|(((u_long)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_NO_NAMESPACE_POLLUTION
-end_ifndef
 
 begin_define
 define|#
@@ -412,6 +369,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAXPAGESIZES
+value|3
+end_define
+
+begin_comment
+comment|/* maximum number of supported page sizes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IOPAGES
 value|2
 end_define
@@ -578,15 +546,6 @@ name|x
 parameter_list|)
 value|((unsigned long)(x) * (PAGE_SIZE / 1024))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_NO_NAMESPACE_POLLUTION */
-end_comment
 
 begin_endif
 endif|#

@@ -3291,6 +3291,9 @@ break|break;
 case|case
 name|REGION_SMBUS
 case|:
+case|case
+name|REGION_IPMI
+case|:
 if|if
 condition|(
 operator|(

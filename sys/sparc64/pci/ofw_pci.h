@@ -60,6 +60,24 @@ name|OFW_PCI_CS_MEM64
 value|0x03
 end_define
 
+begin_comment
+comment|/* OFW device types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFW_TYPE_PCI
+value|"pci"
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFW_TYPE_PCIE
+value|"pciex"
+end_define
+
 begin_struct
 struct|struct
 name|ofw_pci_ranges

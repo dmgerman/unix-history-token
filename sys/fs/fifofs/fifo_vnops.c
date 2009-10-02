@@ -399,14 +399,21 @@ name|filterops
 name|fiforead_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_fifordetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_fiforead
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -417,14 +424,21 @@ name|filterops
 name|fifowrite_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_fifowdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_fifowrite
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -435,14 +449,21 @@ name|filterops
 name|fifo_notsup_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_fifodetach_notsup
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_fifo_notsup
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -457,11 +478,6 @@ name|vop_default
 operator|=
 operator|&
 name|default_vnodeops
-block|,
-operator|.
-name|vop_access
-operator|=
-name|VOP_EBADF
 block|,
 operator|.
 name|vop_advlock

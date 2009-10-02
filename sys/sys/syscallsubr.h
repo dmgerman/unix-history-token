@@ -1901,6 +1901,9 @@ name|struct
 name|timeval
 modifier|*
 name|tvp
+parameter_list|,
+name|int
+name|abi_nfdbits
 parameter_list|)
 function_decl|;
 end_function_decl

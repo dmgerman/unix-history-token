@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -9826,16 +9832,6 @@ name|obj
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Get the page from backing store. 				 */
-name|bsize
-operator|=
-name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_stat
-operator|.
-name|f_iosize
-expr_stmt|;
 name|vfslocked
 operator|=
 name|VFS_LOCK_GIANT
@@ -9845,14 +9841,33 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
 name|LK_SHARED
-operator||
-name|LK_RETRY
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|after_read
+goto|;
+name|bsize
+operator|=
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_stat
+operator|.
+name|f_iosize
 expr_stmt|;
 comment|/* 				 * XXXMAC: Because we don't have fp->f_cred 				 * here, we pass in NOCRED.  This is probably 				 * wrong, but is consistent with our original 				 * implementation. 				 */
 name|error
@@ -9907,6 +9922,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|after_read
+label|:
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
@@ -10817,6 +10834,13 @@ index|]
 operator|=
 name|fd
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|head
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|so
 operator|=
 name|sonewconn
@@ -10987,6 +11011,9 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release explicitly held references before returning. 	 */
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|done
 label|:
 if|if
@@ -11368,6 +11395,13 @@ name|uap
 operator|->
 name|mlen
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sctp_lower_sosend
@@ -11403,6 +11437,9 @@ name|u_sinfo
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -11979,6 +12016,13 @@ name|auio
 operator|.
 name|uio_resid
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sctp_lower_sosend
@@ -12014,6 +12058,9 @@ name|u_sinfo
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -12626,6 +12673,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* KTRACE */
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sctp_sorecvmsg
@@ -12660,6 +12714,9 @@ name|sinfo
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

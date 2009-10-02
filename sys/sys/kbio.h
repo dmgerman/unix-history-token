@@ -586,7 +586,7 @@ begin_struct
 struct|struct
 name|keyent_t
 block|{
-name|u_char
+name|u_int
 name|map
 index|[
 name|NUM_STATES
@@ -1435,18 +1435,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* XXX: Should have keymap_t as an argument, but that's too big for ioctl()! */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|GIO_KEYMAP
-value|_IOR('k', 6, keymap_t)
+value|_IO('k', 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PIO_KEYMAP
-value|_IOW('k', 7, keymap_t)
+value|_IO('k', 7)
 end_define
 
 begin_define
@@ -1485,7 +1489,7 @@ begin_define
 define|#
 directive|define
 name|NOKEY
-value|0x100
+value|0x01000000
 end_define
 
 begin_comment
@@ -1496,7 +1500,7 @@ begin_define
 define|#
 directive|define
 name|FKEY
-value|0x200
+value|0x02000000
 end_define
 
 begin_comment
@@ -1507,7 +1511,7 @@ begin_define
 define|#
 directive|define
 name|MKEY
-value|0x400
+value|0x04000000
 end_define
 
 begin_comment
@@ -1518,7 +1522,7 @@ begin_define
 define|#
 directive|define
 name|BKEY
-value|0x800
+value|0x08000000
 end_define
 
 begin_comment
@@ -1529,7 +1533,7 @@ begin_define
 define|#
 directive|define
 name|SPCLKEY
-value|0x8000
+value|0x80000000
 end_define
 
 begin_comment
@@ -1540,7 +1544,7 @@ begin_define
 define|#
 directive|define
 name|RELKEY
-value|0x4000
+value|0x40000000
 end_define
 
 begin_comment
@@ -1551,11 +1555,15 @@ begin_define
 define|#
 directive|define
 name|ERRKEY
-value|0x2000
+value|0x20000000
 end_define
 
 begin_comment
 comment|/* error			*/
+end_comment
+
+begin_comment
+comment|/*  * The top byte is used to store the flags.  This means there are 24  * bits left to store the actual character.  Because UTF-8 can encode  * 2^21 different characters, this is good enough to get Unicode  * working.  */
 end_comment
 
 begin_define
@@ -1565,7 +1573,7 @@ name|KEYCHAR
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)& 0x00ff)
+value|((c)& 0x00ffffff)
 end_define
 
 begin_define
@@ -1575,7 +1583,7 @@ name|KEYFLAGS
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)& ~0x00ff)
+value|((c)& ~0x00ffffff)
 end_define
 
 begin_endif

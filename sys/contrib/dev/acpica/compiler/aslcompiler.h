@@ -1166,6 +1166,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|FlAddIncludeDirectory
+parameter_list|(
+name|char
+modifier|*
+name|Dir
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|FlOpenIncludeFile
 parameter_list|(
 name|ACPI_PARSE_OBJECT

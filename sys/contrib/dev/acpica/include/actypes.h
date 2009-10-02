@@ -2490,8 +2490,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_ADR_SPACE_DATA_TABLE
+name|ACPI_ADR_SPACE_IPMI
 value|(ACPI_ADR_SPACE_TYPE) 7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADR_SPACE_DATA_TABLE
+value|(ACPI_ADR_SPACE_TYPE) 8
 end_define
 
 begin_define
@@ -3167,9 +3174,6 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Object
 parameter_list|,
-name|UINT32
-name|Function
-parameter_list|,
 name|void
 modifier|*
 name|Data
@@ -3403,22 +3407,23 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Length of _HID, _UID, _CID, and UUID values */
+comment|/* Length of 32-bit EISAID values when converted back to a string */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_DEVICE_ID_LENGTH
-value|0x09
+name|ACPI_EISAID_STRING_SIZE
+value|8
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_CID_LENGTH
-value|48
-end_define
+begin_comment
+comment|/* Includes null terminator */
+end_comment
+
+begin_comment
+comment|/* Length of UUID (string) values */
+end_comment
 
 begin_define
 define|#
@@ -3428,7 +3433,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Common string version of device HIDs and UIDs */
+comment|/* Structures used for device/processor HID, UID, CID */
 end_comment
 
 begin_typedef
@@ -3436,103 +3441,178 @@ typedef|typedef
 struct|struct
 name|acpi_device_id
 block|{
+name|UINT32
+name|Length
+decl_stmt|;
+comment|/* Length of string + null */
 name|char
-name|Value
-index|[
-name|ACPI_DEVICE_ID_LENGTH
-index|]
+modifier|*
+name|String
 decl_stmt|;
 block|}
 name|ACPI_DEVICE_ID
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_device_id_list
+block|{
+name|UINT32
+name|Count
+decl_stmt|;
+comment|/* Number of IDs in Ids array */
+name|UINT32
+name|ListSize
+decl_stmt|;
+comment|/* Size of list, including ID strings */
+name|ACPI_DEVICE_ID
+name|Ids
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* ID array */
+block|}
+name|ACPI_DEVICE_ID_LIST
+typedef|;
+end_typedef
+
 begin_comment
-comment|/* Common string version of device CIDs */
+comment|/*  * Structure returned from AcpiGetObjectInfo.  * Optimized for both 32- and 64-bit builds  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_compatible_id
-block|{
-name|char
-name|Value
-index|[
-name|ACPI_MAX_CID_LENGTH
-index|]
-decl_stmt|;
-block|}
-name|ACPI_COMPATIBLE_ID
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_compatible_id_list
+name|acpi_device_info
 block|{
 name|UINT32
-name|Count
+name|InfoSize
 decl_stmt|;
+comment|/* Size of info, including ID strings */
 name|UINT32
-name|Size
+name|Name
 decl_stmt|;
-name|ACPI_COMPATIBLE_ID
-name|Id
+comment|/* ACPI object Name */
+name|ACPI_OBJECT_TYPE
+name|Type
+decl_stmt|;
+comment|/* ACPI object Type */
+name|UINT8
+name|ParamCount
+decl_stmt|;
+comment|/* If a method, required parameter count */
+name|UINT8
+name|Valid
+decl_stmt|;
+comment|/* Indicates which optional fields are valid */
+name|UINT8
+name|Flags
+decl_stmt|;
+comment|/* Miscellaneous info */
+name|UINT8
+name|HighestDstates
 index|[
-literal|1
+literal|4
 index|]
 decl_stmt|;
+comment|/* _SxD values: 0xFF indicates not valid */
+name|UINT8
+name|LowestDstates
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* _SxW values: 0xFF indicates not valid */
+name|UINT32
+name|CurrentStatus
+decl_stmt|;
+comment|/* _STA value */
+name|ACPI_INTEGER
+name|Address
+decl_stmt|;
+comment|/* _ADR value */
+name|ACPI_DEVICE_ID
+name|HardwareId
+decl_stmt|;
+comment|/* _HID value */
+name|ACPI_DEVICE_ID
+name|UniqueId
+decl_stmt|;
+comment|/* _UID value */
+name|ACPI_DEVICE_ID_LIST
+name|CompatibleIdList
+decl_stmt|;
+comment|/* _CID list<must be last> */
 block|}
-name|ACPI_COMPATIBLE_ID_LIST
+name|ACPI_DEVICE_INFO
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* Structure and flags for AcpiGetObjectInfo */
+comment|/* Values for Flags field above (AcpiGetObjectInfo) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_ROOT_BRIDGE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Flags for Valid field above (AcpiGetObjectInfo) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_STA
-value|0x0001
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_ADR
-value|0x0002
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_HID
-value|0x0004
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_UID
-value|0x0008
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_CID
-value|0x0010
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_SXDS
-value|0x0020
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_VALID_SXWS
+value|0x40
 end_define
 
 begin_comment
@@ -3584,83 +3664,6 @@ directive|define
 name|ACPI_STA_BATTERY_PRESENT
 value|0x10
 end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_COMMON_OBJ_INFO
-define|\
-value|ACPI_OBJECT_TYPE                Type;
-comment|/* ACPI object type */
-value|\     ACPI_NAME                       Name
-end_define
-
-begin_comment
-comment|/* ACPI object Name */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_obj_info_header
-block|{
-name|ACPI_COMMON_OBJ_INFO
-expr_stmt|;
-block|}
-name|ACPI_OBJ_INFO_HEADER
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Structure returned from Get Object Info */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_device_info
-block|{
-name|ACPI_COMMON_OBJ_INFO
-expr_stmt|;
-name|UINT32
-name|ParamCount
-decl_stmt|;
-comment|/* If a method, required parameter count */
-name|UINT32
-name|Valid
-decl_stmt|;
-comment|/* Indicates which fields below are valid */
-name|UINT32
-name|CurrentStatus
-decl_stmt|;
-comment|/* _STA value */
-name|ACPI_INTEGER
-name|Address
-decl_stmt|;
-comment|/* _ADR value if any */
-name|ACPI_DEVICE_ID
-name|HardwareId
-decl_stmt|;
-comment|/* _HID value if any */
-name|ACPI_DEVICE_ID
-name|UniqueId
-decl_stmt|;
-comment|/* _UID value if any */
-name|UINT8
-name|HighestDstates
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* _SxD values: 0xFF indicates not valid */
-name|ACPI_COMPATIBLE_ID_LIST
-name|CompatibilityId
-decl_stmt|;
-comment|/* List of _CIDs if any */
-block|}
-name|ACPI_DEVICE_INFO
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Context structs for address space handlers */

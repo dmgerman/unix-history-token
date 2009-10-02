@@ -1037,19 +1037,7 @@ expr_stmt|;
 case|case
 name|ACPI_REFCLASS_LOCAL
 case|:
-name|ACPI_ERROR
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"Uninitialized Local[%d] at node %p"
-operator|,
-name|Index
-operator|,
-name|Node
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/*              * No error message for this case, will be trapped again later to              * detect and ignore cases of Store(LocalX,LocalX)              */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_UNINITIALIZED_LOCAL

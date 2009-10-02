@@ -522,7 +522,7 @@ begin_define
 define|#
 directive|define
 name|FCNTLFLAGS
-value|(FAPPEND|FASYNC|FFSYNC|FNONBLOCK|O_DIRECT)
+value|(FAPPEND|FASYNC|FFSYNC|FNONBLOCK|FRDAHEAD|O_DIRECT)
 end_define
 
 begin_if
@@ -571,7 +571,7 @@ begin_define
 define|#
 directive|define
 name|FCNTLFLAGS
-value|(FAPPEND|FASYNC|FFSYNC|FNONBLOCK|FPOSIXSHM|O_DIRECT)
+value|(FAPPEND|FASYNC|FFSYNC|FNONBLOCK|FPOSIXSHM|FRDAHEAD| \ 			 O_DIRECT)
 end_define
 
 begin_endif
@@ -674,6 +674,17 @@ if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
+
+begin_comment
+comment|/* Read ahead */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FRDAHEAD
+value|O_CREAT
+end_define
 
 begin_endif
 endif|#
@@ -942,6 +953,28 @@ end_define
 
 begin_comment
 comment|/* debugging support for remote locks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_READAHEAD
+value|15
+end_define
+
+begin_comment
+comment|/* read ahead */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_RDAHEAD
+value|16
+end_define
+
+begin_comment
+comment|/* Darwin compatible read ahead */
 end_comment
 
 begin_comment

@@ -1248,12 +1248,45 @@ condition|(
 name|Arg
 condition|)
 block|{
-comment|/*          * NumElements was exhausted, but there are remaining elements in the          * PackageList.          *          * Note: technically, this is an error, from ACPI spec: "It is an error          * for NumElements to be less than the number of elements in the          * PackageList". However, for now, we just print an error message and          * no exception is returned.          */
+comment|/*          * NumElements was exhausted, but there are remaining elements in the          * PackageList. Truncate the package to NumElements.          *          * Note: technically, this is an error, from ACPI spec: "It is an error          * for NumElements to be less than the number of elements in the          * PackageList". However, we just print an error message and          * no exception is returned. This provides Windows compatibility. Some          * BIOSs will alter the NumElements on the fly, creating this type          * of ill-formed package object.          */
 while|while
 condition|(
 name|Arg
 condition|)
 block|{
+comment|/*              * We must delete any package elements that were created earlier              * and are not going to be used because of the package truncation.              */
+if|if
+condition|(
+name|Arg
+operator|->
+name|Common
+operator|.
+name|Node
+condition|)
+block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_OPERAND_OBJECT
+argument_list|,
+name|Arg
+operator|->
+name|Common
+operator|.
+name|Node
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|Arg
+operator|->
+name|Common
+operator|.
+name|Node
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* Find out how many elements there really are */
 name|i
 operator|++
@@ -1272,7 +1305,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Package List length (%X) larger than NumElements count (%X), truncated\n"
+literal|"Package List length (0x%X) larger than NumElements count (0x%X), truncated\n"
 operator|,
 name|i
 operator|,
@@ -1295,7 +1328,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Package List length (%X) smaller than NumElements count (%X), padded with null elements\n"
+literal|"Package List length (0x%X) smaller than NumElements count (0x%X), padded with null elements\n"
 operator|,
 name|i
 operator|,

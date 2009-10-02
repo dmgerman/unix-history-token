@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|CompilerCompliance
-value|"Supports ACPI Specification Revision 3.0a"
+value|"Supports ACPI Specification Revision 4.0"
 end_define
 
 begin_define

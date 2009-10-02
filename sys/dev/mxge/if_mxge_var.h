@@ -911,6 +911,9 @@ name|int
 name|max_mtu
 decl_stmt|;
 name|int
+name|throttle
+decl_stmt|;
+name|int
 name|tx_defrag
 decl_stmt|;
 name|int
@@ -955,6 +958,10 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* eeprom mac address */
+name|uint16_t
+name|pectl
+decl_stmt|;
+comment|/* save PCIe CTL state */
 name|char
 name|product_code_string
 index|[
@@ -1030,6 +1037,20 @@ define|#
 directive|define
 name|MXGE_SFP_COMPLIANCE_BYTE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGE_MIN_THROTTLE
+value|416
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGE_MAX_THROTTLE
+value|4096
 end_define
 
 begin_define

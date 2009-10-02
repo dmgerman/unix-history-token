@@ -2116,6 +2116,10 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/* route_arp_update_event is no longer generated; see arp_update_event */
+end_comment
+
 begin_expr_stmt
 name|EVENTHANDLER_DECLARE
 argument_list|(

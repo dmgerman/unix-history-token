@@ -4820,6 +4820,50 @@ begin_comment
 comment|/* FreeBSD. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AUE_PDFORK
+value|43197
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PDKILL
+value|43198
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PDGETPID
+value|43199
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PDWAIT
+value|43200
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
 begin_comment
 comment|/*  * Darwin BSM uses a number of AUE_O_* definitions, which are aliased to the  * normal Solaris BSM identifiers.  _O_ refers to it being an old, or compat  * interface.  In most cases, Darwin has never implemented these system calls  * but picked up the fields in their system call table from their FreeBSD  * import.  Happily, these have different names than the AUE_O* definitions  * in Solaris BSM.  */
 end_comment

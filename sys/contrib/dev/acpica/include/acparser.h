@@ -100,6 +100,13 @@ name|ACPI_PARSE_DISASSEMBLE
 value|0x0200
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_PARSE_MODULE_LEVEL
+value|0x0400
+end_define
+
 begin_comment
 comment|/******************************************************************************  *  * Parser interfaces  *  *****************************************************************************/
 end_comment

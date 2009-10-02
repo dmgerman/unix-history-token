@@ -37,6 +37,12 @@ directive|include
 file|<contrib/dev/acpica/include/acinterp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acnamesp.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -66,6 +72,15 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|AcpiNsExecModuleCodeList
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
 end_function
 
 begin_function

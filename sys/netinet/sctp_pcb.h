@@ -1275,13 +1275,16 @@ begin_comment
 comment|/* Attention Julian, this is the extern that  * goes with the base info. sctp_pcb.c has  * the real definition.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|sctp_base_info
+argument_list|,
 name|system_base_info
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#

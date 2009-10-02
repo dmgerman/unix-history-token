@@ -149,6 +149,28 @@ value|0x02
 end_define
 
 begin_comment
+comment|/* Object is not a package element */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOT_PACKAGE_ELEMENT
+value|ACPI_UINT32_MAX
+end_define
+
+begin_comment
+comment|/* Always emit warning message, not dependent on node flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_WARN_ALWAYS
+value|0
+end_define
+
+begin_comment
 comment|/*  * nsinit - Namespace initialization  */
 end_comment
 
@@ -376,6 +398,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiNsRemoveNode
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiNsDeleteNamespaceSubtree
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
@@ -551,6 +584,15 @@ parameter_list|(
 name|ACPI_EVALUATE_INFO
 modifier|*
 name|Info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiNsExecModuleCodeList
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -830,6 +872,48 @@ name|void
 modifier|*
 modifier|*
 name|Data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * nsrepair - return object repair for predefined methods/objects  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsRepairObject
+parameter_list|(
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+parameter_list|,
+name|UINT32
+name|ExpectedBtypes
+parameter_list|,
+name|UINT32
+name|PackageIndex
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ReturnObjectPtr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsRepairPackageList
+parameter_list|(
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ObjDescPtr
 parameter_list|)
 function_decl|;
 end_function_decl

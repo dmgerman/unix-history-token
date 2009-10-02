@@ -314,6 +314,20 @@ name|ident_data
 operator|->
 name|satacapabilities
 operator|&
+name|ATA_SATA_GEN3
+condition|)
+name|printf
+argument_list|(
+literal|" SATA 3.x"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ident_data
+operator|->
+name|satacapabilities
+operator|&
 name|ATA_SATA_GEN2
 condition|)
 name|printf

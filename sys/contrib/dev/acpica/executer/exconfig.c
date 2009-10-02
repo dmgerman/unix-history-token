@@ -225,7 +225,22 @@ name|DdbHandle
 operator|=
 name|NULL
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
+comment|/* Execute any module-level code that was found in the table */
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
+name|AcpiNsExecModuleCodeList
+argument_list|()
+expr_stmt|;
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

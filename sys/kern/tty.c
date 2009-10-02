@@ -2635,14 +2635,21 @@ name|filterops
 name|tty_kqops_read
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|tty_kqops_read_detach
 block|,
+operator|.
+name|f_event
+operator|=
 name|tty_kqops_read_event
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2653,14 +2660,21 @@ name|filterops
 name|tty_kqops_write
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|tty_kqops_write_detach
 block|,
+operator|.
+name|f_event
+operator|=
 name|tty_kqops_write_event
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

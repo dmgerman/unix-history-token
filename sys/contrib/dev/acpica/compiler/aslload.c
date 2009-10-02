@@ -608,6 +608,14 @@ name|Op
 operator|=
 name|Op
 expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Node
+operator|=
+name|Node
+expr_stmt|;
 comment|/*      * Now enter the predefined fields, for easy lookup when referenced      * by the source ASL      */
 name|InitializerOp
 operator|=

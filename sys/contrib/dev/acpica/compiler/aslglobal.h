@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|HEX_LISTING_LINE_SIZE
-value|16
+value|8
 end_define
 
 begin_comment
@@ -666,6 +666,19 @@ name|ASL_INIT_GLOBAL
 argument_list|(
 operator|*
 name|Gbl_OutputFilenamePrefix
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|ASL_INCLUDE_DIR
+name|ASL_INIT_GLOBAL
+argument_list|(
+operator|*
+name|Gbl_IncludeDirList
 argument_list|,
 name|NULL
 argument_list|)

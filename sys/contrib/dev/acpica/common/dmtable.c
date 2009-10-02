@@ -75,6 +75,10 @@ name|UINT8
 modifier|*
 name|Target
 parameter_list|,
+name|char
+modifier|*
+name|RepairedName
+parameter_list|,
 name|UINT32
 name|Count
 parameter_list|)
@@ -136,6 +140,8 @@ literal|"Reserved Memory Region"
 block|,
 literal|"Root Port ATS Capability"
 block|,
+literal|"Remapping Hardware Static Affinity"
+block|,
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
 block|}
@@ -151,18 +157,21 @@ name|AcpiDmHestSubnames
 index|[]
 init|=
 block|{
-literal|"XPF Machine Check Exception"
+literal|"IA-32 Machine Check Exception"
 block|,
-literal|"XPF Corrected Machine Check"
+literal|"IA-32 Corrected Machine Check"
 block|,
-literal|"NOT USED???"
+literal|"IA-32 Non-Maskable Interrupt"
 block|,
-literal|"XPF Non-Maskable Interrupt"
+literal|"Unknown SubTable Type"
 block|,
-literal|"IPF Corrected Machine Check"
+comment|/* 3 - Reserved */
+literal|"Unknown SubTable Type"
 block|,
-literal|"IPF Corrected Platform Error"
+comment|/* 4 - Reserved */
+literal|"Unknown SubTable Type"
 block|,
+comment|/* 5 - Reserved */
 literal|"PCI Express Root Port AER"
 block|,
 literal|"PCI Express AER (AER Endpoint)"
@@ -271,6 +280,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmIvrsSubnames
+index|[]
+init|=
+block|{
+literal|"Hardware Definition Block"
+block|,
+literal|"Memory Definition Block"
+block|,
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -309,7 +337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * ACPI Table Data, indexed by signature.  *  * Simple tables have only a TableInfo structure, complex tables have a handler.  * This table must be NULL terminated. RSDP and FACS are special-cased  * elsewhere.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * ACPI Table Data, indexed by signature.  *  * Each entry contains: Signature, Table Info, Handler, Description  *  * Simple tables have only a TableInfo structure, complex tables have a handler.  * This table must be NULL terminated. RSDP and FACS are special-cased  * elsewhere.  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -440,6 +468,16 @@ literal|"High Precision Event Timer table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_IVRS
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpIvrs
+block|,
+literal|"I/O Virtualization Reporting Structure"
+block|}
+block|,
+block|{
 name|ACPI_SIG_MADT
 block|,
 name|NULL
@@ -457,6 +495,16 @@ block|,
 name|AcpiDmDumpMcfg
 block|,
 literal|"Memory Mapped Configuration table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_MSCT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpMsct
+block|,
+literal|"Maximum System Characteristics Table"
 block|}
 block|,
 block|{
@@ -537,6 +585,36 @@ block|,
 name|NULL
 block|,
 literal|"Trusted Computing Platform Alliance table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_UEFI
+block|,
+name|AcpiDmTableInfoUefi
+block|,
+name|NULL
+block|,
+literal|"UEFI Boot Optimization Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_WAET
+block|,
+name|AcpiDmTableInfoWaet
+block|,
+name|NULL
+block|,
+literal|"Windows ACPI Emulated Devices Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_WDAT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpWdat
+block|,
+literal|"Watchdog Action Table"
 block|}
 block|,
 block|{
@@ -1100,10 +1178,21 @@ name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Name
+decl_stmt|;
 name|BOOLEAN
 name|LastOutputBlankLine
 init|=
 name|FALSE
+decl_stmt|;
+name|char
+name|RepairedName
+index|[
+literal|8
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -1207,6 +1296,9 @@ case|case
 name|ACPI_DMT_SPACEID
 case|:
 case|case
+name|ACPI_DMT_IVRS
+case|:
+case|case
 name|ACPI_DMT_MADT
 case|:
 case|case
@@ -1287,6 +1379,14 @@ case|:
 name|ByteLength
 operator|=
 literal|8
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_BUF16
+case|:
+name|ByteLength
+operator|=
+literal|16
 expr_stmt|;
 break|break;
 case|case
@@ -1601,11 +1701,46 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_BUF16
+case|:
+comment|/* Buffer of length 16 */
+for|for
+control|(
+name|Temp8
+operator|=
+literal|0
+init|;
+name|Temp8
+operator|<
+literal|16
+condition|;
+name|Temp8
+operator|++
+control|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X,"
+argument_list|,
+name|Target
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_STRING
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s\n"
+literal|"\"%s\"\n"
 argument_list|,
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1624,14 +1759,16 @@ name|AcpiDmCheckAscii
 argument_list|(
 name|Target
 argument_list|,
+name|RepairedName
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\"%4.4s\"    "
+literal|"\"%.4s\"    "
 argument_list|,
-name|Target
+name|RepairedName
 argument_list|)
 expr_stmt|;
 name|TableData
@@ -1674,14 +1811,16 @@ name|AcpiDmCheckAscii
 argument_list|(
 name|Target
 argument_list|,
+name|RepairedName
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\"%4.4s\"\n"
+literal|"\"%.4s\"\n"
 argument_list|,
-name|Target
+name|RepairedName
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1692,14 +1831,16 @@ name|AcpiDmCheckAscii
 argument_list|(
 name|Target
 argument_list|,
+name|RepairedName
+argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\"%6.6s\"\n"
+literal|"\"%.6s\"\n"
 argument_list|,
-name|Target
+name|RepairedName
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1710,14 +1851,16 @@ name|AcpiDmCheckAscii
 argument_list|(
 name|Target
 argument_list|,
+name|RepairedName
+argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\"%8.8s\"\n"
+literal|"\"%.8s\"\n"
 argument_list|,
-name|Target
+name|RepairedName
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1799,14 +1942,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiDmDumpTable
 argument_list|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|,
-name|Table
-argument_list|)
-operator|->
-name|Length
+name|TableLength
 argument_list|,
 name|CurrentOffset
 argument_list|,
@@ -1963,14 +2099,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiDmDumpTable
 argument_list|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|,
-name|Table
-argument_list|)
-operator|->
-name|Length
+name|TableLength
 argument_list|,
 name|CurrentOffset
 argument_list|,
@@ -2135,6 +2264,69 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_IVRS
+case|:
+comment|/* IVRS subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+switch|switch
+condition|(
+name|Temp8
+condition|)
+block|{
+case|case
+name|ACPI_IVRS_TYPE_HARDWARE
+case|:
+name|Name
+operator|=
+name|AcpiDmIvrsSubnames
+index|[
+literal|0
+index|]
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_IVRS_TYPE_MEMORY1
+case|:
+case|case
+name|ACPI_IVRS_TYPE_MEMORY2
+case|:
+case|case
+name|ACPI_IVRS_TYPE_MEMORY3
+case|:
+name|Name
+operator|=
+name|AcpiDmIvrsSubnames
+index|[
+literal|1
+index|]
+expr_stmt|;
+break|break;
+default|default:
+name|Name
+operator|=
+name|AcpiDmIvrsSubnames
+index|[
+literal|2
+index|]
+expr_stmt|;
+break|break;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X<%s>\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_EXIT
 case|:
 return|return
@@ -2204,6 +2396,10 @@ name|UINT8
 modifier|*
 name|Name
 parameter_list|,
+name|char
+modifier|*
+name|RepairedName
+parameter_list|,
 name|UINT32
 name|Count
 parameter_list|)
@@ -2225,6 +2421,16 @@ name|i
 operator|++
 control|)
 block|{
+name|RepairedName
+index|[
+name|i
+index|]
+operator|=
+name|Name
+index|[
+name|i
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2232,7 +2438,12 @@ name|Name
 index|[
 name|i
 index|]
-operator|||
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
 operator|!
 name|isprint
 argument_list|(
@@ -2243,7 +2454,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|Name
+name|RepairedName
 index|[
 name|i
 index|]

@@ -1295,9 +1295,9 @@ expr_stmt|;
 else|else
 name|warnx
 argument_list|(
-literal|"opened /dev/targ%d"
+literal|"opened %s"
 argument_list|,
-name|unit
+name|targname
 argument_list|)
 expr_stmt|;
 comment|/* The first three are handled by kevent() later */

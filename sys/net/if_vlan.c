@@ -6040,7 +6040,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error

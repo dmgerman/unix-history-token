@@ -15014,6 +15014,28 @@ begin_comment
 comment|/* COMPAT_FREEBSD6 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD7
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|nosys
+value|linux_nosys
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_FREEBSD7 */
+end_comment
+
 begin_define
 define|#
 directive|define

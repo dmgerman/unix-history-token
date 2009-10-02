@@ -10,14 +10,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PARAM_H_
+name|_MIPS_INCLUDE_PARAM_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PARAM_H_
+name|_MIPS_INCLUDE_PARAM_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/_align.h>
+end_include
 
 begin_include
 include|#
@@ -186,23 +192,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_ALIGNBYTES
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ALIGN
-parameter_list|(
-name|p
-parameter_list|)
-value|(((unsigned long)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ALIGNBYTES
 value|_ALIGNBYTES
 end_define
@@ -230,7 +219,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|((((unsigned long)(p))& (sizeof (t) - 1)) == 0)
+value|((((unsigned)(p))& (sizeof (t) - 1)) == 0)
 end_define
 
 begin_comment
@@ -351,6 +340,17 @@ end_define
 
 begin_comment
 comment|/* LOG2(NBSEG) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPAGESIZES
+value|1
+end_define
+
+begin_comment
+comment|/* maximum number of supported page sizes */
 end_comment
 
 begin_comment
@@ -491,7 +491,7 @@ name|mips_round_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned long)(x)) + NBPG - 1)& ~(NBPG-1))
+value|((((unsigned)(x)) + NBPG - 1)& ~(NBPG-1))
 end_define
 
 begin_define
@@ -501,7 +501,7 @@ name|mips_trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)& ~(NBPG-1))
+value|((unsigned)(x)& ~(NBPG-1))
 end_define
 
 begin_define
@@ -511,7 +511,7 @@ name|mips_btop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)>> PGSHIFT)
+value|((unsigned)(x)>> PGSHIFT)
 end_define
 
 begin_define
@@ -521,7 +521,7 @@ name|mips_ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)<< PGSHIFT)
+value|((unsigned)(x)<< PGSHIFT)
 end_define
 
 begin_define
@@ -599,7 +599,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_PARAM_H_ */
+comment|/* !_MIPS_INCLUDE_PARAM_H_ */
 end_comment
 
 end_unit

@@ -137,6 +137,13 @@ name|AOPOBJ_SINGLE_DATUM
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|AOPOBJ_MODULE_LEVEL
+value|0x40
+end_define
+
 begin_comment
 comment|/******************************************************************************  *  * Basic data types  *  *****************************************************************************/
 end_comment

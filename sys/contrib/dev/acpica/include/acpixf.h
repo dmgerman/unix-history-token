@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20090521
+value|0x20090903
 end_define
 
 begin_include
@@ -617,7 +617,8 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Handle
 parameter_list|,
-name|ACPI_BUFFER
+name|ACPI_DEVICE_INFO
+modifier|*
 modifier|*
 name|ReturnBuffer
 parameter_list|)
@@ -1236,7 +1237,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRead
 parameter_list|(
-name|UINT32
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -1251,7 +1252,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiWrite
 parameter_list|(
-name|UINT32
+name|UINT64
 name|Value
 parameter_list|,
 name|ACPI_GENERIC_ADDRESS

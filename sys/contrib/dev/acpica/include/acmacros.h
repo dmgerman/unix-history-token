@@ -1438,6 +1438,16 @@ parameter_list|)
 value|AcpiNsReportMethodError (AE_INFO, s, n, p, e);
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_WARN_PREDEFINED
+parameter_list|(
+name|plist
+parameter_list|)
+value|AcpiUtPredefinedWarning plist
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1470,6 +1480,15 @@ parameter_list|,
 name|p
 parameter_list|,
 name|e
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WARN_PREDEFINED
+parameter_list|(
+name|plist
 parameter_list|)
 end_define
 

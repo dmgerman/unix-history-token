@@ -360,14 +360,21 @@ name|filterops
 name|solisten_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_sordetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_solisten
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -378,14 +385,21 @@ name|filterops
 name|soread_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_sordetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_soread
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -396,14 +410,21 @@ name|filterops
 name|sowrite_filtops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_sowdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_sowrite
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -8618,6 +8639,12 @@ begin_comment
 comment|/*  * Optimized version of soreceive() for stream (TCP) sockets.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_SORECEIVE_STREAM
+end_ifdef
+
 begin_function
 name|int
 name|soreceive_stream
@@ -9569,6 +9596,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TCP_SORECEIVE_STREAM */
+end_comment
 
 begin_comment
 comment|/*  * Optimized version of soreceive() for simple datagram cases from userspace.  * Unlike in the stream case, we're able to drop a datagram if copyout()  * fails, and because we handle datagrams atomically, we don't need to use a  * sleep lock to prevent I/O interlacing.  */

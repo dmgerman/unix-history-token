@@ -113,27 +113,8 @@ return|;
 case|case
 literal|0
 case|:
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
-name|register_9x_service
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
-comment|/* 		 * This sleep avoids a race condition which kills the 		 * child process if parent is started by a NT/W2K service. 		 */
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|_exit
 argument_list|(
 literal|0

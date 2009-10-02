@@ -177,7 +177,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSubsystemShutdown  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: Shutdown the various subsystems.  Don't delete the mutex  *              objects here -- because the AML debugger may be still running.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSubsystemShutdown  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Shutdown the various components. Do not delete the mutex  *              objects here, because the AML debugger may be still running.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -190,42 +190,6 @@ block|{
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|UtSubsystemShutdown
-argument_list|)
-expr_stmt|;
-comment|/* Just exit if subsystem is already shutdown */
-if|if
-condition|(
-name|AcpiGbl_Shutdown
-condition|)
-block|{
-name|ACPI_ERROR
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"ACPI Subsystem is already terminated"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-comment|/* Subsystem appears active, go ahead and shut it down */
-name|AcpiGbl_Shutdown
-operator|=
-name|TRUE
-expr_stmt|;
-name|AcpiGbl_StartupFlags
-operator|=
-literal|0
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Shutting down ACPI Subsystem\n"
-operator|)
 argument_list|)
 expr_stmt|;
 ifndef|#

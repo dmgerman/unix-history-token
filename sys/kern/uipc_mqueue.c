@@ -1261,14 +1261,21 @@ name|filterops
 name|mq_rfiltops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_mqdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_mqread
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1278,14 +1285,21 @@ name|filterops
 name|mq_wfiltops
 init|=
 block|{
+operator|.
+name|f_isfd
+operator|=
 literal|1
 block|,
-name|NULL
-block|,
+operator|.
+name|f_detach
+operator|=
 name|filt_mqdetach
 block|,
+operator|.
+name|f_event
+operator|=
 name|filt_mqwrite
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

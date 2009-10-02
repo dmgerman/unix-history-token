@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -288,6 +294,38 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum number of memory-mapped files per process"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * 'mmap_zero' determines whether or not MAP_FIXED mmap() requests for  * virtual address zero are permitted.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mmap_zero
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_bsd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mmap_zero
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|mmap_zero
+argument_list|,
+literal|0
+argument_list|,
+literal|"Processes may map an object at virtual address zero"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -787,14 +825,28 @@ name|fp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* make sure mapping fits into numeric range etc */
+comment|/* Make sure mapping fits into numeric range, etc. */
 if|if
 condition|(
+operator|(
 name|uap
 operator|->
 name|len
 operator|==
 literal|0
+operator|&&
+operator|!
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_AOUT
+argument_list|)
+operator|&&
+name|curproc
+operator|->
+name|p_osrel
+operator|>=
+literal|800104
+operator|)
 operator|||
 operator|(
 operator|(
@@ -914,6 +966,21 @@ condition|(
 name|addr
 operator|&
 name|PAGE_MASK
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|/* 		 * Mapping to address zero is only permitted if 		 * mmap_zero is enabled. 		 */
+if|if
+condition|(
+name|addr
+operator|==
+literal|0
+operator|&&
+operator|!
+name|mmap_zero
 condition|)
 return|return
 operator|(

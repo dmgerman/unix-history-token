@@ -167,6 +167,14 @@ name|bus_dmamap_t
 name|cr_datamap
 decl_stmt|;
 comment|/* DMA map for data */
+name|struct
+name|ciss_command
+modifier|*
+name|cr_cc
+decl_stmt|;
+name|uint32_t
+name|cr_ccphys
+decl_stmt|;
 name|int
 name|cr_tag
 decl_stmt|;
@@ -258,36 +266,35 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The adapter command structure is defined with a zero-length  * scatter/gather list size.  In practise, we want space for a  * scatter-gather list, and we also want to avoid having commands  * cross page boundaries.  *  * Note that 512 bytes yields 28 scatter/gather entries, or the  * ability to map (26 * PAGE_SIZE) + 2 bytes of data.  On x86, this is  * 104kB.  256 bytes would only yield 12 entries, giving a mere 40kB,  * too small.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CISS_COMMAND_ALLOC_SIZE
-value|512
-end_define
-
-begin_comment
-comment|/* XXX tune to get sensible s/g list length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CISS_COMMAND_SG_LENGTH
-value|((CISS_COMMAND_ALLOC_SIZE - sizeof(struct ciss_command)) \ 				 / sizeof(struct ciss_sg_entry))
-end_define
-
-begin_comment
-comment|/* XXX Prep for increasing max i/o */
+comment|/*  * The adapter command structure is defined with a zero-length  * scatter/gather list size.  In practise, we want space for a  * scatter-gather list, and we also want to avoid having commands  * cross page boundaries.  *  * The size of the ciss_command is 52 bytes.  65 s/g elements are reserved  * to allow a max i/o size of 256k.  This gives a total command size of  * 1120 bytes, including the 32 byte alignment padding.  Modern controllers  * seem to saturate nicely at this value.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CISS_MAX_SG_ELEMENTS
-value|17
+value|65
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_COMMAND_ALIGN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_COMMAND_SG_LENGTH
+value|(sizeof(struct ciss_sg_entry) * CISS_MAX_SG_ELEMENTS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_COMMAND_ALLOC_SIZE
+value|(roundup2(sizeof(struct ciss_command) + CISS_COMMAND_SG_LENGTH, CISS_COMMAND_ALIGN))
 end_define
 
 begin_comment
@@ -387,7 +394,7 @@ begin_define
 define|#
 directive|define
 name|CISS_MAX_PHYSTGT
-value|15
+value|256
 end_define
 
 begin_define
@@ -682,31 +689,6 @@ comment|/* queue statistics */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Given a request tag, find the corresponding command in virtual or  * physical space.  *  * The arithmetic here is due to the allocation of ciss_command structures  * inside CISS_COMMAND_ALLOC_SIZE blocks.  See the comment at the definition  * of CISS_COMMAND_ALLOC_SIZE above.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CISS_FIND_COMMAND
-parameter_list|(
-name|cr
-parameter_list|)
-define|\
-value|(struct ciss_command *)((u_int8_t *)(cr)->cr_sc->ciss_command +		\ 				((cr)->cr_tag * CISS_COMMAND_ALLOC_SIZE))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CISS_FIND_COMMANDPHYS
-parameter_list|(
-name|cr
-parameter_list|)
-value|((cr)->cr_sc->ciss_command_phys + \ 					 ((cr)->cr_tag * CISS_COMMAND_ALLOC_SIZE))
-end_define
 
 begin_comment
 comment|/************************************************************************  * Debugging/diagnostic output.  */

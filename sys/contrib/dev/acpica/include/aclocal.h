@@ -1187,6 +1187,46 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Data block used during object validation */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_predefined_data
+block|{
+name|char
+modifier|*
+name|Pathname
+decl_stmt|;
+specifier|const
+name|ACPI_PREDEFINED_INFO
+modifier|*
+name|Predefined
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+name|UINT8
+name|NodeFlags
+decl_stmt|;
+block|}
+name|ACPI_PREDEFINED_DATA
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Defines for Flags field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_OBJECT_REPAIRED
+value|1
+end_define
+
+begin_comment
 comment|/*  * Bitmapped return value types  * Note: the actual data types must be contiguous, a loop in nspredef.c  * depends on this.  */
 end_comment
 
@@ -3067,6 +3107,27 @@ define|#
 directive|define
 name|ACPI_OSI_WIN_VISTA
 value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WINSRV_2008
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_VISTA_SP1
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_7
+value|0x0A
 end_define
 
 begin_define

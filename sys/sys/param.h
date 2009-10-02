@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|900000
+value|900002
 end_define
 
 begin_comment
@@ -337,12 +337,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_NO_NAMESPACE_POLLUTION
-end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -660,15 +654,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _NO_NAMESPACE_POLLUTION */
-end_comment
 
 begin_define
 define|#

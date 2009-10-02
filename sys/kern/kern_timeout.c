@@ -981,7 +981,7 @@ name|cc_softticks
 operator|-
 name|ticks
 operator|)
-operator|<
+operator|<=
 literal|0
 condition|;
 name|cc
@@ -1243,6 +1243,8 @@ condition|(
 name|cc
 operator|->
 name|cc_softticks
+operator|-
+literal|1
 operator|!=
 name|ticks
 condition|)

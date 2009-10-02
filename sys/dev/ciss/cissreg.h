@@ -2694,7 +2694,7 @@ name|sc
 parameter_list|,
 name|cr
 parameter_list|)
-value|CISS_TL_SIMPLE_WRITE(sc, CISS_TL_SIMPLE_IPQ, CISS_FIND_COMMANDPHYS(cr) | (cr)->cr_sg_tag)
+value|CISS_TL_SIMPLE_WRITE(sc, CISS_TL_SIMPLE_IPQ, cr->cr_ccphys | (cr)->cr_sg_tag)
 end_define
 
 begin_define
@@ -2724,11 +2724,15 @@ name|CISS_CYCLE_MASK
 value|0x00000001
 end_define
 
+begin_comment
+comment|/* Only need one MSI/MSI-X vector */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CISS_MSI_COUNT
-value|4
+value|1
 end_define
 
 begin_define

@@ -6709,6 +6709,9 @@ name|cverf
 operator|.
 name|tv_sec
 operator|=
+operator|(
+name|int32_t
+operator|)
 name|tl
 index|[
 literal|0
@@ -8694,11 +8697,9 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
+name|vput
 argument_list|(
 name|dirp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -20061,7 +20062,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform access checking for vnodes obtained from file handles that would  * refer to files already opened by a Unix client. You cannot just use  * vn_writechk() and VOP_ACCESS() for two reasons.  * 1 - You must check for exported rdonly as well as MNT_RDONLY for the write  *     case.  * 2 - The owner is to be given access irrespective of mode bits for some  *     operations, so that processes that chmod after opening a file don't  *     break. I don't like this because it opens a security hole, but since  *     the nfs server opens a security hole the size of a barn door anyhow,  *     what the heck.  *  * The exception to rule 2 is EPERM. If a file is IMMUTABLE, VOP_ACCESS()  * will return EPERM instead of EACCESS. EPERM is always an error.  */
+comment|/*  * Perform access checking for vnodes obtained from file handles that would  * refer to files already opened by a Unix client. You cannot just use  * vn_writechk() and VOP_ACCESS() for two reasons.  * 1 - You must check for exported rdonly as well as MNT_RDONLY for the write  *     case.  * 2 - The owner is to be given access irrespective of mode bits for some  *     operations, so that processes that chmod after opening a file don't  *     break. I don't like this because it opens a security hole, but since  *     the nfs server opens a security hole the size of a barn door anyhow,  *     what the heck.  *  * The exception to rule 2 is EPERM. If a file is IMMUTABLE, VOP_ACCESS()  * will return EPERM instead of EACCES. EPERM is always an error.  */
 end_comment
 
 begin_function

@@ -2109,7 +2109,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"can not if_alloc()\n"
+literal|"cannot if_alloc()\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11141,9 +11141,16 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|mwl_rxdma_cleanup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
+block|}
 for|for
 control|(
 name|i

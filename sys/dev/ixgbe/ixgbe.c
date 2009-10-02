@@ -20769,9 +20769,11 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* missed_rx tallies misses for the gprc workaround */
-name|missed_rx
-operator|+=
+name|u32
+name|mp
+decl_stmt|;
+name|mp
+operator|=
 name|IXGBE_READ_REG
 argument_list|(
 name|hw
@@ -20782,6 +20784,11 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* missed_rx tallies misses for the gprc workaround */
+name|missed_rx
+operator|+=
+name|mp
+expr_stmt|;
 name|adapter
 operator|->
 name|stats
@@ -20791,7 +20798,7 @@ index|[
 name|i
 index|]
 operator|+=
-name|missed_rx
+name|mp
 expr_stmt|;
 comment|/* Running comprehensive total for stats display */
 name|total_missed_rx

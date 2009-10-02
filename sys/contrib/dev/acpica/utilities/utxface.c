@@ -548,6 +548,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/*      * Execute any module-level code that was detected during the table load      * phase. Although illegal since ACPI 2.0, there are many machines that      * contain this type of code. Each block of detected executable AML code      * outside of any control method is wrapped with a temporary control      * method object and placed on a global list. The methods on this list      * are executed below.      */
+name|AcpiNsExecModuleCodeList
+argument_list|()
+expr_stmt|;
 comment|/*      * Initialize the objects that remain uninitialized. This runs the      * executable AML that may be part of the declaration of these objects:      * OperationRegions, BufferFields, Buffers, and Packages.      */
 if|if
 condition|(
@@ -690,7 +694,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Shutdown the ACPI subsystem.  Release all resources.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Shutdown the ACPICA subsystem and release all resources.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -706,6 +710,45 @@ decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|AcpiTerminate
+argument_list|)
+expr_stmt|;
+comment|/* Just exit if subsystem is already shutdown */
+if|if
+condition|(
+name|AcpiGbl_Shutdown
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"ACPI Subsystem is already terminated"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Subsystem appears active, go ahead and shut it down */
+name|AcpiGbl_Shutdown
+operator|=
+name|TRUE
+expr_stmt|;
+name|AcpiGbl_StartupFlags
+operator|=
+literal|0
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Shutting down ACPI Subsystem\n"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Terminate the AML Debugger if present */

@@ -556,7 +556,7 @@ operator|!=
 name|ACPI_STATE_S5
 condition|)
 block|{
-comment|/* Disable BM arbitration */
+comment|/*          * Disable BM arbitration. This feature is contained within an          * optional register (PM2 Control), so ignore a BAD_ADDRESS          * exception.          */
 name|Status
 operator|=
 name|AcpiWriteBitRegister
@@ -572,6 +572,12 @@ name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
+operator|&&
+operator|(
+name|Status
+operator|!=
+name|AE_BAD_ADDRESS
+operator|)
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -1489,7 +1495,7 @@ argument_list|,
 name|ACPI_CLEAR_STATUS
 argument_list|)
 expr_stmt|;
-comment|/* Enable BM arbitration */
+comment|/*      * Enable BM arbitration. This feature is contained within an      * optional register (PM2 Control), so ignore a BAD_ADDRESS      * exception.      */
 name|Status
 operator|=
 name|AcpiWriteBitRegister
@@ -1505,6 +1511,12 @@ name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
+operator|&&
+operator|(
+name|Status
+operator|!=
+name|AE_BAD_ADDRESS
+operator|)
 condition|)
 block|{
 name|return_ACPI_STATUS

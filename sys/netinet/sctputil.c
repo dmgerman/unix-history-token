@@ -8157,6 +8157,18 @@ name|tmr
 operator|->
 name|net
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
+name|tmr
+operator|->
+name|vnet
+argument_list|)
+expr_stmt|;
 name|did_output
 operator|=
 literal|1
@@ -8204,6 +8216,9 @@ name|tmr
 condition|)
 block|{
 comment|/* 		 * SCTP_PRINTF("Stale SCTP timer fired (%p), ignoring...\n", 		 * tmr); 		 */
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 name|tmr
@@ -8224,6 +8239,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * SCTP_PRINTF("SCTP timer fired with invalid type: 0x%x\n", 		 * tmr->type); 		 */
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 name|tmr
@@ -8249,6 +8267,9 @@ name|NULL
 operator|)
 condition|)
 block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 comment|/* if this is an iterator timeout, get the struct and clear inp */
@@ -8387,6 +8408,9 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -8448,6 +8472,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -8510,6 +8537,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 name|tmr
@@ -8590,6 +8620,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -10260,6 +10293,9 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -11779,6 +11815,16 @@ name|void
 operator|*
 operator|)
 name|tmr
+expr_stmt|;
+name|tmr
+operator|->
+name|vnet
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|curvnet
 expr_stmt|;
 name|tmr
 operator|->

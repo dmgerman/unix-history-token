@@ -303,7 +303,7 @@ value|a_midmag
 end_define
 
 begin_comment
-comment|/* XXX Hack to work with current kern_execve.c */
+comment|/* XXX Hack to work with imgact_{aout,gzip}.c */
 end_comment
 
 begin_comment

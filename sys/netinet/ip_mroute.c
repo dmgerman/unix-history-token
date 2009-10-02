@@ -4367,6 +4367,9 @@ decl_stmt|,
 modifier|*
 name|nrte
 decl_stmt|;
+name|MFC_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|free_bw_list
 argument_list|(
 name|rt

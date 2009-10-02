@@ -3353,6 +3353,13 @@ operator|->
 name|ex
 argument_list|,
 name|tvp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int32_t
+argument_list|)
+operator|*
+literal|8
 argument_list|)
 operator|)
 return|;
