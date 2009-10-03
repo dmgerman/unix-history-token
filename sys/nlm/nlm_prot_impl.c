@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_nfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -2583,12 +2577,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFSCLIENT
-end_ifdef
-
 begin_comment
 comment|/*  * Thread start callback for client lock recovery  */
 end_comment
@@ -2658,11 +2646,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * This is called when we receive a host state change notification. We  * unlock any active locks owned by the host. When rpc.lockd is  * shutting down, this function is called with newstate set to zero  * which allows us to cancel any pending async locks and clear the  * locking state.  */
@@ -2771,9 +2754,6 @@ name|nh_state
 operator|=
 name|newstate
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFSCLIENT
 comment|/* 	 * If we have any remote locks for this host (i.e. it 	 * represents a remote NFS server that our local NFS client 	 * has locks for), start a recovery thread. 	 */
 if|if
 condition|(
@@ -2841,8 +2821,6 @@ name|nh_caller_name
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -6022,9 +6000,6 @@ name|nlm_waiting_lock
 modifier|*
 name|nw
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NFSCLIENT
 name|vop_advlock_t
 modifier|*
 name|old_nfs_advlock
@@ -6033,8 +6008,6 @@ name|vop_reclaim_t
 modifier|*
 name|old_nfs_reclaim
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|v4_used
 decl_stmt|;
@@ -6553,9 +6526,6 @@ name|smstat
 operator|.
 name|state
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFSCLIENT
 name|old_nfs_advlock
 operator|=
 name|nfs_advlock_p
@@ -6572,8 +6542,6 @@ name|nfs_reclaim_p
 operator|=
 name|nlm_reclaim
 expr_stmt|;
-endif|#
-directive|endif
 name|svc_run
 argument_list|(
 name|pool
@@ -6583,9 +6551,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFSCLIENT
 name|nfs_advlock_p
 operator|=
 name|old_nfs_advlock
@@ -6594,8 +6559,6 @@ name|nfs_reclaim_p
 operator|=
 name|old_nfs_reclaim
 expr_stmt|;
-endif|#
-directive|endif
 name|out
 label|:
 if|if
