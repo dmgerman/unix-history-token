@@ -973,12 +973,23 @@ name|i
 operator|==
 name|MAX_BRANDS
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: %s: could not insert brandinfo entry: %p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|entry
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
