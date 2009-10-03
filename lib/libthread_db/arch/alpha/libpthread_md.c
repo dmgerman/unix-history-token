@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<thread_db.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ucontext.h>
 end_include
 
