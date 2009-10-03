@@ -1154,7 +1154,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|lk
@@ -1200,7 +1200,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|lk
@@ -1283,7 +1283,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|lk
