@@ -9964,7 +9964,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if current thread can handle the signal without 	 * switching conetxt to another thread. 	 */
+comment|/* 	 * Check if current thread can handle the signal without 	 * switching context to another thread. 	 */
 if|if
 condition|(
 name|curproc
