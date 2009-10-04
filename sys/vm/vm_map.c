@@ -169,10 +169,6 @@ begin_comment
 comment|/*  *	Virtual memory maps provide for the mapping, protection,  *	and sharing of virtual memory objects.  In addition,  *	this module provides for an efficient virtual copy of  *	memory from one map to another.  *  *	Synchronization is required prior to most operations.  *  *	Maps consist of an ordered doubly-linked list of simple  *	entries; a single hint is used to speed up lookups.  *  *	Since portions of maps are specified by start/end addresses,  *	which may not align with existing map entries, all  *	routines merely "clip" entries to these start/end values.  *	[That is, an entry is split into two, bordering at a  *	start or end value.]  Note that these clippings may not  *	always be necessary (as the two resulting entries are then  *	not changed); however, the clipping is done for convenience.  *  *	As mentioned above, virtual copy operations are performed  *	by copying VM object references from one map to  *	another, and then marking both regions as copy-on-write.  */
 end_comment
 
-begin_comment
-comment|/*  *	vm_map_startup:  *  *	Initialize the vm_map module.  Must be called before  *	any other vm_map routines.  *  *	Map and entry structures are allocated from the general  *	purpose memory pool with some exceptions:  *  *	- The kernel map and kmem submap are allocated statically.  *	- Kernel map entries are allocated out of a static pool.  *  *	These restrictions are necessary since malloc() uses the  *	maps and requires map entries.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -391,6 +387,10 @@ parameter_list|)
 define|\
 value|{					\ 		if (start< vm_map_min(map))		\ 			start = vm_map_min(map);	\ 		if (end> vm_map_max(map))		\ 			end = vm_map_max(map);		\ 		if (start> end)			\ 			start = end;			\ 		}
 end_define
+
+begin_comment
+comment|/*  *	vm_map_startup:  *  *	Initialize the vm_map module.  Must be called before  *	any other vm_map routines.  *  *	Map and entry structures are allocated from the general  *	purpose memory pool with some exceptions:  *  *	- The kernel map and kmem submap are allocated statically.  *	- Kernel map entries are allocated out of a static pool.  *  *	These restrictions are necessary since malloc() uses the  *	maps and requires map entries.  */
+end_comment
 
 begin_function
 name|void
