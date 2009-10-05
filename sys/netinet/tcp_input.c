@@ -3040,6 +3040,8 @@ name|dropunlock
 goto|;
 block|}
 comment|/* 	 * A previous connection in TIMEWAIT state is supposed to catch stray 	 * or duplicate segments arriving late.  If this segment was a 	 * legitimate new connection attempt the old INPCB gets removed and 	 * we can try again to find a listening socket. 	 * 	 * At this point, due to earlier optimism, we may hold a read lock on 	 * the inpcbinfo, rather than a write lock.  If so, we need to 	 * upgrade, or if that fails, acquire a reference on the inpcb, drop 	 * all locks, acquire a global write lock, and then re-acquire the 	 * inpcb lock.  We may at that point discover that another thread has 	 * tried to free the inpcb, in which case we need to loop back and 	 * try to find a new inpcb to deliver to. 	 */
+name|relocked
+label|:
 if|if
 condition|(
 name|inp
@@ -3234,7 +3236,7 @@ goto|goto
 name|dropwithreset
 goto|;
 block|}
-comment|/* 	 * We've identified a valid inpcb, but it could be that we need an 	 * inpcbinfo write lock and have only a read lock.  In this case, 	 * attempt to upgrade/relock using the same strategy as the TIMEWAIT 	 * case above. 	 */
+comment|/* 	 * We've identified a valid inpcb, but it could be that we need an 	 * inpcbinfo write lock and have only a read lock.  In this case, 	 * attempt to upgrade/relock using the same strategy as the TIMEWAIT 	 * case above.  If we relock, we have to jump back to 'relocked' as 	 * the connection might now be in TIMEWAIT. 	 */
 if|if
 condition|(
 name|tp
@@ -3354,6 +3356,9 @@ block|}
 name|tcp_wlock_relocked
 operator|++
 expr_stmt|;
+goto|goto
+name|relocked
+goto|;
 block|}
 else|else
 block|{
