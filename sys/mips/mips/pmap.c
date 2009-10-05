@@ -3074,7 +3074,7 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-name|mips_dcache_inv_range
+name|mips_dcache_wbinv_range_index
 argument_list|(
 name|origva
 argument_list|,
