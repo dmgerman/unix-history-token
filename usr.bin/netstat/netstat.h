@@ -1247,6 +1247,8 @@ parameter_list|,
 name|u_long
 parameter_list|,
 name|u_long
+parameter_list|,
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
