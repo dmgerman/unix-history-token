@@ -1837,6 +1837,7 @@ operator|.
 name|fs_cgsize
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note that we do not set cg_initediblk at all. 	 * In this extension of a previous filesystem 	 * we have no inodes initialized for the cylinder 	 * group at all. The first access to that cylinder 	 * group will do the correct initialization. 	 */
 name|acg
 operator|.
 name|cg_time
@@ -1858,14 +1859,6 @@ expr_stmt|;
 name|acg
 operator|.
 name|cg_niblk
-operator|=
-name|sblock
-operator|.
-name|fs_ipg
-expr_stmt|;
-name|acg
-operator|.
-name|cg_initediblk
 operator|=
 name|sblock
 operator|.
@@ -1971,12 +1964,6 @@ expr_stmt|;
 name|acg
 operator|.
 name|cg_niblk
-operator|=
-literal|0
-expr_stmt|;
-name|acg
-operator|.
-name|cg_initediblk
 operator|=
 literal|0
 expr_stmt|;
@@ -10127,6 +10114,12 @@ operator|*
 name|sblock
 operator|.
 name|fs_fpg
+expr_stmt|;
+name|maxino
+operator|-=
+name|sblock
+operator|.
+name|fs_ipg
 expr_stmt|;
 block|}
 comment|/* 	 * Update the space for the cylinder group summary information in the 	 * respective cylinder group data area. 	 */
