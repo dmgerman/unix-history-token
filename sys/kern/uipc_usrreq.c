@@ -6546,6 +6546,9 @@ argument_list|(
 literal|"unp_pcblist: arg1 %d"
 argument_list|,
 operator|(
+name|int
+operator|)
+operator|(
 name|intptr_t
 operator|)
 name|arg1
