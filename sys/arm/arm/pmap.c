@@ -391,16 +391,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|pmap_use_l1
-parameter_list|(
-name|pmap_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|pmap_clearbit
 parameter_list|(
@@ -2435,100 +2425,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|PMAP_INLINE
-name|void
-name|pmap_use_l1
-parameter_list|(
-name|pmap_t
-name|pm
-parameter_list|)
-block|{
-name|struct
-name|l1_ttable
-modifier|*
-name|l1
-decl_stmt|;
-comment|/* 	 * Do nothing if we're in interrupt context. 	 * Access to an L1 by the kernel pmap must not affect 	 * the LRU list. 	 */
-if|if
-condition|(
-name|pm
-operator|==
-name|pmap_kernel
-argument_list|()
-condition|)
-return|return;
-name|l1
-operator|=
-name|pm
-operator|->
-name|pm_l1
-expr_stmt|;
-comment|/* 	 * If the L1 is not currently on the LRU list, just return 	 */
-if|if
-condition|(
-name|l1
-operator|->
-name|l1_domain_use_count
-operator|==
-name|PMAP_DOMAINS
-condition|)
-return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|l1_lru_lock
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Check the use count again, now that we've acquired the lock 	 */
-if|if
-condition|(
-name|l1
-operator|->
-name|l1_domain_use_count
-operator|==
-name|PMAP_DOMAINS
-condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|l1_lru_lock
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * Move the L1 to the back of the LRU list 	 */
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|l1_lru_list
-argument_list|,
-name|l1
-argument_list|,
-name|l1_lru
-argument_list|)
-expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|l1_lru_list
-argument_list|,
-name|l1
-argument_list|,
-name|l1_lru
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|l1_lru_lock
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Returns a pointer to the L2 bucket associated with the specified pmap  * and VA, or NULL if no L2 bucket exists for the address.  */
 end_comment
@@ -4122,6 +4018,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|PMAP_INLINE
@@ -4149,6 +4051,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * PTE_SYNC_CURRENT:  *  *     Make sure the pte is written out to RAM.  *     We need to do this for one of two cases:  *       - We're dealing with the kernel pmap  *       - There is no pmap active in the cache/tlb.  *       - The specified pmap is 'active' in the cache/tlb.  */
@@ -6787,6 +6694,8 @@ argument_list|,
 name|printf
 argument_list|(
 literal|"pmap_init: phys_start = %08x\n"
+argument_list|,
+name|PHYSADDR
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8534,11 +8443,11 @@ literal|1
 argument_list|,
 name|printf
 argument_list|(
-literal|"firstaddr = %08x, loadaddr = %08x\n"
+literal|"firstaddr = %08x, lastaddr = %08x\n"
 argument_list|,
 name|firstaddr
 argument_list|,
-name|loadaddr
+name|lastaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -15992,7 +15901,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * pmap_clean_page()  *  * This is a local function used to work out the best strategy to clean  * a single page referenced by its entry in the PV table. It's used by  * pmap_copy_page, pmap_zero page and maybe some others later on.  *  * Its policy is effectively:  *  o If there are no mappings, we don't bother doing anything with the cache.  *  o If there is one mapping, we clean just that page.  *  o If there are multiple mappings, we clean the entire cache.  *  * So that some functions can be further optimised, it returns 0 if it didn't  * clean the entire cache, or 1 if it did.  *  * XXX One bug in this routine is that if the pv_entry has a single page  * mapped at 0x00000000 a whole cache clean will be performed rather than  * just the 1 page. Since this should not occur in everyday use and if it does  * it will just result in not the most efficient clean for the page.  */
+comment|/*  * pmap_clean_page()  *  * This is a local function used to work out the best strategy to clean  * a single page referenced by its entry in the PV table. It should be used by  * pmap_copy_page, pmap_zero page and maybe some others later on.  *  * Its policy is effectively:  *  o If there are no mappings, we don't bother doing anything with the cache.  *  o If there is one mapping, we clean just that page.  *  o If there are multiple mappings, we clean the entire cache.  *  * So that some functions can be further optimised, it returns 0 if it didn't  * clean the entire cache, or 1 if it did.  *  * XXX One bug in this routine is that if the pv_entry has a single page  * mapped at 0x00000000 a whole cache clean will be performed rather than  * just the 1 page. Since this should not occur in everyday use and if it does  * it will just result in not the most efficient clean for the page.  *  * We don't yet use this function but may want to.  */
 end_comment
 
 begin_comment
