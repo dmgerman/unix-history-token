@@ -349,7 +349,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"create drive '%s': couldn't attach"
+literal|"create drive '%s': unable to attach"
 argument_list|,
 name|d
 operator|->
@@ -544,7 +544,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"create drive '%s': couldn't update "
+literal|"create drive '%s': unable to update "
 literal|"access counts"
 argument_list|,
 name|d
@@ -1565,7 +1565,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"volume names not given"
+literal|"volume name not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2072,7 +2072,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"volume's not given"
+literal|"volume name not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2118,7 +2118,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"drives not given"
+literal|"drive names not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2659,7 +2659,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"volume's not given"
+literal|"volume name not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2736,7 +2736,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"drives not given"
+literal|"drive names not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3211,7 +3211,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"volume's not given"
+literal|"volume name not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3257,7 +3257,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"drives not given"
+literal|"drive names not given"
 argument_list|)
 expr_stmt|;
 return|return;
