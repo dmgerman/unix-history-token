@@ -4852,6 +4852,10 @@ name|setintr
 argument_list|)
 expr_stmt|;
 comment|/*      * Mop-up.      */
+comment|/* Take care of these (especially HUP) here instead of inside flush. */
+name|handle_pending_signals
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|intty
