@@ -95,12 +95,30 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|void atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
+value|void atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v);	\ void atomic_##NAME##_barr_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
 end_define
 
 begin_function_decl
 name|int
 name|atomic_cmpset_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|dst
+parameter_list|,
+name|u_int
+name|exp
+parameter_list|,
+name|u_int
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|atomic_cmpset_barr_int
 parameter_list|(
 specifier|volatile
 name|u_int
@@ -198,7 +216,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The assembly is volatilized to demark potential before-and-after side  * effects if an interrupt or SMP collision were to occur.  */
+comment|/*  * The assembly is volatilized to avoid code chunk removal by the compiler.  * GCC aggressively reorders operations and memory clobbering is necessary  * in order to avoid that for memory barriers.  */
 end_comment
 
 begin_define
@@ -217,7 +235,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p));				\ }							\ struct __hack
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p));				\ }							\ 							\ static __inline void					\ atomic_##NAME##_barr_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p)				\ 	: "memory");					\ }							\ struct __hack
 end_define
 
 begin_comment
@@ -402,6 +420,13 @@ begin_comment
 comment|/* CPU_DISABLE_CMPXCHG */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_barr_int
+value|atomic_cmpset_int
+end_define
+
 begin_comment
 comment|/*  * Atomically add the value of v to the integer pointed to by p and return  * the previous value of *p.  */
 end_comment
@@ -479,7 +504,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * We assume that a = b will do atomic loads and stores.  However, on a  * PentiumPro or higher, reads may pass writes, so for that case we have  * to use a serializing instruction (i.e. with LOCK) to do the load in  * SMP kernels.  For UP kernels, however, the cache of the single processor  * is always consistent, so we don't need any memory barriers.  */
+comment|/*  * We assume that a = b will do atomic loads and stores.  However, on a  * PentiumPro or higher, reads may pass writes, so for that case we have  * to use a serializing instruction (i.e. with LOCK) to do the load in  * SMP kernels.  For UP kernels, however, the cache of the single processor  * is always consistent, so we only need to take care of compiler.  */
 end_comment
 
 begin_define
@@ -494,7 +519,7 @@ parameter_list|,
 name|SOP
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	*p = v;						\ }							\ struct __hack
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE tmp;					\ 							\ 	tmp = *p;					\ 	__asm __volatile("" : : : "memory");		\ 	return (tmp);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile("" : : : "memory");		\ 	*p = v;						\ }							\ struct __hack
 end_define
 
 begin_else
@@ -530,9 +555,9 @@ value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p,
 comment|/* 0 */
 value|\ 	  "+r" (v)
 comment|/* 1 */
-value|\ 	: "m" (*p));
+value|\ 	: "m" (*p)
 comment|/* 2 */
-value|\ }							\ struct __hack
+value|\ 	: "memory");					\ }							\ struct __hack
 end_define
 
 begin_endif
@@ -926,6 +951,50 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|int
+name|atomic_cmpset_barr_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|dst
+parameter_list|,
+name|u_long
+name|exp
+parameter_list|,
+name|u_long
+name|src
+parameter_list|)
+block|{
+return|return
+operator|(
+name|atomic_cmpset_barr_int
+argument_list|(
+operator|(
+specifier|volatile
+name|u_int
+operator|*
+operator|)
+name|dst
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|exp
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|src
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|u_long
 name|atomic_fetchadd_long
 parameter_list|(
@@ -1118,260 +1187,256 @@ begin_comment
 comment|/* __GNUCLIKE_ASM */
 end_comment
 
-begin_comment
-comment|/* Acquire and release variants are identical to the normal ones. */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|atomic_set_acq_char
-value|atomic_set_char
+value|atomic_set_barr_char
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_rel_char
-value|atomic_set_char
+value|atomic_set_barr_char
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_acq_char
-value|atomic_clear_char
+value|atomic_clear_barr_char
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_rel_char
-value|atomic_clear_char
+value|atomic_clear_barr_char
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_acq_char
-value|atomic_add_char
+value|atomic_add_barr_char
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_rel_char
-value|atomic_add_char
+value|atomic_add_barr_char
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_acq_char
-value|atomic_subtract_char
+value|atomic_subtract_barr_char
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_rel_char
-value|atomic_subtract_char
+value|atomic_subtract_barr_char
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_acq_short
-value|atomic_set_short
+value|atomic_set_barr_short
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_rel_short
-value|atomic_set_short
+value|atomic_set_barr_short
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_acq_short
-value|atomic_clear_short
+value|atomic_clear_barr_short
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_rel_short
-value|atomic_clear_short
+value|atomic_clear_barr_short
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_acq_short
-value|atomic_add_short
+value|atomic_add_barr_short
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_rel_short
-value|atomic_add_short
+value|atomic_add_barr_short
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_acq_short
-value|atomic_subtract_short
+value|atomic_subtract_barr_short
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_rel_short
-value|atomic_subtract_short
+value|atomic_subtract_barr_short
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_acq_int
-value|atomic_set_int
+value|atomic_set_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_rel_int
-value|atomic_set_int
+value|atomic_set_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_acq_int
-value|atomic_clear_int
+value|atomic_clear_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_rel_int
-value|atomic_clear_int
+value|atomic_clear_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_acq_int
-value|atomic_add_int
+value|atomic_add_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_rel_int
-value|atomic_add_int
+value|atomic_add_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_acq_int
-value|atomic_subtract_int
+value|atomic_subtract_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_rel_int
-value|atomic_subtract_int
+value|atomic_subtract_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_int
-value|atomic_cmpset_int
+value|atomic_cmpset_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_int
-value|atomic_cmpset_int
+value|atomic_cmpset_barr_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_acq_long
-value|atomic_set_long
+value|atomic_set_barr_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_rel_long
-value|atomic_set_long
+value|atomic_set_barr_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_acq_long
-value|atomic_clear_long
+value|atomic_clear_barr_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_rel_long
-value|atomic_clear_long
+value|atomic_clear_barr_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_acq_long
-value|atomic_add_long
+value|atomic_add_barr_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_rel_long
-value|atomic_add_long
+value|atomic_add_barr_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_acq_long
-value|atomic_subtract_long
+value|atomic_subtract_barr_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_rel_long
-value|atomic_subtract_long
+value|atomic_subtract_barr_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_long
-value|atomic_cmpset_long
+value|atomic_cmpset_barr_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_long
-value|atomic_cmpset_long
+value|atomic_cmpset_barr_long
 end_define
 
 begin_comment
