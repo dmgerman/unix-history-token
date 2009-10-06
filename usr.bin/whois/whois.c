@@ -235,13 +235,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SNICHOST
-value|"whois.6bone.net"
-end_define
-
-begin_define
-define|#
-directive|define
 name|BNICHOST
 value|"whois.registro.br"
 end_define
@@ -663,12 +656,16 @@ operator|=
 literal|"ru"
 expr_stmt|;
 break|break;
+comment|/* Remove in FreeBSD 10 */
 case|case
 literal|'6'
 case|:
-name|host
-operator|=
-name|SNICHOST
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-6 is deprecated; use -[aAflr] instead"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
