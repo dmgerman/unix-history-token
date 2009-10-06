@@ -1357,7 +1357,7 @@ condition|(
 operator|(
 name|nbytes
 operator|=
-name|read
+name|pread
 argument_list|(
 name|fd
 argument_list|,
@@ -1366,6 +1366,8 @@ operator|.
 name|buf
 argument_list|,
 name|PAGE_SIZE
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
