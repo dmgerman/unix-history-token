@@ -5007,6 +5007,23 @@ operator|->
 name|ia_addr
 argument_list|)
 expr_stmt|;
+comment|/* remove arp cache */
+name|arp_ifscrub
+argument_list|(
+name|target
+operator|->
+name|ia_ifp
+argument_list|,
+name|IA_SIN
+argument_list|(
+name|target
+argument_list|)
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5100,23 +5117,6 @@ operator|&=
 name|mask
 operator|.
 name|s_addr
-expr_stmt|;
-comment|/* remove arp cache */
-name|arp_ifscrub
-argument_list|(
-name|target
-operator|->
-name|ia_ifp
-argument_list|,
-name|IA_SIN
-argument_list|(
-name|target
-argument_list|)
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-argument_list|)
 expr_stmt|;
 block|}
 name|IN_IFADDR_RLOCK
