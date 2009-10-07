@@ -8213,6 +8213,13 @@ name|BGE_WDMAMODE_ALL_ATTNS
 value|0x000003FC
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_WDMAMODE_STATUS_TAG_FIX
+value|0x20000000
+end_define
+
 begin_comment
 comment|/* Write DMA status register */
 end_comment

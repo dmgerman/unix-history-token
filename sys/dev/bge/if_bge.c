@@ -8976,9 +8976,7 @@ argument_list|)
 condition|)
 name|val
 operator||=
-literal|1
-operator|<<
-literal|29
+name|BGE_WDMAMODE_STATUS_TAG_FIX
 expr_stmt|;
 comment|/* Turn on write DMA state machine */
 name|CSR_WRITE_4
