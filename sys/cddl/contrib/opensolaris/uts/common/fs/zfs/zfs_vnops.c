@@ -10433,6 +10433,9 @@ decl_stmt|;
 name|uint_t
 name|saved_mask
 decl_stmt|;
+name|uint64_t
+name|saved_mode
+decl_stmt|;
 name|int
 name|trim_mask
 init|=
@@ -11497,6 +11500,21 @@ operator|&=
 operator|~
 name|trim_mask
 expr_stmt|;
+if|if
+condition|(
+name|trim_mask
+operator|&
+name|AT_MODE
+condition|)
+block|{
+comment|/* 				 * Save the mode, as secpolicy_vnode_setattr() 				 * will overwrite it with ova.va_mode. 				 */
+name|saved_mode
+operator|=
+name|vap
+operator|->
+name|va_mode
+expr_stmt|;
+block|}
 block|}
 name|err
 operator|=
@@ -11553,12 +11571,29 @@ if|if
 condition|(
 name|trim_mask
 condition|)
+block|{
 name|vap
 operator|->
 name|va_mask
 operator||=
 name|saved_mask
 expr_stmt|;
+if|if
+condition|(
+name|trim_mask
+operator|&
+name|AT_MODE
+condition|)
+block|{
+comment|/* 				 * Recover the mode after 				 * secpolicy_vnode_setattr(). 				 */
+name|vap
+operator|->
+name|va_mode
+operator|=
+name|saved_mode
+expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* 	 * secpolicy_vnode_setattr, or take ownership may have 	 * changed va_mask 	 */
 name|mask
