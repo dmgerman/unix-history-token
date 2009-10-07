@@ -3258,6 +3258,13 @@ modifier|*
 name|rqstp
 parameter_list|)
 block|{
+name|nlm_do_granted_res
+argument_list|(
+name|argp
+argument_list|,
+name|rqstp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FALSE
