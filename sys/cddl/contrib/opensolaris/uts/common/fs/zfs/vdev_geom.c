@@ -3160,7 +3160,7 @@ modifier|*
 name|zio
 parameter_list|)
 block|{
-comment|/*																						     	 * If the device returned ENXIO, then attempt we should verify if GEOM														 	 * provider has been removed. If this is the case, then we trigger an														  	 * asynchronous removal of the device.																		 	 */
+comment|/* 	 * If the device returned ENXIO, then attempt we should verify if GEOM 	 * provider has been removed. If this is the case, then we trigger an 	 * asynchronous removal of the device. 	 */
 if|if
 condition|(
 name|zio
