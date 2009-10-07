@@ -1360,7 +1360,7 @@ name|LC_TIME
 block|,
 name|ALTMON_1
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1372,7 +1372,7 @@ name|LC_TIME
 block|,
 name|ALTMON_2
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1384,7 +1384,7 @@ name|LC_TIME
 block|,
 name|ALTMON_3
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1396,7 +1396,7 @@ name|LC_TIME
 block|,
 name|ALTMON_4
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1408,7 +1408,7 @@ name|LC_TIME
 block|,
 name|ALTMON_5
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1420,7 +1420,7 @@ name|LC_TIME
 block|,
 name|ALTMON_6
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1432,7 +1432,7 @@ name|LC_TIME
 block|,
 name|ALTMON_7
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1444,7 +1444,7 @@ name|LC_TIME
 block|,
 name|ALTMON_8
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1456,7 +1456,7 @@ name|LC_TIME
 block|,
 name|ALTMON_9
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1468,7 +1468,7 @@ name|LC_TIME
 block|,
 name|ALTMON_10
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1480,7 +1480,7 @@ name|LC_TIME
 block|,
 name|ALTMON_11
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
@@ -1492,7 +1492,7 @@ name|LC_TIME
 block|,
 name|ALTMON_12
 block|,
-literal|""
+literal|"(FreeBSD only)"
 block|}
 block|,
 block|{
