@@ -208,6 +208,10 @@ name|int
 name|dh_onlist
 decl_stmt|;
 comment|/* true if on the ufsdirhash_list chain */
+name|time_t
+name|dh_lastused
+decl_stmt|;
+comment|/* time the dirhash was last read or written*/
 comment|/* Protected by ufsdirhash_mtx. */
 name|TAILQ_ENTRY
 argument_list|(
