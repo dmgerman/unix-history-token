@@ -238,13 +238,6 @@ name|mnt_cred
 operator|->
 name|cr_uid
 operator|&&
-operator|(
-operator|!
-name|jailed
-argument_list|(
-name|cred
-argument_list|)
-operator|||
 name|cred
 operator|->
 name|cr_prison
@@ -254,7 +247,6 @@ operator|->
 name|mnt_cred
 operator|->
 name|cr_prison
-operator|)
 condition|)
 block|{
 return|return
@@ -266,14 +258,7 @@ block|}
 block|}
 return|return
 operator|(
-name|priv_check_cred
-argument_list|(
-name|cred
-argument_list|,
-name|PRIV_VFS_MOUNT_OWNER
-argument_list|,
-literal|0
-argument_list|)
+name|EPERM
 operator|)
 return|;
 block|}
