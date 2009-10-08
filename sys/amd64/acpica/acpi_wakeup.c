@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -57,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -101,12 +89,6 @@ directive|include
 file|<machine/specialreg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/vmparam.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -123,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
 end_include
 
 begin_endif
@@ -172,23 +160,6 @@ literal|1024
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_CDEFS_H_
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|this file needs sys/cdefs.h as a prerequisite
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -265,6 +236,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+modifier|*
 name|acpi_alloc_wakeup_handler
 parameter_list|(
 name|void
@@ -1338,16 +1310,10 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|acpi_wakeaddr
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
+modifier|*
 name|acpi_alloc_wakeup_handler
 parameter_list|(
 name|void
@@ -1357,13 +1323,7 @@ name|void
 modifier|*
 name|wakeaddr
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|cold
-condition|)
-return|return;
-comment|/* 	 * Specify the region for our wakeup code.  We want it in the low 1 MB 	 * region, excluding video memory and above (0xa0000).  We ask for 	 * it to be page-aligned, just to be safe. 	 */
+comment|/* 	 * Specify the region for our wakeup code.  We want it in the low 1 MB 	 * region, excluding real mode IVT (0-0x3ff), BDA (0x400-0x4ff), EBDA 	 * (less than 128KB, below 0xa0000, must be excluded by SMAP and DSDT), 	 * and ROM area (0xa0000 and above).  The temporary page tables must be 	 * page-aligned. 	 */
 name|wakeaddr
 operator|=
 name|contigmalloc
@@ -1376,9 +1336,9 @@ name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
 argument_list|,
-literal|0
+literal|0x500
 argument_list|,
-literal|0x9ffff
+literal|0xa0000
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
@@ -1399,7 +1359,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 name|stopxpcbs
 operator|=
@@ -1443,33 +1407,19 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-name|acpi_wakeaddr
-operator|=
+return|return
 operator|(
-name|vm_offset_t
+name|NULL
 operator|)
+return|;
+block|}
+return|return
+operator|(
 name|wakeaddr
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|acpiwakeup
-argument_list|,
-name|SI_SUB_KMEM
-argument_list|,
-name|SI_ORDER_ANY
-argument_list|,
-name|acpi_alloc_wakeup_handler
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 name|void
@@ -1481,6 +1431,13 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+specifier|static
+name|void
+modifier|*
+name|wakeaddr
+init|=
+name|NULL
+decl_stmt|;
 name|uint64_t
 modifier|*
 name|pt4
@@ -1496,16 +1453,31 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|acpi_wakeaddr
+name|wakeaddr
+operator|!=
+name|NULL
+condition|)
+return|return;
+name|wakeaddr
+operator|=
+name|acpi_alloc_wakeup_handler
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|wakeaddr
 operator|==
-literal|0ul
+name|NULL
 condition|)
 return|return;
 name|sc
 operator|->
 name|acpi_wakeaddr
 operator|=
-name|acpi_wakeaddr
+operator|(
+name|vm_offset_t
+operator|)
+name|wakeaddr
 expr_stmt|;
 name|sc
 operator|->
@@ -1513,7 +1485,7 @@ name|acpi_wakephys
 operator|=
 name|vtophys
 argument_list|(
-name|acpi_wakeaddr
+name|wakeaddr
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1710,11 +1682,7 @@ expr_stmt|;
 comment|/* Build temporary page tables below realmode code. */
 name|pt4
 operator|=
-operator|(
-name|uint64_t
-operator|*
-operator|)
-name|acpi_wakeaddr
+name|wakeaddr
 expr_stmt|;
 name|pt3
 operator|=
