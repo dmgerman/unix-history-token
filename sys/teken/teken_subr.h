@@ -2187,13 +2187,18 @@ parameter_list|(
 name|teken_t
 modifier|*
 name|t
-name|__unused
 parameter_list|)
 block|{
 name|teken_printf
 argument_list|(
-literal|"device control string???\n"
+literal|"Unsupported device control string\n"
 argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|t_stateflags
+operator||=
+name|TS_INSTRING
 expr_stmt|;
 block|}
 end_function
@@ -3692,6 +3697,30 @@ name|teken_subr_newline
 argument_list|(
 name|t
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|teken_subr_operating_system_command
+parameter_list|(
+name|teken_t
+modifier|*
+name|t
+parameter_list|)
+block|{
+name|teken_printf
+argument_list|(
+literal|"Unsupported operating system command\n"
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|t_stateflags
+operator||=
+name|TS_INSTRING
 expr_stmt|;
 block|}
 end_function
@@ -6065,11 +6094,7 @@ name|t
 name|__unused
 parameter_list|)
 block|{
-name|teken_printf
-argument_list|(
-literal|"string terminator???\n"
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Strings are already terminated in teken_input_char() when ^[ 	 * is inserted. 	 */
 block|}
 end_function
 

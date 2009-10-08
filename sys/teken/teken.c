@@ -225,6 +225,17 @@ begin_comment
 comment|/* cons25 emulation. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TS_INSTRING
+value|0x80
+end_define
+
+begin_comment
+comment|/* Inside string. */
+end_comment
+
 begin_comment
 comment|/* Character that blanks a cell. */
 end_comment
@@ -926,6 +937,47 @@ name|teken_char_t
 name|c
 parameter_list|)
 block|{
+comment|/* 	 * There is no support for DCS and OSC.  Just discard strings 	 * until we receive characters that may indicate string 	 * termination. 	 */
+if|if
+condition|(
+name|t
+operator|->
+name|t_stateflags
+operator|&
+name|TS_INSTRING
+condition|)
+block|{
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'\x1B'
+case|:
+name|t
+operator|->
+name|t_stateflags
+operator|&=
+operator|~
+name|TS_INSTRING
+expr_stmt|;
+break|break;
+case|case
+literal|'\a'
+case|:
+name|t
+operator|->
+name|t_stateflags
+operator|&=
+operator|~
+name|TS_INSTRING
+expr_stmt|;
+return|return;
+default|default:
+return|return;
+block|}
+block|}
 switch|switch
 condition|(
 name|c
