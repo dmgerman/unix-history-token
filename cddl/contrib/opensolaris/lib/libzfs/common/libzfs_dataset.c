@@ -7639,12 +7639,6 @@ case|case
 name|ZFS_PROP_DEVICES
 case|:
 case|case
-name|ZFS_PROP_ACLMODE
-case|:
-case|case
-name|ZFS_PROP_ACLINHERIT
-case|:
-case|case
 name|ZFS_PROP_ISCSIOPTIONS
 case|:
 operator|(
