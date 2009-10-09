@@ -135,42 +135,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|atomic_cmpset_barr_int
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-name|dst
-parameter_list|,
-name|u_int
-name|exp
-parameter_list|,
-name|u_int
-name|src
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|atomic_cmpset_barr_long
-parameter_list|(
-specifier|volatile
-name|u_long
-modifier|*
-name|dst
-parameter_list|,
-name|u_long
-name|exp
-parameter_list|,
-name|u_long
-name|src
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|u_int
 name|atomic_fetchadd_int
 parameter_list|(
@@ -293,85 +257,163 @@ begin_comment
 comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == exp) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEFINE_CMPSET_GEN
+begin_function
+specifier|static
+name|__inline
+name|int
+name|atomic_cmpset_int
 parameter_list|(
-name|NAME
+specifier|volatile
+name|u_int
+modifier|*
+name|dst
 parameter_list|,
-name|TYPE
+name|u_int
+name|exp
 parameter_list|,
-name|OP
+name|u_int
+name|src
 parameter_list|)
-define|\
-value|static __inline int					\ atomic_cmpset_##NAME(volatile u_##TYPE *dst, u_##TYPE exp, u_##TYPE src)\ {							\ 	u_char res;					\ 							\ 	__asm __volatile(				\ 	"	" MPLOCKED "		"		\ 	"	" OP "	%2,%1 ;		"		\ 	"       sete	%0 ;		"		\ 	"1:				"		\ 	"# atomic_cmpset_##NAME"			\ 	: "=a" (res),
+block|{
+name|u_char
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	cmpxchgl %2,%1 ;	"
+literal|"       sete	%0 ;		"
+literal|"1:				"
+literal|"# atomic_cmpset_int"
+operator|:
+literal|"=a"
+operator|(
+name|res
+operator|)
+operator|,
 comment|/* 0 */
-value|\ 	  "=m" (*dst)
+literal|"=m"
+operator|(
+operator|*
+name|dst
+operator|)
 comment|/* 1 */
-value|\ 	: "r" (src),
+operator|:
+literal|"r"
+operator|(
+name|src
+operator|)
+operator|,
 comment|/* 2 */
-value|\ 	  "a" (exp),
+literal|"a"
+operator|(
+name|exp
+operator|)
+operator|,
 comment|/* 3 */
-value|\ 	  "m" (*dst)
+literal|"m"
+operator|(
+operator|*
+name|dst
+operator|)
 comment|/* 4 */
-value|\ 	: "memory");					\ 							\ 	return (res);					\ }							\ struct __hack
-end_define
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
-begin_expr_stmt
-name|DEFINE_CMPSET_GEN
-argument_list|(
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
 name|int
-argument_list|,
-name|int
-argument_list|,
-literal|"cmpxchgl"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+name|atomic_cmpset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|dst
+parameter_list|,
+name|u_long
+name|exp
+parameter_list|,
+name|u_long
+name|src
+parameter_list|)
+block|{
+name|u_char
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	cmpxchgq %2,%1 ;	"
+literal|"       sete	%0 ;		"
+literal|"1:				"
+literal|"# atomic_cmpset_long"
+operator|:
+literal|"=a"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 */
+literal|"=m"
+operator|(
+operator|*
+name|dst
+operator|)
+comment|/* 1 */
+operator|:
+literal|"r"
+operator|(
+name|src
+operator|)
+operator|,
+comment|/* 2 */
+literal|"a"
+operator|(
+name|exp
+operator|)
+operator|,
+comment|/* 3 */
+literal|"m"
+operator|(
+operator|*
+name|dst
+operator|)
+comment|/* 4 */
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
-begin_expr_stmt
-name|DEFINE_CMPSET_GEN
-argument_list|(
-name|long
-argument_list|,
-name|long
-argument_list|,
-literal|"cmpxchgq"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DEFINE_CMPSET_GEN
-argument_list|(
-name|barr_int
-argument_list|,
-name|int
-argument_list|,
-literal|"cmpxchgl"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DEFINE_CMPSET_GEN
-argument_list|(
-name|barr_long
-argument_list|,
-name|long
-argument_list|,
-literal|"cmpxchgq"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Atomically add the value of v to the integer pointed to by p and return  * the previous value of *p.  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|__inline
 name|u_int
 name|atomic_fetchadd_int
@@ -1235,14 +1277,14 @@ begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_int
-value|atomic_cmpset_barr_int
+value|atomic_cmpset_int
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_int
-value|atomic_cmpset_barr_int
+value|atomic_cmpset_int
 end_define
 
 begin_define
@@ -1305,14 +1347,14 @@ begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_long
-value|atomic_cmpset_barr_long
+value|atomic_cmpset_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_long
-value|atomic_cmpset_barr_long
+value|atomic_cmpset_long
 end_define
 
 begin_comment
