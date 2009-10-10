@@ -545,6 +545,13 @@ name|DT_IA_64_PLT_RESERVE
 value|0x70000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|ET_DYN_LOAD_ADDR
+value|0x2500000000000000
+end_define
+
 begin_endif
 endif|#
 directive|endif
