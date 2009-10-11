@@ -678,7 +678,7 @@ begin_define
 define|#
 directive|define
 name|PLL_CPU_DIV_SEL_MASK
-value|2
+value|3
 end_define
 
 begin_define
