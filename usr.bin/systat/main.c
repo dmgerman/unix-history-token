@@ -567,6 +567,13 @@ block|}
 block|}
 name|signal
 argument_list|(
+name|SIGHUP
+argument_list|,
+name|die
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
 name|SIGINT
 argument_list|,
 name|die
