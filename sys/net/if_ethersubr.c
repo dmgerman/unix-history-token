@@ -2331,7 +2331,7 @@ name|INET6
 argument_list|)
 if|if
 condition|(
-name|ip_fw_chk_ptr
+name|V_ip_fw_chk_ptr
 operator|&&
 name|V_ether_ipfw
 operator|!=
@@ -2641,7 +2641,7 @@ expr_stmt|;
 comment|/* used by ipfw uid/gid/jail rules	*/
 name|i
 operator|=
-name|ip_fw_chk_ptr
+name|V_ip_fw_chk_ptr
 argument_list|(
 operator|&
 name|args
@@ -3652,7 +3652,7 @@ argument_list|)
 comment|/* 	 * Allow dummynet and/or ipfw to claim the frame. 	 * Do not do this for PROMISC frames in case we are re-entered. 	 */
 if|if
 condition|(
-name|ip_fw_chk_ptr
+name|V_ip_fw_chk_ptr
 operator|&&
 name|V_ether_ipfw
 operator|!=

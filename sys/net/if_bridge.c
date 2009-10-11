@@ -220,6 +220,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -8756,7 +8762,7 @@ condition|(
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 ifdef|#
 directive|ifdef
@@ -8765,7 +8771,7 @@ operator|||
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|)
 endif|#
 directive|endif
@@ -9731,7 +9737,7 @@ condition|(
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 ifdef|#
 directive|ifdef
@@ -9740,7 +9746,7 @@ operator|||
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|)
 endif|#
 directive|endif
@@ -9883,7 +9889,7 @@ condition|(
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 ifdef|#
 directive|ifdef
@@ -9892,7 +9898,7 @@ operator|||
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|)
 endif|#
 directive|endif
@@ -10458,7 +10464,7 @@ define|#
 directive|define
 name|OR_PFIL_HOOKED_INET6
 define|\
-value||| PFIL_HOOKED(&inet6_pfil_hook)
+value||| PFIL_HOOKED(&V_inet6_pfil_hook)
 else|#
 directive|else
 define|#
@@ -10477,7 +10483,7 @@ value|if ((iface)->if_type == IFT_GIF) \ 		continue; \
 comment|/* It is destined for us. */
 value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if ((iface)->if_type == IFT_BRIDGE) {			\ 			ETHER_BPF_MTAP(iface, m);			\ 			iface->if_ipackets++;				\
 comment|/* Filter on the physical interface. */
-value|\ 			if (pfil_local_phys&&				\ 			    (PFIL_HOOKED(&inet_pfil_hook)		\ 			     OR_PFIL_HOOKED_INET6)) {			\ 				if (bridge_pfil(&m, NULL, ifp,		\ 				    PFIL_IN) != 0 || m == NULL) {	\ 					BRIDGE_UNLOCK(sc);		\ 					return (NULL);			\ 				}					\ 			}						\ 		}							\ 		if (bif->bif_flags& IFBIF_LEARNING) {			\ 			error = bridge_rtupdate(sc, eh->ether_shost,	\ 			    vlan, bif, 0, IFBAF_DYNAMIC);		\ 			if (error&& bif->bif_addrmax) {		\ 				BRIDGE_UNLOCK(sc);			\ 				m_freem(m);				\ 				return (NULL);				\ 			}						\ 		}							\ 		m->m_pkthdr.rcvif = iface;				\ 		BRIDGE_UNLOCK(sc);					\ 		return (m);						\ 	}								\ 									\
+value|\ 			if (pfil_local_phys&&				\ 			    (PFIL_HOOKED(&V_inet_pfil_hook)		\ 			     OR_PFIL_HOOKED_INET6)) {			\ 				if (bridge_pfil(&m, NULL, ifp,		\ 				    PFIL_IN) != 0 || m == NULL) {	\ 					BRIDGE_UNLOCK(sc);		\ 					return (NULL);			\ 				}					\ 			}						\ 		}							\ 		if (bif->bif_flags& IFBIF_LEARNING) {			\ 			error = bridge_rtupdate(sc, eh->ether_shost,	\ 			    vlan, bif, 0, IFBAF_DYNAMIC);		\ 			if (error&& bif->bif_addrmax) {		\ 				BRIDGE_UNLOCK(sc);			\ 				m_freem(m);				\ 				return (NULL);				\ 			}						\ 		}							\ 		m->m_pkthdr.rcvif = iface;				\ 		BRIDGE_UNLOCK(sc);					\ 		return (m);						\ 	}								\ 									\
 comment|/* We just received a packet that we sent out. */
 value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_shost, ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_SRC((iface))			\ 	    ) {								\ 		BRIDGE_UNLOCK(sc);					\ 		m_freem(m);						\ 		return (NULL);						\ 	}
 comment|/* 	 * Unicast.  Make sure it's not for the bridge. 	 */
@@ -10645,7 +10651,7 @@ operator|(
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 ifdef|#
 directive|ifdef
@@ -10654,7 +10660,7 @@ operator|||
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|)
 endif|#
 directive|endif
@@ -10849,7 +10855,7 @@ operator|(
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 ifdef|#
 directive|ifdef
@@ -10858,7 +10864,7 @@ operator|||
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|)
 endif|#
 directive|endif
@@ -13329,7 +13335,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|ip_fw_chk_ptr
+name|V_ip_fw_chk_ptr
 operator|&&
 name|pfil_ipfw
 operator|!=
@@ -13451,7 +13457,7 @@ expr_stmt|;
 comment|/* used by ipfw uid/gid/jail rules */
 name|i
 operator|=
-name|ip_fw_chk_ptr
+name|V_ip_fw_chk_ptr
 argument_list|(
 operator|&
 name|args
@@ -13628,7 +13634,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|,
 name|mp
 argument_list|,
@@ -13665,7 +13671,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|,
 name|mp
 argument_list|,
@@ -13706,7 +13712,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|,
 name|mp
 argument_list|,
@@ -13961,7 +13967,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|,
 name|mp
 argument_list|,
@@ -13998,7 +14004,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|,
 name|mp
 argument_list|,
@@ -14039,7 +14045,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|,
 name|mp
 argument_list|,
