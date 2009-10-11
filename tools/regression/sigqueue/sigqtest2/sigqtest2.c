@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -30,13 +30,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -88,6 +100,15 @@ operator|==
 name|CLD_STOPPED
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"%d: stop received\n"
+argument_list|,
+name|si
+operator|->
+name|si_pid
+argument_list|)
+expr_stmt|;
 name|stop_received
 operator|=
 literal|1
@@ -112,6 +133,15 @@ operator|==
 name|CLD_EXITED
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"%d: exit received\n"
+argument_list|,
+name|si
+operator|->
+name|si_pid
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|waitpid
@@ -170,6 +200,15 @@ operator|==
 name|CLD_CONTINUED
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"%d: cont received\n"
+argument_list|,
+name|si
+operator|->
+name|si_pid
+argument_list|)
+expr_stmt|;
 name|cont_received
 operator|=
 literal|1
@@ -181,7 +220,9 @@ end_function
 begin_function
 name|void
 name|job_control_test
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|sigaction
@@ -237,6 +278,11 @@ name|exit_received
 operator|=
 literal|0
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|pid
 operator|=
 name|fork
@@ -249,12 +295,25 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"child %d\n"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|kill
 argument_list|(
 name|getpid
 argument_list|()
 argument_list|,
 name|SIGSTOP
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 name|exit
