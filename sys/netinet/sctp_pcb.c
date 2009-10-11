@@ -25653,9 +25653,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|SCTP_IPI_ITERATOR_WQ_DESTROY
-argument_list|()
-expr_stmt|;
 name|SCTP_IPI_ADDR_DESTROY
 argument_list|()
 expr_stmt|;
