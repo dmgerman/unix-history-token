@@ -70,6 +70,12 @@ block|}
 enum|;
 end_enum
 
+begin_union_decl
+union_decl|union
+name|node
+union_decl|;
+end_union_decl
+
 begin_struct
 struct|struct
 name|cmdentry
@@ -83,8 +89,8 @@ block|{
 name|int
 name|index
 decl_stmt|;
-name|union
-name|node
+name|struct
+name|funcdef
 modifier|*
 name|func
 decl_stmt|;
