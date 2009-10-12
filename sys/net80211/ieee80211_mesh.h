@@ -46,41 +46,23 @@ name|uint8_t
 name|conf_len
 decl_stmt|;
 name|uint8_t
-name|conf_ver
-decl_stmt|;
-name|uint8_t
 name|conf_pselid
-index|[
-literal|4
-index|]
 decl_stmt|;
 comment|/* Active Path Sel. Proto. ID */
 name|uint8_t
 name|conf_pmetid
-index|[
-literal|4
-index|]
 decl_stmt|;
-comment|/* APS Metric Identifier */
+comment|/* Active Metric Identifier */
 name|uint8_t
 name|conf_ccid
-index|[
-literal|4
-index|]
 decl_stmt|;
 comment|/* Congestion Control Mode ID  */
 name|uint8_t
 name|conf_syncid
-index|[
-literal|4
-index|]
 decl_stmt|;
 comment|/* Sync. Protocol ID */
 name|uint8_t
 name|conf_authid
-index|[
-literal|4
-index|]
 decl_stmt|;
 comment|/* Auth. Protocol ID */
 name|uint8_t
@@ -95,38 +77,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_VERSION
-value|1
-end_define
-
-begin_comment
-comment|/* Null Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_NULL_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_NULL_VALUE
-value|0xff
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_NULL
-value|{ IEEE80211_MESHCONF_NULL_OUI, \ 					  IEEE80211_MESHCONF_NULL_VALUE }
-end_define
-
 begin_comment
 comment|/* Hybrid Wireless Mesh Protocol */
 end_comment
@@ -134,22 +84,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_HWMP_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_HWMP_VALUE
+name|IEEE80211_MESHCONF_PATH_HWMP
 value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_HWMP
-value|{ IEEE80211_MESHCONF_HWMP_OUI, \ 					  IEEE80211_MESHCONF_HWMP_VALUE }
 end_define
 
 begin_comment
@@ -159,47 +95,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_AIRTIME_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_AIRTIME_VALUE
+name|IEEE80211_MESHCONF_METRIC_AIRTIME
 value|0x00
 end_define
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_AIRTIME
-value|{ IEEE80211_MESHCONF_AIRTIME_OUI, \ 					  IEEE80211_MESHCONF_AIRTIME_VALUE }
-end_define
-
 begin_comment
-comment|/* Congestion Control Signaling */
+comment|/* Congestion Control */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_CCSIG_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_CCSIG_VALUE
+name|IEEE80211_MESHCONF_CC_DISABLED
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_CCSIG
-value|{ IEEE80211_MESHCONF_CCSIG_OUI,\ 					  IEEE80211_MESHCONF_CCSIG_VALUE }
+name|IEEE80211_MESHCONF_CC_SIG
+value|0x01
 end_define
 
 begin_comment
@@ -209,22 +124,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_NEIGHOFF_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_NEIGHOFF_VALUE
+name|IEEE80211_MESHCONF_SYNC_NEIGHOFF
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_NEIGHOFF
-value|{ IEEE80211_MESHCONF_NEIGHOFF_OUI, \ 					  IEEE80211_MESHCONF_NEIGHOFF_VALUE }
+name|IEEE80211_MESHCONF_AUTH_DISABLED
+value|0x00
 end_define
 
 begin_comment
@@ -234,22 +142,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_SAE_OUI
-value|0x00, 0x0f, 0xac
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_SAE_VALUE
+name|IEEE80211_MESHCONF_AUTH_SAE
 value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_SAE
-value|{ IEEE80211_MESHCONF_SAE_OUI, \ 					  IEEE80211_MESHCONF_SAE_VALUE }
 end_define
 
 begin_define
@@ -1445,6 +1339,9 @@ begin_struct
 struct|struct
 name|ieee80211_mesh_proto_path
 block|{
+name|uint8_t
+name|mpp_active
+decl_stmt|;
 name|char
 name|mpp_descr
 index|[
@@ -1453,9 +1350,6 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|mpp_ie
-index|[
-literal|4
-index|]
 decl_stmt|;
 name|struct
 name|ieee80211_node
@@ -1550,6 +1444,9 @@ begin_struct
 struct|struct
 name|ieee80211_mesh_proto_metric
 block|{
+name|uint8_t
+name|mpm_active
+decl_stmt|;
 name|char
 name|mpm_descr
 index|[
@@ -1558,9 +1455,6 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|mpm_ie
-index|[
-literal|4
-index|]
 decl_stmt|;
 name|uint32_t
 function_decl|(
