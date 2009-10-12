@@ -5418,7 +5418,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 	 * The new_block set contains signals that were not previosly 	 * blocked, but are blocked now. 	 * 	 * In case we block any signal that was not previously blocked 	 * for td, and process has the signal pending, try to schedule 	 * signal delivery to some thread that does not block the signal, 	 * possibly waking it up. 	 */
+comment|/* 	 * The new_block set contains signals that were not previously 	 * blocked, but are blocked now. 	 * 	 * In case we block any signal that was not previously blocked 	 * for td, and process has the signal pending, try to schedule 	 * signal delivery to some thread that does not block the signal, 	 * possibly waking it up. 	 */
 if|if
 condition|(
 name|p
