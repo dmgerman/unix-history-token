@@ -1913,7 +1913,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|rw
@@ -2025,7 +2025,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|rw
@@ -2096,7 +2096,7 @@ comment|/* 		 * Try to drop our lock leaving the lock in a unlocked 		 * state. 
 if|if
 condition|(
 operator|!
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|rw
