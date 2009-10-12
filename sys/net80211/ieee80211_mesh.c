@@ -11754,6 +11754,7 @@ block|{
 case|case
 name|IEEE80211_MESH_PEER_LINK_OPEN
 case|:
+operator|*
 name|frm
 operator|++
 operator|=
