@@ -3167,6 +3167,18 @@ name|if_type
 operator|!=
 name|IFT_BRIDGE
 operator|&&
+operator|!
+operator|(
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_IFDISABLED
+operator|)
+operator|&&
 name|ND_IFINFO
 argument_list|(
 name|ifp
@@ -3205,23 +3217,12 @@ argument_list|,
 name|altifp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|log
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"in6_ifattach_linklocal: "
-literal|"failed to add a link-local addr to %s\n"
-argument_list|,
-name|if_name
-argument_list|(
-name|ifp
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (error) 				log(LOG_NOTICE, "in6_ifattach_linklocal: " 				    "failed to add a link-local addr to %s\n", 				    if_name(ifp));
+endif|#
+directive|endif
 block|}
 else|else
 name|ifa_free
