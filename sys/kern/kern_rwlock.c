@@ -2318,7 +2318,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|rw
@@ -2404,7 +2404,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|rw
@@ -2505,7 +2505,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|rw

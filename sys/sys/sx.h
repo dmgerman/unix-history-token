@@ -63,7 +63,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * In general, the sx locks and rwlocks use very similar algorithms.  * The main difference in the implementations is how threads are  * blocked when a lock is unavailable.  For this, sx locks use sleep  * queues which do not support priority propagation, and rwlocks use  * turnstiles which do.  *  * The sx_lock field consists of several fields.  The low bit  * indicates if the lock is locked with a shared or exclusive lock.  A  * value of 0 indicates an exclusive lock, and a value of 1 indicates  * a shared lock.  Bit 1 is a boolean indicating if there are any  * threads waiting for a shared lock.  Bit 2 is a boolean indicating  * if there are any threads waiting for an exclusive lock.  Bit 3 is a  * boolean indicating if an exclusive lock is recursively held.  The  * rest of the variable's definition is dependent on the value of the  * first bit.  For an exclusive lock, it is a pointer to the thread  * holding the lock, similar to the mtx_lock field of mutexes.  For  * shared locks, it is a count of read locks that are held.  *  * When the lock is not locked by any thread, it is encoded as a  * shared lock with zero waiters.  *  * A note about memory barriers.  Exclusive locks need to use the same  * memory barriers as mutexes: _acq when acquiring an exclusive lock  * and _rel when releasing an exclusive lock.  On the other side,  * shared lock needs to use an _acq barrier when acquiring the lock  * but, since they don't update any locked data, no memory barrier is  * needed when releasing a shared lock.  */
+comment|/*  * In general, the sx locks and rwlocks use very similar algorithms.  * The main difference in the implementations is how threads are  * blocked when a lock is unavailable.  For this, sx locks use sleep  * queues which do not support priority propagation, and rwlocks use  * turnstiles which do.  *  * The sx_lock field consists of several fields.  The low bit  * indicates if the lock is locked with a shared or exclusive lock.  A  * value of 0 indicates an exclusive lock, and a value of 1 indicates  * a shared lock.  Bit 1 is a boolean indicating if there are any  * threads waiting for a shared lock.  Bit 2 is a boolean indicating  * if there are any threads waiting for an exclusive lock.  Bit 3 is a  * boolean indicating if an exclusive lock is recursively held.  The  * rest of the variable's definition is dependent on the value of the  * first bit.  For an exclusive lock, it is a pointer to the thread  * holding the lock, similar to the mtx_lock field of mutexes.  For  * shared locks, it is a count of read locks that are held.  *  * When the lock is not locked by any thread, it is encoded as a  * shared lock with zero waiters.  */
 end_comment
 
 begin_define
@@ -903,7 +903,7 @@ name|SX_LOCK_EXCLUSIVE_WAITERS
 operator|)
 operator|||
 operator|!
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|sx

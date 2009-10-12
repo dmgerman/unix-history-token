@@ -4070,7 +4070,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|sx
@@ -4151,7 +4151,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|sx
@@ -4221,7 +4221,7 @@ comment|/* 		 * Wake up semantic here is quite simple: 		 * Just wake up all the
 if|if
 condition|(
 operator|!
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|sx
