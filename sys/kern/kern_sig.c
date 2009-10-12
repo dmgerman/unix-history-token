@@ -936,7 +936,7 @@ name|sugid_coredump
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable coredumping set user/group ID processes"
+literal|"Allow setuid and setgid processes to dump core"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
