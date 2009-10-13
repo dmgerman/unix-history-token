@@ -1811,7 +1811,7 @@ block|{
 name|printf
 argument_list|(
 literal|"ZFS WARNING: Duplicated ZAP "
-literal|"entry detected (%s)."
+literal|"entry detected (%s).\n"
 argument_list|,
 name|mze
 operator|->
