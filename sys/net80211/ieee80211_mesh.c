@@ -11656,6 +11656,11 @@ name|frm
 operator|+=
 literal|1
 expr_stmt|;
+operator|*
+name|frm
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ms
