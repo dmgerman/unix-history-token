@@ -2589,7 +2589,7 @@ name|sc
 operator|->
 name|sc_xfercnt
 condition|)
-comment|/* wait 1/4 second, give up if we get a signal */
+comment|/* wait 1 second, give up if we get a signal */
 if|if
 condition|(
 name|ppb_sleep
