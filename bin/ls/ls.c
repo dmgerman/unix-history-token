@@ -1651,8 +1651,12 @@ operator|&&
 operator|!
 name|f_listdir
 operator|&&
+operator|(
 operator|!
 name|f_type
+operator|||
+name|f_slash
+operator|)
 condition|)
 name|fts_options
 operator||=
