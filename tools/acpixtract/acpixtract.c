@@ -31,11 +31,15 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_comment
+comment|/* Note: This is a 32-bit program only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VERSION
-value|0x20060324
+value|0x20091002
 end_define
 
 begin_define
@@ -59,25 +63,6 @@ name|BUFFER_SIZE
 value|256
 end_define
 
-begin_decl_stmt
-name|char
-name|Filename
-index|[
-literal|16
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|char
-name|Data
-index|[
-literal|16
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Local prototypes */
 end_comment
@@ -86,7 +71,6 @@ begin_function_decl
 name|void
 name|CheckAscii
 parameter_list|(
-name|unsigned
 name|char
 modifier|*
 name|Name
@@ -211,6 +195,57 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_header
+block|{
+name|char
+name|Signature
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|int
+name|Length
+decl_stmt|;
+name|unsigned
+name|char
+name|Revision
+decl_stmt|;
+name|unsigned
+name|char
+name|Checksum
+decl_stmt|;
+name|char
+name|OemId
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|char
+name|OemTableId
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int
+name|OemRevision
+decl_stmt|;
+name|char
+name|AslCompilerId
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|int
+name|AslCompilerRevision
+decl_stmt|;
+block|}
+name|ACPI_TABLE_HEADER
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|TableInfo
@@ -243,6 +278,25 @@ modifier|*
 name|ListHead
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|Filename
+index|[
+literal|16
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|Data
+index|[
+literal|16
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -315,7 +369,6 @@ begin_function
 name|void
 name|CheckAscii
 parameter_list|(
-name|unsigned
 name|char
 modifier|*
 name|Name
@@ -372,7 +425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    NormalizeSignature  *  * PARAMETERS:  Name                - Ascii string  *  * RETURN:      None  *  * DESCRIPTION: Change "RSD PTR" to "RSDP"  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    NormalizeSignature  *  * PARAMETERS:  Name                - Ascii string containing an ACPI signature  *  * RETURN:      None  *  * DESCRIPTION: Change "RSD PTR" to "RSDP"  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -409,7 +462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ConvertLine  *  * DESCRIPTION: Convert one line of ascii text binary (up to 16 bytes)  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    ConvertLine  *  * PARAMETERS:  InputLine           - One line from the input acpidump file  *              OutputData          - Where the converted data is returned  *  * RETURN:      The number of bytes actually converted  *  * DESCRIPTION: Convert one line of ascii text binary (up to 16 bytes)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -461,7 +514,9 @@ name|End
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* Don't understand the format */
 block|}
@@ -618,7 +673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    GetTableHeader  *  * DESCRIPTION: Extract and convert a table heaader  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    GetTableHeader  *  * PARAMETERS:  InputFile           - Handle for the input acpidump file  *              OutputData          - Where the table header is returned  *  * RETURN:      The actual number of bytes converted  *  * DESCRIPTION: Extract and convert an ACPI table header  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -681,7 +736,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|TotalConverted
+operator|)
 return|;
 block|}
 name|BytesConverted
@@ -709,18 +766,22 @@ literal|16
 condition|)
 block|{
 return|return
+operator|(
 name|TotalConverted
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|TotalConverted
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    CountTableInstances  *  * DESCRIPTION: Count the instances of table<Signature> within the input file  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    CountTableInstances  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *              Signature           - Requested signature to count  *  * RETURN:      The number of instances of the signature  *  * DESCRIPTION: Count the instances of tables with the given signature within  *              the input acpidump file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -776,7 +837,9 @@ name|InputPathname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* Count the number of instances of this signature */
@@ -845,13 +908,15 @@ name|InputFile
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Instances
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    GetNextInstance  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    GetNextInstance  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *              Signature           - Requested ACPI signature  *  * RETURN:      The next instance number for this signature. Zero if this  *              is the first instance of this signature.  *  * DESCRIPTION: Get the next instance number of the specified table. If this  *              is the first instance of the table, create a new instance  *              block. Note: only SSDT and PSDT tables can have multiple  *              instances.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -912,6 +977,7 @@ operator|!
 name|Info
 condition|)
 block|{
+comment|/* Signature not found, create new table info block */
 name|Info
 operator|=
 name|malloc
@@ -923,6 +989,23 @@ name|TableInfo
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Info
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Could not allocate memory\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|Info
 operator|->
 name|Signature
@@ -990,7 +1073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ExtractTables  *  * DESCRIPTION: Convert text ACPI tables to binary  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    ExtractTables  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *              Signature           - Requested ACPI signature to extract.  *                                    NULL means extract ALL tables.  *              MinimumInstances    - Min instances that are acceptable  *  * RETURN:      Status  *  * DESCRIPTION: Convert text ACPI tables to binary  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1065,6 +1148,11 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+name|int
+name|Status
+init|=
+literal|0
+decl_stmt|;
 comment|/* Open input in text mode, output is in binary mode */
 name|InputFile
 operator|=
@@ -1089,8 +1177,10 @@ name|InputPathname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1129,10 +1219,14 @@ argument_list|,
 name|InputPathname
 argument_list|)
 expr_stmt|;
-return|return
+name|Status
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|CleanupAndExit
+goto|;
 block|}
 if|if
 condition|(
@@ -1141,9 +1235,9 @@ operator|==
 literal|0
 condition|)
 block|{
-return|return
-literal|0
-return|;
+goto|goto
+name|CleanupAndExit
+goto|;
 block|}
 block|}
 comment|/* Convert all instances of the table to binary */
@@ -1226,7 +1320,7 @@ block|{
 continue|continue;
 block|}
 block|}
-comment|/* Get the instance # for this signature */
+comment|/*              * Get the instance number for this signature. Only the              * SSDT and PSDT tables can have multiple instances.              */
 name|ThisInstance
 operator|=
 name|GetNextInstance
@@ -1290,10 +1384,14 @@ argument_list|,
 name|Filename
 argument_list|)
 expr_stmt|;
-return|return
+name|Status
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|CleanupAndExit
+goto|;
 block|}
 name|State
 operator|=
@@ -1348,7 +1446,7 @@ name|FIND_HEADER
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Acpi table [%4.4s] - % 6d bytes written to %s\n"
+literal|"Acpi table [%4.4s] - % 7d bytes written to %s\n"
 argument_list|,
 name|ThisSignature
 argument_list|,
@@ -1402,10 +1500,18 @@ argument_list|(
 name|OutputFile
 argument_list|)
 expr_stmt|;
-return|return
+name|OutputFile
+operator|=
+name|NULL
+expr_stmt|;
+name|Status
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|CleanupAndExit
+goto|;
 block|}
 name|TotalBytesWritten
 operator|+=
@@ -1413,10 +1519,14 @@ name|BytesConverted
 expr_stmt|;
 continue|continue;
 default|default:
-return|return
+name|Status
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|CleanupAndExit
+goto|;
 block|}
 block|}
 if|if
@@ -1435,6 +1545,8 @@ name|InputPathname
 argument_list|)
 expr_stmt|;
 block|}
+name|CleanupAndExit
+label|:
 if|if
 condition|(
 name|OutputFile
@@ -1455,7 +1567,7 @@ block|{
 comment|/* Received an EOF while extracting data */
 name|printf
 argument_list|(
-literal|"Acpi table [%4.4s] - % 6d bytes written to %s\n"
+literal|"Acpi table [%4.4s] - % 7d bytes written to %s\n"
 argument_list|,
 name|ThisSignature
 argument_list|,
@@ -1472,13 +1584,15 @@ name|InputFile
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|Status
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ListTables  *  * DESCRIPTION: Display info for all ACPI tables found in input  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    ListTables  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *  * RETURN:      Status  *  * DESCRIPTION: Display info for all ACPI tables found in input. Does not  *              perform an actual extraction of the tables.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1515,6 +1629,16 @@ name|TableCount
 init|=
 literal|0
 decl_stmt|;
+name|ACPI_TABLE_HEADER
+modifier|*
+name|TableHeader
+init|=
+operator|(
+name|ACPI_TABLE_HEADER
+operator|*
+operator|)
+name|Header
+decl_stmt|;
 comment|/* Open input in text mode, output is in binary mode */
 name|InputFile
 operator|=
@@ -1539,13 +1663,17 @@ name|InputPathname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
+comment|/* Dump the headers for all tables found in the input file */
 name|printf
 argument_list|(
-literal|"\nSignature Length  OemId     OemTableId   OemRevision CompilerId CompilerRevision\n\n"
+literal|"\nSignature Length Revision  OemId     OemTableId"
+literal|"   OemRevision CompilerId CompilerRevision\n\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -1609,11 +1737,9 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|Header
+name|TableHeader
+operator|->
+name|Signature
 argument_list|,
 literal|"RSD PTR "
 argument_list|,
@@ -1623,6 +1749,10 @@ condition|)
 block|{
 name|CheckAscii
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Header
 index|[
@@ -1634,7 +1764,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8.4s          \"%6.6s\"\n"
+literal|"%8.4s                   \"%6.6s\"\n"
 argument_list|,
 literal|"RSDP"
 argument_list|,
@@ -1650,7 +1780,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Minimum size */
+comment|/* Minimum size for table with standard header */
 if|if
 condition|(
 name|HeaderSize
@@ -1668,18 +1798,13 @@ name|printf
 argument_list|(
 literal|"%8.4s % 7d"
 argument_list|,
-name|Header
+name|TableHeader
+operator|->
+name|Signature
 argument_list|,
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|Header
-index|[
-literal|4
-index|]
+name|TableHeader
+operator|->
+name|Length
 argument_list|)
 expr_stmt|;
 comment|/* FACS has only signature and length */
@@ -1688,11 +1813,9 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|Header
+name|TableHeader
+operator|->
+name|Signature
 argument_list|,
 literal|"FACS"
 argument_list|,
@@ -1710,80 +1833,58 @@ block|}
 comment|/* OEM IDs and Compiler IDs */
 name|CheckAscii
 argument_list|(
-operator|&
-name|Header
-index|[
-literal|10
-index|]
+name|TableHeader
+operator|->
+name|OemId
 argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
 name|CheckAscii
 argument_list|(
-operator|&
-name|Header
-index|[
-literal|16
-index|]
+name|TableHeader
+operator|->
+name|OemTableId
 argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
 name|CheckAscii
 argument_list|(
-operator|&
-name|Header
-index|[
-literal|28
-index|]
+name|TableHeader
+operator|->
+name|AslCompilerId
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  \"%6.6s\"  \"%8.8s\"    %8.8X    \"%4.4s\"     %8.8X\n"
+literal|"     %2.2X    \"%6.6s\"  \"%8.8s\"    %8.8X    \"%4.4s\"     %8.8X\n"
 argument_list|,
-operator|&
-name|Header
-index|[
-literal|10
-index|]
+name|TableHeader
+operator|->
+name|Revision
 argument_list|,
-operator|&
-name|Header
-index|[
-literal|16
-index|]
+name|TableHeader
+operator|->
+name|OemId
 argument_list|,
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|Header
-index|[
-literal|24
-index|]
+name|TableHeader
+operator|->
+name|OemTableId
 argument_list|,
-operator|&
-name|Header
-index|[
-literal|28
-index|]
+name|TableHeader
+operator|->
+name|OemRevision
 argument_list|,
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|Header
-index|[
-literal|32
-index|]
+name|TableHeader
+operator|->
+name|AslCompilerId
+argument_list|,
+name|TableHeader
+operator|->
+name|AslCompilerRevision
 argument_list|)
 expr_stmt|;
 block|}
@@ -1802,7 +1903,9 @@ name|InputFile
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1838,7 +1941,9 @@ name|DisplayUsage
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1865,7 +1970,9 @@ name|DisplayUsage
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 switch|switch
@@ -1882,6 +1989,7 @@ block|{
 case|case
 literal|'a'
 case|:
+comment|/* Extract all tables found */
 return|return
 operator|(
 name|ExtractTables
@@ -1900,6 +2008,7 @@ return|;
 case|case
 literal|'l'
 case|:
+comment|/* List tables only, do not extract */
 return|return
 operator|(
 name|ListTables
@@ -1914,6 +2023,7 @@ return|;
 case|case
 literal|'s'
 case|:
+comment|/* Extract only tables with this signature */
 return|return
 operator|(
 name|ExtractTables
@@ -1941,7 +2051,9 @@ name|DisplayUsage
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -1966,7 +2078,9 @@ name|Status
 condition|)
 block|{
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 name|Status

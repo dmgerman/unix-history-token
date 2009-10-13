@@ -1580,7 +1580,12 @@ case|case
 name|CMD_BATCH
 case|:
 name|AcpiDbBatchExecute
-argument_list|()
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

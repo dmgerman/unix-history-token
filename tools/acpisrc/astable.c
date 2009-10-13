@@ -694,6 +694,12 @@ name|SRC_TYPE_SIMPLE
 block|}
 block|,
 block|{
+literal|"ACPI_EXECUTE_WALK"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_EXTERNAL_LIST"
 block|,
 name|SRC_TYPE_STRUCT

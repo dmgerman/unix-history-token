@@ -31,12 +31,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -83,7 +77,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AfGenerateFilename  *  * PARAMETERS:  Prefix      - prefix string  *              TableId     - The table ID  *  * RETURN:      Pointer to the completed string  *  * DESCRIPTION: Build an output filename from an ACPI table ID string  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AfGenerateFilename  *  * PARAMETERS:  Prefix              - prefix string  *              TableId             - The table ID  *  * RETURN:      Pointer to the completed string  *  * DESCRIPTION: Build an output filename from an ACPI table ID string  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -209,7 +203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AfWriteBuffer  *  * PARAMETERS:  Filename        - name of file  *              Buffer          - data to write  *              Length          - length of data  *  * RETURN:      Actual number of bytes written  *  * DESCRIPTION: Open a file and write out a single buffer  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AfWriteBuffer  *  * PARAMETERS:  Filename            - name of file  *              Buffer              - data to write  *              Length              - length of data  *  * RETURN:      Actual number of bytes written  *  * DESCRIPTION: Open a file and write out a single buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -297,7 +291,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AfWriteTable  *  * PARAMETERS:  Table       - pointer to the ACPI table  *              Length      - length of the table  *              TableName   - the table signature  *              OemTableID  - from the table header  *  * RETURN:      None  *  * DESCRIPTION: Dump the loaded tables to a file (or files)  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AfWriteTable  *  * PARAMETERS:  Table               - pointer to the ACPI table  *              Length              - length of the table  *              TableName           - the table signature  *              OemTableID          - from the table header  *  * RETURN:      None  *  * DESCRIPTION: Dump the loaded tables to a file (or files)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -389,6 +383,9 @@ name|NewFilename
 operator|=
 name|ACPI_ALLOCATE_ZEROED
 argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|strlen
 argument_list|(
 name|InputFilename
@@ -488,6 +485,9 @@ name|NewString
 operator|=
 name|ACPI_ALLOCATE
 argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|strlen
 argument_list|(
 name|String

@@ -63,50 +63,9 @@ name|ACPI_TABLE_FILE_SUFFIX
 value|".dat"
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|UINT8
-modifier|*
-name|DsdtPtr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|AcpiDsdtLength
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT8
-modifier|*
-name|AmlStart
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|AmlLength
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|AcpiGbl_Optind
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|AcpiGbl_Optarg
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * getopt  */
+end_comment
 
 begin_function_decl
 name|int
@@ -126,6 +85,21 @@ name|opts
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|AcpiGbl_Optind
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|AcpiGbl_Optarg
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * adisasm  */

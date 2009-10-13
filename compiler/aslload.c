@@ -1169,7 +1169,7 @@ name|Op
 argument_list|,
 name|Status
 argument_list|,
-literal|"Failure from lookup\n"
+literal|"Failure from namespace lookup"
 argument_list|,
 name|FALSE
 argument_list|)
@@ -1567,7 +1567,7 @@ name|Op
 argument_list|,
 name|Status
 argument_list|,
-literal|"Failure from lookup %s\n"
+literal|"Failure from namespace lookup"
 argument_list|,
 name|FALSE
 argument_list|)
@@ -2052,7 +2052,7 @@ name|Op
 argument_list|,
 name|Status
 argument_list|,
-literal|"Failure from lookup\n"
+literal|"Failure from namespace lookup"
 argument_list|,
 name|FALSE
 argument_list|)
