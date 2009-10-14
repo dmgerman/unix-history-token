@@ -3603,6 +3603,8 @@ name|icmp6len
 argument_list|,
 name|code
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* In this case, m should've been freed. */
