@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Streams.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
@@ -115,6 +109,9 @@ name|Type
 decl_stmt|;
 name|class
 name|User
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 comment|/// ExtAddrMode - This is an extended version of TargetLowering::AddrMode
 comment|/// which holds actual Value*'s for register values.
@@ -150,7 +147,7 @@ block|{}
 name|void
 name|print
 argument_list|(
-argument|OStream&OS
+argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;
@@ -162,12 +159,12 @@ block|; }
 decl_stmt|;
 specifier|static
 specifier|inline
-name|OStream
+name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|OStream
+name|raw_ostream
 operator|&
 name|OS
 operator|,

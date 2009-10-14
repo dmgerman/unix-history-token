@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -128,6 +134,9 @@ name|StructLayout
 decl_stmt|;
 name|class
 name|GlobalVariable
+decl_stmt|;
+name|class
+name|LLVMContext
 decl_stmt|;
 comment|/// Enum used to categorize the alignment types stored by TargetAlignElem
 enum|enum
@@ -302,6 +311,12 @@ specifier|const
 name|TargetAlignElem
 name|InvalidAlignmentElem
 decl_stmt|;
+comment|// Opaque pointer for the StructType -> StructLayout map.
+name|mutable
+name|void
+modifier|*
+name|LayoutMap
+decl_stmt|;
 comment|//! Set/initialize target alignments
 name|void
 name|setAlignment
@@ -394,16 +409,11 @@ argument_list|(
 argument|&ID
 argument_list|)
 block|{
-name|assert
+name|llvm_report_error
 argument_list|(
-literal|0
-operator|&&
-literal|"ERROR: Bad TargetData ctor used.  "
+literal|"Bad TargetData ctor used.  "
 literal|"Tool did not specify a TargetData to use?"
 argument_list|)
-block|;
-name|abort
-argument_list|()
 block|;   }
 comment|/// Constructs a TargetData from a specification string. See init().
 name|explicit
@@ -482,7 +492,14 @@ argument_list|)
 operator|,
 name|Alignments
 argument_list|(
-argument|TD.Alignments
+name|TD
+operator|.
+name|Alignments
+argument_list|)
+operator|,
+name|LayoutMap
+argument_list|(
+literal|0
 argument_list|)
 block|{ }
 operator|~
@@ -765,11 +782,15 @@ comment|/// greater to the host pointer size.
 comment|///
 specifier|const
 name|IntegerType
-operator|*
+modifier|*
 name|getIntPtrType
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getIndexedOffset - return the offset from the beginning of the type for
 comment|/// the specified indices.  This is used to implement getelementptr.
 comment|///

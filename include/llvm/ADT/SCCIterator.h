@@ -96,13 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -137,8 +131,14 @@ name|class
 name|scc_iterator
 operator|:
 name|public
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
 name|std
 operator|::
 name|vector
@@ -177,9 +177,23 @@ operator|>
 name|SccTy
 expr_stmt|;
 typedef|typedef
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
-name|SccTy
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
+name|std
+operator|::
+name|vector
+operator|<
+name|typename
+name|GT
+operator|::
+name|NodeType
+operator|>
 operator|,
 name|ptrdiff_t
 operator|>
@@ -205,9 +219,7 @@ comment|// nodeVisitNumbers are per-node visit numbers, also used as DFS flags.
 name|unsigned
 name|visitNum
 decl_stmt|;
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|NodeType
 operator|*
@@ -312,7 +324,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//DOUT<< "TarjanSCC: Node "<< N<<
+comment|//errs()<< "TarjanSCC: Node "<< N<<
 comment|//      " : visitNum = "<< visitNum<< "\n";
 block|}
 comment|// The stack-based DFS traversal; defined below.
@@ -521,7 +533,7 @@ argument_list|()
 operator|=
 name|minVisitNum
 expr_stmt|;
-comment|//DOUT<< "TarjanSCC: Popped node "<< visitingN<<
+comment|//errs()<< "TarjanSCC: Popped node "<< visitingN<<
 comment|//      " : minVisitNum = "<< minVisitNum<< "; Node visit num = "<<
 comment|//      nodeVisitNumbers[visitingN]<< "\n";
 if|if

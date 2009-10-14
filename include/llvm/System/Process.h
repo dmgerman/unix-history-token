@@ -188,6 +188,17 @@ name|bool
 name|StandardErrIsDisplayed
 parameter_list|()
 function_decl|;
+comment|/// This function determines if the given file descriptor is connected to
+comment|/// a "tty" or "console" window. That is, the output would be displayed to
+comment|/// the user rather than being put on a pipe or stored in a file.
+specifier|static
+name|bool
+name|FileDescriptorIsDisplayed
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+function_decl|;
 comment|/// This function determines the number of columns in the window
 comment|/// if standard output is connected to a "tty" or "console"
 comment|/// window. If standard output is not connected to a tty or

@@ -97,6 +97,10 @@ extern|extern llvm::cl::opt<std::string> OutputFilename;
 end_extern
 
 begin_extern
+extern|extern llvm::cl::opt<std::string> TempDirname;
+end_extern
+
+begin_extern
 extern|extern llvm::cl::list<std::string> Languages;
 end_extern
 

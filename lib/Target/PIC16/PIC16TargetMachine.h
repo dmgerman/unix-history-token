@@ -132,21 +132,13 @@ comment|// any PIC16 specific FrameInfo class.
 name|TargetFrameInfo
 name|FrameInfo
 block|;
-name|protected
-operator|:
-name|virtual
-specifier|const
-name|TargetAsmInfo
-operator|*
-name|createTargetAsmInfo
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|PIC16TargetMachine
 argument_list|(
-argument|const Module&M
+argument|const Target&T
+argument_list|,
+argument|const std::string&TT
 argument_list|,
 argument|const std::string&FS
 argument_list|,
@@ -253,20 +245,7 @@ argument_list|)
 block|;
 name|virtual
 name|bool
-name|addAssemblyEmitter
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|bool Verbose
-argument_list|,
-argument|raw_ostream&Out
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addPostRegAlloc
+name|addPreEmitPass
 argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
@@ -275,32 +254,6 @@ argument_list|)
 block|; }
 decl_stmt|;
 comment|// PIC16TargetMachine.
-comment|/// CooperTargetMachine
-name|class
-name|CooperTargetMachine
-range|:
-name|public
-name|PIC16TargetMachine
-block|{
-name|public
-operator|:
-name|CooperTargetMachine
-argument_list|(
-specifier|const
-name|Module
-operator|&
-name|M
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
-argument_list|)
-block|; }
-decl_stmt|;
-comment|// CooperTargetMachine.
 block|}
 end_decl_stmt
 

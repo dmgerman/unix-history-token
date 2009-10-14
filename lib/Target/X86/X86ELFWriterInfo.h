@@ -161,13 +161,58 @@ operator|:
 name|false
 return|;
 block|}
-comment|/// getAddendForRelTy - Gets the addend value for an ELF relocation entry
-comment|/// based on the target relocation type
+comment|/// getDefaultAddendForRelTy - Gets the default addend value for a
+comment|/// relocation entry based on the target ELF relocation type.
 name|virtual
 name|long
 name|int
-name|getAddendForRelTy
+name|getDefaultAddendForRelTy
 argument_list|(
+argument|unsigned RelTy
+argument_list|,
+argument|long int Modifier =
+literal|0
+argument_list|)
+specifier|const
+block|;
+comment|/// getRelTySize - Returns the size of relocatable field in bits
+name|virtual
+name|unsigned
+name|getRelocationTySize
+argument_list|(
+argument|unsigned RelTy
+argument_list|)
+specifier|const
+block|;
+comment|/// isPCRelativeRel - True if the relocation type is pc relative
+name|virtual
+name|bool
+name|isPCRelativeRel
+argument_list|(
+argument|unsigned RelTy
+argument_list|)
+specifier|const
+block|;
+comment|/// getJumpTableRelocationTy - Returns the machine relocation type used
+comment|/// to reference a jumptable.
+name|virtual
+name|unsigned
+name|getAbsoluteLabelMachineRelTy
+argument_list|()
+specifier|const
+block|;
+comment|/// computeRelocation - Some relocatable fields could be relocated
+comment|/// directly, avoiding the relocation symbol emission, compute the
+comment|/// final relocation value for this symbol.
+name|virtual
+name|long
+name|int
+name|computeRelocation
+argument_list|(
+argument|unsigned SymOffset
+argument_list|,
+argument|unsigned RelOffset
+argument_list|,
 argument|unsigned RelTy
 argument_list|)
 specifier|const

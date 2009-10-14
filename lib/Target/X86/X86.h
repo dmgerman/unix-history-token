@@ -83,10 +83,16 @@ name|class
 name|MachineCodeEmitter
 decl_stmt|;
 name|class
+name|MCCodeEmitter
+decl_stmt|;
+name|class
 name|JITCodeEmitter
 decl_stmt|;
 name|class
-name|raw_ostream
+name|Target
+decl_stmt|;
+name|class
+name|formatted_raw_ostream
 decl_stmt|;
 comment|/// createX86ISelDag - This pass converts a legalized DAG into a
 comment|/// X86-specific DAG, ready for instruction scheduling.
@@ -122,26 +128,6 @@ modifier|*
 name|createX87FPRegKillInserterPass
 parameter_list|()
 function_decl|;
-comment|/// createX86CodePrinterPass - Returns a pass that prints the X86
-comment|/// assembly code for a MachineFunction to the given output stream,
-comment|/// using the given target machine description.
-comment|///
-name|FunctionPass
-modifier|*
-name|createX86CodePrinterPass
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|o
-parameter_list|,
-name|X86TargetMachine
-modifier|&
-name|tm
-parameter_list|,
-name|bool
-name|Verbose
-parameter_list|)
-function_decl|;
 comment|/// createX86CodeEmitterPass - Return a pass that emits the collected X86 code
 comment|/// to the specified MCE object.
 name|FunctionPass
@@ -170,6 +156,32 @@ modifier|&
 name|JCE
 parameter_list|)
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createX86ObjectCodeEmitterPass
+parameter_list|(
+name|X86TargetMachine
+modifier|&
+name|TM
+parameter_list|,
+name|ObjectCodeEmitter
+modifier|&
+name|OCE
+parameter_list|)
+function_decl|;
+name|MCCodeEmitter
+modifier|*
+name|createX86MCCodeEmitter
+parameter_list|(
+specifier|const
+name|Target
+modifier|&
+parameter_list|,
+name|TargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
 comment|/// createX86EmitCodeToMemory - Returns a pass that converts a register
 comment|/// allocated function into raw machine code in a dynamically
 comment|/// allocated chunk of memory.
@@ -187,6 +199,12 @@ modifier|*
 name|createX86MaxStackAlignmentCalculatorPass
 parameter_list|()
 function_decl|;
+specifier|extern
+name|Target
+name|TheX86_32Target
+decl_stmt|,
+name|TheX86_64Target
+decl_stmt|;
 block|}
 end_decl_stmt
 

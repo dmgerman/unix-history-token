@@ -207,6 +207,10 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -245,34 +249,63 @@ comment|// Lower Operand helpers
 name|SDValue
 name|LowerCCCArguments
 argument_list|(
-argument|SDValue Op
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 block|;
 name|SDValue
 name|LowerCCCCallTo
 argument_list|(
-argument|SDValue Op
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|unsigned CC
+argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 block|;
-name|SDNode
-operator|*
+name|SDValue
 name|LowerCallResult
 argument_list|(
 argument|SDValue Chain
 argument_list|,
 argument|SDValue InFlag
 argument_list|,
-argument|CallSDNode*TheCall
+argument|CallingConv::ID CallConv
 argument_list|,
-argument|unsigned CallingConv
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 block|;
 name|SDValue
@@ -295,7 +328,7 @@ argument_list|)
 block|;
 comment|// Lower Operand specifics
 name|SDValue
-name|LowerRET
+name|LowerLOAD
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -303,15 +336,7 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
-name|LowerCALL
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
-name|LowerFORMAL_ARGUMENTS
+name|LowerSTORE
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -393,7 +418,7 @@ name|getRegClassForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -408,6 +433,77 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|PerformDAGCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 block|;   }
 decl_stmt|;

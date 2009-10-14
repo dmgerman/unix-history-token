@@ -46,13 +46,45 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
+
+begin_comment
+comment|// Some system headers or GCC predefined macros conflict with identifiers in
+end_comment
+
+begin_comment
+comment|// this file.  Undefine them here.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|mips
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|sparc
+end_undef
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
+name|class
+name|Twine
+decl_stmt|;
 comment|/// Triple - Helper class for working with target triples.
 comment|///
 comment|/// Target triples are strings in the format of:
@@ -65,8 +97,22 @@ comment|/// target triples, but also want to implement certain special
 comment|/// behavior for particular targets. This class isolates the mapping
 comment|/// from the components of the target triple to well known IDs.
 comment|///
-comment|/// See autoconf/config.guess for a glimpse into what they look like
-comment|/// in practice.
+comment|/// At its core the Triple class is designed to be a wrapper for a triple
+comment|/// string; it does not normally change or normalize the triple string, instead
+comment|/// it provides additional APIs to parse normalized parts out of the triple.
+comment|///
+comment|/// One curiosity this implies is that for some odd triples the results of,
+comment|/// e.g., getOSName() can be very different from the result of getOS().  For
+comment|/// example, for 'i386-mingw32', getOS() will return MinGW32, but since
+comment|/// getOSName() is purely based on the string structure that will return the
+comment|/// empty string.
+comment|///
+comment|/// Clients should generally avoid using getOSName() and related APIs unless
+comment|/// they are familiar with the triple format (this is particularly true when
+comment|/// rewriting a triple).
+comment|///
+comment|/// See autoconf/config.guess for a glimpse into what they look like in
+comment|/// practice.
 name|class
 name|Triple
 block|{
@@ -77,18 +123,57 @@ name|ArchType
 block|{
 name|UnknownArch
 block|,
-name|x86
+name|alpha
 block|,
-comment|// i?86
+comment|// Alpha: alpha
+name|arm
+block|,
+comment|// ARM; arm, armv.*, xscale
+name|bfin
+block|,
+comment|// Blackfin: bfin
+name|cellspu
+block|,
+comment|// CellSPU: spu, cellspu
+name|mips
+block|,
+comment|// MIPS: mips, mipsallegrex
+name|mipsel
+block|,
+comment|// MIPSEL: mipsel, mipsallegrexel, psp
+name|msp430
+block|,
+comment|// MSP430: msp430
+name|pic16
+block|,
+comment|// PIC16: pic16
 name|ppc
 block|,
-comment|// powerpc
+comment|// PPC: powerpc
 name|ppc64
 block|,
-comment|// powerpc64
+comment|// PPC64: powerpc64
+name|sparc
+block|,
+comment|// Sparc: sparc
+name|systemz
+block|,
+comment|// SystemZ: s390x
+name|tce
+block|,
+comment|// TCE (http://tce.cs.tut.fi/): tce
+name|thumb
+block|,
+comment|// Thumb: thumb, thumbv.*
+name|x86
+block|,
+comment|// X86: i[3-9]86
 name|x86_64
 block|,
-comment|// amd64, x86_64
+comment|// X86-64: amd64, x86_64
+name|xcore
+block|,
+comment|// XCore: xcore
 name|InvalidArch
 block|}
 enum|;
@@ -109,6 +194,8 @@ name|UnknownOS
 block|,
 name|AuroraUX
 block|,
+name|Cygwin
+block|,
 name|Darwin
 block|,
 name|DragonFly
@@ -117,7 +204,17 @@ name|FreeBSD
 block|,
 name|Linux
 block|,
+name|MinGW32
+block|,
+name|MinGW64
+block|,
+name|NetBSD
+block|,
 name|OpenBSD
+block|,
+name|Solaris
+block|,
+name|Win32
 block|}
 enum|;
 name|private
@@ -166,9 +263,7 @@ name|Triple
 argument_list|()
 operator|:
 name|Data
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 operator|,
 name|Arch
 argument_list|(
@@ -178,10 +273,7 @@ block|{}
 name|explicit
 name|Triple
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Str
+argument|StringRef Str
 argument_list|)
 operator|:
 name|Data
@@ -197,20 +289,11 @@ block|{}
 name|explicit
 name|Triple
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|ArchStr
+argument|StringRef ArchStr
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|VendorStr
+argument|StringRef VendorStr
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|OSStr
+argument|StringRef OSStr
 argument_list|)
 operator|:
 name|Data
@@ -365,14 +448,6 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// FIXME: Invent a lightweight string representation for these to
-end_comment
-
-begin_comment
-comment|// use.
-end_comment
-
-begin_comment
 comment|/// getArchName - Get the architecture (first) component of the
 end_comment
 
@@ -381,9 +456,7 @@ comment|/// triple.
 end_comment
 
 begin_expr_stmt
-name|std
-operator|::
-name|string
+name|StringRef
 name|getArchName
 argument_list|()
 specifier|const
@@ -395,9 +468,7 @@ comment|/// getVendorName - Get the vendor (second) component of the triple.
 end_comment
 
 begin_expr_stmt
-name|std
-operator|::
-name|string
+name|StringRef
 name|getVendorName
 argument_list|()
 specifier|const
@@ -413,9 +484,7 @@ comment|/// triple.
 end_comment
 
 begin_expr_stmt
-name|std
-operator|::
-name|string
+name|StringRef
 name|getOSName
 argument_list|()
 specifier|const
@@ -431,9 +500,7 @@ comment|/// component of the triple, or "" if empty.
 end_comment
 
 begin_expr_stmt
-name|std
-operator|::
-name|string
+name|StringRef
 name|getEnvironmentName
 argument_list|()
 specifier|const
@@ -453,13 +520,83 @@ comment|/// if the environment component is present).
 end_comment
 
 begin_expr_stmt
-name|std
-operator|::
-name|string
+name|StringRef
 name|getOSAndEnvironmentName
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// getDarwinNumber - Parse the 'darwin number' out of the specific target
+end_comment
+
+begin_comment
+comment|/// triple.  For example, if we have darwin8.5 return 8,5,0.  If any entry is
+end_comment
+
+begin_comment
+comment|/// not defined, return 0's.  This requires that the triple have an OSType of
+end_comment
+
+begin_comment
+comment|/// darwin before it is called.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getDarwinNumber
+argument_list|(
+name|unsigned
+operator|&
+name|Maj
+argument_list|,
+name|unsigned
+operator|&
+name|Min
+argument_list|,
+name|unsigned
+operator|&
+name|Revision
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// getDarwinMajorNumber - Return just the major version number, this is
+end_comment
+
+begin_comment
+comment|/// specialized because it is a common query.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getDarwinMajorNumber
+argument_list|()
+specifier|const
+block|{
+name|unsigned
+name|Maj
+block|,
+name|Min
+block|,
+name|Rev
+block|;
+name|getDarwinNumber
+argument_list|(
+name|Maj
+argument_list|,
+name|Min
+argument_list|,
+name|Rev
+argument_list|)
+block|;
+return|return
+name|Maj
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -532,19 +669,17 @@ begin_comment
 comment|/// setTriple - Set all components to the new triple \arg Str.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|setTriple
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|Twine
+modifier|&
 name|Str
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// setArchName - Set the architecture (first) component of the
@@ -554,19 +689,17 @@ begin_comment
 comment|/// triple by name.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|setArchName
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Str
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// setVendorName - Set the vendor (second) component of the triple
@@ -576,19 +709,17 @@ begin_comment
 comment|/// by name.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|setVendorName
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Str
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// setOSName - Set the operating system (third) component of the
@@ -598,19 +729,17 @@ begin_comment
 comment|/// triple by name.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|setOSName
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Str
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// setEnvironmentName - Set the optional environment (fourth)
@@ -620,19 +749,17 @@ begin_comment
 comment|/// component of the triple by name.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|setEnvironmentName
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Str
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// setOSAndEnvironmentName - Set the operating system and optional
@@ -642,19 +769,17 @@ begin_comment
 comment|/// environment components with a single string.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|setOSAndEnvironmentName
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Str
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// @}
@@ -682,6 +807,43 @@ specifier|const
 name|char
 modifier|*
 name|getArchTypeName
+parameter_list|(
+name|ArchType
+name|Kind
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// getArchTypePrefix - Get the "prefix" canonical name for the \arg Kind
+end_comment
+
+begin_comment
+comment|/// architecture. This is the prefix used by the architecture specific
+end_comment
+
+begin_comment
+comment|/// builtins, and is suitable for passing to \see
+end_comment
+
+begin_comment
+comment|/// Intrinsic::getIntrinsicForGCCBuiltin().
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \return - The architecture prefix, or 0 if none is defined.
+end_comment
+
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getArchTypePrefix
 parameter_list|(
 name|ArchType
 name|Kind
@@ -723,6 +885,64 @@ name|getOSTypeName
 parameter_list|(
 name|OSType
 name|Kind
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
+comment|/// @name Static helpers for converting alternate architecture names.
+end_comment
+
+begin_comment
+comment|/// @{
+end_comment
+
+begin_comment
+comment|/// getArchTypeForLLVMName - The canonical type for the given LLVM
+end_comment
+
+begin_comment
+comment|/// architecture name (e.g., "x86").
+end_comment
+
+begin_function_decl
+specifier|static
+name|ArchType
+name|getArchTypeForLLVMName
+parameter_list|(
+specifier|const
+name|StringRef
+modifier|&
+name|Str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// getArchTypeForDarwinArchName - Get the architecture type for a "Darwin"
+end_comment
+
+begin_comment
+comment|/// architecture name, for example as accepted by "gcc -arch" (see also
+end_comment
+
+begin_comment
+comment|/// arch(3)).
+end_comment
+
+begin_function_decl
+specifier|static
+name|ArchType
+name|getArchTypeForDarwinArchName
+parameter_list|(
+specifier|const
+name|StringRef
+modifier|&
+name|Str
 parameter_list|)
 function_decl|;
 end_function_decl

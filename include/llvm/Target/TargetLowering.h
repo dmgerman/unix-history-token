@@ -94,6 +94,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/InlineAsm.h"
 end_include
 
@@ -225,6 +231,9 @@ name|class
 name|TargetSubtarget
 decl_stmt|;
 name|class
+name|TargetLoweringObjectFile
+decl_stmt|;
+name|class
 name|Value
 decl_stmt|;
 comment|// FIXME: should this be here?
@@ -265,6 +274,24 @@ comment|///
 name|class
 name|TargetLowering
 block|{
+name|TargetLowering
+argument_list|(
+specifier|const
+name|TargetLowering
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|TargetLowering
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|/// LegalizeAction - This enum indicates whether operations are valid for a
@@ -283,19 +310,6 @@ block|,
 comment|// Try to expand this to other ops, otherwise use a libcall.
 name|Custom
 comment|// Use the LowerOperation hook to implement custom lowering.
-block|}
-enum|;
-enum|enum
-name|OutOfRangeShiftAmount
-block|{
-name|Undefined
-block|,
-comment|// Oversized shift amounts are undefined (default).
-name|Mask
-block|,
-comment|// Shift amounts are auto masked (anded) to value size.
-name|Extend
-comment|// Oversized shift pulls in zeros or sign bits.
 block|}
 enum|;
 enum|enum
@@ -322,12 +336,17 @@ name|SchedulingForRegPressure
 comment|// Scheduling for lowest register pressure.
 block|}
 enum|;
+comment|/// NOTE: The constructor takes ownership of TLOF.
 name|explicit
 name|TargetLowering
 parameter_list|(
 name|TargetMachine
 modifier|&
 name|TM
+parameter_list|,
+name|TargetLoweringObjectFile
+modifier|*
+name|TLOF
 parameter_list|)
 function_decl|;
 name|virtual
@@ -354,6 +373,16 @@ specifier|const
 block|{
 return|return
 name|TD
+return|;
+block|}
+name|TargetLoweringObjectFile
+operator|&
+name|getObjFileLowering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TLOF
 return|;
 block|}
 name|bool
@@ -391,15 +420,6 @@ specifier|const
 block|{
 return|return
 name|ShiftAmountTy
-return|;
-block|}
-name|OutOfRangeShiftAmount
-name|getShiftAmountFlavor
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ShiftAmtHandling
 return|;
 block|}
 comment|/// usesGlobalOffsetTable - Return true if this target uses a GOT for PIC
@@ -453,13 +473,14 @@ comment|/// BRCOND the argument passed is MVT::Other since there are no other
 comment|/// operands to get a type hint from.
 name|virtual
 name|MVT
+operator|::
+name|SimpleValueType
 name|getSetCCResultType
 argument_list|(
-name|MVT
-name|VT
+argument|EVT VT
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|/// getBooleanContents - For targets without i1 registers, this gives the
 comment|/// nature of the high-bits of boolean values held in types wider than i1.
 comment|/// "Boolean values" are special true/false values produced by nodes like
@@ -490,25 +511,19 @@ name|TargetRegisterClass
 modifier|*
 name|getRegClassFor
 argument_list|(
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
 block|{
 name|assert
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|VT
 operator|.
-name|getSimpleVT
+name|isSimple
 argument_list|()
-operator|<
-name|array_lengthof
-argument_list|(
-name|RegClassForVT
-argument_list|)
+operator|&&
+literal|"getRegClassFor called on illegal type!"
 argument_list|)
 expr_stmt|;
 name|TargetRegisterClass
@@ -521,6 +536,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 decl_stmt|;
 name|assert
@@ -540,7 +557,7 @@ comment|/// holds it without promotions or expansions.
 name|bool
 name|isTypeLegal
 argument_list|(
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -560,6 +577,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 name|array_lengthof
 argument_list|(
@@ -579,6 +598,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 operator|!=
 literal|0
@@ -692,7 +713,11 @@ block|}
 name|LegalizeAction
 name|getTypeAction
 argument_list|(
-name|MVT
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -738,7 +763,9 @@ operator|==
 name|VT
 operator|.
 name|getRoundIntegerType
-argument_list|()
+argument_list|(
+name|Context
+argument_list|)
 condition|?
 name|Expand
 else|:
@@ -762,6 +789,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 decl_stmt|;
 name|assert
 argument_list|(
@@ -814,7 +843,7 @@ block|}
 name|void
 name|setTypeAction
 parameter_list|(
-name|MVT
+name|EVT
 name|VT
 parameter_list|,
 name|LegalizeAction
@@ -828,6 +857,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 decl_stmt|;
 name|assert
 argument_list|(
@@ -889,7 +920,11 @@ comment|/// of smaller integer type (return 'Expand').  'Custom' is not an optio
 name|LegalizeAction
 name|getTypeAction
 argument_list|(
-name|MVT
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -899,6 +934,8 @@ name|ValueTypeActions
 operator|.
 name|getTypeAction
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 argument_list|)
 return|;
@@ -909,10 +946,14 @@ comment|/// returns the larger type to promote to.  For integer types that are l
 comment|/// than the largest integer register, this contains one step in the expansion
 comment|/// to get to the smaller register. For illegal floating point types, this
 comment|/// returns the integer type to transform to.
-name|MVT
+name|EVT
 name|getTypeToTransformTo
 argument_list|(
-name|MVT
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -934,6 +975,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 name|array_lengthof
 argument_list|(
@@ -941,7 +984,7 @@ name|TransformToType
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MVT
+name|EVT
 name|NVT
 init|=
 name|TransformToType
@@ -950,12 +993,16 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 decl_stmt|;
 name|assert
 argument_list|(
 name|getTypeAction
 argument_list|(
+name|Context
+argument_list|,
 name|NVT
 argument_list|)
 operator|!=
@@ -976,13 +1023,15 @@ name|isVector
 argument_list|()
 condition|)
 block|{
-name|MVT
+name|EVT
 name|NVT
 init|=
 name|VT
 operator|.
 name|getPow2VectorType
-argument_list|()
+argument_list|(
+name|Context
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1000,7 +1049,7 @@ operator|.
 name|getVectorNumElements
 argument_list|()
 decl_stmt|;
-name|MVT
+name|EVT
 name|EltVT
 init|=
 name|VT
@@ -1017,10 +1066,12 @@ operator|)
 condition|?
 name|EltVT
 else|:
-name|MVT
+name|EVT
 operator|::
 name|getVectorVT
 argument_list|(
+name|Context
+argument_list|,
 name|EltVT
 argument_list|,
 name|NumElts
@@ -1033,6 +1084,8 @@ comment|// Promote to a power of two size, avoiding multi-step promotion.
 return|return
 name|getTypeAction
 argument_list|(
+name|Context
+argument_list|,
 name|NVT
 argument_list|)
 operator|==
@@ -1040,6 +1093,8 @@ name|Promote
 condition|?
 name|getTypeToTransformTo
 argument_list|(
+name|Context
+argument_list|,
 name|NVT
 argument_list|)
 else|:
@@ -1055,13 +1110,15 @@ name|isInteger
 argument_list|()
 condition|)
 block|{
-name|MVT
+name|EVT
 name|NVT
 init|=
 name|VT
 operator|.
 name|getRoundIntegerType
-argument_list|()
+argument_list|(
+name|Context
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1071,10 +1128,12 @@ name|VT
 condition|)
 comment|// Size is a power of two - expand to half the size.
 return|return
-name|MVT
+name|EVT
 operator|::
 name|getIntegerVT
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 operator|.
 name|getSizeInBits
@@ -1088,6 +1147,8 @@ comment|// Promote to a power of two size, avoiding multi-step promotion.
 return|return
 name|getTypeAction
 argument_list|(
+name|Context
+argument_list|,
 name|NVT
 argument_list|)
 operator|==
@@ -1095,6 +1156,8 @@ name|Promote
 condition|?
 name|getTypeToTransformTo
 argument_list|(
+name|Context
+argument_list|,
 name|NVT
 argument_list|)
 else|:
@@ -1122,10 +1185,14 @@ comment|/// getTypeToExpandTo - For types supported by the target, this is an
 comment|/// identity function.  For types that must be expanded (i.e. integer types
 comment|/// that are larger than the largest integer register or illegal floating
 comment|/// point types), this returns the largest legal type it will be expanded to.
-name|MVT
+name|EVT
 name|getTypeToExpandTo
 argument_list|(
-name|MVT
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1148,6 +1215,8 @@ switch|switch
 condition|(
 name|getTypeAction
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 argument_list|)
 condition|)
@@ -1165,6 +1234,8 @@ name|VT
 operator|=
 name|getTypeToTransformTo
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 argument_list|)
 expr_stmt|;
@@ -1187,9 +1258,9 @@ name|VT
 return|;
 block|}
 comment|/// getVectorTypeBreakdown - Vector types are broken down into some number of
-comment|/// legal first class types.  For example, MVT::v8f32 maps to 2 MVT::v4f32
-comment|/// with Altivec or SSE1, or 8 promoted MVT::f64 values with the X86 FP stack.
-comment|/// Similarly, MVT::v2i64 turns into 4 MVT::i32 values with both PPC and X86.
+comment|/// legal first class types.  For example, EVT::v8f32 maps to 2 EVT::v4f32
+comment|/// with Altivec or SSE1, or 8 promoted EVT::f64 values with the X86 FP stack.
+comment|/// Similarly, EVT::v2i64 turns into 4 EVT::i32 values with both PPC and X86.
 comment|///
 comment|/// This method returns the number of registers needed, and the VT for each
 comment|/// register.  It also returns the VT and quantity of the intermediate values
@@ -1198,10 +1269,14 @@ comment|///
 name|unsigned
 name|getVectorTypeBreakdown
 argument_list|(
-name|MVT
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
 name|VT
 argument_list|,
-name|MVT
+name|EVT
 operator|&
 name|IntermediateVT
 argument_list|,
@@ -1209,7 +1284,7 @@ name|unsigned
 operator|&
 name|NumIntermediates
 argument_list|,
-name|MVT
+name|EVT
 operator|&
 name|RegisterVT
 argument_list|)
@@ -1227,7 +1302,7 @@ name|unsigned
 name|opc
 decl_stmt|;
 comment|// target opcode
-name|MVT
+name|EVT
 name|memVT
 decl_stmt|;
 comment|// memory VT
@@ -1286,10 +1361,10 @@ comment|/// If there is no vector type that we want to widen to, returns MVT::Ot
 comment|/// When and were to widen is target dependent based on the cost of
 comment|/// scalarizing vs using the wider vector type.
 name|virtual
-name|MVT
+name|EVT
 name|getWidenVectorType
 argument_list|(
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1345,7 +1420,7 @@ operator|>
 operator|&
 name|Mask
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1370,7 +1445,7 @@ operator|>
 operator|&
 name|Mask
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1389,7 +1464,7 @@ argument_list|(
 name|unsigned
 name|Op
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1423,6 +1498,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -1450,6 +1527,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 decl_stmt|;
 name|unsigned
 name|J
@@ -1498,7 +1577,7 @@ argument_list|(
 name|unsigned
 name|Op
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1546,7 +1625,7 @@ argument_list|(
 name|unsigned
 name|Op
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1585,7 +1664,7 @@ argument_list|(
 name|unsigned
 name|LType
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1606,6 +1685,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -1638,6 +1719,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|)
 operator|)
 operator|&
@@ -1653,7 +1736,7 @@ argument_list|(
 name|unsigned
 name|LType
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1692,10 +1775,10 @@ comment|/// expander for it.
 name|LegalizeAction
 name|getTruncStoreAction
 argument_list|(
-name|MVT
+name|EVT
 name|ValVT
 argument_list|,
-name|MVT
+name|EVT
 name|MemVT
 argument_list|)
 decl|const
@@ -1709,6 +1792,8 @@ name|ValVT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 name|array_lengthof
 argument_list|(
@@ -1722,6 +1807,8 @@ name|MemVT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -1748,6 +1835,8 @@ name|ValVT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 operator|>>
 operator|(
@@ -1757,6 +1846,8 @@ name|MemVT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|)
 operator|)
 operator|&
@@ -1769,10 +1860,10 @@ comment|/// legal on this target.
 name|bool
 name|isTruncStoreLegal
 argument_list|(
-name|MVT
+name|EVT
 name|ValVT
 argument_list|,
-name|MVT
+name|EVT
 name|MemVT
 argument_list|)
 decl|const
@@ -1819,7 +1910,7 @@ argument_list|(
 name|unsigned
 name|IdxMode
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1847,6 +1938,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|)
 operator|<
 name|MVT
@@ -1871,6 +1964,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 index|[
 literal|0
@@ -1890,7 +1985,7 @@ argument_list|(
 name|unsigned
 name|IdxMode
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1932,7 +2027,7 @@ argument_list|(
 name|unsigned
 name|IdxMode
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -1959,6 +2054,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -1982,6 +2079,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 index|[
 literal|1
@@ -2001,7 +2100,7 @@ argument_list|(
 name|unsigned
 name|IdxMode
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -2040,10 +2139,10 @@ comment|/// for it.
 name|LegalizeAction
 name|getConvertAction
 argument_list|(
-name|MVT
+name|EVT
 name|FromVT
 argument_list|,
-name|MVT
+name|EVT
 name|ToVT
 argument_list|)
 decl|const
@@ -2057,6 +2156,8 @@ name|FromVT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 name|array_lengthof
 argument_list|(
@@ -2070,6 +2171,8 @@ name|ToVT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -2096,6 +2199,8 @@ name|FromVT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 operator|>>
 operator|(
@@ -2105,6 +2210,8 @@ name|ToVT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|)
 operator|)
 operator|&
@@ -2117,10 +2224,10 @@ comment|/// on this target.
 name|bool
 name|isConvertLegal
 argument_list|(
-name|MVT
+name|EVT
 name|FromVT
 argument_list|,
-name|MVT
+name|EVT
 name|ToVT
 argument_list|)
 decl|const
@@ -2168,7 +2275,7 @@ operator|::
 name|CondCode
 name|CC
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -2192,6 +2299,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -2226,6 +2335,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|)
 operator|)
 operator|&
@@ -2255,7 +2366,7 @@ operator|::
 name|CondCode
 name|CC
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -2282,13 +2393,13 @@ return|;
 block|}
 comment|/// getTypeToPromoteTo - If the action for this operation is to promote, this
 comment|/// method returns the ValueType to promote to.
-name|MVT
+name|EVT
 name|getTypeToPromoteTo
 argument_list|(
 name|unsigned
 name|Op
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -2345,6 +2456,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2379,7 +2492,7 @@ operator|&&
 literal|"Cannot autopromote this type, add it with AddPromotedToType."
 argument_list|)
 expr_stmt|;
-name|MVT
+name|EVT
 name|NVT
 init|=
 name|VT
@@ -2398,6 +2511,8 @@ name|NVT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|+
 literal|1
 operator|)
@@ -2446,11 +2561,11 @@ return|return
 name|NVT
 return|;
 block|}
-comment|/// getValueType - Return the MVT corresponding to this LLVM type.
+comment|/// getValueType - Return the EVT corresponding to this LLVM type.
 comment|/// This is fixed by the LLVM operations except for the pointer size.  If
-comment|/// AllowUnknown is true, this will return MVT::Other for types with no MVT
+comment|/// AllowUnknown is true, this will return MVT::Other for types with no EVT
 comment|/// counterpart (e.g. structs), otherwise it will assert.
-name|MVT
+name|EVT
 name|getValueType
 argument_list|(
 specifier|const
@@ -2465,12 +2580,12 @@ name|false
 argument_list|)
 decl|const
 block|{
-name|MVT
+name|EVT
 name|VT
 init|=
-name|MVT
+name|EVT
 operator|::
-name|getMVT
+name|getEVT
 argument_list|(
 name|Ty
 argument_list|,
@@ -2505,10 +2620,48 @@ decl|const
 decl_stmt|;
 comment|/// getRegisterType - Return the type of registers that this ValueType will
 comment|/// eventually require.
-name|MVT
+name|EVT
 name|getRegisterType
 argument_list|(
 name|MVT
+name|VT
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|VT
+operator|.
+name|SimpleTy
+operator|<
+name|array_lengthof
+argument_list|(
+name|RegisterTypeForVT
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|RegisterTypeForVT
+index|[
+name|VT
+operator|.
+name|SimpleTy
+index|]
+return|;
+block|}
+comment|/// getRegisterType - Return the type of registers that this ValueType will
+comment|/// eventually require.
+name|EVT
+name|getRegisterType
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -2530,6 +2683,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 name|array_lengthof
 argument_list|(
@@ -2544,6 +2699,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 return|;
 block|}
@@ -2555,7 +2712,7 @@ name|isVector
 argument_list|()
 condition|)
 block|{
-name|MVT
+name|EVT
 name|VT1
 decl_stmt|,
 name|RegisterVT
@@ -2568,6 +2725,8 @@ name|void
 operator|)
 name|getVectorTypeBreakdown
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 argument_list|,
 name|VT1
@@ -2592,8 +2751,12 @@ block|{
 return|return
 name|getRegisterType
 argument_list|(
+name|Context
+argument_list|,
 name|getTypeToTransformTo
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 argument_list|)
 argument_list|)
@@ -2607,7 +2770,7 @@ literal|"Unsupported extended type!"
 argument_list|)
 expr_stmt|;
 return|return
-name|MVT
+name|EVT
 argument_list|(
 name|MVT
 operator|::
@@ -2625,7 +2788,11 @@ comment|/// type.  For an i140 on a 32 bit machine this means 5 registers.
 name|unsigned
 name|getNumRegisters
 argument_list|(
-name|MVT
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -2647,6 +2814,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 name|array_lengthof
 argument_list|(
@@ -2661,6 +2830,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 return|;
 block|}
@@ -2672,7 +2843,7 @@ name|isVector
 argument_list|()
 condition|)
 block|{
-name|MVT
+name|EVT
 name|VT1
 decl_stmt|,
 name|VT2
@@ -2683,6 +2854,8 @@ decl_stmt|;
 return|return
 name|getVectorTypeBreakdown
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 argument_list|,
 name|VT1
@@ -2714,6 +2887,8 @@ name|RegWidth
 init|=
 name|getRegisterType
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 argument_list|)
 operator|.
@@ -2751,7 +2926,7 @@ name|virtual
 name|bool
 name|ShouldShrinkFPConstant
 argument_list|(
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -2846,18 +3021,22 @@ name|maxStoresPerMemmove
 return|;
 block|}
 comment|/// This function returns true if the target allows unaligned memory accesses.
-comment|/// This is used, for example, in situations where an array copy/move/set is
-comment|/// converted to a sequence of store operations. It's use helps to ensure that
-comment|/// such replacements don't generate code that causes an alignment error
-comment|/// (trap) on the target machine.
+comment|/// of the specified type. This is used, for example, in situations where an
+comment|/// array copy/move/set is  converted to a sequence of store operations. It's
+comment|/// use helps to ensure that such replacements don't generate code that causes
+comment|/// an alignment error  (trap) on the target machine.
 comment|/// @brief Determine if the target supports unaligned memory accesses.
+name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
-argument_list|()
-specifier|const
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
 block|{
 return|return
-name|allowUnalignedMemoryAccesses
+name|false
 return|;
 block|}
 comment|/// This function returns true if the target would benefit from code placement
@@ -2874,10 +3053,10 @@ return|;
 block|}
 comment|/// getOptimalMemOpType - Returns the target specific optimal type for load
 comment|/// and store operations as a result of memset, memcpy, and memmove lowering.
-comment|/// It returns MVT::iAny if SelectionDAG should be responsible for
+comment|/// It returns EVT::iAny if SelectionDAG should be responsible for
 comment|/// determining it.
 name|virtual
-name|MVT
+name|EVT
 name|getOptimalMemOpType
 argument_list|(
 name|uint64_t
@@ -3329,6 +3508,9 @@ name|bool
 name|BeforeLegalize
 decl_stmt|;
 name|bool
+name|BeforeLegalizeOps
+decl_stmt|;
+name|bool
 name|CalledByLegalizer
 decl_stmt|;
 name|public
@@ -3343,6 +3525,8 @@ argument|SelectionDAG&dag
 argument_list|,
 argument|bool bl
 argument_list|,
+argument|bool blo
+argument_list|,
 argument|bool cl
 argument_list|,
 argument|void *dc
@@ -3356,6 +3540,11 @@ operator|,
 name|BeforeLegalize
 argument_list|(
 name|bl
+argument_list|)
+operator|,
+name|BeforeLegalizeOps
+argument_list|(
+name|blo
 argument_list|)
 operator|,
 name|CalledByLegalizer
@@ -3375,6 +3564,15 @@ specifier|const
 block|{
 return|return
 name|BeforeLegalize
+return|;
+block|}
+name|bool
+name|isBeforeLegalizeOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BeforeLegalizeOps
 return|;
 block|}
 name|bool
@@ -3468,7 +3666,7 @@ comment|/// and cc. If it is unable to simplify it, return a null SDValue.
 name|SDValue
 name|SimplifySetCC
 argument_list|(
-name|MVT
+name|EVT
 name|VT
 argument_list|,
 name|SDValue
@@ -3630,20 +3828,6 @@ operator|=
 name|Pref
 expr_stmt|;
 block|}
-comment|/// setShiftAmountFlavor - Describe how the target handles out of range shift
-comment|/// amounts.
-name|void
-name|setShiftAmountFlavor
-parameter_list|(
-name|OutOfRangeShiftAmount
-name|OORSA
-parameter_list|)
-block|{
-name|ShiftAmtHandling
-operator|=
-name|OORSA
-expr_stmt|;
-block|}
 comment|/// setUseUnderscoreSetJmp - Indicate whether this target prefers to
 comment|/// use _setjmp to implement llvm.setjmp or the non _ version.
 comment|/// Defaults to false.
@@ -3770,7 +3954,7 @@ comment|/// handle values of that class natively.
 name|void
 name|addRegisterClass
 parameter_list|(
-name|MVT
+name|EVT
 name|VT
 parameter_list|,
 name|TargetRegisterClass
@@ -3787,6 +3971,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 operator|<
 name|array_lengthof
 argument_list|(
@@ -3814,6 +4000,8 @@ name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
+operator|.
+name|SimpleTy
 index|]
 operator|=
 name|RC
@@ -3840,42 +4028,6 @@ name|LegalizeAction
 name|Action
 parameter_list|)
 block|{
-name|assert
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|VT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|<
-sizeof|sizeof
-argument_list|(
-name|OpActions
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
-argument_list|)
-operator|*
-literal|8
-operator|&&
-name|Op
-operator|<
-name|array_lengthof
-argument_list|(
-name|OpActions
-index|[
-literal|0
-index|]
-argument_list|)
-operator|&&
-literal|"Table isn't big enough!"
-argument_list|)
-expr_stmt|;
 name|unsigned
 name|I
 init|=
@@ -3884,8 +4036,7 @@ name|unsigned
 operator|)
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 decl_stmt|;
 name|unsigned
 name|J
@@ -3964,8 +4115,7 @@ name|unsigned
 operator|)
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -4001,8 +4151,7 @@ argument_list|)
 operator|<<
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|*
 literal|2
 operator|)
@@ -4019,8 +4168,7 @@ name|Action
 operator|<<
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|*
 literal|2
 expr_stmt|;
@@ -4047,8 +4195,7 @@ name|unsigned
 operator|)
 name|ValVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|<
 name|array_lengthof
 argument_list|(
@@ -4060,8 +4207,7 @@ name|unsigned
 operator|)
 name|MemVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -4080,8 +4226,7 @@ name|TruncStoreActions
 index|[
 name|ValVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 index|]
 operator|&=
 operator|~
@@ -4093,8 +4238,7 @@ argument_list|)
 operator|<<
 name|MemVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|*
 literal|2
 operator|)
@@ -4103,8 +4247,7 @@ name|TruncStoreActions
 index|[
 name|ValVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 index|]
 operator||=
 operator|(
@@ -4114,8 +4257,7 @@ name|Action
 operator|<<
 name|MemVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|*
 literal|2
 expr_stmt|;
@@ -4144,8 +4286,7 @@ name|unsigned
 operator|)
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -4174,8 +4315,7 @@ name|unsigned
 operator|)
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 index|]
 index|[
 literal|0
@@ -4214,8 +4354,7 @@ name|unsigned
 operator|)
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -4244,8 +4383,7 @@ name|unsigned
 operator|)
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 index|]
 index|[
 literal|1
@@ -4282,8 +4420,7 @@ name|unsigned
 operator|)
 name|FromVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|<
 name|array_lengthof
 argument_list|(
@@ -4295,8 +4432,7 @@ name|unsigned
 operator|)
 name|ToVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -4315,8 +4451,7 @@ name|ConvertActions
 index|[
 name|FromVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 index|]
 operator|&=
 operator|~
@@ -4328,8 +4463,7 @@ argument_list|)
 operator|<<
 name|ToVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|*
 literal|2
 operator|)
@@ -4338,8 +4472,7 @@ name|ConvertActions
 index|[
 name|FromVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 index|]
 operator||=
 operator|(
@@ -4349,8 +4482,7 @@ name|Action
 operator|<<
 name|ToVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|*
 literal|2
 expr_stmt|;
@@ -4379,8 +4511,7 @@ name|unsigned
 operator|)
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -4422,8 +4553,7 @@ argument_list|)
 operator|<<
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|*
 literal|2
 operator|)
@@ -4443,8 +4573,7 @@ name|Action
 operator|<<
 name|VT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 operator|*
 literal|2
 expr_stmt|;
@@ -4476,15 +4605,13 @@ name|Opc
 argument_list|,
 name|OrigVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 argument_list|)
 index|]
 operator|=
 name|DestVT
 operator|.
-name|getSimpleVT
-argument_list|()
+name|SimpleTy
 expr_stmt|;
 block|}
 comment|/// addLegalFPImmediate - Indicate that this target can instruction select
@@ -4645,15 +4772,39 @@ comment|//===-------------------------------------------------------------------
 comment|// Lowering methods - These methods must be implemented by targets so that
 comment|// the SelectionDAGLowering code knows how to lower these.
 comment|//
-comment|/// LowerArguments - This hook must be implemented to indicate how we should
-comment|/// lower the arguments for the specified function, into the specified DAG.
+comment|/// LowerFormalArguments - This hook must be implemented to lower the
+comment|/// incoming (formal) arguments, described by the Ins array, into the
+comment|/// specified DAG. The implementation should fill in the InVals array
+comment|/// with legal-type argument values, and return the resulting token
+comment|/// chain value.
+comment|///
 name|virtual
-name|void
-name|LowerArguments
+name|SDValue
+name|LowerFormalArguments
 argument_list|(
-name|Function
+name|SDValue
+name|Chain
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
 operator|&
-name|F
+name|Ins
+argument_list|,
+name|DebugLoc
+name|dl
 argument_list|,
 name|SelectionDAG
 operator|&
@@ -4664,16 +4815,27 @@ operator|<
 name|SDValue
 operator|>
 operator|&
-name|ArgValues
-argument_list|,
-name|DebugLoc
-name|dl
+name|InVals
 argument_list|)
-decl_stmt|;
-comment|/// LowerCallTo - This hook lowers an abstract call to a function into an
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Not Implemented"
+argument_list|)
+expr_stmt|;
+return|return
+name|SDValue
+argument_list|()
+return|;
+comment|// this is here to silence compiler errors
+block|}
+comment|/// LowerCallTo - This function lowers an abstract call to a function into an
 comment|/// actual call.  This returns a pair of operands.  The first element is the
 comment|/// return value for the function (if RetTy is not VoidTy).  The second
-comment|/// element is the outgoing token chain.
+comment|/// element is the outgoing token chain. It calls LowerCall to do the actual
+comment|/// lowering.
 struct|struct
 name|ArgListEntry
 block|{
@@ -4767,7 +4929,6 @@ name|ArgListEntry
 operator|>
 name|ArgListTy
 expr_stmt|;
-name|virtual
 name|std
 operator|::
 name|pair
@@ -4792,9 +4953,11 @@ argument|bool isInreg
 argument_list|,
 argument|unsigned NumFixedArgs
 argument_list|,
-argument|unsigned CallingConv
+argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isTailCall
+argument_list|,
+argument|bool isReturnValueUsed
 argument_list|,
 argument|SDValue Callee
 argument_list|,
@@ -4805,6 +4968,138 @@ argument_list|,
 argument|DebugLoc dl
 argument_list|)
 expr_stmt|;
+comment|/// LowerCall - This hook must be implemented to lower calls into the
+comment|/// the specified DAG. The outgoing arguments to the call are described
+comment|/// by the Outs array, and the values to be returned by the call are
+comment|/// described by the Ins array. The implementation should fill in the
+comment|/// InVals array with legal-type return values from the call, and return
+comment|/// the resulting token chain value.
+comment|///
+comment|/// The isTailCall flag here is normative. If it is true, the
+comment|/// implementation must emit a tail call. The
+comment|/// IsEligibleForTailCallOptimization hook should be used to catch
+comment|/// cases that cannot be handled.
+comment|///
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+name|SDValue
+name|Chain
+argument_list|,
+name|SDValue
+name|Callee
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+name|bool
+name|isTailCall
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|InVals
+argument_list|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Not Implemented"
+argument_list|)
+expr_stmt|;
+return|return
+name|SDValue
+argument_list|()
+return|;
+comment|// this is here to silence compiler errors
+block|}
+comment|/// LowerReturn - This hook must be implemented to lower outgoing
+comment|/// return values, described by the Outs array, into the specified
+comment|/// DAG. The implementation should return the resulting token chain
+comment|/// value.
+comment|///
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+name|SDValue
+name|Chain
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Not Implemented"
+argument_list|)
+expr_stmt|;
+return|return
+name|SDValue
+argument_list|()
+return|;
+comment|// this is here to silence compiler errors
+block|}
 comment|/// EmitTargetCodeForMemcpy - Emit target-specific code that performs a
 comment|/// memcpy. This can be used by targets to provide code sequences for cases
 comment|/// that don't fit the target's parameters for simple loads/stores and can be
@@ -5061,12 +5356,26 @@ name|virtual
 name|bool
 name|IsEligibleForTailCallOptimization
 argument_list|(
-name|CallSDNode
-operator|*
-name|Call
-argument_list|,
 name|SDValue
-name|Ret
+name|Callee
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CalleeCC
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
 argument_list|,
 name|SelectionDAG
 operator|&
@@ -5074,26 +5383,11 @@ name|DAG
 argument_list|)
 decl|const
 block|{
+comment|// Conservative default: no calls are eligible.
 return|return
 name|false
 return|;
 block|}
-comment|/// CheckTailCallReturnConstraints - Check whether CALL node immediatly
-comment|/// preceeds the RET node and whether the return uses the result of the node
-comment|/// or is a void return. This function can be used by the target to determine
-comment|/// eligiblity of tail call optimization.
-specifier|static
-name|bool
-name|CheckTailCallReturnConstraints
-parameter_list|(
-name|CallSDNode
-modifier|*
-name|TheCall
-parameter_list|,
-name|SDValue
-name|Ret
-parameter_list|)
-function_decl|;
 comment|/// GetPossiblePreceedingTailCall - Get preceeding TailCallNodeOpCode node if
 comment|/// it exists. Skip a possible ISD::TokenFactor.
 specifier|static
@@ -5249,6 +5543,24 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Inline Asm Support hooks
 comment|//
+comment|/// ExpandInlineAsm - This hook allows the target to expand an inline asm
+comment|/// call to be explicit llvm code if it wants to.  This is useful for
+comment|/// turning simple inline asms into LLVM intrinsics, which gives the
+comment|/// compiler more information about the behavior of the code.
+name|virtual
+name|bool
+name|ExpandInlineAsm
+argument_list|(
+name|CallInst
+operator|*
+name|CI
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 enum|enum
 name|ConstraintType
 block|{
@@ -5301,7 +5613,7 @@ operator|*
 name|CallOperandVal
 block|;
 comment|/// ConstraintVT - The ValueType for the operand value.
-name|MVT
+name|EVT
 name|ConstraintVT
 block|;
 comment|/// isMatchingInputConstraint - Return true of this is an input operand that
@@ -5411,7 +5723,7 @@ name|getRegClassForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -5440,7 +5752,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -5454,7 +5766,7 @@ name|char
 modifier|*
 name|LowerXConstraint
 argument_list|(
-name|MVT
+name|EVT
 name|ConstraintVT
 argument_list|)
 decl|const
@@ -5499,6 +5811,9 @@ comment|// that mark instructions with the 'usesCustomDAGSchedInserter' flag.  T
 comment|// instructions are special in various ways, which require special support to
 comment|// insert.  The specified MachineInstr is created but not inserted into any
 comment|// basic blocks, and the scheduler passes ownership of it to this method.
+comment|// When new basic blocks are inserted and the edges from MBB to its successors
+comment|// are modified, the method should insert pairs of<OldSucc, NewSucc> into the
+comment|// DenseMap.
 name|virtual
 name|MachineBasicBlock
 modifier|*
@@ -5511,6 +5826,17 @@ argument_list|,
 name|MachineBasicBlock
 operator|*
 name|MBB
+argument_list|,
+name|DenseMap
+operator|<
+name|MachineBasicBlock
+operator|*
+argument_list|,
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|*
+name|EM
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5614,10 +5940,10 @@ name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
-name|MVT
+name|EVT
 name|VT1
 argument_list|,
-name|MVT
+name|EVT
 name|VT2
 argument_list|)
 decl|const
@@ -5658,10 +5984,10 @@ name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
-name|MVT
+name|EVT
 name|VT1
 argument_list|,
-name|MVT
+name|EVT
 name|VT2
 argument_list|)
 decl|const
@@ -5677,10 +6003,10 @@ name|virtual
 name|bool
 name|isNarrowingProfitable
 argument_list|(
-name|MVT
+name|EVT
 name|VT1
 argument_list|,
-name|MVT
+name|EVT
 name|VT2
 argument_list|)
 decl|const
@@ -5828,6 +6154,48 @@ name|Call
 index|]
 return|;
 block|}
+comment|/// setLibcallCallingConv - Set the CallingConv that should be used for the
+comment|/// specified libcall.
+name|void
+name|setLibcallCallingConv
+argument_list|(
+name|RTLIB
+operator|::
+name|Libcall
+name|Call
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CC
+argument_list|)
+block|{
+name|LibcallCallingConvs
+index|[
+name|Call
+index|]
+operator|=
+name|CC
+expr_stmt|;
+block|}
+comment|/// getLibcallCallingConv - Get the CallingConv that should be used for the
+comment|/// specified libcall.
+name|CallingConv
+operator|::
+name|ID
+name|getLibcallCallingConv
+argument_list|(
+argument|RTLIB::Libcall Call
+argument_list|)
+specifier|const
+block|{
+return|return
+name|LibcallCallingConvs
+index|[
+name|Call
+index|]
+return|;
+block|}
 name|private
 label|:
 name|TargetMachine
@@ -5838,6 +6206,10 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+decl_stmt|;
+name|TargetLoweringObjectFile
+modifier|&
+name|TLOF
 decl_stmt|;
 comment|/// PointerTy - The type to use for pointers, usually i32 or i64.
 comment|///
@@ -5886,9 +6258,6 @@ comment|/// ShiftAmountTy - The type to use for shift amounts, usually i8 or wha
 comment|/// PointerTy is.
 name|MVT
 name|ShiftAmountTy
-decl_stmt|;
-name|OutOfRangeShiftAmount
-name|ShiftAmtHandling
 decl_stmt|;
 comment|/// BooleanContents - Information about the contents of the high-bits in
 comment|/// boolean values held in a type wider than i1.  See getBooleanContents.
@@ -5962,7 +6331,7 @@ operator|::
 name|LAST_VALUETYPE
 index|]
 decl_stmt|;
-name|MVT
+name|EVT
 name|RegisterTypeForVT
 index|[
 name|MVT
@@ -5975,7 +6344,7 @@ comment|/// contains the value type that we are changing to.  For Expanded types
 comment|/// contains one step of the expand (e.g. i64 -> i32), even if there are
 comment|/// multiple steps required (e.g. i64 -> i16).  For types natively supported
 comment|/// by the system, this holds the same type (e.g. i32 -> i32).
-name|MVT
+name|EVT
 name|TransformToType
 index|[
 name|MVT
@@ -6098,7 +6467,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|MVT
+name|EVT
 operator|,
 name|TargetRegisterClass
 operator|*
@@ -6177,6 +6546,18 @@ operator|::
 name|UNKNOWN_LIBCALL
 index|]
 expr_stmt|;
+comment|/// LibcallCallingConvs - Stores the CallingConv that should be used for each
+comment|/// libcall.
+name|CallingConv
+operator|::
+name|ID
+name|LibcallCallingConvs
+index|[
+name|RTLIB
+operator|::
+name|UNKNOWN_LIBCALL
+index|]
+expr_stmt|;
 name|protected
 label|:
 comment|/// When lowering \@llvm.memset this field specifies the maximum number of
@@ -6215,13 +6596,6 @@ comment|/// applies to copying a constant array of constant size.
 comment|/// @brief Specify maximum bytes of store instructions per memmove call.
 name|unsigned
 name|maxStoresPerMemmove
-decl_stmt|;
-comment|/// This field specifies whether the target machine permits unaligned memory
-comment|/// accesses.  This is used, for example, to determine the size of store
-comment|/// operations when copying small arrays and other similar tasks.
-comment|/// @brief Indicate whether the target permits unaligned memory accesses.
-name|bool
-name|allowUnalignedMemoryAccesses
 decl_stmt|;
 comment|/// This field specifies whether the target can benefit from code placement
 comment|/// optimization.

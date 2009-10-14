@@ -103,6 +103,9 @@ name|class
 name|SMDiagnostic
 decl_stmt|;
 name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|LLLexer
 block|{
 specifier|const
@@ -121,6 +124,10 @@ decl_stmt|;
 name|SourceMgr
 modifier|&
 name|SM
+decl_stmt|;
+name|LLVMContext
+modifier|&
+name|Context
 decl_stmt|;
 comment|// Information about the current token.
 specifier|const
@@ -172,6 +179,10 @@ name|SM
 parameter_list|,
 name|SMDiagnostic
 modifier|&
+parameter_list|,
+name|LLVMContext
+modifier|&
+name|C
 parameter_list|)
 function_decl|;
 operator|~
@@ -356,6 +367,12 @@ name|lltok
 operator|::
 name|Kind
 name|LexAt
+argument_list|()
+expr_stmt|;
+name|lltok
+operator|::
+name|Kind
+name|LexMetadata
 argument_list|()
 expr_stmt|;
 name|lltok

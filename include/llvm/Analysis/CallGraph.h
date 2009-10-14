@@ -234,6 +234,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/IncludeFile.h"
 end_include
 
@@ -295,7 +301,7 @@ name|ID
 decl_stmt|;
 comment|// Class identification, replacement for typeinfo
 comment|//===---------------------------------------------------------------------
-comment|// Accessors...
+comment|// Accessors.
 comment|//
 typedef|typedef
 name|FunctionMapTy
@@ -469,6 +475,17 @@ return|return
 literal|0
 return|;
 block|}
+name|virtual
+name|CallGraphNode
+operator|*
+name|getCallsExternalNode
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// Return the root/main method in the module, or some other root node, such
 comment|/// as the externalcallingnode.  Overload these if you behavioral
 comment|/// inheritance.
@@ -535,22 +552,6 @@ index|]
 argument_list|)
 return|;
 block|}
-comment|/// changeFunction - This method changes the function associated with this
-comment|/// CallGraphNode, for use by transformations that need to change the
-comment|/// prototype of a Function (thus they must create a new Function and move the
-comment|/// old code over).
-name|void
-name|changeFunction
-parameter_list|(
-name|Function
-modifier|*
-name|OldF
-parameter_list|,
-name|Function
-modifier|*
-name|NewF
-parameter_list|)
-function_decl|;
 comment|/// getOrInsertFunction - This method is identical to calling operator[], but
 comment|/// it will insert a new CallGraphNode for the specified function if one does
 comment|/// not already exist.
@@ -565,7 +566,7 @@ name|F
 parameter_list|)
 function_decl|;
 comment|//===---------------------------------------------------------------------
-comment|// Pass infrastructure interface glue code...
+comment|// Pass infrastructure interface glue code.
 comment|//
 name|protected
 label|:
@@ -593,52 +594,18 @@ operator|&
 name|M
 argument_list|)
 expr_stmt|;
-name|virtual
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|o
 argument_list|,
-specifier|const
 name|Module
 operator|*
-name|M
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|o
-argument_list|,
-specifier|const
-name|Module
-operator|*
-name|M
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|o
-condition|)
-name|print
-argument_list|(
-operator|*
-name|o
-argument_list|,
-name|M
-argument_list|)
-expr_stmt|;
-block|}
 name|void
 name|dump
 argument_list|()
@@ -655,27 +622,35 @@ function_decl|;
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|// CallGraphNode class definition
+comment|// CallGraphNode class definition.
 comment|//
 name|class
 name|CallGraphNode
 block|{
+name|AssertingVH
+operator|<
 name|Function
-modifier|*
+operator|>
 name|F
-decl_stmt|;
+expr_stmt|;
+comment|// CallRecord - This is a pair of the calling instruction (a call or invoke)
+comment|// and the callgraph node being called.
+name|public
+label|:
 typedef|typedef
 name|std
 operator|::
 name|pair
 operator|<
-name|CallSite
+name|WeakVH
 operator|,
 name|CallGraphNode
 operator|*
 operator|>
 name|CallRecord
 expr_stmt|;
+name|private
+label|:
 name|std
 operator|::
 name|vector
@@ -684,6 +659,11 @@ name|CallRecord
 operator|>
 name|CalledFunctions
 expr_stmt|;
+comment|/// NumReferences - This is the number of times that this CallGraphNode occurs
+comment|/// in the CalledFunctions array of this or other CallGraphNodes.
+name|unsigned
+name|NumReferences
+decl_stmt|;
 name|CallGraphNode
 argument_list|(
 specifier|const
@@ -691,7 +671,33 @@ name|CallGraphNode
 operator|&
 argument_list|)
 expr_stmt|;
-comment|// Do not implement
+comment|// DO NOT IMPLEMENT
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CallGraphNode
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
+name|void
+name|DropRef
+parameter_list|()
+block|{
+operator|--
+name|NumReferences
+expr_stmt|;
+block|}
+name|void
+name|AddRef
+parameter_list|()
+block|{
+operator|++
+name|NumReferences
+expr_stmt|;
+block|}
 name|public
 label|:
 typedef|typedef
@@ -703,8 +709,27 @@ name|CallRecord
 operator|>
 name|CalledFunctionsVector
 expr_stmt|;
+comment|// CallGraphNode ctor - Create a node for the specified function.
+specifier|inline
+name|CallGraphNode
+argument_list|(
+name|Function
+operator|*
+name|f
+argument_list|)
+operator|:
+name|F
+argument_list|(
+name|f
+argument_list|)
+operator|,
+name|NumReferences
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 comment|//===---------------------------------------------------------------------
-comment|// Accessor methods...
+comment|// Accessor methods.
 comment|//
 typedef|typedef
 name|std
@@ -728,7 +753,7 @@ operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
-comment|// getFunction - Return the function that this call graph node represents...
+comment|// getFunction - Return the function that this call graph node represents.
 name|Function
 operator|*
 name|getFunction
@@ -818,7 +843,18 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|// Subscripting operator - Return the i'th called function...
+comment|/// getNumReferences - Return the number of other CallGraphNodes in this
+comment|/// CallGraph that reference this node in their callee list.
+name|unsigned
+name|getNumReferences
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumReferences
+return|;
+block|}
+comment|// Subscripting operator - Return the i'th called function.
 comment|//
 name|CallGraphNode
 modifier|*
@@ -830,6 +866,18 @@ name|i
 argument_list|)
 decl|const
 block|{
+name|assert
+argument_list|(
+name|i
+operator|<
+name|CalledFunctions
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid index"
+argument_list|)
+expr_stmt|;
 return|return
 name|CalledFunctions
 index|[
@@ -849,36 +897,12 @@ expr_stmt|;
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|OS
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|OS
-condition|)
-name|print
-argument_list|(
-operator|*
-name|OS
-argument_list|)
-expr_stmt|;
-block|}
 comment|//===---------------------------------------------------------------------
 comment|// Methods to keep a call graph up to date with a function that has been
 comment|// modified
@@ -889,10 +913,62 @@ name|void
 name|removeAllCalledFunctions
 parameter_list|()
 block|{
+while|while
+condition|(
+operator|!
 name|CalledFunctions
 operator|.
-name|clear
+name|empty
 argument_list|()
+condition|)
+block|{
+name|CalledFunctions
+operator|.
+name|back
+argument_list|()
+operator|.
+name|second
+operator|->
+name|DropRef
+argument_list|()
+expr_stmt|;
+name|CalledFunctions
+operator|.
+name|pop_back
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+comment|/// stealCalledFunctionsFrom - Move all the callee information from N to this
+comment|/// node.
+name|void
+name|stealCalledFunctionsFrom
+parameter_list|(
+name|CallGraphNode
+modifier|*
+name|N
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|CalledFunctions
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Cannot steal callsite information if I already have some"
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|swap
+argument_list|(
+name|CalledFunctions
+argument_list|,
+name|N
+operator|->
+name|CalledFunctions
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// addCalledFunction - Add a function to the list of functions called by this
@@ -917,10 +993,46 @@ operator|::
 name|make_pair
 argument_list|(
 name|CS
+operator|.
+name|getInstruction
+argument_list|()
 argument_list|,
 name|M
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|M
+operator|->
+name|AddRef
+argument_list|()
+expr_stmt|;
+block|}
+name|void
+name|removeCallEdge
+parameter_list|(
+name|iterator
+name|I
+parameter_list|)
+block|{
+name|I
+operator|->
+name|second
+operator|->
+name|DropRef
+argument_list|()
+expr_stmt|;
+operator|*
+name|I
+operator|=
+name|CalledFunctions
+operator|.
+name|back
+argument_list|()
+expr_stmt|;
+name|CalledFunctions
+operator|.
+name|pop_back
+argument_list|()
 expr_stmt|;
 block|}
 comment|/// removeCallEdgeFor - This method removes the edge in the node for the
@@ -954,37 +1066,23 @@ modifier|*
 name|Callee
 parameter_list|)
 function_decl|;
-comment|/// replaceCallSite - Make the edge in the node for Old CallSite be for
-comment|/// New CallSite instead.  Note that this method takes linear time, so it
-comment|/// should be used sparingly.
+comment|/// replaceCallEdge - This method replaces the edge in the node for the
+comment|/// specified call site with a new one.  Note that this method takes linear
+comment|/// time, so it should be used sparingly.
 name|void
-name|replaceCallSite
+name|replaceCallEdge
 parameter_list|(
 name|CallSite
-name|Old
+name|CS
 parameter_list|,
 name|CallSite
-name|New
+name|NewCS
+parameter_list|,
+name|CallGraphNode
+modifier|*
+name|NewNode
 parameter_list|)
 function_decl|;
-name|friend
-name|class
-name|CallGraph
-decl_stmt|;
-comment|// CallGraphNode ctor - Create a node for the specified function.
-specifier|inline
-name|CallGraphNode
-argument_list|(
-name|Function
-operator|*
-name|f
-argument_list|)
-operator|:
-name|F
-argument_list|(
-argument|f
-argument_list|)
-block|{}
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -1008,15 +1106,9 @@ name|CallGraphNode
 name|NodeType
 typedef|;
 typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|CallSite
-operator|,
 name|CallGraphNode
-operator|*
-operator|>
+operator|::
+name|CallRecord
 name|CGNPairTy
 expr_stmt|;
 typedef|typedef

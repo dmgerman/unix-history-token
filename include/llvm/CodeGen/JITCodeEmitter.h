@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Streams.h"
+file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_include
@@ -702,66 +702,119 @@ name|Alignment
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|Alignment
-operator|<=
-call|(
-name|uintptr_t
-call|)
-argument_list|(
-name|BufferEnd
-operator|-
-name|CurBufferPtr
-argument_list|)
-condition|)
-block|{
-comment|// Move the current buffer ptr up to the specified alignment.
-name|CurBufferPtr
+name|uint8_t
+operator|*
+name|NewPtr
 operator|=
 operator|(
 name|uint8_t
 operator|*
 operator|)
-operator|(
-operator|(
+name|RoundUpToAlignment
+argument_list|(
 operator|(
 name|uintptr_t
 operator|)
 name|CurBufferPtr
-operator|+
+argument_list|,
 name|Alignment
-operator|-
-literal|1
-operator|)
-operator|&
-operator|~
-call|(
-name|uintptr_t
-call|)
-argument_list|(
-name|Alignment
-operator|-
-literal|1
 argument_list|)
-operator|)
+block|;
+name|CurBufferPtr
+operator|=
+name|std
+operator|::
+name|min
+argument_list|(
+name|NewPtr
+argument_list|,
+name|BufferEnd
+argument_list|)
+block|;   }
+comment|/// emitAlignmentWithFill - Similar to emitAlignment, except that the
+comment|/// extra bytes are filled with the provided byte.
+name|void
+name|emitAlignmentWithFill
+argument_list|(
+argument|unsigned Alignment
+argument_list|,
+argument|uint8_t Fill
+argument_list|)
+block|{
+if|if
+condition|(
+name|Alignment
+operator|==
+literal|0
+condition|)
+name|Alignment
+operator|=
+literal|1
 expr_stmt|;
-block|}
-else|else
+name|uint8_t
+operator|*
+name|NewPtr
+operator|=
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|RoundUpToAlignment
+argument_list|(
+operator|(
+name|uintptr_t
+operator|)
+name|CurBufferPtr
+argument_list|,
+name|Alignment
+argument_list|)
+decl_stmt|;
+comment|// Fail if we don't have room.
+if|if
+condition|(
+name|NewPtr
+operator|>
+name|BufferEnd
+condition|)
 block|{
 name|CurBufferPtr
 operator|=
 name|BufferEnd
 expr_stmt|;
+return|return;
+block|}
+while|while
+condition|(
+name|CurBufferPtr
+operator|<
+name|NewPtr
+condition|)
+block|{
+operator|*
+name|CurBufferPtr
+operator|++
+operator|=
+name|Fill
+expr_stmt|;
 block|}
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// emitULEB128Bytes - This callback is invoked when a ULEB128 needs to be
+end_comment
+
+begin_comment
 comment|/// written to the output stream.
+end_comment
+
+begin_function
 name|void
 name|emitULEB128Bytes
-argument_list|(
-argument|uint64_t Value
-argument_list|)
+parameter_list|(
+name|uint64_t
+name|Value
+parameter_list|)
 block|{
 do|do
 block|{
@@ -790,20 +843,33 @@ name|Byte
 argument_list|)
 expr_stmt|;
 block|}
-while|while
+do|while
 condition|(
 name|Value
 condition|)
-empty_stmt|;
-do|}
+do|;
+block|}
+end_function
+
+begin_comment
 comment|/// emitSLEB128Bytes - This callback is invoked when a SLEB128 needs to be
+end_comment
+
+begin_comment
 comment|/// written to the output stream.
-do|void emitSLEB128Bytes(int64_t Value
-block|)
+end_comment
+
+begin_function
+name|void
+name|emitSLEB128Bytes
+parameter_list|(
+name|int64_t
+name|Value
+parameter_list|)
 block|{
 name|int32_t
 name|Sign
-operator|=
+init|=
 name|Value
 operator|>>
 operator|(
@@ -816,10 +882,10 @@ argument_list|)
 operator|-
 literal|1
 operator|)
-block|;
+decl_stmt|;
 name|bool
 name|IsMore
-block|;
+decl_stmt|;
 do|do
 block|{
 name|uint8_t
@@ -865,16 +931,33 @@ name|Byte
 argument_list|)
 expr_stmt|;
 block|}
-while|while
+do|while
 condition|(
 name|IsMore
 condition|)
-empty_stmt|;
-do|}
+do|;
+block|}
+end_function
+
+begin_comment
 comment|/// emitString - This callback is invoked when a String needs to be
+end_comment
+
+begin_comment
 comment|/// written to the output stream.
-do|void emitString(const std::string&String
-block|)
+end_comment
+
+begin_decl_stmt
+name|void
+name|emitString
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|String
+argument_list|)
 block|{
 for|for
 control|(
@@ -924,12 +1007,19 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// emitInt32 - Emit a int32 directive.
+end_comment
+
+begin_function
 name|void
 name|emitInt32
-argument_list|(
-argument|uint32_t Value
-argument_list|)
+parameter_list|(
+name|uint32_t
+name|Value
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -964,12 +1054,19 @@ name|BufferEnd
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/// emitInt64 - Emit a int64 directive.
+end_comment
+
+begin_function
 name|void
 name|emitInt64
-argument_list|(
-argument|uint64_t Value
-argument_list|)
+parameter_list|(
+name|uint64_t
+name|Value
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1004,14 +1101,23 @@ name|BufferEnd
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/// emitInt32At - Emit the Int32 Value in Addr.
+end_comment
+
+begin_function
 name|void
 name|emitInt32At
-argument_list|(
-argument|uintptr_t *Addr
-argument_list|,
-argument|uintptr_t Value
-argument_list|)
+parameter_list|(
+name|uintptr_t
+modifier|*
+name|Addr
+parameter_list|,
+name|uintptr_t
+name|Value
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1046,7 +1152,13 @@ operator|)
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// emitInt64At - Emit the Int64 Value in Addr.
+end_comment
+
+begin_function
 name|void
 name|emitInt64At
 parameter_list|(
@@ -1091,7 +1203,13 @@ operator|)
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// emitLabel - Emits a label
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|emitLabel
@@ -1102,9 +1220,21 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// allocateSpace - Allocate a block of space in the current output buffer,
+end_comment
+
+begin_comment
 comment|/// returning null (and setting conditions to indicate buffer overflow) on
+end_comment
+
+begin_comment
 comment|/// failure.  Alignment is the alignment in bytes of the buffer desired.
+end_comment
+
+begin_function
 name|virtual
 name|void
 modifier|*
@@ -1166,9 +1296,50 @@ return|return
 name|Result
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/// allocateGlobal - Allocate memory for a global.  Unlike allocateSpace,
+end_comment
+
+begin_comment
+comment|/// this method does not allocate memory in the current output buffer,
+end_comment
+
+begin_comment
+comment|/// because a global may live longer than the current function.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+modifier|*
+name|allocateGlobal
+parameter_list|(
+name|uintptr_t
+name|Size
+parameter_list|,
+name|unsigned
+name|Alignment
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// StartMachineBasicBlock - This should be called by the target when a new
+end_comment
+
+begin_comment
 comment|/// basic block is about to be emitted.  This way the MCE knows where the
+end_comment
+
+begin_comment
 comment|/// start of the block is, and can implement getMachineBasicBlockAddress.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|StartMachineBasicBlock
@@ -1180,9 +1351,21 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getCurrentPCValue - This returns the address that the next emitted byte
+end_comment
+
+begin_comment
 comment|/// will be output to.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|uintptr_t
 name|getCurrentPCValue
@@ -1196,8 +1379,17 @@ operator|)
 name|CurBufferPtr
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getCurrentPCOffset - Return the offset from the start of the emitted
+end_comment
+
+begin_comment
 comment|/// buffer that we are currently writing to.
+end_comment
+
+begin_expr_stmt
 name|uintptr_t
 name|getCurrentPCOffset
 argument_list|()
@@ -1209,8 +1401,49 @@ operator|-
 name|BufferBegin
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// earlyResolveAddresses - True if the code emitter can use symbol addresses
+end_comment
+
+begin_comment
+comment|/// during code emission time. The JIT is capable of doing this because it
+end_comment
+
+begin_comment
+comment|/// creates jump tables or constant pools in memory on the fly while the
+end_comment
+
+begin_comment
+comment|/// object code emitters rely on a linker to have real addresses and should
+end_comment
+
+begin_comment
+comment|/// use relocations instead.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|earlyResolveAddresses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// addRelocation - Whenever a relocatable address is needed, it should be
+end_comment
+
+begin_comment
 comment|/// noted with this interface.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|addRelocation
@@ -1223,10 +1456,25 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// FIXME: These should all be handled with relocations!
+end_comment
+
+begin_comment
 comment|/// getConstantPoolEntryAddress - Return the address of the 'Index' entry in
+end_comment
+
+begin_comment
 comment|/// the constant pool that was last emitted with the emitConstantPool method.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|uintptr_t
 name|getConstantPoolEntryAddress
@@ -1238,9 +1486,21 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getJumpTableEntryAddress - Return the address of the jump table with index
+end_comment
+
+begin_comment
 comment|/// 'Index' in the function that last called initJumpTableInfo.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|uintptr_t
 name|getJumpTableEntryAddress
@@ -1252,10 +1512,25 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getMachineBasicBlockAddress - Return the address of the specified
+end_comment
+
+begin_comment
 comment|/// MachineBasicBlock, only usable after the label for the MBB has been
+end_comment
+
+begin_comment
 comment|/// emitted.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|uintptr_t
 name|getMachineBasicBlockAddress
@@ -1268,9 +1543,21 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getLabelAddress - Return the address of the specified LabelID, only usable
+end_comment
+
+begin_comment
 comment|/// after the LabelID has been emitted.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|uintptr_t
 name|getLabelAddress
@@ -1282,8 +1569,17 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Specifies the MachineModuleInfo object. This is used for exception handling
+end_comment
+
+begin_comment
 comment|/// purposes.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|setModuleInfo
@@ -1295,15 +1591,10 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_comment
-unit|}
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

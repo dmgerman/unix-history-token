@@ -105,7 +105,8 @@ name|int
 name|AlarmStatus
 parameter_list|()
 function_decl|;
-comment|/// Sleep for n seconds.
+comment|/// Sleep for n seconds. Warning: mixing calls to Sleep() and other *Alarm
+comment|/// calls may be a bad idea on some platforms (source: Linux man page).
 comment|/// @returns nothing.
 name|void
 name|Sleep

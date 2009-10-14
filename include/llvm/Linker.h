@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<memory>
 end_include
 
@@ -77,10 +71,23 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|sys
+block|{
+name|class
+name|Path
+decl_stmt|;
+block|}
 name|class
 name|Module
 decl_stmt|;
@@ -96,7 +103,7 @@ comment|/// to the caller and the Linker object is only suitable for destruction
 comment|/// The Linker can link Modules from memory, bitcode files, or bitcode
 comment|/// archives.  It retains a set of search paths in which to find any libraries
 comment|/// presented to it. By default, the linker will generate error and warning
-comment|/// messages to std::cerr but this capability can be turned off with the
+comment|/// messages to stderr but this capability can be turned off with the
 comment|/// QuietWarnings and QuietErrors flags. It can also be instructed to verbosely
 comment|/// print out the linking actions it is taking with the Verbose flag.
 comment|/// @brief The LLVM Linker.
@@ -140,16 +147,16 @@ name|Verbose
 init|=
 literal|1
 block|,
-comment|///< Print to std::cerr what steps the linker is taking
+comment|///< Print to stderr what steps the linker is taking
 name|QuietWarnings
 init|=
 literal|2
 block|,
-comment|///< Don't print warnings to std::cerr.
+comment|///< Don't print warnings to stderr.
 name|QuietErrors
 init|=
 literal|4
-comment|///< Don't print errors to std::cerr.
+comment|///< Don't print errors to stderr.
 block|}
 enum|;
 comment|/// @}
@@ -162,13 +169,13 @@ comment|/// name \p progname. \p progname will also be used for error messages.
 comment|/// @brief Construct with empty module
 name|Linker
 argument_list|(
-argument|const std::string& progname
+argument|const StringRef&progname
 argument_list|,
 comment|///< name of tool running linker
-argument|const std::string& modulename
+argument|const StringRef&modulename
 argument_list|,
 comment|///< name of linker's end-result module
-argument|LLVMContext& C
+argument|LLVMContext&C
 argument_list|,
 comment|///< Context for global info
 argument|unsigned Flags =
@@ -181,7 +188,7 @@ comment|/// \p progname for the name of the program in error messages.
 comment|/// @brief Construct with existing module
 name|Linker
 argument_list|(
-argument|const std::string& progname
+argument|const StringRef& progname
 argument_list|,
 argument|Module* aModule
 argument_list|,
@@ -257,7 +264,7 @@ comment|/// LinkIn* methods. In those cases, the LinkIn* methods will have retur
 comment|/// true, indicating an error occurred. At most one error is retained so
 comment|/// this function always returns the last error that occurred. Note that if
 comment|/// the Quiet control flag is not set, the error string will have already
-comment|/// been printed to std::cerr.
+comment|/// been printed to stderr.
 comment|/// @brief Get the text of the last error that occurred.
 specifier|const
 name|std
@@ -453,21 +460,19 @@ comment|/// @returns true if an error occurs, false otherwise
 comment|/// @brief Link one library into the module
 name|bool
 name|LinkInLibrary
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Library
-argument_list|,
+parameter_list|,
 comment|///< The library to link in
 name|bool
-operator|&
+modifier|&
 name|is_native
 comment|///< Indicates if lib a native library
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// This function links one bitcode archive, \p Filename, into the module.
 comment|/// The archive is searched to resolve outstanding symbols. Any modules in
 comment|/// the archive that resolve outstanding symbols will be linked in. The
@@ -574,9 +579,7 @@ name|Path
 name|FindLib
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|Filename
 argument_list|)
@@ -606,37 +609,31 @@ argument_list|)
 expr_stmt|;
 name|bool
 name|warning
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|message
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|bool
 name|error
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|message
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|void
 name|verbose
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|message
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// @name Data
 comment|/// @{

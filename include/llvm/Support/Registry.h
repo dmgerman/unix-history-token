@@ -328,9 +328,6 @@ name|ListenerTail
 decl_stmt|;
 name|public
 label|:
-name|class
-name|iterator
-decl_stmt|;
 comment|/// Node in linked list of entries.
 comment|///
 name|class

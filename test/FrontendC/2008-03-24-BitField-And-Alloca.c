@@ -4,7 +4,7 @@ comment|// RUN: %llvmgcc -O2 -S %s -o - | not grep alloca
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -m32 -O2 -S %s -o - | grep store | not grep {align 8}
+comment|// RUN: %llvmgcc -m32 -O2 -S %s -o - | not grep store
 end_comment
 
 begin_enum

@@ -124,10 +124,10 @@ name|class
 name|Module
 decl_stmt|;
 name|class
-name|GlobalVariable
+name|MDNode
 decl_stmt|;
 name|class
-name|TargetAsmInfo
+name|MCAsmInfo
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -207,7 +207,7 @@ operator|*
 name|A
 argument_list|,
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 operator|*
 name|T
 argument_list|)
@@ -248,25 +248,25 @@ argument|unsigned Line
 argument_list|,
 argument|unsigned Col
 argument_list|,
-argument|DICompileUnit CU
+argument|MDNode *Scope
 argument_list|)
 block|;
 comment|/// RecordRegionStart - Indicate the start of a region.
 name|unsigned
 name|RecordRegionStart
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|V
+name|N
 argument_list|)
 block|;
 comment|/// RecordRegionEnd - Indicate the end of a region.
 name|unsigned
 name|RecordRegionEnd
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|V
+name|N
 argument_list|)
 block|;
 comment|/// getRecordSourceLineCount - Count source lines.
@@ -279,11 +279,9 @@ comment|///
 name|void
 name|RecordVariable
 argument_list|(
-argument|GlobalVariable *GV
+argument|MDNode *N
 argument_list|,
 argument|unsigned FrameIndex
-argument_list|,
-argument|const MachineInstr *MI
 argument_list|)
 block|;
 comment|/// ShouldEmitDwarfDebug - Returns true if Dwarf debugging declarations should
@@ -313,19 +311,20 @@ argument_list|(
 argument|DISubprogram SP
 argument_list|)
 block|;
-comment|/// RecordVariableScope - Record scope for the variable declared by
-comment|/// DeclareMI. DeclareMI must describe TargetInstrInfo::DECLARE.
 name|void
-name|RecordVariableScope
+name|SetDbgScopeBeginLabels
 argument_list|(
-name|DIVariable
-operator|&
-name|DV
+argument|const MachineInstr *MI
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|DeclareMI
+argument|unsigned L
+argument_list|)
+block|;
+name|void
+name|SetDbgScopeEndLabels
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned L
 argument_list|)
 block|; }
 decl_stmt|;

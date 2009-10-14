@@ -87,6 +87,12 @@ modifier|*
 name|createEdgeProfilerPass
 parameter_list|()
 function_decl|;
+comment|// Insert optimal edge profiling instrumentation
+name|ModulePass
+modifier|*
+name|createOptimalEdgeProfilerPass
+parameter_list|()
+function_decl|;
 comment|// Random Sampling Profiling Framework
 name|ModulePass
 modifier|*

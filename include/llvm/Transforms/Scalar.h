@@ -386,7 +386,7 @@ comment|// does not add critical edges to the CFG.
 comment|//
 comment|//   AU.addRequiredID(LoopSimplifyID);
 comment|//
-name|FunctionPass
+name|Pass
 modifier|*
 name|createLoopSimplifyPass
 parameter_list|()
@@ -400,7 +400,7 @@ name|LoopSimplifyID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// LowerAllocations - Turn malloc and free instructions into %malloc and %free
+comment|// LowerAllocations - Turn malloc and free instructions into @malloc and @free
 comment|// calls.
 comment|//
 comment|//   AU.addRequiredID(LowerAllocationsID);
@@ -507,26 +507,6 @@ name|LCSSAID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// PredicateSimplifier - This pass collapses duplicate variables into one
-comment|// canonical form, and tries to simplify expressions along the way.
-comment|//
-name|FunctionPass
-modifier|*
-name|createPredicateSimplifierPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// GVN-PRE - This pass performs global value numbering and partial redundancy
-comment|// elimination.
-comment|//
-name|FunctionPass
-modifier|*
-name|createGVNPREPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// GVN - This pass performs global value numbering and redundant load
 comment|// elimination cotemporaneously.
 comment|//
@@ -591,6 +571,15 @@ parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// CodeGenLICM - This pass performs late LICM; hoisting constants out of loops.
+comment|//
+name|Pass
+modifier|*
+name|createCodeGenLICMPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// InstructionNamer - Give any unnamed non-void instructions "tmp" names.
 comment|//
 name|FunctionPass
@@ -607,11 +596,22 @@ name|InstructionNamerID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// SSI - This pass converts to Static Single Information form.
+comment|// SSI - This pass converts instructions to Static Single Information form
+comment|// on demand.
 comment|//
 name|FunctionPass
 modifier|*
 name|createSSIPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// SSI - This pass converts every non-void instuction to Static Single
+comment|// Information form.
+comment|//
+name|FunctionPass
+modifier|*
+name|createSSIEverythingPass
 parameter_list|()
 function_decl|;
 block|}

@@ -158,9 +158,6 @@ name|int
 name|VarArgsBase
 block|;
 comment|// What is the base FrameIndex
-name|bool
-name|useITOF
-block|;
 name|public
 operator|:
 name|explicit
@@ -174,9 +171,11 @@ block|;
 comment|/// getSetCCResultType - Get the SETCC result ValueType
 name|virtual
 name|MVT
+operator|::
+name|SimpleValueType
 name|getSetCCResultType
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -224,44 +223,24 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
-comment|/// LowerCallTo - This hook lowers an abstract call to a function into an
-comment|/// actual call.
-name|virtual
-name|std
-operator|::
-name|pair
-operator|<
 name|SDValue
-block|,
-name|SDValue
-operator|>
-name|LowerCallTo
+name|LowerCallResult
 argument_list|(
 argument|SDValue Chain
 argument_list|,
-argument|const Type *RetTy
+argument|SDValue InFlag
 argument_list|,
-argument|bool RetSExt
-argument_list|,
-argument|bool RetZExt
+argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
 argument_list|,
-argument|bool isInreg
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|unsigned NumFixedArgs
-argument_list|,
-argument|unsigned CC
-argument_list|,
-argument|bool isTailCall
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|ArgListTy&Args
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|DebugLoc dl
+argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 block|;
 name|ConstraintType
@@ -281,18 +260,10 @@ name|getRegClassForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|hasITOF
-argument_list|()
-block|{
-return|return
-name|useITOF
-return|;
-block|}
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -300,6 +271,10 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -342,7 +317,68 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|)
-block|;    }
+block|;
+name|virtual
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt

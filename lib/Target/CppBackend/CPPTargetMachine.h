@@ -76,7 +76,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|raw_ostream
+name|formatted_raw_ostream
 decl_stmt|;
 name|struct
 name|CPPTargetMachine
@@ -84,17 +84,19 @@ range|:
 name|public
 name|TargetMachine
 block|{
-specifier|const
-name|TargetData
-name|DataLayout
-block|;
-comment|// Calculates type size& alignment
 name|CPPTargetMachine
 argument_list|(
 specifier|const
-name|Module
+name|Target
 operator|&
-name|M
+name|T
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
 argument_list|,
 specifier|const
 name|std
@@ -104,9 +106,9 @@ operator|&
 name|FS
 argument_list|)
 operator|:
-name|DataLayout
+name|TargetMachine
 argument_list|(
-argument|&M
+argument|T
 argument_list|)
 block|{}
 name|virtual
@@ -125,25 +127,13 @@ name|addPassesToEmitWholeFile
 argument_list|(
 argument|PassManager&PM
 argument_list|,
-argument|raw_ostream&Out
+argument|formatted_raw_ostream&Out
 argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
 argument_list|)
 block|;
-comment|// This class always works, but shouldn't be the default in most cases.
-specifier|static
-name|unsigned
-name|getModuleMatchQuality
-argument_list|(
-argument|const Module&M
-argument_list|)
-block|{
-return|return
-literal|1
-return|;
-block|}
 name|virtual
 specifier|const
 name|TargetData
@@ -153,11 +143,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
-name|DataLayout
+literal|0
 return|;
 block|}
 expr|}
+block|;
+specifier|extern
+name|Target
+name|TheCppBackendTarget
 block|;  }
 end_decl_stmt
 

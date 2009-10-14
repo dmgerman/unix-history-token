@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
@@ -226,10 +232,8 @@ name|CC
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown condition code"
 argument_list|)
 expr_stmt|;
@@ -379,6 +383,40 @@ literal|"gt"
 return|;
 block|}
 block|}
+block|}
+comment|/// MipsII - This namespace holds all of the target specific flags that
+comment|/// instruction info tracks.
+comment|///
+name|namespace
+name|MipsII
+block|{
+comment|/// Target Operand Flag enum.
+enum|enum
+name|TOF
+block|{
+comment|//===------------------------------------------------------------------===//
+comment|// Mips Specific MachineOperand flags.
+name|MO_NO_FLAG
+block|,
+comment|/// MO_GOT - Represents the offset into the global offset table at which
+comment|/// the address the relocation entry symbol resides during execution.
+name|MO_GOT
+block|,
+comment|/// MO_GOT_CALL - Represents the offset into the global offset table at
+comment|/// which the address of a call site relocation entry symbol resides
+comment|/// during execution. This is different from the above since this flag
+comment|/// can only be present in call instructions.
+name|MO_GOT_CALL
+block|,
+comment|/// MO_GPREL - Represents the offset from the current gp value to be used
+comment|/// for the relocatable object file being produced.
+name|MO_GPREL
+block|,
+comment|/// MO_ABS_HILO - Represents the hi or low part of an absolute symbol
+comment|/// address.
+name|MO_ABS_HILO
+block|}
+enum|;
 block|}
 name|class
 name|MipsInstrInfo
@@ -545,24 +583,6 @@ specifier|const
 block|;
 name|virtual
 name|void
-name|storeRegToAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool isKill
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
 name|loadRegFromStackSlot
 argument_list|(
 argument|MachineBasicBlock&MBB
@@ -574,22 +594,6 @@ argument_list|,
 argument|int FrameIndex
 argument_list|,
 argument|const TargetRegisterClass *RC
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|loadRegFromAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
 specifier|const
 block|;

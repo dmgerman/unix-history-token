@@ -314,6 +314,12 @@ decl_stmt|;
 name|bool
 name|isAsCheapAsAMove
 decl_stmt|;
+name|bool
+name|hasExtraSrcRegAllocReq
+decl_stmt|;
+name|bool
+name|hasExtraDefRegAllocReq
+decl_stmt|;
 comment|/// ParseOperandName - Parse an operand name like "$foo" or "$foo.bar",
 comment|/// where $foo is a whole operand and $foo.bar refers to a suboperand.
 comment|/// This throws an exception if the name is invalid.  If AllowWholeOp is

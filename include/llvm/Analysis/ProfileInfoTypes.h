@@ -47,7 +47,12 @@ comment|/* Path profiling information      */
 name|BBTraceInfo
 init|=
 literal|6
+block|,
 comment|/* Basic block trace information   */
+name|OptEdgeInfo
+init|=
+literal|7
+comment|/* Edge profiling information, optimal version */
 block|}
 enum|;
 end_enum

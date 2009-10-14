@@ -81,6 +81,12 @@ directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/CallingConv.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -119,7 +125,10 @@ name|AExt
 block|,
 comment|// The value is extended with undefined upper bits.
 name|BCvt
+block|,
 comment|// The value is bit-converted in the location.
+name|Indirect
+comment|// The location contains pointer to the value.
 comment|// TODO: a subset of the value is in the location.
 block|}
 enum|;
@@ -152,11 +161,11 @@ range|:
 literal|6
 decl_stmt|;
 comment|/// ValVT - The type of the value being assigned.
-name|MVT
+name|EVT
 name|ValVT
 decl_stmt|;
 comment|/// LocVT - The type of the location being assigned to.
-name|MVT
+name|EVT
 name|LocVT
 decl_stmt|;
 name|public
@@ -168,13 +177,13 @@ parameter_list|(
 name|unsigned
 name|ValNo
 parameter_list|,
-name|MVT
+name|EVT
 name|ValVT
 parameter_list|,
 name|unsigned
 name|RegNo
 parameter_list|,
-name|MVT
+name|EVT
 name|LocVT
 parameter_list|,
 name|LocInfo
@@ -237,13 +246,13 @@ parameter_list|(
 name|unsigned
 name|ValNo
 parameter_list|,
-name|MVT
+name|EVT
 name|ValVT
 parameter_list|,
 name|unsigned
 name|RegNo
 parameter_list|,
-name|MVT
+name|EVT
 name|LocVT
 parameter_list|,
 name|LocInfo
@@ -285,13 +294,13 @@ parameter_list|(
 name|unsigned
 name|ValNo
 parameter_list|,
-name|MVT
+name|EVT
 name|ValVT
 parameter_list|,
 name|unsigned
 name|Offset
 parameter_list|,
-name|MVT
+name|EVT
 name|LocVT
 parameter_list|,
 name|LocInfo
@@ -354,13 +363,13 @@ parameter_list|(
 name|unsigned
 name|ValNo
 parameter_list|,
-name|MVT
+name|EVT
 name|ValVT
 parameter_list|,
 name|unsigned
 name|Offset
 parameter_list|,
-name|MVT
+name|EVT
 name|LocVT
 parameter_list|,
 name|LocInfo
@@ -404,7 +413,7 @@ return|return
 name|ValNo
 return|;
 block|}
-name|MVT
+name|EVT
 name|getValVT
 argument_list|()
 specifier|const
@@ -471,7 +480,7 @@ return|return
 name|Loc
 return|;
 block|}
-name|MVT
+name|EVT
 name|getLocVT
 argument_list|()
 specifier|const
@@ -489,6 +498,27 @@ return|return
 name|HTP
 return|;
 block|}
+name|bool
+name|isExtInLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|HTP
+operator|==
+name|AExt
+operator|||
+name|HTP
+operator|==
+name|SExt
+operator|||
+name|HTP
+operator|==
+name|ZExt
+operator|)
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// CCAssignFn - This function assigns a location for Val, updating State to
@@ -500,10 +530,10 @@ argument_list|(
 name|unsigned
 name|ValNo
 argument_list|,
-name|MVT
+name|EVT
 name|ValVT
 argument_list|,
-name|MVT
+name|EVT
 name|LocVT
 argument_list|,
 name|CCValAssign
@@ -532,11 +562,11 @@ name|unsigned
 operator|&
 name|ValNo
 argument_list|,
-name|MVT
+name|EVT
 operator|&
 name|ValVT
 argument_list|,
-name|MVT
+name|EVT
 operator|&
 name|LocVT
 argument_list|,
@@ -563,9 +593,11 @@ comment|/// stack slots are used.  It provides accessors to allocate these value
 name|class
 name|CCState
 block|{
-name|unsigned
 name|CallingConv
-decl_stmt|;
+operator|::
+name|ID
+name|CallingConv
+expr_stmt|;
 name|bool
 name|IsVarArg
 decl_stmt|;
@@ -588,6 +620,10 @@ operator|>
 operator|&
 name|Locs
 expr_stmt|;
+name|LLVMContext
+modifier|&
+name|Context
+decl_stmt|;
 name|unsigned
 name|StackOffset
 decl_stmt|;
@@ -603,7 +639,7 @@ name|public
 label|:
 name|CCState
 argument_list|(
-argument|unsigned CC
+argument|CallingConv::ID CC
 argument_list|,
 argument|bool isVarArg
 argument_list|,
@@ -613,6 +649,8 @@ argument|SmallVector<CCValAssign
 argument_list|,
 literal|16
 argument|>&locs
+argument_list|,
+argument|LLVMContext&C
 argument_list|)
 empty_stmt|;
 name|void
@@ -632,6 +670,16 @@ name|V
 argument_list|)
 expr_stmt|;
 block|}
+name|LLVMContext
+operator|&
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Context
+return|;
+block|}
 specifier|const
 name|TargetMachine
 operator|&
@@ -643,7 +691,9 @@ return|return
 name|TM
 return|;
 block|}
-name|unsigned
+name|CallingConv
+operator|::
+name|ID
 name|getCallingConv
 argument_list|()
 specifier|const
@@ -699,45 +749,63 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// AnalyzeFormalArguments - Analyze an ISD::FORMAL_ARGUMENTS node,
+comment|/// AnalyzeFormalArguments - Analyze an array of argument values,
 comment|/// incorporating info about the formals into this state.
 name|void
 name|AnalyzeFormalArguments
-parameter_list|(
-name|SDNode
-modifier|*
-name|TheArgs
-parameter_list|,
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
 name|CCAssignFn
 name|Fn
-parameter_list|)
-function_decl|;
-comment|/// AnalyzeReturn - Analyze the returned values of an ISD::RET node,
+argument_list|)
+decl_stmt|;
+comment|/// AnalyzeReturn - Analyze the returned values of a return,
 comment|/// incorporating info about the result values into this state.
 name|void
 name|AnalyzeReturn
-parameter_list|(
-name|SDNode
-modifier|*
-name|TheRet
-parameter_list|,
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
 name|CCAssignFn
 name|Fn
-parameter_list|)
-function_decl|;
-comment|/// AnalyzeCallOperands - Analyze an ISD::CALL node, incorporating info
-comment|/// about the passed values into this state.
+argument_list|)
+decl_stmt|;
+comment|/// AnalyzeCallOperands - Analyze the outgoing arguments to a call,
+comment|/// incorporating info about the passed values into this state.
 name|void
 name|AnalyzeCallOperands
-parameter_list|(
-name|CallSDNode
-modifier|*
-name|TheCall
-parameter_list|,
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
 name|CCAssignFn
 name|Fn
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// AnalyzeCallOperands - Same as above except it takes vectors of types
 comment|/// and argument flags.
 name|void
@@ -745,7 +813,7 @@ name|AnalyzeCallOperands
 argument_list|(
 name|SmallVectorImpl
 operator|<
-name|MVT
+name|EVT
 operator|>
 operator|&
 name|ArgVTs
@@ -763,25 +831,31 @@ name|CCAssignFn
 name|Fn
 argument_list|)
 decl_stmt|;
-comment|/// AnalyzeCallResult - Analyze the return values of an ISD::CALL node,
+comment|/// AnalyzeCallResult - Analyze the return values of a call,
 comment|/// incorporating info about the passed values into this state.
 name|void
 name|AnalyzeCallResult
-parameter_list|(
-name|CallSDNode
-modifier|*
-name|TheCall
-parameter_list|,
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
 name|CCAssignFn
 name|Fn
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// AnalyzeCallResult - Same as above except it's specialized for calls which
 comment|/// produce a single value.
 name|void
 name|AnalyzeCallResult
 parameter_list|(
-name|MVT
+name|EVT
 name|VT
 parameter_list|,
 name|CCAssignFn
@@ -1091,10 +1165,10 @@ argument_list|(
 name|unsigned
 name|ValNo
 argument_list|,
-name|MVT
+name|EVT
 name|ValVT
 argument_list|,
-name|MVT
+name|EVT
 name|LocVT
 argument_list|,
 name|CCValAssign

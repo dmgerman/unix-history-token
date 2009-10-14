@@ -262,6 +262,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/// createStandardModulePasses - Add the standard module passes.  This is
+comment|/// expected to be run after the standard function passes.
 specifier|static
 specifier|inline
 name|void
@@ -312,9 +314,8 @@ argument_list|(
 name|InliningPass
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|UnitAtATime
@@ -337,15 +338,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Clean up disgusting code
-comment|// Kill useless allocas
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createPromoteMemoryToRegisterPass
-argument_list|()
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|UnitAtATime
@@ -586,15 +578,6 @@ name|PM
 operator|->
 name|add
 argument_list|(
-name|createLoopIndexSplitPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|// Split loop index
-name|PM
-operator|->
-name|add
-argument_list|(
 name|createInstructionCombiningPass
 argument_list|()
 argument_list|)
@@ -753,7 +736,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Merge dup global constants
-block|}
 block|}
 specifier|static
 specifier|inline
@@ -1075,18 +1057,7 @@ argument_list|,
 name|VerifyEach
 argument_list|)
 expr_stmt|;
-comment|// Cleanup jump threading.
-name|addOnePass
-argument_list|(
-name|PM
-argument_list|,
-name|createPromoteMemoryToRegisterPass
-argument_list|()
-argument_list|,
-name|VerifyEach
-argument_list|)
-expr_stmt|;
-comment|// Delete basic blocks, which optimization passes may have killed...
+comment|// Delete basic blocks, which optimization passes may have killed.
 name|addOnePass
 argument_list|(
 name|PM

@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -1189,16 +1183,28 @@ name|class
 name|member_iterator
 range|:
 name|public
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+decl_stmt|,                                                const
 name|ElemTy
 decl_stmt|,
 name|ptrdiff_t
 decl|>
 block|{
 typedef|typedef
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
 specifier|const
 name|ElemTy
 operator|,

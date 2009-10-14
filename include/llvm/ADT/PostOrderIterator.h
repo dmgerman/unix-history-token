@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -211,8 +205,14 @@ name|class
 name|po_iterator
 operator|:
 name|public
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
 name|typename
 name|GT
 operator|::
@@ -230,8 +230,14 @@ name|ExtStorage
 operator|>
 block|{
 typedef|typedef
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
 name|typename
 name|GT
 operator|::
@@ -418,7 +424,6 @@ operator|,
 name|ExtStorage
 operator|>
 operator|(
-operator|&
 name|S
 operator|)
 block|{
@@ -481,7 +486,6 @@ operator|,
 name|ExtStorage
 operator|>
 operator|(
-operator|&
 name|S
 operator|)
 block|{   }

@@ -140,12 +140,11 @@ modifier|&
 name|Context
 decl_stmt|;
 specifier|const
-name|std
-operator|::
-name|string
+name|char
+modifier|*
 name|ToolName
-expr_stmt|;
-comment|// Name of bugpoint
+decl_stmt|;
+comment|// argv[0] of bugpoint
 name|std
 operator|::
 name|string
@@ -220,10 +219,8 @@ argument|LLVMContext& ctxt
 argument_list|)
 empty_stmt|;
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getToolName
 argument_list|()
 specifier|const
@@ -788,7 +785,7 @@ comment|/// file and writting the filename into OutputFile if successful.  If th
 comment|/// optimizations fail for some reason (optimizer crashes), return true,
 comment|/// otherwise return false.  If DeleteOutput is set to true, the bitcode is
 comment|/// deleted on success, and the filename string is undefined.  This prints to
-comment|/// cout a single line message indicating whether compilation was successful
+comment|/// outs() a single line message indicating whether compilation was successful
 comment|/// or failed, unless Quiet is set.  ExtraArgs specifies additional arguments
 comment|/// to pass to the child bugpoint instance.
 comment|///

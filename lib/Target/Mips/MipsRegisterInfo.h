@@ -132,9 +132,7 @@ comment|/// Get PIC indirect call register
 specifier|static
 name|unsigned
 name|getPICCallReg
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|/// Adjust the Mips stack frame.
 name|void
@@ -193,12 +191,14 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Stack Frame Processing Methods
-name|void
+name|unsigned
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
+argument_list|,
+argument|int *Value = NULL
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)

@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -146,23 +140,6 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// WriteBitcodeToFile - Write the specified module to the specified output
-comment|/// stream.
-name|void
-name|WriteBitcodeToFile
-argument_list|(
-specifier|const
-name|Module
-operator|*
-name|M
-argument_list|,
-name|std
-operator|::
-name|ostream
-operator|&
-name|Out
-argument_list|)
-decl_stmt|;
 comment|/// WriteBitcodeToFile - Write the specified module to the specified
 comment|/// raw output stream.
 name|void
@@ -193,19 +170,6 @@ modifier|&
 name|Stream
 parameter_list|)
 function_decl|;
-comment|/// CreateBitcodeWriterPass - Create and return a pass that writes the module
-comment|/// to the specified ostream.
-name|ModulePass
-modifier|*
-name|CreateBitcodeWriterPass
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|Str
-argument_list|)
-decl_stmt|;
 comment|/// createBitcodeWriterPass - Create and return a pass that writes the module
 comment|/// to the specified ostream.
 name|ModulePass
@@ -217,26 +181,30 @@ modifier|&
 name|Str
 parameter_list|)
 function_decl|;
-comment|/// isBitcodeWrapper - Return true fi this is a wrapper for LLVM IR bitcode
-comment|/// files.
+comment|/// isBitcodeWrapper - Return true if the given bytes are the magic bytes
+comment|/// for an LLVM IR bitcode wrapper.
+comment|///
 specifier|static
-name|bool
 specifier|inline
+name|bool
 name|isBitcodeWrapper
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|BufPtr
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|BufEnd
 parameter_list|)
 block|{
+comment|// See if you can find the hidden message in the magic bytes :-).
+comment|// (Hint: it's a little-endian encoding.)
 return|return
-operator|(
 name|BufPtr
 operator|!=
 name|BufEnd
@@ -268,7 +236,100 @@ literal|3
 index|]
 operator|==
 literal|0x0B
-operator|)
+return|;
+block|}
+comment|/// isRawBitcode - Return true if the given bytes are the magic bytes for
+comment|/// raw LLVM IR bitcode (without a wrapper).
+comment|///
+specifier|static
+specifier|inline
+name|bool
+name|isRawBitcode
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|BufPtr
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|BufEnd
+parameter_list|)
+block|{
+comment|// These bytes sort of have a hidden message, but it's not in
+comment|// little-endian this time, and it's a little redundant.
+return|return
+name|BufPtr
+operator|!=
+name|BufEnd
+operator|&&
+name|BufPtr
+index|[
+literal|0
+index|]
+operator|==
+literal|'B'
+operator|&&
+name|BufPtr
+index|[
+literal|1
+index|]
+operator|==
+literal|'C'
+operator|&&
+name|BufPtr
+index|[
+literal|2
+index|]
+operator|==
+literal|0xc0
+operator|&&
+name|BufPtr
+index|[
+literal|3
+index|]
+operator|==
+literal|0xde
+return|;
+block|}
+comment|/// isBitcode - Return true if the given bytes are the magic bytes for
+comment|/// LLVM IR bitcode, either with or without a wrapper.
+comment|///
+specifier|static
+name|bool
+specifier|inline
+name|isBitcode
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|BufPtr
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|BufEnd
+parameter_list|)
+block|{
+return|return
+name|isBitcodeWrapper
+argument_list|(
+name|BufPtr
+argument_list|,
+name|BufEnd
+argument_list|)
+operator|||
+name|isRawBitcode
+argument_list|(
+name|BufPtr
+argument_list|,
+name|BufEnd
+argument_list|)
 return|;
 block|}
 comment|/// SkipBitcodeWrapperHeader - Some systems wrap bc files with a special

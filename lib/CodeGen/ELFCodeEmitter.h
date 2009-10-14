@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineCodeEmitter.h"
+file|"llvm/CodeGen/ObjectCodeEmitter.h"
 end_include
 
 begin_include
@@ -71,7 +71,7 @@ name|class
 name|ELFCodeEmitter
 range|:
 name|public
-name|MachineCodeEmitter
+name|ObjectCodeEmitter
 block|{
 name|ELFWriter
 operator|&
@@ -87,8 +87,7 @@ name|ELFSection
 operator|*
 name|ES
 block|;
-comment|/// Relocations - These are the relocations that the function needs, as
-comment|/// emitted.
+comment|/// Relocations - Record relocations needed by the current function
 name|std
 operator|::
 name|vector
@@ -97,56 +96,19 @@ name|MachineRelocation
 operator|>
 name|Relocations
 block|;
-comment|/// CPLocations - This is a map of constant pool indices to offsets from the
-comment|/// start of the section for that constant pool index.
+comment|/// JTRelocations - Record relocations needed by the relocation
+comment|/// section.
 name|std
 operator|::
 name|vector
 operator|<
+name|MachineRelocation
+operator|>
+name|JTRelocations
+block|;
+comment|/// FnStartPtr - Function offset from the beginning of ELFSection 'ES'
 name|uintptr_t
-operator|>
-name|CPLocations
-block|;
-comment|/// CPSections - This is a map of constant pool indices to the MachOSection
-comment|/// containing the constant pool entry for that index.
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|CPSections
-block|;
-comment|/// JTLocations - This is a map of jump table indices to offsets from the
-comment|/// start of the section for that jump table index.
-name|std
-operator|::
-name|vector
-operator|<
-name|uintptr_t
-operator|>
-name|JTLocations
-block|;
-comment|/// MBBLocations - This vector is a mapping from MBB ID's to their address.
-comment|/// It is filled in by the StartMachineBasicBlock callback and queried by
-comment|/// the getMachineBasicBlockAddress callback.
-name|std
-operator|::
-name|vector
-operator|<
-name|uintptr_t
-operator|>
-name|MBBLocations
-block|;
-comment|/// FnStartPtr - Pointer to the start location of the current function
-comment|/// in the buffer
-name|uint8_t
-operator|*
-name|FnStartPtr
-block|;
-comment|/// JumpTableSectionIdx - Holds the index of the Jump Table Section
-name|unsigned
-name|JumpTableSectionIdx
+name|FnStartOff
 block|;
 name|public
 operator|:
@@ -165,16 +127,43 @@ argument_list|)
 block|,
 name|TM
 argument_list|(
-name|EW
-operator|.
-name|TM
-argument_list|)
-block|,
-name|JumpTableSectionIdx
-argument_list|(
-literal|0
+argument|EW.TM
 argument_list|)
 block|{}
+comment|/// addRelocation - Register new relocations for this function
+name|void
+name|addRelocation
+argument_list|(
+argument|const MachineRelocation&MR
+argument_list|)
+block|{
+name|Relocations
+operator|.
+name|push_back
+argument_list|(
+name|MR
+argument_list|)
+block|;     }
+comment|/// emitConstantPool - For each constant pool entry, figure out which
+comment|/// section the constant should live in and emit data to it
+name|void
+name|emitConstantPool
+argument_list|(
+name|MachineConstantPool
+operator|*
+name|MCP
+argument_list|)
+block|;
+comment|/// emitJumpTables - Emit all the jump tables for a given jump table
+comment|/// info and record them to the appropriate section.
+name|void
+name|emitJumpTables
+argument_list|(
+name|MachineJumpTableInfo
+operator|*
+name|MJTI
+argument_list|)
+block|;
 name|void
 name|startFunction
 argument_list|(
@@ -191,335 +180,52 @@ operator|&
 name|F
 argument_list|)
 block|;
-name|void
-name|addRelocation
-argument_list|(
-argument|const MachineRelocation&MR
-argument_list|)
-block|{
-name|Relocations
-operator|.
-name|push_back
-argument_list|(
-name|MR
-argument_list|)
-block|;     }
+comment|/// emitLabel - Emits a label
 name|virtual
 name|void
-name|StartMachineBasicBlock
+name|emitLabel
 argument_list|(
-argument|MachineBasicBlock *MBB
+argument|uint64_t LabelID
 argument_list|)
 block|{
-if|if
-condition|(
-name|MBBLocations
-operator|.
-name|size
-argument_list|()
-operator|<=
-operator|(
-name|unsigned
-operator|)
-name|MBB
-operator|->
-name|getNumber
-argument_list|()
-condition|)
-name|MBBLocations
-operator|.
-name|resize
+name|assert
 argument_list|(
-operator|(
-name|MBB
-operator|->
-name|getNumber
-argument_list|()
-operator|+
-literal|1
-operator|)
-operator|*
-literal|2
+literal|"emitLabel not implemented"
 argument_list|)
-expr_stmt|;
-name|MBBLocations
-index|[
-name|MBB
-operator|->
-name|getNumber
-argument_list|()
-index|]
-operator|=
-name|getCurrentPCOffset
-argument_list|()
 block|;     }
-name|virtual
-name|uintptr_t
-name|getConstantPoolEntryAddress
-argument_list|(
-argument|unsigned Index
-argument_list|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|CPLocations
-operator|.
-name|size
-argument_list|()
-operator|>
-name|Index
-operator|&&
-literal|"CP not emitted!"
-argument_list|)
-block|;
-return|return
-name|CPLocations
-index|[
-name|Index
-index|]
-return|;
-block|}
-name|virtual
-name|uintptr_t
-name|getJumpTableEntryAddress
-argument_list|(
-name|unsigned
-name|Index
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|JTLocations
-operator|.
-name|size
-argument_list|()
-operator|>
-name|Index
-operator|&&
-literal|"JT not emitted!"
-argument_list|)
-expr_stmt|;
-return|return
-name|JTLocations
-index|[
-name|Index
-index|]
-return|;
-block|}
-name|virtual
-name|uintptr_t
-name|getMachineBasicBlockAddress
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|MBBLocations
-operator|.
-name|size
-argument_list|()
-operator|>
-operator|(
-name|unsigned
-operator|)
-name|MBB
-operator|->
-name|getNumber
-argument_list|()
-operator|&&
-name|MBBLocations
-index|[
-name|MBB
-operator|->
-name|getNumber
-argument_list|()
-index|]
-operator|&&
-literal|"MBB not emitted!"
-argument_list|)
-expr_stmt|;
-return|return
-name|MBBLocations
-index|[
-name|MBB
-operator|->
-name|getNumber
-argument_list|()
-index|]
-return|;
-block|}
+comment|/// getLabelAddress - Return the address of the specified LabelID,
+comment|/// only usable after the LabelID has been emitted.
 name|virtual
 name|uintptr_t
 name|getLabelAddress
 argument_list|(
-name|uint64_t
-name|Label
+argument|uint64_t Label
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
-literal|0
-operator|&&
-literal|"Label address not implementated yet!"
+literal|"getLabelAddress not implemented"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
+block|;
 return|return
 literal|0
 return|;
 block|}
-name|virtual
-name|void
-name|emitLabel
-parameter_list|(
-name|uint64_t
-name|LabelID
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"emit Label not implementated yet!"
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-comment|/// emitConstantPool - For each constant pool entry, figure out which section
-comment|/// the constant should live in and emit the constant.
-name|void
-name|emitConstantPool
-parameter_list|(
-name|MachineConstantPool
-modifier|*
-name|MCP
-parameter_list|)
-function_decl|;
-comment|/// emitJumpTables - Emit all the jump tables for a given jump table info
-comment|/// record to the appropriate section.
-name|void
-name|emitJumpTables
-parameter_list|(
-name|MachineJumpTableInfo
-modifier|*
-name|MJTI
-parameter_list|)
-function_decl|;
 name|virtual
 name|void
 name|setModuleInfo
 argument_list|(
-name|llvm
-operator|::
-name|MachineModuleInfo
-operator|*
-name|MMI
+argument|llvm::MachineModuleInfo* MMI
 argument_list|)
 block|{}
-comment|/// JIT SPECIFIC FUNCTIONS - DO NOT IMPLEMENT THESE HERE!
-name|void
-name|startGVStub
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|F
-parameter_list|,
-name|unsigned
-name|StubSize
-parameter_list|,
-name|unsigned
-name|Alignment
-init|=
-literal|1
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"JIT specific function called!"
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-name|void
-name|startGVStub
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|F
-parameter_list|,
-name|void
-modifier|*
-name|Buffer
-parameter_list|,
-name|unsigned
-name|StubSize
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"JIT specific function called!"
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-name|void
-modifier|*
-name|finishGVStub
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|F
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"JIT specific function called!"
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
+expr|}
+block|;
+comment|// end class ELFCodeEmitter
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-comment|// end class ELFCodeEmitter
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

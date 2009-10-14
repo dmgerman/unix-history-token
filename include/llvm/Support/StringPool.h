@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- StringPool.h - Interned string pool -------------------------------===//
+comment|//===-- StringPool.h - Interned string pool ---------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -218,26 +218,8 @@ name|PooledStringPtr
 name|intern
 parameter_list|(
 specifier|const
-name|char
-modifier|*
-name|Begin
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|End
-parameter_list|)
-function_decl|;
-comment|/// intern - Adds a null-terminated string to the pool and returns a
-comment|/// reference-counted pointer to it. No additional memory is allocated if
-comment|/// the string already exists in the pool.
-specifier|inline
-name|PooledStringPtr
-name|intern
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 name|Str
 parameter_list|)
 function_decl|;
@@ -579,28 +561,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-name|PooledStringPtr
-name|StringPool
-operator|::
-name|intern
-argument_list|(
-argument|const char *Str
-argument_list|)
-block|{
-return|return
-name|intern
-argument_list|(
-name|Str
-argument_list|,
-name|Str
-operator|+
-name|strlen
-argument_list|(
-name|Str
-argument_list|)
-argument_list|)
-return|;
-block|}
 block|}
 end_decl_stmt
 

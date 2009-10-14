@@ -110,6 +110,23 @@ operator|&
 name|STI
 argument_list|)
 block|;
+comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
+comment|// if there is not such an opcode.
+name|unsigned
+name|getUnindexedOpcode
+argument_list|(
+argument|unsigned Opc
+argument_list|)
+specifier|const
+block|;
+comment|// Return true if the block does not fall through.
+name|bool
+name|BlockHasNoFallThrough
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).
@@ -148,39 +165,6 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|isMoveInstr
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned&SrcReg
-argument_list|,
-argument|unsigned&DstReg
-argument_list|,
-argument|unsigned&SrcSubIdx
-argument_list|,
-argument|unsigned&DstSubIdx
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|isLoadFromStackSlot
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|isStoreToStackSlot
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
-argument_list|)
-specifier|const
-block|;
-name|bool
 name|copyRegToReg
 argument_list|(
 argument|MachineBasicBlock&MBB
@@ -215,23 +199,6 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|storeRegToAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool isKill
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
-argument_list|)
-specifier|const
-block|;
-name|void
 name|loadRegFromStackSlot
 argument_list|(
 argument|MachineBasicBlock&MBB
@@ -243,21 +210,6 @@ argument_list|,
 argument|int FrameIndex
 argument_list|,
 argument|const TargetRegisterClass *RC
-argument_list|)
-specifier|const
-block|;
-name|void
-name|loadRegFromAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
 specifier|const
 block|;

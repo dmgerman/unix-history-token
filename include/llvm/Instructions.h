@@ -94,6 +94,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/LLVMContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -115,6 +127,12 @@ name|ConstantRange
 decl_stmt|;
 name|class
 name|APInt
+decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
+name|DominatorTree
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                             AllocationInst Class
@@ -140,7 +158,7 @@ argument|unsigned iTy
 argument_list|,
 argument|unsigned Align
 argument_list|,
-argument|const std::string&Name =
+argument|const Twine&Name =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -157,7 +175,7 @@ argument|unsigned iTy
 argument_list|,
 argument|unsigned Align
 argument_list|,
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -178,7 +196,7 @@ name|isArrayAllocation
 argument_list|()
 specifier|const
 block|;
-comment|/// getArraySize - Get the number of element allocated, for a simple
+comment|/// getArraySize - Get the number of elements allocated. For a simple
 comment|/// allocation of a single element, this will return a constant 1 value.
 comment|///
 specifier|const
@@ -266,7 +284,7 @@ argument|unsigned Align
 argument_list|)
 block|;
 name|virtual
-name|Instruction
+name|AllocationInst
 operator|*
 name|clone
 argument_list|()
@@ -357,14 +375,6 @@ operator|:
 name|public
 name|AllocationInst
 block|{
-name|MallocInst
-argument_list|(
-specifier|const
-name|MallocInst
-operator|&
-name|MI
-argument_list|)
-block|;
 name|public
 operator|:
 name|explicit
@@ -382,9 +392,7 @@ operator|=
 literal|0
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -424,9 +432,7 @@ operator|*
 name|ArraySize
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -458,9 +464,7 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -494,9 +498,7 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -528,7 +530,7 @@ argument|Value *ArraySize
 argument_list|,
 argument|unsigned Align
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -556,7 +558,7 @@ argument|Value *ArraySize
 argument_list|,
 argument|unsigned Align
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -661,13 +663,6 @@ operator|:
 name|public
 name|AllocationInst
 block|{
-name|AllocaInst
-argument_list|(
-specifier|const
-name|AllocaInst
-operator|&
-argument_list|)
-block|;
 name|public
 operator|:
 name|explicit
@@ -685,9 +680,7 @@ operator|=
 literal|0
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -727,9 +720,7 @@ operator|*
 name|ArraySize
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -761,9 +752,7 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -797,9 +786,7 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -831,7 +818,7 @@ argument|Value *ArraySize
 argument_list|,
 argument|unsigned Align
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -861,7 +848,7 @@ argument|Value *ArraySize
 argument_list|,
 argument|unsigned Align
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -1114,50 +1101,6 @@ operator|:
 name|public
 name|UnaryInstruction
 block|{
-name|LoadInst
-argument_list|(
-specifier|const
-name|LoadInst
-operator|&
-name|LI
-argument_list|)
-operator|:
-name|UnaryInstruction
-argument_list|(
-argument|LI.getType()
-argument_list|,
-argument|Load
-argument_list|,
-argument|LI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{
-name|setVolatile
-argument_list|(
-name|LI
-operator|.
-name|isVolatile
-argument_list|()
-argument_list|)
-block|;
-name|setAlignment
-argument_list|(
-name|LI
-operator|.
-name|getAlignment
-argument_list|()
-argument_list|)
-block|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|AssertOK
-argument_list|()
-block|;
-endif|#
-directive|endif
-block|}
 name|void
 name|AssertOK
 argument_list|()
@@ -1171,9 +1114,7 @@ operator|*
 name|Ptr
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -1189,9 +1130,7 @@ operator|*
 name|Ptr
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -1204,7 +1143,7 @@ name|LoadInst
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|bool isVolatile = false
 argument_list|,
@@ -1216,7 +1155,7 @@ name|LoadInst
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|bool isVolatile
 argument_list|,
@@ -1230,7 +1169,7 @@ name|LoadInst
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|bool isVolatile
 argument_list|,
@@ -1241,7 +1180,7 @@ name|LoadInst
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|bool isVolatile
 argument_list|,
@@ -1415,6 +1354,28 @@ return|return
 literal|0U
 return|;
 block|}
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|getPointerOperand
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getAddressSpace
+argument_list|()
+return|;
+block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -1500,84 +1461,6 @@ name|unsigned
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
-name|StoreInst
-argument_list|(
-specifier|const
-name|StoreInst
-operator|&
-name|SI
-argument_list|)
-operator|:
-name|Instruction
-argument_list|(
-argument|SI.getType()
-argument_list|,
-argument|Store
-argument_list|,
-argument|&Op<
-literal|0
-argument|>()
-argument_list|,
-literal|2
-argument_list|)
-block|{
-name|Op
-operator|<
-literal|0
-operator|>
-operator|(
-operator|)
-operator|=
-name|SI
-operator|.
-name|Op
-operator|<
-literal|0
-operator|>
-operator|(
-operator|)
-block|;
-name|Op
-operator|<
-literal|1
-operator|>
-operator|(
-operator|)
-operator|=
-name|SI
-operator|.
-name|Op
-operator|<
-literal|1
-operator|>
-operator|(
-operator|)
-block|;
-name|setVolatile
-argument_list|(
-name|SI
-operator|.
-name|isVolatile
-argument_list|()
-argument_list|)
-block|;
-name|setAlignment
-argument_list|(
-name|SI
-operator|.
-name|getAlignment
-argument_list|()
-argument_list|)
-block|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|AssertOK
-argument_list|()
-block|;
-endif|#
-directive|endif
-block|}
 name|void
 name|AssertOK
 argument_list|()
@@ -1799,6 +1682,28 @@ return|return
 literal|1U
 return|;
 block|}
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|getPointerOperand
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getAddressSpace
+argument_list|()
+return|;
+block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -1871,6 +1776,7 @@ operator|<
 name|StoreInst
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|2
@@ -1936,7 +1842,7 @@ argument|Value* const *Idx
 argument_list|,
 argument|unsigned NumIdx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|)
 block|;
 name|void
@@ -1951,9 +1857,7 @@ operator|*
 name|Idx
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|)
@@ -1972,7 +1876,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 comment|// This argument ensures that we have an iterator we can
 comment|// do arithmetic on in constant time
@@ -2140,7 +2044,7 @@ argument|InputIterator IdxEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -2161,7 +2065,7 @@ argument|InputIterator IdxEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2179,9 +2083,7 @@ operator|*
 name|Idx
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -2205,9 +2107,7 @@ operator|*
 name|Idx
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -2234,7 +2134,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -2300,7 +2200,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2359,7 +2259,7 @@ argument|Value *Ptr
 argument_list|,
 argument|Value *Idx
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -2392,7 +2292,7 @@ argument|Value *Ptr
 argument_list|,
 argument|Value *Idx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2412,6 +2312,190 @@ name|NameStr
 argument_list|,
 name|InsertAtEnd
 argument_list|)
+return|;
+block|}
+comment|/// Create an "inbounds" getelementptr. See the documentation for the
+comment|/// "inbounds" flag in LangRef.html for details.
+name|template
+operator|<
+name|typename
+name|InputIterator
+operator|>
+specifier|static
+name|GetElementPtrInst
+operator|*
+name|CreateInBounds
+argument_list|(
+argument|Value *Ptr
+argument_list|,
+argument|InputIterator IdxBegin
+argument_list|,
+argument|InputIterator IdxEnd
+argument_list|,
+argument|const Twine&NameStr =
+literal|""
+argument_list|,
+argument|Instruction *InsertBefore =
+literal|0
+argument_list|)
+block|{
+name|GetElementPtrInst
+operator|*
+name|GEP
+operator|=
+name|Create
+argument_list|(
+name|Ptr
+argument_list|,
+name|IdxBegin
+argument_list|,
+name|IdxEnd
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertBefore
+argument_list|)
+block|;
+name|GEP
+operator|->
+name|setIsInBounds
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|GEP
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|InputIterator
+operator|>
+specifier|static
+name|GetElementPtrInst
+operator|*
+name|CreateInBounds
+argument_list|(
+argument|Value *Ptr
+argument_list|,
+argument|InputIterator IdxBegin
+argument_list|,
+argument|InputIterator IdxEnd
+argument_list|,
+argument|const Twine&NameStr
+argument_list|,
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|{
+name|GetElementPtrInst
+operator|*
+name|GEP
+operator|=
+name|Create
+argument_list|(
+name|Ptr
+argument_list|,
+name|IdxBegin
+argument_list|,
+name|IdxEnd
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertAtEnd
+argument_list|)
+block|;
+name|GEP
+operator|->
+name|setIsInBounds
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|GEP
+return|;
+block|}
+specifier|static
+name|GetElementPtrInst
+operator|*
+name|CreateInBounds
+argument_list|(
+argument|Value *Ptr
+argument_list|,
+argument|Value *Idx
+argument_list|,
+argument|const Twine&NameStr =
+literal|""
+argument_list|,
+argument|Instruction *InsertBefore =
+literal|0
+argument_list|)
+block|{
+name|GetElementPtrInst
+operator|*
+name|GEP
+operator|=
+name|Create
+argument_list|(
+name|Ptr
+argument_list|,
+name|Idx
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertBefore
+argument_list|)
+block|;
+name|GEP
+operator|->
+name|setIsInBounds
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|GEP
+return|;
+block|}
+specifier|static
+name|GetElementPtrInst
+operator|*
+name|CreateInBounds
+argument_list|(
+argument|Value *Ptr
+argument_list|,
+argument|Value *Idx
+argument_list|,
+argument|const Twine&NameStr
+argument_list|,
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|{
+name|GetElementPtrInst
+operator|*
+name|GEP
+operator|=
+name|Create
+argument_list|(
+name|Ptr
+argument_list|,
+name|Idx
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertAtEnd
+argument_list|)
+block|;
+name|GEP
+operator|->
+name|setIsInBounds
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|GEP
 return|;
 block|}
 name|virtual
@@ -2611,6 +2695,25 @@ literal|0U
 return|;
 comment|// get index for modifying correct operand
 block|}
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getAddressSpace
+argument_list|()
+return|;
+block|}
 comment|/// getPointerOperandType - Method to return the pointer operand as a
 comment|/// PointerType.
 specifier|const
@@ -2674,6 +2777,20 @@ comment|/// constant integers.  If so, the result pointer and the first operand 
 comment|/// a constant offset between them.
 name|bool
 name|hasAllConstantIndices
+argument_list|()
+specifier|const
+block|;
+comment|/// setIsInBounds - Set or clear the inbounds flag on this GEP instruction.
+comment|/// See LangRef.html for the meaning of inbounds on a getelementptr.
+name|void
+name|setIsInBounds
+argument_list|(
+argument|bool b = true
+argument_list|)
+block|;
+comment|/// isInBounds - Determine whether the GEP has the inbounds flag.
+name|bool
+name|isInBounds
 argument_list|()
 specifier|const
 block|;
@@ -2751,6 +2868,7 @@ operator|<
 name|GetElementPtrInst
 operator|>
 operator|:
+name|public
 name|VariadicOperandTraits
 operator|<
 literal|1
@@ -2774,7 +2892,7 @@ argument|InputIterator IdxEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -2822,7 +2940,7 @@ argument|InputIterator IdxEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2877,6 +2995,9 @@ operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics.
 name|ICmpInst
 argument_list|(
+argument|Instruction *InsertBefore
+argument_list|,
+comment|///< Where to insert
 argument|Predicate pred
 argument_list|,
 comment|///< The predicate to use for the comparison
@@ -2886,13 +3007,9 @@ comment|///< The left-hand-side of the expression
 argument|Value *RHS
 argument_list|,
 comment|///< The right-hand-side of the expression
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
-argument_list|,
 comment|///< Name of the instruction
-argument|Instruction *InsertBefore =
-literal|0
-comment|///< Where to insert
 argument_list|)
 operator|:
 name|CmpInst
@@ -2983,9 +3100,12 @@ operator|&&
 literal|"Invalid operand types for ICmp instruction"
 argument_list|)
 block|;   }
-comment|/// @brief Constructor with insert-at-block-end semantics.
+comment|/// @brief Constructor with insert-at-end semantics.
 name|ICmpInst
 argument_list|(
+argument|BasicBlock&InsertAtEnd
+argument_list|,
+comment|///< Block to insert into.
 argument|Predicate pred
 argument_list|,
 comment|///< The predicate to use for the comparison
@@ -2995,11 +3115,9 @@ comment|///< The left-hand-side of the expression
 argument|Value *RHS
 argument_list|,
 comment|///< The right-hand-side of the expression
-argument|const std::string&NameStr
-argument_list|,
+argument|const Twine&NameStr =
+literal|""
 comment|///< Name of the instruction
-argument|BasicBlock *InsertAtEnd
-comment|///< Block to insert into.
 argument_list|)
 operator|:
 name|CmpInst
@@ -3016,7 +3134,110 @@ argument|RHS
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|InsertAtEnd
+argument|&InsertAtEnd
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|pred
+operator|>=
+name|CmpInst
+operator|::
+name|FIRST_ICMP_PREDICATE
+operator|&&
+name|pred
+operator|<=
+name|CmpInst
+operator|::
+name|LAST_ICMP_PREDICATE
+operator|&&
+literal|"Invalid ICmp predicate value"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|==
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|&&
+literal|"Both operands to ICmp instruction are not of the same type!"
+argument_list|)
+block|;
+comment|// Check that the operands are the right type
+name|assert
+argument_list|(
+operator|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isIntOrIntVector
+argument_list|()
+operator|||
+name|isa
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|)
+operator|&&
+literal|"Invalid operand types for ICmp instruction"
+argument_list|)
+block|;   }
+comment|/// @brief Constructor with no-insertion semantics
+name|ICmpInst
+argument_list|(
+argument|Predicate pred
+argument_list|,
+comment|///< The predicate to use for the comparison
+argument|Value *LHS
+argument_list|,
+comment|///< The left-hand-side of the expression
+argument|Value *RHS
+argument_list|,
+comment|///< The right-hand-side of the expression
+argument|const Twine&NameStr =
+literal|""
+comment|///< Name of the instruction
+argument_list|)
+operator|:
+name|CmpInst
+argument_list|(
+argument|makeCmpResultType(LHS->getType())
+argument_list|,
+argument|Instruction::ICmp
+argument_list|,
+argument|pred
+argument_list|,
+argument|LHS
+argument_list|,
+argument|RHS
+argument_list|,
+argument|NameStr
 argument_list|)
 block|{
 name|assert
@@ -3429,6 +3650,9 @@ operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics.
 name|FCmpInst
 argument_list|(
+argument|Instruction *InsertBefore
+argument_list|,
+comment|///< Where to insert
 argument|Predicate pred
 argument_list|,
 comment|///< The predicate to use for the comparison
@@ -3438,13 +3662,9 @@ comment|///< The left-hand-side of the expression
 argument|Value *RHS
 argument_list|,
 comment|///< The right-hand-side of the expression
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
-argument_list|,
 comment|///< Name of the instruction
-argument|Instruction *InsertBefore =
-literal|0
-comment|///< Where to insert
 argument_list|)
 operator|:
 name|CmpInst
@@ -3513,9 +3733,12 @@ operator|&&
 literal|"Invalid operand types for FCmp instruction"
 argument_list|)
 block|;   }
-comment|/// @brief Constructor with insert-at-block-end semantics.
+comment|/// @brief Constructor with insert-at-end semantics.
 name|FCmpInst
 argument_list|(
+argument|BasicBlock&InsertAtEnd
+argument_list|,
+comment|///< Block to insert into.
 argument|Predicate pred
 argument_list|,
 comment|///< The predicate to use for the comparison
@@ -3525,11 +3748,9 @@ comment|///< The left-hand-side of the expression
 argument|Value *RHS
 argument_list|,
 comment|///< The right-hand-side of the expression
-argument|const std::string&NameStr
-argument_list|,
+argument|const Twine&NameStr =
+literal|""
 comment|///< Name of the instruction
-argument|BasicBlock *InsertAtEnd
-comment|///< Block to insert into.
 argument_list|)
 operator|:
 name|CmpInst
@@ -3546,7 +3767,88 @@ argument|RHS
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|InsertAtEnd
+argument|&InsertAtEnd
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|pred
+operator|<=
+name|FCmpInst
+operator|::
+name|LAST_FCMP_PREDICATE
+operator|&&
+literal|"Invalid FCmp predicate value"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|==
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|&&
+literal|"Both operands to FCmp instruction are not of the same type!"
+argument_list|)
+block|;
+comment|// Check that the operands are the right type
+name|assert
+argument_list|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isFPOrFPVector
+argument_list|()
+operator|&&
+literal|"Invalid operand types for FCmp instruction"
+argument_list|)
+block|;   }
+comment|/// @brief Constructor with no-insertion semantics
+name|FCmpInst
+argument_list|(
+argument|Predicate pred
+argument_list|,
+comment|///< The predicate to use for the comparison
+argument|Value *LHS
+argument_list|,
+comment|///< The left-hand-side of the expression
+argument|Value *RHS
+argument_list|,
+comment|///< The right-hand-side of the expression
+argument|const Twine&NameStr =
+literal|""
+comment|///< Name of the instruction
+argument_list|)
+operator|:
+name|CmpInst
+argument_list|(
+argument|makeCmpResultType(LHS->getType())
+argument_list|,
+argument|Instruction::FCmp
+argument_list|,
+argument|pred
+argument_list|,
+argument|LHS
+argument_list|,
+argument|RHS
+argument_list|,
+argument|NameStr
 argument_list|)
 block|{
 name|assert
@@ -3766,490 +4068,6 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|//                               VICmpInst Class
-comment|//===----------------------------------------------------------------------===//
-comment|/// This instruction compares its operands according to the predicate given
-comment|/// to the constructor. It only operates on vectors of integers.
-comment|/// The operands must be identical types.
-comment|/// @brief Represents a vector integer comparison operator.
-name|class
-name|VICmpInst
-operator|:
-name|public
-name|CmpInst
-block|{
-name|public
-operator|:
-comment|/// @brief Constructor with insert-before-instruction semantics.
-name|VICmpInst
-argument_list|(
-argument|Predicate pred
-argument_list|,
-comment|///< The predicate to use for the comparison
-argument|Value *LHS
-argument_list|,
-comment|///< The left-hand-side of the expression
-argument|Value *RHS
-argument_list|,
-comment|///< The right-hand-side of the expression
-argument|const std::string&NameStr =
-literal|""
-argument_list|,
-comment|///< Name of the instruction
-argument|Instruction *InsertBefore =
-literal|0
-comment|///< Where to insert
-argument_list|)
-operator|:
-name|CmpInst
-argument_list|(
-argument|LHS->getType()
-argument_list|,
-argument|Instruction::VICmp
-argument_list|,
-argument|pred
-argument_list|,
-argument|LHS
-argument_list|,
-argument|RHS
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertBefore
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|pred
-operator|>=
-name|CmpInst
-operator|::
-name|FIRST_ICMP_PREDICATE
-operator|&&
-name|pred
-operator|<=
-name|CmpInst
-operator|::
-name|LAST_ICMP_PREDICATE
-operator|&&
-literal|"Invalid VICmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to VICmp instruction are not of the same type!"
-argument_list|)
-block|;   }
-comment|/// @brief Constructor with insert-at-block-end semantics.
-name|VICmpInst
-argument_list|(
-argument|Predicate pred
-argument_list|,
-comment|///< The predicate to use for the comparison
-argument|Value *LHS
-argument_list|,
-comment|///< The left-hand-side of the expression
-argument|Value *RHS
-argument_list|,
-comment|///< The right-hand-side of the expression
-argument|const std::string&NameStr
-argument_list|,
-comment|///< Name of the instruction
-argument|BasicBlock *InsertAtEnd
-comment|///< Block to insert into.
-argument_list|)
-operator|:
-name|CmpInst
-argument_list|(
-argument|LHS->getType()
-argument_list|,
-argument|Instruction::VICmp
-argument_list|,
-argument|pred
-argument_list|,
-argument|LHS
-argument_list|,
-argument|RHS
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertAtEnd
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|pred
-operator|>=
-name|CmpInst
-operator|::
-name|FIRST_ICMP_PREDICATE
-operator|&&
-name|pred
-operator|<=
-name|CmpInst
-operator|::
-name|LAST_ICMP_PREDICATE
-operator|&&
-literal|"Invalid VICmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to VICmp instruction are not of the same type!"
-argument_list|)
-block|;   }
-comment|/// @brief Return the predicate for this instruction.
-name|Predicate
-name|getPredicate
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Predicate
-argument_list|(
-name|SubclassData
-argument_list|)
-return|;
-block|}
-name|virtual
-name|VICmpInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const VICmpInst *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
-block|{
-return|return
-name|I
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|Instruction
-operator|::
-name|VICmp
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
-block|{
-return|return
-name|isa
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-operator|&&
-name|classof
-argument_list|(
-name|cast
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
-comment|//===----------------------------------------------------------------------===//
-comment|//                               VFCmpInst Class
-comment|//===----------------------------------------------------------------------===//
-comment|/// This instruction compares its operands according to the predicate given
-comment|/// to the constructor. It only operates on vectors of floating point values.
-comment|/// The operands must be identical types.
-comment|/// @brief Represents a vector floating point comparison operator.
-name|class
-name|VFCmpInst
-operator|:
-name|public
-name|CmpInst
-block|{
-name|public
-operator|:
-comment|/// @brief Constructor with insert-before-instruction semantics.
-name|VFCmpInst
-argument_list|(
-argument|Predicate pred
-argument_list|,
-comment|///< The predicate to use for the comparison
-argument|Value *LHS
-argument_list|,
-comment|///< The left-hand-side of the expression
-argument|Value *RHS
-argument_list|,
-comment|///< The right-hand-side of the expression
-argument|const std::string&NameStr =
-literal|""
-argument_list|,
-comment|///< Name of the instruction
-argument|Instruction *InsertBefore =
-literal|0
-comment|///< Where to insert
-argument_list|)
-operator|:
-name|CmpInst
-argument_list|(
-argument|VectorType::getInteger(cast<VectorType>(LHS->getType()))
-argument_list|,
-argument|Instruction::VFCmp
-argument_list|,
-argument|pred
-argument_list|,
-argument|LHS
-argument_list|,
-argument|RHS
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertBefore
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|pred
-operator|<=
-name|CmpInst
-operator|::
-name|LAST_FCMP_PREDICATE
-operator|&&
-literal|"Invalid VFCmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to VFCmp instruction are not of the same type!"
-argument_list|)
-block|;   }
-comment|/// @brief Constructor with insert-at-block-end semantics.
-name|VFCmpInst
-argument_list|(
-argument|Predicate pred
-argument_list|,
-comment|///< The predicate to use for the comparison
-argument|Value *LHS
-argument_list|,
-comment|///< The left-hand-side of the expression
-argument|Value *RHS
-argument_list|,
-comment|///< The right-hand-side of the expression
-argument|const std::string&NameStr
-argument_list|,
-comment|///< Name of the instruction
-argument|BasicBlock *InsertAtEnd
-comment|///< Block to insert into.
-argument_list|)
-operator|:
-name|CmpInst
-argument_list|(
-argument|VectorType::getInteger(cast<VectorType>(LHS->getType()))
-argument_list|,
-argument|Instruction::VFCmp
-argument_list|,
-argument|pred
-argument_list|,
-argument|LHS
-argument_list|,
-argument|RHS
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertAtEnd
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|pred
-operator|<=
-name|CmpInst
-operator|::
-name|LAST_FCMP_PREDICATE
-operator|&&
-literal|"Invalid VFCmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to VFCmp instruction are not of the same type!"
-argument_list|)
-block|;   }
-comment|/// @brief Return the predicate for this instruction.
-name|Predicate
-name|getPredicate
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Predicate
-argument_list|(
-name|SubclassData
-argument_list|)
-return|;
-block|}
-name|virtual
-name|VFCmpInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
-comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const VFCmpInst *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
-block|{
-return|return
-name|I
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|Instruction
-operator|::
-name|VFCmp
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
-block|{
-return|return
-name|isa
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-operator|&&
-name|classof
-argument_list|(
-name|cast
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
-comment|//===----------------------------------------------------------------------===//
 comment|//                                 CallInst Class
 comment|//===----------------------------------------------------------------------===//
 comment|/// CallInst - This class represents a function call, abstracting a target
@@ -4335,7 +4153,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 comment|// This argument ensures that we have an iterator we can
 comment|// do arithmetic on in constant time
@@ -4397,7 +4215,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -4422,7 +4240,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -4438,9 +4256,7 @@ operator|*
 name|Actual
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -4460,9 +4276,7 @@ operator|*
 name|Actual
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -4479,9 +4293,7 @@ operator|*
 name|F
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -4497,9 +4309,7 @@ operator|*
 name|F
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -4526,7 +4336,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -4570,7 +4380,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -4605,7 +4415,7 @@ argument|Value *F
 argument_list|,
 argument|Value *Actual
 argument_list|,
-argument|const std::string& NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -4638,7 +4448,7 @@ argument|Value *F
 argument_list|,
 argument|Value *Actual
 argument_list|,
-argument|const std::string& NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -4667,7 +4477,7 @@ name|Create
 argument_list|(
 argument|Value *F
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -4696,7 +4506,7 @@ name|Create
 argument_list|(
 argument|Value *F
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -4716,6 +4526,78 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
+comment|/// CreateMalloc - Generate the IR for a call to malloc:
+comment|/// 1. Compute the malloc call's argument as the specified type's size,
+comment|///    possibly multiplied by the array size if the array size is not
+comment|///    constant 1.
+comment|/// 2. Call malloc with that argument.
+comment|/// 3. Bitcast the result of the malloc call to the specified type.
+specifier|static
+name|Value
+operator|*
+name|CreateMalloc
+argument_list|(
+name|Instruction
+operator|*
+name|InsertBefore
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|IntPtrTy
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|AllocTy
+argument_list|,
+name|Value
+operator|*
+name|ArraySize
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|)
+block|;
+specifier|static
+name|Value
+operator|*
+name|CreateMalloc
+argument_list|(
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|IntPtrTy
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|AllocTy
+argument_list|,
+name|Value
+operator|*
+name|ArraySize
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|)
+block|;
 operator|~
 name|CallInst
 argument_list|()
@@ -4766,21 +4648,31 @@ argument_list|)
 block|;
 comment|/// getCallingConv/setCallingConv - Get or set the calling convention of this
 comment|/// function call.
-name|unsigned
+name|CallingConv
+operator|::
+name|ID
 name|getCallingConv
 argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
+name|CallingConv
+operator|::
+name|ID
+operator|>
+operator|(
 name|SubclassData
 operator|>>
 literal|1
+operator|)
 return|;
 block|}
 name|void
 name|setCallingConv
 argument_list|(
-argument|unsigned CC
+argument|CallingConv::ID CC
 argument_list|)
 block|{
 name|SubclassData
@@ -4792,7 +4684,13 @@ literal|1
 operator|)
 operator||
 operator|(
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
 name|CC
+operator|)
 operator|<<
 literal|1
 operator|)
@@ -5238,6 +5136,7 @@ operator|<
 name|CallInst
 operator|>
 operator|:
+name|public
 name|VariadicOperandTraits
 operator|<
 literal|1
@@ -5259,7 +5158,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -5309,7 +5208,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -5415,57 +5314,6 @@ name|S2
 block|;   }
 name|SelectInst
 argument_list|(
-specifier|const
-name|SelectInst
-operator|&
-name|SI
-argument_list|)
-operator|:
-name|Instruction
-argument_list|(
-argument|SI.getType()
-argument_list|,
-argument|SI.getOpcode()
-argument_list|,
-argument|&Op<
-literal|0
-argument|>()
-argument_list|,
-literal|3
-argument_list|)
-block|{
-name|init
-argument_list|(
-name|SI
-operator|.
-name|Op
-operator|<
-literal|0
-operator|>
-operator|(
-operator|)
-argument_list|,
-name|SI
-operator|.
-name|Op
-operator|<
-literal|1
-operator|>
-operator|(
-operator|)
-argument_list|,
-name|SI
-operator|.
-name|Op
-operator|<
-literal|2
-operator|>
-operator|(
-operator|)
-argument_list|)
-block|;   }
-name|SelectInst
-argument_list|(
 name|Value
 operator|*
 name|C
@@ -5479,9 +5327,7 @@ operator|*
 name|S2
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -5534,9 +5380,7 @@ operator|*
 name|S2
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -5587,7 +5431,7 @@ argument|Value *S1
 argument_list|,
 argument|Value *S2
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -5624,7 +5468,7 @@ argument|Value *S1
 argument_list|,
 argument|Value *S2
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -5648,6 +5492,7 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
+specifier|const
 name|Value
 operator|*
 name|getCondition
@@ -5663,6 +5508,7 @@ operator|(
 operator|)
 return|;
 block|}
+specifier|const
 name|Value
 operator|*
 name|getTrueValue
@@ -5678,11 +5524,54 @@ operator|(
 operator|)
 return|;
 block|}
+specifier|const
 name|Value
 operator|*
 name|getFalseValue
 argument_list|()
 specifier|const
+block|{
+return|return
+name|Op
+operator|<
+literal|2
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|Value
+operator|*
+name|getCondition
+argument_list|()
+block|{
+return|return
+name|Op
+operator|<
+literal|0
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|Value
+operator|*
+name|getTrueValue
+argument_list|()
+block|{
+return|return
+name|Op
+operator|<
+literal|1
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|Value
+operator|*
+name|getFalseValue
+argument_list|()
 block|{
 return|return
 name|Op
@@ -5817,6 +5706,7 @@ operator|<
 name|SelectInst
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|3
@@ -5841,25 +5731,6 @@ operator|:
 name|public
 name|UnaryInstruction
 block|{
-name|VAArgInst
-argument_list|(
-specifier|const
-name|VAArgInst
-operator|&
-name|VAA
-argument_list|)
-operator|:
-name|UnaryInstruction
-argument_list|(
-argument|VAA.getType()
-argument_list|,
-argument|VAArg
-argument_list|,
-argument|VAA.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{}
 name|public
 operator|:
 name|VAArgInst
@@ -5874,9 +5745,7 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -5917,9 +5786,7 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -6026,83 +5893,6 @@ name|Instruction
 block|{
 name|ExtractElementInst
 argument_list|(
-specifier|const
-name|ExtractElementInst
-operator|&
-name|EE
-argument_list|)
-operator|:
-name|Instruction
-argument_list|(
-argument|EE.getType()
-argument_list|,
-argument|ExtractElement
-argument_list|,
-argument|&Op<
-literal|0
-argument|>()
-argument_list|,
-literal|2
-argument_list|)
-block|{
-name|Op
-operator|<
-literal|0
-operator|>
-operator|(
-operator|)
-operator|=
-name|EE
-operator|.
-name|Op
-operator|<
-literal|0
-operator|>
-operator|(
-operator|)
-block|;
-name|Op
-operator|<
-literal|1
-operator|>
-operator|(
-operator|)
-operator|=
-name|EE
-operator|.
-name|Op
-operator|<
-literal|1
-operator|>
-operator|(
-operator|)
-block|;   }
-name|public
-operator|:
-comment|// allocate space for exactly two operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|2
-argument_list|)
-return|;
-comment|// FIXME: "unsigned Idx" forms of ctor?
-block|}
-name|ExtractElementInst
-argument_list|(
 name|Value
 operator|*
 name|Vec
@@ -6112,9 +5902,7 @@ operator|*
 name|Idx
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -6129,19 +5917,6 @@ argument_list|)
 block|;
 name|ExtractElementInst
 argument_list|(
-argument|Value *Vec
-argument_list|,
-argument|unsigned Idx
-argument_list|,
-argument|const std::string&NameStr =
-literal|""
-argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
-argument_list|)
-block|;
-name|ExtractElementInst
-argument_list|(
 name|Value
 operator|*
 name|Vec
@@ -6151,9 +5926,7 @@ operator|*
 name|Idx
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -6162,17 +5935,72 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
+name|public
+operator|:
+specifier|static
 name|ExtractElementInst
+operator|*
+name|Create
 argument_list|(
 argument|Value *Vec
 argument_list|,
-argument|unsigned Idx
+argument|Value *Idx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr =
+literal|""
+argument_list|,
+argument|Instruction *InsertBefore =
+literal|0
+argument_list|)
+block|{
+return|return
+name|new
+argument_list|(
+literal|2
+argument_list|)
+name|ExtractElementInst
+argument_list|(
+name|Vec
+argument_list|,
+name|Idx
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertBefore
+argument_list|)
+return|;
+block|}
+specifier|static
+name|ExtractElementInst
+operator|*
+name|Create
+argument_list|(
+argument|Value *Vec
+argument_list|,
+argument|Value *Idx
+argument_list|,
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
-block|;
+block|{
+return|return
+name|new
+argument_list|(
+literal|2
+argument_list|)
+name|ExtractElementInst
+argument_list|(
+name|Vec
+argument_list|,
+name|Idx
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertAtEnd
+argument_list|)
+return|;
+block|}
 comment|/// isValidOperands - Return true if an extractelement instruction can be
 comment|/// formed with the specified operands.
 specifier|static
@@ -6197,6 +6025,89 @@ name|clone
 argument_list|()
 specifier|const
 block|;
+name|Value
+operator|*
+name|getVectorOperand
+argument_list|()
+block|{
+return|return
+name|Op
+operator|<
+literal|0
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|Value
+operator|*
+name|getIndexOperand
+argument_list|()
+block|{
+return|return
+name|Op
+operator|<
+literal|1
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+specifier|const
+name|Value
+operator|*
+name|getVectorOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Op
+operator|<
+literal|0
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+specifier|const
+name|Value
+operator|*
+name|getIndexOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Op
+operator|<
+literal|1
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+specifier|const
+name|VectorType
+operator|*
+name|getVectorOperandType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|VectorType
+operator|*
+operator|>
+operator|(
+name|getVectorOperand
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -6275,6 +6186,7 @@ operator|<
 name|ExtractElementInst
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|2
@@ -6301,14 +6213,6 @@ name|Instruction
 block|{
 name|InsertElementInst
 argument_list|(
-specifier|const
-name|InsertElementInst
-operator|&
-name|IE
-argument_list|)
-block|;
-name|InsertElementInst
-argument_list|(
 name|Value
 operator|*
 name|Vec
@@ -6322,9 +6226,7 @@ operator|*
 name|Idx
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -6339,21 +6241,6 @@ argument_list|)
 block|;
 name|InsertElementInst
 argument_list|(
-argument|Value *Vec
-argument_list|,
-argument|Value *NewElt
-argument_list|,
-argument|unsigned Idx
-argument_list|,
-argument|const std::string&NameStr =
-literal|""
-argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
-argument_list|)
-block|;
-name|InsertElementInst
-argument_list|(
 name|Value
 operator|*
 name|Vec
@@ -6367,28 +6254,13 @@ operator|*
 name|Idx
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
 name|BasicBlock
 operator|*
 name|InsertAtEnd
-argument_list|)
-block|;
-name|InsertElementInst
-argument_list|(
-argument|Value *Vec
-argument_list|,
-argument|Value *NewElt
-argument_list|,
-argument|unsigned Idx
-argument_list|,
-argument|const std::string&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
 name|public
@@ -6398,69 +6270,13 @@ name|InsertElementInst
 operator|*
 name|Create
 argument_list|(
-argument|const InsertElementInst&IE
-argument_list|)
-block|{
-return|return
-name|new
-argument_list|(
-argument|IE.getNumOperands()
-argument_list|)
-name|InsertElementInst
-argument_list|(
-name|IE
-argument_list|)
-return|;
-block|}
-specifier|static
-name|InsertElementInst
-operator|*
-name|Create
-argument_list|(
 argument|Value *Vec
 argument_list|,
 argument|Value *NewElt
 argument_list|,
 argument|Value *Idx
 argument_list|,
-argument|const std::string&NameStr =
-literal|""
-argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
-argument_list|)
-block|{
-return|return
-name|new
-argument_list|(
-literal|3
-argument_list|)
-name|InsertElementInst
-argument_list|(
-name|Vec
-argument_list|,
-name|NewElt
-argument_list|,
-name|Idx
-argument_list|,
-name|NameStr
-argument_list|,
-name|InsertBefore
-argument_list|)
-return|;
-block|}
-specifier|static
-name|InsertElementInst
-operator|*
-name|Create
-argument_list|(
-argument|Value *Vec
-argument_list|,
-argument|Value *NewElt
-argument_list|,
-argument|unsigned Idx
-argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -6497,42 +6313,7 @@ argument|Value *NewElt
 argument_list|,
 argument|Value *Idx
 argument_list|,
-argument|const std::string&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
-argument_list|)
-block|{
-return|return
-name|new
-argument_list|(
-literal|3
-argument_list|)
-name|InsertElementInst
-argument_list|(
-name|Vec
-argument_list|,
-name|NewElt
-argument_list|,
-name|Idx
-argument_list|,
-name|NameStr
-argument_list|,
-name|InsertAtEnd
-argument_list|)
-return|;
-block|}
-specifier|static
-name|InsertElementInst
-operator|*
-name|Create
-argument_list|(
-argument|Value *Vec
-argument_list|,
-argument|Value *NewElt
-argument_list|,
-argument|unsigned Idx
-argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -6687,6 +6468,7 @@ operator|<
 name|InsertElementInst
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|3
@@ -6711,14 +6493,6 @@ operator|:
 name|public
 name|Instruction
 block|{
-name|ShuffleVectorInst
-argument_list|(
-specifier|const
-name|ShuffleVectorInst
-operator|&
-name|IE
-argument_list|)
-block|;
 name|public
 operator|:
 comment|// allocate space for exactly three operands
@@ -6757,9 +6531,7 @@ operator|*
 name|Mask
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -6787,9 +6559,7 @@ operator|*
 name|Mask
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -6939,6 +6709,7 @@ operator|<
 name|ShuffleVectorInst
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|3
@@ -6986,7 +6757,7 @@ argument|const unsigned *Idx
 argument_list|,
 argument|unsigned NumIdx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|)
 block|;
 name|void
@@ -6994,7 +6765,7 @@ name|init
 argument_list|(
 argument|unsigned Idx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|)
 block|;
 name|template
@@ -7009,7 +6780,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 comment|// This argument ensures that we have an iterator we can
 comment|// do arithmetic on in constant time
@@ -7176,7 +6947,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -7195,7 +6966,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -7239,7 +7010,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -7278,7 +7049,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -7311,7 +7082,7 @@ argument|Value *Agg
 argument_list|,
 argument|unsigned Idx
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -7355,7 +7126,7 @@ argument|Value *Agg
 argument_list|,
 argument|unsigned Idx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -7614,7 +7385,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -7656,7 +7427,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -7733,7 +7504,7 @@ argument|const unsigned *Idx
 argument_list|,
 argument|unsigned NumIdx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|)
 block|;
 name|void
@@ -7745,7 +7516,7 @@ argument|Value *Val
 argument_list|,
 argument|unsigned Idx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|)
 block|;
 name|template
@@ -7764,7 +7535,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 comment|// This argument ensures that we have an iterator we can
 comment|// do arithmetic on in constant time
@@ -7841,7 +7612,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -7862,7 +7633,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -7877,7 +7648,7 @@ argument|Value *Val
 argument_list|,
 argument|unsigned Idx
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -7892,7 +7663,7 @@ argument|Value *Val
 argument_list|,
 argument|unsigned Idx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -7938,7 +7709,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -7981,7 +7752,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -8018,7 +7789,7 @@ argument|Value *Val
 argument_list|,
 argument|unsigned Idx
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -8052,7 +7823,7 @@ argument|Value *Val
 argument_list|,
 argument|unsigned Idx
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -8287,6 +8058,7 @@ operator|<
 name|InsertValueInst
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|2
@@ -8310,7 +8082,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -8360,7 +8132,7 @@ argument|InputIterator IdxBegin
 argument_list|,
 argument|InputIterator IdxEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -8466,9 +8238,7 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -8514,9 +8284,7 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -8559,7 +8327,7 @@ name|Create
 argument_list|(
 argument|const Type *Ty
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -8585,7 +8353,7 @@ name|Create
 argument_list|(
 argument|const Type *Ty
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -8747,8 +8515,76 @@ operator|/
 literal|2
 return|;
 block|}
+comment|/// getIncomingBlock - Return incoming basic block #i.
+comment|///
+name|BasicBlock
+operator|*
+name|getIncomingBlock
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|BasicBlock
+operator|>
+operator|(
+name|getOperand
+argument_list|(
+name|i
+operator|*
+literal|2
+operator|+
+literal|1
+argument_list|)
+operator|)
+return|;
+block|}
 comment|/// getIncomingBlock - Return incoming basic block corresponding
-comment|/// to value use iterator
+comment|/// to an operand of the PHI.
+comment|///
+name|BasicBlock
+operator|*
+name|getIncomingBlock
+argument_list|(
+argument|const Use&U
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|this
+operator|==
+name|U
+operator|.
+name|getUser
+argument_list|()
+operator|&&
+literal|"Iterator doesn't point to PHI's Uses?"
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|BasicBlock
+operator|>
+operator|(
+operator|(
+operator|&
+name|U
+operator|+
+literal|1
+operator|)
+operator|->
+name|get
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// getIncomingBlock - Return incoming basic block corresponding
+comment|/// to value use iterator.
 comment|///
 name|template
 operator|<
@@ -8763,64 +8599,14 @@ argument|value_use_iterator<U> I
 argument_list|)
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|this
-operator|==
-operator|*
-name|I
-operator|&&
-literal|"Iterator doesn't point to PHI's Uses?"
-argument_list|)
-block|;
 return|return
-name|static_cast
-operator|<
-name|BasicBlock
-operator|*
-operator|>
-operator|(
-operator|(
-operator|&
+name|getIncomingBlock
+argument_list|(
 name|I
 operator|.
 name|getUse
 argument_list|()
-operator|+
-literal|1
-operator|)
-operator|->
-name|get
-argument_list|()
-operator|)
-return|;
-block|}
-comment|/// getIncomingBlock - Return incoming basic block number x
-comment|///
-name|BasicBlock
-operator|*
-name|getIncomingBlock
-argument_list|(
-argument|unsigned i
 argument_list|)
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|BasicBlock
-operator|*
-operator|>
-operator|(
-name|getOperand
-argument_list|(
-name|i
-operator|*
-literal|2
-operator|+
-literal|1
-argument_list|)
-operator|)
 return|;
 block|}
 name|void
@@ -9093,11 +8879,17 @@ block|}
 comment|/// hasConstantValue - If the specified PHI node always merges together the
 comment|/// same value, return the value, otherwise return null.
 comment|///
+comment|/// If the PHI has undef operands, but all the rest of the operands are
+comment|/// some unique value, return that value if it can be proved that the
+comment|/// value dominates the PHI. If DT is null, use a conservative check,
+comment|/// otherwise use DT to test for dominance.
+comment|///
 name|Value
 operator|*
 name|hasConstantValue
 argument_list|(
-argument|bool AllowNonDominatingInstruction = false
+argument|DominatorTree *DT =
+literal|0
 argument_list|)
 specifier|const
 block|;
@@ -9180,6 +8972,7 @@ operator|<
 name|PHINode
 operator|>
 operator|:
+name|public
 name|HungoffOperandTraits
 operator|<
 literal|2
@@ -9229,6 +9022,10 @@ comment|// if it was passed NULL.
 name|explicit
 name|ReturnInst
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|Value
 operator|*
 name|retVal
@@ -9244,6 +9041,10 @@ argument_list|)
 block|;
 name|ReturnInst
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|Value
 operator|*
 name|retVal
@@ -9256,6 +9057,10 @@ block|;
 name|explicit
 name|ReturnInst
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|BasicBlock
 operator|*
 name|InsertAtEnd
@@ -9268,6 +9073,8 @@ name|ReturnInst
 operator|*
 name|Create
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|Value *retVal =
 literal|0
 argument_list|,
@@ -9282,6 +9089,8 @@ argument|!!retVal
 argument_list|)
 name|ReturnInst
 argument_list|(
+name|C
+argument_list|,
 name|retVal
 argument_list|,
 name|InsertBefore
@@ -9293,6 +9102,8 @@ name|ReturnInst
 operator|*
 name|Create
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|Value *retVal
 argument_list|,
 argument|BasicBlock *InsertAtEnd
@@ -9305,6 +9116,8 @@ argument|!!retVal
 argument_list|)
 name|ReturnInst
 argument_list|(
+name|C
+argument_list|,
 name|retVal
 argument_list|,
 name|InsertAtEnd
@@ -9316,6 +9129,8 @@ name|ReturnInst
 operator|*
 name|Create
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|{
@@ -9326,6 +9141,8 @@ literal|0
 argument_list|)
 name|ReturnInst
 argument_list|(
+name|C
+argument_list|,
 name|InsertAtEnd
 argument_list|)
 return|;
@@ -9480,6 +9297,7 @@ operator|<
 name|ReturnInst
 operator|>
 operator|:
+name|public
 name|OptionalOperandTraits
 operator|<
 operator|>
@@ -10040,6 +9858,7 @@ operator|<
 name|BranchInst
 operator|>
 operator|:
+name|public
 name|VariadicOperandTraits
 operator|<
 literal|1
@@ -10707,6 +10526,7 @@ operator|<
 name|SwitchInst
 operator|>
 operator|:
+name|public
 name|HungoffOperandTraits
 operator|<
 literal|2
@@ -10774,7 +10594,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 comment|// This argument ensures that we have an iterator we can
 comment|// do arithmetic on in constant time
@@ -10848,7 +10668,7 @@ argument|InputIterator ArgEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -10880,7 +10700,7 @@ argument|InputIterator ArgEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -10907,7 +10727,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -10969,7 +10789,7 @@ argument|InputIterator ArgBegin
 argument_list|,
 argument|InputIterator ArgEnd
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -11024,24 +10844,40 @@ argument_list|)
 block|;
 comment|/// getCallingConv/setCallingConv - Get or set the calling convention of this
 comment|/// function call.
-name|unsigned
+name|CallingConv
+operator|::
+name|ID
 name|getCallingConv
 argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
+name|CallingConv
+operator|::
+name|ID
+operator|>
+operator|(
 name|SubclassData
+operator|)
 return|;
 block|}
 name|void
 name|setCallingConv
 argument_list|(
-argument|unsigned CC
+argument|CallingConv::ID CC
 argument_list|)
 block|{
 name|SubclassData
 operator|=
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
 name|CC
+operator|)
 block|;   }
 comment|/// getAttributes - Return the parameter attributes for this invoke.
 comment|///
@@ -11122,6 +10958,7 @@ block|{
 return|return
 name|paramHasAttr
 argument_list|(
+operator|~
 literal|0
 argument_list|,
 name|Attribute
@@ -11633,6 +11470,7 @@ operator|<
 name|InvokeInst
 operator|>
 operator|:
+name|public
 name|VariadicOperandTraits
 operator|<
 literal|3
@@ -11660,7 +11498,7 @@ argument|InputIterator ArgEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -11716,7 +11554,7 @@ argument|InputIterator ArgEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -11807,6 +11645,10 @@ block|}
 name|explicit
 name|UnwindInst
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|Instruction
 operator|*
 name|InsertBefore
@@ -11817,6 +11659,10 @@ block|;
 name|explicit
 name|UnwindInst
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|BasicBlock
 operator|*
 name|InsertAtEnd
@@ -11977,6 +11823,10 @@ block|}
 name|explicit
 name|UnreachableInst
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|Instruction
 operator|*
 name|InsertBefore
@@ -11987,6 +11837,10 @@ block|;
 name|explicit
 name|UnreachableInst
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 name|BasicBlock
 operator|*
 name|InsertAtEnd
@@ -12106,26 +11960,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-comment|/// Private copy constructor
-name|TruncInst
-argument_list|(
-specifier|const
-name|TruncInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|Trunc
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12143,9 +11977,7 @@ name|Ty
 argument_list|,
 comment|///< The (smaller) type to truncate to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -12175,9 +12007,7 @@ name|Ty
 argument_list|,
 comment|///< The (smaller) type to truncate to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -12190,7 +12020,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical TruncInst
 name|virtual
-name|CastInst
+name|TruncInst
 operator|*
 name|clone
 argument_list|()
@@ -12267,26 +12097,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-comment|/// @brief Private copy constructor
-name|ZExtInst
-argument_list|(
-specifier|const
-name|ZExtInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|ZExt
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12304,9 +12114,7 @@ name|Ty
 argument_list|,
 comment|///< The type to zero extend to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -12336,9 +12144,7 @@ name|Ty
 argument_list|,
 comment|///< The type to zero extend to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -12351,7 +12157,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical ZExtInst
 name|virtual
-name|CastInst
+name|ZExtInst
 operator|*
 name|clone
 argument_list|()
@@ -12428,26 +12234,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-comment|/// @brief Private copy constructor
-name|SExtInst
-argument_list|(
-specifier|const
-name|SExtInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|SExt
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12465,9 +12251,7 @@ name|Ty
 argument_list|,
 comment|///< The type to sign extend to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -12497,9 +12281,7 @@ name|Ty
 argument_list|,
 comment|///< The type to sign extend to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -12512,7 +12294,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical SExtInst
 name|virtual
-name|CastInst
+name|SExtInst
 operator|*
 name|clone
 argument_list|()
@@ -12589,25 +12371,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-name|FPTruncInst
-argument_list|(
-specifier|const
-name|FPTruncInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|FPTrunc
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12625,9 +12388,7 @@ name|Ty
 argument_list|,
 comment|///< The type to truncate to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -12657,9 +12418,7 @@ name|Ty
 argument_list|,
 comment|///< The type to truncate to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -12672,7 +12431,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical FPTruncInst
 name|virtual
-name|CastInst
+name|FPTruncInst
 operator|*
 name|clone
 argument_list|()
@@ -12749,25 +12508,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-name|FPExtInst
-argument_list|(
-specifier|const
-name|FPExtInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|FPExt
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12785,9 +12525,7 @@ name|Ty
 argument_list|,
 comment|///< The type to extend to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -12817,9 +12555,7 @@ name|Ty
 argument_list|,
 comment|///< The type to extend to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -12832,7 +12568,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical FPExtInst
 name|virtual
-name|CastInst
+name|FPExtInst
 operator|*
 name|clone
 argument_list|()
@@ -12909,25 +12645,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-name|UIToFPInst
-argument_list|(
-specifier|const
-name|UIToFPInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|UIToFP
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12945,9 +12662,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -12977,9 +12692,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -12992,7 +12705,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical UIToFPInst
 name|virtual
-name|CastInst
+name|UIToFPInst
 operator|*
 name|clone
 argument_list|()
@@ -13069,25 +12782,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-name|SIToFPInst
-argument_list|(
-specifier|const
-name|SIToFPInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|SIToFP
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -13105,9 +12799,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -13137,9 +12829,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -13152,7 +12842,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical SIToFPInst
 name|virtual
-name|CastInst
+name|SIToFPInst
 operator|*
 name|clone
 argument_list|()
@@ -13229,25 +12919,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-name|FPToUIInst
-argument_list|(
-specifier|const
-name|FPToUIInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|FPToUI
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -13265,9 +12936,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -13297,9 +12966,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -13312,7 +12979,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical FPToUIInst
 name|virtual
-name|CastInst
+name|FPToUIInst
 operator|*
 name|clone
 argument_list|()
@@ -13389,25 +13056,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-name|FPToSIInst
-argument_list|(
-specifier|const
-name|FPToSIInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|FPToSI
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -13425,9 +13073,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -13457,9 +13103,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -13472,7 +13116,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical FPToSIInst
 name|virtual
-name|CastInst
+name|FPToSIInst
 operator|*
 name|clone
 argument_list|()
@@ -13549,25 +13193,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-name|IntToPtrInst
-argument_list|(
-specifier|const
-name|IntToPtrInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|IntToPtr
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -13585,9 +13210,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -13617,9 +13240,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -13632,7 +13253,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical IntToPtrInst
 name|virtual
-name|CastInst
+name|IntToPtrInst
 operator|*
 name|clone
 argument_list|()
@@ -13709,25 +13330,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-name|PtrToIntInst
-argument_list|(
-specifier|const
-name|PtrToIntInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|PtrToInt
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -13745,9 +13347,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -13777,9 +13377,7 @@ name|Ty
 argument_list|,
 comment|///< The type to convert to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -13792,7 +13390,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical PtrToIntInst
 name|virtual
-name|CastInst
+name|PtrToIntInst
 operator|*
 name|clone
 argument_list|()
@@ -13869,25 +13467,6 @@ operator|:
 name|public
 name|CastInst
 block|{
-name|BitCastInst
-argument_list|(
-specifier|const
-name|BitCastInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|CastInst
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|BitCast
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -13905,9 +13484,7 @@ name|Ty
 argument_list|,
 comment|///< The type to casted to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 operator|=
@@ -13937,9 +13514,7 @@ name|Ty
 argument_list|,
 comment|///< The type to casted to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|NameStr
 argument_list|,
@@ -13952,7 +13527,7 @@ argument_list|)
 block|;
 comment|/// @brief Clone an identical BitCastInst
 name|virtual
-name|CastInst
+name|BitCastInst
 operator|*
 name|clone
 argument_list|()

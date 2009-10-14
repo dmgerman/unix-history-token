@@ -107,7 +107,7 @@ block|,
 comment|/// Y = RRC X, rotate right via carry
 name|RRC
 block|,
-comment|/// CALL/TAILCALL - These operations represent an abstract call
+comment|/// CALL - These operations represent an abstract call
 comment|/// instruction, which includes a bunch of information.
 name|CALL
 block|,
@@ -188,38 +188,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFORMAL_ARGUMENTS
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
-name|LowerCALL
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
-name|LowerRET
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
-name|LowerCCCArguments
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
 name|LowerShifts
 argument_list|(
 argument|SDValue Op
@@ -267,30 +235,32 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 block|;
-name|SDValue
-name|LowerCCCCallTo
+name|TargetLowering
+operator|::
+name|ConstraintType
+name|getConstraintType
 argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|unsigned CC
+argument|const std::string&Constraint
 argument_list|)
+specifier|const
 block|;
-name|SDNode
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|TargetRegisterClass
 operator|*
-name|LowerCallResult
+operator|>
+name|getRegForInlineAsmConstraint
 argument_list|(
-argument|SDValue Chain
+argument|const std::string&Constraint
 argument_list|,
-argument|SDValue InFlag
-argument_list|,
-argument|CallSDNode *TheCall
-argument_list|,
-argument|unsigned CallingConv
-argument_list|,
-argument|SelectionDAG&DAG
+argument|EVT VT
 argument_list|)
+specifier|const
 block|;
 name|MachineBasicBlock
 operator|*
@@ -299,11 +269,138 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
 name|private
 operator|:
+name|SDValue
+name|LowerCCCCallTo
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|SDValue
+name|LowerCCCArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|SDValue
+name|LowerCallResult
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue InFlag
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
 specifier|const
 name|MSP430Subtarget
 operator|&

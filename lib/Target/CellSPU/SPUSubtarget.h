@@ -82,13 +82,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Module
-decl_stmt|;
-name|class
 name|GlobalValue
-decl_stmt|;
-name|class
-name|TargetMachine
 decl_stmt|;
 name|namespace
 name|SPU
@@ -109,11 +103,6 @@ name|TargetSubtarget
 block|{
 name|protected
 operator|:
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
-block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame
 comment|/// on entry to the function and which must be maintained by every function.
 name|unsigned
@@ -136,19 +125,16 @@ block|;
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that
-comment|/// of the specified module.
+comment|/// of the specified triple.
 comment|///
 name|SPUSubtarget
 argument_list|(
 specifier|const
-name|TargetMachine
+name|std
+operator|::
+name|string
 operator|&
-name|TM
-argument_list|,
-specifier|const
-name|Module
-operator|&
-name|M
+name|TT
 argument_list|,
 specifier|const
 name|std

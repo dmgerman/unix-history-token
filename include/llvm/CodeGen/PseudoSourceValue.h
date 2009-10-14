@@ -85,30 +85,26 @@ range|:
 name|public
 name|Value
 block|{
+name|private
+operator|:
+comment|/// printCustom - Implement printing for PseudoSourceValue. This is called
+comment|/// from Value::print or Value's operator<<.
+comment|///
+name|virtual
+name|void
+name|printCustom
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|PseudoSourceValue
 argument_list|()
 block|;
-comment|/// dump - Support for debugging, callable in GDB: V->dump()
-comment|//
-name|virtual
-name|void
-name|dump
-argument_list|()
-specifier|const
-block|;
-comment|/// print - Implement operator<< on PseudoSourceValue.
-comment|///
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
-comment|/// isConstant - Test whether this PseudoSourceValue has a constant value.
+comment|/// isConstant - Test whether the memory pointed to by this
+comment|/// PseudoSourceValue has a constant value.
 comment|///
 name|virtual
 name|bool
@@ -161,8 +157,8 @@ argument_list|(
 argument|int FI
 argument_list|)
 block|;
-comment|/// A source value referencing the area below the stack frame of a function,
-comment|/// e.g., the argument space.
+comment|/// A pseudo source value referencing the area below the stack frame of
+comment|/// a function, e.g., the argument space.
 specifier|static
 specifier|const
 name|PseudoSourceValue
@@ -170,8 +166,8 @@ operator|*
 name|getStack
 argument_list|()
 block|;
-comment|/// A source value referencing the global offset table (or something the
-comment|/// like).
+comment|/// A pseudo source value referencing the global offset table
+comment|/// (or something the like).
 specifier|static
 specifier|const
 name|PseudoSourceValue
@@ -179,7 +175,9 @@ operator|*
 name|getGOT
 argument_list|()
 block|;
-comment|/// A SV referencing the constant pool
+comment|/// A pseudo source value referencing the constant pool. Since constant
+comment|/// pools are constant, this doesn't need to identify a specific constant
+comment|/// pool entry.
 specifier|static
 specifier|const
 name|PseudoSourceValue
@@ -187,7 +185,8 @@ operator|*
 name|getConstantPool
 argument_list|()
 block|;
-comment|/// A SV referencing the jump table
+comment|/// A pseudo source value referencing a jump table. Since jump tables are
+comment|/// constant, this doesn't need to identify a specific jump table.
 specifier|static
 specifier|const
 name|PseudoSourceValue

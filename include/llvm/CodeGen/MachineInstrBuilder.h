@@ -136,6 +136,14 @@ name|MI
 decl_stmt|;
 name|public
 label|:
+name|MachineInstrBuilder
+argument_list|()
+operator|:
+name|MI
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 name|explicit
 name|MachineInstrBuilder
 argument_list|(
@@ -557,11 +565,6 @@ name|char
 operator|*
 name|FnName
 argument_list|,
-name|int64_t
-name|Offset
-operator|=
-literal|0
-argument_list|,
 name|unsigned
 name|char
 name|TargetFlags
@@ -580,8 +583,6 @@ name|CreateES
 argument_list|(
 name|FnName
 argument_list|,
-name|Offset
-argument_list|,
 name|TargetFlags
 argument_list|)
 argument_list|)
@@ -596,9 +597,8 @@ name|MachineInstrBuilder
 modifier|&
 name|addMemOperand
 argument_list|(
-specifier|const
 name|MachineMemOperand
-operator|&
+operator|*
 name|MMO
 argument_list|)
 decl|const

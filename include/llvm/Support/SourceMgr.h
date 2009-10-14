@@ -258,6 +258,13 @@ name|string
 operator|>
 name|IncludeDirectories
 expr_stmt|;
+comment|/// LineNoCache - This is a cache for line number queries, its implementation
+comment|/// is really private to SourceMgr.cpp.
+name|mutable
+name|void
+modifier|*
+name|LineNoCache
+decl_stmt|;
 name|SourceMgr
 argument_list|(
 specifier|const
@@ -280,6 +287,11 @@ name|public
 label|:
 name|SourceMgr
 argument_list|()
+operator|:
+name|LineNoCache
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 operator|~
 name|SourceMgr
@@ -621,57 +633,6 @@ argument_list|(
 argument|LineStr
 argument_list|)
 block|{}
-name|SMDiagnostic
-argument_list|(
-argument|const SMDiagnostic&RHS
-argument_list|)
-block|{
-name|operator
-operator|=
-operator|(
-name|RHS
-operator|)
-block|;   }
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|SMDiagnostic
-operator|&
-name|E
-operator|)
-block|{
-name|Filename
-operator|=
-name|E
-operator|.
-name|Filename
-block|;
-name|LineNo
-operator|=
-name|E
-operator|.
-name|LineNo
-block|;
-name|ColumnNo
-operator|=
-name|E
-operator|.
-name|ColumnNo
-block|;
-name|Message
-operator|=
-name|E
-operator|.
-name|Message
-block|;
-name|LineContents
-operator|=
-name|E
-operator|.
-name|LineContents
-block|;   }
 name|void
 name|Print
 argument_list|(

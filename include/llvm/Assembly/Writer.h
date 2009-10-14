@@ -74,12 +74,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -276,31 +270,6 @@ comment|// whole instruction that generated it.  If you specify a Module for con
 comment|// then even constants get pretty-printed; for example, the type of a null
 comment|// pointer is printed symbolically.
 comment|//
-name|void
-name|WriteAsOperand
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|&
-argument_list|,
-specifier|const
-name|Value
-operator|*
-argument_list|,
-name|bool
-name|PrintTy
-operator|=
-name|true
-argument_list|,
-specifier|const
-name|Module
-operator|*
-name|Context
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
 name|void
 name|WriteAsOperand
 parameter_list|(

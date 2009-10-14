@@ -85,24 +85,25 @@ directive|include
 file|"llvm/Pass.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineFunction.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// FIXME: This pass should declare that the pass does not invalidate any LLVM
-comment|// passes.
-name|struct
+name|class
+name|MachineFunction
+decl_stmt|;
+comment|/// MachineFunctionPass - This class adapts the FunctionPass interface to
+comment|/// allow convenient creation of passes that operate on the MachineFunction
+comment|/// representation. Instead of overriding runOnFunction, subclasses
+comment|/// override runOnMachineFunction.
+name|class
 name|MachineFunctionPass
 range|:
 name|public
 name|FunctionPass
 block|{
+name|protected
+operator|:
 name|explicit
 name|MachineFunctionPass
 argument_list|(
@@ -127,8 +128,6 @@ argument_list|(
 argument|ID
 argument_list|)
 block|{}
-name|protected
-operator|:
 comment|/// runOnMachineFunction - This method must be overloaded to perform the
 comment|/// desired machine code transformation or analysis.
 comment|///
@@ -143,7 +142,21 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|public
+comment|/// getAnalysisUsage - Subclasses that override getAnalysisUsage
+comment|/// must call this.
+comment|///
+comment|/// For MachineFunctionPasses, calling AU.preservesCFG() indicates that
+comment|/// the pass does not modify the MachineBasicBlock CFG.
+comment|///
+name|virtual
+name|void
+name|getAnalysisUsage
+argument_list|(
+argument|AnalysisUsage&AU
+argument_list|)
+specifier|const
+block|;
+name|private
 operator|:
 name|bool
 name|runOnFunction

@@ -85,7 +85,7 @@ name|class
 name|ARMSubtarget
 decl_stmt|;
 name|class
-name|TargetInstrInfo
+name|ARMBaseInstrInfo
 decl_stmt|;
 name|class
 name|Type
@@ -101,7 +101,7 @@ operator|:
 name|Thumb2RegisterInfo
 argument_list|(
 specifier|const
-name|TargetInstrInfo
+name|ARMBaseInstrInfo
 operator|&
 name|tii
 argument_list|,
@@ -120,34 +120,18 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
+argument|DebugLoc dl
+argument_list|,
 argument|unsigned DestReg
+argument_list|,
+argument|unsigned SubIdx
 argument_list|,
 argument|int Val
 argument_list|,
-argument|const TargetInstrInfo *TII
+argument|ARMCC::CondCodes Pred = ARMCC::AL
 argument_list|,
-argument|DebugLoc dl
-argument_list|)
-specifier|const
-block|;
-comment|/// Code Generation virtual methods...
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getPhysicalRegisterRegClass
-argument_list|(
-argument|unsigned Reg
-argument_list|,
-argument|MVT VT = MVT::Other
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isReservedReg
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|unsigned Reg
+argument|unsigned PredReg =
+literal|0
 argument_list|)
 specifier|const
 block|;
@@ -155,51 +139,6 @@ name|bool
 name|requiresRegisterScavenging
 argument_list|(
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|hasReservedCallFrame
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|eliminateCallFramePseudoInstr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|)
-specifier|const
-block|;
-name|void
-name|eliminateFrameIndex
-argument_list|(
-argument|MachineBasicBlock::iterator II
-argument_list|,
-argument|int SPAdj
-argument_list|,
-argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|; }

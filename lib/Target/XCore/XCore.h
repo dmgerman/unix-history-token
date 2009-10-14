@@ -83,7 +83,7 @@ name|class
 name|XCoreTargetMachine
 decl_stmt|;
 name|class
-name|raw_ostream
+name|formatted_raw_ostream
 decl_stmt|;
 name|FunctionPass
 modifier|*
@@ -94,22 +94,10 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
-name|FunctionPass
-modifier|*
-name|createXCoreCodePrinterPass
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|XCoreTargetMachine
-modifier|&
-name|TM
-parameter_list|,
-name|bool
-name|Verbose
-parameter_list|)
-function_decl|;
+specifier|extern
+name|Target
+name|TheXCoreTarget
+decl_stmt|;
 block|}
 end_decl_stmt
 

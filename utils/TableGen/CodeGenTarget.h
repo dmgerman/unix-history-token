@@ -304,6 +304,14 @@ name|getInstructionSet
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// getAsmParser - Return the AssemblyParser definition for this target.
+comment|///
+name|Record
+operator|*
+name|getAsmParser
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getAsmWriter - Return the AssemblyWriter definition for this target.
 comment|///
 name|Record

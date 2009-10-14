@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -S -o - -fno-math-errno | grep llvm.sqrt
+comment|// RUN: %llvmgcc %s -S -o - -fno-math-errno | FileCheck %s
+end_comment
+
+begin_comment
+comment|// llvm.sqrt has undefined behavior on negative inputs, so it is
+end_comment
+
+begin_comment
+comment|// inappropriate to translate C/C++ sqrt to this.
 end_comment
 
 begin_include
@@ -17,7 +25,9 @@ name|float
 name|X
 parameter_list|)
 block|{
-comment|// Check that this compiles to llvm.sqrt when errno is ignored.
+comment|// CHECK: foo
+comment|// CHECK: sqrtf(float %1) nounwind readonly
+comment|// Check that this is marked readonly when errno is ignored.
 return|return
 name|sqrtf
 argument_list|(

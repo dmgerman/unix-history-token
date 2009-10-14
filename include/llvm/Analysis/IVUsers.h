@@ -100,9 +100,9 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-name|class
+struct_decl|struct
 name|IVUsersOfOneStride
-decl_stmt|;
+struct_decl|;
 comment|/// IVStrideUse - Keep track of one use of a strided induction variable, where
 comment|/// the stride is stored externally.  The Offset member keeps track of the
 comment|/// offset from the IV, User is the actual user of the operand, and
@@ -496,7 +496,7 @@ block|;
 name|void
 name|addUser
 argument_list|(
-argument|const SCEV* Offset
+argument|const SCEV *Offset
 argument_list|,
 argument|Instruction *User
 argument_list|,
@@ -655,40 +655,6 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|std::ostream&OS
-argument_list|,
-argument|const Module* =
-literal|0
-argument_list|)
-specifier|const
-block|;
-name|void
-name|print
-argument_list|(
-argument|std::ostream *OS
-argument_list|,
-argument|const Module* M =
-literal|0
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|OS
-condition|)
-name|print
-argument_list|(
-operator|*
-name|OS
-argument_list|,
-name|M
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// dump - This method is used for debugging.
 name|void
 name|dump

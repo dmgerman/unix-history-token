@@ -121,6 +121,9 @@ name|class
 name|APInt
 decl_stmt|;
 name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|DerivedType
 range|:
 name|public
@@ -135,11 +138,15 @@ operator|:
 name|explicit
 name|DerivedType
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|TypeID id
 argument_list|)
 operator|:
 name|Type
 argument_list|(
+argument|C
+argument_list|,
 argument|id
 argument_list|)
 block|{}
@@ -240,16 +247,24 @@ operator|:
 name|public
 name|DerivedType
 block|{
+name|friend
+name|class
+name|LLVMContextImpl
+block|;
 name|protected
 operator|:
 name|explicit
 name|IntegerType
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|unsigned NumBits
 argument_list|)
 operator|:
 name|DerivedType
 argument_list|(
+argument|C
+argument_list|,
 argument|IntegerTyID
 argument_list|)
 block|{
@@ -302,6 +317,8 @@ name|IntegerType
 operator|*
 name|get
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|unsigned NumBits
 argument_list|)
 block|;
@@ -693,11 +710,15 @@ specifier|inline
 name|explicit
 name|CompositeType
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|TypeID id
 argument_list|)
 operator|:
 name|DerivedType
 argument_list|(
+argument|C
+argument_list|,
 argument|id
 argument_list|)
 block|{ }
@@ -842,6 +863,8 @@ block|;
 comment|// Do not implement
 name|StructType
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|const std::vector<const Type*>&Types
 argument_list|,
 argument|bool isPacked
@@ -857,6 +880,8 @@ name|StructType
 operator|*
 name|get
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|const std::vector<const Type*>&Params
 argument_list|,
 argument|bool isPacked=false
@@ -869,12 +894,16 @@ name|StructType
 operator|*
 name|get
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|bool isPacked=false
 argument_list|)
 block|{
 return|return
 name|get
 argument_list|(
+name|Context
+argument_list|,
 name|std
 operator|::
 name|vector
@@ -899,6 +928,8 @@ name|StructType
 operator|*
 name|get
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|const Type *type
 argument_list|,
 argument|...
@@ -1155,6 +1186,11 @@ argument_list|)
 operator|:
 name|CompositeType
 argument_list|(
+name|ElType
+operator|->
+name|getContext
+argument_list|()
+argument_list|,
 name|TID
 argument_list|)
 block|,
@@ -1530,6 +1566,11 @@ name|IntegerType
 operator|::
 name|get
 argument_list|(
+name|VTy
+operator|->
+name|getContext
+argument_list|()
+argument_list|,
 name|EltBits
 argument_list|)
 block|;
@@ -1579,6 +1620,11 @@ name|IntegerType
 operator|::
 name|get
 argument_list|(
+name|VTy
+operator|->
+name|getContext
+argument_list|()
+argument_list|,
 name|EltBits
 operator|*
 literal|2
@@ -1643,6 +1689,11 @@ name|IntegerType
 operator|::
 name|get
 argument_list|(
+name|VTy
+operator|->
+name|getContext
+argument_list|()
+argument_list|,
 name|EltBits
 operator|/
 literal|2
@@ -1953,7 +2004,11 @@ operator|)
 block|;
 comment|// DO NOT IMPLEMENT
 name|OpaqueType
-argument_list|()
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|)
 block|;
 name|public
 operator|:
@@ -1963,12 +2018,16 @@ specifier|static
 name|OpaqueType
 operator|*
 name|get
-argument_list|()
+argument_list|(
+argument|LLVMContext&C
+argument_list|)
 block|{
 return|return
 name|new
 name|OpaqueType
-argument_list|()
+argument_list|(
+name|C
+argument_list|)
 return|;
 comment|// All opaque types are distinct
 block|}

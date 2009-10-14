@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Constants.h"
 end_include
 
@@ -98,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/FindUsedTypes.h"
 end_include
 
@@ -110,13 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/GetElementPtrTypeIterator.h"
+file|"llvm/Support/FormattedStream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/Support/GetElementPtrTypeIterator.h"
 end_include
 
 begin_include
@@ -134,34 +146,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachineRegistry.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Mangler.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ios>
-end_include
-
 begin_decl_stmt
-name|using
 name|namespace
 name|llvm
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|namespace
-end_macro
-
-begin_block
 block|{
+specifier|extern
+name|Target
+name|TheMSILTarget
+decl_stmt|;
 name|class
 name|MSILModule
 range|:
@@ -344,7 +339,7 @@ return|;
 block|}
 name|public
 operator|:
-name|raw_ostream
+name|formatted_raw_ostream
 operator|&
 name|Out
 block|;
@@ -407,9 +402,22 @@ specifier|static
 name|char
 name|ID
 block|;
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+block|,
+name|unsigned
+operator|>
+name|AnonValueNumbers
+block|;
+name|unsigned
+name|NextAnonValueNumber
+block|;
 name|MSILWriter
 argument_list|(
-name|raw_ostream
+name|formatted_raw_ostream
 operator|&
 name|o
 argument_list|)
@@ -422,7 +430,12 @@ argument_list|)
 block|,
 name|Out
 argument_list|(
-argument|o
+name|o
+argument_list|)
+block|,
+name|NextAnonValueNumber
+argument_list|(
+literal|0
 argument_list|)
 block|{
 name|UniqID
@@ -599,7 +612,7 @@ operator|::
 name|string
 name|getConvModopt
 argument_list|(
-argument|unsigned CallingConvID
+argument|CallingConv::ID CallingConvID
 argument_list|)
 block|;
 name|std
@@ -859,6 +872,9 @@ argument_list|,
 argument|const Value* V
 argument_list|,
 argument|const Type* Ty
+argument_list|,
+argument|const Type* SrcTy=
+literal|0
 argument_list|)
 block|;
 name|void
@@ -1126,11 +1142,11 @@ name|char
 operator|*
 name|getLibraryForSymbol
 argument_list|(
-argument|const char* Name
+argument|const StringRef&Name
 argument_list|,
 argument|bool isFunction
 argument_list|,
-argument|unsigned CallingConv
+argument|CallingConv::ID CallingConv
 argument_list|)
 block|;
 name|void
@@ -1139,7 +1155,7 @@ argument_list|()
 block|;   }
 decl_stmt|;
 block|}
-end_block
+end_decl_stmt
 
 begin_endif
 endif|#

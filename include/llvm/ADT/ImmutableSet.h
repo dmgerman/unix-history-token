@@ -200,15 +200,6 @@ name|getLeft
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-operator|!
-name|isMutable
-argument_list|()
-operator|&&
-literal|"Node is incorrectly marked mutable."
-argument_list|)
-block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -217,6 +208,9 @@ operator|*
 operator|>
 operator|(
 name|Left
+operator|&
+operator|~
+name|LeftFlags
 operator|)
 return|;
 block|}
@@ -739,7 +733,6 @@ begin_function
 name|bool
 name|contains
 parameter_list|(
-specifier|const
 name|key_type_ref
 name|K
 parameter_list|)
@@ -1067,7 +1060,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+name|uint32_t
 name|Digest
 decl_stmt|;
 end_decl_stmt
@@ -1095,6 +1088,14 @@ block|{
 name|Mutable
 init|=
 literal|0x1
+block|,
+name|NoCachedDigest
+init|=
+literal|0x2
+block|,
+name|LeftFlags
+init|=
+literal|0x3
 block|}
 enum|;
 end_enum
@@ -1132,7 +1133,11 @@ operator|(
 name|l
 operator|)
 operator||
+operator|(
 name|Mutable
+operator||
+name|NoCachedDigest
+operator|)
 argument_list|)
 operator|,
 name|Right
@@ -1175,35 +1180,25 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getSafeLeft - Returns the pointer to the left tree by always masking
+comment|/// hasCachedDigest - Returns true if the digest for this tree is cached.
 end_comment
 
 begin_comment
-comment|///  out the mutable bit.  This is used internally by ImutAVLFactory,
-end_comment
-
-begin_comment
-comment|///  as no trees returned to the client should have the mutable flag set.
+comment|///  This can only be true if the tree is immutable.
 end_comment
 
 begin_expr_stmt
-name|ImutAVLTree
-operator|*
-name|getSafeLeft
+name|bool
+name|hasCachedDigest
 argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
-operator|<
-name|ImutAVLTree
-operator|*
-operator|>
+operator|!
 operator|(
 name|Left
 operator|&
-operator|~
-name|Mutable
+name|NoCachedDigest
 operator|)
 return|;
 block|}
@@ -1254,11 +1249,7 @@ comment|/// MarkImmutable - Clears the mutable flag for a tree.  After this happ
 end_comment
 
 begin_comment
-comment|///   it is an error to call setLeft(), setRight(), and setHeight().  It
-end_comment
-
-begin_comment
-comment|///   is also then safe to call getLeft() instead of getSafeLeft().
+comment|///   it is an error to call setLeft(), setRight(), and setHeight().
 end_comment
 
 begin_function
@@ -1278,6 +1269,32 @@ name|Left
 operator|&=
 operator|~
 name|Mutable
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// MarkedCachedDigest - Clears the NoCachedDigest flag for a tree.
+end_comment
+
+begin_function
+name|void
+name|MarkedCachedDigest
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+operator|!
+name|hasCachedDigest
+argument_list|()
+operator|&&
+literal|"NoCachedDigest flag already removed."
+argument_list|)
+expr_stmt|;
+name|Left
+operator|&=
+operator|~
+name|NoCachedDigest
 expr_stmt|;
 block|}
 end_function
@@ -1317,7 +1334,7 @@ operator|(
 name|NewLeft
 operator|)
 operator||
-name|Mutable
+name|LeftFlags
 expr_stmt|;
 block|}
 end_function
@@ -1350,6 +1367,13 @@ expr_stmt|;
 name|Right
 operator|=
 name|NewRight
+expr_stmt|;
+comment|// Set the NoCachedDigest flag.
+name|Left
+operator|=
+name|Left
+operator||
+name|NoCachedDigest
 expr_stmt|;
 block|}
 end_function
@@ -1388,7 +1412,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|unsigned
+name|uint32_t
 name|ComputeDigest
 parameter_list|(
 name|ImutAVLTree
@@ -1403,7 +1427,7 @@ name|value_type_ref
 name|V
 parameter_list|)
 block|{
-name|unsigned
+name|uint32_t
 name|digest
 init|=
 literal|0
@@ -1419,7 +1443,6 @@ operator|->
 name|ComputeDigest
 argument_list|()
 expr_stmt|;
-block|{
 comment|// Compute digest of stored data.
 name|FoldingSetNodeID
 name|ID
@@ -1440,7 +1463,6 @@ operator|.
 name|ComputeHash
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|R
@@ -1460,23 +1482,26 @@ end_function
 
 begin_function
 specifier|inline
-name|unsigned
+name|uint32_t
 name|ComputeDigest
 parameter_list|()
 block|{
+comment|// Check the lowest bit to determine if digest has actually been
+comment|// pre-computed.
 if|if
 condition|(
-name|Digest
+name|hasCachedDigest
+argument_list|()
 condition|)
 return|return
 name|Digest
 return|;
-name|unsigned
+name|uint32_t
 name|X
 init|=
 name|ComputeDigest
 argument_list|(
-name|getSafeLeft
+name|getLeft
 argument_list|()
 argument_list|,
 name|getRight
@@ -1486,15 +1511,12 @@ name|getValue
 argument_list|()
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|isMutable
-argument_list|()
-condition|)
 name|Digest
 operator|=
 name|X
+expr_stmt|;
+name|MarkedCachedDigest
+argument_list|()
 expr_stmt|;
 return|return
 name|X
@@ -1835,7 +1857,7 @@ block|{
 return|return
 name|T
 operator|->
-name|getSafeLeft
+name|getLeft
 argument_list|()
 return|;
 block|}
@@ -2057,177 +2079,6 @@ modifier|*
 name|R
 parameter_list|)
 block|{
-comment|// Search the FoldingSet bucket for a Tree with the same digest.
-name|FoldingSetNodeID
-name|ID
-decl_stmt|;
-name|unsigned
-name|digest
-init|=
-name|TreeTy
-operator|::
-name|ComputeDigest
-argument_list|(
-name|L
-argument_list|,
-name|R
-argument_list|,
-name|V
-argument_list|)
-decl_stmt|;
-name|ID
-operator|.
-name|AddInteger
-argument_list|(
-name|digest
-argument_list|)
-expr_stmt|;
-name|unsigned
-name|hash
-init|=
-name|ID
-operator|.
-name|ComputeHash
-argument_list|()
-decl_stmt|;
-name|typename
-name|CacheTy
-operator|::
-name|bucket_iterator
-name|I
-operator|=
-name|Cache
-operator|.
-name|bucket_begin
-argument_list|(
-name|hash
-argument_list|)
-expr_stmt|;
-name|typename
-name|CacheTy
-operator|::
-name|bucket_iterator
-name|E
-operator|=
-name|Cache
-operator|.
-name|bucket_end
-argument_list|(
-name|hash
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-control|)
-block|{
-name|TreeTy
-modifier|*
-name|T
-init|=
-operator|&
-operator|*
-name|I
-decl_stmt|;
-if|if
-condition|(
-name|T
-operator|->
-name|ComputeDigest
-argument_list|()
-operator|!=
-name|digest
-condition|)
-continue|continue;
-comment|// We found a collision.  Perform a comparison of Contents('T')
-comment|// with Contents('L')+'V'+Contents('R').
-name|typename
-name|TreeTy
-operator|::
-name|iterator
-name|TI
-operator|=
-name|T
-operator|->
-name|begin
-argument_list|()
-operator|,
-name|TE
-operator|=
-name|T
-operator|->
-name|end
-argument_list|()
-expr_stmt|;
-comment|// First compare Contents('L') with the (initial) contents of T.
-if|if
-condition|(
-operator|!
-name|CompareTreeWithSection
-argument_list|(
-name|L
-argument_list|,
-name|TI
-argument_list|,
-name|TE
-argument_list|)
-condition|)
-continue|continue;
-comment|// Now compare the new data element.
-if|if
-condition|(
-name|TI
-operator|==
-name|TE
-operator|||
-operator|!
-name|TI
-operator|->
-name|ElementEqual
-argument_list|(
-name|V
-argument_list|)
-condition|)
-continue|continue;
-operator|++
-name|TI
-expr_stmt|;
-comment|// Now compare the remainder of 'T' with 'R'.
-if|if
-condition|(
-operator|!
-name|CompareTreeWithSection
-argument_list|(
-name|R
-argument_list|,
-name|TI
-argument_list|,
-name|TE
-argument_list|)
-condition|)
-continue|continue;
-if|if
-condition|(
-name|TI
-operator|!=
-name|TE
-condition|)
-comment|// Contents('R') did not match suffix of 'T'.
-continue|continue;
-comment|// Trees did match!  Return 'T'.
-return|return
-name|T
-return|;
-block|}
-comment|// No tree with the contents: Contents('L')+'V'+Contents('R').
-comment|// Create it.
-comment|// Allocate the new tree node and insert it into the cache.
 name|BumpPtrAllocator
 modifier|&
 name|A
@@ -2272,11 +2123,6 @@ name|R
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// We do not insert 'T' into the FoldingSet here.  This is because
-comment|// this tree is still mutable and things may get rebalanced.
-comment|// Because our digest is associative and based on the contents of
-comment|// the set, this should hopefully not cause any strange bugs.
-comment|// 'T' is inserted by 'MarkImmutable'.
 return|return
 name|T
 return|;
@@ -3166,28 +3012,209 @@ name|T
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Now that the node is immutable it can safely be inserted
-comment|// into the node cache.
-name|llvm
-operator|::
+block|}
+end_function
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_function
+name|TreeTy
+modifier|*
+name|GetCanonicalTree
+parameter_list|(
+name|TreeTy
+modifier|*
+name|TNew
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|TNew
+condition|)
+return|return
+name|NULL
+return|;
+comment|// Search the FoldingSet bucket for a Tree with the same digest.
 name|FoldingSetNodeID
 name|ID
-expr_stmt|;
+decl_stmt|;
+name|unsigned
+name|digest
+init|=
+name|TNew
+operator|->
+name|ComputeDigest
+argument_list|()
+decl_stmt|;
 name|ID
 operator|.
 name|AddInteger
 argument_list|(
+name|digest
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|hash
+init|=
+name|ID
+operator|.
+name|ComputeHash
+argument_list|()
+decl_stmt|;
+name|typename
+name|CacheTy
+operator|::
+name|bucket_iterator
+name|I
+operator|=
+name|Cache
+operator|.
+name|bucket_begin
+argument_list|(
+name|hash
+argument_list|)
+expr_stmt|;
+name|typename
+name|CacheTy
+operator|::
+name|bucket_iterator
+name|E
+operator|=
+name|Cache
+operator|.
+name|bucket_end
+argument_list|(
+name|hash
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+block|{
+name|TreeTy
+modifier|*
+name|T
+init|=
+operator|&
+operator|*
+name|I
+decl_stmt|;
+if|if
+condition|(
 name|T
 operator|->
 name|ComputeDigest
 argument_list|()
-argument_list|)
+operator|!=
+name|digest
+condition|)
+continue|continue;
+comment|// We found a collision.  Perform a comparison of Contents('T')
+comment|// with Contents('L')+'V'+Contents('R').
+name|typename
+name|TreeTy
+operator|::
+name|iterator
+name|TI
+operator|=
+name|T
+operator|->
+name|begin
+argument_list|()
+operator|,
+name|TE
+operator|=
+name|T
+operator|->
+name|end
+argument_list|()
 expr_stmt|;
+comment|// First compare Contents('L') with the (initial) contents of T.
+if|if
+condition|(
+operator|!
+name|CompareTreeWithSection
+argument_list|(
+name|TNew
+operator|->
+name|getLeft
+argument_list|()
+argument_list|,
+name|TI
+argument_list|,
+name|TE
+argument_list|)
+condition|)
+continue|continue;
+comment|// Now compare the new data element.
+if|if
+condition|(
+name|TI
+operator|==
+name|TE
+operator|||
+operator|!
+name|TI
+operator|->
+name|ElementEqual
+argument_list|(
+name|TNew
+operator|->
+name|getValue
+argument_list|()
+argument_list|)
+condition|)
+continue|continue;
+operator|++
+name|TI
+expr_stmt|;
+comment|// Now compare the remainder of 'T' with 'R'.
+if|if
+condition|(
+operator|!
+name|CompareTreeWithSection
+argument_list|(
+name|TNew
+operator|->
+name|getRight
+argument_list|()
+argument_list|,
+name|TI
+argument_list|,
+name|TE
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|TI
+operator|!=
+name|TE
+condition|)
+continue|continue;
+comment|// Contents('R') did not match suffix of 'T'.
+comment|// Trees did match!  Return 'T'.
+return|return
+name|T
+return|;
+block|}
+comment|// 'TNew' is the only tree of its kind.  Return it.
 name|Cache
 operator|.
 name|InsertNode
 argument_list|(
-name|T
+name|TNew
 argument_list|,
 operator|(
 name|void
@@ -3199,13 +3226,13 @@ name|Cache
 operator|.
 name|bucket_end
 argument_list|(
-name|ID
-operator|.
-name|ComputeHash
-argument_list|()
+name|hash
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+name|TNew
+return|;
 block|}
 end_function
 
@@ -3634,7 +3661,7 @@ name|L
 init|=
 name|Current
 operator|->
-name|getSafeLeft
+name|getLeft
 argument_list|()
 condition|)
 name|stack
@@ -4954,21 +4981,37 @@ operator|::
 name|Factory
 name|F
 block|;
+specifier|const
+name|bool
+name|Canonicalize
+block|;
 name|public
 operator|:
 name|Factory
-argument_list|()
+argument_list|(
+argument|bool canonicalize = true
+argument_list|)
+operator|:
+name|Canonicalize
+argument_list|(
+argument|canonicalize
+argument_list|)
 block|{}
 name|Factory
 argument_list|(
-name|BumpPtrAllocator
-operator|&
-name|Alloc
+argument|BumpPtrAllocator& Alloc
+argument_list|,
+argument|bool canonicalize = true
 argument_list|)
 operator|:
 name|F
 argument_list|(
-argument|Alloc
+name|Alloc
+argument_list|)
+block|,
+name|Canonicalize
+argument_list|(
+argument|canonicalize
 argument_list|)
 block|{}
 comment|/// GetEmptySet - Returns an immutable set that contains no elements.
@@ -5001,9 +5044,10 @@ argument_list|,
 argument|value_type_ref V
 argument_list|)
 block|{
-return|return
-name|ImmutableSet
-argument_list|(
+name|TreeTy
+operator|*
+name|NewT
+operator|=
 name|F
 operator|.
 name|Add
@@ -5014,6 +5058,20 @@ name|Root
 argument_list|,
 name|V
 argument_list|)
+block|;
+return|return
+name|ImmutableSet
+argument_list|(
+name|Canonicalize
+condition|?
+name|F
+operator|.
+name|GetCanonicalTree
+argument_list|(
+name|NewT
+argument_list|)
+else|:
+name|NewT
 argument_list|)
 return|;
 block|}
@@ -5058,9 +5116,10 @@ name|value_type_ref
 name|V
 parameter_list|)
 block|{
-return|return
-name|ImmutableSet
-argument_list|(
+name|TreeTy
+modifier|*
+name|NewT
+init|=
 name|F
 operator|.
 name|Remove
@@ -5071,6 +5130,20 @@ name|Root
 argument_list|,
 name|V
 argument_list|)
+decl_stmt|;
+return|return
+name|ImmutableSet
+argument_list|(
+name|Canonicalize
+condition|?
+name|F
+operator|.
+name|GetCanonicalTree
+argument_list|(
+name|NewT
+argument_list|)
+else|:
+name|NewT
 argument_list|)
 return|;
 block|}
@@ -5141,7 +5214,6 @@ begin_decl_stmt
 name|bool
 name|contains
 argument_list|(
-specifier|const
 name|value_type_ref
 name|V
 argument_list|)
@@ -5234,18 +5306,17 @@ return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
+begin_function
 name|TreeTy
-operator|*
+modifier|*
 name|getRoot
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
 name|Root
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/// isEmpty - Return true if the set contains no elements.
@@ -5368,9 +5439,6 @@ name|iterator
 name|itr
 expr_stmt|;
 name|iterator
-argument_list|()
-block|{}
-name|iterator
 argument_list|(
 name|TreeTy
 operator|*
@@ -5393,6 +5461,9 @@ operator|>
 expr_stmt|;
 name|public
 label|:
+name|iterator
+argument_list|()
+block|{}
 specifier|inline
 name|value_type_ref
 name|operator

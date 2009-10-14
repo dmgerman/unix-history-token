@@ -154,7 +154,7 @@ name|class
 name|MachineModuleInfo
 decl_stmt|;
 name|class
-name|TargetAsmInfo
+name|MCAsmInfo
 decl_stmt|;
 name|class
 name|Timer
@@ -426,7 +426,7 @@ comment|///
 name|UniqueVector
 operator|<
 specifier|const
-name|Section
+name|MCSection
 operator|*
 operator|>
 name|SectionMap
@@ -465,7 +465,7 @@ block|;
 comment|/// DbgScopeMap - Tracks the scopes in the current function.
 name|DenseMap
 operator|<
-name|GlobalVariable
+name|MDNode
 operator|*
 block|,
 name|DbgScope
@@ -473,97 +473,100 @@ operator|*
 operator|>
 name|DbgScopeMap
 block|;
-comment|/// DbgAbstractScopeMap - Tracks abstract instance scopes in the current
-comment|/// function.
-name|DenseMap
-operator|<
-name|GlobalVariable
-operator|*
-block|,
-name|DbgScope
-operator|*
-operator|>
-name|DbgAbstractScopeMap
-block|;
-comment|/// DbgConcreteScopeMap - Tracks concrete instance scopes in the current
-comment|/// function.
-name|DenseMap
-operator|<
-name|GlobalVariable
-operator|*
-block|,
+comment|/// ScopedGVs - Tracks global variables that are not at file scope.
+comment|/// For example void f() { static int b = 42; }
 name|SmallVector
 operator|<
-name|DbgScope
-operator|*
-block|,
-literal|8
-operator|>
-expr|>
-name|DbgConcreteScopeMap
-block|;
-comment|/// InlineInfo - Keep track of inlined functions and their location.  This
-comment|/// information is used to populate debug_inlined section.
-name|DenseMap
-operator|<
-name|GlobalVariable
-operator|*
-block|,
-name|SmallVector
-operator|<
-name|unsigned
+name|WeakVH
 block|,
 literal|4
 operator|>
-expr|>
-name|InlineInfo
+name|ScopedGVs
 block|;
-comment|/// InlinedVariableScopes - Scopes information for the inlined subroutine
-comment|/// variables.
+typedef|typedef
 name|DenseMap
 operator|<
 specifier|const
 name|MachineInstr
 operator|*
-block|,
+operator|,
+name|SmallVector
+operator|<
+name|DbgScope
+operator|*
+operator|,
+literal|2
+operator|>
+expr|>
+name|InsnToDbgScopeMapTy
+expr_stmt|;
+comment|/// DbgScopeBeginMap - Maps instruction with a list DbgScopes it starts.
+name|InsnToDbgScopeMapTy
+name|DbgScopeBeginMap
+decl_stmt|;
+comment|/// DbgScopeEndMap - Maps instruction with a list DbgScopes it ends.
+name|InsnToDbgScopeMapTy
+name|DbgScopeEndMap
+decl_stmt|;
+comment|/// DbgAbstractScopeMap - Tracks abstract instance scopes in the current
+comment|/// function.
+name|DenseMap
+operator|<
+name|MDNode
+operator|*
+operator|,
 name|DbgScope
 operator|*
 operator|>
-name|InlinedVariableScopes
-block|;
+name|DbgAbstractScopeMap
+expr_stmt|;
+comment|/// DbgConcreteScopeMap - Tracks concrete instance scopes in the current
+comment|/// function.
+name|DenseMap
+operator|<
+name|MDNode
+operator|*
+operator|,
+name|SmallVector
+operator|<
+name|DbgScope
+operator|*
+operator|,
+literal|8
+operator|>
+expr|>
+name|DbgConcreteScopeMap
+expr_stmt|;
+comment|/// InlineInfo - Keep track of inlined functions and their location.  This
+comment|/// information is used to populate debug_inlined section.
+name|DenseMap
+operator|<
+name|MDNode
+operator|*
+operator|,
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|4
+operator|>
+expr|>
+name|InlineInfo
+expr_stmt|;
 comment|/// AbstractInstanceRootMap - Map of abstract instance roots of inlined
 comment|/// functions. These are subroutine entries that contain a DW_AT_inline
 comment|/// attribute.
 name|DenseMap
 operator|<
 specifier|const
-name|GlobalVariable
+name|MDNode
 operator|*
-block|,
+operator|,
 name|DbgScope
 operator|*
 operator|>
 name|AbstractInstanceRootMap
-block|;
-comment|/// InlinedParamMap - A map keeping track of which parameters are assigned to
-comment|/// which abstract instance.
-name|DenseMap
-operator|<
-specifier|const
-name|GlobalVariable
-operator|*
-block|,
-name|SmallSet
-operator|<
-specifier|const
-name|GlobalVariable
-operator|*
-block|,
-literal|32
-operator|>
-expr|>
-name|InlinedParamMap
-block|;
+expr_stmt|;
 comment|/// AbstractInstanceRootList - List of abstract instance roots of inlined
 comment|/// functions. These are subroutine entries that contain a DW_AT_inline
 comment|/// attribute.
@@ -571,22 +574,22 @@ name|SmallVector
 operator|<
 name|DbgScope
 operator|*
-block|,
+operator|,
 literal|32
 operator|>
 name|AbstractInstanceRootList
-block|;
+expr_stmt|;
 comment|/// LexicalScopeStack - A stack of lexical scopes. The top one is the current
 comment|/// scope.
 name|SmallVector
 operator|<
 name|DbgScope
 operator|*
-block|,
+operator|,
 literal|16
 operator|>
 name|LexicalScopeStack
-block|;
+expr_stmt|;
 comment|/// CompileUnitOffsets - A vector of the offsets of the compile units. This is
 comment|/// used when calculating the "origin" of a concrete instance of an inlined
 comment|/// function.
@@ -594,21 +597,22 @@ name|DenseMap
 operator|<
 name|CompileUnit
 operator|*
-block|,
+operator|,
 name|unsigned
 operator|>
 name|CompileUnitOffsets
-block|;
+expr_stmt|;
 comment|/// DebugTimer - Timer for the Dwarf debug writer.
 name|Timer
-operator|*
+modifier|*
 name|DebugTimer
-block|;      struct
+decl_stmt|;
+struct|struct
 name|FunctionDebugFrameInfo
 block|{
 name|unsigned
 name|Number
-block|;
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -616,26 +620,26 @@ operator|<
 name|MachineMove
 operator|>
 name|Moves
-block|;
+expr_stmt|;
 name|FunctionDebugFrameInfo
 argument_list|(
 argument|unsigned Num
 argument_list|,
 argument|const std::vector<MachineMove>&M
 argument_list|)
-operator|:
+block|:
 name|Number
 argument_list|(
 name|Num
 argument_list|)
-block|,
+operator|,
 name|Moves
 argument_list|(
 argument|M
 argument_list|)
 block|{}
 block|}
-block|;
+struct|;
 name|std
 operator|::
 name|vector
@@ -643,7 +647,7 @@ operator|<
 name|FunctionDebugFrameInfo
 operator|>
 name|DebugFrames
-block|;
+expr_stmt|;
 comment|/// getSourceDirectoryAndFileIds - Return the directory and file ids that
 comment|/// maps to the source id. Source id starts at 1.
 name|std
@@ -651,7 +655,7 @@ operator|::
 name|pair
 operator|<
 name|unsigned
-block|,
+operator|,
 name|unsigned
 operator|>
 name|getSourceDirectoryAndFileIds
@@ -744,158 +748,225 @@ comment|/// AssignAbbrevNumber - Define a unique number for the abbreviation.
 comment|///
 name|void
 name|AssignAbbrevNumber
-argument_list|(
+parameter_list|(
 name|DIEAbbrev
-operator|&
+modifier|&
 name|Abbrev
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// CreateDIEEntry - Creates a new DIEEntry to be a proxy for a debug
 comment|/// information entry.
 name|DIEEntry
-operator|*
+modifier|*
 name|CreateDIEEntry
-argument_list|(
+parameter_list|(
 name|DIE
-operator|*
+modifier|*
 name|Entry
-operator|=
+init|=
 name|NULL
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// SetDIEEntry - Set a DIEEntry once the debug information entry is defined.
 comment|///
 name|void
 name|SetDIEEntry
-argument_list|(
+parameter_list|(
 name|DIEEntry
-operator|*
+modifier|*
 name|Value
-argument_list|,
+parameter_list|,
 name|DIE
-operator|*
+modifier|*
 name|Entry
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// AddUInt - Add an unsigned integer attribute data and value.
 comment|///
 name|void
 name|AddUInt
-argument_list|(
-argument|DIE *Die
-argument_list|,
-argument|unsigned Attribute
-argument_list|,
-argument|unsigned Form
-argument_list|,
-argument|uint64_t Integer
-argument_list|)
-block|;
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+name|uint64_t
+name|Integer
+parameter_list|)
+function_decl|;
 comment|/// AddSInt - Add an signed integer attribute data and value.
 comment|///
 name|void
 name|AddSInt
-argument_list|(
-argument|DIE *Die
-argument_list|,
-argument|unsigned Attribute
-argument_list|,
-argument|unsigned Form
-argument_list|,
-argument|int64_t Integer
-argument_list|)
-block|;
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+name|int64_t
+name|Integer
+parameter_list|)
+function_decl|;
 comment|/// AddString - Add a string attribute data and value.
 comment|///
 name|void
 name|AddString
 argument_list|(
-argument|DIE *Die
+name|DIE
+operator|*
+name|Die
 argument_list|,
-argument|unsigned Attribute
+name|unsigned
+name|Attribute
 argument_list|,
-argument|unsigned Form
+name|unsigned
+name|Form
 argument_list|,
-argument|const std::string&String
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|String
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// AddLabel - Add a Dwarf label attribute data and value.
 comment|///
 name|void
 name|AddLabel
-argument_list|(
-argument|DIE *Die
-argument_list|,
-argument|unsigned Attribute
-argument_list|,
-argument|unsigned Form
-argument_list|,
-argument|const DWLabel&Label
-argument_list|)
-block|;
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+specifier|const
+name|DWLabel
+modifier|&
+name|Label
+parameter_list|)
+function_decl|;
 comment|/// AddObjectLabel - Add an non-Dwarf label attribute data and value.
 comment|///
 name|void
 name|AddObjectLabel
 argument_list|(
-argument|DIE *Die
+name|DIE
+operator|*
+name|Die
 argument_list|,
-argument|unsigned Attribute
+name|unsigned
+name|Attribute
 argument_list|,
-argument|unsigned Form
+name|unsigned
+name|Form
 argument_list|,
-argument|const std::string&Label
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Label
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// AddSectionOffset - Add a section offset label attribute data and value.
 comment|///
 name|void
 name|AddSectionOffset
-argument_list|(
-argument|DIE *Die
-argument_list|,
-argument|unsigned Attribute
-argument_list|,
-argument|unsigned Form
-argument_list|,
-argument|const DWLabel&Label
-argument_list|,
-argument|const DWLabel&Section
-argument_list|,
-argument|bool isEH = false
-argument_list|,
-argument|bool useSet = true
-argument_list|)
-block|;
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+specifier|const
+name|DWLabel
+modifier|&
+name|Label
+parameter_list|,
+specifier|const
+name|DWLabel
+modifier|&
+name|Section
+parameter_list|,
+name|bool
+name|isEH
+init|=
+name|false
+parameter_list|,
+name|bool
+name|useSet
+init|=
+name|true
+parameter_list|)
+function_decl|;
 comment|/// AddDelta - Add a label delta attribute data and value.
 comment|///
 name|void
 name|AddDelta
-argument_list|(
-argument|DIE *Die
-argument_list|,
-argument|unsigned Attribute
-argument_list|,
-argument|unsigned Form
-argument_list|,
-argument|const DWLabel&Hi
-argument_list|,
-argument|const DWLabel&Lo
-argument_list|)
-block|;
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+specifier|const
+name|DWLabel
+modifier|&
+name|Hi
+parameter_list|,
+specifier|const
+name|DWLabel
+modifier|&
+name|Lo
+parameter_list|)
+function_decl|;
 comment|/// AddDIEEntry - Add a DIE attribute data and value.
 comment|///
 name|void
 name|AddDIEEntry
-argument_list|(
-argument|DIE *Die
-argument_list|,
-argument|unsigned Attribute
-argument_list|,
-argument|unsigned Form
-argument_list|,
-argument|DIE *Entry
-argument_list|)
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+name|DIE
+modifier|*
+name|Entry
+parameter_list|)
 block|{
 name|Die
 operator|->
@@ -910,409 +981,556 @@ argument_list|(
 name|Entry
 argument_list|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// AddBlock - Add block data.
 comment|///
 name|void
 name|AddBlock
-argument_list|(
-argument|DIE *Die
-argument_list|,
-argument|unsigned Attribute
-argument_list|,
-argument|unsigned Form
-argument_list|,
-argument|DIEBlock *Block
-argument_list|)
-block|;
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+name|DIEBlock
+modifier|*
+name|Block
+parameter_list|)
+function_decl|;
 comment|/// AddSourceLine - Add location information to specified debug information
 comment|/// entry.
 name|void
 name|AddSourceLine
-argument_list|(
+parameter_list|(
 name|DIE
-operator|*
+modifier|*
 name|Die
-argument_list|,
+parameter_list|,
 specifier|const
 name|DIVariable
-operator|*
+modifier|*
 name|V
-argument_list|)
-block|;
-comment|/// AddSourceLine - Add location information to specified debug information
-comment|/// entry.
+parameter_list|)
+function_decl|;
 name|void
 name|AddSourceLine
-argument_list|(
+parameter_list|(
 name|DIE
-operator|*
+modifier|*
 name|Die
-argument_list|,
+parameter_list|,
 specifier|const
 name|DIGlobal
-operator|*
+modifier|*
 name|G
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|AddSourceLine
-argument_list|(
+parameter_list|(
 name|DIE
-operator|*
+modifier|*
 name|Die
-argument_list|,
+parameter_list|,
+specifier|const
+name|DISubprogram
+modifier|*
+name|SP
+parameter_list|)
+function_decl|;
+name|void
+name|AddSourceLine
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
 specifier|const
 name|DIType
-operator|*
+modifier|*
 name|Ty
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// AddAddress - Add an address attribute to a die based on the location
 comment|/// provided.
 name|void
 name|AddAddress
-argument_list|(
-argument|DIE *Die
-argument_list|,
-argument|unsigned Attribute
-argument_list|,
-argument|const MachineLocation&Location
-argument_list|)
-block|;
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+specifier|const
+name|MachineLocation
+modifier|&
+name|Location
+parameter_list|)
+function_decl|;
+comment|/// AddComplexAddress - Start with the address based on the location provided,
+comment|/// and generate the DWARF information necessary to find the actual variable
+comment|/// (navigating the extra location information encoded in the type) based on
+comment|/// the starting location.  Add the DWARF information to the die.
+comment|///
+name|void
+name|AddComplexAddress
+parameter_list|(
+name|DbgVariable
+modifier|*
+modifier|&
+name|DV
+parameter_list|,
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+specifier|const
+name|MachineLocation
+modifier|&
+name|Location
+parameter_list|)
+function_decl|;
+comment|// FIXME: Should be reformulated in terms of AddComplexAddress.
+comment|/// AddBlockByrefAddress - Start with the address based on the location
+comment|/// provided, and generate the DWARF information necessary to find the
+comment|/// actual Block variable (navigating the Block struct) based on the
+comment|/// starting location.  Add the DWARF information to the die.  Obsolete,
+comment|/// please use AddComplexAddress instead.
+comment|///
+name|void
+name|AddBlockByrefAddress
+parameter_list|(
+name|DbgVariable
+modifier|*
+modifier|&
+name|DV
+parameter_list|,
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+specifier|const
+name|MachineLocation
+modifier|&
+name|Location
+parameter_list|)
+function_decl|;
 comment|/// AddType - Add a new type attribute to the specified entity.
 name|void
 name|AddType
-argument_list|(
-argument|CompileUnit *DW_Unit
-argument_list|,
-argument|DIE *Entity
-argument_list|,
-argument|DIType Ty
-argument_list|)
-block|;
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|DW_Unit
+parameter_list|,
+name|DIE
+modifier|*
+name|Entity
+parameter_list|,
+name|DIType
+name|Ty
+parameter_list|)
+function_decl|;
 comment|/// ConstructTypeDIE - Construct basic type die from DIBasicType.
 name|void
 name|ConstructTypeDIE
-argument_list|(
-argument|CompileUnit *DW_Unit
-argument_list|,
-argument|DIE&Buffer
-argument_list|,
-argument|DIBasicType BTy
-argument_list|)
-block|;
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|DW_Unit
+parameter_list|,
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DIBasicType
+name|BTy
+parameter_list|)
+function_decl|;
 comment|/// ConstructTypeDIE - Construct derived type die from DIDerivedType.
 name|void
 name|ConstructTypeDIE
-argument_list|(
-argument|CompileUnit *DW_Unit
-argument_list|,
-argument|DIE&Buffer
-argument_list|,
-argument|DIDerivedType DTy
-argument_list|)
-block|;
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|DW_Unit
+parameter_list|,
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DIDerivedType
+name|DTy
+parameter_list|)
+function_decl|;
 comment|/// ConstructTypeDIE - Construct type DIE from DICompositeType.
 name|void
 name|ConstructTypeDIE
-argument_list|(
-argument|CompileUnit *DW_Unit
-argument_list|,
-argument|DIE&Buffer
-argument_list|,
-argument|DICompositeType CTy
-argument_list|)
-block|;
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|DW_Unit
+parameter_list|,
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DICompositeType
+name|CTy
+parameter_list|)
+function_decl|;
 comment|/// ConstructSubrangeDIE - Construct subrange DIE from DISubrange.
 name|void
 name|ConstructSubrangeDIE
-argument_list|(
-argument|DIE&Buffer
-argument_list|,
-argument|DISubrange SR
-argument_list|,
-argument|DIE *IndexTy
-argument_list|)
-block|;
+parameter_list|(
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DISubrange
+name|SR
+parameter_list|,
+name|DIE
+modifier|*
+name|IndexTy
+parameter_list|)
+function_decl|;
 comment|/// ConstructArrayTypeDIE - Construct array type DIE from DICompositeType.
 name|void
 name|ConstructArrayTypeDIE
-argument_list|(
+parameter_list|(
 name|CompileUnit
-operator|*
+modifier|*
 name|DW_Unit
-argument_list|,
+parameter_list|,
 name|DIE
-operator|&
+modifier|&
 name|Buffer
-argument_list|,
+parameter_list|,
 name|DICompositeType
-operator|*
+modifier|*
 name|CTy
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// ConstructEnumTypeDIE - Construct enum type DIE from DIEnumerator.
 name|DIE
-operator|*
+modifier|*
 name|ConstructEnumTypeDIE
-argument_list|(
+parameter_list|(
 name|CompileUnit
-operator|*
+modifier|*
 name|DW_Unit
-argument_list|,
+parameter_list|,
 name|DIEnumerator
-operator|*
+modifier|*
 name|ETy
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// CreateGlobalVariableDIE - Create new DIE using GV.
 name|DIE
-operator|*
+modifier|*
 name|CreateGlobalVariableDIE
-argument_list|(
+parameter_list|(
 name|CompileUnit
-operator|*
+modifier|*
 name|DW_Unit
-argument_list|,
+parameter_list|,
 specifier|const
 name|DIGlobalVariable
-operator|&
+modifier|&
 name|GV
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// CreateMemberDIE - Create new member DIE.
 name|DIE
-operator|*
+modifier|*
 name|CreateMemberDIE
-argument_list|(
+parameter_list|(
 name|CompileUnit
-operator|*
+modifier|*
 name|DW_Unit
-argument_list|,
+parameter_list|,
 specifier|const
 name|DIDerivedType
-operator|&
+modifier|&
 name|DT
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// CreateSubprogramDIE - Create new DIE using SP.
 name|DIE
-operator|*
+modifier|*
 name|CreateSubprogramDIE
-argument_list|(
-argument|CompileUnit *DW_Unit
-argument_list|,
-argument|const DISubprogram&SP
-argument_list|,
-argument|bool IsConstructor = false
-argument_list|,
-argument|bool IsInlined = false
-argument_list|)
-block|;
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|DW_Unit
+parameter_list|,
+specifier|const
+name|DISubprogram
+modifier|&
+name|SP
+parameter_list|,
+name|bool
+name|IsConstructor
+init|=
+name|false
+parameter_list|,
+name|bool
+name|IsInlined
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// FindCompileUnit - Get the compile unit for the given descriptor.
 comment|///
 name|CompileUnit
-operator|&
+modifier|&
 name|FindCompileUnit
 argument_list|(
-argument|DICompileUnit Unit
+name|DICompileUnit
+name|Unit
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// CreateDbgScopeVariable - Create a new scope variable.
 comment|///
 name|DIE
-operator|*
+modifier|*
 name|CreateDbgScopeVariable
-argument_list|(
+parameter_list|(
 name|DbgVariable
-operator|*
+modifier|*
 name|DV
-argument_list|,
+parameter_list|,
 name|CompileUnit
-operator|*
+modifier|*
 name|Unit
-argument_list|)
-block|;
-comment|/// getOrCreateScope - Returns the scope associated with the given descriptor.
+parameter_list|)
+function_decl|;
+comment|/// getDbgScope - Returns the scope associated with the given descriptor.
 comment|///
 name|DbgScope
-operator|*
+modifier|*
 name|getOrCreateScope
-argument_list|(
-name|GlobalVariable
-operator|*
-name|V
-argument_list|)
-block|;
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|DbgScope
+modifier|*
+name|getDbgScope
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|,
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
 comment|/// ConstructDbgScope - Construct the components of a scope.
 comment|///
 name|void
 name|ConstructDbgScope
-argument_list|(
-argument|DbgScope *ParentScope
-argument_list|,
-argument|unsigned ParentStartID
-argument_list|,
-argument|unsigned ParentEndID
-argument_list|,
-argument|DIE *ParentDie
-argument_list|,
-argument|CompileUnit *Unit
-argument_list|)
-block|;
+parameter_list|(
+name|DbgScope
+modifier|*
+name|ParentScope
+parameter_list|,
+name|unsigned
+name|ParentStartID
+parameter_list|,
+name|unsigned
+name|ParentEndID
+parameter_list|,
+name|DIE
+modifier|*
+name|ParentDie
+parameter_list|,
+name|CompileUnit
+modifier|*
+name|Unit
+parameter_list|)
+function_decl|;
 comment|/// ConstructFunctionDbgScope - Construct the scope for the subprogram.
 comment|///
 name|void
 name|ConstructFunctionDbgScope
-argument_list|(
-argument|DbgScope *RootScope
-argument_list|,
-argument|bool AbstractScope = false
-argument_list|)
-block|;
+parameter_list|(
+name|DbgScope
+modifier|*
+name|RootScope
+parameter_list|,
+name|bool
+name|AbstractScope
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// ConstructDefaultDbgScope - Construct a default scope for the subprogram.
 comment|///
 name|void
 name|ConstructDefaultDbgScope
-argument_list|(
+parameter_list|(
 name|MachineFunction
-operator|*
+modifier|*
 name|MF
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// EmitInitial - Emit initial Dwarf declarations.  This is necessary for cc
 comment|/// tools to recognize the object file contains Dwarf information.
 name|void
 name|EmitInitial
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitDIE - Recusively Emits a debug information entry.
 comment|///
 name|void
 name|EmitDIE
-argument_list|(
+parameter_list|(
 name|DIE
-operator|*
+modifier|*
 name|Die
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// SizeAndOffsetDie - Compute the size and offset of a DIE.
 comment|///
 name|unsigned
 name|SizeAndOffsetDie
-argument_list|(
-argument|DIE *Die
-argument_list|,
-argument|unsigned Offset
-argument_list|,
-argument|bool Last
-argument_list|)
-block|;
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Offset
+parameter_list|,
+name|bool
+name|Last
+parameter_list|)
+function_decl|;
 comment|/// SizeAndOffsets - Compute the size and offset of all the DIEs.
 comment|///
 name|void
 name|SizeAndOffsets
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitDebugInfo / EmitDebugInfoPerCU - Emit the debug info section.
 comment|///
 name|void
 name|EmitDebugInfoPerCU
-argument_list|(
+parameter_list|(
 name|CompileUnit
-operator|*
+modifier|*
 name|Unit
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|EmitDebugInfo
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitAbbreviations - Emit the abbreviation section.
 comment|///
 name|void
 name|EmitAbbreviations
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// EmitEndOfLineMatrix - Emit the last address of the section and the end of
 comment|/// the line matrix.
 comment|///
 name|void
 name|EmitEndOfLineMatrix
-argument_list|(
-argument|unsigned SectionEnd
-argument_list|)
-block|;
+parameter_list|(
+name|unsigned
+name|SectionEnd
+parameter_list|)
+function_decl|;
 comment|/// EmitDebugLines - Emit source line information.
 comment|///
 name|void
 name|EmitDebugLines
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitCommonDebugFrame - Emit common frame info into a debug frame section.
 comment|///
 name|void
 name|EmitCommonDebugFrame
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitFunctionDebugFrame - Emit per function frame info into a debug frame
 comment|/// section.
 name|void
 name|EmitFunctionDebugFrame
-argument_list|(
+parameter_list|(
 specifier|const
 name|FunctionDebugFrameInfo
-operator|&
+modifier|&
 name|DebugFrameInfo
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|EmitDebugPubNamesPerCU
-argument_list|(
+parameter_list|(
 name|CompileUnit
-operator|*
+modifier|*
 name|Unit
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// EmitDebugPubNames - Emit visible names into a debug pubnames section.
 comment|///
 name|void
 name|EmitDebugPubNames
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitDebugStr - Emit visible names into a debug str section.
 comment|///
 name|void
 name|EmitDebugStr
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitDebugLoc - Emit visible names into a debug loc section.
 comment|///
 name|void
 name|EmitDebugLoc
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitDebugARanges - Emit visible names into a debug aranges section.
 comment|///
 name|void
 name|EmitDebugARanges
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitDebugRanges - Emit visible names into a debug ranges section.
 comment|///
 name|void
 name|EmitDebugRanges
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitDebugMacInfo - Emit visible names into a debug macinfo section.
 comment|///
 name|void
 name|EmitDebugMacInfo
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// EmitDebugInlineInfo - Emit inline info using following format.
 comment|/// Section Header:
 comment|/// 1. length of section
@@ -1333,56 +1551,68 @@ comment|/// the __debug_info section, and the low_pc is the starting address  fo
 comment|///  inlining instance.
 name|void
 name|EmitDebugInlineInfo
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// GetOrCreateSourceID - Look up the source id with the given directory and
 comment|/// source file names. If none currently exists, create a new id and insert it
 comment|/// in the SourceIds map. This can update DirectoryNames and SourceFileNames maps
 comment|/// as well.
 name|unsigned
 name|GetOrCreateSourceID
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+modifier|*
 name|DirName
-argument_list|,
+parameter_list|,
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+modifier|*
 name|FileName
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|ConstructCompileUnit
-argument_list|(
-name|GlobalVariable
-operator|*
-name|GV
-argument_list|)
-block|;
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 name|void
 name|ConstructGlobalVariableDIE
-argument_list|(
-name|GlobalVariable
-operator|*
-name|GV
-argument_list|)
-block|;
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 name|void
 name|ConstructSubprogram
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|// FIXME: This should go away in favor of complex addresses.
+comment|/// Find the type the programmer originally declared the variable to be
+comment|/// and return that type.  Obsolete, use GetComplexAddrType instead.
+comment|///
+name|DIType
+name|GetBlockByrefType
 argument_list|(
-name|GlobalVariable
-operator|*
-name|GV
+name|DIType
+name|Ty
+argument_list|,
+name|std
+operator|::
+name|string
+name|Name
 argument_list|)
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Main entry points.
 comment|//
@@ -1397,16 +1627,16 @@ operator|*
 name|A
 argument_list|,
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 operator|*
 name|T
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 operator|~
 name|DwarfDebug
 argument_list|()
-block|;
+expr_stmt|;
 comment|/// ShouldEmitDwarfDebug - Returns true if Dwarf debugging declarations should
 comment|/// be emitted.
 name|bool
@@ -1422,68 +1652,59 @@ comment|/// BeginModule - Emit all Dwarf sections that should come prior to the
 comment|/// content.
 name|void
 name|BeginModule
-argument_list|(
+parameter_list|(
 name|Module
-operator|*
+modifier|*
 name|M
-argument_list|,
+parameter_list|,
 name|MachineModuleInfo
-operator|*
+modifier|*
 name|MMI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// EndModule - Emit all Dwarf sections that should come after the content.
 comment|///
 name|void
 name|EndModule
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// BeginFunction - Gather pre-function debug information.  Assumes being
 comment|/// emitted immediately after the function entry point.
 name|void
 name|BeginFunction
-argument_list|(
+parameter_list|(
 name|MachineFunction
-operator|*
+modifier|*
 name|MF
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// EndFunction - Gather and emit post-function debug information.
 comment|///
 name|void
 name|EndFunction
-argument_list|(
+parameter_list|(
 name|MachineFunction
-operator|*
+modifier|*
 name|MF
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// RecordSourceLine - Records location information and associates it with a
 comment|/// label. Returns a unique label ID used to generate a label and provide
 comment|/// correspondence to the source line list.
 name|unsigned
 name|RecordSourceLine
-argument_list|(
-argument|Value *V
-argument_list|,
-argument|unsigned Line
-argument_list|,
-argument|unsigned Col
-argument_list|)
-block|;
-comment|/// RecordSourceLine - Records location information and associates it with a
-comment|/// label. Returns a unique label ID used to generate a label and provide
-comment|/// correspondence to the source line list.
+parameter_list|(
 name|unsigned
-name|RecordSourceLine
-argument_list|(
-argument|unsigned Line
-argument_list|,
-argument|unsigned Col
-argument_list|,
-argument|DICompileUnit CU
-argument_list|)
-block|;
+name|Line
+parameter_list|,
+name|unsigned
+name|Col
+parameter_list|,
+name|MDNode
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
 comment|/// getRecordSourceLineCount - Return the number of source lines in the debug
 comment|/// info.
 name|unsigned
@@ -1520,80 +1741,116 @@ name|string
 operator|&
 name|FileName
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// RecordRegionStart - Indicate the start of a region.
 name|unsigned
 name|RecordRegionStart
-argument_list|(
-name|GlobalVariable
-operator|*
-name|V
-argument_list|)
-block|;
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 comment|/// RecordRegionEnd - Indicate the end of a region.
 name|unsigned
 name|RecordRegionEnd
-argument_list|(
-name|GlobalVariable
-operator|*
-name|V
-argument_list|)
-block|;
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 comment|/// RecordVariable - Indicate the declaration of  a local variable.
 name|void
 name|RecordVariable
-argument_list|(
-argument|GlobalVariable *GV
-argument_list|,
-argument|unsigned FrameIndex
-argument_list|,
-argument|const MachineInstr *MI
-argument_list|)
-block|;
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|FrameIndex
+parameter_list|)
+function_decl|;
 comment|//// RecordInlinedFnStart - Indicate the start of inlined subroutine.
 name|unsigned
 name|RecordInlinedFnStart
-argument_list|(
-argument|DISubprogram&SP
-argument_list|,
-argument|DICompileUnit CU
-argument_list|,
-argument|unsigned Line
-argument_list|,
-argument|unsigned Col
-argument_list|)
-block|;
+parameter_list|(
+name|DISubprogram
+modifier|&
+name|SP
+parameter_list|,
+name|DICompileUnit
+name|CU
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|Col
+parameter_list|)
+function_decl|;
 comment|/// RecordInlinedFnEnd - Indicate the end of inlined subroutine.
 name|unsigned
 name|RecordInlinedFnEnd
-argument_list|(
+parameter_list|(
 name|DISubprogram
-operator|&
+modifier|&
 name|SP
-argument_list|)
-block|;
-comment|/// RecordVariableScope - Record scope for the variable declared by
-comment|/// DeclareMI. DeclareMI must describe TargetInstrInfo::DECLARE. Record scopes
-comment|/// for only inlined subroutine variables. Other variables's scopes are
-comment|/// determined during RecordVariable().
+parameter_list|)
+function_decl|;
+comment|/// ExtractScopeInformation - Scan machine instructions in this function
+comment|/// and collect DbgScopes. Return true, if atleast one scope was found.
+name|bool
+name|ExtractScopeInformation
+parameter_list|(
+name|MachineFunction
+modifier|*
+name|MF
+parameter_list|)
+function_decl|;
+comment|/// CollectVariableInfo - Populate DbgScope entries with variables' info.
 name|void
-name|RecordVariableScope
-argument_list|(
-name|DIVariable
-operator|&
-name|DV
-argument_list|,
+name|CollectVariableInfo
+parameter_list|()
+function_decl|;
+comment|/// SetDbgScopeBeginLabels - Update DbgScope begin labels for the scopes that
+comment|/// start with this machine instruction.
+name|void
+name|SetDbgScopeBeginLabels
+parameter_list|(
 specifier|const
 name|MachineInstr
-operator|*
-name|DeclareMI
-argument_list|)
-block|; }
-decl_stmt|;
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|Label
+parameter_list|)
+function_decl|;
+comment|/// SetDbgScopeEndLabels - Update DbgScope end labels for the scopes that
+comment|/// end with this machine instruction.
+name|void
+name|SetDbgScopeEndLabels
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|Label
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End of namespace llvm
 end_comment
 

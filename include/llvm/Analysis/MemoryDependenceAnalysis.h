@@ -297,7 +297,7 @@ operator|==
 name|Def
 return|;
 block|}
-comment|/// isNonLocal - Return true if this MemDepResult represents an query that
+comment|/// isNonLocal - Return true if this MemDepResult represents a query that
 comment|/// is transparent to the start of the block, but where a non-local hasn't
 comment|/// been done.
 name|bool

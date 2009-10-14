@@ -267,13 +267,33 @@ specifier|const
 block|;
 comment|/// Code Generation virtual methods...
 comment|///
+comment|/// getMatchingSuperRegClass - Return a subclass of the specified register
+comment|/// class A so that each register in it has a sub-register of the
+comment|/// specified sub-register index which is in the specified register class B.
+name|virtual
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getMatchingSuperRegClass
+argument_list|(
+argument|const TargetRegisterClass *A
+argument_list|,
+argument|const TargetRegisterClass *B
+argument_list|,
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
 comment|/// getPointerRegClass - Returns a TargetRegisterClass used for pointer
 comment|/// values.
 specifier|const
 name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
-argument_list|()
+argument_list|(
+argument|unsigned Kind =
+literal|0
+argument_list|)
 specifier|const
 block|;
 comment|/// getCrossCopyRegClass - Returns a legal register class to copy a register
@@ -347,6 +367,17 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|hasReservedSpillSlot
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|int&FrameIdx
+argument_list|)
+specifier|const
+block|;
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -358,21 +389,16 @@ argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
 block|;
-name|void
+name|unsigned
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|int SPAdj
 argument_list|,
+argument|int *Value = NULL
+argument_list|,
 argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|processFunctionBeforeFrameFinalized
-argument_list|(
-argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -382,6 +408,17 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|,
 argument|RegScavenger *RS = NULL
+argument_list|)
+specifier|const
+block|;
+name|void
+name|emitCalleeSavedFrameMoves
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|unsigned LabelId
+argument_list|,
+argument|unsigned FramePtr
 argument_list|)
 specifier|const
 block|;
@@ -398,17 +435,6 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|,
 argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitFrameMoves
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned FrameLabelId
-argument_list|,
-argument|unsigned ReadyLabelId
 argument_list|)
 specifier|const
 block|;
@@ -455,13 +481,13 @@ block|; }
 decl_stmt|;
 comment|// getX86SubSuperRegister - X86 utility function. It returns the sub or super
 comment|// register of a specific X86 register.
-comment|// e.g. getX86SubSuperRegister(X86::EAX, MVT::i16) return X86:AX
+comment|// e.g. getX86SubSuperRegister(X86::EAX, EVT::i16) return X86:AX
 name|unsigned
 name|getX86SubSuperRegister
 parameter_list|(
 name|unsigned
 parameter_list|,
-name|MVT
+name|EVT
 parameter_list|,
 name|bool
 name|High

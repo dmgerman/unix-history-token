@@ -69,6 +69,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|APInt
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -77,49 +80,9 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-comment|/// If object contains references to other objects, then relocations are
-comment|/// usually required for emission of such object (especially in PIC mode). One
-comment|/// usually distinguishes local and global relocations. Local relocations are
-comment|/// made wrt objects in the same module and these objects have local (internal
-comment|/// or private) linkage. Global relocations are made wrt externally visible
-comment|/// objects. In most cases local relocations can be resolved via so-called
-comment|/// 'pre-link' technique.
-name|namespace
-name|Reloc
-block|{
-specifier|const
-name|unsigned
-name|None
-init|=
-literal|0
+name|class
+name|LLVMContext
 decl_stmt|;
-specifier|const
-name|unsigned
-name|Local
-init|=
-literal|1
-operator|<<
-literal|0
-decl_stmt|;
-comment|///< Local relocations are required
-specifier|const
-name|unsigned
-name|Global
-init|=
-literal|1
-operator|<<
-literal|1
-decl_stmt|;
-comment|///< Global relocations are required
-specifier|const
-name|unsigned
-name|LocalOrGlobal
-init|=
-name|Local
-operator||
-name|Global
-decl_stmt|;
-block|}
 comment|/// This is an important base class in LLVM. It provides the common facilities
 comment|/// of all constant values in an LLVM program. A constant is a value that is
 comment|/// immutable at runtime. Functions are constants because their address is
@@ -191,33 +154,6 @@ argument_list|()
 block|;
 name|public
 operator|:
-comment|/// Static constructor to get a '0' constant of arbitrary type...
-comment|///
-specifier|static
-name|Constant
-operator|*
-name|getNullValue
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|)
-block|;
-comment|/// Static constructor to get a '-1' constant.  This supports integers and
-comment|/// vectors.
-comment|///
-specifier|static
-name|Constant
-operator|*
-name|getAllOnesValue
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|)
-block|;
 comment|/// isNullValue - Return true if this is the value that would be returned by
 comment|/// getNullValue.
 name|virtual
@@ -228,22 +164,58 @@ specifier|const
 operator|=
 literal|0
 block|;
+comment|/// isNegativeZeroValue - Return true if the value is what would be returned
+comment|/// by getZeroValueForNegation.
+name|virtual
+name|bool
+name|isNegativeZeroValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isNullValue
+argument_list|()
+return|;
+block|}
 comment|/// canTrap - Return true if evaluation of this constant could trap.  This is
 comment|/// true for things like constant expressions that could divide by zero.
 name|bool
 name|canTrap
 argument_list|()
 specifier|const
+block|;    enum
+name|PossibleRelocationsTy
+block|{
+name|NoRelocation
+operator|=
+literal|0
+block|,
+name|LocalRelocation
+operator|=
+literal|1
+block|,
+name|GlobalRelocations
+operator|=
+literal|2
+block|}
 block|;
-comment|/// ContainsRelocations - Return true if the constant value contains
-comment|/// relocations which cannot be resolved at compile time. Note that answer is
-comment|/// not exclusive: there can be possibility that relocations of other kind are
-comment|/// required as well.
-name|bool
-name|ContainsRelocations
-argument_list|(
-argument|unsigned Kind = Reloc::LocalOrGlobal
-argument_list|)
+comment|/// getRelocationInfo - This method classifies the entry according to
+comment|/// whether or not it may generate a relocation entry.  This must be
+comment|/// conservative, so if it might codegen to a relocatable entry, it should say
+comment|/// so.  The return values are:
+comment|///
+comment|///  NoRelocation: This constant pool entry is guaranteed to never have a
+comment|///     relocation applied to it (because it holds a simple constant like
+comment|///     '4').
+comment|///  LocalRelocation: This entry has relocations, but the entries are
+comment|///     guaranteed to be resolvable by the static linker, so the dynamic
+comment|///     linker will never see them.
+comment|///  GlobalRelocations: This entry may have arbitrary relocations.
+comment|///
+comment|/// FIXME: This really should not be in VMCore.
+name|PossibleRelocationsTy
+name|getRelocationInfo
+argument_list|()
 specifier|const
 block|;
 comment|// Specialize get/setOperand for Constants as their operands are always
@@ -321,6 +293,8 @@ comment|/// constant exprs and other cases we can't handle, we return an empty v
 name|void
 name|getVectorElements
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|SmallVectorImpl<Constant*>&Elts
 argument_list|)
 specifier|const
@@ -435,8 +409,51 @@ operator|&&
 literal|"Constants that do not have operands cannot be using 'From'!"
 argument_list|)
 block|;   }
-expr|}
-block|;  }
+specifier|static
+name|Constant
+operator|*
+name|getNullValue
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+comment|/// @returns the value for an integer constant of the given type that has all
+comment|/// its bits set to true.
+comment|/// @brief Get the all ones value
+specifier|static
+name|Constant
+operator|*
+name|getAllOnesValue
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+comment|/// getIntegerValue - Return the value for an integer or pointer constant,
+comment|/// or a vector thereof, with the given scalar value.
+specifier|static
+name|Constant
+operator|*
+name|getIntegerValue
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|V
+argument_list|)
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

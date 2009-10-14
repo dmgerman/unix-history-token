@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetSubtarget.h"
 end_include
 
@@ -82,7 +88,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Module
+name|GlobalValue
 decl_stmt|;
 name|class
 name|ARMSubtarget
@@ -135,6 +141,12 @@ comment|/// ARMFPUType - Floating Point Unit type.
 name|ARMFPEnum
 name|ARMFPUType
 block|;
+comment|/// UseNEONForSinglePrecisionFP - if the NEONFP attribute has been
+comment|/// specified. Use the method useNEONForSinglePrecisionFP() to
+comment|/// determine if NEON should actually be used.
+name|bool
+name|UseNEONForSinglePrecisionFP
+block|;
 comment|/// IsThumb - True if we are in thumb mode, false if in ARM mode.
 name|bool
 name|IsThumb
@@ -142,6 +154,10 @@ block|;
 comment|/// ThumbMode - Indicates supported Thumb version.
 name|ThumbTypeEnum
 name|ThumbMode
+block|;
+comment|/// PostRAScheduler - True if using post-register-allocation scheduler.
+name|bool
+name|PostRAScheduler
 block|;
 comment|/// IsR9Reserved - True if R9 is a not available as general purpose register.
 name|bool
@@ -181,11 +197,11 @@ block|}
 name|TargetABI
 block|;
 comment|/// This constructor initializes the data members to match that
-comment|/// of the specified module.
+comment|/// of the specified triple.
 comment|///
 name|ARMSubtarget
 argument_list|(
-argument|const Module&M
+argument|const std::string&TT
 argument_list|,
 argument|const std::string&FS
 argument_list|,
@@ -332,6 +348,18 @@ name|NEON
 return|;
 block|}
 name|bool
+name|useNEONForSinglePrecisionFP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasNEON
+argument_list|()
+operator|&&
+name|UseNEONForSinglePrecisionFP
+return|;
+block|}
+name|bool
 name|isTargetDarwin
 argument_list|()
 specifier|const
@@ -409,7 +437,7 @@ name|IsThumb
 operator|&&
 operator|(
 name|ThumbMode
-operator|>=
+operator|==
 name|Thumb2
 operator|)
 return|;
@@ -447,6 +475,17 @@ return|return
 name|CPUString
 return|;
 block|}
+comment|/// enablePostRAScheduler - From TargetSubtarget, return true to
+comment|/// enable post-RA scheduler.
+name|bool
+name|enablePostRAScheduler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PostRAScheduler
+return|;
+block|}
 comment|/// getInstrItins - Return the instruction itineraies based on subtarget
 comment|/// selection.
 specifier|const
@@ -472,8 +511,19 @@ return|return
 name|stackAlignment
 return|;
 block|}
-expr|}
+comment|/// GVIsIndirectSymbol - true if the GV will be accessed via an indirect
+comment|/// symbol.
+name|bool
+name|GVIsIndirectSymbol
+argument_list|(
+argument|GlobalValue *GV
+argument_list|,
+argument|Reloc::Model RelocM
+argument_list|)
+specifier|const
 block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

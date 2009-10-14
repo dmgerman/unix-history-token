@@ -172,6 +172,9 @@ comment|// Psuedo to be caught in schedular and expanded to brcond.
 name|BRCOND
 block|,
 comment|// Conditional branch.
+name|RET
+block|,
+comment|// Return.
 name|Dummy
 block|}
 enum|;
@@ -245,14 +248,16 @@ block|;
 comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
 name|virtual
 name|MVT
+operator|::
+name|SimpleValueType
 name|getSetCCResultType
 argument_list|(
-argument|MVT ValType
+argument|EVT ValType
 argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFORMAL_ARGUMENTS
+name|LowerShift
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -260,7 +265,7 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
-name|LowerShift
+name|LowerMUL
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -291,42 +296,28 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 block|;
-name|SDValue
-name|LowerCALL
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
-name|LowerRET
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
 comment|// Call returns
 name|SDValue
 name|LowerDirectCallReturn
 argument_list|(
-argument|SDValue Op
+argument|SDValue RetLabel
 argument_list|,
 argument|SDValue Chain
 argument_list|,
-argument|SDValue FrameAddress
-argument_list|,
 argument|SDValue InFlag
 argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
 argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 block|;
 name|SDValue
 name|LowerIndirectCallReturn
 argument_list|(
-argument|SDValue Op
-argument_list|,
 argument|SDValue Chain
 argument_list|,
 argument|SDValue InFlag
@@ -335,20 +326,28 @@ argument|SDValue DataAddr_Lo
 argument_list|,
 argument|SDValue DataAddr_Hi
 argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
 argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 block|;
 comment|// Call arguments
 name|SDValue
 name|LowerDirectCallArguments
 argument_list|(
-argument|SDValue Op
+argument|SDValue ArgLabel
 argument_list|,
 argument|SDValue Chain
 argument_list|,
-argument|SDValue FrameAddress
-argument_list|,
 argument|SDValue InFlag
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -356,8 +355,6 @@ block|;
 name|SDValue
 name|LowerIndirectCallArguments
 argument_list|(
-argument|SDValue Op
-argument_list|,
 argument|SDValue Chain
 argument_list|,
 argument|SDValue InFlag
@@ -365,6 +362,12 @@ argument_list|,
 argument|SDValue DataAddr_Lo
 argument_list|,
 argument|SDValue DataAddr_Hi
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -409,6 +412,10 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -459,6 +466,67 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
@@ -684,17 +752,6 @@ argument_list|,
 argument|int&Offset
 argument_list|)
 block|;
-comment|// CALL node should have all legal operands only. Legalize all non-legal
-comment|// operands of CALL node and then return the new call will all operands
-comment|// legal.
-name|SDValue
-name|LegalizeCALL
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
 comment|// For indirect calls data address of the callee frame need to be
 comment|// extracted. This function fills the arguments DataAddr_Lo and
 comment|// DataAddr_Hi with the address of the callee frame.
@@ -778,7 +835,7 @@ name|MakePIC16Libcall
 argument_list|(
 argument|PIC16ISD::PIC16Libcall Call
 argument_list|,
-argument|MVT RetVT
+argument|EVT RetVT
 argument_list|,
 argument|const SDValue *Ops
 argument_list|,

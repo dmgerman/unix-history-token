@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/BasicBlock.h"
 end_include
 
@@ -91,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Argument.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Annotation.h"
 end_include
 
 begin_include
@@ -206,7 +206,7 @@ block|;
 name|private
 operator|:
 name|mutable
-name|ilist_node
+name|ilist_half_node
 operator|<
 name|BasicBlock
 operator|>
@@ -301,7 +301,7 @@ block|;
 name|private
 operator|:
 name|mutable
-name|ilist_node
+name|ilist_half_node
 operator|<
 name|Argument
 operator|>
@@ -313,9 +313,6 @@ name|Function
 range|:
 name|public
 name|GlobalValue
-decl_stmt|,
-name|public
-name|Annotable
 decl_stmt|,
 name|public
 name|ilist_node
@@ -386,7 +383,7 @@ name|AttributeList
 decl_stmt|;
 comment|///< Parameter attributes
 comment|// The Calling Convention is stored in Value::SubclassData.
-comment|/*unsigned CallingConvention;*/
+comment|/*CallingConv::ID CallingConvention;*/
 name|friend
 name|class
 name|SymbolTableListTraits
@@ -465,7 +462,7 @@ argument|const FunctionType *Ty
 argument_list|,
 argument|LinkageTypes Linkage
 argument_list|,
-argument|const std::string&N =
+argument|const Twine&N =
 literal|""
 argument_list|,
 argument|Module *M =
@@ -478,30 +475,28 @@ specifier|static
 name|Function
 modifier|*
 name|Create
-argument_list|(
+parameter_list|(
 specifier|const
 name|FunctionType
-operator|*
+modifier|*
 name|Ty
-argument_list|,
+parameter_list|,
 name|LinkageTypes
 name|Linkage
-argument_list|,
+parameter_list|,
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|Twine
+modifier|&
 name|N
-operator|=
+init|=
 literal|""
-argument_list|,
+parameter_list|,
 name|Module
-operator|*
+modifier|*
 name|M
-operator|=
+init|=
 literal|0
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|new
@@ -543,10 +538,11 @@ comment|// Return the FunctionType for me
 comment|/// getContext - Return a pointer to the LLVMContext associated with this
 comment|/// function, or NULL if this function is not bound to a context yet.
 name|LLVMContext
-modifier|*
+operator|&
 name|getContext
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// isVarArg - Return true if this function takes a variable number of
 comment|/// arguments.
 name|bool
@@ -595,26 +591,38 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// getCallingConv()/setCallingConv(uint) - These method get and set the
+comment|/// getCallingConv()/setCallingConv(CC) - These method get and set the
 comment|/// calling convention of this function.  The enum values for the known
 comment|/// calling conventions are defined in CallingConv.h.
-name|unsigned
+name|CallingConv
+operator|::
+name|ID
 name|getCallingConv
 argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
+name|CallingConv
+operator|::
+name|ID
+operator|>
+operator|(
 name|SubclassData
 operator|>>
 literal|1
+operator|)
 return|;
 block|}
 name|void
 name|setCallingConv
-parameter_list|(
-name|unsigned
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
 name|CC
-parameter_list|)
+argument_list|)
 block|{
 name|SubclassData
 operator|=
@@ -625,7 +633,13 @@ literal|1
 operator|)
 operator||
 operator|(
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
 name|CC
+operator|)
 operator|<<
 literal|1
 operator|)

@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineDominators.h"
 end_include
 
@@ -97,6 +91,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
 end_include
 
 begin_include
@@ -639,11 +645,6 @@ block|;
 name|public
 operator|:
 name|MachineBasicBlock
-operator|*
-name|BB
-block|;
-comment|// Current basic block
-name|MachineBasicBlock
 operator|::
 name|iterator
 name|Begin
@@ -787,7 +788,11 @@ comment|/// input.
 name|virtual
 name|void
 name|BuildSchedGraph
-argument_list|()
+argument_list|(
+name|AliasAnalysis
+operator|*
+name|AA
+argument_list|)
 block|;
 comment|/// ComputeLatency - Compute node latency.
 comment|///
@@ -800,11 +805,36 @@ operator|*
 name|SU
 argument_list|)
 block|;
+comment|/// ComputeOperandLatency - Override dependence edge latency using
+comment|/// operand use/def information
+comment|///
+name|virtual
+name|void
+name|ComputeOperandLatency
+argument_list|(
+argument|SUnit *Def
+argument_list|,
+argument|SUnit *Use
+argument_list|,
+argument|SDep& dep
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitSchedule
-argument_list|()
+argument_list|(
+name|DenseMap
+operator|<
+name|MachineBasicBlock
+operator|*
+argument_list|,
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|*
+argument_list|)
 block|;
 comment|/// StartBlock - Prepare to perform scheduling in the given block.
 comment|///

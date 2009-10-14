@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Streams.h"
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
@@ -122,13 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fstream>
+file|<vector>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -139,203 +139,37 @@ name|namespace
 name|DOT
 block|{
 comment|// Private functions...
-specifier|inline
 name|std
 operator|::
 name|string
 name|EscapeString
 argument_list|(
-argument|const std::string&Label
-argument_list|)
-block|{
+specifier|const
 name|std
 operator|::
 name|string
-name|Str
-argument_list|(
+operator|&
 name|Label
 argument_list|)
-block|;
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|!=
-name|Str
-operator|.
-name|length
-argument_list|()
-condition|;
-operator|++
-name|i
-control|)
-switch|switch
-condition|(
-name|Str
-index|[
-name|i
-index|]
-condition|)
+expr_stmt|;
+block|}
+name|namespace
+name|GraphProgram
 block|{
-case|case
-literal|'\n'
-case|:
-name|Str
-operator|.
-name|insert
-argument_list|(
-name|Str
-operator|.
-name|begin
-argument_list|()
-operator|+
-name|i
-argument_list|,
-literal|'\\'
-argument_list|)
-expr_stmt|;
-comment|// Escape character...
-operator|++
-name|i
-expr_stmt|;
-name|Str
-index|[
-name|i
-index|]
-operator|=
-literal|'n'
-expr_stmt|;
-break|break;
-case|case
-literal|'\t'
-case|:
-name|Str
-operator|.
-name|insert
-argument_list|(
-name|Str
-operator|.
-name|begin
-argument_list|()
-operator|+
-name|i
-argument_list|,
-literal|' '
-argument_list|)
-expr_stmt|;
-comment|// Convert to two spaces
-operator|++
-name|i
-expr_stmt|;
-name|Str
-index|[
-name|i
-index|]
-operator|=
-literal|' '
-expr_stmt|;
-break|break;
-case|case
-literal|'\\'
-case|:
-if|if
-condition|(
-name|i
-operator|+
-literal|1
-operator|!=
-name|Str
-operator|.
-name|length
-argument_list|()
-condition|)
-switch|switch
-condition|(
-name|Str
-index|[
-name|i
-operator|+
-literal|1
-index|]
-condition|)
+enum|enum
+name|Name
 block|{
-case|case
-literal|'l'
-case|:
-continue|continue;
-comment|// don't disturb \l
-case|case
-literal|'|'
-case|:
-case|case
-literal|'{'
-case|:
-case|case
-literal|'}'
-case|:
-name|Str
-operator|.
-name|erase
-argument_list|(
-name|Str
-operator|.
-name|begin
-argument_list|()
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-continue|continue;
-default|default:
-break|break;
+name|DOT
+block|,
+name|FDP
+block|,
+name|NEATO
+block|,
+name|TWOPI
+block|,
+name|CIRCO
 block|}
-case|case
-literal|'{'
-case|:
-case|case
-literal|'}'
-case|:
-case|case
-literal|'<'
-case|:
-case|case
-literal|'>'
-case|:
-case|case
-literal|'|'
-case|:
-case|case
-literal|'"'
-case|:
-name|Str
-operator|.
-name|insert
-argument_list|(
-name|Str
-operator|.
-name|begin
-argument_list|()
-operator|+
-name|i
-argument_list|,
-literal|'\\'
-argument_list|)
-expr_stmt|;
-comment|// Escape character...
-operator|++
-name|i
-expr_stmt|;
-comment|// don't infinite loop
-break|break;
-block|}
-return|return
-name|Str
-return|;
-block|}
+enum|;
 block|}
 name|void
 name|DisplayGraph
@@ -346,6 +180,20 @@ operator|::
 name|Path
 operator|&
 name|Filename
+argument_list|,
+name|bool
+name|wait
+operator|=
+name|true
+argument_list|,
+name|GraphProgram
+operator|::
+name|Name
+name|program
+operator|=
+name|GraphProgram
+operator|::
+name|DOT
 argument_list|)
 decl_stmt|;
 name|template
@@ -356,9 +204,7 @@ operator|>
 name|class
 name|GraphWriter
 block|{
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|O
 block|;
@@ -409,7 +255,7 @@ name|public
 label|:
 name|GraphWriter
 argument_list|(
-argument|std::ostream&o
+argument|raw_ostream&o
 argument_list|,
 argument|const GraphType&g
 argument_list|,
@@ -1335,7 +1181,7 @@ literal|"|"
 expr_stmt|;
 name|O
 operator|<<
-literal|"<g"
+literal|"<s"
 operator|<<
 name|i
 operator|<<
@@ -1449,12 +1295,28 @@ name|DestNodePort
 operator|>=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|DOTTraits
+operator|::
+name|hasEdgeDestLabels
+argument_list|()
+condition|)
 name|O
 operator|<<
 literal|":d"
 operator|<<
 name|DestNodePort
 expr_stmt|;
+else|else
+name|O
+operator|<<
+literal|":s"
+operator|<<
+name|DestNodePort
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1485,13 +1347,11 @@ operator|<
 name|typename
 name|GraphType
 operator|>
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|WriteGraph
 argument_list|(
-argument|std::ostream&O
+argument|raw_ostream&O
 argument_list|,
 argument|const GraphType&G
 argument_list|,
@@ -1570,11 +1430,11 @@ name|WriteGraph
 argument_list|(
 argument|const GraphType&G
 argument_list|,
-argument|const std::string& Name
+argument|const std::string&Name
 argument_list|,
 argument|bool ShortNames = false
 argument_list|,
-argument|const std::string& Title =
+argument|const std::string&Title =
 literal|""
 argument_list|)
 block|{
@@ -1606,7 +1466,8 @@ name|isEmpty
 argument_list|()
 condition|)
 block|{
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"Error: "
 operator|<<
@@ -1643,7 +1504,8 @@ name|ErrMsg
 argument_list|)
 condition|)
 block|{
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"Error: "
 operator|<<
@@ -1661,11 +1523,15 @@ block|}
 end_if
 
 begin_expr_stmt
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"Writing '"
 operator|<<
 name|Filename
+operator|.
+name|str
+argument_list|()
 operator|<<
 literal|"'... "
 expr_stmt|;
@@ -1674,23 +1540,31 @@ end_expr_stmt
 begin_expr_stmt
 name|std
 operator|::
-name|ofstream
+name|string
+name|ErrorInfo
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|raw_fd_ostream
 name|O
 argument_list|(
 name|Filename
 operator|.
 name|c_str
 argument_list|()
+argument_list|,
+name|ErrorInfo
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|if
 condition|(
-name|O
+name|ErrorInfo
 operator|.
-name|good
+name|empty
 argument_list|()
 condition|)
 block|{
@@ -1707,21 +1581,25 @@ argument_list|,
 name|Title
 argument_list|)
 expr_stmt|;
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|" done. \n"
-expr_stmt|;
-name|O
-operator|.
-name|close
-argument_list|()
 expr_stmt|;
 block|}
 else|else
 block|{
-name|cerr
+name|errs
+argument_list|()
 operator|<<
-literal|"error opening file for writing!\n"
+literal|"error opening file '"
+operator|<<
+name|Filename
+operator|.
+name|str
+argument_list|()
+operator|<<
+literal|"' for writing!\n"
 expr_stmt|;
 name|Filename
 operator|.
@@ -1759,14 +1637,16 @@ operator|>
 name|void
 name|ViewGraph
 argument_list|(
-argument|const GraphType& G
+argument|const GraphType&G
 argument_list|,
-argument|const std::string& Name
+argument|const std::string&Name
 argument_list|,
 argument|bool ShortNames = false
 argument_list|,
-argument|const std::string& Title =
+argument|const std::string&Title =
 literal|""
+argument_list|,
+argument|GraphProgram::Name Program = GraphProgram::DOT
 argument_list|)
 block|{
 name|sys
@@ -1792,12 +1672,14 @@ operator|.
 name|isEmpty
 argument_list|()
 condition|)
-block|{
 return|return;
-block|}
 name|DisplayGraph
 argument_list|(
 name|Filename
+argument_list|,
+name|true
+argument_list|,
+name|Program
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -62,25 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Constants.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DerivedTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineRelocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetAsmInfo.h"
+file|"llvm/CodeGen/BinaryObject.h"
 end_include
 
 begin_include
@@ -99,16 +81,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-name|char
-operator|>
-name|DataBuffer
-expr_stmt|;
+name|class
+name|GlobalValue
+decl_stmt|;
+name|class
+name|MCAsmInfo
+decl_stmt|;
 comment|/// MachOSym - This struct contains information about each symbol that is
 comment|/// added to logical symbol table for the module.  This is eventually
 comment|/// turned into a real symbol table in the file.
@@ -257,7 +235,7 @@ argument|std::string name
 argument_list|,
 argument|uint8_t sect
 argument_list|,
-argument|const TargetAsmInfo *TAI
+argument|const MCAsmInfo *MAI
 argument_list|)
 empty_stmt|;
 struct|struct
@@ -388,9 +366,15 @@ decl_stmt|;
 comment|// 64-bit only
 comment|/// HeaderData - The actual data for the header which we are building
 comment|/// up for emission to the file.
-name|DataBuffer
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+name|char
+operator|>
 name|HeaderData
-decl_stmt|;
+expr_stmt|;
 comment|// Constants for the filetype field
 comment|// see<mach-o/loader.h> for additional info on the various types
 enum|enum
@@ -622,7 +606,7 @@ name|reserved
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 comment|/// cmdSize - This routine returns the size of the MachOSection as written
 comment|/// to disk, depending on whether the destination is a 64 bit Mach-O file.
 name|unsigned
@@ -977,181 +961,170 @@ comment|/// MachOSection - This struct contains information about each section i
 comment|/// particular segment that is emitted to the file.  This is eventually
 comment|/// turned into the SectionCommand in the load command for a particlar
 comment|/// segment.
-struct|struct
+name|struct
 name|MachOSection
+range|:
+name|public
+name|BinaryObject
 block|{
 name|std
 operator|::
 name|string
 name|sectname
-expr_stmt|;
+block|;
 comment|// name of this section,
 name|std
 operator|::
 name|string
 name|segname
-expr_stmt|;
+block|;
 comment|// segment this section goes in
 name|uint64_t
 name|addr
-decl_stmt|;
+block|;
 comment|// memory address of this section
-name|uint64_t
-name|size
-decl_stmt|;
-comment|// size in bytes of this section
 name|uint32_t
 name|offset
-decl_stmt|;
+block|;
 comment|// file offset of this section
 name|uint32_t
 name|align
-decl_stmt|;
+block|;
 comment|// section alignment (power of 2)
 name|uint32_t
 name|reloff
-decl_stmt|;
+block|;
 comment|// file offset of relocation entries
 name|uint32_t
 name|nreloc
-decl_stmt|;
+block|;
 comment|// number of relocation entries
 name|uint32_t
 name|flags
-decl_stmt|;
+block|;
 comment|// flags (section type and attributes)
 name|uint32_t
 name|reserved1
-decl_stmt|;
+block|;
 comment|// reserved (for offset or index)
 name|uint32_t
 name|reserved2
-decl_stmt|;
+block|;
 comment|// reserved (for count or sizeof)
 name|uint32_t
 name|reserved3
-decl_stmt|;
+block|;
 comment|// reserved (64 bit only)
 comment|/// A unique number for this section, which will be used to match symbols
 comment|/// to the correct section.
 name|uint32_t
 name|Index
-decl_stmt|;
-comment|/// SectionData - The actual data for this section which we are building
-comment|/// up for emission to the file.
-name|DataBuffer
-name|SectionData
-decl_stmt|;
+block|;
 comment|/// RelocBuffer - A buffer to hold the mach-o relocations before we write
 comment|/// them out at the appropriate location in the file.
-name|DataBuffer
-name|RelocBuffer
-decl_stmt|;
-comment|/// Relocations - The relocations that we have encountered so far in this
-comment|/// section that we will need to convert to MachORelocation entries when
-comment|/// the file is written.
 name|std
 operator|::
 name|vector
 operator|<
-name|MachineRelocation
+name|unsigned
+name|char
 operator|>
-name|Relocations
-expr_stmt|;
+name|RelocBuffer
+block|;
 comment|// Constants for the section types (low 8 bits of flags field)
 comment|// see<mach-o/loader.h>
-enum|enum
+block|enum
 block|{
 name|S_REGULAR
-init|=
+operator|=
 literal|0
 block|,
 comment|// regular section
 name|S_ZEROFILL
-init|=
+operator|=
 literal|1
 block|,
 comment|// zero fill on demand section
 name|S_CSTRING_LITERALS
-init|=
+operator|=
 literal|2
 block|,
 comment|// section with only literal C strings
 name|S_4BYTE_LITERALS
-init|=
+operator|=
 literal|3
 block|,
 comment|// section with only 4 byte literals
 name|S_8BYTE_LITERALS
-init|=
+operator|=
 literal|4
 block|,
 comment|// section with only 8 byte literals
 name|S_LITERAL_POINTERS
-init|=
+operator|=
 literal|5
 block|,
 comment|// section with only pointers to literals
 name|S_NON_LAZY_SYMBOL_POINTERS
-init|=
+operator|=
 literal|6
 block|,
 comment|// section with only non-lazy symbol pointers
 name|S_LAZY_SYMBOL_POINTERS
-init|=
+operator|=
 literal|7
 block|,
 comment|// section with only lazy symbol pointers
 name|S_SYMBOL_STUBS
-init|=
+operator|=
 literal|8
 block|,
 comment|// section with only symbol stubs
 comment|// byte size of stub in the reserved2 field
 name|S_MOD_INIT_FUNC_POINTERS
-init|=
+operator|=
 literal|9
 block|,
 comment|// section with only function pointers for initialization
 name|S_MOD_TERM_FUNC_POINTERS
-init|=
+operator|=
 literal|10
 block|,
 comment|// section with only function pointers for termination
 name|S_COALESCED
-init|=
+operator|=
 literal|11
 block|,
 comment|// section contains symbols that are coalesced
 name|S_GB_ZEROFILL
-init|=
+operator|=
 literal|12
 block|,
 comment|// zero fill on demand section (that can be larger than 4GB)
 name|S_INTERPOSING
-init|=
+operator|=
 literal|13
 block|,
 comment|// section with only pairs of function pointers for interposing
 name|S_16BYTE_LITERALS
-init|=
+operator|=
 literal|14
 comment|// section with only 16 byte literals
 block|}
-enum|;
+block|;
 comment|// Constants for the section flags (high 24 bits of flags field)
 comment|// see<mach-o/loader.h>
-enum|enum
+block|enum
 block|{
 name|S_ATTR_PURE_INSTRUCTIONS
-init|=
+operator|=
 literal|1
 operator|<<
 literal|31
 block|,
 comment|// section contains only true machine instructions
 name|S_ATTR_NO_TOC
-init|=
+operator|=
 literal|1
 operator|<<
 literal|30
@@ -1159,7 +1132,7 @@ block|,
 comment|// section contains coalesced symbols that are not to be in a
 comment|// ranlib table of contents
 name|S_ATTR_STRIP_STATIC_SYMS
-init|=
+operator|=
 literal|1
 operator|<<
 literal|29
@@ -1167,64 +1140,63 @@ block|,
 comment|// ok to strip static symbols in this section in files with the
 comment|// MY_DYLDLINK flag
 name|S_ATTR_NO_DEAD_STRIP
-init|=
+operator|=
 literal|1
 operator|<<
 literal|28
 block|,
 comment|// no dead stripping
 name|S_ATTR_LIVE_SUPPORT
-init|=
+operator|=
 literal|1
 operator|<<
 literal|27
 block|,
 comment|// blocks are live if they reference live blocks
 name|S_ATTR_SELF_MODIFYING_CODE
-init|=
+operator|=
 literal|1
 operator|<<
 literal|26
 block|,
 comment|// used with i386 code stubs written on by dyld
 name|S_ATTR_DEBUG
-init|=
+operator|=
 literal|1
 operator|<<
 literal|25
 block|,
 comment|// a debug section
 name|S_ATTR_SOME_INSTRUCTIONS
-init|=
+operator|=
 literal|1
 operator|<<
 literal|10
 block|,
 comment|// section contains some machine instructions
 name|S_ATTR_EXT_RELOC
-init|=
+operator|=
 literal|1
 operator|<<
 literal|9
 block|,
 comment|// section has external relocation entries
 name|S_ATTR_LOC_RELOC
-init|=
+operator|=
 literal|1
 operator|<<
 literal|8
 comment|// section has local relocation entries
 block|}
-enum|;
+block|;
 comment|/// cmdSize - This routine returns the size of the MachOSection as written
 comment|/// to disk, depending on whether the destination is a 64 bit Mach-O file.
 name|unsigned
 name|cmdSize
 argument_list|(
-name|bool
-name|is64Bit
+argument|bool is64Bit
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -1277,68 +1249,66 @@ operator|&
 name|sect
 argument_list|)
 operator|:
+name|BinaryObject
+argument_list|()
+block|,
 name|sectname
 argument_list|(
 name|sect
 argument_list|)
-operator|,
+block|,
 name|segname
 argument_list|(
 name|seg
 argument_list|)
-operator|,
+block|,
 name|addr
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|size
-argument_list|(
-literal|0
-argument_list|)
-operator|,
+block|,
 name|offset
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|align
 argument_list|(
 literal|2
 argument_list|)
-operator|,
+block|,
 name|reloff
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|nreloc
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|flags
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|reserved1
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|reserved2
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|reserved3
 argument_list|(
 literal|0
 argument_list|)
 block|{ }
 block|}
-struct|;
+decl_stmt|;
 comment|// end struct MachOSection
 comment|/// MachOSymTab - This struct contains information about the offsets and
 comment|/// size of symbol table information.
@@ -1353,7 +1323,7 @@ comment|// LC_DYSYMTAB
 name|uint32_t
 name|cmdsize
 decl_stmt|;
-comment|// sizeof( MachODySymTab )
+comment|// sizeof(MachODySymTab)
 name|uint32_t
 name|ilocalsym
 decl_stmt|;
@@ -1543,9 +1513,10 @@ name|nlocrel
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 block|}
 struct|;
+comment|// end struct MachODySymTab
 block|}
 end_decl_stmt
 

@@ -192,8 +192,7 @@ name|P
 parameter_list|)
 function_decl|;
 comment|/// getAnalysisUsage - All alias analysis implementations should invoke this
-comment|/// directly (using AliasAnalysis::getAnalysisUsage(AU)) to make sure that
-comment|/// TargetData is required by the pass.
+comment|/// directly (using AliasAnalysis::getAnalysisUsage(AU)).
 name|virtual
 name|void
 name|getAnalysisUsage
@@ -230,22 +229,32 @@ name|AliasAnalysis
 argument_list|()
 expr_stmt|;
 comment|// We want to be subclassed
-comment|/// getTargetData - Every alias analysis implementation depends on the size of
-comment|/// data items in the current Target.  This provides a uniform way to handle
-comment|/// it.
+comment|/// getTargetData - Return a pointer to the current TargetData object, or
+comment|/// null if no TargetData object is available.
 comment|///
 specifier|const
 name|TargetData
-operator|&
+operator|*
 name|getTargetData
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
 name|TD
 return|;
 block|}
+comment|/// getTypeStoreSize - Return the TargetData store size for the given type,
+comment|/// if known, or a conservative value otherwise.
+comment|///
+name|unsigned
+name|getTypeStoreSize
+parameter_list|(
+specifier|const
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// Alias Queries...
 comment|///
@@ -1013,7 +1022,7 @@ parameter_list|)
 function_decl|;
 comment|/// isIdentifiedObject - Return true if this pointer refers to a distinct and
 comment|/// identifiable object.  This returns true for:
-comment|///    Global Variables and Functions
+comment|///    Global Variables and Functions (but not Global Aliases)
 comment|///    Allocas and Mallocs
 comment|///    ByVal and NoAlias Arguments
 comment|///    NoAlias returns

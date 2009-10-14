@@ -90,6 +90,9 @@ typedef|;
 struct_decl|struct
 name|fltSemantics
 struct_decl|;
+name|class
+name|StringRef
+decl_stmt|;
 comment|/* When bits of a floating point number are truncated, this enum is      used to indicate what fraction of the LSB those bits represented.      It essentially combines the roles of guard and sticky bits.  */
 enum|enum
 name|lostFraction
@@ -232,10 +235,18 @@ argument_list|(
 specifier|const
 name|fltSemantics
 operator|&
+argument_list|)
+expr_stmt|;
+comment|// Default construct to 0.0
+name|APFloat
+argument_list|(
+specifier|const
+name|fltSemantics
+operator|&
 argument_list|,
 specifier|const
-name|char
-operator|*
+name|StringRef
+operator|&
 argument_list|)
 expr_stmt|;
 name|APFloat
@@ -589,8 +600,8 @@ name|opStatus
 name|convertFromString
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 parameter_list|,
 name|roundingMode
 parameter_list|)
@@ -1011,8 +1022,8 @@ name|opStatus
 name|convertFromHexadecimalString
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 parameter_list|,
 name|roundingMode
 parameter_list|)
@@ -1021,8 +1032,8 @@ name|opStatus
 name|convertFromDecimalString
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 parameter_list|,
 name|roundingMode
 parameter_list|)
@@ -1069,6 +1080,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|APInt
+name|convertQuadrupleAPFloatToAPInt
+argument_list|()
+specifier|const
+expr_stmt|;
+name|APInt
 name|convertF80LongDoubleAPFloatToAPInt
 argument_list|()
 specifier|const
@@ -1103,6 +1119,15 @@ parameter_list|)
 function_decl|;
 name|void
 name|initFromDoubleAPInt
+parameter_list|(
+specifier|const
+name|APInt
+modifier|&
+name|api
+parameter_list|)
+function_decl|;
+name|void
+name|initFromQuadrupleAPInt
 parameter_list|(
 specifier|const
 name|APInt

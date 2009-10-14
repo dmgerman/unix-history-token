@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ConstantFolding.h - Analyze constant folding possibilities --------===//
+comment|//===-- ConstantFolding.h - Fold instructions into constants --------------===//
 end_comment
 
 begin_comment
@@ -36,11 +36,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This family of functions determines the possibility of performing constant
+comment|// This file declares routines for folding instructions into constants.
 end_comment
 
 begin_comment
-comment|// folding.
+comment|//
+end_comment
+
+begin_comment
+comment|// Also, to supplement the basic VMCore ConstantExpr simplifications,
+end_comment
+
+begin_comment
+comment|// this file declares some additional folding routines that can make use of
+end_comment
+
+begin_comment
+comment|// TargetData information. These functions cannot go in VMCore due to library
+end_comment
+
+begin_comment
+comment|// dependency issues.
 end_comment
 
 begin_comment
@@ -85,6 +101,9 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|/// ConstantFoldInstruction - Attempt to constant fold the specified
 comment|/// instruction.  If successful, the constant result is returned, if not, null
 comment|/// is returned.  Note that this function can only fail when attempting to fold
@@ -97,6 +116,10 @@ parameter_list|(
 name|Instruction
 modifier|*
 name|I
+parameter_list|,
+name|LLVMContext
+modifier|&
+name|Context
 parameter_list|,
 specifier|const
 name|TargetData
@@ -116,6 +139,10 @@ parameter_list|(
 name|ConstantExpr
 modifier|*
 name|CE
+parameter_list|,
+name|LLVMContext
+modifier|&
+name|Context
 parameter_list|,
 specifier|const
 name|TargetData
@@ -152,6 +179,10 @@ parameter_list|,
 name|unsigned
 name|NumOps
 parameter_list|,
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|,
 specifier|const
 name|TargetData
 modifier|*
@@ -179,6 +210,10 @@ name|Ops
 parameter_list|,
 name|unsigned
 name|NumOps
+parameter_list|,
+name|LLVMContext
+modifier|&
+name|Context
 parameter_list|,
 specifier|const
 name|TargetData

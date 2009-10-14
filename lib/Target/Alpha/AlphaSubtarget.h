@@ -82,9 +82,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Module
-decl_stmt|;
-name|class
 name|AlphaSubtarget
 range|:
 name|public
@@ -101,14 +98,16 @@ block|;
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that
-comment|/// of the specified module.
+comment|/// of the specified triple.
 comment|///
 name|AlphaSubtarget
 argument_list|(
 specifier|const
-name|Module
+name|std
+operator|::
+name|string
 operator|&
-name|M
+name|TT
 argument_list|,
 specifier|const
 name|std

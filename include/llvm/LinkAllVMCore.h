@@ -240,7 +240,12 @@ name|new
 name|llvm
 operator|::
 name|UnreachableInst
+argument_list|(
+name|llvm
+operator|::
+name|getGlobalContext
 argument_list|()
+argument_list|)
 expr_stmt|;
 operator|(
 name|void

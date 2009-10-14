@@ -88,9 +88,7 @@ block|;
 name|public
 operator|:
 name|XCoreInstrInfo
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
@@ -153,14 +151,6 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|int&FrameIndex
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|isInvariantLoad
-argument_list|(
-argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
@@ -240,24 +230,6 @@ specifier|const
 block|;
 name|virtual
 name|void
-name|storeRegToAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool isKill
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
 name|loadRegFromStackSlot
 argument_list|(
 argument|MachineBasicBlock&MBB
@@ -269,22 +241,6 @@ argument_list|,
 argument|int FrameIndex
 argument_list|,
 argument|const TargetRegisterClass *RC
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|loadRegFromAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
 specifier|const
 block|;

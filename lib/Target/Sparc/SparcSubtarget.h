@@ -76,9 +76,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Module
-decl_stmt|;
-name|class
 name|SparcSubtarget
 range|:
 name|public
@@ -98,9 +95,11 @@ operator|:
 name|SparcSubtarget
 argument_list|(
 specifier|const
-name|Module
+name|std
+operator|::
+name|string
 operator|&
-name|M
+name|TT
 argument_list|,
 specifier|const
 name|std

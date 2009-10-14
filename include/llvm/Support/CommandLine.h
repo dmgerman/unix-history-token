@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
@@ -123,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<cstdarg>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
 end_include
 
 begin_include
@@ -235,7 +229,7 @@ comment|//===-------------------------------------------------------------------
 comment|// Flags permitted to be passed to command line arguments
 comment|//
 enum|enum
-name|NumOccurrences
+name|NumOccurrencesFlag
 block|{
 comment|// Flags for the number of occurrences allowed
 name|Optional
@@ -410,25 +404,19 @@ comment|//
 name|virtual
 name|bool
 name|handleOccurrence
-argument_list|(
+parameter_list|(
 name|unsigned
 name|pos
-argument_list|,
-specifier|const
-name|char
-operator|*
+parameter_list|,
+name|StringRef
 name|ArgName
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Arg
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 name|virtual
 expr|enum
 name|ValueExpected
@@ -489,7 +477,7 @@ decl_stmt|;
 comment|// String describing what the value of this option is
 specifier|inline
 expr|enum
-name|NumOccurrences
+name|NumOccurrencesFlag
 name|getNumOccurrencesFlag
 argument_list|()
 specifier|const
@@ -498,7 +486,7 @@ return|return
 name|static_cast
 operator|<
 expr|enum
-name|NumOccurrences
+name|NumOccurrencesFlag
 operator|>
 operator|(
 name|Flags
@@ -693,7 +681,7 @@ name|void
 name|setNumOccurrencesFlag
 parameter_list|(
 name|enum
-name|NumOccurrences
+name|NumOccurrencesFlag
 name|Val
 parameter_list|)
 block|{
@@ -902,9 +890,7 @@ name|virtual
 name|void
 name|getExtraOptionNames
 argument_list|(
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 specifier|const
 name|char
@@ -913,49 +899,42 @@ operator|>
 operator|&
 argument_list|)
 block|{}
-comment|// addOccurrence - Wrapper around handleOccurrence that enforces Flags
+comment|// addOccurrence - Wrapper around handleOccurrence that enforces Flags.
 comment|//
 name|bool
 name|addOccurrence
-argument_list|(
+parameter_list|(
 name|unsigned
 name|pos
-argument_list|,
-specifier|const
-name|char
-operator|*
+parameter_list|,
+name|StringRef
 name|ArgName
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Value
-argument_list|,
+parameter_list|,
 name|bool
 name|MultiArg
-operator|=
+init|=
 name|false
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Prints option name followed by message.  Always returns true.
 name|bool
 name|error
-argument_list|(
-name|std
-operator|::
-name|string
-name|Message
-argument_list|,
+parameter_list|(
 specifier|const
-name|char
-operator|*
+name|Twine
+modifier|&
+name|Message
+parameter_list|,
+name|StringRef
 name|ArgName
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+function_decl|;
 name|public
 label|:
 specifier|inline
@@ -1616,7 +1595,7 @@ block|;   }
 name|void
 name|getExtraOptionNames
 argument_list|(
-argument|std::vector<const char*>&OptionNames
+argument|SmallVectorImpl<const char*>&OptionNames
 argument_list|)
 block|{
 comment|// If there has been no argstr specified, that means that we need to add an
@@ -1815,16 +1794,14 @@ name|parse
 argument_list|(
 argument|Option&O
 argument_list|,
-argument|const char *ArgName
+argument|StringRef ArgName
 argument_list|,
-argument|const std::string&Arg
+argument|StringRef Arg
 argument_list|,
 argument|DataType&V
 argument_list|)
 block|{
-name|std
-operator|::
-name|string
+name|StringRef
 name|ArgVal
 block|;
 if|if
@@ -1869,14 +1846,14 @@ name|i
 control|)
 if|if
 condition|(
-name|ArgVal
-operator|==
 name|Values
 index|[
 name|i
 index|]
 operator|.
 name|first
+operator|==
+name|ArgVal
 condition|)
 block|{
 name|V
@@ -1899,7 +1876,7 @@ name|O
 operator|.
 name|error
 argument_list|(
-literal|": Cannot find option named '"
+literal|"Cannot find option named '"
 operator|+
 name|ArgVal
 operator|+
@@ -2036,9 +2013,7 @@ block|}
 name|void
 name|getExtraOptionNames
 argument_list|(
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 specifier|const
 name|char
@@ -2151,25 +2126,13 @@ comment|// parse - Return true on error.
 name|bool
 name|parse
 argument_list|(
-name|Option
-operator|&
-name|O
+argument|Option&O
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|ArgName
+argument|StringRef ArgName
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Arg
+argument|StringRef Arg
 argument_list|,
-name|bool
-operator|&
-name|Val
+argument|bool&Val
 argument_list|)
 block|;
 name|template
@@ -2257,25 +2220,13 @@ comment|// parse - Return true on error.
 name|bool
 name|parse
 argument_list|(
-name|Option
-operator|&
-name|O
+argument|Option&O
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|ArgName
+argument|StringRef ArgName
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Arg
+argument|StringRef Arg
 argument_list|,
-name|boolOrDefault
-operator|&
-name|Val
+argument|boolOrDefault&Val
 argument_list|)
 block|;    enum
 name|ValueExpected
@@ -2336,25 +2287,13 @@ comment|// parse - Return true on error.
 name|bool
 name|parse
 argument_list|(
-name|Option
-operator|&
-name|O
+argument|Option&O
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|ArgName
+argument|StringRef ArgName
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Arg
+argument|StringRef Arg
 argument_list|,
-name|int
-operator|&
-name|Val
+argument|int&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
@@ -2406,25 +2345,13 @@ comment|// parse - Return true on error.
 name|bool
 name|parse
 argument_list|(
-name|Option
-operator|&
-name|O
+argument|Option&O
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|AN
+argument|StringRef ArgName
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Arg
+argument|StringRef Arg
 argument_list|,
-name|unsigned
-operator|&
-name|Val
+argument|unsigned&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
@@ -2476,25 +2403,13 @@ comment|// parse - Return true on error.
 name|bool
 name|parse
 argument_list|(
-name|Option
-operator|&
-name|O
+argument|Option&O
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|AN
+argument|StringRef ArgName
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Arg
+argument|StringRef Arg
 argument_list|,
-name|double
-operator|&
-name|Val
+argument|double&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
@@ -2546,25 +2461,13 @@ comment|// parse - Return true on error.
 name|bool
 name|parse
 argument_list|(
-name|Option
-operator|&
-name|O
+argument|Option&O
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|AN
+argument|StringRef ArgName
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Arg
+argument|StringRef Arg
 argument_list|,
-name|float
-operator|&
-name|Val
+argument|float&Val
 argument_list|)
 block|;
 comment|// getValueName - Overload in subclass to provide a better default value.
@@ -2622,9 +2525,9 @@ name|parse
 argument_list|(
 argument|Option&
 argument_list|,
-argument|const char *
+argument|StringRef ArgName
 argument_list|,
-argument|const std::string&Arg
+argument|StringRef Arg
 argument_list|,
 argument|std::string&Value
 argument_list|)
@@ -2632,6 +2535,9 @@ block|{
 name|Value
 operator|=
 name|Arg
+operator|.
+name|str
+argument_list|()
 block|;
 return|return
 name|false
@@ -2688,9 +2594,9 @@ name|parse
 argument_list|(
 argument|Option&
 argument_list|,
-argument|const char *
+argument|StringRef ArgName
 argument_list|,
-argument|const std::string&Arg
+argument|StringRef Arg
 argument_list|,
 argument|char&Value
 argument_list|)
@@ -2884,14 +2790,14 @@ operator|>
 expr|struct
 name|applicator
 operator|<
-name|NumOccurrences
+name|NumOccurrencesFlag
 operator|>
 block|{
 specifier|static
 name|void
 name|opt
 argument_list|(
-argument|NumOccurrences NO
+argument|NumOccurrencesFlag NO
 argument_list|,
 argument|Option&O
 argument_list|)
@@ -2902,7 +2808,7 @@ name|setNumOccurrencesFlag
 argument_list|(
 name|NO
 argument_list|)
-block|; }
+block|;   }
 block|}
 expr_stmt|;
 name|template
@@ -3111,7 +3017,7 @@ name|O
 operator|.
 name|error
 argument_list|(
-literal|": cl::location(x) specified more than once!"
+literal|"cl::location(x) specified more than once!"
 argument_list|)
 return|;
 name|Location
@@ -3423,9 +3329,9 @@ name|handleOccurrence
 argument_list|(
 argument|unsigned pos
 argument_list|,
-argument|const char *ArgName
+argument|StringRef ArgName
 argument_list|,
-argument|const std::string&Arg
+argument|StringRef Arg
 argument_list|)
 block|{
 name|typename
@@ -3502,9 +3408,7 @@ name|virtual
 name|void
 name|getExtraOptionNames
 argument_list|(
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 specifier|const
 name|char
@@ -4462,7 +4366,7 @@ name|O
 operator|.
 name|error
 argument_list|(
-literal|": cl::location(x) specified more than once!"
+literal|"cl::location(x) specified more than once!"
 argument_list|)
 return|;
 name|Location
@@ -4642,7 +4546,7 @@ name|virtual
 name|void
 name|getExtraOptionNames
 argument_list|(
-argument|std::vector<const char*>&OptionNames
+argument|SmallVectorImpl<const char*>&OptionNames
 argument_list|)
 block|{
 return|return
@@ -4656,26 +4560,20 @@ return|;
 block|}
 end_expr_stmt
 
-begin_decl_stmt
+begin_function
 name|virtual
 name|bool
 name|handleOccurrence
-argument_list|(
+parameter_list|(
 name|unsigned
 name|pos
-argument_list|,
-specifier|const
-name|char
-operator|*
+parameter_list|,
+name|StringRef
 name|ArgName
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Arg
-argument_list|)
+parameter_list|)
 block|{
 name|typename
 name|ParserClass
@@ -4730,7 +4628,7 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|// Forward printing stuff to the parser...
@@ -5688,7 +5586,7 @@ name|O
 operator|.
 name|error
 argument_list|(
-literal|": cl::location(x) specified more than once!"
+literal|"cl::location(x) specified more than once!"
 argument_list|)
 return|;
 name|Location
@@ -5979,7 +5877,7 @@ name|virtual
 name|void
 name|getExtraOptionNames
 argument_list|(
-argument|std::vector<const char*>&OptionNames
+argument|SmallVectorImpl<const char*>&OptionNames
 argument_list|)
 block|{
 return|return
@@ -5993,26 +5891,20 @@ return|;
 block|}
 end_expr_stmt
 
-begin_decl_stmt
+begin_function
 name|virtual
 name|bool
 name|handleOccurrence
-argument_list|(
+parameter_list|(
 name|unsigned
 name|pos
-argument_list|,
-specifier|const
-name|char
-operator|*
+parameter_list|,
+name|StringRef
 name|ArgName
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Arg
-argument_list|)
+parameter_list|)
 block|{
 name|typename
 name|ParserClass
@@ -6067,7 +5959,7 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|// Forward printing stuff to the parser...
@@ -6870,10 +6762,10 @@ name|handleOccurrence
 argument_list|(
 argument|unsigned pos
 argument_list|,
-argument|const char *
+argument|StringRef
 comment|/*ArgName*/
 argument_list|,
-argument|const std::string&Arg
+argument|StringRef Arg
 argument_list|)
 block|{
 return|return
@@ -6918,7 +6810,7 @@ argument_list|()
 condition|)
 name|error
 argument_list|(
-literal|": cl::alias must have argument name specified!"
+literal|"cl::alias must have argument name specified!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6929,7 +6821,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|": cl::alias must have an cl::aliasopt(option) specified!"
+literal|"cl::alias must have an cl::aliasopt(option) specified!"
 argument_list|)
 expr_stmt|;
 name|addArgument
@@ -6953,7 +6845,7 @@ name|AliasFor
 condition|)
 name|error
 argument_list|(
-literal|": cl::alias must only have one cl::aliasopt(...) specified!"
+literal|"cl::alias must only have one cl::aliasopt(...) specified!"
 argument_list|)
 expr_stmt|;
 name|AliasFor
@@ -7258,7 +7150,7 @@ comment|// output. All occurrences of cl::extrahelp will be accumulated and
 end_comment
 
 begin_comment
-comment|// printed to std::cerr at the end of the regular help, just before
+comment|// printed to stderr at the end of the regular help, just before
 end_comment
 
 begin_comment

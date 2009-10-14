@@ -93,6 +93,12 @@ directive|include
 file|"llvm/Pass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/CallGraph.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -154,11 +160,13 @@ comment|/// whatever action is necessary for the specified SCC.  Note that
 comment|/// non-recursive (or only self-recursive) functions will have an SCC size of
 comment|/// 1, where recursive portions of the call graph will have SCC size> 1.
 comment|///
+comment|/// SCC passes that add or delete functions to the SCC are required to update
+comment|/// the SCC list, otherwise stale pointers may be dereferenced.
+comment|///
 name|virtual
 name|bool
 name|runOnSCC
 argument_list|(
-specifier|const
 name|std
 operator|::
 name|vector

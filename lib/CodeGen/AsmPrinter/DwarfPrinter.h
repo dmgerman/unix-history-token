@@ -106,7 +106,7 @@ name|class
 name|Module
 decl_stmt|;
 name|class
-name|TargetAsmInfo
+name|MCAsmInfo
 decl_stmt|;
 name|class
 name|TargetData
@@ -135,12 +135,12 @@ name|AsmPrinter
 modifier|*
 name|Asm
 decl_stmt|;
-comment|/// TAI - Target asm information.
+comment|/// MAI - Target asm information.
 comment|///
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 modifier|*
-name|TAI
+name|MAI
 decl_stmt|;
 comment|/// TD - Target data.
 comment|///
@@ -204,7 +204,7 @@ operator|*
 name|A
 argument_list|,
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 operator|*
 name|T
 argument_list|,
@@ -241,14 +241,14 @@ name|MMI
 return|;
 block|}
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 operator|*
-name|getTargetAsmInfo
+name|getMCAsmInfo
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TAI
+name|MAI
 return|;
 block|}
 specifier|const

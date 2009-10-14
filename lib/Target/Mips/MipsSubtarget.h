@@ -82,9 +82,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Module
-decl_stmt|;
-name|class
 name|MipsSubtarget
 range|:
 name|public
@@ -158,23 +155,9 @@ comment|// HasVFPU - Processor has a vector floating point unit.
 name|bool
 name|HasVFPU
 block|;
-comment|// IsABICall - Enable SRV4 code for SVR4-style dynamic objects
-name|bool
-name|HasABICall
-block|;
-comment|// HasAbsoluteCall - Enable code that is not fully position-independent.
-comment|// Only works with HasABICall enabled.
-name|bool
-name|HasAbsoluteCall
-block|;
 comment|// isLinux - Target system is Linux. Is false we consider ELFOS for now.
 name|bool
 name|IsLinux
-block|;
-comment|// Put global and static items less than or equal to SSectionThreshold
-comment|// bytes into the small data or bss section. The default is 8.
-name|unsigned
-name|SSectionThreshold
 block|;
 comment|/// Features related to the presence of specific instructions.
 comment|// HasSEInReg - SEB and SEH (signext in register) instructions.
@@ -240,12 +223,10 @@ name|MipsABI
 return|;
 block|}
 comment|/// This constructor initializes the data members to match that
-comment|/// of the specified module.
+comment|/// of the specified triple.
 name|MipsSubtarget
 argument_list|(
-argument|const TargetMachine&TM
-argument_list|,
-argument|const Module&M
+argument|const std::string&TT
 argument_list|,
 argument|const std::string&FS
 argument_list|,
@@ -357,26 +338,6 @@ return|;
 block|}
 block|;
 name|bool
-name|hasABICall
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasABICall
-return|;
-block|}
-block|;
-name|bool
-name|hasAbsoluteCall
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasAbsoluteCall
-return|;
-block|}
-block|;
-name|bool
 name|isLinux
 argument_list|()
 specifier|const
@@ -386,15 +347,6 @@ name|IsLinux
 return|;
 block|}
 block|;
-name|unsigned
-name|getSSectionThreshold
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SSectionThreshold
-return|;
-block|}
 comment|/// Features related to the presence of specific instructions.
 name|bool
 name|hasSEInReg

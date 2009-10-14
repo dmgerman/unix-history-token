@@ -124,6 +124,7 @@ block|;
 comment|/// PIC16Lowering - This object fully describes how to lower LLVM code to an
 comment|/// PIC16-specific SelectionDAG.
 name|PIC16TargetLowering
+operator|&
 name|PIC16Lowering
 block|;
 name|public

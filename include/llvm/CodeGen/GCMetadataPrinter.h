@@ -236,9 +236,9 @@ modifier|&
 name|AP
 parameter_list|,
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 modifier|&
-name|TAI
+name|MAI
 parameter_list|)
 function_decl|;
 name|virtual
@@ -254,9 +254,9 @@ modifier|&
 name|AP
 parameter_list|,
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 modifier|&
-name|TAI
+name|MAI
 parameter_list|)
 function_decl|;
 name|virtual

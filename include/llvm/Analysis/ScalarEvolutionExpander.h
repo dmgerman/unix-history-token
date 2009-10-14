@@ -77,6 +77,12 @@ directive|include
 file|"llvm/Support/TargetFolder.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<set>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -174,7 +180,9 @@ argument_list|)
 operator|,
 name|Builder
 argument_list|(
-argument|TargetFolder(se.TD)
+argument|se.getContext()
+argument_list|,
+argument|TargetFolder(se.TD, se.getContext())
 argument_list|)
 block|{}
 comment|/// clear - Erase the contents of the InsertedExpressions map so that users
@@ -253,6 +261,19 @@ return|;
 block|}
 name|private
 label|:
+name|LLVMContext
+operator|&
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SE
+operator|.
+name|getContext
+argument_list|()
+return|;
+block|}
 comment|/// InsertBinop - Insert the specified binary operator, doing a small amount
 comment|/// of work to avoid inserting an obviously redundant operation.
 name|Value
@@ -480,6 +501,26 @@ name|visitUMaxExpr
 parameter_list|(
 specifier|const
 name|SCEVUMaxExpr
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
+name|Value
+modifier|*
+name|visitFieldOffsetExpr
+parameter_list|(
+specifier|const
+name|SCEVFieldOffsetExpr
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
+name|Value
+modifier|*
+name|visitAllocSizeExpr
+parameter_list|(
+specifier|const
+name|SCEVAllocSizeExpr
 modifier|*
 name|S
 parameter_list|)

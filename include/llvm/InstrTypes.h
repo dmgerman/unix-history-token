@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DerivedTypes.h"
 end_include
 
@@ -89,6 +95,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                            TerminatorInst Class
 comment|//===----------------------------------------------------------------------===//
@@ -196,7 +205,7 @@ block|;
 name|public
 operator|:
 name|virtual
-name|Instruction
+name|TerminatorInst
 operator|*
 name|clone
 argument_list|()
@@ -326,14 +335,6 @@ argument_list|(
 name|size_t
 argument_list|,
 name|unsigned
-argument_list|)
-block|;
-comment|// Do not implement
-name|UnaryInstruction
-argument_list|(
-specifier|const
-name|UnaryInstruction
-operator|&
 argument_list|)
 block|;
 comment|// Do not implement
@@ -577,6 +578,7 @@ operator|<
 name|UnaryInstruction
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|1
@@ -627,7 +629,7 @@ argument|Value *S2
 argument_list|,
 argument|const Type *Ty
 argument_list|,
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
@@ -642,7 +644,7 @@ argument|Value *S2
 argument_list|,
 argument|const Type *Ty
 argument_list|,
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -692,7 +694,7 @@ argument|Value *S1
 argument_list|,
 argument|Value *S2
 argument_list|,
-argument|const std::string&Name =
+argument|const Twine&Name =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -714,7 +716,7 @@ argument|Value *S1
 argument_list|,
 argument|Value *S2
 argument_list|,
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -733,7 +735,7 @@ parameter_list|,
 name|CLASS
 parameter_list|)
 define|\
-value|static BinaryOperator *Create##OPC(Value *V1, Value *V2, \                                      const std::string&Name = "") {\     return Create(Instruction::OPC, V1, V2, Name);\   }
+value|static BinaryOperator *Create##OPC(Value *V1, Value *V2, \                                      const Twine&Name = "") {\     return Create(Instruction::OPC, V1, V2, Name);\   }
 include|#
 directive|include
 file|"llvm/Instruction.def"
@@ -748,7 +750,7 @@ parameter_list|,
 name|CLASS
 parameter_list|)
 define|\
-value|static BinaryOperator *Create##OPC(Value *V1, Value *V2, \                                      const std::string&Name, BasicBlock *BB) {\     return Create(Instruction::OPC, V1, V2, Name, BB);\   }
+value|static BinaryOperator *Create##OPC(Value *V1, Value *V2, \                                      const Twine&Name, BasicBlock *BB) {\     return Create(Instruction::OPC, V1, V2, Name, BB);\   }
 include|#
 directive|include
 file|"llvm/Instruction.def"
@@ -763,10 +765,367 @@ parameter_list|,
 name|CLASS
 parameter_list|)
 define|\
-value|static BinaryOperator *Create##OPC(Value *V1, Value *V2, \                                      const std::string&Name, Instruction *I) {\     return Create(Instruction::OPC, V1, V2, Name, I);\   }
+value|static BinaryOperator *Create##OPC(Value *V1, Value *V2, \                                      const Twine&Name, Instruction *I) {\     return Create(Instruction::OPC, V1, V2, Name, I);\   }
 include|#
 directive|include
 file|"llvm/Instruction.def"
+comment|/// CreateNSWAdd - Create an Add operator with the NSW flag set.
+comment|///
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWAdd
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name =
+literal|""
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateAdd
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWAdd
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|BasicBlock *BB
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateAdd
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|BB
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWAdd
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|Instruction *I
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateAdd
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|I
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+comment|/// CreateNSWSub - Create an Sub operator with the NSW flag set.
+comment|///
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWSub
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name =
+literal|""
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateSub
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWSub
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|BasicBlock *BB
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateSub
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|BB
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWSub
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|Instruction *I
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateSub
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|I
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+comment|/// CreateExactSDiv - Create an SDiv operator with the exact flag set.
+comment|///
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateExactSDiv
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name =
+literal|""
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateSDiv
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setIsExact
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateExactSDiv
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|BasicBlock *BB
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateSDiv
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|BB
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setIsExact
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateExactSDiv
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|Instruction *I
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateSDiv
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|I
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setIsExact
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
 comment|/// Helper functions to construct and inspect unary operations (NEG and NOT)
 comment|/// via binary operators SUB and XOR:
 comment|///
@@ -783,9 +1142,7 @@ operator|*
 name|Op
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 operator|=
@@ -808,9 +1165,7 @@ operator|*
 name|Op
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 argument_list|,
@@ -829,9 +1184,7 @@ operator|*
 name|Op
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 operator|=
@@ -854,9 +1207,7 @@ operator|*
 name|Op
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 argument_list|,
@@ -875,9 +1226,7 @@ operator|*
 name|Op
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 operator|=
@@ -900,9 +1249,7 @@ operator|*
 name|Op
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 argument_list|,
@@ -1048,6 +1395,51 @@ name|bool
 name|swapOperands
 argument_list|()
 block|;
+comment|/// setHasNoUnsignedWrap - Set or clear the nsw flag on this instruction,
+comment|/// which must be an operator which supports this flag. See LangRef.html
+comment|/// for the meaning of this flag.
+name|void
+name|setHasNoUnsignedWrap
+argument_list|(
+argument|bool b = true
+argument_list|)
+block|;
+comment|/// setHasNoSignedWrap - Set or clear the nsw flag on this instruction,
+comment|/// which must be an operator which supports this flag. See LangRef.html
+comment|/// for the meaning of this flag.
+name|void
+name|setHasNoSignedWrap
+argument_list|(
+argument|bool b = true
+argument_list|)
+block|;
+comment|/// setIsExact - Set or clear the exact flag on this instruction,
+comment|/// which must be an operator which supports this flag. See LangRef.html
+comment|/// for the meaning of this flag.
+name|void
+name|setIsExact
+argument_list|(
+argument|bool b = true
+argument_list|)
+block|;
+comment|/// hasNoUnsignedWrap - Determine whether the no unsigned wrap flag is set.
+name|bool
+name|hasNoUnsignedWrap
+argument_list|()
+specifier|const
+block|;
+comment|/// hasNoSignedWrap - Determine whether the no signed wrap flag is set.
+name|bool
+name|hasNoSignedWrap
+argument_list|()
+specifier|const
+block|;
+comment|/// isExact - Determine whether the exact flag is set.
+name|bool
+name|isExact
+argument_list|()
+specifier|const
+block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -1116,6 +1508,7 @@ operator|<
 name|BinaryOperator
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|2
@@ -1143,30 +1536,6 @@ operator|:
 name|public
 name|UnaryInstruction
 block|{
-comment|/// @brief Copy constructor
-name|CastInst
-argument_list|(
-specifier|const
-name|CastInst
-operator|&
-name|CI
-argument_list|)
-operator|:
-name|UnaryInstruction
-argument_list|(
-argument|CI.getType()
-argument_list|,
-argument|CI.getOpcode()
-argument_list|,
-argument|CI.getOperand(
-literal|0
-argument|)
-argument_list|)
-block|{   }
-comment|/// @brief Do not allow default construction
-name|CastInst
-argument_list|()
-block|;
 name|protected
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics for subclasses
@@ -1178,7 +1547,7 @@ argument|unsigned iType
 argument_list|,
 argument|Value *S
 argument_list|,
-argument|const std::string&NameStr =
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -1210,7 +1579,7 @@ argument|unsigned iType
 argument_list|,
 argument|Value *S
 argument_list|,
-argument|const std::string&NameStr
+argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -1261,9 +1630,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which cast should be made
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 operator|=
@@ -1306,9 +1673,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which operand is casted
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 argument_list|,
@@ -1337,9 +1702,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which cast should be made
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 operator|=
@@ -1372,9 +1735,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which operand is casted
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 argument_list|,
@@ -1403,9 +1764,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which cast should be made
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 operator|=
@@ -1438,9 +1797,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which operand is casted
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 argument_list|,
@@ -1469,9 +1826,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which operand is casted
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 argument_list|,
@@ -1500,9 +1855,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which cast should be made
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 operator|=
@@ -1532,7 +1885,7 @@ comment|///< The type to which cast should be made
 argument|bool isSigned
 argument_list|,
 comment|///< Whether to regard S as signed or not
-argument|const std::string&Name =
+argument|const Twine&Name =
 literal|""
 argument_list|,
 comment|///< Name for the instruction
@@ -1556,7 +1909,7 @@ comment|///< The integer type to which operand is casted
 argument|bool isSigned
 argument_list|,
 comment|///< Whether to regard S as signed or not
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
 comment|///< The name for the instruction
 argument|BasicBlock *InsertAtEnd
@@ -1581,9 +1934,7 @@ name|Ty
 argument_list|,
 comment|///< The floating point type to cast to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 operator|=
@@ -1616,9 +1967,7 @@ name|Ty
 argument_list|,
 comment|///< The floating point type to cast to
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 argument_list|,
@@ -1647,9 +1996,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which cast should be made
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 operator|=
@@ -1682,9 +2029,7 @@ name|Ty
 argument_list|,
 comment|///< The type to which operand is casted
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Name
 argument_list|,
@@ -1798,7 +2143,7 @@ argument|const Type *DstTy
 argument_list|,
 comment|///< DstTy of 2nd cast
 argument|const Type *IntPtrTy
-comment|///< Integer type corresponding to Ptr types
+comment|///< Integer type corresponding to Ptr types, or null
 argument_list|)
 block|;
 comment|/// @brief Return the opcode of this CastInst
@@ -1967,7 +2312,7 @@ argument|Value *LHS
 argument_list|,
 argument|Value *RHS
 argument_list|,
-argument|const std::string&Name =
+argument|const Twine&Name =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -1986,7 +2331,7 @@ argument|Value *LHS
 argument_list|,
 argument|Value *RHS
 argument_list|,
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2199,7 +2544,7 @@ argument|Value *S1
 argument_list|,
 argument|Value *S2
 argument_list|,
-argument|const std::string&Name =
+argument|const Twine&Name =
 literal|""
 argument_list|,
 argument|Instruction *InsertBefore =
@@ -2223,7 +2568,7 @@ argument|Value *S1
 argument_list|,
 argument|Value *S2
 argument_list|,
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2426,24 +2771,6 @@ operator|==
 name|Instruction
 operator|::
 name|FCmp
-operator|||
-name|I
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|Instruction
-operator|::
-name|VICmp
-operator|||
-name|I
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|Instruction
-operator|::
-name|VFCmp
 return|;
 block|}
 specifier|static
@@ -2475,7 +2802,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-comment|/// @brief Create a result type for fcmp/icmp (but not vicmp/vfcmp)
+comment|/// @brief Create a result type for fcmp/icmp
 specifier|static
 specifier|const
 name|Type
@@ -2509,7 +2836,13 @@ name|get
 argument_list|(
 name|Type
 operator|::
-name|Int1Ty
+name|getInt1Ty
+argument_list|(
+name|opnd_type
+operator|->
+name|getContext
+argument_list|()
+argument_list|)
 argument_list|,
 name|vt
 operator|->
@@ -2521,7 +2854,13 @@ block|}
 return|return
 name|Type
 operator|::
-name|Int1Ty
+name|getInt1Ty
+argument_list|(
+name|opnd_type
+operator|->
+name|getContext
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2536,6 +2875,7 @@ operator|<
 name|CmpInst
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|2

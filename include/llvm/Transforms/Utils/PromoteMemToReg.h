@@ -85,6 +85,9 @@ decl_stmt|;
 name|class
 name|AliasSetTracker
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|/// isAllocaPromotable - Return true if this alloca is legal for promotion.
 comment|/// This is true if there are only loads and stores to the alloca...
 comment|///
@@ -126,6 +129,10 @@ argument_list|,
 name|DominanceFrontier
 operator|&
 name|DF
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
 argument_list|,
 name|AliasSetTracker
 operator|*

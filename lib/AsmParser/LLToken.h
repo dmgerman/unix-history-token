@@ -129,6 +129,8 @@ name|kw_constant
 block|,
 name|kw_private
 block|,
+name|kw_linker_private
+block|,
 name|kw_internal
 block|,
 name|kw_linkonce
@@ -181,6 +183,14 @@ name|kw_datalayout
 block|,
 name|kw_volatile
 block|,
+name|kw_nuw
+block|,
+name|kw_nsw
+block|,
+name|kw_exact
+block|,
+name|kw_inbounds
+block|,
 name|kw_align
 block|,
 name|kw_addrspace
@@ -195,7 +205,11 @@ name|kw_asm
 block|,
 name|kw_sideeffect
 block|,
+name|kw_msasm
+block|,
 name|kw_gc
+block|,
+name|kw_dbg
 block|,
 name|kw_c
 block|,
@@ -241,6 +255,8 @@ name|kw_readnone
 block|,
 name|kw_readonly
 block|,
+name|kw_inlinehint
+block|,
 name|kw_noinline
 block|,
 name|kw_alwaysinline
@@ -254,6 +270,8 @@ block|,
 name|kw_noredzone
 block|,
 name|kw_noimplicitfloat
+block|,
+name|kw_naked
 block|,
 name|kw_type
 block|,
@@ -339,10 +357,6 @@ block|,
 name|kw_icmp
 block|,
 name|kw_fcmp
-block|,
-name|kw_vicmp
-block|,
-name|kw_vfcmp
 block|,
 name|kw_phi
 block|,
@@ -432,6 +446,9 @@ comment|// %foo %"foo"
 name|StringConstant
 block|,
 comment|// "foo"
+name|NamedOrCustomMD
+block|,
+comment|// !foo
 comment|// Metadata valued tokens.
 name|Metadata
 block|,

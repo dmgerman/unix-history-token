@@ -62,7 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"AsmLexer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"AsmCond.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCAsmParser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSectionMachO.h"
 end_include
 
 begin_include
@@ -71,15 +95,30 @@ directive|include
 file|"llvm/MC/MCStreamer.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCAsmInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|AsmExpr
+name|AsmCond
 decl_stmt|;
 name|class
 name|MCContext
+decl_stmt|;
+name|class
+name|MCExpr
 decl_stmt|;
 name|class
 name|MCInst
@@ -88,331 +127,516 @@ name|class
 name|MCStreamer
 decl_stmt|;
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
 name|MCValue
 decl_stmt|;
 name|class
+name|TargetAsmParser
+decl_stmt|;
+name|class
+name|Twine
+decl_stmt|;
+name|class
 name|AsmParser
-block|{
+range|:
 name|public
-label|:
-struct_decl|struct
-name|X86Operand
-struct_decl|;
+name|MCAsmParser
+block|{
 name|private
-label|:
+operator|:
 name|AsmLexer
 name|Lexer
-decl_stmt|;
+block|;
 name|MCContext
-modifier|&
+operator|&
 name|Ctx
-decl_stmt|;
+block|;
 name|MCStreamer
-modifier|&
+operator|&
 name|Out
-decl_stmt|;
+block|;
+name|TargetAsmParser
+operator|*
+name|TargetParser
+block|;
+name|AsmCond
+name|TheCondState
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|AsmCond
+operator|>
+name|TheCondStack
+block|;
+comment|// FIXME: Figure out where this should leave, the code is a copy of that which
+comment|// is also used by TargetLoweringObjectFile.
+name|mutable
+name|void
+operator|*
+name|SectionUniquingMap
+block|;
+comment|/// DirectiveMap - This is a table handlers for directives.  Each handler is
+comment|/// invoked after the directive identifier is read and is responsible for
+comment|/// parsing and validating the rest of the directive.  The handler is passed
+comment|/// in the directive name and the location of the directive keyword.
+name|StringMap
+operator|<
+name|bool
+argument_list|(
+name|AsmParser
+operator|::
+operator|*
+argument_list|)
+argument_list|(
+name|StringRef
+argument_list|,
+name|SMLoc
+argument_list|)
+operator|>
+name|DirectiveMap
+block|;
 name|public
-label|:
+operator|:
 name|AsmParser
 argument_list|(
 name|SourceMgr
 operator|&
-name|SM
+name|_SM
 argument_list|,
 name|MCContext
 operator|&
-name|ctx
+name|_Ctx
 argument_list|,
 name|MCStreamer
 operator|&
-name|OutStr
+name|_Out
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|&
+name|_MAI
 argument_list|)
-operator|:
-name|Lexer
-argument_list|(
-name|SM
-argument_list|)
-operator|,
-name|Ctx
-argument_list|(
-name|ctx
-argument_list|)
-operator|,
-name|Out
-argument_list|(
-argument|OutStr
-argument_list|)
-block|{}
+block|;
 operator|~
 name|AsmParser
 argument_list|()
-block|{}
+block|;
 name|bool
 name|Run
 argument_list|()
-expr_stmt|;
-name|private
-label|:
-name|bool
-name|ParseStatement
-parameter_list|()
-function_decl|;
+block|;
+name|void
+name|AddDirectiveHandler
+argument_list|(
+argument|StringRef Directive
+argument_list|,
+argument|bool (AsmParser::*Handler)(StringRef, SMLoc)
+argument_list|)
+block|{
+name|DirectiveMap
+index|[
+name|Directive
+index|]
+operator|=
+name|Handler
+block|;   }
+name|public
+operator|:
+name|TargetAsmParser
+operator|&
+name|getTargetParser
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|TargetParser
+return|;
+block|}
+name|void
+name|setTargetParser
+argument_list|(
+argument|TargetAsmParser&P
+argument_list|)
+block|{
+name|TargetParser
+operator|=
+operator|&
+name|P
+block|; }
+comment|/// @name MCAsmParser Interface
+comment|/// {
+name|virtual
+name|MCAsmLexer
+operator|&
+name|getLexer
+argument_list|()
+block|{
+return|return
+name|Lexer
+return|;
+block|}
+name|virtual
+name|MCContext
+operator|&
+name|getContext
+argument_list|()
+block|{
+return|return
+name|Ctx
+return|;
+block|}
+name|virtual
+name|MCStreamer
+operator|&
+name|getStreamer
+argument_list|()
+block|{
+return|return
+name|Out
+return|;
+block|}
+name|virtual
 name|void
 name|Warning
-parameter_list|(
-name|SMLoc
-name|L
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|Msg
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|SMLoc L
+argument_list|,
+argument|const Twine&Meg
+argument_list|)
+block|;
+name|virtual
 name|bool
 name|Error
-parameter_list|(
-name|SMLoc
-name|L
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|Msg
-parameter_list|)
-function_decl|;
-name|bool
-name|TokError
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Msg
-parameter_list|)
-function_decl|;
-name|void
-name|EatToEndOfStatement
-parameter_list|()
-function_decl|;
-name|bool
-name|ParseAssignment
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|,
-name|bool
-name|IsDotSet
-parameter_list|)
-function_decl|;
-comment|/// ParseExpression - Parse a general assembly expression.
-comment|///
-comment|/// @param Res - The resulting expression. The pointer value is null on error.
-comment|/// @result - False on success.
+argument_list|(
+argument|SMLoc L
+argument_list|,
+argument|const Twine&Msg
+argument_list|)
+block|;
+name|virtual
 name|bool
 name|ParseExpression
-parameter_list|(
-name|AsmExpr
-modifier|*
-modifier|&
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+operator|&
 name|Res
-parameter_list|)
-function_decl|;
-comment|/// ParseAbsoluteExpression - Parse an expression which must evaluate to an
-comment|/// absolute value.
-comment|///
-comment|/// @param Res - The value of the absolute expression. The result is undefined
-comment|/// on error.
-comment|/// @result - False on success.
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|ParseParenExpression
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+operator|&
+name|Res
+argument_list|)
+block|;
+name|virtual
 name|bool
 name|ParseAbsoluteExpression
-parameter_list|(
+argument_list|(
 name|int64_t
-modifier|&
+operator|&
 name|Res
-parameter_list|)
-function_decl|;
-comment|/// ParseRelocatableExpression - Parse an expression which must be
-comment|/// relocatable.
-comment|///
-comment|/// @param Res - The relocatable expression value. The result is undefined on
-comment|/// error.
-comment|/// @result - False on success.
+argument_list|)
+block|;
+comment|/// }
+name|private
+operator|:
+name|MCSymbol
+operator|*
+name|CreateSymbol
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|;
+comment|// FIXME: See comment on SectionUniquingMap.
+specifier|const
+name|MCSection
+operator|*
+name|getMachOSection
+argument_list|(
+argument|const StringRef&Segment
+argument_list|,
+argument|const StringRef&Section
+argument_list|,
+argument|unsigned TypeAndAttributes
+argument_list|,
+argument|unsigned Reserved2
+argument_list|,
+argument|SectionKind Kind
+argument_list|)
+specifier|const
+block|;
 name|bool
-name|ParseRelocatableExpression
-parameter_list|(
-name|MCValue
-modifier|&
-name|Res
-parameter_list|)
-function_decl|;
-comment|/// ParseParenRelocatableExpression - Parse an expression which must be
-comment|/// relocatable, assuming that an initial '(' has already been consumed.
-comment|///
-comment|/// @param Res - The relocatable expression value. The result is undefined on
-comment|/// error.
-comment|/// @result - False on success.
-comment|///
-comment|/// @see ParseRelocatableExpression, ParseParenExpr.
+name|ParseStatement
+argument_list|()
+block|;
 name|bool
-name|ParseParenRelocatableExpression
-parameter_list|(
-name|MCValue
-modifier|&
-name|Res
-parameter_list|)
-function_decl|;
-name|bool
-name|ParsePrimaryExpr
-parameter_list|(
-name|AsmExpr
-modifier|*
-modifier|&
-name|Res
-parameter_list|)
-function_decl|;
-name|bool
-name|ParseBinOpRHS
-parameter_list|(
-name|unsigned
-name|Precedence
-parameter_list|,
-name|AsmExpr
-modifier|*
-modifier|&
-name|Res
-parameter_list|)
-function_decl|;
-name|bool
-name|ParseParenExpr
-parameter_list|(
-name|AsmExpr
-modifier|*
-modifier|&
-name|Res
-parameter_list|)
-function_decl|;
-comment|// X86 specific.
-name|bool
-name|ParseX86InstOperands
-parameter_list|(
+name|TokError
+argument_list|(
 specifier|const
 name|char
-modifier|*
-name|InstName
-parameter_list|,
-name|MCInst
-modifier|&
-name|Inst
-parameter_list|)
-function_decl|;
+operator|*
+name|Msg
+argument_list|)
+block|;
 name|bool
-name|ParseX86Operand
-parameter_list|(
-name|X86Operand
-modifier|&
-name|Op
-parameter_list|)
-function_decl|;
+name|ParseConditionalAssemblyDirectives
+argument_list|(
+argument|StringRef Directive
+argument_list|,
+argument|SMLoc DirectiveLoc
+argument_list|)
+block|;
+name|void
+name|EatToEndOfStatement
+argument_list|()
+block|;
 name|bool
-name|ParseX86MemOperand
-parameter_list|(
-name|X86Operand
-modifier|&
-name|Op
-parameter_list|)
-function_decl|;
+name|ParseAssignment
+argument_list|(
+specifier|const
+name|StringRef
+operator|&
+name|Name
+argument_list|)
+block|;
 name|bool
-name|ParseX86Register
-parameter_list|(
-name|X86Operand
-modifier|&
-name|Op
-parameter_list|)
-function_decl|;
+name|ParsePrimaryExpr
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+operator|&
+name|Res
+argument_list|)
+block|;
+name|bool
+name|ParseBinOpRHS
+argument_list|(
+argument|unsigned Precedence
+argument_list|,
+argument|const MCExpr *&Res
+argument_list|)
+block|;
+name|bool
+name|ParseParenExpr
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+operator|&
+name|Res
+argument_list|)
+block|;
+comment|/// ParseIdentifier - Parse an identifier or string (as a quoted identifier)
+comment|/// and set \arg Res to the identifier contents.
+name|bool
+name|ParseIdentifier
+argument_list|(
+name|StringRef
+operator|&
+name|Res
+argument_list|)
+block|;
 comment|// Directive Parsing.
 name|bool
 name|ParseDirectiveDarwinSection
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|// Darwin specific ".section".
 name|bool
 name|ParseDirectiveSectionSwitch
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Section
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|Directives
-init|=
+argument_list|(
+argument|const char *Segment
+argument_list|,
+argument|const char *Section
+argument_list|,
+argument|unsigned TAA =
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|,
+argument|unsigned ImplicitAlign =
+literal|0
+argument_list|,
+argument|unsigned StubSize =
+literal|0
+argument_list|)
+block|;
 name|bool
 name|ParseDirectiveAscii
-parameter_list|(
-name|bool
-name|ZeroTerminated
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|bool ZeroTerminated
+argument_list|)
+block|;
 comment|// ".ascii", ".asciiz"
 name|bool
 name|ParseDirectiveValue
-parameter_list|(
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned Size
+argument_list|)
+block|;
 comment|// ".byte", ".long", ...
 name|bool
 name|ParseDirectiveFill
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|// ".fill"
 name|bool
 name|ParseDirectiveSpace
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|// ".space"
 name|bool
 name|ParseDirectiveSet
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|// ".set"
 name|bool
 name|ParseDirectiveOrg
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|// ".org"
 comment|// ".align{,32}", ".p2align{,w,l}"
 name|bool
 name|ParseDirectiveAlign
-parameter_list|(
-name|bool
-name|IsPow2
-parameter_list|,
-name|unsigned
-name|ValueSize
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|bool IsPow2
+argument_list|,
+argument|unsigned ValueSize
+argument_list|)
+block|;
 comment|/// ParseDirectiveSymbolAttribute - Parse a directive like ".globl" which
 comment|/// accepts a single symbol (which should be a label or an external).
 name|bool
 name|ParseDirectiveSymbolAttribute
 argument_list|(
-name|MCStreamer
-operator|::
-name|SymbolAttr
-name|Attr
+argument|MCStreamer::SymbolAttr Attr
 argument_list|)
+block|;
+name|bool
+name|ParseDirectiveDarwinSymbolDesc
+argument_list|()
+block|;
+comment|// Darwin specific ".desc"
+name|bool
+name|ParseDirectiveDarwinLsym
+argument_list|()
+block|;
+comment|// Darwin specific ".lsym"
+name|bool
+name|ParseDirectiveComm
+argument_list|(
+argument|bool IsLocal
+argument_list|)
+block|;
+comment|// ".comm" and ".lcomm"
+name|bool
+name|ParseDirectiveDarwinZerofill
+argument_list|()
+block|;
+comment|// Darwin specific ".zerofill"
+comment|// Darwin specific ".subsections_via_symbols"
+name|bool
+name|ParseDirectiveDarwinSubsectionsViaSymbols
+argument_list|()
+block|;
+comment|// Darwin specific .dump and .load
+name|bool
+name|ParseDirectiveDarwinDumpOrLoad
+argument_list|(
+argument|SMLoc IDLoc
+argument_list|,
+argument|bool IsDump
+argument_list|)
+block|;
+name|bool
+name|ParseDirectiveAbort
+argument_list|()
+block|;
+comment|// ".abort"
+name|bool
+name|ParseDirectiveInclude
+argument_list|()
+block|;
+comment|// ".include"
+name|bool
+name|ParseDirectiveIf
+argument_list|(
+argument|SMLoc DirectiveLoc
+argument_list|)
+block|;
+comment|// ".if"
+name|bool
+name|ParseDirectiveElseIf
+argument_list|(
+argument|SMLoc DirectiveLoc
+argument_list|)
+block|;
+comment|// ".elseif"
+name|bool
+name|ParseDirectiveElse
+argument_list|(
+argument|SMLoc DirectiveLoc
+argument_list|)
+block|;
+comment|// ".else"
+name|bool
+name|ParseDirectiveEndIf
+argument_list|(
+argument|SMLoc DirectiveLoc
+argument_list|)
+block|;
+comment|// .endif
+name|bool
+name|ParseDirectiveFile
+argument_list|(
+argument|StringRef
+argument_list|,
+argument|SMLoc DirectiveLoc
+argument_list|)
+block|;
+comment|// ".file"
+name|bool
+name|ParseDirectiveLine
+argument_list|(
+argument|StringRef
+argument_list|,
+argument|SMLoc DirectiveLoc
+argument_list|)
+block|;
+comment|// ".line"
+name|bool
+name|ParseDirectiveLoc
+argument_list|(
+argument|StringRef
+argument_list|,
+argument|SMLoc DirectiveLoc
+argument_list|)
+block|;
+comment|// ".loc"
+comment|/// ParseEscapedString - Parse the current token as a string which may include
+comment|/// escaped characters and return the string contents.
+name|bool
+name|ParseEscapedString
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|Data
+argument_list|)
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 block|}
 end_decl_stmt
 

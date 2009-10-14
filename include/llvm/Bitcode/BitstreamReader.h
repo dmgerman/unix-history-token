@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -1195,6 +1201,15 @@ name|unsigned
 name|NumBits
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|NumBits
+operator|<=
+literal|32
+operator|&&
+literal|"Cannot return more than 32 bits!"
+argument_list|)
+expr_stmt|;
 comment|// If the field is fully contained by CurWord, return it quickly.
 if|if
 condition|(
@@ -1507,6 +1522,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|// ReadVBR64 - Read a VBR that may have a value up to 64-bits in size.  The
+comment|// chunk size of the VBR must still be<= 32 bits though.
 name|uint64_t
 name|ReadVBR64
 parameter_list|(
@@ -1514,7 +1531,7 @@ name|unsigned
 name|NumBits
 parameter_list|)
 block|{
-name|uint64_t
+name|uint32_t
 name|Piece
 init|=
 name|Read
@@ -1528,10 +1545,7 @@ operator|(
 name|Piece
 operator|&
 operator|(
-name|uint64_t
-argument_list|(
-literal|1
-argument_list|)
+literal|1U
 operator|<<
 operator|(
 name|NumBits
@@ -1544,7 +1558,10 @@ operator|==
 literal|0
 condition|)
 return|return
+name|uint64_t
+argument_list|(
 name|Piece
+argument_list|)
 return|;
 name|uint64_t
 name|Result
@@ -1563,7 +1580,8 @@ condition|)
 block|{
 name|Result
 operator||=
-operator|(
+name|uint64_t
+argument_list|(
 name|Piece
 operator|&
 operator|(
@@ -1579,7 +1597,7 @@ operator|)
 operator|-
 literal|1
 operator|)
-operator|)
+argument_list|)
 operator|<<
 name|NextBit
 expr_stmt|;
@@ -1589,10 +1607,7 @@ operator|(
 name|Piece
 operator|&
 operator|(
-name|uint64_t
-argument_list|(
-literal|1
-argument_list|)
+literal|1U
 operator|<<
 operator|(
 name|NumBits

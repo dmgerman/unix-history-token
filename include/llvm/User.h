@@ -155,15 +155,6 @@ name|U
 name|overlay
 typedef|;
 block|}
-block|;
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|allocate
-argument_list|(
-name|unsigned
-argument_list|)
 block|; }
 expr_stmt|;
 name|class

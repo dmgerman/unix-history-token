@@ -209,27 +209,23 @@ comment|///
 name|namespace
 name|X86II
 block|{
+comment|/// Target Operand Flag enum.
 enum|enum
+name|TOF
 block|{
 comment|//===------------------------------------------------------------------===//
 comment|// X86 Specific MachineOperand flags.
 name|MO_NO_FLAG
-init|=
-literal|0
 block|,
 comment|/// MO_GOT_ABSOLUTE_ADDRESS - On a symbol operand, this represents a
 comment|/// relocation of:
 comment|///    SYMBOL_LABEL + [. - PICBASELABEL]
 name|MO_GOT_ABSOLUTE_ADDRESS
-init|=
-literal|1
 block|,
 comment|/// MO_PIC_BASE_OFFSET - On a symbol operand this indicates that the
 comment|/// immediate should get the value of the symbol minus the PIC base label:
 comment|///    SYMBOL_LABEL - PICBASELABEL
 name|MO_PIC_BASE_OFFSET
-init|=
-literal|2
 block|,
 comment|/// MO_GOT - On a symbol operand this indicates that the immediate is the
 comment|/// offset to the GOT entry for the symbol name from the base of the GOT.
@@ -237,8 +233,6 @@ comment|///
 comment|/// See the X86-64 ELF ABI supplement for more details.
 comment|///    SYMBOL_LABEL @GOT
 name|MO_GOT
-init|=
-literal|3
 block|,
 comment|/// MO_GOTOFF - On a symbol operand this indicates that the immediate is
 comment|/// the offset to the location of the symbol name from the base of the GOT.
@@ -246,8 +240,6 @@ comment|///
 comment|/// See the X86-64 ELF ABI supplement for more details.
 comment|///    SYMBOL_LABEL @GOTOFF
 name|MO_GOTOFF
-init|=
-literal|4
 block|,
 comment|/// MO_GOTPCREL - On a symbol operand this indicates that the immediate is
 comment|/// offset to the GOT entry for the symbol name from the current code
@@ -256,8 +248,6 @@ comment|///
 comment|/// See the X86-64 ELF ABI supplement for more details.
 comment|///    SYMBOL_LABEL @GOTPCREL
 name|MO_GOTPCREL
-init|=
-literal|5
 block|,
 comment|/// MO_PLT - On a symbol operand this indicates that the immediate is
 comment|/// offset to the PLT entry of symbol name from the current code location.
@@ -265,8 +255,6 @@ comment|///
 comment|/// See the X86-64 ELF ABI supplement for more details.
 comment|///    SYMBOL_LABEL @PLT
 name|MO_PLT
-init|=
-literal|6
 block|,
 comment|/// MO_TLSGD - On a symbol operand this indicates that the immediate is
 comment|/// some TLS offset.
@@ -274,8 +262,6 @@ comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @TLSGD
 name|MO_TLSGD
-init|=
-literal|7
 block|,
 comment|/// MO_GOTTPOFF - On a symbol operand this indicates that the immediate is
 comment|/// some TLS offset.
@@ -283,8 +269,6 @@ comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @GOTTPOFF
 name|MO_GOTTPOFF
-init|=
-literal|8
 block|,
 comment|/// MO_INDNTPOFF - On a symbol operand this indicates that the immediate is
 comment|/// some TLS offset.
@@ -292,8 +276,6 @@ comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @INDNTPOFF
 name|MO_INDNTPOFF
-init|=
-literal|9
 block|,
 comment|/// MO_TPOFF - On a symbol operand this indicates that the immediate is
 comment|/// some TLS offset.
@@ -301,8 +283,6 @@ comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @TPOFF
 name|MO_TPOFF
-init|=
-literal|10
 block|,
 comment|/// MO_NTPOFF - On a symbol operand this indicates that the immediate is
 comment|/// some TLS offset.
@@ -310,9 +290,162 @@ comment|///
 comment|/// See 'ELF Handling for Thread-Local Storage' for more details.
 comment|///    SYMBOL_LABEL @NTPOFF
 name|MO_NTPOFF
-init|=
-literal|11
 block|,
+comment|/// MO_DLLIMPORT - On a symbol operand "FOO", this indicates that the
+comment|/// reference is actually to the "__imp_FOO" symbol.  This is used for
+comment|/// dllimport linkage on windows.
+name|MO_DLLIMPORT
+block|,
+comment|/// MO_DARWIN_STUB - On a symbol operand "FOO", this indicates that the
+comment|/// reference is actually to the "FOO$stub" symbol.  This is used for calls
+comment|/// and jumps to external functions on Tiger and before.
+name|MO_DARWIN_STUB
+block|,
+comment|/// MO_DARWIN_NONLAZY - On a symbol operand "FOO", this indicates that the
+comment|/// reference is actually to the "FOO$non_lazy_ptr" symbol, which is a
+comment|/// non-PIC-base-relative reference to a non-hidden dyld lazy pointer stub.
+name|MO_DARWIN_NONLAZY
+block|,
+comment|/// MO_DARWIN_NONLAZY_PIC_BASE - On a symbol operand "FOO", this indicates
+comment|/// that the reference is actually to "FOO$non_lazy_ptr - PICBASE", which is
+comment|/// a PIC-base-relative reference to a non-hidden dyld lazy pointer stub.
+name|MO_DARWIN_NONLAZY_PIC_BASE
+block|,
+comment|/// MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE - On a symbol operand "FOO", this
+comment|/// indicates that the reference is actually to "FOO$non_lazy_ptr -PICBASE",
+comment|/// which is a PIC-base-relative reference to a hidden dyld lazy pointer
+comment|/// stub.
+name|MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE
+block|}
+enum|;
+block|}
+comment|/// isGlobalStubReference - Return true if the specified TargetFlag operand is
+comment|/// a reference to a stub for a global, not the global itself.
+specifier|inline
+specifier|static
+name|bool
+name|isGlobalStubReference
+parameter_list|(
+name|unsigned
+name|char
+name|TargetFlag
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|TargetFlag
+condition|)
+block|{
+case|case
+name|X86II
+operator|::
+name|MO_DLLIMPORT
+case|:
+comment|// dllimport stub.
+case|case
+name|X86II
+operator|::
+name|MO_GOTPCREL
+case|:
+comment|// rip-relative GOT reference.
+case|case
+name|X86II
+operator|::
+name|MO_GOT
+case|:
+comment|// normal GOT reference.
+case|case
+name|X86II
+operator|::
+name|MO_DARWIN_NONLAZY_PIC_BASE
+case|:
+comment|// Normal $non_lazy_ptr ref.
+case|case
+name|X86II
+operator|::
+name|MO_DARWIN_NONLAZY
+case|:
+comment|// Normal $non_lazy_ptr ref.
+case|case
+name|X86II
+operator|::
+name|MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE
+case|:
+comment|// Hidden $non_lazy_ptr ref.
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+comment|/// isGlobalRelativeToPICBase - Return true if the specified global value
+comment|/// reference is relative to a 32-bit PIC base (X86ISD::GlobalBaseReg).  If this
+comment|/// is true, the addressing mode has the PIC base register added in (e.g. EBX).
+specifier|inline
+specifier|static
+name|bool
+name|isGlobalRelativeToPICBase
+parameter_list|(
+name|unsigned
+name|char
+name|TargetFlag
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|TargetFlag
+condition|)
+block|{
+case|case
+name|X86II
+operator|::
+name|MO_GOTOFF
+case|:
+comment|// isPICStyleGOT: local global.
+case|case
+name|X86II
+operator|::
+name|MO_GOT
+case|:
+comment|// isPICStyleGOT: other global.
+case|case
+name|X86II
+operator|::
+name|MO_PIC_BASE_OFFSET
+case|:
+comment|// Darwin local global.
+case|case
+name|X86II
+operator|::
+name|MO_DARWIN_NONLAZY_PIC_BASE
+case|:
+comment|// Darwin/32 external global.
+case|case
+name|X86II
+operator|::
+name|MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE
+case|:
+comment|// Darwin/32 hidden global.
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+comment|/// X86II - This namespace holds all of the target specific flags that
+comment|/// instruction info tracks.
+comment|///
+name|namespace
+name|X86II
+block|{
+enum|enum
+block|{
 comment|//===------------------------------------------------------------------===//
 comment|// Instruction encodings.  These are the standard/most common forms for X86
 comment|// instructions.
@@ -574,6 +707,13 @@ block|,
 name|TA
 init|=
 literal|14
+operator|<<
+name|Op0Shift
+block|,
+comment|// TF - Prefix before and after 0x0F
+name|TF
+init|=
+literal|15
 operator|<<
 name|Op0Shift
 block|,
@@ -1011,8 +1151,15 @@ operator|<
 name|unsigned
 operator|*
 block|,
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
 name|unsigned
 operator|>
+expr|>
 name|RegOp2MemOpTable2Addr
 block|;
 name|DenseMap
@@ -1020,8 +1167,15 @@ operator|<
 name|unsigned
 operator|*
 block|,
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
 name|unsigned
 operator|>
+expr|>
 name|RegOp2MemOpTable0
 block|;
 name|DenseMap
@@ -1029,8 +1183,15 @@ operator|<
 name|unsigned
 operator|*
 block|,
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
 name|unsigned
 operator|>
+expr|>
 name|RegOp2MemOpTable1
 block|;
 name|DenseMap
@@ -1038,8 +1199,15 @@ operator|<
 name|unsigned
 operator|*
 block|,
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
 name|unsigned
 operator|>
+expr|>
 name|RegOp2MemOpTable2
 block|;
 comment|/// MemOp2RegOpTable - Load / store unfolding opcode map.
@@ -1126,6 +1294,8 @@ name|bool
 name|isReallyTriviallyReMaterializable
 argument_list|(
 argument|const MachineInstr *MI
+argument_list|,
+argument|AliasAnalysis *AA
 argument_list|)
 specifier|const
 block|;
@@ -1138,14 +1308,9 @@ argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
+argument|unsigned SubIdx
+argument_list|,
 argument|const MachineInstr *Orig
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isInvariantLoad
-argument_list|(
-argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
@@ -1283,6 +1448,10 @@ argument|SmallVectorImpl<MachineOperand>&Addr
 argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
+argument|MachineInstr::mmo_iterator MMOBegin
+argument_list|,
+argument|MachineInstr::mmo_iterator MMOEnd
+argument_list|,
 argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
 specifier|const
@@ -1314,6 +1483,10 @@ argument_list|,
 argument|SmallVectorImpl<MachineOperand>&Addr
 argument_list|,
 argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineInstr::mmo_iterator MMOBegin
+argument_list|,
+argument|MachineInstr::mmo_iterator MMOEnd
 argument_list|,
 argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
@@ -1607,6 +1780,10 @@ argument_list|,
 argument|unsigned OpNum
 argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&MOs
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|unsigned Alignment
 argument_list|)
 specifier|const
 block|; }

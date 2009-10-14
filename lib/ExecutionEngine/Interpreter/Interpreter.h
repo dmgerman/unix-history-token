@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/InstVisitor.h"
+file|"llvm/Target/TargetData.h"
 end_include
 
 begin_include
@@ -92,13 +92,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetData.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/InstVisitor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_decl_stmt
@@ -445,14 +457,6 @@ operator|*
 name|ErrorStr
 operator|=
 literal|0
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-operator|=
-name|CodeGenOpt
-operator|::
-name|Default
 argument_list|)
 decl_stmt|;
 comment|/// run - Start execution with the specified function and arguments.
@@ -628,10 +632,8 @@ modifier|&
 name|PN
 parameter_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"PHI nodes already handled!"
 argument_list|)
 expr_stmt|;
@@ -839,14 +841,13 @@ modifier|&
 name|I
 parameter_list|)
 block|{
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 name|I
 expr_stmt|;
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Instruction not interpretable yet!"
 argument_list|)
 expr_stmt|;

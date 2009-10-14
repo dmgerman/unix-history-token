@@ -121,8 +121,7 @@ block|,
 name|FCTIWZ
 block|,
 comment|/// STFIWX - The STFIWX instruction.  The first operand is an input token
-comment|/// chain, then an f64 value to store, then an address to store it to,
-comment|/// then a SRCVALUE for the address.
+comment|/// chain, then an f64 value to store, then an address to store it to.
 name|STFIWX
 block|,
 comment|// VMADDFP, VNMSUBFP - The VMADDFP and VNMSUBFP instructions, taking
@@ -143,6 +142,8 @@ comment|/// though these are usually folded into other nodes.
 name|Hi
 block|,
 name|Lo
+block|,
+name|TOC_ENTRY
 block|,
 comment|/// OPRC, CHAIN = DYNALLOC(CHAIN, NEGSIZE, FRAME_INDEX)
 comment|/// This instruction is lowered in PPCRegisterInfo::eliminateFrameIndex to
@@ -166,13 +167,13 @@ comment|/// EXTSW_32 - This is the EXTSW instruction for use with "32-bit"
 comment|/// registers.
 name|EXTSW_32
 block|,
-comment|/// STD_32 - This is the STD instruction for use with "32-bit" registers.
-name|STD_32
-block|,
 comment|/// CALL - A direct function call.
 name|CALL_Darwin
 block|,
 name|CALL_SVR4
+block|,
+comment|/// NOP - Special NOP which follows 64-bit SVR4 calls.
+name|NOP
 block|,
 comment|/// CHAIN,FLAG = MTCTR(VAL, CHAIN[, INFLAG]) - Directly corresponds to a
 comment|/// MTCTR instruction.
@@ -211,18 +212,6 @@ comment|/// PPC::BLE), DESTBB is the destination block to branch to, and INFLAG 
 comment|/// an optional input flag argument.
 name|COND_BRANCH
 block|,
-comment|/// CHAIN = STBRX CHAIN, GPRC, Ptr, SRCVALUE, Type - This is a
-comment|/// byte-swapping store instruction.  It byte-swaps the low "Type" bits of
-comment|/// the GPRC input, then stores it through Ptr.  Type can be either i16 or
-comment|/// i32.
-name|STBRX
-block|,
-comment|/// GPRC, CHAIN = LBRX CHAIN, Ptr, SRCVALUE, Type - This is a
-comment|/// byte-swapping load instruction.  It loads "Type" bits, byte swaps it,
-comment|/// then puts it in the bottom bits of the GPRC.  TYPE can be either i16
-comment|/// or i32.
-name|LBRX
-block|,
 comment|// The following 5 instructions are used only as part of the
 comment|// long double-to-int conversion sequence.
 comment|/// OUTFLAG = MFFS F8RC - This moves the FPSCR (not modelled) into the
@@ -251,15 +240,31 @@ comment|/// STCX = This corresponds to PPC stcx. instrcution: store conditional
 comment|/// indexed. This is used to implement atomic operations.
 name|STCX
 block|,
-comment|/// TAILCALL - Indicates a tail call should be taken.
-name|TAILCALL
-block|,
 comment|/// TC_RETURN - A tail call return.
 comment|///   operand #0 chain
 comment|///   operand #1 callee (register or absolute)
 comment|///   operand #2 stack adjustment
 comment|///   operand #3 optional in flag
 name|TC_RETURN
+block|,
+comment|/// STD_32 - This is the STD instruction for use with "32-bit" registers.
+name|STD_32
+init|=
+name|ISD
+operator|::
+name|FIRST_TARGET_MEMORY_OPCODE
+block|,
+comment|/// CHAIN = STBRX CHAIN, GPRC, Ptr, Type - This is a
+comment|/// byte-swapping store instruction.  It byte-swaps the low "Type" bits of
+comment|/// the GPRC input, then stores it through Ptr.  Type can be either i16 or
+comment|/// i32.
+name|STBRX
+block|,
+comment|/// GPRC, CHAIN = LBRX CHAIN, Ptr, Type - This is a
+comment|/// byte-swapping load instruction.  It loads "Type" bits, byte swaps it,
+comment|/// then puts it in the bottom bits of the GPRC.  TYPE can be either i16
+comment|/// or i32.
+name|LBRX
 block|}
 enum|;
 block|}
@@ -450,9 +455,11 @@ block|;
 comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
 name|virtual
 name|MVT
+operator|::
+name|SimpleValueType
 name|getSetCCResultType
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -609,6 +616,10 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -661,7 +672,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -730,18 +741,19 @@ argument|GlobalValue *GV
 argument_list|)
 specifier|const
 block|;
-comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible
-comment|/// for tail call optimization. Target which want to do tail call
-comment|/// optimization should implement this function.
 name|virtual
 name|bool
 name|IsEligibleForTailCallOptimization
 argument_list|(
-argument|CallSDNode *TheCall
+argument|SDValue Callee
 argument_list|,
-argument|SDValue Ret
+argument|CallingConv::ID CalleeCC
 argument_list|,
-argument|SelectionDAG&DAG
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|SelectionDAG& DAG
 argument_list|)
 specifier|const
 block|;
@@ -754,7 +766,7 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|MVT
+name|EVT
 name|getOptimalMemOpType
 argument_list|(
 argument|uint64_t Size
@@ -913,70 +925,6 @@ argument|const PPCSubtarget&Subtarget
 argument_list|)
 block|;
 name|SDValue
-name|LowerFORMAL_ARGUMENTS_SVR4
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|int&VarArgsFrameIndex
-argument_list|,
-argument|int&VarArgsStackOffset
-argument_list|,
-argument|unsigned&VarArgsNumGPR
-argument_list|,
-argument|unsigned&VarArgsNumFPR
-argument_list|,
-argument|const PPCSubtarget&Subtarget
-argument_list|)
-block|;
-name|SDValue
-name|LowerFORMAL_ARGUMENTS_Darwin
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|int&VarArgsFrameIndex
-argument_list|,
-argument|const PPCSubtarget&Subtarget
-argument_list|)
-block|;
-name|SDValue
-name|LowerCALL_Darwin
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|const PPCSubtarget&Subtarget
-argument_list|,
-argument|TargetMachine&TM
-argument_list|)
-block|;
-name|SDValue
-name|LowerCALL_SVR4
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|const PPCSubtarget&Subtarget
-argument_list|,
-argument|TargetMachine&TM
-argument_list|)
-block|;
-name|SDValue
-name|LowerRET
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|TargetMachine&TM
-argument_list|)
-block|;
-name|SDValue
 name|LowerSTACKRESTORE
 argument_list|(
 argument|SDValue Op
@@ -1092,6 +1040,206 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
+name|LowerCallResult
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue InFlag
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|SDValue
+name|FinishCall
+argument_list|(
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVector<std::pair<unsigned
+argument_list|,
+argument|SDValue>
+argument_list|,
+literal|8
+argument|>&RegsToPass
+argument_list|,
+argument|SDValue InFlag
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue&Callee
+argument_list|,
+argument|int SPDiff
+argument_list|,
+argument|unsigned NumBytes
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
+name|LowerFormalArguments_Darwin
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|SDValue
+name|LowerFormalArguments_SVR4
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|SDValue
+name|LowerCall_Darwin
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|SDValue
+name|LowerCall_SVR4
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 block|;   }
 decl_stmt|;

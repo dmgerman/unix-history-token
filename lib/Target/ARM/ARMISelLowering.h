@@ -139,6 +139,9 @@ comment|// Conditional branch.
 name|BR_JT
 block|,
 comment|// Jumptable branch.
+name|BR2_JT
+block|,
+comment|// Jumptable branch (2 level - jumptable entry is a jump).
 name|RET_FLAG
 block|,
 comment|// Return with a flag operand.
@@ -195,12 +198,15 @@ block|,
 comment|// Two gprs to double.
 name|EH_SJLJ_SETJMP
 block|,
-comment|// SjLj exception handling setjmp
+comment|// SjLj exception handling setjmp.
 name|EH_SJLJ_LONGJMP
 block|,
-comment|// SjLj exception handling longjmp
+comment|// SjLj exception handling longjmp.
 name|THREAD_POINTER
 block|,
+name|DYN_ALLOC
+block|,
+comment|// Dynamic allocation on the stack.
 name|VCEQ
 block|,
 comment|// Vector compare equal.
@@ -295,9 +301,32 @@ comment|// zero-extend vector extract element
 name|VGETLANEs
 block|,
 comment|// sign-extend vector extract element
-comment|// Vector duplicate lane (128-bit result only; 64-bit is a shuffle)
-name|VDUPLANEQ
-comment|// splat a lane from a 64-bit vector to a 128-bit vector
+comment|// Vector duplicate:
+name|VDUP
+block|,
+name|VDUPLANE
+block|,
+comment|// Vector shuffles:
+name|VEXT
+block|,
+comment|// extract
+name|VREV64
+block|,
+comment|// reverse elements within 64-bit doublewords
+name|VREV32
+block|,
+comment|// reverse elements within 32-bit words
+name|VREV16
+block|,
+comment|// reverse elements within 16-bit halfwords
+name|VZIP
+block|,
+comment|// zip (interleave)
+name|VUZP
+block|,
+comment|// unzip (deinterleave)
+name|VTRN
+comment|// transpose
 block|}
 enum|;
 block|}
@@ -407,6 +436,21 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*>*
+argument_list|)
+specifier|const
+block|;
+comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
+comment|/// unaligned memory accesses. of the specified type.
+comment|/// FIXME: Add getOptimalMemOpType to implement memcpy with NEON?
+name|virtual
+name|bool
+name|allowsUnalignedMemoryAccesses
+argument_list|(
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -419,6 +463,15 @@ argument_list|(
 argument|const AddrMode&AM
 argument_list|,
 argument|const Type *Ty
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isLegalT2ScaledAddressingMode
+argument_list|(
+argument|const AddrMode&AM
+argument_list|,
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -501,7 +554,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -515,7 +568,7 @@ name|getRegClassForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -559,6 +612,22 @@ argument|const Function *F
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|isShuffleMaskLegal
+argument_list|(
+argument|const SmallVectorImpl<int>&M
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isOffsetFoldingLegal
+argument_list|(
+argument|const GlobalAddressSDNode *GA
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 comment|/// Subtarget - Keep a pointer to the ARMSubtarget around so that we can
@@ -568,7 +637,7 @@ name|ARMSubtarget
 operator|*
 name|Subtarget
 block|;
-comment|/// ARMPCLabelIndex - Keep track the number of ARM PC labels created.
+comment|/// ARMPCLabelIndex - Keep track of the number of ARM PC labels created.
 comment|///
 name|unsigned
 name|ARMPCLabelIndex
@@ -576,23 +645,23 @@ block|;
 name|void
 name|addTypeForNEON
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|,
-argument|MVT PromotedLdStVT
+argument|EVT PromotedLdStVT
 argument_list|,
-argument|MVT PromotedBitwiseVT
+argument|EVT PromotedBitwiseVT
 argument_list|)
 block|;
 name|void
 name|addDRTypeForNEON
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 block|;
 name|void
 name|addQRTypeForNEON
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 block|;
 typedef|typedef
@@ -614,7 +683,7 @@ expr_stmt|;
 name|void
 name|PassF64ArgInRegs
 argument_list|(
-argument|CallSDNode *TheCall
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -665,40 +734,42 @@ name|CCAssignFn
 modifier|*
 name|CCAssignFnForNode
 argument_list|(
-name|unsigned
+name|CallingConv
+operator|::
+name|ID
 name|CC
 argument_list|,
 name|bool
 name|Return
+argument_list|,
+name|bool
+name|isVarArg
 argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
 name|LowerMemOpCallTo
 argument_list|(
-name|CallSDNode
-operator|*
-name|TheCall
+name|SDValue
+name|Chain
+argument_list|,
+name|SDValue
+name|StackPtr
+argument_list|,
+name|SDValue
+name|Arg
+argument_list|,
+name|DebugLoc
+name|dl
 argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
 specifier|const
-name|SDValue
-operator|&
-name|StackPtr
-argument_list|,
-specifier|const
 name|CCValAssign
 operator|&
 name|VA
-argument_list|,
-name|SDValue
-name|Chain
-argument_list|,
-name|SDValue
-name|Arg
 argument_list|,
 name|ISD
 operator|::
@@ -706,30 +777,8 @@ name|ArgFlagsTy
 name|Flags
 argument_list|)
 decl_stmt|;
-name|SDNode
-modifier|*
-name|LowerCallResult
-parameter_list|(
 name|SDValue
-name|Chain
-parameter_list|,
-name|SDValue
-name|InFlag
-parameter_list|,
-name|CallSDNode
-modifier|*
-name|TheCall
-parameter_list|,
-name|unsigned
-name|CallingConv
-parameter_list|,
-name|SelectionDAG
-modifier|&
-name|DAG
-parameter_list|)
-function_decl|;
-name|SDValue
-name|LowerCALL
+name|LowerINTRINSIC_W_CHAIN
 parameter_list|(
 name|SDValue
 name|Op
@@ -741,17 +790,6 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
-parameter_list|(
-name|SDValue
-name|Op
-parameter_list|,
-name|SelectionDAG
-modifier|&
-name|DAG
-parameter_list|)
-function_decl|;
-name|SDValue
-name|LowerRET
 parameter_list|(
 name|SDValue
 name|Op
@@ -830,17 +868,6 @@ name|DAG
 parameter_list|)
 function_decl|;
 name|SDValue
-name|LowerFORMAL_ARGUMENTS
-parameter_list|(
-name|SDValue
-name|Op
-parameter_list|,
-name|SelectionDAG
-modifier|&
-name|DAG
-parameter_list|)
-function_decl|;
-name|SDValue
 name|LowerBR_JT
 parameter_list|(
 name|SDValue
@@ -853,6 +880,17 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|LowerFRAMEADDR
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
+name|SDValue
+name|LowerDYNAMIC_STACKALLOC
 parameter_list|(
 name|SDValue
 name|Op
@@ -907,6 +945,177 @@ name|uint64_t
 name|SrcSVOff
 parameter_list|)
 function_decl|;
+name|SDValue
+name|LowerCallResult
+argument_list|(
+name|SDValue
+name|Chain
+argument_list|,
+name|SDValue
+name|InFlag
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|InVals
+argument_list|)
+decl_stmt|;
+name|virtual
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+name|SDValue
+name|Chain
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|InVals
+argument_list|)
+decl_stmt|;
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+name|SDValue
+name|Chain
+argument_list|,
+name|SDValue
+name|Callee
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+name|bool
+name|isTailCall
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|InVals
+argument_list|)
+decl_stmt|;
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+name|SDValue
+name|Chain
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

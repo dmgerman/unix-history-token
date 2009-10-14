@@ -110,73 +110,20 @@ operator|&
 name|STI
 argument_list|)
 block|;
-comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
-comment|/// such, whenever a client has an instance of instruction info, it should
-comment|/// always be able to get register info as well (through this method).
-comment|///
-specifier|const
-name|Thumb2RegisterInfo
-operator|&
-name|getRegisterInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RI
-return|;
-block|}
-name|bool
-name|spillCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|restoreCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isMoveInstr
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned&SrcReg
-argument_list|,
-argument|unsigned&DstReg
-argument_list|,
-argument|unsigned&SrcSubIdx
-argument_list|,
-argument|unsigned&DstSubIdx
-argument_list|)
-specifier|const
-block|;
+comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
+comment|// if there is not such an opcode.
 name|unsigned
-name|isLoadFromStackSlot
+name|getUnindexedOpcode
 argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
+argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;
-name|unsigned
-name|isStoreToStackSlot
+comment|// Return true if the block does not fall through.
+name|bool
+name|BlockHasNoFallThrough
 argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int&FrameIndex
+argument|const MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;
@@ -215,23 +162,6 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|storeRegToAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool isKill
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
-argument_list|)
-specifier|const
-block|;
-name|void
 name|loadRegFromStackSlot
 argument_list|(
 argument|MachineBasicBlock&MBB
@@ -246,60 +176,19 @@ argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 block|;
-name|void
-name|loadRegFromAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
-argument_list|)
+comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
+comment|/// such, whenever a client has an instance of instruction info, it should
+comment|/// always be able to get register info as well (through this method).
+comment|///
 specifier|const
-block|;
-name|bool
-name|canFoldMemoryOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|)
-specifier|const
-block|;
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|int FrameIndex
-argument_list|)
-specifier|const
-block|;
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|MachineInstr* LoadMI
-argument_list|)
+name|Thumb2RegisterInfo
+operator|&
+name|getRegisterInfo
+argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|RI
 return|;
 block|}
 expr|}

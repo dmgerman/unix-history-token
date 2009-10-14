@@ -69,6 +69,18 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -76,11 +88,43 @@ block|{
 name|class
 name|Function
 decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
 comment|/// Empty for now, but this object will contain all details about the
 comment|/// generated machine code that a Listener might care about.
 struct|struct
 name|JITEvent_EmittedFunctionDetails
-block|{ }
+block|{
+specifier|const
+name|MachineFunction
+modifier|*
+name|MF
+decl_stmt|;
+struct|struct
+name|LineStart
+block|{
+comment|// The address at which the current line changes.
+name|uintptr_t
+name|Address
+decl_stmt|;
+comment|// The new location information.  These can be translated to
+comment|// DebugLocTuples using MF->getDebugLocTuple().
+name|DebugLoc
+name|Loc
+decl_stmt|;
+block|}
+struct|;
+comment|// This holds line boundary information sorted by address.
+name|std
+operator|::
+name|vector
+operator|<
+name|LineStart
+operator|>
+name|LineStarts
+expr_stmt|;
+block|}
 struct|;
 comment|/// JITEventListener - This interface is used by the JIT to notify clients about
 comment|/// significant events during compilation.  For example, we could have
@@ -152,9 +196,15 @@ parameter_list|)
 block|{}
 block|}
 empty_stmt|;
+comment|// These return NULL if support isn't available.
 name|JITEventListener
 modifier|*
 name|createMacOSJITEventListener
+parameter_list|()
+function_decl|;
+name|JITEventListener
+modifier|*
+name|createOProfileJITEventListener
 parameter_list|()
 function_decl|;
 block|}

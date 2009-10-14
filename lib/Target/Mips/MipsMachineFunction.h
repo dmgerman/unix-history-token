@@ -153,7 +153,7 @@ comment|/// to be used on emitPrologue and processFunctionBeforeFrameFinalized.
 name|MipsFIHolder
 name|GPHolder
 block|;
-comment|/// On LowerFORMAL_ARGUMENTS the stack size is unknown, so the Stack
+comment|/// On LowerFormalArguments the stack size is unknown, so the Stack
 comment|/// Pointer Offset calculation of "not in register arguments" must be
 comment|/// postponed to emitPrologue.
 name|SmallVector
@@ -169,7 +169,7 @@ name|HasLoadArgs
 block|;
 comment|// When VarArgs, we must write registers back to caller stack, preserving
 comment|// on register arguments. Since the stack size is unknown on
-comment|// LowerFORMAL_ARGUMENTS, the Stack Pointer Offset calculation must be
+comment|// LowerFormalArguments, the Stack Pointer Offset calculation must be
 comment|// postponed to emitPrologue.
 name|SmallVector
 operator|<

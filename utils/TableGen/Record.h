@@ -4906,9 +4906,7 @@ block|;
 name|virtual
 name|int
 name|getNumOperands
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -5081,9 +5079,7 @@ return|;
 block|}
 name|int
 name|getNumOperands
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -5298,9 +5294,7 @@ return|;
 block|}
 name|int
 name|getNumOperands
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -5542,9 +5536,7 @@ return|;
 block|}
 name|int
 name|getNumOperands
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -7147,6 +7139,14 @@ block|}
 name|class
 name|Record
 block|{
+specifier|static
+name|unsigned
+name|LastID
+block|;
+comment|// Unique record ID.
+name|unsigned
+name|ID
+block|;
 name|std
 operator|::
 name|string
@@ -7192,6 +7192,12 @@ argument_list|,
 argument|SMLoc loc
 argument_list|)
 operator|:
+name|ID
+argument_list|(
+name|LastID
+operator|++
+argument_list|)
+block|,
 name|Name
 argument_list|(
 name|N
@@ -7206,6 +7212,15 @@ operator|~
 name|Record
 argument_list|()
 block|{}
+name|unsigned
+name|getID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -7294,7 +7309,7 @@ block|}
 name|bool
 name|isTemplateArg
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|)
 specifier|const
 block|{
@@ -7340,7 +7355,7 @@ name|RecordVal
 operator|*
 name|getValue
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|)
 specifier|const
 block|{
@@ -7392,7 +7407,7 @@ name|RecordVal
 operator|*
 name|getValue
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|)
 block|{
 for|for
@@ -7442,7 +7457,7 @@ block|}
 name|void
 name|addTemplateArg
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|)
 block|{
 name|assert
@@ -7494,7 +7509,7 @@ block|;   }
 name|void
 name|removeValue
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|)
 block|{
 name|assert
@@ -7610,7 +7625,7 @@ block|}
 name|bool
 name|isSubClassOf
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|)
 specifier|const
 block|{
@@ -7717,7 +7732,7 @@ name|Init
 operator|*
 name|getValueInit
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7730,7 +7745,7 @@ operator|::
 name|string
 name|getValueAsString
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7742,7 +7757,7 @@ name|BitsInit
 operator|*
 name|getValueAsBitsInit
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7754,7 +7769,7 @@ name|ListInit
 operator|*
 name|getValueAsListInit
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7771,7 +7786,7 @@ operator|*
 operator|>
 name|getValueAsListOfDefs
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7787,7 +7802,7 @@ name|int64_t
 operator|>
 name|getValueAsListOfInts
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7799,7 +7814,7 @@ name|Record
 operator|*
 name|getValueAsDef
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7810,7 +7825,7 @@ comment|///
 name|bool
 name|getValueAsBit
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7821,7 +7836,7 @@ comment|///
 name|int64_t
 name|getValueAsInt
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7833,7 +7848,7 @@ name|DagInit
 operator|*
 name|getValueAsDag
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
@@ -7846,7 +7861,7 @@ operator|::
 name|string
 name|getValueAsCode
 argument_list|(
-argument|const std::string&FieldName
+argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|; }

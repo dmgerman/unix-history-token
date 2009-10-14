@@ -104,6 +104,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AliasAnalysis
+decl_stmt|;
+name|class
 name|SUnit
 decl_stmt|;
 name|class
@@ -521,6 +524,19 @@ return|return
 name|Latency
 return|;
 block|}
+comment|/// setLatency - Set the latency for this edge.
+name|void
+name|setLatency
+parameter_list|(
+name|unsigned
+name|Lat
+parameter_list|)
+block|{
+name|Latency
+operator|=
+name|Lat
+expr_stmt|;
+block|}
 comment|//// getSUnit - Return the SUnit to which this edge points.
 name|SUnit
 operator|*
@@ -881,19 +897,19 @@ name|short
 name|Latency
 decl_stmt|;
 comment|// Node latency.
-name|short
+name|unsigned
 name|NumPreds
 decl_stmt|;
 comment|// # of SDep::Data preds.
-name|short
+name|unsigned
 name|NumSuccs
 decl_stmt|;
 comment|// # of SDep::Data sucss.
-name|short
+name|unsigned
 name|NumPredsLeft
 decl_stmt|;
 comment|// # of preds not scheduled.
-name|short
+name|unsigned
 name|NumSuccsLeft
 decl_stmt|;
 comment|// # of succs not scheduled.
@@ -2015,13 +2031,13 @@ name|MachineBasicBlock
 modifier|*
 name|BB
 decl_stmt|;
-comment|// The block in which to insert instructions.
+comment|// The block in which to insert instructions
 name|MachineBasicBlock
 operator|::
 name|iterator
 name|InsertPos
 expr_stmt|;
-comment|// The position to insert instructions.
+comment|// The position to insert instructions
 specifier|const
 name|TargetMachine
 modifier|&
@@ -2116,10 +2132,20 @@ name|virtual
 name|MachineBasicBlock
 modifier|*
 name|EmitSchedule
-parameter_list|()
+argument_list|(
+name|DenseMap
+operator|<
+name|MachineBasicBlock
+operator|*
+argument_list|,
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|*
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 name|void
 name|dumpSchedule
 argument_list|()
@@ -2204,7 +2230,11 @@ comment|///
 name|virtual
 name|void
 name|BuildSchedGraph
-parameter_list|()
+parameter_list|(
+name|AliasAnalysis
+modifier|*
+name|AA
+parameter_list|)
 init|=
 literal|0
 function_decl|;
@@ -2221,6 +2251,28 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// ComputeOperandLatency - Override dependence edge latency using
+comment|/// operand use/def information
+comment|///
+name|virtual
+name|void
+name|ComputeOperandLatency
+argument_list|(
+name|SUnit
+operator|*
+name|Def
+argument_list|,
+name|SUnit
+operator|*
+name|Use
+argument_list|,
+name|SDep
+operator|&
+name|dep
+argument_list|)
+decl|const
+block|{ }
+empty_stmt|;
 comment|/// Schedule - Order nodes according to selected style, filling
 comment|/// in the Sequence member.
 comment|///
@@ -2231,8 +2283,8 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// ForceUnitLatencies - Return true if all scheduling edges should be given a
-comment|/// latency value of one.  The default is to return false; schedulers may
+comment|/// ForceUnitLatencies - Return true if all scheduling edges should be given
+comment|/// a latency value of one.  The default is to return false; schedulers may
 comment|/// override this as needed.
 name|virtual
 name|bool
@@ -2249,19 +2301,6 @@ comment|///
 name|void
 name|EmitNoop
 parameter_list|()
-function_decl|;
-name|void
-name|AddMemOperand
-parameter_list|(
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|,
-specifier|const
-name|MachineMemOperand
-modifier|&
-name|MO
-parameter_list|)
 function_decl|;
 name|void
 name|EmitPhysRegCopy
@@ -2281,57 +2320,6 @@ operator|&
 name|VRBaseMap
 argument_list|)
 decl_stmt|;
-name|private
-label|:
-comment|/// EmitLiveInCopy - Emit a copy for a live in physical register. If the
-comment|/// physical register has only a single copy use, then coalesced the copy
-comment|/// if possible.
-name|void
-name|EmitLiveInCopy
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|InsertPos
-argument_list|,
-name|unsigned
-name|VirtReg
-argument_list|,
-name|unsigned
-name|PhysReg
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-name|DenseMap
-operator|<
-name|MachineInstr
-operator|*
-argument_list|,
-name|unsigned
-operator|>
-operator|&
-name|CopyRegMap
-argument_list|)
-decl_stmt|;
-comment|/// EmitLiveInCopies - If this is the first basic block in the function,
-comment|/// and if it has live ins that need to be copied into vregs, emit the
-comment|/// copies into the top of the block.
-name|void
-name|EmitLiveInCopies
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|MBB
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 
@@ -2344,8 +2332,14 @@ name|class
 name|SUnitIterator
 range|:
 name|public
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+decl_stmt|,
 name|SUnit
 decl_stmt|,
 name|ptrdiff_t

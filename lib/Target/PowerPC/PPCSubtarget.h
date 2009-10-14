@@ -118,9 +118,6 @@ block|}
 enum|;
 block|}
 name|class
-name|Module
-decl_stmt|;
-name|class
 name|GlobalValue
 decl_stmt|;
 name|class
@@ -132,25 +129,8 @@ range|:
 name|public
 name|TargetSubtarget
 block|{
-name|public
-operator|:
-expr|enum
-name|AsmWriterFlavorTy
-block|{
-name|OldMnemonic
-block|,
-name|NewMnemonic
-block|,
-name|Unset
-block|}
-block|;
 name|protected
 operator|:
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
-block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
@@ -163,10 +143,6 @@ block|;
 comment|/// Which cpu directive was used.
 name|unsigned
 name|DarwinDirective
-block|;
-comment|/// AsmFlavor - Which PPC asm dialect to use.
-name|AsmWriterFlavorTy
-name|AsmFlavor
 block|;
 comment|/// Used by the ISel to turn in optimizations for POWER4-derived architectures
 name|bool
@@ -203,13 +179,11 @@ comment|// Is any darwin-ppc platform.
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that
-comment|/// of the specified module.
+comment|/// of the specified triple.
 comment|///
 name|PPCSubtarget
 argument_list|(
-argument|const TargetMachine&TM
-argument_list|,
-argument|const Module&M
+argument|const std::string&TT
 argument_list|,
 argument|const std::string&FS
 argument_list|,
@@ -341,6 +315,8 @@ name|bool
 name|hasLazyResolverStub
 argument_list|(
 argument|const GlobalValue *GV
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 block|;
@@ -423,8 +399,6 @@ block|{
 return|return
 name|isDarwin
 argument_list|()
-operator|||
-name|IsPPC64
 return|;
 block|}
 name|bool
@@ -436,27 +410,6 @@ return|return
 operator|!
 name|isDarwin
 argument_list|()
-operator|&&
-operator|!
-name|IsPPC64
-return|;
-block|}
-name|unsigned
-name|getAsmFlavor
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AsmFlavor
-operator|!=
-name|Unset
-condition|?
-name|unsigned
-argument_list|(
-name|AsmFlavor
-argument_list|)
-else|:
-literal|0
 return|;
 block|}
 expr|}

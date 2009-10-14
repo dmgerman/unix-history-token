@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
@@ -132,10 +138,8 @@ name|Op
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown shift opc!"
 argument_list|)
 expr_stmt|;
@@ -283,10 +287,8 @@ name|Mode
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown addressing sub-mode!"
 argument_list|)
 expr_stmt|;
@@ -344,10 +346,8 @@ name|Mode
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown addressing sub-mode!"
 argument_list|)
 expr_stmt|;
@@ -1139,127 +1139,6 @@ name|V
 argument_list|)
 return|;
 block|}
-comment|/// getT2SOImmValDecode - Given a 12-bit encoded Thumb-2 modified immediate,
-comment|/// return the corresponding 32-bit immediate value.
-comment|/// See ARM Reference Manual A6.3.2.
-specifier|static
-specifier|inline
-name|unsigned
-name|getT2SOImmValDecode
-parameter_list|(
-name|unsigned
-name|Imm
-parameter_list|)
-block|{
-name|unsigned
-name|Base
-init|=
-name|Imm
-operator|&
-literal|0xff
-decl_stmt|;
-switch|switch
-condition|(
-operator|(
-name|Imm
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xf
-condition|)
-block|{
-case|case
-literal|0
-case|:
-return|return
-name|Base
-return|;
-case|case
-literal|1
-case|:
-return|return
-name|Base
-operator||
-operator|(
-name|Base
-operator|<<
-literal|16
-operator|)
-return|;
-case|case
-literal|2
-case|:
-return|return
-operator|(
-name|Base
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|Base
-operator|<<
-literal|24
-operator|)
-return|;
-case|case
-literal|3
-case|:
-return|return
-name|Base
-operator||
-operator|(
-name|Base
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|Base
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|Base
-operator|<<
-literal|24
-operator|)
-return|;
-default|default:
-break|break;
-block|}
-comment|// shifted immediate
-name|unsigned
-name|RotAmount
-init|=
-operator|(
-operator|(
-name|Imm
-operator|>>
-literal|7
-operator|)
-operator|&
-literal|0x1f
-operator|)
-operator|-
-literal|8
-decl_stmt|;
-return|return
-operator|(
-name|Base
-operator||
-literal|0x80
-operator|)
-operator|<<
-operator|(
-literal|24
-operator|-
-name|RotAmount
-operator|)
-return|;
-block|}
 comment|/// getT2SOImmValSplat - Return the 12-bit encoded representation
 comment|/// if the specified value can be obtained by splatting the low 8 bits
 comment|/// into every other byte or every byte of a 32-bit value. i.e.,
@@ -1272,7 +1151,7 @@ comment|/// See ARM Reference Manual A6.3.2.
 specifier|static
 specifier|inline
 name|int
-name|getT2SOImmValSplat
+name|getT2SOImmValSplatVal
 parameter_list|(
 name|unsigned
 name|V
@@ -1391,14 +1270,14 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// getT2SOImmValRotate - Return the 12-bit encoded representation if the
+comment|/// getT2SOImmValRotateVal - Return the 12-bit encoded representation if the
 comment|/// specified value is a rotated 8-bit value. Return -1 if no rotation
 comment|/// encoding is possible.
 comment|/// See ARM Reference Manual A6.3.2.
 specifier|static
 specifier|inline
 name|int
-name|getT2SOImmValRotate
+name|getT2SOImmValRotateVal
 parameter_list|(
 name|unsigned
 name|V
@@ -1484,7 +1363,7 @@ comment|// If 'Arg' is an 8-bit splat, then get the encoded value.
 name|int
 name|Splat
 init|=
-name|getT2SOImmValSplat
+name|getT2SOImmValSplatVal
 argument_list|(
 name|Arg
 argument_list|)
@@ -1503,7 +1382,7 @@ comment|// If 'Arg' can be handled with a single shifter_op return the value.
 name|int
 name|Rot
 init|=
-name|getT2SOImmValRotate
+name|getT2SOImmValRotateVal
 argument_list|(
 name|Arg
 argument_list|)

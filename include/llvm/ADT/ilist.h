@@ -158,13 +158,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -523,16 +523,19 @@ operator|>
 expr|struct
 name|ilist_default_traits
 operator|:
+name|public
 name|ilist_nextprev_traits
 operator|<
 name|NodeTy
 operator|>
 block|,
+name|public
 name|ilist_sentinel_traits
 operator|<
 name|NodeTy
 operator|>
 block|,
+name|public
 name|ilist_node_traits
 operator|<
 name|NodeTy
@@ -549,6 +552,7 @@ operator|>
 expr|struct
 name|ilist_traits
 operator|:
+name|public
 name|ilist_default_traits
 operator|<
 name|NodeTy
@@ -587,8 +591,14 @@ name|class
 name|ilist_iterator
 operator|:
 name|public
-name|bidirectional_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|bidirectional_iterator_tag
+block|,
 name|NodeTy
 block|,
 name|ptrdiff_t
@@ -604,8 +614,14 @@ operator|>
 name|Traits
 expr_stmt|;
 typedef|typedef
-name|bidirectional_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|bidirectional_iterator_tag
+operator|,
 name|NodeTy
 operator|,
 name|ptrdiff_t
@@ -847,20 +863,6 @@ name|pointer
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|Traits
-operator|::
-name|getNext
-argument_list|(
-name|NodePtr
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-literal|"Dereferencing end()!"
-argument_list|)
-block|;
 return|return
 name|NodePtr
 return|;
@@ -872,20 +874,6 @@ operator|(
 operator|)
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|Traits
-operator|::
-name|getNext
-argument_list|(
-name|NodePtr
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-literal|"Dereferencing end()!"
-argument_list|)
-block|;
 return|return
 operator|*
 name|NodePtr
@@ -1008,13 +996,6 @@ operator|::
 name|getNext
 argument_list|(
 name|NodePtr
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|NodePtr
-operator|&&
-literal|"++'d off the end of an ilist!"
 argument_list|)
 block|;
 return|return
@@ -1614,8 +1595,6 @@ specifier|const
 block|{
 name|this
 operator|->
-name|Traits
-operator|::
 name|ensureHead
 argument_list|(
 name|Head
@@ -1661,7 +1640,7 @@ block|}
 end_function
 
 begin_comment
-comment|// No fundamental reason why iplist can't by copyable, but the default
+comment|// No fundamental reason why iplist can't be copyable, but the default
 end_comment
 
 begin_comment
@@ -1809,7 +1788,7 @@ argument_list|()
 operator|:
 name|Head
 argument_list|(
-argument|this->Traits::provideInitialHead()
+argument|this->provideInitialHead()
 argument_list|)
 block|{}
 operator|~

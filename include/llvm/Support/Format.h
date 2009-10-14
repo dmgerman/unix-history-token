@@ -141,6 +141,22 @@ name|home
 parameter_list|()
 function_decl|;
 comment|// Out of line virtual method.
+comment|/// snprint - Call snprintf() for this object, on the given buffer and size.
+name|virtual
+name|int
+name|snprint
+argument_list|(
+name|char
+operator|*
+name|Buffer
+argument_list|,
+name|unsigned
+name|BufferSize
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 name|public
 label|:
 name|format_object_base
@@ -164,7 +180,6 @@ block|{}
 comment|/// print - Format the object into the specified buffer.  On success, this
 comment|/// returns the length of the formatted string.  If the buffer is too small,
 comment|/// this returns a length to retry with, which will be larger than BufferSize.
-name|virtual
 name|unsigned
 name|print
 argument_list|(
@@ -173,15 +188,81 @@ argument_list|,
 argument|unsigned BufferSize
 argument_list|)
 specifier|const
+block|{
+name|assert
+argument_list|(
+name|BufferSize
+operator|&&
+literal|"Invalid buffer size!"
+argument_list|)
+block|;
+comment|// Print the string, leaving room for the terminating null.
+name|int
+name|N
 operator|=
+name|snprint
+argument_list|(
+name|Buffer
+argument_list|,
+name|BufferSize
+argument_list|)
+block|;
+comment|// VC++ and old GlibC return negative on overflow, just double the size.
+if|if
+condition|(
+name|N
+operator|<
 literal|0
-expr_stmt|;
+condition|)
+return|return
+name|BufferSize
+operator|*
+literal|2
+return|;
+comment|// Other impls yield number of bytes needed, not including the final '\0'.
+if|if
+condition|(
+name|unsigned
+argument_list|(
+name|N
+argument_list|)
+operator|>=
+name|BufferSize
+condition|)
+return|return
+name|N
+operator|+
+literal|1
+return|;
+comment|// Otherwise N is the length of output (not including the final '\0').
+return|return
+name|N
+return|;
 block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// format_object1 - This is a templated helper class used by the format
+end_comment
+
+begin_comment
 comment|/// function that captures the object to be formated and the format string. When
+end_comment
+
+begin_comment
 comment|/// actually printed, this synthesizes the string into a temporary buffer
+end_comment
+
+begin_comment
 comment|/// provided and returns whether or not it is big enough.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -221,12 +302,9 @@ argument_list|(
 argument|val
 argument_list|)
 block|{   }
-comment|/// print - Format the object into the specified buffer.  On success, this
-comment|/// returns the length of the formatted string.  If the buffer is too small,
-comment|/// this returns a length to retry with, which will be larger than BufferSize.
 name|virtual
-name|unsigned
-name|print
+name|int
+name|snprint
 argument_list|(
 argument|char *Buffer
 argument_list|,
@@ -234,57 +312,20 @@ argument|unsigned BufferSize
 argument_list|)
 specifier|const
 block|{
-name|int
-name|N
-operator|=
+return|return
 name|snprintf
 argument_list|(
 name|Buffer
 argument_list|,
 name|BufferSize
-operator|-
-literal|1
 argument_list|,
 name|Fmt
 argument_list|,
 name|Val
 argument_list|)
-block|;
-if|if
-condition|(
-name|N
-operator|<
-literal|0
-condition|)
-comment|// VC++ and old GlibC return negative on overflow.
-return|return
-name|BufferSize
-operator|*
-literal|2
-return|;
-if|if
-condition|(
-name|unsigned
-argument_list|(
-name|N
-argument_list|)
-operator|>=
-name|BufferSize
-operator|-
-literal|1
-condition|)
-comment|// Other impls yield number of bytes needed.
-return|return
-name|N
-operator|+
-literal|1
-return|;
-comment|// If N is positive and<= BufferSize-1, then the string fit, yay.
-return|return
-name|N
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
 unit|};
@@ -359,12 +400,9 @@ argument_list|(
 argument|val2
 argument_list|)
 block|{   }
-comment|/// print - Format the object into the specified buffer.  On success, this
-comment|/// returns the length of the formatted string.  If the buffer is too small,
-comment|/// this returns a length to retry with, which will be larger than BufferSize.
 name|virtual
-name|unsigned
-name|print
+name|int
+name|snprint
 argument_list|(
 argument|char *Buffer
 argument_list|,
@@ -372,16 +410,12 @@ argument|unsigned BufferSize
 argument_list|)
 specifier|const
 block|{
-name|int
-name|N
-operator|=
+return|return
 name|snprintf
 argument_list|(
 name|Buffer
 argument_list|,
 name|BufferSize
-operator|-
-literal|1
 argument_list|,
 name|Fmt
 argument_list|,
@@ -389,54 +423,12 @@ name|Val1
 argument_list|,
 name|Val2
 argument_list|)
-block|;
-if|if
-condition|(
-name|N
-operator|<
-literal|0
-condition|)
-comment|// VC++ and old GlibC return negative on overflow.
-return|return
-name|BufferSize
-operator|*
-literal|2
 return|;
-if|if
-condition|(
-name|unsigned
-argument_list|(
-name|N
-argument_list|)
-operator|>=
-name|BufferSize
-operator|-
-literal|1
-condition|)
-comment|// Other impls yield number of bytes needed.
-return|return
-name|N
-operator|+
-literal|1
-return|;
+block|}
 end_expr_stmt
 
 begin_comment
-comment|// If N is positive and<= BufferSize-1, then the string fit, yay.
-end_comment
-
-begin_return
-return|return
-name|N
-return|;
-end_return
-
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+unit|};
 comment|/// format_object3 - This is a templated helper class used by the format
 end_comment
 
@@ -524,12 +516,9 @@ argument_list|(
 argument|val3
 argument_list|)
 block|{   }
-comment|/// print - Format the object into the specified buffer.  On success, this
-comment|/// returns the length of the formatted string.  If the buffer is too small,
-comment|/// this returns a length to retry with, which will be larger than BufferSize.
 name|virtual
-name|unsigned
-name|print
+name|int
+name|snprint
 argument_list|(
 argument|char *Buffer
 argument_list|,
@@ -537,16 +526,12 @@ argument|unsigned BufferSize
 argument_list|)
 specifier|const
 block|{
-name|int
-name|N
-operator|=
+return|return
 name|snprintf
 argument_list|(
 name|Buffer
 argument_list|,
 name|BufferSize
-operator|-
-literal|1
 argument_list|,
 name|Fmt
 argument_list|,
@@ -556,54 +541,12 @@ name|Val2
 argument_list|,
 name|Val3
 argument_list|)
-block|;
-if|if
-condition|(
-name|N
-operator|<
-literal|0
-condition|)
-comment|// VC++ and old GlibC return negative on overflow.
-return|return
-name|BufferSize
-operator|*
-literal|2
 return|;
-if|if
-condition|(
-name|unsigned
-argument_list|(
-name|N
-argument_list|)
-operator|>=
-name|BufferSize
-operator|-
-literal|1
-condition|)
-comment|// Other impls yield number of bytes needed.
-return|return
-name|N
-operator|+
-literal|1
-return|;
+block|}
 end_expr_stmt
 
 begin_comment
-comment|// If N is positive and<= BufferSize-1, then the string fit, yay.
-end_comment
-
-begin_return
-return|return
-name|N
-return|;
-end_return
-
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+unit|};
 comment|/// format - This is a helper function that is used to produce formatted output.
 end_comment
 

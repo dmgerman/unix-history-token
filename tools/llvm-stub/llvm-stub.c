@@ -258,6 +258,11 @@ expr_stmt|;
 comment|/* The rest of the args are as before. */
 name|memcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|Args
 operator|+
 literal|2
@@ -283,7 +288,6 @@ argument_list|,
 operator|(
 name|char
 operator|*
-specifier|const
 operator|*
 operator|)
 name|Args

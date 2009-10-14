@@ -122,31 +122,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Module.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Streams.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<iosfwd>
 end_include
 
 begin_include
@@ -193,7 +175,10 @@ name|class
 name|PMDataManager
 decl_stmt|;
 name|class
-name|LLVMContext
+name|raw_ostream
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 comment|// AnalysisID - Use the PassInfo to identify a pass...
 typedef|typedef
@@ -266,12 +251,6 @@ operator|&
 argument_list|)
 expr_stmt|;
 comment|// DO NOT IMPLEMENT
-name|protected
-label|:
-name|LLVMContext
-modifier|*
-name|Context
-decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -361,9 +340,7 @@ name|virtual
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|O
 argument_list|,
@@ -375,40 +352,11 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|O
-argument_list|,
-specifier|const
-name|Module
-operator|*
-name|M
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|O
-condition|)
-name|print
-argument_list|(
-operator|*
-name|O
-argument_list|,
-name|M
-argument_list|)
-expr_stmt|;
-block|}
-name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// dump - call print(std::cerr, 0);
+comment|// dump - Print to stderr.
 comment|/// Each pass is responsible for assigning a pass manager to itself.
 comment|/// PMS is the stack of available pass manager.
 name|virtual
@@ -562,6 +510,20 @@ name|intptr_t
 name|TI
 parameter_list|)
 function_decl|;
+comment|// lookupPassInfo - Return the pass info object for the pass with the given
+comment|// argument string, or null if it is not known.
+specifier|static
+specifier|const
+name|PassInfo
+modifier|*
+name|lookupPassInfo
+parameter_list|(
+specifier|const
+name|StringRef
+modifier|&
+name|Arg
+parameter_list|)
+function_decl|;
 comment|/// getAnalysisIfAvailable<AnalysisType>() - Subclasses use this function to
 comment|/// get analysis information that might be around, for example to update it.
 comment|/// This is different than getAnalysis in that it can fail (if the analysis
@@ -628,7 +590,7 @@ operator|&
 name|F
 argument_list|)
 expr_stmt|;
-comment|// Defined in PassanalysisSupport.h
+comment|// Defined in PassAnalysisSupport.h
 name|template
 operator|<
 name|typename
@@ -663,39 +625,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-specifier|inline
-name|std
-operator|::
-name|ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|OS
-operator|,
-specifier|const
-name|Pass
-operator|&
-name|P
-operator|)
-block|{
-name|P
-operator|.
-name|print
-argument_list|(
-name|OS
-argument_list|,
-literal|0
-argument_list|)
-block|;
-return|return
-name|OS
-return|;
-block|}
 comment|//===----------------------------------------------------------------------===//
 comment|/// ModulePass class - This class is used to implement unstructured
 comment|/// interprocedural optimizations and analyses.  ModulePasses may do anything
@@ -894,14 +823,6 @@ argument_list|(
 argument|Module&M
 argument_list|)
 block|{
-name|Context
-operator|=
-operator|&
-name|M
-operator|.
-name|getContext
-argument_list|()
-block|;
 return|return
 name|false
 return|;
@@ -1033,14 +954,6 @@ argument_list|(
 argument|Module&M
 argument_list|)
 block|{
-name|Context
-operator|=
-operator|&
-name|M
-operator|.
-name|getContext
-argument_list|()
-block|;
 return|return
 name|false
 return|;

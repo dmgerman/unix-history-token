@@ -67,16 +67,16 @@ directive|define
 name|LLVM_TRANSFORMS_UTILS_UNROLLLOOP_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/LoopInfo.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Loop
+decl_stmt|;
+name|class
+name|LoopInfo
+decl_stmt|;
 name|class
 name|LPPassManager
 decl_stmt|;

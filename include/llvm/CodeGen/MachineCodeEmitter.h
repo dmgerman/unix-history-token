@@ -77,6 +77,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DebugLoc.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -179,68 +185,6 @@ name|finishFunction
 parameter_list|(
 name|MachineFunction
 modifier|&
-name|F
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// startGVStub - This callback is invoked when the JIT needs the
-comment|/// address of a GV (e.g. function) that has not been code generated yet.
-comment|/// The StubSize specifies the total size required by the stub.
-comment|///
-name|virtual
-name|void
-name|startGVStub
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|GV
-parameter_list|,
-name|unsigned
-name|StubSize
-parameter_list|,
-name|unsigned
-name|Alignment
-init|=
-literal|1
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// startGVStub - This callback is invoked when the JIT needs the address of a
-comment|/// GV (e.g. function) that has not been code generated yet.  Buffer points to
-comment|/// memory already allocated for this stub.
-comment|///
-name|virtual
-name|void
-name|startGVStub
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|GV
-parameter_list|,
-name|void
-modifier|*
-name|Buffer
-parameter_list|,
-name|unsigned
-name|StubSize
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// finishGVStub - This callback is invoked to terminate a GV stub.
-comment|///
-name|virtual
-name|void
-modifier|*
-name|finishGVStub
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
 name|F
 parameter_list|)
 init|=
@@ -1119,6 +1063,21 @@ operator|)
 name|Value
 expr_stmt|;
 block|}
+comment|/// processDebugLoc - Records debug location information about a
+comment|/// MachineInstruction.  This is called before emitting any bytes associated
+comment|/// with the instruction.  Even if successive instructions have the same debug
+comment|/// location, this method will be called for each one.
+name|virtual
+name|void
+name|processDebugLoc
+parameter_list|(
+name|DebugLoc
+name|DL
+parameter_list|,
+name|bool
+name|BeforePrintintInsn
+parameter_list|)
+block|{}
 comment|/// emitLabel - Emits a label
 name|virtual
 name|void
@@ -1226,6 +1185,7 @@ return|;
 block|}
 comment|/// getCurrentPCOffset - Return the offset from the start of the emitted
 comment|/// buffer that we are currently writing to.
+name|virtual
 name|uintptr_t
 name|getCurrentPCOffset
 argument_list|()
@@ -1237,6 +1197,19 @@ operator|-
 name|BufferBegin
 return|;
 block|}
+comment|/// earlyResolveAddresses - True if the code emitter can use symbol addresses
+comment|/// during code emission time. The JIT is capable of doing this because it
+comment|/// creates jump tables or constant pools in memory on the fly while the
+comment|/// object code emitters rely on a linker to have real addresses and should
+comment|/// use relocations instead.
+name|virtual
+name|bool
+name|earlyResolveAddresses
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|/// addRelocation - Whenever a relocatable address is needed, it should be
 comment|/// noted with this interface.
 name|virtual

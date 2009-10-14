@@ -145,7 +145,10 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
-argument_list|()
+argument_list|(
+argument|unsigned Kind =
+literal|0
+argument_list|)
 specifier|const
 block|;
 comment|//! Return the array of callee-saved registers
@@ -201,14 +204,16 @@ argument_list|)
 specifier|const
 block|;
 comment|//! Convert frame indicies into machine operands
-name|void
+name|unsigned
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
-argument|int
+argument|int SPAdj
 argument_list|,
-argument|RegScavenger *RS
+argument|int *Value = NULL
+argument_list|,
+argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;

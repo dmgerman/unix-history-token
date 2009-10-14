@@ -80,11 +80,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// When compiling in release mode, the -debug-* options and all code in DEBUG()
+comment|// When compiling without assertions, the -debug-* options and all code in
 end_comment
 
 begin_comment
-comment|// statements disappears, so it does not effect the runtime of the code.
+comment|// DEBUG() statements disappears, so it does not effect the runtime of the code.
 end_comment
 
 begin_comment
@@ -107,12 +107,6 @@ directive|define
 name|LLVM_SUPPORT_DEBUG_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Streams.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -121,14 +115,22 @@ comment|// DebugFlag - This boolean is set to true if the '-debug' command line 
 comment|// is specified.  This should probably not be referenced directly, instead, use
 comment|// the DEBUG macro below.
 comment|//
+ifndef|#
+directive|ifndef
+name|NDEBUG
 specifier|extern
 name|bool
 name|DebugFlag
 decl_stmt|;
+endif|#
+directive|endif
 comment|// isCurrentDebugType - Return true if the specified string is the debug type
 comment|// specified on the command line, or if none was specified on the command line
 comment|// with the -debug-only=X option.
 comment|//
+ifndef|#
+directive|ifndef
+name|NDEBUG
 name|bool
 name|isCurrentDebugType
 parameter_list|(
@@ -138,12 +140,58 @@ modifier|*
 name|Type
 parameter_list|)
 function_decl|;
+else|#
+directive|else
+define|#
+directive|define
+name|isCurrentDebugType
+parameter_list|(
+name|X
+parameter_list|)
+value|(false)
+endif|#
+directive|endif
+comment|// DEBUG_WITH_TYPE macro - This macro should be used by passes to emit debug
+comment|// information.  In the '-debug' option is specified on the commandline, and if
+comment|// this is a debug build, then the code specified as the option to the macro
+comment|// will be executed.  Otherwise it will not be.  Example:
+comment|//
+comment|// DEBUG_WITH_TYPE("bitset", errs()<< "Bitset contains: "<< Bitset<< "\n");
+comment|//
+comment|// This will emit the debug information if -debug is present, and -debug-only is
+comment|// not specified, or is specified as "bitset".
+ifdef|#
+directive|ifdef
+name|NDEBUG
+define|#
+directive|define
+name|DEBUG_WITH_TYPE
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|X
+parameter_list|)
+value|do { } while (0)
+else|#
+directive|else
+define|#
+directive|define
+name|DEBUG_WITH_TYPE
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|X
+parameter_list|)
+define|\
+value|do { if (DebugFlag&& isCurrentDebugType(TYPE)) { X; } } while (0)
+endif|#
+directive|endif
 comment|// DEBUG macro - This macro should be used by passes to emit debug information.
 comment|// In the '-debug' option is specified on the commandline, and if this is a
 comment|// debug build, then the code specified as the option to the macro will be
 comment|// executed.  Otherwise it will not be.  Example:
 comment|//
-comment|// DEBUG(cerr<< "Bitset contains: "<< Bitset<< "\n");
+comment|// DEBUG(errs()<< "Bitset contains: "<< Bitset<< "\n");
 comment|//
 ifndef|#
 directive|ifndef
@@ -154,56 +202,13 @@ name|DEBUG_TYPE
 value|""
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|NDEBUG
 define|#
 directive|define
 name|DEBUG
 parameter_list|(
 name|X
 parameter_list|)
-else|#
-directive|else
-define|#
-directive|define
-name|DEBUG
-parameter_list|(
-name|X
-parameter_list|)
-define|\
-value|do { if (DebugFlag&& isCurrentDebugType(DEBUG_TYPE)) { X; } } while (0)
-endif|#
-directive|endif
-comment|/// getErrorOutputStream - Returns the error output stream (std::cerr). This
-comment|/// places the std::c* I/O streams into one .cpp file and relieves the whole
-comment|/// program from having to have hundreds of static c'tor/d'tors for them.
-comment|///
-name|OStream
-modifier|&
-name|getErrorOutputStream
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|DebugType
-parameter_list|)
-function_decl|;
-ifdef|#
-directive|ifdef
-name|NDEBUG
-define|#
-directive|define
-name|DOUT
-value|llvm::OStream(0)
-else|#
-directive|else
-define|#
-directive|define
-name|DOUT
-value|llvm::getErrorOutputStream(DEBUG_TYPE)
-endif|#
-directive|endif
+value|DEBUG_WITH_TYPE(DEBUG_TYPE, X)
 block|}
 end_decl_stmt
 

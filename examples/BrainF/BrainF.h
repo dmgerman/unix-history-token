@@ -227,6 +227,10 @@ parameter_list|,
 name|BasicBlock
 modifier|*
 name|testbb
+parameter_list|,
+name|LLVMContext
+modifier|&
+name|Context
 parameter_list|)
 function_decl|;
 comment|/// Constants during parsing

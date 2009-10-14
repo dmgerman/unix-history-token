@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -110,6 +104,9 @@ name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|TargetData
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 comment|/// MachineJumpTableEntry - One jump table in the jump table info.
 comment|///
@@ -292,37 +289,13 @@ comment|///
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|OS
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|OS
-condition|)
-name|print
-argument_list|(
-operator|*
-name|OS
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// dump - Call print(std::cerr) to be called from the debugger.
+comment|/// dump - Call to stderr.
 comment|///
 name|void
 name|dump

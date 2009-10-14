@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -106,8 +100,11 @@ block|{
 name|class
 name|TimerGroup
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// Timer - This class is used to track the amount of time spent between
-comment|/// invocations of it's startTimer()/stopTimer() methods.  Given appropriate OS
+comment|/// invocations of its startTimer()/stopTimer() methods.  Given appropriate OS
 comment|/// support it can also keep track of the RSS of the program at various points.
 comment|/// By default, the Timer will print the amount of time it has captured to
 comment|/// standard error when the laster timer is destroyed, otherwise it is printed
@@ -472,19 +469,17 @@ comment|/// print - Print the current timer to standard error, and reset the "St
 comment|/// flag.
 name|void
 name|print
-argument_list|(
+parameter_list|(
 specifier|const
 name|Timer
-operator|&
+modifier|&
 name|Total
-argument_list|,
-name|std
-operator|::
-name|ostream
-operator|&
+parameter_list|,
+name|raw_ostream
+modifier|&
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|friend

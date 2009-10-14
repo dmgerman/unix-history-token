@@ -99,7 +99,13 @@ name|class
 name|Function
 decl_stmt|;
 name|class
+name|NamedMDNode
+decl_stmt|;
+name|class
 name|Module
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 comment|/// This class provides a symbol table of name/value pairs. It is essentially
 comment|/// a std::map<std::string,Value*> but has a controlled interface provided by
@@ -166,6 +172,15 @@ operator|,
 name|Module
 operator|>
 expr_stmt|;
+name|friend
+name|class
+name|SymbolTableListTraits
+operator|<
+name|NamedMDNode
+operator|,
+name|Module
+operator|>
+expr_stmt|;
 comment|/// @name Types
 comment|/// @{
 name|public
@@ -220,39 +235,30 @@ comment|/// @name Accessors
 comment|/// @{
 name|public
 label|:
-comment|/// This method finds the value with the given \p name in the
+comment|/// This method finds the value with the given \p Name in the
 comment|/// the symbol table.
-comment|/// @returns the value associated with the \p name
+comment|/// @returns the value associated with the \p Name
 comment|/// @brief Lookup a named Value.
 name|Value
 modifier|*
 name|lookup
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
-name|name
+name|Name
 argument_list|)
 decl|const
-decl_stmt|;
-name|Value
-modifier|*
+block|{
+return|return
+name|vmap
+operator|.
 name|lookup
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|NameBegin
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|NameEnd
+name|Name
 argument_list|)
-decl|const
-decl_stmt|;
+return|;
+block|}
 comment|/// @returns true iff the symbol table is empty
 comment|/// @brief Determine if the symbol table is empty
 specifier|inline
@@ -377,12 +383,9 @@ modifier|*
 name|createValueName
 parameter_list|(
 specifier|const
-name|char
-modifier|*
-name|NameStart
-parameter_list|,
-name|unsigned
-name|NameLen
+name|StringRef
+modifier|&
+name|Name
 parameter_list|,
 name|Value
 modifier|*

@@ -93,9 +93,34 @@ decl_stmt|;
 name|class
 name|GlobalValue
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 name|class
 name|Mangler
 block|{
+name|public
+label|:
+enum|enum
+name|ManglerPrefixTy
+block|{
+name|Default
+block|,
+comment|///< Emit default string before each symbol.
+name|Private
+block|,
+comment|///< Emit "private" prefix before each symbol.
+name|LinkerPrivate
+comment|///< Emit "linker private" prefix before each symbol.
+block|}
+enum|;
+name|private
+label|:
 comment|/// Prefix - This string is added to each symbol that is emitted, unless the
 comment|/// symbol is marked as not needing this prefix.
 specifier|const
@@ -110,50 +135,42 @@ name|char
 modifier|*
 name|PrivatePrefix
 decl_stmt|;
+comment|/// LinkerPrivatePrefix - This string is emitted before each symbol with
+comment|/// "linker_private" linkage.
+specifier|const
+name|char
+modifier|*
+name|LinkerPrivatePrefix
+decl_stmt|;
 comment|/// UseQuotes - If this is set, the target accepts global names in quotes,
 comment|/// e.g. "foo bar" is a legal name.  This syntax is used instead of escaping
 comment|/// the space character.  By default, this is false.
 name|bool
 name|UseQuotes
 decl_stmt|;
-comment|/// PreserveAsmNames - If this is set, the asm escape character is not removed
-comment|/// from names with 'asm' specifiers.
+comment|/// SymbolsCanStartWithDigit - If this is set, the target allows symbols to
+comment|/// start with digits (e.g., "0x0021").  By default, this is false.
 name|bool
-name|PreserveAsmNames
+name|SymbolsCanStartWithDigit
 decl_stmt|;
-comment|/// Memo - This is used to remember the name that we assign a value.
+comment|/// AnonGlobalIDs - We need to give global values the same name every time
+comment|/// they are mangled.  This keeps track of the number we give to anonymous
+comment|/// ones.
 comment|///
 name|DenseMap
 operator|<
 specifier|const
-name|Value
+name|GlobalValue
 operator|*
 operator|,
-name|std
-operator|::
-name|string
+name|unsigned
 operator|>
-name|Memo
+name|AnonGlobalIDs
 expr_stmt|;
-comment|/// Count - This simple counter is used to unique value names.
+comment|/// NextAnonGlobalID - This simple counter is used to unique value names.
 comment|///
 name|unsigned
-name|Count
-decl_stmt|;
-comment|/// TypeMap - If the client wants us to unique types, this keeps track of the
-comment|/// current assignments and TypeCounter keeps track of the next id to assign.
-name|DenseMap
-operator|<
-specifier|const
-name|Type
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|TypeMap
-expr_stmt|;
-name|unsigned
-name|TypeCounter
+name|NextAnonGlobalID
 decl_stmt|;
 comment|/// AcceptableChars - This bitfield contains a one for each character that is
 comment|/// allowed to be part of an unmangled name.
@@ -188,6 +205,13 @@ operator|*
 name|privatePrefix
 operator|=
 literal|""
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|linkerPrivatePrefix
+operator|=
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/// setUseQuotes - If UseQuotes is set to true, this target accepts quoted
@@ -204,23 +228,23 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|/// setPreserveAsmNames - If the mangler should not strip off the asm name
-comment|/// @verbatim identifier (\001), this should be set. @endverbatim
+comment|/// setSymbolsCanStartWithDigit - If SymbolsCanStartWithDigit is set to true,
+comment|/// this target allows symbols to start with digits.
 name|void
-name|setPreserveAsmNames
+name|setSymbolsCanStartWithDigit
 parameter_list|(
 name|bool
 name|Val
 parameter_list|)
 block|{
-name|PreserveAsmNames
+name|SymbolsCanStartWithDigit
 operator|=
 name|Val
 expr_stmt|;
 block|}
 comment|/// Acceptable Characters - This allows the target to specify which characters
 comment|/// are acceptable to the assembler without being mangled.  By default we
-comment|/// allow letters, numbers, '_', '$', and '.', which is what GAS accepts.
+comment|/// allow letters, numbers, '_', '$', '.', which is what GAS accepts, and '@'.
 name|void
 name|markCharAcceptable
 parameter_list|(
@@ -304,36 +328,22 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// getValueName - Returns the mangled name of V, an LLVM Value,
-comment|/// in the current module.
+comment|/// getMangledName - Returns the mangled name of V, an LLVM Value,
+comment|/// in the current module.  If 'Suffix' is specified, the name ends with the
+comment|/// specified suffix.  If 'ForcePrivate' is specified, the label is specified
+comment|/// to have a private label prefix.
 comment|///
 name|std
 operator|::
 name|string
-name|getValueName
+name|getMangledName
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|V
+argument|const GlobalValue *V
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Suffix
-operator|=
+argument|const char *Suffix =
 literal|""
-argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|getValueName
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|V
+argument_list|,
+argument|bool ForcePrivate = false
 argument_list|)
 expr_stmt|;
 comment|/// makeNameProper - We don't want identifier names with ., space, or
@@ -348,41 +358,33 @@ operator|::
 name|string
 name|makeNameProper
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|x
+argument|const std::string&x
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Prefix
-operator|=
-literal|0
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|PrivatePrefix
-operator|=
-literal|0
+argument|ManglerPrefixTy PrefixTy = Mangler::Default
 argument_list|)
 expr_stmt|;
-name|private
-label|:
-comment|/// getTypeID - Return a unique ID for the specified LLVM type.
-comment|///
-name|unsigned
-name|getTypeID
-parameter_list|(
+comment|/// getNameWithPrefix - Fill OutName with the name of the appropriate prefix
+comment|/// and the specified global variable's name.  If the global variable doesn't
+comment|/// have a name, this fills in a unique name for the global.
+name|void
+name|getNameWithPrefix
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|OutName
+argument_list|,
 specifier|const
-name|Type
-modifier|*
-name|Ty
-parameter_list|)
-function_decl|;
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|bool
+name|isImplicitlyPrivate
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

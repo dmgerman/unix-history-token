@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -S -g -o - | grep {llvm.dbg.stoppoint.*i32 14}
+comment|// RUN: %llvmgcc %s -S -g -o - | grep DW_TAG_compile_unit | count 1
 end_comment
 
 begin_comment

@@ -62,31 +62,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|INLINER_H
+name|LLVM_TRANSFORMS_IPO_INLINERPASS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|INLINER_H
+name|LLVM_TRANSFORMS_IPO_INLINERPASS_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/CallGraphSCCPass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Transforms/Utils/InlineCost.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetData.h"
 end_include
 
 begin_decl_stmt
@@ -96,6 +84,23 @@ block|{
 name|class
 name|CallSite
 decl_stmt|;
+name|class
+name|TargetData
+decl_stmt|;
+name|class
+name|InlineCost
+decl_stmt|;
+name|template
+operator|<
+name|class
+name|PtrType
+operator|,
+name|unsigned
+name|SmallSize
+operator|>
+name|class
+name|SmallPtrSet
+expr_stmt|;
 comment|/// Inliner - This class contains all of the helper code which is used to
 comment|/// perform the inlining operations that do not depend on the policy.
 comment|///
@@ -138,7 +143,6 @@ name|virtual
 name|bool
 name|runOnSCC
 argument_list|(
-specifier|const
 name|std
 operator|::
 name|vector
@@ -159,22 +163,6 @@ argument_list|(
 name|CallGraph
 operator|&
 name|CG
-argument_list|)
-block|;
-comment|// InlineCallIfPossible
-name|bool
-name|InlineCallIfPossible
-argument_list|(
-argument|CallSite CS
-argument_list|,
-argument|CallGraph&CG
-argument_list|,
-argument|const SmallPtrSet<Function*
-argument_list|,
-literal|8
-argument|>&SCCFunctions
-argument_list|,
-argument|const TargetData&TD
 argument_list|)
 block|;
 comment|/// This method returns the value specified by the -inline-threshold value,

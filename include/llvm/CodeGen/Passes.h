@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -94,6 +88,9 @@ decl_stmt|;
 name|class
 name|RegisterCoalescer
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// createUnreachableBlockEliminationPass - The LLVM code generator does not
 comment|/// work well with unreachable basic blocks (what live ranges make sense for a
 comment|/// block that cannot be reached?).  As such, a code generator should either
@@ -106,15 +103,13 @@ name|createUnreachableBlockEliminationPass
 parameter_list|()
 function_decl|;
 comment|/// MachineFunctionPrinter pass - This pass prints out the machine function to
-comment|/// standard error, as a debugging tool.
+comment|/// the given stream, as a debugging tool.
 name|FunctionPass
 modifier|*
 name|createMachineFunctionPrinterPass
 argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
+name|raw_ostream
+operator|&
 name|OS
 argument_list|,
 specifier|const
@@ -221,15 +216,6 @@ modifier|*
 name|createRegisterAllocator
 parameter_list|()
 function_decl|;
-comment|/// SimpleRegisterAllocation Pass - This pass converts the input machine code
-comment|/// from SSA form to use explicit registers by spilling every register.  Wow,
-comment|/// great policy huh?
-comment|///
-name|FunctionPass
-modifier|*
-name|createSimpleRegisterAllocator
-parameter_list|()
-function_decl|;
 comment|/// LocalRegisterAllocation Pass - This pass register allocates the input code
 comment|/// a basic block at a time, yielding code better than the simple register
 comment|/// allocator, but not as good as a global allocator.
@@ -237,18 +223,6 @@ comment|///
 name|FunctionPass
 modifier|*
 name|createLocalRegisterAllocator
-parameter_list|()
-function_decl|;
-comment|/// BigBlockRegisterAllocation Pass - The BigBlock register allocator
-comment|/// munches single basic blocks at a time, like the local register
-comment|/// allocator.  While the BigBlock allocator is a little slower, and uses
-comment|/// somewhat more memory than the local register allocator, it tends to
-comment|/// yield the best allocations (of any of the allocators) for blocks that
-comment|/// have hundreds or thousands of instructions in sequence.
-comment|///
-name|FunctionPass
-modifier|*
-name|createBigBlockRegisterAllocator
 parameter_list|()
 function_decl|;
 comment|/// LinearScanRegisterAllocation Pass - This pass implements the linear scan
@@ -331,14 +305,6 @@ modifier|*
 name|createDebugLabelFoldingPass
 parameter_list|()
 function_decl|;
-comment|/// MachineCodeDeletion Pass - This pass deletes all of the machine code for
-comment|/// the current function, which should happen after the function has been
-comment|/// emitted to a .s file or to memory.
-name|FunctionPass
-modifier|*
-name|createMachineCodeDeleter
-parameter_list|()
-function_decl|;
 comment|/// getRegisterAllocator - This creates an instance of the register allocator
 comment|/// for the Sparc.
 name|FunctionPass
@@ -378,14 +344,12 @@ comment|///
 name|FunctionPass
 modifier|*
 name|createGCInfoPrinter
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|&
+parameter_list|(
+name|raw_ostream
+modifier|&
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// createMachineLICMPass - This pass performs LICM on machine instructions.
 comment|///
 name|FunctionPass
@@ -445,6 +409,18 @@ name|tli
 parameter_list|,
 name|bool
 name|fast
+parameter_list|)
+function_decl|;
+comment|/// createSjLjEHPass - This pass adapts exception handling code to use
+comment|/// the GCC-style builtin setjmp/longjmp (sjlj) to handling EH control flow.
+name|FunctionPass
+modifier|*
+name|createSjLjEHPass
+parameter_list|(
+specifier|const
+name|TargetLowering
+modifier|*
+name|tli
 parameter_list|)
 function_decl|;
 block|}

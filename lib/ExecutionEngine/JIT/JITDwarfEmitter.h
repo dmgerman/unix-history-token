@@ -117,9 +117,6 @@ modifier|&
 name|Jit
 decl_stmt|;
 name|bool
-name|needsIndirectEncoding
-decl_stmt|;
-name|bool
 name|stackGrowthDirection
 decl_stmt|;
 name|unsigned
@@ -288,6 +285,12 @@ name|unsigned
 name|char
 modifier|*
 name|EndFunction
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+modifier|&
+name|EHFramePtr
 parameter_list|)
 function_decl|;
 name|unsigned

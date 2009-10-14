@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Instruction.h"
 end_include
 
@@ -190,41 +196,6 @@ operator|*
 name|C
 argument_list|)
 expr_stmt|;
-name|CallSite
-argument_list|(
-specifier|const
-name|CallSite
-operator|&
-name|CS
-argument_list|)
-operator|:
-name|I
-argument_list|(
-argument|CS.I
-argument_list|)
-block|{}
-name|CallSite
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|CallSite
-operator|&
-name|CS
-operator|)
-block|{
-name|I
-operator|=
-name|CS
-operator|.
-name|I
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 name|bool
 name|operator
 operator|==
@@ -349,18 +320,22 @@ return|;
 block|}
 comment|/// getCallingConv/setCallingConv - get or set the calling convention of the
 comment|/// call.
-name|unsigned
+name|CallingConv
+operator|::
+name|ID
 name|getCallingConv
 argument_list|()
 specifier|const
 expr_stmt|;
 name|void
 name|setCallingConv
-parameter_list|(
-name|unsigned
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
 name|CC
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// getAttributes/setAttributes - get or set the parameter attributes of
 comment|/// the call.
 specifier|const

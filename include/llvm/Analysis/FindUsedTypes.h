@@ -140,34 +140,12 @@ comment|///
 name|void
 name|print
 argument_list|(
-argument|std::ostream&o
+argument|raw_ostream&o
 argument_list|,
 argument|const Module *M
 argument_list|)
 specifier|const
 block|;
-name|void
-name|print
-argument_list|(
-argument|std::ostream *o
-argument_list|,
-argument|const Module *M
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|o
-condition|)
-name|print
-argument_list|(
-operator|*
-name|o
-argument_list|,
-name|M
-argument_list|)
-expr_stmt|;
-block|}
 name|private
 operator|:
 comment|/// IncorporateType - Incorporate one type and all of its subtypes into the

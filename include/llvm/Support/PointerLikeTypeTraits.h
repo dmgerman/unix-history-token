@@ -165,6 +165,14 @@ name|T
 operator|*
 operator|>
 block|{
+typedef|typedef
+name|PointerLikeTypeTraits
+operator|<
+name|T
+operator|*
+operator|>
+name|NonConst
+expr_stmt|;
 name|public
 operator|:
 specifier|static
@@ -178,7 +186,19 @@ argument|const T* P
 argument_list|)
 block|{
 return|return
+name|NonConst
+operator|::
+name|getAsVoidPointer
+argument_list|(
+name|const_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
 name|P
+operator|)
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -192,26 +212,42 @@ argument|const void *P
 argument_list|)
 block|{
 return|return
-name|static_cast
+name|NonConst
+operator|::
+name|getFromVoidPointer
+argument_list|(
+name|const_cast
 operator|<
-specifier|const
-name|T
+name|void
 operator|*
 operator|>
 operator|(
 name|P
 operator|)
+argument_list|)
 return|;
 block|}
-expr|enum
+block|enum
 block|{
 name|NumLowBitsAvailable
 operator|=
-literal|2
+name|NonConst
+operator|::
+name|NumLowBitsAvailable
 block|}
-block|; }
 expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// Provide PointerLikeTypeTraits for uintptr_t.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -261,19 +297,24 @@ name|P
 operator|)
 return|;
 block|}
-comment|// No bits are available!
-expr|enum
-block|{
-name|NumLowBitsAvailable
-operator|=
-literal|0
-block|}
-block|; }
-expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
+comment|// No bits are available!
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NumLowBitsAvailable
+init|=
+literal|0
+block|}
+enum|;
+end_enum
+
+begin_comment
+unit|};    }
 comment|// end namespace llvm
 end_comment
 

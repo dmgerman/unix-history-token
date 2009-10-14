@@ -85,7 +85,7 @@ name|class
 name|ARMSubtarget
 decl_stmt|;
 name|class
-name|TargetInstrInfo
+name|ARMBaseInstrInfo
 decl_stmt|;
 name|class
 name|Type
@@ -101,7 +101,7 @@ operator|:
 name|Thumb1RegisterInfo
 argument_list|(
 specifier|const
-name|TargetInstrInfo
+name|ARMBaseInstrInfo
 operator|&
 name|tii
 argument_list|,
@@ -120,13 +120,18 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
+argument|DebugLoc dl
+argument_list|,
 argument|unsigned DestReg
+argument_list|,
+argument|unsigned SubIdx
 argument_list|,
 argument|int Val
 argument_list|,
-argument|const TargetInstrInfo *TII
+argument|ARMCC::CondCodes Pred = ARMCC::AL
 argument_list|,
-argument|DebugLoc dl
+argument|unsigned PredReg =
+literal|0
 argument_list|)
 specifier|const
 block|;
@@ -138,21 +143,19 @@ name|getPhysicalRegisterRegClass
 argument_list|(
 argument|unsigned Reg
 argument_list|,
-argument|MVT VT = MVT::Other
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isReservedReg
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|unsigned Reg
+argument|EVT VT = MVT::Other
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|requiresRegisterScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|requiresFrameIndexScavenging
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -176,12 +179,61 @@ argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
 block|;
+comment|// rewrite MI to access 'Offset' bytes from the FP. Return the offset that
+comment|// could not be handled directly in MI.
+name|int
+name|rewriteFrameIndex
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned FrameRegIdx
+argument_list|,
+argument|unsigned FrameReg
+argument_list|,
+argument|int Offset
+argument_list|,
+argument|unsigned MOVOpc
+argument_list|,
+argument|unsigned ADDriOpc
+argument_list|,
+argument|unsigned SUBriOpc
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|saveScavengerRegister
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
 name|void
+name|restoreScavengerRegister
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+name|unsigned
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
+argument_list|,
+argument|int *Value = NULL
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)

@@ -104,7 +104,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Note that ConstantRange always keeps unsigned values.
+comment|// Note that ConstantRange can be used to represent either signed or
+end_comment
+
+begin_comment
+comment|// unsigned ranges.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -139,6 +147,8 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// ConstantRange - This class represents an range of values.
+comment|///
 name|class
 name|ConstantRange
 block|{
@@ -204,6 +214,26 @@ operator|&
 name|Upper
 argument_list|)
 expr_stmt|;
+comment|/// makeICmpRegion - Produce the smallest range that contains all values that
+comment|/// might satisfy the comparison specified by Pred when compared to any value
+comment|/// contained within Other.
+comment|///
+comment|/// Solves for range X in 'for all x in X, there exists a y in Y such that
+comment|/// icmp op x, y is true'. Every value that might make the comparison true
+comment|/// is included in the resulting range.
+specifier|static
+name|ConstantRange
+name|makeICmpRegion
+parameter_list|(
+name|unsigned
+name|Pred
+parameter_list|,
+specifier|const
+name|ConstantRange
+modifier|&
+name|Other
+parameter_list|)
+function_decl|;
 comment|/// getLower - Return the lower value for this range...
 comment|///
 specifier|const
@@ -276,6 +306,18 @@ specifier|const
 name|APInt
 operator|&
 name|Val
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// contains - Return true if the other range is a subset of this one.
+comment|///
+name|bool
+name|contains
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|CR
 argument_list|)
 decl|const
 decl_stmt|;
@@ -418,30 +460,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// intersectWith - Return the range that results from the intersection of
-comment|/// this range with another range.  The resultant range is pruned as much as
-comment|/// possible, but there may be cases where elements are included that are in
-comment|/// one of the sets but not the other.  For example: [100, 8) intersect [3,
-comment|/// 120) yields [3, 120)
+comment|/// this range with another range.  The resultant range is guaranteed to
+comment|/// include all elements contained in both input ranges, and to have the
+comment|/// smallest possible set size that does so.  Because there may be two
+comment|/// intersections with the same set size, A.intersectWith(B) might not
+comment|/// be equal to B.intersectWith(A).
 comment|///
 name|ConstantRange
 name|intersectWith
-argument_list|(
-specifier|const
-name|ConstantRange
-operator|&
-name|CR
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// maximalIntersectWith - Return the range that results from the intersection
-comment|/// of this range with another range.  The resultant range is guaranteed to
-comment|/// include all elements contained in both input ranges, and to have the
-comment|/// smallest possible set size that does so.  Because there may be two
-comment|/// intersections with the same set size, A.maximalIntersectWith(B) might not
-comment|/// be equal to B.maximalIntersectWith(A).
-comment|///
-name|ConstantRange
-name|maximalIntersectWith
 argument_list|(
 specifier|const
 name|ConstantRange
@@ -499,6 +525,68 @@ name|truncate
 argument_list|(
 name|uint32_t
 name|BitWidth
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// add - Return a new range representing the possible values resulting
+comment|/// from an addition of a value in this range and a value in Other.
+name|ConstantRange
+name|add
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// multiply - Return a new range representing the possible values resulting
+comment|/// from a multiplication of a value in this range and a value in Other.
+comment|/// TODO: This isn't fully implemented yet.
+name|ConstantRange
+name|multiply
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// smax - Return a new range representing the possible values resulting
+comment|/// from a signed maximum of a value in this range and a value in Other.
+name|ConstantRange
+name|smax
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// umax - Return a new range representing the possible values resulting
+comment|/// from an unsigned maximum of a value in this range and a value in Other.
+name|ConstantRange
+name|umax
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// udiv - Return a new range representing the possible values resulting
+comment|/// from an unsigned division of a value in this range and a value in Other.
+comment|/// TODO: This isn't fully implemented yet.
+name|ConstantRange
+name|udiv
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
 argument_list|)
 decl|const
 decl_stmt|;

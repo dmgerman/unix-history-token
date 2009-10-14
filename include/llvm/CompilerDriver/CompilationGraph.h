@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -1066,8 +1060,14 @@ name|class
 name|NodeChildIterator
 range|:
 name|public
-name|bidirectional_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|bidirectional_iterator_tag
+decl_stmt|,
 name|Node
 decl_stmt|,
 name|ptrdiff_t

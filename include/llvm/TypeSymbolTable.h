@@ -75,6 +75,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 comment|/// This class provides a symbol table of name/type pairs with operations to
 comment|/// support constructing, searching and iterating over the symbol table. The
 comment|/// class derives from AbstractTypeUser so that the contents of the symbol
@@ -151,7 +154,7 @@ operator|::
 name|string
 name|getUniqueName
 argument_list|(
-argument|const std::string&BaseName
+argument|const StringRef&BaseName
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -165,9 +168,32 @@ modifier|*
 name|lookup
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
+operator|&
+name|name
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Lookup the type associated with name.
+comment|/// @returns end() if the name is not found, or an iterator at the entry for
+comment|/// Type.
+name|iterator
+name|find
+parameter_list|(
+specifier|const
+name|StringRef
+modifier|&
+name|name
+parameter_list|)
+function_decl|;
+comment|/// Lookup the type associated with name.
+comment|/// @returns end() if the name is not found, or an iterator at the entry for
+comment|/// Type.
+name|const_iterator
+name|find
+argument_list|(
+specifier|const
+name|StringRef
 operator|&
 name|name
 argument_list|)
@@ -284,20 +310,18 @@ comment|/// with an existing entry in the symbol table to get a new name.
 comment|/// @brief Insert a type under a new name.
 name|void
 name|insert
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Name
-argument_list|,
+parameter_list|,
 specifier|const
 name|Type
-operator|*
+modifier|*
 name|Typ
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Remove a type at the specified position in the symbol table.
 comment|/// @returns the removed Type.
 comment|/// @returns the Type that was erased from the symbol table.

@@ -132,24 +132,21 @@ comment|// any MSP430 specific FrameInfo class.
 name|TargetFrameInfo
 name|FrameInfo
 block|;
-name|protected
-operator|:
-name|virtual
-specifier|const
-name|TargetAsmInfo
-operator|*
-name|createTargetAsmInfo
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|MSP430TargetMachine
 argument_list|(
 specifier|const
-name|Module
+name|Target
 operator|&
-name|M
+name|T
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
 argument_list|,
 specifier|const
 name|std
@@ -253,29 +250,6 @@ argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addAssemblyEmitter
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|bool Verbose
-argument_list|,
-argument|raw_ostream&Out
-argument_list|)
-block|;
-specifier|static
-name|unsigned
-name|getModuleMatchQuality
-argument_list|(
-specifier|const
-name|Module
-operator|&
-name|M
 argument_list|)
 block|; }
 decl_stmt|;

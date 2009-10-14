@@ -390,21 +390,27 @@ name|SmartRWMutex
 operator|<
 name|mt_only
 operator|>
-operator|*
+operator|&
 name|mutex
 block|;
 name|explicit
 name|SmartScopedReader
 argument_list|(
-argument|SmartRWMutex<mt_only>* m
+name|SmartRWMutex
+operator|<
+name|mt_only
+operator|>
+operator|&
+name|m
+argument_list|)
+operator|:
+name|mutex
+argument_list|(
+argument|m
 argument_list|)
 block|{
 name|mutex
-operator|=
-name|m
-block|;
-name|mutex
-operator|->
+operator|.
 name|reader_acquire
 argument_list|()
 block|;       }
@@ -413,7 +419,7 @@ name|SmartScopedReader
 argument_list|()
 block|{
 name|mutex
-operator|->
+operator|.
 name|reader_release
 argument_list|()
 block|;       }
@@ -439,21 +445,27 @@ name|SmartRWMutex
 operator|<
 name|mt_only
 operator|>
-operator|*
+operator|&
 name|mutex
 block|;
 name|explicit
 name|SmartScopedWriter
 argument_list|(
-argument|SmartRWMutex<mt_only>* m
+name|SmartRWMutex
+operator|<
+name|mt_only
+operator|>
+operator|&
+name|m
+argument_list|)
+operator|:
+name|mutex
+argument_list|(
+argument|m
 argument_list|)
 block|{
 name|mutex
-operator|=
-name|m
-block|;
-name|mutex
-operator|->
+operator|.
 name|writer_acquire
 argument_list|()
 block|;       }
@@ -462,7 +474,7 @@ name|SmartScopedWriter
 argument_list|()
 block|{
 name|mutex
-operator|->
+operator|.
 name|writer_release
 argument_list|()
 block|;       }

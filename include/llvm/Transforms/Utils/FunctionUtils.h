@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/LoopInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -83,6 +77,9 @@ name|DominatorTree
 decl_stmt|;
 name|class
 name|Function
+decl_stmt|;
+name|class
+name|Loop
 decl_stmt|;
 comment|/// ExtractCodeRegion - rip out a sequence of basic blocks into a new function
 comment|///

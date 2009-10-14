@@ -98,6 +98,7 @@ comment|/// an abstract object on the stack frame of the current function.  This
 comment|/// reference has base register as the FrameIndex offset until it is resolved.
 comment|/// This allows a constant offset to be specified as well...
 comment|///
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder

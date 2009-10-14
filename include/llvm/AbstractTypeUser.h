@@ -137,6 +137,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Value
+decl_stmt|;
+name|class
 name|Type
 decl_stmt|;
 name|class
@@ -178,6 +181,22 @@ name|AbstractTypeUser
 argument_list|()
 expr_stmt|;
 comment|// Derive from me
+comment|/// setType - It's normally not possible to change a Value's type in place,
+comment|/// but an AbstractTypeUser subclass that knows what its doing can be
+comment|/// permitted to do so with care.
+name|void
+name|setType
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|Type
+modifier|*
+name|NewTy
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// refineAbstractType - The callback method invoked when an abstract type is
@@ -202,7 +221,7 @@ init|=
 literal|0
 function_decl|;
 comment|/// The other case which AbstractTypeUsers must be aware of is when a type
-comment|/// makes the transition from being abstract (where it has clients on it's
+comment|/// makes the transition from being abstract (where it has clients on its
 comment|/// AbstractTypeUsers list) to concrete (where it does not).  This method
 comment|/// notifies ATU's when this occurs for a type.
 comment|///

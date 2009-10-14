@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_ASMPRINTER_DWARFEXCEPTION_H__
+name|LLVM_CODEGEN_ASMPRINTER_DWARFEXCEPTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_ASMPRINTER_DWARFEXCEPTION_H__
+name|LLVM_CODEGEN_ASMPRINTER_DWARFEXCEPTION_H
 end_define
 
 begin_include
@@ -100,7 +100,7 @@ name|class
 name|MachineModuleInfo
 decl_stmt|;
 name|class
-name|TargetAsmInfo
+name|MCAsmInfo
 decl_stmt|;
 name|class
 name|Timer
@@ -212,6 +212,17 @@ name|FunctionEHFrameInfo
 operator|>
 name|EHFrames
 block|;
+comment|/// UsesLSDA - Indicates whether an FDE that uses the CIE at the given index
+comment|/// uses an LSDA. If so, then we need to encode that information in the CIE's
+comment|/// augmentation.
+name|DenseMap
+operator|<
+name|unsigned
+block|,
+name|bool
+operator|>
+name|UsesLSDA
+block|;
 comment|/// shouldEmitTable - Per-function flag to indicate if EH tables should
 comment|/// be emitted.
 name|bool
@@ -237,20 +248,27 @@ name|Timer
 operator|*
 name|ExceptionTimer
 block|;
-comment|/// EmitCommonEHFrame - Emit the common eh unwind frame.
-comment|///
+comment|/// SizeOfEncodedValue - Return the size of the encoding in bytes.
+name|unsigned
+name|SizeOfEncodedValue
+argument_list|(
+argument|unsigned Encoding
+argument_list|)
+block|;
+comment|/// EmitCIE - Emit a Common Information Entry (CIE). This holds information
+comment|/// that is shared among many Frame Description Entries.  There is at least
+comment|/// one CIE in every non-empty .debug_frame section.
 name|void
-name|EmitCommonEHFrame
+name|EmitCIE
 argument_list|(
 argument|const Function *Personality
 argument_list|,
 argument|unsigned Index
 argument_list|)
 block|;
-comment|/// EmitEHFrame - Emit function exception frame information.
-comment|///
+comment|/// EmitFDE - Emit the Frame Description Entry (FDE) for the function.
 name|void
-name|EmitEHFrame
+name|EmitFDE
 argument_list|(
 specifier|const
 name|FunctionEHFrameInfo
@@ -370,22 +388,6 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ActionEntry - Structure describing an entry in the actions table.
-block|struct
-name|ActionEntry
-block|{
-name|int
-name|ValueForTypeID
-block|;
-comment|// The value to write - may not be equal to the type id.
-name|int
-name|NextAction
-block|;     struct
-name|ActionEntry
-operator|*
-name|Previous
-block|;   }
-block|;
 comment|/// PadRange - Structure holding a try-range and the associated landing pad.
 block|struct
 name|PadRange
@@ -410,6 +412,22 @@ name|KeyInfo
 operator|>
 name|RangeMapType
 expr_stmt|;
+comment|/// ActionEntry - Structure describing an entry in the actions table.
+block|struct
+name|ActionEntry
+block|{
+name|int
+name|ValueForTypeID
+block|;
+comment|// The value to write - may not be equal to the type id.
+name|int
+name|NextAction
+block|;     struct
+name|ActionEntry
+operator|*
+name|Previous
+block|;   }
+block|;
 comment|/// CallSiteEntry - Structure describing an entry in the call-site table.
 block|struct
 name|CallSiteEntry
@@ -432,6 +450,77 @@ name|unsigned
 name|Action
 block|;   }
 block|;
+comment|/// ComputeActionsTable - Compute the actions table and gather the first
+comment|/// action index for each landing pad site.
+name|unsigned
+name|ComputeActionsTable
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|LandingPadInfo
+operator|*
+operator|>
+operator|&
+name|LPs
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|ActionEntry
+operator|>
+operator|&
+name|Actions
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|FirstActions
+argument_list|)
+block|;
+comment|/// ComputeCallSiteTable - Compute the call-site table.  The entry for an
+comment|/// invoke has a try-range containing the call, a non-zero landing pad and an
+comment|/// appropriate action.  The entry for an ordinary call has a try-range
+comment|/// containing the call and zero for the landing pad and the action.  Calls
+comment|/// marked 'nounwind' have no entry and must not be contained in the try-range
+comment|/// of any entry - they form gaps in the table.  Entries must be ordered by
+comment|/// try-range address.
+name|void
+name|ComputeCallSiteTable
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|CallSiteEntry
+operator|>
+operator|&
+name|CallSites
+argument_list|,
+specifier|const
+name|RangeMapType
+operator|&
+name|PadMap
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|LandingPadInfo
+operator|*
+operator|>
+operator|&
+name|LPs
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|FirstActions
+argument_list|)
+block|;
 name|void
 name|EmitExceptionTable
 argument_list|()
@@ -452,7 +541,7 @@ operator|*
 name|A
 argument_list|,
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 operator|*
 name|T
 argument_list|)

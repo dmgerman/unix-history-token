@@ -228,14 +228,19 @@ operator|||
 name|llvm_is_multithreaded
 argument_list|()
 condition|)
+block|{
 return|return
 name|MutexImpl
 operator|::
 name|acquire
 argument_list|()
 return|;
-comment|// Single-threaded debugging code.  This would be racy in multithreaded
-comment|// mode, but provides not sanity checks in single threaded mode.
+block|}
+else|else
+block|{
+comment|// Single-threaded debugging code.  This would be racy in
+comment|// multithreaded mode, but provides not sanity checks in single
+comment|// threaded mode.
 name|assert
 argument_list|(
 operator|(
@@ -248,17 +253,18 @@ operator|)
 operator|&&
 literal|"Lock already acquired!!"
 argument_list|)
-block|;
+expr_stmt|;
 operator|++
 name|acquired
-block|;
+expr_stmt|;
 return|return
 name|true
 return|;
 block|}
+block|}
 name|bool
 name|release
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -268,14 +274,19 @@ operator|||
 name|llvm_is_multithreaded
 argument_list|()
 condition|)
+block|{
 return|return
 name|MutexImpl
 operator|::
 name|release
 argument_list|()
 return|;
-comment|// Single-threaded debugging code.  This would be racy in multithreaded
-comment|// mode, but provides not sanity checks in single threaded mode.
+block|}
+else|else
+block|{
+comment|// Single-threaded debugging code.  This would be racy in
+comment|// multithreaded mode, but provides not sanity checks in single
+comment|// threaded mode.
 name|assert
 argument_list|(
 operator|(
@@ -302,9 +313,10 @@ return|return
 name|true
 return|;
 block|}
+block|}
 name|bool
 name|tryacquire
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -320,12 +332,13 @@ operator|::
 name|tryacquire
 argument_list|()
 return|;
+else|else
 return|return
 name|true
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|SmartMutex
 argument_list|(
 specifier|const
@@ -336,10 +349,10 @@ operator|>
 operator|&
 name|original
 argument_list|)
-expr_stmt|;
+block|;
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|SmartMutex
@@ -348,9 +361,8 @@ name|mt_only
 operator|>
 operator|&
 operator|)
-decl_stmt|;
-block|}
-empty_stmt|;
+block|;     }
+expr_stmt|;
 comment|/// Mutex - A standard, always enforced mutex.
 typedef|typedef
 name|SmartMutex
@@ -371,7 +383,7 @@ name|SmartMutex
 operator|<
 name|mt_only
 operator|>
-operator|*
+operator|&
 name|mtx
 block|;
 name|public
@@ -382,7 +394,7 @@ name|SmartMutex
 operator|<
 name|mt_only
 operator|>
-operator|*
+operator|&
 name|m
 argument_list|)
 operator|:
@@ -392,7 +404,7 @@ argument|m
 argument_list|)
 block|{
 name|mtx
-operator|->
+operator|.
 name|acquire
 argument_list|()
 block|;       }
@@ -401,7 +413,7 @@ name|SmartScopedLock
 argument_list|()
 block|{
 name|mtx
-operator|->
+operator|.
 name|release
 argument_list|()
 block|;       }
@@ -415,10 +427,10 @@ operator|>
 name|ScopedLock
 expr_stmt|;
 block|}
+block|}
 end_decl_stmt
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

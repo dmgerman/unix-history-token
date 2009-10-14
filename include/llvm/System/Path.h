@@ -83,12 +83,6 @@ directive|include
 file|<vector>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<iosfwd>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -570,7 +564,17 @@ operator|&
 name|that
 operator|)
 specifier|const
-expr_stmt|;
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|that
+operator|)
+return|;
+block|}
 comment|/// Determines if \p this Path is less than \p that Path. This is required
 comment|/// so that Path objects can be placed into ordered collections (e.g.
 comment|/// std::map). The comparison is done lexicographically as defined by
@@ -622,23 +626,6 @@ name|path
 operator|.
 name|empty
 argument_list|()
-return|;
-block|}
-comment|/// This function returns the current contents of the path as a
-comment|/// std::string. This allows the underlying path string to be manipulated.
-comment|/// @returns std::string containing the path name.
-comment|/// @brief Returns the path as a std::string.
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|toString
-argument_list|()
-specifier|const
-block|{
-return|return
-name|path
 return|;
 block|}
 comment|/// This function returns the last component of the path name. The last
@@ -703,6 +690,19 @@ name|path
 operator|.
 name|c_str
 argument_list|()
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|str
+argument_list|()
+specifier|const
+block|{
+return|return
+name|path
 return|;
 block|}
 comment|/// size - Return the length in bytes of this path name.
@@ -1293,6 +1293,7 @@ comment|/// @name Data
 comment|/// @{
 name|protected
 label|:
+comment|// Our win32 implementation relies on this string being mutable.
 name|mutable
 name|std
 operator|::
@@ -1691,67 +1692,6 @@ specifier|const
 name|char
 name|PathSeparator
 decl_stmt|;
-block|}
-name|std
-operator|::
-name|ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|strm
-operator|,
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-name|aPath
-operator|)
-expr_stmt|;
-specifier|inline
-name|std
-operator|::
-name|ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|strm
-operator|,
-specifier|const
-name|sys
-operator|::
-name|PathWithStatus
-operator|&
-name|aPath
-operator|)
-block|{
-name|strm
-operator|<<
-name|static_cast
-operator|<
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-operator|>
-operator|(
-name|aPath
-operator|)
-block|;
-return|return
-name|strm
-return|;
 block|}
 block|}
 end_decl_stmt

@@ -91,10 +91,19 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 comment|/// ComputeMaskedBits - Determine which of the bits specified in Mask are
 comment|/// known to be either zero or one and return them in the KnownZero/KnownOne
 comment|/// bit sets.  This code only analyzes bits in Mask, in order to short-circuit
 comment|/// processing.
+comment|///
+comment|/// This function is defined on values with integer type, values with pointer
+comment|/// type (but only if TD is non-null), and vectors of integers.  In the case
+comment|/// where V is a vector, the mask, known zero, and known one values are the
+comment|/// same width as the vector element, and the bit is set only if it is true
+comment|/// for all of the elements in the vector.
 name|void
 name|ComputeMaskedBits
 parameter_list|(
@@ -115,6 +124,7 @@ name|APInt
 modifier|&
 name|KnownOne
 parameter_list|,
+specifier|const
 name|TargetData
 modifier|*
 name|TD
@@ -130,6 +140,12 @@ function_decl|;
 comment|/// MaskedValueIsZero - Return true if 'V& Mask' is known to be zero.  We use
 comment|/// this predicate to simplify operations downstream.  Mask is known to be
 comment|/// zero for bits that V cannot have.
+comment|///
+comment|/// This function is defined on values with integer type, values with pointer
+comment|/// type (but only if TD is non-null), and vectors of integers.  In the case
+comment|/// where V is a vector, the mask, known zero, and known one values are the
+comment|/// same width as the vector element, and the bit is set only if it is true
+comment|/// for all of the elements in the vector.
 name|bool
 name|MaskedValueIsZero
 parameter_list|(
@@ -142,6 +158,7 @@ name|APInt
 modifier|&
 name|Mask
 parameter_list|,
+specifier|const
 name|TargetData
 modifier|*
 name|TD
@@ -169,6 +186,7 @@ name|Value
 modifier|*
 name|Op
 parameter_list|,
+specifier|const
 name|TargetData
 modifier|*
 name|TD
@@ -222,6 +240,10 @@ name|unsigned
 modifier|*
 name|idx_end
 parameter_list|,
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|,
 name|Instruction
 modifier|*
 name|InsertBefore
@@ -243,6 +265,10 @@ parameter_list|,
 specifier|const
 name|unsigned
 name|Idx
+parameter_list|,
+name|LLVMContext
+modifier|&
+name|Context
 parameter_list|,
 name|Instruction
 modifier|*
@@ -278,6 +304,8 @@ name|Idxs
 index|[
 literal|1
 index|]
+argument_list|,
+name|Context
 argument_list|,
 name|InsertBefore
 argument_list|)

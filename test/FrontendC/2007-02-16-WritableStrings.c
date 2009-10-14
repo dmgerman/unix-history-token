@@ -8,11 +8,11 @@ comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm -fwritable-strings %s | \
 end_comment
 
 begin_comment
-comment|// RUN:    grep {internal global}
+comment|// RUN:    grep {private global}
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | grep {internal constant}
+comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | grep {private constant}
 end_comment
 
 begin_decl_stmt

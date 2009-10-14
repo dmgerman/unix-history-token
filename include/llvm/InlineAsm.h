@@ -126,15 +126,20 @@ block|;
 name|bool
 name|HasSideEffects
 block|;
+name|bool
+name|IsMsAsm
+block|;
 name|InlineAsm
 argument_list|(
 argument|const FunctionType *Ty
 argument_list|,
-argument|const std::string&AsmString
+argument|const StringRef&AsmString
 argument_list|,
-argument|const std::string&Constraints
+argument|const StringRef&Constraints
 argument_list|,
 argument|bool hasSideEffects
+argument_list|,
+argument|bool isMsAsm = false
 argument_list|)
 block|;
 name|virtual
@@ -153,11 +158,13 @@ name|get
 argument_list|(
 argument|const FunctionType *Ty
 argument_list|,
-argument|const std::string&AsmString
+argument|const StringRef&AsmString
 argument_list|,
-argument|const std::string&Constraints
+argument|const StringRef&Constraints
 argument_list|,
 argument|bool hasSideEffects
+argument_list|,
+argument|bool isMsAsm = false
 argument_list|)
 block|;
 name|bool
@@ -167,6 +174,15 @@ specifier|const
 block|{
 return|return
 name|HasSideEffects
+return|;
+block|}
+name|bool
+name|isMsAsm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsMsAsm
 return|;
 block|}
 comment|/// getType - InlineAsm's are always pointers.
@@ -242,9 +258,7 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|Constraints
 argument_list|)
@@ -328,9 +342,7 @@ name|bool
 name|Parse
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|Str
 argument_list|,
@@ -360,9 +372,7 @@ operator|>
 name|ParseConstraints
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|ConstraintString
 argument_list|)

@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -74,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -87,6 +93,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
@@ -101,6 +110,9 @@ name|MachineModuleInfo
 decl_stmt|;
 name|class
 name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|TargetFrameInfo
@@ -321,11 +333,14 @@ name|uint64_t
 name|StackSize
 decl_stmt|;
 comment|/// OffsetAdjustment - The amount that a frame offset needs to be adjusted to
-comment|/// have the actual offset from the stack/frame pointer.  The calculation is
-comment|/// MFI->getObjectOffset(Index) + StackSize - TFI.getOffsetOfLocalArea() +
-comment|/// OffsetAdjustment.  If OffsetAdjustment is zero (default) then offsets are
-comment|/// away from TOS. If OffsetAdjustment == StackSize then offsets are toward
-comment|/// TOS.
+comment|/// have the actual offset from the stack/frame pointer.  The exact usage of
+comment|/// this is target-dependent, but it is typically used to adjust between
+comment|/// SP-relative and FP-relative offsets.  E.G., if objects are accessed via
+comment|/// SP then OffsetAdjustment is zero; if FP is used, OffsetAdjustment is set
+comment|/// to the distance between the initial SP and the value in FP.  For many
+comment|/// targets, this value is only used when generating debug info (via
+comment|/// TargetRegisterInfo::getFrameIndexOffset); when generating code, the
+comment|/// corresponding adjustments are performed directly.
 name|int
 name|OffsetAdjustment
 decl_stmt|;
@@ -369,6 +384,10 @@ name|CalleeSavedInfo
 operator|>
 name|CSInfo
 expr_stmt|;
+comment|/// CSIValid - Has CSInfo been set yet?
+name|bool
+name|CSIValid
+decl_stmt|;
 comment|/// MMI - This field is set (via setMachineModuleInfo) by a module info
 comment|/// consumer (ex. DwarfWriter) to indicate that frame layout information
 comment|/// should be acquired.  Typically, it's the responsibility of the target's
@@ -431,6 +450,10 @@ block|;
 name|MaxCallFrameSize
 operator|=
 literal|0
+block|;
+name|CSIValid
+operator|=
+name|false
 block|;
 name|MMI
 operator|=
@@ -1229,6 +1252,47 @@ operator|=
 name|CSI
 expr_stmt|;
 block|}
+comment|/// isCalleeSavedInfoValid - Has the callee saved info been calculated yet?
+name|bool
+name|isCalleeSavedInfoValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CSIValid
+return|;
+block|}
+name|void
+name|setCalleeSavedInfoValid
+parameter_list|(
+name|bool
+name|v
+parameter_list|)
+block|{
+name|CSIValid
+operator|=
+name|v
+expr_stmt|;
+block|}
+comment|/// getPristineRegs - Return a set of physical registers that are pristine on
+comment|/// entry to the MBB.
+comment|///
+comment|/// Pristine registers hold a value that is useless to the current function,
+comment|/// but that must be preserved - they are callee saved registers that have not
+comment|/// been saved yet.
+comment|///
+comment|/// Before the PrologueEpilogueInserter has placed the CSR spill code, this
+comment|/// method always returns an empty set.
+name|BitVector
+name|getPristineRegs
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getMachineModuleInfo - Used by a prologue/epilogue
 comment|/// emitter (TargetRegisterInfo) to provide frame layout information.
 name|MachineModuleInfo
@@ -1267,15 +1331,13 @@ name|MachineFunction
 operator|&
 name|MF
 argument_list|,
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// dump - Call print(MF, std::cerr) to be called from the debugger.
+comment|/// dump - Print the function to stderr.
 name|void
 name|dump
 argument_list|(

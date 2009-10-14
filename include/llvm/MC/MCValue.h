@@ -84,6 +84,9 @@ block|{
 name|class
 name|MCSymbol
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// MCValue - This represents an "assembler immediate".  In its most general
 comment|/// form, this can hold "SymbolA - SymbolB + imm64".  Not all targets supports
 comment|/// relocations of this general form, but we need to represent this anyway.
@@ -97,6 +100,7 @@ comment|/// it to live in unions etc.
 name|class
 name|MCValue
 block|{
+specifier|const
 name|MCSymbol
 modifier|*
 name|SymA
@@ -118,6 +122,7 @@ return|return
 name|Cst
 return|;
 block|}
+specifier|const
 name|MCSymbol
 operator|*
 name|getSymA
@@ -128,6 +133,7 @@ return|return
 name|SymA
 return|;
 block|}
+specifier|const
 name|MCSymbol
 operator|*
 name|getSymB
@@ -157,31 +163,47 @@ comment|/// value is associated with.
 comment|///
 comment|/// @result - The value's associated section, or null for external or constant
 comment|/// values.
+comment|//
+comment|// FIXME: Switch to a tagged section, so this can return the tagged section
+comment|// value.
+specifier|const
 name|MCSection
 operator|*
 name|getAssociatedSection
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SymA
-operator|?
-name|SymA
-operator|->
-name|getSection
+expr_stmt|;
+comment|/// print - Print the value to the stream \arg OS.
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|MAI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// dump - Print the value to stderr.
+name|void
+name|dump
 argument_list|()
-operator|:
-literal|0
-return|;
-block|}
+specifier|const
+expr_stmt|;
 specifier|static
 name|MCValue
 name|get
 parameter_list|(
+specifier|const
 name|MCSymbol
 modifier|*
 name|SymA
 parameter_list|,
+specifier|const
 name|MCSymbol
 modifier|*
 name|SymB

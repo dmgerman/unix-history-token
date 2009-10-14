@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cstring>
 end_include
 
@@ -109,6 +103,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// SubtargetFeatureKV - Used to provide key value pairs for feature and
@@ -363,36 +360,12 @@ comment|/// Print feature string.
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|OS
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|OS
-condition|)
-name|print
-argument_list|(
-operator|*
-name|OS
-argument_list|)
-expr_stmt|;
-block|}
 comment|// Dump feature info.
 name|void
 name|dump

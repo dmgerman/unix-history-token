@@ -527,32 +527,6 @@ specifier|inline
 name|std
 operator|::
 name|string
-name|itohexstr
-argument_list|(
-argument|int64_t X
-argument_list|)
-block|{
-return|return
-name|utohexstr
-argument_list|(
-name|static_cast
-operator|<
-name|uint64_t
-operator|>
-operator|(
-name|X
-operator|)
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-specifier|inline
-name|std
-operator|::
-name|string
 name|ftostr
 argument_list|(
 argument|double V

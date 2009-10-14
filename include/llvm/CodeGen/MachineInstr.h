@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineMemOperand.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetInstrDesc.h"
 end_include
 
@@ -107,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DebugLoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<list>
 end_include
 
 begin_include
@@ -126,6 +114,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AliasAnalysis
+decl_stmt|;
+name|class
 name|TargetInstrDesc
 decl_stmt|;
 name|class
@@ -136,6 +127,9 @@ name|TargetRegisterInfo
 decl_stmt|;
 name|class
 name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineMemOperand
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// MachineInstr - Representation of each machine instruction.
@@ -149,16 +143,26 @@ operator|<
 name|MachineInstr
 operator|>
 block|{
+name|public
+operator|:
+typedef|typedef
+name|MachineMemOperand
+modifier|*
+modifier|*
+name|mmo_iterator
+typedef|;
+name|private
+operator|:
 specifier|const
 name|TargetInstrDesc
 operator|*
 name|TID
-block|;
+decl_stmt|;
 comment|// Instruction descriptor.
 name|unsigned
 name|short
 name|NumImplicitOps
-block|;
+decl_stmt|;
 comment|// Number of implicit operands (which
 comment|// are determined at construction time).
 name|std
@@ -168,75 +172,75 @@ operator|<
 name|MachineOperand
 operator|>
 name|Operands
-block|;
+expr_stmt|;
 comment|// the operands
-name|std
-operator|::
-name|list
-operator|<
-name|MachineMemOperand
-operator|>
-name|MemOperands
-block|;
+name|mmo_iterator
+name|MemRefs
+decl_stmt|;
 comment|// information on memory references
+name|mmo_iterator
+name|MemRefsEnd
+decl_stmt|;
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|Parent
-block|;
+decl_stmt|;
 comment|// Pointer to the owning basic block.
 name|DebugLoc
 name|debugLoc
-block|;
+decl_stmt|;
 comment|// Source line information.
 comment|// OperandComplete - Return true if it's illegal to add a new operand
 name|bool
 name|OperandsComplete
-argument_list|()
-specifier|const
-block|;
+parameter_list|()
+function_decl|const;
 name|MachineInstr
 argument_list|(
 specifier|const
 name|MachineInstr
 operator|&
 argument_list|)
-block|;
+expr_stmt|;
 comment|// DO NOT IMPLEMENT
 name|void
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|MachineInstr
 operator|&
 operator|)
-block|;
+decl_stmt|;
 comment|// DO NOT IMPLEMENT
 comment|// Intrusive list support
 name|friend
-expr|struct
+block|struct
 name|ilist_traits
 operator|<
 name|MachineInstr
 operator|>
-block|;
+expr_stmt|;
 name|friend
-expr|struct
+block|struct
 name|ilist_traits
 operator|<
 name|MachineBasicBlock
 operator|>
-block|;
+expr_stmt|;
 name|void
 name|setParent
-argument_list|(
-argument|MachineBasicBlock *P
-argument_list|)
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|P
+parameter_list|)
 block|{
 name|Parent
 operator|=
 name|P
-block|; }
+expr_stmt|;
+block|}
 comment|/// MachineInstr ctor - This constructor creates a copy of the given
 comment|/// MachineInstr in the given MachineFunction.
 name|MachineInstr
@@ -248,12 +252,12 @@ specifier|const
 name|MachineInstr
 operator|&
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// MachineInstr ctor - This constructor creates a dummy MachineInstr with
 comment|/// TID NULL and no operands.
 name|MachineInstr
 argument_list|()
-block|;
+expr_stmt|;
 comment|// The next two constructors have DebugLoc and non-DebugLoc versions;
 comment|// over time, the non-DebugLoc versions should be phased out and eventually
 comment|// removed.
@@ -262,12 +266,18 @@ comment|/// implicit operands.  It reserves space for number of operands specifi
 comment|/// TargetInstrDesc.  The version with a DebugLoc should be preferred.
 name|explicit
 name|MachineInstr
-argument_list|(
-argument|const TargetInstrDesc&TID
-argument_list|,
-argument|bool NoImp = false
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|TargetInstrDesc
+modifier|&
+name|TID
+parameter_list|,
+name|bool
+name|NoImp
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// MachineInstr ctor - Work exactly the same as the ctor above, except that
 comment|/// the MachineInstr is created and added to the end of the specified basic
 comment|/// block.  The version with a DebugLoc should be preferred.
@@ -283,20 +293,28 @@ name|TargetInstrDesc
 operator|&
 name|TID
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// MachineInstr ctor - This constructor create a MachineInstr and add the
 comment|/// implicit operands.  It reserves space for number of operands specified by
 comment|/// TargetInstrDesc.  An explicit DebugLoc is supplied.
 name|explicit
 name|MachineInstr
-argument_list|(
-argument|const TargetInstrDesc&TID
-argument_list|,
-argument|const DebugLoc dl
-argument_list|,
-argument|bool NoImp = false
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|TargetInstrDesc
+modifier|&
+name|TID
+parameter_list|,
+specifier|const
+name|DebugLoc
+name|dl
+parameter_list|,
+name|bool
+name|NoImp
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// MachineInstr ctor - Work exactly the same as the ctor above, except that
 comment|/// the MachineInstr is created and added to the end of the specified basic
 comment|/// block.
@@ -309,18 +327,18 @@ argument|const DebugLoc dl
 argument_list|,
 argument|const TargetInstrDesc&TID
 argument_list|)
-block|;
+empty_stmt|;
 operator|~
 name|MachineInstr
 argument_list|()
-block|;
+expr_stmt|;
 comment|// MachineInstrs are pool-allocated and owned by MachineFunction.
 name|friend
 name|class
 name|MachineFunction
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 specifier|const
 name|MachineBasicBlock
 operator|*
@@ -333,9 +351,9 @@ name|Parent
 return|;
 block|}
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|getParent
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Parent
@@ -398,12 +416,13 @@ return|;
 block|}
 specifier|const
 name|MachineOperand
-operator|&
+modifier|&
 name|getOperand
 argument_list|(
-argument|unsigned i
+name|unsigned
+name|i
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -414,7 +433,7 @@ argument_list|()
 operator|&&
 literal|"getOperand() out of range!"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|Operands
 index|[
@@ -423,11 +442,12 @@ index|]
 return|;
 block|}
 name|MachineOperand
-operator|&
+modifier|&
 name|getOperand
-argument_list|(
-argument|unsigned i
-argument_list|)
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -438,7 +458,7 @@ argument_list|()
 operator|&&
 literal|"getOperand() out of range!"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|Operands
 index|[
@@ -452,80 +472,24 @@ name|unsigned
 name|getNumExplicitOperands
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Access to memory operands of the instruction
-name|std
-operator|::
-name|list
-operator|<
-name|MachineMemOperand
-operator|>
-operator|::
-name|iterator
-name|memoperands_begin
-argument_list|()
-block|{
-return|return
-name|MemOperands
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|std
-operator|::
-name|list
-operator|<
-name|MachineMemOperand
-operator|>
-operator|::
-name|iterator
-name|memoperands_end
-argument_list|()
-block|{
-return|return
-name|MemOperands
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|std
-operator|::
-name|list
-operator|<
-name|MachineMemOperand
-operator|>
-operator|::
-name|const_iterator
+name|mmo_iterator
 name|memoperands_begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|MemOperands
-operator|.
-name|begin
-argument_list|()
+name|MemRefs
 return|;
 block|}
-name|std
-operator|::
-name|list
-operator|<
-name|MachineMemOperand
-operator|>
-operator|::
-name|const_iterator
+name|mmo_iterator
 name|memoperands_end
 argument_list|()
 specifier|const
 block|{
 return|return
-name|MemOperands
-operator|.
-name|end
-argument_list|()
+name|MemRefsEnd
 return|;
 block|}
 name|bool
@@ -534,10 +498,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MemOperands
-operator|.
-name|empty
-argument_list|()
+name|MemRefsEnd
+operator|==
+name|MemRefs
 return|;
 block|}
 comment|/// hasOneMemOperand - Return true if this instruction has exactly one
@@ -548,18 +511,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|memoperands_empty
-argument_list|()
-operator|&&
-name|next
-argument_list|(
-name|memoperands_begin
-argument_list|()
-argument_list|)
+name|MemRefsEnd
+operator|-
+name|MemRefs
 operator|==
-name|memoperands_end
-argument_list|()
+literal|1
 return|;
 block|}
 comment|/// isIdenticalTo - Return true if this instruction is identical to (same
@@ -567,9 +523,12 @@ comment|/// opcode and same operands as) the specified instruction.
 name|bool
 name|isIdenticalTo
 argument_list|(
-argument|const MachineInstr *Other
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|*
+name|Other
+argument_list|)
+decl|const
 block|{
 if|if
 condition|(
@@ -636,84 +595,36 @@ return|return
 name|true
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// removeFromParent - This method unlinks 'this' from the containing basic
-end_comment
-
-begin_comment
 comment|/// block, and returns it, but does not delete it.
-end_comment
-
-begin_function_decl
 name|MachineInstr
 modifier|*
 name|removeFromParent
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// eraseFromParent - This method unlinks 'this' from the containing basic
-end_comment
-
-begin_comment
 comment|/// block and deletes it.
-end_comment
-
-begin_function_decl
 name|void
 name|eraseFromParent
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// isLabel - Returns true if the MachineInstr represents a label.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isLabel
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// isDebugLabel - Returns true if the MachineInstr represents a debug label.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isDebugLabel
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// readsRegister - Return true if the MachineInstr reads the specified
-end_comment
-
-begin_comment
 comment|/// register. If TargetRegisterInfo is passed, then it also checks if there
-end_comment
-
-begin_comment
 comment|/// is a read of a super-register.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|readsRegister
 argument_list|(
@@ -743,21 +654,9 @@ operator|-
 literal|1
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// killsRegister - Return true if the MachineInstr kills the specified
-end_comment
-
-begin_comment
 comment|/// register. If TargetRegisterInfo is passed, then it also checks if there is
-end_comment
-
-begin_comment
 comment|/// a kill of a super-register.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|killsRegister
 argument_list|(
@@ -787,21 +686,9 @@ operator|-
 literal|1
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// modifiesRegister - Return true if the MachineInstr modifies the
-end_comment
-
-begin_comment
 comment|/// specified register. If TargetRegisterInfo is passed, then it also checks
-end_comment
-
-begin_comment
 comment|/// if there is a def of a super-register.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|modifiesRegister
 argument_list|(
@@ -831,21 +718,9 @@ operator|-
 literal|1
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// registerDefIsDead - Returns true if the register is dead in this machine
-end_comment
-
-begin_comment
 comment|/// instruction. If TargetRegisterInfo is passed, then it also checks
-end_comment
-
-begin_comment
 comment|/// if there is a dead def of a super-register.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|registerDefIsDead
 argument_list|(
@@ -875,21 +750,9 @@ operator|-
 literal|1
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// findRegisterUseOperandIdx() - Returns the operand index that is a use of
-end_comment
-
-begin_comment
-comment|/// the specific register or -1 if it is not found. It further tightening
-end_comment
-
-begin_comment
+comment|/// the specific register or -1 if it is not found. It further tightens
 comment|/// the search criteria to a use that kills the register if isKill is true.
-end_comment
-
-begin_decl_stmt
 name|int
 name|findRegisterUseOperandIdx
 argument_list|(
@@ -910,17 +773,8 @@ name|NULL
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// findRegisterUseOperand - Wrapper for findRegisterUseOperandIdx, it returns
-end_comment
-
-begin_comment
 comment|/// a pointer to the MachineOperand rather than an index.
-end_comment
-
-begin_function
 name|MachineOperand
 modifier|*
 name|findRegisterUseOperand
@@ -970,25 +824,10 @@ name|Idx
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// findRegisterDefOperandIdx() - Returns the operand index that is a def of
-end_comment
-
-begin_comment
 comment|/// the specified register or -1 if it is not found. If isDead is true, defs
-end_comment
-
-begin_comment
 comment|/// that are not dead are skipped. If TargetRegisterInfo is non-null, then it
-end_comment
-
-begin_comment
 comment|/// also checks if there is a def of a super-register.
-end_comment
-
-begin_decl_stmt
 name|int
 name|findRegisterDefOperandIdx
 argument_list|(
@@ -1009,17 +848,8 @@ name|NULL
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// findRegisterDefOperand - Wrapper for findRegisterDefOperandIdx, it returns
-end_comment
-
-begin_comment
 comment|/// a pointer to the MachineOperand rather than an index.
-end_comment
-
-begin_function
 name|MachineOperand
 modifier|*
 name|findRegisterDefOperand
@@ -1069,45 +899,18 @@ name|Idx
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// findFirstPredOperandIdx() - Find the index of the first operand in the
-end_comment
-
-begin_comment
 comment|/// operand list that is used to represent the predicate. It returns -1 if
-end_comment
-
-begin_comment
 comment|/// none is found.
-end_comment
-
-begin_expr_stmt
 name|int
 name|findFirstPredOperandIdx
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// isRegTiedToUseOperand - Given the index of a register def operand,
-end_comment
-
-begin_comment
 comment|/// check if the register def is tied to a source operand, due to either
-end_comment
-
-begin_comment
 comment|/// two-address elimination or inline assembly constraints. Returns the
-end_comment
-
-begin_comment
 comment|/// first tied use operand index by reference is UseOpIdx is not null.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isRegTiedToUseOperand
 argument_list|(
@@ -1122,21 +925,9 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// isRegTiedToDefOperand - Return true if the use operand of the specified
-end_comment
-
-begin_comment
 comment|/// index is tied to an def operand. It also returns the def operand index by
-end_comment
-
-begin_comment
 comment|/// reference if DefOpIdx is not null.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isRegTiedToDefOperand
 argument_list|(
@@ -1151,17 +942,8 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// copyKillDeadInfo - Copies kill / dead operand properties from MI.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function_decl
 name|void
 name|copyKillDeadInfo
 parameter_list|(
@@ -1171,13 +953,7 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// copyPredicates - Copies predicate operand(s) from MI.
-end_comment
-
-begin_function_decl
 name|void
 name|copyPredicates
 parameter_list|(
@@ -1187,25 +963,10 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// addRegisterKilled - We have determined MI kills a register. Look for the
-end_comment
-
-begin_comment
 comment|/// operand that uses it and mark it as IsKill. If AddIfNotFound is true,
-end_comment
-
-begin_comment
 comment|/// add a implicit operand if it's not found. Returns true if the operand
-end_comment
-
-begin_comment
 comment|/// exists / is added.
-end_comment
-
-begin_function_decl
 name|bool
 name|addRegisterKilled
 parameter_list|(
@@ -1223,25 +984,10 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// addRegisterDead - We have determined MI defined a register without a use.
-end_comment
-
-begin_comment
 comment|/// Look for the operand that defines it and mark it as IsDead. If
-end_comment
-
-begin_comment
 comment|/// AddIfNotFound is true, add a implicit operand if it's not found. Returns
-end_comment
-
-begin_comment
 comment|/// true if the operand exists / is added.
-end_comment
-
-begin_function_decl
 name|bool
 name|addRegisterDead
 parameter_list|(
@@ -1259,21 +1005,9 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// isSafeToMove - Return true if it is safe to move this instruction. If
-end_comment
-
-begin_comment
 comment|/// SawStore is set to true, it means that there is a store (or call) between
-end_comment
-
-begin_comment
 comment|/// the instruction's location and its intended destination.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isSafeToMove
 argument_list|(
@@ -1285,20 +1019,15 @@ argument_list|,
 name|bool
 operator|&
 name|SawStore
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// isSafeToReMat - Return true if it's safe to rematerialize the specified
-end_comment
-
-begin_comment
 comment|/// instruction which defined the specified register instead of copying it.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isSafeToReMat
 argument_list|(
@@ -1309,156 +1038,39 @@ name|TII
 argument_list|,
 name|unsigned
 name|DstReg
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// hasVolatileMemoryRef - Return true if this instruction may have a
-end_comment
-
-begin_comment
 comment|/// volatile memory reference, or if the information describing the
-end_comment
-
-begin_comment
 comment|/// memory reference is not available. Return false if it is known to
-end_comment
-
-begin_comment
 comment|/// have no volatile memory references.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasVolatileMemoryRef
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
+comment|/// isInvariantLoad - Return true if this instruction is loading from a
+comment|/// location whose value is invariant across the function.  For example,
+comment|/// loading a value from the constant pool or from from the argument area of
+comment|/// a function if it does not change.  This should only return true of *all*
+comment|/// loads the instruction does are invariant (if it does multiple loads).
+name|bool
+name|isInvariantLoad
+argument_list|(
+name|AliasAnalysis
+operator|*
+name|AA
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//
-end_comment
-
-begin_comment
 comment|// Debugging support
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_decl_stmt
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|OS
-argument_list|,
-specifier|const
-name|TargetMachine
-operator|*
-name|TM
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|OS
-condition|)
-name|print
-argument_list|(
-operator|*
-name|OS
-argument_list|,
-name|TM
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|OS
-argument_list|,
-specifier|const
-name|TargetMachine
-operator|*
-name|TM
-operator|=
-literal|0
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|OS
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|OS
-condition|)
-name|print
-argument_list|(
-operator|*
-name|OS
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|print
-argument_list|(
-name|raw_ostream
-operator|*
-name|OS
-argument_list|,
-specifier|const
-name|TargetMachine
-operator|*
-name|TM
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|OS
-condition|)
-name|print
-argument_list|(
-operator|*
-name|OS
-argument_list|,
-name|TM
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -1475,64 +1087,17 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|print
-argument_list|(
-name|raw_ostream
-operator|*
-name|OS
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|OS
-condition|)
-name|print
-argument_list|(
-operator|*
-name|OS
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Accessors used to build up machine instructions.
-end_comment
-
-begin_comment
 comment|/// addOperand - Add the specified operand to the instruction.  If it is an
-end_comment
-
-begin_comment
 comment|/// implicit operand, it is added to the end of the operand list.  If it is
-end_comment
-
-begin_comment
 comment|/// an explicit operand it is added at the end of the explicit operand list
-end_comment
-
-begin_comment
 comment|/// (before the first implicit operand).
-end_comment
-
-begin_function_decl
 name|void
 name|addOperand
 parameter_list|(
@@ -1542,21 +1107,9 @@ modifier|&
 name|Op
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// setDesc - Replace the instruction descriptor (thus opcode) of
-end_comment
-
-begin_comment
 comment|/// the current instruction with a new one.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function
 name|void
 name|setDesc
 parameter_list|(
@@ -1572,21 +1125,9 @@ operator|&
 name|tid
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// setDebugLoc - Replace current source information with new such.
-end_comment
-
-begin_comment
 comment|/// Avoid using this, the constructor argument is preferable.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function
 name|void
 name|setDebugLoc
 parameter_list|(
@@ -1600,21 +1141,9 @@ operator|=
 name|dl
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// RemoveOperand - Erase an operand  from an instruction, leaving it with one
-end_comment
-
-begin_comment
 comment|/// fewer operand than it started with.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function_decl
 name|void
 name|RemoveOperand
 parameter_list|(
@@ -1622,17 +1151,9 @@ name|unsigned
 name|i
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// addMemOperand - Add a MachineMemOperand to the machine instruction,
-end_comment
-
-begin_comment
-comment|/// referencing arbitrary storage.
-end_comment
-
-begin_function_decl
+comment|/// addMemOperand - Add a MachineMemOperand to the machine instruction.
+comment|/// This function should be used only occasionally. The setMemRefs function
+comment|/// is the primary method for setting up a MachineInstr's MemRefs list.
 name|void
 name|addMemOperand
 parameter_list|(
@@ -1640,101 +1161,58 @@ name|MachineFunction
 modifier|&
 name|MF
 parameter_list|,
-specifier|const
 name|MachineMemOperand
-modifier|&
+modifier|*
 name|MO
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// clearMemOperands - Erase all of this MachineInstr's MachineMemOperands.
-end_comment
-
-begin_function_decl
+comment|/// setMemRefs - Assign this MachineInstr's memory reference descriptor
+comment|/// list. This does not transfer ownership.
 name|void
-name|clearMemOperands
+name|setMemRefs
 parameter_list|(
-name|MachineFunction
-modifier|&
-name|MF
+name|mmo_iterator
+name|NewMemRefs
+parameter_list|,
+name|mmo_iterator
+name|NewMemRefsEnd
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_label
+block|{
+name|MemRefs
+operator|=
+name|NewMemRefs
+expr_stmt|;
+name|MemRefsEnd
+operator|=
+name|NewMemRefsEnd
+expr_stmt|;
+block|}
 name|private
 label|:
-end_label
-
-begin_comment
 comment|/// getRegInfo - If this instruction is embedded into a MachineFunction,
-end_comment
-
-begin_comment
 comment|/// return the MachineRegisterInfo object for the current function, otherwise
-end_comment
-
-begin_comment
 comment|/// return null.
-end_comment
-
-begin_function_decl
 name|MachineRegisterInfo
 modifier|*
 name|getRegInfo
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// addImplicitDefUseOperands - Add all implicit def and use operands to
-end_comment
-
-begin_comment
 comment|/// this instruction.
-end_comment
-
-begin_function_decl
 name|void
 name|addImplicitDefUseOperands
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// RemoveRegOperandsFromUseLists - Unlink all of the register operands in
-end_comment
-
-begin_comment
 comment|/// this instruction from their respective use lists.  This requires that the
-end_comment
-
-begin_comment
 comment|/// operands already be on their use lists.
-end_comment
-
-begin_function_decl
 name|void
 name|RemoveRegOperandsFromUseLists
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// AddRegOperandsToUseLists - Add all of the register operands in
-end_comment
-
-begin_comment
 comment|/// this instruction from their respective use lists.  This requires that the
-end_comment
-
-begin_comment
 comment|/// operands not be on their use lists yet.
-end_comment
-
-begin_function_decl
 name|void
 name|AddRegOperandsToUseLists
 parameter_list|(
@@ -1743,50 +1221,20 @@ modifier|&
 name|RegInfo
 parameter_list|)
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
 begin_comment
 comment|// Debugging Support
 end_comment
-
-begin_expr_stmt
-specifier|inline
-name|std
-operator|::
-name|ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|OS
-operator|,
-specifier|const
-name|MachineInstr
-operator|&
-name|MI
-operator|)
-block|{
-name|MI
-operator|.
-name|print
-argument_list|(
-name|OS
-argument_list|)
-block|;
-return|return
-name|OS
-return|;
-block|}
-end_expr_stmt
 
 begin_expr_stmt
 specifier|inline

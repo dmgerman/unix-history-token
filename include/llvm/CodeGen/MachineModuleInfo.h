@@ -193,6 +193,19 @@ directive|include
 file|"llvm/Pass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Metadata.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|ATTACH_DEBUG_INFO_TO_AN_INSN
+value|1
+end_define
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -201,6 +214,9 @@ comment|//===-------------------------------------------------------------------
 comment|// Forward declarations.
 name|class
 name|Constant
+decl_stmt|;
+name|class
+name|MDNode
 decl_stmt|;
 name|class
 name|GlobalVariable
@@ -220,6 +236,22 @@ decl_stmt|;
 name|class
 name|StructType
 decl_stmt|;
+comment|/// MachineModuleInfoImpl - This class can be derived from and used by targets
+comment|/// to hold private target-specific information for each Module.  Objects of
+comment|/// type are accessed/created with MMI::getInfo and destroyed when the
+comment|/// MachineModuleInfo is destroyed.
+name|class
+name|MachineModuleInfoImpl
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|MachineModuleInfoImpl
+argument_list|()
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// LandingPadInfo - This structure is used to retain landing pad info for
 comment|/// the current function.
@@ -304,8 +336,13 @@ range|:
 name|public
 name|ImmutablePass
 block|{
-name|private
-operator|:
+comment|/// ObjFileMMI - This is the object-file-format-specific implementation of
+comment|/// MachineModuleInfoImpl, which lets targets accumulate whatever info they
+comment|/// want.
+name|MachineModuleInfoImpl
+operator|*
+name|ObjFileMMI
+block|;
 comment|// LabelIDList - One entry per assigned label.  Normally the entry is equal to
 comment|// the list index(+1).  If the entry is zero then the label has been deleted.
 comment|// Any other value indicates the label has been deleted by is mapped to
@@ -381,8 +418,9 @@ operator|*
 operator|>
 name|Personalities
 block|;
-comment|// UsedFunctions - the functions in the llvm.used list in a more easily
-comment|// searchable format.
+comment|/// UsedFunctions - The functions in the @llvm.used list in a more easily
+comment|/// searchable format.  This does not include the functions in
+comment|/// llvm.compiler.used.
 name|SmallPtrSet
 operator|<
 specifier|const
@@ -420,53 +458,182 @@ name|char
 name|ID
 block|;
 comment|// Pass identification, replacement for typeid
+typedef|typedef
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|WeakMetadataVH
+operator|,
+name|unsigned
+operator|>
+operator|,
+literal|4
+operator|>
+name|VariableDbgInfoMapTy
+expr_stmt|;
+name|VariableDbgInfoMapTy
+name|VariableDbgInfo
+decl_stmt|;
 name|MachineModuleInfo
 argument_list|()
-block|;
+expr_stmt|;
 operator|~
 name|MachineModuleInfo
 argument_list|()
-block|;
-comment|/// doInitialization - Initialize the state for a new module.
-comment|///
+expr_stmt|;
 name|bool
 name|doInitialization
-argument_list|()
-block|;
-comment|/// doFinalization - Tear down the state after completion of a module.
-comment|///
+parameter_list|()
+function_decl|;
 name|bool
 name|doFinalization
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// BeginFunction - Begin gathering function meta information.
 comment|///
 name|void
 name|BeginFunction
-argument_list|(
+parameter_list|(
 name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-block|;
+modifier|*
+parameter_list|)
+block|{}
 comment|/// EndFunction - Discard function meta information.
 comment|///
 name|void
 name|EndFunction
-argument_list|()
-block|;
-comment|/// AnalyzeModule - Scan the module for global debug information.
+parameter_list|()
+function_decl|;
+comment|/// getInfo - Keep track of various per-function pieces of information for
+comment|/// backends that would like to do so.
 comment|///
+name|template
+operator|<
+name|typename
+name|Ty
+operator|>
+name|Ty
+operator|&
+name|getObjFileInfo
+argument_list|()
+block|{
+if|if
+condition|(
+name|ObjFileMMI
+operator|==
+literal|0
+condition|)
+name|ObjFileMMI
+operator|=
+name|new
+name|Ty
+argument_list|(
+operator|*
+name|this
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|dynamic_cast
+operator|<
+name|Ty
+operator|*
+operator|>
+operator|(
+name|ObjFileMMI
+operator|)
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+name|ObjFileMMI
+operator|&&
+literal|"Invalid concrete type or multiple inheritence for getInfo"
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|static_cast
+operator|<
+name|Ty
+operator|*
+operator|>
+operator|(
+name|ObjFileMMI
+operator|)
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Ty
+operator|>
+specifier|const
+name|Ty
+operator|&
+name|getObjFileInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|MachineModuleInfo
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getObjFileInfo
+operator|<
+name|Ty
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// AnalyzeModule - Scan the module for global debug information.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_function_decl
 name|void
 name|AnalyzeModule
-argument_list|(
+parameter_list|(
 name|Module
-operator|&
+modifier|&
 name|M
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// hasDebugInfo - Returns true if valid debug info is present.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasDebugInfo
 argument_list|()
@@ -476,16 +643,24 @@ return|return
 name|DbgInfoAvailable
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setDebugInfoAvailability
-argument_list|(
-argument|bool avail
-argument_list|)
+parameter_list|(
+name|bool
+name|avail
+parameter_list|)
 block|{
 name|DbgInfoAvailable
 operator|=
 name|true
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|callsEHReturn
 argument_list|()
@@ -495,16 +670,24 @@ return|return
 name|CallsEHReturn
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setCallsEHReturn
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
 name|CallsEHReturn
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|callsUnwindInit
 argument_list|()
@@ -514,25 +697,39 @@ return|return
 name|CallsUnwindInit
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setCallsUnwindInit
-argument_list|(
-argument|bool b
-argument_list|)
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
 block|{
 name|CallsUnwindInit
 operator|=
 name|b
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// NextLabelID - Return the next unique label id.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function
 name|unsigned
 name|NextLabelID
-argument_list|()
+parameter_list|()
 block|{
 name|unsigned
 name|ID
-operator|=
+init|=
 operator|(
 name|unsigned
 operator|)
@@ -542,25 +739,35 @@ name|size
 argument_list|()
 operator|+
 literal|1
-block|;
+decl_stmt|;
 name|LabelIDList
 operator|.
 name|push_back
 argument_list|(
 name|ID
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|ID
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// InvalidateLabel - Inhibit use of the specified label # from
+end_comment
+
+begin_comment
 comment|/// MachineModuleInfo, for example because the code was deleted.
+end_comment
+
+begin_function
 name|void
 name|InvalidateLabel
-argument_list|(
-argument|unsigned LabelID
-argument_list|)
+parameter_list|(
+name|unsigned
+name|LabelID
+parameter_list|)
 block|{
 comment|// Remap to zero to indicate deletion.
 name|RemapLabel
@@ -569,16 +776,28 @@ name|LabelID
 argument_list|,
 literal|0
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// RemapLabel - Indicate that a label has been merged into another.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function
 name|void
 name|RemapLabel
-argument_list|(
-argument|unsigned OldLabelID
-argument_list|,
-argument|unsigned NewLabelID
-argument_list|)
+parameter_list|(
+name|unsigned
+name|OldLabelID
+parameter_list|,
+name|unsigned
+name|NewLabelID
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -595,7 +814,7 @@ argument_list|()
 operator|&&
 literal|"Old label ID out of range."
 argument_list|)
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|NewLabelID
@@ -607,7 +826,7 @@ argument_list|()
 operator|&&
 literal|"New label ID out of range."
 argument_list|)
-block|;
+expr_stmt|;
 name|LabelIDList
 index|[
 name|OldLabelID
@@ -616,15 +835,26 @@ literal|1
 index|]
 operator|=
 name|NewLabelID
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// MappedLabel - Find out the label's final ID.  Zero indicates deletion.
+end_comment
+
+begin_comment
 comment|/// ID != Mapped ID indicates that the label was folded into another label.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|MappedLabel
 argument_list|(
-argument|unsigned LabelID
+name|unsigned
+name|LabelID
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -637,7 +867,7 @@ argument_list|()
 operator|&&
 literal|"Debug label ID out of range."
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|LabelID
 condition|?
@@ -651,13 +881,23 @@ else|:
 literal|0
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// isDbgLabelUsed - Return true if label with LabelID is used by
+end_comment
+
+begin_comment
 comment|/// DwarfWriter.
+end_comment
+
+begin_function
 name|bool
 name|isDbgLabelUsed
-argument_list|(
-argument|unsigned LabelID
-argument_list|)
+parameter_list|(
+name|unsigned
+name|LabelID
+parameter_list|)
 block|{
 return|return
 name|UsedDbgLabels
@@ -668,14 +908,27 @@ name|LabelID
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// RecordUsedDbgLabel - Mark label with LabelID as used. This is used
+end_comment
+
+begin_comment
 comment|/// by DwarfWriter to inform DebugLabelFolder that certain labels are
+end_comment
+
+begin_comment
 comment|/// not to be deleted.
+end_comment
+
+begin_function
 name|void
 name|RecordUsedDbgLabel
-argument_list|(
-argument|unsigned LabelID
-argument_list|)
+parameter_list|(
+name|unsigned
+name|LabelID
+parameter_list|)
 block|{
 name|UsedDbgLabels
 operator|.
@@ -683,10 +936,23 @@ name|insert
 argument_list|(
 name|LabelID
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// getFrameMoves - Returns a reference to a list of moves done in the current
+end_comment
+
+begin_comment
 comment|/// function's prologue.  Used to construct frame maps for debug and exception
+end_comment
+
+begin_comment
 comment|/// handling comsumers.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -701,62 +967,120 @@ return|return
 name|FrameMoves
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//===-EH-----------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// getOrCreateLandingPadInfo - Find or create an LandingPadInfo for the
+end_comment
+
+begin_comment
 comment|/// specified MachineBasicBlock.
+end_comment
+
+begin_function_decl
 name|LandingPadInfo
-operator|&
+modifier|&
 name|getOrCreateLandingPadInfo
-argument_list|(
+parameter_list|(
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|LandingPad
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// addInvoke - Provide the begin and end labels of an invoke style call and
+end_comment
+
+begin_comment
 comment|/// associate it with a try landing pad block.
+end_comment
+
+begin_function_decl
 name|void
 name|addInvoke
-argument_list|(
-argument|MachineBasicBlock *LandingPad
-argument_list|,
-argument|unsigned BeginLabel
-argument_list|,
-argument|unsigned EndLabel
-argument_list|)
-block|;
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+parameter_list|,
+name|unsigned
+name|BeginLabel
+parameter_list|,
+name|unsigned
+name|EndLabel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// addLandingPad - Add a new panding pad.  Returns the label ID for the
+end_comment
+
+begin_comment
 comment|/// landing pad entry.
+end_comment
+
+begin_function_decl
 name|unsigned
 name|addLandingPad
-argument_list|(
+parameter_list|(
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|LandingPad
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// addPersonality - Provide the personality function for the exception
+end_comment
+
+begin_comment
 comment|/// information.
+end_comment
+
+begin_function_decl
 name|void
 name|addPersonality
-argument_list|(
+parameter_list|(
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|LandingPad
-argument_list|,
+parameter_list|,
 name|Function
-operator|*
+modifier|*
 name|Personality
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getPersonalityIndex - Get index of the current personality function inside
+end_comment
+
+begin_comment
 comment|/// Personalitites array
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getPersonalityIndex
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getPersonalities - Return array of personality functions ever seen.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|std
 operator|::
@@ -774,27 +1098,50 @@ return|return
 name|Personalities
 return|;
 block|}
-comment|// UsedFunctions - Return set of the functions in the llvm.used list.
-specifier|const
-name|SmallPtrSet
-operator|<
+end_expr_stmt
+
+begin_comment
+comment|/// isUsedFunction - Return true if the functions in the llvm.used list.  This
+end_comment
+
+begin_comment
+comment|/// does not return true for things in llvm.compiler.used unless they are also
+end_comment
+
+begin_comment
+comment|/// in llvm.used.
+end_comment
+
+begin_function
+name|bool
+name|isUsedFunction
+parameter_list|(
 specifier|const
 name|Function
-operator|*
-block|,
-literal|32
-operator|>
-operator|&
-name|getUsedFunctions
-argument_list|()
-specifier|const
+modifier|*
+name|F
+parameter_list|)
 block|{
 return|return
 name|UsedFunctions
+operator|.
+name|count
+argument_list|(
+name|F
+argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// addCatchTypeInfo - Provide the catch typeinfo for a landing pad.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|void
 name|addCatchTypeInfo
 argument_list|(
@@ -812,9 +1159,18 @@ operator|>
 operator|&
 name|TyInfo
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// addFilterTypeInfo - Provide the filter typeinfo for a landing pad.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|void
 name|addFilterTypeInfo
 argument_list|(
@@ -832,29 +1188,56 @@ operator|>
 operator|&
 name|TyInfo
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// addCleanup - Add a cleanup action for a landing pad.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function_decl
 name|void
 name|addCleanup
-argument_list|(
+parameter_list|(
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|LandingPad
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getTypeIDFor - Return the type id for the specified typeinfo.  This is
+end_comment
+
+begin_comment
 comment|/// function wide.
+end_comment
+
+begin_function_decl
 name|unsigned
 name|getTypeIDFor
-argument_list|(
+parameter_list|(
 name|GlobalVariable
-operator|*
+modifier|*
 name|TI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getFilterIDFor - Return the id of the filter encoded by TyIds.  This is
+end_comment
+
+begin_comment
 comment|/// function wide.
+end_comment
+
+begin_decl_stmt
 name|int
 name|getFilterIDFor
 argument_list|(
@@ -867,15 +1250,33 @@ operator|>
 operator|&
 name|TyIds
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// TidyLandingPads - Remap landing pad labels and remove any deleted landing
+end_comment
+
+begin_comment
 comment|/// pads.
+end_comment
+
+begin_function_decl
 name|void
 name|TidyLandingPads
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getLandingPads - Return a reference to the landing pad info for the
+end_comment
+
+begin_comment
 comment|/// current function.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|std
 operator|::
@@ -892,8 +1293,17 @@ return|return
 name|LandingPads
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getTypeInfos - Return a reference to the C++ typeinfo for the current
+end_comment
+
+begin_comment
 comment|/// function.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|std
 operator|::
@@ -911,8 +1321,17 @@ return|return
 name|TypeInfos
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getFilterIds - Return a reference to the typeids encoding filters used in
+end_comment
+
+begin_comment
 comment|/// the current function.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|std
 operator|::
@@ -929,20 +1348,81 @@ return|return
 name|FilterIds
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getPersonality - Return a personality function if available.  The presence
+end_comment
+
+begin_comment
 comment|/// of one is required to emit exception handling info.
+end_comment
+
+begin_expr_stmt
 name|Function
 operator|*
 name|getPersonality
 argument_list|()
 specifier|const
-block|;  }
-decl_stmt|;
-comment|// End class MachineModuleInfo
-block|}
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
+comment|/// setVariableDbgInfo - Collect information used to emit debugging information
+end_comment
+
+begin_comment
+comment|/// of a variable.
+end_comment
+
+begin_function
+name|void
+name|setVariableDbgInfo
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|S
+parameter_list|)
+block|{
+name|VariableDbgInfo
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|N
+argument_list|,
+name|S
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|VariableDbgInfoMapTy
+modifier|&
+name|getVariableDbgInfo
+parameter_list|()
+block|{
+return|return
+name|VariableDbgInfo
+return|;
+block|}
+end_function
+
+begin_comment
+unit|};
+comment|// End class MachineModuleInfo
+end_comment
+
+begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

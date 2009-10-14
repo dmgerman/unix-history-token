@@ -64,6 +64,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Module
+decl_stmt|;
+name|class
 name|Function
 decl_stmt|;
 name|class
@@ -110,6 +113,16 @@ parameter_list|(
 name|Function
 modifier|*
 name|F
+parameter_list|)
+function_decl|;
+comment|/// This function checks debug info intrinsics. If an intrinsic is invalid
+comment|/// then this function simply removes the intrinsic.
+name|void
+name|CheckDebugInfoIntrinsics
+parameter_list|(
+name|Module
+modifier|*
+name|M
 parameter_list|)
 function_decl|;
 block|}

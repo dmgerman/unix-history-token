@@ -91,6 +91,19 @@ name|StackGrowsDown
 comment|// Adding to the stack decreases the stack address
 block|}
 enum|;
+comment|// Maps a callee saved register to a stack slot with a fixed offset.
+struct|struct
+name|SpillSlot
+block|{
+name|unsigned
+name|Reg
+decl_stmt|;
+name|int
+name|Offset
+decl_stmt|;
+comment|// Offset relative to stack pointer on function entry.
+block|}
+struct|;
 name|private
 label|:
 name|StackDirection
@@ -98,6 +111,9 @@ name|StackDir
 decl_stmt|;
 name|unsigned
 name|StackAlignment
+decl_stmt|;
+name|unsigned
+name|TransientStackAlignment
 decl_stmt|;
 name|int
 name|LocalAreaOffset
@@ -111,6 +127,9 @@ argument_list|,
 argument|unsigned StackAl
 argument_list|,
 argument|int LAO
+argument_list|,
+argument|unsigned TransAl =
+literal|1
 argument_list|)
 block|:
 name|StackDir
@@ -121,6 +140,11 @@ operator|,
 name|StackAlignment
 argument_list|(
 name|StackAl
+argument_list|)
+operator|,
+name|TransientStackAlignment
+argument_list|(
+name|TransAl
 argument_list|)
 operator|,
 name|LocalAreaOffset
@@ -146,9 +170,9 @@ return|return
 name|StackDir
 return|;
 block|}
-comment|/// getStackAlignment - This method returns the number of bytes that the stack
-comment|/// pointer must be aligned to.  Typically, this is the largest alignment for
-comment|/// any data object in the target.
+comment|/// getStackAlignment - This method returns the number of bytes to which the
+comment|/// stack pointer must be aligned on entry to a function.  Typically, this
+comment|/// is the largest alignment for any data object in the target.
 comment|///
 name|unsigned
 name|getStackAlignment
@@ -157,6 +181,19 @@ specifier|const
 block|{
 return|return
 name|StackAlignment
+return|;
+block|}
+comment|/// getTransientStackAlignment - This method returns the number of bytes to
+comment|/// which the stack pointer must be aligned at all times, even between
+comment|/// calls.
+comment|///
+name|unsigned
+name|getTransientStackAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TransientStackAlignment
 return|;
 block|}
 comment|/// getOffsetOfLocalArea - This method returns the offset of the local area
@@ -177,30 +214,25 @@ comment|/// spilled to a particular stack location if it is spilled.
 comment|///
 comment|/// Each entry in this array contains a<register,offset> pair, indicating the
 comment|/// fixed offset from the incoming stack pointer that each register should be
-comment|/// spilled at.  If a register is not listed here, the code generator is
+comment|/// spilled at. If a register is not listed here, the code generator is
 comment|/// allowed to spill it anywhere it chooses.
 comment|///
 name|virtual
 specifier|const
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|int
-operator|>
-operator|*
+name|SpillSlot
+modifier|*
 name|getCalleeSavedSpillSlots
 argument_list|(
-argument|unsigned&NumEntries
+name|unsigned
+operator|&
+name|NumEntries
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|NumEntries
 operator|=
 literal|0
-block|;
+expr_stmt|;
 return|return
 literal|0
 return|;

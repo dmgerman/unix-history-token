@@ -88,6 +88,7 @@ range|:
 name|public
 name|FunctionPass
 decl_stmt|,
+name|public
 name|AliasAnalysis
 block|{
 specifier|static

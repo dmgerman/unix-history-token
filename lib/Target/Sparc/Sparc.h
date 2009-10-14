@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -86,7 +92,7 @@ name|class
 name|SparcTargetMachine
 decl_stmt|;
 name|class
-name|raw_ostream
+name|formatted_raw_ostream
 decl_stmt|;
 name|FunctionPass
 modifier|*
@@ -95,22 +101,6 @@ parameter_list|(
 name|SparcTargetMachine
 modifier|&
 name|TM
-parameter_list|)
-function_decl|;
-name|FunctionPass
-modifier|*
-name|createSparcCodePrinterPass
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|TargetMachine
-modifier|&
-name|TM
-parameter_list|,
-name|bool
-name|Verbose
 parameter_list|)
 function_decl|;
 name|FunctionPass
@@ -131,6 +121,10 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
+specifier|extern
+name|Target
+name|TheSparcTarget
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -375,10 +369,8 @@ name|CC
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown condition code"
 argument_list|)
 expr_stmt|;

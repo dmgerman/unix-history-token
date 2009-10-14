@@ -570,21 +570,8 @@ range|:
 name|public
 name|PassInfo
 block|{
-name|PassInfo
-operator|*
-name|InterfaceInfo
-block|;
-specifier|const
-name|PassInfo
-operator|*
-name|ImplementationInfo
-block|;
-name|bool
-name|isDefaultImplementation
-block|;
 name|protected
 operator|:
-name|explicit
 name|RegisterAGBase
 argument_list|(
 argument|const char *Name

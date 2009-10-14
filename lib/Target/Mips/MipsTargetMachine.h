@@ -100,7 +100,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|raw_ostream
+name|formatted_raw_ostream
 decl_stmt|;
 name|class
 name|MipsTargetMachine
@@ -125,69 +125,19 @@ block|;
 name|MipsTargetLowering
 name|TLInfo
 block|;
-name|protected
-operator|:
-name|virtual
-specifier|const
-name|TargetAsmInfo
-operator|*
-name|createTargetAsmInfo
-argument_list|()
-specifier|const
-block|;
-name|protected
-operator|:
-comment|// To avoid having target depend on the asmprinter stuff libraries,
-comment|// asmprinter set this functions to ctor pointer at startup time if they are
-comment|// linked in.
-typedef|typedef
-name|FunctionPass
-modifier|*
-function_decl|(
-modifier|*
-name|AsmPrinterCtorFn
-function_decl|)
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|o
-parameter_list|,
-name|MipsTargetMachine
-modifier|&
-name|tm
-parameter_list|,
-name|bool
-name|verbose
-parameter_list|)
-function_decl|;
-specifier|static
-name|AsmPrinterCtorFn
-name|AsmPrinterCtor
-decl_stmt|;
 name|public
-label|:
+operator|:
 name|MipsTargetMachine
 argument_list|(
-argument|const Module&M
+argument|const Target&T
+argument_list|,
+argument|const std::string&TT
 argument_list|,
 argument|const std::string&FS
 argument_list|,
 argument|bool isLittle
 argument_list|)
-empty_stmt|;
-specifier|static
-name|void
-name|registerAsmPrinter
-parameter_list|(
-name|AsmPrinterCtorFn
-name|F
-parameter_list|)
-block|{
-name|AsmPrinterCtor
-operator|=
-name|F
-expr_stmt|;
-block|}
+block|;
 name|virtual
 specifier|const
 name|MipsInstrInfo
@@ -275,82 +225,28 @@ name|TLInfo
 operator|)
 return|;
 block|}
-specifier|static
-name|unsigned
-name|getModuleMatchQuality
-parameter_list|(
-specifier|const
-name|Module
-modifier|&
-name|M
-parameter_list|)
-function_decl|;
 comment|// Pass Pipeline Configuration
 name|virtual
 name|bool
 name|addInstSelector
 argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
+argument|PassManagerBase&PM
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
-decl_stmt|;
+block|;
 name|virtual
 name|bool
 name|addPreEmitPass
 argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
+argument|PassManagerBase&PM
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
+block|;   }
 decl_stmt|;
-name|virtual
-name|bool
-name|addAssemblyEmitter
-argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-argument_list|,
-name|bool
-name|Verbose
-argument_list|,
-name|raw_ostream
-operator|&
-name|Out
-argument_list|)
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// MipselTargetMachine - Mipsel target machine.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|MipselTargetMachine
 range|:
@@ -362,9 +258,16 @@ operator|:
 name|MipselTargetMachine
 argument_list|(
 specifier|const
-name|Module
+name|Target
 operator|&
-name|M
+name|T
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
 argument_list|,
 specifier|const
 name|std
@@ -373,22 +276,12 @@ name|string
 operator|&
 name|FS
 argument_list|)
-block|;
-specifier|static
-name|unsigned
-name|getModuleMatchQuality
-argument_list|(
-specifier|const
-name|Module
-operator|&
-name|M
-argument_list|)
 block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

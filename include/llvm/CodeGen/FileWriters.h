@@ -67,7 +67,7 @@ name|class
 name|PassManagerBase
 decl_stmt|;
 name|class
-name|MachineCodeEmitter
+name|ObjectCodeEmitter
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -75,7 +75,7 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-name|MachineCodeEmitter
+name|ObjectCodeEmitter
 modifier|*
 name|AddELFWriter
 parameter_list|(
@@ -92,7 +92,7 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
-name|MachineCodeEmitter
+name|ObjectCodeEmitter
 modifier|*
 name|AddMachOWriter
 parameter_list|(

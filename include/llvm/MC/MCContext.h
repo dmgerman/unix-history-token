@@ -74,7 +74,12 @@ decl_stmt|;
 name|class
 name|MCSymbol
 decl_stmt|;
-comment|/// MCContext - Context object for machine code objects.
+name|class
+name|StringRef
+decl_stmt|;
+comment|/// MCContext - Context object for machine code objects.  This class owns all
+comment|/// of the sections that it creates.
+comment|///
 name|class
 name|MCContext
 block|{
@@ -118,6 +123,7 @@ comment|//
 comment|// FIXME: Is there a good reason to not just put this in the MCSymbol?
 name|DenseMap
 operator|<
+specifier|const
 name|MCSymbol
 operator|*
 operator|,
@@ -141,17 +147,8 @@ operator|~
 name|MCContext
 argument_list|()
 expr_stmt|;
-comment|/// GetSection - Get or create a new section with the given @param Name.
-name|MCSection
-modifier|*
-name|GetSection
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|)
-function_decl|;
+comment|/// @name Symbol Managment
+comment|/// @{
 comment|/// CreateSymbol - Create a new symbol with the specified @param Name.
 comment|///
 comment|/// @param Name - The symbol name, which must be unique across all symbols.
@@ -160,8 +157,8 @@ modifier|*
 name|CreateSymbol
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 name|Name
 parameter_list|)
 function_decl|;
@@ -170,13 +167,15 @@ comment|/// @param Name.  If it exists, return it.  If not, create a forward
 comment|/// reference and return it.
 comment|///
 comment|/// @param Name - The symbol name, which must be unique across all symbols.
+comment|/// @param IsTemporary - Whether this symbol is an assembler temporary,
+comment|/// which should not survive into the symbol table for the translation unit.
 name|MCSymbol
 modifier|*
 name|GetOrCreateSymbol
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 name|Name
 parameter_list|)
 function_decl|;
@@ -191,8 +190,8 @@ modifier|*
 name|CreateTemporarySymbol
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 name|Name
 init|=
 literal|""
@@ -204,27 +203,30 @@ modifier|*
 name|LookupSymbol
 argument_list|(
 specifier|const
-name|char
-operator|*
+name|StringRef
+operator|&
 name|Name
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// ClearSymbolValue - Erase a value binding for @param Symbol, if one
-comment|/// exists.
+comment|/// @}
+comment|/// @name Symbol Value Table
+comment|/// @{
+comment|/// ClearSymbolValue - Erase a value binding for @arg Symbol, if one exists.
 name|void
 name|ClearSymbolValue
 parameter_list|(
+specifier|const
 name|MCSymbol
 modifier|*
 name|Symbol
 parameter_list|)
 function_decl|;
-comment|/// SetSymbolValue - Set the value binding for @param Symbol to @param
-comment|/// Value.
+comment|/// SetSymbolValue - Set the value binding for @arg Symbol to @arg Value.
 name|void
 name|SetSymbolValue
 parameter_list|(
+specifier|const
 name|MCSymbol
 modifier|*
 name|Symbol
@@ -235,19 +237,21 @@ modifier|&
 name|Value
 parameter_list|)
 function_decl|;
-comment|/// GetSymbolValue - Return the current value for @param Symbol, or null if
+comment|/// GetSymbolValue - Return the current value for @arg Symbol, or null if
 comment|/// none exists.
 specifier|const
 name|MCValue
 modifier|*
 name|GetSymbolValue
 argument_list|(
+specifier|const
 name|MCSymbol
 operator|*
 name|Symbol
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// @}
 name|void
 modifier|*
 name|Allocate

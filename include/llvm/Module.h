@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -266,6 +272,93 @@ name|GA
 block|; }
 block|}
 expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ilist_traits
+operator|<
+name|NamedMDNode
+operator|>
+operator|:
+name|public
+name|SymbolTableListTraits
+operator|<
+name|NamedMDNode
+operator|,
+name|Module
+operator|>
+block|{
+comment|// createSentinel is used to get hold of a node that marks the end of
+comment|// the list...
+name|NamedMDNode
+operator|*
+name|createSentinel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|NamedMDNode
+operator|*
+operator|>
+operator|(
+operator|&
+name|Sentinel
+operator|)
+return|;
+block|}
+specifier|static
+name|void
+name|destroySentinel
+argument_list|(
+argument|NamedMDNode*
+argument_list|)
+block|{}
+name|NamedMDNode
+operator|*
+name|provideInitialHead
+argument_list|()
+specifier|const
+block|{
+return|return
+name|createSentinel
+argument_list|()
+return|;
+block|}
+name|NamedMDNode
+operator|*
+name|ensureHead
+argument_list|(
+argument|NamedMDNode*
+argument_list|)
+specifier|const
+block|{
+return|return
+name|createSentinel
+argument_list|()
+return|;
+block|}
+specifier|static
+name|void
+name|noteHead
+argument_list|(
+argument|NamedMDNode*
+argument_list|,
+argument|NamedMDNode*
+argument_list|)
+block|{}
+name|private
+operator|:
+name|mutable
+name|ilist_node
+operator|<
+name|NamedMDNode
+operator|>
+name|Sentinel
+block|; }
+expr_stmt|;
 comment|/// A Module instance is used to store all the information related to an
 comment|/// LLVM module. Modules are the top level container of all other LLVM
 comment|/// Intermediate Representation (IR) objects. Each module directly contains a
@@ -307,6 +400,14 @@ operator|<
 name|GlobalAlias
 operator|>
 name|AliasListType
+expr_stmt|;
+comment|/// The type for the list of named metadata.
+typedef|typedef
+name|iplist
+operator|<
+name|NamedMDNode
+operator|>
+name|NamedMDListType
 expr_stmt|;
 comment|/// The type for the list of dependent libraries.
 typedef|typedef
@@ -361,6 +462,20 @@ name|AliasListType
 operator|::
 name|const_iterator
 name|const_alias_iterator
+expr_stmt|;
+comment|/// The named metadata iterators.
+typedef|typedef
+name|NamedMDListType
+operator|::
+name|iterator
+name|named_metadata_iterator
+expr_stmt|;
+comment|/// The named metadata constant interators.
+typedef|typedef
+name|NamedMDListType
+operator|::
+name|const_iterator
+name|const_named_metadata_iterator
 expr_stmt|;
 comment|/// The Library list iterator.
 typedef|typedef
@@ -418,6 +533,10 @@ name|LibraryListType
 name|LibraryList
 decl_stmt|;
 comment|///< The Libraries needed by the module
+name|NamedMDListType
+name|NamedMDList
+decl_stmt|;
+comment|///< The named metadata in the module
 name|std
 operator|::
 name|string
@@ -465,19 +584,17 @@ comment|/// The Module constructor. Note that there is no default constructor. Y
 comment|/// must provide a name for the module upon construction.
 name|explicit
 name|Module
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|ModuleID
-argument_list|,
+parameter_list|,
 name|LLVMContext
-operator|&
+modifier|&
 name|C
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// The module destructor. This will dropAllReferences.
 operator|~
 name|Module
@@ -583,14 +700,12 @@ label|:
 comment|/// Set the module identifier.
 name|void
 name|setModuleIdentifier
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|ID
-argument_list|)
+parameter_list|)
 block|{
 name|ModuleID
 operator|=
@@ -600,14 +715,12 @@ block|}
 comment|/// Set the data layout
 name|void
 name|setDataLayout
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|DL
-argument_list|)
+parameter_list|)
 block|{
 name|DataLayout
 operator|=
@@ -617,14 +730,12 @@ block|}
 comment|/// Set the target triple.
 name|void
 name|setTargetTriple
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|T
-argument_list|)
+parameter_list|)
 block|{
 name|TargetTriple
 operator|=
@@ -634,14 +745,12 @@ block|}
 comment|/// Set the module-scope inline assembly blocks.
 name|void
 name|setModuleInlineAsm
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Asm
-argument_list|)
+parameter_list|)
 block|{
 name|GlobalScopeAsm
 operator|=
@@ -652,14 +761,12 @@ comment|/// Append to the module-scope inline assembly blocks, automatically
 comment|/// appending a newline to the end.
 name|void
 name|appendModuleInlineAsm
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Asm
-argument_list|)
+parameter_list|)
 block|{
 name|GlobalScopeAsm
 operator|+=
@@ -681,21 +788,8 @@ modifier|*
 name|getNamedValue
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
-name|Name
-argument_list|)
-decl|const
-decl_stmt|;
-name|GlobalValue
-modifier|*
-name|getNamedValue
-argument_list|(
-specifier|const
-name|char
-operator|*
 name|Name
 argument_list|)
 decl|const
@@ -717,40 +811,36 @@ comment|///      function with a constantexpr cast to the right prototype.
 name|Constant
 modifier|*
 name|getOrInsertFunction
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Name
-argument_list|,
+parameter_list|,
 specifier|const
 name|FunctionType
-operator|*
+modifier|*
 name|T
-argument_list|,
+parameter_list|,
 name|AttrListPtr
 name|AttributeList
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|Constant
 modifier|*
 name|getOrInsertFunction
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Name
-argument_list|,
+parameter_list|,
 specifier|const
 name|FunctionType
-operator|*
+modifier|*
 name|T
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// getOrInsertFunction - Look up the specified function in the module symbol
 comment|/// table.  If it does not exist, add a prototype for the function and return
 comment|/// it.  This function guarantees to return a constant of pointer to the
@@ -763,9 +853,7 @@ modifier|*
 name|getOrInsertFunction
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|Name
 argument_list|,
@@ -786,9 +874,7 @@ modifier|*
 name|getOrInsertFunction
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|Name
 argument_list|,
@@ -804,23 +890,21 @@ decl_stmt|;
 name|Constant
 modifier|*
 name|getOrInsertTargetIntrinsic
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Name
-argument_list|,
+parameter_list|,
 specifier|const
 name|FunctionType
-operator|*
+modifier|*
 name|Ty
-argument_list|,
+parameter_list|,
 name|AttrListPtr
 name|AttributeList
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// getFunction - Look up the specified function in the module symbol table.
 comment|/// If it does not exist, return null.
 name|Function
@@ -828,21 +912,8 @@ modifier|*
 name|getFunction
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
-name|Name
-argument_list|)
-decl|const
-decl_stmt|;
-name|Function
-modifier|*
-name|getFunction
-argument_list|(
-specifier|const
-name|char
-operator|*
 name|Name
 argument_list|)
 decl|const
@@ -861,9 +932,7 @@ modifier|*
 name|getGlobalVariable
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|Name
 argument_list|,
@@ -882,9 +951,7 @@ modifier|*
 name|getNamedGlobal
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|Name
 argument_list|)
@@ -909,20 +976,18 @@ comment|///      the existing global.
 name|Constant
 modifier|*
 name|getOrInsertGlobal
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Name
-argument_list|,
+parameter_list|,
 specifier|const
 name|Type
-operator|*
+modifier|*
 name|Ty
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// @name Global Alias Accessors
 comment|/// @{
@@ -936,14 +1001,44 @@ modifier|*
 name|getNamedAlias
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// @}
+comment|/// @name Named Metadata Accessors
+comment|/// @{
+name|public
+label|:
+comment|/// getNamedMetadata - Return the first NamedMDNode in the module with the
+comment|/// specified name. This method returns null if a NamedMDNode with the
+comment|/// specified name is not found.
+name|NamedMDNode
+modifier|*
+name|getNamedMetadata
+argument_list|(
+specifier|const
+name|StringRef
+operator|&
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getOrInsertNamedMetadata - Return the first named MDNode in the module
+comment|/// with the specified name. This method returns a new NamedMDNode if a
+comment|/// NamedMDNode with the specified name is not found.
+name|NamedMDNode
+modifier|*
+name|getOrInsertNamedMetadata
+parameter_list|(
+specifier|const
+name|StringRef
+modifier|&
+name|Name
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// @name Type Accessors
 comment|/// @{
@@ -954,20 +1049,18 @@ comment|/// there is already an entry for this name, true is returned and the sy
 comment|/// table is not modified.
 name|bool
 name|addTypeName
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Name
-argument_list|,
+parameter_list|,
 specifier|const
 name|Type
-operator|*
+modifier|*
 name|Ty
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// getTypeName - If there is at least one entry in the symbol table for the
 comment|/// specified type, return it.
 name|std
@@ -987,9 +1080,7 @@ modifier|*
 name|getTypeByName
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 operator|&
 name|Name
 argument_list|)
@@ -1124,6 +1215,48 @@ operator|&
 name|Module
 operator|::
 name|AliasList
+return|;
+block|}
+comment|/// Get the Module's list of named metadata (constant).
+specifier|const
+name|NamedMDListType
+operator|&
+name|getNamedMDList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NamedMDList
+return|;
+block|}
+comment|/// Get the Module's list of named metadata.
+name|NamedMDListType
+modifier|&
+name|getNamedMDList
+parameter_list|()
+block|{
+return|return
+name|NamedMDList
+return|;
+block|}
+specifier|static
+name|iplist
+operator|<
+name|NamedMDNode
+operator|>
+name|Module
+operator|::
+operator|*
+name|getSublistAccess
+argument_list|(
+argument|NamedMDNode *
+argument_list|)
+block|{
+return|return
+operator|&
+name|Module
+operator|::
+name|NamedMDList
 return|;
 block|}
 comment|/// Get the symbol table of global variable and function identifiers
@@ -1373,27 +1506,23 @@ block|}
 comment|/// @brief Add a library to the list of dependent libraries
 name|void
 name|addLibrary
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Lib
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// @brief Remove a library from the list of dependent libraries
 name|void
 name|removeLibrary
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
+modifier|&
 name|Lib
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// @brief Get all the libraries
 specifier|inline
 specifier|const
@@ -1462,7 +1591,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Determine how many functions are in the Module's list of aliases.
+comment|/// Determine how many aliases are in the Module's list of aliases.
 name|size_t
 name|alias_size
 argument_list|()
@@ -1489,6 +1618,87 @@ argument_list|()
 return|;
 block|}
 comment|/// @}
+comment|/// @name Named Metadata Iteration
+comment|/// @{
+name|public
+label|:
+comment|/// Get an iterator to the first named metadata.
+name|named_metadata_iterator
+name|named_metadata_begin
+parameter_list|()
+block|{
+return|return
+name|NamedMDList
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+comment|/// Get a constant iterator to the first named metadata.
+name|const_named_metadata_iterator
+name|named_metadata_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NamedMDList
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+comment|/// Get an iterator to the last named metadata.
+name|named_metadata_iterator
+name|named_metadata_end
+parameter_list|()
+block|{
+return|return
+name|NamedMDList
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+comment|/// Get a constant iterator to the last named metadata.
+name|const_named_metadata_iterator
+name|named_metadata_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NamedMDList
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+comment|/// Determine how many NamedMDNodes are in the Module's list of named metadata.
+name|size_t
+name|named_metadata_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NamedMDList
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// Determine if the list of named metadata is empty.
+name|bool
+name|named_metadata_empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NamedMDList
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// @}
 comment|/// @name Utility functions for printing and dumping Module objects
 comment|/// @{
 name|public
@@ -1498,21 +1708,6 @@ name|void
 name|print
 argument_list|(
 name|raw_ostream
-operator|&
-name|OS
-argument_list|,
-name|AssemblyAnnotationWriter
-operator|*
-name|AAW
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
 operator|&
 name|OS
 argument_list|,
@@ -1541,40 +1736,7 @@ function_decl|;
 comment|/// @}
 block|}
 empty_stmt|;
-comment|/// An iostream inserter for modules.
-specifier|inline
-name|std
-operator|::
-name|ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|O
-operator|,
-specifier|const
-name|Module
-operator|&
-name|M
-operator|)
-block|{
-name|M
-operator|.
-name|print
-argument_list|(
-name|O
-argument_list|,
-literal|0
-argument_list|)
-block|;
-return|return
-name|O
-return|;
-block|}
+comment|/// An raw_ostream inserter for modules.
 specifier|inline
 name|raw_ostream
 operator|&

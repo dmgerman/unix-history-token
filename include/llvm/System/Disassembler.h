@@ -86,9 +86,7 @@ comment|/// This function returns true, if there is possible to use some externa
 comment|/// disassembler library. False otherwise.
 name|bool
 name|hasDisassembler
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// This function provides some "glue" code to call external disassembler
 comment|/// libraries.

@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<iostream>
+file|<vector>
 end_include
 
 begin_include
@@ -209,9 +209,8 @@ case|case
 name|KeepSuffix
 case|:
 comment|// cannot be reached!
-name|std
-operator|::
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"bugpoint ListReducer internal error: selected empty set.\n"
 expr_stmt|;
@@ -273,9 +272,8 @@ condition|(
 name|BugpointIsInterrupted
 condition|)
 block|{
-name|std
-operator|::
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"\n\n*** Reduction Interrupted, cleaning up...\n\n"
 expr_stmt|;
@@ -321,9 +319,8 @@ name|end
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|std
-operator|::
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"\n\n*** Testing shuffled set...\n\n"
 expr_stmt|;
@@ -361,9 +358,8 @@ name|MaxIterations
 operator|+=
 literal|2
 expr_stmt|;
-name|std
-operator|::
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"\n\n*** Shuffling does not hide the bug...\n\n"
 expr_stmt|;
@@ -375,9 +371,8 @@ operator|=
 name|false
 expr_stmt|;
 comment|// Disable shuffling further on
-name|std
-operator|::
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"\n\n*** Shuffling hides the bug...\n\n"
 expr_stmt|;
@@ -608,9 +603,8 @@ condition|(
 name|BugpointIsInterrupted
 condition|)
 block|{
-name|std
-operator|::
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"\n\n*** Reduction Interrupted, cleaning up...\n\n"
 expr_stmt|;

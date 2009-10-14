@@ -4,7 +4,7 @@ comment|// RUN: %llvmgcc %s -S -emit-llvm -o - | grep llvm.atomic
 end_comment
 
 begin_comment
-comment|// XFAIL: sparc-sun-solaris2|arm|ia64
+comment|// XFAIL: sparc-sun-solaris2|arm
 end_comment
 
 begin_comment

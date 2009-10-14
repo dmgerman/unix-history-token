@@ -166,6 +166,10 @@ specifier|static
 name|void
 name|checkForGarbage
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 specifier|const
 name|std
 operator|::
@@ -179,6 +183,8 @@ directive|ifndef
 name|NDEBUG
 name|checkForGarbageImpl
 argument_list|(
+name|C
+argument_list|,
 name|Message
 argument_list|)
 expr_stmt|;
@@ -276,6 +282,10 @@ specifier|static
 name|void
 name|checkForGarbageImpl
 argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
 specifier|const
 name|std
 operator|::

@@ -183,7 +183,7 @@ comment|/// chain operand, value to store, address, and a ValueType to store it
 comment|/// as.
 name|FST
 block|,
-comment|/// CALL/TAILCALL - These operations represent an abstract X86 call
+comment|/// CALL - These operations represent an abstract X86 call
 comment|/// instruction, which includes a bunch of information.  In particular the
 comment|/// operands of these node are:
 comment|///
@@ -200,12 +200,7 @@ comment|///     #0 - The outgoing token chain
 comment|///     #1 - The first register result value (optional)
 comment|///     #2 - The second register result value (optional)
 comment|///
-comment|/// The CALL vs TAILCALL distinction boils down to whether the callee is
-comment|/// known not to modify the caller's stack frame, as is standard with
-comment|/// LLVM.
 name|CALL
-block|,
-name|TAILCALL
 block|,
 comment|/// RDTSC_DAG - This operation implements the lowering for
 comment|/// readcyclecounter
@@ -316,23 +311,6 @@ name|LCMPXCHG_DAG
 block|,
 name|LCMPXCHG8_DAG
 block|,
-comment|// ATOMADD64_DAG, ATOMSUB64_DAG, ATOMOR64_DAG, ATOMAND64_DAG,
-comment|// ATOMXOR64_DAG, ATOMNAND64_DAG, ATOMSWAP64_DAG -
-comment|// Atomic 64-bit binary operations.
-name|ATOMADD64_DAG
-block|,
-name|ATOMSUB64_DAG
-block|,
-name|ATOMOR64_DAG
-block|,
-name|ATOMXOR64_DAG
-block|,
-name|ATOMAND64_DAG
-block|,
-name|ATOMNAND64_DAG
-block|,
-name|ATOMSWAP64_DAG
-block|,
 comment|// FNSTCW16m - Store FP control world into i16 memory.
 name|FNSTCW16m
 block|,
@@ -383,8 +361,43 @@ name|INC
 block|,
 name|DEC
 block|,
+name|OR
+block|,
+name|XOR
+block|,
+name|AND
+block|,
 comment|// MUL_IMM - X86 specific multiply by immediate.
 name|MUL_IMM
+block|,
+comment|// PTEST - Vector bitwise comparisons
+name|PTEST
+block|,
+comment|// VASTART_SAVE_XMM_REGS - Save xmm argument registers to the stack,
+comment|// according to %al. An operator is needed so that this can be expanded
+comment|// with control flow.
+name|VASTART_SAVE_XMM_REGS
+block|,
+comment|// ATOMADD64_DAG, ATOMSUB64_DAG, ATOMOR64_DAG, ATOMAND64_DAG,
+comment|// ATOMXOR64_DAG, ATOMNAND64_DAG, ATOMSWAP64_DAG -
+comment|// Atomic 64-bit binary operations.
+name|ATOMADD64_DAG
+init|=
+name|ISD
+operator|::
+name|FIRST_TARGET_MEMORY_OPCODE
+block|,
+name|ATOMSUB64_DAG
+block|,
+name|ATOMOR64_DAG
+block|,
+name|ATOMXOR64_DAG
+block|,
+name|ATOMAND64_DAG
+block|,
+name|ATOMNAND64_DAG
+block|,
+name|ATOMSWAP64_DAG
 block|}
 enum|;
 block|}
@@ -600,6 +613,34 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
+comment|/// isZeroNode - Returns true if Elt is a constant zero or a floating point
+comment|/// constant +0.0.
+name|bool
+name|isZeroNode
+parameter_list|(
+name|SDValue
+name|Elt
+parameter_list|)
+function_decl|;
+comment|/// isOffsetSuitableForCodeModel - Returns true of the given offset can be
+comment|/// fit into displacement field of the instruction.
+name|bool
+name|isOffsetSuitableForCodeModel
+argument_list|(
+name|int64_t
+name|Offset
+argument_list|,
+name|CodeModel
+operator|::
+name|Model
+name|M
+argument_list|,
+name|bool
+name|hasSymbolicDisplacement
+operator|=
+name|true
+argument_list|)
+decl_stmt|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|//  X86TargetLowering - X86 Implementation of the TargetLowering interface
@@ -702,10 +743,10 @@ specifier|const
 block|;
 comment|/// getOptimalMemOpType - Returns the target specific optimal type for load
 comment|/// and store operations as a result of memset, memcpy, and memmove
-comment|/// lowering. It returns MVT::iAny if SelectionDAG should be responsible for
+comment|/// lowering. It returns EVT::iAny if SelectionDAG should be responsible for
 comment|/// determining it.
 name|virtual
-name|MVT
+name|EVT
 name|getOptimalMemOpType
 argument_list|(
 argument|uint64_t Size
@@ -720,6 +761,20 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
+comment|/// unaligned memory accesses. of the specified type.
+name|virtual
+name|bool
+name|allowsUnalignedMemoryAccesses
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
 comment|///
 name|virtual
@@ -772,6 +827,10 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -790,9 +849,11 @@ block|;
 comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
 name|virtual
 name|MVT
+operator|::
+name|SimpleValueType
 name|getSetCCResultType
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -838,6 +899,14 @@ operator|&
 name|DAG
 argument_list|)
 block|;
+name|virtual
+name|bool
+name|ExpandInlineAsm
+argument_list|(
+argument|CallInst *CI
+argument_list|)
+specifier|const
+block|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
@@ -855,7 +924,7 @@ name|getRegClassForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -865,7 +934,7 @@ name|char
 operator|*
 name|LowerXConstraint
 argument_list|(
-argument|MVT ConstraintVT
+argument|EVT ConstraintVT
 argument_list|)
 specifier|const
 block|;
@@ -907,7 +976,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -940,9 +1009,9 @@ name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
-argument|MVT VT1
+argument|EVT VT1
 argument_list|,
-argument|MVT VT2
+argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
@@ -968,9 +1037,9 @@ name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
-argument|MVT VT1
+argument|EVT VT1
 argument_list|,
-argument|MVT VT2
+argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
@@ -981,9 +1050,9 @@ name|virtual
 name|bool
 name|isNarrowingProfitable
 argument_list|(
-argument|MVT VT1
+argument|EVT VT1
 argument_list|,
-argument|MVT VT2
+argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
@@ -997,7 +1066,7 @@ name|isShuffleMaskLegal
 argument_list|(
 argument|const SmallVectorImpl<int>&Mask
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -1011,7 +1080,7 @@ name|isVectorClearMaskLegal
 argument_list|(
 argument|const SmallVectorImpl<int>&Mask
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -1022,7 +1091,7 @@ name|virtual
 name|bool
 name|ShouldShrinkFPConstant
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|{
@@ -1041,17 +1110,21 @@ name|f80
 return|;
 block|}
 comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible
-comment|/// for tail call optimization. Target which want to do tail call
+comment|/// for tail call optimization. Targets which want to do tail call
 comment|/// optimization should implement this function.
 name|virtual
 name|bool
 name|IsEligibleForTailCallOptimization
 argument_list|(
-argument|CallSDNode *TheCall
+argument|SDValue Callee
 argument_list|,
-argument|SDValue Ret
+argument|CallingConv::ID CalleeCC
 argument_list|,
-argument|SelectionDAG&DAG
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|SelectionDAG& DAG
 argument_list|)
 specifier|const
 block|;
@@ -1071,7 +1144,7 @@ comment|/// computed in an SSE register, not on the X87 floating point stack.
 name|bool
 name|isScalarFPTypeInSSEReg
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|{
@@ -1101,14 +1174,14 @@ comment|// f32 is when SSE1
 block|}
 comment|/// getWidenVectorType: given a vector type, returns the type to widen
 comment|/// to (e.g., v7i8 to v8i8). If the vector type is legal, it returns itself.
-comment|/// If there is no vector type that we want to widen to, returns MVT::Other
+comment|/// If there is no vector type that we want to widen to, returns EVT::Other
 comment|/// When and were to widen is target dependent based on the cost of
 comment|/// scalarizing vs using the wider vector type.
 name|virtual
-name|MVT
+name|EVT
 name|getWidenVectorType
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -1219,25 +1292,36 @@ block|;
 name|bool
 name|X86ScalarSSEf64
 block|;
-name|SDNode
-operator|*
+name|SDValue
 name|LowerCallResult
 argument_list|(
 argument|SDValue Chain
 argument_list|,
 argument|SDValue InFlag
 argument_list|,
-argument|CallSDNode *TheCall
+argument|CallingConv::ID CallConv
 argument_list|,
-argument|unsigned CallingConv
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 block|;
 name|SDValue
 name|LowerMemArgument
 argument_list|(
-argument|SDValue Op
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&ArgInfo
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1245,27 +1329,23 @@ argument|const CCValAssign&VA
 argument_list|,
 argument|MachineFrameInfo *MFI
 argument_list|,
-argument|unsigned CC
-argument_list|,
-argument|SDValue Root
-argument_list|,
 argument|unsigned i
 argument_list|)
 block|;
 name|SDValue
 name|LowerMemOpCallTo
 argument_list|(
-argument|CallSDNode *TheCall
+argument|SDValue Chain
+argument_list|,
+argument|SDValue StackPtr
+argument_list|,
+argument|SDValue Arg
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|const SDValue&StackPtr
-argument_list|,
 argument|const CCValAssign&VA
-argument_list|,
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Arg
 argument_list|,
 argument|ISD::ArgFlagsTy Flags
 argument_list|)
@@ -1276,23 +1356,7 @@ name|IsCalleePop
 argument_list|(
 argument|bool isVarArg
 argument_list|,
-argument|unsigned CallingConv
-argument_list|)
-block|;
-name|bool
-name|CallRequiresGOTPtrInReg
-argument_list|(
-argument|bool Is64Bit
-argument_list|,
-argument|bool IsTailCall
-argument_list|)
-block|;
-name|bool
-name|CallRequiresFnAddressInReg
-argument_list|(
-argument|bool Is64Bit
-argument_list|,
-argument|bool IsTailCall
+argument|CallingConv::ID CallConv
 argument_list|)
 block|;
 name|SDValue
@@ -1317,14 +1381,14 @@ name|CCAssignFn
 operator|*
 name|CCAssignFnForNode
 argument_list|(
-argument|unsigned CallingConv
+argument|CallingConv::ID CallConv
 argument_list|)
 specifier|const
 block|;
 name|NameDecorationStyle
-name|NameDecorationForFORMAL_ARGUMENTS
+name|NameDecorationForCallConv
 argument_list|(
-argument|SDValue Op
+argument|CallingConv::ID CallConv
 argument_list|)
 block|;
 name|unsigned
@@ -1466,7 +1530,7 @@ name|BuildFILD
 argument_list|(
 argument|SDValue Op
 argument_list|,
-argument|MVT SrcVT
+argument|EVT SrcVT
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -1596,31 +1660,7 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
-name|LowerCALL
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
-name|LowerRET
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
 name|LowerDYNAMIC_STACKALLOC
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
-name|LowerFORMAL_ARGUMENTS
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1763,6 +1803,67 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 block|;
+name|virtual
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
 name|void
 name|ReplaceATOMIC_BINARY_64
 argument_list|(
@@ -1825,9 +1926,28 @@ argument_list|,
 argument|uint64_t SrcSVOff
 argument_list|)
 block|;
+comment|/// Utility function to emit string processing sse4.2 instructions
+comment|/// that return in xmm0.
+comment|/// This takes the instruction to expand, the associated machine basic
+comment|/// block, the number of args, and whether or not the second arg is
+comment|/// in memory or not.
+name|MachineBasicBlock
+operator|*
+name|EmitPCMP
+argument_list|(
+argument|MachineInstr *BInstr
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned argNum
+argument_list|,
+argument|bool inMem
+argument_list|)
+specifier|const
+block|;
 comment|/// Utility function to emit atomic bitwise operations (and, or, xor).
-comment|// It takes the bitwise instruction to expand, the associated machine basic
-comment|// block, and the associated X86 opcodes for reg/reg and reg/imm.
+comment|/// It takes the bitwise instruction to expand, the associated machine basic
+comment|/// block, and the associated X86 opcodes for reg/reg and reg/imm.
 name|MachineBasicBlock
 operator|*
 name|EmitAtomicBitwiseWithCustomInserter
@@ -1888,6 +2008,31 @@ argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|,
 argument|unsigned cmovOpc
+argument_list|)
+specifier|const
+block|;
+comment|/// Utility function to emit the xmm reg save portion of va_start.
+name|MachineBasicBlock
+operator|*
+name|EmitVAStartSaveXMMRegsWithCustomInserter
+argument_list|(
+argument|MachineInstr *BInstr
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitLoweredSelect
+argument_list|(
+argument|MachineInstr *I
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;

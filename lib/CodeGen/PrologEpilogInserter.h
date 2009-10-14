@@ -121,6 +121,12 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -277,6 +283,34 @@ comment|// functions.
 name|bool
 name|ShrinkWrapThisFunction
 decl_stmt|;
+comment|// Flag to control whether to use the register scavenger to resolve
+comment|// frame index materialization registers. Set according to
+comment|// TRI->requiresFrameIndexScavenging() for the curren function.
+name|bool
+name|FrameIndexVirtualScavenging
+decl_stmt|;
+comment|// When using the scavenger post-pass to resolve frame reference
+comment|// materialization registers, maintain a map of the registers to
+comment|// the constant value and SP adjustment associated with it.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+operator|,
+name|int
+operator|>
+name|FrameConstantEntry
+expr_stmt|;
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|FrameConstantEntry
+operator|>
+name|FrameConstantRegMap
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -418,6 +452,14 @@ name|Fn
 parameter_list|)
 function_decl|;
 name|void
+name|calculateCallsInformation
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|Fn
+parameter_list|)
+function_decl|;
+name|void
 name|calculateCalleeSavedRegisters
 parameter_list|(
 name|MachineFunction
@@ -443,6 +485,14 @@ parameter_list|)
 function_decl|;
 name|void
 name|replaceFrameIndices
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|Fn
+parameter_list|)
+function_decl|;
+name|void
+name|scavengeFrameVirtualRegs
 parameter_list|(
 name|MachineFunction
 modifier|&

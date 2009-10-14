@@ -19,12 +19,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdbool.h>
 end_include
 

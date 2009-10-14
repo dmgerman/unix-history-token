@@ -82,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -553,34 +553,7 @@ block|}
 name|void
 name|AddString
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|String
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|End
-parameter_list|)
-function_decl|;
-name|void
-name|AddString
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|String
-argument_list|)
-decl_stmt|;
-name|void
-name|AddString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|String
 parameter_list|)
 function_decl|;
@@ -1716,6 +1689,72 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// FastFoldingSetNode - This is a subclass of FoldingSetNode which stores
+end_comment
+
+begin_comment
+comment|/// a FoldingSetNodeID value rather than requiring the node to recompute it
+end_comment
+
+begin_comment
+comment|/// each time it is needed. This trades space for speed (which can be
+end_comment
+
+begin_comment
+comment|/// significant if the ID is long), and it also permits nodes to drop
+end_comment
+
+begin_comment
+comment|/// information that would otherwise only be required for recomputing an ID.
+end_comment
+
+begin_decl_stmt
+name|class
+name|FastFoldingSetNode
+range|:
+name|public
+name|FoldingSetNode
+block|{
+name|FoldingSetNodeID
+name|FastID
+block|;
+name|protected
+operator|:
+name|explicit
+name|FastFoldingSetNode
+argument_list|(
+specifier|const
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+operator|:
+name|FastID
+argument_list|(
+argument|ID
+argument_list|)
+block|{}
+name|public
+operator|:
+name|void
+name|Profile
+argument_list|(
+argument|FoldingSetNodeID& ID
+argument_list|)
+block|{
+name|ID
+operator|=
+name|FastID
+block|; }
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 

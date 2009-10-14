@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/Mutex.h"
 end_include
 
@@ -108,6 +114,9 @@ name|GenericValue
 struct_decl|;
 name|class
 name|Constant
+decl_stmt|;
+name|class
+name|ExecutionEngine
 decl_stmt|;
 name|class
 name|Function
@@ -145,17 +154,79 @@ decl_stmt|;
 name|class
 name|ExecutionEngineState
 block|{
+name|public
+label|:
+name|class
+name|MapUpdatingCVH
+range|:
+name|public
+name|CallbackVH
+block|{
+name|ExecutionEngineState
+operator|&
+name|EES
+block|;
+name|public
+operator|:
+name|MapUpdatingCVH
+argument_list|(
+name|ExecutionEngineState
+operator|&
+name|EES
+argument_list|,
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+block|;
+name|operator
+specifier|const
+name|GlobalValue
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|GlobalValue
+operator|>
+operator|(
+name|getValPtr
+argument_list|()
+operator|)
+return|;
+block|}
+name|virtual
+name|void
+name|deleted
+argument_list|()
+block|;
+name|virtual
+name|void
+name|allUsesReplacedWith
+argument_list|(
+name|Value
+operator|*
+name|new_value
+argument_list|)
+block|;   }
+decl_stmt|;
 name|private
 label|:
+name|ExecutionEngine
+modifier|&
+name|EE
+decl_stmt|;
 comment|/// GlobalAddressMap - A mapping between LLVM global values and their
 comment|/// actualized version...
 name|std
 operator|::
 name|map
 operator|<
-specifier|const
-name|GlobalValue
-operator|*
+name|MapUpdatingCVH
 operator|,
 name|void
 operator|*
@@ -173,21 +244,49 @@ operator|<
 name|void
 operator|*
 operator|,
+name|AssertingVH
+operator|<
 specifier|const
 name|GlobalValue
-operator|*
 operator|>
+expr|>
 name|GlobalAddressReverseMap
 expr_stmt|;
 name|public
 label|:
+name|ExecutionEngineState
+argument_list|(
+name|ExecutionEngine
+operator|&
+name|EE
+argument_list|)
+operator|:
+name|EE
+argument_list|(
+argument|EE
+argument_list|)
+block|{}
+name|MapUpdatingCVH
+name|getVH
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|)
+block|{
+return|return
+name|MapUpdatingCVH
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|GV
+argument_list|)
+return|;
+block|}
 name|std
 operator|::
 name|map
 operator|<
-specifier|const
-name|GlobalValue
-operator|*
+name|MapUpdatingCVH
 operator|,
 name|void
 operator|*
@@ -209,10 +308,12 @@ operator|<
 name|void
 operator|*
 operator|,
+name|AssertingVH
+operator|<
 specifier|const
 name|GlobalValue
-operator|*
 operator|>
+expr|>
 operator|&
 name|getGlobalAddressReverseMap
 argument_list|(
@@ -223,6 +324,21 @@ return|return
 name|GlobalAddressReverseMap
 return|;
 block|}
+comment|// Returns the address ToUnmap was mapped to.
+name|void
+modifier|*
+name|RemoveMapping
+parameter_list|(
+specifier|const
+name|MutexGuard
+modifier|&
+parameter_list|,
+specifier|const
+name|GlobalValue
+modifier|*
+name|ToUnmap
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -234,7 +350,7 @@ modifier|*
 name|TD
 decl_stmt|;
 name|ExecutionEngineState
-name|state
+name|EEState
 decl_stmt|;
 name|bool
 name|LazyCompilationDisabled
@@ -248,6 +364,11 @@ decl_stmt|;
 name|bool
 name|DlsymStubsEnabled
 decl_stmt|;
+name|friend
+name|class
+name|EngineBuilder
+decl_stmt|;
+comment|// To allow access to JITCtor and InterpCtor.
 name|protected
 label|:
 comment|/// Modules - This is a list of ModuleProvider's that we are JIT'ing from.  We
@@ -290,34 +411,56 @@ function_decl|;
 comment|// To avoid having libexecutionengine depend on the JIT and interpreter
 comment|// libraries, the JIT and Interpreter set these functions to ctor pointers
 comment|// at startup time if they are linked in.
-typedef|typedef
+specifier|static
 name|ExecutionEngine
 operator|*
 operator|(
 operator|*
-name|EECtorFn
+name|JITCtor
 operator|)
 operator|(
 name|ModuleProvider
 operator|*
+name|MP
 operator|,
 name|std
 operator|::
 name|string
 operator|*
+name|ErrorStr
+operator|,
+name|JITMemoryManager
+operator|*
+name|JMM
 operator|,
 name|CodeGenOpt
 operator|::
 name|Level
 name|OptLevel
+operator|,
+name|bool
+name|GVsWithCode
 operator|)
 expr_stmt|;
 specifier|static
-name|EECtorFn
-name|JITCtor
-decl_stmt|,
+name|ExecutionEngine
+operator|*
+call|(
+modifier|*
 name|InterpCtor
-decl_stmt|;
+call|)
+argument_list|(
+name|ModuleProvider
+operator|*
+name|MP
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrorStr
+argument_list|)
+expr_stmt|;
 comment|/// LazyFunctionCreator - If an unknown function is needed, this function
 comment|/// pointer is invoked to create it. If this returns null, the JIT will abort.
 name|void
@@ -386,6 +529,17 @@ argument|std::string *ErrorStr =
 literal|0
 argument_list|,
 argument|CodeGenOpt::Level OptLevel =                                    CodeGenOpt::Default
+argument_list|,
+comment|// Allocating globals with code breaks
+comment|// freeMachineCodeForFunction and is probably
+comment|// unsafe and bad for performance.  However,
+comment|// we have clients who depend on this
+comment|// behavior, so we must support it.
+comment|// Eventually, when we're willing to break
+comment|// some backwards compatability, this flag
+comment|// should be flipped to false, so that by
+comment|// default freeMachineCodeForFunction works.
+argument|bool GVsWithCode = true
 argument_list|)
 argument_list|;
 comment|/// create - This is the factory method for creating an execution engine which
@@ -404,6 +558,9 @@ argument_list|;
 comment|/// createJIT - This is the factory method for creating a JIT for the current
 comment|/// machine, it does not fall back to the interpreter.  This takes ownership
 comment|/// of the ModuleProvider and JITMemoryManager if successful.
+comment|///
+comment|/// Clients should make sure to initialize targets prior to calling this
+comment|/// function.
 specifier|static
 name|ExecutionEngine
 operator|*
@@ -418,6 +575,8 @@ argument|JITMemoryManager *JMM =
 literal|0
 argument_list|,
 argument|CodeGenOpt::Level OptLevel =                                       CodeGenOpt::Default
+argument_list|,
+argument|bool GVsWithCode = true
 argument_list|)
 argument_list|;
 comment|/// addModuleProvider - Add a ModuleProvider to the list of modules that we
@@ -585,8 +744,8 @@ comment|/// addGlobalMapping - Tell the execution engine that the specified glob
 comment|/// at the specified location.  This is used internally as functions are JIT'd
 comment|/// and as global variables are laid out in memory.  It can and should also be
 comment|/// used by clients of the EE that want to have an LLVM global overlay
-comment|/// existing data in memory.  After adding a mapping for GV, you must not
-comment|/// destroy it until you've removed the mapping.
+comment|/// existing data in memory.  Mappings are automatically removed when their
+comment|/// GlobalValue is destroyed.
 name|void
 name|addGlobalMapping
 parameter_list|(
@@ -649,15 +808,7 @@ name|GV
 parameter_list|)
 function_decl|;
 comment|/// getPointerToGlobal - This returns the address of the specified global
-comment|/// value.  This may involve code generation if it's a function.  After
-comment|/// getting a pointer to GV, it and all globals it transitively refers to have
-comment|/// been passed to addGlobalMapping.  You must clear the mapping for each
-comment|/// referred-to global before destroying it.  If a referred-to global RTG is a
-comment|/// function and this ExecutionEngine is a JIT compiler, calling
-comment|/// updateGlobalMapping(RTG, 0) will leak the function's machine code, so you
-comment|/// should call freeMachineCodeForFunction(RTG) instead.  Note that
-comment|/// optimizations can move and delete non-external GlobalValues without
-comment|/// notifying the ExecutionEngine.
+comment|/// value.  This may involve code generation if it's a function.
 comment|///
 name|void
 modifier|*
@@ -671,8 +822,10 @@ parameter_list|)
 function_decl|;
 comment|/// getPointerToFunction - The different EE's represent function bodies in
 comment|/// different ways.  They should each implement this to say what a function
-comment|/// pointer should look like.  See getPointerToGlobal for the requirements on
-comment|/// destroying F and any GlobalValues it refers to.
+comment|/// pointer should look like.  When F is destroyed, the ExecutionEngine will
+comment|/// remove its global mapping but will not yet free its machine code.  Call
+comment|/// freeMachineCodeForFunction(F) explicitly to do that.  Note that global
+comment|/// optimizations can destroy Functions without notifying the ExecutionEngine.
 comment|///
 name|virtual
 name|void
@@ -688,8 +841,8 @@ literal|0
 function_decl|;
 comment|/// getPointerToFunctionOrStub - If the specified function has been
 comment|/// code-gen'd, return a pointer to the function.  If not, compile it, or use
-comment|/// a stub to implement lazy compilation if available.  See getPointerToGlobal
-comment|/// for the requirements on destroying F and any GlobalValues it refers to.
+comment|/// a stub to implement lazy compilation if available.  See
+comment|/// getPointerToFunction for the requirements on destroying F.
 comment|///
 name|virtual
 name|void
@@ -802,8 +955,7 @@ literal|0
 function_decl|;
 comment|/// getOrEmitGlobalVariable - Return the address of the specified global
 comment|/// variable, possibly emitting it to memory if needed.  This is used by the
-comment|/// Emitter.  See getPointerToGlobal for the requirements on destroying GV and
-comment|/// any GlobalValues it refers to.
+comment|/// Emitter.
 name|virtual
 name|void
 modifier|*
@@ -836,7 +988,6 @@ name|RegisterJITEventListener
 parameter_list|(
 name|JITEventListener
 modifier|*
-name|L
 parameter_list|)
 block|{}
 name|virtual
@@ -845,7 +996,6 @@ name|UnregisterJITEventListener
 parameter_list|(
 name|JITEventListener
 modifier|*
-name|L
 parameter_list|)
 block|{}
 comment|/// DisableLazyCompilation - If called, the JIT will abort if lazy compilation
@@ -1072,6 +1222,291 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
+name|namespace
+name|EngineKind
+block|{
+comment|// These are actually bitmasks that get or-ed together.
+enum|enum
+name|Kind
+block|{
+name|JIT
+init|=
+literal|0x1
+block|,
+name|Interpreter
+init|=
+literal|0x2
+block|}
+enum|;
+specifier|const
+specifier|static
+name|Kind
+name|Either
+init|=
+call|(
+name|Kind
+call|)
+argument_list|(
+name|JIT
+operator||
+name|Interpreter
+argument_list|)
+decl_stmt|;
+block|}
+comment|/// EngineBuilder - Builder class for ExecutionEngines.  Use this by
+comment|/// stack-allocating a builder, chaining the various set* methods, and
+comment|/// terminating it with a .create() call.
+name|class
+name|EngineBuilder
+block|{
+name|private
+label|:
+name|ModuleProvider
+modifier|*
+name|MP
+decl_stmt|;
+name|EngineKind
+operator|::
+name|Kind
+name|WhichEngine
+expr_stmt|;
+name|std
+operator|::
+name|string
+operator|*
+name|ErrorStr
+expr_stmt|;
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+expr_stmt|;
+name|JITMemoryManager
+modifier|*
+name|JMM
+decl_stmt|;
+name|bool
+name|AllocateGVsWithCode
+decl_stmt|;
+comment|/// InitEngine - Does the common initialization of default options.
+comment|///
+name|void
+name|InitEngine
+parameter_list|()
+block|{
+name|WhichEngine
+operator|=
+name|EngineKind
+operator|::
+name|Either
+expr_stmt|;
+name|ErrorStr
+operator|=
+name|NULL
+expr_stmt|;
+name|OptLevel
+operator|=
+name|CodeGenOpt
+operator|::
+name|Default
+expr_stmt|;
+name|JMM
+operator|=
+name|NULL
+expr_stmt|;
+name|AllocateGVsWithCode
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|public
+label|:
+comment|/// EngineBuilder - Constructor for EngineBuilder.  If create() is called and
+comment|/// is successful, the created engine takes ownership of the module
+comment|/// provider.
+name|EngineBuilder
+argument_list|(
+name|ModuleProvider
+operator|*
+name|mp
+argument_list|)
+operator|:
+name|MP
+argument_list|(
+argument|mp
+argument_list|)
+block|{
+name|InitEngine
+argument_list|()
+block|;   }
+comment|/// EngineBuilder - Overloaded constructor that automatically creates an
+comment|/// ExistingModuleProvider for an existing module.
+name|EngineBuilder
+argument_list|(
+name|Module
+operator|*
+name|m
+argument_list|)
+expr_stmt|;
+comment|/// setEngineKind - Controls whether the user wants the interpreter, the JIT,
+comment|/// or whichever engine works.  This option defaults to EngineKind::Either.
+name|EngineBuilder
+modifier|&
+name|setEngineKind
+argument_list|(
+name|EngineKind
+operator|::
+name|Kind
+name|w
+argument_list|)
+block|{
+name|WhichEngine
+operator|=
+name|w
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setJITMemoryManager - Sets the memory manager to use.  This allows
+comment|/// clients to customize their memory allocation policies.  If create() is
+comment|/// called and is successful, the created engine takes ownership of the
+comment|/// memory manager.  This option defaults to NULL.
+name|EngineBuilder
+modifier|&
+name|setJITMemoryManager
+parameter_list|(
+name|JITMemoryManager
+modifier|*
+name|jmm
+parameter_list|)
+block|{
+name|JMM
+operator|=
+name|jmm
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setErrorStr - Set the error string to write to on error.  This option
+comment|/// defaults to NULL.
+name|EngineBuilder
+modifier|&
+name|setErrorStr
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|e
+argument_list|)
+block|{
+name|ErrorStr
+operator|=
+name|e
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setOptLevel - Set the optimization level for the JIT.  This option
+comment|/// defaults to CodeGenOpt::Default.
+name|EngineBuilder
+modifier|&
+name|setOptLevel
+argument_list|(
+name|CodeGenOpt
+operator|::
+name|Level
+name|l
+argument_list|)
+block|{
+name|OptLevel
+operator|=
+name|l
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setAllocateGVsWithCode - Sets whether global values should be allocated
+comment|/// into the same buffer as code.  For most applications this should be set
+comment|/// to false.  Allocating globals with code breaks freeMachineCodeForFunction
+comment|/// and is probably unsafe and bad for performance.  However, we have clients
+comment|/// who depend on this behavior, so we must support it.  This option defaults
+comment|/// to false so that users of the new API can safely use the new memory
+comment|/// manager and free machine code.
+name|EngineBuilder
+modifier|&
+name|setAllocateGVsWithCode
+parameter_list|(
+name|bool
+name|a
+parameter_list|)
+block|{
+name|AllocateGVsWithCode
+operator|=
+name|a
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|ExecutionEngine
+modifier|*
+name|create
+parameter_list|()
+function_decl|;
+block|}
+empty_stmt|;
+specifier|inline
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|ExecutionEngineState
+operator|::
+name|MapUpdatingCVH
+operator|&
+name|lhs
+operator|,
+specifier|const
+name|ExecutionEngineState
+operator|::
+name|MapUpdatingCVH
+operator|&
+name|rhs
+operator|)
+block|{
+return|return
+name|static_cast
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+operator|>
+operator|(
+name|lhs
+operator|)
+operator|<
+name|static_cast
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+operator|>
+operator|(
+name|rhs
+operator|)
+return|;
+block|}
 block|}
 end_decl_stmt
 

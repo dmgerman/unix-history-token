@@ -95,6 +95,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 comment|// No need to include Pass.h, we are being included by it!
 comment|//===----------------------------------------------------------------------===//
 comment|// AnalysisUsage - Represent the analysis usage information of a pass.  This
@@ -280,6 +283,9 @@ operator|*
 name|this
 return|;
 block|}
+comment|// addPreserved - Add the specified Pass class to the set of analyses
+comment|// preserved by this pass.
+comment|//
 name|template
 operator|<
 name|class
@@ -318,6 +324,50 @@ operator|(
 operator|)
 argument_list|)
 block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|// addPreserved - Add the Pass with the specified argument string to the set
+comment|// of analyses preserved by this pass. If no such Pass exists, do nothing.
+comment|// This can be useful when a pass is trivially preserved, but may not be
+comment|// linked in. Be careful about spelling!
+comment|//
+name|AnalysisUsage
+modifier|&
+name|addPreserved
+parameter_list|(
+specifier|const
+name|StringRef
+modifier|&
+name|Arg
+parameter_list|)
+block|{
+specifier|const
+name|PassInfo
+modifier|*
+name|PI
+init|=
+name|Pass
+operator|::
+name|lookupPassInfo
+argument_list|(
+name|Arg
+argument_list|)
+decl_stmt|;
+comment|// If the pass exists, preserve it. Otherwise silently do nothing.
+if|if
+condition|(
+name|PI
+condition|)
+name|Preserved
+operator|.
+name|push_back
+argument_list|(
+name|PI
+argument_list|)
+expr_stmt|;
 return|return
 operator|*
 name|this

@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineMemOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/PseudoSourceValue.h"
 end_include
 
@@ -153,7 +159,7 @@ decl_stmt|;
 name|unsigned
 name|IndexReg
 decl_stmt|;
-name|unsigned
+name|int
 name|Disp
 decl_stmt|;
 name|GlobalValue
@@ -208,6 +214,7 @@ comment|/// addDirectMem - This function is used to add a direct memory referenc
 comment|/// current instruction -- that is, a dereference of an address in a register,
 comment|/// with no scale, index or displacement. An example is: DWORD PTR [EAX].
 comment|///
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
@@ -249,6 +256,7 @@ literal|0
 argument_list|)
 return|;
 block|}
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
@@ -283,6 +291,7 @@ name|Offset
 argument_list|)
 return|;
 block|}
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
@@ -316,6 +325,7 @@ comment|/// addRegOffset - This function is used to add a memory reference of th
 comment|/// [Reg + Offset], i.e., one with no scale or index, but with a
 comment|/// displacement. An example is: DWORD PTR [EAX + 4].
 comment|///
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
@@ -356,6 +366,7 @@ name|Offset
 argument_list|)
 return|;
 block|}
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
@@ -398,6 +409,7 @@ return|;
 block|}
 comment|/// addRegReg - This function is used to add a memory reference of the form:
 comment|/// [Reg + Reg].
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
@@ -456,6 +468,7 @@ literal|0
 argument_list|)
 return|;
 block|}
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
@@ -601,6 +614,7 @@ name|Disp
 argument_list|)
 return|;
 block|}
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
@@ -637,6 +651,7 @@ comment|/// an abstract object on the stack frame of the current function.  This
 comment|/// reference has base register as the FrameIndex offset until it is resolved.
 comment|/// This allows a constant offset to be specified as well...
 comment|///
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
@@ -728,7 +743,12 @@ operator|::
 name|MOStore
 expr_stmt|;
 name|MachineMemOperand
+modifier|*
 name|MMO
+init|=
+name|MF
+operator|.
+name|getMachineMemOperand
 argument_list|(
 name|PseudoSourceValue
 operator|::
@@ -739,13 +759,6 @@ argument_list|)
 argument_list|,
 name|Flags
 argument_list|,
-name|MFI
-operator|.
-name|getObjectOffset
-argument_list|(
-name|FI
-argument_list|)
-operator|+
 name|Offset
 argument_list|,
 name|MFI
@@ -789,6 +802,7 @@ comment|/// either machine code emission or assembly output. In PIC mode on x86-
 comment|/// the GlobalBaseReg parameter can be used to make this a
 comment|/// GlobalBaseReg-relative reference.
 comment|///
+specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder

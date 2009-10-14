@@ -61,6 +61,12 @@ directive|include
 file|"llvm/Module.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -92,13 +98,13 @@ define|\
 value|return static_cast<SubClass*>(this)-> \                visit##CLASS_TO_VISIT(static_cast<CLASS_TO_VISIT&>(I))
 comment|/// @brief Base class for instruction visitors
 comment|///
-comment|/// Instruction visitors are used when you want to perform different action for
-comment|/// different kinds of instruction without without having to use lots of casts
-comment|/// and a big switch statement (in your code that is).
+comment|/// Instruction visitors are used when you want to perform different actions
+comment|/// for different kinds of instructions without having to use lots of casts
+comment|/// and a big switch statement (in your code, that is).
 comment|///
 comment|/// To define your own visitor, inherit from this class, specifying your
 comment|/// new type for the 'SubClass' template parameter, and "override" visitXXX
-comment|/// functions in your class. I say "overriding" because this class is defined
+comment|/// functions in your class. I say "override" because this class is defined
 comment|/// in terms of statically resolved overloading, not virtual functions.
 comment|///
 comment|/// For example, here is a visitor that counts the number of malloc
@@ -120,12 +126,12 @@ comment|///    CMV.visit(function);
 comment|///    NumMallocs = CMV.Count;
 comment|///
 comment|/// The defined has 'visit' methods for Instruction, and also for BasicBlock,
-comment|/// Function, and Module, which recursively process all conained instructions.
+comment|/// Function, and Module, which recursively process all contained instructions.
 comment|///
 comment|/// Note that if you don't implement visitXXX for some instruction type,
 comment|/// the visitXXX method for instruction superclass will be invoked. So
 comment|/// if instructions are added in the future, they will be automatically
-comment|/// supported, if you handle on of their superclasses.
+comment|/// supported, if you handle one of their superclasses.
 comment|///
 comment|/// The optional second template argument specifies the type that instruction
 comment|/// visitation functions should return. If you specify this, you *MUST* provide
@@ -360,15 +366,10 @@ argument_list|()
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown instruction type encountered!"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 comment|// Build the switch statement using the Instruction.def file...
 define|#
@@ -526,28 +527,6 @@ name|RetTy
 name|visitFCmpInst
 argument_list|(
 argument|FCmpInst&I
-argument_list|)
-block|{
-name|DELEGATE
-argument_list|(
-name|CmpInst
-argument_list|)
-block|;}
-name|RetTy
-name|visitVICmpInst
-argument_list|(
-argument|VICmpInst&I
-argument_list|)
-block|{
-name|DELEGATE
-argument_list|(
-name|CmpInst
-argument_list|)
-block|;}
-name|RetTy
-name|visitVFCmpInst
-argument_list|(
-argument|VFCmpInst&I
 argument_list|)
 block|{
 name|DELEGATE
@@ -852,7 +831,7 @@ argument_list|(
 name|Instruction
 argument_list|)
 block|; }
-comment|// Next level propagators... if the user does not overload a specific
+comment|// Next level propagators: If the user does not overload a specific
 comment|// instruction type, they can overload one of these to get the whole class
 comment|// of instructions...
 comment|//
@@ -912,7 +891,7 @@ name|Instruction
 argument_list|)
 block|; }
 comment|// If the user wants a 'default' case, they can choose to override this
-comment|// function.  If this function is not overloaded in the users subclass, then
+comment|// function.  If this function is not overloaded in the user's subclass, then
 comment|// this instruction just gets ignored.
 comment|//
 comment|// Note that you MUST override this function if your return type is not void.

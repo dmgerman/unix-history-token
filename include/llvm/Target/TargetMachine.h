@@ -71,12 +71,21 @@ directive|include
 file|<cassert>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|TargetAsmInfo
+name|Target
+decl_stmt|;
+name|class
+name|MCAsmInfo
 decl_stmt|;
 name|class
 name|TargetData
@@ -106,10 +115,10 @@ name|class
 name|JITCodeEmitter
 decl_stmt|;
 name|class
-name|TargetRegisterInfo
+name|ObjectCodeEmitter
 decl_stmt|;
 name|class
-name|Module
+name|TargetRegisterInfo
 decl_stmt|;
 name|class
 name|PassManagerBase
@@ -127,7 +136,7 @@ name|class
 name|TargetELFWriterInfo
 decl_stmt|;
 name|class
-name|raw_ostream
+name|formatted_raw_ostream
 decl_stmt|;
 comment|// Relocation model types.
 name|namespace
@@ -199,24 +208,6 @@ name|Aggressive
 block|}
 enum|;
 block|}
-comment|// Possible float ABI settings. Used with FloatABIType in TargetOptions.h.
-name|namespace
-name|FloatABI
-block|{
-enum|enum
-name|ABIType
-block|{
-name|Default
-block|,
-comment|// Target-specific (either soft of hard depending on triple, etc).
-name|Soft
-block|,
-comment|// Soft float.
-name|Hard
-comment|// Hard float.
-block|}
-enum|;
-block|}
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetMachine - Primary interface to the complete machine description for
@@ -248,7 +239,11 @@ name|protected
 label|:
 comment|// Can only create subclasses.
 name|TargetMachine
-argument_list|()
+argument_list|(
+specifier|const
+name|Target
+operator|&
+argument_list|)
 expr_stmt|;
 comment|/// getSubtargetImpl - virtual method implemented by subclasses that returns
 comment|/// a reference to that target's TargetSubtarget-derived member variable.
@@ -264,28 +259,19 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// TheTarget - The Target that this machine was created for.
+specifier|const
+name|Target
+modifier|&
+name|TheTarget
+decl_stmt|;
 comment|/// AsmInfo - Contains target specific asm information.
 comment|///
-name|mutable
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 modifier|*
 name|AsmInfo
 decl_stmt|;
-comment|/// createTargetAsmInfo - Create a new instance of target specific asm
-comment|/// information.
-name|virtual
-specifier|const
-name|TargetAsmInfo
-operator|*
-name|createTargetAsmInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 name|public
 label|:
 name|virtual
@@ -293,35 +279,15 @@ operator|~
 name|TargetMachine
 argument_list|()
 expr_stmt|;
-comment|/// getModuleMatchQuality - This static method should be implemented by
-comment|/// targets to indicate how closely they match the specified module.  This is
-comment|/// used by the LLC tool to determine which target to use when an explicit
-comment|/// -march option is not specified.  If a target returns zero, it will never
-comment|/// be chosen without an explicit -march option.
-specifier|static
-name|unsigned
-name|getModuleMatchQuality
-parameter_list|(
 specifier|const
-name|Module
-modifier|&
-parameter_list|)
+name|Target
+operator|&
+name|getTarget
+argument_list|()
+specifier|const
 block|{
 return|return
-literal|0
-return|;
-block|}
-comment|/// getJITMatchQuality - This static method should be implemented by targets
-comment|/// that provide JIT capabilities to indicate how suitable they are for
-comment|/// execution on the current host.  If a value of 0 is returned, the target
-comment|/// will not be used unless an explicit -march option is used.
-specifier|static
-name|unsigned
-name|getJITMatchQuality
-parameter_list|()
-block|{
-return|return
-literal|0
+name|TheTarget
 return|;
 block|}
 comment|// Interfaces to the major aspects of target machine information:
@@ -377,25 +343,15 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// getTargetAsmInfo - Return target specific asm information.
+comment|/// getMCAsmInfo - Return target specific asm information.
 comment|///
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 operator|*
-name|getTargetAsmInfo
+name|getMCAsmInfo
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|AsmInfo
-condition|)
-name|AsmInfo
-operator|=
-name|createTargetAsmInfo
-argument_list|()
-expr_stmt|;
 return|return
 name|AsmInfo
 return|;
@@ -626,8 +582,7 @@ return|;
 block|}
 comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
 comment|/// specified file emitted.  Typically this will involve several steps of code
-comment|/// generation.  If Fast is set to true, the code generator should emit code
-comment|/// as fast as possible, though the generated code may be less efficient.
+comment|/// generation.
 comment|/// This method should return FileModel::Error if emission of this file type
 comment|/// is not supported.
 comment|///
@@ -639,7 +594,7 @@ name|addPassesToEmitFile
 argument_list|(
 argument|PassManagerBase&
 argument_list|,
-argument|raw_ostream&
+argument|formatted_raw_ostream&
 argument_list|,
 argument|CodeGenFileType
 argument_list|,
@@ -687,6 +642,29 @@ name|PassManagerBase
 operator|&
 argument_list|,
 name|JITCodeEmitter
+operator|*
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// addPassesToEmitFileFinish - If the passes to emit the specified file had
+comment|/// to be split up (e.g., to add an object writer pass), this method can be
+comment|/// used to finish up adding passes to emit the file, if necessary.
+comment|///
+name|virtual
+name|bool
+name|addPassesToEmitFileFinish
+argument_list|(
+name|PassManagerBase
+operator|&
+argument_list|,
+name|ObjectCodeEmitter
 operator|*
 argument_list|,
 name|CodeGenOpt
@@ -768,7 +746,7 @@ argument_list|(
 name|PassManager
 operator|&
 argument_list|,
-name|raw_ostream
+name|formatted_raw_ostream
 operator|&
 argument_list|,
 name|CodeGenFileType
@@ -783,25 +761,10 @@ name|true
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// LLVMTargetMachine - This class describes a target machine that is
-end_comment
-
-begin_comment
 comment|/// implemented with the LLVM target-independent code generator.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|LLVMTargetMachine
 range|:
@@ -812,8 +775,20 @@ name|protected
 operator|:
 comment|// Can only create subclasses.
 name|LLVMTargetMachine
-argument_list|()
-block|{ }
+argument_list|(
+specifier|const
+name|Target
+operator|&
+name|T
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TargetTriple
+argument_list|)
+block|;
 comment|/// addCommonCodeGenPasses - Add standard LLVM codegen passes used for
 comment|/// both emitting to assembly files or machine code output.
 comment|///
@@ -849,7 +824,7 @@ name|addPassesToEmitFile
 argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
-argument|raw_ostream&Out
+argument|formatted_raw_ostream&Out
 argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
@@ -891,7 +866,28 @@ name|PM
 argument_list|,
 name|JITCodeEmitter
 operator|*
-name|MCE
+name|JCE
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|)
+block|;
+comment|/// addPassesToEmitFileFinish - If the passes to emit the specified file had
+comment|/// to be split up (e.g., to add an object writer pass), this method can be
+comment|/// used to finish up adding passes to emit the file, if necessary.
+comment|///
+name|virtual
+name|bool
+name|addPassesToEmitFileFinish
+argument_list|(
+name|PassManagerBase
+operator|&
+name|PM
+argument_list|,
+name|ObjectCodeEmitter
+operator|*
+name|OCE
 argument_list|,
 name|CodeGenOpt
 operator|::
@@ -961,8 +957,8 @@ return|return
 name|true
 return|;
 block|}
-comment|/// addPreRegAllocPasses - This method may be implemented by targets that want
-comment|/// to run passes immediately before register allocation. This should return
+comment|/// addPreRegAlloc - This method may be implemented by targets that want to
+comment|/// run passes immediately before register allocation. This should return
 comment|/// true if -print-machineinstrs should print after these passes.
 name|virtual
 name|bool
@@ -977,13 +973,30 @@ return|return
 name|false
 return|;
 block|}
-comment|/// addPostRegAllocPasses - This method may be implemented by targets that
-comment|/// want to run passes after register allocation but before prolog-epilog
+comment|/// addPostRegAlloc - This method may be implemented by targets that want
+comment|/// to run passes after register allocation but before prolog-epilog
 comment|/// insertion.  This should return true if -print-machineinstrs should print
 comment|/// after these passes.
 name|virtual
 name|bool
 name|addPostRegAlloc
+argument_list|(
+argument|PassManagerBase&
+argument_list|,
+argument|CodeGenOpt::Level
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// addPreSched2 - This method may be implemented by targets that want to
+comment|/// run passes after prolog-epilog insertion and before the second instruction
+comment|/// scheduling pass.  This should return true if -print-machineinstrs should
+comment|/// print after these passes.
+name|virtual
+name|bool
+name|addPreSched2
 argument_list|(
 argument|PassManagerBase&
 argument_list|,
@@ -1010,30 +1023,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// addAssemblyEmitter - This pass should be overridden by the target to add
-comment|/// the asmprinter, if asm emission is supported.  If this is not supported,
-comment|/// 'true' should be returned.
-name|virtual
-name|bool
-name|addAssemblyEmitter
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|,
-argument|bool
-comment|/* VerboseAsmDefault */
-argument_list|,
-argument|raw_ostream&
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|/// addCodeEmitter - This pass should be overridden by the target to add a
 comment|/// code emitter, if supported.  If this is not supported, 'true' should be
-comment|/// returned. If DumpAsm is true, the generated assembly is printed to cerr.
+comment|/// returned.
 name|virtual
 name|bool
 name|addCodeEmitter
@@ -1041,9 +1033,6 @@ argument_list|(
 argument|PassManagerBase&
 argument_list|,
 argument|CodeGenOpt::Level
-argument_list|,
-argument|bool
-comment|/*DumpAsm*/
 argument_list|,
 argument|MachineCodeEmitter&
 argument_list|)
@@ -1054,7 +1043,7 @@ return|;
 block|}
 comment|/// addCodeEmitter - This pass should be overridden by the target to add a
 comment|/// code emitter, if supported.  If this is not supported, 'true' should be
-comment|/// returned. If DumpAsm is true, the generated assembly is printed to cerr.
+comment|/// returned.
 name|virtual
 name|bool
 name|addCodeEmitter
@@ -1062,9 +1051,6 @@ argument_list|(
 argument|PassManagerBase&
 argument_list|,
 argument|CodeGenOpt::Level
-argument_list|,
-argument|bool
-comment|/*DumpAsm*/
 argument_list|,
 argument|JITCodeEmitter&
 argument_list|)
@@ -1075,8 +1061,7 @@ return|;
 block|}
 comment|/// addSimpleCodeEmitter - This pass should be overridden by the target to add
 comment|/// a code emitter (without setting flags), if supported.  If this is not
-comment|/// supported, 'true' should be returned.  If DumpAsm is true, the generated
-comment|/// assembly is printed to cerr.
+comment|/// supported, 'true' should be returned.
 name|virtual
 name|bool
 name|addSimpleCodeEmitter
@@ -1084,9 +1069,6 @@ argument_list|(
 argument|PassManagerBase&
 argument_list|,
 argument|CodeGenOpt::Level
-argument_list|,
-argument|bool
-comment|/*DumpAsm*/
 argument_list|,
 argument|MachineCodeEmitter&
 argument_list|)
@@ -1097,8 +1079,7 @@ return|;
 block|}
 comment|/// addSimpleCodeEmitter - This pass should be overridden by the target to add
 comment|/// a code emitter (without setting flags), if supported.  If this is not
-comment|/// supported, 'true' should be returned.  If DumpAsm is true, the generated
-comment|/// assembly is printed to cerr.
+comment|/// supported, 'true' should be returned.
 name|virtual
 name|bool
 name|addSimpleCodeEmitter
@@ -1107,10 +1088,25 @@ argument|PassManagerBase&
 argument_list|,
 argument|CodeGenOpt::Level
 argument_list|,
-argument|bool
-comment|/*DumpAsm*/
-argument_list|,
 argument|JITCodeEmitter&
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// addSimpleCodeEmitter - This pass should be overridden by the target to add
+comment|/// a code emitter (without setting flags), if supported.  If this is not
+comment|/// supported, 'true' should be returned.
+name|virtual
+name|bool
+name|addSimpleCodeEmitter
+argument_list|(
+argument|PassManagerBase&
+argument_list|,
+argument|CodeGenOpt::Level
+argument_list|,
+argument|ObjectCodeEmitter&
 argument_list|)
 block|{
 return|return
@@ -1129,8 +1125,29 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;  }
+comment|/// addAssemblyEmitter - Helper function which creates a target specific
+comment|/// assembly printer, if available.
+comment|///
+comment|/// \return Returns 'false' on success.
+name|bool
+name|addAssemblyEmitter
+argument_list|(
+name|PassManagerBase
+operator|&
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|,
+name|bool
+comment|/* VerboseAsmDefault */
+argument_list|,
+name|formatted_raw_ostream
+operator|&
+argument_list|)
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

@@ -74,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<iosfwd>
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -161,6 +167,12 @@ decl_stmt|;
 name|class
 name|ValueHandleBase
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
+name|MetadataContext
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                 Value Class
 comment|//===----------------------------------------------------------------------===//
@@ -193,8 +205,25 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Has a ValueHandle pointing to this?
+name|unsigned
+name|char
+name|HasMetadata
+range|:
+literal|1
+decl_stmt|;
+comment|// Has a metadata attached to this ?
 name|protected
 label|:
+comment|/// SubclassOptionalData - This member is similar to SubclassData, however it
+comment|/// is for holding information which may be used to aid optimization, but
+comment|/// which may be cleared to zero without affecting conservative
+comment|/// interpretation.
+name|unsigned
+name|char
+name|SubclassOptionalData
+range|:
+literal|7
+decl_stmt|;
 comment|/// SubclassData - This member is defined by this class, but is not used for
 comment|/// anything.  Subclasses can use it to hold whatever state they find useful.
 comment|/// This field is initialized to zero by the ctor.
@@ -225,6 +254,14 @@ name|friend
 name|class
 name|ValueHandleBase
 decl_stmt|;
+name|friend
+name|class
+name|MetadataContext
+decl_stmt|;
+name|friend
+name|class
+name|AbstractTypeUser
+decl_stmt|;
 name|ValueName
 modifier|*
 name|Name
@@ -247,6 +284,20 @@ operator|&
 argument_list|)
 expr_stmt|;
 comment|// Do not implement
+name|protected
+label|:
+comment|/// printCustom - Value subclasses can override this to implement custom
+comment|/// printing behavior.
+name|virtual
+name|void
+name|printCustom
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|Value
@@ -263,7 +314,6 @@ argument_list|()
 expr_stmt|;
 comment|/// dump - Support for debugging, callable in GDB: V->dump()
 comment|//
-name|virtual
 name|void
 name|dump
 argument_list|()
@@ -271,23 +321,6 @@ specifier|const
 expr_stmt|;
 comment|/// print - Implement operator<< on Value.
 comment|///
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|O
-argument_list|,
-name|AssemblyAnnotationWriter
-operator|*
-name|AAW
-operator|=
-literal|0
-argument_list|)
-decl|const
-decl_stmt|;
 name|void
 name|print
 argument_list|(
@@ -317,6 +350,13 @@ return|return
 name|VTy
 return|;
 block|}
+comment|/// All values hold a context through their type.
+name|LLVMContext
+operator|&
+name|getContext
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// All values can potentially be named...
 specifier|inline
 name|bool
@@ -340,66 +380,23 @@ return|return
 name|Name
 return|;
 block|}
-comment|/// getNameStart - Return a pointer to a null terminated string for this name.
-comment|/// Note that names can have null characters within the string as well as at
-comment|/// their end.  This always returns a non-null pointer.
-specifier|const
-name|char
-operator|*
-name|getNameStart
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// getNameEnd - Return a pointer to the end of the name.
-specifier|const
-name|char
-operator|*
-name|getNameEnd
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getNameStart
-argument_list|()
-operator|+
-name|getNameLen
-argument_list|()
-return|;
-block|}
-comment|/// isName - Return true if this value has the name specified by the provided
-comment|/// nul terminated string.
-name|bool
-name|isName
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|N
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// getNameLen - Return the length of the string, correctly handling nul
-comment|/// characters embedded into them.
-name|unsigned
-name|getNameLen
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// getName()/getNameStr() - Return the name of the specified value,
-comment|/// *constructing a string* to hold it.  Because these are guaranteed to
-comment|/// construct a string, they are very expensive and should be avoided.
-name|std
-operator|::
-name|string
+comment|/// getName() - Return a constant reference to the value's name. This is cheap
+comment|/// and guaranteed to return the same reference as long as the value is not
+comment|/// modified.
+comment|///
+comment|/// This is currently guaranteed to return a StringRef for which data() points
+comment|/// to a valid null terminated string. The use of StringRef.data() is
+comment|/// deprecated here, however, and clients should not rely on it. If such
+comment|/// behavior is needed, clients should use expensive getNameStr(), or switch
+comment|/// to an interface that does not depend on null termination.
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getNameStr
-argument_list|()
-return|;
-block|}
+expr_stmt|;
+comment|/// getNameStr() - Return the name of the specified value, *constructing a
+comment|/// string* to hold it.  This is guaranteed to construct a string and is very
+comment|/// expensive, clients should use getName() unless necessary.
 name|std
 operator|::
 name|string
@@ -407,39 +404,19 @@ name|getNameStr
 argument_list|()
 specifier|const
 expr_stmt|;
-name|void
-name|setName
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|name
-argument_list|)
-decl_stmt|;
+comment|/// setName() - Change the name of the value, choosing a new unique name if
+comment|/// the provided name is taken.
+comment|///
+comment|/// \arg Name - The new name; or "" if the value's name should be removed.
 name|void
 name|setName
 parameter_list|(
 specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|,
-name|unsigned
-name|NameLen
-parameter_list|)
-function_decl|;
-name|void
-name|setName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|Twine
+modifier|&
 name|Name
 parameter_list|)
 function_decl|;
-comment|// Takes a null-terminated string.
 comment|/// takeName - transfer the name from V to this value, setting V's name to
 comment|/// empty.  It is an error to call V->takeName(V).
 name|void
@@ -714,12 +691,15 @@ comment|// This is an instance of ConstantVector
 name|ConstantPointerNullVal
 block|,
 comment|// This is an instance of ConstantPointerNull
-name|MDStringVal
-block|,
-comment|// This is an instance of MDString
 name|MDNodeVal
 block|,
 comment|// This is an instance of MDNode
+name|MDStringVal
+block|,
+comment|// This is an instance of MDString
+name|NamedMDNodeVal
+block|,
+comment|// This is an instance of NamedMDNode
 name|InlineAsmVal
 block|,
 comment|// This is an instance of InlineAsm
@@ -736,7 +716,7 @@ name|FunctionVal
 block|,
 name|ConstantLastVal
 init|=
-name|MDNodeVal
+name|ConstantPointerNullVal
 block|}
 enum|;
 comment|/// getValueID - Return an ID for the concrete type of this object.  This is
@@ -756,6 +736,56 @@ block|{
 return|return
 name|SubclassID
 return|;
+block|}
+comment|/// getRawSubclassOptionalData - Return the raw optional flags value
+comment|/// contained in this value. This should only be used when testing two
+comment|/// Values for equivalence.
+name|unsigned
+name|getRawSubclassOptionalData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubclassOptionalData
+return|;
+block|}
+comment|/// hasSameSubclassOptionalData - Test whether the optional flags contained
+comment|/// in this value are equal to the optional flags in the given value.
+name|bool
+name|hasSameSubclassOptionalData
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+decl|const
+block|{
+return|return
+name|SubclassOptionalData
+operator|==
+name|V
+operator|->
+name|SubclassOptionalData
+return|;
+block|}
+comment|/// intersectOptionalDataWith - Clear any optional flags in this value
+comment|/// that are not also set in the given value.
+name|void
+name|intersectOptionalDataWith
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
+block|{
+name|SubclassOptionalData
+operator|&=
+name|V
+operator|->
+name|SubclassOptionalData
+expr_stmt|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -902,46 +932,22 @@ name|PredBB
 argument_list|)
 return|;
 block|}
+comment|/// hasMetadata - Return true if metadata is attached with this value.
+name|bool
+name|hasMetadata
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMetadata
+return|;
+block|}
 block|}
 end_decl_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_expr_stmt
-specifier|inline
-name|std
-operator|::
-name|ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|OS
-operator|,
-specifier|const
-name|Value
-operator|&
-name|V
-operator|)
-block|{
-name|V
-operator|.
-name|print
-argument_list|(
-name|OS
-argument_list|)
-block|;
-return|return
-name|OS
-return|;
-block|}
-end_expr_stmt
 
 begin_expr_stmt
 specifier|inline

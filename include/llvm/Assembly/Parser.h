@@ -73,6 +73,9 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|MemoryBuffer
+decl_stmt|;
+name|class
 name|SMDiagnostic
 decl_stmt|;
 name|class
@@ -134,6 +137,34 @@ comment|///< A module to add the assembly too.
 name|SMDiagnostic
 modifier|&
 name|Error
+parameter_list|,
+comment|///< Error result info.
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
+comment|/// This function is the low-level interface to the LLVM Assembly Parser.
+comment|/// ParseAssemblyFile and ParseAssemblyString are wrappers around this function.
+comment|/// @brief Parse LLVM Assembly from a MemoryBuffer. This function *always*
+comment|/// takes ownership of the MemoryBuffer.
+name|Module
+modifier|*
+name|ParseAssembly
+parameter_list|(
+name|MemoryBuffer
+modifier|*
+name|F
+parameter_list|,
+comment|///< The MemoryBuffer containing assembly
+name|Module
+modifier|*
+name|M
+parameter_list|,
+comment|///< A module to add the assembly too.
+name|SMDiagnostic
+modifier|&
+name|Err
 parameter_list|,
 comment|///< Error result info.
 name|LLVMContext

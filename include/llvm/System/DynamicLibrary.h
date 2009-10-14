@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -90,28 +84,10 @@ comment|/// executable cannot be searched.
 name|class
 name|DynamicLibrary
 block|{
-comment|/// @name Constructors
-comment|/// @{
-name|public
-label|:
-comment|/// Construct a DynamicLibrary that represents the currently executing
-comment|/// program. The program must have been linked with -export-dynamic or
-comment|/// -dlopen self for this to work.
-comment|/// @throws std::string indicating why the program couldn't be opened.
-comment|/// @brief Open program as dynamic library.
 name|DynamicLibrary
 argument_list|()
 expr_stmt|;
-comment|/// After destruction, the symbols of the library will no longer be
-comment|/// available to the program.
-comment|/// @brief Closes the DynamicLibrary
-operator|~
-name|DynamicLibrary
-argument_list|()
-expr_stmt|;
-comment|/// @}
-comment|/// @name Functions
-comment|/// @{
+comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|/// This function allows a library to be loaded without instantiating a
@@ -119,6 +95,9 @@ comment|/// DynamicLibrary object. Consequently, it is marked as being permanent
 comment|/// and will only be unloaded when the program terminates.  This returns
 comment|/// false on success or returns true and fills in *ErrMsg on failure.
 comment|/// @brief Open a dynamic library permanently.
+comment|///
+comment|/// NOTE: This function is not thread safe.
+comment|///
 specifier|static
 name|bool
 name|LoadLibraryPermanently
@@ -144,6 +123,9 @@ comment|/// search permanently loaded libraries (LoadLibraryPermanently) as well
 comment|/// as ephemerally loaded libraries (constructors).
 comment|/// @throws std::string on error.
 comment|/// @brief Search through libraries for address of a symbol
+comment|///
+comment|/// NOTE: This function is not thread safe.
+comment|///
 specifier|static
 name|void
 modifier|*
@@ -156,6 +138,9 @@ name|symbolName
 parameter_list|)
 function_decl|;
 comment|/// @brief Convenience function for C++ophiles.
+comment|///
+comment|/// NOTE: This function is not thread safe.
+comment|///
 specifier|static
 name|void
 modifier|*
@@ -183,6 +168,9 @@ comment|/// This functions permanently adds the symbol \p symbolName with the
 comment|/// value \p symbolValue.  These symbols are searched before any
 comment|/// libraries.
 comment|/// @brief Add searchable symbol/value pair.
+comment|///
+comment|/// NOTE: This function is not thread safe.
+comment|///
 specifier|static
 name|void
 name|AddSymbol
@@ -198,6 +186,9 @@ name|symbolValue
 parameter_list|)
 function_decl|;
 comment|/// @brief Convenience function for C++ophiles.
+comment|///
+comment|/// NOTE: This function is not thread safe.
+comment|///
 specifier|static
 name|void
 name|AddSymbol
@@ -225,36 +216,6 @@ name|symbolValue
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// @}
-comment|/// @name Implementation
-comment|/// @{
-name|protected
-label|:
-name|void
-modifier|*
-name|handle
-decl_stmt|;
-comment|// Opaque handle for information about the library
-name|DynamicLibrary
-argument_list|(
-specifier|const
-name|DynamicLibrary
-operator|&
-argument_list|)
-expr_stmt|;
-comment|///< Do not implement
-name|DynamicLibrary
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|DynamicLibrary
-operator|&
-operator|)
-decl_stmt|;
-comment|///< Do not implement
-comment|/// @}
 block|}
 empty_stmt|;
 block|}

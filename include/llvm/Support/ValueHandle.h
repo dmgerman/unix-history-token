@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMapInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -157,9 +163,11 @@ name|HandleBaseKind
 block|{
 name|Assert
 block|,
-name|Weak
-block|,
 name|Callback
+block|,
+name|Tracking
+block|,
+name|Weak
 block|}
 enum|;
 name|private
@@ -184,6 +192,15 @@ name|Value
 modifier|*
 name|VP
 decl_stmt|;
+name|explicit
+name|ValueHandleBase
+parameter_list|(
+specifier|const
+name|ValueHandleBase
+modifier|&
+parameter_list|)
+function_decl|;
+comment|// DO NOT IMPLEMENT.
 name|public
 label|:
 name|explicit
@@ -235,7 +252,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|V
+name|isValid
+argument_list|(
+name|VP
+argument_list|)
 condition|)
 name|AddToUseList
 argument_list|()
@@ -267,7 +287,10 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|isValid
+argument_list|(
 name|VP
+argument_list|)
 condition|)
 name|AddToExistingUseList
 argument_list|(
@@ -284,7 +307,10 @@ argument_list|()
 block|{
 if|if
 condition|(
+name|isValid
+argument_list|(
 name|VP
+argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
@@ -311,7 +337,10 @@ name|RHS
 return|;
 if|if
 condition|(
+name|isValid
+argument_list|(
 name|VP
+argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
@@ -322,7 +351,10 @@ name|RHS
 expr_stmt|;
 if|if
 condition|(
+name|isValid
+argument_list|(
 name|VP
+argument_list|)
 condition|)
 name|AddToUseList
 argument_list|()
@@ -357,7 +389,10 @@ name|VP
 return|;
 if|if
 condition|(
+name|isValid
+argument_list|(
 name|VP
+argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
@@ -370,7 +405,10 @@ name|VP
 expr_stmt|;
 if|if
 condition|(
+name|isValid
+argument_list|(
 name|VP
+argument_list|)
 condition|)
 name|AddToExistingUseList
 argument_list|(
@@ -439,6 +477,44 @@ name|VP
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+specifier|static
+name|bool
+name|isValid
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+block|{
+return|return
+name|V
+operator|&&
+name|V
+operator|!=
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
+operator|::
+name|getEmptyKey
+argument_list|()
+operator|&&
+name|V
+operator|!=
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
+operator|::
+name|getTombstoneKey
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_label
 name|private
@@ -534,11 +610,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// AddToUseList - Add this ValueHandle to the use list for VP, where List is
+comment|/// AddToExistingUseList - Add this ValueHandle to the use list for VP, where
 end_comment
 
 begin_comment
-comment|/// known to point into the existing use list.
+comment|/// List is the address of either the head of the list or a Next node within
+end_comment
+
+begin_comment
+comment|/// the existing use list.
 end_comment
 
 begin_function_decl
@@ -549,6 +629,25 @@ name|ValueHandleBase
 modifier|*
 modifier|*
 name|List
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// AddToExistingUseListAfter - Add this ValueHandle to the use list after
+end_comment
+
+begin_comment
+comment|/// Node.
+end_comment
+
+begin_function_decl
+name|void
+name|AddToExistingUseListAfter
+parameter_list|(
+name|ValueHandleBase
+modifier|*
+name|Node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -642,6 +741,47 @@ argument_list|,
 argument|RHS
 argument_list|)
 block|{}
+name|Value
+operator|*
+name|operator
+operator|=
+operator|(
+name|Value
+operator|*
+name|RHS
+operator|)
+block|{
+return|return
+name|ValueHandleBase
+operator|::
+name|operator
+operator|=
+operator|(
+name|RHS
+operator|)
+return|;
+block|}
+name|Value
+operator|*
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueHandleBase
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|ValueHandleBase
+operator|::
+name|operator
+operator|=
+operator|(
+name|RHS
+operator|)
+return|;
+block|}
 name|operator
 name|Value
 operator|*
@@ -781,7 +921,10 @@ operator|::
 name|operator
 operator|=
 operator|(
+name|GetAsValue
+argument_list|(
 name|P
+argument_list|)
 operator|)
 block|;   }
 else|#
@@ -812,6 +955,39 @@ name|P
 block|; }
 endif|#
 directive|endif
+comment|// Convert a ValueTy*, which may be const, to the type the base
+comment|// class expects.
+specifier|static
+name|Value
+operator|*
+name|GetAsValue
+argument_list|(
+argument|Value *V
+argument_list|)
+block|{
+return|return
+name|V
+return|;
+block|}
+specifier|static
+name|Value
+operator|*
+name|GetAsValue
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|V
+operator|)
+return|;
+block|}
 name|public
 operator|:
 ifndef|#
@@ -836,7 +1012,7 @@ name|ValueHandleBase
 argument_list|(
 argument|Assert
 argument_list|,
-argument|P
+argument|GetAsValue(P)
 argument_list|)
 block|{}
 name|AssertingVH
@@ -915,6 +1091,7 @@ operator|*
 name|operator
 operator|=
 operator|(
+specifier|const
 name|AssertingVH
 operator|<
 name|ValueTy
@@ -1036,15 +1213,407 @@ operator|>
 expr|>
 block|{}
 block|;
+comment|/// TrackingVH - This is a value handle that tracks a Value (or Value subclass),
+comment|/// even across RAUW operations.
+comment|///
+comment|/// TrackingVH is designed for situations where a client needs to hold a handle
+comment|/// to a Value (or subclass) across some operations which may move that value,
+comment|/// but should never destroy it or replace it with some unacceptable type.
+comment|///
+comment|/// It is an error to do anything with a TrackingVH whose value has been
+comment|/// destroyed, except to destruct it.
+comment|///
+comment|/// It is an error to attempt to replace a value with one of a type which is
+comment|/// incompatible with any of its outstanding TrackingVHs.
+name|template
+operator|<
+name|typename
+name|ValueTy
+operator|>
+name|class
+name|TrackingVH
+operator|:
+name|public
+name|ValueHandleBase
+block|{
+name|void
+name|CheckValidity
+argument_list|()
+specifier|const
+block|{
+name|Value
+operator|*
+name|VP
+operator|=
+name|ValueHandleBase
+operator|::
+name|getValPtr
+argument_list|()
+block|;
+comment|// Null is always ok.
+if|if
+condition|(
+operator|!
+name|VP
+condition|)
+return|return;
+comment|// Check that this value is valid (i.e., it hasn't been deleted). We
+comment|// explicitly delay this check until access to avoid requiring clients to be
+comment|// unnecessarily careful w.r.t. destruction.
+name|assert
+argument_list|(
+name|ValueHandleBase
+operator|::
+name|isValid
+argument_list|(
+name|VP
+argument_list|)
+operator|&&
+literal|"Tracked Value was deleted!"
+argument_list|)
+block|;
+comment|// Check that the value is a member of the correct subclass. We would like
+comment|// to check this property on assignment for better debugging, but we don't
+comment|// want to require a virtual interface on this VH. Instead we allow RAUW to
+comment|// replace this value with a value of an invalid type, and check it here.
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|ValueTy
+operator|>
+operator|(
+name|VP
+operator|)
+operator|&&
+literal|"Tracked Value was replaced by one with an invalid type!"
+argument_list|)
+block|;   }
+name|ValueTy
+operator|*
+name|getValPtr
+argument_list|()
+specifier|const
+block|{
+name|CheckValidity
+argument_list|()
+block|;
+return|return
+name|static_cast
+operator|<
+name|ValueTy
+operator|*
+operator|>
+operator|(
+name|ValueHandleBase
+operator|::
+name|getValPtr
+argument_list|()
+operator|)
+return|;
+block|}
+name|void
+name|setValPtr
+argument_list|(
+argument|ValueTy *P
+argument_list|)
+block|{
+name|CheckValidity
+argument_list|()
+block|;
+name|ValueHandleBase
+operator|::
+name|operator
+operator|=
+operator|(
+name|GetAsValue
+argument_list|(
+name|P
+argument_list|)
+operator|)
+block|;   }
+comment|// Convert a ValueTy*, which may be const, to the type the base
+comment|// class expects.
+specifier|static
+name|Value
+operator|*
+name|GetAsValue
+argument_list|(
+argument|Value *V
+argument_list|)
+block|{
+return|return
+name|V
+return|;
+block|}
+specifier|static
+name|Value
+operator|*
+name|GetAsValue
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|V
+operator|)
+return|;
+block|}
+name|public
+operator|:
+name|TrackingVH
+argument_list|()
+operator|:
+name|ValueHandleBase
+argument_list|(
+argument|Tracking
+argument_list|)
+block|{}
+name|TrackingVH
+argument_list|(
+name|ValueTy
+operator|*
+name|P
+argument_list|)
+operator|:
+name|ValueHandleBase
+argument_list|(
+argument|Tracking
+argument_list|,
+argument|P
+argument_list|)
+block|{}
+name|TrackingVH
+argument_list|(
+specifier|const
+name|TrackingVH
+operator|&
+name|RHS
+argument_list|)
+operator|:
+name|ValueHandleBase
+argument_list|(
+argument|Tracking
+argument_list|,
+argument|RHS
+argument_list|)
+block|{}
+name|operator
+name|ValueTy
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|getValPtr
+argument_list|()
+return|;
+block|}
+name|ValueTy
+operator|*
+name|operator
+operator|=
+operator|(
+name|ValueTy
+operator|*
+name|RHS
+operator|)
+block|{
+name|setValPtr
+argument_list|(
+name|RHS
+argument_list|)
+block|;
+return|return
+name|getValPtr
+argument_list|()
+return|;
+block|}
+name|ValueTy
+operator|*
+name|operator
+operator|=
+operator|(
+specifier|const
+name|TrackingVH
+operator|<
+name|ValueTy
+operator|>
+operator|&
+name|RHS
+operator|)
+block|{
+name|setValPtr
+argument_list|(
+name|RHS
+operator|.
+name|getValPtr
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|getValPtr
+argument_list|()
+return|;
+block|}
+name|ValueTy
+operator|*
+name|operator
+operator|->
+expr|(
+block|)
+specifier|const
+block|{
+return|return
+name|getValPtr
+argument_list|()
+return|;
+block|}
+name|ValueTy
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+operator|*
+name|getValPtr
+argument_list|()
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Specialize simplify_type to allow TrackingVH to participate in
+end_comment
+
+begin_comment
+comment|// dyn_cast, isa, etc.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|From
+operator|>
+expr|struct
+name|simplify_type
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+specifier|const
+name|TrackingVH
+operator|<
+name|Value
+operator|>
+expr|>
+block|{
+typedef|typedef
+name|Value
+modifier|*
+name|SimpleType
+typedef|;
+specifier|static
+name|SimpleType
+name|getSimplifiedValue
+argument_list|(
+argument|const TrackingVH<Value>&AVH
+argument_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|AVH
+operator|)
+return|;
+block|}
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+name|TrackingVH
+operator|<
+name|Value
+operator|>
+expr|>
+operator|:
+name|public
+name|simplify_type
+operator|<
+specifier|const
+name|TrackingVH
+operator|<
+name|Value
+operator|>
+expr|>
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// CallbackVH - This is a value handle that allows subclasses to define
+end_comment
+
+begin_comment
 comment|/// callbacks that run when the underlying Value has RAUW called on it or is
+end_comment
+
+begin_comment
 comment|/// destroyed.  This class can be used as the key of a map, as long as the user
+end_comment
+
+begin_comment
 comment|/// takes it out of the map before calling setValPtr() (since the map has to
+end_comment
+
+begin_comment
 comment|/// rearrange itself when the pointer changes).  Unlike ValueHandleBase, this
+end_comment
+
+begin_comment
 comment|/// class has a vtable and a virtual destructor.
+end_comment
+
+begin_decl_stmt
 name|class
 name|CallbackVH
-operator|:
+range|:
 name|public
 name|ValueHandleBase
 block|{

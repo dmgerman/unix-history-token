@@ -231,25 +231,6 @@ argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 block|;
-comment|//! Store a register to an address, based on its register class
-name|virtual
-name|void
-name|storeRegToAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool isKill
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
-argument_list|)
-specifier|const
-block|;
 comment|//! Load a register from a stack slot, based on its register class.
 name|virtual
 name|void
@@ -264,23 +245,6 @@ argument_list|,
 argument|int FrameIndex
 argument_list|,
 argument|const TargetRegisterClass *RC
-argument_list|)
-specifier|const
-block|;
-comment|//! Loqad a register from an address, based on its register class
-name|virtual
-name|void
-name|loadRegFromAddr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Addr
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
 specifier|const
 block|;

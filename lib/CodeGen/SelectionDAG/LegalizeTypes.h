@@ -192,7 +192,7 @@ block|,
 comment|// Replace this one-element vector with its element type.
 name|SplitVector
 block|,
-comment|// This vector type should be split into smaller vectors.
+comment|// Split this vector type into two of half the size.
 name|WidenVector
 comment|// This vector type should be widened into a larger vector.
 block|}
@@ -209,7 +209,7 @@ comment|/// getTypeAction - Return how we should legalize values of this type.
 name|LegalizeAction
 name|getTypeAction
 argument_list|(
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
@@ -220,6 +220,12 @@ name|ValueTypeActions
 operator|.
 name|getTypeAction
 argument_list|(
+operator|*
+name|DAG
+operator|.
+name|getContext
+argument_list|()
+argument_list|,
 name|VT
 argument_list|)
 condition|)
@@ -302,6 +308,12 @@ name|TLI
 operator|.
 name|getTypeToTransformTo
 argument_list|(
+operator|*
+name|DAG
+operator|.
+name|getContext
+argument_list|()
+argument_list|,
 name|VT
 argument_list|)
 operator|.
@@ -343,22 +355,30 @@ comment|/// isTypeLegal - Return true if this type is legal on this target.
 name|bool
 name|isTypeLegal
 argument_list|(
-name|MVT
+name|EVT
 name|VT
 argument_list|)
 decl|const
 block|{
 return|return
+operator|(
 name|ValueTypeActions
 operator|.
 name|getTypeAction
 argument_list|(
+operator|*
+name|DAG
+operator|.
+name|getContext
+argument_list|()
+argument_list|,
 name|VT
 argument_list|)
 operator|==
 name|TargetLowering
 operator|::
 name|Legal
+operator|)
 return|;
 block|}
 comment|/// IgnoreNodeResults - Pretend all of this node's results are legal.
@@ -664,7 +684,7 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
-name|MVT
+name|EVT
 name|DestVT
 parameter_list|)
 function_decl|;
@@ -675,7 +695,7 @@ name|SDNode
 modifier|*
 name|N
 parameter_list|,
-name|MVT
+name|EVT
 name|VT
 parameter_list|,
 name|bool
@@ -688,7 +708,7 @@ parameter_list|(
 name|SDValue
 name|VecPtr
 parameter_list|,
-name|MVT
+name|EVT
 name|EltVT
 parameter_list|,
 name|SDValue
@@ -729,7 +749,7 @@ operator|::
 name|Libcall
 name|LC
 argument_list|,
-name|MVT
+name|EVT
 name|RetVT
 argument_list|,
 specifier|const
@@ -753,7 +773,7 @@ parameter_list|(
 name|SDValue
 name|Bool
 parameter_list|,
-name|MVT
+name|EVT
 name|VT
 parameter_list|)
 function_decl|;
@@ -798,10 +818,10 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
-name|MVT
+name|EVT
 name|LoVT
 parameter_list|,
-name|MVT
+name|EVT
 name|HiVT
 parameter_list|,
 name|SDValue
@@ -879,7 +899,7 @@ name|SDValue
 name|Op
 parameter_list|)
 block|{
-name|MVT
+name|EVT
 name|OldVT
 init|=
 name|Op
@@ -938,7 +958,7 @@ name|SDValue
 name|Op
 parameter_list|)
 block|{
-name|MVT
+name|EVT
 name|OldVT
 init|=
 name|Op
@@ -3151,14 +3171,6 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
-name|ScalarizeVecRes_ShiftOp
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-name|SDValue
 name|ScalarizeVecRes_UnaryOp
 parameter_list|(
 name|SDNode
@@ -3239,6 +3251,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|ScalarizeVecRes_SETCC
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|ScalarizeVecRes_UNDEF
 parameter_list|(
 name|SDNode
@@ -3312,8 +3332,8 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Vector Splitting Support: LegalizeVectorTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// GetSplitVector - Given a processed vector Op which was split into smaller
-comment|/// vectors, this method returns the smaller vectors.  The first elements of
+comment|/// GetSplitVector - Given a processed vector Op which was split into vectors
+comment|/// of half the size, this method returns the halves.  The first elements of
 comment|/// Op coincide with the elements of Lo; the remaining elements of Op coincide
 comment|/// with the elements of Hi: Op is what you would get by concatenating Lo and
 comment|/// Hi.  For example, if Op is a v8i32 that was split into two v4i32's, then
@@ -3552,6 +3572,22 @@ name|Hi
 parameter_list|)
 function_decl|;
 name|void
+name|SplitVecRes_SETCC
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|SDValue
+modifier|&
+name|Lo
+parameter_list|,
+name|SDValue
+modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+name|void
 name|SplitVecRes_UNDEF
 parameter_list|(
 name|SDNode
@@ -3571,22 +3607,6 @@ name|void
 name|SplitVecRes_VECTOR_SHUFFLE
 parameter_list|(
 name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|,
-name|SDValue
-modifier|&
-name|Lo
-parameter_list|,
-name|SDValue
-modifier|&
-name|Hi
-parameter_list|)
-function_decl|;
-name|void
-name|SplitVecRes_VSETCC
-parameter_list|(
-name|SDNode
 modifier|*
 name|N
 parameter_list|,
@@ -3959,7 +3979,7 @@ argument_list|,
 name|unsigned
 name|LdWidth
 argument_list|,
-name|MVT
+name|EVT
 name|ResType
 argument_list|,
 name|DebugLoc
@@ -4029,7 +4049,7 @@ parameter_list|(
 name|SDValue
 name|InOp
 parameter_list|,
-name|MVT
+name|EVT
 name|WidenVT
 parameter_list|)
 function_decl|;
@@ -4109,14 +4129,14 @@ comment|/// which is split (or expanded) into two not necessarily identical piec
 name|void
 name|GetSplitDestVTs
 parameter_list|(
-name|MVT
+name|EVT
 name|InVT
 parameter_list|,
-name|MVT
+name|EVT
 modifier|&
 name|LoVT
 parameter_list|,
-name|MVT
+name|EVT
 modifier|&
 name|HiVT
 parameter_list|)

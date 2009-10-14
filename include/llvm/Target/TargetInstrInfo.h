@@ -76,6 +76,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
 name|TargetRegisterClass
 decl_stmt|;
 name|class
@@ -173,7 +176,9 @@ name|GC_LABEL
 init|=
 literal|4
 block|,
-name|DECLARE
+comment|/// KILL - This instruction is a noop that is used only to adjust the liveness
+comment|/// of registers. This can be useful when dealing with sub-registers.
+name|KILL
 init|=
 literal|5
 block|,
@@ -269,10 +274,24 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
 return|return
+name|MI
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|IMPLICIT_DEF
+operator|||
+operator|(
 name|MI
 operator|->
 name|getDesc
@@ -281,22 +300,32 @@ operator|.
 name|isRematerializable
 argument_list|()
 operator|&&
+operator|(
 name|isReallyTriviallyReMaterializable
 argument_list|(
 name|MI
+argument_list|,
+name|AA
 argument_list|)
+operator|||
+name|isReallyTriviallyReMaterializableGeneric
+argument_list|(
+name|MI
+argument_list|,
+name|AA
+argument_list|)
+operator|)
+operator|)
 return|;
 block|}
 name|protected
 label|:
 comment|/// isReallyTriviallyReMaterializable - For instructions with opcodes for
-comment|/// which the M_REMATERIALIZABLE flag is set, this function tests whether the
-comment|/// instruction itself is actually trivially rematerializable, considering
-comment|/// its operands.  This is used for targets that have instructions that are
-comment|/// only trivially rematerializable for specific uses.  This predicate must
-comment|/// return false if the instruction has any side effects other than
-comment|/// producing a value, or if it requres any address registers that are not
-comment|/// always available.
+comment|/// which the M_REMATERIALIZABLE flag is set, this hook lets the target
+comment|/// specify whether the instruction is actually trivially rematerializable,
+comment|/// taking into consideration its operands. This predicate must return false
+comment|/// if the instruction has any side effects other than producing a value, or
+comment|/// if it requres any address registers that are not always available.
 name|virtual
 name|bool
 name|isReallyTriviallyReMaterializable
@@ -305,13 +334,38 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
 argument_list|)
 decl|const
 block|{
 return|return
-name|true
+name|false
 return|;
 block|}
+name|private
+label|:
+comment|/// isReallyTriviallyReMaterializableGeneric - For instructions with opcodes
+comment|/// for which the M_REMATERIALIZABLE flag is set and the target hook
+comment|/// isReallyTriviallyReMaterializable returns false, this function does
+comment|/// target-independent tests to determine if the instruction is really
+comment|/// trivially rematerializable.
+name|bool
+name|isReallyTriviallyReMaterializableGeneric
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 comment|/// Return true if the instruction is a register to register move and return
@@ -413,6 +467,9 @@ argument_list|,
 name|unsigned
 name|DestReg
 argument_list|,
+name|unsigned
+name|SubIdx
+argument_list|,
 specifier|const
 name|MachineInstr
 operator|*
@@ -422,27 +479,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// isInvariantLoad - Return true if the specified instruction (which is
-comment|/// marked mayLoad) is loading from a location whose value is invariant across
-comment|/// the function.  For example, loading a value from the constant pool or from
-comment|/// from the argument area of a function if it does not change.  This should
-comment|/// only return true of *all* loads the instruction does are invariant (if it
-comment|/// does multiple loads).
-name|virtual
-name|bool
-name|isInvariantLoad
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// convertToThreeAddress - This method must be implemented by targets that
 comment|/// set the M_CONVERTIBLE_TO_3_ADDR flag.  When this flag is set, the target
 comment|/// may be able to convert a two-address instruction into one or more true
@@ -510,14 +546,12 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// CommuteChangesDestination - Return true if commuting the specified
-comment|/// instruction will also changes the destination operand. Also return the
-comment|/// current operand index of the would be new destination register by
-comment|/// reference. This can happen when the commutable instruction is also a
-comment|/// two-address instruction.
+comment|/// findCommutedOpIndices - If specified MI is commutable, return the two
+comment|/// operand indices that would swap value. Return true if the instruction
+comment|/// is not in a form which this routine understands.
 name|virtual
 name|bool
-name|CommuteChangesDestination
+name|findCommutedOpIndices
 argument_list|(
 name|MachineInstr
 operator|*
@@ -525,7 +559,11 @@ name|MI
 argument_list|,
 name|unsigned
 operator|&
-name|OpIdx
+name|SrcOpIdx1
+argument_list|,
+name|unsigned
+operator|&
+name|SrcOpIdx2
 argument_list|)
 decl|const
 init|=
@@ -541,15 +579,15 @@ comment|///    just return false, leaving TBB/FBB null.
 comment|/// 2. If this block ends with only an unconditional branch, it sets TBB to be
 comment|///    the destination block.
 comment|/// 3. If this block ends with an conditional branch and it falls through to
-comment|///    an successor block, it sets TBB to be the branch destination block and
+comment|///    a successor block, it sets TBB to be the branch destination block and
 comment|///    a list of operands that evaluate the condition. These
 comment|///    operands can be passed to other TargetInstrInfo methods to create new
 comment|///    branches.
-comment|/// 4. If this block ends with an conditional branch and an unconditional
-comment|///    block, it returns the 'true' destination in TBB, the 'false'
-comment|///    destination in FBB, and a list of operands that evaluate the condition.
-comment|///    These operands can be passed to other TargetInstrInfo methods to create
-comment|///    new branches.
+comment|/// 4. If this block ends with a conditional branch followed by an
+comment|///    unconditional branch, it returns the 'true' destination in TBB, the
+comment|///    'false' destination in FBB, and a list of operands that evaluate the
+comment|///    condition.  These operands can be passed to other TargetInstrInfo
+comment|///    methods to create new branches.
 comment|///
 comment|/// Note that RemoveBranch and InsertBranch must be implemented to support
 comment|/// cases where this method returns success.
@@ -617,12 +655,11 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// InsertBranch - Insert a branch into the end of the specified
-comment|/// MachineBasicBlock.  This operands to this method are the same as those
-comment|/// returned by AnalyzeBranch.  This is invoked in cases where AnalyzeBranch
-comment|/// returns success and when an unconditional branch (TBB is non-null, FBB is
-comment|/// null, Cond is empty) needs to be inserted. It returns the number of
-comment|/// instructions inserted.
+comment|/// InsertBranch - Insert branch code into the end of the specified
+comment|/// MachineBasicBlock.  The operands to this method are the same as those
+comment|/// returned by AnalyzeBranch.  This is only invoked in cases where
+comment|/// AnalyzeBranch returns success. It returns the number of instructions
+comment|/// inserted.
 comment|///
 comment|/// It is also invoked by tail merging to add unconditional branches in
 comment|/// cases where AnalyzeBranch doesn't apply because there was no original
@@ -752,55 +789,6 @@ literal|"Target didn't implement TargetInstrInfo::storeRegToStackSlot!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// storeRegToAddr - Store the specified register of the given register class
-comment|/// to the specified address. The store instruction is to be added to the
-comment|/// given machine basic block before the specified machine instruction. If
-comment|/// isKill is true, the register operand is the last use and must be marked
-comment|/// kill.
-name|virtual
-name|void
-name|storeRegToAddr
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|unsigned
-name|SrcReg
-argument_list|,
-name|bool
-name|isKill
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Addr
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-operator|&
-name|NewMIs
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Target didn't implement TargetInstrInfo::storeRegToAddr!"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// loadRegFromStackSlot - Load the specified register of the given register
 comment|/// class from the specified stack frame index. The load instruction is to be
 comment|/// added to the given machine basic block before the specified machine
@@ -836,50 +824,6 @@ argument_list|(
 literal|0
 operator|&&
 literal|"Target didn't implement TargetInstrInfo::loadRegFromStackSlot!"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// loadRegFromAddr - Load the specified register of the given register class
-comment|/// class from the specified address. The load instruction is to be added to
-comment|/// the given machine basic block before the specified machine instruction.
-name|virtual
-name|void
-name|loadRegFromAddr
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|unsigned
-name|DestReg
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineOperand
-operator|>
-operator|&
-name|Addr
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-operator|&
-name|NewMIs
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Target didn't implement TargetInstrInfo::loadRegFromAddr!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1247,18 +1191,7 @@ name|iterator
 name|MI
 argument_list|)
 decl|const
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Target didn't implement insertNoop!"
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
+decl_stmt|;
 comment|/// isPredicated - Returns true if the instruction is already predicated.
 comment|///
 name|virtual
@@ -1406,7 +1339,8 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// GetFunctionSizeInBytes - Returns the size of the specified MachineFunction.
+comment|/// GetFunctionSizeInBytes - Returns the size of the specified
+comment|/// MachineFunction.
 comment|///
 name|virtual
 name|unsigned
@@ -1420,6 +1354,24 @@ argument_list|)
 decl|const
 init|=
 literal|0
+decl_stmt|;
+comment|/// Measure the specified inline asm to determine an approximation of its
+comment|/// length.
+name|virtual
+name|unsigned
+name|getInlineAsmLength
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Str
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|&
+name|MAI
+argument_list|)
+decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1464,11 +1416,13 @@ specifier|const
 block|;
 name|virtual
 name|bool
-name|CommuteChangesDestination
+name|findCommutedOpIndices
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
-argument|unsigned&OpIdx
+argument|unsigned&SrcOpIdx1
+argument_list|,
+argument|unsigned&SrcOpIdx2
 argument_list|)
 specifier|const
 block|;
@@ -1492,6 +1446,8 @@ argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
+argument|unsigned SubReg
+argument_list|,
 argument|const MachineInstr *Orig
 argument_list|)
 specifier|const
@@ -1505,27 +1461,6 @@ argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
-comment|/// getInstrOperandRegClass - Return register class of the operand of an
-comment|/// instruction of the specified TargetInstrDesc.
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|getInstrOperandRegClass
-parameter_list|(
-specifier|const
-name|TargetRegisterInfo
-modifier|*
-name|TRI
-parameter_list|,
-specifier|const
-name|TargetInstrDesc
-modifier|&
-name|II
-parameter_list|,
-name|unsigned
-name|Op
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

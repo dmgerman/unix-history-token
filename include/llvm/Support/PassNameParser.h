@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -281,7 +287,8 @@ name|getNumOptions
 argument_list|()
 condition|)
 block|{
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"Two passes with the same argument (-"
 operator|<<
@@ -292,8 +299,10 @@ argument_list|()
 operator|<<
 literal|") attempted to be registered!\n"
 expr_stmt|;
-name|abort
-argument_list|()
+name|llvm_unreachable
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|addLiteralOption

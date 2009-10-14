@@ -577,7 +577,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|inline void dump() {       std::cerr<< "Node: "<< this<< "\n"<< "Label: "<< Label<< "\n"<< "Children:\n";        for (iterator I = Children.begin(), E = Children.end(); I != E; ++I)         std::cerr<< (*I)->Label<< "\n";     }
+block|inline void dump() {       llvm::cerr<< "Node: "<< this<< "\n"<< "Label: "<< Label<< "\n"<< "Children:\n";        for (iterator I = Children.begin(), E = Children.end(); I != E; ++I)         llvm::cerr<< (*I)->Label<< "\n";     }
 endif|#
 directive|endif
 specifier|inline

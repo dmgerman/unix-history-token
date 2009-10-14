@@ -130,7 +130,7 @@ comment|/*===-- Modules --------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* Llvm.llmemorybuffer -> Llvm.module */
+comment|/* Llvm.llcontext -> Llvm.llmemorybuffer -> Llvm.llmodule */
 end_comment
 
 begin_function
@@ -138,6 +138,9 @@ name|CAMLprim
 name|value
 name|llvm_get_module_provider
 parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
 name|LLVMMemoryBufferRef
 name|MemBuf
 parameter_list|)
@@ -161,8 +164,10 @@ name|MP
 decl_stmt|;
 if|if
 condition|(
-name|LLVMGetBitcodeModuleProvider
+name|LLVMGetBitcodeModuleProviderInContext
 argument_list|(
+name|C
+argument_list|,
 name|MemBuf
 argument_list|,
 operator|&
@@ -191,7 +196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Llvm.llmemorybuffer -> Llvm.llmodule */
+comment|/* Llvm.llcontext -> Llvm.llmemorybuffer -> Llvm.llmodule */
 end_comment
 
 begin_function
@@ -199,6 +204,9 @@ name|CAMLprim
 name|value
 name|llvm_parse_bitcode
 parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
 name|LLVMMemoryBufferRef
 name|MemBuf
 parameter_list|)
@@ -222,8 +230,10 @@ name|Message
 decl_stmt|;
 if|if
 condition|(
-name|LLVMParseBitcode
+name|LLVMParseBitcodeInContext
 argument_list|(
+name|C
+argument_list|,
 name|MemBuf
 argument_list|,
 operator|&

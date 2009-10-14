@@ -360,7 +360,8 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|// Insert loop into the loop nest(LoopInfo) and loop queue(LQ).
+comment|// Insert loop into the loop queue and add it as a child of the
+comment|// given parent.
 name|void
 name|insertLoop
 argument_list|(
@@ -371,6 +372,15 @@ argument_list|,
 name|Loop
 operator|*
 name|ParentLoop
+argument_list|)
+block|;
+comment|// Insert a loop into the loop queue.
+name|void
+name|insertLoopIntoQueue
+argument_list|(
+name|Loop
+operator|*
+name|L
 argument_list|)
 block|;
 comment|// Reoptimize this loop. LPPassManager will re-insert this loop into the

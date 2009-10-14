@@ -40,7 +40,7 @@ comment|// This version of the test does not include long long.
 end_comment
 
 begin_comment
-comment|// XFAIL: sparc|arm|ia64
+comment|// XFAIL: sparc|arm
 end_comment
 
 begin_decl_stmt

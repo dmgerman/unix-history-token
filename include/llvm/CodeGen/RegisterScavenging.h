@@ -83,12 +83,6 @@ directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -179,22 +173,6 @@ comment|/// available, unset means the register is currently being used.
 name|BitVector
 name|RegsAvailable
 decl_stmt|;
-comment|/// CurrDist - Distance from MBB entry to the current instruction MBBI.
-comment|///
-name|unsigned
-name|CurrDist
-decl_stmt|;
-comment|/// DistanceMap - Keep track the distance of a MI from the start of the
-comment|/// current basic block.
-name|DenseMap
-operator|<
-name|MachineInstr
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|DistanceMap
-expr_stmt|;
 name|public
 label|:
 name|RegScavenger
@@ -241,18 +219,19 @@ operator|*
 name|mbb
 argument_list|)
 expr_stmt|;
-comment|/// forward / backward - Move the internal MBB iterator and update register
-comment|/// states.
+comment|/// initRegState - allow resetting register state info for multiple
+comment|/// passes over/within the same function.
+name|void
+name|initRegState
+parameter_list|()
+function_decl|;
+comment|/// forward - Move the internal MBB iterator and update register states.
 name|void
 name|forward
 parameter_list|()
 function_decl|;
-name|void
-name|backward
-parameter_list|()
-function_decl|;
-comment|/// forward / backward - Move the internal MBB iterator and update register
-comment|/// states until it has processed the specific iterator.
+comment|/// forward - Move the internal MBB iterator and update register states until
+comment|/// it has processed the specific iterator.
 name|void
 name|forward
 argument_list|(
@@ -287,25 +266,6 @@ name|forward
 argument_list|()
 expr_stmt|;
 block|}
-name|void
-name|backward
-argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|I
-argument_list|)
-block|{
-while|while
-condition|(
-name|MBBI
-operator|!=
-name|I
-condition|)
-name|backward
-argument_list|()
-expr_stmt|;
-block|}
 comment|/// skipTo - Move the internal MBB iterator but do not update register states.
 comment|///
 name|void
@@ -322,55 +282,6 @@ operator|=
 name|I
 expr_stmt|;
 block|}
-comment|/// isReserved - Returns true if a register is reserved. It is never "unused".
-name|bool
-name|isReserved
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-block|{
-return|return
-name|ReservedRegs
-index|[
-name|Reg
-index|]
-return|;
-block|}
-comment|/// isUsed / isUsed - Test if a register is currently being used.
-comment|///
-name|bool
-name|isUsed
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-block|{
-return|return
-operator|!
-name|RegsAvailable
-index|[
-name|Reg
-index|]
-return|;
-block|}
-name|bool
-name|isUnused
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-block|{
-return|return
-name|RegsAvailable
-index|[
-name|Reg
-index|]
-return|;
-block|}
 comment|/// getRegsUsed - return all registers currently in use in used.
 name|void
 name|getRegsUsed
@@ -383,73 +294,8 @@ name|bool
 name|includeReserved
 parameter_list|)
 function_decl|;
-comment|/// setUsed / setUnused - Mark the state of one or a number of registers.
-comment|///
-name|void
-name|setUsed
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
-function_decl|;
-name|void
-name|setUsed
-parameter_list|(
-name|BitVector
-modifier|&
-name|Regs
-parameter_list|)
-block|{
-name|RegsAvailable
-operator|&=
-operator|~
-name|Regs
-expr_stmt|;
-block|}
-name|void
-name|setUnused
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|,
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
-name|void
-name|setUnused
-parameter_list|(
-name|BitVector
-modifier|&
-name|Regs
-parameter_list|)
-block|{
-name|RegsAvailable
-operator||=
-name|Regs
-expr_stmt|;
-block|}
-comment|/// FindUnusedReg - Find a unused register of the specified register class
-comment|/// from the specified set of registers. It return 0 is none is found.
-name|unsigned
-name|FindUnusedReg
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RegClass
-argument_list|,
-specifier|const
-name|BitVector
-operator|&
-name|Candidates
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// FindUnusedReg - Find a unused register of the specified register class.
-comment|/// Exclude callee saved registers if directed. It return 0 is none is found.
+comment|/// Return 0 if none is found.
 name|unsigned
 name|FindUnusedReg
 argument_list|(
@@ -457,11 +303,6 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|RegClass
-argument_list|,
-name|bool
-name|ExCalleeSaved
-operator|=
-name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -532,33 +373,154 @@ name|SPAdj
 argument_list|)
 return|;
 block|}
+comment|/// setUsed - Tell the scavenger a register is used.
+comment|///
+name|void
+name|setUsed
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
 name|private
 label|:
-comment|/// restoreScavengedReg - Restore scavenged by loading it back from the
-comment|/// emergency spill slot. Mark it used.
+comment|/// isReserved - Returns true if a register is reserved. It is never "unused".
+name|bool
+name|isReserved
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+return|return
+name|ReservedRegs
+operator|.
+name|test
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+block|}
+comment|/// isUsed / isUnused - Test if a register is currently being used.
+comment|///
+name|bool
+name|isUsed
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+return|return
+operator|!
+name|RegsAvailable
+operator|.
+name|test
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+block|}
+name|bool
+name|isUnused
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+return|return
+name|RegsAvailable
+operator|.
+name|test
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+block|}
+comment|/// isAliasUsed - Is Reg or an alias currently in use?
+name|bool
+name|isAliasUsed
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// setUsed / setUnused - Mark the state of one or a number of registers.
+comment|///
 name|void
-name|restoreScavengedReg
-parameter_list|()
+name|setUsed
+parameter_list|(
+name|BitVector
+modifier|&
+name|Regs
+parameter_list|)
+block|{
+name|RegsAvailable
+operator|&=
+operator|~
+name|Regs
+expr_stmt|;
+block|}
+name|void
+name|setUnused
+parameter_list|(
+name|BitVector
+modifier|&
+name|Regs
+parameter_list|)
+block|{
+name|RegsAvailable
+operator||=
+name|Regs
+expr_stmt|;
+block|}
+comment|/// Add Reg and all its sub-registers to BV.
+name|void
+name|addRegWithSubRegs
+parameter_list|(
+name|BitVector
+modifier|&
+name|BV
+parameter_list|,
+name|unsigned
+name|Reg
+parameter_list|)
 function_decl|;
-name|MachineInstr
-modifier|*
-name|findFirstUse
+comment|/// Add Reg and its aliases to BV.
+name|void
+name|addRegWithAliases
+parameter_list|(
+name|BitVector
+modifier|&
+name|BV
+parameter_list|,
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+name|unsigned
+name|findSurvivorReg
 argument_list|(
 name|MachineBasicBlock
-operator|*
-name|MBB
+operator|::
+name|iterator
+name|MI
+argument_list|,
+name|BitVector
+operator|&
+name|Candidates
+argument_list|,
+name|unsigned
+name|InstrLimit
 argument_list|,
 name|MachineBasicBlock
 operator|::
 name|iterator
-name|I
-argument_list|,
-name|unsigned
-name|Reg
-argument_list|,
-name|unsigned
 operator|&
-name|Dist
+name|UseMI
 argument_list|)
 decl_stmt|;
 block|}

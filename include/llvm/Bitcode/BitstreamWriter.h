@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Bitcode/BitCodes.h"
 end_include
 
@@ -1491,11 +1497,30 @@ argument|unsigned Abbrev
 argument_list|,
 argument|SmallVectorImpl<uintty>&Vals
 argument_list|,
-argument|const char *BlobData
-argument_list|,
-argument|unsigned BlobLen
+argument|const StringRef&Blob
 argument_list|)
 block|{
+specifier|const
+name|char
+operator|*
+name|BlobData
+operator|=
+name|Blob
+operator|.
+name|data
+argument_list|()
+block|;
+name|unsigned
+name|BlobLen
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|Blob
+operator|.
+name|size
+argument_list|()
+block|;
 name|unsigned
 name|AbbrevNo
 operator|=
@@ -2165,9 +2190,8 @@ name|Abbrev
 argument_list|,
 name|Vals
 argument_list|,
-literal|0
-argument_list|,
-literal|0
+name|StringRef
+argument_list|()
 argument_list|)
 block|;   }
 comment|/// EmitRecordWithBlob - Emit the specified record to the stream, using an
@@ -2187,9 +2211,7 @@ argument|unsigned Abbrev
 argument_list|,
 argument|SmallVectorImpl<uintty>&Vals
 argument_list|,
-argument|const char *BlobData
-argument_list|,
-argument|unsigned BlobLen
+argument|const StringRef&Blob
 argument_list|)
 block|{
 name|EmitRecordWithAbbrevImpl
@@ -2198,13 +2220,77 @@ name|Abbrev
 argument_list|,
 name|Vals
 argument_list|,
+name|Blob
+argument_list|)
+block|;   }
+name|template
+operator|<
+name|typename
+name|uintty
+operator|>
+name|void
+name|EmitRecordWithBlob
+argument_list|(
+argument|unsigned Abbrev
+argument_list|,
+argument|SmallVectorImpl<uintty>&Vals
+argument_list|,
+argument|const char *BlobData
+argument_list|,
+argument|unsigned BlobLen
+argument_list|)
+block|{
+return|return
+name|EmitRecordWithAbbrevImpl
+argument_list|(
+name|Abbrev
+argument_list|,
+name|Vals
+argument_list|,
+name|StringRef
+argument_list|(
 name|BlobData
 argument_list|,
 name|BlobLen
 argument_list|)
-block|;   }
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// EmitRecordWithArray - Just like EmitRecordWithBlob, works with records
+end_comment
+
+begin_comment
 comment|/// that end with an array.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|uintty
+operator|>
+name|void
+name|EmitRecordWithArray
+argument_list|(
+argument|unsigned Abbrev
+argument_list|,
+argument|SmallVectorImpl<uintty>&Vals
+argument_list|,
+argument|const StringRef&Array
+argument_list|)
+block|{
+name|EmitRecordWithAbbrevImpl
+argument_list|(
+name|Abbrev
+argument_list|,
+name|Vals
+argument_list|,
+name|Array
+argument_list|)
+block|;   }
 name|template
 operator|<
 name|typename
@@ -2222,28 +2308,53 @@ argument_list|,
 argument|unsigned ArrayLen
 argument_list|)
 block|{
+return|return
 name|EmitRecordWithAbbrevImpl
 argument_list|(
 name|Abbrev
 argument_list|,
 name|Vals
 argument_list|,
+name|StringRef
+argument_list|(
 name|ArrayData
 argument_list|,
 name|ArrayLen
 argument_list|)
-block|;   }
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Abbrev Emission
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_label
 name|private
-operator|:
+label|:
+end_label
+
+begin_comment
 comment|// Emit the abbreviation as a DEFINE_ABBREV record.
+end_comment
+
+begin_function
 name|void
 name|EncodeAbbrev
-argument_list|(
-argument|BitCodeAbbrev *Abbv
-argument_list|)
+parameter_list|(
+name|BitCodeAbbrev
+modifier|*
+name|Abbv
+parameter_list|)
 block|{
 name|EmitCode
 argument_list|(
@@ -2251,7 +2362,7 @@ name|bitc
 operator|::
 name|DEFINE_ABBREV
 argument_list|)
-block|;
+expr_stmt|;
 name|EmitVBR
 argument_list|(
 name|Abbv
@@ -2261,7 +2372,7 @@ argument_list|()
 argument_list|,
 literal|5
 argument_list|)
-block|;
+expr_stmt|;
 for|for
 control|(
 name|unsigned
@@ -2331,9 +2442,6 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 name|Emit
@@ -2364,10 +2472,11 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-end_else
+block|}
+block|}
+end_function
 
 begin_label
-unit|}   }
 name|public
 label|:
 end_label

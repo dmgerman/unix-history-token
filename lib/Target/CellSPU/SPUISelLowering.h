@@ -144,15 +144,6 @@ comment|///< Rotate quad left, by bits
 name|SHLQUAD_L_BYTES
 block|,
 comment|///< Rotate quad left, by bytes
-name|VEC_SHL
-block|,
-comment|///< Vector shift left
-name|VEC_SRL
-block|,
-comment|///< Vector shift right (logical)
-name|VEC_SRA
-block|,
-comment|///< Vector shift right (arithmetic)
 name|VEC_ROTL
 block|,
 comment|///< Vector rotate left
@@ -202,7 +193,7 @@ name|SelectionDAG
 modifier|&
 name|DAG
 parameter_list|,
-name|MVT
+name|EVT
 name|ValueType
 parameter_list|)
 function_decl|;
@@ -217,7 +208,7 @@ name|SelectionDAG
 modifier|&
 name|DAG
 parameter_list|,
-name|MVT
+name|EVT
 name|ValueType
 parameter_list|)
 function_decl|;
@@ -232,7 +223,7 @@ name|SelectionDAG
 modifier|&
 name|DAG
 parameter_list|,
-name|MVT
+name|EVT
 name|ValueType
 parameter_list|)
 function_decl|;
@@ -247,7 +238,7 @@ name|SelectionDAG
 modifier|&
 name|DAG
 parameter_list|,
-name|MVT
+name|EVT
 name|ValueType
 parameter_list|)
 function_decl|;
@@ -262,7 +253,7 @@ name|SelectionDAG
 modifier|&
 name|DAG
 parameter_list|,
-name|MVT
+name|EVT
 name|ValueType
 parameter_list|)
 function_decl|;
@@ -306,11 +297,11 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
-comment|//! Simplify a MVT::v2i64 constant splat to CellSPU-ready form
+comment|//! Simplify a EVT::v2i64 constant splat to CellSPU-ready form
 name|SDValue
 name|LowerV2I64Splat
 parameter_list|(
-name|MVT
+name|EVT
 name|OpVT
 parameter_list|,
 name|SelectionDAG
@@ -379,9 +370,11 @@ block|;
 comment|/// getSetCCResultType - Return the ValueType for ISD::SETCC
 name|virtual
 name|MVT
+operator|::
+name|SimpleValueType
 name|getSetCCResultType
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -477,7 +470,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -532,6 +525,67 @@ argument_list|(
 argument|const Function *F
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
 block|;   }
 decl_stmt|;
 block|}

@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
@@ -115,6 +109,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -123,7 +120,8 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-comment|/* An unsigned host type used as a single part of a multi-part      bignum.  */
+comment|// An unsigned host type used as a single part of a multi-part
+comment|// bignum.
 typedef|typedef
 name|uint64_t
 name|integerPart
@@ -435,12 +433,9 @@ name|unsigned
 name|numBits
 parameter_list|,
 specifier|const
-name|char
-modifier|*
-name|strStart
-parameter_list|,
-name|unsigned
-name|slen
+name|StringRef
+modifier|&
+name|str
 parameter_list|,
 name|uint8_t
 name|radix
@@ -670,23 +665,21 @@ argument_list|,
 argument|const uint64_t bigVal[]
 argument_list|)
 empty_stmt|;
-comment|/// This constructor interprets the slen characters starting at StrStart as
-comment|/// a string in the given radix. The interpretation stops when the first
-comment|/// character that is not suitable for the radix is encountered. Acceptable
-comment|/// radix values are 2, 8, 10 and 16. It is an error for the value implied by
-comment|/// the string to require more bits than numBits.
+comment|/// This constructor interprets the string \arg str in the given radix. The
+comment|/// interpretation stops when the first character that is not suitable for the
+comment|/// radix is encountered, or the end of the string. Acceptable radix values
+comment|/// are 2, 8, 10 and 16. It is an error for the value implied by the string to
+comment|/// require more bits than numBits.
+comment|///
 comment|/// @param numBits the bit width of the constructed APInt
-comment|/// @param strStart the start of the string to be interpreted
-comment|/// @param slen the maximum number of characters to interpret
+comment|/// @param str the string to be interpreted
 comment|/// @param radix the radix to use for the conversion
 comment|/// @brief Construct an APInt from a string representation.
 name|APInt
 argument_list|(
 argument|unsigned numBits
 argument_list|,
-argument|const char strStart[]
-argument_list|,
-argument|unsigned slen
+argument|const StringRef&str
 argument_list|,
 argument|uint8_t radix
 argument_list|)
@@ -4547,7 +4540,7 @@ comment|/// This method determines how many bits are required to hold the APInt
 end_comment
 
 begin_comment
-comment|/// equivalent of the string given by \p str of length \p slen.
+comment|/// equivalent of the string given by \arg str.
 end_comment
 
 begin_comment
@@ -4560,12 +4553,9 @@ name|unsigned
 name|getBitsNeeded
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 name|str
-parameter_list|,
-name|unsigned
-name|slen
 parameter_list|,
 name|uint8_t
 name|radix
@@ -5320,6 +5310,32 @@ name|BitWidth
 operator|-
 literal|1
 operator|-
+name|countLeadingZeros
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// @returns the ceil log base 2 of this APInt.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|ceilLogBase2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BitWidth
+operator|-
+operator|(
+operator|*
+name|this
+operator|-
+literal|1
+operator|)
+operator|.
 name|countLeadingZeros
 argument_list|()
 return|;
@@ -6333,28 +6349,6 @@ return|return
 name|OS
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|std
-operator|::
-name|ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|o
-operator|,
-specifier|const
-name|APInt
-operator|&
-name|I
-operator|)
-expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt

@@ -65,18 +65,15 @@ directive|include
 file|"llvm/CodeGen/MachineConstantPool.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<iosfwd>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|GlobalValue
+decl_stmt|;
+name|class
+name|LLVMContext
 decl_stmt|;
 name|namespace
 name|ARMCP
@@ -86,9 +83,7 @@ name|ARMCPKind
 block|{
 name|CPValue
 block|,
-name|CPNonLazyPtr
-block|,
-name|CPStub
+name|CPLSDA
 block|}
 enum|;
 block|}
@@ -121,7 +116,7 @@ operator|::
 name|ARMCPKind
 name|Kind
 block|;
-comment|// non_lazy_ptr or stub?
+comment|// Value or LSDA?
 name|unsigned
 name|char
 name|PCAdjust
@@ -157,11 +152,11 @@ argument_list|)
 block|;
 name|ARMConstantPoolValue
 argument_list|(
+argument|LLVMContext&C
+argument_list|,
 argument|const char *s
 argument_list|,
 argument|unsigned id
-argument_list|,
-argument|ARMCP::ARMCPKind Kind = ARMCP::CPValue
 argument_list|,
 argument|unsigned char PCAdj =
 literal|0
@@ -173,12 +168,22 @@ argument_list|)
 block|;
 name|ARMConstantPoolValue
 argument_list|(
-argument|GlobalValue *GV
+name|GlobalValue
+operator|*
+name|GV
 argument_list|,
-argument|ARMCP::ARMCPKind Kind
-argument_list|,
-argument|const char *Modifier
+specifier|const
+name|char
+operator|*
+name|Modifier
 argument_list|)
+block|;
+name|ARMConstantPoolValue
+argument_list|()
+block|;
+operator|~
+name|ARMConstantPoolValue
+argument_list|()
 block|;
 name|GlobalValue
 operator|*
@@ -241,32 +246,6 @@ return|return
 name|LabelId
 return|;
 block|}
-name|bool
-name|isNonLazyPointer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-operator|==
-name|ARMCP
-operator|::
-name|CPNonLazyPtr
-return|;
-block|}
-name|bool
-name|isStub
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-operator|==
-name|ARMCP
-operator|::
-name|CPStub
-return|;
-block|}
 name|unsigned
 name|char
 name|getPCAdjustment
@@ -275,6 +254,30 @@ specifier|const
 block|{
 return|return
 name|PCAdjust
+return|;
+block|}
+name|bool
+name|isLSDA
+argument_list|()
+block|{
+return|return
+name|Kind
+operator|==
+name|ARMCP
+operator|::
+name|CPLSDA
+return|;
+block|}
+name|virtual
+name|unsigned
+name|getRelocationInfo
+argument_list|()
+specifier|const
+block|{
+comment|// FIXME: This is conservatively claiming that these entries require a
+comment|// relocation, we may be able to do better than this.
+return|return
+literal|2
 return|;
 block|}
 name|virtual
@@ -294,31 +297,6 @@ name|FoldingSetNodeID
 operator|&
 name|ID
 argument_list|)
-block|;
-name|void
-name|print
-argument_list|(
-argument|std::ostream *O
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|O
-condition|)
-name|print
-argument_list|(
-operator|*
-name|O
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|print
-argument_list|(
-argument|std::ostream&O
-argument_list|)
-specifier|const
 block|;
 name|void
 name|print
@@ -351,37 +329,6 @@ argument_list|()
 specifier|const
 block|; }
 decl_stmt|;
-specifier|inline
-name|std
-operator|::
-name|ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|O
-operator|,
-specifier|const
-name|ARMConstantPoolValue
-operator|&
-name|V
-operator|)
-block|{
-name|V
-operator|.
-name|print
-argument_list|(
-name|O
-argument_list|)
-block|;
-return|return
-name|O
-return|;
-block|}
 specifier|inline
 name|raw_ostream
 operator|&

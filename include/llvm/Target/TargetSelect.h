@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- TargetSelect.h - Target Selection& Registration -------------------===//
+comment|//===- TargetSelect.h - Target Selection& Registration ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -84,11 +84,21 @@ name|LLVM_TARGET
 parameter_list|(
 name|TargetName
 parameter_list|)
+value|void LLVMInitialize##TargetName##TargetInfo();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
 value|void LLVMInitialize##TargetName##Target();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
-comment|// Declare all of the available asm-printer initialization functions.
+comment|// Declare all of the available assembly printer initialization functions.
 define|#
 directive|define
 name|LLVM_ASM_PRINTER
@@ -99,6 +109,17 @@ value|void LLVMInitialize##TargetName##AsmPrinter();
 include|#
 directive|include
 file|"llvm/Config/AsmPrinters.def"
+comment|// Declare all of the available assembly parser initialization functions.
+define|#
+directive|define
+name|LLVM_ASM_PARSER
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|void LLVMInitialize##TargetName##AsmParser();
+include|#
+directive|include
+file|"llvm/Config/AsmParsers.def"
 block|}
 end_extern
 
@@ -106,13 +127,41 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// InitializeAllTargetInfos - The main program should call this function if
+comment|/// it wants access to all available targets that LLVM is configured to
+comment|/// support, to make them available via the TargetRegistry.
+comment|///
+comment|/// It is legal for a client to make multiple calls to this function.
+specifier|inline
+name|void
+name|InitializeAllTargetInfos
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##TargetInfo();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+block|}
 comment|/// InitializeAllTargets - The main program should call this function if it
-comment|/// wants to link in all available targets that LLVM is configured to support.
+comment|/// wants access to all available target machines that LLVM is configured to
+comment|/// support, to make them available via the TargetRegistry.
+comment|///
+comment|/// It is legal for a client to make multiple calls to this function.
 specifier|inline
 name|void
 name|InitializeAllTargets
 parameter_list|()
 block|{
+comment|// FIXME: Remove this, clients should do it.
+name|InitializeAllTargetInfos
+argument_list|()
+expr_stmt|;
 define|#
 directive|define
 name|LLVM_TARGET
@@ -125,8 +174,10 @@ directive|include
 file|"llvm/Config/Targets.def"
 block|}
 comment|/// InitializeAllAsmPrinters - The main program should call this function if
-comment|/// it wants all asm printers that LLVM is configured to support.  This will
-comment|/// cause them to be linked into its executable.
+comment|/// it wants all asm printers that LLVM is configured to support, to make them
+comment|/// available via the TargetRegistry.
+comment|///
+comment|/// It is legal for a client to make multiple calls to this function.
 specifier|inline
 name|void
 name|InitializeAllAsmPrinters
@@ -143,9 +194,32 @@ include|#
 directive|include
 file|"llvm/Config/AsmPrinters.def"
 block|}
+comment|/// InitializeAllAsmParsers - The main program should call this function if it
+comment|/// wants all asm parsers that LLVM is configured to support, to make them
+comment|/// available via the TargetRegistry.
+comment|///
+comment|/// It is legal for a client to make multiple calls to this function.
+specifier|inline
+name|void
+name|InitializeAllAsmParsers
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_ASM_PARSER
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##AsmParser();
+include|#
+directive|include
+file|"llvm/Config/AsmParsers.def"
+block|}
 comment|/// InitializeNativeTarget - The main program should call this function to
 comment|/// initialize the native target corresponding to the host.  This is useful
 comment|/// for JIT applications to ensure that the target gets linked in correctly.
+comment|///
+comment|/// It is legal for a client to make multiple calls to this function.
 specifier|inline
 name|bool
 name|InitializeNativeTarget
@@ -161,7 +235,8 @@ name|DoInit2
 parameter_list|(
 name|TARG
 parameter_list|)
-value|LLVMInitialize ## TARG ()
+define|\
+value|LLVMInitialize ## TARG ## Info ();          \     LLVMInitialize ## TARG ()
 define|#
 directive|define
 name|DoInit

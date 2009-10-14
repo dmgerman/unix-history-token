@@ -96,62 +96,116 @@ comment|/// object_deleter - Helper method for ManagedStatic.
 comment|///
 name|template
 operator|<
-name|class
-name|C
+name|typename
+name|T
 operator|>
-name|void
+expr|struct
 name|object_deleter
+block|{
+specifier|static
+name|void
+name|call
 argument_list|(
-argument|void *Ptr
+argument|void * Ptr
 argument_list|)
 block|{
 name|delete
 argument_list|(
-argument|C*
+argument|T*
 argument_list|)
 name|Ptr
 block|; }
+block|}
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|size_t
+name|N
+operator|>
+expr|struct
+name|object_deleter
+operator|<
+name|T
+index|[
+name|N
+index|]
+operator|>
+block|{
+specifier|static
+name|void
+name|call
+argument_list|(
+argument|void * Ptr
+argument_list|)
+block|{
+name|delete
+index|[]
+operator|(
+name|T
+operator|*
+operator|)
+name|Ptr
+block|; }
+block|}
+expr_stmt|;
 comment|/// ManagedStaticBase - Common base class for ManagedStatic instances.
 name|class
 name|ManagedStaticBase
 block|{
 name|protected
-operator|:
+label|:
 comment|// This should only be used as a static variable, which guarantees that this
 comment|// will be zero initialized.
 name|mutable
 name|void
-operator|*
+modifier|*
 name|Ptr
-block|;
+decl_stmt|;
 name|mutable
 name|void
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|DeleterFn
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-block|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|mutable
 specifier|const
 name|ManagedStaticBase
-operator|*
+modifier|*
 name|Next
-block|;
+decl_stmt|;
 name|void
 name|RegisterManagedStatic
 argument_list|(
-argument|void *(*creator)()
+name|void
+operator|*
+call|(
+modifier|*
+name|creator
+call|)
+argument_list|()
 argument_list|,
-argument|void (*deleter)(void*)
+name|void
+argument_list|(
+operator|*
+name|deleter
 argument_list|)
-specifier|const
-block|;
+argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
-operator|:
+label|:
 comment|/// isConstructed - Return true if this object has not been created yet.
 name|bool
 name|isConstructed
@@ -168,8 +222,9 @@ name|void
 name|destroy
 argument_list|()
 specifier|const
-block|; }
 expr_stmt|;
+block|}
+empty_stmt|;
 comment|/// ManagedStatic - This transparently changes the behavior of global statics to
 comment|/// be lazily constructed on demand (good for reducing startup times of dynamic
 comment|/// libraries that link in LLVM components) and for making destruction be
@@ -228,6 +283,8 @@ name|object_deleter
 operator|<
 name|C
 operator|>
+operator|::
+name|call
 argument_list|)
 expr_stmt|;
 return|return
@@ -287,6 +344,8 @@ name|object_deleter
 operator|<
 name|C
 operator|>
+operator|::
+name|call
 argument_list|)
 expr_stmt|;
 return|return
@@ -347,6 +406,8 @@ name|object_deleter
 operator|<
 name|C
 operator|>
+operator|::
+name|call
 argument_list|)
 expr_stmt|;
 end_if
@@ -413,6 +474,8 @@ name|object_deleter
 operator|<
 name|C
 operator|>
+operator|::
+name|call
 argument_list|)
 expr_stmt|;
 end_if

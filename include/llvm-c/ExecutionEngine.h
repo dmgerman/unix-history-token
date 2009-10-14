@@ -355,9 +355,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
+struct_decl|struct
 name|GenericValue
-decl_stmt|;
+struct_decl|;
 name|class
 name|ExecutionEngine
 decl_stmt|;

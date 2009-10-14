@@ -125,6 +125,7 @@ operator|<
 name|RecyclerStruct
 operator|>
 operator|:
+name|public
 name|ilist_default_traits
 operator|<
 name|RecyclerStruct

@@ -147,7 +147,6 @@ modifier|&
 name|mf
 parameter_list|)
 block|{}
-empty_stmt|;
 comment|/// Register allocators must call this from their own
 comment|/// getAnalysisUsage to cover the case where the coalescer is not
 comment|/// a Pass in the proper sense and isn't managed by PassManager.
@@ -165,7 +164,6 @@ name|AU
 argument_list|)
 decl|const
 block|{}
-empty_stmt|;
 block|}
 empty_stmt|;
 comment|/// An abstract interface for register allocators to interact with
@@ -182,7 +180,7 @@ comment|///     const LiveIntervals \&li;
 comment|///
 comment|///   public:
 comment|///     LinearScanRegallocQuery(LiveIntervals&intervals)
-comment|///         : li(intervals) {};
+comment|///         : li(intervals) {}
 comment|///
 comment|///     /// This is pretty slow and conservative, but since linear scan
 comment|///     /// allocation doesn't pre-compute interference information it's
@@ -199,14 +197,14 @@ comment|///         if (interfere(a, iv->second)) {
 comment|///           interferences.insert(&iv->second);
 comment|///         }
 comment|///       }
-comment|///     };
+comment|///     }
 comment|///
 comment|///     /// This is *really* slow and stupid.  See above.
 comment|///     int getNumberOfInterferences(const LiveInterval&a) const {
 comment|///       IntervalSet intervals;
 comment|///       getInterferences(intervals, a);
 comment|///       return intervals.size();
-comment|///     };
+comment|///     }
 comment|///   };
 comment|///
 comment|///   In the allocator:
@@ -239,23 +237,16 @@ operator|~
 name|RegallocQuery
 argument_list|()
 block|{}
-expr_stmt|;
 comment|/// Return whether two live ranges interfere.
 name|virtual
 name|bool
 name|interfere
 argument_list|(
-specifier|const
-name|LiveInterval
-operator|&
-name|a
+argument|const LiveInterval&a
 argument_list|,
-specifier|const
-name|LiveInterval
-operator|&
-name|b
+argument|const LiveInterval&b
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// A naive test
 return|return
@@ -267,7 +258,6 @@ name|b
 argument_list|)
 return|;
 block|}
-empty_stmt|;
 comment|/// Return the set of intervals that interfere with this one.
 name|virtual
 name|void
@@ -323,7 +313,6 @@ modifier|&
 name|copy
 parameter_list|)
 block|{}
-empty_stmt|;
 comment|/// Allow the register allocator to communicate when it doesn't
 comment|/// want a copy coalesced.  This may be due to assumptions made by
 comment|/// the allocator about various invariants and so this question is

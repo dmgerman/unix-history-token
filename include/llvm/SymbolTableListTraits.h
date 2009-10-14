@@ -113,6 +113,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|ValueSymbolTable
+decl_stmt|;
 name|template
 operator|<
 name|typename

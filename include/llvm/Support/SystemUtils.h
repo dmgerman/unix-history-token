@@ -66,39 +66,47 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/Program.h"
+file|<string>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// Determine if the ostream provided is connected to the std::cout and
+name|class
+name|raw_ostream
+decl_stmt|;
+name|namespace
+name|sys
+block|{
+name|class
+name|Path
+decl_stmt|;
+block|}
+comment|/// Determine if the raw_ostream provided is connected to the outs() and
 comment|/// displayed or not (to a console window). If so, generate a warning message
 comment|/// advising against display of bitcode and return true. Otherwise just return
 comment|/// false
 comment|/// @brief Check for output written to a console
 name|bool
 name|CheckBitcodeOutputToConsole
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
+parameter_list|(
+name|raw_ostream
+modifier|&
 name|stream_to_check
-argument_list|,
+parameter_list|,
 comment|///< The stream to be checked
 name|bool
 name|print_warning
-operator|=
+init|=
 name|true
 comment|///< Control whether warnings are printed
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FindExecutable - Find a named executable, giving the argv[0] of program
-comment|/// being executed. This allows us to find another LLVM tool if it is built into
-comment|/// the same directory, but that directory is neither the current directory, nor
-comment|/// in the PATH.  If the executable cannot be found, return an empty string.
+comment|/// being executed. This allows us to find another LLVM tool if it is built in
+comment|/// the same directory.  If the executable cannot be found, return an
+comment|/// empty string.
 comment|/// @brief Find a named executable.
 name|sys
 operator|::
@@ -113,11 +121,13 @@ operator|&
 name|ExeName
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|ProgramPath
+name|char
+operator|*
+name|Argv0
+argument_list|,
+name|void
+operator|*
+name|MainAddr
 argument_list|)
 expr_stmt|;
 block|}

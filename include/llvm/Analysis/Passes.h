@@ -83,6 +83,9 @@ name|class
 name|Pass
 decl_stmt|;
 name|class
+name|PassInfo
+decl_stmt|;
+name|class
 name|LibCallInfo
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
@@ -160,6 +163,16 @@ parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createScalarEvolutionAliasAnalysisPass - This pass implements a simple
+comment|// alias analysis using ScalarEvolution queries.
+comment|//
+name|FunctionPass
+modifier|*
+name|createScalarEvolutionAliasAnalysisPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// createAndersensPass - This pass implements Andersen's interprocedural alias
 comment|// analysis.
 comment|//
@@ -185,6 +198,31 @@ comment|//
 name|ImmutablePass
 modifier|*
 name|createNoProfileInfoPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createProfileEstimatorPass - This pass estimates profiling information
+comment|// instead of loading it from a previous run.
+comment|//
+name|FunctionPass
+modifier|*
+name|createProfileEstimatorPass
+parameter_list|()
+function_decl|;
+specifier|extern
+specifier|const
+name|PassInfo
+modifier|*
+name|ProfileEstimatorPassID
+decl_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createProfileVerifierPass - This pass verifies profiling information.
+comment|//
+name|FunctionPass
+modifier|*
+name|createProfileVerifierPass
 parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

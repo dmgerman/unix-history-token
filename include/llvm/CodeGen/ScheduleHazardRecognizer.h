@@ -115,6 +115,14 @@ return|return
 name|NoHazard
 return|;
 block|}
+comment|/// Reset - This callback is invoked when a new block of
+comment|/// instructions is about to be schedule. The hazard state should be
+comment|/// set to an initialized state.
+name|virtual
+name|void
+name|Reset
+parameter_list|()
+block|{}
 comment|/// EmitInstruction - This callback is invoked when an instruction is
 comment|/// emitted, to advance the hazard state.
 name|virtual

@@ -124,27 +124,26 @@ decl_stmt|;
 name|class
 name|ComplexPattern
 decl_stmt|;
-comment|/// EMVT::DAGISelGenValueType - These are some extended forms of
+comment|/// EEVT::DAGISelGenValueType - These are some extended forms of
 comment|/// MVT::SimpleValueType that we use as lattice values during type inference.
+comment|/// The existing MVT iAny, fAny and vAny types suffice to represent
+comment|/// arbitrary integer, floating-point, and vector types, so only an unknown
+comment|/// value is needed.
 name|namespace
-name|EMVT
+name|EEVT
 block|{
 enum|enum
 name|DAGISelGenValueType
 block|{
-name|isFP
+name|isUnknown
 init|=
 name|MVT
 operator|::
 name|LAST_VALUETYPE
-block|,
-name|isInt
-block|,
-name|isUnknown
 block|}
 enum|;
-comment|/// isExtIntegerVT - Return true if the specified extended value type vector
-comment|/// contains isInt or an integer value type.
+comment|/// isExtIntegerInVTs - Return true if the specified extended value type
+comment|/// vector contains iAny or an integer value type.
 name|bool
 name|isExtIntegerInVTs
 argument_list|(
@@ -160,10 +159,27 @@ operator|&
 name|EVTs
 argument_list|)
 decl_stmt|;
-comment|/// isExtFloatingPointVT - Return true if the specified extended value type
-comment|/// vector contains isFP or a FP value type.
+comment|/// isExtFloatingPointInVTs - Return true if the specified extended value
+comment|/// type vector contains fAny or a FP value type.
 name|bool
 name|isExtFloatingPointInVTs
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+name|char
+operator|>
+operator|&
+name|EVTs
+argument_list|)
+decl_stmt|;
+comment|/// isExtVectorinVTs - Return true if the specified extended value type
+comment|/// vector contains vAny or a vector value type.
+name|bool
+name|isExtVectorInVTs
 argument_list|(
 specifier|const
 name|std
@@ -215,6 +231,8 @@ block|,
 name|SDTCisInt
 block|,
 name|SDTCisFP
+block|,
+name|SDTCisVec
 block|,
 name|SDTCisSameAs
 block|,
@@ -525,7 +543,7 @@ comment|/// TreePatternNode objects!
 name|class
 name|TreePatternNode
 block|{
-comment|/// The inferred type for this node, or EMVT::isUnknown if it hasn't
+comment|/// The inferred type for this node, or EEVT::isUnknown if it hasn't
 comment|/// been determined yet. This is a std::vector because during inference
 comment|/// there may be multiple possible types.
 name|std
@@ -630,7 +648,7 @@ name|Types
 operator|.
 name|push_back
 argument_list|(
-name|EMVT
+name|EEVT
 operator|::
 name|isUnknown
 argument_list|)
@@ -665,7 +683,7 @@ name|Types
 operator|.
 name|push_back
 argument_list|(
-name|EMVT
+name|EEVT
 operator|::
 name|isUnknown
 argument_list|)
@@ -765,7 +783,7 @@ index|[
 literal|0
 index|]
 operator|==
-name|EMVT
+name|EEVT
 operator|::
 name|isUnknown
 return|;
@@ -921,7 +939,7 @@ operator|>
 operator|(
 literal|1
 operator|,
-name|EMVT
+name|EEVT
 operator|::
 name|isUnknown
 operator|)
@@ -2256,6 +2274,34 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|// Deterministic comparison of Record*.
+end_comment
+
+begin_struct
+struct|struct
+name|RecordPtrCmp
+block|{
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|Record
+operator|*
+name|LHS
+operator|,
+specifier|const
+name|Record
+operator|*
+name|RHS
+operator|)
+specifier|const
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 name|class
 name|CodeGenDAGPatterns
@@ -2291,6 +2337,8 @@ name|Record
 operator|*
 operator|,
 name|SDNodeInfo
+operator|,
+name|RecordPtrCmp
 operator|>
 name|SDNodes
 expr_stmt|;
@@ -2312,7 +2360,9 @@ name|std
 operator|::
 name|string
 operator|>
-expr|>
+operator|,
+name|RecordPtrCmp
+operator|>
 name|SDNodeXForms
 expr_stmt|;
 name|std
@@ -2323,6 +2373,8 @@ name|Record
 operator|*
 operator|,
 name|ComplexPattern
+operator|,
+name|RecordPtrCmp
 operator|>
 name|ComplexPatterns
 expr_stmt|;
@@ -2335,6 +2387,8 @@ operator|*
 operator|,
 name|TreePattern
 operator|*
+operator|,
+name|RecordPtrCmp
 operator|>
 name|PatternFragments
 expr_stmt|;
@@ -2346,6 +2400,8 @@ name|Record
 operator|*
 operator|,
 name|DAGDefaultOperand
+operator|,
+name|RecordPtrCmp
 operator|>
 name|DefaultOperands
 expr_stmt|;
@@ -2357,6 +2413,8 @@ name|Record
 operator|*
 operator|,
 name|DAGInstruction
+operator|,
+name|RecordPtrCmp
 operator|>
 name|Instructions
 expr_stmt|;
@@ -2521,6 +2579,8 @@ name|Record
 operator|*
 operator|,
 name|NodeXForm
+operator|,
+name|RecordPtrCmp
 operator|>
 operator|::
 name|const_iterator
@@ -2923,6 +2983,8 @@ operator|*
 operator|,
 name|TreePattern
 operator|*
+operator|,
+name|RecordPtrCmp
 operator|>
 operator|::
 name|const_iterator

@@ -70,13 +70,22 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
+name|MCCodeEmitter
+decl_stmt|;
+name|class
 name|MCContext
 decl_stmt|;
 name|class
-name|MCValue
+name|MCExpr
 decl_stmt|;
 name|class
 name|MCInst
+decl_stmt|;
+name|class
+name|MCInstPrinter
 decl_stmt|;
 name|class
 name|MCSection
@@ -85,12 +94,15 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|StringRef
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// MCStreamer - Streaming machine code generation interface.  This interface
 comment|/// is intended to provide a programatic interface that is very similar to the
 comment|/// level that an assembler .s file provides.  It has callbacks to emit bytes,
-comment|/// "emit directives", etc.  The implementation of this interface retains
+comment|/// handle directives, etc.  The implementation of this interface retains
 comment|/// state to know what the current section is etc.
 comment|///
 comment|/// There are multiple implementations of this interface: one for writing out
@@ -149,6 +161,13 @@ init|=
 name|WeakReference
 block|}
 enum|;
+enum|enum
+name|AssemblerFlag
+block|{
+name|SubsectionsViaSymbols
+comment|/// .subsections_via_symbols (Apple)
+block|}
+enum|;
 name|private
 label|:
 name|MCContext
@@ -183,6 +202,13 @@ operator|&
 name|Ctx
 argument_list|)
 expr_stmt|;
+comment|/// CurSection - This is the current section code is being emitted to, it is
+comment|/// kept up to date by SwitchSection.
+specifier|const
+name|MCSection
+modifier|*
+name|CurSection
+decl_stmt|;
 name|public
 label|:
 name|virtual
@@ -202,14 +228,28 @@ return|;
 block|}
 comment|/// @name Symbol& Section Management
 comment|/// @{
+comment|/// getCurrentSection - Return the current seciton that the streamer is
+comment|/// emitting code to.
+specifier|const
+name|MCSection
+operator|*
+name|getCurrentSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurSection
+return|;
+block|}
 comment|/// SwitchSection - Set the current section where code is being emitted to
-comment|/// @param Section.
+comment|/// @param Section.  This is required to update CurSection.
 comment|///
 comment|/// This corresponds to assembler directives like .section, .text, etc.
 name|virtual
 name|void
 name|SwitchSection
 parameter_list|(
+specifier|const
 name|MCSection
 modifier|*
 name|Section
@@ -225,9 +265,6 @@ comment|///
 comment|/// @param Symbol - The symbol to emit. A given symbol should only be
 comment|/// emitted as a label once, and symbols emitted as a label should never be
 comment|/// used in an assignment.
-comment|//
-comment|// FIXME: What to do about the current section? Should we get rid of the
-comment|// symbol section in the constructor and initialize it here?
 name|virtual
 name|void
 name|EmitLabel
@@ -235,6 +272,17 @@ parameter_list|(
 name|MCSymbol
 modifier|*
 name|Symbol
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EmitAssemblerFlag - Note in the output the specified @param Flag
+name|virtual
+name|void
+name|EmitAssemblerFlag
+parameter_list|(
+name|AssemblerFlag
+name|Flag
 parameter_list|)
 init|=
 literal|0
@@ -250,9 +298,6 @@ comment|/// binding into the .s file.
 comment|///
 comment|/// @param Symbol - The symbol being assigned to.
 comment|/// @param Value - The value for the symbol.
-comment|/// @param MakeAbsolute - If true, then the symbol should be given the
-comment|/// absolute value of @param Value, even if @param Value would be
-comment|/// relocatable expression. This corresponds to the ".set" directive.
 name|virtual
 name|void
 name|EmitAssignment
@@ -262,24 +307,14 @@ modifier|*
 name|Symbol
 parameter_list|,
 specifier|const
-name|MCValue
-modifier|&
+name|MCExpr
+modifier|*
 name|Value
-parameter_list|,
-name|bool
-name|MakeAbsolute
-init|=
-name|false
 parameter_list|)
 init|=
 literal|0
 function_decl|;
 comment|/// EmitSymbolAttribute - Add the given @param Attribute to @param Symbol.
-comment|//
-comment|// FIXME: This doesn't make much sense, could we just have attributes be on
-comment|// the symbol and make the printer smart enough to add the right symbols?
-comment|// This should work as long as the order of attributes in the file doesn't
-comment|// matter.
 name|virtual
 name|void
 name|EmitSymbolAttribute
@@ -294,11 +329,86 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// EmitSymbolDesc - Set the @param DescValue for the @param Symbol.
+comment|///
+comment|/// @param Symbol - The symbol to have its n_desc field set.
+comment|/// @param DescValue - The value to set into the n_desc field.
+name|virtual
+name|void
+name|EmitSymbolDesc
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|,
+name|unsigned
+name|DescValue
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EmitCommonSymbol - Emit a common or local common symbol.
+comment|///
+comment|/// @param Symbol - The common symbol to emit.
+comment|/// @param Size - The size of the common symbol.
+comment|/// @param ByteAlignment - The alignment of the symbol if
+comment|/// non-zero. This must be a power of 2 on some targets.
+name|virtual
+name|void
+name|EmitCommonSymbol
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|,
+name|unsigned
+name|Size
+parameter_list|,
+name|unsigned
+name|ByteAlignment
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EmitZerofill - Emit a the zerofill section and an option symbol.
+comment|///
+comment|/// @param Section - The zerofill section to create and or to put the symbol
+comment|/// @param Symbol - The zerofill symbol to emit, if non-NULL.
+comment|/// @param Size - The size of the zerofill symbol.
+comment|/// @param ByteAlignment - The alignment of the zerofill symbol if
+comment|/// non-zero. This must be a power of 2 on some targets.
+name|virtual
+name|void
+name|EmitZerofill
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+name|Section
+parameter_list|,
+name|MCSymbol
+modifier|*
+name|Symbol
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|Size
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|ByteAlignment
+init|=
+literal|0
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// @}
 comment|/// @name Generating Data
 comment|/// @{
-comment|/// EmitBytes - Emit @param Length bytes starting at @param Data into the
-comment|/// output.
+comment|/// EmitBytes - Emit the bytes in \arg Data into the output.
 comment|///
 comment|/// This is used to implement assembler directives such as .byte, .ascii,
 comment|/// etc.
@@ -307,12 +417,9 @@ name|void
 name|EmitBytes
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 name|Data
-parameter_list|,
-name|unsigned
-name|Length
 parameter_list|)
 init|=
 literal|0
@@ -331,8 +438,8 @@ name|void
 name|EmitValue
 parameter_list|(
 specifier|const
-name|MCValue
-modifier|&
+name|MCExpr
+modifier|*
 name|Value
 parameter_list|,
 name|unsigned
@@ -388,18 +495,16 @@ comment|/// byte offset @param Offset is reached.
 comment|///
 comment|/// This is used to implement assembler directives such as .org.
 comment|///
-comment|/// @param Offset - The offset to reach.This may be an expression, but the
+comment|/// @param Offset - The offset to reach. This may be an expression, but the
 comment|/// expression must be associated with the current section.
 comment|/// @param Value - The value to use when filling bytes.
-comment|//
-comment|// FIXME: How are we going to signal failures out of this?
 name|virtual
 name|void
 name|EmitValueToOffset
 parameter_list|(
 specifier|const
-name|MCValue
-modifier|&
+name|MCExpr
+modifier|*
 name|Offset
 parameter_list|,
 name|unsigned
@@ -436,6 +541,17 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
+comment|/// createNullStreamer - Create a dummy machine code streamer, which does
+comment|/// nothing. This is useful for timing the assembler front end.
+name|MCStreamer
+modifier|*
+name|createNullStreamer
+parameter_list|(
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
 comment|/// createAsmStreamer - Create a machine code streamer which will print out
 comment|/// assembly for the native target, suitable for compiling with a native
 comment|/// assembler.
@@ -450,6 +566,23 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|,
+specifier|const
+name|MCAsmInfo
+modifier|&
+name|MAI
+parameter_list|,
+name|MCInstPrinter
+modifier|*
+name|InstPrint
+init|=
+literal|0
+parameter_list|,
+name|MCCodeEmitter
+modifier|*
+name|CE
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|// FIXME: These two may end up getting rolled into a single
@@ -468,6 +601,12 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|,
+name|MCCodeEmitter
+modifier|*
+name|CE
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// createELFStreamer - Create a machine code streamer which will generative

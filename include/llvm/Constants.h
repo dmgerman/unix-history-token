@@ -174,14 +174,6 @@ range|:
 name|public
 name|Constant
 block|{
-specifier|static
-name|ConstantInt
-operator|*
-name|TheTrueVal
-block|,
-operator|*
-name|TheFalseVal
-block|;
 name|void
 operator|*
 name|operator
@@ -242,6 +234,132 @@ return|;
 block|}
 name|public
 operator|:
+specifier|static
+name|ConstantInt
+operator|*
+name|getTrue
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|)
+block|;
+specifier|static
+name|ConstantInt
+operator|*
+name|getFalse
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|)
+block|;
+comment|/// If Ty is a vector type, return a Constant with a splat of the given
+comment|/// value. Otherwise return a ConstantInt for the given value.
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|uint64_t V
+argument_list|,
+argument|bool isSigned = false
+argument_list|)
+block|;
+comment|/// Return a ConstantInt with the specified integer value for the specified
+comment|/// type. If the type is wider than 64 bits, the value will be zero-extended
+comment|/// to fit the type, unless isSigned is true, in which case the value will
+comment|/// be interpreted as a 64-bit signed integer and sign-extended to fit
+comment|/// the type.
+comment|/// @brief Get a ConstantInt for a specific value.
+specifier|static
+name|ConstantInt
+operator|*
+name|get
+argument_list|(
+argument|const IntegerType *Ty
+argument_list|,
+argument|uint64_t V
+argument_list|,
+argument|bool isSigned = false
+argument_list|)
+block|;
+comment|/// Return a ConstantInt with the specified value for the specified type. The
+comment|/// value V will be canonicalized to a an unsigned APInt. Accessing it with
+comment|/// either getSExtValue() or getZExtValue() will yield a correctly sized and
+comment|/// signed value for the type Ty.
+comment|/// @brief Get a ConstantInt for a specific signed value.
+specifier|static
+name|ConstantInt
+operator|*
+name|getSigned
+argument_list|(
+argument|const IntegerType *Ty
+argument_list|,
+argument|int64_t V
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getSigned
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|int64_t V
+argument_list|)
+block|;
+comment|/// Return a ConstantInt with the specified value and an implied Type. The
+comment|/// type is the integer type that corresponds to the bit width of the value.
+specifier|static
+name|ConstantInt
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|V
+argument_list|)
+block|;
+comment|/// Return a ConstantInt constructed from the string strStart with the given
+comment|/// radix.
+specifier|static
+name|ConstantInt
+operator|*
+name|get
+argument_list|(
+argument|const IntegerType *Ty
+argument_list|,
+argument|const StringRef&Str
+argument_list|,
+argument|uint8_t radix
+argument_list|)
+block|;
+comment|/// If Ty is a vector type, return a Constant with a splat of the given
+comment|/// value. Otherwise return a ConstantInt for the given value.
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|V
+argument_list|)
+block|;
 comment|/// Return the constant as an APInt value reference. This allows clients to
 comment|/// obtain a copy of the value, with all its precision in tact.
 comment|/// @brief Return the constant's value.
@@ -323,181 +441,6 @@ operator|==
 name|V
 return|;
 block|}
-comment|/// getTrue/getFalse - Return the singleton true/false values.
-specifier|static
-specifier|inline
-name|ConstantInt
-operator|*
-name|getTrue
-argument_list|()
-block|{
-if|if
-condition|(
-name|TheTrueVal
-condition|)
-return|return
-name|TheTrueVal
-return|;
-return|return
-name|CreateTrueFalseVals
-argument_list|(
-name|true
-argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|ConstantInt
-modifier|*
-name|getFalse
-parameter_list|()
-block|{
-if|if
-condition|(
-name|TheFalseVal
-condition|)
-return|return
-name|TheFalseVal
-return|;
-return|return
-name|CreateTrueFalseVals
-argument_list|(
-name|false
-argument_list|)
-return|;
-block|}
-comment|/// Return a ConstantInt with the specified integer value for the specified
-comment|/// type. If the type is wider than 64 bits, the value will be zero-extended
-comment|/// to fit the type, unless isSigned is true, in which case the value will
-comment|/// be interpreted as a 64-bit signed integer and sign-extended to fit
-comment|/// the type.
-comment|/// @brief Get a ConstantInt for a specific value.
-specifier|static
-name|ConstantInt
-modifier|*
-name|get
-parameter_list|(
-specifier|const
-name|IntegerType
-modifier|*
-name|Ty
-parameter_list|,
-name|uint64_t
-name|V
-parameter_list|,
-name|bool
-name|isSigned
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// If Ty is a vector type, return a Constant with a splat of the given
-comment|/// value. Otherwise return a ConstantInt for the given value.
-specifier|static
-name|Constant
-modifier|*
-name|get
-parameter_list|(
-specifier|const
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
-name|uint64_t
-name|V
-parameter_list|,
-name|bool
-name|isSigned
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// Return a ConstantInt with the specified value for the specified type. The
-comment|/// value V will be canonicalized to a an unsigned APInt. Accessing it with
-comment|/// either getSExtValue() or getZExtValue() will yield a correctly sized and
-comment|/// signed value for the type Ty.
-comment|/// @brief Get a ConstantInt for a specific signed value.
-specifier|static
-name|ConstantInt
-modifier|*
-name|getSigned
-parameter_list|(
-specifier|const
-name|IntegerType
-modifier|*
-name|Ty
-parameter_list|,
-name|int64_t
-name|V
-parameter_list|)
-block|{
-return|return
-name|get
-argument_list|(
-name|Ty
-argument_list|,
-name|V
-argument_list|,
-name|true
-argument_list|)
-return|;
-block|}
-specifier|static
-name|Constant
-modifier|*
-name|getSigned
-parameter_list|(
-specifier|const
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
-name|int64_t
-name|V
-parameter_list|)
-block|{
-return|return
-name|get
-argument_list|(
-name|Ty
-argument_list|,
-name|V
-argument_list|,
-name|true
-argument_list|)
-return|;
-block|}
-comment|/// Return a ConstantInt with the specified value and an implied Type. The
-comment|/// type is the integer type that corresponds to the bit width of the value.
-specifier|static
-name|ConstantInt
-modifier|*
-name|get
-parameter_list|(
-specifier|const
-name|APInt
-modifier|&
-name|V
-parameter_list|)
-function_decl|;
-comment|/// If Ty is a vector type, return a Constant with a splat of the given
-comment|/// value. Otherwise return a ConstantInt for the given value.
-specifier|static
-name|Constant
-modifier|*
-name|get
-parameter_list|(
-specifier|const
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|V
-parameter_list|)
-function_decl|;
 comment|/// getType - Specialize the getType() method to always return an IntegerType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
 comment|///
@@ -536,29 +479,21 @@ comment|/// @brief Determine if the value is in range for the given type.
 specifier|static
 name|bool
 name|isValueValidForType
-parameter_list|(
-specifier|const
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
-name|uint64_t
-name|V
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|uint64_t V
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|isValueValidForType
-parameter_list|(
-specifier|const
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
-name|int64_t
-name|V
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|int64_t V
+argument_list|)
+block|;
 comment|/// This function will return true iff this constant represents the "null"
 comment|/// value that would be returned by the getNullValue method.
 comment|/// @returns true if this is the null integer value.
@@ -628,10 +563,9 @@ comment|/// @brief Determine if the value is maximal.
 name|bool
 name|isMaxValue
 argument_list|(
-name|bool
-name|isSigned
+argument|bool isSigned
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -659,10 +593,9 @@ comment|/// @brief Determine if the value is minimal.
 name|bool
 name|isMinValue
 argument_list|(
-name|bool
-name|isSigned
+argument|bool isSigned
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -689,10 +622,9 @@ comment|/// @returns true iff this constant is greater or equal to the given num
 comment|/// @brief Determine if the value is greater or equal to the given number.
 name|bool
 name|uge
-parameter_list|(
-name|uint64_t
-name|Num
-parameter_list|)
+argument_list|(
+argument|uint64_t Num
+argument_list|)
 block|{
 return|return
 name|Val
@@ -718,13 +650,10 @@ comment|/// @brief Get the constant's value with a saturation limit
 name|uint64_t
 name|getLimitedValue
 argument_list|(
-name|uint64_t
-name|Limit
-operator|=
-operator|~
+argument|uint64_t Limit = ~
 literal|0ULL
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|Val
@@ -735,30 +664,14 @@ name|Limit
 argument_list|)
 return|;
 block|}
-comment|/// @returns the value for an integer constant of the given type that has all
-comment|/// its bits set to true.
-comment|/// @brief Get the all ones value
-specifier|static
-name|ConstantInt
-modifier|*
-name|getAllOnesValue
-parameter_list|(
-specifier|const
-name|Type
-modifier|*
-name|Ty
-parameter_list|)
-function_decl|;
 comment|/// @brief Methods to support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|ConstantInt
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const ConstantInt *
+argument_list|)
 block|{
 return|return
 name|true
@@ -767,12 +680,9 @@ block|}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|V
@@ -783,52 +693,14 @@ operator|==
 name|ConstantIntVal
 return|;
 block|}
-specifier|static
-name|void
-name|ResetTrueFalse
-parameter_list|()
-block|{
-name|TheTrueVal
-operator|=
-name|TheFalseVal
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|private
-label|:
-specifier|static
-name|ConstantInt
-modifier|*
-name|CreateTrueFalseVals
-parameter_list|(
-name|bool
-name|WhichOne
-parameter_list|)
-function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// ConstantFP - Floating Point Values [float, double]
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|ConstantFP
-range|:
+operator|:
 name|public
 name|Constant
 block|{
@@ -854,6 +726,10 @@ operator|&
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
+name|friend
+name|class
+name|LLVMContextImpl
+block|;
 name|protected
 operator|:
 name|ConstantFP
@@ -894,16 +770,18 @@ return|;
 block|}
 name|public
 operator|:
-comment|/// get() - Static factory methods - Return objects of the specified value
+comment|/// Floating point negation must be implemented with f(x) = -0.0 - x. This
+comment|/// method returns the negative zero constant for floating point or vector
+comment|/// floating point types; for all other types, it returns the null value.
 specifier|static
-name|ConstantFP
+name|Constant
 operator|*
-name|get
+name|getZeroValueForNegation
 argument_list|(
 specifier|const
-name|APFloat
-operator|&
-name|V
+name|Type
+operator|*
+name|Ty
 argument_list|)
 block|;
 comment|/// get() - This returns a ConstantFP, or a vector containing a splat of a
@@ -915,9 +793,61 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|const Type *Ty
+argument|const Type* Ty
 argument_list|,
 argument|double V
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+specifier|const
+name|StringRef
+operator|&
+name|Str
+argument_list|)
+block|;
+specifier|static
+name|ConstantFP
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+specifier|const
+name|APFloat
+operator|&
+name|V
+argument_list|)
+block|;
+specifier|static
+name|ConstantFP
+operator|*
+name|getNegativeZero
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+specifier|static
+name|ConstantFP
+operator|*
+name|getInfinity
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|bool Negative = false
 argument_list|)
 block|;
 comment|/// isValueValidForType - return true if Ty is big enough to represent V.
@@ -957,18 +887,26 @@ name|isNullValue
 argument_list|()
 specifier|const
 block|;
-comment|// Get a negative zero.
-specifier|static
-name|ConstantFP
-operator|*
-name|getNegativeZero
-argument_list|(
+comment|/// isNegativeZeroValue - Return true if the value is what would be returned
+comment|/// by getZeroValueForNegation.
+name|virtual
+name|bool
+name|isNegativeZeroValue
+argument_list|()
 specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|)
-block|;
+block|{
+return|return
+name|Val
+operator|.
+name|isZero
+argument_list|()
+operator|&&
+name|Val
+operator|.
+name|isNegative
+argument_list|()
+return|;
+block|}
 comment|/// isExactlyValue - We don't rely on operator== working on double values, as
 comment|/// it returns true for things that are clearly not equal, like -0.0 and 0.0.
 comment|/// As such, this method can be used to do an exact bit-for-bit comparison of
@@ -978,7 +916,7 @@ comment|/// it only for simple constants.
 name|bool
 name|isExactlyValue
 argument_list|(
-argument|const APFloat& V
+argument|const APFloat&V
 argument_list|)
 specifier|const
 block|;
@@ -1039,39 +977,25 @@ name|FV
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|ConstantFP
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const ConstantFP *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|V
@@ -1082,25 +1006,14 @@ operator|==
 name|ConstantFPVal
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// ConstantAggregateZero - All zero aggregate value
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|ConstantAggregateZero
-range|:
+operator|:
 name|public
 name|Constant
 block|{
@@ -1181,8 +1094,6 @@ return|;
 block|}
 name|public
 operator|:
-comment|/// get() - static factory method for creating a null aggregate.  It is
-comment|/// illegal to call this method with a non-aggregate type.
 specifier|static
 name|ConstantAggregateZero
 operator|*
@@ -1299,7 +1210,7 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// get() - Static factory methods - Return objects of the specified value
+comment|// ConstantArray accessors
 specifier|static
 name|Constant
 operator|*
@@ -1319,6 +1230,7 @@ name|Constant
 operator|*
 operator|>
 operator|&
+name|V
 argument_list|)
 block|;
 specifier|static
@@ -1328,34 +1240,11 @@ name|get
 argument_list|(
 argument|const ArrayType *T
 argument_list|,
-argument|Constant*const*Vals
+argument|Constant *const *Vals
 argument_list|,
 argument|unsigned NumVals
 argument_list|)
-block|{
-comment|// FIXME: make this the primary ctor method.
-return|return
-name|get
-argument_list|(
-name|T
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|Constant
-operator|*
-operator|>
-operator|(
-name|Vals
-expr|,
-name|Vals
-operator|+
-name|NumVals
-operator|)
-argument_list|)
-return|;
-block|}
+block|;
 comment|/// This method constructs a ConstantArray and initializes it with a text
 comment|/// string. The default behavior (AddNull==true) causes a null terminator to
 comment|/// be placed at the end of the array. This effectively increases the length
@@ -1367,7 +1256,9 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|const std::string&Initializer
+argument|LLVMContext&Context
+argument_list|,
+argument|const StringRef&Initializer
 argument_list|,
 argument|bool AddNull = true
 argument_list|)
@@ -1506,6 +1397,7 @@ operator|<
 name|ConstantArray
 operator|>
 operator|:
+name|public
 name|VariadicOperandTraits
 operator|<
 operator|>
@@ -1574,8 +1466,7 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// get() - Static factory methods - Return objects of the specified value
-comment|///
+comment|// ConstantStruct accessors
 specifier|static
 name|Constant
 operator|*
@@ -1603,9 +1494,11 @@ name|Constant
 operator|*
 name|get
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|const std::vector<Constant*>&V
 argument_list|,
-argument|bool Packed = false
+argument|bool Packed
 argument_list|)
 block|;
 specifier|static
@@ -1613,36 +1506,15 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|Constant*const* Vals
+argument|LLVMContext&Context
+argument_list|,
+argument|Constant *const *Vals
 argument_list|,
 argument|unsigned NumVals
 argument_list|,
-argument|bool Packed = false
+argument|bool Packed
 argument_list|)
-block|{
-comment|// FIXME: make this the primary ctor method.
-return|return
-name|get
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|Constant
-operator|*
-operator|>
-operator|(
-name|Vals
-expr|,
-name|Vals
-operator|+
-name|NumVals
-operator|)
-argument_list|,
-name|Packed
-argument_list|)
-return|;
-block|}
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1749,6 +1621,7 @@ operator|<
 name|ConstantStruct
 operator|>
 operator|:
+name|public
 name|VariadicOperandTraits
 operator|<
 operator|>
@@ -1817,7 +1690,7 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// get() - Static factory methods - Return objects of the specified value
+comment|// ConstantVector accessors
 specifier|static
 name|Constant
 operator|*
@@ -1837,6 +1710,7 @@ name|Constant
 operator|*
 operator|>
 operator|&
+name|V
 argument_list|)
 block|;
 specifier|static
@@ -1861,32 +1735,11 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|Constant*const* Vals
+argument|Constant *const *Vals
 argument_list|,
 argument|unsigned NumVals
 argument_list|)
-block|{
-comment|// FIXME: make this the primary ctor method.
-return|return
-name|get
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|Constant
-operator|*
-operator|>
-operator|(
-name|Vals
-expr|,
-name|Vals
-operator|+
-name|NumVals
-operator|)
-argument_list|)
-return|;
-block|}
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1919,20 +1772,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// @returns the value for a vector integer constant of the given type that
-comment|/// has all its bits set to true.
-comment|/// @brief Get the all ones value
-specifier|static
-name|ConstantVector
-operator|*
-name|getAllOnesValue
-argument_list|(
-specifier|const
-name|VectorType
-operator|*
-name|Ty
-argument_list|)
-block|;
 comment|/// isNullValue - Return true if this is the value that would be returned by
 comment|/// getNullValue.  This always returns false because zero vectors are always
 comment|/// created as ConstantAggregateZero objects.
@@ -2024,6 +1863,7 @@ operator|<
 name|ConstantVector
 operator|>
 operator|:
+name|public
 name|VariadicOperandTraits
 operator|<
 operator|>
@@ -2295,6 +2135,9 @@ argument_list|,
 argument|Constant *C1
 argument_list|,
 argument|Constant *C2
+argument_list|,
+argument|unsigned Flags =
+literal|0
 argument_list|)
 block|;
 specifier|static
@@ -2336,6 +2179,20 @@ specifier|static
 name|Constant
 operator|*
 name|getGetElementPtrTy
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|Constant *C
+argument_list|,
+argument|Value* const *Idxs
+argument_list|,
+argument|unsigned NumIdxs
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getInBoundsGetElementPtrTy
 argument_list|(
 argument|const Type *Ty
 argument_list|,
@@ -2449,6 +2306,329 @@ comment|// ConstantExpr class, because they will attempt to fold the constant
 comment|// expression into something simpler if possible.
 comment|/// Cast constant expr
 comment|///
+comment|/// getAlignOf constant expr - computes the alignment of a type in a target
+comment|/// independent way (Note: the return type is an i32; Note: assumes that i8
+comment|/// is byte aligned).
+specifier|static
+name|Constant
+operator|*
+name|getAlignOf
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+comment|/// getSizeOf constant expr - computes the size of a type in a target
+comment|/// independent way (Note: the return type is an i64).
+comment|///
+specifier|static
+name|Constant
+operator|*
+name|getSizeOf
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+comment|/// getOffsetOf constant expr - computes the offset of a field in a target
+comment|/// independent way (Note: the return type is an i64).
+comment|///
+specifier|static
+name|Constant
+operator|*
+name|getOffsetOf
+argument_list|(
+argument|const StructType* Ty
+argument_list|,
+argument|unsigned FieldNo
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getNeg
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFNeg
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getNot
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getAdd
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFAdd
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getSub
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFSub
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getMul
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFMul
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getUDiv
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getSDiv
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFDiv
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getURem
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getSRem
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFRem
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getAnd
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getOr
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getXor
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getShl
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getLShr
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getAShr
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
 specifier|static
 name|Constant
 operator|*
@@ -2629,6 +2809,48 @@ operator|*
 name|Ty
 argument_list|)
 block|;
+specifier|static
+name|Constant
+operator|*
+name|getNSWAdd
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getNSWSub
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getExactSDiv
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -2777,6 +2999,16 @@ name|hasIndices
 argument_list|()
 specifier|const
 block|;
+comment|/// @brief Return true if this is a getelementptr expression and all
+comment|/// the index operands are compile-time known integers within the
+comment|/// corresponding notional static array extents. Note that this is
+comment|/// not equivalant to, a subset of, or a superset of the "inbounds"
+comment|/// property.
+name|bool
+name|isGEPWithNoNotionalOverIndexing
+argument_list|()
+specifier|const
+block|;
 comment|/// Select constant expr
 comment|///
 specifier|static
@@ -2807,36 +3039,7 @@ name|V2
 argument_list|)
 return|;
 block|}
-comment|/// getAlignOf constant expr - computes the alignment of a type in a target
-comment|/// independent way (Note: the return type is an i32; Note: assumes that i8
-comment|/// is byte aligned).
-comment|///
-specifier|static
-name|Constant
-operator|*
-name|getAlignOf
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|)
-block|;
-comment|/// getSizeOf constant expr - computes the size of a type in a target
-comment|/// independent way (Note: the return type is an i64).
-comment|///
-specifier|static
-name|Constant
-operator|*
-name|getSizeOf
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|)
-block|;
-comment|/// ConstantExpr::get - Return a binary or shift operator constant expression,
+comment|/// get - Return a binary or shift operator constant expression,
 comment|/// folding if possible.
 comment|///
 specifier|static
@@ -2849,10 +3052,12 @@ argument_list|,
 argument|Constant *C1
 argument_list|,
 argument|Constant *C2
+argument_list|,
+argument|unsigned Flags =
+literal|0
 argument_list|)
 block|;
-comment|/// @brief Return an ICmp, FCmp, VICmp, or VFCmp comparison operator constant
-comment|/// expression.
+comment|/// @brief Return an ICmp or FCmp comparison operator constant expression.
 specifier|static
 name|Constant
 operator|*
@@ -2865,251 +3070,9 @@ argument_list|,
 argument|Constant *C2
 argument_list|)
 block|;
-comment|/// ConstantExpr::get* - Return some common constants without having to
+comment|/// get* - Return some common constants without having to
 comment|/// specify the full Instruction::OPCODE identifier.
 comment|///
-specifier|static
-name|Constant
-operator|*
-name|getNeg
-argument_list|(
-name|Constant
-operator|*
-name|C
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getFNeg
-argument_list|(
-name|Constant
-operator|*
-name|C
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getNot
-argument_list|(
-name|Constant
-operator|*
-name|C
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getAdd
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getFAdd
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getSub
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getFSub
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getMul
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getFMul
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getUDiv
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getSDiv
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getFDiv
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getURem
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-comment|// unsigned rem
-specifier|static
-name|Constant
-operator|*
-name|getSRem
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-comment|// signed rem
-specifier|static
-name|Constant
-operator|*
-name|getFRem
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getAnd
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getOr
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getXor
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
 specifier|static
 name|Constant
 operator|*
@@ -3134,72 +3097,6 @@ argument_list|,
 argument|Constant *RHS
 argument_list|)
 block|;
-specifier|static
-name|Constant
-operator|*
-name|getVICmp
-argument_list|(
-argument|unsigned short pred
-argument_list|,
-argument|Constant *LHS
-argument_list|,
-argument|Constant *RHS
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getVFCmp
-argument_list|(
-argument|unsigned short pred
-argument_list|,
-argument|Constant *LHS
-argument_list|,
-argument|Constant *RHS
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getShl
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getLShr
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getAShr
-argument_list|(
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|)
-block|;
 comment|/// Getelementptr form.  std::vector<Value*> is only accepted for convenience:
 comment|/// all elements must be Constant's.
 comment|///
@@ -3210,7 +3107,7 @@ name|getGetElementPtr
 argument_list|(
 argument|Constant *C
 argument_list|,
-argument|Constant* const *IdxList
+argument|Constant *const *IdxList
 argument_list|,
 argument|unsigned NumIdx
 argument_list|)
@@ -3219,6 +3116,32 @@ specifier|static
 name|Constant
 operator|*
 name|getGetElementPtr
+argument_list|(
+argument|Constant *C
+argument_list|,
+argument|Value* const *IdxList
+argument_list|,
+argument|unsigned NumIdx
+argument_list|)
+block|;
+comment|/// Create an "inbounds" getelementptr. See the documentation for the
+comment|/// "inbounds" flag in LangRef.html for details.
+specifier|static
+name|Constant
+operator|*
+name|getInBoundsGetElementPtr
+argument_list|(
+argument|Constant *C
+argument_list|,
+argument|Constant *const *IdxList
+argument_list|,
+argument|unsigned NumIdx
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getInBoundsGetElementPtr
 argument_list|(
 argument|Constant *C
 argument_list|,
@@ -3301,20 +3224,6 @@ argument_list|,
 argument|const unsigned *IdxList
 argument_list|,
 argument|unsigned NumIdx
-argument_list|)
-block|;
-comment|/// Floating point negation must be implemented with f(x) = -0.0 - x. This
-comment|/// method returns the negative zero constant for floating point or vector
-comment|/// floating point types; for all other types, it returns the null value.
-specifier|static
-name|Constant
-operator|*
-name|getZeroValueForNegationExpr
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
 argument_list|)
 block|;
 comment|/// isNullValue - Return true if this is the value that would be returned by
@@ -3414,7 +3323,7 @@ name|Constant
 operator|*
 name|getWithOperands
 argument_list|(
-argument|Constant* const *Ops
+argument|Constant *const *Ops
 argument_list|,
 argument|unsigned NumOps
 argument_list|)
@@ -3483,6 +3392,7 @@ operator|<
 name|ConstantExpr
 operator|>
 operator|:
+name|public
 name|VariadicOperandTraits
 operator|<
 literal|1
@@ -3645,217 +3555,7 @@ name|UndefValueVal
 return|;
 block|}
 expr|}
-block|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// MDString - a single uniqued string.
-comment|/// These are used to efficiently contain a byte sequence for metadata.
-comment|///
-name|class
-name|MDString
-operator|:
-name|public
-name|Constant
-block|{
-name|MDString
-argument_list|(
-specifier|const
-name|MDString
-operator|&
-argument_list|)
-block|;
-comment|// DO NOT IMPLEMENT
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-block|;
-comment|// DO NOT IMPLEMENT
-name|MDString
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|begin
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|end
-argument_list|)
-block|;
-specifier|const
-name|char
-operator|*
-name|StrBegin
-block|,
-operator|*
-name|StrEnd
-block|;
-name|protected
-operator|:
-comment|// allocate space for exactly zero operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-name|public
-operator|:
-comment|/// get() - Static factory methods - Return objects of the specified value.
-comment|///
-specifier|static
-name|MDString
-operator|*
-name|get
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|StrBegin
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|StrEnd
-argument_list|)
-block|;
-specifier|static
-name|MDString
-operator|*
-name|get
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Str
-argument_list|)
-block|;
-comment|/// size() - The length of this string.
-comment|///
-name|intptr_t
-name|size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StrEnd
-operator|-
-name|StrBegin
-return|;
-block|}
-comment|/// begin() - Pointer to the first byte of the string.
-comment|///
-specifier|const
-name|char
-operator|*
-name|begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StrBegin
-return|;
-block|}
-comment|/// end() - Pointer to one byte past the end of the string.
-comment|///
-specifier|const
-name|char
-operator|*
-name|end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StrEnd
-return|;
-block|}
-comment|/// getType() specialization - Type is always MetadataTy.
-comment|///
-specifier|inline
-specifier|const
-name|Type
-operator|*
-name|getType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Type
-operator|::
-name|MetadataTy
-return|;
-block|}
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.  This always returns false because getNullValue will never
-comment|/// produce metadata.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|void
-name|destroyConstant
-argument_list|()
-block|;
-comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const MDString *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
-block|{
-return|return
-name|V
-operator|->
-name|getValueID
-argument_list|()
-operator|==
-name|MDStringVal
-return|;
-block|}
-expr|}
-block|;  }
+block|; }
 end_decl_stmt
 
 begin_comment

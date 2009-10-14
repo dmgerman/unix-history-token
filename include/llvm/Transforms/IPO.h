@@ -74,9 +74,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|FunctionPass
-decl_stmt|;
-name|class
 name|ModulePass
 decl_stmt|;
 name|class
@@ -348,7 +345,7 @@ comment|//
 comment|/// createLoopExtractorPass - This pass extracts all natural loops from the
 comment|/// program into a function if it can.
 comment|///
-name|FunctionPass
+name|Pass
 modifier|*
 name|createLoopExtractorPass
 parameter_list|()
@@ -356,7 +353,7 @@ function_decl|;
 comment|/// createSingleLoopExtractorPass - This pass extracts one natural loop from the
 comment|/// program into a function if it can.  This is used by bugpoint.
 comment|///
-name|FunctionPass
+name|Pass
 modifier|*
 name|createSingleLoopExtractorPass
 parameter_list|()

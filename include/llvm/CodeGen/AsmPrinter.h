@@ -70,19 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/DebugLoc.h"
 end_include
 
 begin_include
@@ -94,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<set>
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_decl_stmt
@@ -111,6 +105,9 @@ name|class
 name|ConstantArray
 decl_stmt|;
 name|class
+name|ConstantFP
+decl_stmt|;
+name|class
 name|ConstantInt
 decl_stmt|;
 name|class
@@ -123,7 +120,28 @@ name|class
 name|GCMetadataPrinter
 decl_stmt|;
 name|class
+name|GlobalValue
+decl_stmt|;
+name|class
 name|GlobalVariable
+decl_stmt|;
+name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineInstr
+decl_stmt|;
+name|class
+name|MachineLoopInfo
+decl_stmt|;
+name|class
+name|MachineLoop
+decl_stmt|;
+name|class
+name|MachineConstantPool
 decl_stmt|;
 name|class
 name|MachineConstantPoolEntry
@@ -132,7 +150,25 @@ name|class
 name|MachineConstantPoolValue
 decl_stmt|;
 name|class
+name|MachineJumpTableInfo
+decl_stmt|;
+name|class
 name|MachineModuleInfo
+decl_stmt|;
+name|class
+name|MCInst
+decl_stmt|;
+name|class
+name|MCContext
+decl_stmt|;
+name|class
+name|MCSection
+decl_stmt|;
+name|class
+name|MCStreamer
+decl_stmt|;
+name|class
+name|MCSymbol
 decl_stmt|;
 name|class
 name|DwarfWriter
@@ -141,16 +177,16 @@ name|class
 name|Mangler
 decl_stmt|;
 name|class
-name|Section
+name|MCAsmInfo
 decl_stmt|;
 name|class
-name|TargetAsmInfo
+name|TargetLoweringObjectFile
 decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
 name|class
-name|raw_ostream
+name|formatted_raw_ostream
 decl_stmt|;
 comment|/// AsmPrinter - This class is intended to be used as a driving class for all
 comment|/// asm writers.
@@ -193,13 +229,22 @@ expr_stmt|;
 name|gcp_map_type
 name|GCMetadataPrinters
 decl_stmt|;
-name|protected
+comment|/// If VerboseAsm is set, a pointer to the loop info for this
+comment|/// function.
+comment|///
+name|MachineLoopInfo
+modifier|*
+name|LI
+decl_stmt|;
+name|public
 label|:
 comment|/// MMI - If available, this is a pointer to the current MachineModuleInfo.
 name|MachineModuleInfo
 modifier|*
 name|MMI
 decl_stmt|;
+name|protected
+label|:
 comment|/// DW - If available, this is a pointer to the current dwarf writer.
 name|DwarfWriter
 modifier|*
@@ -209,7 +254,7 @@ name|public
 label|:
 comment|/// Output stream on which we're printing assembly code.
 comment|///
-name|raw_ostream
+name|formatted_raw_ostream
 modifier|&
 name|O
 decl_stmt|;
@@ -219,12 +264,19 @@ name|TargetMachine
 modifier|&
 name|TM
 decl_stmt|;
+comment|/// getObjFileLowering - Return information about object file lowering.
+name|TargetLoweringObjectFile
+operator|&
+name|getObjFileLowering
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Target Asm Printer information.
 comment|///
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 modifier|*
-name|TAI
+name|MAI
 decl_stmt|;
 comment|/// Target Register Information.
 comment|///
@@ -232,6 +284,21 @@ specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|TRI
+decl_stmt|;
+comment|/// OutContext - This is the context for the output file that we are
+comment|/// streaming.  This owns all of the global MC-related objects for the
+comment|/// generated translation unit.
+name|MCContext
+modifier|&
+name|OutContext
+decl_stmt|;
+comment|/// OutStreamer - This is the MCStreamer object for the file we are
+comment|/// generating.  This contains the transient state for the current
+comment|/// translation unit that we are generating (such as the current section
+comment|/// etc).
+name|MCStreamer
+modifier|&
+name|OutStreamer
 decl_stmt|;
 comment|/// The current machine function.
 specifier|const
@@ -253,23 +320,14 @@ operator|::
 name|string
 name|CurrentFnName
 expr_stmt|;
-comment|/// CurrentSection - The current section we are emitting to.  This is
-comment|/// controlled and used by the SwitchSection method.
-name|std
-operator|::
-name|string
-name|CurrentSection
-expr_stmt|;
+comment|/// getCurrentSection() - Return the current section we are emitting to.
 specifier|const
-name|Section
-modifier|*
-name|CurrentSection_
-decl_stmt|;
-comment|/// IsInTextSection - True if the current section we are emitting to is a
-comment|/// text section.
-name|bool
-name|IsInTextSection
-decl_stmt|;
+name|MCSection
+operator|*
+name|getCurrentSection
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// VerboseAsm - Emit comments in assembly output if this is true.
 comment|///
 name|bool
@@ -293,7 +351,7 @@ name|mutable
 name|unsigned
 name|Counter
 decl_stmt|;
-comment|// Private state for processDebugLock()
+comment|// Private state for processDebugLoc()
 name|mutable
 name|DebugLocTuple
 name|PrevDLT
@@ -303,7 +361,7 @@ label|:
 name|explicit
 name|AsmPrinter
 parameter_list|(
-name|raw_ostream
+name|formatted_raw_ostream
 modifier|&
 name|o
 parameter_list|,
@@ -312,7 +370,7 @@ modifier|&
 name|TM
 parameter_list|,
 specifier|const
-name|TargetAsmInfo
+name|MCAsmInfo
 modifier|*
 name|T
 parameter_list|,
@@ -338,116 +396,17 @@ return|return
 name|VerboseAsm
 return|;
 block|}
-comment|/// SwitchToTextSection - Switch to the specified section of the executable
-comment|/// if we are not already in it!  If GV is non-null and if the global has an
-comment|/// explicitly requested section, we switch to the section indicated for the
-comment|/// global instead of NewSection.
+comment|/// getFunctionNumber - Return a unique ID for the current function.
 comment|///
-comment|/// If the new section is an empty string, this method forgets what the
-comment|/// current section is, but does not emit a .section directive.
-comment|///
-comment|/// This method is used when about to emit executable code.
-comment|///
-name|void
-name|SwitchToTextSection
-parameter_list|(
+name|unsigned
+name|getFunctionNumber
+argument_list|()
 specifier|const
-name|char
-modifier|*
-name|NewSection
-parameter_list|,
-specifier|const
-name|GlobalValue
-modifier|*
-name|GV
-init|=
-name|NULL
-parameter_list|)
-function_decl|;
-comment|/// SwitchToDataSection - Switch to the specified section of the executable
-comment|/// if we are not already in it!  If GV is non-null and if the global has an
-comment|/// explicitly requested section, we switch to the section indicated for the
-comment|/// global instead of NewSection.
-comment|///
-comment|/// If the new section is an empty string, this method forgets what the
-comment|/// current section is, but does not emit a .section directive.
-comment|///
-comment|/// This method is used when about to emit data.  For most assemblers, this
-comment|/// is the same as the SwitchToTextSection method, but not all assemblers
-comment|/// are the same.
-comment|///
-name|void
-name|SwitchToDataSection
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|NewSection
-parameter_list|,
-specifier|const
-name|GlobalValue
-modifier|*
-name|GV
-init|=
-name|NULL
-parameter_list|)
-function_decl|;
-comment|/// SwitchToSection - Switch to the specified section of the executable if
-comment|/// we are not already in it!
-name|void
-name|SwitchToSection
-parameter_list|(
-specifier|const
-name|Section
-modifier|*
-name|NS
-parameter_list|)
-function_decl|;
-comment|/// getGlobalLinkName - Returns the asm/link name of of the specified
-comment|/// global variable.  Should be overridden by each target asm printer to
-comment|/// generate the appropriate value.
-name|virtual
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getGlobalLinkName
-argument_list|(
-argument|const GlobalVariable *GV
-argument_list|,
-argument|std::string&LinkName
-argument_list|)
-specifier|const
-expr_stmt|;
-comment|/// EmitExternalGlobal - Emit the external reference to a global variable.
-comment|/// Should be overridden if an indirect reference should be used.
-name|virtual
-name|void
-name|EmitExternalGlobal
-parameter_list|(
-specifier|const
-name|GlobalVariable
-modifier|*
-name|GV
-parameter_list|)
-function_decl|;
-comment|/// getCurrentFunctionEHName - Called to return (and cache) the
-comment|/// CurrentFnEHName.
-comment|///
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getCurrentFunctionEHName
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|,
-argument|std::string&FuncEHName
-argument_list|)
-specifier|const
-expr_stmt|;
+block|{
+return|return
+name|FunctionNumber
+return|;
+block|}
 name|protected
 label|:
 comment|/// getAnalysisUsage - Record analysis usage.
@@ -472,6 +431,28 @@ modifier|&
 name|M
 parameter_list|)
 function_decl|;
+comment|/// EmitStartOfAsmFile - This virtual method can be overridden by targets
+comment|/// that want to emit something at the start of their file.
+name|virtual
+name|void
+name|EmitStartOfAsmFile
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|)
+block|{}
+comment|/// EmitEndOfAsmFile - This virtual method can be overridden by targets that
+comment|/// want to emit something at the end of their file.
+name|virtual
+name|void
+name|EmitEndOfAsmFile
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|)
+block|{}
 comment|/// doFinalization - Shut down the asmprinter.  If you override this in your
 comment|/// pass, you must make sure to call it explicitly.
 name|bool
@@ -554,6 +535,20 @@ modifier|*
 name|ExtraCode
 parameter_list|)
 function_decl|;
+comment|/// PrintGlobalVariable - Emit the specified global variable and its
+comment|/// initializer to the output stream.
+name|virtual
+name|void
+name|PrintGlobalVariable
+parameter_list|(
+specifier|const
+name|GlobalVariable
+modifier|*
+name|GV
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// SetupMachineFunction - This should be called when a new MachineFunction
 comment|/// is being processed from runOnMachineFunction.
 name|void
@@ -564,17 +559,6 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// getFunctionNumber - Return a unique ID for the current function.
-comment|///
-name|unsigned
-name|getFunctionNumber
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FunctionNumber
-return|;
-block|}
 comment|/// IncrementFunctionNumber - Increase Function Number.  AsmPrinters should
 comment|/// not normally call this, as the counter is automatically bumped by
 comment|/// SetupMachineFunction.
@@ -689,6 +673,19 @@ specifier|const
 name|char
 operator|*
 name|Comment
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|EOL
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Comment
+argument_list|,
+name|unsigned
+name|Encoding
 argument_list|)
 decl|const
 decl_stmt|;
@@ -870,6 +867,52 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// EmitComments - Pretty-print comments for instructions
+name|void
+name|EmitComments
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// EmitComments - Pretty-print comments for basic blocks
+name|void
+name|EmitComments
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// GetMBBSymbol - Return the MCSymbol corresponding to the specified basic
+comment|/// block label.
+name|MCSymbol
+modifier|*
+name|GetMBBSymbol
+argument_list|(
+name|unsigned
+name|MBBID
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// EmitBasicBlockStart - This method prints the label for the specified
+comment|/// MachineBasicBlock, an alignment (if present) and a comment describing
+comment|/// it if appropriate.
+name|void
+name|EmitBasicBlockStart
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
 name|protected
 label|:
 comment|/// EmitZeros - Emit a block of zeros.
@@ -940,8 +983,13 @@ comment|/// instruction's DebugLoc.
 name|void
 name|processDebugLoc
 parameter_list|(
-name|DebugLoc
-name|DL
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|bool
+name|BeforePrintingInsn
 parameter_list|)
 function_decl|;
 comment|/// printInlineAsm - This method formats and prints the specified machine
@@ -966,34 +1014,6 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// printBasicBlockLabel - This method prints the label for the specified
-comment|/// MachineBasicBlock
-name|virtual
-name|void
-name|printBasicBlockLabel
-argument_list|(
-specifier|const
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|,
-name|bool
-name|printAlign
-operator|=
-name|false
-argument_list|,
-name|bool
-name|printColon
-operator|=
-name|false
-argument_list|,
-name|bool
-name|printComment
-operator|=
-name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1065,46 +1085,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// printSuffixedName - This prints a name with preceding
-comment|/// getPrivateGlobalPrefix and the specified suffix, handling quoted names
-comment|/// correctly.
-name|void
-name|printSuffixedName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|Suffix
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|Prefix
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-name|void
-name|printSuffixedName
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|Suffix
-argument_list|)
-decl_stmt|;
 comment|/// printVisibility - This prints visibility information about symbol, if
 comment|/// this is suported by the target.
 name|void
@@ -1133,17 +1113,6 @@ decl|const
 decl_stmt|;
 name|private
 label|:
-specifier|const
-name|GlobalValue
-modifier|*
-name|findGlobalValue
-parameter_list|(
-specifier|const
-name|Constant
-modifier|*
-name|CV
-parameter_list|)
-function_decl|;
 name|void
 name|EmitLLVMUsedList
 parameter_list|(

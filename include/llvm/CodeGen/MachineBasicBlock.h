@@ -71,12 +71,6 @@ directive|include
 file|"llvm/ADT/GraphTraits.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Streams.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -86,6 +80,9 @@ name|BasicBlock
 decl_stmt|;
 name|class
 name|MachineFunction
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|template
 operator|<
@@ -105,7 +102,7 @@ block|{
 name|private
 operator|:
 name|mutable
-name|ilist_node
+name|ilist_half_node
 operator|<
 name|MachineInstr
 operator|>
@@ -1450,36 +1447,12 @@ expr_stmt|;
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|OS
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|OS
-condition|)
-name|print
-argument_list|(
-operator|*
-name|OS
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// getNumber - MachineBasicBlocks are uniquely numbered at the function
 comment|/// level, unless they're not in a MachineFunction yet, in which case this
 comment|/// will return -1.
@@ -1549,16 +1522,12 @@ empty_stmt|;
 end_empty_stmt
 
 begin_expr_stmt
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 operator|,

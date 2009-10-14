@@ -112,13 +112,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
+file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -721,8 +721,14 @@ name|class
 name|value_use_iterator
 operator|:
 name|public
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
 name|UserTy
 operator|*
 operator|,
@@ -730,8 +736,14 @@ name|ptrdiff_t
 operator|>
 block|{
 typedef|typedef
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
 name|UserTy
 operator|*
 operator|,

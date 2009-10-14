@@ -76,9 +76,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Module
-decl_stmt|;
-name|class
 name|PIC16Subtarget
 range|:
 name|public
@@ -91,11 +88,11 @@ block|;
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that
-comment|/// of the specified module.
+comment|/// of the specified triple.
 comment|///
 name|PIC16Subtarget
 argument_list|(
-argument|const Module&M
+argument|const std::string&TT
 argument_list|,
 argument|const std::string&FS
 argument_list|,

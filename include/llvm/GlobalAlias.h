@@ -181,7 +181,7 @@ argument|const Type *Ty
 argument_list|,
 argument|LinkageTypes Linkage
 argument_list|,
-argument|const std::string&Name =
+argument|const Twine&Name =
 literal|""
 argument_list|,
 argument|Constant* Aliasee =
@@ -343,6 +343,7 @@ operator|<
 name|GlobalAlias
 operator|>
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 literal|1

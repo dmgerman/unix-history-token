@@ -321,7 +321,7 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
-comment|/// SelectInstruction - Do "fast" instruction selection for the given
+comment|/// SelectOperator - Do "fast" instruction selection for the given
 comment|/// LLVM IR operator (Instruction or ConstantExpr), and append
 comment|/// generated machine instructions to the current block. Return true
 comment|/// if selection was successful.
@@ -464,13 +464,9 @@ name|unsigned
 name|FastEmit_
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|RetVT
 argument_list|,
 name|ISD
@@ -488,13 +484,9 @@ name|unsigned
 name|FastEmit_r
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|RetVT
 argument_list|,
 name|ISD
@@ -515,13 +507,9 @@ name|unsigned
 name|FastEmit_rr
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|RetVT
 argument_list|,
 name|ISD
@@ -545,13 +533,9 @@ name|unsigned
 name|FastEmit_ri
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|RetVT
 argument_list|,
 name|ISD
@@ -575,13 +559,9 @@ name|unsigned
 name|FastEmit_rf
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|RetVT
 argument_list|,
 name|ISD
@@ -606,13 +586,9 @@ name|unsigned
 name|FastEmit_rri
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|RetVT
 argument_list|,
 name|ISD
@@ -638,8 +614,6 @@ name|unsigned
 name|FastEmit_ri_
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|ISD
@@ -654,8 +628,6 @@ name|uint64_t
 name|Imm
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|ImmType
 argument_list|)
 decl_stmt|;
@@ -667,8 +639,6 @@ name|unsigned
 name|FastEmit_rf_
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|ISD
@@ -684,8 +654,6 @@ operator|*
 name|FPImm
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|ImmType
 argument_list|)
 decl_stmt|;
@@ -697,13 +665,9 @@ name|unsigned
 name|FastEmit_i
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|RetVT
 argument_list|,
 name|ISD
@@ -723,13 +687,9 @@ name|unsigned
 name|FastEmit_f
 argument_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
 argument_list|,
 name|MVT
-operator|::
-name|SimpleValueType
 name|RetVT
 argument_list|,
 name|ISD
@@ -884,33 +844,29 @@ comment|/// FastEmitInst_extractsubreg - Emit a MachineInstr for an extract_subr
 comment|/// from a specified index of a superregister to a specified type.
 name|unsigned
 name|FastEmitInst_extractsubreg
-argument_list|(
+parameter_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|RetVT
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op0
-argument_list|,
+parameter_list|,
 name|uint32_t
 name|Idx
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmitZExtFromI1 - Emit MachineInstrs to compute the value of Op
 comment|/// with all but the least significant bit set to zero.
 name|unsigned
 name|FastEmitZExtFromI1
-argument_list|(
+parameter_list|(
 name|MVT
-operator|::
-name|SimpleValueType
 name|VT
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmitBranch - Emit an unconditional branch to the given block,
 comment|/// unless it is the immediate (fall-through) successor, and update
 comment|/// the CFG.
@@ -987,6 +943,14 @@ name|NodeType
 name|ISDOpcode
 argument_list|)
 decl_stmt|;
+name|bool
+name|SelectFNeg
+parameter_list|(
+name|User
+modifier|*
+name|I
+parameter_list|)
+function_decl|;
 name|bool
 name|SelectGetElementPtr
 parameter_list|(

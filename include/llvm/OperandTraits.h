@@ -163,8 +163,10 @@ name|Layout
 block|{     struct
 name|overlay
 operator|:
+name|public
 name|prefix
 block|,
+name|public
 name|U
 block|{
 name|overlay
@@ -173,18 +175,7 @@ block|;
 comment|// DO NOT IMPLEMENT
 block|}
 block|;   }
-block|;
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|allocate
-argument_list|(
-name|unsigned
-argument_list|)
-block|;
-comment|// FIXME
-block|}
+block|; }
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                          OptionalOperands Trait Class
@@ -199,6 +190,7 @@ operator|>
 expr|struct
 name|OptionalOperandTraits
 operator|:
+name|public
 name|FixedNumOperandTraits
 operator|<
 name|ARITY
@@ -293,17 +285,7 @@ name|getNumOperands
 argument_list|()
 return|;
 block|}
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|allocate
-argument_list|(
-name|unsigned
-argument_list|)
-block|;
-comment|// FIXME
-block|}
+expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                          HungoffOperand Trait Class
@@ -374,17 +356,7 @@ name|getNumOperands
 argument_list|()
 return|;
 block|}
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|allocate
-argument_list|(
-name|unsigned
-argument_list|)
-block|;
-comment|// FIXME
-block|}
+expr|}
 block|;
 comment|/// Macro for generating in-class operand accessor declarations.
 comment|/// It should only be called in the public section of the interface.

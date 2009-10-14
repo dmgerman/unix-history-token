@@ -69,10 +69,38 @@ name|LLVM_TARGET
 parameter_list|(
 name|TargetName
 parameter_list|)
+value|void LLVMInitialize##TargetName##TargetInfo();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
 value|void LLVMInitialize##TargetName##Target();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
+comment|/** LLVMInitializeAllTargetInfos - The main program should call this function if     it wants access to all available targets that LLVM is configured to     support. */
+specifier|static
+specifier|inline
+name|void
+name|LLVMInitializeAllTargetInfos
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##TargetInfo();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+block|}
 comment|/** LLVMInitializeAllTargets - The main program should call this function if it     wants to link in all available targets that LLVM is configured to     support. */
 specifier|static
 specifier|inline
@@ -108,7 +136,8 @@ name|DoInit2
 parameter_list|(
 name|TARG
 parameter_list|)
-value|LLVMInitialize ## TARG ()
+define|\
+value|LLVMInitialize ## TARG ## Info ();          \   LLVMInitialize ## TARG ()
 define|#
 directive|define
 name|DoInit

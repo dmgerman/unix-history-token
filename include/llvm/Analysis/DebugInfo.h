@@ -74,6 +74,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -98,8 +104,27 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Dwarf.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ValueHandle.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|ATTACH_DEBUG_INFO_TO_AN_INSN
+value|1
+end_define
 
 begin_decl_stmt
 name|namespace
@@ -144,44 +169,46 @@ struct_decl|;
 name|class
 name|DebugLoc
 decl_stmt|;
-name|class
+struct_decl|struct
 name|DebugLocTracker
-decl_stmt|;
+struct_decl|;
 name|class
 name|Instruction
+decl_stmt|;
+name|class
+name|LLVMContext
 decl_stmt|;
 name|class
 name|DIDescriptor
 block|{
 name|protected
 label|:
-name|GlobalVariable
-modifier|*
-name|DbgGV
-decl_stmt|;
-comment|/// DIDescriptor constructor.  If the specified GV is non-null, this checks
+name|TrackingVH
+operator|<
+name|MDNode
+operator|>
+name|DbgNode
+expr_stmt|;
+comment|/// DIDescriptor constructor.  If the specified node is non-null, check
 comment|/// to make sure that the tag in the descriptor matches 'RequiredTag'.  If
 comment|/// not, the debug info is corrupt and we ignore it.
 name|DIDescriptor
 argument_list|(
-argument|GlobalVariable *GV
+argument|MDNode *N
 argument_list|,
 argument|unsigned RequiredTag
 argument_list|)
 empty_stmt|;
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+modifier|*
 name|getStringField
 argument_list|(
-argument|unsigned Elt
-argument_list|,
-argument|std::string&Result
+name|unsigned
+name|Elt
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 name|unsigned
 name|getUnsignedField
 argument_list|(
@@ -236,7 +263,7 @@ argument_list|(
 name|Elt
 argument_list|)
 operator|.
-name|getGV
+name|getNode
 argument_list|()
 argument_list|)
 return|;
@@ -256,7 +283,7 @@ name|explicit
 name|DIDescriptor
 argument_list|()
 operator|:
-name|DbgGV
+name|DbgNode
 argument_list|(
 literal|0
 argument_list|)
@@ -264,14 +291,14 @@ block|{}
 name|explicit
 name|DIDescriptor
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 argument_list|)
 operator|:
-name|DbgGV
+name|DbgNode
 argument_list|(
-argument|GV
+argument|N
 argument_list|)
 block|{}
 name|bool
@@ -280,19 +307,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DbgGV
+name|DbgNode
 operator|==
 literal|0
 return|;
 block|}
-name|GlobalVariable
+name|MDNode
 operator|*
-name|getGV
+name|getNode
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DbgGV
+name|DbgNode
 return|;
 block|}
 name|unsigned
@@ -324,14 +351,14 @@ operator|~
 name|LLVMDebugVersionMask
 return|;
 block|}
-comment|/// ValidDebugInfo - Return true if V represents valid debug info value.
+comment|/// ValidDebugInfo - Return true if N represents valid debug info value.
 specifier|static
 name|bool
 name|ValidDebugInfo
 argument_list|(
-name|Value
+name|MDNode
 operator|*
-name|V
+name|N
 argument_list|,
 name|CodeGenOpt
 operator|::
@@ -342,6 +369,71 @@ decl_stmt|;
 comment|/// dump - print descriptor.
 name|void
 name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isDerivedType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isCompositeType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isBasicType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isVariable
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isSubprogram
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isGlobalVariable
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isScope
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isCompileUnit
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isLexicalBlock
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isSubrange
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isEnumerator
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isGlobal
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -359,16 +451,16 @@ operator|:
 name|explicit
 name|DISubrange
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 operator|=
 literal|0
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|GV
+argument|N
 argument_list|,
 argument|dwarf::DW_TAG_subrange_type
 argument_list|)
@@ -417,16 +509,16 @@ operator|:
 name|explicit
 name|DIArray
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 operator|=
 literal|0
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|GV
+argument|N
 argument_list|)
 block|{}
 name|unsigned
@@ -450,9 +542,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// DICompileUnit - A wrapper for a compile unit.
+comment|/// DIScope - A base class for various scopes.
 name|class
-name|DICompileUnit
+name|DIScope
 operator|:
 name|public
 name|DIDescriptor
@@ -460,22 +552,90 @@ block|{
 name|public
 operator|:
 name|explicit
-name|DICompileUnit
+name|DIScope
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 operator|=
 literal|0
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|GV
-argument_list|,
-argument|dwarf::DW_TAG_compile_unit
+argument|N
 argument_list|)
+block|{
+if|if
+condition|(
+name|DbgNode
+operator|&&
+operator|!
+name|isScope
+argument_list|()
+condition|)
+name|DbgNode
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|virtual
+operator|~
+name|DIScope
+argument_list|()
 block|{}
+specifier|const
+name|char
+operator|*
+name|getFilename
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|char
+operator|*
+name|getDirectory
+argument_list|()
+specifier|const
+block|;   }
+block|;
+comment|/// DICompileUnit - A wrapper for a compile unit.
+name|class
+name|DICompileUnit
+operator|:
+name|public
+name|DIScope
+block|{
+name|public
+operator|:
+name|explicit
+name|DICompileUnit
+argument_list|(
+name|MDNode
+operator|*
+name|N
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|DIScope
+argument_list|(
+argument|N
+argument_list|)
+block|{
+if|if
+condition|(
+name|DbgNode
+operator|&&
+operator|!
+name|isCompileUnit
+argument_list|()
+condition|)
+name|DbgNode
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|unsigned
 name|getLanguage
 argument_list|()
@@ -489,62 +649,44 @@ argument_list|)
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getFilename
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|3
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getDirectory
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|4
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getProducer
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|5
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
@@ -581,22 +723,16 @@ argument_list|)
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getFlags
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|8
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
@@ -639,37 +775,31 @@ operator|:
 name|explicit
 name|DIEnumerator
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 operator|=
 literal|0
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|GV
+argument|N
 argument_list|,
 argument|dwarf::DW_TAG_enumerator
 argument_list|)
 block|{}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getName
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|1
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
@@ -717,20 +847,32 @@ operator|=
 literal|1
 operator|<<
 literal|2
+block|,
+name|FlagAppleBlock
+operator|=
+literal|1
+operator|<<
+literal|3
+block|,
+name|FlagBlockByrefStruct
+operator|=
+literal|1
+operator|<<
+literal|4
 block|}
 block|;
 name|protected
 operator|:
 name|DIType
 argument_list|(
-argument|GlobalVariable *GV
+argument|MDNode *N
 argument_list|,
 argument|unsigned Tag
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|GV
+argument|N
 argument_list|,
 argument|Tag
 argument_list|)
@@ -739,9 +881,9 @@ comment|// This ctor is used when the Tag has already been validated by a derive
 comment|// ctor.
 name|DIType
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 argument_list|,
 name|bool
 argument_list|,
@@ -750,46 +892,11 @@ argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|GV
+argument|N
 argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// isDerivedType - Return true if the specified tag is legal for
-comment|/// DIDerivedType.
-specifier|static
-name|bool
-name|isDerivedType
-argument_list|(
-argument|unsigned TAG
-argument_list|)
-block|;
-comment|/// isCompositeType - Return true if the specified tag is legal for
-comment|/// DICompositeType.
-specifier|static
-name|bool
-name|isCompositeType
-argument_list|(
-argument|unsigned TAG
-argument_list|)
-block|;
-comment|/// isBasicType - Return true if the specified tag is legal for
-comment|/// DIBasicType.
-specifier|static
-name|bool
-name|isBasicType
-argument_list|(
-argument|unsigned TAG
-argument_list|)
-block|{
-return|return
-name|TAG
-operator|==
-name|dwarf
-operator|::
-name|DW_TAG_base_type
-return|;
-block|}
 comment|/// Verify - Verify that a type descriptor is well formed.
 name|bool
 name|Verify
@@ -801,9 +908,9 @@ operator|:
 name|explicit
 name|DIType
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 argument_list|)
 block|;
 name|explicit
@@ -828,22 +935,16 @@ argument_list|)
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getName
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|2
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
@@ -972,6 +1073,39 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|// isAppleBlock - Return true if this is the Apple Blocks extension.
+name|bool
+name|isAppleBlockExtension
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getFlags
+argument_list|()
+operator|&
+name|FlagAppleBlock
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|isBlockByrefStruct
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getFlags
+argument_list|()
+operator|&
+name|FlagBlockByrefStruct
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// dump - print type.
 name|void
 name|dump
@@ -991,14 +1125,16 @@ operator|:
 name|explicit
 name|DIBasicType
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|DIType
 argument_list|(
-argument|GV
+argument|N
 argument_list|,
 argument|dwarf::DW_TAG_base_type
 argument_list|)
@@ -1035,9 +1171,9 @@ operator|:
 name|explicit
 name|DIDerivedType
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 argument_list|,
 name|bool
 argument_list|,
@@ -1046,7 +1182,7 @@ argument_list|)
 operator|:
 name|DIType
 argument_list|(
-argument|GV
+argument|N
 argument_list|,
 argument|true
 argument_list|,
@@ -1058,14 +1194,16 @@ operator|:
 name|explicit
 name|DIDerivedType
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|DIType
 argument_list|(
-argument|GV
+argument|N
 argument_list|,
 argument|true
 argument_list|,
@@ -1074,16 +1212,13 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|GV
+name|DbgNode
 operator|&&
 operator|!
 name|isDerivedType
-argument_list|(
-name|getTag
 argument_list|()
-argument_list|)
 condition|)
-name|DbgGV
+name|DbgNode
 operator|=
 literal|0
 expr_stmt|;
@@ -1115,6 +1250,17 @@ name|void
 name|dump
 argument_list|()
 specifier|const
+block|;
+comment|/// replaceAllUsesWith - Replace all uses of debug info referenced by
+comment|/// this descriptor. After this completes, the current debug info value
+comment|/// is erased.
+name|void
+name|replaceAllUsesWith
+argument_list|(
+name|DIDescriptor
+operator|&
+name|D
+argument_list|)
 block|;   }
 block|;
 comment|/// DICompositeType - This descriptor holds a type that can refer to multiple
@@ -1131,14 +1277,16 @@ operator|:
 name|explicit
 name|DICompositeType
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|DIDerivedType
 argument_list|(
-argument|GV
+argument|N
 argument_list|,
 argument|true
 argument_list|,
@@ -1147,16 +1295,13 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|GV
+name|N
 operator|&&
 operator|!
 name|isCompositeType
-argument_list|(
-name|getTag
 argument_list|()
-argument_list|)
 condition|)
-name|DbgGV
+name|DbgNode
 operator|=
 literal|0
 expr_stmt|;
@@ -1213,52 +1358,18 @@ operator|:
 name|explicit
 name|DIGlobal
 argument_list|(
-argument|GlobalVariable *GV
+argument|MDNode *N
 argument_list|,
 argument|unsigned RequiredTag
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|GV
+argument|N
 argument_list|,
 argument|RequiredTag
 argument_list|)
 block|{}
-comment|/// isSubprogram - Return true if the specified tag is legal for
-comment|/// DISubprogram.
-specifier|static
-name|bool
-name|isSubprogram
-argument_list|(
-argument|unsigned TAG
-argument_list|)
-block|{
-return|return
-name|TAG
-operator|==
-name|dwarf
-operator|::
-name|DW_TAG_subprogram
-return|;
-block|}
-comment|/// isGlobalVariable - Return true if the specified tag is legal for
-comment|/// DIGlobalVariable.
-specifier|static
-name|bool
-name|isGlobalVariable
-argument_list|(
-argument|unsigned TAG
-argument_list|)
-block|{
-return|return
-name|TAG
-operator|==
-name|dwarf
-operator|::
-name|DW_TAG_variable
-return|;
-block|}
 name|public
 operator|:
 name|virtual
@@ -1279,62 +1390,44 @@ argument_list|)
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getName
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|3
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getDisplayName
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|4
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getLinkageName
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|5
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
@@ -1418,27 +1511,119 @@ name|class
 name|DISubprogram
 operator|:
 name|public
-name|DIGlobal
+name|DIScope
 block|{
 name|public
 operator|:
 name|explicit
 name|DISubprogram
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 operator|=
 literal|0
 argument_list|)
 operator|:
-name|DIGlobal
+name|DIScope
 argument_list|(
-argument|GV
-argument_list|,
-argument|dwarf::DW_TAG_subprogram
+argument|N
 argument_list|)
-block|{}
+block|{
+if|if
+condition|(
+name|DbgNode
+operator|&&
+operator|!
+name|isSubprogram
+argument_list|()
+condition|)
+name|DbgNode
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|DIDescriptor
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getDescriptorField
+argument_list|(
+literal|2
+argument_list|)
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringField
+argument_list|(
+literal|3
+argument_list|)
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getDisplayName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringField
+argument_list|(
+literal|4
+argument_list|)
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getLinkageName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringField
+argument_list|(
+literal|5
+argument_list|)
+return|;
+block|}
+name|DICompileUnit
+name|getCompileUnit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DICompileUnit
+operator|>
+operator|(
+literal|6
+operator|)
+return|;
+block|}
+name|unsigned
+name|getLineNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
+argument_list|(
+literal|7
+argument_list|)
+return|;
+block|}
 name|DICompositeType
 name|getType
 argument_list|()
@@ -1457,14 +1642,10 @@ block|}
 comment|/// getReturnTypeName - Subprogram return types are encoded either as
 comment|/// DIType or as DICompositeType.
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getReturnTypeName
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 name|DICompositeType
@@ -1506,7 +1687,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|.
-name|getGV
+name|getNode
 argument_list|()
 argument_list|)
 decl_stmt|;
@@ -1514,9 +1695,7 @@ return|return
 name|T
 operator|.
 name|getName
-argument_list|(
-name|F
-argument_list|)
+argument_list|()
 return|;
 block|}
 name|DIType
@@ -1535,9 +1714,63 @@ return|return
 name|T
 operator|.
 name|getName
+argument_list|()
+return|;
+block|}
+comment|/// isLocalToUnit - Return true if this subprogram is local to the current
+comment|/// compile unit, like 'static' in C.
+name|unsigned
+name|isLocalToUnit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
 argument_list|(
-name|F
+literal|9
 argument_list|)
+return|;
+block|}
+name|unsigned
+name|isDefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
+argument_list|(
+literal|10
+argument_list|)
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCompileUnit
+argument_list|()
+operator|.
+name|getFilename
+argument_list|()
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getDirectory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCompileUnit
+argument_list|()
+operator|.
+name|getDirectory
+argument_list|()
 return|;
 block|}
 comment|/// Verify - Verify that a subprogram descriptor is well formed.
@@ -1576,16 +1809,16 @@ operator|:
 name|explicit
 name|DIGlobalVariable
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 operator|=
 literal|0
 argument_list|)
 operator|:
 name|DIGlobal
 argument_list|(
-argument|GV
+argument|N
 argument_list|,
 argument|dwarf::DW_TAG_variable
 argument_list|)
@@ -1629,30 +1862,27 @@ operator|:
 name|explicit
 name|DIVariable
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
+name|N
 operator|=
 literal|0
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|GV
+argument|N
 argument_list|)
 block|{
 if|if
 condition|(
-name|GV
+name|DbgNode
 operator|&&
 operator|!
 name|isVariable
-argument_list|(
-name|getTag
 argument_list|()
-argument_list|)
 condition|)
-name|DbgGV
+name|DbgNode
 operator|=
 literal|0
 expr_stmt|;
@@ -1670,22 +1900,16 @@ argument_list|)
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getName
-argument_list|(
-argument|std::string&F
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getStringField
 argument_list|(
 literal|2
-argument_list|,
-name|F
 argument_list|)
 return|;
 block|}
@@ -1731,20 +1955,70 @@ literal|5
 operator|)
 return|;
 block|}
-comment|/// isVariable - Return true if the specified tag is legal for DIVariable.
-specifier|static
-name|bool
-name|isVariable
-argument_list|(
-argument|unsigned Tag
-argument_list|)
-block|;
 comment|/// Verify - Verify that a variable descriptor is well formed.
 name|bool
 name|Verify
 argument_list|()
 specifier|const
 block|;
+comment|/// HasComplexAddr - Return true if the variable has a complex address.
+name|bool
+name|hasComplexAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumAddrElements
+argument_list|()
+operator|>
+literal|0
+return|;
+block|}
+name|unsigned
+name|getNumAddrElements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DbgNode
+operator|->
+name|getNumElements
+argument_list|()
+operator|-
+literal|6
+return|;
+block|}
+name|uint64_t
+name|getAddrElement
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getUInt64Field
+argument_list|(
+name|Idx
+operator|+
+literal|6
+argument_list|)
+return|;
+block|}
+comment|/// isBlockByrefVariable - Return true if the variable was declared as
+comment|/// a "__block" variable (Apple Blocks).
+name|bool
+name|isBlockByrefVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getType
+argument_list|()
+operator|.
+name|isBlockByrefStruct
+argument_list|()
+return|;
+block|}
 comment|/// dump - print variable.
 name|void
 name|dump
@@ -1752,9 +2026,94 @@ argument_list|()
 specifier|const
 block|;   }
 block|;
-comment|/// DIBlock - This is a wrapper for a block (e.g. a function, scope, etc).
+comment|/// DILexicalBlock - This is a wrapper for a lexical block.
 name|class
-name|DIBlock
+name|DILexicalBlock
+operator|:
+name|public
+name|DIScope
+block|{
+name|public
+operator|:
+name|explicit
+name|DILexicalBlock
+argument_list|(
+name|MDNode
+operator|*
+name|N
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|DIScope
+argument_list|(
+argument|N
+argument_list|)
+block|{
+if|if
+condition|(
+name|DbgNode
+operator|&&
+operator|!
+name|isLexicalBlock
+argument_list|()
+condition|)
+name|DbgNode
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|DIScope
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DIScope
+operator|>
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getDirectory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getContext
+argument_list|()
+operator|.
+name|getDirectory
+argument_list|()
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getContext
+argument_list|()
+operator|.
+name|getFilename
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// DILocation - This object holds location information. This object
+comment|/// is not associated with any DWARF tag.
+name|class
+name|DILocation
 operator|:
 name|public
 name|DIDescriptor
@@ -1762,32 +2121,100 @@ block|{
 name|public
 operator|:
 name|explicit
-name|DIBlock
+name|DILocation
 argument_list|(
-name|GlobalVariable
+name|MDNode
 operator|*
-name|GV
-operator|=
-literal|0
+name|N
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
-argument|GV
-argument_list|,
-argument|dwarf::DW_TAG_lexical_block
+argument|N
 argument_list|)
-block|{}
-name|DIDescriptor
-name|getContext
+block|{ ; }
+name|unsigned
+name|getLineNumber
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getDescriptorField
+name|getUnsignedField
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getColumnNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
 argument_list|(
 literal|1
 argument_list|)
+return|;
+block|}
+name|DIScope
+name|getScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DIScope
+operator|>
+operator|(
+literal|2
+operator|)
+return|;
+block|}
+name|DILocation
+name|getOrigLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DILocation
+operator|>
+operator|(
+literal|3
+operator|)
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getScope
+argument_list|()
+operator|.
+name|getFilename
+argument_list|()
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getDirectory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getScope
+argument_list|()
+operator|.
+name|getDirectory
+argument_list|()
 return|;
 block|}
 expr|}
@@ -1800,6 +2227,10 @@ block|{
 name|Module
 operator|&
 name|M
+block|;
+name|LLVMContext
+operator|&
+name|VMContext
 block|;
 comment|// Cached values for uniquing and faster lookups.
 specifier|const
@@ -1869,6 +2300,16 @@ block|;
 comment|// DO NOT IMPLEMENT
 name|public
 operator|:
+expr|enum
+name|ComplexAddrKind
+block|{
+name|OpPlus
+operator|=
+literal|1
+block|,
+name|OpDeref
+block|}
+block|;
 name|explicit
 name|DIFactory
 argument_list|(
@@ -1904,11 +2345,11 @@ name|CreateCompileUnit
 argument_list|(
 argument|unsigned LangID
 argument_list|,
-argument|const std::string&Filename
+argument|StringRef Filenae
 argument_list|,
-argument|const std::string&Directory
+argument|StringRef Directory
 argument_list|,
-argument|const std::string&Producer
+argument|StringRef Producer
 argument_list|,
 argument|bool isMain = false
 argument_list|,
@@ -1925,7 +2366,7 @@ comment|/// CreateEnumerator - Create a single enumerator value.
 name|DIEnumerator
 name|CreateEnumerator
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
 argument|uint64_t Val
 argument_list|)
@@ -1936,7 +2377,7 @@ name|CreateBasicType
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -1962,7 +2403,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -1987,7 +2428,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2016,11 +2457,11 @@ name|CreateSubprogram
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
-argument|const std::string&DisplayName
+argument|StringRef DisplayName
 argument_list|,
-argument|const std::string&LinkageName
+argument|StringRef LinkageName
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2039,11 +2480,11 @@ name|CreateGlobalVariable
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
-argument|const std::string&DisplayName
+argument|StringRef DisplayName
 argument_list|,
-argument|const std::string&LinkageName
+argument|StringRef LinkageName
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2066,7 +2507,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2075,12 +2516,48 @@ argument_list|,
 argument|DIType Type
 argument_list|)
 block|;
-comment|/// CreateBlock - This creates a descriptor for a lexical block with the
-comment|/// specified parent context.
-name|DIBlock
-name|CreateBlock
+comment|/// CreateComplexVariable - Create a new descriptor for the specified
+comment|/// variable which has a complex address expression for its address.
+name|DIVariable
+name|CreateComplexVariable
+argument_list|(
+argument|unsigned Tag
+argument_list|,
+argument|DIDescriptor Context
+argument_list|,
+argument|const std::string&Name
+argument_list|,
+argument|DICompileUnit CompileUnit
+argument_list|,
+argument|unsigned LineNo
+argument_list|,
+argument|DIType Type
+argument_list|,
+argument|SmallVector<Value *
+argument_list|,
+literal|9
+argument|>&addr
+argument_list|)
+block|;
+comment|/// CreateLexicalBlock - This creates a descriptor for a lexical block
+comment|/// with the specified parent context.
+name|DILexicalBlock
+name|CreateLexicalBlock
 argument_list|(
 argument|DIDescriptor Context
+argument_list|)
+block|;
+comment|/// CreateLocation - Creates a debug info location.
+name|DILocation
+name|CreateLocation
+argument_list|(
+argument|unsigned LineNo
+argument_list|,
+argument|unsigned ColumnNo
+argument_list|,
+argument|DIScope S
+argument_list|,
+argument|DILocation OrigLoc
 argument_list|)
 block|;
 comment|/// InsertStopPoint - Create a new llvm.dbg.stoppoint intrinsic invocation,
@@ -2135,7 +2612,18 @@ argument|llvm::Value *Storage
 argument_list|,
 argument|DIVariable D
 argument_list|,
-argument|BasicBlock *BB
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|;
+comment|/// InsertDeclare - Insert a new llvm.dbg.declare intrinsic call.
+name|void
+name|InsertDeclare
+argument_list|(
+argument|llvm::Value *Storage
+argument_list|,
+argument|DIVariable D
+argument_list|,
+argument|Instruction *InsertBefore
 argument_list|)
 block|;
 name|private
@@ -2145,26 +2633,6 @@ operator|*
 name|GetTagConstant
 argument_list|(
 argument|unsigned TAG
-argument_list|)
-block|;
-name|Constant
-operator|*
-name|GetStringConstant
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|String
-argument_list|)
-block|;
-comment|/// getCastToEmpty - Return the descriptor as a Constant* with type '{}*'.
-name|Constant
-operator|*
-name|getCastToEmpty
-argument_list|(
-argument|DIDescriptor D
 argument_list|)
 block|;   }
 block|;
@@ -2253,45 +2721,6 @@ operator|&
 name|Dir
 argument_list|)
 block|;
-comment|/// CollectDebugInfoAnchors - Collect debugging information anchors.
-name|void
-name|CollectDebugInfoAnchors
-argument_list|(
-name|Module
-operator|&
-name|M
-argument_list|,
-name|SmallVector
-operator|<
-name|GlobalVariable
-operator|*
-argument_list|,
-literal|2
-operator|>
-operator|&
-name|CompileUnits
-argument_list|,
-name|SmallVector
-operator|<
-name|GlobalVariable
-operator|*
-argument_list|,
-literal|4
-operator|>
-operator|&
-name|GlobalVars
-argument_list|,
-name|SmallVector
-operator|<
-name|GlobalVariable
-operator|*
-argument_list|,
-literal|4
-operator|>
-operator|&
-name|Subprograms
-argument_list|)
-block|;
 comment|/// isValidDebugInfoIntrinsic - Return true if SPI is a valid debug
 comment|/// info intrinsic.
 name|bool
@@ -2357,6 +2786,20 @@ name|DebugLocInfo
 argument_list|)
 block|;
 comment|/// ExtractDebugLocation - Extract debug location information
+comment|/// from DILocation.
+name|DebugLoc
+name|ExtractDebugLocation
+argument_list|(
+name|DILocation
+operator|&
+name|Loc
+argument_list|,
+name|DebugLocTracker
+operator|&
+name|DebugLocInfo
+argument_list|)
+block|;
+comment|/// ExtractDebugLocation - Extract debug location information
 comment|/// from llvm.dbg.func_start intrinsic.
 name|DebugLoc
 name|ExtractDebugLocation
@@ -2397,7 +2840,317 @@ name|Function
 operator|*
 name|CurrentFn
 argument_list|)
-block|;  }
+block|;
+comment|/// DebugInfoFinder - This object collects DebugInfo from a module.
+name|class
+name|DebugInfoFinder
+block|{
+name|public
+operator|:
+comment|/// processModule - Process entire module and collect debug info
+comment|/// anchors.
+name|void
+name|processModule
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+block|;
+name|private
+operator|:
+comment|/// processType - Process DIType.
+name|void
+name|processType
+argument_list|(
+argument|DIType DT
+argument_list|)
+block|;
+comment|/// processLexicalBlock - Process DILexicalBlock.
+name|void
+name|processLexicalBlock
+argument_list|(
+argument|DILexicalBlock LB
+argument_list|)
+block|;
+comment|/// processSubprogram - Process DISubprogram.
+name|void
+name|processSubprogram
+argument_list|(
+argument|DISubprogram SP
+argument_list|)
+block|;
+comment|/// processStopPoint - Process DbgStopPointInst.
+name|void
+name|processStopPoint
+argument_list|(
+name|DbgStopPointInst
+operator|*
+name|SPI
+argument_list|)
+block|;
+comment|/// processFuncStart - Process DbgFuncStartInst.
+name|void
+name|processFuncStart
+argument_list|(
+name|DbgFuncStartInst
+operator|*
+name|FSI
+argument_list|)
+block|;
+comment|/// processRegionStart - Process DbgRegionStart.
+name|void
+name|processRegionStart
+argument_list|(
+name|DbgRegionStartInst
+operator|*
+name|DRS
+argument_list|)
+block|;
+comment|/// processRegionEnd - Process DbgRegionEnd.
+name|void
+name|processRegionEnd
+argument_list|(
+name|DbgRegionEndInst
+operator|*
+name|DRE
+argument_list|)
+block|;
+comment|/// processDeclare - Process DbgDeclareInst.
+name|void
+name|processDeclare
+argument_list|(
+name|DbgDeclareInst
+operator|*
+name|DDI
+argument_list|)
+block|;
+comment|/// addCompileUnit - Add compile unit into CUs.
+name|bool
+name|addCompileUnit
+argument_list|(
+argument|DICompileUnit CU
+argument_list|)
+block|;
+comment|/// addGlobalVariable - Add global variable into GVs.
+name|bool
+name|addGlobalVariable
+argument_list|(
+argument|DIGlobalVariable DIG
+argument_list|)
+block|;
+comment|// addSubprogram - Add subprgoram into SPs.
+name|bool
+name|addSubprogram
+argument_list|(
+argument|DISubprogram SP
+argument_list|)
+block|;
+comment|/// addType - Add type into Tys.
+name|bool
+name|addType
+argument_list|(
+argument|DIType DT
+argument_list|)
+block|;
+name|public
+operator|:
+typedef|typedef
+name|SmallVector
+operator|<
+name|MDNode
+operator|*
+operator|,
+literal|8
+operator|>
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+name|iterator
+name|compile_unit_begin
+argument_list|()
+block|{
+return|return
+name|CUs
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|compile_unit_end
+argument_list|()
+block|{
+return|return
+name|CUs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|iterator
+name|subprogram_begin
+argument_list|()
+block|{
+return|return
+name|SPs
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|subprogram_end
+argument_list|()
+block|{
+return|return
+name|SPs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|iterator
+name|global_variable_begin
+argument_list|()
+block|{
+return|return
+name|GVs
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|global_variable_end
+argument_list|()
+block|{
+return|return
+name|GVs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|iterator
+name|type_begin
+argument_list|()
+block|{
+return|return
+name|TYs
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|type_end
+argument_list|()
+block|{
+return|return
+name|TYs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|compile_unit_count
+argument_list|()
+block|{
+return|return
+name|CUs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|global_variable_count
+argument_list|()
+block|{
+return|return
+name|GVs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|subprogram_count
+argument_list|()
+block|{
+return|return
+name|SPs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|type_count
+argument_list|()
+block|{
+return|return
+name|TYs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|private
+operator|:
+name|SmallVector
+operator|<
+name|MDNode
+operator|*
+block|,
+literal|8
+operator|>
+name|CUs
+block|;
+comment|// Compile Units
+name|SmallVector
+operator|<
+name|MDNode
+operator|*
+block|,
+literal|8
+operator|>
+name|SPs
+block|;
+comment|// Subprograms
+name|SmallVector
+operator|<
+name|MDNode
+operator|*
+block|,
+literal|8
+operator|>
+name|GVs
+block|;
+comment|// Global Variables;
+name|SmallVector
+operator|<
+name|MDNode
+operator|*
+block|,
+literal|8
+operator|>
+name|TYs
+block|;
+comment|// Types
+name|SmallPtrSet
+operator|<
+name|MDNode
+operator|*
+block|,
+literal|64
+operator|>
+name|NodesSeen
+block|;   }
+block|; }
 end_decl_stmt
 
 begin_comment

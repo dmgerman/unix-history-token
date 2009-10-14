@@ -1594,6 +1594,10 @@ name|DW_CFA_extended
 init|=
 literal|0x00
 block|,
+name|DW_CFA_nop
+init|=
+literal|0x00
+block|,
 name|DW_CFA_advance_loc
 init|=
 literal|0x40

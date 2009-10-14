@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -176,6 +182,21 @@ return|return
 name|BufferEnd
 operator|-
 name|BufferStart
+return|;
+block|}
+name|StringRef
+name|getBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|BufferStart
+argument_list|,
+name|getBufferSize
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// getBufferIdentifier - Return an identifier for this buffer, typically the

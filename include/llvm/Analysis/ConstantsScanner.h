@@ -73,12 +73,6 @@ directive|include
 file|"llvm/Support/InstIterator.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -90,9 +84,14 @@ name|class
 name|constant_iterator
 range|:
 name|public
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
-specifier|const
+name|std
+operator|::
+name|forward_iterator_tag
+decl_stmt|,                                                const
 name|Constant
 decl_stmt|,
 name|ptrdiff_t

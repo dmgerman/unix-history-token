@@ -467,6 +467,13 @@ name|O_F32
 block|,
 name|O_F64
 block|,
+comment|// MEMORY
+name|MEMCPY
+block|,
+name|MEMSET
+block|,
+name|MEMMOVE
+block|,
 comment|// EXCEPTION HANDLING
 name|UNWIND_RESUME
 block|,
@@ -478,10 +485,10 @@ comment|/// UNKNOWN_LIBCALL if there is none.
 name|Libcall
 name|getFPEXT
 parameter_list|(
-name|MVT
+name|EVT
 name|OpVT
 parameter_list|,
-name|MVT
+name|EVT
 name|RetVT
 parameter_list|)
 function_decl|;
@@ -490,10 +497,10 @@ comment|/// UNKNOWN_LIBCALL if there is none.
 name|Libcall
 name|getFPROUND
 parameter_list|(
-name|MVT
+name|EVT
 name|OpVT
 parameter_list|,
-name|MVT
+name|EVT
 name|RetVT
 parameter_list|)
 function_decl|;
@@ -502,10 +509,10 @@ comment|/// UNKNOWN_LIBCALL if there is none.
 name|Libcall
 name|getFPTOSINT
 parameter_list|(
-name|MVT
+name|EVT
 name|OpVT
 parameter_list|,
-name|MVT
+name|EVT
 name|RetVT
 parameter_list|)
 function_decl|;
@@ -514,10 +521,10 @@ comment|/// UNKNOWN_LIBCALL if there is none.
 name|Libcall
 name|getFPTOUINT
 parameter_list|(
-name|MVT
+name|EVT
 name|OpVT
 parameter_list|,
-name|MVT
+name|EVT
 name|RetVT
 parameter_list|)
 function_decl|;
@@ -526,10 +533,10 @@ comment|/// UNKNOWN_LIBCALL if there is none.
 name|Libcall
 name|getSINTTOFP
 parameter_list|(
-name|MVT
+name|EVT
 name|OpVT
 parameter_list|,
-name|MVT
+name|EVT
 name|RetVT
 parameter_list|)
 function_decl|;
@@ -538,10 +545,10 @@ comment|/// UNKNOWN_LIBCALL if there is none.
 name|Libcall
 name|getUINTTOFP
 parameter_list|(
-name|MVT
+name|EVT
 name|OpVT
 parameter_list|,
-name|MVT
+name|EVT
 name|RetVT
 parameter_list|)
 function_decl|;

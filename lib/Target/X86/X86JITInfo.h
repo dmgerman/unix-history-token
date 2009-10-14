@@ -85,6 +85,9 @@ name|class
 name|X86TargetMachine
 decl_stmt|;
 name|class
+name|X86Subtarget
+decl_stmt|;
+name|class
 name|X86JITInfo
 range|:
 name|public
@@ -93,6 +96,11 @@ block|{
 name|X86TargetMachine
 operator|&
 name|TM
+block|;
+specifier|const
+name|X86Subtarget
+operator|*
+name|Subtarget
 block|;
 name|uintptr_t
 name|PICBase
@@ -110,20 +118,7 @@ name|X86TargetMachine
 operator|&
 name|tm
 argument_list|)
-operator|:
-name|TM
-argument_list|(
-argument|tm
-argument_list|)
-block|{
-name|useGOT
-operator|=
-literal|0
 block|;
-name|TLSOffset
-operator|=
-literal|0
-block|;     }
 comment|/// replaceMachineCodeForFunction - Make it so that calling the function
 comment|/// whose machine code is at OLD turns into a call to NEW, perhaps by
 comment|/// overwriting OLD with a branch to NEW.  This is used for self-modifying

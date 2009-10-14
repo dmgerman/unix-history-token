@@ -97,6 +97,9 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 struct_decl|struct
 name|DbgInfoIntrinsic
 struct_decl|;
@@ -195,6 +198,12 @@ parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|,
+name|Pass
+modifier|*
+name|P
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// SimplifyCFG - This function is used to do simplification of a CFG.  For

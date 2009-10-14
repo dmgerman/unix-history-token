@@ -100,7 +100,7 @@ name|class
 name|SmallSet
 block|{
 comment|/// Use a SmallVector to hold the elements here (even though it will never
-comment|/// reach it's 'large' stage) to avoid calling the default ctors of elements
+comment|/// reach its 'large' stage) to avoid calling the default ctors of elements
 comment|/// we will never use.
 name|SmallVector
 operator|<

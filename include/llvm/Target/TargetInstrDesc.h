@@ -70,6 +70,9 @@ block|{
 name|class
 name|TargetRegisterClass
 decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Machine Operand Flags and Description
 comment|//===----------------------------------------------------------------------===//
@@ -111,11 +114,17 @@ block|{
 name|public
 label|:
 comment|/// RegClass - This specifies the register class enumeration of the operand
-comment|/// if the operand is a register.  If not, this contains 0.
+comment|/// if the operand is a register.  If isLookupPtrRegClass is set, then this is
+comment|/// an index that is passed to TargetRegisterInfo::getPointerRegClass(x) to
+comment|/// get a dynamic register class.
+comment|///
+comment|/// NOTE: This member should be considered to be private, all access should go
+comment|/// through "getRegClass(TRI)" below.
 name|unsigned
 name|short
 name|RegClass
 decl_stmt|;
+comment|/// Flags - These are flags from the TOI::OperandFlags enum.
 name|unsigned
 name|short
 name|Flags
@@ -123,10 +132,24 @@ decl_stmt|;
 comment|/// Lower 16 bits are used to specify which constraints are set. The higher 16
 comment|/// bits are used to specify the value of constraints (4 bits each).
 name|unsigned
-name|int
 name|Constraints
 decl_stmt|;
 comment|/// Currently no other information.
+comment|/// getRegClass - Get the register class for the operand, handling resolution
+comment|/// of "symbolic" pointer register classes etc.  If this is not a register
+comment|/// operand, this returns null.
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getRegClass
+argument_list|(
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isLookupPtrRegClass - Set if this operand is a pointer value and it
 comment|/// requires a callback to look up its register class.
 name|bool
@@ -239,6 +262,10 @@ block|,
 name|Rematerializable
 block|,
 name|CheapAsAMove
+block|,
+name|ExtraSrcRegAllocReq
+block|,
+name|ExtraDefRegAllocReq
 block|}
 enum|;
 block|}
@@ -1074,6 +1101,52 @@ operator|<<
 name|TID
 operator|::
 name|CheapAsAMove
+operator|)
+return|;
+block|}
+comment|/// hasExtraSrcRegAllocReq - Returns true if this instruction source operands
+comment|/// have special register allocation requirements that are not captured by the
+comment|/// operand register classes. e.g. ARM::STRD's two source registers must be an
+comment|/// even / odd pair, ARM::STM registers have to be in ascending order.
+comment|/// Post-register allocation passes should not attempt to change allocations
+comment|/// for sources of instructions with this flag.
+name|bool
+name|hasExtraSrcRegAllocReq
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|TID
+operator|::
+name|ExtraSrcRegAllocReq
+operator|)
+return|;
+block|}
+comment|/// hasExtraDefRegAllocReq - Returns true if this instruction def operands
+comment|/// have special register allocation requirements that are not captured by the
+comment|/// operand register classes. e.g. ARM::LDRD's two def registers must be an
+comment|/// even / odd pair, ARM::LDM registers have to be in ascending order.
+comment|/// Post-register allocation passes should not attempt to change allocations
+comment|/// for definitions of instructions with this flag.
+name|bool
+name|hasExtraDefRegAllocReq
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|TID
+operator|::
+name|ExtraDefRegAllocReq
 operator|)
 return|;
 block|}

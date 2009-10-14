@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -S %s -o - | grep {getelementptr \\\[0 x i32\\\]}
+comment|// RUN: %llvmgcc -S %s -o - | grep {getelementptr inbounds \\\[0 x i32\\\]}
 end_comment
 
 begin_function_decl

@@ -78,12 +78,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Streams.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -105,6 +99,9 @@ name|Function
 decl_stmt|;
 name|class
 name|Module
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|class
 name|Trace
@@ -531,36 +528,12 @@ comment|///
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|O
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|O
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|O
-condition|)
-name|print
-argument_list|(
-operator|*
-name|O
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// dump - Debugger convenience method; writes trace to standard error
 comment|/// output stream.
 comment|///

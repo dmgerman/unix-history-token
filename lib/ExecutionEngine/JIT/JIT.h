@@ -71,6 +71,12 @@ directive|include
 file|"llvm/PassManager.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ValueHandle.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -78,9 +84,9 @@ block|{
 name|class
 name|Function
 decl_stmt|;
-name|class
+struct_decl|struct
 name|JITEvent_EmittedFunctionDetails
-decl_stmt|;
+struct_decl|;
 name|class
 name|MachineCodeEmitter
 decl_stmt|;
@@ -113,9 +119,11 @@ name|std
 operator|::
 name|vector
 operator|<
+name|AssertingVH
+operator|<
 name|Function
-operator|*
 operator|>
+expr|>
 name|PendingFunctions
 expr_stmt|;
 name|public
@@ -163,9 +171,11 @@ name|std
 operator|::
 name|vector
 operator|<
+name|AssertingVH
+operator|<
 name|Function
-operator|*
 operator|>
+expr|>
 operator|&
 name|getPendingFunctions
 argument_list|(
@@ -208,6 +218,12 @@ operator|*
 operator|>
 name|EventListeners
 block|;
+comment|/// AllocateGVsWithCode - Some applications require that global variables and
+comment|/// code be allocated into the same region of memory, in which case this flag
+comment|/// should be set to true.  Doing so breaks freeMachineCodeForFunction.
+name|bool
+name|AllocateGVsWithCode
+block|;
 name|JITState
 operator|*
 name|jitstate
@@ -223,6 +239,8 @@ argument_list|,
 argument|JITMemoryManager *JMM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
+argument_list|,
+argument|bool AllocateGVsWithCode
 argument_list|)
 block|;
 name|public
@@ -264,19 +282,27 @@ argument|ModuleProvider *MP
 argument_list|,
 argument|std::string *Err
 argument_list|,
+argument|JITMemoryManager *JMM
+argument_list|,
 argument|CodeGenOpt::Level OptLevel =                                    CodeGenOpt::Default
+argument_list|,
+argument|bool GVsWithCode = true
 argument_list|)
 block|{
 return|return
+name|ExecutionEngine
+operator|::
 name|createJIT
 argument_list|(
 name|MP
 argument_list|,
 name|Err
 argument_list|,
-literal|0
+name|JMM
 argument_list|,
 name|OptLevel
+argument_list|,
+name|GVsWithCode
 argument_list|)
 return|;
 block|}
@@ -453,6 +479,7 @@ name|F
 argument_list|)
 block|;
 comment|/// getCodeEmitter - Return the code emitter this JIT is emitting into.
+comment|///
 name|JITCodeEmitter
 operator|*
 name|getCodeEmitter
@@ -463,6 +490,24 @@ return|return
 name|JCE
 return|;
 block|}
+comment|/// selectTarget - Pick a target either via -march or by guessing the native
+comment|/// arch.  Add any CPU features specified via -mcpu or -mattr.
+specifier|static
+name|TargetMachine
+operator|*
+name|selectTarget
+argument_list|(
+name|ModuleProvider
+operator|*
+name|MP
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|Err
+argument_list|)
+block|;
 specifier|static
 name|ExecutionEngine
 operator|*
@@ -470,11 +515,13 @@ name|createJIT
 argument_list|(
 argument|ModuleProvider *MP
 argument_list|,
-argument|std::string *Err
+argument|std::string *ErrorStr
 argument_list|,
 argument|JITMemoryManager *JMM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
+argument_list|,
+argument|bool GVsWithCode
 argument_list|)
 block|;
 comment|// Run the JIT on F and return information about the generated code
@@ -552,6 +599,10 @@ argument_list|,
 name|JITMemoryManager
 operator|*
 name|JMM
+argument_list|,
+name|TargetMachine
+operator|&
+name|tm
 argument_list|)
 block|;
 name|void

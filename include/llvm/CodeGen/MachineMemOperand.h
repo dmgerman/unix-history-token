@@ -77,6 +77,9 @@ decl_stmt|;
 name|class
 name|FoldingSetNodeID
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// MachineMemOperand - A description of a memory reference used in the backend.
 comment|/// Instead of holding a StoreInst or LoadInst, this class holds the address
@@ -126,7 +129,7 @@ literal|4
 block|}
 enum|;
 comment|/// MachineMemOperand - Construct an MachineMemOperand object with the
-comment|/// specified address Value, flags, offset, size, and alignment.
+comment|/// specified address Value, flags, offset, size, and base alignment.
 name|MachineMemOperand
 argument_list|(
 argument|const Value *v
@@ -137,13 +140,16 @@ argument|int64_t o
 argument_list|,
 argument|uint64_t s
 argument_list|,
-argument|unsigned int a
+argument|unsigned int base_alignment
 argument_list|)
 empty_stmt|;
-comment|/// getValue - Return the base address of the memory access.
-comment|/// Special values are PseudoSourceValue::FPRel, PseudoSourceValue::SPRel,
-comment|/// and the other PseudoSourceValue members which indicate references to
-comment|/// frame/stack pointer relative references and other special references.
+comment|/// getValue - Return the base address of the memory access. This may either
+comment|/// be a normal LLVM IR Value, or one of the special values used in CodeGen.
+comment|/// Special values are those obtained via
+comment|/// PseudoSourceValue::getFixedStack(int), PseudoSourceValue::getStack, and
+comment|/// other PseudoSourceValue member functions which return objects which stand
+comment|/// for frame/stack pointer relative references and other special references
+comment|/// which are not representable in the high-level IR.
 specifier|const
 name|Value
 operator|*
@@ -191,10 +197,16 @@ name|Size
 return|;
 block|}
 comment|/// getAlignment - Return the minimum known alignment in bytes of the
-comment|/// memory reference.
-name|unsigned
-name|int
+comment|/// actual memory reference.
+name|uint64_t
 name|getAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getBaseAlignment - Return the minimum known alignment in bytes of the
+comment|/// base address, without the offset.
+name|uint64_t
+name|getBaseAlignment
 argument_list|()
 specifier|const
 block|{
@@ -245,6 +257,35 @@ operator|&
 name|MOVolatile
 return|;
 block|}
+comment|/// refineAlignment - Update this MachineMemOperand to reflect the alignment
+comment|/// of MMO, if it has a greater alignment. This must only be used when the
+comment|/// new alignment applies to all users of this MachineMemOperand.
+name|void
+name|refineAlignment
+parameter_list|(
+specifier|const
+name|MachineMemOperand
+modifier|*
+name|MMO
+parameter_list|)
+function_decl|;
+comment|/// setValue - Change the SourceValue for this MachineMemOperand. This
+comment|/// should only be used when an object is being relocated and all references
+comment|/// to it are being updated.
+name|void
+name|setValue
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|NewSV
+parameter_list|)
+block|{
+name|V
+operator|=
+name|NewSV
+expr_stmt|;
+block|}
 comment|/// Profile - Gather unique data for the object.
 comment|///
 name|void
@@ -258,6 +299,21 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|MachineMemOperand
+operator|&
+name|MRO
+operator|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

@@ -86,7 +86,7 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
-name|raw_ostream
+name|formatted_raw_ostream
 decl_stmt|;
 name|FunctionPass
 modifier|*
@@ -95,22 +95,6 @@ parameter_list|(
 name|SPUTargetMachine
 modifier|&
 name|TM
-parameter_list|)
-function_decl|;
-name|FunctionPass
-modifier|*
-name|createSPUAsmPrinterPass
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|o
-parameter_list|,
-name|SPUTargetMachine
-modifier|&
-name|tm
-parameter_list|,
-name|bool
-name|verbose
 parameter_list|)
 function_decl|;
 comment|/*--== Utility functions/predicates/etc used all over the place: --==*/
@@ -433,6 +417,10 @@ operator|)
 operator|)
 return|;
 block|}
+specifier|extern
+name|Target
+name|TheCellSPUTarget
+decl_stmt|;
 block|}
 end_decl_stmt
 

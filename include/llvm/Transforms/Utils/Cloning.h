@@ -78,12 +78,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -131,25 +125,24 @@ name|class
 name|TargetData
 decl_stmt|;
 name|class
+name|Loop
+decl_stmt|;
+name|class
 name|LoopInfo
 decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
+name|class
+name|AllocaInst
+decl_stmt|;
 name|template
 operator|<
-name|class
-name|N
+name|typename
+name|T
 operator|>
 name|class
-name|LoopBase
-expr_stmt|;
-typedef|typedef
-name|LoopBase
-operator|<
-name|BasicBlock
-operator|>
-name|Loop
+name|SmallVectorImpl
 expr_stmt|;
 comment|/// CloneModule - Return an exact copy of the specified module
 comment|///
@@ -294,8 +287,8 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// CloneLoop - Clone Loop. Clone dominator info for loop insiders. Populate ValueMap
-comment|/// using old blocks to new blocks mapping.
+comment|/// CloneLoop - Clone Loop. Clone dominator info for loop insiders. Populate
+comment|/// ValueMap using old blocks to new blocks mapping.
 name|Loop
 modifier|*
 name|CloneLoop
@@ -437,9 +430,7 @@ operator|>
 operator|&
 name|ValueMap
 argument_list|,
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|ReturnInst
 operator|*
@@ -492,9 +483,7 @@ operator|>
 operator|&
 name|ValueMap
 argument_list|,
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|ReturnInst
 operator|*
@@ -523,63 +512,6 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// CloneTraceInto - Clone T into NewFunc. Original<->clone mapping is
-comment|/// saved in ValueMap.
-comment|///
-name|void
-name|CloneTraceInto
-argument_list|(
-name|Function
-operator|*
-name|NewFunc
-argument_list|,
-name|Trace
-operator|&
-name|T
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|Value
-operator|*
-argument_list|,
-name|Value
-operator|*
-operator|>
-operator|&
-name|ValueMap
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|NameSuffix
-argument_list|)
-decl_stmt|;
-comment|/// CloneTrace - Returns a copy of the specified trace.
-comment|/// It takes a vector of basic blocks clones the basic blocks, removes internal
-comment|/// phi nodes, adds it to the same function as the original (although there is
-comment|/// no jump to it) and returns the new vector of basic blocks.
-name|std
-operator|::
-name|vector
-operator|<
-name|BasicBlock
-operator|*
-operator|>
-name|CloneTrace
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|BasicBlock
-operator|*
-operator|>
-operator|&
-name|origTrace
-argument_list|)
-expr_stmt|;
 comment|/// InlineFunction - This function inlines the called function into the basic
 comment|/// block of the caller.  This returns false if it is not possible to inline
 comment|/// this call.  The program is still in a well defined state if this occurs
@@ -593,68 +525,101 @@ comment|///
 comment|/// If a non-null callgraph pointer is provided, these functions update the
 comment|/// CallGraph to represent the program after inlining.
 comment|///
+comment|/// If StaticAllocas is non-null, InlineFunction populates it with all of the
+comment|/// static allocas that it inlines into the caller.
+comment|///
 name|bool
 name|InlineFunction
-parameter_list|(
+argument_list|(
 name|CallInst
-modifier|*
+operator|*
 name|C
-parameter_list|,
+argument_list|,
 name|CallGraph
-modifier|*
+operator|*
 name|CG
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetData
-modifier|*
+operator|*
 name|TD
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|AllocaInst
+operator|*
+operator|>
+operator|*
+name|StaticAllocas
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 name|bool
 name|InlineFunction
-parameter_list|(
+argument_list|(
 name|InvokeInst
-modifier|*
+operator|*
 name|II
-parameter_list|,
+argument_list|,
 name|CallGraph
-modifier|*
+operator|*
 name|CG
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetData
-modifier|*
+operator|*
 name|TD
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|AllocaInst
+operator|*
+operator|>
+operator|*
+name|StaticAllocas
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 name|bool
 name|InlineFunction
-parameter_list|(
+argument_list|(
 name|CallSite
 name|CS
-parameter_list|,
+argument_list|,
 name|CallGraph
-modifier|*
+operator|*
 name|CG
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetData
-modifier|*
+operator|*
 name|TD
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|AllocaInst
+operator|*
+operator|>
+operator|*
+name|StaticAllocas
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

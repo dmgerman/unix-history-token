@@ -136,24 +136,27 @@ block|,
 comment|///< Special purpose, only applies to global arrays
 name|InternalLinkage
 block|,
-comment|///< Rename collisions when linking (static functions)
+comment|///< Rename collisions when linking (static functions).
 name|PrivateLinkage
 block|,
-comment|///< Like Internal, but omit from symbol table
+comment|///< Like Internal, but omit from symbol table.
+name|LinkerPrivateLinkage
+block|,
+comment|///< Like Private, but linker removes.
 name|DLLImportLinkage
 block|,
 comment|///< Function to be imported from DLL
 name|DLLExportLinkage
 block|,
-comment|///< Function to be accessible from DLL
+comment|///< Function to be accessible from DLL.
 name|ExternalWeakLinkage
 block|,
-comment|///< ExternalWeak linkage description
+comment|///< ExternalWeak linkage description.
 name|GhostLinkage
 block|,
-comment|///< Stand-in functions for streaming fns from BC files
+comment|///< Stand-in functions for streaming fns from BC files.
 name|CommonLinkage
-comment|///< Tentative definitions
+comment|///< Tentative definitions.
 block|}
 block|;
 comment|/// @brief An enumeration for the kinds of visibility of global values.
@@ -186,7 +189,7 @@ argument|unsigned NumOps
 argument_list|,
 argument|LinkageTypes linkage
 argument_list|,
-argument|const std::string&name =
+argument|const Twine&Name =
 literal|""
 argument_list|)
 operator|:
@@ -221,20 +224,11 @@ argument_list|(
 literal|0
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|name
-operator|.
-name|empty
-argument_list|()
-condition|)
 name|setName
 argument_list|(
-name|name
+name|Name
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|Module
 operator|*
 name|Parent
@@ -325,6 +319,17 @@ argument_list|)
 return|;
 block|}
 name|bool
+name|hasDefaultVisibility
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Visibility
+operator|==
+name|DefaultVisibility
+return|;
+block|}
+name|bool
 name|hasHiddenVisibility
 argument_list|()
 specifier|const
@@ -385,7 +390,7 @@ block|}
 name|void
 name|setSection
 argument_list|(
-argument|const std::string&S
+argument|const StringRef&S
 argument_list|)
 block|{
 name|Section
@@ -541,18 +546,30 @@ name|PrivateLinkage
 return|;
 block|}
 name|bool
-name|hasLocalLinkage
+name|hasLinkerPrivateLinkage
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Linkage
 operator|==
-name|InternalLinkage
+name|LinkerPrivateLinkage
+return|;
+block|}
+name|bool
+name|hasLocalLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasInternalLinkage
+argument_list|()
 operator|||
-name|Linkage
-operator|==
-name|PrivateLinkage
+name|hasPrivateLinkage
+argument_list|()
+operator|||
+name|hasLinkerPrivateLinkage
+argument_list|()
 return|;
 block|}
 name|bool

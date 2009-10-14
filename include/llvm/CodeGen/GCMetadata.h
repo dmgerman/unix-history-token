@@ -167,7 +167,7 @@ name|class
 name|Constant
 decl_stmt|;
 name|class
-name|TargetAsmInfo
+name|MCAsmInfo
 decl_stmt|;
 name|namespace
 name|GC

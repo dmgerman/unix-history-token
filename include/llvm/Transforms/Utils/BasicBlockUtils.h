@@ -347,7 +347,8 @@ comment|/// have many edges to any one destination.  This ensures that all edges
 comment|/// dest go to one block instead of each going to a different block, but isn't
 comment|/// the standard definition of a "critical edge".
 comment|///
-name|bool
+name|BasicBlock
+modifier|*
 name|SplitCriticalEdge
 parameter_list|(
 name|TerminatorInst
@@ -370,7 +371,8 @@ name|false
 parameter_list|)
 function_decl|;
 specifier|inline
-name|bool
+name|BasicBlock
+modifier|*
 name|SplitCriticalEdge
 parameter_list|(
 name|BasicBlock
@@ -478,6 +480,8 @@ name|Succ
 condition|)
 name|MadeChange
 operator||=
+operator|!
+operator|!
 name|SplitCriticalEdge
 argument_list|(
 name|TI
@@ -496,7 +500,8 @@ comment|/// and return true, otherwise return false.  This method requires that 
 comment|/// an edge between the two blocks.  If P is specified, it updates the analyses
 comment|/// described above.
 specifier|inline
-name|bool
+name|BasicBlock
+modifier|*
 name|SplitCriticalEdge
 parameter_list|(
 name|BasicBlock
@@ -625,8 +630,12 @@ comment|/// be predecessors of the new block.  The new predecessors are indicate
 comment|/// Preds array, which has NumPreds elements in it.  The new block is given a
 comment|/// suffix of 'Suffix'.  This function returns the new block.
 comment|///
-comment|/// This currently updates the LLVM IR, AliasAnalysis, DominatorTree and
-comment|/// DominanceFrontier, but no other analyses.
+comment|/// This currently updates the LLVM IR, AliasAnalysis, DominatorTree,
+comment|/// DominanceFrontier, LoopInfo, and LCCSA but no other analyses.
+comment|/// In particular, it does not preserve LoopSimplify (because it's
+comment|/// complicated to handle the case where one of the edges being split
+comment|/// is an exit of a loop with other exits).
+comment|///
 name|BasicBlock
 modifier|*
 name|SplitBlockPredecessors

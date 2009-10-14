@@ -63,6 +63,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|SDep
+decl_stmt|;
+name|class
+name|SUnit
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetSubtarget - Generic base class for all target subtargets.  All
@@ -117,6 +123,38 @@ return|return
 literal|0
 return|;
 block|}
+comment|// enablePostRAScheduler - Return true to enable
+comment|// post-register-allocation scheduling.
+name|virtual
+name|bool
+name|enablePostRAScheduler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// adjustSchedDependency - Perform target specific adjustments to
+comment|// the latency of a schedule dependency.
+name|virtual
+name|void
+name|adjustSchedDependency
+argument_list|(
+name|SUnit
+operator|*
+name|def
+argument_list|,
+name|SUnit
+operator|*
+name|use
+argument_list|,
+name|SDep
+operator|&
+name|dep
+argument_list|)
+decl|const
+block|{ }
 block|}
 empty_stmt|;
 block|}

@@ -111,6 +111,9 @@ decl_stmt|;
 name|class
 name|Constant
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -220,6 +223,8 @@ comment|/// GlobalVariable ctor - If a parent module is specified, the global is
 comment|/// automatically inserted into the end of the specified modules global list.
 name|GlobalVariable
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|const Type *Ty
 argument_list|,
 argument|bool isConstant
@@ -229,11 +234,8 @@ argument_list|,
 argument|Constant *Initializer =
 literal|0
 argument_list|,
-argument|const std::string&Name =
+argument|const Twine&Name =
 literal|""
-argument_list|,
-argument|Module *Parent =
-literal|0
 argument_list|,
 argument|bool ThreadLocal = false
 argument_list|,
@@ -245,6 +247,8 @@ comment|/// GlobalVariable ctor - This creates a global and inserts it before th
 comment|/// specified other global.
 name|GlobalVariable
 argument_list|(
+argument|Module&M
+argument_list|,
 argument|const Type *Ty
 argument_list|,
 argument|bool isConstant
@@ -253,9 +257,10 @@ argument|LinkageTypes Linkage
 argument_list|,
 argument|Constant *Initializer
 argument_list|,
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
-argument|GlobalVariable *InsertBefore
+argument|GlobalVariable *InsertBefore =
+literal|0
 argument_list|,
 argument|bool ThreadLocal = false
 argument_list|,
@@ -609,6 +614,7 @@ operator|<
 name|GlobalVariable
 operator|>
 operator|:
+name|public
 name|OptionalOperandTraits
 operator|<
 operator|>

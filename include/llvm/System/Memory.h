@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -82,6 +88,26 @@ name|MemoryBlock
 block|{
 name|public
 label|:
+name|MemoryBlock
+argument_list|()
+block|{ }
+name|MemoryBlock
+argument_list|(
+argument|void *addr
+argument_list|,
+argument|size_t size
+argument_list|)
+block|:
+name|Address
+argument_list|(
+name|addr
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+argument|size
+argument_list|)
+block|{ }
 name|void
 operator|*
 name|base
@@ -92,7 +118,7 @@ return|return
 name|Address
 return|;
 block|}
-name|unsigned
+name|size_t
 name|size
 argument_list|()
 specifier|const
@@ -108,7 +134,7 @@ modifier|*
 name|Address
 decl_stmt|;
 comment|///< Address of first byte of memory area
-name|unsigned
+name|size_t
 name|Size
 decl_stmt|;
 comment|///< Size, in bytes of the memory area
@@ -141,7 +167,7 @@ specifier|static
 name|MemoryBlock
 name|AllocateRWX
 argument_list|(
-name|unsigned
+name|size_t
 name|NumBytes
 argument_list|,
 specifier|const

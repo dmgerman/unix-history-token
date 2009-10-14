@@ -52,7 +52,7 @@ file|<assert.h>
 end_include
 
 begin_comment
-comment|/* Force the LLVM interpreter, JIT, and native target to be linked in. */
+comment|/* Force the LLVM interpreter and JIT to be linked in. */
 end_comment
 
 begin_function
@@ -68,9 +68,29 @@ expr_stmt|;
 name|LLVMLinkInJIT
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* unit -> bool */
+end_comment
+
+begin_function
+name|CAMLprim
+name|value
+name|llvm_initialize_native_target
+parameter_list|(
+name|value
+name|Unit
+parameter_list|)
+block|{
+return|return
+name|Val_bool
+argument_list|(
 name|LLVMInitializeNativeTarget
 argument_list|()
-expr_stmt|;
+argument_list|)
+return|;
 block|}
 end_function
 

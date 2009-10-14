@@ -109,6 +109,10 @@ block|,
 name|TYPE_SYMTAB_BLOCK_ID
 block|,
 name|VALUE_SYMTAB_BLOCK_ID
+block|,
+name|METADATA_BLOCK_ID
+block|,
+name|METADATA_ATTACHMENT_ID
 block|}
 enum|;
 comment|/// MODULE blocks have a number of optional fields and subblocks.
@@ -297,6 +301,40 @@ literal|2
 comment|// VST_BBENTRY: [bbid, namechar x N]
 block|}
 enum|;
+enum|enum
+name|MetadataCodes
+block|{
+name|METADATA_STRING
+init|=
+literal|1
+block|,
+comment|// MDSTRING:      [values]
+name|METADATA_NODE
+init|=
+literal|2
+block|,
+comment|// MDNODE:        [n x (type num, value num)]
+name|METADATA_NAME
+init|=
+literal|3
+block|,
+comment|// STRING:        [values]
+name|METADATA_NAMED_NODE
+init|=
+literal|4
+block|,
+comment|// NAMEDMDNODE:   [n x mdnodes]
+name|METADATA_KIND
+init|=
+literal|5
+block|,
+comment|// [n x [id, name]]
+name|METADATA_ATTACHMENT
+init|=
+literal|6
+comment|// [m x [value, [n x [id, mdnode]]]
+block|}
+enum|;
 comment|// The constants block (CONSTANTS_BLOCK_ID) describes emission for each
 comment|// constant and maintains an implicit current type value.
 enum|enum
@@ -397,15 +435,10 @@ init|=
 literal|19
 block|,
 comment|// SHUFVEC_EX:    [opty, opval, opval, opval]
-name|CST_CODE_MDSTRING
+name|CST_CODE_CE_INBOUNDS_GEP
 init|=
 literal|20
-block|,
-comment|// MDSTRING:      [values]
-name|CST_CODE_MDNODE
-init|=
-literal|21
-comment|// MDNODE:        [n x (type num, value num)]
+comment|// INBOUNDS_GEP:  [n x operands]
 block|}
 enum|;
 comment|/// CastOpcodes - These are values used in the bitcode files to encode which
@@ -524,6 +557,30 @@ block|,
 name|BINOP_XOR
 init|=
 literal|12
+block|}
+enum|;
+comment|/// OverflowingBinaryOperatorOptionalFlags - Flags for serializing
+comment|/// OverflowingBinaryOperator's SubclassOptionalData contents.
+enum|enum
+name|OverflowingBinaryOperatorOptionalFlags
+block|{
+name|OBO_NO_UNSIGNED_WRAP
+init|=
+literal|0
+block|,
+name|OBO_NO_SIGNED_WRAP
+init|=
+literal|1
+block|}
+enum|;
+comment|/// SDivOperatorOptionalFlags - Flags for serializing SDivOperator's
+comment|/// SubclassOptionalData contents.
+enum|enum
+name|SDivOperatorOptionalFlags
+block|{
+name|SDIV_EXACT
+init|=
+literal|0
 block|}
 enum|;
 comment|// The function body block (FUNCTION_BLOCK_ID) describes function bodies.  It
@@ -671,7 +728,8 @@ init|=
 literal|27
 block|,
 comment|// INSERTVAL:  [n x operands]
-comment|// fcmp/icmp returning Int1TY or vector of Int1Ty, NOT for vicmp/vfcmp
+comment|// fcmp/icmp returning Int1TY or vector of Int1Ty. Same as CMP, exists to
+comment|// support legacy vicmp/vfcmp instructions.
 name|FUNC_CODE_INST_CMP2
 init|=
 literal|28
@@ -681,7 +739,12 @@ comment|// new select on i1 or [N x i1]
 name|FUNC_CODE_INST_VSELECT
 init|=
 literal|29
+block|,
 comment|// VSELECT:    [ty,opval,opval,predty,pred]
+name|FUNC_CODE_INST_INBOUNDS_GEP
+init|=
+literal|30
+comment|// INBOUNDS_GEP: [n x operands]
 block|}
 enum|;
 block|}

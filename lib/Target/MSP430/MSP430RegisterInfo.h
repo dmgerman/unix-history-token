@@ -151,7 +151,10 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|getPointerRegClass
-argument_list|()
+argument_list|(
+argument|unsigned Kind =
+literal|0
+argument_list|)
 specifier|const
 block|;
 name|bool
@@ -179,12 +182,14 @@ argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
 block|;
-name|void
+name|unsigned
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
+argument_list|,
+argument|int *Value = NULL
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)

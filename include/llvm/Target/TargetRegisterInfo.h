@@ -130,12 +130,6 @@ block|{
 specifier|const
 name|char
 modifier|*
-name|AsmName
-decl_stmt|;
-comment|// Assembly language name for the register
-specifier|const
-name|char
-modifier|*
 name|Name
 decl_stmt|;
 comment|// Printable name for the reg (for debugging)
@@ -178,7 +172,7 @@ name|const_iterator
 typedef|;
 typedef|typedef
 specifier|const
-name|MVT
+name|EVT
 modifier|*
 name|vt_iterator
 typedef|;
@@ -251,7 +245,7 @@ argument|unsigned id
 argument_list|,
 argument|const char *name
 argument_list|,
-argument|const MVT *vts
+argument|const EVT *vts
 argument_list|,
 argument|const TargetRegisterClass * const *subcs
 argument_list|,
@@ -478,7 +472,7 @@ comment|///
 name|bool
 name|hasType
 argument_list|(
-name|MVT
+name|EVT
 name|vt
 argument_list|)
 decl|const
@@ -494,6 +488,11 @@ name|VTs
 index|[
 name|i
 index|]
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
 operator|!=
 name|MVT
 operator|::
@@ -541,8 +540,12 @@ name|VTs
 block|;
 while|while
 condition|(
-operator|*
 name|I
+operator|->
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
 operator|!=
 name|MVT
 operator|::
@@ -1310,7 +1313,7 @@ name|FirstVirtualRegister
 return|;
 block|}
 comment|/// getPhysicalRegisterRegClass - Returns the Register Class of a physical
-comment|/// register of the given type. If type is MVT::Other, then just return any
+comment|/// register of the given type. If type is EVT::Other, then just return any
 comment|/// register class the register belongs to.
 name|virtual
 specifier|const
@@ -1321,7 +1324,7 @@ argument_list|(
 name|unsigned
 name|Reg
 argument_list|,
-name|MVT
+name|EVT
 name|VT
 operator|=
 name|MVT
@@ -1336,6 +1339,7 @@ comment|/// specified, returns the subset for the class.
 name|BitVector
 name|getAllocatableSet
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF
@@ -1468,27 +1472,6 @@ operator|.
 name|SuperRegs
 return|;
 block|}
-comment|/// getAsmName - Return the symbolic target-specific name for the
-comment|/// specified physical register.
-specifier|const
-name|char
-modifier|*
-name|getAsmName
-argument_list|(
-name|unsigned
-name|RegNo
-argument_list|)
-decl|const
-block|{
-return|return
-name|get
-argument_list|(
-name|RegNo
-argument_list|)
-operator|.
-name|AsmName
-return|;
-block|}
 comment|/// getName - Return the human-readable symbolic target-specific name for the
 comment|/// specified physical register.
 specifier|const
@@ -1521,10 +1504,10 @@ return|return
 name|NumRegs
 return|;
 block|}
-comment|/// areAliases - Returns true if the two registers alias each other, false
-comment|/// otherwise
+comment|/// regsOverlap - Returns true if the two registers are equal or alias each
+comment|/// other. The registers may be virtual register.
 name|bool
-name|areAliases
+name|regsOverlap
 argument_list|(
 name|unsigned
 name|regA
@@ -1534,6 +1517,31 @@ name|regB
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|regA
+operator|==
+name|regB
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|isVirtualRegister
+argument_list|(
+name|regA
+argument_list|)
+operator|||
+name|isVirtualRegister
+argument_list|(
+name|regB
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+comment|// regA and regB are distinct physical registers. Do they alias?
 name|size_t
 name|index
 init|=
@@ -1625,52 +1633,6 @@ expr_stmt|;
 block|}
 return|return
 name|false
-return|;
-block|}
-comment|/// regsOverlap - Returns true if the two registers are equal or alias each
-comment|/// other. The registers may be virtual register.
-name|bool
-name|regsOverlap
-argument_list|(
-name|unsigned
-name|regA
-argument_list|,
-name|unsigned
-name|regB
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|regA
-operator|==
-name|regB
-condition|)
-return|return
-name|true
-return|;
-if|if
-condition|(
-name|isVirtualRegister
-argument_list|(
-name|regA
-argument_list|)
-operator|||
-name|isVirtualRegister
-argument_list|(
-name|regB
-argument_list|)
-condition|)
-return|return
-name|false
-return|;
-return|return
-name|areAliases
-argument_list|(
-name|regA
-argument_list|,
-name|regB
-argument_list|)
 return|;
 block|}
 comment|/// isSubRegister - Returns true if regB is a sub-register of regA.
@@ -2026,6 +1988,34 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// getMatchingSuperRegClass - Return a subclass of the specified register
+comment|/// class A so that each register in it has a sub-register of the
+comment|/// specified sub-register index which is in the specified register class B.
+name|virtual
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getMatchingSuperRegClass
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|B
+argument_list|,
+name|unsigned
+name|Idx
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Register Class Information
 comment|//
@@ -2103,14 +2093,20 @@ name|NULL
 return|;
 block|}
 comment|/// getPointerRegClass - Returns a TargetRegisterClass used for pointer
-comment|/// values.
+comment|/// values.  If a target supports multiple different pointer register classes,
+comment|/// kind specifies which one is indicated.
 name|virtual
 specifier|const
 name|TargetRegisterClass
-operator|*
+modifier|*
 name|getPointerRegClass
-argument_list|()
-specifier|const
+argument_list|(
+name|unsigned
+name|Kind
+operator|=
+literal|0
+argument_list|)
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -2118,7 +2114,7 @@ literal|0
 operator|&&
 literal|"Target didn't implement getPointerRegClass!"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2285,6 +2281,23 @@ return|return
 name|false
 return|;
 block|}
+comment|/// requiresFrameIndexScavenging - returns true if the target requires post
+comment|/// PEI scavenging of registers for materializing frame index constants.
+name|virtual
+name|bool
+name|requiresFrameIndexScavenging
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// hasFP - Return true if the specified function should have a dedicated
 comment|/// frame pointer register. For most targets this is true only if the function
 comment|/// has variable sized allocas or if frame pointer elimination is disabled.
@@ -2301,11 +2314,11 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|// hasReservedCallFrame - Under normal circumstances, when a frame pointer is
-comment|// not required, we reserve argument space for call sites in the function
-comment|// immediately on entry to the current function. This eliminates the need for
-comment|// add/sub sp brackets around call sites. Returns true if the call frame is
-comment|// included as part of the stack frame.
+comment|/// hasReservedCallFrame - Under normal circumstances, when a frame pointer is
+comment|/// not required, we reserve argument space for call sites in the function
+comment|/// immediately on entry to the current function. This eliminates the need for
+comment|/// add/sub sp brackets around call sites. Returns true if the call frame is
+comment|/// included as part of the stack frame.
 name|virtual
 name|bool
 name|hasReservedCallFrame
@@ -2324,9 +2337,36 @@ name|MF
 argument_list|)
 return|;
 block|}
-comment|// needsStackRealignment - true if storage within the function requires the
-comment|// stack pointer to be aligned more than the normal calling convention calls
-comment|// for.
+comment|/// hasReservedSpillSlot - Return true if target has reserved a spill slot in
+comment|/// the stack frame of the given function for the specified register. e.g. On
+comment|/// x86, if the frame register is required, the first fixed stack object is
+comment|/// reserved as its spill slot. This tells PEI not to create a new stack frame
+comment|/// object for the given register. It should be called only after
+comment|/// processFunctionBeforeCalleeSavedScan().
+name|virtual
+name|bool
+name|hasReservedSpillSlot
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|,
+name|int
+operator|&
+name|FrameIdx
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// needsStackRealignment - true if storage within the function requires the
+comment|/// stack pointer to be aligned more than the normal calling convention calls
+comment|/// for.
 name|virtual
 name|bool
 name|needsStackRealignment
@@ -2452,6 +2492,64 @@ name|MF
 argument_list|)
 decl|const
 block|{   }
+comment|/// saveScavengerRegister - Save the register so it can be used by the
+comment|/// register scavenger. Return true if the register was saved, false
+comment|/// otherwise. If this function does not save the register, the scavenger
+comment|/// will instead spill it to the emergency spill slot.
+comment|///
+name|virtual
+name|bool
+name|saveScavengerRegister
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// restoreScavengerRegister - Restore a register saved by
+comment|/// saveScavengerRegister().
+comment|///
+name|virtual
+name|void
+name|restoreScavengerRegister
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{}
 comment|/// eliminateFrameIndex - This method must be overriden to eliminate abstract
 comment|/// frame indices from instructions which may use them.  The instruction
 comment|/// referenced by the iterator contains an MO_FrameIndex operand which must be
@@ -2459,8 +2557,12 @@ comment|/// eliminated by this method.  This method may modify or replace the
 comment|/// specified instruction, as long as it keeps the iterator pointing the the
 comment|/// finished product. SPAdj is the SP adjustment due to call frame setup
 comment|/// instruction.
+comment|///
+comment|/// When -enable-frame-index-scavenging is enabled, the virtual register
+comment|/// allocated for this frame index is returned and its value is stored in
+comment|/// *Value.
 name|virtual
-name|void
+name|unsigned
 name|eliminateFrameIndex
 argument_list|(
 name|MachineBasicBlock
@@ -2470,6 +2572,12 @@ name|MI
 argument_list|,
 name|int
 name|SPAdj
+argument_list|,
+name|int
+operator|*
+name|Value
+operator|=
+name|NULL
 argument_list|,
 name|RegScavenger
 operator|*
@@ -2603,6 +2711,7 @@ begin_decl_stmt
 name|struct
 name|VirtReg2IndexFunctor
 range|:
+name|public
 name|std
 operator|::
 name|unary_function

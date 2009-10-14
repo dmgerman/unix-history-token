@@ -1093,7 +1093,7 @@ directive|ifdef
 name|DEBUG_CAST_OPERATORS
 include|#
 directive|include
-file|"llvm/Support/Streams.h"
+file|"llvm/Support/raw_ostream.h"
 expr|struct
 name|bar
 block|{
@@ -1138,7 +1138,8 @@ operator|&
 name|Val
 operator|)
 block|{
-name|cerr
+name|errs
+argument_list|()
 operator|<<
 literal|"Classof: "
 operator|<<

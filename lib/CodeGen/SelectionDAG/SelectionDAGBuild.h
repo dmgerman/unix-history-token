@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/SelectionDAG.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/APInt.h"
 end_include
 
@@ -110,6 +116,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/CallSite.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -273,12 +285,6 @@ name|class
 name|UnwindInst
 decl_stmt|;
 name|class
-name|VICmpInst
-decl_stmt|;
-name|class
-name|VFCmpInst
-decl_stmt|;
-name|class
 name|VAArgInst
 decl_stmt|;
 name|class
@@ -403,7 +409,7 @@ directive|endif
 name|unsigned
 name|MakeReg
 parameter_list|(
-name|MVT
+name|EVT
 name|VT
 parameter_list|)
 function_decl|;
@@ -1410,6 +1416,8 @@ name|BitTestBlock
 operator|>
 name|BitTestCases
 expr_stmt|;
+comment|/// PHINodesToUpdate - A list of phi instructions whose operand list will
+comment|/// be updated after processing the current basic block.
 name|std
 operator|::
 name|vector
@@ -1425,6 +1433,18 @@ name|unsigned
 operator|>
 expr|>
 name|PHINodesToUpdate
+expr_stmt|;
+comment|/// EdgeMapping - If an edge from CurMBB to any MBB is changed (e.g. due to
+comment|/// scheduler custom lowering), track the change here.
+name|DenseMap
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|,
+name|MachineBasicBlock
+operator|*
+operator|>
+name|EdgeMapping
 expr_stmt|;
 comment|// Emit PHI-node-operand constants only once even if used by multiple
 comment|// PHI nodes.
@@ -1454,6 +1474,17 @@ comment|/// GFI - Garbage collection metadata for the function.
 name|GCFunctionInfo
 modifier|*
 name|GFI
+decl_stmt|;
+comment|/// HasTailCall - This is set to true if a call in the current
+comment|/// block has been translated as a tail call. In this case,
+comment|/// no subsequent DAG nodes should be created.
+comment|///
+name|bool
+name|HasTailCall
+decl_stmt|;
+name|LLVMContext
+modifier|*
+name|Context
 decl_stmt|;
 name|SelectionDAGLowering
 argument_list|(
@@ -1491,7 +1522,17 @@ argument_list|)
 operator|,
 name|OptLevel
 argument_list|(
-argument|ol
+name|ol
+argument_list|)
+operator|,
+name|HasTailCall
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Context
+argument_list|(
+argument|dag.getContext()
 argument_list|)
 block|{   }
 name|void
@@ -2317,22 +2358,6 @@ modifier|&
 name|I
 parameter_list|)
 function_decl|;
-name|void
-name|visitVICmp
-parameter_list|(
-name|User
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
-name|void
-name|visitVFCmp
-parameter_list|(
-name|User
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
 comment|// Visit the conversion instructions
 name|void
 name|visitTrunc
@@ -2662,15 +2687,10 @@ modifier|&
 name|I
 parameter_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"UserOp1 should not exist at instruction selection time!"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 name|void
@@ -2681,15 +2701,10 @@ modifier|&
 name|I
 parameter_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"UserOp2 should not exist at instruction selection time!"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 specifier|const

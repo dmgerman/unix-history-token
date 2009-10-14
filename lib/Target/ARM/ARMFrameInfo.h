@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetFrameInfo.h"
+file|"ARMSubtarget.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ARMSubtarget.h"
+file|"llvm/Target/TargetFrameInfo.h"
 end_include
 
 begin_decl_stmt
@@ -105,6 +105,8 @@ argument_list|,
 argument|ST.getStackAlignment()
 argument_list|,
 literal|0
+argument_list|,
+literal|4
 argument_list|)
 block|{   }
 block|}

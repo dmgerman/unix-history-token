@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -123,6 +117,12 @@ name|Function
 decl_stmt|;
 name|class
 name|SparseSolver
+decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|template
 operator|<
@@ -247,6 +247,21 @@ argument_list|()
 return|;
 comment|// always safe
 block|}
+comment|/// IsSpecialCasedPHI - Given a PHI node, determine whether this PHI node is
+comment|/// one that the we want to handle through ComputeInstructionState.
+name|virtual
+name|bool
+name|IsSpecialCasedPHI
+parameter_list|(
+name|PHINode
+modifier|*
+name|PN
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// GetConstant - If the specified lattice value is representable as an LLVM
 comment|/// constant value, return it.  Otherwise return null.  The returned value
 comment|/// must be in the same LLVM type as Val.
@@ -333,17 +348,15 @@ comment|/// PrintValue - Render the specified lattice value to the specified str
 name|virtual
 name|void
 name|PrintValue
-argument_list|(
+parameter_list|(
 name|LatticeVal
 name|V
-argument_list|,
-name|std
-operator|::
-name|ostream
-operator|&
+parameter_list|,
+name|raw_ostream
+modifier|&
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// SparseSolver - This class is a general purpose solver for Sparse Conditional
@@ -363,6 +376,10 @@ comment|/// compute transfer functions.
 name|AbstractLatticeFunction
 modifier|*
 name|LatticeFunc
+decl_stmt|;
+name|LLVMContext
+modifier|*
+name|Context
 decl_stmt|;
 name|DenseMap
 operator|<
@@ -453,11 +470,20 @@ argument_list|(
 name|AbstractLatticeFunction
 operator|*
 name|Lattice
+argument_list|,
+name|LLVMContext
+operator|*
+name|C
 argument_list|)
 operator|:
 name|LatticeFunc
 argument_list|(
-argument|Lattice
+name|Lattice
+argument_list|)
+operator|,
+name|Context
+argument_list|(
+argument|C
 argument_list|)
 block|{}
 operator|~
@@ -484,9 +510,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|OS
 argument_list|)

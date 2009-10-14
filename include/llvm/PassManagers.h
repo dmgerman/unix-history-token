@@ -370,13 +370,19 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Module
+decl_stmt|;
+name|class
 name|Pass
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
 name|class
-name|Module
+name|Timer
 decl_stmt|;
 comment|/// FunctionPassManager and PassManager, two top level managers, serve
 comment|/// as the public interface of pass manager infrastructure.
@@ -441,6 +447,7 @@ name|M
 block|;
 name|public
 operator|:
+name|explicit
 name|PassManagerPrettyStackEntry
 argument_list|(
 name|Pass
@@ -980,19 +987,6 @@ modifier|*
 name|P
 parameter_list|)
 function_decl|;
-comment|/// verifyDomInfo -- Verify dominator information if it is available.
-name|void
-name|verifyDomInfo
-parameter_list|(
-name|Pass
-modifier|&
-name|P
-parameter_list|,
-name|Function
-modifier|&
-name|F
-parameter_list|)
-function_decl|;
 comment|/// Remove Analysis that is not preserved by the pass
 name|void
 name|removeNotPreservedAnalysis
@@ -1002,7 +996,7 @@ modifier|*
 name|P
 parameter_list|)
 function_decl|;
-comment|/// Remove dead passes
+comment|/// Remove dead passes used by P.
 name|void
 name|removeDeadPasses
 parameter_list|(
@@ -1011,8 +1005,25 @@ modifier|*
 name|P
 parameter_list|,
 specifier|const
-name|char
+name|StringRef
+modifier|&
+name|Msg
+parameter_list|,
+name|enum
+name|PassDebuggingString
+parameter_list|)
+function_decl|;
+comment|/// Remove P.
+name|void
+name|freePass
+parameter_list|(
+name|Pass
 modifier|*
+name|P
+parameter_list|,
+specifier|const
+name|StringRef
+modifier|&
 name|Msg
 parameter_list|,
 name|enum
@@ -1243,8 +1254,8 @@ name|PassDebuggingString
 name|S2
 parameter_list|,
 specifier|const
-name|char
-modifier|*
+name|StringRef
+modifier|&
 name|Msg
 parameter_list|)
 function_decl|;
@@ -1409,14 +1420,21 @@ index|[
 name|PMT_Last
 index|]
 expr_stmt|;
+comment|/// isPassDebuggingExecutionsOrMore - Return true if -debug-pass=Executions
+comment|/// or higher is specified.
+name|bool
+name|isPassDebuggingExecutionsOrMore
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|void
 name|dumpAnalysisUsage
 argument_list|(
 specifier|const
-name|char
-operator|*
+name|StringRef
+operator|&
 name|Msg
 argument_list|,
 specifier|const
@@ -1634,33 +1652,27 @@ return|;
 block|}
 block|}
 empty_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
-name|void
+name|Timer
+modifier|*
 name|StartPassTimer
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|Pass
-operator|*
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
 specifier|extern
 name|void
 name|StopPassTimer
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|Pass
-operator|*
-argument_list|)
-decl_stmt|;
+modifier|*
+parameter_list|,
+name|Timer
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
 end_decl_stmt
 
 begin_endif

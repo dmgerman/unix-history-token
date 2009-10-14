@@ -59,24 +59,6 @@ directive|define
 name|CODEGEN_ASMPRINTER_DWARFLABEL_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<iosfwd>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -84,13 +66,15 @@ block|{
 name|class
 name|FoldingSetNodeID
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// DWLabel - Labels are used to track locations in the assembler file.
 comment|/// Labels appear in the form @verbatim<prefix><Tag><Number> @endverbatim,
 comment|/// where the tag is a category of label (Ex. location) and number is a value
 comment|/// unique in that category.
 name|class
-name|VISIBILITY_HIDDEN
 name|DWLabel
 block|{
 comment|/// Tag - Label category tag. Should always be a statically declared C
@@ -163,20 +147,7 @@ name|NDEBUG
 name|void
 name|print
 argument_list|(
-name|std
-operator|::
-name|ostream
-operator|*
-name|O
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|print
-argument_list|(
-name|std
-operator|::
-name|ostream
+name|raw_ostream
 operator|&
 name|O
 argument_list|)

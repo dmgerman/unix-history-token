@@ -81,19 +81,13 @@ directive|include
 file|"llvm/InstrTypes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|//===--------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
 comment|// BasicBlock pred_iterator definition
-comment|//===--------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
 name|template
 operator|<
 name|class
@@ -107,16 +101,28 @@ name|class
 name|PredIterator
 operator|:
 name|public
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
 name|_Ptr
 operator|,
 name|ptrdiff_t
 operator|>
 block|{
 typedef|typedef
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
 name|_Ptr
 operator|,
 name|ptrdiff_t
@@ -471,7 +477,7 @@ block|}
 end_function
 
 begin_comment
-comment|//===--------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
 end_comment
 
 begin_comment
@@ -479,7 +485,7 @@ comment|// BasicBlock succ_iterator definition
 end_comment
 
 begin_comment
-comment|//===--------------------------------------------------------------------===//
+comment|//===----------------------------------------------------------------------===//
 end_comment
 
 begin_expr_stmt
@@ -496,8 +502,14 @@ name|class
 name|SuccIterator
 operator|:
 name|public
-name|bidirectional_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|bidirectional_iterator_tag
+operator|,
 name|BB_
 operator|,
 name|ptrdiff_t
@@ -511,8 +523,14 @@ name|unsigned
 name|idx
 block|;
 typedef|typedef
-name|bidirectional_iterator
+name|std
+operator|::
+name|iterator
 operator|<
+name|std
+operator|::
+name|bidirectional_iterator_tag
+operator|,
 name|BB_
 operator|,
 name|ptrdiff_t

@@ -193,6 +193,48 @@ return|;
 block|}
 specifier|inline
 name|bool
+name|dominates
+argument_list|(
+argument|DomTreeNode* A
+argument_list|,
+argument|DomTreeNode* B
+argument_list|)
+specifier|const
+block|{
+return|return
+name|DT
+operator|->
+name|dominates
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|dominates
+argument_list|(
+argument|const BasicBlock* A
+argument_list|,
+argument|const BasicBlock* B
+argument_list|)
+specifier|const
+block|{
+return|return
+name|DT
+operator|->
+name|dominates
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
 name|properlyDominates
 argument_list|(
 argument|const DomTreeNode* A
@@ -235,37 +277,36 @@ return|;
 block|}
 name|virtual
 name|void
-name|print
-argument_list|(
-argument|std::ostream&OS
-argument_list|,
-argument|const Module* M=
-literal|0
-argument_list|)
-specifier|const
+name|releaseMemory
+argument_list|()
 block|{
 name|DT
 operator|->
+name|releaseMemory
+argument_list|()
+block|;   }
+name|virtual
+name|void
 name|print
 argument_list|(
-name|OS
+argument|raw_ostream&OS
 argument_list|,
-name|M
+argument|const Module*
 argument_list|)
-block|;   }
-expr|}
-block|;
+specifier|const
+block|; }
+decl_stmt|;
 name|FunctionPass
-operator|*
+modifier|*
 name|createPostDomTree
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// PostDominanceFrontier Class - Concrete subclass of DominanceFrontier that is
 comment|/// used to compute the a post-dominance frontier.
 comment|///
-block|struct
+name|struct
 name|PostDominanceFrontier
-operator|:
+range|:
 name|public
 name|DominanceFrontierBase
 block|{
@@ -340,15 +381,17 @@ name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
-argument|AnalysisUsage&AU
+name|AnalysisUsage
+operator|&
+name|AU
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|AU
 operator|.
 name|setPreservesAll
 argument_list|()
-block|;
+expr_stmt|;
 name|AU
 operator|.
 name|addRequired
@@ -357,35 +400,43 @@ name|PostDominatorTree
 operator|>
 operator|(
 operator|)
-block|;   }
+expr_stmt|;
+block|}
 name|private
-operator|:
+label|:
 specifier|const
 name|DomSetType
-operator|&
+modifier|&
 name|calculate
-argument_list|(
+parameter_list|(
 specifier|const
 name|PostDominatorTree
-operator|&
+modifier|&
 name|DT
-argument_list|,
+parameter_list|,
 specifier|const
 name|DomTreeNode
-operator|*
+modifier|*
 name|Node
-argument_list|)
-block|; }
-decl_stmt|;
+parameter_list|)
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|FunctionPass
 modifier|*
 name|createPostDomFrontier
 parameter_list|()
 function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

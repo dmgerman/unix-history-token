@@ -184,9 +184,11 @@ specifier|const
 block|;
 comment|/// getSetCCResultType - get the ISD::SETCC result ValueType
 name|MVT
+operator|::
+name|SimpleValueType
 name|getSetCCResultType
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -208,33 +210,24 @@ operator|*
 name|Subtarget
 block|;
 comment|// Lower Operand helpers
-name|SDNode
-operator|*
+name|SDValue
 name|LowerCallResult
 argument_list|(
 argument|SDValue Chain
 argument_list|,
 argument|SDValue InFlag
 argument_list|,
-argument|CallSDNode *TheCall
+argument|CallingConv::ID CallConv
 argument_list|,
-argument|unsigned CallingConv
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|bool
-name|IsGlobalInSmallSection
-argument_list|(
-name|GlobalValue
-operator|*
-name|GV
-argument_list|)
-block|;
-name|bool
-name|IsInSmallSection
-argument_list|(
-argument|unsigned Size
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 block|;
 comment|// Lower Operand specifics
@@ -255,14 +248,6 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
-name|LowerCALL
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
 name|LowerConstantPool
 argument_list|(
 argument|SDValue Op
@@ -272,14 +257,6 @@ argument_list|)
 block|;
 name|SDValue
 name|LowerDYNAMIC_STACKALLOC
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
-name|LowerFORMAL_ARGUMENTS
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -319,14 +296,6 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
-name|LowerRET
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-block|;
-name|SDValue
 name|LowerSELECT
 argument_list|(
 argument|SDValue Op
@@ -343,6 +312,67 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|virtual
+name|SDValue
+name|LowerFormalArguments
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+block|;
+name|virtual
+name|SDValue
+name|LowerReturn
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -350,6 +380,10 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -375,7 +409,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -389,7 +423,7 @@ name|getRegClassForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;

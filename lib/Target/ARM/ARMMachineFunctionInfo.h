@@ -133,11 +133,6 @@ comment|/// enable far jump.
 name|bool
 name|LRSpilledForFarJump
 block|;
-comment|/// R3IsLiveIn - True if R3 is live in to this function.
-comment|/// FIXME: Remove when register scavenger for Thumb is done.
-name|bool
-name|R3IsLiveIn
-block|;
 comment|/// FramePtrSpillOffset - If HasStackFrame, this records the frame pointer
 comment|/// spill stack offset.
 name|unsigned
@@ -226,11 +221,6 @@ name|false
 argument_list|)
 block|,
 name|LRSpilledForFarJump
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|R3IsLiveIn
 argument_list|(
 name|false
 argument_list|)
@@ -363,11 +353,6 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|R3IsLiveIn
-argument_list|(
-name|false
-argument_list|)
-block|,
 name|FramePtrSpillOffset
 argument_list|(
 literal|0
@@ -449,6 +434,18 @@ specifier|const
 block|{
 return|return
 name|isThumb
+return|;
+block|}
+name|bool
+name|isThumb1OnlyFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isThumb
+operator|&&
+operator|!
+name|hasThumb2
 return|;
 block|}
 name|bool
@@ -537,26 +534,6 @@ block|{
 name|LRSpilledForFarJump
 operator|=
 name|s
-block|; }
-comment|// FIXME: Remove when register scavenger for Thumb is done.
-name|bool
-name|isR3LiveIn
-argument_list|()
-specifier|const
-block|{
-return|return
-name|R3IsLiveIn
-return|;
-block|}
-name|void
-name|setR3IsLiveIn
-argument_list|(
-argument|bool l
-argument_list|)
-block|{
-name|R3IsLiveIn
-operator|=
-name|l
 block|; }
 name|unsigned
 name|getFramePtrSpillOffset

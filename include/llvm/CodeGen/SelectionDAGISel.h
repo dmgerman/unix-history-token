@@ -87,6 +87,12 @@ directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -142,7 +148,7 @@ name|class
 name|SelectionDAGISel
 range|:
 name|public
-name|FunctionPass
+name|MachineFunctionPass
 block|{
 name|public
 operator|:
@@ -228,17 +234,17 @@ specifier|const
 block|;
 name|virtual
 name|bool
-name|runOnFunction
+name|runOnMachineFunction
 argument_list|(
-name|Function
+name|MachineFunction
 operator|&
-name|Fn
+name|MF
 argument_list|)
 block|;
 name|unsigned
 name|MakeReg
 argument_list|(
-argument|MVT VT
+argument|EVT VT
 argument_list|)
 block|;
 name|virtual

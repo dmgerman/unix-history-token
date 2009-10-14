@@ -108,6 +108,7 @@ block|{
 name|struct
 name|IdentityFunctor
 range|:
+name|public
 name|std
 operator|::
 name|unary_function

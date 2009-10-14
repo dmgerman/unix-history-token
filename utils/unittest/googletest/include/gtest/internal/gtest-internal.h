@@ -244,6 +244,12 @@ directive|include
 file|<gtest/internal/gtest-type-util.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_os_ostream.h"
+end_include
+
 begin_comment
 comment|// Due to C++ preprocessor weirdness, we need double indirection to
 end_comment
@@ -400,7 +406,90 @@ begin_comment
 comment|// compile with MSVC.
 end_comment
 
-begin_expr_stmt
+begin_comment
+comment|// LLVM INTERNAL CHANGE: To allow operator<< to work with both
+end_comment
+
+begin_comment
+comment|// std::ostreams and LLVM's raw_ostreams, we define a special
+end_comment
+
+begin_comment
+comment|// std::ostream with an implicit conversion to raw_ostream& and stream
+end_comment
+
+begin_comment
+comment|// to that.  This causes the compiler to prefer std::ostream overloads
+end_comment
+
+begin_comment
+comment|// but still find raw_ostream& overloads.
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|convertible_fwd_ostream
+range|:
+name|public
+name|std
+operator|::
+name|ostream
+block|{
+name|std
+operator|::
+name|ostream
+operator|&
+name|os_
+block|;
+name|raw_os_ostream
+name|ros_
+block|;
+name|public
+operator|:
+name|convertible_fwd_ostream
+argument_list|(
+name|std
+operator|::
+name|ostream
+operator|&
+name|os
+argument_list|)
+operator|:
+name|std
+operator|::
+name|ostream
+argument_list|(
+name|os
+operator|.
+name|rdbuf
+argument_list|()
+argument_list|)
+block|,
+name|os_
+argument_list|(
+name|os
+argument_list|)
+block|,
+name|ros_
+argument_list|(
+argument|*this
+argument_list|)
+block|{}
+name|operator
+name|raw_ostream
+operator|&
+operator|(
+operator|)
+block|{
+return|return
+name|ros_
+return|;
+block|}
+expr|}
+block|; }
 name|template
 operator|<
 name|typename
@@ -415,8 +504,16 @@ argument_list|,
 argument|const T& val
 argument_list|)
 block|{
+name|llvm
+operator|::
+name|convertible_fwd_ostream
+name|cos
+argument_list|(
 operator|*
 name|os
+argument_list|)
+block|;
+name|cos
 operator|<<
 name|val
 block|; }
@@ -736,26 +833,11 @@ argument|value
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|// These are needed as the above solution using is_pointer has the
-end_comment
-
-begin_comment
 comment|// limitation that T cannot be a type without external linkage, when
-end_comment
-
-begin_comment
 comment|// compiled using MSVC.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -775,17 +857,8 @@ name|value
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// This overload makes sure that all pointers (including
-end_comment
-
-begin_comment
 comment|// those to char or wchar_t) are printed as raw pointers.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -813,58 +886,26 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// GTEST_NEEDS_IS_POINTER_
-end_comment
-
-begin_comment
 comment|// These overloaded versions handle narrow and wide characters.
-end_comment
-
-begin_function_decl
 name|String
 name|FormatForFailureMessage
-parameter_list|(
-name|char
-name|ch
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|char ch
+argument_list|)
+block|;
 name|String
 name|FormatForFailureMessage
-parameter_list|(
-name|wchar_t
-name|wchar
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|wchar_t wchar
+argument_list|)
+block|;
 comment|// When this operand is a const char* or char*, and the other operand
-end_comment
-
-begin_comment
 comment|// is a ::std::string or ::string, we print this operand as a C string
-end_comment
-
-begin_comment
 comment|// rather than a pointer.  We do the same for wide strings.
-end_comment
-
-begin_comment
 comment|// This internal macro is used to avoid duplicated code.
-end_comment
-
-begin_define
 define|#
 directive|define
 name|GTEST_FORMAT_IMPL_
@@ -879,317 +920,115 @@ comment|/*operand2*/
 value|) {\   return operand1_printer(str);\ }\ inline String FormatForComparisonFailureMessage(\     const operand2_type::value_type* str, const operand2_type&
 comment|/*operand2*/
 value|) {\   return operand1_printer(str);\ }
-end_define
-
-begin_if
 if|#
 directive|if
 name|GTEST_HAS_STD_STRING
-end_if
-
-begin_macro
 name|GTEST_FORMAT_IMPL_
 argument_list|(
 argument|::std::string
 argument_list|,
 argument|String::ShowCStringQuoted
 argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// GTEST_HAS_STD_STRING
-end_comment
-
-begin_if
 if|#
 directive|if
 name|GTEST_HAS_STD_WSTRING
-end_if
-
-begin_macro
 name|GTEST_FORMAT_IMPL_
 argument_list|(
 argument|::std::wstring
 argument_list|,
 argument|String::ShowWideCStringQuoted
 argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// GTEST_HAS_STD_WSTRING
-end_comment
-
-begin_if
 if|#
 directive|if
 name|GTEST_HAS_GLOBAL_STRING
-end_if
-
-begin_macro
 name|GTEST_FORMAT_IMPL_
 argument_list|(
 argument|::string
 argument_list|,
 argument|String::ShowCStringQuoted
 argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// GTEST_HAS_GLOBAL_STRING
-end_comment
-
-begin_if
 if|#
 directive|if
 name|GTEST_HAS_GLOBAL_WSTRING
-end_if
-
-begin_macro
 name|GTEST_FORMAT_IMPL_
 argument_list|(
 argument|::wstring
 argument_list|,
 argument|String::ShowWideCStringQuoted
 argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// GTEST_HAS_GLOBAL_WSTRING
-end_comment
-
-begin_undef
 undef|#
 directive|undef
 name|GTEST_FORMAT_IMPL_
-end_undef
-
-begin_comment
 comment|// Constructs and returns the message for an equality assertion
-end_comment
-
-begin_comment
 comment|// (e.g. ASSERT_EQ, EXPECT_STREQ, etc) failure.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// The first four parameters are the expressions used in the assertion
-end_comment
-
-begin_comment
 comment|// and their values, as strings.  For example, for ASSERT_EQ(foo, bar)
-end_comment
-
-begin_comment
 comment|// where foo is 5 and bar is 6, we have:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   expected_expression: "foo"
-end_comment
-
-begin_comment
 comment|//   actual_expression:   "bar"
-end_comment
-
-begin_comment
 comment|//   expected_value:      "5"
-end_comment
-
-begin_comment
 comment|//   actual_value:        "6"
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// The ignoring_case parameter is true iff the assertion is a
-end_comment
-
-begin_comment
 comment|// *_STRCASEEQ*.  When it's true, the string " (ignoring case)" will
-end_comment
-
-begin_comment
 comment|// be inserted into the message.
-end_comment
-
-begin_function_decl
 name|AssertionResult
 name|EqFailure
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|expected_expression
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|actual_expression
-parameter_list|,
-specifier|const
-name|String
-modifier|&
-name|expected_value
-parameter_list|,
-specifier|const
-name|String
-modifier|&
-name|actual_value
-parameter_list|,
-name|bool
-name|ignoring_case
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|const char* expected_expression
+argument_list|,
+argument|const char* actual_expression
+argument_list|,
+argument|const String& expected_value
+argument_list|,
+argument|const String& actual_value
+argument_list|,
+argument|bool ignoring_case
+argument_list|)
+block|;
 comment|// This template class represents an IEEE floating-point number
-end_comment
-
-begin_comment
 comment|// (either single-precision or double-precision, depending on the
-end_comment
-
-begin_comment
 comment|// template parameters).
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// The purpose of this class is to do more sophisticated number
-end_comment
-
-begin_comment
 comment|// comparison.  (Due to round-off error, etc, it's very unlikely that
-end_comment
-
-begin_comment
 comment|// two floating-points will be equal exactly.  Hence a naive
-end_comment
-
-begin_comment
 comment|// comparison by the == operation often doesn't work.)
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Format of IEEE floating-point:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   The most-significant bit being the leftmost, an IEEE
-end_comment
-
-begin_comment
 comment|//   floating-point looks like
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//     sign_bit exponent_bits fraction_bits
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   Here, sign_bit is a single bit that designates the sign of the
-end_comment
-
-begin_comment
 comment|//   number.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   For float, there are 8 exponent bits and 23 fraction bits.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   For double, there are 11 exponent bits and 52 fraction bits.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   More details can be found at
-end_comment
-
-begin_comment
 comment|//   http://en.wikipedia.org/wiki/IEEE_floating-point_standard.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Template parameter:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   RawType: the raw floating-point type (either float or double)
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1228,19 +1067,13 @@ sizeof|sizeof
 argument_list|(
 name|RawType
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// # of fraction bits in a number.
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|size_t
 name|kFractionBitCount
-init|=
+operator|=
 name|std
 operator|::
 name|numeric_limits
@@ -1251,37 +1084,25 @@ operator|::
 name|digits
 operator|-
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// # of exponent bits in a number.
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|size_t
 name|kExponentBitCount
-init|=
+operator|=
 name|kBitCount
 operator|-
 literal|1
 operator|-
 name|kFractionBitCount
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// The mask for the sign bit.
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|Bits
 name|kSignBitMask
-init|=
+operator|=
 name|static_cast
 operator|<
 name|Bits
@@ -1295,19 +1116,13 @@ name|kBitCount
 operator|-
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// The mask for the fraction bits.
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|Bits
 name|kFractionBitMask
-init|=
+operator|=
 operator|~
 name|static_cast
 operator|<
@@ -1322,115 +1137,46 @@ name|kExponentBitCount
 operator|+
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// The mask for the exponent bits.
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|Bits
 name|kExponentBitMask
-init|=
+operator|=
 operator|~
 operator|(
 name|kSignBitMask
 operator||
 name|kFractionBitMask
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// How many ULP's (Units in the Last Place) we want to tolerate when
-end_comment
-
-begin_comment
 comment|// comparing two numbers.  The larger the value, the more error we
-end_comment
-
-begin_comment
 comment|// allow.  A 0 value means that two numbers must be exactly the same
-end_comment
-
-begin_comment
 comment|// to be considered equal.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// The maximum error of a single floating-point operation is 0.5
-end_comment
-
-begin_comment
 comment|// units in the last place.  On Intel CPU's, all floating-point
-end_comment
-
-begin_comment
 comment|// calculations are done with 80-bit precision, while double has 64
-end_comment
-
-begin_comment
 comment|// bits.  Therefore, 4 should be enough for ordinary use.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// See the following article for more details on ULP:
-end_comment
-
-begin_comment
 comment|// http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm.
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|size_t
 name|kMaxUlps
-init|=
+operator|=
 literal|4
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Constructs a FloatingPoint from a raw floating-point number.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// On an Intel CPU, passing a non-normalized NAN (Not a Number)
-end_comment
-
-begin_comment
 comment|// around may change its bits, although the new value is guaranteed
-end_comment
-
-begin_comment
 comment|// to be also a NAN.  Therefore, don't expect this constructor to
-end_comment
-
-begin_comment
 comment|// preserve the bits in x when x is a NAN.
-end_comment
-
-begin_macro
 name|explicit
-end_macro
-
-begin_expr_stmt
 name|FloatingPoint
 argument_list|(
 specifier|const
@@ -1473,17 +1219,11 @@ operator|.
 name|value_
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Returns the floating-point number that represent positive infinity.
-end_comment
-
-begin_function
 specifier|static
 name|RawType
 name|Infinity
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|ReinterpretBits
@@ -1492,17 +1232,8 @@ name|kExponentBitMask
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Non-static methods
-end_comment
-
-begin_comment
 comment|// Returns the bits that represents this number.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|Bits
 operator|&
@@ -1514,13 +1245,7 @@ return|return
 name|bits_
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Returns the exponent bits of this number.
-end_comment
-
-begin_expr_stmt
 name|Bits
 name|exponent_bits
 argument_list|()
@@ -1532,13 +1257,7 @@ operator|&
 name|bits_
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Returns the fraction bits of this number.
-end_comment
-
-begin_expr_stmt
 name|Bits
 name|fraction_bits
 argument_list|()
@@ -1550,13 +1269,7 @@ operator|&
 name|bits_
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Returns the sign bit of this number.
-end_comment
-
-begin_expr_stmt
 name|Bits
 name|sign_bit
 argument_list|()
@@ -1568,13 +1281,7 @@ operator|&
 name|bits_
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Returns true iff this is NAN (not a number).
-end_comment
-
-begin_expr_stmt
 name|bool
 name|is_nan
 argument_list|()
@@ -1598,42 +1305,18 @@ literal|0
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Returns true iff this number is at most kMaxUlps ULP's away from
-end_comment
-
-begin_comment
 comment|// rhs.  In particular, this function:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   - returns false if either number is (or both are) NAN.
-end_comment
-
-begin_comment
 comment|//   - treats really large numbers as almost equal to infinity.
-end_comment
-
-begin_comment
 comment|//   - thinks +0.0 and -0.0 are 0 DLP's apart.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|AlmostEquals
 argument_list|(
-specifier|const
-name|FloatingPoint
-operator|&
-name|rhs
+argument|const FloatingPoint& rhs
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// The IEEE standard says that any comparison operation involving
 comment|// a NAN must return false.
@@ -1663,83 +1346,29 @@ operator|<=
 name|kMaxUlps
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|// Converts an integer from the sign-and-magnitude representation to
-end_comment
-
-begin_comment
 comment|// the biased representation.  More precisely, let N be 2 to the
-end_comment
-
-begin_comment
 comment|// power of (kBitCount - 1), an integer x is represented by the
-end_comment
-
-begin_comment
 comment|// unsigned number x + N.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// For instance,
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   -N + 1 (the most negative number representable using
-end_comment
-
-begin_comment
 comment|//          sign-and-magnitude) is represented by 1;
-end_comment
-
-begin_comment
 comment|//   0      is represented by N; and
-end_comment
-
-begin_comment
 comment|//   N - 1  (the biggest number representable using
-end_comment
-
-begin_comment
 comment|//          sign-and-magnitude) is represented by 2N - 1.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Read http://en.wikipedia.org/wiki/Signed_number_representations
-end_comment
-
-begin_comment
 comment|// for more details on signed number representations.
-end_comment
-
-begin_function
 specifier|static
 name|Bits
 name|SignAndMagnitudeToBiased
-parameter_list|(
-specifier|const
-name|Bits
-modifier|&
-name|sam
-parameter_list|)
+argument_list|(
+argument|const Bits&sam
+argument_list|)
 block|{
 if|if
 condition|(
@@ -1766,50 +1395,35 @@ name|sam
 return|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|// Given two numbers in the sign-and-magnitude representation,
-end_comment
-
-begin_comment
 comment|// returns the distance between them as an unsigned number.
-end_comment
-
-begin_function
 specifier|static
 name|Bits
 name|DistanceBetweenSignAndMagnitudeNumbers
-parameter_list|(
-specifier|const
-name|Bits
-modifier|&
-name|sam1
-parameter_list|,
-specifier|const
-name|Bits
-modifier|&
-name|sam2
-parameter_list|)
+argument_list|(
+argument|const Bits&sam1
+argument_list|,
+argument|const Bits&sam2
+argument_list|)
 block|{
 specifier|const
 name|Bits
 name|biased1
-init|=
+operator|=
 name|SignAndMagnitudeToBiased
 argument_list|(
 name|sam1
 argument_list|)
-decl_stmt|;
+block|;
 specifier|const
 name|Bits
 name|biased2
-init|=
+operator|=
 name|SignAndMagnitudeToBiased
 argument_list|(
 name|sam2
 argument_list|)
-decl_stmt|;
+block|;
 return|return
 operator|(
 name|biased1
@@ -1830,33 +1444,21 @@ name|biased1
 operator|)
 return|;
 block|}
-end_function
-
-begin_union
-union|union
+expr|union
 block|{
 name|RawType
 name|value_
-decl_stmt|;
+block|;
 comment|// The raw floating-point number.
 name|Bits
 name|bits_
-decl_stmt|;
+block|;
 comment|// The bits that represent the number.
 block|}
-union|;
-end_union
-
-begin_comment
-unit|};
+block|; }
+decl_stmt|;
 comment|// Typedefs the instances of the FloatingPoint template class that we
-end_comment
-
-begin_comment
 comment|// care to use.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|FloatingPoint
 operator|<
@@ -1864,9 +1466,6 @@ name|float
 operator|>
 name|Float
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|FloatingPoint
 operator|<
@@ -1874,42 +1473,18 @@ name|double
 operator|>
 name|Double
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|// In order to catch the mistake of putting tests that use different
-end_comment
-
-begin_comment
 comment|// test fixture classes in the same test case, we need to assign
-end_comment
-
-begin_comment
 comment|// unique IDs to fixture classes and compare them.  The TypeId type is
-end_comment
-
-begin_comment
 comment|// used to hold such IDs.  The user should treat TypeId as an opaque
-end_comment
-
-begin_comment
 comment|// type: the only operation allowed on TypeId values is to compare
-end_comment
-
-begin_comment
 comment|// them for equality using the == operator.
-end_comment
-
-begin_typedef
 typedef|typedef
 specifier|const
 name|void
 modifier|*
 name|TypeId
 typedef|;
-end_typedef
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1928,9 +1503,6 @@ name|bool
 name|dummy_
 block|; }
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1946,21 +1518,9 @@ name|dummy_
 operator|=
 name|false
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// GetTypeId<T>() returns the ID of type T.  Different values will be
-end_comment
-
-begin_comment
 comment|// returned for different types.  Calling the function twice with the
-end_comment
-
-begin_comment
 comment|// same type argument is guaranteed to return the same ID.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1986,44 +1546,17 @@ name|dummy_
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Returns the type ID of ::testing::Test.  Always call this instead
-end_comment
-
-begin_comment
 comment|// of GetTypeId< ::testing::Test>() to get the type ID of
-end_comment
-
-begin_comment
 comment|// ::testing::Test, as the latter may give the wrong result due to a
-end_comment
-
-begin_comment
 comment|// suspected linker bug when compiling Google Test as a Mac OS X
-end_comment
-
-begin_comment
 comment|// framework.
-end_comment
-
-begin_function_decl
 name|TypeId
 name|GetTestTypeId
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|// Defines the abstract factory interface that creates instances
-end_comment
-
-begin_comment
 comment|// of a Test object.
-end_comment
-
-begin_decl_stmt
 name|class
 name|TestFactoryBase
 block|{
@@ -2057,21 +1590,9 @@ name|TestFactoryBase
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|// This class provides implementation of TeastFactoryBase interface.
-end_comment
-
-begin_comment
 comment|// It is used in TEST and TEST_F macros.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -2096,114 +1617,61 @@ name|new
 name|TestClass
 return|;
 block|}
-end_expr_stmt
-
-begin_ifdef
-unit|};
+expr|}
+block|;
 ifdef|#
 directive|ifdef
 name|GTEST_OS_WINDOWS
-end_ifdef
-
-begin_comment
 comment|// Predicate-formatters for implementing the HRESULT checking macros
-end_comment
-
-begin_comment
 comment|// {ASSERT|EXPECT}_HRESULT_{SUCCEEDED|FAILED}
-end_comment
-
-begin_comment
 comment|// We pass a long instead of HRESULT to avoid causing an
-end_comment
-
-begin_comment
 comment|// include dependency for the HRESULT type.
-end_comment
-
-begin_function_decl
 name|AssertionResult
 name|IsHRESULTSuccess
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|expr
-parameter_list|,
-name|long
-name|hr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|const char* expr
+argument_list|,
+argument|long hr
+argument_list|)
+block|;
 comment|// NOLINT
-end_comment
-
-begin_function_decl
 name|AssertionResult
 name|IsHRESULTFailure
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|expr
-parameter_list|,
-name|long
-name|hr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|const char* expr
+argument_list|,
+argument|long hr
+argument_list|)
+block|;
 comment|// NOLINT
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// GTEST_OS_WINDOWS
-end_comment
-
-begin_comment
 comment|// Formats a source file path and a line number as they would appear
-end_comment
-
-begin_comment
 comment|// in a compiler error message.
-end_comment
-
-begin_function
 specifier|inline
 name|String
 name|FormatFileLocation
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
+argument_list|(
+argument|const char* file
+argument_list|,
+argument|int line
+argument_list|)
 block|{
 specifier|const
 name|char
-modifier|*
+operator|*
 specifier|const
 name|file_name
-init|=
+operator|=
 name|file
 operator|==
 name|NULL
-condition|?
+operator|?
 literal|"unknown file"
-else|:
+operator|:
 name|file
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|line
@@ -2255,13 +1723,7 @@ endif|#
 directive|endif
 comment|// _MSC_VER
 block|}
-end_function
-
-begin_comment
 comment|// Types of SetUpTestCase() and TearDownTestCase() functions.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|void
 function_decl|(
@@ -2270,9 +1732,6 @@ name|SetUpTestCaseFunc
 function_decl|)
 parameter_list|()
 function_decl|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|void
 function_decl|(
@@ -2281,77 +1740,23 @@ name|TearDownTestCaseFunc
 function_decl|)
 parameter_list|()
 function_decl|;
-end_typedef
-
-begin_comment
 comment|// Creates a new TestInfo object and registers it with Google Test;
-end_comment
-
-begin_comment
 comment|// returns the created object.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Arguments:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   test_case_name:   name of the test case
-end_comment
-
-begin_comment
 comment|//   name:             name of the test
-end_comment
-
-begin_comment
 comment|//   test_case_comment: a comment on the test case that will be included in
-end_comment
-
-begin_comment
 comment|//                      the test output
-end_comment
-
-begin_comment
 comment|//   comment:          a comment on the test that will be included in the
-end_comment
-
-begin_comment
 comment|//                     test output
-end_comment
-
-begin_comment
 comment|//   fixture_class_id: ID of the test fixture class
-end_comment
-
-begin_comment
 comment|//   set_up_tc:        pointer to the function that sets up the test case
-end_comment
-
-begin_comment
 comment|//   tear_down_tc:     pointer to the function that tears down the test case
-end_comment
-
-begin_comment
 comment|//   factory:          pointer to the factory that creates a test object.
-end_comment
-
-begin_comment
 comment|//                     The newly created TestInfo instance will assume
-end_comment
-
-begin_comment
 comment|//                     ownership of the factory object.
-end_comment
-
-begin_function_decl
 name|TestInfo
 modifier|*
 name|MakeAndRegisterTestInfo
@@ -2390,9 +1795,6 @@ modifier|*
 name|factory
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -2404,13 +1806,7 @@ name|defined
 argument_list|(
 name|GTEST_HAS_TYPED_TEST_P
 argument_list|)
-end_if
-
-begin_comment
 comment|// State of the definition of a type-parameterized test case.
-end_comment
-
-begin_decl_stmt
 name|class
 name|TypedTestCasePState
 block|{
@@ -2481,21 +1877,9 @@ return|return
 name|true
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// Verifies that registered_tests match the test names in
-end_comment
-
-begin_comment
 comment|// defined_test_names_; returns registered_tests if successful, or
-end_comment
-
-begin_comment
 comment|// aborts the program otherwise.
-end_comment
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -2515,20 +1899,11 @@ modifier|*
 name|registered_tests
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_decl_stmt
 name|bool
 name|registered_
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 operator|::
 name|std
 operator|::
@@ -2540,10 +1915,14 @@ operator|*
 operator|>
 name|defined_test_names_
 expr_stmt|;
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|// Skips to the first non-space char after the first comma in 'str';
 end_comment
 

@@ -778,7 +778,7 @@ operator|.
 name|seconds_
 return|;
 block|}
-comment|/// Converts the TiemValue into the correspodning number of "ticks" for
+comment|/// Converts the TimeValue into the corresponding number of "ticks" for
 comment|/// Win32 platforms, correcting for the difference in Win32 zero time.
 comment|/// @brief Convert to windows time (seconds since 12:00:00a Jan 1, 1601)
 name|uint64_t
@@ -840,7 +840,7 @@ comment|/// @brief Convert time to a string.
 name|std
 operator|::
 name|string
-name|toString
+name|str
 argument_list|()
 specifier|const
 expr_stmt|;

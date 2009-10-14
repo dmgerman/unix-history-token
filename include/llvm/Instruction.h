@@ -79,6 +79,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|LLVMContext
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -196,6 +199,19 @@ comment|/// identical to the current one.  This means that all operands match an
 comment|/// extra information (e.g. load is volatile) agree.
 name|bool
 name|isIdenticalTo
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isIdenticalToWhenDefined - This is like isIdenticalTo, except that it
+comment|/// ignores the SubclassOptionalData flags, which specify conditions
+comment|/// under which the instruction's result is undefined.
+name|bool
+name|isIdenticalToWhenDefined
 argument_list|(
 specifier|const
 name|Instruction
@@ -611,29 +627,6 @@ name|unsigned
 name|op
 parameter_list|)
 function_decl|;
-comment|/// isTrapping - Return true if the instruction may trap.
-comment|///
-name|bool
-name|isTrapping
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isTrapping
-argument_list|(
-name|getOpcode
-argument_list|()
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|isTrapping
-parameter_list|(
-name|unsigned
-name|op
-parameter_list|)
-function_decl|;
 comment|/// mayWriteToMemory - Return true if this instruction may modify memory.
 comment|///
 name|bool
@@ -657,6 +650,10 @@ specifier|const
 expr_stmt|;
 comment|/// mayHaveSideEffects - Return true if the instruction may have side effects.
 comment|///
+comment|/// Note that this does not consider malloc and alloca to have side
+comment|/// effects because the newly allocated memory is completely invisible to
+comment|/// instructions which don't used the returned value.  For cases where this
+comment|/// matters, isSafeToSpeculativelyExecute may be more appropriate.
 name|bool
 name|mayHaveSideEffects
 argument_list|()
@@ -670,6 +667,29 @@ name|mayThrow
 argument_list|()
 return|;
 block|}
+comment|/// isSafeToSpeculativelyExecute - Return true if the instruction does not
+comment|/// have any effects besides calculating the result and does not have
+comment|/// undefined behavior.
+comment|///
+comment|/// This method never returns true for an instruction that returns true for
+comment|/// mayHaveSideEffects; however, this method also does some other checks in
+comment|/// addition. It checks for undefined behavior, like dividing by zero or
+comment|/// loading from an invalid pointer (but not for undefined results, like a
+comment|/// shift with a shift amount larger than the width of the result). It checks
+comment|/// for malloc and alloca because speculatively executing them might cause a
+comment|/// memory leak. It also returns false for instructions related to control
+comment|/// flow, specifically terminators and PHI nodes.
+comment|///
+comment|/// This method only looks at the instruction itself and its operands, so if
+comment|/// this method returns true, it is safe to move the instruction as long as
+comment|/// the correct dominance relationships for the operands and users hold.
+comment|/// However, this method can return true for instructions that read memory;
+comment|/// for such instructions, moving them may change the resulting value.
+name|bool
+name|isSafeToSpeculativelyExecute
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

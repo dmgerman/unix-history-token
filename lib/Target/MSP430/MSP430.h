@@ -80,7 +80,7 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
-name|raw_ostream
+name|formatted_raw_ostream
 decl_stmt|;
 name|FunctionPass
 modifier|*
@@ -96,22 +96,10 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
-name|FunctionPass
-modifier|*
-name|createMSP430CodePrinterPass
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|o
-parameter_list|,
-name|MSP430TargetMachine
-modifier|&
-name|tm
-parameter_list|,
-name|bool
-name|verbose
-parameter_list|)
-function_decl|;
+specifier|extern
+name|Target
+name|TheMSP430Target
+decl_stmt|;
 block|}
 end_decl_stmt
 

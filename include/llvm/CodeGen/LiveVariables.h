@@ -122,7 +122,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineInstr.h"
 end_include
 
 begin_include
@@ -135,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
 end_include
 
 begin_include
@@ -409,45 +427,58 @@ parameter_list|)
 function_decl|;
 name|void
 name|HandlePhysRegDef
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|,
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
-comment|/// FindLastPartialDef - Return the last partial def of the specified register.
-comment|/// Also returns the sub-register that's defined.
-name|MachineInstr
-modifier|*
-name|FindLastPartialDef
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|,
-name|unsigned
-modifier|&
-name|PartDefReg
-parameter_list|)
-function_decl|;
-comment|/// hasRegisterUseBelow - Return true if the specified register is used after
-comment|/// the current instruction and before it's next definition.
-name|bool
-name|hasRegisterUseBelow
 argument_list|(
 name|unsigned
 name|Reg
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|I
-argument_list|,
-name|MachineBasicBlock
+name|MachineInstr
 operator|*
-name|MBB
+name|MI
+argument_list|,
+name|SmallVector
+operator|<
+name|unsigned
+argument_list|,
+literal|4
+operator|>
+operator|&
+name|Defs
+argument_list|)
+decl_stmt|;
+name|void
+name|UpdatePhysRegDefs
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|SmallVector
+operator|<
+name|unsigned
+argument_list|,
+literal|4
+operator|>
+operator|&
+name|Defs
+argument_list|)
+decl_stmt|;
+comment|/// FindLastPartialDef - Return the last partial def of the specified register.
+comment|/// Also returns the sub-registers that're defined by the instruction.
+name|MachineInstr
+modifier|*
+name|FindLastPartialDef
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|,
+name|SmallSet
+operator|<
+name|unsigned
+argument_list|,
+literal|4
+operator|>
+operator|&
+name|PartDefRegs
 argument_list|)
 decl_stmt|;
 comment|/// analyzePHINodes - Gather information about the PHI nodes in here. In

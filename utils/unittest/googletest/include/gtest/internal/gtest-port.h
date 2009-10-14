@@ -789,6 +789,21 @@ directive|define
 name|GTEST_OS_SOLARIS
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__HAIKU__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GTEST_OS_HAIKU
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -982,6 +997,11 @@ operator|||
 name|defined
 argument_list|(
 name|GTEST_OS_SOLARIS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|GTEST_OS_HAIKU
 argument_list|)
 end_if
 

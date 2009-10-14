@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/type_traits.h"
 end_include
 
@@ -1915,6 +1909,89 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// capacity - Return the total number of elements in the currently allocated
+end_comment
+
+begin_comment
+comment|/// buffer.
+end_comment
+
+begin_expr_stmt
+name|size_t
+name|capacity
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Capacity
+operator|-
+name|Begin
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// set_size - Set the array size to \arg N, which the current array must have
+end_comment
+
+begin_comment
+comment|/// enough capacity for.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This does not construct or destroy any elements in the vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients can use this in conjunction with capacity() to write past the end
+end_comment
+
+begin_comment
+comment|/// of the buffer when they know that more elements are available, and only
+end_comment
+
+begin_comment
+comment|/// update the size later. This avoids the cost of value initializing elements
+end_comment
+
+begin_comment
+comment|/// which will only be overwritten.
+end_comment
+
+begin_function
+name|void
+name|set_size
+parameter_list|(
+name|unsigned
+name|N
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|N
+operator|<=
+name|capacity
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|End
+operator|=
+name|Begin
+operator|+
+name|N
+expr_stmt|;
+block|}
+end_function
 
 begin_label
 name|private

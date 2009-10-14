@@ -76,29 +76,33 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Module
-decl_stmt|;
-name|class
 name|GlobalValue
 decl_stmt|;
 name|class
 name|TargetMachine
 decl_stmt|;
+comment|/// PICStyles - The X86 backend supports a number of different styles of PIC.
+comment|///
 name|namespace
 name|PICStyles
 block|{
 enum|enum
 name|Style
 block|{
-name|Stub
+name|StubPIC
 block|,
+comment|// Used on i386-darwin in -fPIC mode.
+name|StubDynamicNoPIC
+block|,
+comment|// Used on i386-darwin in -mdynamic-no-pic mode.
 name|GOT
 block|,
+comment|// Used on many 32-bit unices in -fPIC mode.
 name|RIPRel
 block|,
-name|WinPIC
-block|,
+comment|// Used on X86-64 when not in -static mode.
 name|None
+comment|// Set when in -static mode (not PIC or DynamicNoPIC mode).
 block|}
 enum|;
 block|}
@@ -108,24 +112,6 @@ range|:
 name|public
 name|TargetSubtarget
 block|{
-name|public
-operator|:
-expr|enum
-name|AsmWriterFlavorTy
-block|{
-comment|// Note: This numbering has to match the GCC assembler dialects for inline
-comment|// asm alternatives to work right.
-name|ATT
-operator|=
-literal|0
-block|,
-name|Intel
-operator|=
-literal|1
-block|,
-name|Unset
-block|}
-block|;
 name|protected
 operator|:
 expr|enum
@@ -157,11 +143,6 @@ block|,
 name|ThreeDNowA
 block|}
 block|;
-comment|/// AsmFlavor - Which x86 asm dialect to use.
-comment|///
-name|AsmWriterFlavorTy
-name|AsmFlavor
-block|;
 comment|/// PICStyle - Which PIC style to use
 comment|///
 name|PICStyles
@@ -178,6 +159,11 @@ comment|/// X863DNowLevel - 3DNow or 3DNow Athlon, or none supported.
 comment|///
 name|X863DNowEnum
 name|X863DNowLevel
+block|;
+comment|/// HasCMov - True if this processor has conditional move instructions
+comment|/// (generally pentium pro+).
+name|bool
+name|HasCMov
 block|;
 comment|/// HasX86_64 - True if the processor supports X86-64 instructions.
 comment|///
@@ -227,7 +213,7 @@ name|MaxInlineSizeThreshold
 block|;
 name|private
 operator|:
-comment|/// Is64Bit - True if the processor supports 64-bit instructions and module
+comment|/// Is64Bit - True if the processor supports 64-bit instructions and
 comment|/// pointer size is 64 bit.
 name|bool
 name|Is64Bit
@@ -249,11 +235,11 @@ block|}
 name|TargetType
 block|;
 comment|/// This constructor initializes the data members to match that
-comment|/// of the specified module.
+comment|/// of the specified triple.
 comment|///
 name|X86Subtarget
 argument_list|(
-argument|const Module&M
+argument|const std::string&TT
 argument_list|,
 argument|const std::string&FS
 argument_list|,
@@ -485,46 +471,6 @@ return|return
 name|IsBTMemSlow
 return|;
 block|}
-name|unsigned
-name|getAsmFlavor
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AsmFlavor
-operator|!=
-name|Unset
-operator|?
-name|unsigned
-argument_list|(
-name|AsmFlavor
-argument_list|)
-operator|:
-literal|0
-return|;
-block|}
-name|bool
-name|isFlavorAtt
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AsmFlavor
-operator|==
-name|ATT
-return|;
-block|}
-name|bool
-name|isFlavorIntel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AsmFlavor
-operator|==
-name|Intel
-return|;
-block|}
 name|bool
 name|isTargetDarwin
 argument_list|()
@@ -570,23 +516,6 @@ name|isMingw
 return|;
 block|}
 name|bool
-name|isTargetCygMing
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|TargetType
-operator|==
-name|isMingw
-operator|||
-name|TargetType
-operator|==
-name|isCygwin
-operator|)
-return|;
-block|}
-name|bool
 name|isTargetCygwin
 argument_list|()
 specifier|const
@@ -598,12 +527,46 @@ name|isCygwin
 return|;
 block|}
 name|bool
+name|isTargetCygMing
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetType
+operator|==
+name|isMingw
+operator|||
+name|TargetType
+operator|==
+name|isCygwin
+return|;
+block|}
+comment|/// isTargetCOFF - Return true if this is any COFF/Windows target variant.
+name|bool
+name|isTargetCOFF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetType
+operator|==
+name|isMingw
+operator|||
+name|TargetType
+operator|==
+name|isCygwin
+operator|||
+name|TargetType
+operator|==
+name|isWindows
+return|;
+block|}
+name|bool
 name|isTargetWin64
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|Is64Bit
 operator|&&
 operator|(
@@ -614,7 +577,6 @@ operator|||
 name|TargetType
 operator|==
 name|isWindows
-operator|)
 operator|)
 return|;
 block|}
@@ -639,8 +601,7 @@ name|p
 operator|=
 literal|"e-p:64:64-s:64-f64:64:64-i64:64:64-f80:128:128"
 expr_stmt|;
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|isTargetDarwin
@@ -655,7 +616,6 @@ name|p
 operator|=
 literal|"e-p:32:32-f64:32:64-i64:32:64-f80:32:32"
 expr_stmt|;
-block|}
 return|return
 name|std
 operator|::
@@ -692,19 +652,6 @@ name|GOT
 return|;
 block|}
 name|bool
-name|isPICStyleStub
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PICStyle
-operator|==
-name|PICStyles
-operator|::
-name|Stub
-return|;
-block|}
-name|bool
 name|isPICStyleRIPRel
 argument_list|()
 specifier|const
@@ -718,7 +665,7 @@ name|RIPRel
 return|;
 block|}
 name|bool
-name|isPICStyleWinPIC
+name|isPICStyleStubPIC
 argument_list|()
 specifier|const
 block|{
@@ -727,10 +674,43 @@ name|PICStyle
 operator|==
 name|PICStyles
 operator|::
-name|WinPIC
+name|StubPIC
 return|;
 block|}
-comment|/// getDarwinVers - Return the darwin version number, 8 = tiger, 9 = leopard.
+name|bool
+name|isPICStyleStubNoDynamic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PICStyle
+operator|==
+name|PICStyles
+operator|::
+name|StubDynamicNoPIC
+return|;
+block|}
+name|bool
+name|isPICStyleStubAny
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PICStyle
+operator|==
+name|PICStyles
+operator|::
+name|StubDynamicNoPIC
+operator|||
+name|PICStyle
+operator|==
+name|PICStyles
+operator|::
+name|StubPIC
+return|;
+block|}
+comment|/// getDarwinVers - Return the darwin version number, 8 = Tiger, 9 = Leopard,
+comment|/// 10 = Snow Leopard, etc.
 name|unsigned
 name|getDarwinVers
 argument_list|()
@@ -750,44 +730,37 @@ return|return
 name|IsLinux
 return|;
 block|}
-comment|/// True if accessing the GV requires an extra load. For Windows, dllimported
-comment|/// symbols are indirect, loading the value at address GV rather then the
-comment|/// value of GV itself. This means that the GlobalAddress must be in the base
-comment|/// or index register of the address, not the GV offset field.
-name|bool
-name|GVRequiresExtraLoad
+comment|/// ClassifyGlobalReference - Classify a global variable reference for the
+comment|/// current subtarget according to how we should reference it in a non-pcrel
+comment|/// context.
+name|unsigned
+name|char
+name|ClassifyGlobalReference
 argument_list|(
-argument|const GlobalValue* GV
-argument_list|,
-argument|const TargetMachine& TM
-argument_list|,
-argument|bool isDirectCall
-argument_list|)
 specifier|const
-block|;
-comment|/// True if accessing the GV requires a register.  This is a superset of the
-comment|/// cases where GVRequiresExtraLoad is true.  Some variations of PIC require
-comment|/// a register, but not an extra load.
-name|bool
-name|GVRequiresRegister
-argument_list|(
-argument|const GlobalValue* GV
+name|GlobalValue
+operator|*
+name|GV
 argument_list|,
-argument|const TargetMachine& TM
-argument_list|,
-argument|bool isDirectCall
-argument_list|)
 specifier|const
-block|;
+name|TargetMachine
+operator|&
+name|TM
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// IsLegalToCallImmediateAddr - Return true if the subtarget allows calls
 comment|/// to immediate address.
 name|bool
 name|IsLegalToCallImmediateAddr
 argument_list|(
-argument|const TargetMachine&TM
-argument_list|)
 specifier|const
-block|;
+name|TargetMachine
+operator|&
+name|TM
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// This function returns the name of a function which has an interface
 comment|/// like the non-standard bzero function, if such a function exists on
 comment|/// the current subtarget and it is considered prefereable over
@@ -799,7 +772,7 @@ operator|*
 name|getBZeroEntry
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// getSpecialAddressLatency - For targets where it is beneficial to
 comment|/// backschedule instructions that compute addresses, return a value
 comment|/// indicating the number of scheduling cycles of backscheduling that
@@ -808,41 +781,16 @@ name|unsigned
 name|getSpecialAddressLatency
 argument_list|()
 specifier|const
-block|; }
-decl_stmt|;
-name|namespace
-name|X86
-block|{
-comment|/// GetCpuIDAndInfo - Execute the specified cpuid and return the 4 values in
-comment|/// the specified arguments.  If we can't run cpuid on the host, return true.
-name|bool
-name|GetCpuIDAndInfo
-parameter_list|(
-name|unsigned
-name|value
-parameter_list|,
-name|unsigned
-modifier|*
-name|rEAX
-parameter_list|,
-name|unsigned
-modifier|*
-name|rEBX
-parameter_list|,
-name|unsigned
-modifier|*
-name|rECX
-parameter_list|,
-name|unsigned
-modifier|*
-name|rEDX
-parameter_list|)
-function_decl|;
-block|}
+expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 
