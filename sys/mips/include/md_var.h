@@ -105,6 +105,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|MipsSwitchFPState
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_long
 name|kvtop
 parameter_list|(
