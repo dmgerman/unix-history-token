@@ -16725,12 +16725,7 @@ name|sin_addr
 expr_stmt|;
 name|SCTP_RTALLOC
 argument_list|(
-operator|(
-operator|&
 name|ro
-operator|->
-name|ro_rt
-operator|)
 argument_list|,
 name|vrf_id
 argument_list|)
@@ -18709,12 +18704,7 @@ name|sin6_addr
 expr_stmt|;
 name|SCTP_RTALLOC
 argument_list|(
-operator|(
-operator|&
 name|ro
-operator|->
-name|ro_rt
-operator|)
 argument_list|,
 name|vrf_id
 argument_list|)
