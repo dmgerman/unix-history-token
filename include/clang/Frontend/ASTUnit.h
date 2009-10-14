@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/SourceManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
@@ -83,9 +89,6 @@ name|FileEntry
 decl_stmt|;
 name|class
 name|SourceManager
-decl_stmt|;
-name|class
-name|DiagnosticClient
 decl_stmt|;
 name|class
 name|Diagnostic
@@ -110,30 +113,13 @@ comment|///
 name|class
 name|ASTUnit
 block|{
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|SourceManager
-operator|>
-name|SourceMgr
-expr_stmt|;
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|DiagnosticClient
-operator|>
-name|DiagClient
-expr_stmt|;
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
 name|Diagnostic
-operator|>
+modifier|&
 name|Diags
-expr_stmt|;
+decl_stmt|;
+name|SourceManager
+name|SourceMgr
+decl_stmt|;
 name|llvm
 operator|::
 name|OwningPtr
@@ -173,7 +159,7 @@ name|ASTUnit
 operator|&
 argument_list|)
 expr_stmt|;
-comment|// do not implement
+comment|// DO NOT IMPLEMENT
 name|ASTUnit
 modifier|&
 name|operator
@@ -184,9 +170,13 @@ name|ASTUnit
 operator|&
 operator|)
 decl_stmt|;
-comment|// do not implement
+comment|// DO NOT IMPLEMENT
 name|ASTUnit
-argument_list|()
+argument_list|(
+name|Diagnostic
+operator|&
+name|_Diag
+argument_list|)
 expr_stmt|;
 name|public
 label|:
@@ -202,11 +192,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
 name|SourceMgr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SourceManager
@@ -215,11 +201,7 @@ name|getSourceManager
 parameter_list|()
 block|{
 return|return
-operator|*
 name|SourceMgr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -278,15 +260,51 @@ name|get
 argument_list|()
 return|;
 block|}
+specifier|const
+name|Diagnostic
+operator|&
+name|getDiagnostic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diags
+return|;
+block|}
+name|Diagnostic
+modifier|&
+name|getDiagnostic
+parameter_list|()
+block|{
+return|return
+name|Diags
+return|;
+block|}
+name|FileManager
+modifier|&
+name|getFileManager
+parameter_list|()
+function_decl|;
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getOriginalSourceFileName
+argument_list|()
+expr_stmt|;
 comment|/// \brief Create a ASTUnit from a PCH file.
 comment|///
-comment|/// \param Filename PCH filename
+comment|/// \param Filename - The PCH file to load.
 comment|///
-comment|/// \param FileMgr The FileManager to use
+comment|/// \param Diags - The Diagnostic implementation to use.
 comment|///
-comment|/// \param ErrMsg Error message to report if the PCH file could not be loaded
+comment|/// \param FileMgr - The FileManager to use.
 comment|///
-comment|/// \returns the initialized ASTUnit or NULL if the PCH failed to load
+comment|/// \param ErrMsg - Error message to report if the PCH file could not be
+comment|/// loaded.
+comment|///
+comment|/// \returns - The initialized ASTUnit or null if the PCH failed to load.
 specifier|static
 name|ASTUnit
 modifier|*
@@ -298,6 +316,10 @@ operator|::
 name|string
 operator|&
 name|Filename
+argument_list|,
+name|Diagnostic
+operator|&
+name|Diags
 argument_list|,
 name|FileManager
 operator|&

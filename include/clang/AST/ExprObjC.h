@@ -143,14 +143,6 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{}
-name|ObjCStringLiteral
-operator|*
-name|Clone
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-specifier|const
-block|;
 name|StringLiteral
 operator|*
 name|getString
@@ -518,14 +510,6 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{}
-name|ObjCSelectorExpr
-operator|*
-name|Clone
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-specifier|const
-block|;
 name|Selector
 name|getSelector
 argument_list|()
@@ -717,14 +701,6 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{}
-name|ObjCProtocolExpr
-operator|*
-name|Clone
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-specifier|const
-block|;
 name|ObjCProtocolDecl
 operator|*
 name|getProtocol
@@ -1335,27 +1311,40 @@ name|child_end
 argument_list|()
 block|; }
 decl_stmt|;
-comment|/// ObjCKVCRefExpr - A dot-syntax expression to access "implicit" properties
-comment|/// (i.e. methods following the property naming convention). KVC stands for
-comment|/// Key Value Encoding, a generic concept for accessing or setting a 'Key'
-comment|/// value for an object.
-comment|///
+comment|/// ObjCImplicitSetterGetterRefExpr - A dot-syntax expression to access two
+comment|/// methods; one to set a value to an 'ivar' (Setter) and the other to access
+comment|/// an 'ivar' (Setter).
+comment|/// An example for use of this AST is:
+comment|/// @code
+comment|///  @interface Test { }
+comment|///  - (Test *)crash;
+comment|///  - (void)setCrash: (Test*)value;
+comment|/// @end
+comment|/// void  foo(Test *p1, Test *p2)
+comment|/// {
+comment|///    p2.crash  = p1.crash; // Uses ObjCImplicitSetterGetterRefExpr AST
+comment|/// }
+comment|/// @endcode
 name|class
-name|ObjCKVCRefExpr
+name|ObjCImplicitSetterGetterRefExpr
 range|:
 name|public
 name|Expr
 block|{
+comment|/// Setter - Setter method user declared for setting its 'ivar' to a value
 name|ObjCMethodDecl
 operator|*
 name|Setter
 block|;
+comment|/// Getter - Getter method user declared for accessing 'ivar' it controls.
 name|ObjCMethodDecl
 operator|*
 name|Getter
 block|;
+comment|/// Location of the member in the dot syntax notation. This is location
+comment|/// of the getter method.
 name|SourceLocation
-name|Loc
+name|MemberLoc
 block|;
 comment|// FIXME: Swizzle these into a single pointer.
 name|Stmt
@@ -1364,14 +1353,16 @@ name|Base
 block|;
 name|ObjCInterfaceDecl
 operator|*
-name|ClassProp
+name|InterfaceDecl
 block|;
+comment|/// Location of the receiver class in the dot syntax notation
+comment|/// used to call a class method setter/getter.
 name|SourceLocation
 name|ClassLoc
 block|;
 name|public
 operator|:
-name|ObjCKVCRefExpr
+name|ObjCImplicitSetterGetterRefExpr
 argument_list|(
 argument|ObjCMethodDecl *getter
 argument_list|,
@@ -1386,7 +1377,7 @@ argument_list|)
 operator|:
 name|Expr
 argument_list|(
-name|ObjCKVCRefExprClass
+name|ObjCImplicitSetterGetterRefExprClass
 argument_list|,
 name|t
 argument_list|)
@@ -1401,7 +1392,7 @@ argument_list|(
 name|getter
 argument_list|)
 block|,
-name|Loc
+name|MemberLoc
 argument_list|(
 name|l
 argument_list|)
@@ -1411,7 +1402,7 @@ argument_list|(
 name|base
 argument_list|)
 block|,
-name|ClassProp
+name|InterfaceDecl
 argument_list|(
 literal|0
 argument_list|)
@@ -1421,7 +1412,7 @@ argument_list|(
 argument|SourceLocation()
 argument_list|)
 block|{     }
-name|ObjCKVCRefExpr
+name|ObjCImplicitSetterGetterRefExpr
 argument_list|(
 argument|ObjCMethodDecl *getter
 argument_list|,
@@ -1438,7 +1429,7 @@ argument_list|)
 operator|:
 name|Expr
 argument_list|(
-name|ObjCKVCRefExprClass
+name|ObjCImplicitSetterGetterRefExprClass
 argument_list|,
 name|t
 argument_list|)
@@ -1453,7 +1444,7 @@ argument_list|(
 name|getter
 argument_list|)
 block|,
-name|Loc
+name|MemberLoc
 argument_list|(
 name|l
 argument_list|)
@@ -1463,7 +1454,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|ClassProp
+name|InterfaceDecl
 argument_list|(
 name|C
 argument_list|)
@@ -1474,14 +1465,14 @@ argument|CL
 argument_list|)
 block|{     }
 name|explicit
-name|ObjCKVCRefExpr
+name|ObjCImplicitSetterGetterRefExpr
 argument_list|(
 argument|EmptyShell Empty
 argument_list|)
 operator|:
 name|Expr
 argument_list|(
-argument|ObjCKVCRefExprClass
+argument|ObjCImplicitSetterGetterRefExprClass
 argument_list|,
 argument|Empty
 argument_list|)
@@ -1508,12 +1499,12 @@ return|;
 block|}
 name|ObjCInterfaceDecl
 operator|*
-name|getClassProp
+name|getInterfaceDecl
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ClassProp
+name|InterfaceDecl
 return|;
 block|}
 name|void
@@ -1537,12 +1528,12 @@ operator|=
 name|D
 block|; }
 name|void
-name|setClassProp
+name|setInterfaceDecl
 argument_list|(
 argument|ObjCInterfaceDecl *D
 argument_list|)
 block|{
-name|ClassProp
+name|InterfaceDecl
 operator|=
 name|D
 block|; }
@@ -1565,7 +1556,7 @@ operator|->
 name|getLocStart
 argument_list|()
 argument_list|,
-name|Loc
+name|MemberLoc
 argument_list|)
 return|;
 return|return
@@ -1573,7 +1564,7 @@ name|SourceRange
 argument_list|(
 name|ClassLoc
 argument_list|,
-name|Loc
+name|MemberLoc
 argument_list|)
 return|;
 block|}
@@ -1628,7 +1619,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Loc
+name|MemberLoc
 return|;
 block|}
 name|void
@@ -1638,7 +1629,7 @@ name|SourceLocation
 name|L
 parameter_list|)
 block|{
-name|Loc
+name|MemberLoc
 operator|=
 name|L
 expr_stmt|;
@@ -1680,7 +1671,7 @@ operator|->
 name|getStmtClass
 argument_list|()
 operator|==
-name|ObjCKVCRefExprClass
+name|ObjCImplicitSetterGetterRefExprClass
 return|;
 block|}
 specifier|static
@@ -1688,7 +1679,7 @@ name|bool
 name|classof
 parameter_list|(
 specifier|const
-name|ObjCKVCRefExpr
+name|ObjCImplicitSetterGetterRefExpr
 modifier|*
 parameter_list|)
 block|{
@@ -2574,6 +2565,219 @@ name|bool
 name|classof
 argument_list|(
 argument|const ObjCSuperExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|virtual
+name|child_iterator
+name|child_begin
+argument_list|()
+block|;
+name|virtual
+name|child_iterator
+name|child_end
+argument_list|()
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// ObjCIsaExpr - Represent X->isa and X.isa when X is an ObjC 'id' type.
+end_comment
+
+begin_comment
+comment|/// (similiar in spirit to MemberExpr).
+end_comment
+
+begin_decl_stmt
+name|class
+name|ObjCIsaExpr
+range|:
+name|public
+name|Expr
+block|{
+comment|/// Base - the expression for the base object pointer.
+name|Stmt
+operator|*
+name|Base
+block|;
+comment|/// IsaMemberLoc - This is the location of the 'isa'.
+name|SourceLocation
+name|IsaMemberLoc
+block|;
+comment|/// IsArrow - True if this is "X->F", false if this is "X.F".
+name|bool
+name|IsArrow
+block|;
+name|public
+operator|:
+name|ObjCIsaExpr
+argument_list|(
+argument|Expr *base
+argument_list|,
+argument|bool isarrow
+argument_list|,
+argument|SourceLocation l
+argument_list|,
+argument|QualType ty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|ObjCIsaExprClass
+argument_list|,
+name|ty
+argument_list|)
+block|,
+name|Base
+argument_list|(
+name|base
+argument_list|)
+block|,
+name|IsaMemberLoc
+argument_list|(
+name|l
+argument_list|)
+block|,
+name|IsArrow
+argument_list|(
+argument|isarrow
+argument_list|)
+block|{}
+comment|/// \brief Build an empty expression.
+name|explicit
+name|ObjCIsaExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|ObjCIsaExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+name|void
+name|setBase
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|Base
+operator|=
+name|E
+block|; }
+name|Expr
+operator|*
+name|getBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Base
+operator|)
+return|;
+block|}
+name|bool
+name|isArrow
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsArrow
+return|;
+block|}
+name|void
+name|setArrow
+argument_list|(
+argument|bool A
+argument_list|)
+block|{
+name|IsArrow
+operator|=
+name|A
+block|; }
+comment|/// getMemberLoc - Return the location of the "member", in X->F, it is the
+comment|/// location of 'F'.
+name|SourceLocation
+name|getIsaMemberLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsaMemberLoc
+return|;
+block|}
+name|void
+name|setIsaMemberLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|IsaMemberLoc
+operator|=
+name|L
+block|; }
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getBase
+argument_list|()
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|IsaMemberLoc
+argument_list|)
+return|;
+block|}
+name|virtual
+name|SourceLocation
+name|getExprLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsaMemberLoc
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ObjCIsaExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCIsaExpr *
 argument_list|)
 block|{
 return|return

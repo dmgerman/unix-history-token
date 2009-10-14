@@ -94,14 +94,20 @@ decl_stmt|;
 name|class
 name|NestedNameSpecifier
 decl_stmt|;
-name|class
+struct_decl|struct
 name|PrintingPolicy
-decl_stmt|;
+struct_decl|;
 name|class
 name|QualifiedTemplateName
 decl_stmt|;
 name|class
+name|NamedDecl
+decl_stmt|;
+name|class
 name|TemplateDecl
+decl_stmt|;
+name|class
+name|OverloadedFunctionDecl
 decl_stmt|;
 comment|/// \brief Represents a C++ template name within the type system.
 comment|///
@@ -136,9 +142,12 @@ block|{
 typedef|typedef
 name|llvm
 operator|::
-name|PointerUnion3
+name|PointerUnion4
 operator|<
 name|TemplateDecl
+operator|*
+operator|,
+name|OverloadedFunctionDecl
 operator|*
 operator|,
 name|QualifiedTemplateName
@@ -194,6 +203,19 @@ block|{ }
 name|explicit
 name|TemplateName
 argument_list|(
+name|OverloadedFunctionDecl
+operator|*
+name|FunctionTemplates
+argument_list|)
+operator|:
+name|Storage
+argument_list|(
+argument|FunctionTemplates
+argument_list|)
+block|{ }
+name|explicit
+name|TemplateName
+argument_list|(
 name|QualifiedTemplateName
 operator|*
 name|Qual
@@ -217,15 +239,42 @@ argument_list|(
 argument|Dep
 argument_list|)
 block|{ }
+comment|/// \brief Determine whether this template name is NULL.
+name|bool
+name|isNull
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Storage
+operator|.
+name|isNull
+argument_list|()
+return|;
+block|}
 comment|/// \brief Retrieve the the underlying template declaration that
 comment|/// this template name refers to, if known.
 comment|///
 comment|/// \returns The template declaration that this template name refers
 comment|/// to, if any. If the template name does not refer to a specific
-comment|/// declaration because it is a dependent name, returns NULL.
+comment|/// declaration because it is a dependent name, or if it refers to a
+comment|/// set of function templates, returns NULL.
 name|TemplateDecl
 operator|*
 name|getAsTemplateDecl
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Retrieve the the underlying, overloaded function template
+comment|// declarations that this template name refers to, if known.
+comment|///
+comment|/// \returns The set of overloaded function templates that this template
+comment|/// name refers to, if known. If the template name does not refer to a
+comment|/// specific set of function templates because it is a dependent name or
+comment|/// refers to a single template, returns NULL.
+name|OverloadedFunctionDecl
+operator|*
+name|getAsOverloadedFunctionDecl
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -402,9 +451,9 @@ literal|1
 operator|>
 name|Qualifier
 block|;
-comment|/// \brief The template declaration that this qualified name refers
-comment|/// to.
-name|TemplateDecl
+comment|/// \brief The template declaration or set of overloaded function templates
+comment|/// that this qualified name refers to.
+name|NamedDecl
 operator|*
 name|Template
 block|;
@@ -434,7 +483,32 @@ argument_list|)
 block|,
 name|Template
 argument_list|(
-argument|Template
+argument|reinterpret_cast<NamedDecl *>(Template)
+argument_list|)
+block|{ }
+name|QualifiedTemplateName
+argument_list|(
+argument|NestedNameSpecifier *NNS
+argument_list|,
+argument|bool TemplateKeyword
+argument_list|,
+argument|OverloadedFunctionDecl *Template
+argument_list|)
+operator|:
+name|Qualifier
+argument_list|(
+name|NNS
+argument_list|,
+name|TemplateKeyword
+condition|?
+literal|1
+else|:
+literal|0
+argument_list|)
+block|,
+name|Template
+argument_list|(
+argument|reinterpret_cast<NamedDecl *>(Template)
 argument_list|)
 block|{ }
 name|public
@@ -467,11 +541,11 @@ name|getInt
 argument_list|()
 return|;
 block|}
-comment|/// \brief The template declaration to which this qualified name
-comment|/// refers.
-name|TemplateDecl
+comment|/// \brief The template declaration or set of overloaded functions that
+comment|/// that qualified name refers to.
+name|NamedDecl
 operator|*
-name|getTemplateDecl
+name|getDecl
 argument_list|()
 specifier|const
 block|{
@@ -479,6 +553,24 @@ return|return
 name|Template
 return|;
 block|}
+comment|/// \brief The template declaration to which this qualified name
+comment|/// refers, or NULL if this qualified name refers to a set of overloaded
+comment|/// function templates.
+name|TemplateDecl
+operator|*
+name|getTemplateDecl
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief The set of overloaded function tempaltes to which this qualified
+comment|/// name refers, or NULL if this qualified name refers to a single
+comment|/// template declaration.
+name|OverloadedFunctionDecl
+operator|*
+name|getOverloadedFunctionDecl
+argument_list|()
+specifier|const
+block|;
 name|void
 name|Profile
 argument_list|(
@@ -495,7 +587,7 @@ argument_list|,
 name|hasTemplateKeyword
 argument_list|()
 argument_list|,
-name|getTemplateDecl
+name|getDecl
 argument_list|()
 argument_list|)
 block|;   }
@@ -509,7 +601,7 @@ argument|NestedNameSpecifier *NNS
 argument_list|,
 argument|bool TemplateKeyword
 argument_list|,
-argument|TemplateDecl *Template
+argument|NamedDecl *Template
 argument_list|)
 block|{
 name|ID
@@ -533,19 +625,19 @@ argument_list|(
 name|Template
 argument_list|)
 block|;   }
-expr|}
-block|;
+block|}
+decl_stmt|;
 comment|/// \brief Represents a dependent template name that cannot be
 comment|/// resolved prior to template instantiation.
 comment|///
 comment|/// This kind of template name refers to a dependent template name,
-comment|/// including its nested name specifier. For example,
+comment|/// including its nested name specifier (if any). For example,
 comment|/// DependentTemplateName can refer to "MetaFun::template apply",
 comment|/// where "MetaFun::" is the nested name specifier and "apply" is the
 comment|/// template name referenced. The "template" keyword is implied.
 name|class
 name|DependentTemplateName
-operator|:
+range|:
 name|public
 name|llvm
 operator|::

@@ -1,30 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t.ast %s&&
-end_comment
-
-begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:22:6 | grep "starts here"&&
-end_comment
-
-begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:22:6 | grep "block comment"&&
-end_comment
-
-begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:28:6 | grep "BCPL"&&
-end_comment
-
-begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:28:6 | grep "But"&&
-end_comment
-
-begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:28:6 | grep "NOT" | count 0&&
-end_comment
-
-begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:30:6 | grep "member"
+comment|// Run lines are sensitive to line numbers and come below the code.
 end_comment
 
 begin_comment
@@ -90,6 +66,46 @@ end_function_decl
 
 begin_comment
 comment|///< This is a member comment.
+end_comment
+
+begin_comment
+comment|// RUN: clang-cc -emit-pch -o %t.ast %s&&
+end_comment
+
+begin_comment
+comment|// RUN: index-test %t.ast -point-at %s:11:6> %t&&
+end_comment
+
+begin_comment
+comment|// RUN: grep "starts here" %t&&
+end_comment
+
+begin_comment
+comment|// RUN: grep "block comment" %t&&
+end_comment
+
+begin_comment
+comment|// RUN: index-test %t.ast -point-at %s:17:6> %t&&
+end_comment
+
+begin_comment
+comment|// RUN: grep "BCPL" %t&&
+end_comment
+
+begin_comment
+comment|// RUN: grep "But" %t&&
+end_comment
+
+begin_comment
+comment|// RUN: index-test %t.ast -point-at %s:19:6> %t&&
+end_comment
+
+begin_comment
+comment|// RUN: grep "NOT" %t | count 0&&
+end_comment
+
+begin_comment
+comment|// RUN: grep "member" %t
 end_comment
 
 end_unit

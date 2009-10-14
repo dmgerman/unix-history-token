@@ -254,7 +254,7 @@ struct|;
 end_struct
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|()
 block|{

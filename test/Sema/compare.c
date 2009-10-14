@@ -38,6 +38,12 @@ name|C
 operator|!=
 literal|0
 return|;
+return|return
+name|C
+operator|!=
+literal|1
+return|;
+comment|// expected-warning {{comparison between pointer and integer ('char *' and 'int')}}
 block|}
 end_function
 
@@ -127,7 +133,13 @@ name|a
 operator|>
 literal|0
 return|;
-comment|// expected-warning {{ordered comparison between pointer and integer}}
+comment|// expected-warning {{ordered comparison between pointer and zero ('int *' and 'int') is an extension}}
+return|return
+name|a
+operator|>
+literal|42
+return|;
+comment|// expected-warning {{ordered comparison between pointer and integer ('int *' and 'int')}}
 return|return
 name|a
 operator|>
@@ -162,6 +174,15 @@ function_decl|)
 parameter_list|(
 name|int
 parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|c
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
 parameter_list|)
 block|{
 return|return
@@ -176,6 +197,12 @@ operator|>
 name|function_pointers
 return|;
 comment|// expected-warning {{ordered comparison of function pointers}}
+return|return
+name|a
+operator|>
+name|c
+return|;
+comment|// expected-warning {{comparison of distinct pointer types}}
 return|return
 name|a
 operator|==
@@ -194,7 +221,37 @@ operator|*
 operator|)
 literal|1
 return|;
-comment|// expected-warning {{comparison of distinct pointer types}}
+comment|// expected-warning {{equality comparison between function pointer and void pointer}}
+block|}
+end_function
+
+begin_function
+name|int
+name|void_pointers
+parameter_list|(
+name|void
+modifier|*
+name|foo
+parameter_list|)
+block|{
+return|return
+name|foo
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+return|;
+return|return
+name|foo
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+literal|1
+return|;
 block|}
 end_function
 

@@ -64,8 +64,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|Twine
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -613,14 +635,76 @@ name|char
 modifier|*
 name|MakeArgString
 argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Str
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|MakeArgString
+argument_list|(
 specifier|const
 name|char
 operator|*
 name|Str
 argument_list|)
 decl|const
-init|=
-literal|0
+block|{
+return|return
+name|MakeArgString
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+argument_list|(
+name|Str
+argument_list|)
+argument_list|)
+return|;
+block|}
+specifier|const
+name|char
+modifier|*
+name|MakeArgString
+argument_list|(
+name|std
+operator|::
+name|string
+name|Str
+argument_list|)
+decl|const
+block|{
+return|return
+name|MakeArgString
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+argument_list|(
+name|Str
+argument_list|)
+argument_list|)
+return|;
+block|}
+specifier|const
+name|char
+modifier|*
+name|MakeArgString
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Twine
+operator|&
+name|Str
+argument_list|)
+decl|const
 decl_stmt|;
 comment|/// @}
 block|}
@@ -730,16 +814,16 @@ comment|/// MakeIndex - Get an index for the given string(s).
 name|unsigned
 name|MakeIndex
 argument_list|(
-argument|const char *String0
+argument|llvm::StringRef String0
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|MakeIndex
 argument_list|(
-argument|const char *String0
+argument|llvm::StringRef String0
 argument_list|,
-argument|const char *String1
+argument|llvm::StringRef String1
 argument_list|)
 specifier|const
 block|;
@@ -749,7 +833,7 @@ name|char
 operator|*
 name|MakeArgString
 argument_list|(
-argument|const char *Str
+argument|llvm::StringRef Str
 argument_list|)
 specifier|const
 block|;
@@ -824,7 +908,7 @@ name|char
 operator|*
 name|MakeArgString
 argument_list|(
-argument|const char *Str
+argument|llvm::StringRef Str
 argument_list|)
 specifier|const
 block|;
@@ -850,7 +934,7 @@ argument|const Arg *BaseArg
 argument_list|,
 argument|const Option *Opt
 argument_list|,
-argument|const char *Value
+argument|llvm::StringRef Value
 argument_list|)
 specifier|const
 block|;
@@ -864,7 +948,7 @@ argument|const Arg *BaseArg
 argument_list|,
 argument|const Option *Opt
 argument_list|,
-argument|const char *Value
+argument|llvm::StringRef Value
 argument_list|)
 specifier|const
 block|;
@@ -878,7 +962,7 @@ argument|const Arg *BaseArg
 argument_list|,
 argument|const Option *Opt
 argument_list|,
-argument|const char *Value
+argument|llvm::StringRef Value
 argument_list|)
 specifier|const
 block|;

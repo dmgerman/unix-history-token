@@ -108,7 +108,7 @@ name|Assume
 argument_list|(
 argument|const GRState *state
 argument_list|,
-argument|SVal Cond
+argument|DefinedSVal Cond
 argument_list|,
 argument|bool Assumption
 argument_list|)
@@ -156,9 +156,9 @@ name|AssumeInBound
 argument_list|(
 argument|const GRState *state
 argument_list|,
-argument|SVal Idx
+argument|DefinedSVal Idx
 argument_list|,
-argument|SVal UpperBound
+argument|DefinedSVal UpperBound
 argument_list|,
 argument|bool Assumption
 argument_list|)

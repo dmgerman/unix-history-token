@@ -36,7 +36,7 @@ comment|// RUN: grep 'define void @f7(i32 %a0)' %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep 'type { i64, double }.*type .0' %t&&
+comment|// RUN: grep '.0 = type { i64, double }' %t&&
 end_comment
 
 begin_comment
@@ -53,7 +53,11 @@ name|f0
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -62,7 +66,11 @@ name|f1
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -71,7 +79,11 @@ name|f2
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -80,7 +92,11 @@ name|f3
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -89,7 +105,11 @@ name|f4
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -99,7 +119,11 @@ name|f5
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -174,7 +198,13 @@ name|union
 name|u8
 name|f8_1
 parameter_list|()
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 end_function
 
 begin_function
@@ -211,7 +241,13 @@ name|f9
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define void @f10(i64)' %t&&
 decl|struct
 name|s10
@@ -258,7 +294,13 @@ decl_stmt|;
 block|}
 name|f11
 argument_list|()
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define i64 @f12_0()' %t&&
 comment|// RUN: grep 'define void @f12_1(i64)' %t&&
 decl|struct
@@ -287,7 +329,13 @@ name|f12_0
 parameter_list|(
 name|void
 parameter_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 end_function
 
 begin_function
@@ -328,24 +376,8 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-name|struct
-name|s13_0
-name|f13
-argument_list|(
-name|int
-name|a
-argument_list|,
-name|int
-name|b
-argument_list|,
-name|int
-name|c
-argument_list|,
-name|int
-name|d
-argument_list|,
-expr|struct
+begin_struct
+struct|struct
 name|s13_1
 block|{
 name|long
@@ -354,14 +386,43 @@ name|f0
 index|[
 literal|2
 index|]
-block|; }
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|struct
+name|s13_0
+name|f13
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|,
+name|int
+name|c
+parameter_list|,
+name|int
+name|d
+parameter_list|,
+name|struct
+name|s13_1
 name|e
-argument_list|,
+parameter_list|,
 name|int
 name|f
-argument_list|)
+parameter_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
-end_decl_stmt
+block|}
+end_function
 
 begin_comment
 comment|// RUN: grep 'define void @f14(.*, i8 signext .X)' %t&&
@@ -510,34 +571,47 @@ comment|// Check for valid coercion.
 end_comment
 
 begin_comment
-comment|// RUN: grep '.1 = bitcast i64. .tmp to .struct.f18_s0.' %t&&
+comment|// RUN: grep '.. = bitcast i64. .* to .struct.f18_s0.' %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '.2 = load .struct.f18_s0. .1, align 1' %t&&
+comment|// RUN: grep '.. = load .struct.f18_s0. .., align 1' %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep 'store .struct.f18_s0 .2, .struct.f18_s0. .f18_arg1' %t&&
+comment|// RUN: grep 'store .struct.f18_s0 .., .struct.f18_s0. .f18_arg1' %t&&
 end_comment
 
-begin_decl_stmt
-name|void
-name|f18
-argument_list|(
-name|int
-name|a
-argument_list|,
-expr|struct
+begin_struct
+struct|struct
 name|f18_s0
 block|{
 name|int
 name|f0
-block|; }
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f18
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|struct
+name|f18_s0
 name|f18_arg1
-argument_list|)
+parameter_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
-end_decl_stmt
+block|}
+end_function
 
 begin_comment
 comment|// RUN: true

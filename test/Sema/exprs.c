@@ -276,7 +276,7 @@ operator|->
 name|x
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{invalid application of '__alignof' to bitfield}}
+comment|// expected-error {{invalid application of '__alignof' to bit-field}}
 name|R
 operator|=
 name|__alignof
@@ -296,7 +296,7 @@ operator|->
 name|x
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{invalid application of 'sizeof' to bitfield}}
+comment|// expected-error {{invalid application of 'sizeof' to bit-field}}
 return|return
 name|R
 return|;
@@ -443,14 +443,6 @@ comment|// expected-error {{blocks support disabled - compile with -fblocks}}
 block|}
 end_function
 
-begin_comment
-comment|// rdar://6326239 - Vector comparisons are not fully trusted yet, until the
-end_comment
-
-begin_comment
-comment|// backend is known to work, just unconditionally reject them.
-end_comment
-
 begin_function
 name|void
 name|test14
@@ -471,6 +463,7 @@ name|__attribute__
 typedef|((
 name|__vector_size__
 typedef|(8)));
+comment|// Ok.
 name|__v4hi
 name|a
 decl_stmt|;
@@ -486,7 +479,6 @@ name|__v4hi
 operator|)
 name|a
 operator|>
-comment|// expected-error {{comparison of vector types ('__v4hi' and '__v4hi') not supported yet}}
 operator|(
 name|__v4hi
 operator|)

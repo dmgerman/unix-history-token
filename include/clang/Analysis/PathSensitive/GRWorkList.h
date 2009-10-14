@@ -79,7 +79,7 @@ decl_stmt|;
 name|class
 name|GRWorkListUnit
 block|{
-name|ExplodedNodeImpl
+name|ExplodedNode
 modifier|*
 name|Node
 decl_stmt|;
@@ -97,7 +97,7 @@ name|public
 label|:
 name|GRWorkListUnit
 argument_list|(
-argument|ExplodedNodeImpl* N
+argument|ExplodedNode* N
 argument_list|,
 argument|GRBlockCounter C
 argument_list|,
@@ -129,7 +129,7 @@ block|{}
 name|explicit
 name|GRWorkListUnit
 argument_list|(
-argument|ExplodedNodeImpl* N
+argument|ExplodedNode* N
 argument_list|,
 argument|GRBlockCounter C
 argument_list|)
@@ -154,7 +154,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|ExplodedNodeImpl
+name|ExplodedNode
 operator|*
 name|getNode
 argument_list|()
@@ -230,7 +230,7 @@ function_decl|;
 name|void
 name|Enqueue
 parameter_list|(
-name|ExplodedNodeImpl
+name|ExplodedNode
 modifier|*
 name|N
 parameter_list|,
@@ -261,7 +261,7 @@ block|}
 name|void
 name|Enqueue
 parameter_list|(
-name|ExplodedNodeImpl
+name|ExplodedNode
 modifier|*
 name|N
 parameter_list|)

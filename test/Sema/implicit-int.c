@@ -11,6 +11,9 @@ end_macro
 begin_block
 block|{
 comment|// expected-warning {{type specifier missing, defaults to 'int'}}
+return|return
+literal|0
+return|;
 block|}
 end_block
 
@@ -53,7 +56,7 @@ name|PAD
 parameter_list|(
 name|ms10
 parameter_list|)
-value|{ \ 	register i; \ }
+value|{ \     register i;     \ }
 end_define
 
 begin_define
@@ -98,7 +101,6 @@ name|x
 range|:
 literal|4
 decl_stmt|;
-comment|// expected-warning {{type specifier missing, defaults to 'int'}}
 block|}
 struct|;
 end_struct

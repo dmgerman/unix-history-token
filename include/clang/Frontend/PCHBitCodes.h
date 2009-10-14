@@ -101,11 +101,15 @@ comment|/// Whenever the PCH format changes in a way that makes it
 comment|/// incompatible with previous versions (such that a reader
 comment|/// designed for the previous version could not support reading
 comment|/// the new version), this number should be increased.
+comment|///
+comment|/// Version 3 of PCH files also requires that the Subversion branch and
+comment|/// revision match exactly, since there is no backward compatibility of
+comment|/// PCH files at this time.
 specifier|const
 name|unsigned
 name|VERSION_MAJOR
 init|=
-literal|1
+literal|3
 decl_stmt|;
 comment|/// \brief PCH minor version number supported by this version of
 comment|/// Clang.
@@ -346,21 +350,21 @@ name|EXT_VECTOR_DECLS
 init|=
 literal|18
 block|,
-comment|/// \brief Record code for the set of Objective-C category
-comment|/// implementations.
-name|OBJC_CATEGORY_IMPLEMENTATIONS
-init|=
-literal|19
-block|,
 comment|/// \brief Record code for the original file that was used to
 comment|/// generate the precompiled header.
 name|ORIGINAL_FILE_NAME
 init|=
-literal|20
+literal|19
 block|,
 comment|/// \brief Record code for the sorted array of source ranges where
 comment|/// comments were encountered in the source code.
 name|COMMENT_RANGES
+init|=
+literal|20
+block|,
+comment|/// \brief Record code for the Subversion branch and revision information
+comment|/// of the compiler used to build this PCH file.
+name|SVN_BRANCH_REVISION
 init|=
 literal|21
 block|}
@@ -568,6 +572,26 @@ comment|/// \brief The type of 'nullptr'.
 name|PREDEF_TYPE_NULLPTR_ID
 init|=
 literal|23
+block|,
+comment|/// \brief The C++ 'char16_t' type.
+name|PREDEF_TYPE_CHAR16_ID
+init|=
+literal|24
+block|,
+comment|/// \brief The C++ 'char32_t' type.
+name|PREDEF_TYPE_CHAR32_ID
+init|=
+literal|25
+block|,
+comment|/// \brief The ObjC 'id' type.
+name|PREDEF_TYPE_OBJC_ID
+init|=
+literal|26
+block|,
+comment|/// \brief The ObjC 'Class' type.
+name|PREDEF_TYPE_OBJC_CLASS
+init|=
+literal|27
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -695,13 +719,13 @@ name|TYPE_OBJC_INTERFACE
 init|=
 literal|21
 block|,
-comment|/// \brief An ObjCQualifiedInterfaceType record.
-name|TYPE_OBJC_QUALIFIED_INTERFACE
+comment|/// \brief An ObjCObjectPointerType record.
+name|TYPE_OBJC_OBJECT_POINTER
 init|=
 literal|22
 block|,
-comment|/// \brief An ObjCObjectPointerType record.
-name|TYPE_OBJC_OBJECT_POINTER
+comment|/// \brief An ObjCProtocolListType record.
+name|TYPE_OBJC_PROTOCOL_LIST
 init|=
 literal|23
 block|,
@@ -709,6 +733,21 @@ comment|/// \brief a DecltypeType record.
 name|TYPE_DECLTYPE
 init|=
 literal|24
+block|,
+comment|/// \brief A ConstantArrayWithExprType record.
+name|TYPE_CONSTANT_ARRAY_WITH_EXPR
+init|=
+literal|25
+block|,
+comment|/// \brief A ConstantArrayWithoutExprType record.
+name|TYPE_CONSTANT_ARRAY_WITHOUT_EXPR
+init|=
+literal|26
+block|,
+comment|/// \brief An ElaboratedType record.
+name|TYPE_ELABORATED
+init|=
+literal|27
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -753,6 +792,31 @@ comment|/// \brief Objective-C fast enumeration state type
 name|SPECIAL_TYPE_OBJC_FAST_ENUMERATION_STATE
 init|=
 literal|6
+block|,
+comment|/// \brief C FILE typedef type
+name|SPECIAL_TYPE_FILE
+init|=
+literal|7
+block|,
+comment|/// \brief C jmp_buf typedef type
+name|SPECIAL_TYPE_jmp_buf
+init|=
+literal|8
+block|,
+comment|/// \brief C sigjmp_buf typedef type
+name|SPECIAL_TYPE_sigjmp_buf
+init|=
+literal|9
+block|,
+comment|/// \brief Objective-C "id" redefinition type
+name|SPECIAL_TYPE_OBJC_ID_REDEFINITION
+init|=
+literal|10
+block|,
+comment|/// \brief Objective-C "Class" redefinition type
+name|SPECIAL_TYPE_OBJC_CLASS_REDEFINITION
+init|=
+literal|11
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of declaration.
@@ -1052,7 +1116,7 @@ block|,
 comment|/// \brief An ObjCPropertyRefExpr record.
 name|EXPR_OBJC_PROPERTY_REF_EXPR
 block|,
-comment|/// \brief An ObjCKVCRefExpr record.
+comment|/// \brief An ObjCImplicitSetterGetterRefExpr record.
 name|EXPR_OBJC_KVC_REF_EXPR
 block|,
 comment|/// \brief An ObjCMessageExpr record.
@@ -1060,6 +1124,9 @@ name|EXPR_OBJC_MESSAGE_EXPR
 block|,
 comment|/// \brief An ObjCSuperExpr record.
 name|EXPR_OBJC_SUPER_EXPR
+block|,
+comment|/// \brief An ObjCIsa Expr record.
+name|EXPR_OBJC_ISA
 block|,
 comment|/// \brief An ObjCForCollectionStmt record.
 name|STMT_OBJC_FOR_COLLECTION
@@ -1078,6 +1145,13 @@ name|STMT_OBJC_AT_SYNCHRONIZED
 block|,
 comment|/// \brief An ObjCAtThrowStmt record.
 name|STMT_OBJC_AT_THROW
+block|,
+comment|// C++
+comment|/// \brief A CXXOperatorCallExpr record.
+name|EXPR_CXX_OPERATOR_CALL
+block|,
+comment|/// \brief A CXXConstructExpr record.
+name|EXPR_CXX_CONSTRUCT
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a

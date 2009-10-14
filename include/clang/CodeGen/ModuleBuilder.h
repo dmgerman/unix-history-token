@@ -124,7 +124,7 @@ name|ReleaseModule
 argument_list|()
 operator|=
 literal|0
-block|;       }
+block|;   }
 decl_stmt|;
 name|CodeGenerator
 modifier|*

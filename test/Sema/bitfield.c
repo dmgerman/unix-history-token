@@ -87,7 +87,7 @@ name|char
 label|:
 literal|10
 expr_stmt|;
-comment|// expected-error {{size of anonymous bitfield exceeds size of its type (8 bits)}}
+comment|// expected-error {{size of anonymous bit-field exceeds size of its type (8 bits)}}
 name|unsigned
 label|:
 operator|-

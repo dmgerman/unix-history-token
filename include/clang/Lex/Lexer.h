@@ -147,6 +147,10 @@ name|bool
 name|Is_PragmaLexer
 block|;
 comment|// True if lexer for _Pragma handling.
+name|bool
+name|IsEofCodeCompletion
+block|;
+comment|// True if EOF is treated as a code-completion.
 comment|//===--------------------------------------------------------------------===//
 comment|// Context-specific lexing flags set by the preprocessor.
 comment|//
@@ -482,6 +486,21 @@ condition|?
 literal|1
 else|:
 literal|0
+block|;   }
+comment|/// \brief Specify that end-of-file is to be considered a code-completion
+comment|/// token.
+comment|///
+comment|/// When in this mode, the end-of-file token will be immediately preceded
+comment|/// by a code-completion token.
+name|void
+name|SetEofIsCodeCompletion
+argument_list|(
+argument|bool Val = true
+argument_list|)
+block|{
+name|IsEofCodeCompletion
+operator|=
+name|Val
 block|;   }
 specifier|const
 name|char

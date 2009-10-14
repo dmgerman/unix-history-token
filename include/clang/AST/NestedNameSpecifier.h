@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
@@ -98,9 +104,9 @@ decl_stmt|;
 name|class
 name|IdentifierInfo
 decl_stmt|;
-name|class
+struct_decl|struct
 name|PrintingPolicy
-decl_stmt|;
+struct_decl|;
 name|class
 name|Type
 decl_stmt|;
@@ -318,6 +324,26 @@ argument_list|,
 argument|bool Template
 argument_list|,
 argument|Type *T
+argument_list|)
+block|;
+comment|/// \brief Builds a specifier that consists of just an identifier.
+comment|///
+comment|/// The nested-name-specifier is assumed to be dependent, but has no
+comment|/// prefix because the prefix is implied by something outside of the
+comment|/// nested name specifier, e.g., in "x->Base::f", the "x" has a dependent
+comment|/// type.
+specifier|static
+name|NestedNameSpecifier
+operator|*
+name|Create
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|II
 argument_list|)
 block|;
 comment|/// \brief Returns the nested name specifier representing the global
@@ -599,8 +625,58 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+unit|};
+comment|/// Insertion operator for diagnostics.  This allows sending NestedNameSpecifiers
+end_comment
+
+begin_comment
+comment|/// into a diagnostic with<<.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+name|NestedNameSpecifier
+operator|*
+name|NNS
+operator|)
+block|{
+name|DB
+operator|.
+name|AddTaggedVal
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|NNS
+operator|)
+argument_list|,
+name|Diagnostic
+operator|::
+name|ak_nestednamespec
+argument_list|)
+block|;
+return|return
+name|DB
+return|;
+block|}
+end_expr_stmt
+
 begin_endif
-unit|};  }
+unit|}
 endif|#
 directive|endif
 end_endif

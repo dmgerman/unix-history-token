@@ -280,6 +280,10 @@ comment|/// argument list.
 name|bool
 name|GreaterThanIsOperator
 decl_stmt|;
+comment|/// The "depth" of the template parameters currently being parsed.
+name|unsigned
+name|TemplateParameterDepth
+decl_stmt|;
 comment|/// \brief RAII object that makes '>' behave either as an operator
 comment|/// or as the closing angle bracket for a template argument list.
 struct|struct
@@ -1140,14 +1144,24 @@ comment|///
 comment|/// This returns true if the token was annotated.
 name|bool
 name|TryAnnotateTypeOrScopeToken
-parameter_list|()
+parameter_list|(
+name|bool
+name|EnteringContext
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|/// TryAnnotateCXXScopeToken - Like TryAnnotateTypeOrScopeToken but only
 comment|/// annotates C++ scope specifiers.  This returns true if the token was
 comment|/// annotated.
 name|bool
 name|TryAnnotateCXXScopeToken
-parameter_list|()
+parameter_list|(
+name|bool
+name|EnteringContext
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|/// TentativeParsingAction - An object that is used as a kind of "tentative
 comment|/// parsing transaction". It gets instantiated to mark the token position and
@@ -1602,6 +1616,12 @@ expr_stmt|;
 name|CachedTokens
 name|Toks
 decl_stmt|;
+comment|/// \brief Whether this member function had an associated template
+comment|/// scope. When true, D is a template declaration.
+comment|/// othewise, it is a member function declaration.
+name|bool
+name|TemplateScope
+decl_stmt|;
 name|explicit
 name|LexedMethod
 argument_list|(
@@ -1613,7 +1633,12 @@ argument_list|)
 range|:
 name|D
 argument_list|(
-argument|MD
+name|MD
+argument_list|)
+decl_stmt|,
+name|TemplateScope
+argument_list|(
+name|false
 argument_list|)
 block|{}
 block|}
@@ -1684,7 +1709,12 @@ argument_list|)
 range|:
 name|Method
 argument_list|(
-argument|M
+name|M
+argument_list|)
+decl_stmt|,
+name|TemplateScope
+argument_list|(
+name|false
 argument_list|)
 block|{ }
 comment|/// Method - The method declaration.
@@ -1692,6 +1722,12 @@ name|Action
 operator|::
 name|DeclPtrTy
 name|Method
+expr_stmt|;
+comment|/// \brief Whether this member function had an associated template
+comment|/// scope. When true, D is a template declaration.
+comment|/// othewise, it is a member function declaration.
+name|bool
+name|TemplateScope
 decl_stmt|;
 comment|/// DefaultArgs - Contains the parameters of the function and
 comment|/// their default arguments. At least one of the parameters will
@@ -1923,6 +1959,114 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|/// \brief Contains information about any template-specific
+comment|/// information that has been parsed prior to parsing declaration
+comment|/// specifiers.
+struct|struct
+name|ParsedTemplateInfo
+block|{
+name|ParsedTemplateInfo
+argument_list|()
+operator|:
+name|Kind
+argument_list|(
+name|NonTemplate
+argument_list|)
+operator|,
+name|TemplateParams
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TemplateLoc
+argument_list|()
+block|{ }
+name|ParsedTemplateInfo
+argument_list|(
+argument|TemplateParameterLists *TemplateParams
+argument_list|,
+argument|bool isSpecialization
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|isSpecialization
+operator|?
+name|ExplicitSpecialization
+operator|:
+name|Template
+argument_list|)
+operator|,
+name|TemplateParams
+argument_list|(
+argument|TemplateParams
+argument_list|)
+block|{ }
+name|explicit
+name|ParsedTemplateInfo
+argument_list|(
+argument|SourceLocation ExternLoc
+argument_list|,
+argument|SourceLocation TemplateLoc
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|ExplicitInstantiation
+argument_list|)
+operator|,
+name|TemplateParams
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|ExternLoc
+argument_list|(
+name|ExternLoc
+argument_list|)
+operator|,
+name|TemplateLoc
+argument_list|(
+argument|TemplateLoc
+argument_list|)
+block|{ }
+comment|/// \brief The kind of template we are parsing.
+expr|enum
+block|{
+comment|/// \brief We are not parsing a template at all.
+name|NonTemplate
+operator|=
+literal|0
+block|,
+comment|/// \brief We are parsing a template declaration.
+name|Template
+block|,
+comment|/// \brief We are parsing an explicit specialization.
+name|ExplicitSpecialization
+block|,
+comment|/// \brief We are parsing an explicit instantiation.
+name|ExplicitInstantiation
+block|}
+name|Kind
+expr_stmt|;
+comment|/// \brief The template parameter lists, for template declarations
+comment|/// and explicit specializations.
+name|TemplateParameterLists
+modifier|*
+name|TemplateParams
+decl_stmt|;
+comment|/// \brief The location of the 'extern' keyword, if any, for an explicit
+comment|/// instantiation
+name|SourceLocation
+name|ExternLoc
+decl_stmt|;
+comment|/// \brief The location of the 'template' keyword, for an explicit
+comment|/// instantiation.
+name|SourceLocation
+name|TemplateLoc
+decl_stmt|;
+block|}
+struct|;
 name|void
 name|PushParsingClass
 parameter_list|(
@@ -1954,6 +2098,11 @@ parameter_list|,
 name|Declarator
 modifier|&
 name|D
+parameter_list|,
+specifier|const
+name|ParsedTemplateInfo
+modifier|&
+name|TemplateInfo
 parameter_list|)
 function_decl|;
 name|void
@@ -2004,102 +2153,6 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
-comment|/// \brief Contains information about any template-specific
-comment|/// information that has been parsed prior to parsing declaration
-comment|/// specifiers.
-struct|struct
-name|ParsedTemplateInfo
-block|{
-name|ParsedTemplateInfo
-argument_list|()
-operator|:
-name|Kind
-argument_list|(
-name|NonTemplate
-argument_list|)
-operator|,
-name|TemplateParams
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TemplateLoc
-argument_list|()
-block|{ }
-name|ParsedTemplateInfo
-argument_list|(
-argument|TemplateParameterLists *TemplateParams
-argument_list|,
-argument|bool isSpecialization
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-name|isSpecialization
-operator|?
-name|ExplicitSpecialization
-operator|:
-name|Template
-argument_list|)
-operator|,
-name|TemplateParams
-argument_list|(
-argument|TemplateParams
-argument_list|)
-block|{ }
-name|explicit
-name|ParsedTemplateInfo
-argument_list|(
-argument|SourceLocation TemplateLoc
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-name|ExplicitInstantiation
-argument_list|)
-operator|,
-name|TemplateParams
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TemplateLoc
-argument_list|(
-argument|TemplateLoc
-argument_list|)
-block|{ }
-comment|/// \brief The kind of template we are parsing.
-expr|enum
-block|{
-comment|/// \brief We are not parsing a template at all.
-name|NonTemplate
-operator|=
-literal|0
-block|,
-comment|/// \brief We are parsing a template declaration.
-name|Template
-block|,
-comment|/// \brief We are parsing an explicit specialization.
-name|ExplicitSpecialization
-block|,
-comment|/// \brief We are parsing an explicit instantiation.
-name|ExplicitInstantiation
-block|}
-name|Kind
-expr_stmt|;
-comment|/// \brief The template parameter lists, for template declarations
-comment|/// and explicit specializations.
-name|TemplateParameterLists
-modifier|*
-name|TemplateParams
-decl_stmt|;
-comment|/// \brief The location of the 'template' keyword, for an explicit
-comment|/// instantiation.
-name|SourceLocation
-name|TemplateLoc
-decl_stmt|;
-block|}
-struct|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C99 6.9: External Definitions.
 name|DeclGroupPtrTy
@@ -2212,8 +2265,21 @@ operator|>
 operator|&
 name|P
 argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|SourceLocation
+operator|>
+operator|&
+name|PLocs
+argument_list|,
 name|bool
 name|WarnOnDeclarations
+argument_list|,
+name|SourceLocation
+operator|&
+name|LAngleLoc
 argument_list|,
 name|SourceLocation
 operator|&
@@ -2441,6 +2507,9 @@ parameter_list|,
 name|bool
 modifier|&
 name|NotCastExpr
+parameter_list|,
+name|bool
+name|parseParenAsExprList
 parameter_list|)
 function_decl|;
 name|OwningExprResult
@@ -2451,6 +2520,11 @@ name|isUnaryExpression
 parameter_list|,
 name|bool
 name|isAddressOfOperand
+init|=
+name|false
+parameter_list|,
+name|bool
+name|parseParenAsExprList
 init|=
 name|false
 parameter_list|)
@@ -2525,16 +2599,46 @@ expr_stmt|;
 comment|/// ParseExpressionList - Used for C/C++ (argument-)expression-list.
 name|bool
 name|ParseExpressionList
-parameter_list|(
+argument_list|(
 name|ExprListTy
-modifier|&
+operator|&
 name|Exprs
-parameter_list|,
+argument_list|,
 name|CommaLocsTy
-modifier|&
+operator|&
 name|CommaLocs
-parameter_list|)
-function_decl|;
+argument_list|,
+name|void
+argument_list|(
+argument|Action::*Completer
+argument_list|)
+operator|(
+name|Scope
+operator|*
+name|S
+operator|,
+name|void
+operator|*
+name|Data
+operator|,
+name|ExprTy
+operator|*
+operator|*
+name|Args
+operator|,
+name|unsigned
+name|NumArgs
+operator|)
+operator|=
+literal|0
+argument_list|,
+name|void
+operator|*
+name|Data
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|/// ParenParseOption - Control what ParseParenExpression will parse.
 enum|enum
 name|ParenParseOption
@@ -2561,6 +2665,9 @@ name|ExprType
 parameter_list|,
 name|bool
 name|stopIfCastExpr
+parameter_list|,
+name|bool
+name|parseAsExprList
 parameter_list|,
 name|TypeTy
 modifier|*
@@ -2621,17 +2728,19 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// ParseOptionalCXXScopeSpecifier - Parse global scope or
-comment|/// nested-name-specifier if present.  Returns true if a nested-name-specifier
-comment|/// was parsed from the token stream.  Note that this routine will not parse
-comment|/// ::new or ::delete, it will just leave them in the token stream.
-comment|///
 name|bool
 name|ParseOptionalCXXScopeSpecifier
 parameter_list|(
 name|CXXScopeSpec
 modifier|&
 name|SS
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
+parameter_list|,
+name|bool
+name|EnteringContext
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -3164,6 +3273,19 @@ parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C99 6.7: Declarations.
+comment|/// A context for parsing declaration specifiers.  TODO: flesh this
+comment|/// out, there are other significant restrictions on specifiers than
+comment|/// would be best implemented in the parser.
+enum|enum
+name|DeclSpecContext
+block|{
+name|DSC_normal
+block|,
+comment|// normal context
+name|DSC_class
+comment|// class context, enables 'friend'
+block|}
+enum|;
 name|DeclGroupPtrTy
 name|ParseDeclaration
 parameter_list|(
@@ -3268,6 +3390,11 @@ name|AccessSpecifier
 name|AS
 init|=
 name|AS_none
+parameter_list|,
+name|DeclSpecContext
+name|DSC
+init|=
+name|DSC_normal
 parameter_list|)
 function_decl|;
 name|bool
@@ -3277,7 +3404,7 @@ name|DeclSpec
 modifier|&
 name|DS
 parameter_list|,
-name|int
+name|bool
 modifier|&
 name|isInvalid
 parameter_list|,
@@ -3286,6 +3413,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|,
 specifier|const
 name|ParsedTemplateInfo
@@ -3800,6 +3931,9 @@ name|CXXScopeSpec
 modifier|&
 name|SS
 decl_stmt|;
+name|bool
+name|EnteredScope
+decl_stmt|;
 name|public
 label|:
 name|DeclaratorScopeObj
@@ -3820,20 +3954,38 @@ argument_list|)
 operator|,
 name|SS
 argument_list|(
-argument|ss
+name|ss
+argument_list|)
+operator|,
+name|EnteredScope
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|void
 name|EnterDeclaratorScope
 argument_list|()
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
+operator|!
+name|EnteredScope
+operator|&&
+literal|"Already entered the scope!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
 name|SS
 operator|.
 name|isSet
 argument_list|()
-condition|)
+operator|&&
+literal|"C++ scope was not set!"
+argument_list|)
+block|;
+if|if
+condition|(
 name|P
 operator|.
 name|Actions
@@ -3846,6 +3998,25 @@ name|CurScope
 argument_list|,
 name|SS
 argument_list|)
+condition|)
+name|SS
+operator|.
+name|setScopeRep
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SS
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+name|EnteredScope
+operator|=
+name|true
 expr_stmt|;
 block|}
 operator|~
@@ -3854,11 +4025,19 @@ argument_list|()
 block|{
 if|if
 condition|(
+name|EnteredScope
+condition|)
+block|{
+name|assert
+argument_list|(
 name|SS
 operator|.
 name|isSet
 argument_list|()
-condition|)
+operator|&&
+literal|"C++ scope was cleared ?"
+argument_list|)
+expr_stmt|;
 name|P
 operator|.
 name|Actions
@@ -3874,8 +4053,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// ParseDeclarator - Parse and verify a newly-initialized declarator.
+end_comment
+
+begin_function_decl
 name|void
 name|ParseDeclarator
 parameter_list|(
@@ -3884,7 +4073,13 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// A function that parses a variant of direct-declarator.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|void
 argument_list|(
@@ -3898,6 +4093,9 @@ name|Declarator
 operator|&
 argument_list|)
 expr_stmt|;
+end_typedef
+
+begin_function_decl
 name|void
 name|ParseDeclaratorInternal
 parameter_list|(
@@ -3909,6 +4107,9 @@ name|DirectDeclParseFunction
 name|DirectDeclParser
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ParseTypeQualifierListOpt
 parameter_list|(
@@ -3922,6 +4123,9 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ParseDirectDeclarator
 parameter_list|(
@@ -3930,6 +4134,9 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ParseParenDeclarator
 parameter_list|(
@@ -3938,6 +4145,9 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ParseFunctionDeclarator
 parameter_list|(
@@ -3960,6 +4170,9 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ParseFunctionDeclaratorIdentifierList
 parameter_list|(
@@ -3971,6 +4184,9 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ParseBracketDeclarator
 parameter_list|(
@@ -3979,8 +4195,17 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// C++ 7: Declarations [dcl.dcl]
+end_comment
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseNamespace
 parameter_list|(
@@ -3992,6 +4217,9 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseLinkage
 parameter_list|(
@@ -3999,6 +4227,9 @@ name|unsigned
 name|Context
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseUsingDirectiveOrDeclaration
 parameter_list|(
@@ -4010,6 +4241,9 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseUsingDirective
 parameter_list|(
@@ -4024,6 +4258,9 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseUsingDeclaration
 parameter_list|(
@@ -4036,8 +4273,16 @@ parameter_list|,
 name|SourceLocation
 modifier|&
 name|DeclEnd
+parameter_list|,
+name|AccessSpecifier
+name|AS
+init|=
+name|AS_none
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseStaticAssertDeclaration
 parameter_list|(
@@ -4046,6 +4291,9 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseNamespaceAlias
 parameter_list|(
@@ -4064,8 +4312,17 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// C++ 9: classes [class] and C structs/unions.
+end_comment
+
+begin_function_decl
 name|TypeResult
 name|ParseClassName
 parameter_list|(
@@ -4079,8 +4336,16 @@ modifier|*
 name|SS
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|DestrExpected
+init|=
+name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|void
 name|ParseClassSpecifier
 argument_list|(
@@ -4110,6 +4375,9 @@ operator|=
 name|AS_none
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|ParseCXXMemberSpecification
 parameter_list|(
@@ -4123,13 +4391,27 @@ name|DeclPtrTy
 name|TagDecl
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ParseCXXClassMemberDeclaration
 parameter_list|(
 name|AccessSpecifier
 name|AS
+parameter_list|,
+specifier|const
+name|ParsedTemplateInfo
+modifier|&
+name|TemplateInfo
+init|=
+name|ParsedTemplateInfo
+argument_list|()
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ParseConstructorInitializer
 parameter_list|(
@@ -4137,6 +4419,9 @@ name|DeclPtrTy
 name|ConstructorDecl
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|MemInitResult
 name|ParseMemInitializer
 parameter_list|(
@@ -4144,8 +4429,31 @@ name|DeclPtrTy
 name|ConstructorDecl
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|HandleMemberFunctionDefaultArgs
+parameter_list|(
+name|Declarator
+modifier|&
+name|DeclaratorInfo
+parameter_list|,
+name|DeclPtrTy
+name|ThisDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// C++ 10: Derived classes [class.derived]
+end_comment
+
+begin_function_decl
 name|void
 name|ParseBaseClause
 parameter_list|(
@@ -4153,6 +4461,9 @@ name|DeclPtrTy
 name|ClassDecl
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|BaseResult
 name|ParseBaseSpecifier
 parameter_list|(
@@ -4160,15 +4471,33 @@ name|DeclPtrTy
 name|ClassDecl
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|AccessSpecifier
 name|getAccessSpecifierIfPresent
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// C++ 13.5: Overloaded operators [over.oper]
+end_comment
+
+begin_comment
 comment|// EndLoc, if non-NULL, is filled with the location of the last token of
+end_comment
+
+begin_comment
 comment|// the ID.
+end_comment
+
+begin_function_decl
 name|OverloadedOperatorKind
 name|TryParseOperatorFunctionId
 parameter_list|(
@@ -4179,6 +4508,9 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|TypeTy
 modifier|*
 name|ParseConversionFunctionId
@@ -4190,8 +4522,17 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// C++ 14: Templates [temp]
+end_comment
+
+begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -4203,7 +4544,13 @@ literal|4
 operator|>
 name|TemplateParameterList
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// C++ 14.1: Template Parameters [temp.param]
+end_comment
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseDeclarationStartingWithTemplate
 parameter_list|(
@@ -4220,6 +4567,9 @@ init|=
 name|AS_none
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseTemplateDeclarationOrSpecialization
 parameter_list|(
@@ -4234,6 +4584,9 @@ name|AccessSpecifier
 name|AS
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseSingleDeclarationAfterTemplate
 parameter_list|(
@@ -4255,6 +4608,9 @@ init|=
 name|AS_none
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|ParseTemplateParameters
 parameter_list|(
@@ -4274,6 +4630,9 @@ modifier|&
 name|RAngleLoc
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|ParseTemplateParameterList
 parameter_list|(
@@ -4285,6 +4644,9 @@ modifier|&
 name|TemplateParams
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseTemplateParameter
 parameter_list|(
@@ -4295,6 +4657,9 @@ name|unsigned
 name|Position
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseTypeParameter
 parameter_list|(
@@ -4305,6 +4670,9 @@ name|unsigned
 name|Position
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseTemplateTemplateParameter
 parameter_list|(
@@ -4315,6 +4683,9 @@ name|unsigned
 name|Position
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseNonTypeTemplateParameter
 parameter_list|(
@@ -4325,7 +4696,13 @@ name|unsigned
 name|Position
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// C++ 14.3: Template arguments [temp.arg]
+end_comment
+
+begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -4338,6 +4715,9 @@ literal|16
 operator|>
 name|TemplateArgList
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -4349,6 +4729,9 @@ literal|16
 operator|>
 name|TemplateArgIsTypeList
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -4360,6 +4743,9 @@ literal|16
 operator|>
 name|TemplateArgLocationList
 expr_stmt|;
+end_typedef
+
+begin_function_decl
 name|bool
 name|ParseTemplateIdAfterTemplateName
 parameter_list|(
@@ -4398,6 +4784,9 @@ modifier|&
 name|RAngleLoc
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|AnnotateTemplateIdToken
 parameter_list|(
@@ -4424,6 +4813,9 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|AnnotateTemplateIdTokenAsType
 parameter_list|(
@@ -4435,6 +4827,9 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|ParseTemplateArgumentList
 parameter_list|(
@@ -4451,6 +4846,9 @@ modifier|&
 name|TemplateArgLocations
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|ParseTemplateArgument
@@ -4460,9 +4858,15 @@ modifier|&
 name|ArgIsType
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclPtrTy
 name|ParseExplicitInstantiation
 parameter_list|(
+name|SourceLocation
+name|ExternLoc
+parameter_list|,
 name|SourceLocation
 name|TemplateLoc
 parameter_list|,
@@ -4471,21 +4875,25 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// GNU G++: Type Traits [Type-Traits.html in the GCC manual]
+end_comment
+
+begin_function_decl
 name|OwningExprResult
 name|ParseUnaryTypeTrait
 parameter_list|()
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace clang
 end_comment
 

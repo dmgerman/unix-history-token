@@ -146,7 +146,7 @@ struct_decl|;
 end_struct_decl
 
 begin_function
-name|int
+name|void
 name|test2
 parameter_list|(
 name|int
@@ -185,7 +185,7 @@ typedef|;
 end_typedef
 
 begin_function
-name|int
+name|void
 name|test3
 parameter_list|(
 name|x
@@ -202,7 +202,7 @@ block|{}
 end_function
 
 begin_function
-name|int
+name|void
 name|test4
 parameter_list|(
 name|x

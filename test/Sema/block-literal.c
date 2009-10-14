@@ -65,7 +65,7 @@ end_typedef
 
 begin_function_decl
 name|void
-name|takeclosure
+name|takeblock
 parameter_list|(
 name|T
 parameter_list|)
@@ -153,7 +153,7 @@ name|x
 init|=
 literal|4
 decl_stmt|;
-name|takeclosure
+name|takeblock
 argument_list|(
 lambda|^
 block|{
@@ -172,7 +172,7 @@ condition|(
 literal|1
 condition|)
 block|{
-name|takeclosure
+name|takeblock
 argument_list|(
 lambda|^
 block|{
@@ -197,7 +197,7 @@ break|break;
 block|}
 name|foo
 label|:
-name|takeclosure
+name|takeblock
 argument_list|(
 lambda|^
 block|{
@@ -215,7 +215,7 @@ operator|=
 literal|7
 expr_stmt|;
 comment|// expected-warning {{type specifier missing, defaults to 'int'}}
-name|takeclosure
+name|takeblock
 argument_list|(
 lambda|^
 block|{
@@ -468,67 +468,6 @@ parameter_list|)
 block|{ }
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|// Old syntax. FIXME: convert/test.
-end_comment
-
-begin_comment
-unit|void test_byref() {   int i;      X = ^{| g |};
-comment|// error {{use of undeclared identifier 'g'}}
-end_comment
-
-begin_comment
-unit|X = ^{| i,i,i | };    X = ^{|i| i = 0; };  }
-comment|// TODO: global closures someday.
-end_comment
-
-begin_comment
-unit|void *A = ^{}; void *B = ^(int){ A = 0; };
-comment|// Closures can not take return types at this point.
-end_comment
-
-begin_comment
-unit|void test_retvals() {
-comment|// Explicit return value.
-end_comment
-
-begin_comment
-unit|^int{};
-comment|// error {{closure with explicit return type requires argument list}}
-end_comment
-
-begin_comment
-unit|X = ^void(){};
-comment|// Optional specification of return type.
-end_comment
-
-begin_comment
-unit|X = ^char{ return 'x'; };
-comment|// error {{closure with explicit return type requires argument list}}
-end_comment
-
-begin_comment
-unit|X = ^
-comment|/*missing declspec*/
-end_comment
-
-begin_comment
-unit|*() { return (void*)0; };   X = ^void*() { return (void*)0; };
-comment|//X = ^char(short c){ if (c) return c; else return (int)4; };
-end_comment
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -77,13 +77,13 @@ decl_stmt|;
 name|class
 name|ToolChain
 decl_stmt|;
-comment|/// HostInfo - Config information about a particular host which may
-comment|/// interact with driver behavior.
+comment|/// HostInfo - Config information about a particular host which may interact
+comment|/// with driver behavior.
 comment|///
-comment|/// The host information is used for controlling the parts of the
-comment|/// driver which interact with the platform the driver is ostensibly
-comment|/// being run from. For testing purposes, the HostInfo used by the
-comment|/// driver may differ from the actual host.
+comment|/// The host information is used for controlling the parts of the driver which
+comment|/// interact with the platform the driver is ostensibly being run from. For
+comment|/// testing purposes, the HostInfo used by the driver may differ from the actual
+comment|/// host.
 name|class
 name|HostInfo
 block|{
@@ -188,8 +188,8 @@ name|getOSName
 argument_list|()
 return|;
 block|}
-comment|/// useDriverDriver - Whether the driver should act as a driver
-comment|/// driver for this host and support -arch, -Xarch, etc.
+comment|/// useDriverDriver - Whether the driver should act as a driver driver for
+comment|/// this host and support -arch, -Xarch, etc.
 name|virtual
 name|bool
 name|useDriverDriver
@@ -198,8 +198,8 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// lookupTypeForExtension - Return the default language type to use
-comment|/// for the given extension.
+comment|/// lookupTypeForExtension - Return the default language type to use for the
+comment|/// given extension.
 name|virtual
 name|types
 operator|::
@@ -212,20 +212,21 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// getToolChain - Construct the toolchain to use for this host.
+comment|/// CreateToolChain - Construct the toolchain to use for this host (which the
+comment|/// host retains ownership of).
 comment|///
-comment|/// \param Args - The argument list, which may be used to alter the
-comment|/// default toolchain, for example in the presence of -m32 or -m64.
+comment|/// \param Args - The argument list, which may be used to alter the default
+comment|/// toolchain, for example in the presence of -m32 or -m64.
 comment|///
-comment|/// \param ArchName - The architecture to return a toolchain for, or
-comment|/// 0 if unspecified. This will only ever be non-zero for hosts
-comment|/// which support a driver driver.
+comment|/// \param ArchName - The architecture to return a toolchain for, or 0 if
+comment|/// unspecified. This will only ever be non-zero for hosts which support a
+comment|/// driver driver.
 comment|// FIXME: Pin down exactly what the HostInfo is allowed to use Args
 comment|// for here. Currently this is for -m32 / -m64 defaulting.
 name|virtual
 name|ToolChain
 modifier|*
-name|getToolChain
+name|CreateToolChain
 argument_list|(
 specifier|const
 name|ArgList
@@ -245,6 +246,24 @@ literal|0
 decl_stmt|;
 block|}
 empty_stmt|;
+specifier|const
+name|HostInfo
+modifier|*
+name|createAuroraUXHostInfo
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
 specifier|const
 name|HostInfo
 modifier|*

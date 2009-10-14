@@ -242,7 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|checkStaticAry
 parameter_list|()
 block|{

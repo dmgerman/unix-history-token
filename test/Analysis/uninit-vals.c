@@ -92,7 +92,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|f5
 parameter_list|()
 block|{

@@ -61,7 +61,7 @@ comment|/* collection threshold */
 name|int
 name|count
 decl_stmt|;
-comment|/* count of allocations or collections of younger 		      generations */
+comment|/* count of allocations or collections of younger                     generations */
 block|}
 struct|;
 end_struct
@@ -96,7 +96,7 @@ name|NUM_GENERATIONS
 index|]
 init|=
 block|{
-comment|/* PyGC_Head,				threshold,	count */
+comment|/* PyGC_Head,                     threshold,      count */
 block|{
 block|{
 block|{

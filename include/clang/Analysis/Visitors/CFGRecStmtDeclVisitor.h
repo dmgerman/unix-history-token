@@ -164,7 +164,7 @@ operator|->
 name|getDecl
 argument_list|()
 argument_list|)
-block|;    }
+block|;   }
 name|void
 name|VisitDeclStmt
 argument_list|(

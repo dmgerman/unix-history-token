@@ -47,7 +47,7 @@ literal|0
 end_if
 
 begin_endif
-unit|This code below comes from the following system headers: sys/socket.h:#define	CMSG_SPACE(l)		(__DARWIN_ALIGN(sizeof(struct   cmsghdr)) + __DARWIN_ALIGN(l))  i386/_param.h:#define	__DARWIN_ALIGN(p)	((__darwin_size_t)((char *)(p)   + __DARWIN_ALIGNBYTES)&~ __DARWIN_ALIGNBYTES)
+unit|This code below comes from the following system headers: sys/socket.h:#define CMSG_SPACE(l) (__DARWIN_ALIGN(sizeof(struct   cmsghdr)) + __DARWIN_ALIGN(l))  i386/_param.h:#define __DARWIN_ALIGN(p) ((__darwin_size_t)((char *)(p)   + __DARWIN_ALIGNBYTES)&~ __DARWIN_ALIGNBYTES)
 endif|#
 directive|endif
 end_endif
@@ -156,6 +156,9 @@ decl_stmt|;
 block|}
 name|control_un
 union|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

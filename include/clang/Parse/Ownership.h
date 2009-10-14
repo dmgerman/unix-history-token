@@ -2226,7 +2226,7 @@ name|operator
 operator|->
 expr|(
 block|)
-block|; 	}
+block|;      }
 endif|#
 directive|endif
 name|ASTMultiPtr
@@ -3577,7 +3577,7 @@ name|Node
 argument_list|(
 argument|o.get()
 argument_list|)
-block|{}
+block|{ }
 comment|// These versions are hopefully no-ops.
 name|template
 operator|<

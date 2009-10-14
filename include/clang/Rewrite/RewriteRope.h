@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cstring>
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -391,9 +391,14 @@ name|class
 name|RopePieceBTreeIterator
 range|:
 name|public
-name|forward_iterator
+name|std
+operator|::
+name|iterator
 operator|<
-specifier|const
+name|std
+operator|::
+name|forward_iterator_tag
+decl_stmt|, const
 name|char
 decl_stmt|,
 name|ptrdiff_t

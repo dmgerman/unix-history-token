@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/CFG.h"
+file|"clang/Analysis/CFG.h"
 end_include
 
 begin_include
@@ -355,6 +355,8 @@ argument_list|(
 name|Prev
 argument_list|,
 name|B
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -379,6 +381,8 @@ argument_list|(
 name|B
 argument_list|,
 name|Next
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -534,6 +538,8 @@ argument_list|(
 name|B
 argument_list|,
 name|Prev
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -558,6 +564,8 @@ argument_list|(
 name|Next
 argument_list|,
 name|B
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -857,7 +865,7 @@ block|}
 end_expr_stmt
 
 begin_macro
-unit|}      void
+unit|}    void
 name|runOnBlock
 argument_list|(
 argument|const CFGBlock& B
@@ -1051,6 +1059,7 @@ name|enqueue
 argument_list|(
 operator|&
 operator|*
+operator|*
 name|I
 argument_list|)
 expr_stmt|;
@@ -1183,6 +1192,19 @@ operator|++
 name|I
 control|)
 block|{
+name|CFGBlock
+modifier|*
+name|PrevBlk
+init|=
+operator|*
+name|I
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|PrevBlk
+condition|)
+continue|continue;
 name|typename
 name|EdgeDataMapTy
 operator|::
@@ -1199,8 +1221,7 @@ name|PrevEdge
 argument_list|(
 name|B
 argument_list|,
-operator|*
-name|I
+name|PrevBlk
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1576,6 +1597,15 @@ condition|;
 operator|++
 name|I
 control|)
+if|if
+condition|(
+name|CFGBlock
+modifier|*
+name|NextBlk
+init|=
+operator|*
+name|I
+condition|)
 name|UpdateEdgeValue
 argument_list|(
 name|ItrTraits
@@ -1584,14 +1614,12 @@ name|NextEdge
 argument_list|(
 name|B
 argument_list|,
-operator|*
-name|I
+name|NextBlk
 argument_list|)
 argument_list|,
 name|V
 argument_list|,
-operator|*
-name|I
+name|NextBlk
 argument_list|)
 expr_stmt|;
 block|}

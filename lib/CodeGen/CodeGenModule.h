@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclObjC.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CGBlocks.h"
 end_include
 
@@ -98,7 +104,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"CGVtable.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CodeGenTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"Mangle.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Module.h"
 end_include
 
 begin_include
@@ -131,6 +155,13 @@ directive|include
 file|<list>
 end_include
 
+begin_define
+define|#
+directive|define
+name|ATTACH_DEBUG_INFO_TO_AN_INSN
+value|1
+end_define
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -152,6 +183,9 @@ name|TargetData
 decl_stmt|;
 name|class
 name|FunctionType
+decl_stmt|;
+name|class
+name|LLVMContext
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -238,7 +272,7 @@ decl_stmt|;
 comment|/// GlobalDecl - represents a global declaration. This can either be a
 comment|/// CXXConstructorDecl and the constructor type (Base, Complete).
 comment|/// a CXXDestructorDecl and the destructor type (Base, Complete) or
-comment|// a regular VarDecl or a FunctionDecl.
+comment|/// a VarDecl, a FunctionDecl or a BlockDecl.
 name|class
 name|GlobalDecl
 block|{
@@ -247,33 +281,21 @@ operator|::
 name|PointerIntPair
 operator|<
 specifier|const
-name|ValueDecl
+name|Decl
 operator|*
 operator|,
 literal|2
 operator|>
 name|Value
 expr_stmt|;
-name|public
-label|:
-name|GlobalDecl
-argument_list|()
-block|{}
-name|explicit
-name|GlobalDecl
-argument_list|(
+name|void
+name|Init
+parameter_list|(
 specifier|const
-name|ValueDecl
-operator|*
-name|VD
-argument_list|)
-operator|:
-name|Value
-argument_list|(
-argument|VD
-argument_list|,
-literal|0
-argument_list|)
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -283,12 +305,12 @@ operator|<
 name|CXXConstructorDecl
 operator|>
 operator|(
-name|VD
+name|D
 operator|)
 operator|&&
 literal|"Use other ctor with ctor decls!"
 argument_list|)
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 operator|!
@@ -297,19 +319,76 @@ operator|<
 name|CXXDestructorDecl
 operator|>
 operator|(
-name|VD
+name|D
 operator|)
 operator|&&
 literal|"Use other ctor with dtor decls!"
 argument_list|)
-block|;   }
+expr_stmt|;
+name|Value
+operator|.
+name|setPointer
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+name|public
+label|:
+name|GlobalDecl
+argument_list|()
+block|{}
+name|GlobalDecl
+argument_list|(
+argument|const VarDecl *D
+argument_list|)
+block|{
+name|Init
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+name|GlobalDecl
+argument_list|(
+argument|const FunctionDecl *D
+argument_list|)
+block|{
+name|Init
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+name|GlobalDecl
+argument_list|(
+argument|const BlockDecl *D
+argument_list|)
+block|{
+name|Init
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+name|GlobalDecl
+argument_list|(
+argument|const ObjCMethodDecl *D
+argument_list|)
+block|{
+name|Init
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
 name|GlobalDecl
 argument_list|(
 argument|const CXXConstructorDecl *D
 argument_list|,
 argument|CXXCtorType Type
 argument_list|)
-operator|:
+block|:
 name|Value
 argument_list|(
 argument|D
@@ -323,7 +402,7 @@ argument|const CXXDestructorDecl *D
 argument_list|,
 argument|CXXDtorType Type
 argument_list|)
-operator|:
+block|:
 name|Value
 argument_list|(
 argument|D
@@ -332,7 +411,7 @@ argument|Type
 argument_list|)
 block|{}
 specifier|const
-name|ValueDecl
+name|Decl
 operator|*
 name|getDecl
 argument_list|()
@@ -490,6 +569,13 @@ decl_stmt|;
 name|CodeGenTypes
 name|Types
 decl_stmt|;
+name|MangleContext
+name|MangleCtx
+decl_stmt|;
+comment|/// VtableInfo - Holds information about C++ vtables.
+name|CGVtableInfo
+name|VtableInfo
+decl_stmt|;
 name|CGObjCRuntime
 modifier|*
 name|Runtime
@@ -640,6 +726,18 @@ operator|*
 operator|>
 name|ConstantStringMap
 expr_stmt|;
+comment|/// CXXGlobalInits - Variables with global initializers that need to run
+comment|/// before main.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+operator|>
+name|CXXGlobalInits
+expr_stmt|;
 comment|/// CFConstantStringClassRef - Cached reference to the class for constant
 comment|/// strings. This value has type int * but is actually an Obj-C class pointer.
 name|llvm
@@ -647,6 +745,12 @@ operator|::
 name|Constant
 operator|*
 name|CFConstantStringClassRef
+expr_stmt|;
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|VMContext
 expr_stmt|;
 name|public
 label|:
@@ -781,6 +885,24 @@ return|return
 name|Types
 return|;
 block|}
+name|MangleContext
+modifier|&
+name|getMangleContext
+parameter_list|()
+block|{
+return|return
+name|MangleCtx
+return|;
+block|}
+name|CGVtableInfo
+modifier|&
+name|getVtableInfo
+parameter_list|()
+block|{
+return|return
+name|VtableInfo
+return|;
+block|}
 name|Diagnostic
 operator|&
 name|getDiags
@@ -802,6 +924,17 @@ specifier|const
 block|{
 return|return
 name|TheTargetData
+return|;
+block|}
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|getLLVMContext
+argument_list|()
+block|{
+return|return
+name|VMContext
 return|;
 block|}
 comment|/// getDeclVisibilityMode - Compute the visibility of the decl \arg D.
@@ -870,6 +1003,74 @@ argument|GlobalDecl GD
 argument_list|,
 argument|const llvm::Type *Ty =
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/// GenerateRtti - Generate the rtti information for the given type.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GenerateRtti
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+expr_stmt|;
+comment|/// BuildThunk - Build a thunk for the given method
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|BuildThunk
+argument_list|(
+argument|const CXXMethodDecl *MD
+argument_list|,
+argument|bool Extern
+argument_list|,
+argument|int64_t nv
+argument_list|,
+argument|int64_t v
+argument_list|)
+expr_stmt|;
+comment|/// BuildCoVariantThunk - Build a thunk for the given method
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|BuildCovariantThunk
+argument_list|(
+argument|const CXXMethodDecl *MD
+argument_list|,
+argument|bool Extern
+argument_list|,
+argument|int64_t nv_t
+argument_list|,
+argument|int64_t v_t
+argument_list|,
+argument|int64_t nv_r
+argument_list|,
+argument|int64_t v_r
+argument_list|)
+expr_stmt|;
+comment|/// GetCXXBaseClassOffset - Returns the offset from a derived class to its
+comment|/// base class. Returns null if the offset is 0.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetCXXBaseClassOffset
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|ClassDecl
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|BaseClassDecl
 argument_list|)
 expr_stmt|;
 comment|/// GetStringForStringLiteral - Return the appropriate bytes for a string
@@ -1019,6 +1220,8 @@ name|Value
 operator|*
 name|getBuiltinLibFunction
 argument_list|(
+argument|const FunctionDecl *FD
+argument_list|,
 argument|unsigned BuiltinID
 argument_list|)
 expr_stmt|;
@@ -1320,6 +1523,15 @@ modifier|&
 name|FI
 parameter_list|)
 function_decl|;
+comment|/// ConstructAttributeList - Get the LLVM attributes and calling convention to
+comment|/// use for a particular function type.
+comment|///
+comment|/// \param Info - The function type information.
+comment|/// \param TargetDecl - The decl these attributes are being constructed
+comment|/// for. If supplied the attributes applied to this decl may contribute to the
+comment|/// function attributes and calling convention.
+comment|/// \param PAL [out] - On return, the attribute list to use.
+comment|/// \param CallingConv [out] - On return, the LLVM calling convention to use.
 name|void
 name|ConstructAttributeList
 parameter_list|(
@@ -1336,6 +1548,10 @@ parameter_list|,
 name|AttributeListType
 modifier|&
 name|PAL
+parameter_list|,
+name|unsigned
+modifier|&
+name|CallingConv
 parameter_list|)
 function_decl|;
 specifier|const
@@ -1468,6 +1684,27 @@ operator|*
 name|D
 argument_list|)
 expr_stmt|;
+name|void
+name|DeferredCopyConstructorToEmit
+parameter_list|(
+name|GlobalDecl
+name|D
+parameter_list|)
+function_decl|;
+name|void
+name|DeferredCopyAssignmentToEmit
+parameter_list|(
+name|GlobalDecl
+name|D
+parameter_list|)
+function_decl|;
+name|void
+name|DeferredDestructorToEmit
+parameter_list|(
+name|GlobalDecl
+name|D
+parameter_list|)
+function_decl|;
 comment|/// SetCommonAttributes - Set attributes which are common to any
 comment|/// form of a global definition (alias, Objective-C method,
 comment|/// function, global variable).
@@ -1642,6 +1879,11 @@ parameter_list|,
 name|CXXDtorType
 name|Type
 parameter_list|)
+function_decl|;
+comment|/// EmitCXXGlobalInitFunc - Emit a function that initializes C++ globals.
+name|void
+name|EmitCXXGlobalInitFunc
+parameter_list|()
 function_decl|;
 comment|// FIXME: Hardcoding priority here is gross.
 name|void

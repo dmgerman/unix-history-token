@@ -4,7 +4,7 @@ comment|// RUN: clang-cc -emit-llvm %s -o %t
 end_comment
 
 begin_function
-name|int
+name|void
 name|f
 parameter_list|()
 block|{
@@ -25,7 +25,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|f2
 parameter_list|()
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -g -o %t  %s -emit-llvm-bc&& llc %t -f -o %t.s
+comment|// RUN: clang-cc -g -o %t  %s -emit-llvm-bc&& llc %t -o %t.s
 end_comment
 
 begin_empty

@@ -313,26 +313,6 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
-comment|/// Add metadata globals to the 'used' globals for final output.
-name|virtual
-name|void
-name|MergeMetadataGlobals
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|llvm
-operator|::
-name|Constant
-operator|*
-operator|>
-operator|&
-name|UsedArray
-argument_list|)
-init|=
-literal|0
-decl_stmt|;
 comment|/// Get a selector for the specified name and type values. The
 comment|/// return value should have the LLVM type for pointer-to
 comment|/// ASTContext::getObjCSelType().
@@ -413,6 +393,9 @@ init|=
 literal|0
 function_decl|;
 comment|/// Generate an Objective-C message send operation.
+comment|///
+comment|/// \param Method - The method being called, this may be null if synthesizing
+comment|/// a property setter or getter.
 name|virtual
 name|CodeGen
 operator|::
@@ -431,7 +414,7 @@ argument|bool IsClassMessage
 argument_list|,
 argument|const CallArgList&CallArgs
 argument_list|,
-argument|const ObjCMethodDecl *Method=
+argument|const ObjCMethodDecl *Method =
 literal|0
 argument_list|)
 operator|=
@@ -440,6 +423,9 @@ expr_stmt|;
 comment|/// Generate an Objective-C message send operation to the super
 comment|/// class initiated in a method for Class and with the given Self
 comment|/// object.
+comment|///
+comment|/// \param Method - The method being called, this may be null if synthesizing
+comment|/// a property setter or getter.
 name|virtual
 name|CodeGen
 operator|::
@@ -461,6 +447,9 @@ argument_list|,
 argument|bool IsClassMessage
 argument_list|,
 argument|const CallArgList&CallArgs
+argument_list|,
+argument|const ObjCMethodDecl *Method =
+literal|0
 argument_list|)
 operator|=
 literal|0
@@ -709,6 +698,12 @@ operator|::
 name|Value
 operator|*
 name|dest
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ivarOffset
 argument_list|)
 init|=
 literal|0
@@ -794,6 +789,34 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|virtual
+name|void
+name|EmitGCMemmoveCollectable
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestPtr
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SrcPtr
+argument_list|,
+name|QualType
+name|Ty
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Creates an instance of an Objective-C runtime class.

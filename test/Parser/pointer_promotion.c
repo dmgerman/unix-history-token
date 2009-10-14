@@ -4,7 +4,7 @@ comment|// RUN: clang-cc -fsyntax-only -verify %s
 end_comment
 
 begin_function
-name|int
+name|void
 name|test
 parameter_list|()
 block|{

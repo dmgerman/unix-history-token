@@ -130,6 +130,9 @@ name|class
 name|SubRegionMap
 decl_stmt|;
 name|class
+name|StackFrameContext
+decl_stmt|;
+name|class
 name|StoreManager
 block|{
 name|protected
@@ -154,34 +157,6 @@ operator|&
 name|stateMgr
 argument_list|)
 expr_stmt|;
-name|protected
-label|:
-name|virtual
-specifier|const
-name|GRState
-modifier|*
-name|AddRegionView
-parameter_list|(
-specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
-specifier|const
-name|MemRegion
-modifier|*
-name|view
-parameter_list|,
-specifier|const
-name|MemRegion
-modifier|*
-name|base
-parameter_list|)
-block|{
-return|return
-name|state
-return|;
-block|}
 name|public
 label|:
 name|virtual
@@ -197,7 +172,9 @@ comment|///   expected type of the returned value.  This is used if the value is
 comment|///   lazily computed.
 comment|/// \return The value bound to the location \c loc.
 name|virtual
-name|SVal
+name|SValuator
+operator|::
+name|CastResult
 name|Retrieve
 argument_list|(
 argument|const GRState *state
@@ -280,7 +257,12 @@ comment|///  value bindings upon entry to an analyzed function.
 name|virtual
 name|Store
 name|getInitialStore
-parameter_list|()
+parameter_list|(
+specifier|const
+name|LocationContext
+modifier|*
+name|InitLoc
+parameter_list|)
 init|=
 literal|0
 function_decl|;
@@ -316,14 +298,14 @@ name|SVal
 name|getLValueVar
 parameter_list|(
 specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
-specifier|const
 name|VarDecl
 modifier|*
-name|vd
+name|VD
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LC
 parameter_list|)
 init|=
 literal|0
@@ -332,11 +314,6 @@ name|virtual
 name|SVal
 name|getLValueString
 parameter_list|(
-specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
 specifier|const
 name|StringLiteral
 modifier|*
@@ -350,11 +327,6 @@ name|SVal
 name|getLValueCompoundLiteral
 parameter_list|(
 specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
-specifier|const
 name|CompoundLiteralExpr
 modifier|*
 name|cl
@@ -366,11 +338,6 @@ name|virtual
 name|SVal
 name|getLValueIvar
 parameter_list|(
-specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
 specifier|const
 name|ObjCIvarDecl
 modifier|*
@@ -387,17 +354,12 @@ name|SVal
 name|getLValueField
 parameter_list|(
 specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
-name|SVal
-name|base
-parameter_list|,
-specifier|const
 name|FieldDecl
 modifier|*
 name|D
+parameter_list|,
+name|SVal
+name|Base
 parameter_list|)
 init|=
 literal|0
@@ -406,19 +368,14 @@ name|virtual
 name|SVal
 name|getLValueElement
 parameter_list|(
-specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
 name|QualType
 name|elementType
 parameter_list|,
 name|SVal
-name|base
+name|offset
 parameter_list|,
 name|SVal
-name|offset
+name|Base
 parameter_list|)
 init|=
 literal|0
@@ -523,15 +480,11 @@ empty_stmt|;
 comment|/// CastRegion - Used by GRExprEngine::VisitCast to handle casts from
 comment|///  a MemRegion* to a specific location type.  'R' is the region being
 comment|///  casted and 'CastToTy' the result type of the cast.
-name|virtual
-name|CastResult
+specifier|const
+name|MemRegion
+modifier|*
 name|CastRegion
 parameter_list|(
-specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
 specifier|const
 name|MemRegion
 modifier|*
@@ -571,28 +524,12 @@ name|UnknownVal
 argument_list|()
 return|;
 block|}
-comment|/// getSelfRegion - Returns the region for the 'self' (Objective-C) or
-comment|///  'this' object (C++).  When used when analyzing a normal function this
-comment|///  method returns NULL.
 name|virtual
-specifier|const
-name|MemRegion
-modifier|*
-name|getSelfRegion
-parameter_list|(
-name|Store
-name|store
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
-name|Store
+name|void
 name|RemoveDeadBindings
 argument_list|(
-specifier|const
 name|GRState
-operator|*
+operator|&
 name|state
 argument_list|,
 name|Stmt
@@ -626,12 +563,17 @@ parameter_list|(
 specifier|const
 name|GRState
 modifier|*
-name|state
+name|ST
 parameter_list|,
 specifier|const
 name|VarDecl
 modifier|*
-name|vd
+name|VD
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LC
 parameter_list|,
 name|SVal
 name|initVal
@@ -648,12 +590,44 @@ parameter_list|(
 specifier|const
 name|GRState
 modifier|*
-name|state
+name|ST
 parameter_list|,
 specifier|const
 name|VarDecl
 modifier|*
-name|vd
+name|VD
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LC
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+specifier|const
+name|GRState
+modifier|*
+name|InvalidateRegion
+parameter_list|(
+specifier|const
+name|GRState
+modifier|*
+name|state
+parameter_list|,
+specifier|const
+name|MemRegion
+modifier|*
+name|R
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|,
+name|unsigned
+name|Count
 parameter_list|)
 init|=
 literal|0
@@ -683,12 +657,13 @@ return|return
 name|state
 return|;
 block|}
-comment|// FIXME: Make out-of-line.
+comment|/// EnterStackFrame - Let the StoreManager to do something when execution
+comment|/// engine is about to execute into a callee.
 name|virtual
 specifier|const
 name|GRState
 modifier|*
-name|setDefaultValue
+name|EnterStackFrame
 parameter_list|(
 specifier|const
 name|GRState
@@ -696,12 +671,9 @@ modifier|*
 name|state
 parameter_list|,
 specifier|const
-name|MemRegion
+name|StackFrameContext
 modifier|*
-name|region
-parameter_list|,
-name|SVal
-name|val
+name|frame
 parameter_list|)
 block|{
 return|return
@@ -783,6 +755,44 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|protected
+label|:
+specifier|const
+name|MemRegion
+modifier|*
+name|MakeElementRegion
+parameter_list|(
+specifier|const
+name|MemRegion
+modifier|*
+name|Base
+parameter_list|,
+name|QualType
+name|pointeeTy
+parameter_list|,
+name|uint64_t
+name|index
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// CastRetrievedVal - Used by subclasses of StoreManager to implement
+comment|///  implicit casts that arise from loads from regions that are reinterpreted
+comment|///  as another region.
+name|SValuator
+operator|::
+name|CastResult
+name|CastRetrievedVal
+argument_list|(
+argument|SVal val
+argument_list|,
+argument|const GRState *state
+argument_list|,
+argument|const TypedRegion *R
+argument_list|,
+argument|QualType castTy
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|// FIXME: Do we still need this?

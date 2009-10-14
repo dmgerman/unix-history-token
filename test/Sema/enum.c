@@ -230,6 +230,7 @@ init|;
 condition|;
 name|ve2
 control|)
+comment|// expected-warning {{expression result unused}}
 empty_stmt|;
 operator|(
 name|void

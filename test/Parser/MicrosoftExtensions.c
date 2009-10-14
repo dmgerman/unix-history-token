@@ -160,6 +160,7 @@ block|}
 end_function
 
 begin_function
+name|void
 name|__forceinline
 name|InterlockedBitTestAndSet
 parameter_list|(
@@ -170,7 +171,6 @@ parameter_list|,
 name|long
 name|Bit
 parameter_list|)
-comment|// expected-warning {{type specifier missing, defaults to 'int'}}
 block|{
 asm|__asm {
 asm|mov eax, Bit

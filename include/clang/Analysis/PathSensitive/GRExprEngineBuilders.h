@@ -69,135 +69,35 @@ directive|include
 file|"clang/Analysis/PathSensitive/GRExprEngine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Analysis/Support/SaveAndRestore.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|// SaveAndRestore - A utility class that uses RAII to save and restore
-comment|//  the value of a variable.
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|SaveAndRestore
-block|{
-name|SaveAndRestore
-argument_list|(
-name|T
-operator|&
-name|x
-argument_list|)
-operator|:
-name|X
-argument_list|(
-name|x
-argument_list|)
-block|,
-name|old_value
-argument_list|(
-argument|x
-argument_list|)
-block|{}
-operator|~
-name|SaveAndRestore
-argument_list|()
-block|{
-name|X
-operator|=
-name|old_value
-block|; }
-name|T
-name|get
-argument_list|()
-block|{
-return|return
-name|old_value
-return|;
-block|}
-name|private
-operator|:
-name|T
-operator|&
-name|X
-block|;
-name|T
-name|old_value
-block|; }
-expr_stmt|;
-comment|// SaveOr - Similar to SaveAndRestore.  Operates only on bools; the old
-comment|//  value of a variable is saved, and during the dstor the old value is
-comment|//  or'ed with the new value.
-struct|struct
-name|SaveOr
-block|{
-name|SaveOr
-argument_list|(
-name|bool
-operator|&
-name|x
-argument_list|)
-operator|:
-name|X
-argument_list|(
-name|x
-argument_list|)
-operator|,
-name|old_value
-argument_list|(
-argument|x
-argument_list|)
-block|{
-name|x
-operator|=
-name|false
-block|; }
-operator|~
-name|SaveOr
-argument_list|()
-block|{
-name|X
-operator||=
-name|old_value
-block|; }
-name|private
-operator|:
-name|bool
-operator|&
-name|X
-expr_stmt|;
-specifier|const
-name|bool
-name|old_value
-decl_stmt|;
-block|}
-struct|;
 name|class
 name|GRStmtNodeBuilderRef
 block|{
-name|GRExprEngine
-operator|::
-name|NodeSet
-operator|&
+name|ExplodedNodeSet
+modifier|&
 name|Dst
-expr_stmt|;
-name|GRExprEngine
-operator|::
-name|StmtNodeBuilder
-operator|&
+decl_stmt|;
+name|GRStmtNodeBuilder
+modifier|&
 name|B
-expr_stmt|;
+decl_stmt|;
 name|GRExprEngine
 modifier|&
 name|Eng
 decl_stmt|;
-name|GRExprEngine
-operator|::
-name|NodeTy
-operator|*
+name|ExplodedNode
+modifier|*
 name|Pred
-expr_stmt|;
+decl_stmt|;
 specifier|const
 name|GRState
 modifier|*
@@ -255,13 +155,13 @@ decl_stmt|;
 comment|// do not implement
 name|GRStmtNodeBuilderRef
 argument_list|(
-argument|GRExprEngine::NodeSet&dst
+argument|ExplodedNodeSet&dst
 argument_list|,
-argument|GRExprEngine::StmtNodeBuilder&builder
+argument|GRStmtNodeBuilder&builder
 argument_list|,
 argument|GRExprEngine& eng
 argument_list|,
-argument|GRExprEngine::NodeTy* pred
+argument|ExplodedNode* pred
 argument_list|,
 argument|const GRState *st
 argument_list|,
@@ -416,14 +316,15 @@ name|getStateManager
 argument_list|()
 return|;
 block|}
-name|GRExprEngine
-operator|::
-name|NodeTy
-operator|*
+name|ExplodedNode
+modifier|*
 name|MakeNode
-argument_list|(
-argument|const GRState* state
-argument_list|)
+parameter_list|(
+specifier|const
+name|GRState
+modifier|*
+name|state
+parameter_list|)
 block|{
 return|return
 name|B

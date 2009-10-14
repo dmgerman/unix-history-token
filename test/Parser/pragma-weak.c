@@ -66,6 +66,10 @@ name|z
 name|=
 end_pragma
 
+begin_comment
+comment|/* expected-warning {{weak identifier 'y' never declared}} */
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma

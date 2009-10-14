@@ -607,6 +607,34 @@ expr_stmt|;
 block|}
 return|;
 comment|// expected-error {{returning block that lives on the local stack}}
+return|return
+operator|(
+lambda|^
+block|{
+name|i
+operator|=
+literal|0
+expr_stmt|;
+block|}
+operator|)
+return|;
+comment|// expected-error {{returning block that lives on the local stack}}
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+lambda|^
+block|{
+name|i
+operator|=
+literal|0
+expr_stmt|;
+block|}
+operator|)
+return|;
+comment|// expected-error {{returning block that lives on the local stack}}
 block|}
 end_function
 

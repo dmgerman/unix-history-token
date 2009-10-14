@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/Expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -86,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -94,6 +106,16 @@ include|#
 directive|include
 file|"CGBuilder.h"
 end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|MDNode
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -110,6 +132,9 @@ name|CodeGen
 block|{
 name|class
 name|CodeGenModule
+decl_stmt|;
+name|class
+name|CodeGenFunction
 decl_stmt|;
 comment|/// CGDebugInfo - This class gathers all debug information during compilation
 comment|/// and is responsible for emitting to llvm globals or pass directly to
@@ -158,7 +183,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|DIType
+name|WeakVH
 operator|>
 name|TypeCache
 expr_stmt|;
@@ -204,7 +229,7 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
-name|CreateCVRType
+name|CreateQualifiedType
 argument_list|(
 argument|QualType Ty
 argument_list|,
@@ -219,6 +244,16 @@ argument_list|(
 argument|const TypedefType *Ty
 argument_list|,
 argument|llvm::DICompileUnit U
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|CreateType
+argument_list|(
+argument|const ObjCObjectPointerType *Ty
+argument_list|,
+argument|llvm::DICompileUnit Unit
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -416,6 +451,31 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
+comment|/// EmitDeclareOfBlockDeclRefVariable - Emit call to llvm.dbg.declare for an
+comment|/// imported variable declaration in a block.
+name|void
+name|EmitDeclareOfBlockDeclRefVariable
+argument_list|(
+specifier|const
+name|BlockDeclRefExpr
+operator|*
+name|BDRE
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|AI
+argument_list|,
+name|CGBuilderTy
+operator|&
+name|Builder
+argument_list|,
+name|CodeGenFunction
+operator|*
+name|CGF
+argument_list|)
+decl_stmt|;
 comment|/// EmitDeclareOfArgVariable - Emit call to llvm.dbg.declare for an argument
 comment|/// variable declaration.
 name|void
@@ -493,6 +553,51 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
+comment|/// EmitDeclare - Emit call to llvm.dbg.declare for a variable declaration.
+name|void
+name|EmitDeclare
+argument_list|(
+specifier|const
+name|BlockDeclRefExpr
+operator|*
+name|BDRE
+argument_list|,
+name|unsigned
+name|Tag
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|AI
+argument_list|,
+name|CGBuilderTy
+operator|&
+name|Builder
+argument_list|,
+name|CodeGenFunction
+operator|*
+name|CGF
+argument_list|)
+decl_stmt|;
+comment|/// getContext - Get context info for the decl.
+name|llvm
+operator|::
+name|DIDescriptor
+name|getContext
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|Decl
+argument_list|,
+name|llvm
+operator|::
+name|DIDescriptor
+operator|&
+name|CU
+argument_list|)
+expr_stmt|;
 comment|/// getOrCreateCompileUnit - Get the compile unit from the cache or create a
 comment|/// new one if necessary.
 name|llvm
@@ -509,6 +614,17 @@ name|llvm
 operator|::
 name|DIType
 name|getOrCreateType
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|llvm::DICompileUnit Unit
+argument_list|)
+expr_stmt|;
+comment|/// CreateTypeNode - Create type metadata for a source language type.
+name|llvm
+operator|::
+name|DIType
+name|CreateTypeNode
 argument_list|(
 argument|QualType Ty
 argument_list|,

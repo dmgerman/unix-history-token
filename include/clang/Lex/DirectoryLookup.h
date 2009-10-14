@@ -178,7 +178,7 @@ operator|.
 name|Dir
 operator|=
 name|dir
-block|;    }
+block|;   }
 comment|/// DirectoryLookup ctor - Note that this ctor *does not take ownership* of
 comment|/// 'map'.
 name|DirectoryLookup
@@ -210,7 +210,7 @@ operator|.
 name|Map
 operator|=
 name|map
-block|;    }
+block|;   }
 comment|/// getLookupType - Return the kind of directory lookup that this is: either a
 comment|/// normal directory, a framework path, or a HeaderMap.
 name|LookupType_t

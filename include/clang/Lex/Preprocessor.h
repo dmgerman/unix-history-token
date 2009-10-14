@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -186,9 +192,7 @@ name|Diagnostic
 modifier|*
 name|Diags
 decl_stmt|;
-specifier|const
 name|LangOptions
-modifier|&
 name|Features
 decl_stmt|;
 name|TargetInfo
@@ -596,11 +600,13 @@ name|private
 label|:
 comment|// Cached tokens state.
 typedef|typedef
-name|std
+name|llvm
 operator|::
-name|vector
+name|SmallVector
 operator|<
 name|Token
+operator|,
+literal|1
 operator|>
 name|CachedTokensTy
 expr_stmt|;

@@ -162,7 +162,13 @@ decl_stmt|;
 block|}
 name|f3
 argument_list|()
-block|{ }
+block|{
+while|while
+condition|(
+literal|1
+condition|)
+block|{}
+block|}
 comment|// PR4423 - This shouldn't crash in codegen
 name|void
 name|f4

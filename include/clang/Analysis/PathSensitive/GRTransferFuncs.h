@@ -135,32 +135,32 @@ name|virtual
 name|void
 name|EvalCall
 argument_list|(
-argument|ExplodedNodeSet<GRState>& Dst
+argument|ExplodedNodeSet& Dst
 argument_list|,
 argument|GRExprEngine& Engine
 argument_list|,
-argument|GRStmtNodeBuilder<GRState>& Builder
+argument|GRStmtNodeBuilder& Builder
 argument_list|,
 argument|CallExpr* CE
 argument_list|,
 argument|SVal L
 argument_list|,
-argument|ExplodedNode<GRState>* Pred
+argument|ExplodedNode* Pred
 argument_list|)
 block|{}
 name|virtual
 name|void
 name|EvalObjCMessageExpr
 argument_list|(
-argument|ExplodedNodeSet<GRState>& Dst
+argument|ExplodedNodeSet& Dst
 argument_list|,
 argument|GRExprEngine& Engine
 argument_list|,
-argument|GRStmtNodeBuilder<GRState>& Builder
+argument|GRStmtNodeBuilder& Builder
 argument_list|,
 argument|ObjCMessageExpr* ME
 argument_list|,
-argument|ExplodedNode<GRState>* Pred
+argument|ExplodedNode* Pred
 argument_list|)
 block|{}
 comment|// Stores.
@@ -182,20 +182,20 @@ name|EvalEndPath
 argument_list|(
 argument|GRExprEngine& Engine
 argument_list|,
-argument|GREndPathNodeBuilder<GRState>& Builder
+argument|GREndPathNodeBuilder& Builder
 argument_list|)
 block|{}
 name|virtual
 name|void
 name|EvalDeadSymbols
 argument_list|(
-argument|ExplodedNodeSet<GRState>& Dst
+argument|ExplodedNodeSet& Dst
 argument_list|,
 argument|GRExprEngine& Engine
 argument_list|,
-argument|GRStmtNodeBuilder<GRState>& Builder
+argument|GRStmtNodeBuilder& Builder
 argument_list|,
-argument|ExplodedNode<GRState>* Pred
+argument|ExplodedNode* Pred
 argument_list|,
 argument|Stmt* S
 argument_list|,
@@ -209,15 +209,15 @@ name|virtual
 name|void
 name|EvalReturn
 argument_list|(
-argument|ExplodedNodeSet<GRState>& Dst
+argument|ExplodedNodeSet& Dst
 argument_list|,
 argument|GRExprEngine& Engine
 argument_list|,
-argument|GRStmtNodeBuilder<GRState>& Builder
+argument|GRStmtNodeBuilder& Builder
 argument_list|,
 argument|ReturnStmt* S
 argument_list|,
-argument|ExplodedNode<GRState>* Pred
+argument|ExplodedNode* Pred
 argument_list|)
 block|{}
 comment|// Assumptions.
@@ -240,6 +240,15 @@ return|;
 block|}
 block|}
 empty_stmt|;
+name|GRTransferFuncs
+modifier|*
+name|CreateCallInliner
+parameter_list|(
+name|ASTContext
+modifier|&
+name|ctx
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/* RUN: clang-cc -fsyntax-only -verify %s */
 end_comment
 
 begin_function
-name|int
+name|void
 name|foo
 parameter_list|()
 block|{
@@ -14,7 +14,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|foo2
 parameter_list|()
 block|{

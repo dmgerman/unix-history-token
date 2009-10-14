@@ -21,6 +21,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note {{'a' declared here}}
+end_comment
+
 begin_function_decl
 name|void
 name|b
@@ -46,7 +50,7 @@ block|{
 name|a
 argument_list|()
 expr_stmt|;
-comment|// expected-error{{return type of called function ('struct foo') is incomplete}}
+comment|// expected-error{{calling 'a' with incomplete return type 'struct foo'}}
 name|b
 argument_list|(
 operator|*

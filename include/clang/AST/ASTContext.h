@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/CanonicalType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -180,6 +186,15 @@ name|class
 name|Decl
 decl_stmt|;
 name|class
+name|FieldDecl
+decl_stmt|;
+name|class
+name|ObjCIvarDecl
+decl_stmt|;
+name|class
+name|ObjCIvarRefExpr
+decl_stmt|;
+name|class
 name|ObjCPropertyDecl
 decl_stmt|;
 name|class
@@ -187,6 +202,9 @@ name|RecordDecl
 decl_stmt|;
 name|class
 name|TagDecl
+decl_stmt|;
+name|class
+name|TemplateTypeParmDecl
 decl_stmt|;
 name|class
 name|TranslationUnitDecl
@@ -198,16 +216,10 @@ name|class
 name|TypedefDecl
 decl_stmt|;
 name|class
-name|TemplateTypeParmDecl
+name|UnresolvedUsingDecl
 decl_stmt|;
 name|class
-name|FieldDecl
-decl_stmt|;
-name|class
-name|ObjCIvarRefExpr
-decl_stmt|;
-name|class
-name|ObjCIvarDecl
+name|UsingDecl
 decl_stmt|;
 name|namespace
 name|Builtin
@@ -234,9 +246,9 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
-name|ExtQualType
+name|ExtQuals
 operator|>
-name|ExtQualTypes
+name|ExtQualNodes
 expr_stmt|;
 name|llvm
 operator|::
@@ -311,21 +323,19 @@ operator|*
 operator|>
 name|VariableArrayTypes
 expr_stmt|;
-name|std
+name|llvm
 operator|::
-name|vector
+name|FoldingSet
 operator|<
 name|DependentSizedArrayType
-operator|*
 operator|>
 name|DependentSizedArrayTypes
 expr_stmt|;
-name|std
+name|llvm
 operator|::
-name|vector
+name|FoldingSet
 operator|<
 name|DependentSizedExtVectorType
-operator|*
 operator|>
 name|DependentSizedExtVectorTypes
 expr_stmt|;
@@ -352,6 +362,22 @@ operator|<
 name|FunctionProtoType
 operator|>
 name|FunctionProtoTypes
+expr_stmt|;
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|DependentTypeOfExprType
+operator|>
+name|DependentTypeOfExprTypes
+expr_stmt|;
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|DependentDecltypeType
+operator|>
+name|DependentDecltypeTypes
 expr_stmt|;
 name|llvm
 operator|::
@@ -389,9 +415,9 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
-name|ObjCQualifiedInterfaceType
+name|ObjCInterfaceType
 operator|>
-name|ObjCQualifiedInterfaceTypes
+name|ObjCInterfaceTypes
 expr_stmt|;
 name|llvm
 operator|::
@@ -400,6 +426,22 @@ operator|<
 name|ObjCObjectPointerType
 operator|>
 name|ObjCObjectPointerTypes
+expr_stmt|;
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|ObjCProtocolListType
+operator|>
+name|ObjCProtocolListTypes
+expr_stmt|;
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|ElaboratedType
+operator|>
+name|ElaboratedTypes
 expr_stmt|;
 name|llvm
 operator|::
@@ -466,6 +508,19 @@ operator|*
 operator|>
 name|ObjCLayouts
 expr_stmt|;
+comment|/// \brief Mapping from ObjCContainers to their ObjCImplementations.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|ObjCContainerDecl
+operator|*
+operator|,
+name|ObjCImplDecl
+operator|*
+operator|>
+name|ObjCImpls
+expr_stmt|;
 name|llvm
 operator|::
 name|DenseMap
@@ -496,12 +551,7 @@ name|BuiltinVaListType
 decl_stmt|;
 comment|/// ObjCIdType - a pseudo built-in typedef type (set by Sema).
 name|QualType
-name|ObjCIdType
-decl_stmt|;
-specifier|const
-name|RecordType
-modifier|*
-name|IdStructType
+name|ObjCIdTypedefType
 decl_stmt|;
 comment|/// ObjCSelType - another pseudo built-in typedef type (set by Sema).
 name|QualType
@@ -523,12 +573,7 @@ name|ProtoStructType
 decl_stmt|;
 comment|/// ObjCClassType - another pseudo built-in typedef type (set by Sema).
 name|QualType
-name|ObjCClassType
-decl_stmt|;
-specifier|const
-name|RecordType
-modifier|*
-name|ClassStructType
+name|ObjCClassTypedefType
 decl_stmt|;
 name|QualType
 name|ObjCConstantStringType
@@ -540,6 +585,21 @@ decl_stmt|;
 name|RecordDecl
 modifier|*
 name|ObjCFastEnumerationStateTypeDecl
+decl_stmt|;
+comment|/// \brief The type for the C FILE type.
+name|TypeDecl
+modifier|*
+name|FILEDecl
+decl_stmt|;
+comment|/// \brief The type for the C jmp_buf type.
+name|TypeDecl
+modifier|*
+name|jmp_bufDecl
+decl_stmt|;
+comment|/// \brief The type for the C sigjmp_buf type.
+name|TypeDecl
+modifier|*
+name|sigjmp_bufDecl
 decl_stmt|;
 comment|/// \brief Keeps track of all declaration attributes.
 comment|///
@@ -557,6 +617,87 @@ name|Attr
 operator|*
 operator|>
 name|DeclAttrs
+expr_stmt|;
+comment|/// \brief Keeps track of the static data member templates from which
+comment|/// static data members of class template specializations were instantiated.
+comment|///
+comment|/// This data structure stores the mapping from instantiations of static
+comment|/// data members to the static data member representations within the
+comment|/// class template from which they were instantiated along with the kind
+comment|/// of instantiation or specialization (a TemplateSpecializationKind - 1).
+comment|///
+comment|/// Given the following example:
+comment|///
+comment|/// \code
+comment|/// template<typename T>
+comment|/// struct X {
+comment|///   static T value;
+comment|/// };
+comment|///
+comment|/// template<typename T>
+comment|///   T X<T>::value = T(17);
+comment|///
+comment|/// int *x =&X<int>::value;
+comment|/// \endcode
+comment|///
+comment|/// This mapping will contain an entry that maps from the VarDecl for
+comment|/// X<int>::value to the corresponding VarDecl for X<T>::value (within the
+comment|/// class template X) and will be marked TSK_ImplicitInstantiation.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|VarDecl
+operator|*
+operator|,
+name|MemberSpecializationInfo
+operator|*
+operator|>
+name|InstantiatedFromStaticDataMember
+expr_stmt|;
+comment|/// \brief Keeps track of the UnresolvedUsingDecls from which UsingDecls
+comment|/// where created during instantiation.
+comment|///
+comment|/// For example:
+comment|/// \code
+comment|/// template<typename T>
+comment|/// struct A {
+comment|///   void f();
+comment|/// };
+comment|///
+comment|/// template<typename T>
+comment|/// struct B : A<T> {
+comment|///   using A<T>::f;
+comment|/// };
+comment|///
+comment|/// template struct B<int>;
+comment|/// \endcode
+comment|///
+comment|/// This mapping will contain an entry that maps from the UsingDecl in
+comment|/// B<int> to the UnresolvedUsingDecl in B<T>.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|UsingDecl
+operator|*
+operator|,
+name|UnresolvedUsingDecl
+operator|*
+operator|>
+name|InstantiatedFromUnresolvedUsingDecl
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|FieldDecl
+operator|*
+operator|,
+name|FieldDecl
+operator|*
+operator|>
+name|InstantiatedFromUnnamedFieldDecl
 expr_stmt|;
 name|TranslationUnitDecl
 modifier|*
@@ -643,6 +784,14 @@ operator|::
 name|PrintingPolicy
 name|PrintingPolicy
 expr_stmt|;
+comment|// Typedefs which may be provided defining the structure of Objective-C
+comment|// pseudo-builtins
+name|QualType
+name|ObjCIdRedefinitionType
+decl_stmt|;
+name|QualType
+name|ObjCClassRedefinitionType
+decl_stmt|;
 comment|/// \brief Source ranges for all of the comments in the source file,
 comment|/// sorted in order of appearance in the translation unit.
 name|std
@@ -793,6 +942,81 @@ name|D
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief If this variable is an instantiated static data member of a
+comment|/// class template specialization, returns the templated static data member
+comment|/// from which it was instantiated.
+name|MemberSpecializationInfo
+modifier|*
+name|getInstantiatedFromStaticDataMember
+parameter_list|(
+name|VarDecl
+modifier|*
+name|Var
+parameter_list|)
+function_decl|;
+comment|/// \brief Note that the static data member \p Inst is an instantiation of
+comment|/// the static data member template \p Tmpl of a class template.
+name|void
+name|setInstantiatedFromStaticDataMember
+parameter_list|(
+name|VarDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|VarDecl
+modifier|*
+name|Tmpl
+parameter_list|,
+name|TemplateSpecializationKind
+name|TSK
+parameter_list|)
+function_decl|;
+comment|/// \brief If this using decl is instantiated from an unresolved using decl,
+comment|/// return it.
+name|UnresolvedUsingDecl
+modifier|*
+name|getInstantiatedFromUnresolvedUsingDecl
+parameter_list|(
+name|UsingDecl
+modifier|*
+name|UUD
+parameter_list|)
+function_decl|;
+comment|/// \brief Note that the using decl \p Inst is an instantiation of
+comment|/// the unresolved using decl \p Tmpl of a class template.
+name|void
+name|setInstantiatedFromUnresolvedUsingDecl
+parameter_list|(
+name|UsingDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|UnresolvedUsingDecl
+modifier|*
+name|Tmpl
+parameter_list|)
+function_decl|;
+name|FieldDecl
+modifier|*
+name|getInstantiatedFromUnnamedFieldDecl
+parameter_list|(
+name|FieldDecl
+modifier|*
+name|Field
+parameter_list|)
+function_decl|;
+name|void
+name|setInstantiatedFromUnnamedFieldDecl
+parameter_list|(
+name|FieldDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|FieldDecl
+modifier|*
+name|Tmpl
+parameter_list|)
+function_decl|;
 name|TranslationUnitDecl
 operator|*
 name|getTranslationUnitDecl
@@ -828,6 +1052,14 @@ name|QualType
 name|WCharTy
 decl_stmt|;
 comment|// [C++ 3.9.1p5], integer type in C99.
+name|QualType
+name|Char16Ty
+decl_stmt|;
+comment|// [C++0x 3.9.1p5], integer type in C99.
+name|QualType
+name|Char32Ty
+decl_stmt|;
+comment|// [C++0x 3.9.1p5], integer type in C99.
 name|QualType
 name|SignedCharTy
 decl_stmt|,
@@ -882,6 +1114,11 @@ name|DependentTy
 decl_stmt|;
 name|QualType
 name|UndeducedAutoTy
+decl_stmt|;
+name|QualType
+name|ObjCBuiltinIdTy
+decl_stmt|,
+name|ObjCBuiltinClassTy
 decl_stmt|;
 name|ASTContext
 argument_list|(
@@ -965,6 +1202,23 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|//                           Type Constructors
 comment|//===--------------------------------------------------------------------===//
+name|private
+label|:
+comment|/// getExtQualType - Return a type with extended qualifiers.
+name|QualType
+name|getExtQualType
+parameter_list|(
+specifier|const
+name|Type
+modifier|*
+name|Base
+parameter_list|,
+name|Qualifiers
+name|Quals
+parameter_list|)
+function_decl|;
+name|public
+label|:
 comment|/// getAddSpaceQualType - Return the uniqued reference to the type for an
 comment|/// address space qualified type with the specified type and address space.
 comment|/// The resulting type has a union of the qualifiers from T and the address
@@ -989,12 +1243,72 @@ argument_list|(
 name|QualType
 name|T
 argument_list|,
-name|QualType
+name|Qualifiers
 operator|::
-name|GCAttrTypes
+name|GC
 name|gcAttr
 argument_list|)
 decl_stmt|;
+comment|/// getRestrictType - Returns the uniqued reference to the type for a
+comment|/// 'restrict' qualified type.  The resulting type has a union of the
+comment|/// qualifiers from T and 'restrict'.
+name|QualType
+name|getRestrictType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+return|return
+name|T
+operator|.
+name|withFastQualifiers
+argument_list|(
+name|Qualifiers
+operator|::
+name|Restrict
+argument_list|)
+return|;
+block|}
+comment|/// getVolatileType - Returns the uniqued reference to the type for a
+comment|/// 'volatile' qualified type.  The resulting type has a union of the
+comment|/// qualifiers from T and 'volatile'.
+name|QualType
+name|getVolatileType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// getConstType - Returns the uniqued reference to the type for a
+comment|/// 'const' qualified type.  The resulting type has a union of the
+comment|/// qualifiers from T and 'const'.
+comment|///
+comment|/// It can be reasonably expected that this will always be
+comment|/// equivalent to calling T.withConst().
+name|QualType
+name|getConstType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+return|return
+name|T
+operator|.
+name|withConst
+argument_list|()
+return|;
+block|}
+comment|/// getNoReturnType - Add the noreturn attribute to the given type which must
+comment|/// be a FunctionType or a pointer to an allowable type or a BlockPointer.
+name|QualType
+name|getNoReturnType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
 comment|/// getComplexType - Return the uniqued reference to the type for a complex
 comment|/// number with the specified element type.
 name|QualType
@@ -1074,6 +1388,9 @@ name|ASM
 argument_list|,
 name|unsigned
 name|EltTypeQuals
+argument_list|,
+name|SourceRange
+name|Brackets
 argument_list|)
 decl_stmt|;
 comment|/// getDependentSizedArrayType - Returns a non-unique reference to
@@ -1097,6 +1414,9 @@ name|ASM
 argument_list|,
 name|unsigned
 name|EltTypeQuals
+argument_list|,
+name|SourceRange
+name|Brackets
 argument_list|)
 decl_stmt|;
 comment|/// getIncompleteArrayType - Returns a unique reference to the type for a
@@ -1120,6 +1440,61 @@ comment|/// getConstantArrayType - Return the unique reference to the type for a
 comment|/// constant array of the specified element type.
 name|QualType
 name|getConstantArrayType
+argument_list|(
+name|QualType
+name|EltTy
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|APInt
+operator|&
+name|ArySize
+argument_list|,
+name|ArrayType
+operator|::
+name|ArraySizeModifier
+name|ASM
+argument_list|,
+name|unsigned
+name|EltTypeQuals
+argument_list|)
+decl_stmt|;
+comment|/// getConstantArrayWithExprType - Return a reference to the type for a
+comment|/// constant array of the specified element type.
+name|QualType
+name|getConstantArrayWithExprType
+argument_list|(
+name|QualType
+name|EltTy
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|APInt
+operator|&
+name|ArySize
+argument_list|,
+name|Expr
+operator|*
+name|ArySizeExpr
+argument_list|,
+name|ArrayType
+operator|::
+name|ArraySizeModifier
+name|ASM
+argument_list|,
+name|unsigned
+name|EltTypeQuals
+argument_list|,
+name|SourceRange
+name|Brackets
+argument_list|)
+decl_stmt|;
+comment|/// getConstantArrayWithoutExprType - Return a reference to the type
+comment|/// for a constant array of the specified element type.
+name|QualType
+name|getConstantArrayWithoutExprType
 argument_list|(
 name|QualType
 name|EltTy
@@ -1190,6 +1565,11 @@ name|getFunctionNoProtoType
 parameter_list|(
 name|QualType
 name|ResultTy
+parameter_list|,
+name|bool
+name|NoReturn
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// getFunctionType - Return a normal function type with a typed argument
@@ -1235,6 +1615,11 @@ modifier|*
 name|ExArray
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|NoReturn
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// getTypeDeclType - Return the unique reference to the type for
@@ -1259,15 +1644,6 @@ name|QualType
 name|getTypedefType
 parameter_list|(
 name|TypedefDecl
-modifier|*
-name|Decl
-parameter_list|)
-function_decl|;
-name|QualType
-name|getObjCInterfaceType
-parameter_list|(
-specifier|const
-name|ObjCInterfaceDecl
 modifier|*
 name|Decl
 parameter_list|)
@@ -1361,14 +1737,46 @@ name|QualType
 argument_list|()
 parameter_list|)
 function_decl|;
+name|QualType
+name|getElaboratedType
+argument_list|(
+name|QualType
+name|UnderlyingType
+argument_list|,
+name|ElaboratedType
+operator|::
+name|TagKind
+name|Tag
+argument_list|)
+decl_stmt|;
+name|QualType
+name|getObjCInterfaceType
+parameter_list|(
+specifier|const
+name|ObjCInterfaceDecl
+modifier|*
+name|Decl
+parameter_list|,
+name|ObjCProtocolDecl
+modifier|*
+modifier|*
+name|Protocols
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|NumProtocols
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// getObjCObjectPointerType - Return a ObjCObjectPointerType type for the
 comment|/// given interface decl and the conforming protocol list.
 name|QualType
 name|getObjCObjectPointerType
 parameter_list|(
-name|ObjCInterfaceDecl
-modifier|*
-name|Decl
+name|QualType
+name|OIT
 parameter_list|,
 name|ObjCProtocolDecl
 modifier|*
@@ -1383,20 +1791,16 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// getObjCQualifiedInterfaceType - Return a
-comment|/// ObjCQualifiedInterfaceType type for the given interface decl and
-comment|/// the conforming protocol list.
 name|QualType
-name|getObjCQualifiedInterfaceType
+name|getObjCProtocolListType
 parameter_list|(
-name|ObjCInterfaceDecl
-modifier|*
-name|Decl
+name|QualType
+name|T
 parameter_list|,
 name|ObjCProtocolDecl
 modifier|*
 modifier|*
-name|ProtocolList
+name|Protocols
 parameter_list|,
 name|unsigned
 name|NumProtocols
@@ -1432,6 +1836,7 @@ comment|/// specified TagDecl (struct/union/class/enum) decl.
 name|QualType
 name|getTagDeclType
 parameter_list|(
+specifier|const
 name|TagDecl
 modifier|*
 name|Decl
@@ -1562,6 +1967,114 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
+comment|/// \brief Set the type for the C FILE type.
+name|void
+name|setFILEDecl
+parameter_list|(
+name|TypeDecl
+modifier|*
+name|FILEDecl
+parameter_list|)
+block|{
+name|this
+operator|->
+name|FILEDecl
+operator|=
+name|FILEDecl
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the C FILE type.
+name|QualType
+name|getFILEType
+parameter_list|()
+block|{
+if|if
+condition|(
+name|FILEDecl
+condition|)
+return|return
+name|getTypeDeclType
+argument_list|(
+name|FILEDecl
+argument_list|)
+return|;
+return|return
+name|QualType
+argument_list|()
+return|;
+block|}
+comment|/// \brief Set the type for the C jmp_buf type.
+name|void
+name|setjmp_bufDecl
+parameter_list|(
+name|TypeDecl
+modifier|*
+name|jmp_bufDecl
+parameter_list|)
+block|{
+name|this
+operator|->
+name|jmp_bufDecl
+operator|=
+name|jmp_bufDecl
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the C jmp_buf type.
+name|QualType
+name|getjmp_bufType
+parameter_list|()
+block|{
+if|if
+condition|(
+name|jmp_bufDecl
+condition|)
+return|return
+name|getTypeDeclType
+argument_list|(
+name|jmp_bufDecl
+argument_list|)
+return|;
+return|return
+name|QualType
+argument_list|()
+return|;
+block|}
+comment|/// \brief Set the type for the C sigjmp_buf type.
+name|void
+name|setsigjmp_bufDecl
+parameter_list|(
+name|TypeDecl
+modifier|*
+name|sigjmp_bufDecl
+parameter_list|)
+block|{
+name|this
+operator|->
+name|sigjmp_bufDecl
+operator|=
+name|sigjmp_bufDecl
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the C sigjmp_buf type.
+name|QualType
+name|getsigjmp_bufType
+parameter_list|()
+block|{
+if|if
+condition|(
+name|sigjmp_bufDecl
+condition|)
+return|return
+name|getTypeDeclType
+argument_list|(
+name|sigjmp_bufDecl
+argument_list|)
+return|;
+return|return
+name|QualType
+argument_list|()
+return|;
+block|}
 comment|/// getObjCEncodingForType - Emit the ObjC type encoding for the
 comment|/// given type into \arg S. If \arg NameFields is specified then
 comment|/// record field names are also encoded.
@@ -1652,6 +2165,18 @@ operator|&
 name|S
 argument_list|)
 decl_stmt|;
+name|bool
+name|ProtocolCompatibleWithProtocol
+parameter_list|(
+name|ObjCProtocolDecl
+modifier|*
+name|lProto
+parameter_list|,
+name|ObjCProtocolDecl
+modifier|*
+name|rProto
+parameter_list|)
+function_decl|;
 comment|/// getObjCEncodingTypeSize returns size of type for objective-c encoding
 comment|/// purpose.
 name|int
@@ -1669,7 +2194,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ObjCIdType
+name|ObjCIdTypedefType
 return|;
 block|}
 name|void
@@ -1720,7 +2245,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ObjCClassType
+name|ObjCClassTypedefType
 return|;
 block|}
 name|void
@@ -1756,6 +2281,130 @@ name|bool
 name|Signed
 parameter_list|)
 function_decl|;
+comment|/// getCVRQualifiedType - Returns a type with additional const,
+comment|/// volatile, or restrict qualifiers.
+name|QualType
+name|getCVRQualifiedType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|unsigned
+name|CVR
+parameter_list|)
+block|{
+return|return
+name|getQualifiedType
+argument_list|(
+name|T
+argument_list|,
+name|Qualifiers
+operator|::
+name|fromCVRMask
+argument_list|(
+name|CVR
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// getQualifiedType - Returns a type with additional qualifiers.
+name|QualType
+name|getQualifiedType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|Qualifiers
+name|Qs
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Qs
+operator|.
+name|hasNonFastQualifiers
+argument_list|()
+condition|)
+return|return
+name|T
+operator|.
+name|withFastQualifiers
+argument_list|(
+name|Qs
+operator|.
+name|getFastQualifiers
+argument_list|()
+argument_list|)
+return|;
+name|QualifierCollector
+name|Qc
+argument_list|(
+name|Qs
+argument_list|)
+decl_stmt|;
+specifier|const
+name|Type
+modifier|*
+name|Ptr
+init|=
+name|Qc
+operator|.
+name|strip
+argument_list|(
+name|T
+argument_list|)
+decl_stmt|;
+return|return
+name|getExtQualType
+argument_list|(
+name|Ptr
+argument_list|,
+name|Qc
+argument_list|)
+return|;
+block|}
+comment|/// getQualifiedType - Returns a type with additional qualifiers.
+name|QualType
+name|getQualifiedType
+parameter_list|(
+specifier|const
+name|Type
+modifier|*
+name|T
+parameter_list|,
+name|Qualifiers
+name|Qs
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Qs
+operator|.
+name|hasNonFastQualifiers
+argument_list|()
+condition|)
+return|return
+name|QualType
+argument_list|(
+name|T
+argument_list|,
+name|Qs
+operator|.
+name|getFastQualifiers
+argument_list|()
+argument_list|)
+return|;
+return|return
+name|getExtQualType
+argument_list|(
+name|T
+argument_list|,
+name|Qs
+argument_list|)
+return|;
+block|}
 name|TemplateName
 name|getQualifiedTemplateName
 parameter_list|(
@@ -1767,6 +2416,21 @@ name|bool
 name|TemplateKeyword
 parameter_list|,
 name|TemplateDecl
+modifier|*
+name|Template
+parameter_list|)
+function_decl|;
+name|TemplateName
+name|getQualifiedTemplateName
+parameter_list|(
+name|NestedNameSpecifier
+modifier|*
+name|NNS
+parameter_list|,
+name|bool
+name|TemplateKeyword
+parameter_list|,
+name|OverloadedFunctionDecl
 modifier|*
 name|Template
 parameter_list|)
@@ -1790,8 +2454,11 @@ block|{
 name|GE_None
 block|,
 comment|//< No error
-name|GE_Missing_FILE
-comment|//< Missing the FILE type from<stdio.h>
+name|GE_Missing_stdio
+block|,
+comment|//< Missing a type from<stdio.h>
+name|GE_Missing_setjmp
+comment|//< Missing a type from<setjmp.h>
 block|}
 enum|;
 comment|/// GetBuiltinType - Return the type for the specified builtin.
@@ -1821,24 +2488,12 @@ comment|//                         Type Predicates.
 comment|//===--------------------------------------------------------------------===//
 name|public
 label|:
-comment|/// isObjCObjectPointerType - Returns true if type is an Objective-C pointer
-comment|/// to an object type.  This includes "id" and "Class" (two 'special' pointers
-comment|/// to struct), Interface* (pointer to ObjCInterfaceType) and id<P> (qualified
-comment|/// ID type).
-name|bool
-name|isObjCObjectPointerType
-argument_list|(
-name|QualType
-name|Ty
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// getObjCGCAttr - Returns one of GCNone, Weak or Strong objc's
 comment|/// garbage collection attribute.
 comment|///
-name|QualType
+name|Qualifiers
 operator|::
-name|GCAttrTypes
+name|GC
 name|getObjCGCAttrKind
 argument_list|(
 argument|const QualType&Ty
@@ -2158,7 +2813,7 @@ comment|/// of a type may have many "decorated" versions of types.  Decorators c
 comment|/// include typedefs, 'typeof' operators, etc. The returned type is guaranteed
 comment|/// to be free of any of these, allowing two canonical types to be compared
 comment|/// for exact equality with a simple pointer comparison.
-name|QualType
+name|CanQualType
 name|getCanonicalType
 parameter_list|(
 name|QualType
@@ -2247,48 +2902,6 @@ name|getUnqualifiedType
 argument_list|()
 return|;
 block|}
-comment|/// \brief Retrieves the "canonical" declaration of the given declaration.
-name|Decl
-modifier|*
-name|getCanonicalDecl
-parameter_list|(
-name|Decl
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
-comment|/// \brief Retrieves the "canonical" declaration of the given tag
-comment|/// declaration.
-comment|///
-comment|/// The canonical declaration for the given tag declaration is
-comment|/// either the definition of the tag (if it is a complete type) or
-comment|/// the first declaration of that tag.
-name|TagDecl
-modifier|*
-name|getCanonicalDecl
-parameter_list|(
-name|TagDecl
-modifier|*
-name|Tag
-parameter_list|)
-block|{
-return|return
-name|cast
-operator|<
-name|TagDecl
-operator|>
-operator|(
-name|getCanonicalDecl
-argument_list|(
-operator|(
-name|Decl
-operator|*
-operator|)
-name|Tag
-argument_list|)
-operator|)
-return|;
-block|}
 comment|/// \brief Retrieves the "canonical" declaration of
 comment|/// \brief Retrieves the "canonical" nested name specifier for a
 comment|/// given nested name specifier.
@@ -2345,6 +2958,20 @@ name|getCanonicalTemplateName
 parameter_list|(
 name|TemplateName
 name|Name
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve the "canonical" template argument.
+comment|///
+comment|/// The canonical template argument is the simplest template argument
+comment|/// (which may be a type, value, expression, or declaration) that
+comment|/// expresses the value of the argument.
+name|TemplateArgument
+name|getCanonicalTemplateArgument
+parameter_list|(
+specifier|const
+name|TemplateArgument
+modifier|&
+name|Arg
 parameter_list|)
 function_decl|;
 comment|/// Type Query functions.  If the type is an instance of the specified class,
@@ -2426,17 +3053,37 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/// getBaseElementType - Returns the innermost element type of a variable
-comment|/// length array type. For example, will return "int" for int[m][n]
+comment|/// getBaseElementType - Returns the innermost element type of an array type.
+comment|/// For example, will return "int" for int[m][n]
 name|QualType
 name|getBaseElementType
 parameter_list|(
 specifier|const
-name|VariableArrayType
+name|ArrayType
 modifier|*
 name|VAT
 parameter_list|)
 function_decl|;
+comment|/// getBaseElementType - Returns the innermost element type of a type
+comment|/// (which needn't actually be an array type).
+name|QualType
+name|getBaseElementType
+parameter_list|(
+name|QualType
+name|QT
+parameter_list|)
+function_decl|;
+comment|/// getConstantArrayElementCount - Returns number of constant array elements.
+name|uint64_t
+name|getConstantArrayElementCount
+argument_list|(
+specifier|const
+name|ConstantArrayType
+operator|*
+name|CA
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getArrayDecayedType - Return the properly qualified result of decaying the
 comment|/// specified array type to a pointer.  This operation is non-trivial when
 comment|/// handling typedefs etc.  The canonical type of "T" must be an array type,
@@ -2448,6 +3095,29 @@ name|getArrayDecayedType
 parameter_list|(
 name|QualType
 name|T
+parameter_list|)
+function_decl|;
+comment|/// getPromotedIntegerType - Returns the type that Promotable will
+comment|/// promote to: C99 6.3.1.1p2, assuming that Promotable is a promotable
+comment|/// integer type.
+name|QualType
+name|getPromotedIntegerType
+parameter_list|(
+name|QualType
+name|PromotableType
+parameter_list|)
+function_decl|;
+comment|/// \brief Whether this is a promotable bitfield reference according
+comment|/// to C99 6.3.1.1p2, bullet 2 (and GCC extensions).
+comment|///
+comment|/// \returns the type this bit-field will promote to, or NULL if no
+comment|/// promotion occurs.
+name|QualType
+name|isPromotableBitField
+parameter_list|(
+name|Expr
+modifier|*
+name|E
 parameter_list|)
 function_decl|;
 comment|/// getIntegerTypeOrder - Returns the highest ranked integer type:
@@ -2529,33 +3199,7 @@ block|{
 return|return
 name|T
 operator|==
-name|ObjCIdType
-return|;
-block|}
-name|bool
-name|isObjCIdStructType
-argument_list|(
-name|QualType
-name|T
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-operator|!
-name|IdStructType
-condition|)
-comment|// ObjC isn't enabled
-return|return
-name|false
-return|;
-return|return
-name|T
-operator|->
-name|getAsStructureType
-argument_list|()
-operator|==
-name|IdStructType
+name|ObjCIdTypedefType
 return|;
 block|}
 name|bool
@@ -2569,33 +3213,7 @@ block|{
 return|return
 name|T
 operator|==
-name|ObjCClassType
-return|;
-block|}
-name|bool
-name|isObjCClassStructType
-argument_list|(
-name|QualType
-name|T
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-operator|!
-name|ClassStructType
-condition|)
-comment|// ObjC isn't enabled
-return|return
-name|false
-return|;
-return|return
-name|T
-operator|->
-name|getAsStructureType
-argument_list|()
-operator|==
-name|ClassStructType
+name|ObjCClassTypedefType
 return|;
 block|}
 name|bool
@@ -2622,7 +3240,44 @@ operator|==
 name|SelStructType
 return|;
 block|}
+name|bool
+name|QualifiedIdConformsQualifiedId
+parameter_list|(
+name|QualType
+name|LHS
+parameter_list|,
+name|QualType
+name|RHS
+parameter_list|)
+function_decl|;
+name|bool
+name|ObjCQualifiedIdTypesAreCompatible
+parameter_list|(
+name|QualType
+name|LHS
+parameter_list|,
+name|QualType
+name|RHS
+parameter_list|,
+name|bool
+name|ForCompare
+parameter_list|)
+function_decl|;
 comment|// Check the safety of assignment from LHS to RHS
+name|bool
+name|canAssignObjCInterfaces
+parameter_list|(
+specifier|const
+name|ObjCObjectPointerType
+modifier|*
+name|LHSOPT
+parameter_list|,
+specifier|const
+name|ObjCObjectPointerType
+modifier|*
+name|RHSOPT
+parameter_list|)
+function_decl|;
 name|bool
 name|canAssignObjCInterfaces
 parameter_list|(
@@ -2662,6 +3317,19 @@ parameter_list|(
 name|QualType
 parameter_list|,
 name|QualType
+parameter_list|)
+function_decl|;
+comment|/// UsualArithmeticConversionsType - handles the various conversions
+comment|/// that are common to binary operators (C99 6.3.1.8, C++ [expr]p9)
+comment|/// and returns the result type of that conversion.
+name|QualType
+name|UsualArithmeticConversionsType
+parameter_list|(
+name|QualType
+name|lhs
+parameter_list|,
+name|QualType
+name|rhs
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -2799,6 +3467,68 @@ return|return
 name|Res
 return|;
 block|}
+comment|/// \brief Get the implementation of ObjCInterfaceDecl,or NULL if none exists.
+name|ObjCImplementationDecl
+modifier|*
+name|getObjCImplementation
+parameter_list|(
+name|ObjCInterfaceDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+comment|/// \brief Get the implementation of ObjCCategoryDecl, or NULL if none exists.
+name|ObjCCategoryImplDecl
+modifier|*
+name|getObjCImplementation
+parameter_list|(
+name|ObjCCategoryDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+comment|/// \brief Set the implementation of ObjCInterfaceDecl.
+name|void
+name|setObjCImplementation
+parameter_list|(
+name|ObjCInterfaceDecl
+modifier|*
+name|IFaceD
+parameter_list|,
+name|ObjCImplementationDecl
+modifier|*
+name|ImplD
+parameter_list|)
+function_decl|;
+comment|/// \brief Set the implementation of ObjCCategoryDecl.
+name|void
+name|setObjCImplementation
+parameter_list|(
+name|ObjCCategoryDecl
+modifier|*
+name|CatD
+parameter_list|,
+name|ObjCCategoryImplDecl
+modifier|*
+name|ImplD
+parameter_list|)
+function_decl|;
+comment|/// \brief Allocate an uninitialized DeclaratorInfo.
+comment|///
+comment|/// The caller should initialize the memory held by DeclaratorInfo using
+comment|/// the TypeLoc wrappers.
+comment|///
+comment|/// \param T the type that will be the basis for type source info. This type
+comment|/// should refer to how the declarator was written in source code, not to
+comment|/// what type semantic analysis resolved the declarator to.
+name|DeclaratorInfo
+modifier|*
+name|CreateDeclaratorInfo
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|ASTContext

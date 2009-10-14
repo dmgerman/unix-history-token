@@ -1659,7 +1659,7 @@ comment|// PR2151
 end_comment
 
 begin_function
-name|int
+name|void
 name|emptyInit
 parameter_list|()
 block|{
@@ -1680,7 +1680,7 @@ comment|//expected-warning{{empty struct extension}} expected-error{{initializer
 end_comment
 
 begin_function
-name|int
+name|void
 name|noNamedInit
 parameter_list|()
 block|{

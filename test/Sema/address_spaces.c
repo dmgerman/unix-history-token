@@ -24,6 +24,21 @@ name|_AS3
 value|__attribute__((address_space(3)))
 end_define
 
+begin_function_decl
+name|void
+name|bar
+parameter_list|(
+name|_AS2
+name|int
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-error {{parameter may not be qualified with an address space}}
+end_comment
+
 begin_function
 name|void
 name|foo
@@ -32,7 +47,12 @@ name|_AS3
 name|float
 modifier|*
 name|a
+parameter_list|,
+name|_AS1
+name|float
+name|b
 parameter_list|)
+comment|// expected-error {{parameter may not be qualified with an address space}}
 block|{
 name|_AS2
 modifier|*
@@ -85,10 +105,56 @@ literal|5
 index|]
 decl_stmt|;
 comment|// expected-error {{automatic variable qualified with an address space}}
+name|__attribute__
+argument_list|(
+argument|(address_space(-
+literal|1
+argument|))
+argument_list|)
+name|int
+modifier|*
+name|_boundsA
+decl_stmt|;
+comment|// expected-error {{address space is negative}}
+name|__attribute__
+argument_list|(
+argument|(address_space(
+literal|0xFFFFFF
+argument|))
+argument_list|)
+name|int
+modifier|*
+name|_boundsB
+decl_stmt|;
+name|__attribute__
+argument_list|(
+argument|(address_space(
+literal|0x1000000
+argument|))
+argument_list|)
+name|int
+modifier|*
+name|_boundsC
+decl_stmt|;
+comment|// expected-error {{address space is larger than the maximum supported}}
+comment|// chosen specifically to overflow 32 bits and come out reasonable
+name|__attribute__
+argument_list|(
+argument|(address_space(
+literal|4294967500
+argument|))
+argument_list|)
+name|int
+modifier|*
+name|_boundsD
+decl_stmt|;
+comment|// expected-error {{address space is larger than the maximum supported}}
 operator|*
 name|a
 operator|=
 literal|5.0f
+operator|+
+name|b
 expr_stmt|;
 block|}
 end_function
@@ -167,7 +233,7 @@ name|warning
 block|{
 block|{
 name|returning
-literal|'void __attribute__((address_space(256)))*'
+literal|'void __attribute__((address_space(256))) *'
 name|discards
 name|qualifiers
 block|,

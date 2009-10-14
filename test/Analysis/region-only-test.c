@@ -50,6 +50,9 @@ index|]
 operator|==
 literal|1
 condition|)
+operator|(
+name|void
+operator|)
 operator|*
 name|x
 expr_stmt|;

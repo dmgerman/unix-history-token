@@ -224,7 +224,7 @@ comment|// expected-error {{block pointer to non-function type is invalid}} expe
 end_comment
 
 begin_function
-name|int
+name|void
 name|test3
 parameter_list|()
 block|{
@@ -911,6 +911,45 @@ lambda|^
 block|{ }
 expr_stmt|;
 comment|// expected-error {{read-only variable is not assignable}}
+block|}
+end_function
+
+begin_comment
+comment|// rdar://7072507
+end_comment
+
+begin_function
+name|int
+name|test19
+parameter_list|()
+block|{
+goto|goto
+name|L0
+goto|;
+comment|// expected-error {{illegal goto into protected scope}}
+specifier|__block
+name|int
+name|x
+decl_stmt|;
+comment|// expected-note {{jump bypasses setup of __block variable}}
+name|L0
+label|:
+name|x
+operator|=
+literal|0
+expr_stmt|;
+lambda|^
+parameter_list|()
+block|{
+operator|++
+name|x
+expr_stmt|;
+block|}
+argument_list|()
+expr_stmt|;
+return|return
+name|x
+return|;
 block|}
 end_function
 

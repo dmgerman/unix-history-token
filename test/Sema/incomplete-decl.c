@@ -10,7 +10,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|// expected-note 4 {{forward declaration of 'struct foo'}}
+comment|// expected-note 5 {{forward declaration of 'struct foo'}}
 end_comment
 
 begin_decl_stmt
@@ -54,15 +54,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{variable has incomplete type 'struct foo'}}
+comment|// expected-warning {{tentative definition of variable with internal linkage has incomplete non-array type 'struct foo'}} \
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|expected
+operator|-
+name|error
+block|{
+block|{
+name|tentative
+name|definition
+name|has
+name|type
+literal|'struct foo'
+name|that
+name|is
+name|never
+name|completed
+block|}
+block|}
 specifier|extern
 name|void
 name|d
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern

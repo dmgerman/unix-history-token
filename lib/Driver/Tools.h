@@ -81,7 +81,7 @@ name|namespace
 name|toolchains
 block|{
 name|class
-name|Darwin_X86
+name|Darwin
 decl_stmt|;
 block|}
 name|namespace
@@ -106,6 +106,24 @@ argument_list|,
 argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
+argument_list|)
+specifier|const
+block|;
+name|void
+name|AddARMTargetArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
+name|AddX86TargetArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
@@ -565,10 +583,85 @@ name|darwin
 block|{
 name|class
 name|VISIBILITY_HIDDEN
-name|CC1
+name|DarwinTool
 range|:
 name|public
 name|Tool
+block|{
+name|protected
+operator|:
+name|void
+name|AddDarwinArch
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
+name|AddDarwinSubArch
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|toolchains
+operator|::
+name|Darwin
+operator|&
+name|getDarwinToolChain
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|toolchains
+operator|::
+name|Darwin
+operator|&
+operator|>
+operator|(
+name|getToolChain
+argument_list|()
+operator|)
+return|;
+block|}
+name|public
+operator|:
+name|DarwinTool
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Name
+argument_list|,
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+argument|Name
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+block|;   }
+decl_stmt|;
+name|class
+name|VISIBILITY_HIDDEN
+name|CC1
+range|:
+name|public
+name|DarwinTool
 block|{
 name|public
 operator|:
@@ -704,7 +797,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|DarwinTool
 argument_list|(
 argument|Name
 argument_list|,
@@ -838,7 +931,7 @@ name|VISIBILITY_HIDDEN
 name|Assemble
 operator|:
 name|public
-name|Tool
+name|DarwinTool
 block|{
 name|public
 operator|:
@@ -850,7 +943,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|DarwinTool
 argument_list|(
 literal|"darwin::Assemble"
 argument_list|,
@@ -913,26 +1006,8 @@ name|VISIBILITY_HIDDEN
 name|Link
 operator|:
 name|public
-name|Tool
+name|DarwinTool
 block|{
-name|void
-name|AddDarwinArch
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
-name|void
-name|AddDarwinSubArch
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
 name|void
 name|AddLinkArgs
 argument_list|(
@@ -940,21 +1015,6 @@ argument|const ArgList&Args
 argument_list|,
 argument|ArgStringList&CmdArgs
 argument_list|)
-specifier|const
-block|;
-comment|/// The default macosx-version-min.
-specifier|const
-name|char
-operator|*
-name|MacosxVersionMin
-block|;
-specifier|const
-name|toolchains
-operator|::
-name|Darwin_X86
-operator|&
-name|getDarwinToolChain
-argument_list|()
 specifier|const
 block|;
 name|public
@@ -965,25 +1025,15 @@ specifier|const
 name|ToolChain
 operator|&
 name|TC
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|_MacosxVersionMin
 argument_list|)
 operator|:
-name|Tool
+name|DarwinTool
 argument_list|(
 literal|"darwin::Link"
 argument_list|,
-name|TC
+argument|TC
 argument_list|)
-block|,
-name|MacosxVersionMin
-argument_list|(
-argument|_MacosxVersionMin
-argument_list|)
-block|{     }
+block|{}
 name|virtual
 name|bool
 name|acceptsPipedInput
@@ -1040,7 +1090,7 @@ name|VISIBILITY_HIDDEN
 name|Lipo
 operator|:
 name|public
-name|Tool
+name|DarwinTool
 block|{
 name|public
 operator|:
@@ -1052,7 +1102,7 @@ operator|&
 name|TC
 argument_list|)
 operator|:
-name|Tool
+name|DarwinTool
 argument_list|(
 literal|"darwin::Lipo"
 argument_list|,
@@ -1264,6 +1314,7 @@ argument_list|)
 specifier|const
 block|;   }
 block|; }
+comment|// end namespace openbsd
 comment|/// freebsd -- Directly call GNU Binutils assembler and linker
 name|namespace
 name|freebsd
@@ -1418,6 +1469,162 @@ argument_list|)
 specifier|const
 block|;   }
 block|; }
+comment|// end namespace freebsd
+comment|/// auroraux -- Directly call GNU Binutils assembler and linker
+name|namespace
+name|auroraux
+block|{
+name|class
+name|VISIBILITY_HIDDEN
+name|Assemble
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Assemble
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"auroraux::Assemble"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|acceptsPipedInput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|canPipeOutput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|Job&Dest
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|;
+name|class
+name|VISIBILITY_HIDDEN
+name|Link
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Link
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"auroraux::Link"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|acceptsPipedInput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|canPipeOutput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|Job&Dest
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|; }
+comment|// end namespace auroraux
 comment|/// dragonfly -- Directly call GNU Binutils assembler and linker
 name|namespace
 name|dragonfly
@@ -1572,6 +1779,7 @@ argument_list|)
 specifier|const
 block|;   }
 block|; }
+comment|// end namespace dragonfly
 block|}
 comment|// end namespace toolchains
 block|}
@@ -1587,6 +1795,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// CLANG_LIB_DRIVER_TOOLS_H_
+end_comment
 
 end_unit
 

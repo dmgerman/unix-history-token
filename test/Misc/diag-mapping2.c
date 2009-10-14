@@ -40,7 +40,15 @@ comment|// -Wno-error= overrides -Werror.  rdar://3158301
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -Werror -Wno-error=#warnings 2>&1 | grep "warning:"
+comment|// RUN: clang-cc %s -Werror -Wno-error=#warnings 2>&1 | grep "warning:"&&
+end_comment
+
+begin_comment
+comment|// -Wno-error overrides -Werror.  PR4715
+end_comment
+
+begin_comment
+comment|// RUN: clang-cc %s -Werror -Wno-error 2>&1 | grep "warning:"
 end_comment
 
 begin_warning

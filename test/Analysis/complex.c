@@ -22,7 +22,7 @@ file|<stdint.h>
 end_include
 
 begin_function
-name|int
+name|void
 name|f1
 parameter_list|(
 name|int

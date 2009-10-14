@@ -164,7 +164,7 @@ literal|'t1'
 name|and
 name|integer
 name|type
-literal|'int'
+literal|'short'
 name|of
 name|different
 name|size

@@ -355,7 +355,13 @@ argument_list|()
 end_macro
 
 begin_block
-block|{ }
+block|{
+while|while
+condition|(
+literal|1
+condition|)
+block|{}
+block|}
 end_block
 
 begin_function

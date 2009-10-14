@@ -44,6 +44,10 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|// expected-warning {{function declared 'noreturn' should not return}}
+end_comment
+
+begin_comment
 comment|// On K&R
 end_comment
 
@@ -154,6 +158,39 @@ block|{
 return|return;
 comment|// expected-warning {{function 'f4' declared 'noreturn' should not return}}
 block|}
+end_function
+
+begin_comment
+comment|// PR4685
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|f5
+parameter_list|(
+name|unsigned
+name|long
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__noreturn__
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|f5
+parameter_list|(
+name|unsigned
+name|long
+name|size
+parameter_list|)
+block|{    }
 end_function
 
 end_unit

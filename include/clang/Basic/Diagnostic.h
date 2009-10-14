@@ -68,7 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/type_traits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_include
@@ -97,19 +109,25 @@ name|namespace
 name|clang
 block|{
 name|class
-name|DiagnosticClient
-decl_stmt|;
-name|class
-name|SourceRange
+name|DeclContext
 decl_stmt|;
 name|class
 name|DiagnosticBuilder
+decl_stmt|;
+name|class
+name|DiagnosticClient
 decl_stmt|;
 name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
 name|LangOptions
+decl_stmt|;
+name|class
+name|PartialDiagnostic
+decl_stmt|;
+name|class
+name|SourceRange
 decl_stmt|;
 comment|// Import the diagnostic enums themselves.
 name|namespace
@@ -441,7 +459,13 @@ name|ak_declarationname
 block|,
 comment|// DeclarationName
 name|ak_nameddecl
+block|,
 comment|// NamedDecl *
+name|ak_nestednamespec
+block|,
+comment|// NestedNameSpecifier *
+name|ak_declcontext
+comment|// DeclContext *
 block|}
 enum|;
 name|private
@@ -463,6 +487,10 @@ name|bool
 name|SuppressSystemWarnings
 decl_stmt|;
 comment|// Suppress warnings in system headers.
+name|bool
+name|SuppressAllDiagnostics
+decl_stmt|;
+comment|// Suppress all diagnostics.
 name|ExtensionHandling
 name|ExtBehavior
 decl_stmt|;
@@ -477,18 +505,25 @@ comment|/// (an instance of diag::Mapping), or zero if unset.  The high bit is s
 comment|/// when the mapping was established as a user mapping.  If the high bit is
 comment|/// clear, then the low bits are set to the default value, and should be
 comment|/// mapped with -pedantic, -Werror, etc.
-name|mutable
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
 name|unsigned
 name|char
+operator|>
 name|DiagMappings
-index|[
-name|diag
+expr_stmt|;
+name|mutable
+name|std
 operator|::
-name|DIAG_UPPER_LIMIT
-operator|/
-literal|2
-index|]
-decl_stmt|;
+name|vector
+operator|<
+name|DiagMappings
+operator|>
+name|DiagMappingsStack
+expr_stmt|;
 comment|/// ErrorOccurred / FatalErrorOccurred - This is set to true when an error or
 comment|/// fatal error is emitted, and is sticky.
 name|bool
@@ -614,6 +649,20 @@ name|Client
 return|;
 block|}
 empty_stmt|;
+comment|/// pushMappings - Copies the current DiagMappings and pushes the new copy
+comment|/// onto the top of the stack.
+name|void
+name|pushMappings
+parameter_list|()
+function_decl|;
+comment|/// popMappings - Pops the current DiagMappings off the top of the stack
+comment|/// causing the new top of the stack to be the active mappings. Returns
+comment|/// true if the pop happens, false if there is only one DiagMapping on the
+comment|/// stack.
+name|bool
+name|popMappings
+parameter_list|()
+function_decl|;
 name|void
 name|setClient
 parameter_list|(
@@ -696,6 +745,43 @@ return|return
 name|SuppressSystemWarnings
 return|;
 block|}
+comment|/// \brief Suppress all diagnostics, to silence the front end when we
+comment|/// know that we don't want any more diagnostics to be passed along to the
+comment|/// client
+name|void
+name|setSuppressAllDiagnostics
+parameter_list|(
+name|bool
+name|Val
+init|=
+name|true
+parameter_list|)
+block|{
+name|SuppressAllDiagnostics
+operator|=
+name|Val
+expr_stmt|;
+block|}
+name|bool
+name|getSuppressAllDiagnostics
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuppressAllDiagnostics
+return|;
+block|}
+comment|/// \brief Pretend that the last diagnostic issued was ignored. This can
+comment|/// be used by clients who suppress diagnostics themselves.
+name|void
+name|setLastDiagnosticIgnored
+parameter_list|()
+block|{
+name|LastDiagLevel
+operator|=
+name|Ignored
+expr_stmt|;
+block|}
 comment|/// setExtensionHandlingBehavior - This controls whether otherwise-unmapped
 comment|/// extension diagnostics are mapped onto ignore/warning/error.  This
 comment|/// corresponds to the GCC -pedantic and -pedantic-errors option.
@@ -729,6 +815,16 @@ block|{
 operator|--
 name|AllExtensionsSilenced
 expr_stmt|;
+block|}
+name|bool
+name|hasAllExtensionsSilenced
+parameter_list|()
+block|{
+return|return
+name|AllExtensionsSilenced
+operator|!=
+literal|0
+return|;
 block|}
 comment|/// setDiagnosticMapping - This allows the client to specify that certain
 comment|/// warnings are ignored.  Notes can never be mapped, errors can only be
@@ -1062,6 +1158,16 @@ name|Diag
 argument_list|)
 decl|const
 block|{
+specifier|const
+name|DiagMappings
+modifier|&
+name|currentMappings
+init|=
+name|DiagMappingsStack
+operator|.
+name|back
+argument_list|()
+decl_stmt|;
 return|return
 operator|(
 name|diag
@@ -1070,7 +1176,7 @@ name|Mapping
 operator|)
 operator|(
 operator|(
-name|DiagMappings
+name|currentMappings
 index|[
 name|Diag
 operator|/
@@ -1118,7 +1224,10 @@ name|char
 modifier|&
 name|Slot
 init|=
-name|DiagMappings
+name|DiagMappingsStack
+operator|.
+name|back
+argument_list|()
 index|[
 name|DiagId
 operator|/
@@ -1923,6 +2032,85 @@ argument_list|,
 name|Diagnostic
 operator|::
 name|ak_identifierinfo
+argument_list|)
+block|;
+return|return
+name|DB
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Adds a DeclContext to the diagnostic. The enable_if template magic is here
+end_comment
+
+begin_comment
+comment|// so that we only match those arguments that are (statically) DeclContexts;
+end_comment
+
+begin_comment
+comment|// other arguments that derive from DeclContext (e.g., RecordDecls) will not
+end_comment
+
+begin_comment
+comment|// match.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|typename
+name|llvm
+operator|::
+name|enable_if
+operator|<
+name|llvm
+operator|::
+name|is_same
+operator|<
+name|T
+operator|,
+name|DeclContext
+operator|>
+operator|,
+specifier|const
+name|DiagnosticBuilder
+operator|&
+operator|>
+operator|::
+name|type
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+name|T
+operator|*
+name|DC
+operator|)
+block|{
+name|DB
+operator|.
+name|AddTaggedVal
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|DC
+operator|)
+argument_list|,
+name|Diagnostic
+operator|::
+name|ak_declcontext
 argument_list|)
 block|;
 return|return

@@ -13,7 +13,11 @@ name|foo
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 end_unit

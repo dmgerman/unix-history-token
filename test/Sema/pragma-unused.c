@@ -85,7 +85,7 @@ name|unused
 name|(
 name|x
 name|)
-comment|// expected-error{{use of undeclared identifier 'x'}}
+comment|// expected-warning{{undeclared variable 'x' used as an argument for '#pragma unused'}}
 block|}
 end_function
 
@@ -131,7 +131,7 @@ name|unused
 name|(
 name|k
 name|)
-comment|// expected-warning{{only local variables can be arguments to '#pragma unused' - ignored}}
+comment|// expected-warning{{only local variables can be arguments to '#pragma unused'}}
 block|}
 end_function
 
@@ -155,6 +155,28 @@ name|z
 name|)
 comment|// no-warning
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|f7
+parameter_list|()
+block|{
+name|int
+name|y
+decl_stmt|;
+pragma|#
+directive|pragma
+name|unused
+name|(
+name|undeclared
+name|,
+name|undefined
+name|,
+name|y
+name|)
+comment|// expected-warning{{undeclared variable 'undeclared' used as an argument for '#pragma unused'}} expected-warning{{undeclared variable 'undefined' used as an argument for '#pragma unused'}}
 block|}
 end_function
 

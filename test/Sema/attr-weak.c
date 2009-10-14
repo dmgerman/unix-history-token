@@ -73,7 +73,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|__attribute__
 argument_list|(
 operator|(
@@ -115,6 +115,23 @@ end_struct
 
 begin_comment
 comment|// expected-warning {{'weak_import' attribute only applies to variable and function types}}
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|x
+name|__attribute__
+argument_list|(
+operator|(
+name|weak
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{weak declaration of 'x' must be public}}
 end_comment
 
 end_unit

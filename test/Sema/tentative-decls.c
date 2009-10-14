@@ -27,7 +27,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{variable has incomplete type 'struct a'}}
+comment|// expected-warning{{tentative definition of variable with internal linkage has incomplete non-array type 'struct a'}}
 end_comment
 
 begin_decl_stmt

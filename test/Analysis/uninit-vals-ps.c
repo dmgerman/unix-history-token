@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -checker-cfref -verify %s&&
+comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=basic -verify %s&&
 end_comment
 
 begin_comment
@@ -106,7 +106,7 @@ name|x
 operator|+
 literal|1
 condition|)
-comment|// expected-warning{{Branch}}
+comment|// expected-warning{{The left operand of '+' is a garbage value}}
 return|return
 literal|1
 return|;
@@ -127,9 +127,9 @@ decl_stmt|;
 return|return
 operator|(
 operator|(
-name|x
-operator|+
 literal|1
+operator|+
+name|x
 operator|)
 operator|+
 literal|2
@@ -147,7 +147,7 @@ literal|1
 else|:
 literal|2
 return|;
-comment|// expected-warning{{Branch}}
+comment|// expected-warning{{The right operand of '+' is a garbage value}}
 block|}
 end_function
 
@@ -175,7 +175,7 @@ name|p
 operator|>
 literal|0
 condition|)
-comment|// expected-warning{{Branch condition evaluates to an uninitialized value}}
+comment|// expected-warning{{The left operand of '>' is a garbage value}}
 return|return
 literal|0
 return|;
@@ -288,7 +288,7 @@ return|return
 operator|*
 name|p
 return|;
-comment|// expected-warning{{Uninitialized or undefined value returned to caller.}}
+comment|// expected-warning{{Undefined or garbage value returned to caller}}
 block|}
 end_function
 
@@ -411,6 +411,238 @@ name|CFStringConvertEncodingToIANACharSetName
 argument_list|(
 name|encoding
 argument_list|)
+return|;
+comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// PR 4630 - false warning with nonnull attribute
+end_comment
+
+begin_comment
+comment|//  This false positive (due to a regression) caused the analyzer to falsely
+end_comment
+
+begin_comment
+comment|//  flag a "return of uninitialized value" warning in the first branch due to
+end_comment
+
+begin_comment
+comment|//  the nonnull attribute.
+end_comment
+
+begin_function_decl
+name|void
+name|pr_4630_aux
+parameter_list|(
+name|char
+modifier|*
+name|x
+parameter_list|,
+name|int
+modifier|*
+name|y
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(nonnull
+parameter_list|(
+function_decl|1
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|pr_4630_aux_2
+parameter_list|(
+name|char
+modifier|*
+name|x
+parameter_list|,
+name|int
+modifier|*
+name|y
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|int
+name|pr_4630
+parameter_list|(
+name|char
+modifier|*
+name|a
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{
+name|int
+name|x
+decl_stmt|;
+if|if
+condition|(
+name|y
+condition|)
+block|{
+name|pr_4630_aux
+argument_list|(
+name|a
+argument_list|,
+operator|&
+name|x
+argument_list|)
+expr_stmt|;
+return|return
+name|x
+return|;
+comment|// no-warning
+block|}
+else|else
+block|{
+name|pr_4630_aux_2
+argument_list|(
+name|a
+argument_list|,
+operator|&
+name|x
+argument_list|)
+expr_stmt|;
+return|return
+name|x
+return|;
+comment|// no-warning
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// PR 4631 - False positive with union initializer
+end_comment
+
+begin_comment
+comment|//  Previously the analyzer didn't examine the compound initializers of unions,
+end_comment
+
+begin_comment
+comment|//  resulting in some false positives for initializers with side-effects.
+end_comment
+
+begin_union
+union|union
+name|u_4631
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_struct
+struct|struct
+name|s_4631
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|pr4631_f2
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pr4631_f3
+parameter_list|(
+name|void
+modifier|*
+name|q
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|int
+name|pr4631_f1
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|x
+decl_stmt|;
+name|union
+name|u_4631
+name|m
+init|=
+block|{
+name|pr4631_f2
+argument_list|(
+argument|&x
+argument_list|)
+block|}
+decl_stmt|;
+name|pr4631_f3
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+comment|// tell analyzer that we use m
+return|return
+name|x
+return|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|int
+name|pr4631_f1_b
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|x
+decl_stmt|;
+name|struct
+name|s_4631
+name|m
+init|=
+block|{
+name|pr4631_f2
+argument_list|(
+argument|&x
+argument_list|)
+block|}
+decl_stmt|;
+name|pr4631_f3
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+comment|// tell analyzer that we use m
+return|return
+name|x
 return|;
 comment|// no-warning
 block|}

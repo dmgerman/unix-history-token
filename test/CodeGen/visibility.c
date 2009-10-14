@@ -68,7 +68,7 @@ comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility=hidden -emit-
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_com = common hidden global i32 0' %t&&a
+comment|// RUN: grep '@g_com = common hidden global i32 0' %t&&
 end_comment
 
 begin_comment

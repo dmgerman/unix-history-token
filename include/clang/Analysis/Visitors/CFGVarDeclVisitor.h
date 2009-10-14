@@ -81,12 +81,6 @@ directive|include
 file|"clang/AST/Stmt.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"clang/AST/CFG.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang

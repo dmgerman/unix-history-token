@@ -107,6 +107,12 @@ directive|include
 file|"llvm/Support/PrettyStackTrace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -734,15 +740,75 @@ comment|/// in the current scope.
 end_comment
 
 begin_comment
-comment|/// An optional CXXScopeSpec can be passed to indicate the C++ scope (class or
+comment|///
 end_comment
 
 begin_comment
-comment|/// namespace) that the identifier must be a member of.
+comment|/// \param II the identifier for which we are performing name lookup
 end_comment
 
 begin_comment
-comment|/// i.e. for "foo::bar", 'II' will be "bar" and 'SS' will be "foo::".
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NameLoc the location of the identifier
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which this name lookup occurs
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS if non-NULL, the C++ scope specifier that precedes the
+end_comment
+
+begin_comment
+comment|/// identifier
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param isClassName whether this is a C++ class-name production, in
+end_comment
+
+begin_comment
+comment|/// which we can end up referring to a member of an unknown specialization
+end_comment
+
+begin_comment
+comment|/// that we know (from the grammar) is supposed to be a type. For example,
+end_comment
+
+begin_comment
+comment|/// this occurs when deriving from "std::vector<T>::allocator_type", where T
+end_comment
+
+begin_comment
+comment|/// is a template parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the type referred to by this identifier, or NULL if the type
+end_comment
+
+begin_comment
+comment|/// does not name an identifier.
 end_comment
 
 begin_function_decl
@@ -768,6 +834,11 @@ modifier|*
 name|SS
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|isClassName
+init|=
+name|false
 parameter_list|)
 init|=
 literal|0
@@ -815,6 +886,128 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Action called as part of error recovery when the parser has
+end_comment
+
+begin_comment
+comment|/// determined that the given name must refer to a type, but
+end_comment
+
+begin_comment
+comment|/// \c getTypeName() did not return a result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This callback permits the action to give a detailed diagnostic when an
+end_comment
+
+begin_comment
+comment|/// unknown type name is encountered and, potentially, to try to recover
+end_comment
+
+begin_comment
+comment|/// by producing a new type in \p SuggestedType.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param II the name that should be a type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IILoc the location of the name in the source.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which name lookup was performed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS if non-NULL, the C++ scope specifier that preceded the name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SuggestedType if the action sets this type to a non-NULL type,
+end_comment
+
+begin_comment
+comment|/// the parser will recovery by consuming the type name token and then
+end_comment
+
+begin_comment
+comment|/// pretending that the given type was the type it parsed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if a diagnostic was emitted, false otherwise. When false,
+end_comment
+
+begin_comment
+comment|/// the parser itself will emit a generic "unknown type name" diagnostic.
+end_comment
+
+begin_function
+name|virtual
+name|bool
+name|DiagnoseUnknownTypeName
+parameter_list|(
+specifier|const
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|,
+name|SourceLocation
+name|IILoc
+parameter_list|,
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|*
+name|SS
+parameter_list|,
+name|TypeTy
+modifier|*
+modifier|&
+name|SuggestedType
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// isCurrentClassName - Return true if the specified name is the
 end_comment
 
@@ -849,23 +1042,83 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Determines whether the identifier II is a template name
+comment|/// \brief Determine whether the given identifier refers to the name of a
 end_comment
 
 begin_comment
-comment|/// in the current scope. If so, the kind of template name is
+comment|/// template.
 end_comment
 
 begin_comment
-comment|/// returned, and \p TemplateDecl receives the declaration. An
+comment|///
 end_comment
 
 begin_comment
-comment|/// optional CXXScope can be passed to indicate the C++ scope in
+comment|/// \param S the scope in which name lookup occurs
 end_comment
 
 begin_comment
-comment|/// which the identifier will be found.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param II the identifier that we are querying to determine whether it
+end_comment
+
+begin_comment
+comment|/// is a template.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IdLoc the source location of the identifier
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS the C++ scope specifier that precedes the template name, if
+end_comment
+
+begin_comment
+comment|/// any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param EnteringContext whether we are potentially entering the context
+end_comment
+
+begin_comment
+comment|/// referred to by the scope specifier \p SS
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Template if the name does refer to a template, the declaration
+end_comment
+
+begin_comment
+comment|/// of the template that the name refers to.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the kind of template that this name refers to.
 end_comment
 
 begin_function_decl
@@ -873,25 +1126,33 @@ name|virtual
 name|TemplateNameKind
 name|isTemplateName
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 specifier|const
 name|IdentifierInfo
 modifier|&
 name|II
 parameter_list|,
-name|Scope
-modifier|*
-name|S
-parameter_list|,
-name|TemplateTy
-modifier|&
-name|Template
+name|SourceLocation
+name|IdLoc
 parameter_list|,
 specifier|const
 name|CXXScopeSpec
 modifier|*
 name|SS
-init|=
-literal|0
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
+parameter_list|,
+name|bool
+name|EnteringContext
+parameter_list|,
+name|TemplateTy
+modifier|&
+name|Template
 parameter_list|)
 init|=
 literal|0
@@ -927,27 +1188,111 @@ block|}
 end_function
 
 begin_comment
-comment|/// ActOnCXXNestedNameSpecifier - Called during parsing of a
+comment|/// \brief Parsed an identifier followed by '::' in a C++
 end_comment
 
 begin_comment
-comment|/// nested-name-specifier. e.g. for "foo::bar::" we parsed "foo::" and now
+comment|/// nested-name-specifier.
 end_comment
 
 begin_comment
-comment|/// we want to resolve "bar::". 'SS' is empty or the previously parsed
+comment|///
 end_comment
 
 begin_comment
-comment|/// nested-name part ("foo::"), 'IdLoc' is the source location of 'bar',
+comment|/// \param S the scope in which the nested-name-specifier was parsed.
 end_comment
 
 begin_comment
-comment|/// 'CCLoc' is the location of '::' and 'II' is the identifier for 'bar'.
+comment|///
 end_comment
 
 begin_comment
-comment|/// Returns a CXXScopeTy* object representing the C++ scope.
+comment|/// \param SS the nested-name-specifier that precedes the identifier. For
+end_comment
+
+begin_comment
+comment|/// example, if we are parsing "foo::bar::", \p SS will describe the "foo::"
+end_comment
+
+begin_comment
+comment|/// that has already been parsed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IdLoc the location of the identifier we have just parsed (e.g.,
+end_comment
+
+begin_comment
+comment|/// the "bar" in "foo::bar::".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CCLoc the location of the '::' at the end of the
+end_comment
+
+begin_comment
+comment|/// nested-name-specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param II the identifier that represents the scope that this
+end_comment
+
+begin_comment
+comment|/// nested-name-specifier refers to, e.g., the "bar" in "foo::bar::".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ObjectType if this nested-name-specifier occurs as part of a
+end_comment
+
+begin_comment
+comment|/// C++ member access expression such as "x->Base::f", the type of the base
+end_comment
+
+begin_comment
+comment|/// object (e.g., *x in the example, if "x" were a pointer).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param EnteringContext if true, then we intend to immediately enter the
+end_comment
+
+begin_comment
+comment|/// context of this nested-name-specifier, e.g., for an out-of-line
+end_comment
+
+begin_comment
+comment|/// definition of a class member.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns a CXXScopeTy* object representing the C++ scope.
 end_comment
 
 begin_function
@@ -974,6 +1319,13 @@ parameter_list|,
 name|IdentifierInfo
 modifier|&
 name|II
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
+parameter_list|,
+name|bool
+name|EnteringContext
 parameter_list|)
 block|{
 return|return
@@ -1070,9 +1422,13 @@ begin_comment
 comment|/// The 'SS' should be a non-empty valid CXXScopeSpec.
 end_comment
 
+begin_comment
+comment|/// \returns true if an error occurred, false otherwise.
+end_comment
+
 begin_function
 name|virtual
-name|void
+name|bool
 name|ActOnCXXEnterDeclaratorScope
 parameter_list|(
 name|Scope
@@ -1084,7 +1440,11 @@ name|CXXScopeSpec
 modifier|&
 name|SS
 parameter_list|)
-block|{   }
+block|{
+return|return
+name|false
+return|;
+block|}
 end_function
 
 begin_comment
@@ -1292,7 +1652,7 @@ parameter_list|(
 name|DeclPtrTy
 name|Dcl
 parameter_list|,
-name|FullExprArg
+name|ExprArg
 name|Init
 parameter_list|)
 block|{
@@ -1340,6 +1700,14 @@ begin_comment
 comment|/// ActOnDeclarator (when an initializer is *not* present).
 end_comment
 
+begin_comment
+comment|/// If TypeContainsUndeducedAuto is true, then the type of the declarator
+end_comment
+
+begin_comment
+comment|/// has an undeduced 'auto' type somewhere.
+end_comment
+
 begin_function
 name|virtual
 name|void
@@ -1347,6 +1715,9 @@ name|ActOnUninitializedDecl
 parameter_list|(
 name|DeclPtrTy
 name|Dcl
+parameter_list|,
+name|bool
+name|TypeContainsUndeducedAuto
 parameter_list|)
 block|{
 return|return;
@@ -1791,19 +2162,186 @@ end_function
 
 begin_enum
 enum|enum
-name|TagKind
+name|TagUseKind
 block|{
-name|TK_Reference
+name|TUK_Reference
 block|,
 comment|// Reference to a tag:  'struct foo *X;'
-name|TK_Declaration
+name|TUK_Declaration
 block|,
 comment|// Fwd decl of a tag:   'struct foo;'
-name|TK_Definition
+name|TUK_Definition
+block|,
 comment|// Definition of a tag: 'struct foo { int X; } Y;'
+name|TUK_Friend
+comment|// Friend declaration:  'friend struct foo;'
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/// \brief The parser has encountered a tag (e.g., "class X") that should be
+end_comment
+
+begin_comment
+comment|/// turned into a declaration by the action module.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which this tag occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TagSpec an instance of DeclSpec::TST, indicating what kind of tag
+end_comment
+
+begin_comment
+comment|/// this is (struct/union/enum/class).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TUK how the tag we have encountered is being used, which
+end_comment
+
+begin_comment
+comment|/// can be a reference to a (possibly pre-existing) tag, a
+end_comment
+
+begin_comment
+comment|/// declaration of that tag, or the beginning of a definition of
+end_comment
+
+begin_comment
+comment|/// that tag.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param KWLoc the location of the "struct", "class", "union", or "enum"
+end_comment
+
+begin_comment
+comment|/// keyword.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS C++ scope specifier that precedes the name of the tag, e.g.,
+end_comment
+
+begin_comment
+comment|/// the "std::" in "class std::type_info".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Name the name of the tag, e.g., "X" in "struct X". This parameter
+end_comment
+
+begin_comment
+comment|/// may be NULL, to indicate an anonymous class/struct/union/enum type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NameLoc the location of the name of the tag.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Attr the set of attributes that appertain to the tag.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AS when this tag occurs within a C++ class, provides the
+end_comment
+
+begin_comment
+comment|/// current access specifier (AS_public, AS_private, AS_protected).
+end_comment
+
+begin_comment
+comment|/// Otherwise, it will be AS_none.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TemplateParameterLists the set of C++ template parameter lists
+end_comment
+
+begin_comment
+comment|/// that apply to this tag, if the tag is a declaration or definition (see
+end_comment
+
+begin_comment
+comment|/// the \p TK parameter). The action module is responsible for determining,
+end_comment
+
+begin_comment
+comment|/// based on the template parameter lists and the scope specifier, whether
+end_comment
+
+begin_comment
+comment|/// the declared tag is a class template or not.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OwnedDecl the callee should set this flag true when the returned
+end_comment
+
+begin_comment
+comment|/// declaration is "owned" by this reference. Ownership is handled entirely
+end_comment
+
+begin_comment
+comment|/// by the action module.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the declaration to which this tag refers.
+end_comment
 
 begin_function
 name|virtual
@@ -1817,8 +2355,8 @@ parameter_list|,
 name|unsigned
 name|TagSpec
 parameter_list|,
-name|TagKind
-name|TK
+name|TagUseKind
+name|TUK
 parameter_list|,
 name|SourceLocation
 name|KWLoc
@@ -1842,15 +2380,114 @@ parameter_list|,
 name|AccessSpecifier
 name|AS
 parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParameterLists
+parameter_list|,
 name|bool
 modifier|&
 name|OwnedDecl
+parameter_list|,
+name|bool
+modifier|&
+name|IsDependent
 parameter_list|)
 block|{
-comment|// TagType is an instance of DeclSpec::TST, indicating what kind of tag this
-comment|// is (struct/union/enum/class).
 return|return
 name|DeclPtrTy
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Acts on a reference to a dependent tag name.  This arises in
+end_comment
+
+begin_comment
+comment|/// cases like:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    template<class T> class A;
+end_comment
+
+begin_comment
+comment|///    template<class T> class B {
+end_comment
+
+begin_comment
+comment|///      friend class A<T>::M;  // here
+end_comment
+
+begin_comment
+comment|///    };
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TagSpec an instance of DeclSpec::TST corresponding to the
+end_comment
+
+begin_comment
+comment|/// tag specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TUK the tag use kind (either TUK_Friend or TUK_Reference)
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS the scope specifier (always defined)
+end_comment
+
+begin_function
+name|virtual
+name|TypeResult
+name|ActOnDependentTag
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|unsigned
+name|TagSpec
+parameter_list|,
+name|TagUseKind
+name|TUK
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Name
+parameter_list|,
+name|SourceLocation
+name|KWLoc
+parameter_list|,
+name|SourceLocation
+name|NameLoc
+parameter_list|)
+block|{
+return|return
+name|TypeResult
 argument_list|()
 return|;
 block|}
@@ -2043,6 +2680,9 @@ name|S
 parameter_list|,
 name|DeclPtrTy
 name|TagDecl
+parameter_list|,
+name|SourceLocation
+name|RBraceLoc
 parameter_list|)
 block|{ }
 end_function
@@ -2107,6 +2747,14 @@ name|Elements
 parameter_list|,
 name|unsigned
 name|NumElements
+parameter_list|,
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|AttributeList
+modifier|*
+name|AttrList
 parameter_list|)
 block|{}
 end_function
@@ -2598,7 +3246,7 @@ parameter_list|(
 name|SourceLocation
 name|ReturnLoc
 parameter_list|,
-name|FullExprArg
+name|ExprArg
 name|RetValExp
 parameter_list|)
 block|{
@@ -3286,6 +3934,28 @@ comment|// Default impl returns operand.
 block|}
 end_function
 
+begin_function
+name|virtual
+name|OwningExprResult
+name|ActOnParenListExpr
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|,
+name|SourceLocation
+name|R
+parameter_list|,
+name|MultiExprArg
+name|Val
+parameter_list|)
+block|{
+return|return
+name|ExprEmpty
+argument_list|()
+return|;
+block|}
+end_function
+
 begin_comment
 comment|// Postfix Expressions.
 end_comment
@@ -3376,6 +4046,13 @@ name|Member
 argument_list|,
 name|DeclPtrTy
 name|ObjCImpDecl
+argument_list|,
+specifier|const
+name|CXXScopeSpec
+operator|*
+name|SS
+operator|=
+literal|0
 argument_list|)
 block|{
 return|return
@@ -3628,6 +4305,10 @@ name|virtual
 name|OwningExprResult
 name|ActOnCastExpr
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
@@ -4221,6 +4902,9 @@ name|Scope
 modifier|*
 name|CurScope
 parameter_list|,
+name|AccessSpecifier
+name|AS
+parameter_list|,
 name|SourceLocation
 name|UsingLoc
 parameter_list|,
@@ -4583,31 +5267,69 @@ block|}
 end_function
 
 begin_comment
-comment|/// ActOnFriendDecl - This action is called when a friend declaration is
+comment|/// ActOnFriendFunctionDecl - Parsed a friend function declarator.
 end_comment
 
 begin_comment
-comment|/// encountered. Returns false on success.
+comment|/// The name is actually a slight misnomer, because the declarator
+end_comment
+
+begin_comment
+comment|/// is not necessarily a function declarator.
 end_comment
 
 begin_function
 name|virtual
-name|bool
-name|ActOnFriendDecl
+name|DeclPtrTy
+name|ActOnFriendFunctionDecl
 parameter_list|(
 name|Scope
 modifier|*
 name|S
 parameter_list|,
-name|SourceLocation
-name|FriendLoc
+name|Declarator
+modifier|&
+name|D
 parameter_list|,
-name|DeclPtrTy
-name|Dcl
+name|bool
+name|IsDefinition
+parameter_list|,
+name|MultiTemplateParamsArg
+name|TParams
 parameter_list|)
 block|{
 return|return
-name|false
+name|DeclPtrTy
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// ActOnFriendTypeDecl - Parsed a friend type declaration.
+end_comment
+
+begin_function
+name|virtual
+name|DeclPtrTy
+name|ActOnFriendTypeDecl
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|DeclSpec
+modifier|&
+name|DS
+parameter_list|,
+name|MultiTemplateParamsArg
+name|TParams
+parameter_list|)
+block|{
+return|return
+name|DeclPtrTy
+argument_list|()
 return|;
 block|}
 end_function
@@ -5003,6 +5725,458 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Invoked when the parser is starting to parse a C++ member access
+end_comment
+
+begin_comment
+comment|/// expression such as x.f or x->f.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the member access expression occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Base the expression in which a member is being accessed, e.g., the
+end_comment
+
+begin_comment
+comment|/// "x" in "x.f".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OpLoc the location of the member access operator ("." or "->")
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OpKind the kind of member access operator ("." or "->")
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ObjectType originally NULL. The action should fill in this type
+end_comment
+
+begin_comment
+comment|/// with the type into which name lookup should look to find the member in
+end_comment
+
+begin_comment
+comment|/// the member access expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the (possibly modified) \p Base expression
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|OwningExprResult
+name|ActOnStartCXXMemberReference
+argument_list|(
+name|Scope
+operator|*
+name|S
+argument_list|,
+name|ExprArg
+name|Base
+argument_list|,
+name|SourceLocation
+name|OpLoc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|OpKind
+argument_list|,
+name|TypeTy
+operator|*
+operator|&
+name|ObjectType
+argument_list|)
+block|{
+return|return
+name|ExprEmpty
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// ActOnDestructorReferenceExpr - Parsed a destructor reference, for example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// t->~T();
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|OwningExprResult
+name|ActOnDestructorReferenceExpr
+argument_list|(
+name|Scope
+operator|*
+name|S
+argument_list|,
+name|ExprArg
+name|Base
+argument_list|,
+name|SourceLocation
+name|OpLoc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|OpKind
+argument_list|,
+name|SourceLocation
+name|ClassNameLoc
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|ClassName
+argument_list|,
+specifier|const
+name|CXXScopeSpec
+operator|&
+name|SS
+argument_list|,
+name|bool
+name|HasTrailingLParen
+argument_list|)
+block|{
+return|return
+name|ExprEmpty
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// ActOnOverloadedOperatorReferenceExpr - Parsed an overloaded operator
+end_comment
+
+begin_comment
+comment|/// reference, for example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// t.operator++();
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|OwningExprResult
+name|ActOnOverloadedOperatorReferenceExpr
+argument_list|(
+name|Scope
+operator|*
+name|S
+argument_list|,
+name|ExprArg
+name|Base
+argument_list|,
+name|SourceLocation
+name|OpLoc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|OpKind
+argument_list|,
+name|SourceLocation
+name|ClassNameLoc
+argument_list|,
+name|OverloadedOperatorKind
+name|OverOpKind
+argument_list|,
+specifier|const
+name|CXXScopeSpec
+operator|*
+name|SS
+operator|=
+literal|0
+argument_list|)
+block|{
+return|return
+name|ExprEmpty
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// ActOnConversionOperatorReferenceExpr - Parsed an overloaded conversion
+end_comment
+
+begin_comment
+comment|/// function reference, for example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// t.operator int();
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|OwningExprResult
+name|ActOnConversionOperatorReferenceExpr
+argument_list|(
+name|Scope
+operator|*
+name|S
+argument_list|,
+name|ExprArg
+name|Base
+argument_list|,
+name|SourceLocation
+name|OpLoc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|OpKind
+argument_list|,
+name|SourceLocation
+name|ClassNameLoc
+argument_list|,
+name|TypeTy
+operator|*
+name|Ty
+argument_list|,
+specifier|const
+name|CXXScopeSpec
+operator|*
+name|SS
+operator|=
+literal|0
+argument_list|)
+block|{
+return|return
+name|ExprEmpty
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Parsed a reference to a member template-id.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This callback will occur instead of ActOnMemberReferenceExpr() when the
+end_comment
+
+begin_comment
+comment|/// member in question is a template for which the code provides an
+end_comment
+
+begin_comment
+comment|/// explicitly-specified template argument list, e.g.,
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// x.f<int>()
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the member reference expression occurs
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Base the expression to the left of the "." or "->".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OpLoc the location of the "." or "->".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OpKind the kind of operator, which will be "." or "->".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS the scope specifier that precedes the template-id in, e.g.,
+end_comment
+
+begin_comment
+comment|/// \c x.Base::f<int>().
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Template the declaration of the template that is being referenced.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TemplateNameLoc the location of the template name referred to by
+end_comment
+
+begin_comment
+comment|/// \p Template.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param LAngleLoc the location of the left angle bracket ('<')
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TemplateArgs the (possibly-empty) template argument list provided
+end_comment
+
+begin_comment
+comment|/// as part of the member reference.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param RAngleLoc the location of the right angle bracket ('>')
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|OwningExprResult
+name|ActOnMemberTemplateIdReferenceExpr
+argument_list|(
+name|Scope
+operator|*
+name|S
+argument_list|,
+name|ExprArg
+name|Base
+argument_list|,
+name|SourceLocation
+name|OpLoc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|OpKind
+argument_list|,
+specifier|const
+name|CXXScopeSpec
+operator|&
+name|SS
+argument_list|,
+comment|// FIXME: "template" keyword?
+name|TemplateTy
+name|Template
+argument_list|,
+name|SourceLocation
+name|TemplateNameLoc
+argument_list|,
+name|SourceLocation
+name|LAngleLoc
+argument_list|,
+name|ASTTemplateArgsPtr
+name|TemplateArgs
+argument_list|,
+name|SourceLocation
+operator|*
+name|TemplateArgLocs
+argument_list|,
+name|SourceLocation
+name|RAngleLoc
+argument_list|)
+block|{
+return|return
+name|ExprEmpty
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// ActOnFinishFullExpr - Called whenever a full expression has been parsed.
 end_comment
 
@@ -5123,6 +6297,9 @@ name|Declarator
 modifier|&
 name|D
 parameter_list|,
+name|MultiTemplateParamsArg
+name|TemplateParameterLists
+parameter_list|,
 name|ExprTy
 modifier|*
 name|BitfieldWidth
@@ -5241,6 +6418,17 @@ name|unsigned
 name|NumMemInits
 parameter_list|)
 block|{   }
+end_function
+
+begin_function
+name|virtual
+name|void
+name|ActOnDefaultCtorInitializers
+parameter_list|(
+name|DeclPtrTy
+name|CDtorDecl
+parameter_list|)
+block|{}
 end_function
 
 begin_comment
@@ -5720,62 +6908,6 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Process the declaration or definition of a class template
-end_comment
-
-begin_comment
-comment|/// with the given template parameter lists.
-end_comment
-
-begin_function
-name|virtual
-name|DeclResult
-name|ActOnClassTemplate
-parameter_list|(
-name|Scope
-modifier|*
-name|S
-parameter_list|,
-name|unsigned
-name|TagSpec
-parameter_list|,
-name|TagKind
-name|TK
-parameter_list|,
-name|SourceLocation
-name|KWLoc
-parameter_list|,
-specifier|const
-name|CXXScopeSpec
-modifier|&
-name|SS
-parameter_list|,
-name|IdentifierInfo
-modifier|*
-name|Name
-parameter_list|,
-name|SourceLocation
-name|NameLoc
-parameter_list|,
-name|AttributeList
-modifier|*
-name|Attr
-parameter_list|,
-name|MultiTemplateParamsArg
-name|TemplateParameterLists
-parameter_list|,
-name|AccessSpecifier
-name|AS
-parameter_list|)
-block|{
-return|return
-name|DeclResult
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/// \brief Form a type from a template and a list of template
 end_comment
 
@@ -5809,22 +6941,6 @@ end_comment
 
 begin_comment
 comment|/// type, e.g., a class template or template template parameter.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param IsSpecialization true when we are naming the class
-end_comment
-
-begin_comment
-comment|/// template specialization as part of an explicit class
-end_comment
-
-begin_comment
-comment|/// specialization or class template partial specialization.
 end_comment
 
 begin_function
@@ -5862,6 +6978,81 @@ end_function
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// \brief Note that a template ID was used with a tag.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Type The result of ActOnTemplateIdType.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TUK Either TUK_Reference or TUK_Friend.  Declarations and
+end_comment
+
+begin_comment
+comment|/// definitions are interpreted as explicit instantiations or
+end_comment
+
+begin_comment
+comment|/// specializations.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TagSpec The tag keyword that was provided as part of the
+end_comment
+
+begin_comment
+comment|/// elaborated-type-specifier;  either class, struct, union, or enum.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TagLoc The location of the tag keyword.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|TypeResult
+name|ActOnTagTemplateIdType
+argument_list|(
+name|TypeResult
+name|Type
+argument_list|,
+name|TagUseKind
+name|TUK
+argument_list|,
+name|DeclSpec
+operator|::
+name|TST
+name|TagSpec
+argument_list|,
+name|SourceLocation
+name|TagLoc
+argument_list|)
+block|{
+return|return
+name|TypeResult
+argument_list|()
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Form a reference to a template-id (that will refer to a function)
@@ -5959,6 +7150,66 @@ begin_comment
 comment|/// of the "template" keyword, and "apply" is the \p Name.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TemplateKWLoc the location of the "template" keyword (if any).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Name the name of the template (an identifier)
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NameLoc the location of the identifier
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS the nested-name-specifier that precedes the "template" keyword
+end_comment
+
+begin_comment
+comment|/// or the template name. FIXME: If the dependent template name occurs in
+end_comment
+
+begin_comment
+comment|/// a member access expression, e.g., "x.template f<T>", this
+end_comment
+
+begin_comment
+comment|/// nested-name-specifier will be empty.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ObjectType if this dependent template name occurs in the
+end_comment
+
+begin_comment
+comment|/// context of a member access expression, the type of the object being
+end_comment
+
+begin_comment
+comment|/// accessed.
+end_comment
+
 begin_function
 name|virtual
 name|TemplateTy
@@ -5979,6 +7230,10 @@ specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
 parameter_list|)
 block|{
 return|return
@@ -6097,7 +7352,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param TK whether this is a declaration or a definition
+comment|/// \param TUK whether this is a declaration or a definition
 end_comment
 
 begin_comment
@@ -6184,8 +7439,8 @@ parameter_list|,
 name|unsigned
 name|TagSpec
 parameter_list|,
-name|TagKind
-name|TK
+name|TagUseKind
+name|TUK
 parameter_list|,
 name|SourceLocation
 name|KWLoc
@@ -6370,6 +7625,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param ExternLoc the location of the 'extern' keyword that specifies that
+end_comment
+
+begin_comment
+comment|/// this is an extern template (if any).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \param TemplateLoc the location of the 'template' keyword that
 end_comment
 
@@ -6473,6 +7740,9 @@ parameter_list|(
 name|Scope
 modifier|*
 name|S
+parameter_list|,
+name|SourceLocation
+name|ExternLoc
 parameter_list|,
 name|SourceLocation
 name|TemplateLoc
@@ -6584,6 +7854,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param ExternLoc the location of the 'extern' keyword that specifies that
+end_comment
+
+begin_comment
+comment|/// this is an extern template (if any).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \param TemplateLoc the location of the 'template' keyword that
 end_comment
 
@@ -6689,6 +7971,9 @@ modifier|*
 name|S
 parameter_list|,
 name|SourceLocation
+name|ExternLoc
+parameter_list|,
+name|SourceLocation
 name|TemplateLoc
 parameter_list|,
 name|unsigned
@@ -6712,6 +7997,129 @@ parameter_list|,
 name|AttributeList
 modifier|*
 name|Attr
+parameter_list|)
+block|{
+return|return
+name|DeclResult
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Process the explicit instantiation of a function template or a
+end_comment
+
+begin_comment
+comment|/// member of a class template.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine is invoked when an explicit instantiation of a
+end_comment
+
+begin_comment
+comment|/// function template or member function of a class template specialization
+end_comment
+
+begin_comment
+comment|/// is encountered. In the following example,
+end_comment
+
+begin_comment
+comment|/// ActOnExplicitInstantiation will be invoked to force the
+end_comment
+
+begin_comment
+comment|/// instantiation of X<int>:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// template<typename T> void f(T);
+end_comment
+
+begin_comment
+comment|/// template void f(int); // explicit instantiation
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the current scope
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ExternLoc the location of the 'extern' keyword that specifies that
+end_comment
+
+begin_comment
+comment|/// this is an extern template (if any).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TemplateLoc the location of the 'template' keyword that
+end_comment
+
+begin_comment
+comment|/// specifies that this is an explicit instantiation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D the declarator describing the declaration to be implicitly
+end_comment
+
+begin_comment
+comment|/// instantiated.
+end_comment
+
+begin_function
+name|virtual
+name|DeclResult
+name|ActOnExplicitInstantiation
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|SourceLocation
+name|ExternLoc
+parameter_list|,
+name|SourceLocation
+name|TemplateLoc
+parameter_list|,
+name|Declarator
+modifier|&
+name|D
 parameter_list|)
 block|{
 return|return
@@ -7785,13 +9193,17 @@ name|virtual
 name|void
 name|ActOnPragmaUnused
 parameter_list|(
-name|ExprTy
+specifier|const
+name|Token
 modifier|*
-modifier|*
-name|Exprs
+name|Identifiers
 parameter_list|,
 name|unsigned
-name|NumExprs
+name|NumIdentifiers
+parameter_list|,
+name|Scope
+modifier|*
+name|CurScope
 parameter_list|,
 name|SourceLocation
 name|PragmaLoc
@@ -7863,6 +9275,591 @@ block|}
 end_function
 
 begin_comment
+comment|/// \name Code completion actions
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// These actions are used to signal that a code-completion token has been
+end_comment
+
+begin_comment
+comment|/// found at a point in the grammar where the Action implementation is
+end_comment
+
+begin_comment
+comment|/// likely to be able to provide a list of possible completions, e.g.,
+end_comment
+
+begin_comment
+comment|/// after the "." or "->" of a member access expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \todo Code completion for designated field initializers
+end_comment
+
+begin_comment
+comment|/// \todo Code completion for call arguments after a function template-id
+end_comment
+
+begin_comment
+comment|/// \todo Code completion within a call expression, object construction, etc.
+end_comment
+
+begin_comment
+comment|/// \todo Code completion within a template argument list.
+end_comment
+
+begin_comment
+comment|/// \todo Code completion for attributes.
+end_comment
+
+begin_comment
+comment|//@{
+end_comment
+
+begin_comment
+comment|/// \brief Code completion for an ordinary name that occurs within the given
+end_comment
+
+begin_comment
+comment|/// scope.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the name occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteOrdinaryName
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a member access expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token
+end_comment
+
+begin_comment
+comment|/// is found after the "." or "->" of a member access expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the member access expression occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Base the base expression (e.g., the x in "x.foo") of the member
+end_comment
+
+begin_comment
+comment|/// access.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OpLoc the location of the "." or "->" operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IsArrow true when the operator is "->", false when it is ".".
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteMemberReferenceExpr
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|ExprTy
+modifier|*
+name|Base
+parameter_list|,
+name|SourceLocation
+name|OpLoc
+parameter_list|,
+name|bool
+name|IsArrow
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a reference to a tag.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion
+end_comment
+
+begin_comment
+comment|/// token is found after a tag keyword (struct, union, enum, or class).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the tag reference occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TagSpec an instance of DeclSpec::TST, indicating what kind of tag
+end_comment
+
+begin_comment
+comment|/// this is (struct/union/enum/class).
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteTag
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|unsigned
+name|TagSpec
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a case statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \brief S the scope in which the case statement occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteCase
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a call.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \brief S the scope in which the call occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Fn the expression describing the function being called.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Args the arguments to the function call (so far).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NumArgs the number of arguments in \p Args.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteCall
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|ExprTy
+modifier|*
+name|Fn
+parameter_list|,
+name|ExprTy
+modifier|*
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a C++ nested-name-specifier that precedes a
+end_comment
+
+begin_comment
+comment|/// qualified-id of some form.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token
+end_comment
+
+begin_comment
+comment|/// is found after the "::" of a nested-name-specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the nested-name-specifier occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS the scope specifier ending with "::".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \parame EnteringContext whether we're entering the context of this
+end_comment
+
+begin_comment
+comment|/// scope specifier.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteQualifiedId
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|bool
+name|EnteringContext
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a C++ "using" declaration or directive.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token is
+end_comment
+
+begin_comment
+comment|/// found after the "using" keyword.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the "using" occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteUsing
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a C++ using directive.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token is
+end_comment
+
+begin_comment
+comment|/// found after "using namespace".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the "using namespace" occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteUsingDirective
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a C++ namespace declaration or namespace
+end_comment
+
+begin_comment
+comment|/// alias declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token is
+end_comment
+
+begin_comment
+comment|/// found after "namespace".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the "namespace" token occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteNamespaceDecl
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a C++ namespace alias declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token is
+end_comment
+
+begin_comment
+comment|/// found after "namespace identifier = ".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the namespace alias declaration occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteNamespaceAliasDecl
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for an operator name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token is
+end_comment
+
+begin_comment
+comment|/// found after the keyword "operator".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the operator keyword occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteOperatorName
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for an ObjC property decl.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token is
+end_comment
+
+begin_comment
+comment|/// found after the left paren.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the operator keyword occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCProperty
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|ObjCDeclSpec
+modifier|&
+name|ODS
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|//@}
+end_comment
+
+begin_comment
 unit|};
 comment|/// MinimalAction - Minimal actions are used by light-weight clients of the
 end_comment
@@ -7928,6 +9925,24 @@ argument_list|()
 block|;
 comment|/// getTypeName - This looks at the IdentifierInfo::FETokenInfo field to
 comment|/// determine whether the name is a typedef or not in this scope.
+comment|///
+comment|/// \param II the identifier for which we are performing name lookup
+comment|///
+comment|/// \param NameLoc the location of the identifier
+comment|///
+comment|/// \param S the scope in which this name lookup occurs
+comment|///
+comment|/// \param SS if non-NULL, the C++ scope specifier that precedes the
+comment|/// identifier
+comment|///
+comment|/// \param isClassName whether this is a C++ class-name production, in
+comment|/// which we can end up referring to a member of an unknown specialization
+comment|/// that we know (from the grammar) is supposed to be a type. For example,
+comment|/// this occurs when deriving from "std::vector<T>::allocator_type", where T
+comment|/// is a template parameter.
+comment|///
+comment|/// \returns the type referred to by this identifier, or NULL if the type
+comment|/// does not name an identifier.
 name|virtual
 name|TypeTy
 operator|*
@@ -7940,6 +9955,8 @@ argument_list|,
 argument|Scope *S
 argument_list|,
 argument|const CXXScopeSpec *SS
+argument_list|,
+argument|bool isClassName = false
 argument_list|)
 block|;
 comment|/// isCurrentClassName - Always returns false, because MinimalAction
@@ -7967,25 +9984,19 @@ name|virtual
 name|TemplateNameKind
 name|isTemplateName
 argument_list|(
-specifier|const
-name|IdentifierInfo
-operator|&
-name|II
+argument|Scope *S
 argument_list|,
-name|Scope
-operator|*
-name|S
+argument|const IdentifierInfo&II
 argument_list|,
-name|TemplateTy
-operator|&
-name|Template
+argument|SourceLocation IdLoc
 argument_list|,
-specifier|const
-name|CXXScopeSpec
-operator|*
-name|SS
-operator|=
-literal|0
+argument|const CXXScopeSpec *SS
+argument_list|,
+argument|TypeTy *ObjectType
+argument_list|,
+argument|bool EnteringContext
+argument_list|,
+argument|TemplateTy&Template
 argument_list|)
 block|;
 comment|/// ActOnDeclarator - If this is a typedef declarator, we modify the

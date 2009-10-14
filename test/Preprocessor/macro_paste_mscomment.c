@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -P -E -fms-extensions %s | sed '/^#.\+/d' | tr -d '\n' |
+comment|// RUN: clang-cc -P -E -fms-extensions %s | sed '/^#.\+/d' | tr -d '\n'> %t&&
 end_comment
 
 begin_comment
-comment|// RUN:   grep '^int foo;int bar;int baz;$' | count 1
+comment|// RUN: grep '^int foo;int bar;int baz;$' %t | count 1
 end_comment
 
 begin_comment

@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/CFG.h"
+file|"clang/Analysis/CFG.h"
 end_include
 
 begin_decl_stmt

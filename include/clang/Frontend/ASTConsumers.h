@@ -62,25 +62,16 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<iosfwd>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
@@ -116,9 +107,9 @@ decl_stmt|;
 name|class
 name|PreprocessorFactory
 decl_stmt|;
-struct_decl|struct
+name|class
 name|CompileOptions
-struct_decl|;
+decl_stmt|;
 name|class
 name|LangOptions
 decl_stmt|;
@@ -172,6 +163,13 @@ comment|// to stderr; this is intended for debugging.
 name|ASTConsumer
 modifier|*
 name|CreateDeclContextPrinter
+parameter_list|()
+function_decl|;
+comment|// RecordLayout dumper: prints out the record layout information for all records
+comment|// in the translation unit; this is intended for debugging.
+name|ASTConsumer
+modifier|*
+name|CreateRecordLayoutDumper
 parameter_list|()
 function_decl|;
 comment|// ObjC rewriter: attempts tp rewrite ObjC constructs into pure C code.
@@ -308,6 +306,13 @@ operator|::
 name|raw_ostream
 operator|*
 name|OS
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|isysroot
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|// Block rewriter: rewrites code using the Apple blocks extension to pure

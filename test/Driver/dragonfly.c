@@ -4,19 +4,19 @@ comment|// RUN: clang -ccc-host-triple amd64-pc-dragonfly %s -### 2> %t.log&&
 end_comment
 
 begin_comment
-comment|// RUN: grep 'clang-cc" "-triple" "x86_64-pc-dragonfly"' %t.log&&
+comment|// RUN: FileCheck -input-file %t.log %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'as" "-o" ".*\.o" ".*\.s' %t.log&&
+comment|// CHECK: clang-cc{{.*}}" "-triple" "amd64-pc-dragonfly"
 end_comment
 
 begin_comment
-comment|// RUN: grep 'ld" "-dynamic-linker" ".*ld-elf.*" "-o" "a\.out" ".*crt1.o" ".*crti.o" "crtbegin.o" ".*\.o" "-L.*/gcc.*" .* "-lc" "-lgcc" ".*crtend.o" ".*crtn.o"' %t.log&&
+comment|// CHECK: as{{.*}}" "-o" "{{.*}}.o" "{{.*}}.s
 end_comment
 
 begin_comment
-comment|// RUN: true
+comment|// CHECK: ld{{.*}}" "-dynamic-linker" "{{.*}}ld-elf.{{.*}}" "-o" "a.out" "{{.*}}crt1.o" "{{.*}}crti.o" "{{.*}}crtbegin.o" "{{.*}}.o" "-L{{.*}}/gcc{{.*}}" {{.*}} "-lc" "-lgcc" "{{.*}}crtend.o" "{{.*}}crtn.o"
 end_comment
 
 end_unit

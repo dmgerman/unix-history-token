@@ -12,7 +12,7 @@ comment|// RUN: clang-cc %s -E | grep 'fo2{A,}'&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | grep '{foo}'
+comment|// RUN: clang-cc %s -E | grep '{foo}'&&
 end_comment
 
 begin_define

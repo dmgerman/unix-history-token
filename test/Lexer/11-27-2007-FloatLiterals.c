@@ -1,10 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -emit-llvm -o - | grep 0x3BFD83C940000000 | count 2&&
+comment|// RUN: clang-cc %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -emit-llvm -o - | grep 2.000000e+32 | count 2
+comment|// CHECK: 0x3BFD83C940000000
+end_comment
+
+begin_comment
+comment|// CHECK: 2.000000e+{{[0]*}}32
+end_comment
+
+begin_comment
+comment|// CHECK: 0x3BFD83C940000000
+end_comment
+
+begin_comment
+comment|// CHECK: 2.000000e+{{[0]*}}32
 end_comment
 
 begin_decl_stmt

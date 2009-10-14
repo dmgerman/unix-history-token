@@ -238,31 +238,20 @@ argument_list|)
 operator|)
 block|}
 enum|;
-comment|/// Data - space for the largest member in units of void*.  This is an effort
-comment|/// to ensure that the APSInt/APFloat values have proper alignment.
+union|union
+block|{
 name|void
 modifier|*
+name|Aligner
+decl_stmt|;
+name|char
 name|Data
 index|[
-operator|(
 name|MaxSize
-operator|+
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|-
-literal|1
-operator|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
 index|]
 decl_stmt|;
+block|}
+union|;
 name|public
 label|:
 name|APValue
@@ -565,7 +554,7 @@ name|APSInt
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -612,7 +601,7 @@ name|APFloat
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -663,7 +652,7 @@ name|Vec
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -724,7 +713,7 @@ name|ComplexAPSInt
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -774,7 +763,7 @@ name|ComplexAPSInt
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -824,7 +813,7 @@ name|ComplexAPFloat
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -874,7 +863,7 @@ name|ComplexAPFloat
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -990,7 +979,7 @@ name|APSInt
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1021,7 +1010,7 @@ name|APFloat
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1055,7 +1044,7 @@ name|Vec
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1075,7 +1064,7 @@ name|Vec
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1105,7 +1094,7 @@ name|Vec
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1165,7 +1154,7 @@ name|ComplexAPSInt
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1181,7 +1170,7 @@ name|ComplexAPSInt
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1237,7 +1226,7 @@ name|ComplexAPFloat
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1253,7 +1242,7 @@ name|ComplexAPFloat
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1289,7 +1278,7 @@ name|LV
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1305,7 +1294,7 @@ name|LV
 operator|*
 operator|)
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|Data
@@ -1374,7 +1363,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(APFloat*)(void*)Data
+argument|(void*)(char*)Data
 argument_list|)
 name|APFloat
 argument_list|(
@@ -1400,7 +1389,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(Vec*)(void*)Data
+argument|(void*)(char*)Data
 argument_list|)
 name|Vec
 argument_list|()
@@ -1424,7 +1413,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(ComplexAPSInt*)(void*)Data
+argument|(void*)(char*)Data
 argument_list|)
 name|ComplexAPSInt
 argument_list|()
@@ -1448,7 +1437,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(ComplexAPFloat*)(void*)Data
+argument|(void*)(char*)Data
 argument_list|)
 name|ComplexAPFloat
 argument_list|()
@@ -1472,7 +1461,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(LV*)(void*)Data
+argument|(void*)(char*)Data
 argument_list|)
 name|LV
 argument_list|()

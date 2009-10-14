@@ -144,7 +144,11 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_block
 
 begin_comment

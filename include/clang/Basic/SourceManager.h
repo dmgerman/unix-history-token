@@ -161,6 +161,12 @@ name|MemoryBuffer
 operator|*
 name|Buffer
 expr_stmt|;
+comment|/// The line and column at which we should truncate the file.
+name|unsigned
+name|TruncateAtLine
+decl_stmt|,
+name|TruncateAtColumn
+decl_stmt|;
 name|public
 label|:
 comment|/// Reference to the file entry.  This reference does not own
@@ -241,6 +247,34 @@ operator|=
 name|B
 expr_stmt|;
 block|}
+comment|/// \brief Truncate this file at the given line and column.
+comment|///
+comment|/// \param Line the line on which to truncate the current file (1-based).
+comment|/// \param Column the column at which to truncate the current file.
+comment|/// (1-based).
+name|void
+name|truncateAt
+parameter_list|(
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|Column
+parameter_list|)
+function_decl|;
+comment|/// \brief Determines whether the file was artificially truncated with
+comment|/// truncateAt().
+name|bool
+name|isTruncated
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TruncateAtLine
+operator|&&
+name|TruncateAtColumn
+return|;
+block|}
 name|ContentCache
 argument_list|(
 specifier|const
@@ -252,6 +286,16 @@ literal|0
 argument_list|)
 operator|:
 name|Buffer
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TruncateAtLine
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TruncateAtColumn
 argument_list|(
 literal|0
 argument_list|)
@@ -291,6 +335,16 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|TruncateAtLine
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TruncateAtColumn
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|SourceLineCache
 argument_list|(
 literal|0
@@ -324,7 +378,7 @@ operator|=
 name|RHS
 operator|.
 name|NumLines
-block|;           }
+block|;     }
 name|private
 operator|:
 comment|// Disable assignments.
@@ -1009,6 +1063,18 @@ name|mutable
 name|bool
 name|LastResForBeforeTUCheck
 decl_stmt|;
+comment|// Keep track of the file/line/column that we should truncate.
+specifier|const
+name|FileEntry
+modifier|*
+name|TruncateFile
+decl_stmt|;
+name|unsigned
+name|TruncateAtLine
+decl_stmt|;
+name|unsigned
+name|TruncateAtColumn
+decl_stmt|;
 comment|// SourceManager doesn't support copy construction.
 name|explicit
 name|SourceManager
@@ -1048,6 +1114,21 @@ literal|0
 argument_list|)
 operator|,
 name|NumBinaryProbes
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TruncateFile
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TruncateAtLine
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|TruncateAtColumn
 argument_list|(
 literal|0
 argument_list|)
@@ -2372,6 +2453,43 @@ name|LHS
 argument_list|,
 name|SourceLocation
 name|RHS
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Truncate the given file at the specified line/column.
+end_comment
+
+begin_function_decl
+name|void
+name|truncateFileAt
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|Entry
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|Column
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Determine whether this file was truncated.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isTruncatedFile
+argument_list|(
+name|FileID
+name|FID
 argument_list|)
 decl|const
 decl_stmt|;

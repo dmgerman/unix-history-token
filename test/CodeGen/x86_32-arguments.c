@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-apple-darwin9 -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -fblocks -triple i386-apple-darwin9 -emit-llvm -o %t %s&&
 end_comment
 
 begin_comment
@@ -49,7 +49,11 @@ name|f0
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -58,7 +62,11 @@ name|f1
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -67,7 +75,11 @@ name|f2
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -76,7 +88,11 @@ name|f3
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -85,7 +101,11 @@ name|f4
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -95,7 +115,11 @@ name|f5
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
@@ -119,7 +143,7 @@ name|void
 modifier|*
 name|a4
 parameter_list|)
-block|{ }
+block|{}
 end_function
 
 begin_typedef
@@ -143,7 +167,7 @@ parameter_list|(
 name|E
 name|a0
 parameter_list|)
-block|{ }
+block|{}
 end_function
 
 begin_struct
@@ -167,7 +191,13 @@ name|f8_1
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+while|while
+condition|(
+literal|1
+condition|)
+block|{}
+block|}
 end_function
 
 begin_function
@@ -178,7 +208,7 @@ name|struct
 name|s8
 name|a0
 parameter_list|)
-block|{ }
+block|{}
 end_function
 
 begin_comment
@@ -224,7 +254,13 @@ name|f9_1
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+while|while
+condition|(
+literal|1
+condition|)
+block|{}
+block|}
 end_function
 
 begin_function
@@ -235,7 +271,7 @@ name|struct
 name|s9
 name|a0
 parameter_list|)
-block|{ }
+block|{}
 end_function
 
 begin_comment
@@ -261,7 +297,13 @@ name|f10
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// Small vectors and 1 x {i64,double} are returned in registers
 comment|// RUN: grep 'i32 @f11()' %t&&
 comment|// RUN: grep -F 'void @f12(<2 x i32>* noalias sret %agg.result)' %t&&
@@ -290,7 +332,13 @@ name|f11
 parameter_list|(
 name|void
 parameter_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 end_function
 
 begin_typedef
@@ -309,7 +357,13 @@ name|f12
 parameter_list|(
 name|void
 parameter_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 end_function
 
 begin_typedef
@@ -329,7 +383,13 @@ name|f13
 parameter_list|(
 name|void
 parameter_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 end_function
 
 begin_typedef
@@ -348,7 +408,13 @@ name|f14
 parameter_list|(
 name|void
 parameter_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 end_function
 
 begin_typedef
@@ -368,7 +434,13 @@ name|f15
 parameter_list|(
 name|void
 parameter_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 end_function
 
 begin_typedef
@@ -387,7 +459,13 @@ name|f16
 parameter_list|(
 name|void
 parameter_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 end_function
 
 begin_comment
@@ -433,7 +511,13 @@ name|f17
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 decl|struct
 block|{
 name|T12
@@ -444,7 +528,13 @@ name|f18
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 decl|struct
 block|{
 name|T13
@@ -455,7 +545,13 @@ name|f19
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 decl|struct
 block|{
 name|T14
@@ -466,7 +562,13 @@ name|f20
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 decl|struct
 block|{
 name|T15
@@ -477,7 +579,13 @@ name|f21
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 decl|struct
 block|{
 name|T16
@@ -488,7 +596,13 @@ name|f22
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// Single element structures are handled specially
 comment|// RUN: grep -F 'float @f23()' %t&&
 comment|// RUN: grep -F 'float @f24()' %t&&
@@ -503,7 +617,13 @@ name|f23
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 decl|struct
 block|{
 name|float
@@ -517,7 +637,13 @@ name|f24
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 decl|struct
 block|{
 struct|struct
@@ -540,7 +666,13 @@ name|f25
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// Small structures are handled recursively
 comment|// RUN: grep -F 'i32 @f26()' %t&&
 comment|// RUN: grep 'void @f27(%.truct.s27\* noalias sret %agg.result)' %t&&
@@ -572,7 +704,13 @@ name|f26
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 decl|struct
 name|s27
 block|{
@@ -601,7 +739,13 @@ name|f27
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'void @f28(%.truct.s28\* noalias sret %agg.result)' %t&&
 decl|struct
 name|s28
@@ -618,7 +762,13 @@ name|f28
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define i16 @f29()' %t&&
 decl|struct
 name|s29
@@ -641,7 +791,13 @@ name|f29
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define i16 @f30()' %t&&
 decl|struct
 name|s30
@@ -659,7 +815,13 @@ name|f30
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define float @f31()' %t&&
 decl|struct
 name|s31
@@ -680,7 +842,13 @@ name|f31
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define i32 @f32()' %t&&
 decl|struct
 name|s32
@@ -697,7 +865,13 @@ name|f32
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define float @f33()' %t&&
 decl|struct
 name|s33
@@ -715,7 +889,13 @@ name|f33
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define float @f34()' %t&&
 decl|struct
 name|s34
@@ -737,7 +917,13 @@ name|f34
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define i16 @f35()' %t&&
 decl|struct
 name|s35
@@ -762,7 +948,13 @@ name|f35
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define i16 @f36()' %t&&
 decl|struct
 name|s36
@@ -793,7 +985,13 @@ name|f36
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define float @f37()' %t&&
 decl|struct
 name|s37
@@ -812,7 +1010,13 @@ name|f37
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define void @f38(.struct.s38. noalias sret .agg.result)' %t&&
 decl|struct
 name|s38
@@ -831,7 +1035,13 @@ name|f38
 argument_list|(
 name|void
 argument_list|)
+block|{
+while|while
+condition|(
+literal|1
+condition|)
 block|{}
+block|}
 comment|// RUN: grep 'define void @f39(.struct.s39. byval align 16 .x)' %t&&
 decl|typedef
 name|int
@@ -868,6 +1078,250 @@ name|s39
 name|x
 parameter_list|)
 block|{}
+end_function
+
+begin_comment
+comment|//<rdar://problem/7247671>
+end_comment
+
+begin_comment
+comment|// RUN: grep 'define i32 @f40()' %t&&
+end_comment
+
+begin_enum
+enum|enum
+name|e40
+block|{
+name|ec0
+init|=
+literal|0
+block|}
+enum|;
+end_enum
+
+begin_function
+name|enum
+name|e40
+name|f40
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// RUN: grep 'define void ()\* @f41()' %t&&
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|^
+name|vvbp
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function
+name|vvbp
+name|f41
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// RUN: grep 'define i32 @f42()' %t&&
+end_comment
+
+begin_struct
+struct|struct
+name|s42
+block|{
+name|enum
+name|e40
+name|f0
+decl_stmt|;
+block|}
+name|f42
+argument_list|(
+name|void
+argument_list|)
+block|{  }
+comment|// RUN: grep 'define i64 @f43()' %t&&
+decl|struct
+name|s43
+block|{
+name|enum
+name|e40
+name|f0
+decl_stmt|;
+name|int
+name|f1
+decl_stmt|;
+block|}
+name|f43
+argument_list|(
+name|void
+argument_list|)
+block|{  }
+comment|// RUN: grep 'define i32 @f44()' %t&&
+decl|struct
+name|s44
+block|{
+name|vvbp
+name|f0
+decl_stmt|;
+block|}
+name|f44
+argument_list|(
+name|void
+argument_list|)
+block|{  }
+comment|// RUN: grep 'define i64 @f45()' %t&&
+decl|struct
+name|s45
+block|{
+name|vvbp
+name|f0
+decl_stmt|;
+name|int
+name|f1
+decl_stmt|;
+block|}
+name|f45
+argument_list|(
+name|void
+argument_list|)
+block|{  }
+comment|// RUN: grep 'define void @f46(i32 %a0)' %t&&
+name|void
+name|f46
+argument_list|(
+expr|enum
+name|e40
+name|a0
+argument_list|)
+block|{ }
+comment|// RUN: grep 'define void @f47(void ()\* %a1)' %t&&
+name|void
+name|f47
+argument_list|(
+name|vvbp
+name|a1
+argument_list|)
+block|{ }
+comment|// RUN: grep 'define void @f48(i32 %a0.0)' %t&&
+decl|struct
+name|s48
+block|{
+name|enum
+name|e40
+name|f0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f48
+parameter_list|(
+name|struct
+name|s48
+name|a0
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// RUN: grep 'define void @f49(i32 %a0.0, i32 %a0.1)' %t&&
+end_comment
+
+begin_struct
+struct|struct
+name|s49
+block|{
+name|enum
+name|e40
+name|f0
+decl_stmt|;
+name|int
+name|f1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f49
+parameter_list|(
+name|struct
+name|s49
+name|a0
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// RUN: grep 'define void @f50(void ()\* %a0.0)' %t&&
+end_comment
+
+begin_struct
+struct|struct
+name|s50
+block|{
+name|vvbp
+name|f0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f50
+parameter_list|(
+name|struct
+name|s50
+name|a0
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// RUN: grep 'define void @f51(void ()\* %a0.0, i32 %a0.1)' %t&&
+end_comment
+
+begin_struct
+struct|struct
+name|s51
+block|{
+name|vvbp
+name|f0
+decl_stmt|;
+name|int
+name|f1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f51
+parameter_list|(
+name|struct
+name|s51
+name|a0
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment

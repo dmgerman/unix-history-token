@@ -4,19 +4,19 @@ comment|// RUN: clang -ccc-clang-archs "" -ccc-host-triple i686-pc-openbsd %s -#
 end_comment
 
 begin_comment
-comment|// RUN: grep 'clang-cc" "-triple" "i386-pc-openbsd"' %t.log&&
+comment|// RUN: FileCheck -input-file %t.log %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'as" "-o" ".*\.o" ".*\.s' %t.log&&
+comment|// CHECK: clang-cc{{.*}}" "-triple" "i686-pc-openbsd"
 end_comment
 
 begin_comment
-comment|// RUN: grep 'ld" "--eh-frame-hdr" "-dynamic-linker" ".*ld.so" "-o" "a\.out" ".*crt0.o" ".*crtbegin.o" ".*\.o" "-lc" ".*crtend.o"' %t.log&&
+comment|// CHECK: as{{.*}}" "-o" "{{.*}}.o" "{{.*}}.s
 end_comment
 
 begin_comment
-comment|// RUN: true
+comment|// CHECK: ld{{.*}}" "-e" "__start" "--eh-frame-hdr" "-Bdynamic" "-dynamic-linker" "{{.*}}ld.so" "-o" "a.out" "{{.*}}crt0.o" "{{.*}}crtbegin.o" "{{.*}}.o" "-lgcc" "-lc" "-lgcc" "{{.*}}crtend.o"
 end_comment
 
 end_unit

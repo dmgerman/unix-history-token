@@ -421,7 +421,7 @@ comment|/// List of attributes for this method declaration.
 name|SourceLocation
 name|EndLoc
 decl_stmt|;
-comment|// the location of the ';' or '{'.
+comment|// the location of the ';' or '}'.
 comment|// The following are only used for method definitions, null otherwise.
 comment|// FIXME: space savings opportunity, consider a sub-class.
 name|Stmt
@@ -532,18 +532,27 @@ operator|~
 name|ObjCMethodDecl
 argument_list|()
 block|{}
+comment|/// \brief A definition will return its interface declaration.
+comment|/// An interface declaration will return its definition.
+comment|/// Otherwise it will return itself.
+name|virtual
+name|ObjCMethodDecl
+operator|*
+name|getNextRedeclaration
+argument_list|()
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|/// Destroy - Call destructors and release memory.
 name|virtual
 name|void
 name|Destroy
-argument_list|(
+parameter_list|(
 name|ASTContext
-operator|&
+modifier|&
 name|C
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 specifier|static
 name|ObjCMethodDecl
 modifier|*
@@ -589,6 +598,12 @@ name|impControl
 init|=
 name|None
 parameter_list|)
+function_decl|;
+name|virtual
+name|ObjCMethodDecl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
 function_decl|;
 name|ObjCDeclQualifier
 name|getObjCDeclQualifier
@@ -646,6 +661,7 @@ operator|=
 name|Loc
 expr_stmt|;
 block|}
+name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -700,11 +716,6 @@ name|getObjCSelector
 argument_list|()
 return|;
 block|}
-name|unsigned
-name|getSynthesizedMethodSize
-argument_list|()
-specifier|const
-expr_stmt|;
 name|QualType
 name|getResultType
 argument_list|()
@@ -1072,6 +1083,16 @@ operator|=
 name|B
 expr_stmt|;
 block|}
+comment|/// \brief Returns whether this specific method is a definition.
+name|bool
+name|isThisDeclarationADefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Body
+return|;
+block|}
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -1209,9 +1230,8 @@ block|}
 block|}
 struct|;
 comment|/// ObjCContainerDecl - Represents a container for method declarations.
-comment|/// Current sub-classes are ObjCInterfaceDecl, ObjCCategoryDecl, and
-comment|/// ObjCProtocolDecl.
-comment|/// FIXME: Use for ObjC implementation decls.
+comment|/// Current sub-classes are ObjCInterfaceDecl, ObjCCategoryDecl,
+comment|/// ObjCProtocolDecl, and ObjCImplDecl.
 comment|///
 name|class
 name|ObjCContainerDecl
@@ -1407,13 +1427,35 @@ block|}
 comment|// Get the local instance/class method declared in this interface.
 name|ObjCMethodDecl
 modifier|*
+name|getMethod
+argument_list|(
+name|Selector
+name|Sel
+argument_list|,
+name|bool
+name|isInstance
+argument_list|)
+decl|const
+decl_stmt|;
+name|ObjCMethodDecl
+modifier|*
 name|getInstanceMethod
 argument_list|(
 name|Selector
 name|Sel
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|getMethod
+argument_list|(
+name|Sel
+argument_list|,
+name|true
+comment|/*isInstance*/
+argument_list|)
+return|;
+block|}
 name|ObjCMethodDecl
 modifier|*
 name|getClassMethod
@@ -1422,7 +1464,17 @@ name|Selector
 name|Sel
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|getMethod
+argument_list|(
+name|Sel
+argument_list|,
+name|false
+comment|/*isInstance*/
+argument_list|)
+return|;
+block|}
 name|ObjCIvarDecl
 modifier|*
 name|getIvarDecl
@@ -1433,32 +1485,6 @@ name|Id
 argument_list|)
 decl|const
 decl_stmt|;
-name|ObjCMethodDecl
-modifier|*
-name|getMethod
-argument_list|(
-name|Selector
-name|Sel
-argument_list|,
-name|bool
-name|isInstance
-argument_list|)
-decl|const
-block|{
-return|return
-name|isInstance
-condition|?
-name|getInstanceMethod
-argument_list|(
-name|Sel
-argument_list|)
-else|:
-name|getClassMethod
-argument_list|(
-name|Sel
-argument_list|)
-return|;
-block|}
 name|ObjCPropertyDecl
 modifier|*
 name|FindPropertyDeclaration
@@ -1490,6 +1516,23 @@ name|AtEndLoc
 operator|=
 name|L
 expr_stmt|;
+block|}
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getLocation
+argument_list|()
+argument_list|,
+name|getAtEndLoc
+argument_list|()
+argument_list|)
+return|;
 block|}
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
@@ -1745,6 +1788,20 @@ return|return
 name|ReferencedProtocols
 return|;
 block|}
+name|ObjCImplementationDecl
+operator|*
+name|getImplementation
+argument_list|()
+specifier|const
+block|;
+name|void
+name|setImplementation
+argument_list|(
+name|ObjCImplementationDecl
+operator|*
+name|ImplD
+argument_list|)
+block|;
 name|ObjCCategoryDecl
 operator|*
 name|FindCategoryDeclaration
@@ -1753,6 +1810,47 @@ argument|IdentifierInfo *CategoryId
 argument_list|)
 specifier|const
 block|;
+comment|// Get the local instance/class method declared in a category.
+name|ObjCMethodDecl
+operator|*
+name|getCategoryInstanceMethod
+argument_list|(
+argument|Selector Sel
+argument_list|)
+specifier|const
+block|;
+name|ObjCMethodDecl
+operator|*
+name|getCategoryClassMethod
+argument_list|(
+argument|Selector Sel
+argument_list|)
+specifier|const
+block|;
+name|ObjCMethodDecl
+operator|*
+name|getCategoryMethod
+argument_list|(
+argument|Selector Sel
+argument_list|,
+argument|bool isInstance
+argument_list|)
+specifier|const
+block|{
+return|return
+name|isInstance
+operator|?
+name|getInstanceMethod
+argument_list|(
+name|Sel
+argument_list|)
+operator|:
+name|getClassMethod
+argument_list|(
+name|Sel
+argument_list|)
+return|;
+block|}
 typedef|typedef
 name|ObjCList
 operator|<
@@ -1886,6 +1984,25 @@ name|C
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// mergeClassExtensionProtocolList - Merge class extension's protocol list
+comment|/// into the protocol list for this class.
+name|void
+name|mergeClassExtensionProtocolList
+parameter_list|(
+name|ObjCProtocolDecl
+modifier|*
+specifier|const
+modifier|*
+name|List
+parameter_list|,
+name|unsigned
+name|Num
+parameter_list|,
+name|ASTContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
 name|void
 name|setIVarList
 parameter_list|(
@@ -2063,20 +2180,54 @@ comment|// Lookup a method. First, we search locally. If a method isn't
 comment|// found, we search referenced protocols and class categories.
 name|ObjCMethodDecl
 modifier|*
-name|lookupInstanceMethod
-parameter_list|(
+name|lookupMethod
+argument_list|(
 name|Selector
 name|Sel
-parameter_list|)
-function_decl|;
+argument_list|,
+name|bool
+name|isInstance
+argument_list|)
+decl|const
+decl_stmt|;
+name|ObjCMethodDecl
+modifier|*
+name|lookupInstanceMethod
+argument_list|(
+name|Selector
+name|Sel
+argument_list|)
+decl|const
+block|{
+return|return
+name|lookupMethod
+argument_list|(
+name|Sel
+argument_list|,
+name|true
+comment|/*isInstance*/
+argument_list|)
+return|;
+block|}
 name|ObjCMethodDecl
 modifier|*
 name|lookupClassMethod
-parameter_list|(
+argument_list|(
 name|Selector
 name|Sel
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+block|{
+return|return
+name|lookupMethod
+argument_list|(
+name|Sel
+argument_list|,
+name|false
+comment|/*isInstance*/
+argument_list|)
+return|;
+block|}
 name|ObjCInterfaceDecl
 modifier|*
 name|lookupInheritedClass
@@ -2085,6 +2236,17 @@ specifier|const
 name|IdentifierInfo
 modifier|*
 name|ICName
+parameter_list|)
+function_decl|;
+comment|// Lookup a method in the classes implementation hierarchy.
+name|ObjCMethodDecl
+modifier|*
+name|lookupPrivateInstanceMethod
+parameter_list|(
+specifier|const
+name|Selector
+modifier|&
+name|Sel
 parameter_list|)
 function_decl|;
 comment|// Location information, modeled after the Stmt API.
@@ -2187,6 +2349,25 @@ operator|=
 name|val
 expr_stmt|;
 block|}
+comment|/// ClassImplementsProtocol - Checks that 'lProto' protocol
+comment|/// has been implemented in IDecl class, its super class or categories (if
+comment|/// lookupCategory is true).
+name|bool
+name|ClassImplementsProtocol
+parameter_list|(
+name|ObjCProtocolDecl
+modifier|*
+name|lProto
+parameter_list|,
+name|bool
+name|lookupCategory
+parameter_list|,
+name|bool
+name|RHSIsQualifiedID
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|// Low-level accessor
 name|Type
 operator|*
@@ -2347,6 +2528,8 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
+argument|DeclaratorInfo *DInfo
+argument_list|,
 argument|AccessControl ac
 argument_list|,
 argument|Expr *BW
@@ -2363,6 +2546,8 @@ argument_list|,
 name|Id
 argument_list|,
 name|T
+argument_list|,
+name|DInfo
 argument_list|,
 name|BW
 argument_list|,
@@ -2391,6 +2576,8 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|DeclaratorInfo *DInfo
 argument_list|,
 argument|AccessControl ac
 argument_list|,
@@ -2518,6 +2705,10 @@ argument|Id
 argument_list|,
 argument|T
 argument_list|,
+comment|/*DInfo=*/
+literal|0
+argument_list|,
+comment|// FIXME: Do ObjCAtDefs have declarators ?
 argument|BW
 argument_list|,
 comment|/*Mutable=*/
@@ -2779,18 +2970,50 @@ comment|// Lookup a method. First, we search locally. If a method isn't
 comment|// found, we search referenced protocols and class categories.
 name|ObjCMethodDecl
 operator|*
+name|lookupMethod
+argument_list|(
+argument|Selector Sel
+argument_list|,
+argument|bool isInstance
+argument_list|)
+specifier|const
+block|;
+name|ObjCMethodDecl
+operator|*
 name|lookupInstanceMethod
 argument_list|(
 argument|Selector Sel
 argument_list|)
-block|;
+specifier|const
+block|{
+return|return
+name|lookupMethod
+argument_list|(
+name|Sel
+argument_list|,
+name|true
+comment|/*isInstance*/
+argument_list|)
+return|;
+block|}
 name|ObjCMethodDecl
 operator|*
 name|lookupClassMethod
 argument_list|(
 argument|Selector Sel
 argument_list|)
-block|;
+specifier|const
+block|{
+return|return
+name|lookupMethod
+argument_list|(
+name|Sel
+argument_list|,
+name|false
+comment|/*isInstance*/
+argument_list|)
+return|;
+block|}
 name|bool
 name|isForwardDecl
 argument_list|()
@@ -3313,6 +3536,20 @@ name|ClassInterface
 operator|=
 name|IDecl
 block|; }
+name|ObjCCategoryImplDecl
+operator|*
+name|getImplementation
+argument_list|()
+specifier|const
+block|;
+name|void
+name|setImplementation
+argument_list|(
+name|ObjCCategoryImplDecl
+operator|*
+name|ImplD
+argument_list|)
+block|;
 comment|/// setProtocolList - Set the list of protocols that this interface
 comment|/// implements.
 name|void
@@ -3498,18 +3735,12 @@ name|class
 name|ObjCImplDecl
 operator|:
 name|public
-name|NamedDecl
-block|,
-name|public
-name|DeclContext
+name|ObjCContainerDecl
 block|{
 comment|/// Class interface for this category implementation
 name|ObjCInterfaceDecl
 operator|*
 name|ClassInterface
-block|;
-name|SourceLocation
-name|EndLoc
 block|;
 name|protected
 operator|:
@@ -3524,7 +3755,7 @@ argument_list|,
 argument|ObjCInterfaceDecl *classInterface
 argument_list|)
 operator|:
-name|NamedDecl
+name|ObjCContainerDecl
 argument_list|(
 name|DK
 argument_list|,
@@ -3536,16 +3767,10 @@ name|classInterface
 condition|?
 name|classInterface
 operator|->
-name|getDeclName
+name|getIdentifier
 argument_list|()
 else|:
-name|DeclarationName
-argument_list|()
-argument_list|)
-block|,
-name|DeclContext
-argument_list|(
-name|DK
+literal|0
 argument_list|)
 block|,
 name|ClassInterface
@@ -3583,13 +3808,11 @@ block|}
 name|void
 name|setClassInterface
 argument_list|(
-argument|ObjCInterfaceDecl *IFace
-argument_list|)
-block|{
-name|ClassInterface
-operator|=
+name|ObjCInterfaceDecl
+operator|*
 name|IFace
-block|; }
+argument_list|)
+block|;
 name|void
 name|addInstanceMethod
 argument_list|(
@@ -3608,7 +3831,7 @@ name|addDecl
 argument_list|(
 name|method
 argument_list|)
-block|;    }
+block|;   }
 name|void
 name|addClassMethod
 argument_list|(
@@ -3627,48 +3850,7 @@ name|addDecl
 argument_list|(
 name|method
 argument_list|)
-block|;    }
-comment|// Get the local instance/class method declared in this interface.
-name|ObjCMethodDecl
-operator|*
-name|getInstanceMethod
-argument_list|(
-argument|Selector Sel
-argument_list|)
-specifier|const
-block|;
-name|ObjCMethodDecl
-operator|*
-name|getClassMethod
-argument_list|(
-argument|Selector Sel
-argument_list|)
-specifier|const
-block|;
-name|ObjCMethodDecl
-operator|*
-name|getMethod
-argument_list|(
-argument|Selector Sel
-argument_list|,
-argument|bool isInstance
-argument_list|)
-specifier|const
-block|{
-return|return
-name|isInstance
-condition|?
-name|getInstanceMethod
-argument_list|(
-name|Sel
-argument_list|)
-else|:
-name|getClassMethod
-argument_list|(
-name|Sel
-argument_list|)
-return|;
-block|}
+block|;   }
 name|void
 name|addPropertyImplementation
 argument_list|(
@@ -3727,198 +3909,58 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-typedef|typedef
-name|filtered_decl_iterator
-operator|<
-name|ObjCMethodDecl
-operator|,
-operator|&
-name|ObjCMethodDecl
-operator|::
-name|isInstanceMethod
-operator|>
-name|instmeth_iterator
-expr_stmt|;
-name|instmeth_iterator
-name|instmeth_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|instmeth_iterator
+specifier|static
+name|bool
+name|classof
 argument_list|(
-name|decls_begin
-argument_list|()
+argument|const Decl *D
 argument_list|)
-return|;
-block|}
-name|instmeth_iterator
-name|instmeth_end
-argument_list|()
-specifier|const
 block|{
 return|return
-name|instmeth_iterator
+name|D
+operator|->
+name|getKind
+argument_list|()
+operator|>=
+name|ObjCImplFirst
+operator|&&
+name|D
+operator|->
+name|getKind
+argument_list|()
+operator|<=
+name|ObjCImplLast
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
 argument_list|(
-name|decls_end
-argument_list|()
+argument|const ObjCImplDecl *D
 argument_list|)
-return|;
-block|}
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|filtered_decl_iterator
-operator|<
-name|ObjCMethodDecl
-operator|,
-operator|&
-name|ObjCMethodDecl
-operator|::
-name|isClassMethod
-operator|>
-name|classmeth_iterator
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|classmeth_iterator
-name|classmeth_begin
-argument_list|()
-specifier|const
 block|{
 return|return
-name|classmeth_iterator
-argument_list|(
-name|decls_begin
-argument_list|()
-argument_list|)
+name|true
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|classmeth_iterator
-name|classmeth_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|classmeth_iterator
-argument_list|(
-name|decls_end
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|// Location information, modeled after the Stmt API.
-end_comment
-
-begin_expr_stmt
-name|SourceLocation
-name|getLocStart
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getLocation
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|SourceLocation
-name|getLocEnd
-argument_list|()
-specifier|const
-block|{
-return|return
-name|EndLoc
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setLocEnd
-parameter_list|(
-name|SourceLocation
-name|LE
-parameter_list|)
-block|{
-name|EndLoc
-operator|=
-name|LE
-expr_stmt|;
-block|}
-end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|/// ObjCCategoryImplDecl - An object of this class encapsulates a category
-end_comment
-
-begin_comment
 comment|/// @implementation declaration. If a category class has declaration of a
-end_comment
-
-begin_comment
 comment|/// property, its implementation must be specified in the category's
-end_comment
-
-begin_comment
 comment|/// @implementation declaration. Example:
-end_comment
-
-begin_comment
 comment|/// @interface I @end
-end_comment
-
-begin_comment
 comment|/// @interface I(CATEGORY)
-end_comment
-
-begin_comment
 comment|///    @property int p1, d1;
-end_comment
-
-begin_comment
 comment|/// @end
-end_comment
-
-begin_comment
 comment|/// @implementation I(CATEGORY)
-end_comment
-
-begin_comment
 comment|///  @dynamic p1,d1;
-end_comment
-
-begin_comment
 comment|/// @end
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// ObjCCategoryImplDecl
-end_comment
-
-begin_decl_stmt
 name|class
 name|ObjCCategoryImplDecl
-range|:
+operator|:
 name|public
 name|ObjCImplDecl
 block|{
@@ -3994,6 +4036,12 @@ name|Id
 operator|=
 name|II
 block|; }
+name|ObjCCategoryDecl
+operator|*
+name|getCategoryClass
+argument_list|()
+specifier|const
+block|;
 comment|/// getNameAsCString - Get the name of identifier for the class
 comment|/// interface associated with this implementation as a C string
 comment|/// (const char*).
@@ -4059,58 +4107,6 @@ argument_list|)
 block|{
 return|return
 name|true
-return|;
-block|}
-specifier|static
-name|DeclContext
-operator|*
-name|castToDeclContext
-argument_list|(
-argument|const ObjCCategoryImplDecl *D
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|DeclContext
-operator|*
-operator|>
-operator|(
-name|const_cast
-operator|<
-name|ObjCCategoryImplDecl
-operator|*
-operator|>
-operator|(
-name|D
-operator|)
-operator|)
-return|;
-block|}
-specifier|static
-name|ObjCCategoryImplDecl
-operator|*
-name|castFromDeclContext
-argument_list|(
-argument|const DeclContext *DC
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|ObjCCategoryImplDecl
-operator|*
-operator|>
-operator|(
-name|const_cast
-operator|<
-name|DeclContext
-operator|*
-operator|>
-operator|(
-name|DC
-operator|)
-operator|)
 return|;
 block|}
 expr|}
@@ -4362,58 +4358,6 @@ argument_list|)
 block|{
 return|return
 name|true
-return|;
-block|}
-specifier|static
-name|DeclContext
-operator|*
-name|castToDeclContext
-argument_list|(
-argument|const ObjCImplementationDecl *D
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|DeclContext
-operator|*
-operator|>
-operator|(
-name|const_cast
-operator|<
-name|ObjCImplementationDecl
-operator|*
-operator|>
-operator|(
-name|D
-operator|)
-operator|)
-return|;
-block|}
-specifier|static
-name|ObjCImplementationDecl
-operator|*
-name|castFromDeclContext
-argument_list|(
-argument|const DeclContext *DC
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|ObjCImplementationDecl
-operator|*
-operator|>
-operator|(
-name|const_cast
-operator|<
-name|DeclContext
-operator|*
-operator|>
-operator|(
-name|DC
-operator|)
-operator|)
 return|;
 block|}
 expr|}
@@ -5085,6 +5029,22 @@ argument_list|,
 argument|ObjCIvarDecl *ivarDecl
 argument_list|)
 block|;
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|AtLoc
+argument_list|,
+name|getLocation
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|SourceLocation
 name|getLocStart
 argument_list|()

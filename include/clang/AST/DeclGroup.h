@@ -686,7 +686,7 @@ block|}
 end_function
 
 begin_comment
-unit|};    }
+unit|};  }
 comment|// end clang namespace
 end_comment
 

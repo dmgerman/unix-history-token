@@ -85,6 +85,7 @@ name|p
 operator|=
 literal|1
 expr_stmt|;
+comment|// no-warning
 name|kernel_tea_cheese_t
 modifier|*
 name|q
@@ -95,13 +96,16 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+comment|// This test case tests both the RegionStore logic (doesn't crash) and
+comment|// the out-of-bounds checking.  We don't expect the warning for now since
+comment|// out-of-bound checking is temporarily disabled.
 name|kernel_tea_cheese_t
 name|r
 init|=
 operator|*
 name|q
 decl_stmt|;
-comment|// expected-warning{{out-of-bound memory position}}
+comment|// eventually-warning{{out-of-bound memory position}}
 block|}
 end_function
 

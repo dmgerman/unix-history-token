@@ -104,7 +104,7 @@ comment|// RUN: grep '"gcc::Compile", inputs: \[".*bindings.c"\], output: (nothi
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-bindings -fsyntax-only -x c++ %s 2> %t&&
+comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-bindings -ccc-no-clang-cxx -fsyntax-only -x c++ %s 2> %t&&
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ comment|// RUN: grep '"gcc::Compile", inputs: \[".*bindings.c"\], output: "bindi
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-bindings -ccc-clang-archs ppc %s -S -arch ppc 2> %t&&
+comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-bindings -ccc-clang-archs powerpc %s -S -arch ppc 2> %t&&
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ comment|// RUN: grep '"clang", inputs: \[".*bindings.c"\], output: "bindings.s"'
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple powerpc-unknown-unknown -ccc-print-bindings %s -S 2> %t&&
+comment|// RUN: clang -ccc-host-triple powerpc-unknown-unknown -ccc-print-bindings -ccc-clang-archs "i386" %s -S 2> %t&&
 end_comment
 
 begin_comment

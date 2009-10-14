@@ -4,7 +4,7 @@ comment|// RUN: clang-cc -dump-tokens %s 2> %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "identifier '\$A'" %t
+comment|// RUN: grep "identifier '\$A'" %t&&
 end_comment
 
 begin_comment

@@ -62,6 +62,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Lex/DirectoryLookup.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -69,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/DirectoryLookup.h"
 end_include
 
 begin_decl_stmt
@@ -167,7 +179,7 @@ comment|/// AddPath - Add the specified path to the specified group list.
 name|void
 name|AddPath
 argument_list|(
-argument|const std::string&Path
+argument|const llvm::StringRef&Path
 argument_list|,
 argument|IncludeDirGroup Group
 argument_list|,
@@ -191,6 +203,59 @@ modifier|*
 name|Name
 parameter_list|)
 function_decl|;
+comment|/// AddGnuCPlusPlusIncludePaths - Add the necessary paths to suport a gnu
+comment|///  libstdc++.
+name|void
+name|AddGnuCPlusPlusIncludePaths
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Base
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Dir32
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Dir64
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|triple
+argument_list|)
+decl_stmt|;
+comment|/// AddMinGWCPlusPlusIncludePaths - Add the necessary paths to suport a MinGW
+comment|///  libstdc++.
+name|void
+name|AddMinGWCPlusPlusIncludePaths
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Base
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Arch
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Version
+argument_list|)
+decl_stmt|;
 comment|/// AddDefaultEnvVarPaths - Adds list of paths from default environment
 comment|///  variables such as CPATH.
 name|void
@@ -206,13 +271,20 @@ comment|/// AddDefaultSystemIncludePaths - Adds the default system include paths
 comment|///  that e.g. stdio.h is found.
 name|void
 name|AddDefaultSystemIncludePaths
-parameter_list|(
+argument_list|(
 specifier|const
 name|LangOptions
-modifier|&
+operator|&
 name|Lang
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|triple
+argument_list|)
+decl_stmt|;
 comment|/// Realize - Merges all search path lists into one list and send it to
 comment|/// HeaderSearch.
 name|void

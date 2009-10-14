@@ -7,7 +7,11 @@ begin_function
 name|int
 name|x
 parameter_list|()
-block|{}
+block|{
+return|return
+literal|1
+return|;
+block|}
 end_function
 
 begin_function_decl

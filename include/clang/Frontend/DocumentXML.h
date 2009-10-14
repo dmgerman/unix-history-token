@@ -713,6 +713,24 @@ specifier|static
 name|bool
 name|isDefault
 argument_list|(
+name|Qualifiers
+operator|::
+name|GC
+name|value
+argument_list|)
+block|{
+return|return
+name|value
+operator|==
+name|Qualifiers
+operator|::
+name|GCNone
+return|;
+block|}
+specifier|static
+name|bool
+name|isDefault
+argument_list|(
 specifier|const
 name|std
 operator|::
@@ -744,7 +762,7 @@ name|Ctx
 operator|=
 operator|&
 name|Context
-block|;  }
+block|; }
 comment|//---------------------------------------------------------
 name|template
 operator|<

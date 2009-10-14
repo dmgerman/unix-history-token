@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region -verify %s
 end_comment
 
+begin_comment
+comment|// XFAIL
+end_comment
+
 begin_function
 name|char
 name|f1

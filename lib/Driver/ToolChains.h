@@ -134,6 +134,8 @@ operator|*
 name|TranslateArgs
 argument_list|(
 argument|InputArgList&Args
+argument_list|,
+argument|const char *BoundArch
 argument_list|)
 specifier|const
 block|;
@@ -177,10 +179,10 @@ argument_list|()
 specifier|const
 block|; }
 decl_stmt|;
-comment|/// Darwin_X86 - Darwin tool chain for i386 an x86_64.
+comment|/// Darwin - The base Darwin tool chain.
 name|class
 name|VISIBILITY_HIDDEN
-name|Darwin_X86
+name|Darwin
 range|:
 name|public
 name|ToolChain
@@ -204,18 +206,12 @@ index|[
 literal|3
 index|]
 block|;
-comment|/// GCC version to use.
-name|unsigned
-name|GCCVersion
-index|[
-literal|3
-index|]
-block|;
-comment|/// The directory suffix for this tool chain.
-name|std
-operator|::
-name|string
-name|ToolChainDir
+comment|/// Whether this is this an iPhoneOS toolchain.
+comment|//
+comment|// FIXME: This should go away, such differences should be completely
+comment|// determined by the target triple.
+name|bool
+name|IsIPhoneOS
 block|;
 comment|/// The default macosx-version-min of this tool chain; empty until
 comment|/// initialized.
@@ -224,6 +220,12 @@ name|std
 operator|::
 name|string
 name|MacosxVersionMin
+block|;
+comment|/// The default iphoneos-version-min of this tool chain.
+name|std
+operator|::
+name|string
+name|IPhoneOSVersionMin
 block|;
 specifier|const
 name|char
@@ -234,45 +236,25 @@ specifier|const
 block|;
 name|public
 operator|:
-name|Darwin_X86
+name|Darwin
 argument_list|(
-specifier|const
-name|HostInfo
-operator|&
-name|Host
+argument|const HostInfo&Host
 argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|Triple
+argument|const llvm::Triple& Triple
 argument_list|,
-specifier|const
-name|unsigned
-argument_list|(
-operator|&
-name|DarwinVersion
-argument_list|)
-index|[
+argument|const unsigned (&DarwinVersion)[
 literal|3
-index|]
+argument|]
 argument_list|,
-specifier|const
-name|unsigned
-argument_list|(
-operator|&
-name|GCCVersion
-argument_list|)
-index|[
-literal|3
-index|]
+argument|bool IsIPhoneOS
 argument_list|)
 block|;
 operator|~
-name|Darwin_X86
+name|Darwin
 argument_list|()
 block|;
+comment|/// @name Darwin Specific Toolchain API
+comment|/// {
 name|void
 name|getDarwinVersion
 argument_list|(
@@ -350,6 +332,122 @@ index|[
 literal|1
 index|]
 block|;   }
+comment|/// getMacosxVersionMin - Get the effective -mmacosx-version-min, which is
+comment|/// either the -mmacosx-version-min, or the current version if unspecified.
+name|void
+name|getMacosxVersionMin
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|unsigned (&Res)[
+literal|3
+argument|]
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|isMacosxVersionLT
+argument_list|(
+argument|unsigned (&A)[
+literal|3
+argument|]
+argument_list|,
+argument|unsigned (&B)[
+literal|3
+argument|]
+argument_list|)
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|A
+index|[
+name|i
+index|]
+operator|>
+name|B
+index|[
+name|i
+index|]
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|A
+index|[
+name|i
+index|]
+operator|<
+name|B
+index|[
+name|i
+index|]
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+specifier|static
+name|bool
+name|isMacosxVersionLT
+argument_list|(
+argument|unsigned (&A)[
+literal|3
+argument|]
+argument_list|,
+argument|unsigned V0
+argument_list|,
+argument|unsigned V1=
+literal|0
+argument_list|,
+argument|unsigned V2=
+literal|0
+argument_list|)
+block|{
+name|unsigned
+name|B
+index|[
+literal|3
+index|]
+operator|=
+block|{
+name|V0
+block|,
+name|V1
+block|,
+name|V2
+block|}
+block|;
+return|return
+name|isMacosxVersionLT
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
 specifier|const
 name|char
 operator|*
@@ -365,24 +463,70 @@ argument_list|()
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getToolChainDir
+name|char
+operator|*
+name|getIPhoneOSVersionStr
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ToolChainDir
+name|IPhoneOSVersionMin
+operator|.
+name|c_str
+argument_list|()
 return|;
 block|}
+comment|/// AddLinkSearchPathArgs - Add the linker search paths to \arg CmdArgs.
+comment|///
+comment|/// \param Args - The input argument list.
+comment|/// \param CmdArgs [out] - The command argument list to append the paths
+comment|/// (prefixed by -L) to.
+name|virtual
+name|void
+name|AddLinkSearchPathArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+comment|/// AddLinkRuntimeLibArgs - Add the linker arguments to link the compiler
+comment|/// runtime library.
+name|virtual
+name|void
+name|AddLinkRuntimeLibArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|bool
+name|isIPhoneOS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsIPhoneOS
+return|;
+block|}
+comment|/// }
+comment|/// @name ToolChain Implementation
+comment|/// {
 name|virtual
 name|DerivedArgList
 operator|*
 name|TranslateArgs
 argument_list|(
 argument|InputArgList&Args
+argument_list|,
+argument|const char *BoundArch
 argument_list|)
 specifier|const
 block|;
@@ -424,19 +568,134 @@ operator|*
 name|GetForcedPicModel
 argument_list|()
 specifier|const
-block|; }
+block|;
+comment|/// }
+block|}
 decl_stmt|;
-comment|/// Darwin_GCC - Generic Darwin tool chain using gcc.
+comment|/// DarwinClang - The Darwin toolchain used by Clang.
 name|class
 name|VISIBILITY_HIDDEN
-name|Darwin_GCC
+name|DarwinClang
+range|:
+name|public
+name|Darwin
+block|{
+name|public
+operator|:
+name|DarwinClang
+argument_list|(
+argument|const HostInfo&Host
+argument_list|,
+argument|const llvm::Triple& Triple
+argument_list|,
+argument|const unsigned (&DarwinVersion)[
+literal|3
+argument|]
+argument_list|,
+argument|bool IsIPhoneOS
+argument_list|)
+block|;
+comment|/// @name Darwin ToolChain Implementation
+comment|/// {
+name|virtual
+name|void
+name|AddLinkSearchPathArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddLinkRuntimeLibArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+comment|/// }
+block|}
+decl_stmt|;
+comment|/// DarwinGCC - The Darwin toolchain used by GCC.
+name|class
+name|VISIBILITY_HIDDEN
+name|DarwinGCC
+range|:
+name|public
+name|Darwin
+block|{
+comment|/// GCC version to use.
+name|unsigned
+name|GCCVersion
+index|[
+literal|3
+index|]
+block|;
+comment|/// The directory suffix for this tool chain.
+name|std
+operator|::
+name|string
+name|ToolChainDir
+block|;
+name|public
+operator|:
+name|DarwinGCC
+argument_list|(
+argument|const HostInfo&Host
+argument_list|,
+argument|const llvm::Triple& Triple
+argument_list|,
+argument|const unsigned (&DarwinVersion)[
+literal|3
+argument|]
+argument_list|,
+argument|const unsigned (&GCCVersion)[
+literal|3
+argument|]
+argument_list|,
+argument|bool IsIPhoneOS
+argument_list|)
+block|;
+comment|/// @name Darwin ToolChain Implementation
+comment|/// {
+name|virtual
+name|void
+name|AddLinkSearchPathArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddLinkRuntimeLibArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+comment|/// }
+block|}
+decl_stmt|;
+comment|/// Darwin_Generic_GCC - Generic Darwin tool chain using gcc.
+name|class
+name|VISIBILITY_HIDDEN
+name|Darwin_Generic_GCC
 range|:
 name|public
 name|Generic_GCC
 block|{
 name|public
 operator|:
-name|Darwin_GCC
+name|Darwin_Generic_GCC
 argument_list|(
 specifier|const
 name|HostInfo
@@ -471,6 +730,42 @@ literal|"pic"
 return|;
 block|}
 expr|}
+block|;
+name|class
+name|VISIBILITY_HIDDEN
+name|AuroraUX
+operator|:
+name|public
+name|Generic_GCC
+block|{
+name|public
+operator|:
+name|AuroraUX
+argument_list|(
+specifier|const
+name|HostInfo
+operator|&
+name|Host
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+block|;
+name|virtual
+name|Tool
+operator|&
+name|SelectTool
+argument_list|(
+argument|const Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|)
+specifier|const
+block|; }
 block|;
 name|class
 name|VISIBILITY_HIDDEN

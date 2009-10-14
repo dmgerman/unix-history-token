@@ -176,6 +176,12 @@ block|,
 name|TST_wchar
 block|,
 comment|// C++ wchar_t
+name|TST_char16
+block|,
+comment|// C++0x char16_t
+name|TST_char32
+block|,
+comment|// C++0x char32_t
 name|TST_int
 block|,
 name|TST_float
@@ -224,7 +230,7 @@ comment|// type-qualifiers
 enum|enum
 name|TQ
 block|{
-comment|// NOTE: These flags must be kept in sync with QualType::TQ.
+comment|// NOTE: These flags must be kept in sync with Qualifiers::TQ.
 name|TQ_unspecified
 init|=
 literal|0
@@ -366,6 +372,13 @@ expr_stmt|;
 name|unsigned
 name|NumProtocolQualifiers
 decl_stmt|;
+name|SourceLocation
+name|ProtocolLAngleLoc
+decl_stmt|;
+name|SourceLocation
+modifier|*
+name|ProtocolLocs
+decl_stmt|;
 comment|// SourceLocation info.  These are null if the item wasn't specified or if
 comment|// the setting was synthesized.
 name|SourceRange
@@ -402,84 +415,6 @@ decl_stmt|;
 name|SourceLocation
 name|FriendLoc
 decl_stmt|;
-name|bool
-name|BadSpecifier
-parameter_list|(
-name|TST
-name|T
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|PrevSpec
-parameter_list|)
-function_decl|;
-name|bool
-name|BadSpecifier
-parameter_list|(
-name|TQ
-name|T
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|PrevSpec
-parameter_list|)
-function_decl|;
-name|bool
-name|BadSpecifier
-parameter_list|(
-name|TSS
-name|T
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|PrevSpec
-parameter_list|)
-function_decl|;
-name|bool
-name|BadSpecifier
-parameter_list|(
-name|TSC
-name|T
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|PrevSpec
-parameter_list|)
-function_decl|;
-name|bool
-name|BadSpecifier
-parameter_list|(
-name|TSW
-name|T
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|PrevSpec
-parameter_list|)
-function_decl|;
-name|bool
-name|BadSpecifier
-parameter_list|(
-name|SCS
-name|T
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|PrevSpec
-parameter_list|)
-function_decl|;
 name|DeclSpec
 argument_list|(
 specifier|const
@@ -582,6 +517,11 @@ name|NumProtocolQualifiers
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|ProtocolLocs
+argument_list|(
+literal|0
+argument_list|)
 block|{   }
 operator|~
 name|DeclSpec
@@ -593,6 +533,10 @@ block|;
 name|delete
 index|[]
 name|ProtocolQualifiers
+block|;
+name|delete
+index|[]
+name|ProtocolLocs
 block|;   }
 comment|// storage-class-specifier
 name|SCS
@@ -786,6 +730,54 @@ name|DeclSpec
 operator|::
 name|TST
 name|T
+argument_list|)
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getSpecifierName
+argument_list|(
+name|DeclSpec
+operator|::
+name|TQ
+name|Q
+argument_list|)
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getSpecifierName
+argument_list|(
+name|DeclSpec
+operator|::
+name|TSS
+name|S
+argument_list|)
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getSpecifierName
+argument_list|(
+name|DeclSpec
+operator|::
+name|TSC
+name|C
+argument_list|)
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getSpecifierName
+argument_list|(
+name|DeclSpec
+operator|::
+name|TSW
+name|W
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -1015,9 +1007,16 @@ name|Loc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// These methods set the specified attribute of the DeclSpec, but return true
-comment|/// and ignore the request if invalid (e.g. "extern" then "auto" is
-comment|/// specified).  The name of the previous specifier is returned in prevspec.
+comment|/// These methods set the specified attribute of the DeclSpec and
+comment|/// return false if there was no error.  If an error occurs (for
+comment|/// example, if we tried to set "auto" on a spec with "extern"
+comment|/// already set), they return true and set PrevSpec and DiagID
+comment|/// such that
+comment|///   Diag(Loc, DiagID)<< PrevSpec;
+comment|/// will yield a useful result.
+comment|///
+comment|/// TODO: use a more general approach that still allows these
+comment|/// diagnostics to be ignored when desired.
 name|bool
 name|SetStorageClassSpec
 parameter_list|(
@@ -1032,6 +1031,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -1045,6 +1048,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -1061,6 +1068,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -1077,6 +1088,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -1093,6 +1108,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -1110,6 +1129,10 @@ modifier|*
 modifier|&
 name|PrevSpec
 parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
+parameter_list|,
 name|void
 modifier|*
 name|Rep
@@ -1126,6 +1149,19 @@ name|bool
 name|SetTypeSpecError
 parameter_list|()
 function_decl|;
+name|void
+name|UpdateTypeRep
+parameter_list|(
+name|void
+modifier|*
+name|Rep
+parameter_list|)
+block|{
+name|TypeRep
+operator|=
+name|Rep
+expr_stmt|;
+block|}
 name|bool
 name|SetTypeQual
 parameter_list|(
@@ -1140,6 +1176,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|,
 specifier|const
 name|LangOptions
@@ -1158,6 +1198,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -1171,6 +1215,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -1184,6 +1232,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -1197,6 +1249,10 @@ name|char
 modifier|*
 modifier|&
 name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
@@ -1237,27 +1293,14 @@ modifier|*
 name|alist
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|alist
-condition|)
-return|return;
-comment|// we parsed __attribute__(()) or had a syntax error
-if|if
-condition|(
-name|AttrList
-condition|)
-name|alist
-operator|->
-name|addAttributeList
-argument_list|(
-name|AttrList
-argument_list|)
-expr_stmt|;
 name|AttrList
 operator|=
+name|addAttributeLists
+argument_list|(
+name|AttrList
+argument_list|,
 name|alist
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -1331,6 +1374,16 @@ return|return
 name|ProtocolQualifiers
 return|;
 block|}
+name|SourceLocation
+operator|*
+name|getProtocolLocs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ProtocolLocs
+return|;
+block|}
 name|unsigned
 name|getNumProtocolQualifiers
 argument_list|()
@@ -1338,6 +1391,15 @@ specifier|const
 block|{
 return|return
 name|NumProtocolQualifiers
+return|;
+block|}
+name|SourceLocation
+name|getProtocolLAngleLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ProtocolLAngleLoc
 return|;
 block|}
 name|void
@@ -1352,50 +1414,15 @@ name|Protos
 argument_list|,
 name|unsigned
 name|NP
-argument_list|)
-block|{
-if|if
-condition|(
-name|NP
-operator|==
-literal|0
-condition|)
-return|return;
-name|ProtocolQualifiers
-operator|=
-name|new
-name|ActionBase
-operator|::
-name|DeclPtrTy
-index|[
-name|NP
-index|]
-expr_stmt|;
-name|memcpy
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|ProtocolQualifiers
 argument_list|,
-name|Protos
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ActionBase
-operator|::
-name|DeclPtrTy
-argument_list|)
+name|SourceLocation
 operator|*
-name|NP
+name|ProtoLocs
+argument_list|,
+name|SourceLocation
+name|LAngleLoc
 argument_list|)
-expr_stmt|;
-name|NumProtocolQualifiers
-operator|=
-name|NP
-expr_stmt|;
-block|}
+decl_stmt|;
 comment|/// Finish - This does final analysis of the declspec, issuing diagnostics for
 comment|/// things like "_Imaginary" (lacking an FP type).  After calling this method,
 comment|/// DeclSpec is guaranteed self-consistent, even if an error occurred.
@@ -1522,7 +1549,7 @@ name|SetterName
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{ }
 name|ObjCDeclQualifier
 name|getObjCDeclQualifier
 argument_list|()
@@ -1911,6 +1938,10 @@ enum|;
 comment|/// Loc - The place where this type was defined.
 name|SourceLocation
 name|Loc
+decl_stmt|;
+comment|/// EndLoc - If valid, the place where this chunck ends.
+name|SourceLocation
+name|EndLoc
 decl_stmt|;
 struct|struct
 name|PointerTypeInfo
@@ -2659,7 +2690,10 @@ modifier|*
 name|NumElts
 parameter_list|,
 name|SourceLocation
-name|Loc
+name|LBLoc
+parameter_list|,
+name|SourceLocation
+name|RBLoc
 parameter_list|)
 block|{
 name|DeclaratorChunk
@@ -2675,7 +2709,13 @@ name|I
 operator|.
 name|Loc
 operator|=
-name|Loc
+name|LBLoc
+expr_stmt|;
+name|I
+operator|.
+name|EndLoc
+operator|=
+name|RBLoc
 expr_stmt|;
 name|I
 operator|.
@@ -2762,7 +2802,10 @@ name|unsigned
 name|NumExceptions
 argument_list|,
 name|SourceLocation
-name|Loc
+name|LPLoc
+argument_list|,
+name|SourceLocation
+name|RPLoc
 argument_list|,
 name|Declarator
 operator|&
@@ -2959,8 +3002,12 @@ name|DK_Operator
 block|,
 comment|// A C++ overloaded operator name
 name|DK_Conversion
+block|,
 comment|// A C++ conversion function (identifier is
 comment|// "operator " then the type name)
+name|DK_TemplateId
+comment|// A C++ template-id naming a function template
+comment|// specialization.
 block|}
 enum|;
 name|private
@@ -3046,6 +3093,12 @@ comment|/// operator that this declarator names.
 name|OverloadedOperatorKind
 name|OperatorKind
 decl_stmt|;
+comment|/// When Kind is DK_TemplateId, this is the template-id annotation that
+comment|/// contains the template and its template arguments.
+name|TemplateIdAnnotation
+modifier|*
+name|TemplateId
+decl_stmt|;
 block|}
 union|;
 comment|/// InlineParams - This is a local array used for the first function decl
@@ -3061,6 +3114,12 @@ index|]
 expr_stmt|;
 name|bool
 name|InlineParamsUsed
+decl_stmt|;
+comment|/// Extension - true if the declaration is preceded by __extension__.
+name|bool
+name|Extension
+range|:
+literal|1
 decl_stmt|;
 name|friend
 struct_decl|struct
@@ -3136,6 +3195,11 @@ literal|0
 argument_list|)
 operator|,
 name|InlineParamsUsed
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Extension
 argument_list|(
 argument|false
 argument_list|)
@@ -3382,6 +3446,17 @@ operator|=
 name|DS
 operator|.
 name|getSourceRange
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Kind
+operator|==
+name|DK_TemplateId
+condition|)
+name|TemplateId
+operator|->
+name|Destroy
 argument_list|()
 expr_stmt|;
 name|Kind
@@ -3774,6 +3849,47 @@ name|EndLoc
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Set this declaration to be a C++ template-id, which includes the
+comment|/// template (or set of function templates) along with template arguments.
+name|void
+name|setTemplateId
+parameter_list|(
+name|TemplateIdAnnotation
+modifier|*
+name|TemplateId
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|TemplateId
+operator|&&
+literal|"NULL template-id provided to declarator?"
+argument_list|)
+expr_stmt|;
+name|IdentifierLoc
+operator|=
+name|TemplateId
+operator|->
+name|TemplateNameLoc
+expr_stmt|;
+name|Kind
+operator|=
+name|DK_TemplateId
+expr_stmt|;
+name|SetRangeEnd
+argument_list|(
+name|TemplateId
+operator|->
+name|RAngleLoc
+argument_list|)
+expr_stmt|;
+name|this
+operator|->
+name|TemplateId
+operator|=
+name|TemplateId
+expr_stmt|;
+block|}
 comment|/// AddTypeInfo - Add a chunk to this declarator. Also extend the range to
 comment|/// EndLoc, which should be the last token of the chunk.
 name|void
@@ -3925,27 +4041,14 @@ name|SourceLocation
 name|LastLoc
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|alist
-condition|)
-return|return;
-comment|// we parsed __attribute__(()) or had a syntax error
-if|if
-condition|(
-name|AttrList
-condition|)
-name|alist
-operator|->
-name|addAttributeList
-argument_list|(
-name|AttrList
-argument_list|)
-expr_stmt|;
 name|AttrList
 operator|=
+name|addAttributeLists
+argument_list|(
+name|AttrList
+argument_list|,
 name|alist
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3981,6 +4084,62 @@ return|return
 name|AttrList
 return|;
 block|}
+comment|/// hasAttributes - do we contain any attributes?
+name|bool
+name|hasAttributes
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getAttributes
+argument_list|()
+operator|||
+name|getDeclSpec
+argument_list|()
+operator|.
+name|getAttributes
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|getNumTypeObjects
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|getTypeObject
+argument_list|(
+name|i
+argument_list|)
+operator|.
+name|getAttrs
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
 name|void
 name|setAsmLabel
 argument_list|(
@@ -4008,6 +4167,29 @@ return|return
 name|AsmLabel
 return|;
 block|}
+name|void
+name|setExtension
+parameter_list|(
+name|bool
+name|Val
+init|=
+name|true
+parameter_list|)
+block|{
+name|Extension
+operator|=
+name|Val
+expr_stmt|;
+block|}
+name|bool
+name|getExtension
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Extension
+return|;
+block|}
 name|ActionBase
 operator|::
 name|TypeTy
@@ -4016,6 +4198,25 @@ name|getDeclaratorIdType
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|(
+name|Kind
+operator|==
+name|DK_Constructor
+operator|||
+name|Kind
+operator|==
+name|DK_Destructor
+operator|||
+name|Kind
+operator|==
+name|DK_Conversion
+operator|)
+operator|&&
+literal|"Declarator kind does not have a type"
+argument_list|)
+block|;
 return|return
 name|Type
 return|;
@@ -4025,8 +4226,35 @@ name|getOverloadedOperator
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|DK_Operator
+operator|&&
+literal|"Declarator is not an overloaded operator"
+argument_list|)
+block|;
 return|return
 name|OperatorKind
+return|;
+block|}
+name|TemplateIdAnnotation
+modifier|*
+name|getTemplateId
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|DK_TemplateId
+operator|&&
+literal|"Declarator is not a template-id"
+argument_list|)
+expr_stmt|;
+return|return
+name|TemplateId
 return|;
 block|}
 name|void
@@ -4083,9 +4311,21 @@ name|GroupingParens
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// FieldDeclarator - This little struct is used to capture information about
+end_comment
+
+begin_comment
 comment|/// structure field declarators, which is basically just a bitfield size.
+end_comment
+
+begin_struct
 struct|struct
 name|FieldDeclarator
 block|{
@@ -4119,10 +4359,10 @@ literal|0
 block|;   }
 block|}
 struct|;
-block|}
-end_decl_stmt
+end_struct
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

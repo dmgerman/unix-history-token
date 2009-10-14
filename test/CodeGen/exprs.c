@@ -88,6 +88,9 @@ condition|(
 name|test2b
 condition|)
 empty_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

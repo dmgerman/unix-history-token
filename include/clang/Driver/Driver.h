@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/Path.h"
 end_include
 
@@ -92,6 +98,16 @@ include|#
 directive|include
 file|<string>
 end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -272,9 +288,11 @@ name|std
 operator|::
 name|set
 operator|<
-name|std
+name|llvm
 operator|::
-name|string
+name|Triple
+operator|::
+name|ArchType
 operator|>
 name|CCCClangArchs
 expr_stmt|;
@@ -308,31 +326,19 @@ name|public
 label|:
 name|Driver
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|_Name
+argument|const char *_Name
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|_Dir
+argument|const char *_Dir
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|_DefaultHostTriple
+argument|const char *_DefaultHostTriple
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|_DefaultImageName
+argument|const char *_DefaultImageName
 argument_list|,
-name|Diagnostic
-operator|&
-name|_Diags
+argument|bool IsProduction
+argument_list|,
+argument|Diagnostic&_Diags
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|Driver
 argument_list|()
@@ -518,6 +524,12 @@ specifier|const
 name|Compilation
 operator|&
 name|C
+argument_list|,
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 decl|const
 decl_stmt|;
@@ -525,12 +537,11 @@ comment|/// GetFilePath - Lookup \arg Name in the list of file search paths.
 comment|///
 comment|/// \arg TC - The tool chain for additional information on
 comment|/// directories to search.
+comment|//
 comment|// FIXME: This should be in CompilationInfo.
-name|llvm
+name|std
 operator|::
-name|sys
-operator|::
-name|Path
+name|string
 name|GetFilePath
 argument_list|(
 argument|const char *Name
@@ -547,12 +558,11 @@ comment|/// directories to search.
 comment|///
 comment|/// \arg WantFile - False when searching for an executable file, otherwise
 comment|/// true.  Defaults to false.
+comment|//
 comment|// FIXME: This should be in CompilationInfo.
-name|llvm
+name|std
 operator|::
-name|sys
-operator|::
-name|Path
+name|string
 name|GetProgramPath
 argument_list|(
 argument|const char *Name
@@ -618,6 +628,11 @@ specifier|const
 name|ToolChain
 operator|*
 name|TC
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|BoundArch
 argument_list|,
 name|bool
 name|CanAcceptPipe
@@ -712,9 +727,9 @@ operator|&
 name|JA
 argument_list|,
 specifier|const
-name|std
+name|llvm
 operator|::
-name|string
+name|Triple
 operator|&
 name|ArchName
 argument_list|)

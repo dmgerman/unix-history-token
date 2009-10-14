@@ -9,6 +9,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
 begin_function_decl
 specifier|const
 name|char

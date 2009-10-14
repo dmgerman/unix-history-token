@@ -69,6 +69,20 @@ directive|include
 file|<cstring>
 end_include
 
+begin_comment
+comment|// VC++ defines 'alloca' as an object-like macro, which interferes with our
+end_comment
+
+begin_comment
+comment|// builtins.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|alloca
+end_undef
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -359,6 +373,31 @@ operator|.
 name|Attributes
 argument_list|,
 literal|'n'
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// isNoReturn - Return true if we know this builtin never returns.
+name|bool
+name|isNoReturn
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|strchr
+argument_list|(
+name|GetRecord
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|Attributes
+argument_list|,
+literal|'r'
 argument_list|)
 operator|!=
 literal|0

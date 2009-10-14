@@ -81,6 +81,16 @@ directive|include
 file|"llvm/ADT/ImmutableList.h"
 end_include
 
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|//==------------------------------------------------------------------------==//
 end_comment
@@ -101,10 +111,19 @@ name|class
 name|CompoundValData
 decl_stmt|;
 name|class
+name|LazyCompoundValData
+decl_stmt|;
+name|class
+name|GRState
+decl_stmt|;
+name|class
 name|BasicValueFactory
 decl_stmt|;
 name|class
 name|MemRegion
+decl_stmt|;
+name|class
+name|TypedRegion
 decl_stmt|;
 name|class
 name|MemRegionManager
@@ -466,7 +485,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 name|llvm
 operator|::
@@ -477,7 +496,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
-name|printStdErr
+name|dump
 parameter_list|()
 function|const;
 comment|// Iterators.
@@ -606,43 +625,8 @@ block|}
 block|}
 empty_stmt|;
 name|class
-name|UnknownVal
-range|:
-name|public
-name|SVal
-block|{
-name|public
-operator|:
-name|UnknownVal
-argument_list|()
-operator|:
-name|SVal
-argument_list|(
-argument|UnknownKind
-argument_list|)
-block|{}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SVal* V
-argument_list|)
-block|{
-return|return
-name|V
-operator|->
-name|getBaseKind
-argument_list|()
-operator|==
-name|UnknownKind
-return|;
-block|}
-expr|}
-block|;
-name|class
 name|UndefinedVal
-operator|:
+range|:
 name|public
 name|SVal
 block|{
@@ -700,10 +684,188 @@ block|}
 expr|}
 block|;
 name|class
-name|NonLoc
+name|DefinedOrUnknownSVal
 operator|:
 name|public
 name|SVal
+block|{
+name|private
+operator|:
+comment|// Do not implement.  We want calling these methods to be a compiler
+comment|// error since they are tautologically false.
+name|bool
+name|isUndef
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|;
+name|protected
+operator|:
+name|explicit
+name|DefinedOrUnknownSVal
+argument_list|(
+argument|const void* d
+argument_list|,
+argument|bool isLoc
+argument_list|,
+argument|unsigned ValKind
+argument_list|)
+operator|:
+name|SVal
+argument_list|(
+argument|d
+argument_list|,
+argument|isLoc
+argument_list|,
+argument|ValKind
+argument_list|)
+block|{}
+name|explicit
+name|DefinedOrUnknownSVal
+argument_list|(
+argument|BaseKind k
+argument_list|,
+argument|void *D = NULL
+argument_list|)
+operator|:
+name|SVal
+argument_list|(
+argument|k
+argument_list|,
+argument|D
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|// Implement isa<T> support.
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SVal *V
+argument_list|)
+block|{
+return|return
+operator|!
+name|V
+operator|->
+name|isUndef
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|UnknownVal
+operator|:
+name|public
+name|DefinedOrUnknownSVal
+block|{
+name|public
+operator|:
+name|UnknownVal
+argument_list|()
+operator|:
+name|DefinedOrUnknownSVal
+argument_list|(
+argument|UnknownKind
+argument_list|)
+block|{}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SVal *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getBaseKind
+argument_list|()
+operator|==
+name|UnknownKind
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|DefinedSVal
+operator|:
+name|public
+name|DefinedOrUnknownSVal
+block|{
+name|private
+operator|:
+comment|// Do not implement.  We want calling these methods to be a compiler
+comment|// error since they are tautologically true/false.
+name|bool
+name|isUnknown
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isUnknownOrUndef
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|;
+name|protected
+operator|:
+name|DefinedSVal
+argument_list|(
+argument|const void* d
+argument_list|,
+argument|bool isLoc
+argument_list|,
+argument|unsigned ValKind
+argument_list|)
+operator|:
+name|DefinedOrUnknownSVal
+argument_list|(
+argument|d
+argument_list|,
+argument|isLoc
+argument_list|,
+argument|ValKind
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|// Implement isa<T> support.
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SVal *V
+argument_list|)
+block|{
+return|return
+operator|!
+name|V
+operator|->
+name|isUnknownOrUndef
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|NonLoc
+operator|:
+name|public
+name|DefinedSVal
 block|{
 name|protected
 operator|:
@@ -714,7 +876,7 @@ argument_list|,
 argument|const void* d
 argument_list|)
 operator|:
-name|SVal
+name|DefinedSVal
 argument_list|(
 argument|d
 argument_list|,
@@ -726,7 +888,7 @@ block|{}
 name|public
 operator|:
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& Out
 argument_list|)
@@ -756,7 +918,7 @@ name|class
 name|Loc
 operator|:
 name|public
-name|SVal
+name|DefinedSVal
 block|{
 name|protected
 operator|:
@@ -767,7 +929,7 @@ argument_list|,
 argument|const void* D
 argument_list|)
 operator|:
-name|SVal
+name|DefinedSVal
 argument_list|(
 argument|const_cast<void*>(D)
 argument_list|,
@@ -779,7 +941,7 @@ block|{}
 name|public
 operator|:
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& Out
 argument_list|)
@@ -793,7 +955,7 @@ operator|&
 name|X
 argument_list|)
 operator|:
-name|SVal
+name|DefinedSVal
 argument_list|(
 argument|X.Data
 argument_list|,
@@ -860,12 +1022,7 @@ block|{
 return|return
 name|T
 operator|->
-name|isPointerType
-argument_list|()
-operator|||
-name|T
-operator|->
-name|isObjCQualifiedIdType
+name|isAnyPointerType
 argument_list|()
 operator|||
 name|T
@@ -881,7 +1038,7 @@ comment|//  Subclasses of NonLoc.
 comment|//==------------------------------------------------------------------------==//
 name|namespace
 name|nonloc
-block|{    enum
+block|{  enum
 name|Kind
 block|{
 name|ConcreteIntKind
@@ -893,6 +1050,8 @@ block|,
 name|LocAsIntegerKind
 block|,
 name|CompoundValKind
+block|,
+name|LazyCompoundValKind
 block|}
 block|;
 name|class
@@ -1468,14 +1627,117 @@ name|CompoundValKind
 return|;
 block|}
 expr|}
-block|;    }
+block|;
+name|class
+name|LazyCompoundVal
+operator|:
+name|public
+name|NonLoc
+block|{
+name|friend
+name|class
+name|clang
+operator|::
+name|ValueManager
+block|;
+name|LazyCompoundVal
+argument_list|(
+specifier|const
+name|LazyCompoundValData
+operator|*
+name|D
+argument_list|)
+operator|:
+name|NonLoc
+argument_list|(
+argument|LazyCompoundValKind
+argument_list|,
+argument|D
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|const
+name|LazyCompoundValData
+operator|*
+name|getCVData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+specifier|const
+name|LazyCompoundValData
+operator|*
+operator|>
+operator|(
+name|Data
+operator|)
+return|;
+block|}
+specifier|const
+name|GRState
+operator|*
+name|getState
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|TypedRegion
+operator|*
+name|getRegion
+argument_list|()
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SVal *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getBaseKind
+argument_list|()
+operator|==
+name|NonLocKind
+operator|&&
+name|V
+operator|->
+name|getSubKind
+argument_list|()
+operator|==
+name|LazyCompoundValKind
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const NonLoc *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getSubKind
+argument_list|()
+operator|==
+name|LazyCompoundValKind
+return|;
+block|}
+expr|}
+block|;  }
 comment|// end namespace clang::nonloc
 comment|//==------------------------------------------------------------------------==//
 comment|//  Subclasses of Loc.
 comment|//==------------------------------------------------------------------------==//
 name|namespace
 name|loc
-block|{    enum
+block|{  enum
 name|Kind
 block|{
 name|GotoLabelKind
@@ -1608,6 +1870,13 @@ name|Data
 operator|)
 return|;
 block|}
+specifier|const
+name|MemRegion
+operator|*
+name|getBaseRegion
+argument_list|()
+specifier|const
+block|;
 name|template
 operator|<
 name|typename
@@ -1824,13 +2093,50 @@ name|ConcreteIntKind
 return|;
 block|}
 expr|}
-block|;    }
+block|;  }
 comment|// end clang::loc namespace
 block|}
+comment|// end clang namespace
+name|namespace
+name|llvm
+block|{
+specifier|static
+specifier|inline
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|os
+expr|,
+name|clang
+operator|::
+name|SVal
+name|V
+operator|)
+block|{
+name|V
+operator|.
+name|dumpToStream
+argument_list|(
+name|os
+argument_list|)
+block|;
+return|return
+name|os
+return|;
+block|}
+expr|}
 end_decl_stmt
 
 begin_comment
-comment|// end clang namespace
+comment|// end llvm namespace
 end_comment
 
 begin_endif

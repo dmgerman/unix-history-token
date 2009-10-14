@@ -381,6 +381,15 @@ literal|2.
 operator|)
 argument_list|)
 expr_stmt|;
+name|P
+argument_list|(
+name|isnan
+argument_list|,
+operator|(
+literal|1.
+operator|)
+argument_list|)
+expr_stmt|;
 comment|// Bitwise& Numeric Functions
 name|P
 argument_list|(

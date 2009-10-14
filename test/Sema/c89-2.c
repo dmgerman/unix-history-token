@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: not clang-cc %s -std=c89 -pedantic-errors  */
-end_comment
-
-begin_comment
-comment|/* We can't put expected-warning lines on #if lines. */
+comment|/* RUN: clang-cc %s -std=c89 -pedantic-errors -verify  */
 end_comment
 
 begin_if
@@ -14,7 +10,7 @@ literal|1LL
 end_if
 
 begin_comment
-comment|/* expected-warning {{long long}} */
+comment|/* expected-error {{long long}} */
 end_comment
 
 begin_endif

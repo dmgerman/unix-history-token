@@ -134,9 +134,18 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
+name|std
+operator|::
+name|pair
+operator|<
 specifier|const
 name|ToolChain
 operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|>
 operator|,
 name|DerivedArgList
 operator|*
@@ -273,6 +282,8 @@ block|}
 comment|/// getArgsForToolChain - Return the derived argument list for the
 comment|/// tool chain \arg TC (or the default tool chain, if TC is not
 comment|/// specified).
+comment|///
+comment|/// \param BoundArch - The bound architecture name, or 0.
 specifier|const
 name|DerivedArgList
 modifier|&
@@ -282,8 +293,11 @@ specifier|const
 name|ToolChain
 modifier|*
 name|TC
-init|=
-literal|0
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BoundArch
 parameter_list|)
 function_decl|;
 comment|/// addTempFile - Add a file to remove on exit, and returns its

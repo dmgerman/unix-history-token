@@ -90,7 +90,11 @@ name|g1_def
 argument_list|(
 name|void
 argument_list|)
-block|{}
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_decl_stmt
 
 begin_comment

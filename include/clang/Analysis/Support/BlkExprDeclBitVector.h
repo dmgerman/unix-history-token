@@ -74,7 +74,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/CFG.h"
+file|"clang/Analysis/CFG.h"
 end_include
 
 begin_include
@@ -1455,7 +1455,7 @@ operator|&=
 name|Src
 block|; }
 block|}
-block|;    }
+block|;  }
 decl_stmt|;
 block|}
 comment|// end namespace clang

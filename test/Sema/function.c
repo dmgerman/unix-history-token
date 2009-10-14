@@ -522,5 +522,24 @@ comment|// no warning.
 block|}
 end_function
 
+begin_comment
+comment|// missing ',' before '...'
+end_comment
+
+begin_function
+name|void
+name|t20
+parameter_list|(
+name|int
+name|i
+modifier|...
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// expected-error {{requires a comma}}
+end_comment
+
 end_unit
 

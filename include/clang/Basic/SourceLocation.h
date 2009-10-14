@@ -1224,7 +1224,7 @@ name|IncludeLoc
 return|;
 block|}
 expr|}
-block|;     }
+block|;   }
 comment|// end namespace clang
 name|namespace
 name|llvm
@@ -1313,7 +1313,7 @@ name|true
 return|;
 block|}
 expr|}
-block|;    }
+block|;  }
 end_decl_stmt
 
 begin_comment

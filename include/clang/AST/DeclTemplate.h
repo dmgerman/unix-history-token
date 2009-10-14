@@ -160,7 +160,7 @@ argument|SourceLocation TemplateLoc
 argument_list|,
 argument|SourceLocation LAngleLoc
 argument_list|,
-argument|Decl **Params
+argument|NamedDecl **Params
 argument_list|,
 argument|unsigned NumParams
 argument_list|,
@@ -184,7 +184,7 @@ parameter_list|,
 name|SourceLocation
 name|LAngleLoc
 parameter_list|,
-name|Decl
+name|NamedDecl
 modifier|*
 modifier|*
 name|Params
@@ -198,14 +198,14 @@ parameter_list|)
 function_decl|;
 comment|/// iterator - Iterates through the template parameters in this list.
 typedef|typedef
-name|Decl
+name|NamedDecl
 modifier|*
 modifier|*
 name|iterator
 typedef|;
 comment|/// const_iterator - Iterates through the template parameters in this list.
 typedef|typedef
-name|Decl
+name|NamedDecl
 modifier|*
 specifier|const
 modifier|*
@@ -218,7 +218,7 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-name|Decl
+name|NamedDecl
 operator|*
 operator|*
 operator|>
@@ -237,7 +237,7 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-name|Decl
+name|NamedDecl
 operator|*
 specifier|const
 operator|*
@@ -281,7 +281,7 @@ return|return
 name|NumParams
 return|;
 block|}
-name|Decl
+name|NamedDecl
 modifier|*
 name|getParam
 parameter_list|(
@@ -308,7 +308,7 @@ index|]
 return|;
 block|}
 specifier|const
-name|Decl
+name|NamedDecl
 modifier|*
 name|getParam
 argument_list|(
@@ -1083,7 +1083,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}      const
+unit|}    const
 name|llvm
 operator|::
 name|APSInt
@@ -1144,7 +1144,7 @@ return|;
 end_return
 
 begin_macro
-unit|}      void
+unit|}    void
 name|setIntegralType
 argument_list|(
 argument|QualType T
@@ -1368,6 +1368,10 @@ operator|::
 name|FoldingSetNodeID
 operator|&
 name|ID
+argument_list|,
+name|ASTContext
+operator|&
+name|Context
 argument_list|)
 decl|const
 block|{
@@ -1408,9 +1412,16 @@ name|AddPointer
 argument_list|(
 name|getAsDecl
 argument_list|()
+condition|?
+name|getAsDecl
+argument_list|()
+operator|->
+name|getCanonicalDecl
+argument_list|()
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
-comment|// FIXME: Must be canonical!
 break|break;
 case|case
 name|Integral
@@ -1435,13 +1446,16 @@ break|break;
 case|case
 name|Expression
 case|:
-comment|// FIXME: We need a canonical representation of expressions.
-name|ID
-operator|.
-name|AddPointer
-argument_list|(
 name|getAsExpr
 argument_list|()
+operator|->
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|Context
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1483,6 +1497,8 @@ operator|.
 name|Profile
 argument_list|(
 name|ID
+argument_list|,
+name|Context
 argument_list|)
 expr_stmt|;
 block|}
@@ -1747,6 +1763,15 @@ argument_list|,
 argument|bool TakeArgs
 argument_list|)
 empty_stmt|;
+comment|/// \brief Produces a shallow copy of the given template argument list
+name|TemplateArgumentList
+argument_list|(
+specifier|const
+name|TemplateArgumentList
+operator|&
+name|Other
+argument_list|)
+expr_stmt|;
 operator|~
 name|TemplateArgumentList
 argument_list|()
@@ -2126,8 +2151,7 @@ block|;
 comment|/// \brief The function template from which this function template
 comment|/// specialization was generated.
 comment|///
-comment|/// The bit will be 0 for an implicit instantiation, 1 for an explicit
-comment|/// specialization.
+comment|/// The two bits are contain the top 4 values of TemplateSpecializationKind.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -2135,7 +2159,7 @@ operator|<
 name|FunctionTemplateDecl
 operator|*
 block|,
-literal|1
+literal|2
 operator|>
 name|Template
 block|;
@@ -2145,6 +2169,11 @@ specifier|const
 name|TemplateArgumentList
 operator|*
 name|TemplateArguments
+block|;
+comment|/// \brief The point at which this function template specialization was
+comment|/// first instantiated.
+name|SourceLocation
+name|PointOfInstantiation
 block|;
 comment|/// \brief Retrieve the template from which this function was specialized.
 name|FunctionTemplateDecl
@@ -2160,33 +2189,76 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-comment|/// \brief Determine whether this is an explicit specialization.
-name|bool
-name|isExplicitSpecialization
+comment|/// \brief Determine what kind of template specialization this is.
+name|TemplateSpecializationKind
+name|getTemplateSpecializationKind
 argument_list|()
 specifier|const
 block|{
 return|return
+call|(
+name|TemplateSpecializationKind
+call|)
+argument_list|(
 name|Template
 operator|.
 name|getInt
 argument_list|()
+operator|+
+literal|1
+argument_list|)
 return|;
 block|}
-comment|/// \brief Set whether this is an explicit specialization or an implicit
-comment|/// instantiation.
+comment|/// \brief Set the template specialization kind.
 name|void
-name|setExplicitSpecialization
+name|setTemplateSpecializationKind
 argument_list|(
-argument|bool ES
+argument|TemplateSpecializationKind TSK
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|TSK
+operator|!=
+name|TSK_Undeclared
+operator|&&
+literal|"Cannot encode TSK_Undeclared for a function template specialization"
+argument_list|)
+block|;
 name|Template
 operator|.
 name|setInt
 argument_list|(
-name|ES
+name|TSK
+operator|-
+literal|1
 argument_list|)
+block|;   }
+comment|/// \brief Retrieve the first point of instantiation of this function
+comment|/// template specialization.
+comment|///
+comment|/// The point of instantiation may be an invalid source location if this
+comment|/// function has yet to be instantiated.
+name|SourceLocation
+name|getPointOfInstantiation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointOfInstantiation
+return|;
+block|}
+comment|/// \brief Set the (first) point of instantiation of this function template
+comment|/// specialization.
+name|void
+name|setPointOfInstantiation
+argument_list|(
+argument|SourceLocation POI
+argument_list|)
+block|{
+name|PointOfInstantiation
+operator|=
+name|POI
 block|;   }
 name|void
 name|Profile
@@ -2207,8 +2279,13 @@ name|TemplateArguments
 operator|->
 name|flat_size
 argument_list|()
+argument_list|,
+name|Function
+operator|->
+name|getASTContext
+argument_list|()
 argument_list|)
-block|;       }
+block|;   }
 specifier|static
 name|void
 name|Profile
@@ -2218,6 +2295,8 @@ argument_list|,
 argument|const TemplateArgument *TemplateArgs
 argument_list|,
 argument|unsigned NumTemplateArgs
+argument_list|,
+argument|ASTContext&Context
 argument_list|)
 block|{
 name|ID
@@ -2249,9 +2328,150 @@ operator|.
 name|Profile
 argument_list|(
 name|ID
+argument_list|,
+name|Context
 argument_list|)
 expr_stmt|;
 block|}
+expr|}
+block|;
+comment|/// \brief Provides information a specialization of a member of a class
+comment|/// template, which may be a member function, static data member, or
+comment|/// member class.
+name|class
+name|MemberSpecializationInfo
+block|{
+comment|// The member declaration from which this member was instantiated, and the
+comment|// manner in which the instantiation occurred (in the lower two bits).
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|NamedDecl
+operator|*
+block|,
+literal|2
+operator|>
+name|MemberAndTSK
+block|;
+comment|// The point at which this member was first instantiated.
+name|SourceLocation
+name|PointOfInstantiation
+block|;
+name|public
+operator|:
+name|explicit
+name|MemberSpecializationInfo
+argument_list|(
+argument|NamedDecl *IF
+argument_list|,
+argument|TemplateSpecializationKind TSK
+argument_list|)
+operator|:
+name|MemberAndTSK
+argument_list|(
+name|IF
+argument_list|,
+name|TSK
+operator|-
+literal|1
+argument_list|)
+block|,
+name|PointOfInstantiation
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|TSK
+operator|!=
+name|TSK_Undeclared
+operator|&&
+literal|"Cannot encode undeclared template specializations for members"
+argument_list|)
+block|;   }
+comment|/// \brief Retrieve the member declaration from which this member was
+comment|/// instantiated.
+name|NamedDecl
+operator|*
+name|getInstantiatedFrom
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MemberAndTSK
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determine what kind of template specialization this is.
+name|TemplateSpecializationKind
+name|getTemplateSpecializationKind
+argument_list|()
+specifier|const
+block|{
+return|return
+call|(
+name|TemplateSpecializationKind
+call|)
+argument_list|(
+name|MemberAndTSK
+operator|.
+name|getInt
+argument_list|()
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set the template specialization kind.
+name|void
+name|setTemplateSpecializationKind
+argument_list|(
+argument|TemplateSpecializationKind TSK
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|TSK
+operator|!=
+name|TSK_Undeclared
+operator|&&
+literal|"Cannot encode undeclared template specializations for members"
+argument_list|)
+block|;
+name|MemberAndTSK
+operator|.
+name|setInt
+argument_list|(
+name|TSK
+operator|-
+literal|1
+argument_list|)
+block|;   }
+comment|/// \brief Retrieve the first point of instantiation of this member.
+comment|/// If the point of instantiation is an invalid location, then this member
+comment|/// has not yet been instantiated.
+name|SourceLocation
+name|getPointOfInstantiation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointOfInstantiation
+return|;
+block|}
+comment|/// \brief Set the first point of instantiation.
+name|void
+name|setPointOfInstantiation
+argument_list|(
+argument|SourceLocation POI
+argument_list|)
+block|{
+name|PointOfInstantiation
+operator|=
+name|POI
+block|;   }
 expr|}
 block|;
 comment|/// Declaration of a template function.
@@ -2268,6 +2488,16 @@ comment|/// function template.
 expr|struct
 name|Common
 block|{
+name|Common
+argument_list|()
+operator|:
+name|InstantiatedFromMember
+argument_list|(
+literal|0
+argument_list|,
+argument|false
+argument_list|)
+block|{ }
 comment|/// \brief The function template specializations for this function
 comment|/// template, including explicit specializations and instantiations.
 name|llvm
@@ -2277,6 +2507,24 @@ operator|<
 name|FunctionTemplateSpecializationInfo
 operator|>
 name|Specializations
+block|;
+comment|/// \brief The member function template from which this was most
+comment|/// directly instantiated (or null).
+comment|///
+comment|/// The boolean value indicates whether this member function template
+comment|/// was explicitly specialized.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|FunctionTemplateDecl
+operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
+name|InstantiatedFromMember
 block|;   }
 block|;
 comment|/// \brief A pointer to the previous declaration (if this is a redeclaration)
@@ -2439,6 +2687,134 @@ operator|=
 name|Prev
 expr_stmt|;
 block|}
+name|virtual
+name|FunctionTemplateDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+block|;
+comment|/// \brief Retrieve the member function template that this function template
+comment|/// was instantiated from.
+comment|///
+comment|/// This routine will return non-NULL for member function templates of
+comment|/// class templates.  For example, given:
+comment|///
+comment|/// \code
+comment|/// template<typename T>
+comment|/// struct X {
+comment|///   template<typename U> void f();
+comment|/// };
+comment|/// \endcode
+comment|///
+comment|/// X<int>::A<float> is a CXXMethodDecl (whose parent is X<int>, a
+comment|/// ClassTemplateSpecializationDecl) for which getPrimaryTemplate() will
+comment|/// return X<int>::f, a FunctionTemplateDecl (whose parent is again
+comment|/// X<int>) for which getInstantiatedFromMemberTemplate() will return
+comment|/// X<T>::f, a FunctionTemplateDecl (whose parent is X<T>, a
+comment|/// ClassTemplateDecl).
+comment|///
+comment|/// \returns NULL if this is not an instantiation of a member function
+comment|/// template.
+name|FunctionTemplateDecl
+operator|*
+name|getInstantiatedFromMemberTemplate
+argument_list|()
+block|{
+return|return
+name|getCommonPtr
+argument_list|()
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|void
+name|setInstantiatedFromMemberTemplate
+argument_list|(
+argument|FunctionTemplateDecl *FTD
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|getCommonPtr
+argument_list|()
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getPointer
+argument_list|()
+argument_list|)
+block|;
+name|getCommonPtr
+argument_list|()
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|setPointer
+argument_list|(
+name|FTD
+argument_list|)
+block|;   }
+comment|/// \brief Determines whether this template was a specialization of a
+comment|/// member template.
+comment|///
+comment|/// In the following example, the function template \c X<int>::f is a
+comment|/// member specialization.
+comment|///
+comment|/// \code
+comment|/// template<typename T>
+comment|/// struct X {
+comment|///   template<typename U> void f(T, U);
+comment|/// };
+comment|///
+comment|/// template<> template<typename T>
+comment|/// void X<int>::f(int, T);
+comment|/// \endcode
+name|bool
+name|isMemberSpecialization
+argument_list|()
+block|{
+return|return
+name|getCommonPtr
+argument_list|()
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+comment|/// \brief Note that this member template is a specialization.
+name|void
+name|setMemberSpecialization
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|getCommonPtr
+argument_list|()
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getPointer
+argument_list|()
+operator|&&
+literal|"Only member templates can be member template specializations"
+argument_list|)
+block|;
+name|getCommonPtr
+argument_list|()
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|setInt
+argument_list|(
+name|true
+argument_list|)
+block|;   }
 comment|/// Create a template function node.
 specifier|static
 name|FunctionTemplateDecl
@@ -2849,7 +3225,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|SourceLocation TSSL = SourceLocation()
+argument|DeclaratorInfo *DInfo
 argument_list|)
 operator|:
 name|VarDecl
@@ -2864,11 +3240,11 @@ name|Id
 argument_list|,
 name|T
 argument_list|,
+name|DInfo
+argument_list|,
 name|VarDecl
 operator|::
 name|None
-argument_list|,
-name|TSSL
 argument_list|)
 block|,
 name|TemplateParmPosition
@@ -2904,7 +3280,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|SourceLocation TypeSpecStartLoc = SourceLocation()
+argument|DeclaratorInfo *DInfo
 argument_list|)
 block|;
 name|using
@@ -3158,31 +3534,6 @@ return|;
 block|}
 expr|}
 block|;
-comment|// \brief Describes the kind of template specialization that a
-comment|// particular template specialization declaration represents.
-block|enum
-name|TemplateSpecializationKind
-block|{
-comment|/// This template specialization was formed from a template-id but
-comment|/// has not yet been declared, defined, or instantiated.
-name|TSK_Undeclared
-operator|=
-literal|0
-block|,
-comment|/// This template specialization was declared or defined by an
-comment|/// explicit specialization (C++ [temp.expl.spec]) or partial
-comment|/// specialization (C++ [temp.class.spec]).
-name|TSK_ExplicitSpecialization
-block|,
-comment|/// This template specialization was implicitly instantiated from a
-comment|/// template. (C++ [temp.inst]).
-name|TSK_ImplicitInstantiation
-block|,
-comment|/// This template specialization was instantiated from a template
-comment|/// due to an explicit instantiation request (C++ [temp.explicit]).
-name|TSK_ExplicitInstantiation
-block|}
-block|;
 comment|/// \brief Represents a class template specialization, which refers to
 comment|/// a class template with a given set of template arguments.
 comment|///
@@ -3207,21 +3558,52 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
+comment|/// \brief Structure that stores information about a class template
+comment|/// specialization that was instantiated from a class template partial
+comment|/// specialization.
+block|struct
+name|SpecializedPartialSpecialization
+block|{
+comment|/// \brief The class template partial specialization from which this
+comment|/// class template specialization was instantiated.
+name|ClassTemplatePartialSpecializationDecl
+operator|*
+name|PartialSpecialization
+block|;
+comment|/// \brief The template argument list deduced for the class template
+comment|/// partial specialization itself.
+name|TemplateArgumentList
+operator|*
+name|TemplateArgs
+block|;   }
+block|;
 comment|/// \brief The template that this specialization specializes
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
 name|ClassTemplateDecl
 operator|*
+block|,
+name|SpecializedPartialSpecialization
+operator|*
+operator|>
 name|SpecializedTemplate
 block|;
 comment|/// \brief The template arguments used to describe this specialization.
 name|TemplateArgumentList
 name|TemplateArgs
 block|;
+comment|/// \brief The point where this template was instantiated (if any)
+name|SourceLocation
+name|PointOfInstantiation
+block|;
 comment|/// \brief The kind of specialization this declaration refers to.
 comment|/// Really a value of type TemplateSpecializationKind.
 name|unsigned
 name|SpecializationKind
 operator|:
-literal|2
+literal|3
 block|;
 name|protected
 operator|:
@@ -3238,6 +3620,8 @@ argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
 argument|TemplateArgumentListBuilder&Builder
+argument_list|,
+argument|ClassTemplateSpecializationDecl *PrevDecl
 argument_list|)
 block|;
 name|public
@@ -3260,17 +3644,36 @@ argument_list|,
 argument|ClassTemplateSpecializationDecl *PrevDecl
 argument_list|)
 block|;
+name|virtual
+name|void
+name|Destroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
+name|virtual
+name|void
+name|getNameForDiagnostic
+argument_list|(
+argument|std::string&S
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|,
+argument|bool Qualified
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Retrieve the template that this specialization specializes.
 name|ClassTemplateDecl
 operator|*
 name|getSpecializedTemplate
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SpecializedTemplate
-return|;
-block|}
+block|;
+comment|/// \brief Retrieve the template arguments of the class template
+comment|/// specialization.
 specifier|const
 name|TemplateArgumentList
 operator|&
@@ -3309,6 +3712,201 @@ name|SpecializationKind
 operator|=
 name|TSK
 block|;   }
+comment|/// \brief Get the point of instantiation (if any), or null if none.
+name|SourceLocation
+name|getPointOfInstantiation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointOfInstantiation
+return|;
+block|}
+name|void
+name|setPointOfInstantiation
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Loc
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"point of instantiation must be valid!"
+argument_list|)
+block|;
+name|PointOfInstantiation
+operator|=
+name|Loc
+block|;   }
+comment|/// \brief If this class template specialization is an instantiation of
+comment|/// a template (rather than an explicit specialization), return the
+comment|/// class template or class template partial specialization from which it
+comment|/// was instantiated.
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|ClassTemplateDecl
+operator|*
+block|,
+name|ClassTemplatePartialSpecializationDecl
+operator|*
+operator|>
+name|getInstantiatedFrom
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getSpecializationKind
+argument_list|()
+operator|!=
+name|TSK_ImplicitInstantiation
+operator|&&
+name|getSpecializationKind
+argument_list|()
+operator|!=
+name|TSK_ExplicitInstantiationDefinition
+operator|&&
+name|getSpecializationKind
+argument_list|()
+operator|!=
+name|TSK_ExplicitInstantiationDeclaration
+condition|)
+return|return
+operator|(
+name|ClassTemplateDecl
+operator|*
+operator|)
+literal|0
+return|;
+if|if
+condition|(
+name|SpecializedPartialSpecialization
+modifier|*
+name|PartialSpec
+init|=
+name|SpecializedTemplate
+operator|.
+name|dyn_cast
+operator|<
+name|SpecializedPartialSpecialization
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|PartialSpec
+operator|->
+name|PartialSpecialization
+return|;
+return|return
+name|const_cast
+operator|<
+name|ClassTemplateDecl
+operator|*
+operator|>
+operator|(
+name|SpecializedTemplate
+operator|.
+name|get
+operator|<
+name|ClassTemplateDecl
+operator|*
+operator|>
+operator|(
+operator|)
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the set of template arguments that should be used
+comment|/// to instantiate members of the class template or class template partial
+comment|/// specialization from which this class template specialization was
+comment|/// instantiated.
+comment|///
+comment|/// \returns For a class template specialization instantiated from the primary
+comment|/// template, this function will return the same template arguments as
+comment|/// getTemplateArgs(). For a class template specialization instantiated from
+comment|/// a class template partial specialization, this function will return the
+comment|/// deduced template arguments for the class template partial specialization
+comment|/// itself.
+specifier|const
+name|TemplateArgumentList
+operator|&
+name|getTemplateInstantiationArgs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|SpecializedPartialSpecialization
+modifier|*
+name|PartialSpec
+init|=
+name|SpecializedTemplate
+operator|.
+name|dyn_cast
+operator|<
+name|SpecializedPartialSpecialization
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+operator|*
+name|PartialSpec
+operator|->
+name|TemplateArgs
+return|;
+return|return
+name|getTemplateArgs
+argument_list|()
+return|;
+block|}
+comment|/// \brief Note that this class template specialization is actually an
+comment|/// instantiation of the given class template partial specialization whose
+comment|/// template arguments have been deduced.
+name|void
+name|setInstantiationOf
+argument_list|(
+argument|ClassTemplatePartialSpecializationDecl *PartialSpec
+argument_list|,
+argument|TemplateArgumentList *TemplateArgs
+argument_list|)
+block|{
+name|SpecializedPartialSpecialization
+operator|*
+name|PS
+operator|=
+name|new
+argument_list|(
+argument|getASTContext()
+argument_list|)
+name|SpecializedPartialSpecialization
+argument_list|()
+block|;
+name|PS
+operator|->
+name|PartialSpecialization
+operator|=
+name|PartialSpec
+block|;
+name|PS
+operator|->
+name|TemplateArgs
+operator|=
+name|TemplateArgs
+block|;
+name|SpecializedTemplate
+operator|=
+name|PS
+block|;   }
 comment|/// \brief Sets the type of this specialization as it was written by
 comment|/// the user. This will be a class template specialization type.
 name|void
@@ -3344,6 +3942,9 @@ name|TemplateArgs
 operator|.
 name|flat_size
 argument_list|()
+argument_list|,
+name|getASTContext
+argument_list|()
 argument_list|)
 block|;   }
 specifier|static
@@ -3355,6 +3956,8 @@ argument_list|,
 argument|const TemplateArgument *TemplateArgs
 argument_list|,
 argument|unsigned NumTemplateArgs
+argument_list|,
+argument|ASTContext&Context
 argument_list|)
 block|{
 name|ID
@@ -3386,6 +3989,8 @@ operator|.
 name|Profile
 argument_list|(
 name|ID
+argument_list|,
+name|Context
 argument_list|)
 expr_stmt|;
 block|}
@@ -3460,6 +4065,8 @@ argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
 argument|TemplateArgumentListBuilder&Builder
+argument_list|,
+argument|ClassTemplatePartialSpecializationDecl *PrevDecl
 argument_list|)
 operator|:
 name|ClassTemplateSpecializationDecl
@@ -3475,6 +4082,8 @@ argument_list|,
 name|SpecializedTemplate
 argument_list|,
 name|Builder
+argument_list|,
+name|PrevDecl
 argument_list|)
 block|,
 name|TemplateParams
@@ -3559,6 +4168,16 @@ comment|/// class template.
 expr|struct
 name|Common
 block|{
+name|Common
+argument_list|()
+operator|:
+name|InstantiatedFromMember
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{}
 comment|/// \brief The class template specializations for this class
 comment|/// template, including explicit specializations and instantiations.
 name|llvm
@@ -3582,8 +4201,28 @@ block|;
 comment|/// \brief The injected-class-name type for this class template.
 name|QualType
 name|InjectedClassNameType
+block|;
+comment|/// \brief The templated member class from which this was most
+comment|/// directly instantiated (or null).
+comment|///
+comment|/// The boolean value indicates whether this member class template
+comment|/// was explicitly specialized.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|ClassTemplateDecl
+operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
+name|InstantiatedFromMember
 block|;   }
 block|;
+comment|// FIXME: Combine PreviousDeclaration with CommonPtr, as in
+comment|// FunctionTemplateDecl.
 comment|/// \brief Previous declaration of this class template.
 name|ClassTemplateDecl
 operator|*
@@ -3675,6 +4314,12 @@ return|return
 name|PreviousDeclaration
 return|;
 block|}
+name|virtual
+name|ClassTemplateDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+block|;
 comment|/// Create a class template node.
 specifier|static
 name|ClassTemplateDecl
@@ -3731,6 +4376,21 @@ operator|->
 name|PartialSpecializations
 return|;
 block|}
+comment|/// \brief Find a class template partial specialization with the given
+comment|/// type T.
+comment|///
+comment|/// \brief A dependent type that names a specialization of this class
+comment|/// template.
+comment|///
+comment|/// \returns the class template partial specialization that exactly matches
+comment|/// the type \p T, or NULL if no such partial specialization exists.
+name|ClassTemplatePartialSpecializationDecl
+operator|*
+name|findPartialSpecialization
+argument_list|(
+argument|QualType T
+argument_list|)
+block|;
 comment|/// \brief Retrieve the type of the injected-class-name for this
 comment|/// class template.
 comment|///
@@ -3753,6 +4413,121 @@ operator|&
 name|Context
 argument_list|)
 block|;
+comment|/// \brief Retrieve the member class template that this class template was
+comment|/// derived from.
+comment|///
+comment|/// This routine will return non-NULL for templated member classes of
+comment|/// class templates.  For example, given:
+comment|///
+comment|/// \code
+comment|/// template<typename T>
+comment|/// struct X {
+comment|///   template<typename U> struct A {};
+comment|/// };
+comment|/// \endcode
+comment|///
+comment|/// X<int>::A<float> is a ClassTemplateSpecializationDecl (whose parent
+comment|/// is X<int>, also a CTSD) for which getSpecializedTemplate() will
+comment|/// return X<int>::A<U>, a TemplateClassDecl (whose parent is again
+comment|/// X<int>) for which getInstantiatedFromMemberTemplate() will return
+comment|/// X<T>::A<U>, a TemplateClassDecl (whose parent is X<T>, also a TCD).
+comment|///
+comment|/// \returns null if this is not an instantiation of a member class template.
+name|ClassTemplateDecl
+operator|*
+name|getInstantiatedFromMemberTemplate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CommonPtr
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|void
+name|setInstantiatedFromMemberTemplate
+argument_list|(
+argument|ClassTemplateDecl *CTD
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|CommonPtr
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getPointer
+argument_list|()
+argument_list|)
+block|;
+name|CommonPtr
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|setPointer
+argument_list|(
+name|CTD
+argument_list|)
+block|;   }
+comment|/// \brief Determines whether this template was a specialization of a
+comment|/// member template.
+comment|///
+comment|/// In the following example, the member template \c X<int>::Inner is a
+comment|/// member specialization.
+comment|///
+comment|/// \code
+comment|/// template<typename T>
+comment|/// struct X {
+comment|///   template<typename U> struct Inner;
+comment|/// };
+comment|///
+comment|/// template<> template<typename T>
+comment|/// struct X<int>::Inner { /* ... */ };
+comment|/// \endcode
+name|bool
+name|isMemberSpecialization
+argument_list|()
+block|{
+return|return
+name|CommonPtr
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+comment|/// \brief Note that this member template is a specialization.
+name|void
+name|setMemberSpecialization
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|CommonPtr
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|getPointer
+argument_list|()
+operator|&&
+literal|"Only member templates can be member template specializations"
+argument_list|)
+block|;
+name|CommonPtr
+operator|->
+name|InstantiatedFromMember
+operator|.
+name|setInt
+argument_list|(
+name|true
+argument_list|)
+block|;   }
 comment|// Implement isa/cast/dyncast support
 specifier|static
 name|bool
@@ -3790,6 +4565,236 @@ operator|&
 name|C
 argument_list|)
 block|; }
+block|;
+comment|/// Declaration of a friend template.  For example:
+comment|///
+comment|/// template<typename T> class A {
+comment|///   friend class MyVector<T>; // not a friend template
+comment|///   template<typename U> friend class B; // friend template
+comment|///   template<typename U> friend class Foo<T>::Nested; // friend template
+name|class
+name|FriendTemplateDecl
+operator|:
+name|public
+name|Decl
+block|{
+name|public
+operator|:
+typedef|typedef
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|NamedDecl
+operator|*
+operator|,
+name|Type
+operator|*
+operator|>
+name|FriendUnion
+expr_stmt|;
+name|private
+operator|:
+comment|// The number of template parameters;  always non-zero.
+name|unsigned
+name|NumParams
+block|;
+comment|// The parameter list.
+name|TemplateParameterList
+operator|*
+operator|*
+name|Params
+block|;
+comment|// The declaration that's a friend of this class.
+name|FriendUnion
+name|Friend
+block|;
+comment|// Location of the 'friend' specifier.
+name|SourceLocation
+name|FriendLoc
+block|;
+name|FriendTemplateDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|unsigned NParams
+argument_list|,
+argument|TemplateParameterList **Params
+argument_list|,
+argument|FriendUnion Friend
+argument_list|,
+argument|SourceLocation FriendLoc
+argument_list|)
+operator|:
+name|Decl
+argument_list|(
+name|Decl
+operator|::
+name|FriendTemplate
+argument_list|,
+name|DC
+argument_list|,
+name|Loc
+argument_list|)
+block|,
+name|NumParams
+argument_list|(
+name|NParams
+argument_list|)
+block|,
+name|Params
+argument_list|(
+name|Params
+argument_list|)
+block|,
+name|Friend
+argument_list|(
+name|Friend
+argument_list|)
+block|,
+name|FriendLoc
+argument_list|(
+argument|FriendLoc
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|FriendTemplateDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|unsigned NParams
+argument_list|,
+argument|TemplateParameterList **Params
+argument_list|,
+argument|FriendUnion Friend
+argument_list|,
+argument|SourceLocation FriendLoc
+argument_list|)
+block|;
+comment|/// If this friend declaration names a templated type (or
+comment|/// a dependent member type of a templated type), return that
+comment|/// type;  otherwise return null.
+name|Type
+operator|*
+name|getFriendType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Friend
+operator|.
+name|dyn_cast
+operator|<
+name|Type
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// If this friend declaration names a templated function (or
+comment|/// a member function of a templated type), return that type;
+comment|/// otherwise return null.
+name|NamedDecl
+operator|*
+name|getFriendDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Friend
+operator|.
+name|dyn_cast
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// Retrieves the location of the 'friend' keyword.
+name|SourceLocation
+name|getFriendLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FriendLoc
+return|;
+block|}
+name|TemplateParameterList
+operator|*
+name|getTemplateParameterList
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|i
+operator|<=
+name|NumParams
+argument_list|)
+block|;
+return|return
+name|Params
+index|[
+name|i
+index|]
+return|;
+block|}
+name|unsigned
+name|getNumTemplateParameters
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumParams
+return|;
+block|}
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|D
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|Decl
+operator|::
+name|FriendTemplate
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const FriendTemplateDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
 block|;
 comment|/// Implementation of inline functions that require the template declarations
 specifier|inline

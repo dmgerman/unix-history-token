@@ -21,9 +21,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|void
 name|f1
 parameter_list|(
 specifier|const

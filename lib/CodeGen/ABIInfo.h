@@ -65,6 +65,9 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -152,6 +155,9 @@ expr_stmt|;
 name|unsigned
 name|UIntData
 decl_stmt|;
+name|bool
+name|BoolData
+decl_stmt|;
 name|ABIArgInfo
 argument_list|(
 argument|Kind K
@@ -161,6 +167,8 @@ literal|0
 argument_list|,
 argument|unsigned UI=
 literal|0
+argument_list|,
+argument|bool B = false
 argument_list|)
 block|:
 name|TheKind
@@ -175,7 +183,12 @@ argument_list|)
 operator|,
 name|UIntData
 argument_list|(
-argument|UI
+name|UI
+argument_list|)
+operator|,
+name|BoolData
+argument_list|(
+argument|B
 argument_list|)
 block|{}
 name|public
@@ -261,6 +274,11 @@ name|getIndirect
 parameter_list|(
 name|unsigned
 name|Alignment
+parameter_list|,
+name|bool
+name|ByVal
+init|=
+name|true
 parameter_list|)
 block|{
 return|return
@@ -271,6 +289,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|Alignment
+argument_list|,
+name|ByVal
 argument_list|)
 return|;
 block|}
@@ -384,7 +404,7 @@ return|return
 name|TypeData
 return|;
 block|}
-comment|// ByVal accessors
+comment|// Indirect accessors
 name|unsigned
 name|getIndirectAlign
 argument_list|()
@@ -401,6 +421,24 @@ argument_list|)
 block|;
 return|return
 name|UIntData
+return|;
+block|}
+name|bool
+name|getIndirectByVal
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|TheKind
+operator|==
+name|Indirect
+operator|&&
+literal|"Invalid kind!"
+argument_list|)
+block|;
+return|return
+name|BoolData
 return|;
 block|}
 name|void
@@ -435,6 +473,12 @@ argument_list|,
 name|ASTContext
 operator|&
 name|Ctx
+argument_list|,
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|VMContext
 argument_list|)
 decl|const
 init|=

@@ -300,7 +300,7 @@ struct|;
 end_struct
 
 begin_function
-name|int
+name|void
 name|wizbiz_quxPoof
 parameter_list|(
 name|z

@@ -51,17 +51,19 @@ begin_comment
 comment|// RUN: true
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
+begin_function_decl
+name|int
+name|printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|_Format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

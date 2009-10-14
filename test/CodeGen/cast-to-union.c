@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm< %s -o %t&&
+comment|// RUN: clang-cc -emit-llvm  %s -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: grep "store i32 351, i32*" %t&&
+comment|// CHECK: w = global %0 { i32 2, [4 x i8] zeroinitializer }
 end_comment
 
 begin_comment
-comment|// RUN: grep "w = global %0<{ i32 2, i8 0, i8 0, i8 0, i8 0 }>" %t&&
+comment|// CHECK: y = global %union.u { double 7.300000e+0{{[0]*}}1 }
 end_comment
 
 begin_comment
-comment|// RUN: grep "y = global %1<{ double 7.300000e+01 }>" %t
+comment|// CHECK: store i32 351, i32
 end_comment
 
 begin_union

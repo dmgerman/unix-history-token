@@ -30,8 +30,7 @@ end_comment
 
 begin_function
 specifier|static
-name|char
-modifier|*
+name|void
 name|f
 parameter_list|(
 name|char
@@ -96,7 +95,7 @@ comment|// rdar://6094870
 end_comment
 
 begin_macro
-unit|int
+unit|void
 name|test
 argument_list|(
 argument|int a
@@ -254,7 +253,7 @@ comment|// rdar://6248081
 end_comment
 
 begin_function
-name|int
+name|void
 name|test6248081
 parameter_list|()
 block|{

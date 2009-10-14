@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown %s -emit-llvm -o - | grep "<{ i8\* null, i32 1024 }>"&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown %s -emit-llvm -o %t&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown %s -emit-llvm -o - | grep "i32 0, i32 22"
+comment|// RUN: grep "{ i8\* null, i32 1024 }" %t&&
+end_comment
+
+begin_comment
+comment|// RUN: grep "i32 0, i32 22" %t
 end_comment
 
 begin_struct

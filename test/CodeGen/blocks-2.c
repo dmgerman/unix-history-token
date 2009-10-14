@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -g %s -emit-llvm -o %t -fblocks
+comment|// RUN: clang-cc -g %s -emit-llvm -o %t -fblocks&&
 end_comment
 
 begin_comment
@@ -9,6 +9,10 @@ end_comment
 
 begin_comment
 comment|// 1 declaration, 1 bar, 1 test_block_dbg and 1 for the block.
+end_comment
+
+begin_comment
+comment|// XFAIL
 end_comment
 
 begin_decl_stmt

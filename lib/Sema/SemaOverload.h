@@ -405,6 +405,19 @@ name|UserDefined
 decl_stmt|;
 block|}
 union|;
+comment|/// When ConversionKind == BadConversion due to multiple conversion
+comment|/// functions, this will list those functions.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|FunctionDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|ConversionFunctionSet
+expr_stmt|;
 comment|// The result of a comparison between implicit conversion
 comment|// sequences. Use Sema::CompareImplicitConversionSequences to
 comment|// actually perform the comparison.
@@ -509,17 +522,54 @@ block|}
 struct|;
 comment|/// OverloadCandidateSet - A set of overload candidates, used in C++
 comment|/// overload resolution (C++ 13.3).
-typedef|typedef
+name|class
+name|OverloadCandidateSet
+range|:
+name|public
 name|llvm
 operator|::
 name|SmallVector
 operator|<
 name|OverloadCandidate
+decl_stmt|, 16>
+block|{
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+name|Decl
+operator|*
 operator|,
 literal|16
 operator|>
-name|OverloadCandidateSet
+name|Functions
 expr_stmt|;
+name|public
+label|:
+comment|/// \brief Determine when this overload candidate will be new to the
+comment|/// overload set.
+name|bool
+name|isNewCandidate
+parameter_list|(
+name|Decl
+modifier|*
+name|F
+parameter_list|)
+block|{
+return|return
+name|Functions
+operator|.
+name|insert
+argument_list|(
+name|F
+operator|->
+name|getCanonicalDecl
+argument_list|()
+argument_list|)
+return|;
+block|}
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

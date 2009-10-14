@@ -4,7 +4,7 @@ comment|// RUN: clang-cc -fsyntax-only -verify %s
 end_comment
 
 begin_function
-name|int
+name|void
 name|test1
 parameter_list|()
 block|{
@@ -21,7 +21,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|test2
 parameter_list|()
 block|{
@@ -62,10 +62,16 @@ condition|)
 do|;
 for|for
 control|(
+operator|(
+name|void
+operator|)
 literal|0
 init|;
 literal|0
 condition|;
+operator|(
+name|void
+operator|)
 literal|0
 control|)
 for|for
@@ -75,10 +81,16 @@ condition|;
 control|)
 for|for
 control|(
+operator|(
+name|void
+operator|)
 literal|9
 init|;
 literal|0
 condition|;
+operator|(
+name|void
+operator|)
 literal|2
 control|)
 empty_stmt|;
@@ -91,6 +103,9 @@ literal|0
 init|;
 literal|0
 condition|;
+operator|(
+name|void
+operator|)
 literal|0
 control|)
 empty_stmt|;
@@ -98,7 +113,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|test3
 parameter_list|()
 block|{
@@ -127,7 +142,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|test4
 parameter_list|()
 block|{

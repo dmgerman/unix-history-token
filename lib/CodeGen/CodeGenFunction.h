@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"CodeGenModule.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CGBlocks.h"
 end_include
 
@@ -145,6 +151,9 @@ name|class
 name|BasicBlock
 decl_stmt|;
 name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
@@ -165,6 +174,9 @@ name|ASTContext
 decl_stmt|;
 name|class
 name|CXXDestructorDecl
+decl_stmt|;
+name|class
+name|CXXTryStmt
 decl_stmt|;
 name|class
 name|Decl
@@ -526,6 +538,11 @@ argument_list|(
 name|CleanupBB
 argument_list|)
 block|;
+comment|// FIXME: This is silly, move this into the builder.
+if|if
+condition|(
+name|CurBB
+condition|)
 name|CGF
 operator|.
 name|Builder
@@ -534,7 +551,16 @@ name|SetInsertPoint
 argument_list|(
 name|CurBB
 argument_list|)
-block|;     }
+expr_stmt|;
+else|else
+name|CGF
+operator|.
+name|Builder
+operator|.
+name|ClearInsertionPoint
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 comment|/// EmitCleanupBlocks - Takes the old cleanup stack size and emits the cleanup
@@ -600,19 +626,16 @@ name|unsigned
 operator|>
 name|LabelIDs
 expr_stmt|;
-comment|/// IndirectSwitches - Record the list of switches for indirect
-comment|/// gotos. Emission of the actual switching code needs to be delayed until all
-comment|/// AddrLabelExprs have been seen.
-name|std
-operator|::
-name|vector
-operator|<
+comment|/// IndirectGotoSwitch - The first time an indirect goto is seen we create a
+comment|/// block with the switch for the indirect gotos.  Every time we see the
+comment|/// address of a label taken, we add the label to the indirect goto.  Every
+comment|/// subsequent indirect goto is codegen'd as a jump to the
+comment|/// IndirectGotoSwitch's basic block.
 name|llvm
 operator|::
 name|SwitchInst
 operator|*
-operator|>
-name|IndirectSwitches
+name|IndirectGotoSwitch
 expr_stmt|;
 comment|/// LocalDeclMap - This keeps track of the LLVM allocas or globals for local C
 comment|/// decls.
@@ -726,6 +749,9 @@ operator|*
 name|InvokeDest
 expr_stmt|;
 comment|// VLASizeMap - This keeps track of the associated size for each VLA type.
+comment|// We track this by the size expression rather than the type itself because
+comment|// in certain situations, like a const qualifier applied to an VLA typedef,
+comment|// multiple VLA types can share the same size expression.
 comment|// FIXME: Maybe this could be a stack of maps that is pushed/popped as we
 comment|// enter/leave scopes.
 name|llvm
@@ -733,7 +759,7 @@ operator|::
 name|DenseMap
 operator|<
 specifier|const
-name|VariableArrayType
+name|Expr
 operator|*
 operator|,
 name|llvm
@@ -939,6 +965,43 @@ literal|4
 operator|>
 name|ConditionalTempDestructionStack
 expr_stmt|;
+comment|/// ByrefValueInfoMap - For each __block variable, contains a pair of the LLVM
+comment|/// type as well as the field number that contains the actual data.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|ValueDecl
+operator|*
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|ByRefValueInfo
+expr_stmt|;
+comment|/// getByrefValueFieldNumber - Given a declaration, returns the LLVM field
+comment|/// number that holds the value.
+name|unsigned
+name|getByRefValueLLVMField
+argument_list|(
+specifier|const
+name|ValueDecl
+operator|*
+name|VD
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|CodeGenFunction
@@ -988,6 +1051,17 @@ name|InvokeDest
 operator|=
 name|B
 expr_stmt|;
+block|}
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|getLLVMContext
+argument_list|()
+block|{
+return|return
+name|VMContext
+return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|//                                  Objective-C
@@ -1165,18 +1239,17 @@ name|Type
 operator|*
 name|BuildByRefType
 argument_list|(
-argument|QualType Ty
-argument_list|,
-argument|uint64_t Align
+specifier|const
+name|ValueDecl
+operator|*
+name|D
 argument_list|)
 expr_stmt|;
 name|void
 name|GenerateCode
 argument_list|(
-specifier|const
-name|FunctionDecl
-operator|*
-name|FD
+name|GlobalDecl
+name|GD
 argument_list|,
 name|llvm
 operator|::
@@ -1188,10 +1261,8 @@ decl_stmt|;
 name|void
 name|StartFunction
 argument_list|(
-specifier|const
-name|Decl
-operator|*
-name|D
+name|GlobalDecl
+name|GD
 argument_list|,
 name|QualType
 name|RetTy
@@ -1227,6 +1298,174 @@ name|EndLoc
 init|=
 name|SourceLocation
 argument_list|()
+parameter_list|)
+function_decl|;
+comment|/// GenerateVtable - Generate the vtable for the given type.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|GenerateVtable
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+expr_stmt|;
+comment|/// GenerateThunk - Generate a thunk for the given method
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GenerateThunk
+argument_list|(
+argument|llvm::Function *Fn
+argument_list|,
+argument|const CXXMethodDecl *MD
+argument_list|,
+argument|bool Extern
+argument_list|,
+argument|int64_t nv
+argument_list|,
+argument|int64_t v
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GenerateCovariantThunk
+argument_list|(
+argument|llvm::Function *Fn
+argument_list|,
+argument|const CXXMethodDecl *MD
+argument_list|,
+argument|bool Extern
+argument_list|,
+argument|int64_t nv_t
+argument_list|,
+argument|int64_t v_t
+argument_list|,
+argument|int64_t nv_r
+argument_list|,
+argument|int64_t v_r
+argument_list|)
+expr_stmt|;
+name|void
+name|EmitCtorPrologue
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|,
+name|CXXCtorType
+name|Type
+parameter_list|)
+function_decl|;
+name|void
+name|SynthesizeCXXCopyConstructor
+argument_list|(
+specifier|const
+name|CXXConstructorDecl
+operator|*
+name|Ctor
+argument_list|,
+name|CXXCtorType
+name|Type
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|,
+specifier|const
+name|FunctionArgList
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
+name|void
+name|SynthesizeCXXCopyAssignment
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|CD
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|,
+specifier|const
+name|FunctionArgList
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
+name|void
+name|SynthesizeDefaultConstructor
+argument_list|(
+specifier|const
+name|CXXConstructorDecl
+operator|*
+name|Ctor
+argument_list|,
+name|CXXCtorType
+name|Type
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|,
+specifier|const
+name|FunctionArgList
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
+name|void
+name|SynthesizeDefaultDestructor
+argument_list|(
+specifier|const
+name|CXXDestructorDecl
+operator|*
+name|Dtor
+argument_list|,
+name|CXXDtorType
+name|Type
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|,
+specifier|const
+name|FunctionArgList
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
+comment|/// EmitDtorEpilogue - Emit all code that comes at the end of class's
+comment|/// destructor. This is to call destructors on members and base classes
+comment|/// in reverse order of their construction.
+name|void
+name|EmitDtorEpilogue
+parameter_list|(
+specifier|const
+name|CXXDestructorDecl
+modifier|*
+name|Dtor
+parameter_list|,
+name|CXXDtorType
+name|Type
 parameter_list|)
 function_decl|;
 comment|/// EmitFunctionProlog - Emit the target specific LLVM code to load the
@@ -1340,6 +1579,8 @@ name|BasicBlock
 operator|::
 name|Create
 argument_list|(
+name|VMContext
+argument_list|,
 literal|""
 argument_list|,
 name|Parent
@@ -1356,6 +1597,8 @@ name|BasicBlock
 operator|::
 name|Create
 argument_list|(
+name|VMContext
+argument_list|,
 name|Name
 argument_list|,
 name|Parent
@@ -1495,6 +1738,38 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//                                  Helpers
 comment|//===--------------------------------------------------------------------===//
+name|Qualifiers
+name|MakeQualifiers
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+name|Qualifiers
+name|Quals
+init|=
+name|T
+operator|.
+name|getQualifiers
+argument_list|()
+decl_stmt|;
+name|Quals
+operator|.
+name|setObjCGCAttr
+argument_list|(
+name|getContext
+argument_list|()
+operator|.
+name|getObjCGCAttrKind
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|Quals
+return|;
+block|}
 comment|/// CreateTempAlloca - This creates a alloca and inserts it into the entry
 comment|/// block.
 name|llvm
@@ -1555,12 +1830,17 @@ operator|=
 literal|0
 argument_list|,
 name|bool
-name|isAggLocVolatile
+name|IsAggLocVolatile
 operator|=
 name|false
 argument_list|,
 name|bool
 name|IgnoreResult
+operator|=
+name|false
+argument_list|,
+name|bool
+name|IsInitializer
 operator|=
 name|false
 argument_list|)
@@ -1583,26 +1863,23 @@ comment|/// EmitAnyExprToTemp - Similary to EmitAnyExpr(), however, the result w
 comment|/// always be accessible even if no aggregate location is provided.
 name|RValue
 name|EmitAnyExprToTemp
-argument_list|(
+parameter_list|(
 specifier|const
 name|Expr
-operator|*
+modifier|*
 name|E
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|AggLoc
-operator|=
-literal|0
-argument_list|,
+parameter_list|,
 name|bool
-name|isAggLocVolatile
-operator|=
+name|IsAggLocVolatile
+init|=
 name|false
-argument_list|)
-decl_stmt|;
+parameter_list|,
+name|bool
+name|IsInitializer
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// EmitAggregateCopy - Emit an aggrate copy.
 comment|///
 comment|/// \param isVolatile - True iff either the source or the destination is
@@ -1653,20 +1930,6 @@ specifier|const
 name|char
 modifier|*
 name|N
-parameter_list|)
-function_decl|;
-comment|/// getCGRecordLayout - Return record layout info.
-specifier|const
-name|CGRecordLayout
-modifier|*
-name|getCGRecordLayout
-parameter_list|(
-name|CodeGenTypes
-modifier|&
-name|CGT
-parameter_list|,
-name|QualType
-name|RTy
 parameter_list|)
 function_decl|;
 comment|/// GetAddrOfStaticLocalVar - Return the address of a static local variable.
@@ -1721,6 +1984,13 @@ modifier|*
 name|L
 parameter_list|)
 function_decl|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|GetIndirectGotoBlock
+argument_list|()
+expr_stmt|;
 comment|/// EmitMemSetToZero - Generate code to memset a value of the given type to 0.
 name|void
 name|EmitMemSetToZero
@@ -1753,6 +2023,8 @@ expr_stmt|;
 comment|// EmitVLASize - Generate code for any VLA size expressions that might occur
 comment|// in a variably modified type. If Ty is a VLA, will return the value that
 comment|// corresponds to the size in bytes of the VLA type. Will return 0 otherwise.
+comment|///
+comment|/// This function can be called with a null (unreachable) insert point.
 name|llvm
 operator|::
 name|Value
@@ -1784,6 +2056,164 @@ operator|*
 name|LoadCXXThis
 argument_list|()
 expr_stmt|;
+comment|/// GetAddressCXXOfBaseClass - This function will add the necessary delta
+comment|/// to the load of 'this' and returns address of the base class.
+comment|// FIXME. This currently only does a derived to non-virtual base conversion.
+comment|// Other kinds of conversions will come later.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|GetAddressCXXOfBaseClass
+argument_list|(
+argument|llvm::Value *BaseValue
+argument_list|,
+argument|const CXXRecordDecl *ClassDecl
+argument_list|,
+argument|const CXXRecordDecl *BaseClassDecl
+argument_list|,
+argument|bool NullCheckValue
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|GetVirtualCXXBaseClassOffset
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|This
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|ClassDecl
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|BaseClassDecl
+argument_list|)
+expr_stmt|;
+name|void
+name|EmitClassAggrMemberwiseCopy
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestValue
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SrcValue
+argument_list|,
+specifier|const
+name|ArrayType
+operator|*
+name|Array
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|BaseClassDecl
+argument_list|,
+name|QualType
+name|Ty
+argument_list|)
+decl_stmt|;
+name|void
+name|EmitClassAggrCopyAssignment
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestValue
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SrcValue
+argument_list|,
+specifier|const
+name|ArrayType
+operator|*
+name|Array
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|BaseClassDecl
+argument_list|,
+name|QualType
+name|Ty
+argument_list|)
+decl_stmt|;
+name|void
+name|EmitClassMemberwiseCopy
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestValue
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SrcValue
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|ClassDecl
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|BaseClassDecl
+argument_list|,
+name|QualType
+name|Ty
+argument_list|)
+decl_stmt|;
+name|void
+name|EmitClassCopyAssignment
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestValue
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SrcValue
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|ClassDecl
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|BaseClassDecl
+argument_list|,
+name|QualType
+name|Ty
+argument_list|)
+decl_stmt|;
 name|void
 name|EmitCXXConstructorCall
 argument_list|(
@@ -1810,6 +2240,67 @@ name|CallExpr
 operator|::
 name|const_arg_iterator
 name|ArgEnd
+argument_list|)
+decl_stmt|;
+name|void
+name|EmitCXXAggrConstructorCall
+argument_list|(
+specifier|const
+name|CXXConstructorDecl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|ConstantArrayType
+operator|*
+name|ArrayTy
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ArrayPtr
+argument_list|)
+decl_stmt|;
+name|void
+name|EmitCXXAggrConstructorCall
+argument_list|(
+specifier|const
+name|CXXConstructorDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|NumElements
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ArrayPtr
+argument_list|)
+decl_stmt|;
+name|void
+name|EmitCXXAggrDestructorCall
+argument_list|(
+specifier|const
+name|CXXDestructorDecl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|ArrayType
+operator|*
+name|Array
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|This
 argument_list|)
 decl_stmt|;
 name|void
@@ -1861,9 +2352,21 @@ operator|*
 name|E
 argument_list|)
 expr_stmt|;
+name|void
+name|EmitCXXDeleteExpr
+parameter_list|(
+specifier|const
+name|CXXDeleteExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//                            Declaration Emission
 comment|//===--------------------------------------------------------------------===//
+comment|/// EmitDecl - Emit a declaration.
+comment|///
+comment|/// This function can be called with a null (unreachable) insert point.
 name|void
 name|EmitDecl
 parameter_list|(
@@ -1873,6 +2376,9 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+comment|/// EmitBlockVarDecl - Emit a block variable declaration.
+comment|///
+comment|/// This function can be called with a null (unreachable) insert point.
 name|void
 name|EmitBlockVarDecl
 parameter_list|(
@@ -1882,6 +2388,9 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+comment|/// EmitLocalBlockVarDecl - Emit a local block variable declaration.
+comment|///
+comment|/// This function can be called with a null (unreachable) insert point.
 name|void
 name|EmitLocalBlockVarDecl
 parameter_list|(
@@ -2174,6 +2683,15 @@ name|EmitObjCAtSynchronizedStmt
 parameter_list|(
 specifier|const
 name|ObjCAtSynchronizedStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+name|void
+name|EmitCXXTryStmt
+parameter_list|(
+specifier|const
+name|CXXTryStmt
 modifier|&
 name|S
 parameter_list|)
@@ -2543,7 +3061,7 @@ name|E
 parameter_list|)
 function_decl|;
 name|LValue
-name|EmitConditionalOperator
+name|EmitConditionalOperatorLValue
 parameter_list|(
 specifier|const
 name|ConditionalOperator
@@ -2672,6 +3190,15 @@ name|E
 parameter_list|)
 function_decl|;
 name|LValue
+name|EmitCXXExprWithTemporariesLValue
+parameter_list|(
+specifier|const
+name|CXXExprWithTemporaries
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+name|LValue
 name|EmitObjCMessageExprLValue
 parameter_list|(
 specifier|const
@@ -2702,7 +3229,7 @@ name|LValue
 name|EmitObjCKVCRefLValue
 parameter_list|(
 specifier|const
-name|ObjCKVCRefExpr
+name|ObjCImplicitSetterGetterRefExpr
 modifier|*
 name|E
 parameter_list|)
@@ -2801,6 +3328,32 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|BuildVirtualCall
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|MD
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|&
+name|This
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|Ty
+argument_list|)
+expr_stmt|;
 name|RValue
 name|EmitCXXMemberCall
 argument_list|(
@@ -2834,6 +3387,15 @@ argument_list|)
 decl_stmt|;
 name|RValue
 name|EmitCXXMemberCallExpr
+parameter_list|(
+specifier|const
+name|CXXMemberCallExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+name|RValue
+name|EmitCXXMemberPointerCallExpr
 parameter_list|(
 specifier|const
 name|CXXMemberCallExpr
@@ -3059,6 +3621,11 @@ name|E
 parameter_list|,
 name|QualType
 name|DestType
+parameter_list|,
+name|bool
+name|IsInitializer
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -3075,7 +3642,7 @@ name|EmitScalarExpr
 argument_list|(
 argument|const Expr *E
 argument_list|,
-argument|bool IgnoreResultAssign=false
+argument|bool IgnoreResultAssign = false
 argument_list|)
 expr_stmt|;
 comment|/// EmitScalarConversion - Emit a conversion from the specified type to the
@@ -3133,6 +3700,37 @@ name|bool
 name|IgnoreResult
 operator|=
 name|false
+argument_list|,
+name|bool
+name|IsInitializer
+operator|=
+name|false
+argument_list|,
+name|bool
+name|RequiresGCollection
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+comment|/// EmitGCMemmoveCollectable - Emit special API for structs with object
+comment|/// pointers.
+name|void
+name|EmitGCMemmoveCollectable
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DestPtr
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SrcPtr
+argument_list|,
+name|QualType
+name|Ty
 argument_list|)
 decl_stmt|;
 comment|/// EmitComplexExpr - Emit the computation of the specified expression of
@@ -3232,10 +3830,10 @@ argument_list|,
 argument|llvm::GlobalValue::LinkageTypes                                                   Linkage
 argument_list|)
 expr_stmt|;
-comment|/// GenerateStaticCXXBlockVarDecl - Create the initializer for a C++
+comment|/// EmitStaticCXXBlockVarDeclInit - Create the initializer for a C++
 comment|/// runtime initialized static block var decl.
 name|void
-name|GenerateStaticCXXBlockVarDeclInit
+name|EmitStaticCXXBlockVarDeclInit
 argument_list|(
 specifier|const
 name|VarDecl
@@ -3247,6 +3845,61 @@ operator|::
 name|GlobalVariable
 operator|*
 name|GV
+argument_list|)
+decl_stmt|;
+comment|/// EmitCXXGlobalVarDeclInit - Create the initializer for a C++
+comment|/// variable with global storage.
+name|void
+name|EmitCXXGlobalVarDeclInit
+argument_list|(
+specifier|const
+name|VarDecl
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|DeclPtr
+argument_list|)
+decl_stmt|;
+comment|/// EmitCXXGlobalDtorRegistration - Emits a call to register the global ptr
+comment|/// with the C++ runtime so that its destructor will be called at exit.
+name|void
+name|EmitCXXGlobalDtorRegistration
+argument_list|(
+specifier|const
+name|CXXDestructorDecl
+operator|*
+name|Dtor
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|DeclPtr
+argument_list|)
+decl_stmt|;
+comment|/// GenerateCXXGlobalInitFunc - Generates code for initializing global
+comment|/// variables.
+name|void
+name|GenerateCXXGlobalInitFunc
+argument_list|(
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|,
+specifier|const
+name|VarDecl
+operator|*
+operator|*
+name|Decls
+argument_list|,
+name|unsigned
+name|NumDecls
 argument_list|)
 decl_stmt|;
 name|void
@@ -3281,7 +3934,12 @@ operator|=
 literal|0
 argument_list|,
 name|bool
-name|isAggLocVolatile
+name|IsAggLocVolatile
+operator|=
+name|false
+argument_list|,
+name|bool
+name|IsInitializer
 operator|=
 name|false
 argument_list|)
@@ -3346,12 +4004,6 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
-comment|/// EmitIndirectSwitches - Emit code for all of the switch
-comment|/// instructions in IndirectSwitches.
-name|void
-name|EmitIndirectSwitches
-parameter_list|()
-function_decl|;
 name|void
 name|EmitReturnOfRValue
 parameter_list|(

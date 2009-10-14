@@ -153,6 +153,12 @@ decl_stmt|;
 name|class
 name|MemSpaceRegion
 decl_stmt|;
+name|class
+name|LocationContext
+decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|// Base region classes.
+comment|//===----------------------------------------------------------------------===//
 comment|/// MemRegion - The root abstract class for all memory regions.
 name|class
 name|MemRegion
@@ -183,8 +189,6 @@ block|,
 name|StringRegionKind
 block|,
 name|ElementRegionKind
-block|,
-name|TypedViewRegionKind
 block|,
 comment|// Decl Regions.
 name|BEG_DECL_REGIONS
@@ -225,14 +229,14 @@ operator|~
 name|MemRegion
 argument_list|()
 block|;
+name|public
+operator|:
 name|ASTContext
 operator|&
 name|getContext
 argument_list|()
 specifier|const
 block|;
-name|public
-operator|:
 name|virtual
 name|void
 name|Profile
@@ -263,6 +267,13 @@ specifier|const
 name|MemSpaceRegion
 operator|*
 name|getMemorySpace
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|MemRegion
+operator|*
+name|getBaseRegion
 argument_list|()
 specifier|const
 block|;
@@ -298,14 +309,14 @@ specifier|const
 block|;
 name|virtual
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
 specifier|const
 block|;
 name|void
-name|printStdErr
+name|dump
 argument_list|()
 specifier|const
 block|;
@@ -510,6 +521,96 @@ return|;
 block|}
 expr|}
 block|;
+comment|//===----------------------------------------------------------------------===//
+comment|// Auxillary data classes for use with MemRegions.
+comment|//===----------------------------------------------------------------------===//
+name|class
+name|ElementRegion
+block|;
+name|class
+name|RegionRawOffset
+operator|:
+name|public
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MemRegion
+operator|*
+block|,
+name|int64_t
+operator|>
+block|{
+name|private
+operator|:
+name|friend
+name|class
+name|ElementRegion
+block|;
+name|RegionRawOffset
+argument_list|(
+argument|const MemRegion* reg
+argument_list|,
+argument|int64_t offset =
+literal|0
+argument_list|)
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MemRegion
+operator|*
+block|,
+name|int64_t
+operator|>
+operator|(
+name|reg
+expr|,
+name|offset
+operator|)
+block|{}
+name|public
+operator|:
+comment|// FIXME: Eventually support symbolic offsets.
+name|int64_t
+name|getByteOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|second
+return|;
+block|}
+specifier|const
+name|MemRegion
+operator|*
+name|getRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|first
+return|;
+block|}
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream& os
+argument_list|)
+specifier|const
+block|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|; }
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|// MemRegion subclasses.
+comment|//===----------------------------------------------------------------------===//
 comment|/// AllocaRegion - A region that represents an untyped blob of bytes created
 comment|///  by a call to 'alloca'.
 name|class
@@ -573,6 +674,15 @@ return|return
 name|Ex
 return|;
 block|}
+name|bool
+name|isBoundable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 name|void
 name|Profile
 argument_list|(
@@ -594,7 +704,7 @@ argument|const MemRegion *superRegion
 argument_list|)
 block|;
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
@@ -696,7 +806,7 @@ name|getTypePtr
 argument_list|()
 condition|?
 name|T
-operator|->
+operator|.
 name|getDesugaredType
 argument_list|()
 else|:
@@ -715,7 +825,7 @@ name|getLocationType
 argument_list|(
 name|C
 argument_list|)
-operator|->
+operator|.
 name|getDesugaredType
 argument_list|()
 return|;
@@ -774,72 +884,24 @@ operator|:
 name|public
 name|TypedRegion
 block|{
-name|public
-operator|:
-expr|enum
-name|CodeKind
-block|{
-name|Declared
-block|,
-name|Symbolic
-block|}
-block|;
-name|private
-operator|:
-comment|// The function pointer kind that this CodeTextRegion represents.
-name|CodeKind
-name|codekind
-block|;
-comment|// Data may be a SymbolRef or FunctionDecl*.
 specifier|const
-name|void
+name|FunctionDecl
 operator|*
-name|Data
-block|;
-comment|// Cached function pointer type.
-name|QualType
-name|LocationType
+name|FD
 block|;
 name|public
 operator|:
 name|CodeTextRegion
 argument_list|(
-argument|const FunctionDecl* fd
-argument_list|,
-argument|QualType t
-argument_list|,
-argument|const MemRegion* sreg
-argument_list|)
-operator|:
-name|TypedRegion
-argument_list|(
-name|sreg
-argument_list|,
-name|CodeTextRegionKind
-argument_list|)
-block|,
-name|codekind
-argument_list|(
-name|Declared
-argument_list|)
-block|,
-name|Data
-argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
 name|fd
-argument_list|)
-block|,
-name|LocationType
-argument_list|(
-argument|t
-argument_list|)
-block|{}
-name|CodeTextRegion
-argument_list|(
-argument|SymbolRef sym
 argument_list|,
-argument|QualType t
-argument_list|,
-argument|const MemRegion* sreg
+specifier|const
+name|MemRegion
+operator|*
+name|sreg
 argument_list|)
 operator|:
 name|TypedRegion
@@ -849,19 +911,9 @@ argument_list|,
 name|CodeTextRegionKind
 argument_list|)
 block|,
-name|codekind
+name|FD
 argument_list|(
-name|Symbolic
-argument_list|)
-block|,
-name|Data
-argument_list|(
-name|sym
-argument_list|)
-block|,
-name|LocationType
-argument_list|(
-argument|t
+argument|fd
 argument_list|)
 block|{}
 name|QualType
@@ -890,29 +942,15 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|LocationType
-return|;
-block|}
-name|bool
-name|isDeclared
+name|C
+operator|.
+name|getPointerType
+argument_list|(
+name|FD
+operator|->
+name|getType
 argument_list|()
-specifier|const
-block|{
-return|return
-name|codekind
-operator|==
-name|Declared
-return|;
-block|}
-name|bool
-name|isSymbolic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|codekind
-operator|==
-name|Symbolic
+argument_list|)
 return|;
 block|}
 specifier|const
@@ -922,52 +960,8 @@ name|getDecl
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|codekind
-operator|==
-name|Declared
-argument_list|)
-block|;
 return|return
-name|static_cast
-operator|<
-specifier|const
-name|FunctionDecl
-operator|*
-operator|>
-operator|(
-name|Data
-operator|)
-return|;
-block|}
-name|SymbolRef
-name|getSymbol
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|codekind
-operator|==
-name|Symbolic
-argument_list|)
-block|;
-return|return
-name|const_cast
-operator|<
-name|SymbolRef
-operator|>
-operator|(
-name|static_cast
-operator|<
-specifier|const
-name|SymbolRef
-operator|>
-operator|(
-name|Data
-operator|)
-operator|)
+name|FD
 return|;
 block|}
 name|bool
@@ -981,7 +975,7 @@ return|;
 block|}
 name|virtual
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
@@ -998,13 +992,20 @@ specifier|static
 name|void
 name|ProfileRegion
 argument_list|(
-argument|llvm::FoldingSetNodeID& ID
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
 argument_list|,
-argument|const void* data
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
 argument_list|,
-argument|QualType t
-argument_list|,
-argument|const MemRegion*
+specifier|const
+name|MemRegion
+operator|*
 argument_list|)
 block|;
 specifier|static
@@ -1072,6 +1073,15 @@ return|return
 name|sym
 return|;
 block|}
+name|bool
+name|isBoundable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 name|void
 name|Profile
 argument_list|(
@@ -1091,7 +1101,7 @@ argument|const MemRegion* superRegion
 argument_list|)
 block|;
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
@@ -1232,7 +1242,7 @@ name|superRegion
 argument_list|)
 block|;   }
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
@@ -1255,153 +1265,6 @@ name|StringRegionKind
 return|;
 block|}
 expr|}
-block|;
-name|class
-name|TypedViewRegion
-operator|:
-name|public
-name|TypedRegion
-block|{
-name|friend
-name|class
-name|MemRegionManager
-block|;
-name|QualType
-name|LValueType
-block|;
-name|TypedViewRegion
-argument_list|(
-argument|QualType lvalueType
-argument_list|,
-argument|const MemRegion* sreg
-argument_list|)
-operator|:
-name|TypedRegion
-argument_list|(
-name|sreg
-argument_list|,
-name|TypedViewRegionKind
-argument_list|)
-block|,
-name|LValueType
-argument_list|(
-argument|lvalueType
-argument_list|)
-block|{}
-specifier|static
-name|void
-name|ProfileRegion
-argument_list|(
-argument|llvm::FoldingSetNodeID& ID
-argument_list|,
-argument|QualType T
-argument_list|,
-argument|const MemRegion* superRegion
-argument_list|)
-block|;
-name|public
-operator|:
-name|void
-name|print
-argument_list|(
-argument|llvm::raw_ostream& os
-argument_list|)
-specifier|const
-block|;
-name|QualType
-name|getLocationType
-argument_list|(
-argument|ASTContext&
-argument_list|)
-specifier|const
-block|{
-return|return
-name|LValueType
-return|;
-block|}
-name|QualType
-name|getValueType
-argument_list|(
-argument|ASTContext&
-argument_list|)
-specifier|const
-block|{
-specifier|const
-name|PointerType
-operator|*
-name|PTy
-operator|=
-name|LValueType
-operator|->
-name|getAsPointerType
-argument_list|()
-block|;
-name|assert
-argument_list|(
-name|PTy
-argument_list|)
-block|;
-return|return
-name|PTy
-operator|->
-name|getPointeeType
-argument_list|()
-return|;
-block|}
-name|bool
-name|isBoundable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isa
-operator|<
-name|PointerType
-operator|>
-operator|(
-name|LValueType
-operator|)
-return|;
-block|}
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID& ID
-argument_list|)
-specifier|const
-block|{
-name|ProfileRegion
-argument_list|(
-name|ID
-argument_list|,
-name|LValueType
-argument_list|,
-name|superRegion
-argument_list|)
-block|;   }
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MemRegion* R
-argument_list|)
-block|{
-return|return
-name|R
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|TypedViewRegionKind
-return|;
-block|}
-specifier|const
-name|MemRegion
-operator|*
-name|removeViews
-argument_list|()
-specifier|const
-block|; }
 block|;
 comment|/// CompoundLiteralRegion - A memory region representing a compound literal.
 comment|///   Compound literals are essentially temporaries that are stack allocated
@@ -1511,7 +1374,7 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
@@ -1650,12 +1513,24 @@ name|friend
 name|class
 name|MemRegionManager
 block|;
+comment|// Data.
+specifier|const
+name|LocationContext
+operator|*
+name|LC
+block|;
+comment|// Constructors and private methods.
 name|VarRegion
 argument_list|(
 specifier|const
 name|VarDecl
 operator|*
 name|vd
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|lC
 argument_list|,
 specifier|const
 name|MemRegion
@@ -1665,11 +1540,16 @@ argument_list|)
 operator|:
 name|DeclRegion
 argument_list|(
-argument|vd
+name|vd
 argument_list|,
-argument|sReg
+name|sReg
 argument_list|,
-argument|VarRegionKind
+name|VarRegionKind
+argument_list|)
+block|,
+name|LC
+argument_list|(
+argument|lC
 argument_list|)
 block|{}
 specifier|static
@@ -1680,7 +1560,9 @@ argument|llvm::FoldingSetNodeID& ID
 argument_list|,
 argument|const VarDecl* VD
 argument_list|,
-argument|const MemRegion* superRegion
+argument|const LocationContext *LC
+argument_list|,
+argument|const MemRegion *superRegion
 argument_list|)
 block|{
 name|DeclRegion
@@ -1695,7 +1577,21 @@ name|superRegion
 argument_list|,
 name|VarRegionKind
 argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|LC
+argument_list|)
 block|;   }
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& ID
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 specifier|const
@@ -1713,6 +1609,17 @@ operator|>
 operator|(
 name|D
 operator|)
+return|;
+block|}
+specifier|const
+name|LocationContext
+operator|*
+name|getLocationContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LC
 return|;
 block|}
 name|QualType
@@ -1737,7 +1644,7 @@ argument_list|)
 return|;
 block|}
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
@@ -1796,7 +1703,7 @@ block|{}
 name|public
 operator|:
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
@@ -2082,6 +1989,13 @@ name|getType
 argument_list|()
 return|;
 block|}
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream& os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -2222,8 +2136,13 @@ return|return
 name|ElementType
 return|;
 block|}
+name|RegionRawOffset
+name|getAsRawOffset
+argument_list|()
+specifier|const
+block|;
 name|void
-name|print
+name|dumpToStream
 argument_list|(
 argument|llvm::raw_ostream& os
 argument_list|)
@@ -2268,15 +2187,6 @@ name|getAs
 argument_list|()
 specifier|const
 block|{
-specifier|const
-name|MemRegion
-operator|*
-name|R
-operator|=
-name|this
-block|;
-do|do
-block|{
 if|if
 condition|(
 specifier|const
@@ -2289,60 +2199,32 @@ operator|<
 name|RegionTy
 operator|>
 operator|(
-name|R
+name|this
 operator|)
 condition|)
 return|return
 name|RT
 return|;
-if|if
-condition|(
-specifier|const
-name|TypedViewRegion
-modifier|*
-name|TR
-init|=
-name|dyn_cast
-operator|<
-name|TypedViewRegion
-operator|>
-operator|(
-name|R
-operator|)
-condition|)
-block|{
-name|R
-operator|=
-name|TR
-operator|->
-name|getSuperRegion
-argument_list|()
-expr_stmt|;
-continue|continue;
+return|return
+name|NULL
+return|;
 block|}
-break|break;
-block|}
-while|while
-condition|(
-name|R
-condition|)
-empty_stmt|;
-do|return 0; }
 comment|//===----------------------------------------------------------------------===//
 comment|// MemRegionManager - Factory object for creating regions.
 comment|//===----------------------------------------------------------------------===//
-do|class MemRegionManager
+name|class
+name|MemRegionManager
 block|{
 name|ASTContext
-modifier|&
+operator|&
 name|C
-decl_stmt|;
+block|;
 name|llvm
 operator|::
 name|BumpPtrAllocator
 operator|&
 name|A
-expr_stmt|;
+block|;
 name|llvm
 operator|::
 name|FoldingSet
@@ -2350,33 +2232,33 @@ operator|<
 name|MemRegion
 operator|>
 name|Regions
-expr_stmt|;
+block|;
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|globals
-decl_stmt|;
+block|;
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|stack
-decl_stmt|;
+block|;
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|stackArguments
-decl_stmt|;
+block|;
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|heap
-decl_stmt|;
+block|;
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|unknown
-decl_stmt|;
+block|;
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|code
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|MemRegionManager
 argument_list|(
 name|ASTContext
@@ -2394,37 +2276,37 @@ name|C
 argument_list|(
 name|c
 argument_list|)
-operator|,
+block|,
 name|A
 argument_list|(
 name|a
 argument_list|)
-operator|,
+block|,
 name|globals
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|stack
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|stackArguments
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|heap
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|unknown
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|code
 argument_list|(
 literal|0
@@ -2449,216 +2331,234 @@ name|MemSpaceRegion
 operator|*
 name|getStackRegion
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// getStackArgumentsRegion - Retrieve the memory region associated with
 comment|///  function/method arguments of the current stack frame.
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|getStackArgumentsRegion
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// getGlobalsRegion - Retrieve the memory region associated with
 comment|///  all global variables.
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|getGlobalsRegion
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// getHeapRegion - Retrieve the memory region associated with the
 comment|///  generic "heap".
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|getHeapRegion
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// getUnknownRegion - Retrieve the memory region associated with unknown
 comment|/// memory space.
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|getUnknownRegion
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|MemSpaceRegion
-modifier|*
+operator|*
 name|getCodeRegion
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// getAllocaRegion - Retrieve a region associated with a call to alloca().
 name|AllocaRegion
-modifier|*
+operator|*
 name|getAllocaRegion
-parameter_list|(
-specifier|const
-name|Expr
-modifier|*
-name|Ex
-parameter_list|,
-name|unsigned
-name|Cnt
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const Expr* Ex
+argument_list|,
+argument|unsigned Cnt
+argument_list|)
+block|;
 comment|/// getCompoundLiteralRegion - Retrieve the region associated with a
 comment|///  given CompoundLiteral.
 name|CompoundLiteralRegion
-modifier|*
+operator|*
 name|getCompoundLiteralRegion
-parameter_list|(
+argument_list|(
 specifier|const
 name|CompoundLiteralExpr
-modifier|*
+operator|*
 name|CL
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// getSymbolicRegion - Retrieve or create a "symbolic" memory region.
 name|SymbolicRegion
-modifier|*
+operator|*
 name|getSymbolicRegion
-parameter_list|(
-name|SymbolRef
-name|sym
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|SymbolRef sym
+argument_list|)
+block|;
 name|StringRegion
-modifier|*
+operator|*
 name|getStringRegion
-parameter_list|(
+argument_list|(
 specifier|const
 name|StringLiteral
-modifier|*
+operator|*
 name|Str
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// getVarRegion - Retrieve or create the memory region associated with
-comment|///  a specified VarDecl.
+comment|///  a specified VarDecl and LocationContext.
 name|VarRegion
-modifier|*
+operator|*
 name|getVarRegion
-parameter_list|(
+argument_list|(
 specifier|const
 name|VarDecl
-modifier|*
-name|vd
-parameter_list|)
-function_decl|;
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LC
+argument_list|)
+block|;
 comment|/// getElementRegion - Retrieve the memory region associated with the
 comment|///  associated element type, index, and super region.
 name|ElementRegion
-modifier|*
+operator|*
 name|getElementRegion
-parameter_list|(
-name|QualType
-name|elementType
-parameter_list|,
-name|SVal
-name|Idx
-parameter_list|,
-specifier|const
-name|MemRegion
-modifier|*
+argument_list|(
+argument|QualType elementType
+argument_list|,
+argument|SVal Idx
+argument_list|,
+argument|const MemRegion *superRegion
+argument_list|,
+argument|ASTContext&Ctx
+argument_list|)
+block|;
+name|ElementRegion
+operator|*
+name|getElementRegionWithSuper
+argument_list|(
+argument|const ElementRegion *ER
+argument_list|,
+argument|const MemRegion *superRegion
+argument_list|)
+block|{
+return|return
+name|getElementRegion
+argument_list|(
+name|ER
+operator|->
+name|getElementType
+argument_list|()
+argument_list|,
+name|ER
+operator|->
+name|getIndex
+argument_list|()
+argument_list|,
 name|superRegion
-parameter_list|,
-name|ASTContext
-modifier|&
-name|Ctx
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ER
+operator|->
+name|getContext
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// getFieldRegion - Retrieve or create the memory region associated with
 comment|///  a specified FieldDecl.  'superRegion' corresponds to the containing
 comment|///  memory region (which typically represents the memory representing
 comment|///  a structure or class).
 name|FieldRegion
-modifier|*
+operator|*
 name|getFieldRegion
-parameter_list|(
+argument_list|(
 specifier|const
 name|FieldDecl
-modifier|*
+operator|*
 name|fd
-parameter_list|,
+argument_list|,
 specifier|const
 name|MemRegion
-modifier|*
+operator|*
 name|superRegion
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
+name|FieldRegion
+operator|*
+name|getFieldRegionWithSuper
+argument_list|(
+argument|const FieldRegion *FR
+argument_list|,
+argument|const MemRegion *superRegion
+argument_list|)
+block|{
+return|return
+name|getFieldRegion
+argument_list|(
+name|FR
+operator|->
+name|getDecl
+argument_list|()
+argument_list|,
+name|superRegion
+argument_list|)
+return|;
+block|}
 comment|/// getObjCObjectRegion - Retrieve or create the memory region associated with
 comment|///  the instance of a specified Objective-C class.
 name|ObjCObjectRegion
-modifier|*
+operator|*
 name|getObjCObjectRegion
-parameter_list|(
+argument_list|(
 specifier|const
 name|ObjCInterfaceDecl
-modifier|*
+operator|*
 name|ID
-parameter_list|,
+argument_list|,
 specifier|const
 name|MemRegion
-modifier|*
+operator|*
 name|superRegion
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// getObjCIvarRegion - Retrieve or create the memory region associated with
 comment|///   a specified Objective-c instance variable.  'superRegion' corresponds
 comment|///   to the containing region (which typically represents the Objective-C
 comment|///   object).
 name|ObjCIvarRegion
-modifier|*
+operator|*
 name|getObjCIvarRegion
-parameter_list|(
+argument_list|(
 specifier|const
 name|ObjCIvarDecl
-modifier|*
+operator|*
 name|ivd
-parameter_list|,
+argument_list|,
 specifier|const
 name|MemRegion
-modifier|*
+operator|*
 name|superRegion
-parameter_list|)
-function_decl|;
-name|TypedViewRegion
-modifier|*
-name|getTypedViewRegion
-parameter_list|(
-name|QualType
-name|LValueType
-parameter_list|,
-specifier|const
-name|MemRegion
-modifier|*
-name|superRegion
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|CodeTextRegion
-modifier|*
+operator|*
 name|getCodeTextRegion
-parameter_list|(
-name|SymbolRef
-name|sym
-parameter_list|,
-name|QualType
-name|t
-parameter_list|)
-function_decl|;
-name|CodeTextRegion
-modifier|*
-name|getCodeTextRegion
-parameter_list|(
+argument_list|(
 specifier|const
 name|FunctionDecl
-modifier|*
-name|fd
-parameter_list|,
-name|QualType
-name|t
-parameter_list|)
-function_decl|;
+operator|*
+name|FD
+argument_list|)
+block|;
 name|template
 operator|<
 name|typename
 name|RegionTy
-operator|,
+block|,
 name|typename
 name|A1
 operator|>
@@ -2668,32 +2568,32 @@ name|getRegion
 argument_list|(
 argument|const A1 a1
 argument_list|)
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|typename
 name|RegionTy
-operator|,
+block|,
 name|typename
 name|A1
 operator|>
 name|RegionTy
 operator|*
-name|getRegion
+name|getSubRegion
 argument_list|(
 argument|const A1 a1
 argument_list|,
 argument|const MemRegion* superRegion
 argument_list|)
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|typename
 name|RegionTy
-operator|,
+block|,
 name|typename
 name|A1
-operator|,
+block|,
 name|typename
 name|A2
 operator|>
@@ -2705,47 +2605,47 @@ argument|const A1 a1
 argument_list|,
 argument|const A2 a2
 argument_list|)
-expr_stmt|;
+block|;
 name|bool
 name|isGlobalsRegion
-parameter_list|(
-specifier|const
-name|MemRegion
-modifier|*
-name|R
-parameter_list|)
+argument_list|(
+argument|const MemRegion* R
+argument_list|)
 block|{
 name|assert
 argument_list|(
 name|R
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|R
 operator|==
 name|globals
 return|;
 block|}
-function|private:   MemSpaceRegion* LazyAllocate
-parameter_list|(
+name|private
+operator|:
 name|MemSpaceRegion
-modifier|*
-modifier|&
+operator|*
+name|LazyAllocate
+argument_list|(
+name|MemSpaceRegion
+operator|*
+operator|&
 name|region
-parameter_list|)
-function|;
-block|}
-do|;
+argument_list|)
+block|; }
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Out-of-line member definitions.
 comment|//===----------------------------------------------------------------------===//
 specifier|inline
-namespace|ASTContext&
+name|ASTContext
+operator|&
 name|MemRegion
-namespace|::
+operator|::
 name|getContext
-namespace|(
-block|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2902,7 +2802,7 @@ name|RegionTy
 operator|*
 name|MemRegionManager
 operator|::
-name|getRegion
+name|getSubRegion
 argument_list|(
 argument|const A1 a1
 argument_list|,
@@ -3264,14 +3164,17 @@ name|SuperRegionTy
 operator|*
 name|getSuperRegion
 argument_list|(
-argument|MemRegionManager& MRMgr
+argument|MemRegionManager&MRMgr
 argument_list|,
-argument|const VarDecl *d
+argument|const VarDecl *D
+argument_list|,
+argument|const LocationContext *LC
 argument_list|)
 block|{
+comment|// FIXME: Make stack regions have a location context?
 if|if
 condition|(
-name|d
+name|D
 operator|->
 name|hasLocalStorage
 argument_list|()
@@ -3283,7 +3186,7 @@ operator|<
 name|ParmVarDecl
 operator|>
 operator|(
-name|d
+name|D
 operator|)
 operator|||
 name|isa
@@ -3291,7 +3194,7 @@ operator|<
 name|ImplicitParamDecl
 operator|>
 operator|(
-name|d
+name|D
 operator|)
 condition|?
 name|MRMgr
@@ -3369,8 +3272,6 @@ argument_list|(
 argument|MemRegionManager& MRMgr
 argument_list|,
 argument|const FunctionDecl*
-argument_list|,
-argument|QualType
 argument_list|)
 block|{
 return|return
@@ -3401,7 +3302,7 @@ argument_list|()
 return|;
 block|}
 expr|}
-block|;    }
+block|;  }
 comment|// end clang namespace
 comment|//===----------------------------------------------------------------------===//
 comment|// Pretty-printing regions.
@@ -3418,7 +3319,7 @@ operator|<<
 operator|(
 name|raw_ostream
 operator|&
-name|O
+name|os
 expr|,
 specifier|const
 name|clang
@@ -3430,13 +3331,13 @@ operator|)
 block|{
 name|R
 operator|->
-name|print
+name|dumpToStream
 argument_list|(
-name|O
+name|os
 argument_list|)
 block|;
 return|return
-name|O
+name|os
 return|;
 block|}
 expr|}

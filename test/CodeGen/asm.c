@@ -135,7 +135,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep "T8 NAMED MODIFIER: \${0:c}" %t
+comment|// RUN: grep "T8 NAMED MODIFIER: \${0:c}" %t&&
 end_comment
 
 begin_function
@@ -319,6 +319,27 @@ name|P
 parameter_list|)
 block|{
 asm|__asm__("abc %0" : "=r"(P->a) );
+block|}
+end_function
+
+begin_comment
+comment|// PR4938
+end_comment
+
+begin_function
+name|int
+name|t16
+parameter_list|()
+block|{
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+asm|asm ( "nop;"        :"=%c" (a)        : "r" (b)        );
+return|return
+literal|0
+return|;
 block|}
 end_function
 

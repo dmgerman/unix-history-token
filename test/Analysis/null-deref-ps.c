@@ -1,31 +1,71 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=basic -analyzer-store=basic&&
+comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=basic -analyzer-store=basic&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=range -analyzer-store=basic&&
+comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=range -analyzer-store=basic&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -analyzer-purge-dead=false -verify %s&&
+comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -analyzer-purge-dead=false -verify %s&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -verify %s
+comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -verify %s
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
+begin_typedef
+typedef|typedef
+name|unsigned
+name|uintptr_t
+typedef|;
+end_typedef
 
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
+begin_function_decl
+specifier|extern
+name|void
+name|__assert_fail
+parameter_list|(
+name|__const
+name|char
+modifier|*
+name|__assertion
+parameter_list|,
+name|__const
+name|char
+modifier|*
+name|__file
+parameter_list|,
+name|unsigned
+name|int
+name|__line
+parameter_list|,
+name|__const
+name|char
+modifier|*
+name|__function
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__noreturn__
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|assert
+parameter_list|(
+name|expr
+parameter_list|)
+define|\
+value|((expr)  ? (void)(0)  : __assert_fail (#expr, __FILE__, __LINE__, __func__))
+end_define
 
 begin_function
 name|void
@@ -290,6 +330,9 @@ operator|+=
 literal|10
 expr_stmt|;
 comment|// expected-warning{{Dereference of null pointer}}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -488,6 +531,45 @@ name|q
 argument_list|)
 return|;
 comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|f6d
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|bar
+argument_list|(
+name|p
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// At this point, 'p' cannot be null.
+if|if
+condition|(
+operator|!
+name|p
+condition|)
+block|{
+name|int
+modifier|*
+name|q
+init|=
+literal|0
+decl_stmt|;
+operator|*
+name|q
+operator|=
+literal|0xDEADBEEF
+expr_stmt|;
+comment|// no-warning
+block|}
 block|}
 end_function
 
@@ -721,7 +803,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|f8
 parameter_list|(
 name|int
@@ -1191,6 +1273,50 @@ operator|=
 literal|1
 expr_stmt|;
 comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// PR 4759 - Attribute non-null checking by the analyzer was not correctly
+end_comment
+
+begin_comment
+comment|// handling pointer values that were undefined.
+end_comment
+
+begin_function_decl
+name|void
+name|pr4759_aux
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(nonnull
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|pr4759
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|p
+decl_stmt|;
+name|pr4759_aux
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{undefined}}
 block|}
 end_function
 

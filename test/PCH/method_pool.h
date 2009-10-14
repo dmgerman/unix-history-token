@@ -57,7 +57,14 @@ name|implementation
 name|TestMethodPool1
 operator|+
 name|alloc
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 operator|-
 operator|(
 name|double

@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -104,6 +110,9 @@ name|TargetData
 decl_stmt|;
 name|class
 name|Type
+decl_stmt|;
+name|class
+name|LLVMContext
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -166,42 +175,56 @@ name|CGRecordLayout
 argument_list|()
 expr_stmt|;
 comment|// DO NOT IMPLEMENT
-name|public
-label|:
-name|CGRecordLayout
-argument_list|(
+comment|/// LLVMType - The LLVMType corresponding to this record layout.
+specifier|const
 name|llvm
 operator|::
 name|Type
 operator|*
-name|T
+name|LLVMType
+expr_stmt|;
+comment|/// ContainsMemberPointer - Whether one of the fields in this record layout
+comment|/// is a member pointer, or a struct that contains a member pointer.
+name|bool
+name|ContainsMemberPointer
+decl_stmt|;
+comment|/// KeyFunction - The key function of the record layout (if one exists),
+comment|/// which is the first non-pure virtual function that is not inline at the
+comment|/// point of class definition.
+comment|/// See http://www.codesourcery.com/public/cxx-abi/abi.html#vague-vtable.
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|KeyFunction
+decl_stmt|;
+name|public
+label|:
+name|CGRecordLayout
+argument_list|(
+argument|const llvm::Type *T
 argument_list|,
-name|llvm
-operator|::
-name|SmallSet
-operator|<
-name|unsigned
+argument|bool ContainsMemberPointer
 argument_list|,
-literal|8
-operator|>
-operator|&
-name|PF
+argument|const CXXMethodDecl *KeyFunction
 argument_list|)
-operator|:
-name|STy
+block|:
+name|LLVMType
 argument_list|(
 name|T
 argument_list|)
 operator|,
-name|PaddingFields
+name|ContainsMemberPointer
 argument_list|(
-argument|PF
+name|ContainsMemberPointer
 argument_list|)
-block|{
-comment|// FIXME : Collect info about fields that requires adjustments
-comment|// (i.e. fields that do not directly map to llvm struct fields.)
-block|}
+operator|,
+name|KeyFunction
+argument_list|(
+argument|KeyFunction
+argument_list|)
+block|{ }
 comment|/// getLLVMType - Return llvm type associated with this record.
+specifier|const
 name|llvm
 operator|::
 name|Type
@@ -211,57 +234,29 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|STy
+name|LLVMType
 return|;
 block|}
 name|bool
-name|isPaddingField
-argument_list|(
-name|unsigned
-name|No
-argument_list|)
-decl|const
-block|{
-return|return
-name|PaddingFields
-operator|.
-name|count
-argument_list|(
-name|No
-argument_list|)
-operator|!=
-literal|0
-return|;
-block|}
-name|unsigned
-name|getNumPaddingFields
-parameter_list|()
-block|{
-return|return
-name|PaddingFields
-operator|.
-name|size
+name|containsMemberPointer
 argument_list|()
+specifier|const
+block|{
+return|return
+name|ContainsMemberPointer
 return|;
 block|}
-name|private
-label|:
-name|llvm
-operator|::
-name|Type
+specifier|const
+name|CXXMethodDecl
 operator|*
-name|STy
-expr_stmt|;
-name|llvm
-operator|::
-name|SmallSet
-operator|<
-name|unsigned
-operator|,
-literal|8
-operator|>
-name|PaddingFields
-expr_stmt|;
+name|getKeyFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|KeyFunction
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// CodeGenTypes - This class organizes the cross-module state that is used
@@ -406,39 +401,44 @@ name|FunctionInfos
 expr_stmt|;
 name|public
 label|:
-name|class
+struct|struct
 name|BitFieldInfo
 block|{
-name|public
-label|:
-name|explicit
 name|BitFieldInfo
 argument_list|(
-argument|unsigned short B
+argument|unsigned FieldNo
 argument_list|,
-argument|unsigned short S
+argument|unsigned Start
+argument_list|,
+argument|unsigned Size
 argument_list|)
 block|:
-name|Begin
+name|FieldNo
 argument_list|(
-name|B
+name|FieldNo
+argument_list|)
+operator|,
+name|Start
+argument_list|(
+name|Start
 argument_list|)
 operator|,
 name|Size
 argument_list|(
-argument|S
+argument|Size
 argument_list|)
 block|{}
 name|unsigned
-name|short
-name|Begin
+name|FieldNo
 expr_stmt|;
 name|unsigned
-name|short
+name|Start
+decl_stmt|;
+name|unsigned
 name|Size
 decl_stmt|;
 block|}
-empty_stmt|;
+struct|;
 name|private
 label|:
 name|llvm
@@ -550,6 +550,20 @@ name|getABIInfo
 argument_list|()
 specifier|const
 expr_stmt|;
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|getLLVMContext
+argument_list|()
+block|{
+return|return
+name|TheModule
+operator|.
+name|getContext
+argument_list|()
+return|;
+block|}
 comment|/// ConvertType - Convert type T into a llvm::Type.
 specifier|const
 name|llvm
@@ -610,7 +624,7 @@ argument_list|)
 expr_stmt|;
 specifier|const
 name|CGRecordLayout
-modifier|*
+modifier|&
 name|getCGRecordLayout
 argument_list|(
 specifier|const
@@ -641,28 +655,8 @@ modifier|*
 name|TD
 parameter_list|)
 function_decl|;
-comment|/// getFunctionInfo - Get the CGFunctionInfo for this function signature.
-specifier|const
-name|CGFunctionInfo
-modifier|&
-name|getFunctionInfo
-argument_list|(
-name|QualType
-name|RetTy
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|QualType
-argument_list|,
-literal|16
-operator|>
-operator|&
-name|ArgTys
-argument_list|)
-decl_stmt|;
+name|private
+label|:
 specifier|const
 name|CGFunctionInfo
 modifier|&
@@ -685,6 +679,9 @@ modifier|*
 name|FTP
 parameter_list|)
 function_decl|;
+name|public
+label|:
+comment|/// getFunctionInfo - Get the function info for the specified function decl.
 specifier|const
 name|CGFunctionInfo
 modifier|&
@@ -718,6 +715,26 @@ modifier|*
 name|MD
 parameter_list|)
 function_decl|;
+comment|// getFunctionInfo - Get the function info for a member function.
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getFunctionInfo
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+specifier|const
+name|FunctionProtoType
+modifier|*
+name|FTP
+parameter_list|)
+function_decl|;
+comment|/// getFunctionInfo - Get the function info for a function described by a
+comment|/// return type and argument types. If the calling convention is not
+comment|/// specified, the "C" calling convention will be used.
 specifier|const
 name|CGFunctionInfo
 modifier|&
@@ -730,10 +747,13 @@ specifier|const
 name|CallArgList
 modifier|&
 name|Args
+parameter_list|,
+name|unsigned
+name|CallingConvention
+init|=
+literal|0
 parameter_list|)
 function_decl|;
-name|public
-label|:
 specifier|const
 name|CGFunctionInfo
 modifier|&
@@ -746,8 +766,39 @@ specifier|const
 name|FunctionArgList
 modifier|&
 name|Args
+parameter_list|,
+name|unsigned
+name|CallingConvention
+init|=
+literal|0
 parameter_list|)
 function_decl|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getFunctionInfo
+argument_list|(
+name|QualType
+name|RetTy
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|QualType
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|ArgTys
+argument_list|,
+name|unsigned
+name|CallingConvention
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 comment|// These are internal details of CGT that shouldn't be used externally.
@@ -761,7 +812,7 @@ modifier|*
 name|FD
 parameter_list|,
 name|unsigned
-name|No
+name|FieldNo
 parameter_list|)
 function_decl|;
 comment|/// addBitFieldInfo - Assign a start bit and a size to field FD.
@@ -774,7 +825,10 @@ modifier|*
 name|FD
 parameter_list|,
 name|unsigned
-name|Begin
+name|FieldNo
+parameter_list|,
+name|unsigned
+name|Start
 parameter_list|,
 name|unsigned
 name|Size

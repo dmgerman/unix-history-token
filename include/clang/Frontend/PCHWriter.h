@@ -153,6 +153,133 @@ decl_stmt|;
 name|class
 name|TargetInfo
 decl_stmt|;
+comment|/// A structure for putting "fast"-unqualified QualTypes into a
+comment|/// DenseMap.  This uses the standard pointer hash function.
+struct|struct
+name|UnsafeQualTypeDenseMapInfo
+block|{
+specifier|static
+specifier|inline
+name|bool
+name|isEqual
+parameter_list|(
+name|QualType
+name|A
+parameter_list|,
+name|QualType
+name|B
+parameter_list|)
+block|{
+return|return
+name|A
+operator|==
+name|B
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|isPod
+parameter_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+specifier|inline
+name|QualType
+name|getEmptyKey
+parameter_list|()
+block|{
+return|return
+name|QualType
+operator|::
+name|getFromOpaquePtr
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+literal|1
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|QualType
+name|getTombstoneKey
+parameter_list|()
+block|{
+return|return
+name|QualType
+operator|::
+name|getFromOpaquePtr
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+literal|2
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|unsigned
+name|getHashValue
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|T
+operator|.
+name|getFastQualifiers
+argument_list|()
+operator|&&
+literal|"hash invalid for types with fast quals"
+argument_list|)
+expr_stmt|;
+name|uintptr_t
+name|v
+init|=
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|T
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+operator|)
+decl_stmt|;
+return|return
+operator|(
+name|unsigned
+argument_list|(
+name|v
+argument_list|)
+operator|>>
+literal|4
+operator|)
+operator|^
+operator|(
+name|unsigned
+argument_list|(
+name|v
+argument_list|)
+operator|>>
+literal|9
+operator|)
+return|;
+block|}
+block|}
+struct|;
 comment|/// \brief Writes a precompiled header containing the contents of a
 comment|/// translation unit.
 comment|///
@@ -231,19 +358,21 @@ comment|/// output stream.
 comment|///
 comment|/// The ID numbers of types are consecutive (in order of discovery)
 comment|/// and start at 1. 0 is reserved for NULL. When types are actually
-comment|/// stored in the stream, the ID number is shifted by 3 bits to
-comment|/// allow for the const/volatile/restrict qualifiers.
+comment|/// stored in the stream, the ID number is shifted by 2 bits to
+comment|/// allow for the const/volatile qualifiers.
+comment|///
+comment|/// Keys in the map never have const/volatile qualifiers.
 name|llvm
 operator|::
 name|DenseMap
 operator|<
-specifier|const
-name|Type
-operator|*
+name|QualType
 operator|,
 name|pch
 operator|::
 name|TypeID
+operator|,
+name|UnsafeQualTypeDenseMapInfo
 operator|>
 name|TypeIDs
 expr_stmt|;
@@ -269,9 +398,7 @@ name|std
 operator|::
 name|queue
 operator|<
-specifier|const
-name|Type
-operator|*
+name|QualType
 operator|>
 name|TypesToEmit
 expr_stmt|;
@@ -442,6 +569,11 @@ parameter_list|(
 name|ASTContext
 modifier|&
 name|Context
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|isysroot
 parameter_list|)
 function_decl|;
 name|void
@@ -459,6 +591,11 @@ parameter_list|(
 name|MemorizeStatCalls
 modifier|&
 name|StatCalls
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|isysroot
 parameter_list|)
 function_decl|;
 name|void
@@ -472,6 +609,11 @@ specifier|const
 name|Preprocessor
 modifier|&
 name|PP
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|isysroot
 parameter_list|)
 function_decl|;
 name|void
@@ -494,9 +636,7 @@ function_decl|;
 name|void
 name|WriteType
 parameter_list|(
-specifier|const
-name|Type
-modifier|*
+name|QualType
 name|T
 parameter_list|)
 function_decl|;
@@ -586,6 +726,15 @@ name|Stream
 argument_list|)
 expr_stmt|;
 comment|/// \brief Write a precompiled header for the given semantic analysis.
+comment|///
+comment|/// \param SemaRef a reference to the semantic analysis object that processed
+comment|/// the AST to be written into the precompiled header.
+comment|///
+comment|/// \param StatCalls the object that cached all of the stat() calls made while
+comment|/// searching for source files and headers.
+comment|///
+comment|/// \param isysroot if non-NULL, write a relocatable PCH file whose headers
+comment|/// are relative to the given system root.
 name|void
 name|WritePCH
 parameter_list|(
@@ -596,6 +745,11 @@ parameter_list|,
 name|MemorizeStatCalls
 modifier|*
 name|StatCalls
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|isysroot
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit a source location.

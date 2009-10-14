@@ -106,7 +106,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|int
+name|void
 name|b
 parameter_list|()
 block|{

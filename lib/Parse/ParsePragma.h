@@ -121,7 +121,7 @@ name|Token
 operator|&
 name|FirstToken
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|PragmaUnusedHandler
@@ -182,7 +182,7 @@ name|Token
 operator|&
 name|FirstToken
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|PragmaWeakHandler
@@ -230,7 +230,7 @@ name|Token
 operator|&
 name|FirstToken
 argument_list|)
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

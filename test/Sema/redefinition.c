@@ -10,7 +10,11 @@ parameter_list|(
 name|int
 name|a
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_comment
@@ -33,7 +37,11 @@ parameter_list|(
 name|int
 name|a
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_comment

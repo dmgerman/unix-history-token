@@ -280,8 +280,10 @@ name|ProgramPaths
 return|;
 block|}
 comment|// Tool access.
-comment|/// TranslateArgs - Create a new derived argument list for any
-comment|/// argument translations this ToolChain may wish to perform.
+comment|/// TranslateArgs - Create a new derived argument list for any argument
+comment|/// translations this ToolChain may wish to perform.
+comment|///
+comment|/// \param BoundArch - The bound architecture name, or 0.
 name|virtual
 name|DerivedArgList
 modifier|*
@@ -290,6 +292,11 @@ argument_list|(
 name|InputArgList
 operator|&
 name|Args
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|BoundArch
 argument_list|)
 decl|const
 init|=
@@ -316,11 +323,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|// Helper methods
-name|llvm
+name|std
 operator|::
-name|sys
-operator|::
-name|Path
+name|string
 name|GetFilePath
 argument_list|(
 argument|const Compilation&C
@@ -329,11 +334,9 @@ argument|const char *Name
 argument_list|)
 specifier|const
 expr_stmt|;
-name|llvm
+name|std
 operator|::
-name|sys
-operator|::
-name|Path
+name|string
 name|GetProgramPath
 argument_list|(
 argument|const Compilation&C

@@ -1,42 +1,38 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fblocks -triple x86_64-apple-darwin10 -emit-llvm -o %t %s&&
+comment|// FIXME: We forcibly strip the names so that the test doesn't vary between
 end_comment
 
 begin_comment
-comment|// RUN: grep '%call = call i32 (...)\* @rhs()' %t | count 1&&
+comment|// builds with and without asserts. We need a better solution for this.
 end_comment
 
 begin_comment
-comment|// If this fails, see about sliding %4, %5, %6 and %7...
+comment|// RUN: clang-cc -fblocks -triple x86_64-apple-darwin10 -emit-llvm-bc -o - %s | opt -strip | llvm-dis> %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '%forwarding1 = getelementptr %0\* %i, i32 0, i32 1' %t | count 1&&
+comment|// RUN: grep '%6 = call i32 (...)\* @rhs()' %t | count 1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '%4 = bitcast i8\*\* %forwarding1 to %0\*\*' %t | count 1&&
+comment|// RUN: grep '%7 = getelementptr inbounds %0\* %1, i32 0, i32 1' %t | count 1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '%5 = load %0\*\* %4' %t | count 1&&
+comment|// RUN: grep '%8 = load %0\*\* %7' %t | count 1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '%call2 = call i32 (...)\* @rhs()' %t | count 1&&
+comment|// RUN: grep '%10 = call i32 (...)\* @rhs()' %t | count 1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '%forwarding3 = getelementptr %0\* %i, i32 0, i32 1' %t | count 1&&
+comment|// RUN: grep '%11 = getelementptr inbounds %0\* %1, i32 0, i32 1' %t | count 1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '%6 = bitcast i8\*\* %forwarding3 to %0\*\*' %t | count 1&&
-end_comment
-
-begin_comment
-comment|// RUN: grep '%7 = load %0\*\* %6' %t | count 1
+comment|// RUN: grep '%12 = load %0\*\* %11' %t | count 1
 end_comment
 
 begin_function_decl

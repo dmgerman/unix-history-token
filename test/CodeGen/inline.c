@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: echo "C89 tests:"&&
+comment|// RUN: echo "GNU89 tests:"&&
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -S -o %t -std=c89&&
+comment|// RUN: clang %s -emit-llvm -S -o %t -std=gnu89&&
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|// RUN: grep "define i32 @test2" %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally void @test3" %t&&
+comment|// RUN: grep "define void @test3" %t&&
 end_comment
 
 begin_comment
@@ -108,7 +108,7 @@ comment|// RUN: grep "define available_externally i32 @test4" %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test5" %t&&
+comment|// RUN: grep "define available_externally i32 @test5" %t&&
 end_comment
 
 begin_comment
@@ -335,24 +335,19 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
-begin_function
+begin_decl_stmt
 name|__inline
 name|void
-name|test3
-parameter_list|()
-block|{}
-end_function
-
-begin_function
-name|void
-name|test_test3
-parameter_list|()
-block|{
+name|__attribute__
+argument_list|(
+operator|(
+name|gnu_inline
+operator|)
+argument_list|)
 name|test3
 argument_list|()
-expr_stmt|;
-block|}
-end_function
+block|{}
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -378,7 +373,11 @@ name|test4
 argument_list|(
 name|void
 argument_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_decl_stmt
 
 begin_function
@@ -400,8 +399,15 @@ name|test5
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__gnu_inline__
 end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -417,7 +423,11 @@ name|test5
 argument_list|(
 name|void
 argument_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_decl_stmt
 
 begin_function

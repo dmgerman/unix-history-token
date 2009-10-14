@@ -408,7 +408,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-unit|};     }
+unit|};   }
 comment|// end namespace llvm
 end_comment
 

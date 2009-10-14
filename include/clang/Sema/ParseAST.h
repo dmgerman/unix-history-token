@@ -72,6 +72,12 @@ decl_stmt|;
 name|class
 name|ASTContext
 decl_stmt|;
+name|class
+name|CodeCompleteConsumer
+decl_stmt|;
+name|class
+name|Sema
+decl_stmt|;
 comment|/// \brief Parse the entire file specified, notifying the ASTConsumer as
 comment|/// the file is parsed.
 comment|///
@@ -105,6 +111,29 @@ name|bool
 name|CompleteTranslationUnit
 init|=
 name|true
+parameter_list|,
+name|CodeCompleteConsumer
+modifier|*
+function_decl|(
+modifier|*
+name|CreateCodeCompleter
+function_decl|)
+parameter_list|(
+name|Sema
+modifier|&
+parameter_list|,
+name|void
+modifier|*
+name|Data
+parameter_list|)
+init|=
+literal|0
+parameter_list|,
+name|void
+modifier|*
+name|CreateCodeCompleterData
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 block|}

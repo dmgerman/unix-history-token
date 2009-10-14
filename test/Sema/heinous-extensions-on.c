@@ -4,7 +4,7 @@ comment|// RUN: clang-cc %s -verify -fheinous-gnu-extensions
 end_comment
 
 begin_function
-name|int
+name|void
 name|foo
 parameter_list|()
 block|{

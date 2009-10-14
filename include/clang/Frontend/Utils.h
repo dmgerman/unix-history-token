@@ -121,12 +121,6 @@ decl_stmt|;
 name|class
 name|Stmt
 decl_stmt|;
-name|class
-name|ASTContext
-decl_stmt|;
-name|class
-name|SourceLocation
-decl_stmt|;
 comment|/// ProcessWarningOptions - Initialize the diagnostic client and process the
 comment|/// warning options specified on the command line.
 name|bool
@@ -304,47 +298,6 @@ operator|*
 name|OS
 argument_list|)
 decl_stmt|;
-comment|/// \brief Returns the AST node that a source location points to.
-comment|///
-comment|/// Returns a pair of Decl* and Stmt*. If no AST node is found for the source
-comment|/// location, the pair will contain null pointers.
-comment|///
-comment|/// If the source location points to just a declaration, the statement part of
-comment|/// the pair will be null, e.g.,
-comment|/// @code
-comment|///   int foo;
-comment|/// @endcode
-comment|/// If the source location points at 'foo', the pair will contain the VarDecl
-comment|/// of foo and a null Stmt.
-comment|///
-comment|/// If the source location points to a statement node, the returned declaration
-comment|/// will be the immediate 'parent' declaration of the statement node, e.g.,
-comment|/// @code
-comment|///   void f() {
-comment|///     int foo = 100;
-comment|///     ++foo;
-comment|///   }
-comment|/// @endcode
-comment|/// Pointing at '100' will return a<VarDecl 'foo', IntegerLiteral '100'> pair.
-comment|/// Pointing at '++foo' will return a<FunctionDecl 'f', UnaryOperator> pair.
-comment|///
-name|std
-operator|::
-name|pair
-operator|<
-name|Decl
-operator|*
-operator|,
-name|Stmt
-operator|*
-operator|>
-name|ResolveLocationInAST
-argument_list|(
-argument|ASTContext&Ctx
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-expr_stmt|;
 block|}
 end_decl_stmt
 

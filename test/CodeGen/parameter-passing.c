@@ -40,7 +40,7 @@ comment|// RUN: not grep '@g0' %t&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -triple ppc-unknown-unknown -O3 -emit-llvm -o %t&&
+comment|// RUN: clang-cc %s -triple powerpc-unknown-unknown -O3 -emit-llvm -o %t&&
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-pc-linux-gnu -verify -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-pc-linux-gnu -verify -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_include
@@ -148,7 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g1x = global %. { double 1.000000e+00, double 0.000000e+00 }' %t&&
+comment|// CHECK: @g1x = global {{%.}} { double 1.000000e+00{{[0]*}}, double 0.000000e+00{{[0]*}} }
 end_comment
 
 begin_decl_stmt
@@ -161,7 +161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g1y = global %. { double 0.000000e+00, double 1.000000e+00 }' %t&&
+comment|// CHECK: @g1y = global {{%.}} { double 0.000000e+00{{[0]*}}, double 1.000000e+00{{[0]*}} }
 end_comment
 
 begin_decl_stmt
@@ -174,7 +174,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g1 = global %. { i8 1, i8 10 }' %t&&
+comment|// CHECK: @g1 = global {{%.}} { i8 1, i8 10 }
 end_comment
 
 begin_decl_stmt
@@ -197,7 +197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g2 = global %2 { i32 1, i32 10 }' %t&&
+comment|// CHECK: @g2 = global %2 { i32 1, i32 10 }
 end_comment
 
 begin_decl_stmt
@@ -210,7 +210,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g3 = global %. { float 1.000000e+00, float 1.000000e+01 }' %t&&
+comment|// CHECK: @g3 = global {{%.}} { float 1.000000e+00{{[0]*}}, float 1.000000e+0{{[0]*}}1 }
 end_comment
 
 begin_decl_stmt
@@ -223,7 +223,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g4 = global %. { double 1.000000e+00, double 1.000000e+01 }' %t&&
+comment|// CHECK: @g4 = global {{%.}} { double 1.000000e+00{{[0]*}}, double 1.000000e+0{{[0]*}}1 }
 end_comment
 
 begin_decl_stmt
@@ -236,7 +236,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g5 = global %2 zeroinitializer' %t&&
+comment|// CHECK: @g5 = global %2 zeroinitializer
 end_comment
 
 begin_decl_stmt
@@ -255,7 +255,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g6 = global %. { double -1.100000e+01, double 2.900000e+01 }' %t&&
+comment|// CHECK: @g6 = global {{%.}} { double -1.100000e+0{{[0]*}}1, double 2.900000e+0{{[0]*}}1 }
 end_comment
 
 begin_decl_stmt
@@ -274,7 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g7 = global i32 1' %t&&
+comment|// CHECK: @g7 = global i32 1
 end_comment
 
 begin_decl_stmt
@@ -297,7 +297,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g8 = global i32 1' %t&&
+comment|// CHECK: @g8 = global i32 1
 end_comment
 
 begin_decl_stmt
@@ -320,7 +320,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g9 = global i32 0' %t&&
+comment|// CHECK: @g9 = global i32 0
 end_comment
 
 begin_decl_stmt
@@ -343,7 +343,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g10 = global i32 0' %t&&
+comment|// CHECK: @g10 = global i32 0
 end_comment
 
 begin_decl_stmt
@@ -366,11 +366,95 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// PR5108
+end_comment
+
+begin_comment
+comment|// CHECK: @gv1 = global %4<{ i32 0, i8 7 }>, align 1
+end_comment
+
+begin_struct
+struct|struct
+block|{
+name|unsigned
+name|long
+name|a
+decl_stmt|;
+name|unsigned
+name|long
+name|b
+range|:
+literal|3
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
+name|gv1
+init|=
+block|{
+operator|.
+name|a
+operator|=
+literal|0x0
+block|,
+operator|.
+name|b
+operator|=
+literal|7
+block|,  }
+struct|;
+end_struct
+
+begin_comment
+comment|// PR5118
+end_comment
+
+begin_comment
+comment|// CHECK: @gv2 = global %5<{ i8 1, i8* null }>, align 1
+end_comment
+
+begin_struct
+struct|struct
+block|{
+name|unsigned
+name|char
+name|a
+decl_stmt|;
+name|char
+modifier|*
+name|b
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
+name|gv2
+init|=
+block|{
+literal|1
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|// Global references
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g11.l0 = internal global i32 ptrtoint (i32 ()\* @g11 to i32)' %t&&
+comment|// CHECK: @g11.l0 = internal global i32 ptrtoint (i32 ()* @g11 to i32)
 end_comment
 
 begin_function
@@ -394,7 +478,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep '@g12 = global i32 ptrtoint (i8\* @g12_tmp to i32)' %t&&
+comment|// CHECK: @g12 = global i32 ptrtoint (i8* @g12_tmp to i32)
 end_comment
 
 begin_decl_stmt
@@ -417,7 +501,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g13 = global \[1 x .struct.g13_s0\] \[.struct.g13_s0<{ i32 ptrtoint (i8\* @g12_tmp to i32) }>\]' %t&&
+comment|// CHECK: @g13 = global [1 x %struct.g13_s0] [%struct.g13_s0 { i32 ptrtoint (i8* @g12_tmp to i32) }]
 end_comment
 
 begin_struct
@@ -450,7 +534,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g14 = global i8\* inttoptr (i64 100 to i8\*)' %t&&
+comment|// CHECK: @g14 = global i8* inttoptr (i64 100 to i8*)
 end_comment
 
 begin_decl_stmt
@@ -467,7 +551,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g15 = global i32 -1' %t&&
+comment|// CHECK: @g15 = global i32 -1
 end_comment
 
 begin_decl_stmt
@@ -493,7 +577,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g16 = global i64 4294967295' %t&&
+comment|// CHECK: @g16 = global i64 4294967295
 end_comment
 
 begin_decl_stmt
@@ -516,7 +600,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g17 = global i32\* @g15' %t&&
+comment|// CHECK: @g17 = global i32* @g15
 end_comment
 
 begin_decl_stmt
@@ -539,7 +623,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@g18.p = internal global \[1 x i32\*\] \[i32\* @g19\]' %t&&
+comment|// CHECK: @g18.p = internal global [1 x i32*] [i32* @g19]
 end_comment
 
 begin_function
@@ -568,7 +652,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep '@g20.l0 = internal global .struct.g20_s1<{ .struct.g20_s0\* null, .struct.g20_s0\*\* getelementptr (.struct.g20_s1\* @g20.l0, i32 0, i32 0) }>'  %t&&
+comment|// CHECK: @g20.l0 = internal global %struct.g20_s1 { %struct.g20_s0* null, %struct.g20_s0** getelementptr inbounds (%struct.g20_s1* @g20.l0, i32 0, i32 0) }
 end_comment
 
 begin_struct_decl
@@ -660,10 +744,6 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// RUN: true
-end_comment
 
 end_unit
 

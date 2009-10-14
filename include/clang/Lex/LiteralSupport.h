@@ -75,6 +75,12 @@ directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -190,6 +196,10 @@ name|bool
 name|isImaginary
 decl_stmt|;
 comment|// 1.0i
+name|bool
+name|isMicrosoftInteger
+decl_stmt|;
+comment|// Microsoft suffix extension i8, i16, i32, or i64.
 name|bool
 name|isIntegerLiteral
 argument_list|()

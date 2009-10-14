@@ -1457,7 +1457,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}      OnDiskChainedHashTableGenerator
+unit|}    OnDiskChainedHashTableGenerator
 operator|(
 operator|)
 block|{

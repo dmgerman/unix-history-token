@@ -47,8 +47,7 @@ end_typedef
 
 begin_function
 specifier|static
-name|char
-modifier|*
+name|void
 name|f
 parameter_list|(
 name|char

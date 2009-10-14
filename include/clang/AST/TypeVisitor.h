@@ -147,7 +147,7 @@ name|CLASS
 parameter_list|,
 name|PARENT
 parameter_list|)
-value|RetTy Visit##CLASS##Type(CLASS##Type *T) { DISPATCH(PARENT); }
+value|RetTy Visit##CLASS##Type(CLASS##Type *T) {       \   DISPATCH(PARENT);                                                          \ }
 include|#
 directive|include
 file|"clang/AST/TypeNodes.def"

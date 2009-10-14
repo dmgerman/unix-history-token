@@ -143,6 +143,9 @@ name|class
 name|ObjCCategoryImplDecl
 decl_stmt|;
 name|class
+name|ObjCImplDecl
+decl_stmt|;
+name|class
 name|LinkageSpecDecl
 decl_stmt|;
 name|class
@@ -289,7 +292,9 @@ comment|/// IdentifierNamespace - According to C99 6.2.3, there are four
 comment|/// namespaces, labels, tags, members and ordinary
 comment|/// identifiers. These are meant as bitmasks, so that searches in
 comment|/// C++ can look into the "tag" namespace during ordinary lookup. We
-comment|/// use additional namespaces for Objective-C entities.
+comment|/// use additional namespaces for Objective-C entities.  We also
+comment|/// put C++ friend declarations (of previously-undeclared entities) in
+comment|/// shadow namespaces.
 enum|enum
 name|IdentifierNamespace
 block|{
@@ -320,6 +325,14 @@ block|,
 name|IDNS_ObjCCategoryImpl
 init|=
 literal|0x40
+block|,
+name|IDNS_OrdinaryFriend
+init|=
+literal|0x80
+block|,
+name|IDNS_TagFriend
+init|=
+literal|0x100
 block|}
 enum|;
 comment|/// ObjCDeclQualifier - Qualifier used on types in method declarations
@@ -526,7 +539,7 @@ comment|/// IdentifierNamespace - This specifies what IDNS_* namespace this live
 name|unsigned
 name|IdentifierNamespace
 range|:
-literal|8
+literal|16
 decl_stmt|;
 name|private
 label|:
@@ -811,6 +824,11 @@ name|getTranslationUnitDecl
 argument_list|()
 return|;
 block|}
+name|bool
+name|isInAnonymousNamespace
+argument_list|()
+specifier|const
+expr_stmt|;
 name|ASTContext
 operator|&
 name|getASTContext
@@ -1295,6 +1313,373 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Retrieves the "canonical" declaration of the given declaration.
+end_comment
+
+begin_function
+name|virtual
+name|Decl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
+block|{
+return|return
+name|this
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+specifier|const
+name|Decl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getCanonicalDecl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Whether this particular Decl is a canonical one.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCanonicalDecl
+argument_list|()
+operator|==
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_label
+name|protected
+label|:
+end_label
+
+begin_comment
+comment|/// \brief Returns the next redeclaration or itself if this is the only decl.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Decl subclasses that can be redeclared should override this method so that
+end_comment
+
+begin_comment
+comment|/// Decl::redecl_iterator can iterate over them.
+end_comment
+
+begin_function
+name|virtual
+name|Decl
+modifier|*
+name|getNextRedeclaration
+parameter_list|()
+block|{
+return|return
+name|this
+return|;
+block|}
+end_function
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_comment
+comment|/// \brief Iterates through all the redeclarations of the same decl.
+end_comment
+
+begin_decl_stmt
+name|class
+name|redecl_iterator
+block|{
+comment|/// Current - The current declaration.
+name|Decl
+modifier|*
+name|Current
+decl_stmt|;
+name|Decl
+modifier|*
+name|Starter
+decl_stmt|;
+name|public
+label|:
+typedef|typedef
+name|Decl
+modifier|*
+name|value_type
+typedef|;
+typedef|typedef
+name|Decl
+modifier|*
+name|reference
+typedef|;
+typedef|typedef
+name|Decl
+modifier|*
+name|pointer
+typedef|;
+typedef|typedef
+name|std
+operator|::
+name|forward_iterator_tag
+name|iterator_category
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|ptrdiff_t
+name|difference_type
+expr_stmt|;
+name|redecl_iterator
+argument_list|()
+operator|:
+name|Current
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|explicit
+name|redecl_iterator
+argument_list|(
+name|Decl
+operator|*
+name|C
+argument_list|)
+operator|:
+name|Current
+argument_list|(
+name|C
+argument_list|)
+operator|,
+name|Starter
+argument_list|(
+argument|C
+argument_list|)
+block|{ }
+name|reference
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Current
+return|;
+block|}
+name|pointer
+name|operator
+operator|->
+expr|(
+block|)
+decl|const
+block|{
+return|return
+name|Current
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|redecl_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+name|assert
+argument_list|(
+name|Current
+operator|&&
+literal|"Advancing while iterator has reached end"
+argument_list|)
+block|;
+comment|// Get either previous decl or latest decl.
+name|Decl
+operator|*
+name|Next
+operator|=
+name|Current
+operator|->
+name|getNextRedeclaration
+argument_list|()
+block|;
+name|assert
+argument_list|(
+name|Next
+operator|&&
+literal|"Should return next redeclaration or itself, never null!"
+argument_list|)
+block|;
+name|Current
+operator|=
+operator|(
+name|Next
+operator|!=
+name|Starter
+condition|?
+name|Next
+else|:
+literal|0
+operator|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|redecl_iterator
+name|operator
+operator|++
+operator|(
+name|int
+operator|)
+block|{
+name|redecl_iterator
+name|tmp
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+operator|++
+operator|(
+operator|*
+name|this
+operator|)
+block|;
+return|return
+name|tmp
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+name|redecl_iterator
+name|x
+operator|,
+name|redecl_iterator
+name|y
+operator|)
+block|{
+return|return
+name|x
+operator|.
+name|Current
+operator|==
+name|y
+operator|.
+name|Current
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+name|redecl_iterator
+name|x
+operator|,
+name|redecl_iterator
+name|y
+operator|)
+block|{
+return|return
+name|x
+operator|.
+name|Current
+operator|!=
+name|y
+operator|.
+name|Current
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// \brief Returns iterator for all the redeclarations of the same decl.
+end_comment
+
+begin_comment
+comment|/// It will iterate at least once (when this decl is the only one).
+end_comment
+
+begin_expr_stmt
+name|redecl_iterator
+name|redecls_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|redecl_iterator
+argument_list|(
+name|const_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|redecl_iterator
+name|redecls_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|redecl_iterator
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getBody - If this Decl represents a declaration for a body of code,
 end_comment
 
@@ -1430,11 +1815,182 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Changes the namespace of this declaration to reflect that it's
+end_comment
+
+begin_comment
+comment|/// the object of a friend declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// These declarations appear in the lexical context of the friending
+end_comment
+
+begin_comment
+comment|/// class, but in the semantic context of the actual entity.  This property
+end_comment
+
+begin_comment
+comment|/// applies only to a specific decl object;  other redeclarations of the
+end_comment
+
+begin_comment
+comment|/// same entity may not (and probably don't) share this property.
+end_comment
+
+begin_function
+name|void
+name|setObjectOfFriendDecl
+parameter_list|(
+name|bool
+name|PreviouslyDeclared
+parameter_list|)
+block|{
+name|unsigned
+name|OldNS
+init|=
+name|IdentifierNamespace
+decl_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|OldNS
+operator|==
+name|IDNS_Tag
+operator|||
+name|OldNS
+operator|==
+name|IDNS_Ordinary
+operator|||
+name|OldNS
+operator|==
+operator|(
+name|IDNS_Tag
+operator||
+name|IDNS_Ordinary
+operator|)
+operator|)
+operator|&&
+literal|"unsupported namespace for undeclared friend"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|PreviouslyDeclared
+condition|)
+name|IdentifierNamespace
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|OldNS
+operator|==
+name|IDNS_Tag
+condition|)
+name|IdentifierNamespace
+operator||=
+name|IDNS_TagFriend
+expr_stmt|;
+else|else
+name|IdentifierNamespace
+operator||=
+name|IDNS_OrdinaryFriend
+expr_stmt|;
+block|}
+end_function
+
+begin_enum
+enum|enum
+name|FriendObjectKind
+block|{
+name|FOK_None
+block|,
+comment|// not a friend object
+name|FOK_Declared
+block|,
+comment|// a friend of a previously-declared entity
+name|FOK_Undeclared
+comment|// a friend of a previously-undeclared entity
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// \brief Determines whether this declaration is the object of a
+end_comment
+
+begin_comment
+comment|/// friend declaration and, if so, what kind.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// There is currently no direct way to find the associated FriendDecl.
+end_comment
+
+begin_expr_stmt
+name|FriendObjectKind
+name|getFriendObjectKind
+argument_list|()
+specifier|const
+block|{
+name|unsigned
+name|mask
+operator|=
+operator|(
+name|IdentifierNamespace
+operator|&
+operator|(
+name|IDNS_TagFriend
+operator||
+name|IDNS_OrdinaryFriend
+operator|)
+operator|)
+block|;
+if|if
+condition|(
+operator|!
+name|mask
+condition|)
+return|return
+name|FOK_None
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|IdentifierNamespace
+operator|&
+operator|(
+name|IDNS_Tag
+operator||
+name|IDNS_Ordinary
+operator|)
+condition|?
+name|FOK_Declared
+else|:
+name|FOK_Undeclared
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|// Implement isa/cast/dyncast/etc.
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|bool
 name|classof
 parameter_list|(
@@ -1506,6 +2062,7 @@ name|Indentation
 operator|=
 literal|0
 argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 
@@ -1529,6 +2086,7 @@ name|Indentation
 operator|=
 literal|0
 argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 
@@ -1564,12 +2122,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_expr_stmt
 name|void
 name|dump
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private
@@ -1702,14 +2261,6 @@ end_comment
 
 begin_comment
 comment|///   ObjCContainerDecl
-end_comment
-
-begin_comment
-comment|///   ObjCCategoryImplDecl
-end_comment
-
-begin_comment
-comment|///   ObjCImplementationDecl
 end_comment
 
 begin_comment
@@ -1935,6 +2486,32 @@ name|getLexicalParent
 argument_list|()
 return|;
 block|}
+name|DeclContext
+modifier|*
+name|getLookupParent
+parameter_list|()
+function_decl|;
+specifier|const
+name|DeclContext
+operator|*
+name|getLookupParent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getLookupParent
+argument_list|()
+return|;
+block|}
 name|ASTContext
 operator|&
 name|getParentASTContext
@@ -2085,40 +2662,38 @@ name|isTransparentContext
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determine whether this declaration context is equivalent
+comment|/// to the declaration context DC.
 name|bool
-name|Encloses
-argument_list|(
+name|Equals
+parameter_list|(
 name|DeclContext
-operator|*
+modifier|*
 name|DC
-argument_list|)
-decl|const
+parameter_list|)
 block|{
-for|for
-control|(
-init|;
-name|DC
-condition|;
-name|DC
-operator|=
+return|return
+name|this
+operator|->
+name|getPrimaryContext
+argument_list|()
+operator|==
 name|DC
 operator|->
-name|getParent
+name|getPrimaryContext
 argument_list|()
-control|)
-if|if
-condition|(
-name|DC
-operator|==
-name|this
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
 return|;
 block|}
+comment|/// \brief Determine whether this declaration context encloses the
+comment|/// declaration context DC.
+name|bool
+name|Encloses
+parameter_list|(
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
+function_decl|;
 comment|/// getPrimaryContext - There may be many different
 comment|/// declarations of the same entity (including forward declarations
 comment|/// of classes, multiple definitions of namespaces, etc.), each with
@@ -3115,6 +3690,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// @brief Add the declaration D to this context without modifying
+end_comment
+
+begin_comment
+comment|/// any lookup tables.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is useful for some operations in dependent contexts where
+end_comment
+
+begin_comment
+comment|/// the semantic context might not be dependent;  this basically
+end_comment
+
+begin_comment
+comment|/// only happens with friends.
+end_comment
+
+begin_function_decl
+name|void
+name|addHiddenDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// lookup_iterator - An iterator that provides access to the results
 end_comment
 
@@ -3274,6 +3884,22 @@ begin_comment
 comment|/// replaced with D.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param Recoverable true if it's okay to not add this decl to
+end_comment
+
+begin_comment
+comment|/// the lookup tables because it can be easily recovered by walking
+end_comment
+
+begin_comment
+comment|/// the declaration chains.
+end_comment
+
 begin_function_decl
 name|void
 name|makeDeclVisibleInContext
@@ -3281,6 +3907,11 @@ parameter_list|(
 name|NamedDecl
 modifier|*
 name|D
+parameter_list|,
+name|bool
+name|Recoverable
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl

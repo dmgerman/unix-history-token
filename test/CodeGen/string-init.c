@@ -4,7 +4,7 @@ comment|// RUN: clang-cc -emit-llvm %s -o %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep 'internal constant \[10 x i8\]' %t&&
+comment|// RUN: grep 'private constant \[10 x i8\]' %t&&
 end_comment
 
 begin_comment

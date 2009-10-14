@@ -1,42 +1,42 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc< %s -emit-llvm> %t1 -triple=i686-apple-darwin9
+comment|// RUN: clang-cc< %s -emit-llvm> %t1 -triple=i686-apple-darwin9&&
 end_comment
 
 begin_comment
-comment|// Run  grep "STest1 = type<{ i32, \[4 x i16\], double }>" %t1&&
+comment|// RUN: grep "STest1 = type { i32, \[4 x i16\], double }" %t1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "STest2 = type<{ i16, i16, i32, i32 }>" %t1&&
+comment|// RUN: grep "STest2 = type { i16, i16, i32, i32 }" %t1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "STest3 = type<{ i8, i8, i16, i32 }>" %t1&&
+comment|// RUN: grep "STest3 = type { i8, i16, i32 }" %t1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "STestB1 = type<{ i8, i8 }>" %t1&&
+comment|// RUN: grep "STestB1 = type { i8, i8 }" %t1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "STestB2 = type<{ i8, i8, i8 }>" %t1&&
+comment|// RUN: grep "STestB2 = type { i8, i8, i8 }" %t1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "STestB3 = type<{ i8, i8 }>" %t1&&
+comment|// RUN: grep "STestB3 = type { i8, i8 }" %t1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "STestB4 = type<{ i8, i8, i8, i8 }>" %t1&&
+comment|// RUN: grep "STestB4 = type { i8, i8, i8, i8 }" %t1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "STestB5 = type<{ i8, i8, i8, i8, i8, i8 }>" %t1&&
+comment|// RUN: grep "STestB5 = type { i8, i8, \[2 x i8\], i8, i8 }" %t1&&
 end_comment
 
 begin_comment
-comment|// RUN: grep "STestB6 = type<{ i8, i8, i8, i8 }>" %t1
+comment|// RUN: grep "STestB6 = type { i8, i8, \[2 x i8\] }" %t1
 end_comment
 
 begin_comment

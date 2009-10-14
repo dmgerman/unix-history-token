@@ -8,7 +8,7 @@ comment|// RUN: clang -MD -MF %t.d -c -x c -o %t.o /dev/null&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '.*dependency-gen.c.out.tmp.o:' %t.d&&
+comment|// RUN: grep '.*dependency-gen.*:' %t.d&&
 end_comment
 
 begin_comment

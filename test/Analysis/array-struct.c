@@ -4,11 +4,7 @@ comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=basic -analyzer
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=basic -analyzer-constraints=range -verify %s
-end_comment
-
-begin_comment
-comment|// RegionStore now has an infinite recursion with this test case.
+comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=basic -analyzer-constraints=range -verify %s&&
 end_comment
 
 begin_comment
@@ -663,6 +659,9 @@ literal|1
 index|]
 condition|)
 comment|// no-warning
+operator|(
+name|void
+operator|)
 literal|1
 expr_stmt|;
 block|}

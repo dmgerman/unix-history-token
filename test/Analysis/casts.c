@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region --verify %s
+comment|// RUN: clang-cc -triple x86_64-apple-darwin9 -analyze -checker-cfref -analyzer-store=region --verify %s
 end_comment
 
 begin_comment
@@ -11,11 +11,60 @@ begin_comment
 comment|// 'struct sockaddr *'.
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|__uint8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__uint32_t
+name|__darwin_socklen_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__uint8_t
+name|sa_family_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__darwin_socklen_t
+name|socklen_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|sockaddr
+block|{
+name|sa_family_t
+name|sa_family
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sockaddr_storage
+block|{}
+struct|;
+end_struct
 
 begin_function
 name|void
@@ -88,7 +137,7 @@ struct|;
 end_struct
 
 begin_function
-name|int
+name|void
 name|f1
 parameter_list|(
 name|struct
@@ -135,7 +184,7 @@ operator|*
 operator|)
 name|pval
 expr_stmt|;
-comment|// Should record the cast-to type here.
+comment|// use the cast-to type 'int *' to create element region.
 name|char
 name|c
 init|=
@@ -155,6 +204,10 @@ operator|==
 operator|-
 literal|1
 condition|)
+comment|// here load the element region with the correct type 'int'
+operator|(
+name|void
+operator|)
 literal|3
 expr_stmt|;
 block|}

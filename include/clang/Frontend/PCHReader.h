@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<deque>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -232,9 +238,9 @@ decl_stmt|;
 name|class
 name|PCHReader
 decl_stmt|;
-name|class
+struct_decl|struct
 name|HeaderFileInfo
-decl_stmt|;
+struct_decl|;
 comment|/// \brief Abstract interface for callback invocations by the PCHReader.
 comment|///
 comment|/// While reading a PCH file, the PCHReader will call the methods of the
@@ -601,8 +607,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|Type
-operator|*
+name|QualType
 operator|>
 name|TypesLoaded
 expr_stmt|;
@@ -816,6 +821,17 @@ operator|::
 name|string
 name|OriginalFileName
 expr_stmt|;
+comment|/// \brief Whether this precompiled header is a relocatable PCH file.
+name|bool
+name|RelocatablePCH
+decl_stmt|;
+comment|/// \brief The system include root to be used when loading the
+comment|/// precompiled header.
+specifier|const
+name|char
+modifier|*
+name|isysroot
+decl_stmt|;
 comment|/// \brief Mapping from switch-case IDs in the PCH file to
 comment|/// switch-case statements.
 name|std
@@ -921,6 +937,99 @@ name|NumVisibleDeclContextsRead
 decl_stmt|,
 name|TotalVisibleDeclContexts
 decl_stmt|;
+comment|/// \brief When a type or declaration is being loaded from the PCH file, an
+comment|/// instantance of this RAII object will be available on the stack to
+comment|/// indicate when we are in a recursive-loading situation.
+name|class
+name|LoadingTypeOrDecl
+block|{
+name|PCHReader
+modifier|&
+name|Reader
+decl_stmt|;
+name|LoadingTypeOrDecl
+modifier|*
+name|Parent
+decl_stmt|;
+name|LoadingTypeOrDecl
+argument_list|(
+specifier|const
+name|LoadingTypeOrDecl
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// do not implement
+name|LoadingTypeOrDecl
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|LoadingTypeOrDecl
+operator|&
+operator|)
+decl_stmt|;
+comment|// do not implement
+name|public
+label|:
+name|explicit
+name|LoadingTypeOrDecl
+parameter_list|(
+name|PCHReader
+modifier|&
+name|Reader
+parameter_list|)
+function_decl|;
+operator|~
+name|LoadingTypeOrDecl
+argument_list|()
+expr_stmt|;
+block|}
+empty_stmt|;
+name|friend
+name|class
+name|LoadingTypeOrDecl
+decl_stmt|;
+comment|/// \brief If we are currently loading a type or declaration, points to the
+comment|/// most recent LoadingTypeOrDecl object on the stack.
+name|LoadingTypeOrDecl
+modifier|*
+name|CurrentlyLoadingTypeOrDecl
+decl_stmt|;
+comment|/// \brief An IdentifierInfo that has been loaded but whose top-level
+comment|/// declarations of the same name have not (yet) been loaded.
+struct|struct
+name|PendingIdentifierInfo
+block|{
+name|IdentifierInfo
+modifier|*
+name|II
+decl_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint32_t
+operator|,
+literal|4
+operator|>
+name|DeclIDs
+expr_stmt|;
+block|}
+struct|;
+comment|/// \brief The set of identifiers that were read while the PCH reader was
+comment|/// (recursively) loading declarations.
+comment|///
+comment|/// The declarations on the identifier chain for these identifiers will be
+comment|/// loaded once the recursive loading has completed.
+name|std
+operator|::
+name|deque
+operator|<
+name|PendingIdentifierInfo
+operator|>
+name|PendingIdentifierInfos
+expr_stmt|;
 comment|/// \brief FIXME: document!
 name|llvm
 operator|::
@@ -977,6 +1086,16 @@ operator|::
 name|string
 name|SuggestedPredefines
 expr_stmt|;
+name|void
+name|MaybeAddSystemRootToFilename
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|Filename
+argument_list|)
+decl_stmt|;
 name|PCHReadResult
 name|ReadPCHBlock
 parameter_list|()
@@ -996,6 +1115,19 @@ name|FileID
 name|PCHBufferID
 parameter_list|)
 function_decl|;
+name|bool
+name|ParseLineTable
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|uint64_t
+operator|>
+operator|&
+name|Record
+argument_list|)
+decl_stmt|;
 name|PCHReadResult
 name|ReadSourceManagerBlock
 parameter_list|()
@@ -1097,6 +1229,16 @@ name|RecordData
 expr_stmt|;
 comment|/// \brief Load the PCH file and validate its contents against the given
 comment|/// Preprocessor.
+comment|///
+comment|/// \param PP the preprocessor associated with the context in which this
+comment|/// precompiled header will be loaded.
+comment|///
+comment|/// \param Context the AST context that this precompiled header will be
+comment|/// loaded into.
+comment|///
+comment|/// \param isysroot If non-NULL, the system include path specified by the
+comment|/// user. This is only used with relocatable PCH files. If non-NULL,
+comment|/// a relocatable PCH file will use the default path "/".
 name|PCHReader
 argument_list|(
 name|Preprocessor
@@ -1106,12 +1248,32 @@ argument_list|,
 name|ASTContext
 operator|*
 name|Context
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|isysroot
+operator|=
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/// \brief Load the PCH file without using any pre-initialized Preprocessor.
 comment|///
 comment|/// The necessary information to initialize a Preprocessor later can be
 comment|/// obtained by setting a PCHReaderListener.
+comment|///
+comment|/// \param SourceMgr the source manager into which the precompiled header
+comment|/// will be loaded.
+comment|///
+comment|/// \param FileMgr the file manager into which the precompiled header will
+comment|/// be loaded.
+comment|///
+comment|/// \param Diags the diagnostics system to use for reporting errors and
+comment|/// warnings relevant to loading the precompiled header.
+comment|///
+comment|/// \param isysroot If non-NULL, the system include path specified by the
+comment|/// user. This is only used with relocatable PCH files. If non-NULL,
+comment|/// a relocatable PCH file will use the default path "/".
 name|PCHReader
 argument_list|(
 name|SourceManager
@@ -1125,6 +1287,13 @@ argument_list|,
 name|Diagnostic
 operator|&
 name|Diags
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|isysroot
+operator|=
+literal|0
 argument_list|)
 expr_stmt|;
 operator|~
@@ -1458,6 +1627,29 @@ modifier|*
 name|II
 parameter_list|)
 function_decl|;
+name|void
+name|SetGloballyVisibleDecls
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|uint32_t
+operator|>
+operator|&
+name|DeclIDs
+argument_list|,
+name|bool
+name|Nonrecursive
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
 comment|/// \brief Report a diagnostic.
 name|DiagnosticBuilder
 name|Diag

@@ -8,7 +8,7 @@ comment|/*  * Copyright 2001-2004 Unicode, Inc.  *   * Disclaimer  *   * This so
 end_comment
 
 begin_comment
-comment|/* ---------------------------------------------------------------------      Conversions between UTF32, UTF-16, and UTF-8. Source code file.     Author: Mark E. Davis, 1994.     Rev History: Rick McGowan, fixes& updates May 2001.     Sept 2001: fixed const& error conditions per 	mods suggested by S. Parent& A. Lillich.     June 2002: Tim Dodd added detection and handling of incomplete 	source sequences, enhanced error detection, added casts 	to eliminate compiler warnings.     July 2003: slight mods to back out aggressive FFFE detection.     Jan 2004: updated switches in from-UTF8 conversions.     Oct 2004: updated to use UNI_MAX_LEGAL_UTF32 in UTF-32 conversions.      See the header file "ConvertUTF.h" for complete documentation.  ------------------------------------------------------------------------ */
+comment|/* ---------------------------------------------------------------------      Conversions between UTF32, UTF-16, and UTF-8. Source code file.     Author: Mark E. Davis, 1994.     Rev History: Rick McGowan, fixes& updates May 2001.     Sept 2001: fixed const& error conditions per         mods suggested by S. Parent& A. Lillich.     June 2002: Tim Dodd added detection and handling of incomplete         source sequences, enhanced error detection, added casts         to eliminate compiler warnings.     July 2003: slight mods to back out aggressive FFFE detection.     Jan 2004: updated switches in from-UTF8 conversions.     Oct 2004: updated to use UNI_MAX_LEGAL_UTF32 in UTF-32 conversions.      See the header file "ConvertUTF.h" for complete documentation.  ------------------------------------------------------------------------ */
 end_comment
 
 begin_include
@@ -1794,7 +1794,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 	 * Figure out how many bytes the result will require. Turn any 	 * illegally large UTF32 things (> Plane 17) into replacement chars. 	 */
+comment|/*          * Figure out how many bytes the result will require. Turn any          * illegally large UTF32 things (> Plane 17) into replacement chars.          */
 if|if
 condition|(
 name|ch
@@ -2123,7 +2123,7 @@ name|sourceIllegal
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * The cases all fall through. See "Note A" below. 	 */
+comment|/*          * The cases all fall through. See "Note A" below.          */
 switch|switch
 condition|(
 name|extraBytesToRead
@@ -2240,7 +2240,7 @@ operator|<=
 name|UNI_MAX_LEGAL_UTF32
 condition|)
 block|{
-comment|/* 	     * UTF-16 surrogate values are illegal in UTF-32, and anything 	     * over Plane 17 (> 0x10FFFF) is illegal. 	     */
+comment|/*              * UTF-16 surrogate values are illegal in UTF-32, and anything              * over Plane 17 (> 0x10FFFF) is illegal.              */
 if|if
 condition|(
 name|ch
@@ -2714,7 +2714,7 @@ name|sourceIllegal
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * The cases all fall through. See "Note A" below. 	 */
+comment|/*          * The cases all fall through. See "Note A" below.          */
 switch|switch
 condition|(
 name|extraBytesToRead
@@ -3017,7 +3017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ---------------------------------------------------------------------      Note A.     The fall-through switches in UTF-8 reading code save a     temp variable, some decrements& conditionals.  The switches     are equivalent to the following loop: 	{ 	    int tmpBytesToRead = extraBytesToRead+1; 	    do { 		ch += *source++; 		--tmpBytesToRead; 		if (tmpBytesToRead) ch<<= 6; 	    } while (tmpBytesToRead> 0); 	}     In UTF-8 writing code, the switches on "bytesToWrite" are     similarly unrolled loops.     --------------------------------------------------------------------- */
+comment|/* ---------------------------------------------------------------------      Note A.     The fall-through switches in UTF-8 reading code save a     temp variable, some decrements& conditionals.  The switches     are equivalent to the following loop:         {             int tmpBytesToRead = extraBytesToRead+1;             do {                 ch += *source++;                 --tmpBytesToRead;                 if (tmpBytesToRead) ch<<= 6;             } while (tmpBytesToRead> 0);         }     In UTF-8 writing code, the switches on "bytesToWrite" are     similarly unrolled loops.     --------------------------------------------------------------------- */
 end_comment
 
 end_unit

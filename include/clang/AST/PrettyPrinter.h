@@ -150,7 +150,17 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|SuppressScope
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Dump
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ConstantArraySizeAsWritten
 argument_list|(
 argument|false
 argument_list|)
@@ -206,12 +216,39 @@ name|SuppressTagKind
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Suppresses printing of scope specifiers.
+name|bool
+name|SuppressScope
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief True when we are "dumping" rather than "pretty-printing",
 comment|/// where dumping involves printing the internal details of the AST
 comment|/// and pretty-printing involves printing something similar to
 comment|/// source code.
 name|bool
 name|Dump
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we should print the sizes of constant array expressions
+comment|/// as written in the sources.
+comment|///
+comment|/// This flag is determines whether arrays types declared as
+comment|///
+comment|/// \code
+comment|/// int a[4+10*10];
+comment|/// char a[] = "A string";
+comment|/// \endcode
+comment|///
+comment|/// will be printed as written or as follows:
+comment|///
+comment|/// \code
+comment|/// int a[104];
+comment|/// char a[9] = "A string";
+comment|/// \endcode
+name|bool
+name|ConstantArraySizeAsWritten
 range|:
 literal|1
 decl_stmt|;

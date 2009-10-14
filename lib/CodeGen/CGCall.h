@@ -217,6 +217,16 @@ name|ABIArgInfo
 name|info
 block|;     }
 block|;
+comment|/// The LLVM::CallingConv to use for this function (as specified by the
+comment|/// user).
+name|unsigned
+name|CallingConvention
+block|;
+comment|/// The LLVM::CallingConv to actually use for this function, which may
+comment|/// depend on the ABI.
+name|unsigned
+name|EffectiveCallingConvention
+block|;
 name|unsigned
 name|NumArgs
 block|;
@@ -239,6 +249,8 @@ name|arg_iterator
 typedef|;
 name|CGFunctionInfo
 argument_list|(
+argument|unsigned CallingConvention
+argument_list|,
 argument|QualType ResTy
 argument_list|,
 argument|const llvm::SmallVector<QualType
@@ -310,6 +322,40 @@ return|return
 name|NumArgs
 return|;
 block|}
+comment|/// getCallingConvention - Return the user specified calling
+comment|/// convention.
+name|unsigned
+name|getCallingConvention
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallingConvention
+return|;
+block|}
+comment|/// getEffectiveCallingConvention - Return the actual calling convention to
+comment|/// use, which may depend on the ABI.
+name|unsigned
+name|getEffectiveCallingConvention
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EffectiveCallingConvention
+return|;
+block|}
+name|void
+name|setEffectiveCallingConvention
+parameter_list|(
+name|unsigned
+name|Value
+parameter_list|)
+block|{
+name|EffectiveCallingConvention
+operator|=
+name|Value
+expr_stmt|;
+block|}
 name|QualType
 name|getReturnType
 argument_list|()
@@ -364,6 +410,14 @@ operator|&
 name|ID
 argument_list|)
 block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|getCallingConvention
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|getReturnType
 argument_list|()
 operator|.
@@ -413,6 +467,8 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
+argument|unsigned CallingConvention
+argument_list|,
 argument|QualType ResTy
 argument_list|,
 argument|Iterator begin
@@ -420,6 +476,13 @@ argument_list|,
 argument|Iterator end
 argument_list|)
 block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|CallingConvention
+argument_list|)
+block|;
 name|ResTy
 operator|.
 name|Profile

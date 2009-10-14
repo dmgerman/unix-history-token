@@ -24,6 +24,9 @@ name|ss
 operator|)
 condition|)
 block|{}
+return|return
+literal|1
+return|;
 block|}
 end_function
 

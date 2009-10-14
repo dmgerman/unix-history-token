@@ -102,13 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ImmutableSet.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_decl_stmt
@@ -127,6 +121,9 @@ name|clang
 block|{
 name|class
 name|MemRegion
+decl_stmt|;
+name|class
+name|TypedRegion
 decl_stmt|;
 name|class
 name|ASTContext
@@ -159,6 +156,8 @@ block|,
 name|RegionValueKind
 block|,
 name|ConjuredKind
+block|,
+name|DerivedKind
 block|,
 name|END_SYMBOLS
 block|,
@@ -200,6 +199,21 @@ return|return
 name|K
 return|;
 block|}
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream&os
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
 name|virtual
 name|QualType
 name|getType
@@ -430,6 +444,13 @@ argument_list|,
 name|T
 argument_list|)
 block|;   }
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 name|QualType
 name|getType
 argument_list|(
@@ -559,6 +580,13 @@ argument|ASTContext&
 argument_list|)
 specifier|const
 block|;
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|void
 name|Profile
@@ -652,6 +680,153 @@ return|;
 block|}
 expr|}
 block|;
+name|class
+name|SymbolDerived
+operator|:
+name|public
+name|SymbolData
+block|{
+name|SymbolRef
+name|parentSymbol
+block|;
+specifier|const
+name|TypedRegion
+operator|*
+name|R
+block|;
+name|public
+operator|:
+name|SymbolDerived
+argument_list|(
+argument|SymbolID sym
+argument_list|,
+argument|SymbolRef parent
+argument_list|,
+argument|const TypedRegion *r
+argument_list|)
+operator|:
+name|SymbolData
+argument_list|(
+name|DerivedKind
+argument_list|,
+name|sym
+argument_list|)
+block|,
+name|parentSymbol
+argument_list|(
+name|parent
+argument_list|)
+block|,
+name|R
+argument_list|(
+argument|r
+argument_list|)
+block|{}
+name|SymbolRef
+name|getParentSymbol
+argument_list|()
+specifier|const
+block|{
+return|return
+name|parentSymbol
+return|;
+block|}
+specifier|const
+name|TypedRegion
+operator|*
+name|getRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|R
+return|;
+block|}
+name|QualType
+name|getType
+argument_list|(
+argument|ASTContext&
+argument_list|)
+specifier|const
+block|;
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& profile
+argument_list|,
+argument|SymbolRef parent
+argument_list|,
+argument|const TypedRegion *r
+argument_list|)
+block|{
+name|profile
+operator|.
+name|AddInteger
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|DerivedKind
+argument_list|)
+block|;
+name|profile
+operator|.
+name|AddPointer
+argument_list|(
+name|r
+argument_list|)
+block|;
+name|profile
+operator|.
+name|AddPointer
+argument_list|(
+name|parent
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& profile
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|profile
+argument_list|,
+name|parentSymbol
+argument_list|,
+name|R
+argument_list|)
+block|;   }
+comment|// Implement isa<T> support.
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SymExpr* SE
+argument_list|)
+block|{
+return|return
+name|SE
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DerivedKind
+return|;
+block|}
+expr|}
+block|;
 comment|// SymIntExpr - Represents symbolic expression like 'x' + 3.
 name|class
 name|SymIntExpr
@@ -741,6 +916,13 @@ return|return
 name|Op
 return|;
 block|}
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|const
 name|SymExpr
 operator|*
@@ -956,6 +1138,13 @@ return|return
 name|T
 return|;
 block|}
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream&os
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|void
 name|Profile
@@ -1186,6 +1375,16 @@ argument_list|)
 return|;
 block|}
 specifier|const
+name|SymbolDerived
+operator|*
+name|getDerivedSymbol
+argument_list|(
+argument|SymbolRef parentSymbol
+argument_list|,
+argument|const TypedRegion *R
+argument_list|)
+block|;
+specifier|const
 name|SymIntExpr
 operator|*
 name|getSymIntExpr
@@ -1283,21 +1482,12 @@ block|{
 typedef|typedef
 name|llvm
 operator|::
-name|ImmutableSet
+name|DenseSet
 operator|<
 name|SymbolRef
 operator|>
 name|SetTy
 expr_stmt|;
-typedef|typedef
-name|SetTy
-operator|::
-name|Factory
-name|FactoryTy
-expr_stmt|;
-name|FactoryTy
-name|F
-block|;
 name|SetTy
 name|TheLiving
 block|;
@@ -1325,22 +1515,6 @@ operator|&
 name|symmgr
 argument_list|)
 operator|:
-name|TheLiving
-argument_list|(
-name|F
-operator|.
-name|GetEmptySet
-argument_list|()
-argument_list|)
-block|,
-name|TheDead
-argument_list|(
-name|F
-operator|.
-name|GetEmptySet
-argument_list|()
-argument_list|)
-block|,
 name|Liveness
 argument_list|(
 name|liveness
@@ -1350,6 +1524,10 @@ name|SymMgr
 argument_list|(
 argument|symmgr
 argument_list|)
+block|{}
+operator|~
+name|SymbolReaper
+argument_list|()
 block|{}
 name|bool
 name|isLive
@@ -1412,7 +1590,7 @@ block|;
 typedef|typedef
 name|SetTy
 operator|::
-name|iterator
+name|const_iterator
 name|dead_iterator
 expr_stmt|;
 name|dead_iterator
@@ -1448,7 +1626,7 @@ return|return
 operator|!
 name|TheDead
 operator|.
-name|isEmpty
+name|empty
 argument_list|()
 return|;
 block|}
@@ -1476,11 +1654,13 @@ operator|~
 name|SymbolVisitor
 argument_list|()
 block|; }
-block|;    }
+block|;  }
 comment|// end clang namespace
 name|namespace
 name|llvm
 block|{
+specifier|static
+specifier|inline
 name|llvm
 operator|::
 name|raw_ostream
@@ -1492,7 +1672,7 @@ name|llvm
 operator|::
 name|raw_ostream
 operator|&
-name|Out
+name|os
 expr|,
 specifier|const
 name|clang
@@ -1501,8 +1681,24 @@ name|SymExpr
 operator|*
 name|SE
 operator|)
-block|; }
+block|{
+name|SE
+operator|->
+name|dumpToStream
+argument_list|(
+name|os
+argument_list|)
+block|;
+return|return
+name|os
+return|;
+block|}
+expr|}
 end_decl_stmt
+
+begin_comment
+comment|// end llvm namespace
+end_comment
 
 begin_endif
 endif|#

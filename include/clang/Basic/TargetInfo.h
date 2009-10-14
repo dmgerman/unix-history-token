@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -100,6 +106,9 @@ block|{
 struct_decl|struct
 name|fltSemantics
 struct_decl|;
+name|class
+name|StringRef
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -109,6 +118,9 @@ name|clang
 block|{
 name|class
 name|Diagnostic
+decl_stmt|;
+name|class
+name|SourceLocation
 decl_stmt|;
 name|class
 name|SourceManager
@@ -128,9 +140,9 @@ comment|///
 name|class
 name|TargetInfo
 block|{
-name|std
+name|llvm
 operator|::
-name|string
+name|Triple
 name|Triple
 expr_stmt|;
 name|protected
@@ -151,6 +163,18 @@ name|char
 name|WCharWidth
 decl_stmt|,
 name|WCharAlign
+decl_stmt|;
+name|unsigned
+name|char
+name|Char16Width
+decl_stmt|,
+name|Char16Align
+decl_stmt|;
+name|unsigned
+name|char
+name|Char32Width
+decl_stmt|,
+name|Char32Align
 decl_stmt|;
 name|unsigned
 name|char
@@ -294,6 +318,10 @@ name|IntPtrType
 decl_stmt|,
 name|WCharType
 decl_stmt|,
+name|Char16Type
+decl_stmt|,
+name|Char32Type
+decl_stmt|,
 name|Int64Type
 decl_stmt|;
 name|public
@@ -362,6 +390,24 @@ specifier|const
 block|{
 return|return
 name|WCharType
+return|;
+block|}
+name|IntType
+name|getChar16Type
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Char16Type
+return|;
+block|}
+name|IntType
+name|getChar32Type
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Char32Type
 return|;
 block|}
 name|IntType
@@ -451,44 +497,24 @@ block|}
 comment|// FIXME
 name|unsigned
 name|getCharWidth
-argument_list|(
-name|bool
-name|isWide
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
-name|isWide
-condition|?
-name|getWCharWidth
-argument_list|()
-else|:
 literal|8
 return|;
-comment|// FIXME
 block|}
+comment|// FIXME
 name|unsigned
 name|getCharAlign
-argument_list|(
-name|bool
-name|isWide
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
-name|isWide
-condition|?
-name|getWCharAlign
-argument_list|()
-else|:
 literal|8
 return|;
-comment|// FIXME
 block|}
+comment|// FIXME
 comment|/// getShortWidth/Align - Return the size of 'signed short' and
 comment|/// 'unsigned short' for this target, in bits.
 name|unsigned
@@ -571,7 +597,7 @@ return|return
 name|LongLongAlign
 return|;
 block|}
-comment|/// getWcharWidth/Align - Return the size of 'wchar_t' for this target, in
+comment|/// getWCharWidth/Align - Return the size of 'wchar_t' for this target, in
 comment|/// bits.
 name|unsigned
 name|getWCharWidth
@@ -589,6 +615,46 @@ specifier|const
 block|{
 return|return
 name|WCharAlign
+return|;
+block|}
+comment|/// getChar16Width/Align - Return the size of 'char16_t' for this target, in
+comment|/// bits.
+name|unsigned
+name|getChar16Width
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Char16Width
+return|;
+block|}
+name|unsigned
+name|getChar16Align
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Char16Align
+return|;
+block|}
+comment|/// getChar32Width/Align - Return the size of 'char32_t' for this target, in
+comment|/// bits.
+name|unsigned
+name|getChar32Width
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Char32Width
+return|;
+block|}
+name|unsigned
+name|getChar32Align
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Char32Align
 return|;
 block|}
 comment|/// getFloatWidth/Align/Format - Return the size/align/format of 'float'.
@@ -1211,31 +1277,18 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// getTargetPrefix - Return the target prefix used for identifying
-comment|/// llvm intrinsics.
-name|virtual
+comment|/// getTriple - Return the target triple of the primary target.
 specifier|const
-name|char
-operator|*
-name|getTargetPrefix
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-comment|/// getTargetTriple - Return the target triple of the primary target.
-specifier|const
-name|char
-operator|*
-name|getTargetTriple
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|getTriple
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Triple
-operator|.
-name|c_str
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -1279,51 +1332,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getStringSymbolPrefix - Get the default symbol prefix to
-comment|/// use for string literals.
-name|virtual
-specifier|const
-name|char
-modifier|*
-name|getStringSymbolPrefix
-argument_list|(
-name|bool
-name|IsConstant
-argument_list|)
-decl|const
-block|{
-return|return
-literal|".str"
-return|;
-block|}
-comment|/// getCFStringSymbolPrefix - Get the default symbol prefix
-comment|/// to use for CFString literals.
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getCFStringSymbolPrefix
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|""
-return|;
-block|}
-comment|/// getUnicodeStringSymbolPrefix - Get the default symbol prefix to
-comment|/// use for string literals.
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getUnicodeStringSymbolPrefix
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|".str"
-return|;
-block|}
 comment|/// getUnicodeStringSection - Return the section to use for unicode
 comment|/// string literals, or 0 if no special section is used.
 name|virtual
@@ -1352,19 +1360,28 @@ return|return
 literal|"__DATA,__cfstring"
 return|;
 block|}
-comment|/// getCFStringDataSection - Return the section to use for the
-comment|/// constant string data associated with a CFString literal, or 0 if
-comment|/// no special section is used.
+comment|/// isValidSectionSpecifier - This is an optional hook that targets can
+comment|/// implement to perform semantic checking on attribute((section("foo")))
+comment|/// specifiers.  In this case, "foo" is passed in to be checked.  If the
+comment|/// section specifier is invalid, the backend should return a non-empty string
+comment|/// that indicates the problem.
+comment|///
+comment|/// This hook is a simple quality of implementation feature to catch errors
+comment|/// and give good diagnostics in cases when the assembler or code generator
+comment|/// would otherwise reject the section specifier.
+comment|///
 name|virtual
-specifier|const
-name|char
-operator|*
-name|getCFStringDataSection
-argument_list|()
+name|std
+operator|::
+name|string
+name|isValidSectionSpecifier
+argument_list|(
+argument|const llvm::StringRef&SR
+argument_list|)
 specifier|const
 block|{
 return|return
-literal|"__TEXT,__cstring,cstring_literals"
+literal|""
 return|;
 block|}
 comment|/// getDefaultLangOptions - Allow the target to specify default settings for
@@ -1404,6 +1421,38 @@ name|Features
 argument_list|)
 decl|const
 block|{   }
+comment|/// getABI - Get the ABI in use.
+name|virtual
+specifier|const
+name|char
+operator|*
+name|getABI
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|""
+return|;
+block|}
+comment|/// setABI - Use the specific ABI.
+comment|///
+comment|/// \return - False on error (invalid ABI name).
+name|virtual
+name|bool
+name|setABI
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// setFeatureEnabled - Enable or disable a specific target feature,
 comment|/// the feature name must be valid.
 comment|///
@@ -1464,14 +1513,30 @@ return|return
 name|RegParmMax
 return|;
 block|}
-comment|// isTLSSupported - Whether the target supports thread-local storage
-name|unsigned
+comment|/// isTLSSupported - Whether the target supports thread-local storage.
+name|bool
 name|isTLSSupported
 argument_list|()
 specifier|const
 block|{
 return|return
 name|TLSSupported
+return|;
+block|}
+comment|/// getEHDataRegisterNumber - Return the register number that
+comment|/// __builtin_eh_return_regno would return with the specified argument.
+name|virtual
+name|int
+name|getEHDataRegisterNumber
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+return|return
+operator|-
+literal|1
 return|;
 block|}
 name|protected

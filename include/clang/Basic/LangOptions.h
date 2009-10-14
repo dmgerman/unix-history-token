@@ -167,13 +167,6 @@ literal|1
 decl_stmt|;
 comment|// Objective-C 2 support enabled.
 name|unsigned
-name|ObjCSenderDispatch
-range|:
-literal|1
-decl_stmt|;
-comment|// Objective-C 2 three-dimensional dispatch
-comment|// enabled.
-name|unsigned
 name|ObjCNonFragileABI
 range|:
 literal|1
@@ -209,6 +202,12 @@ literal|1
 decl_stmt|;
 comment|// Support exception handling.
 name|unsigned
+name|Rtti
+range|:
+literal|1
+decl_stmt|;
+comment|// Support rtti information.
+name|unsigned
 name|NeXTRuntime
 range|:
 literal|1
@@ -233,6 +232,13 @@ literal|1
 decl_stmt|;
 comment|// Whether static initializers are protected
 comment|// by locks.
+name|unsigned
+name|POSIXThreads
+range|:
+literal|1
+decl_stmt|;
+comment|// Compiling with POSIX thread support
+comment|// (-pthread)
 name|unsigned
 name|Blocks
 range|:
@@ -332,6 +338,13 @@ range|:
 literal|1
 decl_stmt|;
 comment|// OpenCL C99 language extensions.
+name|unsigned
+name|ElideConstructors
+range|:
+literal|1
+decl_stmt|;
+comment|// Whether C++ copy constructors should be
+comment|// elided if possible.
 name|private
 label|:
 name|unsigned
@@ -372,6 +385,11 @@ name|unsigned
 name|InstantiationDepth
 decl_stmt|;
 comment|// Maximum template instantiation depth.
+specifier|const
+name|char
+modifier|*
+name|ObjCConstantStringClass
+decl_stmt|;
 enum|enum
 name|GCMode
 block|{
@@ -439,6 +457,10 @@ name|ObjCNonFragileABI
 operator|=
 literal|0
 expr_stmt|;
+name|ObjCConstantStringClass
+operator|=
+literal|0
+expr_stmt|;
 name|C99
 operator|=
 name|Microsoft
@@ -466,6 +488,10 @@ operator|=
 name|NoBuiltin
 operator|=
 literal|0
+expr_stmt|;
+name|Rtti
+operator|=
+literal|1
 expr_stmt|;
 name|LaxVectorConversions
 operator|=
@@ -495,6 +521,10 @@ name|ThreadsafeStatics
 operator|=
 literal|0
 expr_stmt|;
+name|POSIXThreads
+operator|=
+literal|0
+expr_stmt|;
 name|Blocks
 operator|=
 literal|0
@@ -512,15 +542,15 @@ name|AccessControl
 operator|=
 literal|0
 expr_stmt|;
+name|ElideConstructors
+operator|=
+literal|1
+expr_stmt|;
 name|OverflowChecking
 operator|=
 literal|0
 expr_stmt|;
 name|ObjCGCBitmapPrint
-operator|=
-literal|0
-expr_stmt|;
-name|ObjCSenderDispatch
 operator|=
 literal|0
 expr_stmt|;

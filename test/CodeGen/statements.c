@@ -50,5 +50,75 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|test4
+parameter_list|()
+block|{
+name|bar
+label|:
+name|baz
+label|:
+name|blong
+label|:
+name|bing
+label|:
+empty_stmt|;
+comment|// PR5131
+specifier|static
+name|long
+name|x
+init|=
+operator|&&
+name|bar
+operator|-
+operator|&&
+name|baz
+decl_stmt|;
+specifier|static
+name|long
+name|y
+init|=
+operator|&&
+name|baz
+decl_stmt|;
+operator|&&
+name|bing
+expr_stmt|;
+operator|&&
+name|blong
+expr_stmt|;
+if|if
+condition|(
+name|y
+condition|)
+goto|goto *
+name|y
+goto|;
+goto|goto *
+name|x
+goto|;
+block|}
+end_function
+
+begin_comment
+comment|// PR3869
+end_comment
+
+begin_function
+name|int
+name|test5
+parameter_list|(
+name|long
+name|long
+name|b
+parameter_list|)
+block|{
+goto|goto *
+name|b
+goto|;
+block|}
+end_function
+
 end_unit
 

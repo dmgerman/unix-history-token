@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/ASTContext.h"
 end_include
 
@@ -126,6 +120,16 @@ operator|::
 name|dyn_cast_or_null
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|FoldingSetNodeID
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -664,9 +668,18 @@ block|}
 enum|;
 name|private
 label|:
+comment|/// \brief The statement class.
 specifier|const
-name|StmtClass
+name|unsigned
 name|sClass
+range|:
+literal|8
+decl_stmt|;
+comment|/// \brief The reference count for this statement.
+name|unsigned
+name|RefCount
+range|:
+literal|24
 decl_stmt|;
 comment|// Make vanilla 'new' and 'delete' illegal for Stmts.
 name|protected
@@ -891,7 +904,12 @@ argument_list|)
 block|:
 name|sClass
 argument_list|(
-argument|SC
+name|SC
+argument_list|)
+operator|,
+name|RefCount
+argument_list|(
+literal|1
 argument_list|)
 block|{
 if|if
@@ -909,6 +927,20 @@ name|SC
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Virtual method that performs the actual destruction of
+comment|/// this statement.
+comment|///
+comment|/// Subclasses should override this method (not Destroy()) to
+comment|/// provide class-specific destruction.
+name|virtual
+name|void
+name|DoDestroy
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|Stmt
@@ -918,7 +950,12 @@ argument_list|)
 block|:
 name|sClass
 argument_list|(
-argument|SC
+name|SC
+argument_list|)
+operator|,
+name|RefCount
+argument_list|(
+literal|1
 argument_list|)
 block|{
 if|if
@@ -941,21 +978,74 @@ operator|~
 name|Stmt
 argument_list|()
 block|{}
-name|virtual
+comment|/// \brief Destroy the current statement and its children.
 name|void
 name|Destroy
 argument_list|(
-name|ASTContext
-operator|&
+argument|ASTContext&Ctx
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|RefCount
+operator|>=
+literal|1
+argument_list|)
+block|;
+if|if
+condition|(
+operator|--
+name|RefCount
+operator|==
+literal|0
+condition|)
+name|DoDestroy
+argument_list|(
 name|Ctx
 argument_list|)
 expr_stmt|;
+block|}
+comment|/// \brief Increases the reference count for this statement.
+comment|///
+comment|/// Invoke the Retain() operation when this statement or expression
+comment|/// is being shared by another owner.
+name|Stmt
+modifier|*
+name|Retain
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|RefCount
+operator|>=
+literal|1
+argument_list|)
+expr_stmt|;
+operator|++
+name|RefCount
+expr_stmt|;
+return|return
+name|this
+return|;
+block|}
 name|StmtClass
 name|getStmtClass
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|RefCount
+operator|>=
+literal|1
+operator|&&
+literal|"Referencing already-destroyed statement!"
+argument_list|)
+block|;
 return|return
+operator|(
+name|StmtClass
+operator|)
 name|sClass
 return|;
 block|}
@@ -1244,6 +1334,35 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// \brief Produce a unique representation of the given statement.
+comment|///
+comment|/// \brief ID once the profiling operation is complete, will contain
+comment|/// the unique representation of the given statement.
+comment|///
+comment|/// \brief Context the AST context in which the statement resides
+comment|///
+comment|/// \brief Canonical whether the profile should be based on the canonical
+comment|/// representation of this statement (e.g., where non-type template
+comment|/// parameters are identified by index/level rather than their
+comment|/// declaration pointers) or the exact representation of the statement as
+comment|/// written in the source.
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
+name|bool
+name|Canonical
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1331,15 +1450,6 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
-argument_list|)
-block|;
 comment|/// isSingleDecl - This method returns true if this DeclStmt refers
 comment|/// to a single Decl.
 name|bool
@@ -1623,14 +1733,6 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
-name|NullStmt
-operator|*
-name|Clone
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-specifier|const
-block|;
 name|SourceLocation
 name|getSemiLoc
 argument_list|()
@@ -2338,7 +2440,7 @@ name|v_getSubStmt
 argument_list|()
 operator|=
 literal|0
-block|;   }
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -3600,6 +3702,17 @@ block|;
 name|SourceLocation
 name|SwitchLoc
 block|;
+name|protected
+operator|:
+name|virtual
+name|void
+name|DoDestroy
+argument_list|(
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|)
+block|;
 name|public
 operator|:
 name|SwitchStmt
@@ -3773,6 +3886,10 @@ return|return
 name|FirstCase
 return|;
 block|}
+comment|/// \brief Set the case list for this switch statement.
+comment|///
+comment|/// The caller is responsible for incrementing the retain counts on
+comment|/// all of the SwitchCase statements in this list.
 name|void
 name|setSwitchCaseList
 argument_list|(
@@ -3837,6 +3954,11 @@ argument_list|()
 operator|&&
 literal|"case/default already added to a switch"
 argument_list|)
+block|;
+name|SC
+operator|->
+name|Retain
+argument_list|()
 block|;
 name|SC
 operator|->
@@ -5422,14 +5544,6 @@ name|ContinueLoc
 argument_list|)
 return|;
 block|}
-name|ContinueStmt
-operator|*
-name|Clone
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -5552,14 +5666,6 @@ name|BreakLoc
 argument_list|)
 return|;
 block|}
-name|BreakStmt
-operator|*
-name|Clone
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
