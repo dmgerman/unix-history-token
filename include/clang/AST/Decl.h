@@ -2370,6 +2370,22 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Determine whether this is or was instantiated from an out-of-line
+end_comment
+
+begin_comment
+comment|/// definition of a static data member.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isOutOfLine
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief If this variable is an instantiated static data member of a
 end_comment
 
@@ -2381,13 +2397,14 @@ begin_comment
 comment|/// from which it was instantiated.
 end_comment
 
-begin_function_decl
+begin_expr_stmt
 name|VarDecl
-modifier|*
+operator|*
 name|getInstantiatedFromStaticDataMember
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief If this variable is a static data member, determine what kind of
@@ -2397,12 +2414,13 @@ begin_comment
 comment|/// template specialization or instantiation this is.
 end_comment
 
-begin_function_decl
+begin_expr_stmt
 name|TemplateSpecializationKind
 name|getTemplateSpecializationKind
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief If this variable is an instantiation of a static data member of a
@@ -2416,13 +2434,14 @@ begin_comment
 comment|/// information.
 end_comment
 
-begin_function_decl
+begin_expr_stmt
 name|MemberSpecializationInfo
-modifier|*
+operator|*
 name|getMemberSpecializationInfo
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief For a static data member that was instantiated from a static

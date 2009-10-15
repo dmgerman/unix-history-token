@@ -13,12 +13,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<math.h>
-end_include
-
 begin_function
 name|void
 name|p
@@ -882,9 +876,19 @@ block|}
 end_function
 
 begin_function
-name|void
+name|char
+modifier|*
 name|strcat
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|a
+parameter_list|,
+name|char
+specifier|const
+modifier|*
+name|b
+parameter_list|)
 block|{}
 end_function
 

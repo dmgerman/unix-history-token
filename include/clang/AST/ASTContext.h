@@ -647,6 +647,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
+specifier|const
 name|VarDecl
 operator|*
 operator|,
@@ -949,6 +950,7 @@ name|MemberSpecializationInfo
 modifier|*
 name|getInstantiatedFromStaticDataMember
 parameter_list|(
+specifier|const
 name|VarDecl
 modifier|*
 name|Var
