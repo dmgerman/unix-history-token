@@ -500,6 +500,9 @@ argument|const unsigned long long& Val
 argument_list|)
 block|{
 return|return
+operator|(
+name|unsigned
+operator|)
 name|Val
 operator|*
 literal|37ULL

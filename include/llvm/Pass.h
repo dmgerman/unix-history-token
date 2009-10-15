@@ -820,7 +820,7 @@ name|virtual
 name|bool
 name|doInitialization
 argument_list|(
-argument|Module&M
+argument|Module&
 argument_list|)
 block|{
 return|return
@@ -951,7 +951,7 @@ name|virtual
 name|bool
 name|doInitialization
 argument_list|(
-argument|Module&M
+argument|Module&
 argument_list|)
 block|{
 return|return

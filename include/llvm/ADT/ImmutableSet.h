@@ -5180,10 +5180,6 @@ begin_block
 block|{}
 end_block
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_decl_stmt
 name|void
 name|operator
@@ -5195,7 +5191,6 @@ operator|&
 name|RHS
 operator|)
 block|{}
-decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt

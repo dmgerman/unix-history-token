@@ -2525,7 +2525,7 @@ name|parse
 argument_list|(
 argument|Option&
 argument_list|,
-argument|StringRef ArgName
+argument|StringRef
 argument_list|,
 argument|StringRef Arg
 argument_list|,
@@ -2594,7 +2594,7 @@ name|parse
 argument_list|(
 argument|Option&
 argument_list|,
-argument|StringRef ArgName
+argument|StringRef
 argument_list|,
 argument|StringRef Arg
 argument_list|,

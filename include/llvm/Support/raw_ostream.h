@@ -860,15 +860,12 @@ name|changeColor
 parameter_list|(
 name|enum
 name|Colors
-name|colors
 parameter_list|,
 name|bool
-name|bold
 init|=
 name|false
 parameter_list|,
 name|bool
-name|bg
 init|=
 name|false
 parameter_list|)

@@ -2260,19 +2260,15 @@ name|ComputeOperandLatency
 argument_list|(
 name|SUnit
 operator|*
-name|Def
 argument_list|,
 name|SUnit
 operator|*
-name|Use
 argument_list|,
 name|SDep
 operator|&
-name|dep
 argument_list|)
 decl|const
 block|{ }
-empty_stmt|;
 comment|/// Schedule - Order nodes according to selected style, filling
 comment|/// in the Sequence member.
 comment|///

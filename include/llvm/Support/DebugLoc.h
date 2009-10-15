@@ -125,7 +125,6 @@ argument|~
 literal|0U
 argument_list|)
 block|{}
-expr_stmt|;
 name|DebugLocTuple
 argument_list|(
 argument|MDNode *n
@@ -136,7 +135,7 @@ argument|unsigned l
 argument_list|,
 argument|unsigned c
 argument_list|)
-block|:
+operator|:
 name|Scope
 argument_list|(
 name|n
@@ -157,7 +156,6 @@ argument_list|(
 argument|c
 argument_list|)
 block|{}
-expr_stmt|;
 name|bool
 name|operator
 operator|==

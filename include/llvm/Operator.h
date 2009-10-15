@@ -252,7 +252,6 @@ parameter_list|(
 specifier|const
 name|Instruction
 modifier|*
-name|I
 parameter_list|)
 block|{
 return|return
@@ -267,7 +266,6 @@ parameter_list|(
 specifier|const
 name|ConstantExpr
 modifier|*
-name|I
 parameter_list|)
 block|{
 return|return

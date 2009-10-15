@@ -191,7 +191,6 @@ operator|~
 name|Edge
 argument_list|()
 block|{}
-block|;
 specifier|const
 name|std
 operator|::

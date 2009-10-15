@@ -782,11 +782,11 @@ name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-argument|Value *From
+argument|Value *
 argument_list|,
-argument|Value *To
+argument|Value *
 argument_list|,
-argument|Use *U
+argument|Use *
 argument_list|)
 block|{
 name|llvm_unreachable
@@ -1281,11 +1281,11 @@ name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-argument|Value *From
+argument|Value *
 argument_list|,
-argument|Value *To
+argument|Value *
 argument_list|,
-argument|Use *U
+argument|Use *
 argument_list|)
 block|{
 name|llvm_unreachable
@@ -1515,7 +1515,6 @@ parameter_list|(
 specifier|const
 name|Value
 modifier|*
-name|V
 parameter_list|)
 block|{}
 name|void

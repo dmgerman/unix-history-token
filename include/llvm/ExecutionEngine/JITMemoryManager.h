@@ -412,7 +412,6 @@ name|std
 operator|::
 name|string
 operator|&
-name|ErrorStr
 argument_list|)
 block|{
 return|return

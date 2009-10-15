@@ -1344,6 +1344,10 @@ specifier|const
 name|MachineInstr
 modifier|*
 name|MI
+parameter_list|,
+name|MDNode
+modifier|*
+name|InlinedAt
 parameter_list|)
 function_decl|;
 comment|/// ConstructDbgScope - Construct the components of a scope.
