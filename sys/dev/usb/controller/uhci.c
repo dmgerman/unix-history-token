@@ -220,6 +220,12 @@ directive|include
 file|<dev/usb/controller/uhci.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/controller/uhcireg.h>
+end_include
+
 begin_define
 define|#
 directive|define

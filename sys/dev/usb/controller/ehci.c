@@ -224,6 +224,12 @@ directive|include
 file|<dev/usb/controller/ehci.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/controller/ehcireg.h>
+end_include
+
 begin_define
 define|#
 directive|define
