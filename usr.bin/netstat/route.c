@@ -5285,35 +5285,35 @@ name|p
 argument_list|(
 name|rts_badredirect
 argument_list|,
-literal|"\t%u bad routing redirect%s\n"
+literal|"\t%hu bad routing redirect%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rts_dynamic
 argument_list|,
-literal|"\t%u dynamically created route%s\n"
+literal|"\t%hu dynamically created route%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rts_newgateway
 argument_list|,
-literal|"\t%u new gateway%s due to redirects\n"
+literal|"\t%hu new gateway%s due to redirects\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rts_unreach
 argument_list|,
-literal|"\t%u destination%s found unreachable\n"
+literal|"\t%hu destination%s found unreachable\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rts_wildcard
 argument_list|,
-literal|"\t%u use%s of a wildcard route\n"
+literal|"\t%hu use%s of a wildcard route\n"
 argument_list|)
 expr_stmt|;
 undef|#
