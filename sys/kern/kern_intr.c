@@ -3536,7 +3536,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"handler %p not find in interrupt event %p"
+literal|"handler %p not found in interrupt event %p"
 argument_list|,
 name|cookie
 argument_list|,
