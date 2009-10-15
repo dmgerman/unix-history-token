@@ -407,6 +407,17 @@ name|send_errors
 decl_stmt|,
 name|send_calls
 decl_stmt|;
+comment|/* do not call gettimeofday more than every 20us */
+name|long
+name|minres_ns
+init|=
+literal|20000
+decl_stmt|;
+name|int
+name|ic
+decl_stmt|,
+name|gettimeofday_cycles
+decl_stmt|;
 if|if
 condition|(
 name|clock_getres
@@ -448,7 +459,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"warning: interval less than resolution (%jd.%09ld)\n"
+literal|"warning: interval (%jd.%09ld) less than resolution (%jd.%09ld)\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|interval
+operator|.
+name|tv_sec
+argument_list|,
+name|interval
+operator|.
+name|tv_nsec
 argument_list|,
 operator|(
 name|intmax_t
@@ -461,6 +483,42 @@ name|tmptime
 operator|.
 name|tv_nsec
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmptime
+operator|.
+name|tv_nsec
+operator|<
+name|minres_ns
+condition|)
+block|{
+name|gettimeofday_cycles
+operator|=
+name|minres_ns
+operator|/
+operator|(
+name|tmptime
+operator|.
+name|tv_nsec
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"calling time every %d cycles\n"
+argument_list|,
+name|gettimeofday_cycles
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|gettimeofday_cycles
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -561,6 +619,10 @@ name|waited
 operator|=
 literal|0
 expr_stmt|;
+name|ic
+operator|=
+name|gettimeofday_cycles
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -574,6 +636,18 @@ argument_list|,
 operator|&
 name|interval
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|--
+name|ic
+operator|<=
+literal|0
+condition|)
+block|{
+name|ic
+operator|=
+name|gettimeofday_cycles
 expr_stmt|;
 if|if
 condition|(
@@ -597,6 +671,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 comment|/* 		 * We maintain and, if there's room, send a counter.  Note 		 * that even if the error is purely local, we still increment 		 * the counter, so missing sequence numbers on the receive 		 * side should not be assumed to be packets lost in transit. 		 * For example, if the UDP socket gets back an ICMP from a 		 * previous send, the error will turn up the current send 		 * operation, causing the current sequence number also to be 		 * skipped. 		 * 		 * XXXRW: Note alignment assumption. 		 */
 if|if
 condition|(
@@ -1008,7 +1083,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Specify an arbitrary limit.  It's exactly that, not selected by 	 .* any particular strategy.  '0' is a special value meaning "blast", 	 * and avoids the cost of a timing loop. 	 */
+comment|/* 	 * Specify an arbitrary limit.  It's exactly that, not selected by 	 * any particular strategy.  '0' is a special value meaning "blast", 	 * and avoids the cost of a timing loop. 	 * XXX 0 is not actually implemented. 	 */
 name|rate
 operator|=
 name|strtoul
