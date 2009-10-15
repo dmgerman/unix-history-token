@@ -311,6 +311,23 @@ name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
+name|arpt_down
+argument_list|)
+operator|=
+literal|20
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* keep incomplete entries for 					       * 20 seconds */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
 name|arp_maxtries
 argument_list|)
 operator|=
@@ -350,6 +367,13 @@ define|#
 directive|define
 name|V_arpt_keep
 value|VNET(arpt_keep)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_arpt_down
+value|VNET(arpt_down)
 end_define
 
 begin_define
@@ -1550,7 +1574,7 @@ name|la
 operator|->
 name|la_expire
 operator|>
-name|time_uptime
+name|time_second
 operator|)
 condition|)
 block|{
@@ -1580,7 +1604,7 @@ operator|&
 name|LLE_STATIC
 operator|)
 operator|&&
-name|time_uptime
+name|time_second
 operator|+
 name|la
 operator|->
@@ -1683,7 +1707,7 @@ name|la
 operator|->
 name|la_expire
 operator|!=
-name|time_uptime
+name|time_second
 operator|)
 expr_stmt|;
 if|if
@@ -1804,9 +1828,9 @@ operator|&
 name|RTF_GATEWAY
 operator|)
 condition|?
-name|EHOSTDOWN
-else|:
 name|EHOSTUNREACH
+else|:
+name|EHOSTDOWN
 expr_stmt|;
 if|if
 condition|(
@@ -1822,7 +1846,7 @@ name|la
 operator|->
 name|la_expire
 operator|=
-name|time_uptime
+name|time_second
 expr_stmt|;
 name|callout_reset
 argument_list|(
@@ -1832,6 +1856,8 @@ operator|->
 name|la_timer
 argument_list|,
 name|hz
+operator|*
+name|V_arpt_down
 argument_list|,
 name|arptimer
 argument_list|,
@@ -3412,7 +3438,7 @@ name|la
 operator|->
 name|la_expire
 operator|=
-name|time_uptime
+name|time_second
 operator|+
 name|V_arpt_keep
 expr_stmt|;
