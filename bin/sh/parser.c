@@ -6252,6 +6252,12 @@ decl_stmt|;
 name|int
 name|saveprompt
 decl_stmt|;
+specifier|const
+name|int
+name|bq_startlinno
+init|=
+name|plinno
+decl_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -6275,6 +6281,23 @@ name|handler
 operator|=
 name|savehandler
 expr_stmt|;
+if|if
+condition|(
+name|exception
+operator|==
+name|EXERROR
+condition|)
+block|{
+name|startlinno
+operator|=
+name|bq_startlinno
+expr_stmt|;
+name|synerror
+argument_list|(
+literal|"Error in command substitution"
+argument_list|)
+expr_stmt|;
+block|}
 name|longjmp
 argument_list|(
 name|handler
