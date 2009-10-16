@@ -427,8 +427,6 @@ expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_RA
 index|]
@@ -442,8 +440,6 @@ comment|/* Make sp 64-bit aligned */
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_SP
 index|]
@@ -477,8 +473,6 @@ expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_S0
 index|]
@@ -491,8 +485,6 @@ expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_S1
 index|]
@@ -505,8 +497,6 @@ expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_S2
 index|]
@@ -521,8 +511,6 @@ expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_SR
 index|]
@@ -567,8 +555,6 @@ name|TARGET_OCTEON
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_SR
 index|]
@@ -624,8 +610,6 @@ operator|->
 name|td_pcb
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_S0
 index|]
@@ -640,8 +624,6 @@ operator|->
 name|td_pcb
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_S1
 index|]
@@ -1069,8 +1051,6 @@ comment|/* 	 * Set registers for trampoline to user mode. 	 */
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_RA
 index|]
@@ -1084,8 +1064,6 @@ comment|/* Make sp 64-bit aligned */
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_SP
 index|]
@@ -1119,8 +1097,6 @@ expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_S0
 index|]
@@ -1133,8 +1109,6 @@ expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_S1
 index|]
@@ -1147,8 +1121,6 @@ expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_S2
 index|]
@@ -1164,8 +1136,6 @@ comment|/* Dont set IE bit in SR. sched lock release will take care of it */
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_SR
 index|]
@@ -1181,8 +1151,6 @@ name|TARGET_OCTEON
 name|pcb2
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 name|PCB_REG_SR
 index|]

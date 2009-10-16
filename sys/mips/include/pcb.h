@@ -38,8 +38,11 @@ name|trapframe
 name|pcb_regs
 decl_stmt|;
 comment|/* saved CPU and registers */
-name|label_t
+name|__register_t
 name|pcb_context
+index|[
+literal|13
+index|]
 decl_stmt|;
 comment|/* kernel context for resume */
 name|int

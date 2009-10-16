@@ -837,22 +837,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|label_t
-block|{
-name|__register_t
-name|val
-index|[
-literal|13
-index|]
-decl_stmt|;
-block|}
-name|label_t
-typedef|;
-end_typedef
-
 begin_endif
 endif|#
 directive|endif
