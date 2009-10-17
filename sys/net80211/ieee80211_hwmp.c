@@ -1052,7 +1052,7 @@ block|,
 operator|.
 name|mpp_ie
 operator|=
-name|IEEE80211_MESHCONF_HWMP
+name|IEEE80211_MESHCONF_PATH_HWMP
 block|,
 operator|.
 name|mpp_discover
