@@ -5014,6 +5014,16 @@ block|{
 name|stacktrace_subr
 argument_list|(
 name|regs
+operator|->
+name|pc
+argument_list|,
+name|regs
+operator|->
+name|sp
+argument_list|,
+name|regs
+operator|->
+name|ra
 argument_list|,
 name|printf
 argument_list|)

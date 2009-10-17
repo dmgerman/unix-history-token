@@ -349,8 +349,14 @@ begin_function_decl
 name|void
 name|stacktrace_subr
 parameter_list|(
-name|db_regs_t
-modifier|*
+name|register_t
+name|pc
+parameter_list|,
+name|register_t
+name|sp
+parameter_list|,
+name|register_t
+name|ra
 parameter_list|,
 name|int
 function_decl|(
