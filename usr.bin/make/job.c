@@ -11171,6 +11171,20 @@ name|makeErrors
 operator|++
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|gn
+operator|->
+name|made
+operator|==
+name|ERROR
+condition|)
+block|{
+name|makeErrors
+operator|++
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * If the user has defined a .END target, run its commands. 	 */
 if|if
