@@ -120,9 +120,6 @@ name|void
 modifier|*
 name|pfil_arg
 decl_stmt|;
-name|int
-name|pfil_flags
-decl_stmt|;
 block|}
 struct|;
 end_struct
