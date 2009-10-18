@@ -410,7 +410,7 @@ begin_define
 define|#
 directive|define
 name|ET_DYN_LOAD_ADDR
-value|0x150000000
+value|0x100000
 end_define
 
 begin_endif
