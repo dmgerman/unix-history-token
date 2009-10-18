@@ -2466,7 +2466,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[amd,%d] ri %d null pcd"
+literal|"[pmc,%d] ri %d null pcd"
 operator|,
 name|__LINE__
 operator|,
