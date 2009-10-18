@@ -219,7 +219,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|((((unsigned)(p))& (sizeof (t) - 1)) == 0)
+value|((((unsigned long)(p))& (sizeof (t) - 1)) == 0)
 end_define
 
 begin_comment
@@ -491,7 +491,7 @@ name|mips_round_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned)(x)) + NBPG - 1)& ~(NBPG-1))
+value|((((unsigned long)(x)) + NBPG - 1)& ~(NBPG-1))
 end_define
 
 begin_define
@@ -501,7 +501,7 @@ name|mips_trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& ~(NBPG-1))
+value|((unsigned long)(x)& ~(NBPG-1))
 end_define
 
 begin_define
@@ -511,7 +511,7 @@ name|mips_btop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)>> PGSHIFT)
+value|((unsigned long)(x)>> PGSHIFT)
 end_define
 
 begin_define
@@ -521,7 +521,7 @@ name|mips_ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)<< PGSHIFT)
+value|((unsigned long)(x)<< PGSHIFT)
 end_define
 
 begin_define
