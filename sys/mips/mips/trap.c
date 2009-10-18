@@ -4376,7 +4376,7 @@ comment|/*  * Return the resulting PC as if the branch was executed.  */
 end_comment
 
 begin_function
-name|u_int
+name|uintptr_t
 name|MipsEmulateBranch
 parameter_list|(
 name|struct
