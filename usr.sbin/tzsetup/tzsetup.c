@@ -3831,6 +3831,10 @@ name|fd
 operator|<
 literal|0
 condition|)
+block|{
+name|end_dialog
+argument_list|()
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
@@ -3840,6 +3844,7 @@ argument_list|,
 name|_PATH_WALL_CMOS_CLOCK
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|fd
