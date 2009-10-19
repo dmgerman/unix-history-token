@@ -3014,7 +3014,8 @@ control|)
 block|{
 operator|*
 name|frm
-operator|+=
+operator|++
+operator|=
 name|perr
 operator|->
 name|perr_dests
@@ -5990,6 +5991,13 @@ operator|.
 name|perr_ndests
 operator|=
 literal|1
+expr_stmt|;
+name|PERR_DFLAGS
+argument_list|(
+literal|0
+argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
