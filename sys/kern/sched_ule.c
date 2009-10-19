@@ -6366,7 +6366,7 @@ name|sched_interact_score
 argument_list|(
 name|td
 argument_list|)
-operator|-
+operator|+
 name|td
 operator|->
 name|td_proc
