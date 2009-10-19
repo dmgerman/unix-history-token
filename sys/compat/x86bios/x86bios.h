@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Alex Keda<admin@lissyara.su>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2009 Alex Keda<admin@lissyara.su>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * x86 registers were borrowed from x86emu.h x86emu_regs.h  * for compatability.  *  * $FreeBSD$  */
+comment|/*  * x86 registers were borrowed from x86emu.h x86emu_regs.h  * for compatability.  */
 end_comment
 
 begin_ifndef
@@ -22,12 +22,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/endian.h>
 end_include
 
@@ -35,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_ifdef
@@ -74,12 +74,14 @@ name|x86_register8
 block|{
 name|uint8_t
 name|filler0
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|filler1
 decl_stmt|;
 name|uint8_t
 name|h_reg
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|l_reg
 decl_stmt|;
 block|}
@@ -123,7 +125,8 @@ name|x86_register8
 block|{
 name|uint8_t
 name|l_reg
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|h_reg
 decl_stmt|;
 block|}
@@ -164,12 +167,13 @@ struct|struct
 name|x86regs
 block|{
 name|uint16_t
-name|padding
+name|_pad0
 decl_stmt|;
-comment|/* CS is unused. */
+comment|/* CS */
 name|uint16_t
-name|register_ds
+name|_pad1
 decl_stmt|;
+comment|/* DS */
 name|uint16_t
 name|register_es
 decl_stmt|;
@@ -180,8 +184,9 @@ name|uint16_t
 name|register_gs
 decl_stmt|;
 name|uint16_t
-name|register_ss
+name|_pad2
 decl_stmt|;
+comment|/* SS */
 name|uint32_t
 name|register_flags
 decl_stmt|;
@@ -203,8 +208,9 @@ name|register_d
 decl_stmt|;
 name|union
 name|x86_register
-name|register_sp
+name|_pad3
 decl_stmt|;
+comment|/* SP */
 name|union
 name|x86_register
 name|register_bp
@@ -360,13 +366,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_SP
-value|register_sp.I16_reg.x_reg
-end_define
-
-begin_define
-define|#
-directive|define
 name|R_BP
 value|register_bp.I16_reg.x_reg
 end_define
@@ -395,13 +394,6 @@ end_define
 begin_comment
 comment|/* special registers */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|R_ESP
-value|register_sp.I32_reg.e_reg
-end_define
 
 begin_define
 define|#
@@ -438,20 +430,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_DS
-value|register_ds
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_SS
-value|register_ss
-end_define
-
-begin_define
-define|#
-directive|define
 name|R_ES
 value|register_es
 end_define
@@ -473,45 +451,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|SEG_ADDR
+name|X86BIOS_PHYSTOSEG
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 4)& 0x00F000)
+value|(((x)>> 4)& 0xffff)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SEG_OFF
+name|X86BIOS_PHYSTOOFF
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x0FFFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FARP
-parameter_list|(
-name|x
-parameter_list|)
-value|((le32toh(x)& 0xffff) + ((le32toh(x)>> 12)& 0xffff00))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAPPED_MEMORY_SIZE
-value|(1024 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PAGE_RESERV
-value|(4096 * 5)
+value|((x)& 0x000f)
 end_define
 
 begin_function_decl
@@ -520,12 +474,30 @@ name|void
 modifier|*
 name|x86bios_alloc
 parameter_list|(
-name|int
-name|count
-parameter_list|,
-name|int
+name|uint32_t
 modifier|*
-name|segs
+name|offset
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|x86bios_call
+parameter_list|(
+name|struct
+name|x86regs
+modifier|*
+name|regs
+parameter_list|,
+name|uint16_t
+name|seg
+parameter_list|,
+name|uint16_t
+name|off
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -536,10 +508,43 @@ name|x86bios_free
 parameter_list|(
 name|void
 modifier|*
-name|pbuf
+name|addr
 parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|x86bios_get_intr
+parameter_list|(
 name|int
-name|count
+name|intno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|x86bios_get_orm
+parameter_list|(
+name|uint32_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|x86bios_init_regs
+parameter_list|(
+name|struct
+name|x86regs
+modifier|*
+name|regs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -560,12 +565,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|x86bios_match_device
+parameter_list|(
+name|uint32_t
+name|offset
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|x86bios_offset
 parameter_list|(
 name|uint32_t
-name|offs
+name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
