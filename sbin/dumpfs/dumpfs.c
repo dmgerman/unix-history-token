@@ -2272,9 +2272,14 @@ argument_list|,
 operator|(
 name|intmax_t
 operator|)
+name|fsbtodb
+argument_list|(
+name|fs
+argument_list|,
 name|fs
 operator|->
 name|fs_size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
