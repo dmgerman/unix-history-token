@@ -2006,7 +2006,7 @@ parameter_list|)
 block|{
 name|x86bios_ivt
 operator|=
-name|pmap_mapdev
+name|pmap_mapbios
 argument_list|(
 name|X86BIOS_IVT_BASE
 argument_list|,
