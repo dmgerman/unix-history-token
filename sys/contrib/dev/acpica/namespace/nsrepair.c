@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/dev/acpica/include/acinterp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/dev/acpica/include/acpredef.h>
 end_include
 
@@ -89,6 +95,10 @@ decl_stmt|;
 name|ACPI_SIZE
 name|Length
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+comment|/*      * At this point, we know that the type of the returned object was not      * one of the expected types for this predefined name. Attempt to      * repair the object. Only a limited number of repairs are possible.      */
 switch|switch
 condition|(
 name|ReturnObject
@@ -189,7 +199,111 @@ argument_list|,
 name|Length
 argument_list|)
 expr_stmt|;
-comment|/*          * If the original object is a package element, we need to:          * 1. Set the reference count of the new object to match the          *    reference count of the old object.          * 2. Decrement the reference count of the original object.          */
+break|break;
+case|case
+name|ACPI_TYPE_INTEGER
+case|:
+comment|/* 1) Does the method/object legally return a buffer? */
+if|if
+condition|(
+name|ExpectedBtypes
+operator|&
+name|ACPI_RTYPE_BUFFER
+condition|)
+block|{
+comment|/*              * Convert the Integer to a packed-byte buffer. _MAT needs              * this sometimes, if a read has been performed on a Field              * object that is less than or equal to the global integer              * size (32 or 64 bits).              */
+name|Status
+operator|=
+name|AcpiExConvertToBuffer
+argument_list|(
+name|ReturnObject
+argument_list|,
+operator|&
+name|NewObject
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+block|}
+comment|/* 2) Does the method/object legally return a string? */
+elseif|else
+if|if
+condition|(
+name|ExpectedBtypes
+operator|&
+name|ACPI_RTYPE_STRING
+condition|)
+block|{
+comment|/*              * The only supported Integer-to-String conversion is to convert              * an integer of value 0 to a NULL string. The last element of              * _BIF and _BIX packages occasionally need this fix.              */
+if|if
+condition|(
+name|ReturnObject
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|!=
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|AE_AML_OPERAND_TYPE
+operator|)
+return|;
+block|}
+comment|/* Allocate a new NULL string object */
+name|NewObject
+operator|=
+name|AcpiUtCreateStringObject
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NewObject
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NO_MEMORY
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+return|return
+operator|(
+name|AE_AML_OPERAND_TYPE
+operator|)
+return|;
+block|}
+break|break;
+default|default:
+comment|/* We cannot repair this object */
+return|return
+operator|(
+name|AE_AML_OPERAND_TYPE
+operator|)
+return|;
+block|}
+comment|/* Object was successfully repaired */
+comment|/*      * If the original object is a package element, we need to:      * 1. Set the reference count of the new object to match the      *    reference count of the old object.      * 2. Decrement the reference count of the original object.      */
 if|if
 condition|(
 name|PackageIndex
@@ -241,7 +355,17 @@ name|Data
 operator|->
 name|NodeFlags
 operator|,
-literal|"Converted Buffer to expected String at index %u"
+literal|"Converted %s to expected %s at index %u"
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|ReturnObject
+argument_list|)
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|NewObject
+argument_list|)
 operator|,
 name|PackageIndex
 operator|)
@@ -263,7 +387,17 @@ name|Data
 operator|->
 name|NodeFlags
 operator|,
-literal|"Converted Buffer to expected String"
+literal|"Converted %s to expected %s"
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|ReturnObject
+argument_list|)
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|NewObject
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -288,14 +422,6 @@ expr_stmt|;
 return|return
 operator|(
 name|AE_OK
-operator|)
-return|;
-default|default:
-break|break;
-block|}
-return|return
-operator|(
-name|AE_AML_OPERAND_TYPE
 operator|)
 return|;
 block|}

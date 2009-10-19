@@ -1123,6 +1123,14 @@ name|AcpiGbl_DbOpt_verbose
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_EXTERNAL_LIST
+modifier|*
+name|AcpiGbl_ExternalList
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

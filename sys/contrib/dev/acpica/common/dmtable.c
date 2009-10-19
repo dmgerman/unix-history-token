@@ -2426,6 +2426,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|Name
 index|[
 name|i

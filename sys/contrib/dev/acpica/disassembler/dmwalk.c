@@ -71,6 +71,32 @@ value|"[%4.4s] @%5.5X #%4.4X:  "
 end_define
 
 begin_comment
+comment|/* Stub for non-compiler code */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_ASL_COMPILER
+end_ifndef
+
+begin_function
+name|void
+name|AcpiDmEmitExternals
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Local prototypes */
 end_comment
 
@@ -123,149 +149,6 @@ name|Op
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|AcpiDmGetObjectTypeName
-parameter_list|(
-name|ACPI_OBJECT_TYPE
-name|Type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * This table maps ACPI_OBJECT_TYPEs to the corresponding ASL  * ObjectTypeKeyword. Used to generate typed external declarations  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|AcpiGbl_DmTypeNames
-index|[]
-init|=
-block|{
-comment|/* 00 */
-literal|""
-block|,
-comment|/* Type ANY */
-comment|/* 01 */
-literal|", IntObj"
-block|,
-comment|/* 02 */
-literal|", StrObj"
-block|,
-comment|/* 03 */
-literal|", BuffObj"
-block|,
-comment|/* 04 */
-literal|", PkgObj"
-block|,
-comment|/* 05 */
-literal|", FieldUnitObj"
-block|,
-comment|/* 06 */
-literal|", DeviceObj"
-block|,
-comment|/* 07 */
-literal|", EventObj"
-block|,
-comment|/* 08 */
-literal|", MethodObj"
-block|,
-comment|/* 09 */
-literal|", MutexObj"
-block|,
-comment|/* 10 */
-literal|", OpRegionObj"
-block|,
-comment|/* 11 */
-literal|", PowerResObj"
-block|,
-comment|/* 12 */
-literal|", ProcessorObj"
-block|,
-comment|/* 13 */
-literal|", ThermalZoneObj"
-block|,
-comment|/* 14 */
-literal|", BuffFieldObj"
-block|,
-comment|/* 15 */
-literal|", DDBHandleObj"
-block|,
-comment|/* 16 */
-literal|""
-block|,
-comment|/* Debug object */
-comment|/* 17 */
-literal|", FieldUnitObj"
-block|,
-comment|/* 18 */
-literal|", FieldUnitObj"
-block|,
-comment|/* 19 */
-literal|", FieldUnitObj"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGetObjectTypeName  *  * PARAMETERS:  Type        - An ACPI_OBJECT_TYPE  *  * RETURN:      Pointer to a string  *  * DESCRIPTION: Map an object type to the ASL object type string.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|AcpiDmGetObjectTypeName
-parameter_list|(
-name|ACPI_OBJECT_TYPE
-name|Type
-parameter_list|)
-block|{
-if|if
-condition|(
-name|Type
-operator|==
-name|ACPI_TYPE_LOCAL_SCOPE
-condition|)
-block|{
-name|Type
-operator|=
-name|ACPI_TYPE_DEVICE
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Type
-operator|>
-name|ACPI_TYPE_LOCAL_INDEX_FIELD
-condition|)
-block|{
-return|return
-operator|(
-literal|""
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|AcpiGbl_DmTypeNames
-index|[
-name|Type
-index|]
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDisassemble  *  * PARAMETERS:  WalkState       - Current state  *              Origin          - Starting object  *              NumOpcodes      - Max number of opcodes to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Disassemble parser object and its children.  This is the  *              main entry point of the disassembler.  *  ******************************************************************************/
@@ -920,10 +803,6 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|NextOp
 decl_stmt|;
-name|ACPI_EXTERNAL_LIST
-modifier|*
-name|NextExternal
-decl_stmt|;
 if|if
 condition|(
 name|Op
@@ -1019,89 +898,9 @@ literal|"{\n"
 argument_list|)
 expr_stmt|;
 comment|/* Emit all External() declarations here */
-if|if
-condition|(
-name|AcpiGbl_ExternalList
-condition|)
-block|{
-comment|/*                  * Walk the list of externals (unresolved references)                  * found during parsing                  */
-while|while
-condition|(
-name|AcpiGbl_ExternalList
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"    External (%s%s"
-argument_list|,
-name|AcpiGbl_ExternalList
-operator|->
-name|Path
-argument_list|,
-name|AcpiDmGetObjectTypeName
-argument_list|(
-name|AcpiGbl_ExternalList
-operator|->
-name|Type
-argument_list|)
-argument_list|)
+name|AcpiDmEmitExternals
+argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|AcpiGbl_ExternalList
-operator|->
-name|Type
-operator|==
-name|ACPI_TYPE_METHOD
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|")    // %d Arguments\n"
-argument_list|,
-name|AcpiGbl_ExternalList
-operator|->
-name|Value
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|")\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|NextExternal
-operator|=
-name|AcpiGbl_ExternalList
-operator|->
-name|Next
-expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|AcpiGbl_ExternalList
-operator|->
-name|Path
-argument_list|)
-expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|AcpiGbl_ExternalList
-argument_list|)
-expr_stmt|;
-name|AcpiGbl_ExternalList
-operator|=
-name|NextExternal
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|AE_OK

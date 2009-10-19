@@ -2149,6 +2149,15 @@ name|ANOBJ_END_OF_PEER_LIST
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|ACPI_DISASSEMBLER
+name|AcpiGbl_ExternalList
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|ACPI_DEBUG_OUTPUT
 name|AcpiGbl_LowestStackPointer
 operator|=
