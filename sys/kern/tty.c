@@ -410,7 +410,7 @@ operator|->
 name|t_inlow
 operator|=
 operator|(
-name|ttyinq_getsize
+name|ttyinq_getallocatedsize
 argument_list|(
 operator|&
 name|tp
@@ -457,7 +457,7 @@ operator|->
 name|t_outlow
 operator|=
 operator|(
-name|ttyoutq_getsize
+name|ttyoutq_getallocatedsize
 argument_list|(
 operator|&
 name|tp
