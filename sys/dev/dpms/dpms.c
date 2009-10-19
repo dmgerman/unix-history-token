@@ -397,7 +397,6 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|(
 name|x86bios_match_device
 argument_list|(
 literal|0xc0000
@@ -411,14 +410,6 @@ name|parent
 argument_list|)
 operator|!=
 literal|0
-operator|)
-operator|||
-name|x86bios_get_orm
-argument_list|(
-literal|0xc0000
-argument_list|)
-operator|!=
-name|NULL
 condition|)
 name|device_add_child
 argument_list|(
