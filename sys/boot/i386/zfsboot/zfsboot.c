@@ -2911,8 +2911,10 @@ name|off
 operator|=
 literal|0
 expr_stmt|;
-name|xfsread
+name|zfs_read
 argument_list|(
+name|spa
+argument_list|,
 operator|&
 name|dn
 argument_list|,
