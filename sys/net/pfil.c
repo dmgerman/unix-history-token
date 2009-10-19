@@ -381,7 +381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_head_register() registers a pfil_head with the packet filter  * hook mechanism.  */
+comment|/*  * pfil_head_register() registers a pfil_head with the packet filter hook  * mechanism.  */
 end_comment
 
 begin_function
@@ -438,7 +438,9 @@ name|PFIL_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|EEXIST
+operator|)
 return|;
 block|}
 block|}
@@ -927,7 +929,9 @@ name|ph
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|locked_error
 label|:
@@ -965,13 +969,15 @@ name|M_IFADDR
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_remove_hook removes a specific function from the packet filter  * hook list.  */
+comment|/*  * pfil_remove_hook removes a specific function from the packet filter hook  * list.  */
 end_comment
 
 begin_function
@@ -1106,7 +1112,9 @@ name|ph
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
@@ -1162,9 +1170,11 @@ operator|->
 name|pfil_arg
 condition|)
 return|return
+operator|(
 name|EEXIST
+operator|)
 return|;
-comment|/* 	 * insert the input list in reverse order of the output list 	 * so that the same path is followed in or out of the kernel. 	 */
+comment|/* 	 * Insert the input list in reverse order of the output list so that 	 * the same path is followed in or out of the kernel. 	 */
 if|if
 condition|(
 name|flags
@@ -1191,7 +1201,9 @@ name|pfil_link
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1284,17 +1296,21 @@ name|M_IFADDR
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/****************  * Stuff that must be initialized for every instance  * (including the first of course).  */
+comment|/*  * Stuff that must be initialized for every instance (including the first of  * course).  */
 end_comment
 
 begin_function
@@ -1323,7 +1339,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***********************  * Called for the removal of each instance.  */
+comment|/*  * Called for the removal of each instance.  */
 end_comment
 
 begin_function
@@ -1339,7 +1355,9 @@ parameter_list|)
 block|{
 comment|/*  XXX should panic if list is not empty */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1378,7 +1396,7 @@ comment|/* Later still. */
 end_comment
 
 begin_comment
-comment|/*  * Starting up.   * VNET_SYSINIT is called for each existing vnet and each new vnet.  */
+comment|/*  * Starting up.  *  * VNET_SYSINIT is called for each existing vnet and each new vnet.  */
 end_comment
 
 begin_expr_stmt
@@ -1398,7 +1416,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Closing up shop. These are done in REVERSE ORDER,   * Not called on reboot.  * VNET_SYSUNINIT is called for each exiting vnet as it exits.  */
+comment|/*  * Closing up shop.  These are done in REVERSE ORDER.  Not called on reboot.  *  * VNET_SYSUNINIT is called for each exiting vnet as it exits.  */
 end_comment
 
 begin_expr_stmt
