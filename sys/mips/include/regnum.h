@@ -135,6 +135,13 @@ name|PREG_GP
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|PREG_PC
+value|13
+end_define
+
 begin_comment
 comment|/*  * Location of the saved registers relative to ZERO.  * This must match struct trapframe defined in frame.h exactly.  */
 end_comment

@@ -1903,9 +1903,10 @@ name|register_t
 operator|)
 name|ctx
 operator|->
-name|pcb_regs
-operator|.
-name|pc
+name|pcb_context
+index|[
+name|PREG_PC
+index|]
 expr_stmt|;
 name|ra
 operator|=

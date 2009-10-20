@@ -41,7 +41,7 @@ comment|/* saved CPU and registers */
 name|__register_t
 name|pcb_context
 index|[
-literal|13
+literal|14
 index|]
 decl_stmt|;
 comment|/* kernel context for resume */
@@ -146,6 +146,13 @@ define|#
 directive|define
 name|PCB_REG_GP
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCB_REG_PC
+value|13
 end_define
 
 begin_ifdef
