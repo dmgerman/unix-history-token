@@ -999,6 +999,11 @@ operator|->
 name|fs_spec
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -1082,7 +1087,7 @@ operator|=
 literal|0
 init|;
 name|id
-operator|<=
+operator|<
 name|maxid
 condition|;
 name|id
@@ -1288,6 +1293,11 @@ literal|"-"
 argument_list|)
 expr_stmt|;
 block|}
+name|quota_close
+argument_list|(
+name|qf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1322,7 +1332,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%7llu"
+literal|" %6llu"
 argument_list|,
 name|dbtokb
 argument_list|(
