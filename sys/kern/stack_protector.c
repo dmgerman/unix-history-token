@@ -152,16 +152,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* SI_SUB_EVENTHANDLER is right after SI_SUB_LOCK used by arc4rand() init. */
-end_comment
-
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
 name|stack_chk
 argument_list|,
-name|SI_SUB_EVENTHANDLER
+name|SI_SUB_RANDOM
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
