@@ -382,6 +382,13 @@ name|MAGIC_TRAMP_NUMBER
 value|0x5c000003
 end_define
 
+begin_define
+define|#
+directive|define
+name|ET_DYN_LOAD_ADDR
+value|0x12000
+end_define
+
 begin_endif
 endif|#
 directive|endif
