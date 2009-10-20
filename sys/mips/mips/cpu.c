@@ -278,10 +278,6 @@ expr_stmt|;
 comment|/* L1 instruction cache. */
 name|tmp
 operator|=
-literal|1
-operator|<<
-operator|(
-operator|(
 operator|(
 name|cfg1
 operator|&
@@ -289,10 +285,6 @@ name|MIPS_CONFIG1_IL_MASK
 operator|)
 operator|>>
 name|MIPS_CONFIG1_IL_SHIFT
-operator|)
-operator|+
-literal|1
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -307,7 +299,13 @@ name|l1
 operator|.
 name|ic_linesize
 operator|=
+literal|1
+operator|<<
+operator|(
 name|tmp
+operator|+
+literal|1
+operator|)
 expr_stmt|;
 name|cpuinfo
 operator|->
@@ -379,10 +377,6 @@ block|}
 comment|/* L1 data cache. */
 name|tmp
 operator|=
-literal|1
-operator|<<
-operator|(
-operator|(
 operator|(
 name|cfg1
 operator|&
@@ -390,10 +384,6 @@ name|MIPS_CONFIG1_DL_MASK
 operator|)
 operator|>>
 name|MIPS_CONFIG1_DL_SHIFT
-operator|)
-operator|+
-literal|1
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -408,7 +398,13 @@ name|l1
 operator|.
 name|dc_linesize
 operator|=
+literal|1
+operator|<<
+operator|(
 name|tmp
+operator|+
+literal|1
+operator|)
 expr_stmt|;
 name|cpuinfo
 operator|->
