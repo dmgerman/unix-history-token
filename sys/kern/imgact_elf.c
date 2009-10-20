@@ -3092,6 +3092,15 @@ operator|.
 name|p_type
 operator|==
 name|PT_LOAD
+operator|&&
+name|phdr
+index|[
+name|i
+index|]
+operator|.
+name|p_memsz
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* Loadable segment */
@@ -3771,6 +3780,18 @@ case|case
 name|PT_LOAD
 case|:
 comment|/* Loadable segment */
+if|if
+condition|(
+name|phdr
+index|[
+name|i
+index|]
+operator|.
+name|p_memsz
+operator|==
+literal|0
+condition|)
+break|break;
 name|prot
 operator|=
 literal|0
