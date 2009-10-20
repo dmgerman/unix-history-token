@@ -2526,7 +2526,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Directly ship on the packet.  This allows to forward packets 		 * that were destined for us to some other directly connected 		 * host. 		 */
+comment|/* 		 * Directly ship on the packet.  This allows to forward 		 * packets that were destined for us to some other directly 		 * connected host. 		 */
 name|ip_forward
 argument_list|(
 name|m
