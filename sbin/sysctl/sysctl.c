@@ -284,6 +284,7 @@ specifier|static
 name|int
 name|set_IK
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -2271,6 +2272,7 @@ specifier|static
 name|int
 name|set_IK
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2288,10 +2290,12 @@ name|len
 decl_stmt|,
 name|kelv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|endptr
 decl_stmt|;
@@ -2336,11 +2340,6 @@ operator|==
 literal|'F'
 condition|)
 block|{
-operator|*
-name|p
-operator|=
-literal|'\0'
-expr_stmt|;
 name|temp
 operator|=
 name|strtof
@@ -2357,10 +2356,9 @@ name|endptr
 operator|==
 name|str
 operator|||
-operator|*
 name|endptr
 operator|!=
-literal|'\0'
+name|p
 condition|)
 return|return
 operator|(
