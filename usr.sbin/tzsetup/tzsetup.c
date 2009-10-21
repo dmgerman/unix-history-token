@@ -137,6 +137,41 @@ end_define
 
 begin_decl_stmt
 specifier|static
+name|char
+name|path_zonetab
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
+name|path_iso3166
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
+name|path_zoneinfo
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
+name|path_localtime
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
+name|path_db
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
+name|path_wall_cmos_clock
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|reallydoit
 init|=
@@ -150,6 +185,25 @@ name|int
 name|reinstall
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|usedialog
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|chrootenv
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -886,7 +940,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|_PATH_ISO3166
+name|path_iso3166
 argument_list|,
 literal|"r"
 argument_list|)
@@ -900,7 +954,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ISO3166
+name|path_iso3166
 argument_list|)
 expr_stmt|;
 name|lineno
@@ -942,8 +996,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ISO3166
-literal|":%d: invalid format"
+literal|"%s:%d: invalid format"
+argument_list|,
+name|path_iso3166
 argument_list|,
 name|lineno
 argument_list|)
@@ -1006,8 +1061,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ISO3166
-literal|":%d: invalid format"
+literal|"%s:%d: invalid format"
+argument_list|,
+name|path_iso3166
 argument_list|,
 name|lineno
 argument_list|)
@@ -1046,8 +1102,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ISO3166
-literal|":%d: invalid code `%s'"
+literal|"%s:%d: invalid code `%s'"
+argument_list|,
+name|path_iso3166
 argument_list|,
 name|lineno
 argument_list|,
@@ -1083,8 +1140,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ISO3166
-literal|":%d: invalid format"
+literal|"%s:%d: invalid format"
+argument_list|,
+name|path_iso3166
 argument_list|,
 name|lineno
 argument_list|)
@@ -1117,8 +1175,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ISO3166
-literal|":%d: invalid format"
+literal|"%s:%d: invalid format"
+argument_list|,
+name|path_iso3166
 argument_list|,
 name|lineno
 argument_list|)
@@ -1148,8 +1207,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ISO3166
-literal|":%d: country code `%s' multiply defined: %s"
+literal|"%s:%d: country code `%s' multiply defined: %s"
+argument_list|,
+name|path_iso3166
 argument_list|,
 name|lineno
 argument_list|,
@@ -1290,8 +1350,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
-literal|":%d: country code `%s' invalid"
+literal|"%s:%d: country code `%s' invalid"
+argument_list|,
+name|path_zonetab
 argument_list|,
 name|lineno
 argument_list|,
@@ -1321,8 +1382,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
-literal|":%d: country code `%s' unknown"
+literal|"%s:%d: country code `%s' unknown"
+argument_list|,
+name|path_zonetab
 argument_list|,
 name|lineno
 argument_list|,
@@ -1346,8 +1408,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
-literal|":%d: conflicting zone definition"
+literal|"%s:%d: conflicting zone definition"
+argument_list|,
+name|path_zonetab
 argument_list|,
 name|lineno
 argument_list|)
@@ -1484,8 +1547,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
-literal|":%d: zone must have description"
+literal|"%s:%d: zone must have description"
+argument_list|,
+name|path_zonetab
 argument_list|,
 name|lineno
 argument_list|)
@@ -1502,8 +1566,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
-literal|":%d: zone multiply defined"
+literal|"%s:%d: zone multiply defined"
+argument_list|,
+name|path_zonetab
 argument_list|,
 name|lineno
 argument_list|)
@@ -1735,7 +1800,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|_PATH_ZONETAB
+name|path_zonetab
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1749,7 +1814,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
+name|path_zonetab
 argument_list|)
 expr_stmt|;
 name|lineno
@@ -1791,8 +1856,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
-literal|":%d: invalid format"
+literal|"%s:%d: invalid format"
+argument_list|,
+name|path_zonetab
 argument_list|,
 name|lineno
 argument_list|)
@@ -1839,8 +1905,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
-literal|":%d: invalid country code `%s'"
+literal|"%s:%d: invalid country code `%s'"
+argument_list|,
+name|path_zonetab
 argument_list|,
 name|lineno
 argument_list|,
@@ -1886,8 +1953,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
-literal|":%d: invalid zone name `%s'"
+literal|"%s:%d: invalid zone name `%s'"
+argument_list|,
+name|path_zonetab
 argument_list|,
 name|lineno
 argument_list|,
@@ -1928,8 +1996,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|_PATH_ZONETAB
-literal|":%d: invalid region `%s'"
+literal|"%s:%d: invalid region `%s'"
+argument_list|,
+name|path_zonetab
 argument_list|,
 name|lineno
 argument_list|,
@@ -2730,15 +2799,12 @@ end_function
 begin_function
 specifier|static
 name|int
-name|install_zone_file
+name|install_zoneinfo_file
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|filename
-parameter_list|,
-name|int
-name|usedialog
+name|zoneinfo_file
 parameter_list|)
 block|{
 name|char
@@ -2772,15 +2838,11 @@ name|fd2
 decl_stmt|,
 name|copymode
 decl_stmt|;
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
 if|if
 condition|(
 name|lstat
 argument_list|(
-name|_PATH_LOCALTIME
+name|path_localtime
 argument_list|,
 operator|&
 name|sb
@@ -2830,10 +2892,11 @@ argument_list|(
 name|prompt
 argument_list|)
 argument_list|,
-literal|"Copying %s to "
-name|_PATH_LOCALTIME
+literal|"Copying %s to %s"
 argument_list|,
-name|filename
+name|zoneinfo_file
+argument_list|,
+name|path_localtime
 argument_list|)
 expr_stmt|;
 else|else
@@ -2846,11 +2909,11 @@ argument_list|(
 name|prompt
 argument_list|)
 argument_list|,
-literal|"Creating symbolic link "
-name|_PATH_LOCALTIME
-literal|" to %s"
+literal|"Creating symbolic link %s to %s"
 argument_list|,
-name|filename
+name|path_localtime
+argument_list|,
+name|zoneinfo_file
 argument_list|)
 expr_stmt|;
 if|if
@@ -2888,7 +2951,7 @@ name|fd1
 operator|=
 name|open
 argument_list|(
-name|filename
+name|zoneinfo_file
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -2925,7 +2988,7 @@ argument_list|)
 argument_list|,
 literal|"Could not open %s: %s"
 argument_list|,
-name|filename
+name|zoneinfo_file
 argument_list|,
 name|strerror
 argument_list|(
@@ -2968,14 +3031,14 @@ return|;
 block|}
 name|unlink
 argument_list|(
-name|_PATH_LOCALTIME
+name|path_localtime
 argument_list|)
 expr_stmt|;
 name|fd2
 operator|=
 name|open
 argument_list|(
-name|_PATH_LOCALTIME
+name|path_localtime
 argument_list|,
 name|O_CREAT
 operator||
@@ -3018,9 +3081,9 @@ argument_list|(
 name|prompt
 argument_list|)
 argument_list|,
-literal|"Could not open "
-name|_PATH_LOCALTIME
-literal|": %s"
+literal|"Could not open %s: %s"
+argument_list|,
+name|path_localtime
 argument_list|,
 name|strerror
 argument_list|(
@@ -3121,11 +3184,11 @@ argument_list|(
 name|prompt
 argument_list|)
 argument_list|,
-literal|"Error copying %s to "
-name|_PATH_LOCALTIME
-literal|": %s"
+literal|"Error copying %s to %s %s"
 argument_list|,
-name|filename
+name|zoneinfo_file
+argument_list|,
+name|path_localtime
 argument_list|,
 name|strerror
 argument_list|(
@@ -3161,7 +3224,7 @@ expr_stmt|;
 comment|/* Better to leave none than a corrupt one. */
 name|unlink
 argument_list|(
-name|_PATH_LOCALTIME
+name|path_localtime
 argument_list|)
 expr_stmt|;
 return|return
@@ -3189,7 +3252,7 @@ if|if
 condition|(
 name|access
 argument_list|(
-name|filename
+name|zoneinfo_file
 argument_list|,
 name|R_OK
 argument_list|)
@@ -3220,7 +3283,7 @@ argument_list|)
 argument_list|,
 literal|"Cannot access %s: %s"
 argument_list|,
-name|filename
+name|zoneinfo_file
 argument_list|,
 name|strerror
 argument_list|(
@@ -3263,16 +3326,16 @@ return|;
 block|}
 name|unlink
 argument_list|(
-name|_PATH_LOCALTIME
+name|path_localtime
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|symlink
 argument_list|(
-name|filename
+name|zoneinfo_file
 argument_list|,
-name|_PATH_LOCALTIME
+name|path_localtime
 argument_list|)
 operator|<
 literal|0
@@ -3299,11 +3362,11 @@ argument_list|(
 name|prompt
 argument_list|)
 argument_list|,
-literal|"Cannot create symbolic link "
-name|_PATH_LOCALTIME
-literal|" to %s: %s"
+literal|"Cannot create symbolic link %s to %s: %s"
 argument_list|,
-name|filename
+name|path_localtime
+argument_list|,
+name|zoneinfo_file
 argument_list|,
 name|strerror
 argument_list|(
@@ -3374,10 +3437,11 @@ argument_list|(
 name|prompt
 argument_list|)
 argument_list|,
-literal|"Copied timezone file from %s to "
-name|_PATH_LOCALTIME
+literal|"Copied timezone file from %s to %s"
 argument_list|,
-name|filename
+name|zoneinfo_file
+argument_list|,
+name|path_localtime
 argument_list|)
 expr_stmt|;
 else|else
@@ -3390,11 +3454,11 @@ argument_list|(
 name|prompt
 argument_list|)
 argument_list|,
-literal|"Created symbolic link from "
-name|_PATH_LOCALTIME
-literal|" to %s"
+literal|"Created symbolic link from %s to %s"
 argument_list|,
-name|filename
+name|zoneinfo_file
+argument_list|,
+name|path_localtime
 argument_list|)
 expr_stmt|;
 if|if
@@ -3424,6 +3488,56 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+name|DITEM_LEAVE_MENU
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|install_zoneinfo
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|zoneinfo
+parameter_list|)
+block|{
+name|int
+name|rv
+decl_stmt|;
+name|FILE
+modifier|*
+name|f
+decl_stmt|;
+name|char
+name|path_zoneinfo_file
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|path_zoneinfo_file
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|path_zoneinfo
+argument_list|,
+name|zoneinfo
+argument_list|)
+expr_stmt|;
+name|rv
+operator|=
+name|install_zoneinfo_file
+argument_list|(
+name|path_zoneinfo_file
+argument_list|)
+expr_stmt|;
 comment|/* Save knowledge for later */
 if|if
 condition|(
@@ -3432,7 +3546,7 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-name|_PATH_DB
+name|path_db
 argument_list|,
 literal|"w"
 argument_list|)
@@ -3447,14 +3561,7 @@ name|f
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|filename
-operator|+
-name|strlen
-argument_list|(
-name|_PATH_ZONEINFO
-argument_list|)
-operator|+
-literal|1
+name|zoneinfo
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -3465,7 +3572,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|DITEM_LEAVE_MENU
+name|rv
 operator|)
 return|;
 block|}
@@ -3598,10 +3705,6 @@ name|dmi
 operator|->
 name|data
 decl_stmt|;
-name|char
-modifier|*
-name|fn
-decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
@@ -3622,32 +3725,13 @@ operator||
 name|DITEM_RECREATE
 operator|)
 return|;
-name|asprintf
+name|rv
+operator|=
+name|install_zoneinfo
 argument_list|(
-operator|&
-name|fn
-argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|_PATH_ZONEINFO
-argument_list|,
 name|zp
 operator|->
 name|filename
-argument_list|)
-expr_stmt|;
-name|rv
-operator|=
-name|install_zone_file
-argument_list|(
-name|fn
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|fn
 argument_list|)
 expr_stmt|;
 return|return
@@ -3677,10 +3761,6 @@ name|dmi
 operator|->
 name|data
 decl_stmt|;
-name|char
-modifier|*
-name|fn
-decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
@@ -3701,32 +3781,13 @@ operator||
 name|DITEM_RECREATE
 operator|)
 return|;
-name|asprintf
+name|rv
+operator|=
+name|install_zoneinfo
 argument_list|(
-operator|&
-name|fn
-argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|_PATH_ZONEINFO
-argument_list|,
 name|cp
 operator|->
 name|filename
-argument_list|)
-expr_stmt|;
-name|rv
-operator|=
-name|install_zone_file
-argument_list|(
-name|fn
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|fn
 argument_list|)
 expr_stmt|;
 return|return
@@ -3841,7 +3902,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"nrs"
+literal|"C:nrs"
 argument_list|)
 operator|)
 operator|!=
@@ -3854,6 +3915,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'C'
+case|:
+name|chrootenv
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'n'
 case|:
@@ -3868,6 +3937,10 @@ case|:
 name|reinstall
 operator|=
 literal|1
+expr_stmt|;
+name|usedialog
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -3895,6 +3968,125 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|chrootenv
+operator|==
+name|NULL
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|path_zonetab
+argument_list|,
+name|_PATH_ZONETAB
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|path_iso3166
+argument_list|,
+name|_PATH_ISO3166
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|path_zoneinfo
+argument_list|,
+name|_PATH_ZONEINFO
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|path_localtime
+argument_list|,
+name|_PATH_LOCALTIME
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|path_db
+argument_list|,
+name|_PATH_DB
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|path_wall_cmos_clock
+argument_list|,
+name|_PATH_WALL_CMOS_CLOCK
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sprintf
+argument_list|(
+name|path_zonetab
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|chrootenv
+argument_list|,
+name|_PATH_ZONETAB
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|path_iso3166
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|chrootenv
+argument_list|,
+name|_PATH_ISO3166
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|path_zoneinfo
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|chrootenv
+argument_list|,
+name|_PATH_ZONEINFO
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|path_localtime
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|chrootenv
+argument_list|,
+name|_PATH_LOCALTIME
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|path_db
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|chrootenv
+argument_list|,
+name|_PATH_DB
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|path_wall_cmos_clock
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|chrootenv
+argument_list|,
+name|_PATH_WALL_CMOS_CLOCK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Override the user-supplied umask. */
 operator|(
 name|void
@@ -3935,13 +4127,71 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|char
+name|path_db
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|zonefile
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|path_db
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|chrootenv
+operator|!=
+name|NULL
+condition|)
+block|{
 name|sprintf
 argument_list|(
 name|zonefile
 argument_list|,
 literal|"%s/"
 argument_list|,
+name|chrootenv
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|path_db
+argument_list|,
+literal|"%s/"
+argument_list|,
+name|chrootenv
+argument_list|)
+expr_stmt|;
+block|}
+name|strcat
+argument_list|(
+name|zonefile
+argument_list|,
 name|_PATH_ZONEINFO
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|zonefile
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|path_db
+argument_list|,
+name|_PATH_DB
 argument_list|)
 expr_stmt|;
 if|if
@@ -3951,7 +4201,7 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-name|_PATH_DB
+name|path_db
 argument_list|,
 literal|"r"
 argument_list|)
@@ -3965,18 +4215,8 @@ condition|(
 name|fgets
 argument_list|(
 name|zonefile
-operator|+
-name|strlen
-argument_list|(
-name|zonefile
-argument_list|)
 argument_list|,
 sizeof|sizeof
-argument_list|(
-name|zonefile
-argument_list|)
-operator|-
-name|strlen
 argument_list|(
 name|zonefile
 argument_list|)
@@ -4023,11 +4263,9 @@ literal|0
 expr_stmt|;
 name|rv
 operator|=
-name|install_zone_file
+name|install_zoneinfo
 argument_list|(
 name|zonefile
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4045,7 +4283,7 @@ literal|1
 argument_list|,
 literal|"Error reading %s.\n"
 argument_list|,
-name|_PATH_DB
+name|path_db
 argument_list|)
 expr_stmt|;
 block|}
@@ -4061,7 +4299,7 @@ argument_list|,
 literal|"Unable to determine earlier installed zoneinfo "
 literal|"file. Check %s"
 argument_list|,
-name|_PATH_DB
+name|path_db
 argument_list|)
 expr_stmt|;
 block|}
@@ -4071,9 +4309,64 @@ literal|1
 argument_list|,
 literal|"Cannot open %s for reading. Does it exist?"
 argument_list|,
-name|_PATH_DB
+name|path_db
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * If the arguments on the command-line do not specify a file, 	 * then interpret it as a zoneinfo name 	 */
+if|if
+condition|(
+name|optind
+operator|==
+name|argc
+operator|-
+literal|1
+condition|)
+block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|argv
+index|[
+name|optind
+index|]
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|usedialog
+operator|=
+literal|0
+expr_stmt|;
+name|rv
+operator|=
+name|install_zoneinfo
+argument_list|(
+name|argv
+index|[
+name|optind
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|rv
+operator|&
+operator|~
+name|DITEM_LEAVE_MENU
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* FALLTHROUGH */
 block|}
 name|init_dialog
 argument_list|()
@@ -4248,14 +4541,12 @@ condition|)
 block|{
 name|rv
 operator|=
-name|install_zone_file
+name|install_zoneinfo_file
 argument_list|(
 name|argv
 index|[
 name|optind
 index|]
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|dialog_clear
