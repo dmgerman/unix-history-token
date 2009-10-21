@@ -971,6 +971,29 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+comment|/* Make the I-cache coherent for breakpoints. */
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|writing
+operator|&&
+operator|(
+name|out_prot
+operator|&
+name|VM_PROT_EXECUTE
+operator|)
+condition|)
+name|vm_sync_icache
+argument_list|(
+name|map
+argument_list|,
+name|uva
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Release the page. 		 */
 name|vm_page_lock_queues
 argument_list|()

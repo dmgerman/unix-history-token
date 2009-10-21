@@ -1868,10 +1868,9 @@ block|{
 comment|/* Fall back to hardcoded boothowto flags and metadata. */
 name|boothowto
 operator|=
-name|RB_VERBOSE
-operator||
-name|RB_SINGLE
+literal|0
 expr_stmt|;
+comment|// RB_VERBOSE | RB_SINGLE;
 name|lastaddr
 operator|=
 name|fake_preload_metadata
