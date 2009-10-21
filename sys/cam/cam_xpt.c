@@ -18311,11 +18311,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|cam_eb
-modifier|*
-name|bus
-decl_stmt|;
 comment|/* 			 * If there is a timeout scheduled to release this 			 * sim queue, remove it.  The queue frozen count is 			 * already at 0. 			 */
 if|if
 condition|(
@@ -18346,6 +18341,17 @@ operator|~
 name|CAM_SIM_REL_TIMEOUT_PENDING
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|run_queue
+condition|)
+block|{
+name|struct
+name|cam_eb
+modifier|*
+name|bus
+decl_stmt|;
+comment|/* 				 * Now that we are unfrozen run the send queue. 				 */
 name|bus
 operator|=
 name|xpt_find_bus
@@ -18355,23 +18361,17 @@ operator|->
 name|path_id
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|run_queue
-condition|)
-block|{
-comment|/* 				 * Now that we are unfrozen run the send queue. 				 */
 name|xpt_run_dev_sendq
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-block|}
 name|xpt_release_bus
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
