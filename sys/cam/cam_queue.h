@@ -272,18 +272,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|cam_ccbq_fini
-parameter_list|(
-name|struct
-name|cam_ccbq
-modifier|*
-name|ccbq
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Allocate and initialize a cam_queue structure.  */
 end_comment
