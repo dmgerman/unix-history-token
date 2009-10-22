@@ -3589,6 +3589,12 @@ argument_list|,
 literal|"send broadcast RANN"
 argument_list|)
 expr_stmt|;
+name|rann
+operator|.
+name|rann_flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ms
