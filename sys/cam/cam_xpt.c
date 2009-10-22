@@ -19800,14 +19800,12 @@ operator|->
 name|drvq
 argument_list|)
 expr_stmt|;
-name|camq_fini
+name|cam_ccbq_fini
 argument_list|(
 operator|&
 name|device
 operator|->
 name|ccbq
-operator|.
-name|queue
 argument_list|)
 expr_stmt|;
 name|free
