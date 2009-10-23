@@ -2345,8 +2345,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|xpt_action
@@ -2383,8 +2382,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|xpt_action
@@ -3773,8 +3771,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|xpt_setup_ccb
@@ -3790,8 +3787,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -4241,8 +4237,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb_h
@@ -4306,8 +4301,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|crs
@@ -4767,8 +4761,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
@@ -5163,8 +5156,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgds
@@ -5441,8 +5433,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgds
@@ -5788,8 +5779,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
@@ -6204,7 +6194,7 @@ operator|>=
 name|SS_START
 condition|)
 block|{
-comment|/* 			 * Drop the priority to 0 so that the recovery 			 * CCB is the first to execute.  Freeze the queue 			 * after this command is sent so that we can 			 * restore the old csio and have it queued in 			 * the proper order before we release normal  			 * transactions to the device. 			 */
+comment|/* 			 * Drop the priority, so that the recovery 			 * CCB is the first to execute.  Freeze the queue 			 * after this command is sent so that we can 			 * restore the old csio and have it queued in 			 * the proper order before we release normal  			 * transactions to the device. 			 */
 name|ccb
 operator|->
 name|ccb_h
@@ -6213,7 +6203,7 @@ name|pinfo
 operator|.
 name|priority
 operator|=
-literal|0
+name|CAM_PRIORITY_DEV
 expr_stmt|;
 name|ccb
 operator|->

@@ -122,6 +122,14 @@ name|priority
 decl_stmt|;
 define|#
 directive|define
+name|CAM_PRIORITY_DEV
+value|0
+define|#
+directive|define
+name|CAM_PRIORITY_NORMAL
+value|1
+define|#
+directive|define
 name|CAM_PRIORITY_NONE
 value|(u_int32_t)-1
 name|u_int32_t

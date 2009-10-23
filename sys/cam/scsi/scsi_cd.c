@@ -2881,8 +2881,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -4499,7 +4498,7 @@ name|pinfo
 operator|.
 name|priority
 operator|=
-literal|1
+name|CAM_PRIORITY_NORMAL
 expr_stmt|;
 name|softc
 operator|->
@@ -4912,8 +4911,7 @@ name|softc
 operator|->
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get rid of any pending timeouts, and set a flag to schedule new 	 * ones so this device gets its full time quantum. 	 */
@@ -5424,7 +5422,7 @@ name|pinfo
 operator|.
 name|priority
 operator|=
-literal|1
+name|CAM_PRIORITY_NORMAL
 expr_stmt|;
 name|softc
 operator|->
@@ -5744,8 +5742,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 else|else
@@ -5753,8 +5750,7 @@ name|cdschedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_periph_unlock
@@ -6099,8 +6095,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -6716,8 +6711,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
@@ -11910,8 +11904,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_prevent
@@ -12657,8 +12650,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 comment|/* XXX Should be M_WAITOK */
@@ -13749,8 +13741,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -13957,8 +13948,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -14176,8 +14166,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -14512,8 +14501,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -14800,8 +14788,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -15084,8 +15071,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -15276,8 +15262,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -15447,8 +15432,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -15590,8 +15574,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_start_stop
@@ -15686,8 +15669,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_start_stop
@@ -15795,8 +15777,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -15991,8 +15972,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -16640,8 +16620,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -17029,8 +17008,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 switch|switch

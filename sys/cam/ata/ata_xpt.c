@@ -1119,8 +1119,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -2160,22 +2159,12 @@ literal|0
 end_if
 
 begin_comment
-unit|static void proberequestdefaultnegotiation(struct cam_periph *periph) { 	struct ccb_trans_settings cts;  	xpt_setup_ccb(&cts.ccb_h, periph->path,
-comment|/*priority*/
-end_comment
-
-begin_comment
-unit|1); 	cts.ccb_h.func_code = XPT_GET_TRAN_SETTINGS; 	cts.type = CTS_TYPE_USER_SETTINGS; 	xpt_action((union ccb *)&cts); 	if ((cts.ccb_h.status& CAM_STATUS_MASK) != CAM_REQ_CMP) { 		return; 	} 	cts.ccb_h.func_code = XPT_SET_TRAN_SETTINGS; 	cts.type = CTS_TYPE_CURRENT_SETTINGS; 	xpt_action((union ccb *)&cts); }
+unit|static void proberequestdefaultnegotiation(struct cam_periph *periph) { 	struct ccb_trans_settings cts;  	xpt_setup_ccb(&cts.ccb_h, periph->path, CAM_PRIORITY_NORMAL); 	cts.ccb_h.func_code = XPT_GET_TRAN_SETTINGS; 	cts.type = CTS_TYPE_USER_SETTINGS; 	xpt_action((union ccb *)&cts); 	if ((cts.ccb_h.status& CAM_STATUS_MASK) != CAM_REQ_CMP) { 		return; 	} 	cts.ccb_h.func_code = XPT_SET_TRAN_SETTINGS; 	cts.type = CTS_TYPE_CURRENT_SETTINGS; 	xpt_action((union ccb *)&cts); }
 comment|/*  * Backoff Negotiation Code- only pertinent for SPI devices.  */
 end_comment
 
 begin_comment
-unit|static int proberequestbackoff(struct cam_periph *periph, struct cam_ed *device) { 	struct ccb_trans_settings cts; 	struct ccb_trans_settings_spi *spi;  	memset(&cts, 0, sizeof (cts)); 	xpt_setup_ccb(&cts.ccb_h, periph->path,
-comment|/*priority*/
-end_comment
-
-begin_comment
-unit|1); 	cts.ccb_h.func_code = XPT_GET_TRAN_SETTINGS; 	cts.type = CTS_TYPE_CURRENT_SETTINGS; 	xpt_action((union ccb *)&cts); 	if ((cts.ccb_h.status& CAM_STATUS_MASK) != CAM_REQ_CMP) { 		if (bootverbose) { 			xpt_print(periph->path, 			    "failed to get current device settings\n"); 		} 		return (0); 	} 	if (cts.transport != XPORT_SPI) { 		if (bootverbose) { 			xpt_print(periph->path, "not SPI transport\n"); 		} 		return (0); 	} 	spi =&cts.xport_specific.spi;
+unit|static int proberequestbackoff(struct cam_periph *periph, struct cam_ed *device) { 	struct ccb_trans_settings cts; 	struct ccb_trans_settings_spi *spi;  	memset(&cts, 0, sizeof (cts)); 	xpt_setup_ccb(&cts.ccb_h, periph->path, CAM_PRIORITY_NORMAL); 	cts.ccb_h.func_code = XPT_GET_TRAN_SETTINGS; 	cts.type = CTS_TYPE_CURRENT_SETTINGS; 	xpt_action((union ccb *)&cts); 	if ((cts.ccb_h.status& CAM_STATUS_MASK) != CAM_REQ_CMP) { 		if (bootverbose) { 			xpt_print(periph->path, 			    "failed to get current device settings\n"); 		} 		return (0); 	} 	if (cts.transport != XPORT_SPI) { 		if (bootverbose) { 			xpt_print(periph->path, "not SPI transport\n"); 		} 		return (0); 	} 	spi =&cts.xport_specific.spi;
 comment|/* 	 * We cannot renegotiate sync rate if we don't have one. 	 */
 end_comment
 
@@ -2423,7 +2412,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cts
@@ -6062,8 +6051,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -6268,8 +6256,7 @@ name|ccb_h
 argument_list|,
 name|new_path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|request_ccb
@@ -6764,8 +6751,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -6933,8 +6919,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cts
@@ -7590,8 +7575,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -7684,8 +7668,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cur_cts
@@ -7972,8 +7955,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|crs
@@ -8123,7 +8105,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cts
