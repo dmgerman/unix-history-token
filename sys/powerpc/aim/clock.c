@@ -212,24 +212,6 @@ argument_list|(
 name|tick
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nticks
-operator|>
-literal|5
-condition|)
-name|printf
-argument_list|(
-literal|"BIG NTICKS on CPU %d: %x\n"
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-argument_list|,
-name|nticks
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|nticks
