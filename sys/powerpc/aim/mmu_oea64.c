@@ -330,6 +330,13 @@ begin_comment
 comment|/*  * The tlbie instruction must be executed in 64-bit mode  * so we have to twiddle MSR[SF] around every invocation.  * Just to add to the fun, exceptions must be off as well  * so that we can't trap in 64-bit mode. What a pain.  */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|tlbie_mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|__inline
@@ -343,12 +350,6 @@ name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-name|register_t
-name|msr
-decl_stmt|;
-name|register_t
-name|scratch
-decl_stmt|;
 name|uint64_t
 name|vpn
 decl_stmt|;
@@ -357,10 +358,12 @@ name|vpn_hi
 decl_stmt|,
 name|vpn_lo
 decl_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* 	 * CPU documentation says that tlbie takes the VPN, not the 	 * VA. I think the code below does this correctly. We will see. 	 */
+name|register_t
+name|msr
+decl_stmt|;
+name|register_t
+name|scratch
+decl_stmt|;
 name|vpn
 operator|=
 call|(
@@ -391,14 +394,6 @@ operator|<<
 literal|28
 operator|)
 expr_stmt|;
-else|#
-directive|else
-name|vpn
-operator|=
-name|va
-expr_stmt|;
-endif|#
-directive|endif
 name|vpn_hi
 operator|=
 call|(
@@ -417,7 +412,13 @@ name|uint32_t
 operator|)
 name|vpn
 expr_stmt|;
-asm|__asm __volatile("\ 	    mfmsr %0; \ 	    clrldi %1,%0,49; \ 	    insrdi %1,1,1,0; \ 	    mtmsrd %1; \ 	    ptesync; \ 	    \ 	    sld %1,%2,%4; \ 	    or %1,%1,%3; \ 	    tlbie %1; \ 	    \ 	    mtmsrd %0; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbie_mutex
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("\ 	    mfmsr %0; \ 	    clrldi %1,%0,49; \ 	    mtmsr %1; \ 	    insrdi %1,%5,1,0; \ 	    mtmsrd %1; \ 	    ptesync; \ 	    \ 	    sld %1,%2,%4; \ 	    or %1,%1,%3; \ 	    tlbie %1; \ 	    \ 	    mtmsrd %0; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
 block|:
 literal|"=r"
 operator|(
@@ -443,9 +444,23 @@ literal|"r"
 operator|(
 literal|32
 operator|)
+operator|,
+literal|"r"
+operator|(
+literal|1
+operator|)
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|tlbie_mutex
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 unit|}
@@ -1174,8 +1189,6 @@ parameter_list|,
 name|vm_offset_t
 parameter_list|,
 name|uint64_t
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -3713,6 +3726,19 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize the TLBIE lock. TLBIE can only be executed by one CPU. 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|tlbie_mutex
+argument_list|,
+literal|"tlbie mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialise the unmanaged pvo pool. 	 */
 name|moea64_bpvo_pool
 operator|=
@@ -5666,8 +5692,6 @@ argument_list|,
 name|pte_lo
 argument_list|,
 name|pvo_flags
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6363,7 +6387,6 @@ argument_list|(
 literal|"Ran out of PVO allocator buffer space!"
 argument_list|)
 expr_stmt|;
-comment|/* Now call pvo_enter in recursive mode */
 name|moea64_pvo_enter
 argument_list|(
 name|kernel_pmap
@@ -6385,8 +6408,6 @@ argument_list|,
 name|PVO_WIRED
 operator||
 name|PVO_BOOTSTRAP
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|TLBIE
@@ -7056,8 +7077,6 @@ argument_list|,
 name|PVO_WIRED
 operator||
 name|VM_PROT_EXECUTE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|TLBIE
@@ -8709,6 +8728,11 @@ block|{
 name|vm_offset_t
 name|i
 decl_stmt|;
+name|register_t
+name|msr
+decl_stmt|,
+name|scratch
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -8723,18 +8747,35 @@ name|i
 operator|+=
 literal|0x00001000
 control|)
-name|TLBIE
-argument_list|(
-name|NULL
-argument_list|,
+block|{
+asm|__asm __volatile("\ 		    mfmsr %0; \ 		    mr %1, %0; \ 		    insrdi %1,%3,1,0; \ 		    mtmsrd %1; \ 		    ptesync; \ 		    \ 		    tlbiel %2; \ 		    \ 		    mtmsrd %0; \ 		    eieio; \ 		    tlbsync; \ 		    ptesync;"
+block|:
+literal|"=r"
+operator|(
+name|msr
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|scratch
+operator|)
+operator|:
+literal|"r"
+operator|(
 name|i
-argument_list|)
-expr_stmt|;
+operator|)
+operator|,
+literal|"r"
+operator|(
+literal|1
+operator|)
+block|)
+empty_stmt|;
 block|}
 end_function
 
 begin_function
-specifier|static
+unit|}  static
 name|int
 name|moea64_pvo_enter
 parameter_list|(
@@ -8760,9 +8801,6 @@ name|pte_lo
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|int
-name|recurse
 parameter_list|)
 block|{
 name|struct
@@ -8835,11 +8873,6 @@ name|va
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove any existing mapping for this page.  Reuse the pvo entry if 	 * there is a mapping. 	 */
-if|if
-condition|(
-operator|!
-name|recurse
-condition|)
 name|LOCK_TABLE
 argument_list|()
 expr_stmt|;
@@ -8903,11 +8936,6 @@ name|LPTE_PP
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|recurse
-condition|)
 name|UNLOCK_TABLE
 argument_list|()
 expr_stmt|;
@@ -8977,6 +9005,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Note: drop the table around the UMA allocation in 		 * case the UMA allocator needs to manipulate the page 		 * table. The mapping we are working with is already 		 * protected by the PMAP lock. 		 */
+name|UNLOCK_TABLE
+argument_list|()
+expr_stmt|;
 name|pvo
 operator|=
 name|uma_zalloc
@@ -8986,6 +9018,9 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+name|LOCK_TABLE
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8994,11 +9029,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|recurse
-condition|)
 name|UNLOCK_TABLE
 argument_list|()
 expr_stmt|;
@@ -9216,11 +9246,6 @@ name|moea64_pte_overflow
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|recurse
-condition|)
 name|UNLOCK_TABLE
 argument_list|()
 expr_stmt|;
