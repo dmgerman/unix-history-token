@@ -4042,9 +4042,34 @@ name|getCategoryClass
 argument_list|()
 specifier|const
 block|;
+comment|/// getName - Get the name of identifier for the class interface associated
+comment|/// with this implementation as a StringRef.
+comment|//
+comment|// FIXME: This is a bad API, we are overriding the NamedDecl::getName, to mean
+comment|// something different.
+name|llvm
+operator|::
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Id
+operator|?
+name|Id
+operator|->
+name|getNameStart
+argument_list|()
+operator|:
+literal|""
+return|;
+block|}
 comment|/// getNameAsCString - Get the name of identifier for the class
 comment|/// interface associated with this implementation as a C string
 comment|/// (const char*).
+comment|//
+comment|// FIXME: Deprecated, move clients to getName().
 specifier|const
 name|char
 operator|*
@@ -4054,16 +4079,18 @@ specifier|const
 block|{
 return|return
 name|Id
-operator|?
+condition|?
 name|Id
 operator|->
-name|getName
+name|getNameStart
 argument_list|()
-operator|:
+else|:
 literal|""
 return|;
 block|}
 comment|/// @brief Get the name of the class associated with this interface.
+comment|//
+comment|// FIXME: Deprecated, move clients to getName().
 name|std
 operator|::
 name|string
@@ -4072,14 +4099,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Id
-condition|?
-name|Id
-operator|->
 name|getName
 argument_list|()
-else|:
-literal|""
 return|;
 block|}
 specifier|static
@@ -4197,13 +4218,15 @@ name|getIdentifier
 argument_list|()
 return|;
 block|}
-comment|/// getNameAsCString - Get the name of identifier for the class
-comment|/// interface associated with this implementation as a C string
-comment|/// (const char*).
-specifier|const
-name|char
-operator|*
-name|getNameAsCString
+comment|/// getName - Get the name of identifier for the class interface associated
+comment|/// with this implementation as a StringRef.
+comment|//
+comment|// FIXME: This is a bad API, we are overriding the NamedDecl::getName, to mean
+comment|// something different.
+name|llvm
+operator|::
+name|StringRef
+name|getName
 argument_list|()
 specifier|const
 block|{
@@ -4223,7 +4246,29 @@ name|getName
 argument_list|()
 return|;
 block|}
+comment|/// getNameAsCString - Get the name of identifier for the class
+comment|/// interface associated with this implementation as a C string
+comment|/// (const char*).
+comment|//
+comment|// FIXME: Move to StringRef API.
+specifier|const
+name|char
+operator|*
+name|getNameAsCString
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getName
+argument_list|()
+operator|.
+name|data
+argument_list|()
+return|;
+block|}
 comment|/// @brief Get the name of the class associated with this interface.
+comment|//
+comment|// FIXME: Move to StringRef API.
 name|std
 operator|::
 name|string
@@ -4232,10 +4277,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getClassInterface
-argument_list|()
-operator|->
-name|getNameAsString
+name|getName
 argument_list|()
 return|;
 block|}

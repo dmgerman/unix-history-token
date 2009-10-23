@@ -206,5 +206,48 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_comment
+comment|// PR5265
+end_comment
+
+begin_typedef
+typedef|typedef
+name|float
+name|__attribute__
+argument_list|(
+operator|(
+name|ext_vector_type
+argument_list|(
+literal|3
+argument_list|)
+operator|)
+argument_list|)
+name|float3
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|int
+name|test2
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+name|float3
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|float4
+argument_list|)
+operator|)
+operator|*
+literal|2
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

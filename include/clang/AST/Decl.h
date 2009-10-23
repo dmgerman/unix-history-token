@@ -153,6 +153,16 @@ argument_list|)
 block|{ }
 name|public
 label|:
+comment|/// \brief Return the type wrapped by this type source info.
+name|QualType
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ty
+return|;
+block|}
 comment|/// \brief Return the TypeLoc wrapper for the type source info.
 name|TypeLoc
 name|getTypeLoc
@@ -379,9 +389,44 @@ name|getAsIdentifierInfo
 argument_list|()
 return|;
 block|}
+comment|/// getName - Get the name of identifier for this declaration as a StringRef.
+comment|/// This requires that the declaration have a name and that it be a simple
+comment|/// identifier.
+name|llvm
+operator|::
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Name
+operator|.
+name|isIdentifier
+argument_list|()
+operator|&&
+literal|"Name is not a simple identifier"
+argument_list|)
+block|;
+return|return
+name|getIdentifier
+argument_list|()
+condition|?
+name|getIdentifier
+argument_list|()
+operator|->
+name|getName
+argument_list|()
+else|:
+literal|""
+return|;
+block|}
 comment|/// getNameAsCString - Get the name of identifier for this declaration as a
 comment|/// C string (const char*).  This requires that the declaration have a name
 comment|/// and that it be a simple identifier.
+comment|//
+comment|// FIXME: Deprecated, move clients to getName().
 specifier|const
 name|char
 operator|*
@@ -391,7 +436,9 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|getIdentifier
+name|Name
+operator|.
+name|isIdentifier
 argument_list|()
 operator|&&
 literal|"Name is not a simple identifier"
@@ -400,8 +447,37 @@ block|;
 return|return
 name|getIdentifier
 argument_list|()
+condition|?
+name|getIdentifier
+argument_list|()
 operator|->
-name|getName
+name|getNameStart
+argument_list|()
+else|:
+literal|""
+return|;
+block|}
+comment|/// getNameAsString - Get a human-readable name for the declaration, even if
+comment|/// it is one of the special kinds of names (C++ constructor, Objective-C
+comment|/// selector, etc).  Creating this name requires expensive string
+comment|/// manipulation, so it should be called only when performance doesn't matter.
+comment|/// For simple declarations, getNameAsCString() should suffice.
+comment|//
+comment|// FIXME: This function should be renamed to indicate that it is not just an
+comment|// alternate form of getName(), and clients should move as appropriate.
+comment|//
+comment|// FIXME: Deprecated, move clients to getName().
+name|std
+operator|::
+name|string
+name|getNameAsString
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+operator|.
+name|getAsString
 argument_list|()
 return|;
 block|}
@@ -427,25 +503,6 @@ name|Name
 operator|=
 name|N
 block|; }
-comment|/// getNameAsString - Get a human-readable name for the declaration, even if
-comment|/// it is one of the special kinds of names (C++ constructor, Objective-C
-comment|/// selector, etc).  Creating this name requires expensive string
-comment|/// manipulation, so it should be called only when performance doesn't matter.
-comment|/// For simple declarations, getNameAsCString() should suffice.
-name|std
-operator|::
-name|string
-name|getNameAsString
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Name
-operator|.
-name|getAsString
-argument_list|()
-return|;
-block|}
 comment|/// getQualifiedNameAsString - Returns human-readable qualified name for
 comment|/// declaration, like A::B::i, for i being member of namespace A::B.
 comment|/// If declaration is not member of context which can be named (record,
@@ -2457,6 +2514,12 @@ name|setTemplateSpecializationKind
 parameter_list|(
 name|TemplateSpecializationKind
 name|TSK
+parameter_list|,
+name|SourceLocation
+name|PointOfInstantiation
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4729,9 +4792,47 @@ name|setTemplateSpecializationKind
 parameter_list|(
 name|TemplateSpecializationKind
 name|TSK
+parameter_list|,
+name|SourceLocation
+name|PointOfInstantiation
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Retrieve the (first) point of instantiation of a function template
+end_comment
+
+begin_comment
+comment|/// specialization or a member of a class template specialization.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the first point of instantiation, if this function was
+end_comment
+
+begin_comment
+comment|/// instantiated from a template; otherwie, returns an invalid source
+end_comment
+
+begin_comment
+comment|/// location.
+end_comment
+
+begin_expr_stmt
+name|SourceLocation
+name|getPointOfInstantiation
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Determine whether this is or was instantiated from an out-of-line

@@ -5881,6 +5881,117 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Parsed a C++ destructor reference that refers to a type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This action is used when parsing a destructor reference that uses a
+end_comment
+
+begin_comment
+comment|/// template-id, e.g.,
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// t->~Tmpl<T1, T2>
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the destructor reference occurs.
+end_comment
+
+begin_comment
+comment|/// \param Base the base object of the destructor reference expression.
+end_comment
+
+begin_comment
+comment|/// \param OpLoc the location of the operator ('.' or '->').
+end_comment
+
+begin_comment
+comment|/// \param OpKind the kind of the destructor reference operator ('.' or '->').
+end_comment
+
+begin_comment
+comment|/// \param TypeRange the source range that covers the destructor type.
+end_comment
+
+begin_comment
+comment|/// \param Type the type that is being destroyed.
+end_comment
+
+begin_comment
+comment|/// \param SS the scope specifier that precedes the destructor name.
+end_comment
+
+begin_comment
+comment|/// \param HasTrailingLParen whether the destructor name is followed by a '('.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|OwningExprResult
+name|ActOnDestructorReferenceExpr
+argument_list|(
+name|Scope
+operator|*
+name|S
+argument_list|,
+name|ExprArg
+name|Base
+argument_list|,
+name|SourceLocation
+name|OpLoc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|OpKind
+argument_list|,
+name|SourceRange
+name|TypeRange
+argument_list|,
+name|TypeTy
+operator|*
+name|Type
+argument_list|,
+specifier|const
+name|CXXScopeSpec
+operator|&
+name|SS
+argument_list|,
+name|bool
+name|HasTrailingLParen
+argument_list|)
+block|{
+return|return
+name|ExprEmpty
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// ActOnOverloadedOperatorReferenceExpr - Parsed an overloaded operator
 end_comment
 
@@ -7083,6 +7194,14 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param SS  The scope specifier that may precede the template name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \param Template  A template whose specialization results in a
 end_comment
 
@@ -7090,11 +7209,68 @@ begin_comment
 comment|/// function or a dependent template.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TemplateNameLoc The location of the template name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param LAngleLoc The location of the left angle bracket ('<') that starts
+end_comment
+
+begin_comment
+comment|/// the template argument list.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TemplateArgs The template arguments in the template argument list,
+end_comment
+
+begin_comment
+comment|/// which may be empty.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TemplateArgLocs The locations of the template arguments.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param RAngleLoc The location of the right angle bracket ('>') that
+end_comment
+
+begin_comment
+comment|/// closes the template argument list.
+end_comment
+
 begin_function
 name|virtual
 name|OwningExprResult
 name|ActOnTemplateIdExpr
 parameter_list|(
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
 name|TemplateTy
 name|Template
 parameter_list|,

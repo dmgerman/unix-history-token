@@ -605,6 +605,15 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|SymbolRef
+operator|>
+name|InvalidatedSymbols
+expr_stmt|;
 name|virtual
 specifier|const
 name|GRState
@@ -628,6 +637,10 @@ name|E
 parameter_list|,
 name|unsigned
 name|Count
+parameter_list|,
+name|InvalidatedSymbols
+modifier|*
+name|IS
 parameter_list|)
 init|=
 literal|0

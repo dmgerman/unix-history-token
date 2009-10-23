@@ -312,6 +312,133 @@ name|BitstreamWriter
 operator|&
 name|Stream
 expr_stmt|;
+comment|/// \brief Stores a declaration or a type to be written to the PCH file.
+name|class
+name|DeclOrType
+block|{
+name|public
+label|:
+name|DeclOrType
+argument_list|(
+name|Decl
+operator|*
+name|D
+argument_list|)
+operator|:
+name|Stored
+argument_list|(
+name|D
+argument_list|)
+operator|,
+name|IsType
+argument_list|(
+argument|false
+argument_list|)
+block|{ }
+name|DeclOrType
+argument_list|(
+argument|QualType T
+argument_list|)
+operator|:
+name|Stored
+argument_list|(
+name|T
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+operator|,
+name|IsType
+argument_list|(
+argument|true
+argument_list|)
+block|{ }
+name|bool
+name|isType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsType
+return|;
+block|}
+name|bool
+name|isDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|IsType
+return|;
+block|}
+name|QualType
+name|getType
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isType
+argument_list|()
+operator|&&
+literal|"Not a type!"
+argument_list|)
+block|;
+return|return
+name|QualType
+operator|::
+name|getFromOpaquePtr
+argument_list|(
+name|Stored
+argument_list|)
+return|;
+block|}
+name|Decl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isDecl
+argument_list|()
+operator|&&
+literal|"Not a decl!"
+argument_list|)
+block|;
+return|return
+name|static_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+name|Stored
+operator|)
+return|;
+block|}
+name|private
+label|:
+name|void
+modifier|*
+name|Stored
+decl_stmt|;
+name|bool
+name|IsType
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// \brief The declarations and types to emit.
+name|std
+operator|::
+name|queue
+operator|<
+name|DeclOrType
+operator|>
+name|DeclTypesToEmit
+expr_stmt|;
 comment|/// \brief Map that provides the ID numbers of each declaration within
 comment|/// the output stream.
 comment|///
@@ -341,17 +468,6 @@ operator|<
 name|uint32_t
 operator|>
 name|DeclOffsets
-expr_stmt|;
-comment|/// \brief Queue containing the declarations that we still need to
-comment|/// emit.
-name|std
-operator|::
-name|queue
-operator|<
-name|Decl
-operator|*
-operator|>
-name|DeclsToEmit
 expr_stmt|;
 comment|/// \brief Map that provides the ID numbers of each type within the
 comment|/// output stream.
@@ -391,16 +507,6 @@ name|pch
 operator|::
 name|TypeID
 name|NextTypeID
-expr_stmt|;
-comment|/// \brief Queue containing the types that we still need to
-comment|/// emit.
-name|std
-operator|::
-name|queue
-operator|<
-name|QualType
-operator|>
-name|TypesToEmit
 expr_stmt|;
 comment|/// \brief Map that provides the ID numbers of each identifier in
 comment|/// the output stream.
@@ -640,14 +746,6 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
-name|void
-name|WriteTypesBlock
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
 name|uint64_t
 name|WriteDeclContextLexicalBlock
 parameter_list|(
@@ -670,14 +768,6 @@ parameter_list|,
 name|DeclContext
 modifier|*
 name|DC
-parameter_list|)
-function_decl|;
-name|void
-name|WriteDeclsBlock
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Context
 parameter_list|)
 function_decl|;
 name|void
@@ -711,6 +801,18 @@ decl_stmt|;
 name|void
 name|WriteDeclsBlockAbbrevs
 parameter_list|()
+function_decl|;
+name|void
+name|WriteDecl
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 function_decl|;
 name|public
 label|:
@@ -894,6 +996,19 @@ name|AddTypeRef
 parameter_list|(
 name|QualType
 name|T
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emits a reference to a declarator info.
+name|void
+name|AddDeclaratorInfo
+parameter_list|(
+name|DeclaratorInfo
+modifier|*
+name|DInfo
 parameter_list|,
 name|RecordData
 modifier|&

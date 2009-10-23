@@ -535,6 +535,24 @@ literal|1
 decl_stmt|;
 name|protected
 label|:
+comment|/// Access - Used by C++ decls for the access specifier.
+comment|// NOTE: VC++ treats enums as signed, avoid using the AccessSpecifier enum
+name|unsigned
+name|Access
+range|:
+literal|2
+decl_stmt|;
+name|friend
+name|class
+name|CXXClassMemberWrapper
+decl_stmt|;
+comment|// PCHLevel - the "level" of precompiled header/AST file from which this
+comment|// declaration was built.
+name|unsigned
+name|PCHLevel
+range|:
+literal|2
+decl_stmt|;
 comment|/// IdentifierNamespace - This specifies what IDNS_* namespace this lives in.
 name|unsigned
 name|IdentifierNamespace
@@ -562,17 +580,6 @@ endif|#
 directive|endif
 name|protected
 operator|:
-comment|/// Access - Used by C++ decls for the access specifier.
-comment|// NOTE: VC++ treats enums as signed, avoid using the AccessSpecifier enum
-name|unsigned
-name|Access
-operator|:
-literal|2
-expr_stmt|;
-name|friend
-name|class
-name|CXXClassMemberWrapper
-decl_stmt|;
 name|Decl
 argument_list|(
 argument|Kind DK
@@ -581,7 +588,7 @@ argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
 argument_list|)
-block|:
+operator|:
 name|NextDeclInContext
 argument_list|(
 literal|0
@@ -622,17 +629,19 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|IdentifierNamespace
-argument_list|(
-name|getIdentifierNamespaceForKind
-argument_list|(
-name|DK
-argument_list|)
-argument_list|)
-operator|,
 name|Access
 argument_list|(
-argument|AS_none
+name|AS_none
+argument_list|)
+operator|,
+name|PCHLevel
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|IdentifierNamespace
+argument_list|(
+argument|getIdentifierNamespaceForKind(DK)
 argument_list|)
 block|{
 if|if
@@ -1109,6 +1118,96 @@ block|{
 name|Used
 operator|=
 name|U
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Retrieve the level of precompiled header from which this
+end_comment
+
+begin_comment
+comment|/// declaration was generated.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The PCH level of a declaration describes where the declaration originated
+end_comment
+
+begin_comment
+comment|/// from. A PCH level of 0 indicates that the declaration was not from a
+end_comment
+
+begin_comment
+comment|/// precompiled header. A PCH level of 1 indicates that the declaration was
+end_comment
+
+begin_comment
+comment|/// from a top-level precompiled header; 2 indicates that the declaration
+end_comment
+
+begin_comment
+comment|/// comes from a precompiled header on which the top-level precompiled header
+end_comment
+
+begin_comment
+comment|/// depends, and so on.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getPCHLevel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PCHLevel
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief The maximum PCH level that any declaration may have.
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|unsigned
+name|MaxPCHLevel
+init|=
+literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Set the PCH level of this declaration.
+end_comment
+
+begin_function
+name|void
+name|setPCHLevel
+parameter_list|(
+name|unsigned
+name|Level
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Level
+operator|<
+name|MaxPCHLevel
+operator|&&
+literal|"PCH level exceeds the maximum"
+argument_list|)
+expr_stmt|;
+name|PCHLevel
+operator|=
+name|Level
 expr_stmt|;
 block|}
 end_function

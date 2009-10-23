@@ -533,6 +533,13 @@ name|ASTContext
 modifier|*
 name|Context
 decl_stmt|;
+comment|/// \brief The PCH stat cache installed by this PCHReader, if any.
+comment|///
+comment|/// The dynamic type of this stat cache is always PCHStatCache
+name|void
+modifier|*
+name|StatCache
+decl_stmt|;
 comment|/// \brief The AST consumer.
 name|ASTConsumer
 modifier|*
@@ -1354,6 +1361,19 @@ modifier|&
 name|Context
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve the name of the PCH file
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getFileName
+argument_list|()
+block|{
+return|return
+name|FileName
+return|;
+block|}
 comment|/// \brief Retrieve the name of the original source file name
 specifier|const
 name|std
@@ -1419,6 +1439,22 @@ operator|&
 name|Comments
 argument_list|)
 decl_stmt|;
+comment|/// \brief Reads a declarator info from the given record.
+name|virtual
+name|DeclaratorInfo
+modifier|*
+name|GetDeclaratorInfo
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
 comment|/// \brief Resolve a type ID into a type, potentially building a new
 comment|/// type.
 name|virtual

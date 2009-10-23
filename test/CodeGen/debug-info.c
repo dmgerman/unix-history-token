@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -o %t --emit-llvm -g %s
+comment|// RUN: clang-cc -o %t --emit-llvm -g %s&&
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --input-file=%t %s
 end_comment
 
 begin_comment
@@ -158,6 +162,28 @@ name|foo2
 name|foo2
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// Radar 7325611
+end_comment
+
+begin_comment
+comment|// CHECK: "barfoo"
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|barfoo
+typedef|;
+end_typedef
+
+begin_function
+name|barfoo
+name|foo
+parameter_list|()
+block|{ }
+end_function
 
 end_unit
 

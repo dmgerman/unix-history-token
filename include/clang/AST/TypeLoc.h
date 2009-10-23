@@ -73,14 +73,33 @@ name|class
 name|ParmVarDecl
 decl_stmt|;
 name|class
-name|TypeSpecLoc
-decl_stmt|;
-name|class
 name|DeclaratorInfo
 decl_stmt|;
 name|class
 name|UnqualTypeLoc
 decl_stmt|;
+comment|// Predeclare all the type nodes.
+define|#
+directive|define
+name|ABSTRACT_TYPELOC
+parameter_list|(
+name|Class
+parameter_list|,
+name|Base
+parameter_list|)
+define|#
+directive|define
+name|TYPELOC
+parameter_list|(
+name|Class
+parameter_list|,
+name|Base
+parameter_list|)
+define|\
+value|class Class##TypeLoc;
+include|#
+directive|include
+file|"clang/AST/TypeLocNodes.def"
 comment|/// \brief Base wrapper for a particular "section" of type source info.
 comment|///
 comment|/// A client should use the TypeLoc subclasses through cast/dyn_cast in order to
@@ -102,6 +121,36 @@ name|Data
 decl_stmt|;
 name|public
 label|:
+comment|/// The kinds of TypeLocs.  Equivalent to the Type::TypeClass enum,
+comment|/// except it also defines a Qualified enum that corresponds to the
+comment|/// QualifiedLoc class.
+enum|enum
+name|TypeLocClass
+block|{
+define|#
+directive|define
+name|ABSTRACT_TYPE
+parameter_list|(
+name|Class
+parameter_list|,
+name|Base
+parameter_list|)
+define|#
+directive|define
+name|TYPE
+parameter_list|(
+name|Class
+parameter_list|,
+name|Base
+parameter_list|)
+define|\
+value|Class = Type::Class,
+include|#
+directive|include
+file|"clang/AST/TypeNodes.def"
+name|Qualified
+block|}
+enum|;
 name|TypeLoc
 argument_list|()
 operator|:
@@ -156,6 +205,33 @@ argument_list|(
 argument|opaqueData
 argument_list|)
 block|{ }
+name|TypeLocClass
+name|getTypeLocClass
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getType
+argument_list|()
+operator|.
+name|hasQualifiers
+argument_list|()
+condition|)
+return|return
+name|Qualified
+return|;
+return|return
+operator|(
+name|TypeLocClass
+operator|)
+name|getType
+argument_list|()
+operator|->
+name|getTypeClass
+argument_list|()
+return|;
+block|}
 name|bool
 name|isNull
 argument_list|()
@@ -187,7 +263,7 @@ function_decl|;
 comment|/// \brief Get the type for which this source info wrapper provides
 comment|/// information.
 name|QualType
-name|getSourceType
+name|getType
 argument_list|()
 specifier|const
 block|{
@@ -202,7 +278,7 @@ return|;
 block|}
 name|Type
 operator|*
-name|getSourceTypePtr
+name|getTypePtr
 argument_list|()
 specifier|const
 block|{
@@ -233,20 +309,15 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Find the TypeSpecLoc that is part of this TypeLoc.
-name|TypeSpecLoc
-name|getTypeSpecLoc
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief Find the TypeSpecLoc that is part of this TypeLoc and return its
-comment|/// SourceRange.
-name|SourceRange
-name|getTypeSpecRange
-argument_list|()
-specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getSourceRangeImpl
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+block|}
 comment|/// \brief Returns the size of the type source info data block.
 name|unsigned
 name|getFullDataSize
@@ -256,7 +327,7 @@ block|{
 return|return
 name|getFullDataSizeForType
 argument_list|(
-name|getSourceType
+name|getType
 argument_list|()
 argument_list|)
 return|;
@@ -267,13 +338,44 @@ name|TypeLoc
 name|getNextTypeLoc
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getNextTypeLocImpl
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+block|}
 comment|/// \brief Skips past any qualifiers, if this is qualified.
 name|UnqualTypeLoc
 name|getUnqualifiedLoc
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// implemented in this header
+comment|/// \brief Initializes this to state that every location in this
+comment|/// type is the given location.
+comment|///
+comment|/// This method exists to provide a simple transition for code that
+comment|/// relies on location-less types.
+name|void
+name|initialize
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+block|{
+name|initializeImpl
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|Loc
+argument_list|)
+expr_stmt|;
+block|}
 name|friend
 name|bool
 name|operator
@@ -347,10 +449,51 @@ return|return
 name|true
 return|;
 block|}
+name|private
+label|:
+specifier|static
+name|void
+name|initializeImpl
+parameter_list|(
+name|TypeLoc
+name|TL
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+specifier|static
+name|TypeLoc
+name|getNextTypeLocImpl
+parameter_list|(
+name|TypeLoc
+name|TL
+parameter_list|)
+function_decl|;
+specifier|static
+name|SourceRange
+name|getSourceRangeImpl
+parameter_list|(
+name|TypeLoc
+name|TL
+parameter_list|)
+function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Wrapper of type source information for a type with
+end_comment
+
+begin_comment
 comment|/// no direct quqlaifiers.
+end_comment
+
+begin_decl_stmt
 name|class
 name|UnqualTypeLoc
 range|:
@@ -382,7 +525,7 @@ argument_list|)
 block|{}
 name|Type
 operator|*
-name|getSourceTypePtr
+name|getTypePtr
 argument_list|()
 specifier|const
 block|{
@@ -397,6 +540,22 @@ name|Ty
 operator|)
 return|;
 block|}
+name|TypeLocClass
+name|getTypeLocClass
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|TypeLocClass
+operator|)
+name|getTypePtr
+argument_list|()
+operator|->
+name|getTypeClass
+argument_list|()
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -408,7 +567,7 @@ return|return
 operator|!
 name|TL
 operator|->
-name|getSourceType
+name|getType
 argument_list|()
 operator|.
 name|hasQualifiers
@@ -434,7 +593,7 @@ comment|///
 comment|/// Currently, we intentionally do not provide source location for
 comment|/// type qualifiers.
 name|class
-name|QualifiedLoc
+name|QualifiedTypeLoc
 operator|:
 name|public
 name|TypeLoc
@@ -459,11 +618,31 @@ block|{
 return|return
 name|UnqualTypeLoc
 argument_list|(
-name|getSourceTypePtr
+name|getTypePtr
 argument_list|()
 argument_list|,
 name|Data
 argument_list|)
+return|;
+block|}
+comment|/// Initializes the local data of this type source info block to
+comment|/// provide no information.
+name|void
+name|initializeLocal
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+comment|// do nothing
+block|}
+name|TypeLoc
+name|getNextTypeLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnqualifiedLoc
+argument_list|()
 return|;
 block|}
 comment|/// \brief Returns the size of the type source info data block that is
@@ -491,7 +670,7 @@ argument_list|()
 operator|+
 name|getFullDataSizeForType
 argument_list|(
-name|getSourceType
+name|getType
 argument_list|()
 operator|.
 name|getUnqualifiedType
@@ -509,7 +688,7 @@ block|{
 return|return
 name|TL
 operator|->
-name|getSourceType
+name|getType
 argument_list|()
 operator|.
 name|hasQualifiers
@@ -520,7 +699,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const QualifiedLoc *TL
+argument|const QualifiedTypeLoc *TL
 argument_list|)
 block|{
 return|return
@@ -541,7 +720,7 @@ if|if
 condition|(
 name|isa
 operator|<
-name|QualifiedLoc
+name|QualifiedTypeLoc
 operator|>
 operator|(
 name|this
@@ -550,7 +729,7 @@ condition|)
 return|return
 name|cast
 operator|<
-name|QualifiedLoc
+name|QualifiedTypeLoc
 operator|>
 operator|(
 name|this
@@ -570,155 +749,6 @@ name|this
 operator|)
 return|;
 block|}
-comment|/// \brief Base wrapper of type source info data for type-spec types.
-name|class
-name|TypeSpecLoc
-operator|:
-name|public
-name|UnqualTypeLoc
-block|{
-name|public
-operator|:
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypeLoc *TL
-argument_list|)
-block|{
-return|return
-operator|(
-name|UnqualTypeLoc
-operator|::
-name|classof
-argument_list|(
-name|TL
-argument_list|)
-operator|&&
-name|classof
-argument_list|(
-name|static_cast
-operator|<
-specifier|const
-name|UnqualTypeLoc
-operator|*
-operator|>
-operator|(
-name|TL
-operator|)
-argument_list|)
-operator|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-specifier|const
-name|UnqualTypeLoc
-operator|*
-name|TL
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypeSpecLoc *TL
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
-specifier|inline
-name|SourceRange
-name|TypeLoc
-operator|::
-name|getTypeSpecRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTypeSpecLoc
-argument_list|()
-operator|.
-name|getSourceRange
-argument_list|()
-return|;
-block|}
-comment|/// \brief Base wrapper of type source info data for types part of a declarator,
-comment|/// excluding type-spec types.
-name|class
-name|DeclaratorLoc
-operator|:
-name|public
-name|UnqualTypeLoc
-block|{
-name|public
-operator|:
-comment|/// \brief Find the TypeSpecLoc that is part of this DeclaratorLoc.
-name|TypeSpecLoc
-name|getTypeSpecLoc
-argument_list|()
-specifier|const
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypeLoc *TL
-argument_list|)
-block|{
-return|return
-operator|(
-name|UnqualTypeLoc
-operator|::
-name|classof
-argument_list|(
-name|TL
-argument_list|)
-operator|&&
-name|classof
-argument_list|(
-name|static_cast
-operator|<
-specifier|const
-name|UnqualTypeLoc
-operator|*
-operator|>
-operator|(
-name|TL
-operator|)
-argument_list|)
-operator|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-specifier|const
-name|UnqualTypeLoc
-operator|*
-name|TL
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DeclaratorLoc *TL
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
 comment|/// A metaprogramming base class for TypeLoc classes which correspond
 comment|/// to a particular Type subclass.  It is accepted for a single
 comment|/// TypeLoc class to correspond to multiple Type classes.
@@ -737,9 +767,19 @@ comment|/// TypeLocs with non-constant amounts of local data should override
 comment|/// getExtraLocalDataSize(); getExtraLocalData() will then point to
 comment|/// this extra memory.
 comment|///
-comment|/// TypeLocs with an inner type should override hasInnerType() and
-comment|/// getInnerType(); getInnerTypeLoc() will then point to this inner
-comment|/// type's location data.
+comment|/// TypeLocs with an inner type should define
+comment|///   QualType getInnerType() const
+comment|/// and getInnerTypeLoc() will then point to this inner type's
+comment|/// location data.
+comment|///
+comment|/// A word about hierarchies: this template is not designed to be
+comment|/// derived from multiple times in a hierarchy.  It is also not
+comment|/// designed to be used for classes where subtypes might provide
+comment|/// different amounts of source information.  It should be subclassed
+comment|/// only at the deepest portion of the hierarchy where all children
+comment|/// have identical source information; if that's an abstract type,
+comment|/// then further descendents should inherit from
+comment|/// InheritingConcreteTypeLoc instead.
 name|template
 operator|<
 name|class
@@ -818,55 +858,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const TypeLoc *TL
-argument_list|)
-block|{
-return|return
-name|Derived
-operator|::
-name|classofType
-argument_list|(
-name|TL
-operator|->
-name|getSourceTypePtr
-argument_list|()
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const UnqualTypeLoc *TL
-argument_list|)
-block|{
-return|return
-name|Derived
-operator|::
-name|classofType
-argument_list|(
-name|TL
-operator|->
-name|getSourceTypePtr
-argument_list|()
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Derived *TL
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|classofType
 argument_list|(
 argument|const Type *Ty
@@ -881,8 +872,22 @@ name|Ty
 argument_list|)
 return|;
 block|}
-name|protected
-operator|:
+name|TypeLoc
+name|getNextTypeLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNextTypeLoc
+argument_list|(
+name|asDerived
+argument_list|()
+operator|->
+name|getInnerType
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|TypeClass
 operator|*
 name|getTypePtr
@@ -897,11 +902,13 @@ operator|>
 operator|(
 name|Base
 operator|::
-name|getSourceTypePtr
+name|getTypePtr
 argument_list|()
 operator|)
 return|;
 block|}
+name|protected
+operator|:
 name|unsigned
 name|getExtraLocalDataSize
 argument_list|()
@@ -971,13 +978,18 @@ name|getLocalDataSize
 argument_list|()
 return|;
 block|}
-name|bool
-name|hasInnerType
+expr|struct
+name|HasNoInnerType
+block|{}
+block|;
+name|HasNoInnerType
+name|getInnerType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|false
+name|HasNoInnerType
+argument_list|()
 return|;
 block|}
 name|TypeLoc
@@ -985,15 +997,6 @@ name|getInnerTypeLoc
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|asDerived
-argument_list|()
-operator|->
-name|hasInnerType
-argument_list|()
-argument_list|)
-block|;
 return|return
 name|TypeLoc
 argument_list|(
@@ -1015,14 +1018,35 @@ name|getInnerTypeSize
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+return|return
+name|getInnerTypeSize
+argument_list|(
 name|asDerived
 argument_list|()
 operator|->
-name|hasInnerType
+name|getInnerType
 argument_list|()
-condition|)
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getInnerTypeSize
+argument_list|(
+argument|HasNoInnerType _
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|unsigned
+name|getInnerTypeSize
+argument_list|(
+argument|QualType _
+argument_list|)
+specifier|const
+block|{
 return|return
 name|getInnerTypeLoc
 argument_list|()
@@ -1030,127 +1054,164 @@ operator|.
 name|getFullDataSize
 argument_list|()
 return|;
-return|return
-literal|0
-return|;
 block|}
-comment|// Required here because my metaprogramming is too weak to avoid it.
-name|QualType
-name|getInnerType
-argument_list|()
+name|TypeLoc
+name|getNextTypeLoc
+argument_list|(
+argument|HasNoInnerType _
+argument_list|)
 specifier|const
 block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"getInnerType() not overridden"
-argument_list|)
-block|;
 return|return
-name|QualType
+name|TypeLoc
 argument_list|()
+return|;
+block|}
+name|TypeLoc
+name|getNextTypeLoc
+argument_list|(
+argument|QualType T
+argument_list|)
+specifier|const
+block|{
+return|return
+name|TypeLoc
+argument_list|(
+name|T
+argument_list|,
+name|getNonLocalData
+argument_list|()
+argument_list|)
 return|;
 block|}
 expr|}
-block|;   struct
-name|DefaultTypeSpecLocInfo
-block|{
-name|SourceLocation
-name|StartLoc
-block|; }
 block|;
-comment|/// \brief The default wrapper for type-spec types that are not handled by
-comment|/// another specific wrapper.
-name|class
-name|DefaultTypeSpecLoc
-operator|:
-name|public
-name|ConcreteTypeLoc
+comment|/// A metaprogramming class designed for concrete subtypes of abstract
+comment|/// types where all subtypes share equivalently-structured source
+comment|/// information.  See the note on ConcreteTypeLoc.
+name|template
 operator|<
-name|TypeSpecLoc
+name|class
+name|Base
 block|,
-name|DefaultTypeSpecLoc
+name|class
+name|Derived
 block|,
-name|Type
-block|,
-name|DefaultTypeSpecLocInfo
+name|class
+name|TypeClass
 operator|>
+name|class
+name|InheritingConcreteTypeLoc
+operator|:
+name|public
+name|Base
 block|{
 name|public
 operator|:
-name|SourceLocation
-name|getStartLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getLocalData
-argument_list|()
-operator|->
-name|StartLoc
-return|;
-block|}
-name|void
-name|setStartLoc
+specifier|static
+name|bool
+name|classof
 argument_list|(
-argument|SourceLocation Loc
+argument|const TypeLoc *TL
 argument_list|)
 block|{
-name|getLocalData
-argument_list|()
-operator|->
-name|StartLoc
-operator|=
-name|Loc
-block|;   }
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
 return|return
-name|SourceRange
+name|Derived
+operator|::
+name|classofType
 argument_list|(
-name|getStartLoc
-argument_list|()
-argument_list|,
-name|getStartLoc
+name|TL
+operator|->
+name|getTypePtr
 argument_list|()
 argument_list|)
 return|;
 block|}
 specifier|static
 name|bool
+name|classof
+argument_list|(
+argument|const UnqualTypeLoc *TL
+argument_list|)
+block|{
+return|return
+name|Derived
+operator|::
 name|classofType
 argument_list|(
-specifier|const
-name|Type
-operator|*
-name|T
+name|TL
+operator|->
+name|getTypePtr
+argument_list|()
 argument_list|)
-block|; }
-block|;   struct
-name|TypedefLocInfo
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Derived *TL
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+name|TypeClass
+operator|*
+name|getTypePtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|TypeClass
+operator|>
+operator|(
+name|Base
+operator|::
+name|getTypePtr
+argument_list|()
+operator|)
+return|;
+block|}
+expr|}
+block|;  struct
+name|TypeSpecLocInfo
 block|{
 name|SourceLocation
 name|NameLoc
 block|; }
 block|;
-comment|/// \brief Wrapper for source info for typedefs.
+comment|/// \brief A reasonable base class for TypeLocs that correspond to
+comment|/// types that are written as a type-specifier.
+name|template
+operator|<
 name|class
-name|TypedefLoc
+name|Derived
+block|,
+name|class
+name|TypeClass
+block|,
+name|class
+name|LocalData
+operator|=
+name|TypeSpecLocInfo
+operator|>
+name|class
+name|TypeSpecTypeLoc
 operator|:
 name|public
 name|ConcreteTypeLoc
 operator|<
-name|TypeSpecLoc
+name|UnqualTypeLoc
 block|,
-name|TypedefLoc
+name|Derived
 block|,
-name|TypedefType
+name|TypeClass
 block|,
-name|TypedefLocInfo
+name|LocalData
 operator|>
 block|{
 name|public
@@ -1161,6 +1222,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|this
+operator|->
 name|getLocalData
 argument_list|()
 operator|->
@@ -1173,6 +1236,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 block|{
+name|this
+operator|->
 name|getLocalData
 argument_list|()
 operator|->
@@ -1196,6 +1261,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|void
+name|initializeLocal
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|setNameLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;   }
+expr|}
+block|;
+comment|/// \brief Wrapper for source info for typedefs.
+name|class
+name|TypedefTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|TypedefTypeLoc
+block|,
+name|TypedefType
+operator|>
+block|{
+name|public
+operator|:
 name|TypedefDecl
 operator|*
 name|getTypedefDecl
@@ -1211,110 +1303,84 @@ argument_list|()
 return|;
 block|}
 expr|}
-block|;   struct
-name|ObjCInterfaceLocInfo
-block|{
-name|SourceLocation
-name|NameLoc
-block|; }
 block|;
-comment|/// \brief Wrapper for source info for ObjC interfaces.
+comment|/// \brief Wrapper for source info for builtin types.
 name|class
-name|ObjCInterfaceLoc
+name|BuiltinTypeLoc
 operator|:
 name|public
-name|ConcreteTypeLoc
+name|TypeSpecTypeLoc
 operator|<
-name|TypeSpecLoc
+name|BuiltinTypeLoc
 block|,
-name|ObjCInterfaceLoc
-block|,
-name|ObjCInterfaceType
-block|,
-name|ObjCInterfaceLocInfo
+name|BuiltinType
 operator|>
-block|{
-name|public
+block|{ }
+block|;
+comment|/// \brief Wrapper for template type parameters.
+name|class
+name|TemplateTypeParmTypeLoc
 operator|:
-name|SourceLocation
-name|getNameLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getLocalData
-argument_list|()
-operator|->
-name|NameLoc
-return|;
-block|}
-name|void
-name|setNameLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
-block|{
-name|getLocalData
-argument_list|()
-operator|->
-name|NameLoc
-operator|=
-name|Loc
-block|;   }
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|getNameLoc
-argument_list|()
-argument_list|,
-name|getNameLoc
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|ObjCInterfaceDecl
-operator|*
-name|getIFaceDecl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTypePtr
-argument_list|()
-operator|->
-name|getDecl
-argument_list|()
-return|;
-block|}
-expr|}
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|TemplateTypeParmTypeLoc
+block|,
+name|TemplateTypeParmType
+operator|>
+block|{ }
+block|;
+comment|/// \brief Wrapper for substituted template type parameters.
+name|class
+name|SubstTemplateTypeParmTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|SubstTemplateTypeParmTypeLoc
+block|,
+name|SubstTemplateTypeParmType
+operator|>
+block|{ }
 block|;   struct
 name|ObjCProtocolListLocInfo
 block|{
 name|SourceLocation
 name|LAngleLoc
-block|,
+block|;
+name|SourceLocation
 name|RAngleLoc
 block|; }
 block|;
-comment|/// \brief Wrapper for source info for ObjC protocol lists.
+comment|// A helper class for defining ObjC TypeLocs that can qualified with
+comment|// protocols.
+comment|//
+comment|// TypeClass basically has to be either ObjCInterfaceType or
+comment|// ObjCObjectPointerType.
+name|template
+operator|<
 name|class
-name|ObjCProtocolListLoc
+name|Derived
+block|,
+name|class
+name|TypeClass
+block|,
+name|class
+name|LocalData
+operator|>
+name|class
+name|ObjCProtocolListTypeLoc
 operator|:
 name|public
 name|ConcreteTypeLoc
 operator|<
-name|TypeSpecLoc
+name|UnqualTypeLoc
 block|,
-name|ObjCProtocolListLoc
+name|Derived
 block|,
-name|ObjCProtocolListType
+name|TypeClass
 block|,
-name|ObjCProtocolListLocInfo
+name|LocalData
 operator|>
 block|{
 comment|// SourceLocations are stored after Info, one for each Protocol.
@@ -1329,9 +1395,56 @@ operator|(
 name|SourceLocation
 operator|*
 operator|)
+name|this
+operator|->
 name|getExtraLocalData
 argument_list|()
 return|;
+block|}
+name|protected
+operator|:
+name|void
+name|initializeLocalBase
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|setLAngleLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setRAngleLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|getNumProtocols
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+name|setProtocolLoc
+argument_list|(
+name|i
+argument_list|,
+name|Loc
+argument_list|)
+expr_stmt|;
 block|}
 name|public
 operator|:
@@ -1341,6 +1454,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|this
+operator|->
 name|getLocalData
 argument_list|()
 operator|->
@@ -1353,6 +1468,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 block|{
+name|this
+operator|->
 name|getLocalData
 argument_list|()
 operator|->
@@ -1366,6 +1483,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|this
+operator|->
 name|getLocalData
 argument_list|()
 operator|->
@@ -1378,6 +1497,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 block|{
+name|this
+operator|->
 name|getLocalData
 argument_list|()
 operator|->
@@ -1391,6 +1512,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|this
+operator|->
 name|getTypePtr
 argument_list|()
 operator|->
@@ -1470,6 +1593,8 @@ block|;
 return|return
 operator|*
 operator|(
+name|this
+operator|->
 name|getTypePtr
 argument_list|()
 operator|->
@@ -1478,16 +1603,6 @@ argument_list|()
 operator|+
 name|i
 operator|)
-return|;
-block|}
-name|TypeLoc
-name|getBaseTypeLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getInnerTypeLoc
-argument_list|()
 return|;
 block|}
 name|SourceRange
@@ -1506,14 +1621,25 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// \brief Returns the size of the type source info data block that is
-comment|/// specific to this type.
+name|void
+name|initializeLocal
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|initializeLocalBase
+argument_list|(
+name|Loc
+argument_list|)
+block|;   }
 name|unsigned
 name|getExtraLocalDataSize
 argument_list|()
 specifier|const
 block|{
 return|return
+name|this
+operator|->
 name|getNumProtocols
 argument_list|()
 operator|*
@@ -1523,17 +1649,35 @@ name|SourceLocation
 argument_list|)
 return|;
 block|}
-name|bool
-name|hasInnerType
-argument_list|()
-specifier|const
+expr|}
+block|;   struct
+name|ObjCInterfaceLocInfo
+operator|:
+name|ObjCProtocolListLocInfo
 block|{
-return|return
-name|true
-return|;
-block|}
-name|QualType
-name|getInnerType
+name|SourceLocation
+name|NameLoc
+block|; }
+block|;
+comment|/// \brief Wrapper for source info for ObjC interfaces.
+name|class
+name|ObjCInterfaceTypeLoc
+operator|:
+name|public
+name|ObjCProtocolListTypeLoc
+operator|<
+name|ObjCInterfaceTypeLoc
+block|,
+name|ObjCInterfaceType
+block|,
+name|ObjCInterfaceLocInfo
+operator|>
+block|{
+name|public
+operator|:
+name|ObjCInterfaceDecl
+operator|*
+name|getIFaceDecl
 argument_list|()
 specifier|const
 block|{
@@ -1541,36 +1685,168 @@ return|return
 name|getTypePtr
 argument_list|()
 operator|->
-name|getBaseType
+name|getDecl
 argument_list|()
 return|;
 block|}
+name|SourceLocation
+name|getNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|NameLoc
+return|;
+block|}
+name|void
+name|setNameLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|getLocalData
+argument_list|()
+operator|->
+name|NameLoc
+operator|=
+name|Loc
+block|;   }
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getNumProtocols
+argument_list|()
+condition|)
+return|return
+name|SourceRange
+argument_list|(
+name|getNameLoc
+argument_list|()
+argument_list|,
+name|getRAngleLoc
+argument_list|()
+argument_list|)
+return|;
+else|else
+return|return
+name|SourceRange
+argument_list|(
+name|getNameLoc
+argument_list|()
+argument_list|,
+name|getNameLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|void
+name|initializeLocal
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|initializeLocalBase
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setNameLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;   }
 expr|}
 block|;   struct
-name|PointerLocInfo
+name|ObjCObjectPointerLocInfo
+operator|:
+name|ObjCProtocolListLocInfo
 block|{
 name|SourceLocation
 name|StarLoc
+block|;
+name|bool
+name|HasProtocols
+block|;
+name|bool
+name|HasBaseType
 block|; }
 block|;
-comment|/// \brief Wrapper for source info for pointers.
+comment|/// Wraps an ObjCPointerType with source location information.  Note
+comment|/// that not all ObjCPointerTypes actually have a star location; nor
+comment|/// are protocol locations necessarily written in the source just
+comment|/// because they're present on the type.
 name|class
-name|PointerLoc
+name|ObjCObjectPointerTypeLoc
 operator|:
 name|public
-name|ConcreteTypeLoc
+name|ObjCProtocolListTypeLoc
 operator|<
-name|DeclaratorLoc
+name|ObjCObjectPointerTypeLoc
 block|,
-name|PointerLoc
+name|ObjCObjectPointerType
 block|,
-name|PointerType
-block|,
-name|PointerLocInfo
+name|ObjCObjectPointerLocInfo
 operator|>
 block|{
 name|public
 operator|:
+name|bool
+name|hasProtocolsAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|HasProtocols
+return|;
+block|}
+name|void
+name|setHasProtocolsAsWritten
+argument_list|(
+argument|bool HasProtocols
+argument_list|)
+block|{
+name|getLocalData
+argument_list|()
+operator|->
+name|HasProtocols
+operator|=
+name|HasProtocols
+block|;   }
+name|bool
+name|hasBaseTypeAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|HasBaseType
+return|;
+block|}
+name|void
+name|setHasBaseTypeAsWritten
+argument_list|(
+argument|bool HasBaseType
+argument_list|)
+block|{
+name|getLocalData
+argument_list|()
+operator|->
+name|HasBaseType
+operator|=
+name|HasBaseType
+block|;   }
 name|SourceLocation
 name|getStarLoc
 argument_list|()
@@ -1596,35 +1872,29 @@ name|StarLoc
 operator|=
 name|Loc
 block|;   }
-name|TypeLoc
-name|getPointeeLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getInnerTypeLoc
-argument_list|()
-return|;
-block|}
-comment|/// \brief Find the TypeSpecLoc that is part of this PointerLoc.
-name|TypeSpecLoc
-name|getTypeSpecLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getPointeeLoc
-argument_list|()
-operator|.
-name|getTypeSpecLoc
-argument_list|()
-return|;
-block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
 block|{
+comment|// Being written with protocols is incompatible with being written
+comment|// with a star.
+if|if
+condition|(
+name|hasProtocolsAsWritten
+argument_list|()
+condition|)
+return|return
+name|SourceRange
+argument_list|(
+name|getLAngleLoc
+argument_list|()
+argument_list|,
+name|getRAngleLoc
+argument_list|()
+argument_list|)
+return|;
+else|else
 return|return
 name|SourceRange
 argument_list|(
@@ -1636,13 +1906,40 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|bool
-name|hasInnerType
+name|void
+name|initializeLocal
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|initializeLocalBase
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setHasProtocolsAsWritten
+argument_list|(
+name|false
+argument_list|)
+block|;
+name|setHasBaseTypeAsWritten
+argument_list|(
+name|false
+argument_list|)
+block|;
+name|setStarLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;   }
+name|TypeLoc
+name|getBaseTypeLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|true
+name|getInnerTypeLoc
+argument_list|()
 return|;
 block|}
 name|QualType
@@ -1660,26 +1957,175 @@ return|;
 block|}
 expr|}
 block|;   struct
-name|BlockPointerLocInfo
+name|PointerLikeLocInfo
 block|{
 name|SourceLocation
-name|CaretLoc
+name|StarLoc
 block|; }
 block|;
-comment|/// \brief Wrapper for source info for block pointers.
+comment|/// A base class for
+name|template
+operator|<
 name|class
-name|BlockPointerLoc
+name|Derived
+block|,
+name|class
+name|TypeClass
+block|,
+name|class
+name|LocalData
+operator|=
+name|PointerLikeLocInfo
+operator|>
+name|class
+name|PointerLikeTypeLoc
 operator|:
 name|public
 name|ConcreteTypeLoc
 operator|<
-name|DeclaratorLoc
+name|UnqualTypeLoc
 block|,
-name|BlockPointerLoc
+name|Derived
+block|,
+name|TypeClass
+block|,
+name|LocalData
+operator|>
+block|{
+name|public
+operator|:
+name|SourceLocation
+name|getSigilLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|StarLoc
+return|;
+block|}
+name|void
+name|setSigilLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|StarLoc
+operator|=
+name|Loc
+block|;   }
+name|TypeLoc
+name|getPointeeLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getInnerTypeLoc
+argument_list|()
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getSigilLoc
+argument_list|()
+argument_list|,
+name|getSigilLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|void
+name|initializeLocal
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|setSigilLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;   }
+name|QualType
+name|getInnerType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getTypePtr
+argument_list|()
+operator|->
+name|getPointeeType
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Wrapper for source info for pointers.
+name|class
+name|PointerTypeLoc
+operator|:
+name|public
+name|PointerLikeTypeLoc
+operator|<
+name|PointerTypeLoc
+block|,
+name|PointerType
+operator|>
+block|{
+name|public
+operator|:
+name|SourceLocation
+name|getStarLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSigilLoc
+argument_list|()
+return|;
+block|}
+name|void
+name|setStarLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|setSigilLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;   }
+expr|}
+block|;
+comment|/// \brief Wrapper for source info for block pointers.
+name|class
+name|BlockPointerTypeLoc
+operator|:
+name|public
+name|PointerLikeTypeLoc
+operator|<
+name|BlockPointerTypeLoc
 block|,
 name|BlockPointerType
-block|,
-name|BlockPointerLocInfo
 operator|>
 block|{
 name|public
@@ -1690,10 +2136,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getLocalData
+name|getSigilLoc
 argument_list|()
-operator|->
-name|CaretLoc
 return|;
 block|}
 name|void
@@ -1702,97 +2146,23 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 block|{
-name|getLocalData
-argument_list|()
-operator|->
-name|CaretLoc
-operator|=
-name|Loc
-block|;   }
-name|TypeLoc
-name|getPointeeLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getInnerTypeLoc
-argument_list|()
-return|;
-block|}
-comment|/// \brief Find the TypeSpecLoc that is part of this BlockPointerLoc.
-name|TypeSpecLoc
-name|getTypeSpecLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getPointeeLoc
-argument_list|()
-operator|.
-name|getTypeSpecLoc
-argument_list|()
-return|;
-block|}
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceRange
+name|setSigilLoc
 argument_list|(
-name|getCaretLoc
-argument_list|()
-argument_list|,
-name|getCaretLoc
-argument_list|()
+name|Loc
 argument_list|)
-return|;
-block|}
-name|bool
-name|hasInnerType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|QualType
-name|getInnerType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTypePtr
-argument_list|()
-operator|->
-name|getPointeeType
-argument_list|()
-return|;
-block|}
+block|;   }
 expr|}
-block|;   struct
-name|MemberPointerLocInfo
-block|{
-name|SourceLocation
-name|StarLoc
-block|; }
 block|;
 comment|/// \brief Wrapper for source info for member pointers.
 name|class
-name|MemberPointerLoc
+name|MemberPointerTypeLoc
 operator|:
 name|public
-name|ConcreteTypeLoc
+name|PointerLikeTypeLoc
 operator|<
-name|DeclaratorLoc
-block|,
-name|MemberPointerLoc
+name|MemberPointerTypeLoc
 block|,
 name|MemberPointerType
-block|,
-name|MemberPointerLocInfo
 operator|>
 block|{
 name|public
@@ -1803,10 +2173,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getLocalData
+name|getSigilLoc
 argument_list|()
-operator|->
-name|StarLoc
 return|;
 block|}
 name|void
@@ -1815,62 +2183,26 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 block|{
-name|getLocalData
-argument_list|()
-operator|->
-name|StarLoc
-operator|=
-name|Loc
-block|;   }
-name|TypeLoc
-name|getPointeeLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getInnerTypeLoc
-argument_list|()
-return|;
-block|}
-comment|/// \brief Find the TypeSpecLoc that is part of this MemberPointerLoc.
-name|TypeSpecLoc
-name|getTypeSpecLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getPointeeLoc
-argument_list|()
-operator|.
-name|getTypeSpecLoc
-argument_list|()
-return|;
-block|}
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceRange
+name|setSigilLoc
 argument_list|(
-name|getStarLoc
-argument_list|()
-argument_list|,
-name|getStarLoc
-argument_list|()
+name|Loc
 argument_list|)
-return|;
-block|}
-name|bool
-name|hasInnerType
-argument_list|()
-specifier|const
+block|;   }
+expr|}
+block|;
+name|class
+name|ReferenceTypeLoc
+operator|:
+name|public
+name|PointerLikeTypeLoc
+operator|<
+name|ReferenceTypeLoc
+block|,
+name|ReferenceType
+operator|>
 block|{
-return|return
-name|true
-return|;
-block|}
+name|public
+operator|:
 name|QualType
 name|getInnerType
 argument_list|()
@@ -1880,32 +2212,23 @@ return|return
 name|getTypePtr
 argument_list|()
 operator|->
-name|getPointeeType
+name|getPointeeTypeAsWritten
 argument_list|()
 return|;
 block|}
 expr|}
-block|;   struct
-name|ReferenceLocInfo
-block|{
-name|SourceLocation
-name|AmpLoc
-block|; }
 block|;
-comment|/// \brief Wrapper for source info for references.
 name|class
-name|ReferenceLoc
+name|LValueReferenceTypeLoc
 operator|:
 name|public
-name|ConcreteTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
-name|DeclaratorLoc
+name|ReferenceTypeLoc
 block|,
-name|ReferenceLoc
+name|LValueReferenceTypeLoc
 block|,
-name|ReferenceType
-block|,
-name|ReferenceLocInfo
+name|LValueReferenceType
 operator|>
 block|{
 name|public
@@ -1916,10 +2239,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getLocalData
+name|getSigilLoc
 argument_list|()
-operator|->
-name|AmpLoc
 return|;
 block|}
 name|void
@@ -1928,84 +2249,49 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 block|{
-name|getLocalData
-argument_list|()
-operator|->
-name|AmpLoc
-operator|=
+name|setSigilLoc
+argument_list|(
 name|Loc
+argument_list|)
 block|;   }
-name|TypeLoc
-name|getPointeeLoc
+expr|}
+block|;
+name|class
+name|RValueReferenceTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|ReferenceTypeLoc
+block|,
+name|RValueReferenceTypeLoc
+block|,
+name|RValueReferenceType
+operator|>
+block|{
+name|public
+operator|:
+name|SourceLocation
+name|getAmpAmpLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TypeLoc
+name|getSigilLoc
+argument_list|()
+return|;
+block|}
+name|void
+name|setAmpAmpLoc
 argument_list|(
-name|getTypePtr
-argument_list|()
-operator|->
-name|getPointeeType
-argument_list|()
-argument_list|,
-name|getNonLocalData
-argument_list|()
+argument|SourceLocation Loc
 argument_list|)
-return|;
-block|}
-comment|/// \brief Find the TypeSpecLoc that is part of this ReferenceLoc.
-name|TypeSpecLoc
-name|getTypeSpecLoc
-argument_list|()
-specifier|const
 block|{
-return|return
-name|getPointeeLoc
-argument_list|()
-operator|.
-name|getTypeSpecLoc
-argument_list|()
-return|;
-block|}
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceRange
+name|setSigilLoc
 argument_list|(
-name|getAmpLoc
-argument_list|()
-argument_list|,
-name|getAmpLoc
-argument_list|()
+name|Loc
 argument_list|)
-return|;
-block|}
-name|bool
-name|hasInnerType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|QualType
-name|getInnerType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTypePtr
-argument_list|()
-operator|->
-name|getPointeeType
-argument_list|()
-return|;
-block|}
+block|;   }
 expr|}
 block|;   struct
 name|FunctionLocInfo
@@ -2018,14 +2304,14 @@ block|; }
 block|;
 comment|/// \brief Wrapper for source info for functions.
 name|class
-name|FunctionLoc
+name|FunctionTypeLoc
 operator|:
 name|public
 name|ConcreteTypeLoc
 operator|<
-name|DeclaratorLoc
+name|UnqualTypeLoc
 block|,
-name|FunctionLoc
+name|FunctionTypeLoc
 block|,
 name|FunctionType
 block|,
@@ -2184,20 +2470,6 @@ name|getInnerTypeLoc
 argument_list|()
 return|;
 block|}
-comment|/// \brief Find the TypeSpecLoc that is part of this FunctionLoc.
-name|TypeSpecLoc
-name|getTypeSpecLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getResultLoc
-argument_list|()
-operator|.
-name|getTypeSpecLoc
-argument_list|()
-return|;
-block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -2213,6 +2485,49 @@ name|getRParenLoc
 argument_list|()
 argument_list|)
 return|;
+block|}
+name|void
+name|initializeLocal
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|setLParenLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setRParenLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|getNumArgs
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+name|setArg
+argument_list|(
+name|i
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// \brief Returns the size of the type source info data block that is
 comment|/// specific to this type.
@@ -2232,15 +2547,6 @@ operator|*
 argument_list|)
 return|;
 block|}
-name|bool
-name|hasInnerType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 name|QualType
 name|getInnerType
 argument_list|()
@@ -2255,6 +2561,34 @@ argument_list|()
 return|;
 block|}
 expr|}
+block|;
+name|class
+name|FunctionProtoTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|FunctionTypeLoc
+block|,
+name|FunctionProtoTypeLoc
+block|,
+name|FunctionProtoType
+operator|>
+block|{ }
+block|;
+name|class
+name|FunctionNoProtoTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|FunctionTypeLoc
+block|,
+name|FunctionNoProtoTypeLoc
+block|,
+name|FunctionNoProtoType
+operator|>
+block|{ }
 block|;   struct
 name|ArrayLocInfo
 block|{
@@ -2270,14 +2604,14 @@ block|; }
 block|;
 comment|/// \brief Wrapper for source info for arrays.
 name|class
-name|ArrayLoc
+name|ArrayTypeLoc
 operator|:
 name|public
 name|ConcreteTypeLoc
 operator|<
-name|DeclaratorLoc
+name|UnqualTypeLoc
 block|,
-name|ArrayLoc
+name|ArrayTypeLoc
 block|,
 name|ArrayType
 block|,
@@ -2372,20 +2706,6 @@ name|getInnerTypeLoc
 argument_list|()
 return|;
 block|}
-comment|/// \brief Find the TypeSpecLoc that is part of this ArrayLoc.
-name|TypeSpecLoc
-name|getTypeSpecLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getElementLoc
-argument_list|()
-operator|.
-name|getTypeSpecLoc
-argument_list|()
-return|;
-block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -2402,15 +2722,27 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|bool
-name|hasInnerType
-argument_list|()
-specifier|const
+name|void
+name|initializeLocal
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
 block|{
-return|return
-name|true
-return|;
-block|}
+name|setLBracketLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setRBracketLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setSizeExpr
+argument_list|(
+name|NULL
+argument_list|)
+block|;   }
 name|QualType
 name|getInnerType
 argument_list|()
@@ -2425,6 +2757,250 @@ argument_list|()
 return|;
 block|}
 expr|}
+block|;
+name|class
+name|ConstantArrayTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|ArrayTypeLoc
+block|,
+name|ConstantArrayTypeLoc
+block|,
+name|ConstantArrayType
+operator|>
+block|{ }
+block|;
+name|class
+name|IncompleteArrayTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|ArrayTypeLoc
+block|,
+name|IncompleteArrayTypeLoc
+block|,
+name|IncompleteArrayType
+operator|>
+block|{ }
+block|;
+name|class
+name|DependentSizedArrayTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|ArrayTypeLoc
+block|,
+name|DependentSizedArrayTypeLoc
+block|,
+name|DependentSizedArrayType
+operator|>
+block|{  }
+block|;
+name|class
+name|VariableArrayTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|ArrayTypeLoc
+block|,
+name|VariableArrayTypeLoc
+block|,
+name|VariableArrayType
+operator|>
+block|{ }
+block|;
+comment|// None of these types have proper implementations yet.
+name|class
+name|VectorTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|VectorTypeLoc
+block|,
+name|VectorType
+operator|>
+block|{ }
+block|;
+name|class
+name|ExtVectorTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|VectorTypeLoc
+block|,
+name|ExtVectorTypeLoc
+block|,
+name|ExtVectorType
+operator|>
+block|{ }
+block|;
+comment|// For some reason, this isn't a subtype of VectorType.
+name|class
+name|DependentSizedExtVectorTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|DependentSizedExtVectorTypeLoc
+block|,
+name|DependentSizedExtVectorType
+operator|>
+block|{ }
+block|;
+name|class
+name|FixedWidthIntTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|FixedWidthIntTypeLoc
+block|,
+name|FixedWidthIntType
+operator|>
+block|{ }
+block|;
+name|class
+name|ComplexTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|ComplexTypeLoc
+block|,
+name|ComplexType
+operator|>
+block|{ }
+block|;
+name|class
+name|TypeOfExprTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|TypeOfExprTypeLoc
+block|,
+name|TypeOfExprType
+operator|>
+block|{ }
+block|;
+name|class
+name|TypeOfTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|TypeOfTypeLoc
+block|,
+name|TypeOfType
+operator|>
+block|{ }
+block|;
+name|class
+name|DecltypeTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|DecltypeTypeLoc
+block|,
+name|DecltypeType
+operator|>
+block|{ }
+block|;
+name|class
+name|TagTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|TagTypeLoc
+block|,
+name|TagType
+operator|>
+block|{ }
+block|;
+name|class
+name|RecordTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|TagTypeLoc
+block|,
+name|RecordTypeLoc
+block|,
+name|RecordType
+operator|>
+block|{ }
+block|;
+name|class
+name|EnumTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|TagTypeLoc
+block|,
+name|EnumTypeLoc
+block|,
+name|EnumType
+operator|>
+block|{ }
+block|;
+name|class
+name|ElaboratedTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|ElaboratedTypeLoc
+block|,
+name|ElaboratedType
+operator|>
+block|{ }
+block|;
+name|class
+name|TemplateSpecializationTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|TemplateSpecializationTypeLoc
+block|,
+name|TemplateSpecializationType
+operator|>
+block|{ }
+block|;
+name|class
+name|QualifiedNameTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|QualifiedNameTypeLoc
+block|,
+name|QualifiedNameType
+operator|>
+block|{ }
+block|;
+name|class
+name|TypenameTypeLoc
+operator|:
+name|public
+name|TypeSpecTypeLoc
+operator|<
+name|TypenameTypeLoc
+block|,
+name|TypenameType
+operator|>
+block|{ }
 block|;  }
 end_decl_stmt
 

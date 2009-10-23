@@ -123,7 +123,7 @@ name|f3
 parameter_list|()
 block|{
 return|return;
-comment|// expected-error {{function 'f3' declared 'noreturn' should not return}}
+comment|// expected-warning {{function 'f3' declared 'noreturn' should not return}}
 block|}
 end_function
 
@@ -132,7 +132,7 @@ pragma|#
 directive|pragma
 name|clang
 name|diagnostic
-name|warning
+name|error
 literal|"-Winvalid-noreturn"
 end_pragma
 
@@ -156,7 +156,7 @@ name|f4
 parameter_list|()
 block|{
 return|return;
-comment|// expected-warning {{function 'f4' declared 'noreturn' should not return}}
+comment|// expected-error {{function 'f4' declared 'noreturn' should not return}}
 block|}
 end_function
 

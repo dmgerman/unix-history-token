@@ -59,7 +59,7 @@ end_typedef
 
 begin_function
 name|void
-name|f
+name|test1
 parameter_list|()
 block|{
 name|v2s
@@ -186,7 +186,7 @@ end_comment
 
 begin_decl_stmt
 name|float
-name|f2
+name|test2
 argument_list|(
 name|__attribute__
 argument_list|(
@@ -209,6 +209,56 @@ index|]
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// PR4838
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(2
+modifier|*
+typedef|sizeof(
+name|long
+name|long
+typedef|))))
+name|longlongvec
+typedef|;
+end_typedef
+
+begin_function_decl
+name|void
+name|test3a
+parameter_list|(
+name|longlongvec
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test3
+parameter_list|(
+specifier|const
+name|unsigned
+modifier|*
+name|src
+parameter_list|)
+block|{
+name|test3a
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{incompatible pointer types passing 'unsigned int const *', expected 'longlongvec *'}}
+block|}
+end_function
 
 end_unit
 

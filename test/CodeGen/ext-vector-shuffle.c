@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -emit-llvm -o - | not grep 'extractelement'&&
+comment|// RUN: clang-cc %s -x cl -emit-llvm -o - | not grep 'extractelement'&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -emit-llvm -o - | not grep 'insertelement'&&
+comment|// RUN: clang-cc %s -x cl -emit-llvm -o - | not grep 'insertelement'&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -emit-llvm -o - | grep 'shufflevector'
+comment|// RUN: clang-cc %s -x cl -emit-llvm -o - | grep 'shufflevector'
 end_comment
 
 begin_typedef
@@ -80,6 +80,34 @@ operator|+
 name|W
 operator|.
 name|yxyx
+return|;
+block|}
+end_function
+
+begin_function
+name|float4
+name|test3
+parameter_list|(
+name|float4
+name|V1
+parameter_list|,
+name|float4
+name|V2
+parameter_list|)
+block|{
+return|return
+call|(
+name|float4
+call|)
+argument_list|(
+name|V1
+operator|.
+name|zw
+argument_list|,
+name|V2
+operator|.
+name|xy
+argument_list|)
 return|;
 block|}
 end_function

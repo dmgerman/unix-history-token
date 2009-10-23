@@ -116,8 +116,6 @@ name|BumpPtrAllocator
 operator|*
 operator|,
 literal|1
-operator|,
-name|bool
 operator|>
 name|Alloc
 expr_stmt|;
@@ -132,7 +130,7 @@ name|Alloc
 argument_list|(
 argument|new llvm::BumpPtrAllocator()
 argument_list|,
-argument|true
+literal|1
 argument_list|)
 block|{}
 comment|/// Construct a new BumpVectorContext that reuses an existing
@@ -151,7 +149,7 @@ name|Alloc
 argument_list|(
 argument|&A
 argument_list|,
-argument|false
+literal|0
 argument_list|)
 block|{}
 operator|~

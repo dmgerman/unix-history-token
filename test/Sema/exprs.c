@@ -488,5 +488,40 @@ decl_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// PR5242
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+modifier|*
+name|test15_t
+typedef|;
+end_typedef
+
+begin_function
+name|test15_t
+name|test15
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|test15_t
+operator|)
+literal|0
+operator|+
+operator|(
+name|test15_t
+operator|)
+literal|0
+return|;
+comment|// expected-error {{invalid operands to binary expression ('test15_t' (aka 'unsigned long *') and 'test15_t')}}
+block|}
+end_function
+
 end_unit
 

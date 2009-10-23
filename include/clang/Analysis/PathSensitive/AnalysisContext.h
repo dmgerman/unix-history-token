@@ -237,6 +237,11 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+comment|// Discard all previously created AnalysisContexts.
+name|void
+name|clear
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -679,6 +684,10 @@ name|Contexts
 block|;
 name|public
 operator|:
+operator|~
+name|LocationContextManager
+argument_list|()
+block|;
 name|StackFrameContext
 operator|*
 name|getStackFrame
@@ -716,6 +725,11 @@ name|Stmt
 operator|*
 name|s
 argument_list|)
+block|;
+comment|/// Discard all previously created LocationContext objects.
+name|void
+name|clear
+argument_list|()
 block|; }
 block|;  }
 end_decl_stmt

@@ -74,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/TextDiagnosticBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/FileManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -92,6 +104,9 @@ name|SourceManager
 decl_stmt|;
 name|class
 name|Diagnostic
+decl_stmt|;
+name|class
+name|TextDiagnosticBuffer
 decl_stmt|;
 name|class
 name|HeaderSearch
@@ -114,8 +129,10 @@ name|class
 name|ASTUnit
 block|{
 name|Diagnostic
-modifier|&
 name|Diags
+decl_stmt|;
+name|FileManager
+name|FileMgr
 decl_stmt|;
 name|SourceManager
 name|SourceMgr
@@ -152,6 +169,15 @@ name|ASTContext
 operator|>
 name|Ctx
 expr_stmt|;
+name|bool
+name|tempFile
+decl_stmt|;
+comment|// OnlyLocalDecls - when true, walking this AST should only visit declarations
+comment|// that come from the AST itself, not from included precompiled headers.
+comment|// FIXME: This is temporary; eventually, CIndex will always do this.
+name|bool
+name|OnlyLocalDecls
+decl_stmt|;
 name|ASTUnit
 argument_list|(
 specifier|const
@@ -172,14 +198,19 @@ operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|ASTUnit
-argument_list|(
-name|Diagnostic
-operator|&
-name|_Diag
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|public
 label|:
+name|ASTUnit
+argument_list|(
+name|DiagnosticClient
+operator|*
+name|diagClient
+operator|=
+name|NULL
+argument_list|)
+expr_stmt|;
 operator|~
 name|ASTUnit
 argument_list|()
@@ -280,11 +311,26 @@ return|return
 name|Diags
 return|;
 block|}
+specifier|const
+name|FileManager
+operator|&
+name|getFileManager
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileMgr
+return|;
+block|}
 name|FileManager
 modifier|&
 name|getFileManager
 parameter_list|()
-function_decl|;
+block|{
+return|return
+name|FileMgr
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -293,11 +339,39 @@ operator|&
 name|getOriginalSourceFileName
 argument_list|()
 expr_stmt|;
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getPCHFileName
+argument_list|()
+expr_stmt|;
+name|void
+name|unlinkTemporaryFile
+parameter_list|()
+block|{
+name|tempFile
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|bool
+name|getOnlyLocalDecls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OnlyLocalDecls
+return|;
+block|}
 comment|/// \brief Create a ASTUnit from a PCH file.
 comment|///
 comment|/// \param Filename - The PCH file to load.
 comment|///
-comment|/// \param Diags - The Diagnostic implementation to use.
+comment|/// \param diagClient - The diagnostics client to use.  Specify NULL
+comment|/// to use a default client that emits warnings/errors to standard error.
+comment|/// The ASTUnit objects takes ownership of this object.
 comment|///
 comment|/// \param FileMgr - The FileManager to use.
 comment|///
@@ -317,14 +391,6 @@ name|string
 operator|&
 name|Filename
 argument_list|,
-name|Diagnostic
-operator|&
-name|Diags
-argument_list|,
-name|FileManager
-operator|&
-name|FileMgr
-argument_list|,
 name|std
 operator|::
 name|string
@@ -332,6 +398,22 @@ operator|*
 name|ErrMsg
 operator|=
 literal|0
+argument_list|,
+name|DiagnosticClient
+operator|*
+name|diagClient
+operator|=
+name|NULL
+argument_list|,
+name|bool
+name|OnlyLocalDecls
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UseBumpAllocator
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 block|}

@@ -253,6 +253,20 @@ argument_list|(
 argument|trim
 argument_list|)
 block|{}
+name|void
+name|ClearContexts
+argument_list|()
+block|{
+name|LocCtxMgr
+operator|.
+name|clear
+argument_list|()
+block|;
+name|AnaCtxMgr
+operator|.
+name|clear
+argument_list|()
+block|;   }
 name|StoreManagerCreator
 name|getStoreManagerCreator
 argument_list|()

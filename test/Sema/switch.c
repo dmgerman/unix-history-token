@@ -229,5 +229,30 @@ block|}
 block|}
 end_function
 
+begin_function
+name|void
+name|test6
+parameter_list|()
+block|{
+specifier|const
+name|char
+name|ch
+init|=
+literal|'a'
+decl_stmt|;
+switch|switch
+condition|(
+name|ch
+condition|)
+block|{
+case|case
+literal|1234
+case|:
+comment|// expected-warning {{overflow converting case value}}
+break|break;
+block|}
+block|}
+end_function
+
 end_unit
 

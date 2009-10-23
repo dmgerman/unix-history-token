@@ -367,12 +367,22 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|// FIXME: This is a lightweight shim that is used by FileManager to cache
-comment|//  'stat' system calls.  We will use it with PTH to identify if caching
-comment|//  stat calls in PTH files is a performance win.
+comment|/// \brief Abstract interface for introducing a FileManager cache for 'stat'
+comment|/// system calls, which is used by precompiled and pretokenized headers to
+comment|/// improve performance.
 name|class
 name|StatSysCallCache
 block|{
+name|protected
+label|:
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|StatSysCallCache
+operator|>
+name|NextStatCache
+expr_stmt|;
 name|public
 label|:
 name|virtual
@@ -384,24 +394,103 @@ name|virtual
 name|int
 name|stat
 argument_list|(
-specifier|const
-name|char
-operator|*
+argument|const char *path
+argument_list|,
+argument|struct stat *buf
+argument_list|)
+block|{
+if|if
+condition|(
+name|getNextStatCache
+argument_list|()
+condition|)
+return|return
+name|getNextStatCache
+argument_list|()
+operator|->
+name|stat
+argument_list|(
 name|path
 argument_list|,
-expr|struct
-name|stat
-operator|*
 name|buf
 argument_list|)
-operator|=
-literal|0
+return|;
+return|return
+operator|::
+name|stat
+argument_list|(
+name|path
+argument_list|,
+name|buf
+argument_list|)
+return|;
+block|}
+comment|/// \brief Sets the next stat call cache in the chain of stat caches.
+comment|/// Takes ownership of the given stat cache.
+name|void
+name|setNextStatCache
+parameter_list|(
+name|StatSysCallCache
+modifier|*
+name|Cache
+parameter_list|)
+block|{
+name|NextStatCache
+operator|.
+name|reset
+argument_list|(
+name|Cache
+argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Retrieve the next stat call cache in the chain.
+name|StatSysCallCache
+modifier|*
+name|getNextStatCache
+parameter_list|()
+block|{
+return|return
+name|NextStatCache
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the next stat call cache in the chain, transferring
+comment|/// ownership of this cache (and, transitively, all of the remaining caches)
+comment|/// to the caller.
+name|StatSysCallCache
+modifier|*
+name|takeNextStatCache
+parameter_list|()
+block|{
+return|return
+name|NextStatCache
+operator|.
+name|take
+argument_list|()
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
-comment|/// \brief A stat listener that can be used by FileManager to keep
+end_empty_stmt
+
+begin_comment
+comment|/// \brief A stat "cache" that can be used by FileManager to keep
+end_comment
+
+begin_comment
 comment|/// track of the results of stat() calls that occur throughout the
+end_comment
+
+begin_comment
 comment|/// execution of the front end.
+end_comment
+
+begin_decl_stmt
 name|class
 name|MemorizeStatCalls
 range|:
@@ -440,6 +529,9 @@ name|BumpPtrAllocator
 operator|>
 name|StatCalls
 decl_stmt|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -455,6 +547,9 @@ operator|::
 name|const_iterator
 name|iterator
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|iterator
 name|begin
 argument_list|()
@@ -467,6 +562,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|iterator
 name|end
 argument_list|()
@@ -479,6 +577,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function_decl
 name|virtual
 name|int
 name|stat
@@ -494,14 +595,10 @@ modifier|*
 name|buf
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_comment
+unit|};
 comment|/// FileManager - Implements support for file system lookup, file system
 end_comment
 
@@ -641,25 +738,39 @@ operator|~
 name|FileManager
 argument_list|()
 expr_stmt|;
-comment|/// setStatCache - Installs the provided StatSysCallCache object within
-comment|///  the FileManager.  Ownership of this object is transferred to the
-comment|///  FileManager.
+comment|/// \brief Installs the provided StatSysCallCache object within
+comment|/// the FileManager.
+comment|///
+comment|/// Ownership of this object is transferred to the FileManager.
+comment|///
+comment|/// \param statCache the new stat cache to install. Ownership of this
+comment|/// object is transferred to the FileManager.
+comment|///
+comment|/// \param AtBeginning whether this new stat cache must be installed at the
+comment|/// beginning of the chain of stat caches. Otherwise, it will be added to
+comment|/// the end of the chain.
 name|void
-name|setStatCache
+name|addStatCache
+parameter_list|(
+name|StatSysCallCache
+modifier|*
+name|statCache
+parameter_list|,
+name|bool
+name|AtBeginning
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Removes the provided StatSysCallCache object from the file manager.
+name|void
+name|removeStatCache
 parameter_list|(
 name|StatSysCallCache
 modifier|*
 name|statCache
 parameter_list|)
-block|{
-name|StatCache
-operator|.
-name|reset
-argument_list|(
-name|statCache
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// getDirectory - Lookup, cache, and verify the specified directory.  This
 comment|/// returns null if the directory doesn't exist.
 comment|///

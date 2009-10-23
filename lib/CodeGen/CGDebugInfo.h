@@ -385,7 +385,7 @@ operator|*
 name|Name
 argument_list|,
 name|QualType
-name|ReturnType
+name|FnType
 argument_list|,
 name|llvm
 operator|::

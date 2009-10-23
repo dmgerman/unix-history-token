@@ -287,7 +287,7 @@ operator|&&
 operator|!
 name|memcmp
 argument_list|(
-name|getName
+name|getNameStart
 argument_list|()
 argument_list|,
 name|Str
@@ -298,13 +298,13 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// getName - Return the actual string for this identifier.  The returned
-comment|/// string is properly null terminated.
+comment|/// getNameStart - Return the beginning of the actual string for this
+comment|/// identifier.  The returned string is properly null terminated.
 comment|///
 specifier|const
 name|char
 operator|*
-name|getName
+name|getNameStart
 argument_list|()
 specifier|const
 block|{
@@ -423,6 +423,33 @@ literal|1
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// getName - Return the actual identifier string.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|StringRef
+argument_list|(
+name|getNameStart
+argument_list|()
+argument_list|,
+name|getLength
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// hasMacroDefinition - Return true if this identifier is #defined to some
@@ -1019,6 +1046,8 @@ comment|/// get - Return the identifier token info for the specified named ident
 comment|///  Unlike the version in IdentifierTable, this returns a pointer instead
 comment|///  of a reference.  If the pointer is NULL then the IdentifierInfo cannot
 comment|///  be found.
+comment|//
+comment|// FIXME: Move to StringRef API.
 name|virtual
 name|IdentifierInfo
 modifier|*
@@ -1417,13 +1446,36 @@ return|;
 block|}
 name|IdentifierInfo
 modifier|&
-name|get
+name|CreateIdentifierInfo
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|StringRef
-operator|&
+name|Name
+argument_list|)
+block|{
+return|return
+name|CreateIdentifierInfo
+argument_list|(
+name|Name
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Name
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|IdentifierInfo
+modifier|&
+name|get
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|Name
 argument_list|)
 block|{
@@ -2053,24 +2105,11 @@ operator|=
 literal|"set"
 expr_stmt|;
 name|SelectorName
-operator|.
-name|append
-argument_list|(
+operator|+=
 name|Name
 operator|->
 name|getName
 argument_list|()
-argument_list|,
-name|Name
-operator|->
-name|getName
-argument_list|()
-operator|+
-name|Name
-operator|->
-name|getLength
-argument_list|()
-argument_list|)
 expr_stmt|;
 name|SelectorName
 index|[

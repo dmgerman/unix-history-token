@@ -255,9 +255,16 @@ name|void
 modifier|*
 name|CXEntity
 typedef|;
+comment|/**    * \brief clang_createIndex() provides a shared context for creating  * translation units. It provides two options:  *  * - excludeDeclarationsFromPCH: When non-zero, allows enumeration of "local"  * declarations (when loading any new translation units). A "local" declaration  * is one that belongs in the translation unit itself and not in a precompiled   * header that was used by the translation unit. If zero, all declarations  * will be enumerated.  *  * - displayDiagnostics: when non-zero, diagnostics will be output. If zero,  * diagnostics will be ignored.  *  * Here is an example:  *  *   // excludeDeclsFromPCH = 1, displayDiagnostics = 1  *   Idx = clang_createIndex(1, 1);  *  *   // IndexTest.pch was produced with the following command:  *   // "clang -x c IndexTest.h -emit-ast -o IndexTest.pch"  *   TU = clang_createTranslationUnit(Idx, "IndexTest.pch");  *  *   // This will load all the symbols from 'IndexTest.pch'  *   clang_loadTranslationUnit(TU, TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  *   // This will load all the symbols from 'IndexTest.c', excluding symbols  *   // from 'IndexTest.pch'.  *   char *args[] = { "-Xclang", "-include-pch=IndexTest.pch", 0 };  *   TU = clang_createTranslationUnitFromSourceFile(Idx, "IndexTest.c", 2, args);  *   clang_loadTranslationUnit(TU, TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  * This process of creating the 'pch', loading it separately, and using it (via  * -include-pch) allows 'excludeDeclsFromPCH' to remove redundant callbacks  * (which gives the indexer the same performance benefit as the compiler).  */
 name|CXIndex
 name|clang_createIndex
-parameter_list|()
+parameter_list|(
+name|int
+name|excludeDeclarationsFromPCH
+parameter_list|,
+name|int
+name|displayDiagnostics
+parameter_list|)
 function_decl|;
 name|void
 name|clang_disposeIndex
@@ -274,6 +281,7 @@ name|CXTranslationUnit
 name|CTUnit
 parameter_list|)
 function_decl|;
+comment|/*   * \brief Create a translation unit from an AST file (-emit-ast).  */
 name|CXTranslationUnit
 name|clang_createTranslationUnit
 parameter_list|(
@@ -285,10 +293,34 @@ modifier|*
 name|ast_filename
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Destroy the specified CXTranslationUnit object.  */
 name|void
 name|clang_disposeTranslationUnit
 parameter_list|(
 name|CXTranslationUnit
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Return the CXTranslationUnit for a given source file and the provided  * command line arguments one would pass to the compiler.  *  * Note: The 'source_filename' argument is optional.  If the caller provides a NULL pointer,  *  the name of the source file is expected to reside in the specified command line arguments.  *  * Note: When encountered in 'clang_command_line_args', the following options are ignored:  *  *   '-c'  *   '-emit-ast'  *   '-fsyntax-only'  *   '-o<output file>'  (both '-o' and '<output file>' are ignored)  *  */
+name|CXTranslationUnit
+name|clang_createTranslationUnitFromSourceFile
+parameter_list|(
+name|CXIndex
+name|CIdx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|source_filename
+comment|/* specify NULL if the source file is in clang_command_line_args */
+parameter_list|,
+name|int
+name|num_clang_command_line_args
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|clang_command_line_args
 parameter_list|)
 function_decl|;
 comment|/*    Usage: clang_loadTranslationUnit(). Will load the toplevel declarations    within a translation unit, issuing a 'callback' for each one.     void printObjCInterfaceNames(CXTranslationUnit X, CXCursor C) {      if (clang_getCursorKind(C) == Cursor_Declaration) {        CXDecl D = clang_getCursorDecl(C);        if (clang_getDeclKind(D) == CXDecl_ObjC_interface)          printf("@interface %s in file %s on line %d column %d\n",                 clang_getDeclSpelling(D), clang_getCursorSource(C),                 clang_getCursorLine(C), clang_getCursorColumn(C));      }    }    static void usage {      clang_loadTranslationUnit(CXTranslationUnit, printObjCInterfaceNames);    } */
@@ -414,6 +446,7 @@ name|CXDecl
 parameter_list|)
 function_decl|;
 comment|/*  * CXCursor Operations.  */
+comment|/**    Usage: clang_getCursor() will translate a source/line/column position    into an AST cursor (to derive semantic information from the source code).  */
 name|CXCursor
 name|clang_getCursor
 parameter_list|(
@@ -429,6 +462,40 @@ name|line
 parameter_list|,
 name|unsigned
 name|column
+parameter_list|)
+function_decl|;
+comment|/**    Usage: clang_getCursorWithHint() provides the same functionality as    clang_getCursor() except that it takes an option 'hint' argument.    The 'hint' is a temporary CXLookupHint object (whose lifetime is managed by     the caller) that should be initialized with clang_initCXLookupHint().     FIXME: Add a better comment once getCursorWithHint() has more functionality.  */
+typedef|typedef
+name|CXCursor
+name|CXLookupHint
+typedef|;
+name|CXCursor
+name|clang_getCursorWithHint
+parameter_list|(
+name|CXTranslationUnit
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|source_name
+parameter_list|,
+name|unsigned
+name|line
+parameter_list|,
+name|unsigned
+name|column
+parameter_list|,
+name|CXLookupHint
+modifier|*
+name|hint
+parameter_list|)
+function_decl|;
+name|void
+name|clang_initCXLookupHint
+parameter_list|(
+name|CXLookupHint
+modifier|*
+name|hint
 parameter_list|)
 function_decl|;
 name|enum

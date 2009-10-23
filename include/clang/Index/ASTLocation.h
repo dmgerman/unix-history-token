@@ -363,7 +363,7 @@ name|TyPtr
 operator|=
 name|tyLoc
 operator|.
-name|getSourceType
+name|getType
 argument_list|()
 operator|.
 name|getAsOpaquePtr
@@ -552,6 +552,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|isValid
+argument_list|()
+operator|&&
 name|getKind
 argument_list|()
 operator|==
@@ -569,6 +572,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|isValid
+argument_list|()
+operator|&&
 name|getKind
 argument_list|()
 operator|==

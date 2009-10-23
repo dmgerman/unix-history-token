@@ -713,7 +713,6 @@ argument_list|(
 argument|alignment
 argument_list|)
 block|{}
-comment|// FIXME: Should use addressable units, not bits, to match llvm
 comment|/// getAlignment - The specified alignment in bits.
 name|unsigned
 name|getAlignment

@@ -876,19 +876,9 @@ block|}
 end_function
 
 begin_function
-name|char
-modifier|*
+name|void
 name|strcat
-parameter_list|(
-name|char
-modifier|*
-name|a
-parameter_list|,
-name|char
-specifier|const
-modifier|*
-name|b
-parameter_list|)
+parameter_list|()
 block|{}
 end_function
 

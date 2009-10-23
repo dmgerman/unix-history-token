@@ -166,7 +166,7 @@ comment|/// Individual elements in the path are described by the \c CXXBasePathE
 comment|/// structure, which captures both the link from a derived class to one of its
 comment|/// direct bases and identification describing which base class
 comment|/// subobject is being used.
-name|struct
+name|class
 name|CXXBasePath
 range|:
 name|public
@@ -177,6 +177,8 @@ operator|<
 name|CXXBasePathElement
 decl_stmt|, 4>
 block|{
+name|public
+label|:
 comment|/// \brief The set of declarations found inside this base class
 comment|/// subobject.
 name|DeclContext

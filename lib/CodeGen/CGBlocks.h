@@ -600,54 +600,21 @@ argument_list|(
 argument|QualType Ty
 argument_list|)
 block|{
-if|if
-condition|(
-name|Ty
-operator|->
-name|isBlockPointerType
-argument_list|()
-condition|)
 return|return
-name|true
-return|;
-if|if
-condition|(
 name|getContext
 argument_list|()
 operator|.
-name|isObjCNSObjectType
+name|BlockRequiresCopying
 argument_list|(
 name|Ty
 argument_list|)
-condition|)
-return|return
-name|true
-return|;
-if|if
-condition|(
-name|Ty
-operator|->
-name|isObjCObjectPointerType
-argument_list|()
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+expr|}
+block|;
 name|class
 name|BlockFunction
-range|:
+operator|:
 name|public
 name|BlockBase
 block|{
@@ -755,21 +722,7 @@ operator|*
 block|,
 literal|8
 operator|>
-name|ByCopyDeclRefs
-block|;
-comment|// ByRefDeclRefs - __block variables from parent scopes that have been
-comment|// imported into this block.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-specifier|const
-name|BlockDeclRefExpr
-operator|*
-block|,
-literal|8
-operator|>
-name|ByRefDeclRefs
+name|DeclRefs
 block|;
 name|BlockInfo
 argument_list|(
@@ -1065,16 +1018,24 @@ name|BlockRequiresCopying
 argument_list|(
 argument|QualType Ty
 argument_list|)
-block|; }
+block|{
+return|return
+name|getContext
+argument_list|()
+operator|.
+name|BlockRequiresCopying
+argument_list|(
+name|Ty
+argument_list|)
+return|;
+block|}
+expr|}
 block|;  }
+comment|// end namespace CodeGen
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace CodeGen
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

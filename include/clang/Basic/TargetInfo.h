@@ -318,6 +318,8 @@ name|IntPtrType
 decl_stmt|,
 name|WCharType
 decl_stmt|,
+name|WIntType
+decl_stmt|,
 name|Char16Type
 decl_stmt|,
 name|Char32Type
@@ -393,6 +395,15 @@ name|WCharType
 return|;
 block|}
 name|IntType
+name|getWIntType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WIntType
+return|;
+block|}
+name|IntType
 name|getChar16Type
 argument_list|()
 specifier|const
@@ -419,6 +430,26 @@ return|return
 name|Int64Type
 return|;
 block|}
+comment|/// getTypeWidth - Return the width (in bits) of the specified integer type
+comment|/// enum. For example, SignedInt -> getIntWidth().
+name|unsigned
+name|getTypeWidth
+argument_list|(
+name|IntType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getTypeSigned - Return whether an integer types is signed. Returns true if
+comment|/// the type is signed; false otherwise.
+name|bool
+name|getTypeSigned
+argument_list|(
+name|IntType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getPointerWidth - Return the width of pointers on this target, for the
 comment|/// specified address space.
 name|uint64_t
@@ -790,6 +821,18 @@ specifier|const
 name|char
 modifier|*
 name|getTypeName
+parameter_list|(
+name|IntType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// getTypeConstantSuffix - Return the constant suffix for the specified
+comment|/// integer type enum. For example, SignedLong -> "L".
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getTypeConstantSuffix
 parameter_list|(
 name|IntType
 name|T

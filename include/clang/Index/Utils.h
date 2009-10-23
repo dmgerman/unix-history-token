@@ -73,6 +73,9 @@ decl_stmt|;
 name|class
 name|SourceLocation
 decl_stmt|;
+name|class
+name|Decl
+decl_stmt|;
 name|namespace
 name|idx
 block|{
@@ -92,6 +95,12 @@ name|Ctx
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|Decl
+modifier|*
+name|RelativeToDecl
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 block|}

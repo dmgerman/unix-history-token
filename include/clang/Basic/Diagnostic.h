@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/type_traits.h"
 end_include
 
@@ -174,7 +180,7 @@ name|DIAG_START_ANALYSIS
 init|=
 name|DIAG_START_SEMA
 operator|+
-literal|1000
+literal|1100
 block|,
 name|DIAG_UPPER_LIMIT
 init|=
@@ -306,7 +312,7 @@ name|CreateInsertion
 argument_list|(
 argument|SourceLocation InsertionLoc
 argument_list|,
-argument|const std::string&Code
+argument|llvm::StringRef Code
 argument_list|)
 block|{
 name|CodeModificationHint
@@ -360,11 +366,9 @@ argument_list|(
 name|SourceRange
 name|RemoveRange
 argument_list|,
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|Code
 argument_list|)
 block|{
@@ -468,6 +472,19 @@ name|ak_declcontext
 comment|// DeclContext *
 block|}
 enum|;
+comment|/// ArgumentValue - This typedef represents on argument value, which is a
+comment|/// union discriminated by ArgumentKind, with a value.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|ArgumentKind
+operator|,
+name|intptr_t
+operator|>
+name|ArgumentValue
+expr_stmt|;
 name|private
 label|:
 name|unsigned
@@ -558,6 +575,11 @@ expr_stmt|;
 comment|/// ArgToStringFn - A function pointer that converts an opaque diagnostic
 comment|/// argument to a strings.  This takes the modifiers and argument that was
 comment|/// present in the diagnostic.
+comment|///
+comment|/// The PrevArgs array (whose length is NumPrevArgs) indicates the previous
+comment|/// arguments formatted for this diagnostic.  Implementations of this function
+comment|/// can use this information to avoid redundancy across arguments.
+comment|///
 comment|/// This is a hack to avoid a layering violation between libbasic and libsema.
 typedef|typedef
 name|void
@@ -586,6 +608,14 @@ name|Argument
 operator|,
 name|unsigned
 name|ArgumentLen
+operator|,
+specifier|const
+name|ArgumentValue
+operator|*
+name|PrevArgs
+operator|,
+name|unsigned
+name|NumPrevArgs
 operator|,
 name|llvm
 operator|::
@@ -977,6 +1007,14 @@ argument_list|,
 name|unsigned
 name|ArgLen
 argument_list|,
+specifier|const
+name|ArgumentValue
+operator|*
+name|PrevArgs
+argument_list|,
+name|unsigned
+name|NumPrevArgs
+argument_list|,
 name|llvm
 operator|::
 name|SmallVectorImpl
@@ -1001,6 +1039,10 @@ argument_list|,
 name|Argument
 argument_list|,
 name|ArgLen
+argument_list|,
+name|PrevArgs
+argument_list|,
+name|NumPrevArgs
 argument_list|,
 name|Output
 argument_list|,
@@ -1629,11 +1671,9 @@ block|}
 name|void
 name|AddString
 argument_list|(
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|S
 argument_list|)
 decl|const
@@ -1833,11 +1873,9 @@ name|DiagnosticBuilder
 operator|&
 name|DB
 operator|,
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|S
 operator|)
 block|{

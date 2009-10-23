@@ -1965,6 +1965,16 @@ name|getTypePtr
 argument_list|()
 return|;
 block|}
+name|bool
+name|isCanonical
+argument_list|()
+specifier|const
+decl_stmt|;
+name|bool
+name|isCanonicalAsParam
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// isNull - Return true if this QualType doesn't point to a type yet.
 name|bool
 name|isNull
@@ -2084,7 +2094,7 @@ argument_list|(
 name|getFastQualifiers
 argument_list|()
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 return|return
 name|Quals
 return|;
@@ -3149,7 +3159,7 @@ operator|)
 return|;
 block|}
 name|bool
-name|isCanonical
+name|isCanonicalUnqualified
 argument_list|()
 specifier|const
 block|{
@@ -4614,6 +4624,25 @@ block|{
 name|QualType
 name|PointeeType
 block|;
+comment|/// True if the type was originally spelled with an lvalue sigil.
+comment|/// This is never true of rvalue references but can also be false
+comment|/// on lvalue references because of C++0x [dcl.typedef]p9,
+comment|/// as follows:
+comment|///
+comment|///   typedef int&ref;    // lvalue, spelled lvalue
+comment|///   typedef int&&rvref; // rvalue
+comment|///   ref&a;              // lvalue, inner ref, spelled lvalue
+comment|///   ref&&a;             // lvalue, inner ref
+comment|///   rvref&a;            // lvalue, inner ref, spelled lvalue
+comment|///   rvref&&a;           // rvalue, inner ref
+name|bool
+name|SpelledAsLValue
+block|;
+comment|/// True if the inner type is a reference type.  This only happens
+comment|/// in non-canonical forms.
+name|bool
+name|InnerRef
+block|;
 name|protected
 operator|:
 name|ReferenceType
@@ -4623,6 +4652,8 @@ argument_list|,
 argument|QualType Referencee
 argument_list|,
 argument|QualType CanonicalRef
+argument_list|,
+argument|bool SpelledAsLValue
 argument_list|)
 operator|:
 name|Type
@@ -4639,17 +4670,74 @@ argument_list|)
 block|,
 name|PointeeType
 argument_list|(
-argument|Referencee
+name|Referencee
+argument_list|)
+block|,
+name|SpelledAsLValue
+argument_list|(
+name|SpelledAsLValue
+argument_list|)
+block|,
+name|InnerRef
+argument_list|(
+argument|Referencee->isReferenceType()
 argument_list|)
 block|{   }
 name|public
 operator|:
+name|bool
+name|isSpelledAsLValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SpelledAsLValue
+return|;
+block|}
+name|QualType
+name|getPointeeTypeAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointeeType
+return|;
+block|}
 name|QualType
 name|getPointeeType
 argument_list|()
 specifier|const
 block|{
+comment|// FIXME: this might strip inner qualifiers; okay?
+specifier|const
+name|ReferenceType
+operator|*
+name|T
+operator|=
+name|this
+block|;
+while|while
+condition|(
+name|T
+operator|->
+name|InnerRef
+condition|)
+name|T
+operator|=
+name|T
+operator|->
+name|PointeeType
+operator|->
+name|getAs
+operator|<
+name|ReferenceType
+operator|>
+operator|(
+operator|)
+expr_stmt|;
 return|return
+name|T
+operator|->
 name|PointeeType
 return|;
 block|}
@@ -4663,8 +4751,9 @@ name|Profile
 argument_list|(
 name|ID
 argument_list|,
-name|getPointeeType
-argument_list|()
+name|PointeeType
+argument_list|,
+name|SpelledAsLValue
 argument_list|)
 block|;   }
 specifier|static
@@ -4674,6 +4763,8 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType Referencee
+argument_list|,
+argument|bool SpelledAsLValue
 argument_list|)
 block|{
 name|ID
@@ -4684,6 +4775,13 @@ name|Referencee
 operator|.
 name|getAsOpaquePtr
 argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|SpelledAsLValue
 argument_list|)
 block|;   }
 specifier|static
@@ -4735,6 +4833,8 @@ argument_list|(
 argument|QualType Referencee
 argument_list|,
 argument|QualType CanonicalRef
+argument_list|,
+argument|bool SpelledAsLValue
 argument_list|)
 operator|:
 name|ReferenceType
@@ -4744,8 +4844,10 @@ argument_list|,
 argument|Referencee
 argument_list|,
 argument|CanonicalRef
+argument_list|,
+argument|SpelledAsLValue
 argument_list|)
-block|{   }
+block|{}
 name|friend
 name|class
 name|ASTContext
@@ -4837,6 +4939,8 @@ argument_list|,
 argument|Referencee
 argument_list|,
 argument|CanonicalRef
+argument_list|,
+argument|false
 argument_list|)
 block|{   }
 name|friend
@@ -5272,20 +5376,6 @@ operator|->
 name|getTypeClass
 argument_list|()
 operator|==
-name|ConstantArrayWithExpr
-operator|||
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
-name|ConstantArrayWithoutExpr
-operator|||
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
 name|VariableArray
 operator|||
 name|T
@@ -5537,20 +5627,6 @@ name|getTypeClass
 argument_list|()
 operator|==
 name|ConstantArray
-operator|||
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
-name|ConstantArrayWithExpr
-operator|||
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
-name|ConstantArrayWithoutExpr
 return|;
 block|}
 specifier|static
@@ -5564,324 +5640,6 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
-comment|/// ConstantArrayWithExprType - This class represents C arrays with a
-comment|/// constant size specified by means of an integer constant expression.
-comment|/// For example 'int A[sizeof(int)]' has ConstantArrayWithExprType where
-comment|/// the element type is 'int' and the size expression is 'sizeof(int)'.
-comment|/// These types are non-canonical.
-name|class
-name|ConstantArrayWithExprType
-operator|:
-name|public
-name|ConstantArrayType
-block|{
-comment|/// SizeExpr - The ICE occurring in the concrete syntax.
-name|Expr
-operator|*
-name|SizeExpr
-block|;
-comment|/// Brackets - The left and right array brackets.
-name|SourceRange
-name|Brackets
-block|;
-name|ConstantArrayWithExprType
-argument_list|(
-argument|QualType et
-argument_list|,
-argument|QualType can
-argument_list|,
-argument|const llvm::APInt&size
-argument_list|,
-argument|Expr *e
-argument_list|,
-argument|ArraySizeModifier sm
-argument_list|,
-argument|unsigned tq
-argument_list|,
-argument|SourceRange brackets
-argument_list|)
-operator|:
-name|ConstantArrayType
-argument_list|(
-name|ConstantArrayWithExpr
-argument_list|,
-name|et
-argument_list|,
-name|can
-argument_list|,
-name|size
-argument_list|,
-name|sm
-argument_list|,
-name|tq
-argument_list|)
-block|,
-name|SizeExpr
-argument_list|(
-name|e
-argument_list|)
-block|,
-name|Brackets
-argument_list|(
-argument|brackets
-argument_list|)
-block|{}
-name|friend
-name|class
-name|ASTContext
-block|;
-comment|// ASTContext creates these.
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
-name|public
-operator|:
-name|Expr
-operator|*
-name|getSizeExpr
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SizeExpr
-return|;
-block|}
-name|SourceRange
-name|getBracketsRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Brackets
-return|;
-block|}
-name|SourceLocation
-name|getLBracketLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Brackets
-operator|.
-name|getBegin
-argument_list|()
-return|;
-block|}
-name|SourceLocation
-name|getRBracketLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Brackets
-operator|.
-name|getEnd
-argument_list|()
-return|;
-block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isSugared
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|QualType
-name|desugar
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualType
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Type *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
-name|ConstantArrayWithExpr
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ConstantArrayWithExprType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&ID
-argument_list|)
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Cannot unique ConstantArrayWithExprTypes."
-argument_list|)
-block|;   }
-expr|}
-block|;
-comment|/// ConstantArrayWithoutExprType - This class represents C arrays with a
-comment|/// constant size that was not specified by an integer constant expression,
-comment|/// but inferred by static semantics.
-comment|/// For example 'int A[] = { 0, 1, 2 }' has ConstantArrayWithoutExprType.
-comment|/// These types are non-canonical: the corresponding canonical type,
-comment|/// having the size specified in an APInt object, is a ConstantArrayType.
-name|class
-name|ConstantArrayWithoutExprType
-operator|:
-name|public
-name|ConstantArrayType
-block|{
-name|ConstantArrayWithoutExprType
-argument_list|(
-argument|QualType et
-argument_list|,
-argument|QualType can
-argument_list|,
-argument|const llvm::APInt&size
-argument_list|,
-argument|ArraySizeModifier sm
-argument_list|,
-argument|unsigned tq
-argument_list|)
-operator|:
-name|ConstantArrayType
-argument_list|(
-argument|ConstantArrayWithoutExpr
-argument_list|,
-argument|et
-argument_list|,
-argument|can
-argument_list|,
-argument|size
-argument_list|,
-argument|sm
-argument_list|,
-argument|tq
-argument_list|)
-block|{}
-name|friend
-name|class
-name|ASTContext
-block|;
-comment|// ASTContext creates these.
-name|public
-operator|:
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isSugared
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|QualType
-name|desugar
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualType
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Type *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
-name|ConstantArrayWithoutExpr
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ConstantArrayWithoutExprType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&ID
-argument_list|)
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Cannot unique ConstantArrayWithoutExprTypes."
-argument_list|)
-block|;   }
 expr|}
 block|;
 comment|/// IncompleteArrayType - This class represents C arrays with an unspecified
@@ -9796,6 +9554,200 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Represents the result of substituting a type for a template
+comment|/// type parameter.
+comment|///
+comment|/// Within an instantiated template, all template type parameters have
+comment|/// been replaced with these.  They are used solely to record that a
+comment|/// type was originally written as a template type parameter;
+comment|/// therefore they are never canonical.
+name|class
+name|SubstTemplateTypeParmType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+comment|// The original type parameter.
+specifier|const
+name|TemplateTypeParmType
+operator|*
+name|Replaced
+block|;
+name|SubstTemplateTypeParmType
+argument_list|(
+argument|const TemplateTypeParmType *Param
+argument_list|,
+argument|QualType Canon
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|SubstTemplateTypeParm
+argument_list|,
+name|Canon
+argument_list|,
+name|Canon
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|)
+block|,
+name|Replaced
+argument_list|(
+argument|Param
+argument_list|)
+block|{ }
+name|friend
+name|class
+name|ASTContext
+block|;
+name|public
+operator|:
+name|IdentifierInfo
+operator|*
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaced
+operator|->
+name|getName
+argument_list|()
+return|;
+block|}
+comment|/// Gets the template parameter that was substituted for.
+specifier|const
+name|TemplateTypeParmType
+operator|*
+name|getReplacedParameter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaced
+return|;
+block|}
+comment|/// Gets the type that was substituted for the template
+comment|/// parameter.
+name|QualType
+name|getReplacementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCanonicalTypeInternal
+argument_list|()
+return|;
+block|}
+name|virtual
+name|void
+name|getAsStringInternal
+argument_list|(
+argument|std::string&InnerString
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getReplacementType
+argument_list|()
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getReplacedParameter
+argument_list|()
+argument_list|,
+name|getReplacementType
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|const TemplateTypeParmType *Replaced
+argument_list|,
+argument|QualType Replacement
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|Replaced
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|Replacement
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|SubstTemplateTypeParm
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SubstTemplateTypeParmType *T
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Represents the type of a template specialization as written
 comment|/// in the source code.
 comment|///
@@ -10575,6 +10527,8 @@ name|Protocols
 block|;
 name|ObjCInterfaceType
 argument_list|(
+argument|QualType Canonical
+argument_list|,
 argument|ObjCInterfaceDecl *D
 argument_list|,
 argument|ObjCProtocolDecl **Protos
@@ -10586,8 +10540,7 @@ name|Type
 argument_list|(
 name|ObjCInterface
 argument_list|,
-name|QualType
-argument_list|()
+name|Canonical
 argument_list|,
 comment|/*Dependent=*/
 name|false
@@ -10810,6 +10763,8 @@ name|Protocols
 block|;
 name|ObjCObjectPointerType
 argument_list|(
+argument|QualType Canonical
+argument_list|,
 argument|QualType T
 argument_list|,
 argument|ObjCProtocolDecl **Protos
@@ -10821,8 +10776,7 @@ name|Type
 argument_list|(
 name|ObjCObjectPointer
 argument_list|,
-name|QualType
-argument_list|()
+name|Canonical
 argument_list|,
 comment|/*Dependent=*/
 name|false
@@ -11146,236 +11100,6 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief An ObjC Protocol list that qualifies a type.
-comment|///
-comment|/// This is used only for keeping detailed type source information, it should
-comment|/// not participate in the semantics of the type system.
-comment|/// The protocol list is not canonicalized.
-name|class
-name|ObjCProtocolListType
-operator|:
-name|public
-name|Type
-block|,
-name|public
-name|llvm
-operator|::
-name|FoldingSetNode
-block|{
-name|QualType
-name|BaseType
-block|;
-comment|// List of protocols for this protocol conforming object type.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|ObjCProtocolDecl
-operator|*
-block|,
-literal|4
-operator|>
-name|Protocols
-block|;
-name|ObjCProtocolListType
-argument_list|(
-argument|QualType T
-argument_list|,
-argument|ObjCProtocolDecl **Protos
-argument_list|,
-argument|unsigned NumP
-argument_list|)
-operator|:
-name|Type
-argument_list|(
-name|ObjCProtocolList
-argument_list|,
-name|QualType
-argument_list|()
-argument_list|,
-comment|/*Dependent=*/
-name|false
-argument_list|)
-block|,
-name|BaseType
-argument_list|(
-name|T
-argument_list|)
-block|,
-name|Protocols
-argument_list|(
-argument|Protos
-argument_list|,
-argument|Protos+NumP
-argument_list|)
-block|{ }
-name|friend
-name|class
-name|ASTContext
-block|;
-comment|// ASTContext creates these.
-name|public
-operator|:
-name|QualType
-name|getBaseType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BaseType
-return|;
-block|}
-comment|/// \brief Provides access to the list of protocols qualifying the base type.
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|ObjCProtocolDecl
-operator|*
-operator|,
-literal|4
-operator|>
-operator|::
-name|const_iterator
-name|qual_iterator
-expr_stmt|;
-name|qual_iterator
-name|qual_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Protocols
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|qual_iterator
-name|qual_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Protocols
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|bool
-name|qual_empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Protocols
-operator|.
-name|size
-argument_list|()
-operator|==
-literal|0
-return|;
-block|}
-comment|/// \brief Return the number of qualifying protocols.
-name|unsigned
-name|getNumProtocols
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Protocols
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-name|bool
-name|isSugared
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|QualType
-name|desugar
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualType
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-name|void
-name|Profile
-argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-block|;
-specifier|static
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&ID
-argument_list|,
-argument|QualType T
-argument_list|,
-argument|ObjCProtocolDecl **protocols
-argument_list|,
-argument|unsigned NumProtocols
-argument_list|)
-block|;
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Type *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
-name|ObjCProtocolList
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ObjCProtocolListType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
 comment|/// A qualifier set is used to build a set of qualifiers.
 name|class
 name|QualifierCollector
@@ -11516,6 +11240,98 @@ specifier|const
 block|;  }
 block|;
 comment|// Inline function definitions.
+specifier|inline
+name|bool
+name|QualType
+operator|::
+name|isCanonical
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|Type
+operator|*
+name|T
+operator|=
+name|getTypePtr
+argument_list|()
+block|;
+if|if
+condition|(
+name|hasQualifiers
+argument_list|()
+condition|)
+return|return
+name|T
+operator|->
+name|isCanonicalUnqualified
+argument_list|()
+operator|&&
+operator|!
+name|isa
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|T
+operator|)
+return|;
+return|return
+name|T
+operator|->
+name|isCanonicalUnqualified
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|bool
+name|QualType
+operator|::
+name|isCanonicalAsParam
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|hasQualifiers
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+specifier|const
+name|Type
+operator|*
+name|T
+operator|=
+name|getTypePtr
+argument_list|()
+block|;
+return|return
+name|T
+operator|->
+name|isCanonicalUnqualified
+argument_list|()
+operator|&&
+operator|!
+name|isa
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|T
+operator|)
+operator|&&
+operator|!
+name|isa
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|T
+operator|)
+return|;
+block|}
 specifier|inline
 name|void
 name|QualType
@@ -13017,7 +12833,7 @@ specifier|const
 name|DiagnosticBuilder
 operator|&
 name|DB
-expr|,
+operator|,
 name|QualType
 name|T
 operator|)
@@ -13108,10 +12924,10 @@ argument_list|()
 operator|)
 return|;
 block|}
-expr|}
 end_block
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

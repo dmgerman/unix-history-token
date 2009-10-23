@@ -391,6 +391,14 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
+name|SubstTemplateTypeParmType
+operator|>
+name|SubstTemplateTypeParmTypes
+expr_stmt|;
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
 name|TemplateSpecializationType
 operator|>
 name|TemplateSpecializationTypes
@@ -426,14 +434,6 @@ operator|<
 name|ObjCObjectPointerType
 operator|>
 name|ObjCObjectPointerTypes
-expr_stmt|;
-name|llvm
-operator|::
-name|FoldingSet
-operator|<
-name|ObjCProtocolListType
-operator|>
-name|ObjCProtocolListTypes
 expr_stmt|;
 name|llvm
 operator|::
@@ -600,6 +600,16 @@ comment|/// \brief The type for the C sigjmp_buf type.
 name|TypeDecl
 modifier|*
 name|sigjmp_bufDecl
+decl_stmt|;
+comment|/// \brief Type for the Block descriptor for Blocks CodeGen.
+name|RecordDecl
+modifier|*
+name|BlockDescriptorType
+decl_stmt|;
+comment|/// \brief Type for the Block descriptor for Blocks CodeGen.
+name|RecordDecl
+modifier|*
+name|BlockDescriptorExtendedType
 decl_stmt|;
 comment|/// \brief Keeps track of all declaration attributes.
 comment|///
@@ -1338,6 +1348,118 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
+comment|/// This gets the struct used to keep track of the descriptor for pointer to
+comment|/// blocks.
+name|QualType
+name|getBlockDescriptorType
+parameter_list|()
+function_decl|;
+comment|// Set the type for a Block descriptor type.
+name|void
+name|setBlockDescriptorType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// Get the BlockDescriptorType type, or NULL if it hasn't yet been built.
+name|QualType
+name|getRawBlockdescriptorType
+parameter_list|()
+block|{
+if|if
+condition|(
+name|BlockDescriptorType
+condition|)
+return|return
+name|getTagDeclType
+argument_list|(
+name|BlockDescriptorType
+argument_list|)
+return|;
+return|return
+name|QualType
+argument_list|()
+return|;
+block|}
+comment|/// This gets the struct used to keep track of the extended descriptor for
+comment|/// pointer to blocks.
+name|QualType
+name|getBlockDescriptorExtendedType
+parameter_list|()
+function_decl|;
+comment|// Set the type for a Block descriptor extended type.
+name|void
+name|setBlockDescriptorExtendedType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// Get the BlockDescriptorExtendedType type, or NULL if it hasn't yet been
+comment|/// built.
+name|QualType
+name|getRawBlockdescriptorExtendedType
+parameter_list|()
+block|{
+if|if
+condition|(
+name|BlockDescriptorExtendedType
+condition|)
+return|return
+name|getTagDeclType
+argument_list|(
+name|BlockDescriptorExtendedType
+argument_list|)
+return|;
+return|return
+name|QualType
+argument_list|()
+return|;
+block|}
+comment|/// This gets the struct used to keep track of pointer to blocks, complete
+comment|/// with captured variables.
+name|QualType
+name|getBlockParmType
+argument_list|(
+name|bool
+name|BlockHasCopyDispose
+argument_list|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+argument_list|,
+literal|8
+operator|>
+operator|&
+name|BDRDs
+argument_list|)
+decl_stmt|;
+comment|/// This builds the struct used for __block variables.
+name|QualType
+name|BuildByRefType
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|DeclName
+parameter_list|,
+name|QualType
+name|Ty
+parameter_list|)
+function_decl|;
+comment|/// Returns true iff we need copy/dispose helpers for the given type.
+name|bool
+name|BlockRequiresCopying
+parameter_list|(
+name|QualType
+name|Ty
+parameter_list|)
+function_decl|;
 comment|/// getLValueReferenceType - Return the uniqued reference to the type for an
 comment|/// lvalue reference to the specified type.
 name|QualType
@@ -1345,6 +1467,11 @@ name|getLValueReferenceType
 parameter_list|(
 name|QualType
 name|T
+parameter_list|,
+name|bool
+name|SpelledAsLValue
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// getRValueReferenceType - Return the uniqued reference to the type for an
@@ -1442,61 +1569,6 @@ comment|/// getConstantArrayType - Return the unique reference to the type for a
 comment|/// constant array of the specified element type.
 name|QualType
 name|getConstantArrayType
-argument_list|(
-name|QualType
-name|EltTy
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|APInt
-operator|&
-name|ArySize
-argument_list|,
-name|ArrayType
-operator|::
-name|ArraySizeModifier
-name|ASM
-argument_list|,
-name|unsigned
-name|EltTypeQuals
-argument_list|)
-decl_stmt|;
-comment|/// getConstantArrayWithExprType - Return a reference to the type for a
-comment|/// constant array of the specified element type.
-name|QualType
-name|getConstantArrayWithExprType
-argument_list|(
-name|QualType
-name|EltTy
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|APInt
-operator|&
-name|ArySize
-argument_list|,
-name|Expr
-operator|*
-name|ArySizeExpr
-argument_list|,
-name|ArrayType
-operator|::
-name|ArraySizeModifier
-name|ASM
-argument_list|,
-name|unsigned
-name|EltTypeQuals
-argument_list|,
-name|SourceRange
-name|Brackets
-argument_list|)
-decl_stmt|;
-comment|/// getConstantArrayWithoutExprType - Return a reference to the type
-comment|/// for a constant array of the specified element type.
-name|QualType
-name|getConstantArrayWithoutExprType
 argument_list|(
 name|QualType
 name|EltTy
@@ -1651,6 +1723,18 @@ name|Decl
 parameter_list|)
 function_decl|;
 name|QualType
+name|getSubstTemplateTypeParmType
+parameter_list|(
+specifier|const
+name|TemplateTypeParmType
+modifier|*
+name|Replaced
+parameter_list|,
+name|QualType
+name|Replacement
+parameter_list|)
+function_decl|;
+name|QualType
 name|getTemplateTypeParmType
 parameter_list|(
 name|unsigned
@@ -1791,21 +1875,6 @@ name|unsigned
 name|NumProtocols
 init|=
 literal|0
-parameter_list|)
-function_decl|;
-name|QualType
-name|getObjCProtocolListType
-parameter_list|(
-name|QualType
-name|T
-parameter_list|,
-name|ObjCProtocolDecl
-modifier|*
-modifier|*
-name|Protocols
-parameter_list|,
-name|unsigned
-name|NumProtocols
 parameter_list|)
 function_decl|;
 comment|/// getTypeOfType - GCC extension.
@@ -2843,6 +2912,17 @@ name|getTypePtr
 argument_list|()
 return|;
 block|}
+comment|/// getCanonicalParamType - Return the canonical parameter type
+comment|/// corresponding to the specific potentially non-canonical one.
+comment|/// Qualifiers are stripped off, functions are turned into function
+comment|/// pointers, and arrays decay one level into pointers.
+name|CanQualType
+name|getCanonicalParamType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
 comment|/// \brief Determine whether the given types are equivalent.
 name|bool
 name|hasSameType
@@ -3523,12 +3603,20 @@ comment|///
 comment|/// \param T the type that will be the basis for type source info. This type
 comment|/// should refer to how the declarator was written in source code, not to
 comment|/// what type semantic analysis resolved the declarator to.
+comment|///
+comment|/// \param Size the size of the type info to create, or 0 if the size
+comment|/// should be calculated based on the type.
 name|DeclaratorInfo
 modifier|*
 name|CreateDeclaratorInfo
 parameter_list|(
 name|QualType
 name|T
+parameter_list|,
+name|unsigned
+name|Size
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|private

@@ -1,30 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -fsyntax-only -fmessage-length=72 %s 2> %t&&
+comment|// RUN: clang -fsyntax-only -fmessage-length=72 %s 2>&1 | FileCheck -strict-whitespace %s&&
 end_comment
 
 begin_comment
-comment|// RUN: grep -A4 "FILE:23" %t> %t.msg&&
-end_comment
-
-begin_comment
-comment|// FIXME: This diagnostic is getting truncated very poorly.
-end_comment
-
-begin_comment
-comment|// RUN: grep -e '^  ...// some long comment text and a brace, eh {} ' %t.msg&&
-end_comment
-
-begin_comment
-comment|// RUN: grep -e '^                                                 \^' %t.msg&&
-end_comment
-
-begin_comment
-comment|// RUN: clang -fsyntax-only -fmessage-length=1 %s&&
-end_comment
-
-begin_comment
-comment|// RUN: true
+comment|// RUN: clang -fsyntax-only -fmessage-length=1 %s
 end_comment
 
 begin_comment
@@ -233,6 +213,14 @@ end_pragma
 
 begin_comment
 comment|// some long comment text and a brace, eh {}
+end_comment
+
+begin_comment
+comment|// CHECK: FILE:23:78
+end_comment
+
+begin_comment
+comment|// CHECK: {{^  ...// some long comment text and a brace, eh {} $}}
 end_comment
 
 end_unit

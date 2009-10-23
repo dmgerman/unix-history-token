@@ -182,31 +182,26 @@ comment|/// preprocessor.
 name|PREPROCESSOR_BLOCK_ID
 block|,
 comment|/// \brief The block containing the definitions of all of the
-comment|/// types used within the PCH file.
-name|TYPES_BLOCK_ID
-block|,
-comment|/// \brief The block containing the definitions of all of the
-comment|/// declarations stored in the PCH file.
-name|DECLS_BLOCK_ID
+comment|/// types and decls used within the PCH file.
+name|DECLTYPES_BLOCK_ID
 block|}
 enum|;
 comment|/// \brief Record types that occur within the PCH block itself.
 enum|enum
 name|PCHRecordTypes
 block|{
-comment|/// \brief Offset of each type within the types block.
+comment|/// \brief Record code for the offsets of each type.
 comment|///
 comment|/// The TYPE_OFFSET constant describes the record that occurs
-comment|/// within the block identified by TYPE_OFFSETS_BLOCK_ID within
-comment|/// the PCH file. The record itself is an array of offsets that
-comment|/// point into the types block (identified by TYPES_BLOCK_ID in
-comment|/// the PCH file). The index into the array is based on the ID
+comment|/// within the PCH block. The record itself is an array of offsets that
+comment|/// point into the declarations and types block (identified by
+comment|/// DECLTYPES_BLOCK_ID). The index into the array is based on the ID
 comment|/// of a type. For a given type ID @c T, the lower three bits of
 comment|/// @c T are its qualifiers (const, volatile, restrict), as in
 comment|/// the QualType class. The upper bits, after being shifted and
 comment|/// subtracting NUM_PREDEF_TYPE_IDS, are used to index into the
 comment|/// TYPE_OFFSET block to determine the offset of that type's
-comment|/// corresponding record within the TYPES_BLOCK_ID block.
+comment|/// corresponding record within the DECLTYPES_BLOCK_ID block.
 name|TYPE_OFFSET
 init|=
 literal|1
@@ -214,10 +209,10 @@ block|,
 comment|/// \brief Record code for the offsets of each decl.
 comment|///
 comment|/// The DECL_OFFSET constant describes the record that occurs
-comment|/// within the block identifier by DECL_OFFSETS_BLOCK_ID within
-comment|/// the PCH file. The record itself is an array of offsets that
-comment|/// point into the declarations block (identified by
-comment|/// DECLS_BLOCK_ID). The declaration ID is an index into this
+comment|/// within the block identified by DECL_OFFSETS_BLOCK_ID within
+comment|/// the PCH block. The record itself is an array of offsets that
+comment|/// point into the declarations and types block (identified by
+comment|/// DECLTYPES_BLOCK_ID). The declaration ID is an index into this
 comment|/// record, after subtracting one to account for the use of
 comment|/// declaration ID 0 for a NULL declaration pointer. Index 0 is
 comment|/// reserved for the translation unit declaration.
@@ -607,8 +602,8 @@ literal|100
 decl_stmt|;
 comment|/// \brief Record codes for each kind of type.
 comment|///
-comment|/// These constants describe the records that can occur within a
-comment|/// block identified by TYPES_BLOCK_ID in the PCH file. Each
+comment|/// These constants describe the type records that can occur within a
+comment|/// block identified by DECLTYPES_BLOCK_ID in the PCH file. Each
 comment|/// constant describes a record for a specific type class in the
 comment|/// AST.
 enum|enum
@@ -724,30 +719,20 @@ name|TYPE_OBJC_OBJECT_POINTER
 init|=
 literal|22
 block|,
-comment|/// \brief An ObjCProtocolListType record.
-name|TYPE_OBJC_PROTOCOL_LIST
-init|=
-literal|23
-block|,
 comment|/// \brief a DecltypeType record.
 name|TYPE_DECLTYPE
 init|=
-literal|24
-block|,
-comment|/// \brief A ConstantArrayWithExprType record.
-name|TYPE_CONSTANT_ARRAY_WITH_EXPR
-init|=
-literal|25
-block|,
-comment|/// \brief A ConstantArrayWithoutExprType record.
-name|TYPE_CONSTANT_ARRAY_WITHOUT_EXPR
-init|=
-literal|26
+literal|23
 block|,
 comment|/// \brief An ElaboratedType record.
 name|TYPE_ELABORATED
 init|=
-literal|27
+literal|24
+block|,
+comment|/// \brief A SubstTemplateTypeParmType record.
+name|TYPE_SUBST_TEMPLATE_TYPE_PARM
+init|=
+literal|25
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -817,12 +802,22 @@ comment|/// \brief Objective-C "Class" redefinition type
 name|SPECIAL_TYPE_OBJC_CLASS_REDEFINITION
 init|=
 literal|11
+block|,
+comment|/// \brief Block descriptor type for Blocks CodeGen
+name|SPECIAL_TYPE_BLOCK_DESCRIPTOR
+init|=
+literal|12
+block|,
+comment|/// \brief Block extedned descriptor type for Blocks CodeGen
+name|SPECIAL_TYPE_BLOCK_EXTENDED_DESCRIPTOR
+init|=
+literal|13
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of declaration.
 comment|///
-comment|/// These constants describe the records that can occur within a
-comment|/// declarations block (identified by DECLS_BLOCK_ID). Each
+comment|/// These constants describe the declaration records that can occur within
+comment|/// a declarations block (identified by DECLS_BLOCK_ID). Each
 comment|/// constant describes a record for a specific declaration class
 comment|/// in the AST.
 enum|enum
@@ -831,7 +826,7 @@ block|{
 comment|/// \brief Attributes attached to a declaration.
 name|DECL_ATTR
 init|=
-literal|1
+literal|50
 block|,
 comment|/// \brief A TranslationUnitDecl record.
 name|DECL_TRANSLATION_UNIT
@@ -934,10 +929,10 @@ enum|;
 comment|/// \brief Record codes for each kind of statement or expression.
 comment|///
 comment|/// These constants describe the records that describe statements
-comment|/// or expressions. These records can occur within either the type
-comment|/// or declaration blocks, so they begin with record values of
-comment|/// 50.  Each constant describes a record for a specific
-comment|/// statement or expression class in the AST.
+comment|/// or expressions. These records  occur within type and declarations
+comment|/// block, so they begin with record values of 100.  Each constant
+comment|/// describes a record for a specific statement or expression class in the
+comment|/// AST.
 enum|enum
 name|StmtCode
 block|{
@@ -945,7 +940,7 @@ comment|/// \brief A marker record that indicates that we are at the end
 comment|/// of an expression.
 name|STMT_STOP
 init|=
-literal|50
+literal|100
 block|,
 comment|/// \brief A NULL expression.
 name|STMT_NULL_PTR

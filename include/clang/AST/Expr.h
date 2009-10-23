@@ -5959,6 +5959,26 @@ name|CK_IntegralToPointer
 block|,
 comment|/// CK_PointerToIntegral - Pointer to integral
 name|CK_PointerToIntegral
+block|,
+comment|/// CK_ToVoid - Cast to void.
+name|CK_ToVoid
+block|,
+comment|/// CK_VectorSplat - Casting from an integer/floating type to an extended
+comment|/// vector type with the same element type as the src type. Splats the
+comment|/// src expression into the destination expression.
+name|CK_VectorSplat
+block|,
+comment|/// CK_IntegralCast - Casting between integral types of different size.
+name|CK_IntegralCast
+block|,
+comment|/// CK_IntegralToFloating - Integral to floating point.
+name|CK_IntegralToFloating
+block|,
+comment|/// CK_FloatingToIntegral - Floating point to integral.
+name|CK_FloatingToIntegral
+block|,
+comment|/// CK_FloatingCast - Casting between floating types of different size.
+name|CK_FloatingCast
 block|}
 block|;
 name|private
@@ -7118,10 +7138,12 @@ operator|==
 name|Sub
 return|;
 block|}
+specifier|static
 name|bool
 name|isShiftOp
-argument_list|()
-specifier|const
+argument_list|(
+argument|Opcode Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -7131,6 +7153,18 @@ operator|||
 name|Opc
 operator|==
 name|Shr
+return|;
+block|}
+name|bool
+name|isShiftOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isShiftOp
+argument_list|(
+name|Opc
+argument_list|)
 return|;
 block|}
 name|bool

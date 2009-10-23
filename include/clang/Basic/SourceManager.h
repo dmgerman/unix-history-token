@@ -2566,56 +2566,6 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// Iteration over the source location entry table.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|SrcMgr
-operator|::
-name|SLocEntry
-operator|>
-operator|::
-name|const_iterator
-name|sloc_entry_iterator
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|sloc_entry_iterator
-name|sloc_entry_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SLocEntryTable
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|sloc_entry_iterator
-name|sloc_entry_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SLocEntryTable
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
 begin_expr_stmt
 name|unsigned
 name|sloc_entry_size
@@ -2639,14 +2589,12 @@ name|SLocEntry
 operator|&
 name|getSLocEntry
 argument_list|(
-argument|FileID FID
+argument|unsigned ID
 argument_list|)
 specifier|const
 block|{
 name|assert
 argument_list|(
-name|FID
-operator|.
 name|ID
 operator|<
 name|SLocEntryTable
@@ -2661,8 +2609,6 @@ if|if
 condition|(
 name|ExternalSLocEntries
 operator|&&
-name|FID
-operator|.
 name|ID
 operator|<
 name|SLocEntryLoaded
@@ -2673,8 +2619,6 @@ operator|&&
 operator|!
 name|SLocEntryLoaded
 index|[
-name|FID
-operator|.
 name|ID
 index|]
 condition|)
@@ -2682,8 +2626,6 @@ name|ExternalSLocEntries
 operator|->
 name|ReadSLocEntry
 argument_list|(
-name|FID
-operator|.
 name|ID
 argument_list|)
 expr_stmt|;
@@ -2693,20 +2635,38 @@ begin_return
 return|return
 name|SLocEntryTable
 index|[
-name|FID
-operator|.
 name|ID
 index|]
 return|;
 end_return
 
-begin_macro
-unit|}    unsigned
-name|getNextOffset
-argument_list|()
-end_macro
+begin_expr_stmt
+unit|}      const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|&
+name|getSLocEntry
+argument_list|(
+argument|FileID FID
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getSLocEntry
+argument_list|(
+name|FID
+operator|.
+name|ID
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
+name|unsigned
+name|getNextOffset
+argument_list|()
 specifier|const
 block|{
 return|return
