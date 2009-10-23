@@ -3981,7 +3981,7 @@ argument_list|(
 name|msr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Map certain important things, like ourselves and the exception 	 * vectors 	 */
+comment|/* 	 * Map certain important things, like ourselves. 	 * 	 * NOTE: We do not map the exception vector space. That code is 	 * used only in real mode, and leaving it unmapped allows us to 	 * catch NULL pointer deferences, instead of making NULL a valid 	 * address. 	 */
 name|DISABLE_TRANS
 argument_list|(
 name|msr
@@ -3999,29 +3999,6 @@ init|;
 name|pa
 operator|<
 name|kernelend
-condition|;
-name|pa
-operator|+=
-name|PAGE_SIZE
-control|)
-name|moea64_kenter
-argument_list|(
-name|mmup
-argument_list|,
-name|pa
-argument_list|,
-name|pa
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|pa
-operator|=
-name|EXC_RSVD
-init|;
-name|pa
-operator|<
-name|EXC_LAST
 condition|;
 name|pa
 operator|+=
