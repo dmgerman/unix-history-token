@@ -139,6 +139,10 @@ name|bsp_state
 index|[
 literal|8
 index|]
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -734,6 +738,12 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_expr_stmt
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_break
 break|break;
 end_break
@@ -883,7 +893,8 @@ name|powerpc_sync
 argument_list|()
 expr_stmt|;
 comment|/* 		 * The 970 has strange rules about how to update HID registers. 		 * See Table 2-3, 970MP manual 		 */
-asm|__asm __volatile(" \ 			ld	%0,0(%2);				\ 			mtspr	%1, %0;					\ 			mfspr	%0, %1;	mfspr	%0, %1;	mfspr	%0, %1;	\ 			mfspr	%0, %1;	mfspr	%0, %1;	mfspr	%0, %1;"
+asm|__asm __volatile("mtasr %0; sync" :: "r"(0));
+asm|__asm __volatile(" \ 			ld	%0,0(%2);				\ 			sync; isync;					\ 			mtspr	%1, %0;					\ 			mfspr	%0, %1;	mfspr	%0, %1;	mfspr	%0, %1;	\ 			mfspr	%0, %1;	mfspr	%0, %1;	mfspr	%0, %1; \ 			sync; isync"
 block|:
 literal|"=r"
 operator|(
@@ -901,9 +912,32 @@ name|bsp_state
 operator|)
 block|)
 empty_stmt|;
-asm|__asm __volatile("ld %0, 8(%2); mtspr %1, %0; mtspr %1, %0; \ 		    isync" : "=r"(reg) : "K"(SPR_HID1), "r"(bsp_state));
-asm|__asm __volatile("ld %0, 16(%2); sync; mtspr %1, %0; isync;"
+asm|__asm __volatile("ld %0, 8(%2); sync; isync;	\ 		    mtspr %1, %0; mtspr %1, %0; sync; isync"
 block|:
+literal|"=r"
+operator|(
+name|reg
+operator|)
+operator|:
+literal|"K"
+operator|(
+name|SPR_HID1
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|bsp_state
+operator|)
+block|)
+function|;
+end_function
+
+begin_asm
+asm|__asm __volatile("ld %0, 16(%2); sync; isync;	\ 		    mtspr %1, %0; sync; isync;"
+end_asm
+
+begin_expr_stmt
+unit|:
 literal|"=r"
 operator|(
 name|reg
@@ -918,12 +952,15 @@ literal|"r"
 operator|(
 name|bsp_state
 operator|)
-block|)
-function|;
-end_function
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_asm
-asm|__asm __volatile("ld %0, 24(%2); sync; mtspr %1, %0; isync;"
+asm|__asm __volatile("ld %0, 24(%2); sync; isync;	\ 		    mtspr %1, %0; sync; isync;"
 end_asm
 
 begin_expr_stmt
