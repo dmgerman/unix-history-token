@@ -87,9 +87,11 @@ directive|define
 name|LLVM_PASS_SUPPORT_H
 end_define
 
-begin_comment
-comment|// No need to include Pass.h, we are being included by it!
-end_comment
+begin_include
+include|#
+directive|include
+file|"Pass.h"
+end_include
 
 begin_decl_stmt
 name|namespace

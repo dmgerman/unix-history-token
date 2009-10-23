@@ -377,13 +377,6 @@ operator|&
 name|BTNE
 argument_list|)
 decl_stmt|;
-comment|/// createIndMemRemPass - This pass removes potential indirect calls of
-comment|/// malloc and free
-name|ModulePass
-modifier|*
-name|createIndMemRemPass
-parameter_list|()
-function_decl|;
 comment|/// createStripDeadPrototypesPass - This pass removes any function declarations
 comment|/// (prototypes) that are not used.
 name|ModulePass

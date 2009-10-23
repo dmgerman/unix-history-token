@@ -71,6 +71,51 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|MSP430CC
+block|{
+comment|// MSP430 specific condition code.
+enum|enum
+name|CondCodes
+block|{
+name|COND_E
+init|=
+literal|0
+block|,
+comment|// aka COND_Z
+name|COND_NE
+init|=
+literal|1
+block|,
+comment|// aka COND_NZ
+name|COND_HS
+init|=
+literal|2
+block|,
+comment|// aka COND_C
+name|COND_LO
+init|=
+literal|3
+block|,
+comment|// aka COND_NC
+name|COND_GE
+init|=
+literal|4
+block|,
+name|COND_L
+init|=
+literal|5
+block|,
+name|COND_INVALID
+init|=
+operator|-
+literal|1
+block|}
+enum|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|llvm
 block|{
 name|class

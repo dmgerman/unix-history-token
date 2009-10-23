@@ -582,6 +582,11 @@ name|MachineDominatorTree
 operator|&
 name|MDT
 block|;
+specifier|const
+name|MachineFrameInfo
+operator|*
+name|MFI
+block|;
 comment|/// Defs, Uses - Remember where defs and uses of each physical register
 comment|/// are as we iterate upward through the instructions. This is allocated
 comment|/// here instead of inside BuildSchedGraph to avoid the need for it to be

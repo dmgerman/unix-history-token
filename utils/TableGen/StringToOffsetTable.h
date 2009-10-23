@@ -46,19 +46,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/ADT/StringExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringExtras.h"
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_decl_stmt
@@ -148,6 +154,30 @@ modifier|&
 name|O
 parameter_list|)
 block|{
+comment|// Escape the string.
+name|SmallString
+operator|<
+literal|256
+operator|>
+name|Str
+expr_stmt|;
+name|raw_svector_ostream
+argument_list|(
+name|Str
+argument_list|)
+operator|.
+name|write_escaped
+argument_list|(
+name|AggregateString
+argument_list|)
+expr_stmt|;
+name|AggregateString
+operator|=
+name|Str
+operator|.
+name|str
+argument_list|()
+expr_stmt|;
 name|O
 operator|<<
 literal|"    \""
@@ -157,11 +187,6 @@ name|CharsPrinted
 init|=
 literal|0
 decl_stmt|;
-name|EscapeString
-argument_list|(
-name|AggregateString
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|unsigned

@@ -207,18 +207,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|unsigned Reg
-argument_list|)
-specifier|const
-block|;
-name|void
-name|restoreScavengerRegister
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
+argument|MachineBasicBlock::iterator&UseMI
 argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,

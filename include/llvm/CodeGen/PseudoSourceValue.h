@@ -114,6 +114,16 @@ argument|const MachineFrameInfo *
 argument_list|)
 specifier|const
 block|;
+comment|/// isAliased - Test whether the memory pointed to by this
+comment|/// PseudoSourceValue may also be pointed to by an LLVM IR Value.
+name|virtual
+name|bool
+name|isAliased
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+block|;
 comment|/// classof - Methods for support type inquiry through isa, cast, and
 comment|/// dyn_cast:
 comment|///

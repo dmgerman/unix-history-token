@@ -58,31 +58,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MDNODE_H
+name|LLVM_METADATA_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MDNODE_H
+name|LLVM_METADATA_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/User.h"
+file|"llvm/Value.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/OperandTraits.h"
 end_include
 
 begin_include
@@ -100,31 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -146,21 +116,17 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
+name|class
+name|MetadataContextImpl
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// MetadataBase  - A base class for MDNode, MDString and NamedMDNode.
 name|class
 name|MetadataBase
 range|:
 name|public
-name|User
+name|Value
 block|{
-name|private
-operator|:
-comment|/// ReservedSpace - The number of operands actually allocated.  NumOperands is
-comment|/// the number actually in use.
-name|unsigned
-name|ReservedSpace
-block|;
 name|protected
 operator|:
 name|MetadataBase
@@ -170,43 +136,15 @@ argument_list|,
 argument|unsigned scid
 argument_list|)
 operator|:
-name|User
+name|Value
 argument_list|(
-name|Ty
+argument|Ty
 argument_list|,
-name|scid
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-block|,
-name|ReservedSpace
-argument_list|(
-literal|0
+argument|scid
 argument_list|)
 block|{}
-name|void
-name|resizeOperands
-argument_list|(
-argument|unsigned NumOps
-argument_list|)
-block|;
 name|public
 operator|:
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.  This always returns false because getNullValue will never
-comment|/// produce metadata.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -270,22 +208,6 @@ operator|&
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-block|;
-comment|// DO NOT IMPLEMENT
-name|unsigned
-name|getNumOperands
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
 name|StringRef
 name|Str
 block|;
@@ -296,9 +218,7 @@ name|MDString
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|const char *begin
-argument_list|,
-argument|unsigned l
+argument|StringRef S
 argument_list|)
 operator|:
 name|MetadataBase
@@ -317,47 +237,19 @@ argument_list|)
 block|,
 name|Str
 argument_list|(
-argument|begin
-argument_list|,
-argument|l
+argument|S
 argument_list|)
 block|{}
 name|public
 operator|:
-comment|// Do not allocate any space for operands.
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 specifier|static
 name|MDString
 operator|*
 name|get
 argument_list|(
-name|LLVMContext
-operator|&
-name|Context
+argument|LLVMContext&Context
 argument_list|,
-specifier|const
-name|StringRef
-operator|&
-name|Str
+argument|StringRef Str
 argument_list|)
 block|;
 name|StringRef
@@ -370,7 +262,7 @@ name|Str
 return|;
 block|}
 name|unsigned
-name|length
+name|getLength
 argument_list|()
 specifier|const
 block|{
@@ -381,11 +273,15 @@ name|size
 argument_list|()
 return|;
 block|}
+typedef|typedef
+name|StringRef
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
 comment|/// begin() - Pointer to the first byte of the string.
 comment|///
-specifier|const
-name|char
-operator|*
+name|iterator
 name|begin
 argument_list|()
 specifier|const
@@ -399,9 +295,7 @@ return|;
 block|}
 comment|/// end() - Pointer to one byte past the end of the string.
 comment|///
-specifier|const
-name|char
-operator|*
+name|iterator
 name|end
 argument_list|()
 specifier|const
@@ -465,29 +359,6 @@ operator|&
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-block|;
-comment|// DO NOT IMPLEMENT
-comment|// getNumOperands - Make this only available for private uses.
-name|unsigned
-name|getNumOperands
-argument_list|()
-block|{
-return|return
-name|User
-operator|::
-name|getNumOperands
-argument_list|()
-return|;
-block|}
 name|friend
 name|class
 name|ElementVH
@@ -503,6 +374,9 @@ name|MDNode
 operator|*
 name|Parent
 block|;
+name|ElementVH
+argument_list|()
+block|{}
 name|ElementVH
 argument_list|(
 name|Value
@@ -573,13 +447,12 @@ operator|*
 name|T
 argument_list|)
 block|;
-name|SmallVector
-operator|<
 name|ElementVH
-block|,
-literal|4
-operator|>
+operator|*
 name|Node
+block|;
+name|unsigned
+name|NodeSize
 block|;
 name|protected
 operator|:
@@ -588,34 +461,13 @@ name|MDNode
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|Value*const* Vals
+argument|Value *const *Vals
 argument_list|,
 argument|unsigned NumVals
 argument_list|)
 block|;
 name|public
 operator|:
-comment|// Do not allocate any space for operands.
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 comment|// Constructors and destructors.
 specifier|static
 name|MDNode
@@ -624,15 +476,10 @@ name|get
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|Value* const* Vals
+argument|Value *const *Vals
 argument_list|,
 argument|unsigned NumVals
 argument_list|)
-block|;
-comment|/// dropAllReferences - Remove all uses and clear node vector.
-name|void
-name|dropAllReferences
-argument_list|()
 block|;
 comment|/// ~MDNode - Destroy MDNode.
 operator|~
@@ -650,10 +497,10 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+name|i
+operator|<
 name|getNumElements
 argument_list|()
-operator|>
-name|i
 operator|&&
 literal|"Invalid element number!"
 argument_list|)
@@ -672,101 +519,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Node
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-comment|// Element access
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|ElementVH
-operator|>
-operator|::
-name|const_iterator
-name|const_elem_iterator
-expr_stmt|;
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|ElementVH
-operator|>
-operator|::
-name|iterator
-name|elem_iterator
-expr_stmt|;
-comment|/// elem_empty - Return true if MDNode is empty.
-name|bool
-name|elem_empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Node
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-name|const_elem_iterator
-name|elem_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Node
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|const_elem_iterator
-name|elem_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Node
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|elem_iterator
-name|elem_begin
-argument_list|()
-block|{
-return|return
-name|Node
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|elem_iterator
-name|elem_end
-argument_list|()
-block|{
-return|return
-name|Node
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.  This always returns false because getNullValue will never
-comment|/// produce metadata.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
+name|NodeSize
 return|;
 block|}
 comment|/// Profile - calculate a unique identifier for this MDNode to collapse
@@ -778,22 +531,6 @@ argument|FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *
-argument_list|,
-argument|Value *
-argument_list|,
-argument|Use *
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"This should never be called because MDNodes have no ops"
-argument_list|)
-block|;   }
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -821,79 +558,6 @@ name|getValueID
 argument_list|()
 operator|==
 name|MDNodeVal
-return|;
-block|}
-expr|}
-block|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// WeakMetadataVH - a weak value handle for metadata.
-name|class
-name|WeakMetadataVH
-operator|:
-name|public
-name|WeakVH
-block|{
-name|public
-operator|:
-name|WeakMetadataVH
-argument_list|()
-operator|:
-name|WeakVH
-argument_list|()
-block|{}
-name|WeakMetadataVH
-argument_list|(
-name|MetadataBase
-operator|*
-name|M
-argument_list|)
-operator|:
-name|WeakVH
-argument_list|(
-argument|M
-argument_list|)
-block|{}
-name|WeakMetadataVH
-argument_list|(
-specifier|const
-name|WeakMetadataVH
-operator|&
-name|RHS
-argument_list|)
-operator|:
-name|WeakVH
-argument_list|(
-argument|RHS
-argument_list|)
-block|{}
-name|operator
-name|Value
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"WeakMetadataVH only handles Metadata"
-argument_list|)
-block|;   }
-name|operator
-name|MetadataBase
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-name|dyn_cast_or_null
-operator|<
-name|MetadataBase
-operator|>
-operator|(
-name|getValPtr
-argument_list|()
-operator|)
 return|;
 block|}
 expr|}
@@ -945,50 +609,31 @@ operator|&
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-block|;
-comment|// DO NOT IMPLEMENT
-comment|// getNumOperands - Make this only available for private uses.
-name|unsigned
-name|getNumOperands
-argument_list|()
-block|{
-return|return
-name|User
-operator|::
-name|getNumOperands
-argument_list|()
-return|;
-block|}
 name|Module
 operator|*
 name|Parent
 block|;
 name|SmallVector
 operator|<
-name|WeakMetadataVH
+name|TrackingVH
+operator|<
+name|MetadataBase
+operator|>
 block|,
 literal|4
 operator|>
 name|Node
 block|;
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|WeakMetadataVH
-operator|>
-operator|::
-name|iterator
-name|elem_iterator
-expr_stmt|;
+name|void
+name|setParent
+argument_list|(
+argument|Module *M
+argument_list|)
+block|{
+name|Parent
+operator|=
+name|M
+block|; }
 name|protected
 operator|:
 name|explicit
@@ -998,7 +643,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|const Twine&N
 argument_list|,
-argument|MetadataBase*const* Vals
+argument|MetadataBase*const *Vals
 argument_list|,
 argument|unsigned NumVals
 argument_list|,
@@ -1008,27 +653,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|// Do not allocate any space for operands.
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 specifier|static
 name|NamedMDNode
 operator|*
@@ -1038,7 +662,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|const Twine&N
 argument_list|,
-argument|MetadataBase*const*MDs
+argument|MetadataBase *const *MDs
 argument_list|,
 argument|unsigned NumMDs
 argument_list|,
@@ -1118,16 +742,6 @@ return|return
 name|Parent
 return|;
 block|}
-name|void
-name|setParent
-argument_list|(
-argument|Module *M
-argument_list|)
-block|{
-name|Parent
-operator|=
-name|M
-block|; }
 comment|/// getElement - Return specified element.
 name|MetadataBase
 operator|*
@@ -1139,10 +753,10 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+name|i
+operator|<
 name|getNumElements
 argument_list|()
-operator|>
-name|i
 operator|&&
 literal|"Invalid element number!"
 argument_list|)
@@ -1174,34 +788,39 @@ argument_list|(
 argument|MetadataBase *M
 argument_list|)
 block|{
-name|resizeOperands
-argument_list|(
-literal|0
-argument_list|)
-block|;
-name|OperandList
-index|[
-name|NumOperands
-operator|++
-index|]
-operator|=
-name|M
-block|;
 name|Node
 operator|.
 name|push_back
 argument_list|(
-name|WeakMetadataVH
-argument_list|(
+name|TrackingVH
+operator|<
+name|MetadataBase
+operator|>
+operator|(
 name|M
-argument_list|)
+operator|)
 argument_list|)
 block|;   }
 typedef|typedef
 name|SmallVectorImpl
 operator|<
-name|WeakMetadataVH
+name|TrackingVH
+operator|<
+name|MetadataBase
 operator|>
+expr|>
+operator|::
+name|iterator
+name|elem_iterator
+expr_stmt|;
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|TrackingVH
+operator|<
+name|MetadataBase
+operator|>
+expr|>
 operator|::
 name|const_iterator
 name|const_elem_iterator
@@ -1264,35 +883,6 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.  This always returns false because getNullValue will never
-comment|/// produce metadata.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|void
-name|replaceUsesOfWithOnConstant
-argument_list|(
-argument|Value *
-argument_list|,
-argument|Value *
-argument_list|,
-argument|Use *
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"This should never be called because NamedMDNodes have no ops"
-argument_list|)
-block|;   }
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -1333,241 +923,184 @@ comment|/// is [a-zA-Z$._][a-zA-Z$._0-9]*
 name|class
 name|MetadataContext
 block|{
+comment|// DO NOT IMPLEMENT
+name|MetadataContext
+argument_list|(
+name|MetadataContext
+operator|&
+argument_list|)
+block|;
+name|void
+name|operator
+operator|=
+operator|(
+name|MetadataContext
+operator|&
+operator|)
+block|;
+name|MetadataContextImpl
+operator|*
+specifier|const
+name|pImpl
+block|;
 name|public
 operator|:
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|WeakVH
-operator|>
-name|MDPairTy
-expr_stmt|;
-typedef|typedef
-name|SmallVector
-operator|<
-name|MDPairTy
-operator|,
-literal|2
-operator|>
-name|MDMapTy
-expr_stmt|;
-typedef|typedef
-name|DenseMap
-operator|<
-specifier|const
-name|Instruction
-operator|*
-operator|,
-name|MDMapTy
-operator|>
-name|MDStoreTy
-expr_stmt|;
-name|friend
-name|class
-name|BitcodeReader
-decl_stmt|;
-name|private
-label|:
-comment|/// MetadataStore - Collection of metadata used in this context.
-name|MDStoreTy
-name|MetadataStore
-decl_stmt|;
-comment|/// MDHandlerNames - Map to hold metadata handler names.
-name|StringMap
-operator|<
-name|unsigned
-operator|>
-name|MDHandlerNames
-expr_stmt|;
-name|public
-label|:
-comment|/// RegisterMDKind - Register a new metadata kind and return its ID.
+name|MetadataContext
+argument_list|()
+block|;
+operator|~
+name|MetadataContext
+argument_list|()
+block|;
+comment|/// registerMDKind - Register a new metadata kind and return its ID.
 comment|/// A metadata kind can be registered only once.
 name|unsigned
-name|RegisterMDKind
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|)
-function_decl|;
+name|registerMDKind
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|;
 comment|/// getMDKind - Return metadata kind. If the requested metadata kind
 comment|/// is not registered then return 0.
 name|unsigned
 name|getMDKind
-parameter_list|(
+argument_list|(
+argument|StringRef Name
+argument_list|)
 specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|)
-function_decl|;
-comment|/// validName - Return true if Name is a valid custom metadata handler name.
+block|;
+comment|/// isValidName - Return true if Name is a valid custom metadata handler name.
+specifier|static
 name|bool
-name|validName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|)
-function_decl|;
-comment|/// getMD - Get the metadata of given kind attached with an Instruction.
+name|isValidName
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|;
+comment|/// getMD - Get the metadata of given kind attached to an Instruction.
 comment|/// If the metadata is not found then return 0.
 name|MDNode
-modifier|*
+operator|*
 name|getMD
-parameter_list|(
-name|unsigned
-name|Kind
-parameter_list|,
-specifier|const
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|)
-function_decl|;
-comment|/// getMDs - Get the metadata attached with an Instruction.
-specifier|const
-name|MDMapTy
-modifier|*
+argument_list|(
+argument|unsigned Kind
+argument_list|,
+argument|const Instruction *Inst
+argument_list|)
+block|;
+comment|/// getMDs - Get the metadata attached to an Instruction.
+name|void
 name|getMDs
-parameter_list|(
+argument_list|(
+argument|const Instruction *Inst
+argument_list|,
+argument|SmallVectorImpl<std::pair<unsigned
+argument_list|,
+argument|TrackingVH<MDNode>>>&MDs
+argument_list|)
 specifier|const
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|)
-function_decl|;
-comment|/// addMD - Attach the metadata of given kind with an Instruction.
+block|;
+comment|/// addMD - Attach the metadata of given kind to an Instruction.
 name|void
 name|addMD
-parameter_list|(
-name|unsigned
-name|Kind
-parameter_list|,
-name|MDNode
-modifier|*
-name|Node
-parameter_list|,
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned Kind
+argument_list|,
+argument|MDNode *Node
+argument_list|,
+argument|Instruction *Inst
+argument_list|)
+block|;
 comment|/// removeMD - Remove metadata of given kind attached with an instuction.
 name|void
 name|removeMD
-parameter_list|(
-name|unsigned
-name|Kind
-parameter_list|,
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|)
-function_decl|;
-comment|/// removeMDs - Remove all metadata attached with an instruction.
+argument_list|(
+argument|unsigned Kind
+argument_list|,
+argument|Instruction *Inst
+argument_list|)
+block|;
+comment|/// removeAllMetadata - Remove all metadata attached with an instruction.
 name|void
-name|removeMDs
-parameter_list|(
-specifier|const
+name|removeAllMetadata
+argument_list|(
 name|Instruction
-modifier|*
+operator|*
 name|Inst
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// copyMD - If metadata is attached with Instruction In1 then attach
 comment|/// the same metadata to In2.
 name|void
 name|copyMD
-parameter_list|(
+argument_list|(
 name|Instruction
-modifier|*
-name|In1
-parameter_list|,
-name|Instruction
-modifier|*
-name|In2
-parameter_list|)
-function_decl|;
-comment|/// getHandlerNames - Get handler names. This is used by bitcode
-comment|/// writer.
-specifier|const
-name|StringMap
-operator|<
-name|unsigned
-operator|>
 operator|*
+name|In1
+argument_list|,
+name|Instruction
+operator|*
+name|In2
+argument_list|)
+block|;
+comment|/// getHandlerNames - Populate client supplied smallvector using custome
+comment|/// metadata name and ID.
+name|void
 name|getHandlerNames
-argument_list|()
-expr_stmt|;
+argument_list|(
+argument|SmallVectorImpl<std::pair<unsigned
+argument_list|,
+argument|StringRef>>&
+argument_list|)
+specifier|const
+block|;
 comment|/// ValueIsDeleted - This handler is used to update metadata store
 comment|/// when a value is deleted.
 name|void
 name|ValueIsDeleted
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const Value *
+argument_list|)
 block|{}
 name|void
 name|ValueIsDeleted
-parameter_list|(
-specifier|const
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|)
-block|{
-name|removeMDs
 argument_list|(
+name|Instruction
+operator|*
 name|Inst
 argument_list|)
-expr_stmt|;
-block|}
+block|;
 name|void
 name|ValueIsRAUWd
-parameter_list|(
+argument_list|(
 name|Value
-modifier|*
+operator|*
 name|V1
-parameter_list|,
+argument_list|,
 name|Value
-modifier|*
+operator|*
 name|V2
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// ValueIsCloned - This handler is used to update metadata store
 comment|/// when In1 is cloned to create In2.
 name|void
 name|ValueIsCloned
-parameter_list|(
+argument_list|(
 specifier|const
 name|Instruction
-modifier|*
+operator|*
 name|In1
-parameter_list|,
+argument_list|,
 name|Instruction
-modifier|*
+operator|*
 name|In2
-parameter_list|)
-function_decl|;
-block|}
+argument_list|)
+block|; }
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end llvm namespace
 end_comment
 

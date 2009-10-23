@@ -234,9 +234,6 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
-name|MallocInst
-decl_stmt|;
-name|class
 name|PHINode
 decl_stmt|;
 name|class
@@ -2507,14 +2504,6 @@ name|void
 name|visitSelect
 parameter_list|(
 name|User
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
-name|void
-name|visitMalloc
-parameter_list|(
-name|MallocInst
 modifier|&
 name|I
 parameter_list|)

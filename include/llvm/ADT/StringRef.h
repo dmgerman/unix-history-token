@@ -174,7 +174,7 @@ name|StringRef
 argument_list|(
 argument|const char *data
 argument_list|,
-argument|unsigned length
+argument|size_t length
 argument_list|)
 block|:
 name|Data

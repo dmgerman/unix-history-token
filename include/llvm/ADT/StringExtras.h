@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cctype>
 end_include
 
@@ -1300,50 +1306,85 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// UnescapeString - Modify the argument string, turning two character sequences
+comment|/// HashString - Hash funtion for strings.
 end_comment
 
 begin_comment
-comment|/// like '\\' 'n' into '\n'.  This handles: \e \a \b \f \n \r \t \v \' \\ and
+comment|///
 end_comment
 
 begin_comment
-comment|/// \num (where num is a 1-3 byte octal value).
+comment|/// This is the Bernstein hash function.
 end_comment
 
-begin_decl_stmt
-name|void
-name|UnescapeString
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// FIXME: Investigate whether a modified bernstein hash function performs
+end_comment
+
+begin_comment
+comment|// better: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
+end_comment
+
+begin_comment
+comment|//   X*33+c -> X*33^c
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|HashString
+parameter_list|(
+name|StringRef
 name|Str
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// EscapeString - Modify the argument string, turning '\\' and anything that
-end_comment
-
-begin_comment
-comment|/// doesn't satisfy std::isprint into an escape sequence.
-end_comment
-
-begin_decl_stmt
-name|void
-name|EscapeString
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|unsigned
+name|Result
+init|=
+literal|0
+parameter_list|)
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
 name|Str
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+name|Result
+operator|=
+name|Result
+operator|*
+literal|33
+operator|+
+name|Str
+index|[
+name|i
+index|]
+expr_stmt|;
+return|return
+name|Result
+return|;
+block|}
+end_function
 
 begin_comment
 unit|}

@@ -200,11 +200,17 @@ block|{
 enum|enum
 name|Level
 block|{
-name|Default
-block|,
 name|None
 block|,
+comment|// -O0
+name|Less
+block|,
+comment|// -O1
+name|Default
+block|,
+comment|// -O2, -Os
 name|Aggressive
+comment|// -O3
 block|}
 enum|;
 block|}

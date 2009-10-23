@@ -196,12 +196,7 @@ parameter_list|)
 block|{}
 block|}
 empty_stmt|;
-comment|// These return NULL if support isn't available.
-name|JITEventListener
-modifier|*
-name|createMacOSJITEventListener
-parameter_list|()
-function_decl|;
+comment|// This returns NULL if support isn't available.
 name|JITEventListener
 modifier|*
 name|createOProfileJITEventListener

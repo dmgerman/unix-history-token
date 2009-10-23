@@ -155,6 +155,22 @@ label|:
 name|MachineLoop
 argument_list|()
 expr_stmt|;
+comment|/// getTopBlock - Return the "top" block in the loop, which is the first
+comment|/// block in the linear layout, ignoring any parts of the loop not
+comment|/// contiguous with the part the contains the header.
+name|MachineBasicBlock
+modifier|*
+name|getTopBlock
+parameter_list|()
+function_decl|;
+comment|/// getBottomBlock - Return the "bottom" block in the loop, which is the last
+comment|/// block in the linear layout, ignoring any parts of the loop not
+comment|/// contiguous with the part the contains the header.
+name|MachineBasicBlock
+modifier|*
+name|getBottomBlock
+parameter_list|()
+function_decl|;
 name|private
 label|:
 name|friend

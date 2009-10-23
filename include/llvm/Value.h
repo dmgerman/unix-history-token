@@ -171,7 +171,7 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
-name|MetadataContext
+name|MetadataContextImpl
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                 Value Class
@@ -256,7 +256,7 @@ name|ValueHandleBase
 decl_stmt|;
 name|friend
 name|class
-name|MetadataContext
+name|MetadataContextImpl
 decl_stmt|;
 name|friend
 name|class

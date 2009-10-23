@@ -474,15 +474,6 @@ argument_list|()
 operator|==
 name|Instruction
 operator|::
-name|Malloc
-operator|||
-name|I
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|Instruction
-operator|::
 name|Alloca
 operator|||
 name|I

@@ -66,7 +66,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCValue
+name|MCExpr
 decl_stmt|;
 name|class
 name|MCSection
@@ -76,6 +76,9 @@ name|MCSymbol
 decl_stmt|;
 name|class
 name|StringRef
+decl_stmt|;
+name|class
+name|Twine
 decl_stmt|;
 comment|/// MCContext - Context object for machine code objects.  This class owns all
 comment|/// of the sections that it creates.
@@ -117,19 +120,6 @@ name|MCSymbol
 operator|*
 operator|>
 name|Symbols
-expr_stmt|;
-comment|/// SymbolValues - Bindings of symbols to values.
-comment|//
-comment|// FIXME: Is there a good reason to not just put this in the MCSymbol?
-name|DenseMap
-operator|<
-specifier|const
-name|MCSymbol
-operator|*
-operator|,
-name|MCValue
-operator|>
-name|SymbolValues
 expr_stmt|;
 comment|/// Allocator - Allocator object used for creating machine code objects.
 comment|///
@@ -179,6 +169,16 @@ modifier|&
 name|Name
 parameter_list|)
 function_decl|;
+name|MCSymbol
+modifier|*
+name|GetOrCreateSymbol
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Name
+parameter_list|)
+function_decl|;
 comment|/// CreateTemporarySymbol - Create a new temporary symbol with the specified
 comment|/// @param Name.
 comment|///
@@ -206,48 +206,6 @@ specifier|const
 name|StringRef
 operator|&
 name|Name
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @}
-comment|/// @name Symbol Value Table
-comment|/// @{
-comment|/// ClearSymbolValue - Erase a value binding for @arg Symbol, if one exists.
-name|void
-name|ClearSymbolValue
-parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|*
-name|Symbol
-parameter_list|)
-function_decl|;
-comment|/// SetSymbolValue - Set the value binding for @arg Symbol to @arg Value.
-name|void
-name|SetSymbolValue
-parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|*
-name|Symbol
-parameter_list|,
-specifier|const
-name|MCValue
-modifier|&
-name|Value
-parameter_list|)
-function_decl|;
-comment|/// GetSymbolValue - Return the current value for @arg Symbol, or null if
-comment|/// none exists.
-specifier|const
-name|MCValue
-modifier|*
-name|GetSymbolValue
-argument_list|(
-specifier|const
-name|MCSymbol
-operator|*
-name|Symbol
 argument_list|)
 decl|const
 decl_stmt|;
@@ -283,7 +241,7 @@ name|void
 modifier|*
 name|Ptr
 parameter_list|)
-block|{      }
+block|{     }
 block|}
 empty_stmt|;
 block|}

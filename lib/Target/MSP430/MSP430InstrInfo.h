@@ -78,45 +78,6 @@ block|{
 name|class
 name|MSP430TargetMachine
 decl_stmt|;
-name|namespace
-name|MSP430
-block|{
-comment|// MSP430 specific condition code.
-enum|enum
-name|CondCode
-block|{
-name|COND_E
-init|=
-literal|0
-block|,
-comment|// aka COND_Z
-name|COND_NE
-init|=
-literal|1
-block|,
-comment|// aka COND_NZ
-name|COND_HS
-init|=
-literal|2
-block|,
-comment|// aka COND_C
-name|COND_LO
-init|=
-literal|3
-block|,
-comment|// aka COND_NC
-name|COND_GE
-init|=
-literal|4
-block|,
-name|COND_L
-init|=
-literal|5
-block|,
-name|COND_INVALID
-block|}
-enum|;
-block|}
 name|class
 name|MSP430InstrInfo
 range|:
@@ -247,7 +208,50 @@ argument|const std::vector<CalleeSavedInfo>&CSI
 argument_list|)
 specifier|const
 block|;
-name|virtual
+comment|// Branch folding goodness
+name|bool
+name|ReverseBranchCondition
+argument_list|(
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|BlockHasNoFallThrough
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isUnpredicatedTerminator
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|AnalyzeBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *&TBB
+argument_list|,
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|RemoveBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
 name|unsigned
 name|InsertBranch
 argument_list|(

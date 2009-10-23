@@ -242,6 +242,11 @@ comment|// StackObject - Represent a single object allocated on the stack.
 struct|struct
 name|StackObject
 block|{
+comment|// SPOffset - The offset of this object from the stack pointer on entry to
+comment|// the function.  This field has no meaning for a variable sized element.
+name|int64_t
+name|SPOffset
+decl_stmt|;
 comment|// The size of this object on the stack. 0 means a variable sized object,
 comment|// ~0ULL means a dead object.
 name|uint64_t
@@ -257,10 +262,10 @@ comment|// default, fixed objects are immutable unless marked otherwise.
 name|bool
 name|isImmutable
 decl_stmt|;
-comment|// SPOffset - The offset of this object from the stack pointer on entry to
-comment|// the function.  This field has no meaning for a variable sized element.
-name|int64_t
-name|SPOffset
+comment|// isSpillSlot - If true, the stack object is used as spill slot. It
+comment|// cannot alias any other memory objects.
+name|bool
+name|isSpillSlot
 decl_stmt|;
 name|StackObject
 argument_list|(
@@ -272,8 +277,15 @@ argument|int64_t SP =
 literal|0
 argument_list|,
 argument|bool IM = false
+argument_list|,
+argument|bool isSS = false
 argument_list|)
 block|:
+name|SPOffset
+argument_list|(
+name|SP
+argument_list|)
+operator|,
 name|Size
 argument_list|(
 name|Sz
@@ -289,9 +301,9 @@ argument_list|(
 name|IM
 argument_list|)
 operator|,
-name|SPOffset
+name|isSpillSlot
 argument_list|(
-argument|SP
+argument|isSS
 argument_list|)
 block|{}
 block|}
@@ -1062,6 +1074,45 @@ operator|.
 name|isImmutable
 return|;
 block|}
+comment|/// isSpillSlotObjectIndex - Returns true if the specified index corresponds
+comment|/// to a spill slot..
+name|bool
+name|isSpillSlotObjectIndex
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isSpillSlot
+return|;
+empty_stmt|;
+block|}
 comment|/// isDeadObjectIndex - Returns true if the specified index corresponds to
 comment|/// a dead object.
 name|bool
@@ -1114,6 +1165,11 @@ name|Size
 parameter_list|,
 name|unsigned
 name|Alignment
+parameter_list|,
+name|bool
+name|isSS
+init|=
+name|false
 parameter_list|)
 block|{
 name|assert
@@ -1134,6 +1190,12 @@ argument_list|(
 name|Size
 argument_list|,
 name|Alignment
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|isSS
 argument_list|)
 argument_list|)
 expr_stmt|;

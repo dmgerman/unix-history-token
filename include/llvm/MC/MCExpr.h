@@ -180,10 +180,6 @@ comment|/// @result - True on success.
 name|bool
 name|EvaluateAsAbsolute
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
-argument_list|,
 name|int64_t
 operator|&
 name|Res
@@ -198,10 +194,6 @@ comment|/// @result - True on success.
 name|bool
 name|EvaluateAsRelocatable
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
-argument_list|,
 name|MCValue
 operator|&
 name|Res

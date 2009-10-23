@@ -3913,6 +3913,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|WidenVecOp_EXTRACT_SUBVECTOR
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|WidenVecOp_STORE
 parameter_list|(
 name|SDNode

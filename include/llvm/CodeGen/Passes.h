@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -78,9 +84,6 @@ name|FunctionPass
 decl_stmt|;
 name|class
 name|PassInfo
-decl_stmt|;
-name|class
-name|TargetMachine
 decl_stmt|;
 name|class
 name|TargetLowering
@@ -266,12 +269,18 @@ modifier|*
 name|createLowerSubregsPass
 parameter_list|()
 function_decl|;
-comment|/// createPostRAScheduler - under development.
+comment|/// createPostRAScheduler - This pass performs post register allocation
+comment|/// scheduling.
 name|FunctionPass
 modifier|*
 name|createPostRAScheduler
-parameter_list|()
-function_decl|;
+argument_list|(
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|)
+decl_stmt|;
 comment|/// BranchFolding Pass - This pass performs machine code CFG based
 comment|/// optimizations to delete branches to branches, eliminate branches to
 comment|/// successor blocks (creating fall throughs), and eliminating branches over

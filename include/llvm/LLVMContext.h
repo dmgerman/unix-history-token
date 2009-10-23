@@ -108,10 +108,6 @@ modifier|&
 name|getMetadata
 parameter_list|()
 function_decl|;
-name|bool
-name|RemoveDeadMetadata
-parameter_list|()
-function_decl|;
 name|LLVMContext
 argument_list|()
 expr_stmt|;

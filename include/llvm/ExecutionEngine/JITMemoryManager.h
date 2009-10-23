@@ -342,16 +342,17 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// deallocateMemForFunction - Free JIT memory for the specified function.
-comment|/// This is never called when the JIT is currently emitting a function.
+comment|/// deallocateFunctionBody - Free the specified function body.  The argument
+comment|/// must be the return value from a call to startFunctionBody() that hasn't
+comment|/// been deallocated yet.  This is never called when the JIT is currently
+comment|/// emitting a function.
 name|virtual
 name|void
-name|deallocateMemForFunction
+name|deallocateFunctionBody
 parameter_list|(
-specifier|const
-name|Function
+name|void
 modifier|*
-name|F
+name|Body
 parameter_list|)
 init|=
 literal|0
@@ -397,6 +398,21 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|FrameRegister
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// deallocateExceptionTable - Free the specified exception table's memory.
+comment|/// The argument must be the return value from a call to startExceptionTable()
+comment|/// that hasn't been deallocated yet.  This is never called when the JIT is
+comment|/// currently emitting an exception table.
+name|virtual
+name|void
+name|deallocateExceptionTable
+parameter_list|(
+name|void
+modifier|*
+name|ET
 parameter_list|)
 init|=
 literal|0

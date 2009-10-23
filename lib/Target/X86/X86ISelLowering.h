@@ -580,6 +580,16 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
+comment|/// isPALIGNRMask - Return true if the specified VECTOR_SHUFFLE operand
+comment|/// specifies a shuffle of elements that is suitable for input to PALIGNR.
+name|bool
+name|isPALIGNRMask
+parameter_list|(
+name|ShuffleVectorSDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 comment|/// getShuffleSHUFImmediate - Return the appropriate immediate to shuffle
 comment|/// the specified isShuffleMask VECTOR_SHUFFLE mask with PSHUF* and SHUFP*
 comment|/// instructions.
@@ -592,8 +602,7 @@ name|N
 parameter_list|)
 function_decl|;
 comment|/// getShufflePSHUFHWImmediate - Return the appropriate immediate to shuffle
-comment|/// the specified isShuffleMask VECTOR_SHUFFLE mask with PSHUFHW
-comment|/// instructions.
+comment|/// the specified VECTOR_SHUFFLE mask with PSHUFHW instruction.
 name|unsigned
 name|getShufflePSHUFHWImmediate
 parameter_list|(
@@ -602,11 +611,20 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// getShufflePSHUFKWImmediate - Return the appropriate immediate to shuffle
-comment|/// the specified isShuffleMask VECTOR_SHUFFLE mask with PSHUFLW
-comment|/// instructions.
+comment|/// getShufflePSHUFLWImmediate - Return the appropriate immediate to shuffle
+comment|/// the specified VECTOR_SHUFFLE mask with PSHUFLW instruction.
 name|unsigned
 name|getShufflePSHUFLWImmediate
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// getShufflePALIGNRImmediate - Return the appropriate immediate to shuffle
+comment|/// the specified VECTOR_SHUFFLE mask with the PALIGNR instruction.
+name|unsigned
+name|getShufflePALIGNRImmediate
 parameter_list|(
 name|SDNode
 modifier|*

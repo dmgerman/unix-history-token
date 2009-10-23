@@ -79,17 +79,6 @@ comment|///
 name|class
 name|TargetIntrinsicInfo
 block|{
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|Intrinsics
-decl_stmt|;
-comment|// Raw array to allow static init'n
-name|unsigned
-name|NumIntrinsics
-decl_stmt|;
-comment|// Number of entries in the desc array
 name|TargetIntrinsicInfo
 argument_list|(
 specifier|const
@@ -111,97 +100,46 @@ comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|TargetIntrinsicInfo
-argument_list|(
-argument|const char **desc
-argument_list|,
-argument|unsigned num
-argument_list|)
-empty_stmt|;
+argument_list|()
+expr_stmt|;
 name|virtual
 operator|~
 name|TargetIntrinsicInfo
 argument_list|()
 expr_stmt|;
-name|unsigned
-name|getNumIntrinsics
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumIntrinsics
-return|;
-block|}
+comment|/// Return the name of a target intrinsic, e.g. "llvm.bfin.ssync".
 name|virtual
-name|Function
-modifier|*
-name|getDeclaration
-argument_list|(
-name|Module
-operator|*
-name|M
-argument_list|,
 specifier|const
 name|char
-operator|*
-name|BuiltinName
+modifier|*
+name|getName
+argument_list|(
+name|unsigned
+name|IntrID
 argument_list|)
 decl|const
-block|{
-return|return
+init|=
 literal|0
-return|;
-block|}
-comment|// Returns the Function declaration for intrinsic BuiltinName.  If the
-comment|// intrinsic can be overloaded, uses Tys to return the correct function.
+decl_stmt|;
+comment|/// Look up target intrinsic by name. Return intrinsic ID or 0 for unknown
+comment|/// names.
 name|virtual
-name|Function
-modifier|*
-name|getDeclaration
+name|unsigned
+name|lookupName
 argument_list|(
-name|Module
-operator|*
-name|M
-argument_list|,
 specifier|const
 name|char
 operator|*
-name|BuiltinName
-argument_list|,
-specifier|const
-name|Type
-operator|*
-operator|*
-name|Tys
+name|Name
 argument_list|,
 name|unsigned
-name|numTys
+name|Len
 argument_list|)
 decl|const
-block|{
-return|return
+init|=
 literal|0
-return|;
-block|}
-comment|// Returns true if the Builtin can be overloaded.
-name|virtual
-name|bool
-name|isOverloaded
-argument_list|(
-name|Module
-operator|*
-name|M
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|BuiltinName
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
+decl_stmt|;
+comment|/// Return the target intrinsic ID of a function, or 0.
 name|virtual
 name|unsigned
 name|getIntrinsicID
@@ -211,11 +149,7 @@ operator|*
 name|F
 argument_list|)
 decl|const
-block|{
-return|return
-literal|0
-return|;
-block|}
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

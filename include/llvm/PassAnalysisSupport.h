@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Pass.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -98,7 +104,6 @@ block|{
 name|class
 name|StringRef
 decl_stmt|;
-comment|// No need to include Pass.h, we are being included by it!
 comment|//===----------------------------------------------------------------------===//
 comment|// AnalysisUsage - Represent the analysis usage information of a pass.  This
 comment|// tracks analyses that the pass REQUIRES (must be available when the pass

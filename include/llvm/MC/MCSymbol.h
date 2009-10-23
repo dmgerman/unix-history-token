@@ -85,6 +85,9 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCExpr
+decl_stmt|;
+name|class
 name|MCSection
 decl_stmt|;
 name|class
@@ -126,6 +129,12 @@ name|MCSection
 modifier|*
 name|Section
 decl_stmt|;
+comment|/// Value - If non-null, the value for a variable symbol.
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+decl_stmt|;
 comment|/// IsTemporary - True if this is an assembler temporary label, which
 comment|/// typically does not survive in the .o file's symbol table.  Usually
 comment|/// "Lfoo" or ".foo".
@@ -154,6 +163,11 @@ name|_Name
 argument_list|)
 operator|,
 name|Section
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Value
 argument_list|(
 literal|0
 argument_list|)
@@ -209,6 +223,9 @@ return|return
 name|IsTemporary
 return|;
 block|}
+comment|/// @}
+comment|/// @name Associated Sections
+comment|/// @{
 comment|/// isDefined - Check if this symbol is defined (i.e., it has an address).
 comment|///
 comment|/// Defined symbols are either absolute or in some section.
@@ -308,6 +325,50 @@ block|{
 name|Section
 operator|=
 name|AbsolutePseudoSection
+expr_stmt|;
+block|}
+comment|/// @}
+comment|/// @name Variable Symbols
+comment|/// @{
+comment|/// isVariable - Check if this is a variable symbol.
+name|bool
+name|isVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// getValue() - Get the value for variable symbols, or null if the symbol
+comment|/// is not a variable.
+specifier|const
+name|MCExpr
+operator|*
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+return|;
+block|}
+name|void
+name|setValue
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+parameter_list|)
+block|{
+name|this
+operator|->
+name|Value
+operator|=
+name|Value
 expr_stmt|;
 block|}
 comment|/// @}

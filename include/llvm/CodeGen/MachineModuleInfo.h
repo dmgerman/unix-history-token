@@ -465,7 +465,10 @@ name|std
 operator|::
 name|pair
 operator|<
-name|WeakMetadataVH
+name|TrackingVH
+operator|<
+name|MDNode
+operator|>
 operator|,
 name|unsigned
 operator|>

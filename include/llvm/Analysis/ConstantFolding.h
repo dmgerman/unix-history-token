@@ -223,6 +223,25 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// ConstantFoldLoadFromConstPtr - Return the value that a load from C would
+comment|/// produce if it is constant and determinable.  If this is not determinable,
+comment|/// return null.
+name|Constant
+modifier|*
+name|ConstantFoldLoadFromConstPtr
+parameter_list|(
+name|Constant
+modifier|*
+name|C
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// ConstantFoldLoadThroughGEPConstantExpr - Given a constant and a
 comment|/// getelementptr constantexpr, return the constant value being addressed by the
 comment|/// constant expression, or null if something is funny and we can't decide.

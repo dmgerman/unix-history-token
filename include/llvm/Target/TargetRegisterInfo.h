@@ -2492,9 +2492,9 @@ name|MF
 argument_list|)
 decl|const
 block|{   }
-comment|/// saveScavengerRegister - Save the register so it can be used by the
-comment|/// register scavenger. Return true if the register was saved, false
-comment|/// otherwise. If this function does not save the register, the scavenger
+comment|/// saveScavengerRegister - Spill the register so it can be used by the
+comment|/// register scavenger. Return true if the register was spilled, false
+comment|/// otherwise. If this function does not spill the register, the scavenger
 comment|/// will instead spill it to the emergency spill slot.
 comment|///
 name|virtual
@@ -2510,6 +2510,12 @@ operator|::
 name|iterator
 name|I
 argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+operator|&
+name|UseMI
+argument_list|,
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -2524,32 +2530,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// restoreScavengerRegister - Restore a register saved by
-comment|/// saveScavengerRegister().
-comment|///
-name|virtual
-name|void
-name|restoreScavengerRegister
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|I
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-block|{}
 comment|/// eliminateFrameIndex - This method must be overriden to eliminate abstract
 comment|/// frame indices from instructions which may use them.  The instruction
 comment|/// referenced by the iterator contains an MO_FrameIndex operand which must be

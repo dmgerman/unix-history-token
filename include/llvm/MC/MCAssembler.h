@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
@@ -103,10 +97,16 @@ name|class
 name|MCContext
 decl_stmt|;
 name|class
+name|MCExpr
+decl_stmt|;
+name|class
 name|MCSection
 decl_stmt|;
 name|class
 name|MCSectionData
+decl_stmt|;
+name|class
+name|MCSymbol
 decl_stmt|;
 name|class
 name|MCFragment
@@ -604,7 +604,9 @@ name|public
 name|MCFragment
 block|{
 comment|/// Value - Value to use for filling bytes.
-name|MCValue
+specifier|const
+name|MCExpr
+operator|*
 name|Value
 block|;
 comment|/// ValueSize - The size (in bytes) of \arg Value to use when filling.
@@ -619,7 +621,7 @@ name|public
 operator|:
 name|MCFillFragment
 argument_list|(
-argument|MCValue _Value
+argument|const MCExpr&_Value
 argument_list|,
 argument|unsigned _ValueSize
 argument_list|,
@@ -638,6 +640,7 @@ argument_list|)
 block|,
 name|Value
 argument_list|(
+operator|&
 name|_Value
 argument_list|)
 block|,
@@ -664,12 +667,15 @@ operator|*
 name|Count
 return|;
 block|}
-name|MCValue
+specifier|const
+name|MCExpr
+operator|&
 name|getValue
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|Value
 return|;
 block|}
@@ -730,7 +736,9 @@ name|public
 name|MCFragment
 block|{
 comment|/// Offset - The offset this fragment should start at.
-name|MCValue
+specifier|const
+name|MCExpr
+operator|*
 name|Offset
 block|;
 comment|/// Value - Value to use for filling bytes.
@@ -741,7 +749,7 @@ name|public
 operator|:
 name|MCOrgFragment
 argument_list|(
-argument|MCValue _Offset
+argument|const MCExpr&_Offset
 argument_list|,
 argument|int8_t _Value
 argument_list|,
@@ -758,6 +766,7 @@ argument_list|)
 block|,
 name|Offset
 argument_list|(
+operator|&
 name|_Offset
 argument_list|)
 block|,
@@ -782,12 +791,15 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|MCValue
+specifier|const
+name|MCExpr
+operator|&
 name|getOffset
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|Offset
 return|;
 block|}
@@ -991,10 +1003,9 @@ name|uint64_t
 name|Offset
 block|;
 comment|/// Value - The expression to eventually write into the fragment.
-comment|//
-comment|// FIXME: We could probably get away with requiring the client to pass in an
-comment|// owned reference whose lifetime extends past that of the fixup.
-name|MCValue
+specifier|const
+name|MCExpr
+operator|*
 name|Value
 block|;
 comment|/// Size - The fixup size.
@@ -1015,7 +1026,7 @@ argument|MCFragment&_Fragment
 argument_list|,
 argument|uint64_t _Offset
 argument_list|,
-argument|const MCValue&_Value
+argument|const MCExpr&_Value
 argument_list|,
 argument|unsigned _Size
 argument_list|)
@@ -1033,6 +1044,7 @@ argument_list|)
 block|,
 name|Value
 argument_list|(
+operator|&
 name|_Value
 argument_list|)
 block|,

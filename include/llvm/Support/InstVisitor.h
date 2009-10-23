@@ -113,17 +113,17 @@ comment|///
 comment|///  /// Declare the class.  Note that we derive from InstVisitor instantiated
 comment|///  /// with _our new subclasses_ type.
 comment|///  ///
-comment|///  struct CountMallocVisitor : public InstVisitor<CountMallocVisitor> {
+comment|///  struct CountAllocaVisitor : public InstVisitor<CountAllocaVisitor> {
 comment|///    unsigned Count;
-comment|///    CountMallocVisitor() : Count(0) {}
+comment|///    CountAllocaVisitor() : Count(0) {}
 comment|///
-comment|///    void visitMallocInst(MallocInst&MI) { ++Count; }
+comment|///    void visitAllocaInst(AllocaInst&AI) { ++Count; }
 comment|///  };
 comment|///
 comment|///  And this class would be used like this:
-comment|///    CountMallocVistor CMV;
-comment|///    CMV.visit(function);
-comment|///    NumMallocs = CMV.Count;
+comment|///    CountAllocaVisitor CAV;
+comment|///    CAV.visit(function);
+comment|///    NumAllocas = CAV.Count;
 comment|///
 comment|/// The defined has 'visit' methods for Instruction, and also for BasicBlock,
 comment|/// Function, and Module, which recursively process all contained instructions.
@@ -532,17 +532,6 @@ block|{
 name|DELEGATE
 argument_list|(
 name|CmpInst
-argument_list|)
-block|;}
-name|RetTy
-name|visitMallocInst
-argument_list|(
-argument|MallocInst&I
-argument_list|)
-block|{
-name|DELEGATE
-argument_list|(
-name|AllocationInst
 argument_list|)
 block|;}
 name|RetTy

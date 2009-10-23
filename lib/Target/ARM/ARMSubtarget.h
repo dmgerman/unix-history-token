@@ -475,15 +475,31 @@ return|return
 name|CPUString
 return|;
 block|}
-comment|/// enablePostRAScheduler - From TargetSubtarget, return true to
-comment|/// enable post-RA scheduler.
+comment|/// enablePostRAScheduler - True at 'More' optimization except
+comment|/// for Thumb1.
 name|bool
 name|enablePostRAScheduler
-argument_list|()
+argument_list|(
+argument|CodeGenOpt::Level OptLevel
+argument_list|,
+argument|TargetSubtarget::AntiDepBreakMode& mode
+argument_list|)
 specifier|const
 block|{
+name|mode
+operator|=
+name|TargetSubtarget
+operator|::
+name|ANTIDEP_NONE
+block|;
 return|return
 name|PostRAScheduler
+operator|&&
+name|OptLevel
+operator|>=
+name|CodeGenOpt
+operator|::
+name|Default
 return|;
 block|}
 comment|/// getInstrItins - Return the instruction itineraies based on subtarget

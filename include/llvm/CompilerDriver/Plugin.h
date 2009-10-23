@@ -92,6 +92,17 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// PreprocessOptions - The auto-generated function that performs various
+comment|/// consistency checks on options (like ensuring that -O2 and -O3 are not
+comment|/// used together).
+name|virtual
+name|void
+name|PreprocessOptions
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|/// PopulateLanguageMap - The auto-generated function that fills in
 comment|/// the language map (map from file extensions to language names).
 name|virtual
@@ -210,26 +221,22 @@ operator|~
 name|PluginLoader
 argument_list|()
 expr_stmt|;
-comment|/// PopulateLanguageMap - Fills in the language map by calling
-comment|/// PopulateLanguageMap methods of all plugins.
+comment|/// RunInitialization - Calls PreprocessOptions, PopulateLanguageMap and
+comment|/// PopulateCompilationGraph methods of all plugins. This populates the
+comment|/// global language map and the compilation graph.
 name|void
-name|PopulateLanguageMap
-parameter_list|(
+name|RunInitialization
+argument_list|(
 name|LanguageMap
-modifier|&
+operator|&
 name|langMap
-parameter_list|)
-function_decl|;
-comment|/// PopulateCompilationGraph - Populates the compilation graph by
-comment|/// calling PopulateCompilationGraph methods of all plugins.
-name|void
-name|PopulateCompilationGraph
-parameter_list|(
+argument_list|,
 name|CompilationGraph
-modifier|&
-name|tools
-parameter_list|)
-function_decl|;
+operator|&
+name|graph
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 comment|// noncopyable

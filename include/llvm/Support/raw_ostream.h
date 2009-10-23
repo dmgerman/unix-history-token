@@ -763,6 +763,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// write_escaped - Output \arg Str, turning '\\', '\t', '\n', '"', and
+end_comment
+
+begin_comment
+comment|/// anything that doesn't satisfy std::isprint into an escape sequence.
+end_comment
+
+begin_function_decl
+name|raw_ostream
+modifier|&
+name|write_escaped
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|raw_ostream
 modifier|&

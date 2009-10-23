@@ -215,6 +215,8 @@ block|,
 name|Solaris
 block|,
 name|Win32
+block|,
+name|Haiku
 block|}
 enum|;
 name|private

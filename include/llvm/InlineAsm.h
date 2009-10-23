@@ -127,7 +127,7 @@ name|bool
 name|HasSideEffects
 block|;
 name|bool
-name|IsMsAsm
+name|IsAlignStack
 block|;
 name|InlineAsm
 argument_list|(
@@ -139,7 +139,7 @@ argument|const StringRef&Constraints
 argument_list|,
 argument|bool hasSideEffects
 argument_list|,
-argument|bool isMsAsm = false
+argument|bool isAlignStack = false
 argument_list|)
 block|;
 name|virtual
@@ -164,7 +164,7 @@ argument|const StringRef&Constraints
 argument_list|,
 argument|bool hasSideEffects
 argument_list|,
-argument|bool isMsAsm = false
+argument|bool isAlignStack = false
 argument_list|)
 block|;
 name|bool
@@ -177,12 +177,12 @@ name|HasSideEffects
 return|;
 block|}
 name|bool
-name|isMsAsm
+name|isAlignStack
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsMsAsm
+name|IsAlignStack
 return|;
 block|}
 comment|/// getType - InlineAsm's are always pointers.

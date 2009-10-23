@@ -95,6 +95,12 @@ directive|include
 file|"BlackfinISelLowering.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"BlackfinIntrinsicInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -120,6 +126,9 @@ name|InstrInfo
 block|;
 name|TargetFrameInfo
 name|FrameInfo
+block|;
+name|BlackfinIntrinsicInfo
+name|IntrinsicInfo
 block|;
 name|public
 operator|:
@@ -240,9 +249,21 @@ argument|PassManagerBase&PM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
 argument_list|)
-block|;   }
-decl_stmt|;
+block|;
+specifier|const
+name|TargetIntrinsicInfo
+operator|*
+name|getIntrinsicInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|IntrinsicInfo
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

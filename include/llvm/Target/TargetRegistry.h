@@ -1498,6 +1498,42 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// RegisterMCInstPrinter - Register a MCInstPrinter implementation for the
+end_comment
+
+begin_comment
+comment|/// given target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct an MCInstPrinter for the target.
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|void

@@ -59,6 +59,12 @@ directive|define
 name|LLVM_TARGET_TARGETSUBTARGET_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -104,6 +110,19 @@ argument_list|()
 expr_stmt|;
 name|public
 label|:
+comment|// AntiDepBreakMode - Type of anti-dependence breaking that should
+comment|// be performed before post-RA scheduling.
+typedef|typedef
+enum|enum
+block|{
+name|ANTIDEP_NONE
+block|,
+name|ANTIDEP_CRITICAL
+block|,
+name|ANTIDEP_ALL
+block|}
+name|AntiDepBreakMode
+typedef|;
 name|virtual
 operator|~
 name|TargetSubtarget
@@ -123,14 +142,28 @@ return|return
 literal|0
 return|;
 block|}
-comment|// enablePostRAScheduler - Return true to enable
-comment|// post-register-allocation scheduling.
+comment|// enablePostRAScheduler - If the target can benefit from post-regalloc
+comment|// scheduling and the specified optimization level meets the requirement
+comment|// return true to enable post-register-allocation scheduling.
 name|virtual
 name|bool
 name|enablePostRAScheduler
-argument_list|()
-specifier|const
+argument_list|(
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|,
+name|AntiDepBreakMode
+operator|&
+name|mode
+argument_list|)
+decl|const
 block|{
+name|mode
+operator|=
+name|ANTIDEP_NONE
+expr_stmt|;
 return|return
 name|false
 return|;

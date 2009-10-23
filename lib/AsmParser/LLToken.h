@@ -205,11 +205,9 @@ name|kw_asm
 block|,
 name|kw_sideeffect
 block|,
-name|kw_msasm
+name|kw_alignstack
 block|,
 name|kw_gc
-block|,
-name|kw_dbg
 block|,
 name|kw_c
 block|,

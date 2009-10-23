@@ -134,9 +134,6 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
-argument_list|,
-argument|const char *Modifier =
-literal|0
 argument_list|)
 block|;
 name|void

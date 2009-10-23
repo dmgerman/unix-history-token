@@ -400,20 +400,14 @@ name|LoopSimplifyID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// LowerAllocations - Turn malloc and free instructions into @malloc and @free
-comment|// calls.
+comment|// LowerAllocations - Turn free instructions into @free calls.
 comment|//
 comment|//   AU.addRequiredID(LowerAllocationsID);
 comment|//
 name|Pass
 modifier|*
 name|createLowerAllocationsPass
-parameter_list|(
-name|bool
-name|LowerMallocArgToInteger
-init|=
-name|false
-parameter_list|)
+parameter_list|()
 function_decl|;
 specifier|extern
 specifier|const

@@ -197,10 +197,6 @@ name|char
 name|DarwinVers
 block|;
 comment|// Is any darwin-x86 platform.
-comment|/// isLinux - true if this is a "linux" platform.
-name|bool
-name|IsLinux
-block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
@@ -720,16 +716,6 @@ return|return
 name|DarwinVers
 return|;
 block|}
-comment|/// isLinux - Return true if the target is "Linux".
-name|bool
-name|isLinux
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsLinux
-return|;
-block|}
 comment|/// ClassifyGlobalReference - Classify a global variable reference for the
 comment|/// current subtarget according to how we should reference it in a non-pcrel
 comment|/// context.
@@ -782,6 +768,38 @@ name|getSpecialAddressLatency
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// enablePostRAScheduler - X86 target is enabling post-alloc scheduling
+comment|/// at 'More' optimization level.
+name|bool
+name|enablePostRAScheduler
+argument_list|(
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|,
+name|TargetSubtarget
+operator|::
+name|AntiDepBreakMode
+operator|&
+name|mode
+argument_list|)
+decl|const
+block|{
+name|mode
+operator|=
+name|TargetSubtarget
+operator|::
+name|ANTIDEP_CRITICAL
+expr_stmt|;
+return|return
+name|OptLevel
+operator|>=
+name|CodeGenOpt
+operator|::
+name|Default
+return|;
+block|}
 block|}
 end_decl_stmt
 
