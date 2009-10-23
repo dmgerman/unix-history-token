@@ -3530,7 +3530,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-name|CAM_PRIORITY_BUS
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_periph_runccb
