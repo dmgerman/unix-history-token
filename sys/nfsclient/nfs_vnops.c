@@ -4289,6 +4289,9 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
+name|time_t
+name|dmtime
+decl_stmt|;
 name|int
 name|flags
 init|=
@@ -4674,6 +4677,17 @@ name|n_mtx
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Cache the modification time of the parent directory in case 	 * the lookup fails and results in adding the first negative 	 * name cache entry for the directory.  Since this is reading 	 * a single time_t, don't bother with locking.  The 	 * modification time may be a bit stale, but it must be read 	 * before performing the lookup RPC to prevent a race where 	 * another lookup updates the timestamp on the directory after 	 * the lookup RPC has been performed on the server but before 	 * n_dmtime is set at the end of this function. 	 */
+name|dmtime
+operator|=
+name|np
+operator|->
+name|n_vattr
+operator|.
+name|va_mtime
+operator|.
+name|tv_sec
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -5276,7 +5290,7 @@ operator|!=
 name|CREATE
 condition|)
 block|{
-comment|/* 			 * Maintain n_dmtime as the modification time 			 * of the parent directory when the oldest -ve 			 * name cache entry for this directory was 			 * added. 			 */
+comment|/* 			 * Maintain n_dmtime as the modification time 			 * of the parent directory when the oldest -ve 			 * name cache entry for this directory was 			 * added.  If a -ve cache entry has already 			 * been added with a newer modification time 			 * by a concurrent lookup, then don't bother 			 * adding a cache entry.  The modification 			 * time of the directory might have changed 			 * due to the file this lookup failed to find 			 * being created.  In that case a subsequent 			 * lookup would incorrectly use the entry 			 * added here instead of doing an extra 			 * lookup. 			 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5290,6 +5304,15 @@ condition|(
 name|np
 operator|->
 name|n_dmtime
+operator|<=
+name|dmtime
+condition|)
+block|{
+if|if
+condition|(
+name|np
+operator|->
+name|n_dmtime
 operator|==
 literal|0
 condition|)
@@ -5297,13 +5320,7 @@ name|np
 operator|->
 name|n_dmtime
 operator|=
-name|np
-operator|->
-name|n_vattr
-operator|.
-name|va_mtime
-operator|.
-name|tv_sec
+name|dmtime
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -5320,6 +5337,16 @@ argument_list|,
 name|NULL
 argument_list|,
 name|cnp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|mtx_unlock
+argument_list|(
+operator|&
+name|np
+operator|->
+name|n_mtx
 argument_list|)
 expr_stmt|;
 block|}
