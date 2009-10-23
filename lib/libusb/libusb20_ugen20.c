@@ -3497,6 +3497,22 @@ operator||=
 name|USB_FS_FLAG_CLEAR_STALL
 expr_stmt|;
 block|}
+comment|/* NOTE: The "fsep->timeout" variable is 16-bit. */
+if|if
+condition|(
+name|xfer
+operator|->
+name|timeout
+operator|>
+literal|65535
+condition|)
+name|fsep
+operator|->
+name|timeout
+operator|=
+literal|65535
+expr_stmt|;
+else|else
 name|fsep
 operator|->
 name|timeout
