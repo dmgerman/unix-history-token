@@ -4454,17 +4454,6 @@ argument_list|)
 expr_stmt|;
 name|vmode
 operator|.
-name|v_maxpixelclock
-operator|=
-name|le32toh
-argument_list|(
-name|vmode
-operator|.
-name|v_maxpixelclock
-argument_list|)
-expr_stmt|;
-name|vmode
-operator|.
 name|v_linbpscanline
 operator|=
 name|le16toh
