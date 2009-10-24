@@ -3195,6 +3195,16 @@ operator|!
 name|set
 operator|&&
 name|uflag
+operator|&&
+operator|*
+name|var
+operator|!=
+literal|'@'
+operator|&&
+operator|*
+name|var
+operator|!=
+literal|'*'
 condition|)
 block|{
 switch|switch
