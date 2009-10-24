@@ -241,7 +241,7 @@ begin_define
 define|#
 directive|define
 name|KSTACK_PAGES
-value|4
+value|5
 end_define
 
 begin_comment
