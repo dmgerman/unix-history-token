@@ -2443,6 +2443,43 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+specifier|static
+name|void
+name|random_init
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+name|__unused
+parameter_list|)
+block|{
+comment|/* 	 * After CPU has been started we have some randomness on most 	 * platforms via get_cyclecount().  For platforms that don't 	 * we will reseed random(9) in proc0_post() as well. 	 */
+name|srandom
+argument_list|(
+name|get_cyclecount
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|random
+argument_list|,
+name|SI_SUB_RANDOM
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|random_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  ***************************************************************************  ****  **** The following SYSINIT's and glue code should be moved to the  **** respective files on a per subsystem basis.  ****  ***************************************************************************  */
 end_comment
