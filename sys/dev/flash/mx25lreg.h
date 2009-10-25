@@ -135,6 +135,13 @@ name|STATUS_WIP
 value|(1<< 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|FLASH_PAGE_SIZE
+value|256
+end_define
+
 begin_endif
 endif|#
 directive|endif
