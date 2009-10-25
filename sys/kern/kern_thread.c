@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -118,6 +124,23 @@ include|#
 directive|include
 file|<sys/cpuset.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1557,6 +1580,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+comment|/* 	 * If this thread is part of a process that is being tracked by hwpmc(4), 	 * inform the module of the thread's impending exit. 	 */
+if|if
+condition|(
+name|PMC_PROC_IS_USING_PMCS
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+condition|)
+name|PMC_SWITCH_CONTEXT
+argument_list|(
+name|td
+argument_list|,
+name|PMC_FN_CSW_OUT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|PROC_UNLOCK
 argument_list|(
 name|p
