@@ -385,8 +385,15 @@ operator|)
 return|;
 end_return
 
+begin_ifdef
+unit|}
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_macro
-unit|}  u_short
+unit|u_short
 name|in_cksum_skip
 argument_list|(
 argument|struct mbuf *m
@@ -400,6 +407,11 @@ end_macro
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
