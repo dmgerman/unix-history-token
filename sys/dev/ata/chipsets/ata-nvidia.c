@@ -1269,6 +1269,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* MCP55 seems to need some time to allow r_res2 read. */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ctlr
