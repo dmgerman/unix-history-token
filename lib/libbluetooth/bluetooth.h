@@ -659,12 +659,12 @@ name|struct
 name|bt_devfilter
 specifier|const
 modifier|*
-name|new
+name|newp
 parameter_list|,
 name|struct
 name|bt_devfilter
 modifier|*
-name|old
+name|oldp
 parameter_list|)
 function_decl|;
 end_function_decl
