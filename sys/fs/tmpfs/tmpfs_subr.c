@@ -3417,6 +3417,8 @@ argument_list|(
 name|newsize
 argument_list|)
 argument_list|,
+name|VM_ALLOC_NOBUSY
+operator||
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_RETRY
@@ -3431,11 +3433,6 @@ operator|-
 name|zerolen
 argument_list|,
 name|zerolen
-argument_list|)
-expr_stmt|;
-name|vm_page_wakeup
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 block|}
