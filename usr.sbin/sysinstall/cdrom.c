@@ -929,6 +929,11 @@ argument_list|,
 name|CDIOCEJECT
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
