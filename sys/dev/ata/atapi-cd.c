@@ -3976,7 +3976,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|5
+literal|10
 expr_stmt|;
 name|ata_queue_request
 argument_list|(

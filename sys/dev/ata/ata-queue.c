@@ -669,7 +669,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|5
+literal|10
 expr_stmt|;
 block|}
 name|request
@@ -2103,7 +2103,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|5
+literal|10
 expr_stmt|;
 name|request
 operator|->
