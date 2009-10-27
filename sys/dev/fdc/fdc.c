@@ -9987,6 +9987,8 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+return|return
+operator|(
 name|g_modevent
 argument_list|(
 name|NULL
@@ -9996,10 +9998,6 @@ argument_list|,
 operator|&
 name|g_fd_class
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
