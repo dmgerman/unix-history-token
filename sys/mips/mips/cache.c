@@ -522,14 +522,16 @@ block|mips_cache_ops.mco_intern_pdcache_wbinv_all = 		    cache_noop; 		mips_cac
 endif|#
 directive|endif
 comment|/* Check that all cache ops are set up. */
+comment|/* must have primary Icache */
 if|if
 condition|(
-name|mips_picache_size
-operator|||
-literal|1
+name|cpuinfo
+operator|->
+name|l1
+operator|.
+name|ic_size
 condition|)
 block|{
-comment|/* XXX- must have primary Icache */
 if|if
 condition|(
 operator|!
@@ -567,14 +569,16 @@ literal|"no icache_sync_range_index cache op"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* must have primary Dcache */
 if|if
 condition|(
-name|mips_pdcache_size
-operator|||
-literal|1
+name|cpuinfo
+operator|->
+name|l1
+operator|.
+name|dc_size
 condition|)
 block|{
-comment|/* XXX- must have primary Icache */
 if|if
 condition|(
 operator|!
