@@ -1170,6 +1170,24 @@ value|101
 end_define
 
 begin_comment
+comment|/* flags for kern_sigprocmask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGPROCMASK_OLD
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGPROCMASK_PROC_LOCKED
+value|0x0002
+end_define
+
+begin_comment
 comment|/*  * Machine-independent functions:  */
 end_comment
 
@@ -1730,6 +1748,32 @@ parameter_list|,
 name|struct
 name|timespec
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kern_sigprocmask
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|how
+parameter_list|,
+name|sigset_t
+modifier|*
+name|set
+parameter_list|,
+name|sigset_t
+modifier|*
+name|oset
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
