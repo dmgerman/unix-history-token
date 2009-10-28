@@ -156,6 +156,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Exported variables for consumers like bus_dma code  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|mips_picache_linesize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mips_pdcache_linesize
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -390,6 +406,22 @@ operator|.
 name|dc_nways
 expr_stmt|;
 block|}
+name|mips_picache_linesize
+operator|=
+name|cpuinfo
+operator|->
+name|l1
+operator|.
+name|ic_linesize
+expr_stmt|;
+name|mips_pdcache_linesize
+operator|=
+name|cpuinfo
+operator|->
+name|l1
+operator|.
+name|dc_linesize
+expr_stmt|;
 name|picache_size
 operator|=
 name|cpuinfo
