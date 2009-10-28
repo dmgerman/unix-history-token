@@ -789,7 +789,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTICS
+name|DIAGNOSTIC
 else|else
 block|{
 name|struct

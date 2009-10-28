@@ -6163,7 +6163,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTICS
+name|DIAGNOSTIC
 name|log
 argument_list|(
 name|LOG_INFO
@@ -6381,7 +6381,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTICS
+name|DIAGNOSTIC
 if|if
 condition|(
 name|flags
@@ -6584,7 +6584,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTICS
+name|DIAGNOSTIC
 name|log
 argument_list|(
 name|LOG_INFO
