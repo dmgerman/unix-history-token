@@ -1262,11 +1262,9 @@ index|]
 operator|>=
 name|MIPS_KSEG0_LARGEST_PHYS
 condition|)
-block|{
 name|memory_larger_than_512meg
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|i
@@ -1801,24 +1799,6 @@ name|NPTEPG
 operator|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|phys_avail
-index|[
-name|i
-operator|+
-literal|2
-index|]
-condition|;
-name|i
-operator|+=
-literal|2
-control|)
-continue|continue;
 comment|/* 	 * The kernel's pmap is statically allocated so we don't have to use 	 * pmap_create, which is unlikely to work correctly at this part of 	 * the boot sequence (XXX and which no longer exists). 	 */
 name|PMAP_LOCK_INIT
 argument_list|(
