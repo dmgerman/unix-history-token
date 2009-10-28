@@ -2259,7 +2259,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|callout_schedule
+name|callout_reset
 argument_list|(
 operator|&
 name|sc
@@ -2271,6 +2271,10 @@ operator|*
 literal|60
 operator|*
 name|hz
+argument_list|,
+name|aac_daemon
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
