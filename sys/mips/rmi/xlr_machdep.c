@@ -1545,7 +1545,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|v
+name|xlr_argv
+index|[
+name|i
+index|]
 operator|==
 name|NULL
 condition|)
