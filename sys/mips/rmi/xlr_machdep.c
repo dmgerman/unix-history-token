@@ -1337,6 +1337,8 @@ literal|0
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|struct
 name|xlr_boot1_mem_map
