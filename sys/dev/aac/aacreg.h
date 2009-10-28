@@ -4445,7 +4445,7 @@ name|AAC_FA_HACK
 parameter_list|(
 name|sc
 parameter_list|)
-value|(void)AAC_GETREG4(sc, AAC_FA_INTSRC)
+value|(void)AAC_MEM0_GETREG4(sc, AAC_FA_INTSRC)
 end_define
 
 begin_comment
