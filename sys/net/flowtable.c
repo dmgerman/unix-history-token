@@ -4761,6 +4761,13 @@ name|i
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|smp_started
+operator|==
+literal|1
+condition|)
+block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -4778,6 +4785,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+block|}
 name|flowtable_free_stale
 argument_list|(
 name|ft
@@ -4785,6 +4793,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|smp_started
+operator|==
+literal|1
+condition|)
+block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -4800,6 +4815,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
