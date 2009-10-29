@@ -271,7 +271,7 @@ file|<machine/bus.h>
 end_include
 
 begin_comment
-comment|/*  */
+comment|/* */
 end_comment
 
 begin_include
@@ -720,7 +720,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/*Nothing*/
+comment|/* Nothing */
 end_comment
 
 begin_define
@@ -737,7 +737,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/*Nothing*/
+comment|/* Nothing */
 end_comment
 
 begin_endif
@@ -827,9 +827,9 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|( ".set push\n" 			       ".set noreorder\n" 			       "move $8, %2\n"  			       "move $9, %3\n"
+asm|(".set push\n" 	            ".set noreorder\n" 	            "move $8, %2\n" 	            "move $9, %3\n"
 comment|/* "ldaddwu $8, $9\n" */
-asm|".word 0x71280011\n" 			       "move %0, $8\n" 			       ".set pop\n" 			       : "=&r"(value), "+m"(*addr) 			       : "0"(value), "r" ((unsigned long)addr) 			       :  "$8", "$9");
+asm|".word 0x71280011\n" 	            "move %0, $8\n" 	            ".set pop\n" 	    :       "=&r"(value), "+m"(*addr) 	    :       "0"(value), "r"((unsigned long)addr) 	    :       "$8", "$9");
 return|return
 name|value
 return|;
@@ -1924,7 +1924,7 @@ argument_list|)
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 			      		".set push\n" 			      		".set noreorder\n" 			      		".set mips64\n" 			      		"lw    %0, 0(%1) \n" 			      		".set pop\n" 			      :		"=r"         (value) 			      :		"r"          (addr) );
+asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set mips64\n" 	            "lw    %0, 0(%1) \n" 	            ".set pop\n" 	    :       "=r"(value) 	    :       "r"(addr));
 name|disable_KX
 argument_list|(
 name|flags
@@ -1987,7 +1987,7 @@ argument_list|)
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 			      		".set push\n" 			      		".set noreorder\n" 			      		".set mips64\n" 			      		"ld    %0, 0(%1) \n" 			      		".set pop\n" 			      :		"=r"         (value) 			      :		"r"          (addr));
+asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set mips64\n" 	            "ld    %0, 0(%1) \n" 	            ".set pop\n" 	    :       "=r"(value) 	    :       "r"(addr));
 name|disable_KX
 argument_list|(
 name|flags
@@ -2142,7 +2142,7 @@ index|[
 literal|7
 index|]
 argument_list|)
-block|, 	}
+block|, }
 expr_stmt|;
 end_expr_stmt
 
@@ -2226,7 +2226,7 @@ index|[
 literal|7
 index|]
 argument_list|)
-block|, 	}
+block|, }
 expr_stmt|;
 end_expr_stmt
 
@@ -2720,7 +2720,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*Increment p2d desc fail count*/
+comment|/* Increment p2d desc fail count */
 name|get_p2d_desc_failed
 operator|++
 expr_stmt|;
@@ -4719,7 +4719,7 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-comment|/*Check whether this is interface is active or not.*/
+comment|/* Check whether this is interface is active or not. */
 name|ifmr
 operator|->
 name|ifm_status
@@ -5077,7 +5077,7 @@ argument_list|,
 literal|0x0000
 argument_list|)
 expr_stmt|;
-comment|/*  	 * For loop delay and GPIO programming crud from Linux driver, 	 */
+comment|/* 	 * For loop delay and GPIO programming crud from Linux driver, 	 */
 for|for
 control|(
 name|i
@@ -5091,7 +5091,7 @@ condition|;
 name|i
 operator|++
 control|)
-block|{}
+block|{ 	}
 name|mmio_gpio
 index|[
 literal|0x20
@@ -5119,7 +5119,7 @@ condition|;
 name|i
 operator|++
 control|)
-block|{}
+block|{ 	}
 return|return;
 block|}
 end_function
@@ -5140,7 +5140,7 @@ name|delay
 init|=
 literal|100000
 decl_stmt|;
-comment|/* Enable Auto negotiation in the PCS Layer*/
+comment|/* Enable Auto negotiation in the PCS Layer */
 name|rge_mii_write_internal
 argument_list|(
 name|priv
@@ -5381,7 +5381,7 @@ operator|<<
 literal|3
 operator|)
 expr_stmt|;
-comment|//| (cpu& 0x03);
+comment|//|(cpu& 0x03);
 name|bucket_map
 operator||=
 operator|(
@@ -7249,7 +7249,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|priv->advertising = ADVERTISED_10baseT_Full | ADVERTISED_10baseT_Half | 		ADVERTISED_100baseT_Full | ADVERTISED_100baseT_Half | 		ADVERTISED_1000baseT_Full | ADVERTISED_Autoneg | 		ADVERTISED_MII;
+block|priv->advertising = ADVERTISED_10baseT_Full | ADVERTISED_10baseT_Half | 	    ADVERTISED_100baseT_Full | ADVERTISED_100baseT_Half | 	    ADVERTISED_1000baseT_Full | ADVERTISED_Autoneg | 	    ADVERTISED_MII;
 endif|#
 directive|endif
 comment|/* 	 * Enable all MDIO interrupts in the phy RX_ER bit seems to be get 	 * set about every 1 sec in GigE mode, ignore it for now... 	 */
@@ -9231,7 +9231,7 @@ index|]
 operator|->
 name|priv
 decl_stmt|;
-comment|/*uint32_t crdt;*/
+comment|/* uint32_t crdt; */
 if|if
 condition|(
 name|xlr_debug_enabled
@@ -10486,7 +10486,7 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
-comment|//		callout_reset(&rge_dbg_count, hz, xlr_debug_count, NULL);
+comment|//callout_reset(&rge_dbg_count, hz, xlr_debug_count, NULL);
 block|}
 if|if
 condition|(
@@ -13706,7 +13706,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Not yet 	if (xlr_board_atx_ii()) { 		if (register_msgring_handler 		    (TX_STN_XGS_0, rmi_xlr_mac_msgring_handler, NULL)) { 			panic("Couldn't register msgring handler for TX_STN_XGS_0\n"); 		} 		if (register_msgring_handler 		    (TX_STN_XGS_1, rmi_xlr_mac_msgring_handler, NULL)) { 			panic("Couldn't register msgring handler for TX_STN_XGS_1\n"); 		} 	} 	*/
+comment|/* 	 * Not yet if (xlr_board_atx_ii()) { if (register_msgring_handler 	 * (TX_STN_XGS_0, rmi_xlr_mac_msgring_handler, NULL)) { 	 * panic("Couldn't register msgring handler for TX_STN_XGS_0\n"); } 	 * if (register_msgring_handler (TX_STN_XGS_1, 	 * rmi_xlr_mac_msgring_handler, NULL)) { panic("Couldn't register 	 * msgring handler for TX_STN_XGS_1\n"); } } 	 */
 block|}
 end_function
 
