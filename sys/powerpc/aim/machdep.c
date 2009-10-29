@@ -4163,10 +4163,20 @@ block|{
 name|uint32_t
 name|msr
 decl_stmt|;
+name|uint16_t
+name|vers
+decl_stmt|;
 name|msr
 operator|=
 name|mfmsr
 argument_list|()
+expr_stmt|;
+name|vers
+operator|=
+name|mfpvr
+argument_list|()
+operator|>>
+literal|16
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4213,6 +4223,47 @@ condition|(
 name|powerpc_pow_enabled
 condition|)
 block|{
+switch|switch
+condition|(
+name|vers
+condition|)
+block|{
+case|case
+name|IBM970
+case|:
+case|case
+name|IBM970FX
+case|:
+case|case
+name|IBM970MP
+case|:
+case|case
+name|MPC7447A
+case|:
+case|case
+name|MPC7448
+case|:
+case|case
+name|MPC7450
+case|:
+case|case
+name|MPC7455
+case|:
+case|case
+name|MPC7457
+case|:
+asm|__asm __volatile("\ 			    dssall; sync; mtmsr %0; isync"
+operator|::
+literal|"r"
+operator|(
+name|msr
+operator||
+name|PSL_POW
+operator|)
+block|)
+empty_stmt|;
+break|break;
+default|default:
 name|powerpc_sync
 argument_list|()
 expr_stmt|;
@@ -4226,17 +4277,20 @@ expr_stmt|;
 name|isync
 argument_list|()
 expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
+unit|}  int
 name|cpu_idle_wakeup
-parameter_list|(
-name|int
-name|cpu
-parameter_list|)
+argument_list|(
+argument|int cpu
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 operator|(
@@ -4244,7 +4298,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Set set up registers on exec.  */
