@@ -426,6 +426,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -1318,6 +1324,9 @@ name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
 name|cpu_setregs
+argument_list|()
+expr_stmt|;
+name|mca_init
 argument_list|()
 expr_stmt|;
 block|}

@@ -292,6 +292,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -2511,6 +2517,9 @@ argument_list|(
 name|idlethread
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|mca_init
+argument_list|()
 expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
