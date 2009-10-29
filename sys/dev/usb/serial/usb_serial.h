@@ -176,6 +176,19 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
+name|ucom_cfg_set_ring
+function_decl|)
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
 name|ucom_cfg_param
 function_decl|)
 parameter_list|(
@@ -320,6 +333,17 @@ name|buflen
 parameter_list|,
 name|uint16_t
 name|local_subunit
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ucom_poll
+function_decl|)
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
 parameter_list|)
 function_decl|;
 block|}
@@ -566,7 +590,7 @@ decl_stmt|;
 name|uint16_t
 name|sc_portno
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|sc_flag
 decl_stmt|;
 define|#
@@ -599,6 +623,11 @@ directive|define
 name|UCOM_FLAG_HL_READY
 value|0x40
 comment|/* set if high layer is ready */
+define|#
+directive|define
+name|UCOM_FLAG_CONSOLE
+value|0x80
+comment|/* set if device is a console */
 name|uint8_t
 name|sc_lsr
 decl_stmt|;
@@ -637,6 +666,10 @@ define|#
 directive|define
 name|UCOM_LS_BREAK
 value|0x04
+define|#
+directive|define
+name|UCOM_LS_RING
+value|0x08
 block|}
 struct|;
 end_struct
