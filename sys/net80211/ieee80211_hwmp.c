@@ -6655,7 +6655,18 @@ name|hr
 operator|->
 name|hr_seq
 argument_list|)
-operator|&&
+condition|)
+block|{
+name|hr
+operator|->
+name|hr_seq
+operator|=
+name|rann
+operator|->
+name|rann_seq
+expr_stmt|;
+if|if
+condition|(
 name|rann
 operator|->
 name|rann_ttl
@@ -6733,6 +6744,7 @@ operator|&
 name|prann
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
