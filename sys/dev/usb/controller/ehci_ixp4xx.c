@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/controller/ehcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/xscale/ixp425/ixp425reg.h>
 end_include
 
