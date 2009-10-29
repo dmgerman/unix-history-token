@@ -2661,7 +2661,7 @@ name|sc_ue
 operator|.
 name|ue_dev
 argument_list|,
-literal|"MII read timed out\n"
+literal|"MII write timed out\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3227,16 +3227,16 @@ argument_list|,
 literal|"reset failed\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The PHY(s) attached to the Pegasus chip may be held 	 * in reset until we flip on the GPIO outputs. Make sure 	 * to set the GPIO pins high so that the PHY(s) will 	 * be enabled. 	 * 	 * Note: We force all of the GPIO pins low first, *then* 	 * enable the ones we want. 	 */
+comment|/* 	 * The PHY(s) attached to the Pegasus chip may be held 	 * in reset until we flip on the GPIO outputs. Make sure 	 * to set the GPIO pins high so that the PHY(s) will 	 * be enabled. 	 * 	 * NOTE: We used to force all of the GPIO pins low first and then 	 * enable the ones we want. This has been changed to better 	 * match the ADMtek's reference design to avoid setting the 	 * power-down configuration line of the PHY at the same time 	 * it is reset. 	 */
 name|aue_csr_write_1
 argument_list|(
 name|sc
 argument_list|,
 name|AUE_GPIO0
 argument_list|,
-name|AUE_GPIO_OUT0
-operator||
 name|AUE_GPIO_SEL0
+operator||
+name|AUE_GPIO_SEL1
 argument_list|)
 expr_stmt|;
 name|aue_csr_write_1
@@ -3245,11 +3245,11 @@ name|sc
 argument_list|,
 name|AUE_GPIO0
 argument_list|,
-name|AUE_GPIO_OUT0
-operator||
 name|AUE_GPIO_SEL0
 operator||
 name|AUE_GPIO_SEL1
+operator||
+name|AUE_GPIO_OUT0
 argument_list|)
 expr_stmt|;
 if|if
