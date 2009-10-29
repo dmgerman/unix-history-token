@@ -1013,7 +1013,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*res->r_start = *rid;*/
+comment|/* res->r_start = *rid; */
 return|return
 operator|(
 name|res
@@ -1141,7 +1141,7 @@ block|{
 name|device_t
 name|tmpd
 decl_stmt|;
-comment|/* 	 *  Attach each devices 	 */
+comment|/* 	 * Attach each devices 	 */
 name|device_add_child
 argument_list|(
 name|dev

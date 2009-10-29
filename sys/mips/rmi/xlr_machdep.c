@@ -331,7 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 4KB static data aread to keep a copy of the bootload env until     the dynamic kenv is setup */
+comment|/* 4KB static data aread to keep a copy of the bootload env until    the dynamic kenv is setup */
 end_comment
 
 begin_decl_stmt
@@ -835,7 +835,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Platform specific register setup for CPUs   * XLR has control registers accessible with MFCR/MTCR instructions, this  * code initialized them from the environment variable xlr.cr of form:  *  xlr.cr=reg:val[,reg:val]*, all values in hex.  * To enable shared TLB option use xlr.shtlb=1  */
+comment|/*  * Platform specific register setup for CPUs  * XLR has control registers accessible with MFCR/MTCR instructions, this  * code initialized them from the environment variable xlr.cr of form:  *  xlr.cr=reg:val[,reg:val]*, all values in hex.  * To enable shared TLB option use xlr.shtlb=1  */
 end_comment
 
 begin_function
@@ -1552,7 +1552,7 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* TODO: Verify the magic number here */
-comment|/*FIXMELATER: xlr_boot1_info.magic_number */
+comment|/* FIXMELATER: xlr_boot1_info.magic_number */
 comment|/* initialize console so that we have printf */
 name|boothowto
 operator||=
@@ -1572,7 +1572,7 @@ name|cpu_frequency
 operator|/
 literal|1000000
 expr_stmt|;
-comment|/* Note the time counter on CPU0 runs not at system 	 * clock speed, but at PIC time counter speed (which is 	 * returned by platform_get_frequency(). Thus we do not 	 * use xlr_boot1_info.cpu_frequency here. 	 */
+comment|/* 	 * Note the time counter on CPU0 runs not at system clock speed, but 	 * at PIC time counter speed (which is returned by 	 * platform_get_frequency(). Thus we do not use 	 * xlr_boot1_info.cpu_frequency here. 	 */
 name|mips_timer_early_init
 argument_list|(
 name|platform_get_frequency
@@ -1692,7 +1692,7 @@ block|}
 name|xlr_set_boot_flags
 argument_list|()
 expr_stmt|;
-comment|/* get physical memory info from boot loader*/
+comment|/* get physical memory info from boot loader */
 name|boot_map
 operator|=
 operator|(
@@ -1767,7 +1767,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*TODO FIXME  */
+comment|/* TODO FIXME  */
 comment|/* start after kernel end */
 name|phys_avail
 index|[
@@ -1787,7 +1787,7 @@ literal|0x20000
 expr_stmt|;
 comment|/* boot loader start */
 comment|/* HACK to Use bootloaders memory region */
-comment|/*TODO FIXME  */
+comment|/* TODO FIXME  */
 if|if
 condition|(
 name|boot_map
@@ -1883,7 +1883,7 @@ if|#
 directive|if
 literal|0
 comment|/* FIXME TOD0 */
-block|phys_avail[j] = phys_avail[j+1] = 0;
+block|phys_avail[j] = phys_avail[j + 1] = 0;
 endif|#
 directive|endif
 block|}
@@ -1924,7 +1924,7 @@ argument_list|(
 name|physsz
 argument_list|)
 expr_stmt|;
-comment|/*Store pcpu in scratch 5*/
+comment|/* Store pcpu in scratch 5 */
 name|write_c0_register32
 argument_list|(
 name|MIPS_COP_0_OSSCRATCH
@@ -1951,7 +1951,7 @@ comment|/* TODO To be removed */
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/*If thread 0 of any core is not available then mark whole core as  	not available*/
+comment|/* 	 * If thread 0 of any core is not available then mark whole core as 	 * not available 	 */
 name|tmp
 operator|=
 name|xlr_boot1_info
@@ -1997,7 +1997,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*Oopps.. thread 0 is not available. Disable whole  			core*/
+comment|/* 			 * Oopps.. thread 0 is not available. Disable whole 			 * core 			 */
 name|tmp
 operator|=
 name|tmp
@@ -2109,7 +2109,7 @@ operator|)
 operator|&
 name|_gp
 expr_stmt|;
-comment|/*Build ltop and ptol cpu map.*/
+comment|/* Build ltop and ptol cpu map. */
 name|cpu_ltop_map
 index|[
 name|j
@@ -2134,7 +2134,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-comment|/*store thread0 of each core */
+comment|/* store thread0 of each core */
 name|xlr_core_cpu_mask
 operator||=
 operator|(
@@ -2235,7 +2235,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* xlr specific post initialization */
-comment|/* The expectation is that mutex_init() is already done    * in mips_init()    * XXX NOTE: We may need to move this to SMP based init code    * for each CPU, later.    */
+comment|/* 	 * The expectation is that mutex_init() is already done in 	 * mips_init() XXX NOTE: We may need to move this to SMP based init 	 * code for each CPU, later. 	 */
 name|on_chip_init
 argument_list|()
 expr_stmt|;
@@ -2452,7 +2452,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-comment|/* Interrupt thread will enable the interrupts after processing  	   all messages 	   */
+comment|/* 	 * Interrupt thread will enable the interrupts after processing all 	 * messages 	 */
 name|disable_msgring_int
 argument_list|(
 name|NULL
@@ -2627,7 +2627,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|//	printf("Started %s on CPU %d\n", __FUNCTION__, ithd->i_cpu);
+comment|//printf("Started %s on CPU %d\n", __FUNCTION__, ithd->i_cpu);
 while|while
 condition|(
 literal|1
@@ -2670,7 +2670,7 @@ operator|->
 name|i_pending
 condition|)
 block|{
-comment|/* 			 * This might need a full read and write barrier 			 * to make sure that this write posts before any 			 * of the memory or device accesses in the 			 * handlers. 			 */
+comment|/* 			 * This might need a full read and write barrier to 			 * make sure that this write posts before any of the 			 * memory or device accesses in the handlers. 			 */
 name|atomic_store_rel_int
 argument_list|(
 operator|&

@@ -1200,9 +1200,9 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|volatile
-asm|( 		    ".set push\n" 		    ".set noreorder\n" 		    "sync\n"
-comment|//		    "msgsnd %0\n"
-asm|"move  $8, %0\n" 		    "c2    0x80001\n" 		    ".set pop\n" 		    : : "r" (stid) : "$8" 		    );
+asm|( 	             ".set push\n" 	             ".set noreorder\n" 	             "sync\n"
+comment|//       "msgsnd %0\n"
+asm|"move  $8, %0\n" 	             "c2    0x80001\n" 	             ".set pop\n" 	    ::       "r" (stid):"$8" 	);
 block|}
 end_function
 
@@ -1219,9 +1219,9 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|volatile
-asm|( 		    ".set push\n" 		    ".set noreorder\n"
-comment|//		    "msgld %0\n"
-asm|"move $8, %0\n" 		    "c2   0x80002\n" 		    ".set pop\n" 		    : : "r" (pri) : "$8" 		    );
+asm|( 	             ".set push\n" 	             ".set noreorder\n"
+comment|//       "msgld %0\n"
+asm|"move $8, %0\n" 	             "c2   0x80002\n" 	             ".set pop\n" 	    ::       "r" (pri):"$8" 	);
 block|}
 end_function
 
@@ -1238,9 +1238,9 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|volatile
-asm|( 		    ".set push\n" 		    ".set noreorder\n"
-comment|//		    "msgwait %0\n"
-asm|"move $8, %0\n" 		    "c2   0x80003\n" 		    ".set pop\n" 		    : :"r" (mask) : "$8" 		    );
+asm|( 	             ".set push\n" 	             ".set noreorder\n"
+comment|//       "msgwait %0\n"
+asm|"move $8, %0\n" 	             "c2   0x80003\n" 	             ".set pop\n" 	    ::       "r" (mask):"$8" 	);
 block|}
 end_function
 
@@ -1345,7 +1345,7 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|(".set push\n"                         ".set noreorder\n"                         ".set mips64\n"                         "dmtc2 %1, $0, 0\n"                         "dmtc2 %2, $0, 1\n"                         "dmtc2 %3, $0, 2\n"                         "dmtc2 %4, $0, 3\n"                         "move $8, %0\n"                         "1: c2 0x80001\n"                         "mfc2 $8, $2\n"                         "andi $8, $8, 0x6\n"                         "bnez $8, 1b\n"                         "move $8, %0\n"                         ".set pop\n"                         :                         : "r"(((size-1)<<16)|(code<<8)|stid), "r" (msg0), "r" (msg1), "r"(msg2), "r"(msg3)                         : "$8"                         );
+asm|(".set push\n" 	            ".set noreorder\n" 	            ".set mips64\n" 	            "dmtc2 %1, $0, 0\n" 	            "dmtc2 %2, $0, 1\n" 	            "dmtc2 %3, $0, 2\n" 	            "dmtc2 %4, $0, 3\n" 	            "move $8, %0\n" 	            "1: c2 0x80001\n" 	            "mfc2 $8, $2\n" 	            "andi $8, $8, 0x6\n" 	            "bnez $8, 1b\n" 	            "move $8, %0\n" 	            ".set pop\n" 	    : 	    :       "r"(((size - 1)<< 16) | (code<< 8) | stid), "r"(msg0), "r"(msg1), "r"(msg2), "r"(msg3) 	    :       "$8" 	);
 block|}
 end_function
 
@@ -1492,7 +1492,7 @@ operator|=
 name|msgrng_read_status
 argument_list|()
 expr_stmt|;
-comment|//	dbg_msg("status = %Lx\n", status);
+comment|//dbg_msg("status = %Lx\n", status);
 if|if
 condition|(
 name|status

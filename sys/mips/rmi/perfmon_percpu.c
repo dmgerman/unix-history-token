@@ -1635,7 +1635,7 @@ operator|!=
 name|PERFMON_ACTIVE_MAGIC
 condition|)
 return|return;
-comment|/* 	 * If there has been a change in configuation, update the configuration           */
+comment|/* 	 * If there has been a change in configuation, update the 	 * configuration 	 */
 if|if
 condition|(
 name|saved_config
@@ -1948,7 +1948,7 @@ argument_list|,
 name|processor
 argument_list|)
 expr_stmt|;
-return|return ;
+return|return;
 block|}
 end_function
 

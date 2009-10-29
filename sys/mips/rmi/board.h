@@ -1084,7 +1084,7 @@ name|bucket_size
 modifier|*
 name|bucket_sizes
 decl_stmt|;
-comment|/* pointer to Core station bucket */
+comment|/* pointer to Core station 						 * bucket */
 name|int
 modifier|*
 name|msgmap
@@ -1131,7 +1131,7 @@ comment|/* IO base */
 name|int
 name|baseirq
 decl_stmt|;
-comment|/* first irq for this block, the rest are in sequence */
+comment|/* first irq for this block, the rest are in 				 * sequence */
 name|int
 name|baseinst
 decl_stmt|;

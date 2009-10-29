@@ -8,7 +8,7 @@ comment|/*  * Skeleton of this file was based on respective code for ARM  * code
 end_comment
 
 begin_comment
-comment|/*  * XLRMIPS: This file is hacked from arm/...   */
+comment|/*  * XLRMIPS: This file is hacked from arm/...  */
 end_comment
 
 begin_include
@@ -189,7 +189,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*UartLock*/
+comment|/* UartLock */
 end_comment
 
 begin_decl_stmt
@@ -226,7 +226,7 @@ name|putc
 operator|=
 name|xlr_uart_putc
 block|,
-comment|/*	.poll = xlr_uart_poll, ?? */
+comment|/* .poll = xlr_uart_poll, ?? */
 operator|.
 name|getc
 operator|=

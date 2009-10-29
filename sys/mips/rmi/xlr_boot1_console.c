@@ -112,7 +112,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static cn_probe_t	xlr_boot1_cnprobe; static cn_init_t	xlr_boot1_cninit; static cn_term_t	xlr_boot1_cnterm; static cn_getc_t	xlr_boot1_cngetc; static cn_checkc_t      xlr_boot1_cncheckc; static cn_putc_t	xlr_boot1_cnputc;  CONS_DRIVER(xlrboot, xlr_boot1_cnprobe, xlr_boot1_cninit, xlr_boot1_cnterm, xlr_boot1_cngetc,     xlr_boot1_cncheckc, xlr_boot1_cnputc, NULL);
+unit|static cn_probe_t xlr_boot1_cnprobe; static cn_init_t xlr_boot1_cninit; static cn_term_t xlr_boot1_cnterm; static cn_getc_t xlr_boot1_cngetc; static cn_checkc_t xlr_boot1_cncheckc; static cn_putc_t xlr_boot1_cnputc;  CONS_DRIVER(xlrboot, xlr_boot1_cnprobe, xlr_boot1_cninit, xlr_boot1_cnterm, xlr_boot1_cngetc,     xlr_boot1_cncheckc, xlr_boot1_cnputc, NULL);
 comment|/*  * Device gets probed. Firmwire should be checked here probably.  */
 end_comment
 

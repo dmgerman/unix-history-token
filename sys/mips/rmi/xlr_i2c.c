@@ -435,8 +435,15 @@ name|MDELAY
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \     unsigned long  local_loop = 0xfffff; \     while(local_loop--); \ }\  static void get_i2c_base(void)
+value|{ \     unsigned long  local_loop = 0xfffff; \     while(local_loop--); \ }\  static void
 end_define
+
+begin_macro
+name|get_i2c_base
+argument_list|(
+argument|void
+argument_list|)
+end_macro
 
 begin_block
 block|{
@@ -661,7 +668,7 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-comment|//DEVADDR=0x4c, 0x68
+comment|//DEVADDR = 0x4c, 0x68
 name|MDELAY
 argument_list|(
 literal|1
@@ -1324,7 +1331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   static int xlr_i2c_add_child(device_t dev, int order, const char *name, int unit) {     printf("********* %s ********  \n", __FUNCTION__); 	device_add_child_ordered(dev, order, name, unit);  	bus_generic_attach(dev);  	return (0); } */
+comment|/* static int xlr_i2c_add_child(device_t dev, int order, const char *name, int unit) {     printf("********* %s ********  \n", __FUNCTION__); 	device_add_child_ordered(dev, order, name, unit);  	bus_generic_attach(dev);  	return (0); } */
 end_comment
 
 begin_function
@@ -1530,7 +1537,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* address for the next read*/
+comment|/* address for the next read */
 name|read_address
 operator|=
 name|buf
@@ -1561,7 +1568,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/*for write operation, buf[0] contains the register offset and          buf[1] onwards contains the value*/
+comment|/* 	 * for write operation, buf[0] contains the register offset and 	 * buf[1] onwards contains the value 	 */
 name|palm_tx
 argument_list|(
 name|current_slave

@@ -103,7 +103,7 @@ value|0x61
 end_define
 
 begin_comment
-comment|/*RW Frame len adj, SOF=59488+6*fladj */
+comment|/* RW Frame len adj, SOF=59488+6*fladj */
 end_comment
 
 begin_define
@@ -193,7 +193,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/*RO Capability register length field */
+comment|/* RO Capability register length field */
 end_comment
 
 begin_comment
@@ -387,7 +387,7 @@ value|0x0c
 end_define
 
 begin_comment
-comment|/*RO Companion port route description */
+comment|/* RO Companion port route description */
 end_comment
 
 begin_comment
@@ -506,7 +506,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* RW intr on async adv door bell */
+comment|/* RW intr on async adv door 						 * bell */
 end_comment
 
 begin_define
@@ -735,7 +735,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* interrupt on async advance ena */
+comment|/* interrupt on async advance 						 * ena */
 end_comment
 
 begin_define

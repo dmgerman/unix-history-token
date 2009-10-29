@@ -22,7 +22,7 @@ file|<mips/rmi/perfmon_xlrconfig.h>
 end_include
 
 begin_comment
-comment|/*   * category events reported by the perfmon library  */
+comment|/*  * category events reported by the perfmon library  */
 end_comment
 
 begin_enum
@@ -149,7 +149,7 @@ decl_stmt|;
 name|uint16_t
 name|cc_sample_rate
 decl_stmt|;
-comment|/* rate at which credit counters are sampled                                       relative to sampling_rate */
+comment|/* rate at which credit counters are sampled 				 * relative to sampling_rate */
 name|uint32_t
 name|sampling_rate
 decl_stmt|;
@@ -157,7 +157,7 @@ comment|/* rate at which events are sampled */
 name|uint32_t
 name|cc_register_mask
 decl_stmt|;
-comment|/* credit counters registers to be sampled */
+comment|/* credit counters registers to be 					 * sampled */
 name|uint64_t
 name|events
 index|[
@@ -229,7 +229,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * We have a shared location to keep a global tick counter for all the   * CPUS  - TODO is this optimal? effect on cache?  */
+comment|/*  * We have a shared location to keep a global tick counter for all the  * CPUS  - TODO is this optimal? effect on cache?  */
 end_comment
 
 begin_decl_stmt

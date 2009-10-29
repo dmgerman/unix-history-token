@@ -228,7 +228,7 @@ name|low
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|(       ".set push\n"       ".set noreorder\n"       ".set noat\n"       ".set mips4\n"        ".word 0x40214806  \n\t"       "nop               \n\t"       "dsra32 %0, $1, 0  \n\t"       "sll    %1, $1, 0  \n\t"        ".set pop\n"        : "=r" (high), "=r" (low)       );
+asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set noat\n" 	            ".set mips4\n"  	            ".word 0x40214806  \n\t" 	            "nop               \n\t" 	            "dsra32 %0, $1, 0  \n\t" 	            "sll    %1, $1, 0  \n\t"  	            ".set pop\n"  	    :       "=r"(high), "=r"(low) 	);
 return|return
 operator|(
 operator|(
@@ -262,7 +262,7 @@ name|low
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|(       ".set push\n"       ".set noreorder\n"       ".set noat\n"       ".set mips4\n"        ".word 0x40214807  \n\t"       "nop               \n\t"       "dsra32 %0, $1, 0  \n\t"       "sll    %1, $1, 0  \n\t"        ".set pop\n"        : "=r" (high), "=r" (low)       );
+asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set noat\n" 	            ".set mips4\n"  	            ".word 0x40214807  \n\t" 	            "nop               \n\t" 	            "dsra32 %0, $1, 0  \n\t" 	            "sll    %1, $1, 0  \n\t"  	            ".set pop\n"  	    :       "=r"(high), "=r"(low) 	);
 return|return
 operator|(
 operator|(
@@ -309,7 +309,7 @@ literal|0xffffffff
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|(       ".set push\n"       ".set noreorder\n"       ".set noat\n"       ".set mips4\n\t"        "dsll32 $2, %1, 0  \n\t"       "dsll32 $1, %0, 0  \n\t"       "dsrl32 $2, $2, 0  \n\t"       "or     $1, $1, $2 \n\t"       ".word  0x40a14806 \n\t"       "nop               \n\t"        ".set pop\n"        :       : "r" (high), "r" (low)       : "$1", "$2");
+asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set noat\n" 	            ".set mips4\n\t"  	            "dsll32 $2, %1, 0  \n\t" 	            "dsll32 $1, %0, 0  \n\t" 	            "dsrl32 $2, $2, 0  \n\t" 	            "or     $1, $1, $2 \n\t" 	            ".word  0x40a14806 \n\t" 	            "nop               \n\t"  	            ".set pop\n"  	    : 	    :       "r"(high), "r"(low) 	    :       "$1", "$2");
 block|}
 end_function
 
@@ -342,7 +342,7 @@ literal|0xffffffff
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|(       ".set push\n"       ".set noreorder\n"       ".set noat\n"       ".set mips4\n\t"        "dsll32 $2, %1, 0  \n\t"       "dsll32 $1, %0, 0  \n\t"       "dsrl32 $2, $2, 0  \n\t"       "or     $1, $1, $2 \n\t"       ".word  0x40a14807 \n\t"       "nop               \n\t"        ".set pop\n"        :       : "r" (high), "r" (low)       : "$1", "$2");
+asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set noat\n" 	            ".set mips4\n\t"  	            "dsll32 $2, %1, 0  \n\t" 	            "dsll32 $1, %0, 0  \n\t" 	            "dsrl32 $2, $2, 0  \n\t" 	            "or     $1, $1, $2 \n\t" 	            ".word  0x40a14807 \n\t" 	            "nop               \n\t"  	            ".set pop\n"  	    : 	    :       "r"(high), "r"(low) 	    :       "$1", "$2");
 block|}
 end_function
 
@@ -364,9 +364,9 @@ literal|0
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|(".set push\n"       ".set noreorder\n"       "move $9, %2\n"       "li $8, 1\n"
-comment|//"swapw $8, $9\n"
-asm|".word 0x71280014\n"       "move %1, $8\n"       ".set pop\n"       : "+m" (*lock), "=r" (oldval)       : "r" ((unsigned long)lock)       : "$8", "$9"       );
+asm|(".set push\n" 	            ".set noreorder\n" 	            "move $9, %2\n" 	            "li $8, 1\n"
+comment|//      "swapw $8, $9\n"
+asm|".word 0x71280014\n" 	            "move %1, $8\n" 	            ".set pop\n" 	    :       "+m"(*lock), "=r"(oldval) 	    :       "r"((unsigned long)lock) 	    :       "$8", "$9" 	);
 return|return
 operator|(
 name|oldval
@@ -374,10 +374,10 @@ operator|==
 literal|0
 condition|?
 literal|1
-comment|/*success*/
+comment|/* success */
 else|:
 literal|0
-comment|/*failure*/
+comment|/* failure */
 operator|)
 return|;
 block|}
@@ -398,7 +398,7 @@ name|val
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"move   $8, %1\n" 		".word  0x71090018\n" 		"move   %0, $9\n" 		: "=r"(val) 		: "r"(reg) : "$8", "$9");
+asm|( 	            "move   $8, %1\n" 	            ".word  0x71090018\n" 	            "move   %0, $9\n" 	    :       "=r"(val) 	    :       "r"(reg):"$8", "$9");
 return|return
 name|val
 return|;
@@ -420,7 +420,7 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|( 		"move   $8, %1\n" 		"move   $9, %0\n" 		".word  0x71090019\n" 		::"r"(val), "r"(reg) 		: "$8", "$9");
+asm|( 	            "move   $8, %1\n" 	            "move   $9, %0\n" 	            ".word  0x71090019\n" 	    ::      "r"(val), "r"(reg) 	    :       "$8", "$9");
 block|}
 end_function
 

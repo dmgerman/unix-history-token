@@ -359,7 +359,7 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* Message Stations are shared among all threads in a cpu core 	 * Assume, thread 0 on all cores are always active when more than 	 * 1 thread is active in a core 	 */
+comment|/* 	 * Message Stations are shared among all threads in a cpu core 	 * Assume, thread 0 on all cores are always active when more than 1 	 * thread is active in a core 	 */
 name|msgrng_write_bucksize
 argument_list|(
 literal|0
@@ -755,7 +755,7 @@ operator|)
 operator|&
 name|msgring_pop_bucket_mask
 expr_stmt|;
-comment|/* all buckets empty, break*/
+comment|/* all buckets empty, break */
 if|if
 condition|(
 name|bucket_empty_bm
@@ -793,7 +793,7 @@ operator|<<
 name|bucket
 operator|)
 operator|)
-comment|/*empty*/
+comment|/* empty */
 condition|)
 continue|continue;
 name|status
@@ -1275,7 +1275,7 @@ argument_list|,
 literal|0x01
 argument_list|)
 expr_stmt|;
-comment|/* Use local scheduling and high polarity for all IRTs  		 * Invalidate all IRTs, by default 		 */
+comment|/* 		 * Use local scheduling and high polarity for all IRTs 		 * Invalidate all IRTs, by default 		 */
 name|xlr_write_reg
 argument_list|(
 name|mmio

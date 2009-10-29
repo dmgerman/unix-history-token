@@ -271,7 +271,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|,  	}
+block|, 	}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -570,7 +570,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -869,7 +869,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1168,7 +1168,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1467,7 +1467,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1766,7 +1766,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2065,7 +2065,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2364,7 +2364,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2663,7 +2663,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2962,7 +2962,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3261,7 +3261,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|, }
 block|}
 decl_stmt|;
 end_decl_stmt

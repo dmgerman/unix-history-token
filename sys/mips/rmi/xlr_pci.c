@@ -268,7 +268,7 @@ value|0x00000000
 end_define
 
 begin_comment
-comment|/*       edge */
+comment|/* edge */
 end_comment
 
 begin_define
@@ -279,7 +279,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/*       level */
+comment|/* level */
 end_comment
 
 begin_define
@@ -326,7 +326,7 @@ value|0x00000000
 end_define
 
 begin_comment
-comment|/*   fixed */
+comment|/* fixed */
 end_comment
 
 begin_define
@@ -337,7 +337,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/*   lowest priority */
+comment|/* lowest priority */
 end_comment
 
 begin_define
@@ -881,7 +881,7 @@ operator|&
 literal|1
 operator|)
 condition|)
-return|return ;
+return|return;
 elseif|else
 if|if
 condition|(
@@ -897,13 +897,13 @@ operator|&
 literal|3
 operator|)
 condition|)
-return|return ;
+return|return;
 if|if
 condition|(
 operator|!
 name|pci_bus_status
 condition|)
-return|return ;
+return|return;
 if|if
 condition|(
 name|width
@@ -1019,7 +1019,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-return|return ;
+return|return;
 block|}
 end_function
 
@@ -1564,7 +1564,7 @@ index|]
 operator|=
 name|pciirq
 expr_stmt|;
-comment|/*  	   For now put in some fixed values for the other requested MSI, 	   TODO handle multiple messages 	*/
+comment|/* 	 * For now put in some fixed values for the other requested MSI, 	 * TODO handle multiple messages 	 */
 for|for
 control|(
 name|i

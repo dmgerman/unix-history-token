@@ -273,7 +273,7 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
-comment|/* FIXME locking - not needed now, because we do this only on startup from 	   CPU0 */
+comment|/* 	 * FIXME locking - not needed now, because we do this only on 	 * startup from CPU0 	 */
 name|mih
 operator|=
 operator|&
@@ -282,7 +282,7 @@ index|[
 name|irq
 index|]
 expr_stmt|;
-comment|/*mih->cntp =&intrcnt[irq]; */
+comment|/* mih->cntp =&intrcnt[irq]; */
 name|ie
 operator|=
 name|mih
@@ -493,7 +493,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* No need to clear the EIRR here. the handler is gonna 	 * write to compare which clears eirr also 	 */
+comment|/* 	 * No need to clear the EIRR here. the handler is gonna write to 	 * compare which clears eirr also 	 */
 if|if
 condition|(
 name|eirr
@@ -653,7 +653,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/*atomic_add_long(mih->cntp, 1);*/
+comment|/* atomic_add_long(mih->cntp, 1); */
 name|ie
 operator|=
 name|mih

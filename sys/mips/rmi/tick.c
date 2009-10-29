@@ -205,7 +205,7 @@ decl_stmt|;
 name|uint64_t
 name|freq
 decl_stmt|;
-comment|/* 	 * RRS wonders if this will really work. You don't 	 * change the req of the system here, it would require 	 * changes to the RMI PIC in order to get the TC to 	 * run at a differrent frequency. 	 */
+comment|/* 	 * RRS wonders if this will really work. You don't change the req of 	 * the system here, it would require changes to the RMI PIC in order 	 * to get the TC to run at a differrent frequency. 	 */
 if|if
 condition|(
 name|counter_timecounter

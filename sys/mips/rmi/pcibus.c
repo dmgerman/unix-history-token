@@ -1003,7 +1003,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|device_printf(bus, "xlr_pci_alloc_resource : child %s, type %d, start %lx end %lx, count %lx, flags %x\n", 		       device_get_nameunit(child), type, start, end, count, flags);
+block|device_printf(bus, "xlr_pci_alloc_resource : child %s, type %d, start %lx end %lx, count %lx, flags %x\n", 	    device_get_nameunit(child), type, start, end, count, flags);
 endif|#
 directive|endif
 switch|switch
@@ -1098,9 +1098,9 @@ operator|==
 name|SYS_RES_IOPORT
 condition|)
 block|{
-comment|/*		if ((start + count)> (2<< 28)) { 			va_start = kmem_alloc_nofault(kernel_map, count); 			}*/
-comment|/* This called for pmap_map_uncached, but the pmap_map 		 * calls pmap_kenter which does a is_cacheable_mem() check and 		 * thus sets the PTE_UNCACHED bit. Hopefully this will work 		 * for this guy... RRS 		 */
-comment|/*		va = pmap_map(&va_start, start, start + count, 0);*/
+comment|/* 		 * if ((start + count)> (2<< 28)) { va_start = 		 * kmem_alloc_nofault(kernel_map, count); } 		 */
+comment|/* 		 * This called for pmap_map_uncached, but the pmap_map calls 		 * pmap_kenter which does a is_cacheable_mem() check and 		 * thus sets the PTE_UNCACHED bit. Hopefully this will work 		 * for this guy... RRS 		 */
+comment|/* va = pmap_map(&va_start, start, start + count, 0); */
 name|va
 operator|=
 operator|(

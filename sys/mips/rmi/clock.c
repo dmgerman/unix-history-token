@@ -284,7 +284,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* * count_compare_clockhandler: * * Handle the clock interrupt when count becomes equal to  * compare. */
+comment|/* * count_compare_clockhandler: * * Handle the clock interrupt when count becomes equal to * compare. */
 end_comment
 
 begin_function
@@ -565,7 +565,7 @@ name|void
 modifier|*
 name|cookie
 decl_stmt|;
-comment|/* Note: Passing #3 as NULL ensures that clockhandler     * gets called with trapframe     */
+comment|/* 	 * Note: Passing #3 as NULL ensures that clockhandler gets called 	 * with trapframe 	 */
 comment|/* profiling/process accounting timer interrupt for non-zero cpus */
 name|cpu_establish_hardintr
 argument_list|(
@@ -694,7 +694,7 @@ literal|0xffffffff
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 0x100 + 7*/
+comment|/* 0x100 + 7 */
 name|xlr_write_reg
 argument_list|(
 name|mmio
@@ -728,7 +728,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 0x80 + 8 */
 comment|/* Reg 80 is upper bits 63-32 and holds                              */
-comment|/*                                      Valid   Edge    Local    IRQ */
+comment|/* Valid   Edge    Local    IRQ */
 name|xlr_write_reg
 argument_list|(
 name|mmio
@@ -1036,7 +1036,7 @@ decl_stmt|;
 name|uint64_t
 name|tc
 decl_stmt|;
-comment|/* Pull the value of the 64 bit counter which is stored in 	 * PIC register 120+N and 130+N 	 */
+comment|/* 	 * Pull the value of the 64 bit counter which is stored in PIC 	 * register 120+N and 130+N 	 */
 name|upper
 operator|=
 literal|0xffffffffU
