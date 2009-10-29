@@ -2601,12 +2601,6 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -2693,12 +2687,6 @@ condition|)
 name|ieee80211_start_all
 argument_list|(
 name|ic
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 break|break;
