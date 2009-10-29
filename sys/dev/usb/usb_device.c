@@ -9037,6 +9037,12 @@ name|malloc_type
 modifier|*
 name|mt
 decl_stmt|;
+specifier|const
+name|size_t
+name|buf_size
+init|=
+literal|512
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -9068,7 +9074,7 @@ name|data
 operator|=
 name|malloc
 argument_list|(
-literal|512
+name|buf_size
 argument_list|,
 name|mt
 argument_list|,
@@ -9087,7 +9093,7 @@ name|snprintf
 argument_list|(
 name|data
 argument_list|,
-literal|1024
+name|buf_size
 argument_list|,
 literal|"%s"
 literal|"%s "
