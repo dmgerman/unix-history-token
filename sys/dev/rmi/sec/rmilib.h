@@ -1563,7 +1563,7 @@ literal|1
 block|,
 comment|/* Preserve old Keys */
 name|XLR_SEC_CIPHER_INIT_NK
-comment|/*Load new Keys */
+comment|/* Load new Keys */
 block|}
 name|XLR_SEC_CIPHER_INIT
 typedef|;
@@ -1626,9 +1626,9 @@ name|XLR_SEC_DIGEST_INIT_OLDKEY
 init|=
 literal|1
 block|,
-comment|/* Preserve old key HMAC key stored in ID registers (moot if HASH.HMAC == 0) */
+comment|/* Preserve old key HMAC key stored in 					 * ID registers (moot if HASH.HMAC == 					 * 0) */
 name|XLR_SEC_DIGEST_INIT_NEWKEY
-comment|/*Load new HMAC key from memory ctrl section to ID registers */
+comment|/* Load new HMAC key from memory ctrl 					 * section to ID registers */
 block|}
 name|XLR_SEC_DIGEST_INIT
 typedef|;
@@ -1644,7 +1644,7 @@ literal|1
 block|,
 comment|/* DMA channel */
 name|XLR_SEC_DIGEST_SRC_CPHR
-comment|/*Cipher if word count exceeded Cipher_Offset; else DMA */
+comment|/* Cipher if word count exceeded 				 * Cipher_Offset; else DMA */
 block|}
 name|XLR_SEC_DIGEST_SRC
 typedef|;
@@ -1862,7 +1862,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/*usable for anything by caller*/
+comment|/* usable for anything by caller */
 name|unsigned
 name|int
 name|command_context

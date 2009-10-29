@@ -142,7 +142,7 @@ file|<dev/rmi/sec/desc.h>
 end_include
 
 begin_comment
-comment|//static int msgrng_stnid_pk0 = MSGRNG_STNID_PK0;
+comment|// static int msgrng_stnid_pk0 = MSGRNG_STNID_PK0;
 end_comment
 
 begin_comment
@@ -596,7 +596,7 @@ literal|0x07
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*      * Register a bucket handler with the phoenix messaging subsystem      * For now, register handler for bucket 0->5 in msg stn 0      */
+comment|/* 	 * Register a bucket handler with the phoenix messaging subsystem 	 * For now, register handler for bucket 0->5 in msg stn 0 	 */
 if|if
 condition|(
 name|register_msgring_handler
@@ -615,7 +615,7 @@ literal|"Couldn't register msgring handler 0\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return ;
+return|return;
 block|}
 end_function
 
@@ -1030,7 +1030,7 @@ name|source_buf_size
 operator|+
 name|iv_len
 expr_stmt|;
-comment|/* make sure that there are enough bytes for aes based stream ciphers */
+comment|/* 	 * make sure that there are enough bytes for aes based stream 	 * ciphers 	 */
 if|if
 condition|(
 name|op
@@ -1295,7 +1295,7 @@ name|user
 operator|.
 name|aligned_src
 expr_stmt|;
-comment|/*      *  Build new dest buffer, for Cipher output only      */
+comment|/* 	 * Build new dest buffer, for Cipher output only 	 */
 if|if
 condition|(
 name|op
@@ -1305,7 +1305,7 @@ operator|==
 name|XLR_SEC_CIPHER_TYPE_NONE
 condition|)
 block|{
-comment|/*          *  Digest Engine *NEEDS* this,          *    otherwise it will write at 0[x]          */
+comment|/* 		 * Digest Engine *NEEDS* this, otherwise it will write at 		 * 0[x] 		 */
 name|op
 operator|->
 name|dest_buf
@@ -1344,7 +1344,7 @@ name|dest_buf_size
 operator|+
 name|iv_len
 expr_stmt|;
-comment|/* make sure that there are enough bytes for aes based stream ciphers */
+comment|/* 		 * make sure that there are enough bytes for aes based 		 * stream ciphers 		 */
 if|if
 condition|(
 name|op
@@ -1953,8 +1953,8 @@ name|byte_offset
 operator|&
 literal|0x7
 expr_stmt|;
-comment|/*      *  op->source_buf_size is expected to be the Nb double words to stream       *  in (Including Segment address->CP/IV/Auth/CkSum offsets)      */
-comment|/* adjusted length of the whole thing, accounting for the added head,        sans global_offset (per Paul S.)      */
+comment|/* 	 * op->source_buf_size is expected to be the Nb double words to 	 * stream in (Including Segment address->CP/IV/Auth/CkSum offsets) 	 */
+comment|/* 	 * adjusted length of the whole thing, accounting for the added 	 * head, sans global_offset (per Paul S.) 	 */
 name|len
 operator|=
 name|op
@@ -2052,7 +2052,7 @@ name|XLR_SEC_ERR_CIPHER_MODE
 return|;
 comment|/* ! fix ! */
 block|}
-comment|/* global_offset is only three bits, so work the number of the whole        8-byte words into the global offset.        both offset and cipher_offset are byte counts      */
+comment|/* 	 * global_offset is only three bits, so work the number of the whole 	 * 8-byte words into the global offset. both offset and 	 * cipher_offset are byte counts 	 */
 name|cipher_offset_dwords
 operator|=
 operator|(
@@ -2864,7 +2864,7 @@ argument_list|,
 name|len_dwords
 argument_list|)
 expr_stmt|;
-comment|/* same operation with the destination.        cipher offset affects this, as well      */
+comment|/* 	 * same operation with the destination. cipher offset affects this, 	 * as well 	 */
 if|if
 condition|(
 name|multi_frag_flag
@@ -2991,7 +2991,7 @@ operator|)
 name|byte_offset
 argument_list|)
 expr_stmt|;
-comment|/*      *  Dest Address =      *     (Cipher Dest Address) + (Cipher Offset) + (Global Dest Data Offset)      *      *   Cipher Dest Address - Cache-line  (0xffffffffe0)      *   Cipher Offset - Which (64-bit) Word in Cacheline  (0-3)      *   Global Dest Data Offset - Number of Bytes in (64-bit) Word before data      *      *  It must be set for Digest-only Ops, since      *   the Digest engine will write data to this address.      */
+comment|/* 	 * Dest Address = (Cipher Dest Address) + (Cipher Offset) + (Global 	 * Dest Data Offset) 	 *  	 * Cipher Dest Address - Cache-line  (0xffffffffe0) Cipher Offset - 	 * Which (64-bit) Word in Cacheline  (0-3) Global Dest Data Offset - 	 * Number of Bytes in (64-bit) Word before data 	 *  	 * It must be set for Digest-only Ops, since the Digest engine will 	 * write data to this address. 	 */
 name|cipher_offset_dwords
 operator|=
 operator|(
@@ -3881,7 +3881,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*        XLR_SEC_CMD_DIAG (" xlr_sec_setup_packet():  pkt_desc=%llx   phys_pkt_desc=%llx \n",        (unsigned long long)pkt_desc, (unsigned long long)virt_to_phys(pkt_desc));        (unsigned long long)pkt_desc, (unsigned long long)vtophys(pkt_desc));      */
+comment|/* 	 * XLR_SEC_CMD_DIAG (" xlr_sec_setup_packet():  pkt_desc=%llx 	 * phys_pkt_desc=%llx \n", (unsigned long long)pkt_desc, (unsigned 	 * long long)virt_to_phys(pkt_desc)); (unsigned long long)pkt_desc, 	 * (unsigned long long)vtophys(pkt_desc)); 	 */
 name|XLR_SEC_CMD_DIAG
 argument_list|(
 literal|" xlr_sec_setup_packet():  pkt_desc=%p   phys_pkt_desc=%llx \n"
@@ -9235,7 +9235,7 @@ operator|=
 name|temp
 expr_stmt|;
 block|}
-comment|/*      *  Control length is the number of control cachelines to be read so      *  user needs to round up the control length to closest integer       *  multiple of 32 bytes.      */
+comment|/* 	 * Control length is the number of control cachelines to be read so 	 * user needs to round up the control length to closest integer 	 * multiple of 32 bytes. 	 */
 name|ctl_size
 operator|+=
 sizeof|sizeof
@@ -9418,7 +9418,7 @@ argument_list|,
 name|rsp_dest_id
 argument_list|)
 expr_stmt|;
-comment|/*      * Set DestId in Message Control Word.      * This tells the Security Engine which bucket to send the      * reply to for this CPU      */
+comment|/* 	 * Set DestId in Message Control Word. This tells the Security 	 * Engine which bucket to send the reply to for this CPU 	 */
 name|CLEAR_SET_FIELD
 argument_list|(
 name|desc
@@ -9515,7 +9515,7 @@ name|flags
 operator|=
 literal|1
 expr_stmt|;
-comment|// in_interrupt(); /* ipsec softirq ? */
+comment|//in_interrupt();	/* ipsec softirq ? */
 name|XLR_SEC_CMD_DIAG
 argument_list|(
 literal|"[%s]: IN_IRQ=%d  msg0=0x%llx  msg1=0x%llx \n"
@@ -10393,7 +10393,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|info = (uint8_t *)&desc->ctl_desc->cipherHashInfo;     for (i=0; i< sizeof(CipherHashInfo_t); i++, info++) {         DPRINT(" %02x", *info);         if (i&& (i % 16) == 0) DPRINT("\n");     }     DPRINT("\n\n");
+block|info = (uint8_t *)& desc->ctl_desc->cipherHashInfo; 	for (i = 0; i< sizeof(CipherHashInfo_t); i++, info++) { 		DPRINT(" %02x", *info); 		if (i&& (i % 16) == 0) 			DPRINT("\n"); 	} 	DPRINT("\n\n");
 endif|#
 directive|endif
 switch|switch
@@ -14209,7 +14209,7 @@ name|MSGRNG_STNID_PK0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The Submit() operation encodes the engine and pipe in these two      * separate fields.  This allows use to verify the result type with      * the submitted operation type.      */
+comment|/* 	 * The Submit() operation encodes the engine and pipe in these two 	 * separate fields.  This allows use to verify the result type with 	 * the submitted operation type. 	 */
 name|sec_eng
 operator|=
 name|GET_FIELD
@@ -14293,7 +14293,7 @@ operator|==
 name|MSG0_CTL_OP_ENGINE_SYMKEY
 condition|)
 block|{
-comment|/*          * The data descriptor address allows us to associate the response          * with the submitted operation.          * Address is 40-bit cacheline aligned address.          * We need to zero bit 0-4 since they are used for the          *  engine and pipe Id.          */
+comment|/* 		 * The data descriptor address allows us to associate the 		 * response with the submitted operation. Address is 40-bit 		 * cacheline aligned address. We need to zero bit 0-4 since 		 * they are used for the engine and pipe Id. 		 */
 name|addr
 operator|=
 name|GET_FIELD
@@ -14334,7 +14334,7 @@ name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * The adddress points to the data descriptor.          * The operation descriptor is defined with the 32-byte cacheline          * size in mind.  It allows the code to use this address to reference          * the symkey descriptor.   (ref:  xlr_sec_desc.h)          */
+comment|/* 		 * The adddress points to the data descriptor. The operation 		 * descriptor is defined with the 32-byte cacheline size in 		 * mind.  It allows the code to use this address to 		 * reference the symkey descriptor.   (ref:  xlr_sec_desc.h) 		 */
 name|addr
 operator|=
 name|addr
@@ -14703,16 +14703,16 @@ block|}
 if|#
 directive|if
 literal|0
-if|else if (sec_eng == MSG0_CTL_OP_ENGINE_PUBKEY) {         pubkey_desc_pt desc;          if (sec_pipe != MSG1_CTL_OP_PUBKEY_PIPE0) {
+if|else if (sec_eng == MSG0_CTL_OP_ENGINE_PUBKEY) { 		pubkey_desc_pt desc;  		if (sec_pipe != MSG1_CTL_OP_PUBKEY_PIPE0) {
 comment|/* response to uc load */
-comment|/*                 XLR_SEC_CMD_DIAG("[%s:STNID_SEC]: ecc cpu=%d  ctl_result=0x%llx  data_result=%llx\n",                __FUNCTION__, desc->op_ctl.cpu,                desc->ctl_result, desc->data_result);              */
-if|return;         }
-comment|/*          * The data descriptor address allows us to associate the response          * with the submitted operation.          * Address is 40-bit cacheline aligned address.          * We need to zero bit 0-4 since they are used for the          *  engine and pipe Id.          */
-if|addr = GET_FIELD(msg->msg0, PUBKEY_RSLT_CTL_SRCADDR);         addr = addr& ~((1<< 5) - 1);         if (!addr) {             panic("[%s:STNID_SEC]:  NULL pubkey ctrl desc!\n", __FUNCTION__);         }
-comment|/*          * The adddress points to the data descriptor.          * The operation descriptor is defined with the 32-byte cacheline          * size in mind.  It allows the code to use this address to reference          * the symkey descriptor.   (ref:  xlr_sec_desc.h)          */
+comment|/* 			 * XLR_SEC_CMD_DIAG("[%s:STNID_SEC]: ecc cpu=%d 			 * ctl_result=0x%llx  data_result=%llx\n", 			 * __FUNCTION__, desc->op_ctl.cpu, desc->ctl_result, 			 * desc->data_result); 			 */
+if|return; 		}
+comment|/* 		 * The data descriptor address allows us to associate the 		 * response with the submitted operation. Address is 40-bit 		 * cacheline aligned address. We need to zero bit 0-4 since 		 * they are used for the engine and pipe Id. 		 */
+if|addr = GET_FIELD(msg->msg0, PUBKEY_RSLT_CTL_SRCADDR); 		addr = addr& ~((1<< 5) - 1); 		if (!addr) { 			panic("[%s:STNID_SEC]:  NULL pubkey ctrl desc!\n", __FUNCTION__); 		}
+comment|/* 		 * The adddress points to the data descriptor. The operation 		 * descriptor is defined with the 32-byte cacheline size in 		 * mind.  It allows the code to use this address to 		 * reference the symkey descriptor.   (ref:  xlr_sec_desc.h) 		 */
 if|addr = addr - sizeof(OperationDescriptor_t);
 comment|/* Get pointer to pubkey Descriptor */
-if|desc = (pubkey_desc_pt)(unsigned long) addr ;         if (!desc) {             panic("[%s:STNID_SEC]:  NULL pubkey data descriptor!\n", __FUNCTION__);         }          XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  addr=0x%llx  desc=%p  alloc=%p \n",                 __FUNCTION__, addr, desc, desc->alloc);          XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  op_ctl=%p  phys_self=%llx  stn_id=%d \n",                 __FUNCTION__,&desc->op_ctl, desc->op_ctl.phys_self,                 desc->op_ctl.stn_id);          if (addr != desc->op_ctl.phys_self) {             XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  Control Descriptor fails Self-Verify !\n",                     __FUNCTION__);         }           if (desc->op_ctl.stn_id != msgrng_stnid_pk0) {             XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  Operation Type Mismatch ! \n",                     __FUNCTION__);         }          desc->ctl_result  = GET_FIELD(msg->msg0, PUBKEY_RSLT_CTL_ERROR);         desc->data_result = GET_FIELD(msg->msg1, PUBKEY_RSLT_DATA_ERROR);          XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  ctl_result=0x%llx  data_result=%llx\n",                 __FUNCTION__, desc->ctl_result, desc->data_result);      }
+if|desc = (pubkey_desc_pt) (unsigned long)addr; 		if (!desc) { 			panic("[%s:STNID_SEC]:  NULL pubkey data descriptor!\n", __FUNCTION__); 		} 		XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  addr=0x%llx  desc=%p  alloc=%p \n", 		    __FUNCTION__, addr, desc, desc->alloc);  		XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  op_ctl=%p  phys_self=%llx  stn_id=%d \n", 		    __FUNCTION__,&desc->op_ctl, desc->op_ctl.phys_self, 		    desc->op_ctl.stn_id);  		if (addr != desc->op_ctl.phys_self) { 			XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  Control Descriptor fails Self-Verify !\n", 			    __FUNCTION__); 		} 		if (desc->op_ctl.stn_id != msgrng_stnid_pk0) { 			XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  Operation Type Mismatch ! \n", 			    __FUNCTION__); 		} 		desc->ctl_result = GET_FIELD(msg->msg0, PUBKEY_RSLT_CTL_ERROR); 		desc->data_result = GET_FIELD(msg->msg1, PUBKEY_RSLT_DATA_ERROR);  		XLR_SEC_CMD_DIAG("[%s:STNID_PK0]:  ctl_result=0x%llx  data_result=%llx\n", 		    __FUNCTION__, desc->ctl_result, desc->data_result);  	}
 endif|#
 directive|endif
 else|else

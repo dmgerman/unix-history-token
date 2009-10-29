@@ -1303,8 +1303,8 @@ case|case
 name|CRYPTO_AES_CBC
 case|:
 comment|/* XXX this may read fewer, does it matter? */
-comment|/*            read_random(ses->hs_iv,                               c->cri_alg == CRYPTO_AES_CBC ? XLR_SEC_AES_IV_LENGTH : XLR_SEC_IV_LENGTH);                  */
-comment|/*FALLTHROUGH*/
+comment|/* 			 * read_random(ses->hs_iv, c->cri_alg == 			 * CRYPTO_AES_CBC ? XLR_SEC_AES_IV_LENGTH : 			 * XLR_SEC_IV_LENGTH); 			 */
+comment|/* FALLTHROUGH */
 case|case
 name|CRYPTO_ARC4
 case|:
@@ -2523,8 +2523,7 @@ name|cipher_type
 operator|=
 name|XLR_SEC_CIPHER_TYPE_3DES
 expr_stmt|;
-comment|//                  if(enccrd->crd_flags& CRD_F_KEY_EXPLICIT)
-block|{
+comment|//if (enccrd->crd_flags& CRD_F_KEY_EXPLICIT) {
 name|memcpy
 argument_list|(
 operator|&
@@ -2674,7 +2673,7 @@ name|pkt_lastword
 operator|=
 name|XLR_SEC_LASTWORD_128
 expr_stmt|;
-comment|//                if((!(enccrd->crd_flags& CRD_F_IV_PRESENT))&&
+comment|//if ((!(enccrd->crd_flags& CRD_F_IV_PRESENT))&&
 if|if
 condition|(
 operator|(
@@ -2727,8 +2726,7 @@ name|cipher_type
 operator|=
 name|XLR_SEC_CIPHER_TYPE_AES128
 expr_stmt|;
-comment|//                  if(enccrd->crd_flags& CRD_F_KEY_EXPLICIT)
-block|{
+comment|//if (enccrd->crd_flags& CRD_F_KEY_EXPLICIT) {
 name|memcpy
 argument_list|(
 operator|&
@@ -2878,7 +2876,7 @@ name|pkt_lastword
 operator|=
 name|XLR_SEC_LASTWORD_128
 expr_stmt|;
-comment|//                if(!(enccrd->crd_flags& CRD_F_IV_PRESENT)){
+comment|//if (!(enccrd->crd_flags& CRD_F_IV_PRESENT)) {
 if|if
 condition|(
 operator|(
@@ -2910,22 +2908,34 @@ name|XLR_SEC_AES_BLOCK_SIZE
 argument_list|)
 expr_stmt|;
 block|}
-comment|//                }
+comment|//
+block|}
+end_function
+
+begin_break
 break|break;
-block|}
-block|}
+end_break
+
+begin_expr_stmt
+unit|} 	}
 name|cmd
 operator|->
 name|crp
 operator|=
 name|crp
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|cmd
 operator|->
 name|session_num
 operator|=
 name|session
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|xlr_sec_setup
 argument_list|(
 name|ses
@@ -2940,13 +2950,22 @@ operator|->
 name|desc_ptr
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+end_return
+
+begin_label
 name|errout
 label|:
+end_label
+
+begin_if
 if|if
 condition|(
 name|cmd
@@ -2960,24 +2979,33 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|crp
 operator|->
 name|crp_etype
 operator|=
 name|err
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|crypto_done
 argument_list|(
 name|crp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|err
 operator|)
 return|;
-block|}
-end_function
+end_return
 
+unit|}
 end_unit
 
