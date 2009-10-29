@@ -976,7 +976,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|aac_srb32
+name|aac_srb
 modifier|*
 name|srb
 decl_stmt|;
@@ -1719,7 +1719,7 @@ name|srb
 operator|=
 operator|(
 expr|struct
-name|aac_srb32
+name|aac_srb
 operator|*
 operator|)
 operator|&
@@ -2250,7 +2250,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|aac_srb32
+name|aac_srb
 argument_list|)
 expr_stmt|;
 name|aac_enqueue_ready

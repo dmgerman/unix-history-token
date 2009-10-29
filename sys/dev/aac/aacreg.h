@@ -4105,7 +4105,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|aac_srb32
+name|aac_srb
 block|{
 name|u_int32_t
 name|function
