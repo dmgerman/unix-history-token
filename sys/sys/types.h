@@ -1376,6 +1376,17 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|char
+name|vm_memattr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* memory attribute codes */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|struct
 name|vm_page
 modifier|*

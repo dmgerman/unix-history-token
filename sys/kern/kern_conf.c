@@ -1211,7 +1211,7 @@ begin_define
 define|#
 directive|define
 name|no_mmap
-value|(d_mmap_t *)enodev
+value|(d_mmap2_t *)enodev
 end_define
 
 begin_define
@@ -2092,6 +2092,10 @@ name|paddr
 parameter_list|,
 name|int
 name|nprot
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+name|memattr
 parameter_list|)
 block|{
 name|struct
@@ -2126,6 +2130,36 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dsw
+operator|->
+name|d_gianttrick
+operator|->
+name|d_flags
+operator|&
+name|D_MMAP2
+condition|)
+name|retval
+operator|=
+name|dsw
+operator|->
+name|d_gianttrick
+operator|->
+name|d_mmap2
+argument_list|(
+name|dev
+argument_list|,
+name|offset
+argument_list|,
+name|paddr
+argument_list|,
+name|nprot
+argument_list|,
+name|memattr
+argument_list|)
+expr_stmt|;
+else|else
 name|retval
 operator|=
 name|dsw
@@ -2827,6 +2861,12 @@ name|d_gianttrick
 operator|=
 name|dsw2
 expr_stmt|;
+name|devsw
+operator|->
+name|d_flags
+operator||=
+name|D_MMAP2
+expr_stmt|;
 name|dsw2
 operator|=
 name|NULL
@@ -2910,7 +2950,7 @@ argument_list|)
 expr_stmt|;
 name|FIXUP
 argument_list|(
-name|d_mmap
+name|d_mmap2
 argument_list|,
 name|no_mmap
 argument_list|,
