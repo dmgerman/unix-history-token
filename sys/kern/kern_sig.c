@@ -9774,7 +9774,7 @@ name|mask
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|SIGPROCMASK_PROC_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
