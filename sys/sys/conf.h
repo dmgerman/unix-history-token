@@ -551,6 +551,33 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
+name|d_mmap2_t
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|dev
+parameter_list|,
+name|vm_offset_t
+name|offset
+parameter_list|,
+name|vm_paddr_t
+modifier|*
+name|paddr
+parameter_list|,
+name|int
+name|nprot
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+name|memattr
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
 name|d_mmap_single_t
 parameter_list|(
 name|struct
@@ -725,6 +752,17 @@ begin_comment
 comment|/* driver want Giant */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|D_MMAP2
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* driver uses d_mmap2() */
+end_comment
+
 begin_comment
 comment|/*  * Version numbers.  */
 end_comment
@@ -827,10 +865,19 @@ name|d_poll_t
 modifier|*
 name|d_poll
 decl_stmt|;
+union|union
+block|{
 name|d_mmap_t
 modifier|*
-name|d_mmap
+name|old
 decl_stmt|;
+name|d_mmap2_t
+modifier|*
+name|new
+decl_stmt|;
+block|}
+name|__d_mmap
+union|;
 name|d_strategy_t
 modifier|*
 name|d_strategy
@@ -901,6 +948,20 @@ union|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|d_mmap
+value|__d_mmap.old
+end_define
+
+begin_define
+define|#
+directive|define
+name|d_mmap2
+value|__d_mmap.new
+end_define
 
 begin_define
 define|#
