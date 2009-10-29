@@ -120,31 +120,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/iomap.h>
+file|<mips/rmi/iomap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/pic.h>
+file|<mips/rmi/pic.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/shared_structs.h>
+file|<mips/rmi/shared_structs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/board.h>
+file|<mips/rmi/board.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/pci/pcibus.h>
+file|<mips/rmi/pcibus.h>
 end_include
 
 begin_include
@@ -488,7 +488,7 @@ parameter_list|,
 name|int
 name|which
 parameter_list|,
-name|u_long
+name|uintptr_t
 modifier|*
 name|result
 parameter_list|)

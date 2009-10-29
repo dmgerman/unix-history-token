@@ -60,13 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/perfmon.h>
+file|<mips/rmi/perfmon.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/pic.h>
+file|<mips/rmi/pic.h>
 end_include
 
 begin_include
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/clock.h>
+file|<mips/rmi/clock.h>
 end_include
 
 begin_decl_stmt

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<mips/xlr/msgring.h>
+file|<mips/rmi/msgring.h>
 end_include
 
 begin_decl_stmt

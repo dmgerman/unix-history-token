@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/shared_structs.h>
+file|<mips/rmi/shared_structs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/shared_structs_func.h>
+file|<mips/rmi/shared_structs_func.h>
 end_include
 
 begin_define

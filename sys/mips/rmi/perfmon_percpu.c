@@ -36,37 +36,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/xlrconfig.h>
+file|<mips/rmi/xlrconfig.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/perfmon_xlrconfig.h>
+file|<mips/rmi/perfmon_xlrconfig.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/perfmon.h>
+file|<mips/rmi/perfmon.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/perfmon_utils.h>
+file|<mips/rmi/perfmon_utils.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/pic.h>
+file|<mips/rmi/pic.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/msgring.h>
+file|<mips/rmi/msgring.h>
 end_include
 
 begin_define

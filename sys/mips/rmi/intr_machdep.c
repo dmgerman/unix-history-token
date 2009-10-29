@@ -104,8 +104,24 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/intrcnt.h>
+file|<mips/rmi/xlrconfig.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/rmi/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/rmi/clock.h>
+end_include
+
+begin_comment
+comment|/*#include<machine/intrcnt.h>*/
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -240,11 +256,11 @@ name|errcode
 decl_stmt|;
 if|if
 condition|(
-name|intr
+name|irq
 operator|<
 literal|0
 operator|||
-name|intr
+name|irq
 operator|>
 name|XLR_MAX_INTR
 condition|)
@@ -254,7 +270,7 @@ literal|"%s called for unknown hard intr %d"
 argument_list|,
 name|__func__
 argument_list|,
-name|intr
+name|irq
 argument_list|)
 expr_stmt|;
 comment|/* FIXME locking - not needed now, because we do this only on startup from 	   CPU0 */
@@ -266,16 +282,7 @@ index|[
 name|irq
 index|]
 expr_stmt|;
-name|mih
-operator|->
-name|cntp
-operator|=
-operator|&
-name|intrcnt
-index|[
-name|irq
-index|]
-expr_stmt|;
+comment|/*mih->cntp =&intrcnt[irq]; */
 name|ie
 operator|=
 name|mih
@@ -294,7 +301,7 @@ operator|=
 name|intr_event_create
 argument_list|(
 operator|&
-name|event
+name|ie
 argument_list|,
 operator|(
 name|void
@@ -339,7 +346,7 @@ block|}
 block|}
 name|intr_event_add_handler
 argument_list|(
-name|event
+name|ie
 argument_list|,
 name|name
 argument_list|,
@@ -430,7 +437,7 @@ name|handler
 argument_list|,
 name|arg
 argument_list|,
-name|intr
+name|irq
 argument_list|,
 name|flags
 argument_list|,
@@ -456,11 +463,6 @@ modifier|*
 name|mih
 decl_stmt|;
 name|struct
-name|intr_handler
-modifier|*
-name|ih
-decl_stmt|;
-name|struct
 name|intr_event
 modifier|*
 name|ie
@@ -470,10 +472,6 @@ name|eirr
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|thread
-decl_stmt|,
-name|error
 decl_stmt|;
 name|critical_enter
 argument_list|()
@@ -655,15 +653,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|atomic_add_long
-argument_list|(
-name|mih
-operator|->
-name|cntp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/*atomic_add_long(mih->cntp, 1);*/
 name|ie
 operator|=
 name|mih
@@ -714,13 +704,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"stray %s interrupt %d\n"
-argument_list|,
-name|hard
-condition|?
-literal|"hard"
-else|:
-literal|"soft"
+literal|"stray interrupt %d\n"
 argument_list|,
 name|i
 argument_list|)

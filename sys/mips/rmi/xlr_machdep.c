@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2004 Juli Mallett<jmallett@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2006-2009 RMI Corporation  * Copyright (c) 2002-2004 Juli Mallett<jmallett@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -256,37 +256,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/iomap.h>
+file|<mips/rmi/iomap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/clock.h>
+file|<mips/rmi/clock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/msgring.h>
+file|<mips/rmi/msgring.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/xlrconfig.h>
+file|<mips/rmi/xlrconfig.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/interrupt.h>
+file|<mips/rmi/interrupt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/pic.h>
+file|<mips/rmi/pic.h>
 end_include
 
 begin_ifdef
@@ -298,7 +298,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<mips/xlr/perfmon.h>
+file|<mips/rmi/perfmon.h>
 end_include
 
 begin_endif
@@ -457,7 +457,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|uint32_t
 name|cpu_ltop_map
 index|[
@@ -467,7 +466,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|uint32_t
 name|cpu_ptol_map
 index|[
@@ -535,27 +533,27 @@ name|xlr_msgring_cpu_init
 argument_list|()
 expr_stmt|;
 comment|/* Setup interrupts for secondary CPUs here */
-name|platform_update_intrmask
+name|mips_mask_hard_irq
 argument_list|(
 name|IPI_SMP_CALL_FUNCTION
 argument_list|)
 expr_stmt|;
-name|platform_update_intrmask
+name|mips_mask_hard_irq
 argument_list|(
 name|IPI_STOP
 argument_list|)
 expr_stmt|;
-name|platform_update_intrmask
+name|mips_mask_hard_irq
 argument_list|(
 name|IPI_RENDEZVOUS
 argument_list|)
 expr_stmt|;
-name|platform_update_intrmask
+name|mips_mask_hard_irq
 argument_list|(
 name|IPI_AST
 argument_list|)
 expr_stmt|;
-name|platform_update_intrmask
+name|mips_mask_hard_irq
 argument_list|(
 name|IRQ_TIMER
 argument_list|)
@@ -563,7 +561,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|XLR_PERFMON
-name|platform_update_intrmask
+name|mips_mask_hard_irq
 argument_list|(
 name|IPI_PERFMON
 argument_list|)
@@ -1326,9 +1324,112 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
+name|void
+name|mips_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|init_param1
+argument_list|()
+expr_stmt|;
+name|init_param2
+argument_list|(
+name|physmem
+argument_list|)
+expr_stmt|;
+comment|/* XXX: Catch 22. Something touches the tlb. */
+name|mips_cpu_init
+argument_list|()
+expr_stmt|;
+name|pmap_bootstrap
+argument_list|()
+expr_stmt|;
+name|mips_proc0_init
+argument_list|()
+expr_stmt|;
+name|write_c0_register32
+argument_list|(
+name|MIPS_COP_0_OSSCRATCH
+argument_list|,
+literal|7
+argument_list|,
+name|pcpup
+operator|->
+name|pc_curthread
+argument_list|)
+expr_stmt|;
+name|mutex_init
+argument_list|()
+expr_stmt|;
+name|PMAP_LOCK_INIT
+argument_list|(
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+ifdef|#
+directive|ifdef
+name|SMP
+name|setup_nmi
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SMP */
+name|kdb_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_KDB
+condition|)
+block|{
+name|kdb_enter
+argument_list|(
+literal|"Boot flags requested debugger"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|tick_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
 name|void
 name|platform_start
-parameter_list|()
+parameter_list|(
+name|__register_t
+name|a0
+name|__unused
+parameter_list|,
+name|__register_t
+name|a1
+name|__unused
+parameter_list|,
+name|__register_t
+name|a2
+name|__unused
+parameter_list|,
+name|__register_t
+name|a3
+name|__unused
+parameter_list|)
 block|{
 name|vm_size_t
 name|physsz
@@ -1463,13 +1564,28 @@ operator|)
 expr_stmt|;
 comment|/* Use multiple consoles */
 comment|/* clockrate used by delay, so initialize it here */
-name|hw_clockrate
+name|cpu_clock
 operator|=
 name|xlr_boot1_info
 operator|.
 name|cpu_frequency
 operator|/
 literal|1000000
+expr_stmt|;
+comment|/* Note the time counter on CPU0 runs not at system 	 * clock speed, but at PIC time counter speed (which is 	 * returned by platform_get_frequency(). Thus we do not 	 * use xlr_boot1_info.cpu_frequency here. 	 */
+name|mips_timer_early_init
+argument_list|(
+name|platform_get_frequency
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|mips_timer_init_params
+argument_list|(
+name|platform_get_frequency
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|cninit
 argument_list|()
@@ -1949,7 +2065,7 @@ index|[
 name|i
 index|]
 operator|=
-name|pmap_steal_unmapped_memory
+name|pmap_steal_memory
 argument_list|(
 name|PAGE_SIZE
 argument_list|)
@@ -2183,28 +2299,9 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_function
-name|void
-name|platform_update_intrmask
-parameter_list|(
-name|int
-name|intr
-parameter_list|)
-block|{
-name|write_c0_eimr64
-argument_list|(
-name|read_c0_eimr64
-argument_list|()
-operator||
-operator|(
-literal|1ULL
-operator|<<
-name|intr
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/*  void  platform_update_intrmask(int intr)  {    write_c0_eimr64(read_c0_eimr64() | (1ULL<<intr));  } */
+end_comment
 
 begin_function_decl
 name|void
@@ -2356,12 +2453,6 @@ operator|->
 name|td_proc
 expr_stmt|;
 comment|/* Interrupt thread will enable the interrupts after processing  	   all messages 	   */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|disable_msgring_int
 argument_list|(
 name|NULL
@@ -2381,6 +2472,11 @@ name|td
 argument_list|)
 condition|)
 block|{
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_INTR
@@ -2403,11 +2499,16 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|setrunqueue
+name|sched_add
 argument_list|(
 name|td
 argument_list|,
 name|SRQ_INTR
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2435,12 +2536,6 @@ name|td_state
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2513,10 +2608,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* First bind this thread to the right CPU */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|sched_bind
@@ -2528,10 +2622,9 @@ operator|->
 name|i_cpu
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 comment|//	printf("Started %s on CPU %d\n", __FUNCTION__, ithd->i_cpu);
@@ -2567,9 +2660,7 @@ name|p_comm
 argument_list|)
 expr_stmt|;
 name|kthread_exit
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 while|while
@@ -2596,12 +2687,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2619,7 +2704,24 @@ name|MIT_DEAD
 operator|)
 condition|)
 block|{
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|sched_class
+argument_list|(
+name|td
+argument_list|,
+name|PRI_ITHD
+argument_list|)
+expr_stmt|;
 name|TD_SET_IWAIT
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|thread_unlock
 argument_list|(
 name|td
 argument_list|)
@@ -2637,12 +2739,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -2757,7 +2853,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|msgring_process
 argument_list|,
@@ -2770,13 +2866,13 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
+operator|(
 name|RFSTOPPED
 operator||
 name|RFHIGHPID
+operator|)
 argument_list|,
-literal|0
-argument_list|,
-literal|"%s"
+literal|2
 argument_list|,
 name|ithd_name
 index|[
@@ -2790,7 +2886,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"kthread_create() failed with %d"
+literal|"kproc_create() failed with %d"
 argument_list|,
 name|error
 argument_list|)
@@ -2803,36 +2899,27 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
+name|sched_class
+argument_list|(
 name|td
-operator|->
-name|td_ksegrp
-operator|->
-name|kg_pri_class
-operator|=
+argument_list|,
 name|PRI_ITHD
+argument_list|)
 expr_stmt|;
 name|TD_SET_IWAIT
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|td
-operator|->
-name|td_pflags
-operator||=
-name|TDP_ITHREAD
+argument_list|)
 expr_stmt|;
 name|ithd
 operator|->

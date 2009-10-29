@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lockmgr.h>
 end_include
 
@@ -103,28 +109,24 @@ directive|include
 file|<dev/usb/usbdi.h>
 end_include
 
+begin_comment
+comment|/*#include<dev/usb/usbdivar.h>  */
+end_comment
+
+begin_comment
+comment|/*#include<dev/usb/usb_mem.h>   */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdivar.h>
+file|<mips/rmi/ehcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_mem.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/ehcireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/ehcivar.h>
+file|<mips/rmi/ehcivar.h>
 end_include
 
 begin_ifdef

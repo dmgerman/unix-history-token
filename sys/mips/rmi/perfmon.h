@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<mips/xlr/perfmon_xlrconfig.h>
+file|<mips/rmi/perfmon_xlrconfig.h>
 end_include
 
 begin_comment

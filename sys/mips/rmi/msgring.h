@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<mips/xlr/xlrconfig.h>
+file|<mips/rmi/xlrconfig.h>
 end_include
 
 begin_define

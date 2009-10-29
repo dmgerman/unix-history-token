@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/iomap.h>
+file|<mips/rmi/iomap.h>
 end_include
 
 begin_include

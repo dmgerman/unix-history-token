@@ -24,7 +24,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<mips/xlr/perfmon_utils.h>
+file|<mips/rmi/perfmon_utils.h>
 end_include
 
 begin_comment

@@ -48,19 +48,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/msgring.h>
+file|<mips/rmi/msgring.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/board.h>
+file|<mips/rmi/board.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/pic.h>
+file|<mips/rmi/pic.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/rmi/shared_structs.h>
 end_include
 
 begin_decl_stmt

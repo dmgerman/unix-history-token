@@ -159,18 +159,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|xlr_uart_poll
-parameter_list|(
-name|struct
-name|uart_bas
-modifier|*
-name|bas
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*static int xlr_uart_poll(struct uart_bas *bas);*/
+end_comment
 
 begin_function_decl
 specifier|static
@@ -181,6 +172,11 @@ name|struct
 name|uart_bas
 modifier|*
 name|bas
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|hwmtx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -195,6 +191,14 @@ end_decl_stmt
 begin_comment
 comment|/*UartLock*/
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uart_ops
+name|uart_ns8250_ops
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -222,11 +226,7 @@ name|putc
 operator|=
 name|xlr_uart_putc
 block|,
-operator|.
-name|poll
-operator|=
-name|xlr_uart_poll
-block|,
+comment|/*	.poll = xlr_uart_poll, ?? */
 operator|.
 name|getc
 operator|=
@@ -488,46 +488,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|xlr_uart_poll
-parameter_list|(
-name|struct
-name|uart_bas
-modifier|*
-name|bas
-parameter_list|)
-block|{
-name|int
-name|res
-decl_stmt|;
-name|xlr_uart_lock
-argument_list|(
-operator|&
-name|xlr_uart_mtx
-argument_list|)
-expr_stmt|;
-name|res
-operator|=
-name|uart_ns8250_ops
-operator|.
-name|poll
-argument_list|(
-name|bas
-argument_list|)
-expr_stmt|;
-name|xlr_uart_unlock
-argument_list|(
-operator|&
-name|xlr_uart_mtx
-argument_list|)
-expr_stmt|;
-return|return
-name|res
-return|;
-block|}
-end_function
+begin_comment
+comment|/* static int xlr_uart_poll(struct uart_bas *bas) { 	int res; 	xlr_uart_lock(&xlr_uart_mtx); 	res = uart_ns8250_ops.poll(bas); 	xlr_uart_unlock(&xlr_uart_mtx); 	return res; } */
+end_comment
 
 begin_function
 specifier|static
@@ -538,6 +501,11 @@ name|struct
 name|uart_bas
 modifier|*
 name|bas
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|hwmtx
 parameter_list|)
 block|{
 return|return
@@ -546,6 +514,8 @@ operator|.
 name|getc
 argument_list|(
 name|bas
+argument_list|,
+name|hwmtx
 argument_list|)
 return|;
 block|}
@@ -611,6 +581,7 @@ name|di
 operator|->
 name|ops
 operator|=
+operator|&
 name|xlr_uart_ns8250_ops
 expr_stmt|;
 name|di

@@ -84,37 +84,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/interrupt.h>
+file|<mips/rmi/interrupt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/msgring.h>
+file|<mips/rmi/msgring.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/iomap.h>
+file|<mips/rmi/iomap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/debug.h>
+file|<mips/rmi/debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/pic.h>
+file|<mips/rmi/pic.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/board.h>
+file|<mips/rmi/board.h>
 end_include
 
 begin_function_decl
@@ -1171,11 +1171,15 @@ block|{
 name|platform_prep_smp_launch
 argument_list|()
 expr_stmt|;
-name|cpu_establish_intr
+name|cpu_establish_hardintr
 argument_list|(
 literal|"msgring"
 argument_list|,
-name|IRQ_MSGRING
+operator|(
+name|driver_filter_t
+operator|*
+operator|)
+name|NULL
 argument_list|,
 operator|(
 name|driver_intr_t
@@ -1185,16 +1189,14 @@ name|msgring_process_fast_intr
 argument_list|,
 name|NULL
 argument_list|,
+name|IRQ_MSGRING
+argument_list|,
 name|INTR_TYPE_NET
 operator||
 name|INTR_FAST
 argument_list|,
 operator|&
 name|cookie
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* configure the msgring interrupt on cpu 0 */
