@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -1812,6 +1818,14 @@ argument_list|,
 literal|"polling\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kdb_active
+operator|==
+literal|0
+condition|)
+return|return;
+comment|/* Only poll if KDB is active */
 while|while
 condition|(
 name|sc
