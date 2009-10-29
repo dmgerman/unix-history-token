@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -251,13 +245,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|AAC_MAXIO
-value|65536
-end_define
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -272,64 +259,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* sysctl tunables */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|aac_iosize_max
-init|=
-name|AAC_MAXIO
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* due to limits of the card */
-end_comment
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.aac.iosize_max"
-argument_list|,
-operator|&
-name|aac_iosize_max
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_hw_aac
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_hw_aac
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|iosize_max
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|aac_iosize_max
-argument_list|,
-literal|0
-argument_list|,
-literal|"Max I/O size per transfer to an array"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -941,7 +870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dump memory out to an array  *  * Send out one command at a time with up to AAC_MAXIO of data.  */
+comment|/*  * Dump memory out to an array  *  * Send out one command at a time with up to maxio of data.  */
 end_comment
 
 begin_function
@@ -984,6 +913,8 @@ name|fib
 decl_stmt|;
 name|size_t
 name|len
+decl_stmt|,
+name|maxio
 decl_stmt|;
 name|int
 name|size
@@ -1091,15 +1022,23 @@ operator|>
 literal|0
 condition|)
 block|{
+name|maxio
+operator|=
+name|sc
+operator|->
+name|aac_max_sectors
+operator|<<
+literal|9
+expr_stmt|;
 name|len
 operator|=
 operator|(
 name|length
 operator|>
-name|AAC_MAXIO
+name|maxio
 operator|)
 condition|?
-name|AAC_MAXIO
+name|maxio
 else|:
 name|length
 expr_stmt|;
@@ -1779,7 +1718,13 @@ name|ad_disk
 operator|->
 name|d_maxsize
 operator|=
-name|aac_iosize_max
+name|sc
+operator|->
+name|ad_controller
+operator|->
+name|aac_max_sectors
+operator|<<
+literal|9
 expr_stmt|;
 name|sc
 operator|->
