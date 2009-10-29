@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mips-exts.h>
+file|<mips/rmi/rmi_mips_exts.h>
 end_include
 
 begin_include
