@@ -1170,15 +1170,14 @@ operator|=
 literal|0xFF
 expr_stmt|;
 block|}
-comment|/* clear SETUP packet interrupt */
+comment|/* Clear SETUP packet interrupt and all other previous interrupts */
 name|ATMEGA_WRITE_1
 argument_list|(
 name|sc
 argument_list|,
 name|ATMEGA_UEINTX
 argument_list|,
-operator|~
-name|ATMEGA_UEINTX_RXSTPI
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
