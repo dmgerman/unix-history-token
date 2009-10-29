@@ -85,17 +85,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_UNCFG_FLAG_FREE_SUBDEV
-value|0x01
-end_define
-
-begin_comment
-comment|/* subdevices are freed */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|USB_UNCFG_FLAG_FREE_EP0
 value|0x02
 end_define

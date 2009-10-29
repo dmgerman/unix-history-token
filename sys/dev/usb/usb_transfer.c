@@ -7637,6 +7637,15 @@ argument_list|,
 name|xfer
 argument_list|)
 expr_stmt|;
+comment|/* only delay once */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|did_dma_delay
+operator|=
+literal|1
+expr_stmt|;
 comment|/* queue callback for execution, again */
 name|usbd_transfer_done
 argument_list|(
@@ -8743,15 +8752,6 @@ block|{
 name|usb_timeout_t
 name|temp
 decl_stmt|;
-comment|/* only delay once */
-name|xfer
-operator|->
-name|flags_int
-operator|.
-name|did_dma_delay
-operator|=
-literal|1
-expr_stmt|;
 comment|/* we can not cancel this delay */
 name|xfer
 operator|->

@@ -1816,7 +1816,7 @@ name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
-name|USB_UNCFG_FLAG_FREE_SUBDEV
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2272,7 +2272,7 @@ name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
-name|USB_UNCFG_FLAG_FREE_SUBDEV
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3609,35 +3609,17 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|flag
-operator|&
-name|USB_UNCFG_FLAG_FREE_SUBDEV
-operator|)
-condition|)
-block|{
-operator|*
-name|ppdev
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|*
-name|ppdev
-condition|)
-block|{
-comment|/* 		 * NOTE: It is important to clear "*ppdev" before deleting 		 * the child due to some device methods being called late 		 * during the delete process ! 		 */
 name|dev
 operator|=
 operator|*
 name|ppdev
 expr_stmt|;
+if|if
+condition|(
+name|dev
+condition|)
+block|{
+comment|/* 		 * NOTE: It is important to clear "*ppdev" before deleting 		 * the child due to some device methods being called late 		 * during the delete process ! 		 */
 operator|*
 name|ppdev
 operator|=
@@ -6541,7 +6523,7 @@ name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
-name|USB_UNCFG_FLAG_FREE_SUBDEV
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6645,14 +6627,12 @@ condition|(
 name|err
 condition|)
 block|{
-comment|/* free device  */
+comment|/* 		 * Free USB device and all subdevices, if any. 		 */
 name|usb_free_device
 argument_list|(
 name|udev
 argument_list|,
-name|USB_UNCFG_FLAG_FREE_SUBDEV
-operator||
-name|USB_UNCFG_FLAG_FREE_EP0
+literal|0
 argument_list|)
 expr_stmt|;
 name|udev
@@ -7238,7 +7218,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_free_device  *  * This function is NULL safe and will free an USB device.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_free_device  *  * This function is NULL safe and will free an USB device and its  * children devices, if any.  *  * Flag values: Reserved, set to zero.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7462,7 +7442,7 @@ name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
-name|flag
+name|USB_UNCFG_FLAG_FREE_EP0
 argument_list|)
 expr_stmt|;
 comment|/* unsetup any leftover default USB transfers */
