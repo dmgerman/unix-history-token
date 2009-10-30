@@ -159,6 +159,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|platform_initclocks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|clk_ticks
@@ -306,7 +315,7 @@ end_function
 
 begin_function
 name|void
-name|cpu_initclocks
+name|platform_initclocks
 parameter_list|(
 name|void
 parameter_list|)

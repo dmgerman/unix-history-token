@@ -58,6 +58,23 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|kdb_cpu_sync_icache
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|addr
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{ }
+end_function
+
 begin_endif
 endif|#
 directive|endif

@@ -119,6 +119,12 @@ directive|include
 file|<machine/pte.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/hwfunc.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -513,6 +519,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|platform_cpu_init
+argument_list|()
+expr_stmt|;
 name|mips_get_identity
 argument_list|(
 operator|&

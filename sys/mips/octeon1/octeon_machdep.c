@@ -306,6 +306,15 @@ name|end
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+name|void
+name|platform_cpu_init
+parameter_list|()
+block|{
+comment|/* Nothing special yet */
+block|}
+end_function
+
 begin_comment
 comment|/*  * Perform a board-level soft-reset.  * Note that this is not emulated by gxemul.  */
 end_comment

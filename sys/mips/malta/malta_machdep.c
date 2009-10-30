@@ -335,6 +335,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+name|void
+name|platform_cpu_init
+parameter_list|()
+block|{
+comment|/* Nothing special */
+block|}
+end_function
+
 begin_comment
 comment|/*  * Put character to Malta LCD at given position.  */
 end_comment
