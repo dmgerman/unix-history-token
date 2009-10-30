@@ -122,17 +122,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|DRIVER_SOFTC
-parameter_list|(
-name|unit
-parameter_list|)
-define|\
-value|((struct drm_device *)devclass_get_softc(drm_devclass, unit))
-end_define
-
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
@@ -1183,7 +1172,7 @@ argument_list|(
 operator|&
 name|drm_cdevsw
 argument_list|,
-name|unit
+literal|0
 argument_list|,
 name|DRM_DEV_UID
 argument_list|,
@@ -1195,6 +1184,14 @@ literal|"dri/card%d"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|devnode
+operator|->
+name|si_drv1
+operator|=
+name|dev
 expr_stmt|;
 if|#
 directive|if
@@ -3140,13 +3137,9 @@ literal|0
 decl_stmt|;
 name|dev
 operator|=
-name|DRIVER_SOFTC
-argument_list|(
-name|dev2unit
-argument_list|(
 name|kdev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
