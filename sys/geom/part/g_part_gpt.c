@@ -2352,6 +2352,17 @@ argument_list|,
 name|codesz
 argument_list|)
 expr_stmt|;
+comment|/* Mark the PMBR active since some BIOS require it */
+name|table
+operator|->
+name|mbr
+index|[
+name|DOSPARTOFF
+index|]
+operator|=
+literal|0x80
+expr_stmt|;
+comment|/* status */
 return|return
 operator|(
 literal|0
