@@ -202,6 +202,8 @@ name|request
 operator|->
 name|size
 argument_list|,
+name|entry
+operator|->
 name|pages
 argument_list|,
 comment|/* maxsize, nsegs */
