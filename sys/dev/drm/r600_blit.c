@@ -3862,7 +3862,18 @@ operator|==
 name|CHIP_RS780
 operator|)
 operator|||
-comment|/*((dev_priv->flags& RADEON_FAMILY_MASK) == CHIP_RS880) ||*/
+operator|(
+operator|(
+name|dev_priv
+operator|->
+name|flags
+operator|&
+name|RADEON_FAMILY_MASK
+operator|)
+operator|==
+name|CHIP_RS880
+operator|)
+operator|||
 operator|(
 operator|(
 name|dev_priv
@@ -4618,7 +4629,9 @@ case|:
 case|case
 name|CHIP_RS780
 case|:
-comment|/*case CHIP_RS880:*/
+case|case
+name|CHIP_RS880
+case|:
 default|default:
 name|num_ps_gprs
 operator|=
@@ -4939,7 +4952,18 @@ operator|==
 name|CHIP_RS780
 operator|)
 operator|||
-comment|/*((dev_priv->flags& RADEON_FAMILY_MASK) == CHIP_RS880) ||*/
+operator|(
+operator|(
+name|dev_priv
+operator|->
+name|flags
+operator|&
+name|RADEON_FAMILY_MASK
+operator|)
+operator|==
+name|CHIP_RS880
+operator|)
+operator|||
 operator|(
 operator|(
 name|dev_priv
