@@ -525,7 +525,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|arge_poll
 parameter_list|(
 name|struct
@@ -603,7 +603,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|arge_rx_locked
 parameter_list|(
 name|struct
@@ -6627,7 +6627,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|arge_poll
 parameter_list|(
 name|struct
@@ -6652,6 +6652,11 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|ifp
@@ -6671,6 +6676,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|rx_npkts
+operator|=
 name|arge_rx_locked
 argument_list|(
 name|sc
@@ -6682,6 +6689,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
@@ -6953,7 +6965,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|arge_rx_locked
 parameter_list|(
 name|struct
@@ -6994,6 +7006,11 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|;
+name|int
+name|rx_npkts
+init|=
+literal|0
 decl_stmt|;
 name|ARGE_LOCK_ASSERT
 argument_list|(
@@ -7163,6 +7180,9 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
+name|rx_npkts
+operator|++
+expr_stmt|;
 name|ARGE_UNLOCK
 argument_list|(
 name|sc
@@ -7275,6 +7295,11 @@ operator|=
 name|cons
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|rx_npkts
+operator|)
+return|;
 block|}
 end_function
 
