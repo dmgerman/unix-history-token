@@ -1187,6 +1187,13 @@ name|SIGPROCMASK_PROC_LOCKED
 value|0x0002
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIGPROCMASK_PS_LOCKED
+value|0x0004
+end_define
+
 begin_comment
 comment|/*  * Machine-independent functions:  */
 end_comment
