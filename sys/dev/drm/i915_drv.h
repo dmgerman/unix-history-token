@@ -2564,7 +2564,7 @@ name|IS_I965G
 parameter_list|(
 name|dev
 parameter_list|)
-value|((dev)->pci_device == 0x2972 || \ 		       (dev)->pci_device == 0x2982 || \ 		       (dev)->pci_device == 0x2992 || \ 		       (dev)->pci_device == 0x29A2 || \ 		       (dev)->pci_device == 0x2A02 || \ 		       (dev)->pci_device == 0x2A12 || \ 		       (dev)->pci_device == 0x2A42 || \ 		       (dev)->pci_device == 0x2E02 || \ 		       (dev)->pci_device == 0x2E12 || \ 		       (dev)->pci_device == 0x2E22)
+value|((dev)->pci_device == 0x2972 || \ 		       (dev)->pci_device == 0x2982 || \ 		       (dev)->pci_device == 0x2992 || \ 		       (dev)->pci_device == 0x29A2 || \ 		       (dev)->pci_device == 0x2A02 || \ 		       (dev)->pci_device == 0x2A12 || \ 		       (dev)->pci_device == 0x2A42 || \ 		       (dev)->pci_device == 0x2E02 || \ 		       (dev)->pci_device == 0x2E12 || \ 		       (dev)->pci_device == 0x2E22 || \ 		       (dev)->pci_device == 0x2E32)
 end_define
 
 begin_define
@@ -2594,7 +2594,7 @@ name|IS_G4X
 parameter_list|(
 name|dev
 parameter_list|)
-value|((dev)->pci_device == 0x2E02 || \ 		     (dev)->pci_device == 0x2E12 || \ 		     (dev)->pci_device == 0x2E22 || \ 		     IS_GM45(dev))
+value|((dev)->pci_device == 0x2E02 || \ 		     (dev)->pci_device == 0x2E12 || \ 		     (dev)->pci_device == 0x2E22 || \ 		     (dev)->pci_device == 0x2E32 || \ 		     IS_GM45(dev))
 end_define
 
 begin_define
