@@ -1888,9 +1888,14 @@ decl_stmt|;
 comment|/* start of CSA element */
 name|uint8_t
 modifier|*
+name|bo_meshconf
+decl_stmt|;
+comment|/* start of MESHCONF element */
+name|uint8_t
+modifier|*
 name|bo_spare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}
@@ -1970,6 +1975,11 @@ init|=
 literal|10
 block|,
 comment|/* ATH parameters */
+name|IEEE80211_BEACON_MESHCONF
+init|=
+literal|11
+block|,
+comment|/* Mesh Configuration */
 block|}
 enum|;
 end_enum
