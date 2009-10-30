@@ -804,6 +804,45 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|drm
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+name|NULL
+argument_list|,
+literal|"DRM device"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_drm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|msi
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|drm_msi
+argument_list|,
+literal|1
+argument_list|,
+literal|"Enable MSI interrupts for drm devices"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
