@@ -3470,15 +3470,23 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+operator|(
 name|lobject
 operator|->
 name|backing_object_offset
 operator|&
 name|PAGE_MASK
-condition|)
-break|break;
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_fault_prefault: unaligned object offset"
+operator|)
+argument_list|)
+expr_stmt|;
 name|pindex
 operator|+=
 name|lobject
