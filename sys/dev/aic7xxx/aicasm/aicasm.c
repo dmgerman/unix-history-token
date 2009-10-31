@@ -2642,6 +2642,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|free
+argument_list|(
+name|func_values
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Dump the remainder of the file */
 end_comment
