@@ -159,7 +159,9 @@ begin_function_decl
 name|void
 name|showkeywordslist
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|substring
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1350,6 +1352,150 @@ literal|""
 block|}
 block|,
 block|{
+literal|"altmon_1"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_1
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_2"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_2
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_3"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_3
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_4"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_4
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_5"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_5
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_6"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_6
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_7"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_7
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_8"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_8
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_9"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_9
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_10"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_10
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_11"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_11
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
+literal|"altmon_12"
+block|,
+literal|1
+block|,
+name|LC_TIME
+block|,
+name|ALTMON_12
+block|,
+literal|"(FreeBSD only)"
+block|}
+block|,
+block|{
 literal|"era"
 block|,
 literal|1
@@ -1532,7 +1678,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ackm"
+literal|"ackms:"
 argument_list|)
 operator|)
 operator|!=
@@ -1714,7 +1860,12 @@ literal|0
 condition|)
 block|{
 name|showkeywordslist
-argument_list|()
+argument_list|(
+name|argv
+index|[
+name|tmp
+index|]
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -1789,7 +1940,8 @@ block|{
 name|printf
 argument_list|(
 literal|"Usage: locale [ -a | -m ]\n"
-literal|"       locale [ -ck ] name ...\n"
+literal|"       locale -k list [prefix]\n"
+literal|"       locale [ -ck ] keyword ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3005,6 +3157,15 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * invalid keyword specified. 		 * XXX: any actions? 		 */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unknown keyword: `%s'\n"
+argument_list|,
+name|kw
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -3177,7 +3338,9 @@ begin_function
 name|void
 name|showkeywordslist
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|substring
 parameter_list|)
 block|{
 name|size_t
@@ -3187,9 +3350,23 @@ define|#
 directive|define
 name|FMT
 value|"%-20s %-12s %-7s %-20s\n"
+if|if
+condition|(
+name|substring
+operator|==
+name|NULL
+condition|)
 name|printf
 argument_list|(
 literal|"List of available keywords\n\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"List of available keywords starting with '%s'\n\n"
+argument_list|,
+name|substring
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3224,6 +3401,36 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|substring
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|kwinfo
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|substring
+argument_list|,
+name|strlen
+argument_list|(
+name|substring
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+block|}
 name|printf
 argument_list|(
 name|FMT

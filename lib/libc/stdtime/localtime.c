@@ -87,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -7407,6 +7413,9 @@ name|tm
 modifier|*
 name|p_tm
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|__isthreaded
@@ -7436,6 +7445,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|r
+operator|=
 name|_pthread_key_create
 argument_list|(
 operator|&
@@ -7443,7 +7455,8 @@ name|localtime_key
 argument_list|,
 name|free
 argument_list|)
-operator|<
+operator|)
+operator|!=
 literal|0
 condition|)
 block|{
@@ -7452,6 +7465,10 @@ argument_list|(
 operator|&
 name|localtime_mutex
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|r
 expr_stmt|;
 return|return
 operator|(
@@ -7842,6 +7859,9 @@ name|tm
 modifier|*
 name|p_tm
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|__isthreaded
@@ -7871,6 +7891,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|r
+operator|=
 name|_pthread_key_create
 argument_list|(
 operator|&
@@ -7878,7 +7901,8 @@ name|gmtime_key
 argument_list|,
 name|free
 argument_list|)
-operator|<
+operator|)
+operator|!=
 literal|0
 condition|)
 block|{
@@ -7887,6 +7911,10 @@ argument_list|(
 operator|&
 name|gmtime_mutex
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|r
 expr_stmt|;
 return|return
 operator|(
