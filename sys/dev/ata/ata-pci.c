@@ -2524,8 +2524,6 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|request
-operator|->
 name|dev
 argument_list|,
 literal|"DMA reset calling unload\n"

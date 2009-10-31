@@ -2776,11 +2776,11 @@ name|sc
 operator|=
 name|device_get_softc
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2825,6 +2825,26 @@ operator|.
 name|command
 operator|!=
 name|ATA_WRITE_DMA
+operator|&&
+name|request
+operator|->
+name|u
+operator|.
+name|ata
+operator|.
+name|command
+operator|!=
+name|ATA_READ_DMA48
+operator|&&
+name|request
+operator|->
+name|u
+operator|.
+name|ata
+operator|.
+name|command
+operator|!=
+name|ATA_WRITE_DMA48
 condition|)
 block|{
 comment|/* Disable EDMA before accessing legacy registers */
@@ -2876,12 +2896,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* Check for 48 bit access and convert if needed */
-name|ata_modify_if_48bit
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
 comment|/* Prepare data for DMA */
 if|if
 condition|(
@@ -2907,7 +2921,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"setting up DMA failed!\n"
 argument_list|)
@@ -3314,11 +3328,11 @@ name|sc
 operator|=
 name|device_get_softc
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -1122,18 +1122,6 @@ modifier|*
 name|fis
 parameter_list|)
 block|{
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-init|=
-name|device_get_softc
-argument_list|(
-name|request
-operator|->
-name|dev
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|request
@@ -1159,7 +1147,7 @@ operator|=
 literal|0x80
 operator||
 operator|(
-name|atadev
+name|request
 operator|->
 name|unit
 operator|&
@@ -1235,11 +1223,6 @@ return|;
 block|}
 else|else
 block|{
-name|ata_modify_if_48bit
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
 name|fis
 index|[
 literal|0
@@ -1256,7 +1239,7 @@ operator|=
 literal|0x80
 operator||
 operator|(
-name|atadev
+name|request
 operator|->
 name|unit
 operator|&
@@ -1343,11 +1326,11 @@ if|if
 condition|(
 operator|!
 operator|(
-name|atadev
+name|request
 operator|->
 name|flags
 operator|&
-name|ATA_D_48BIT_ACTIVE
+name|ATA_R_48BIT
 operator|)
 condition|)
 name|fis
@@ -1658,15 +1641,6 @@ name|pm_ports
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* realloc space for needed DMA slots */
-name|ch
-operator|->
-name|dma
-operator|.
-name|dma_slots
-operator|=
-name|pm_ports
-expr_stmt|;
 comment|/* reset all ports and register if anything connected */
 for|for
 control|(

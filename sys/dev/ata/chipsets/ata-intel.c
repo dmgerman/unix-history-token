@@ -3142,12 +3142,9 @@ name|ch
 init|=
 name|device_get_softc
 argument_list|(
-name|device_get_parent
-argument_list|(
 name|request
 operator|->
-name|dev
-argument_list|)
+name|parent
 argument_list|)
 decl_stmt|;
 name|struct
@@ -3164,11 +3161,11 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|atadev
+name|request
 operator|->
 name|flags
 operator|&
-name|ATA_D_48BIT_ACTIVE
+name|ATA_R_48BIT
 condition|)
 block|{
 name|ATA_IDX_OUTW
@@ -3324,7 +3321,7 @@ name|ATA_D_LBA
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
+name|request
 operator|->
 name|unit
 argument_list|)
@@ -3503,7 +3500,7 @@ name|ATA_D_IBM
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
+name|request
 operator|->
 name|unit
 argument_list|)
@@ -3597,7 +3594,7 @@ name|ATA_D_LBA
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
+name|request
 operator|->
 name|unit
 argument_list|)

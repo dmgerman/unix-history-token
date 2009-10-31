@@ -144,9 +144,8 @@ name|ata_channel
 modifier|*
 name|ch
 parameter_list|,
-name|struct
-name|ata_device
-modifier|*
+name|int
+name|unit
 parameter_list|,
 name|u_int8_t
 parameter_list|)
@@ -328,18 +327,6 @@ operator|->
 name|parent
 argument_list|)
 decl_stmt|;
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-init|=
-name|device_get_softc
-argument_list|(
-name|request
-operator|->
-name|dev
-argument_list|)
-decl_stmt|;
 name|int
 name|dummy
 decl_stmt|,
@@ -394,12 +381,6 @@ operator|&=
 operator|~
 name|ATA_R_DMA
 expr_stmt|;
-comment|/* check for 48 bit access and convert if needed */
-name|ata_modify_if_48bit
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|request
@@ -445,7 +426,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"error issuing %s command\n"
 argument_list|,
@@ -550,7 +531,9 @@ name|ata_wait
 argument_list|(
 name|ch
 argument_list|,
-name|atadev
+name|request
+operator|->
+name|unit
 argument_list|,
 operator|(
 name|ATA_S_READY
@@ -566,7 +549,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"timeout waiting for write DRQ\n"
 argument_list|)
@@ -625,7 +608,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"setting up DMA failed\n"
 argument_list|)
@@ -657,7 +640,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"error issuing %s command\n"
 argument_list|,
@@ -700,7 +683,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"error starting DMA\n"
 argument_list|)
@@ -749,7 +732,7 @@ name|ATA_D_IBM
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
+name|request
 operator|->
 name|unit
 argument_list|)
@@ -801,7 +784,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"error issuing ATA PACKET command\n"
 argument_list|)
@@ -852,7 +835,7 @@ name|ATA_D_IBM
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
+name|request
 operator|->
 name|unit
 argument_list|)
@@ -913,7 +896,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"setting up DMA failed\n"
 argument_list|)
@@ -945,7 +928,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"error issuing ATA PACKET command\n"
 argument_list|)
@@ -1077,18 +1060,6 @@ argument_list|(
 name|request
 operator|->
 name|parent
-argument_list|)
-decl_stmt|;
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-init|=
-name|device_get_softc
-argument_list|(
-name|request
-operator|->
-name|dev
 argument_list|)
 decl_stmt|;
 name|int
@@ -1238,7 +1209,9 @@ name|ata_wait
 argument_list|(
 name|ch
 argument_list|,
-name|atadev
+name|request
+operator|->
+name|unit
 argument_list|,
 name|flags
 argument_list|)
@@ -1250,7 +1223,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"timeout waiting for read DRQ\n"
 argument_list|)
@@ -1335,7 +1308,9 @@ name|ata_wait
 argument_list|(
 name|ch
 argument_list|,
-name|atadev
+name|request
+operator|->
+name|unit
 argument_list|,
 operator|(
 name|ATA_S_READY
@@ -1351,7 +1326,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"timeout waiting for write DRQ\n"
 argument_list|)
@@ -1589,7 +1564,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"command interrupt without DRQ\n"
 argument_list|)
@@ -1623,20 +1598,16 @@ operator|.
 name|ccb
 argument_list|,
 operator|(
-name|atadev
+name|request
 operator|->
-name|param
-operator|.
-name|config
+name|flags
 operator|&
-name|ATA_PROTO_MASK
+name|ATA_R_ATAPI16
 operator|)
-operator|==
-name|ATA_PROTO_ATAPI_12
 condition|?
-literal|6
-else|:
 literal|8
+else|:
+literal|6
 argument_list|)
 expr_stmt|;
 comment|/* return wait for interrupt */
@@ -1665,7 +1636,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"%s trying to write on read buffer\n"
 argument_list|,
@@ -1741,7 +1712,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"%s trying to read on write buffer\n"
 argument_list|,
@@ -1801,7 +1772,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"WARNING - %s DONEDRQ non conformant device\n"
 argument_list|,
@@ -1903,7 +1874,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"unknown transfer phase\n"
 argument_list|)
@@ -2978,10 +2949,8 @@ name|ata_channel
 modifier|*
 name|ch
 parameter_list|,
-name|struct
-name|ata_device
-modifier|*
-name|atadev
+name|int
+name|unit
 parameter_list|,
 name|u_int8_t
 name|mask
@@ -3035,8 +3004,6 @@ name|ATA_D_IBM
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
-operator|->
 name|unit
 argument_list|)
 argument_list|)
@@ -3192,18 +3159,6 @@ operator|->
 name|parent
 argument_list|)
 decl_stmt|;
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-init|=
-name|device_get_softc
-argument_list|(
-name|request
-operator|->
-name|dev
-argument_list|)
-decl_stmt|;
 comment|/* select device */
 name|ATA_IDX_OUTB
 argument_list|(
@@ -3217,7 +3172,7 @@ name|ATA_D_LBA
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
+name|request
 operator|->
 name|unit
 argument_list|)
@@ -3230,7 +3185,9 @@ name|ata_wait
 argument_list|(
 name|ch
 argument_list|,
-name|atadev
+name|request
+operator|->
+name|unit
 argument_list|,
 literal|0
 argument_list|)
@@ -3242,7 +3199,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"timeout waiting to issue command\n"
 argument_list|)
@@ -3275,6 +3232,9 @@ name|int
 name|timeout
 init|=
 literal|5000
+decl_stmt|;
+name|int
+name|res
 decl_stmt|;
 comment|/* issue packet command to controller */
 if|if
@@ -3362,21 +3322,58 @@ expr_stmt|;
 comment|/* command interrupt device ? just return and wait for interrupt */
 if|if
 condition|(
-operator|(
-name|atadev
+name|request
 operator|->
-name|param
-operator|.
-name|config
+name|flags
 operator|&
-name|ATA_DRQ_MASK
-operator|)
-operator|==
-name|ATA_DRQ_INTR
+name|ATA_R_ATAPI_INTR
 condition|)
 return|return
 literal|0
 return|;
+comment|/* command processed ? */
+name|res
+operator|=
+name|ata_wait
+argument_list|(
+name|ch
+argument_list|,
+name|request
+operator|->
+name|unit
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|res
+operator|<
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|request
+operator|->
+name|parent
+argument_list|,
+literal|"timeout waiting for PACKET command\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* wait for ready to write ATAPI command block */
 while|while
 condition|(
@@ -3448,7 +3445,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"timeout waiting for ATAPI ready\n"
 argument_list|)
@@ -3490,20 +3487,16 @@ operator|.
 name|ccb
 argument_list|,
 operator|(
-name|atadev
+name|request
 operator|->
-name|param
-operator|.
-name|config
+name|flags
 operator|&
-name|ATA_PROTO_MASK
+name|ATA_R_ATAPI16
 operator|)
-operator|==
-name|ATA_PROTO_ATAPI_12
 condition|?
-literal|6
-else|:
 literal|8
+else|:
+literal|6
 argument_list|)
 expr_stmt|;
 block|}
@@ -3564,25 +3557,13 @@ operator|->
 name|parent
 argument_list|)
 decl_stmt|;
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-init|=
-name|device_get_softc
-argument_list|(
-name|request
-operator|->
-name|dev
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
-name|atadev
+name|request
 operator|->
 name|flags
 operator|&
-name|ATA_D_48BIT_ACTIVE
+name|ATA_R_48BIT
 condition|)
 block|{
 name|ATA_IDX_OUTB
@@ -3845,11 +3826,11 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|atadev
+name|request
 operator|->
 name|flags
 operator|&
-name|ATA_D_48BIT_ACTIVE
+name|ATA_R_48BIT
 condition|)
 block|{
 name|ATA_IDX_OUTB
@@ -4026,7 +4007,7 @@ name|ATA_D_LBA
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
+name|request
 operator|->
 name|unit
 argument_list|)
@@ -4205,7 +4186,7 @@ name|ATA_D_IBM
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
+name|request
 operator|->
 name|unit
 argument_list|)
@@ -4299,7 +4280,7 @@ name|ATA_D_LBA
 operator||
 name|ATA_DEV
 argument_list|(
-name|atadev
+name|request
 operator|->
 name|unit
 argument_list|)
@@ -4460,7 +4441,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"WARNING - %s read data overrun %d>%d\n"
 argument_list|,
@@ -4640,7 +4621,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"WARNING - %s write data underrun %d>%d\n"
 argument_list|,

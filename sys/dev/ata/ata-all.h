@@ -1563,7 +1563,7 @@ begin_define
 define|#
 directive|define
 name|ATA_AHCI_CT_SIZE
-value|(1024 + 128)
+value|(2176 + 128)
 end_define
 
 begin_struct
@@ -1619,7 +1619,7 @@ decl_stmt|;
 define|#
 directive|define
 name|ATA_AHCI_DMA_ENTRIES
-value|64
+value|129
 name|struct
 name|ata_ahci_dma_prd
 name|prd_tab
@@ -2115,6 +2115,10 @@ name|device_t
 name|parent
 decl_stmt|;
 comment|/* channel handle */
+name|int
+name|unit
+decl_stmt|;
+comment|/* physical unit */
 union|union
 block|{
 struct|struct
@@ -2211,6 +2215,10 @@ name|ATA_R_TIMEOUT
 value|0x00000040
 define|#
 directive|define
+name|ATA_R_48BIT
+value|0x00000080
+define|#
+directive|define
 name|ATA_R_ORDERED
 value|0x00000100
 define|#
@@ -2229,6 +2237,14 @@ define|#
 directive|define
 name|ATA_R_DIRECT
 value|0x00001000
+define|#
+directive|define
+name|ATA_R_ATAPI16
+value|0x00010000
+define|#
+directive|define
+name|ATA_R_ATAPI_INTR
+value|0x00020000
 define|#
 directive|define
 name|ATA_R_DEBUG
@@ -2350,7 +2366,7 @@ parameter_list|,
 name|string
 parameter_list|)
 define|\
-value|{ \     if (request->flags& ATA_R_DEBUG) \ 	device_printf(request->dev, "req=%p %s " string "\n", \ 		      request, ata_cmd2str(request)); \     }
+value|{ \     if (request->flags& ATA_R_DEBUG) \ 	device_printf(request->parent, "req=%p %s " string "\n", \ 		      request, ata_cmd2str(request)); \     }
 end_define
 
 begin_else
@@ -2441,10 +2457,6 @@ define|#
 directive|define
 name|ATA_D_ENC_PRESENT
 value|0x0004
-define|#
-directive|define
-name|ATA_D_48BIT_ACTIVE
-value|0x0008
 block|}
 struct|;
 end_struct
@@ -2558,7 +2570,7 @@ comment|/* bus address of dmatab */
 define|#
 directive|define
 name|ATA_DMA_SLOTS
-value|32
+value|1
 name|int
 name|dma_slots
 decl_stmt|;
