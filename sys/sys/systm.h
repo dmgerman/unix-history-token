@@ -138,6 +138,18 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|u_long
+name|pagesizes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* supported page sizes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|long
 name|physmem
 decl_stmt|;

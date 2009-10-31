@@ -246,6 +246,17 @@ name|NPTEPG
 value|(PAGE_SIZE/(sizeof (pt_entry_t)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXPAGESIZES
+value|1
+end_define
+
+begin_comment
+comment|/* maximum number of supported page sizes */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
