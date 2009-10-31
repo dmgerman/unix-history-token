@@ -3806,6 +3806,21 @@ literal|64
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
+else|else
+name|ch
+operator|->
+name|dma
+operator|.
+name|max_iosize
+operator|=
+operator|(
+name|ATA_DMA_ENTRIES
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
 block|}
 end_function
 
