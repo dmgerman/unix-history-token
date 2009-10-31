@@ -340,17 +340,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|__inline
-name|void
-name|setusr
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|setfault
 parameter_list|(
@@ -2601,31 +2590,6 @@ name|SIGSEGV
 operator|)
 return|;
 end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|setusr
-parameter_list|(
-name|u_int
-name|content
-parameter_list|)
-block|{
-asm|__asm __volatile ("isync; mtsr %0,%1; isync"
-operator|::
-literal|"n"
-operator|(
-name|USER_SR
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|content
-operator|)
-block|)
-function|;
-end_function
 
 begin_macro
 unit|}  int
