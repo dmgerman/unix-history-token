@@ -2191,8 +2191,8 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|w_notrunning
+index|[]
 init|=
 literal|"Witness not running\n"
 decl_stmt|;
@@ -2202,8 +2202,8 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|w_stillcold
+index|[]
 init|=
 literal|"Witness is still cold\n"
 decl_stmt|;
