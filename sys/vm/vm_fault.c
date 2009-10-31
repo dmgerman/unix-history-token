@@ -4100,7 +4100,7 @@ name|prot
 operator|=
 name|dst_entry
 operator|->
-name|max_protection
+name|protection
 expr_stmt|;
 comment|/* 	 * If not an upgrade, then enter the mappings in the pmap as 	 * read and/or execute accesses.  Otherwise, enter them as 	 * write accesses. 	 * 	 * A writeable large page mapping is only created if all of 	 * the constituent small page mappings are modified. Marking 	 * PTEs as modified on inception allows promotion to happen 	 * without taking potentially large number of soft faults. 	 */
 if|if
