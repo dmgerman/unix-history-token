@@ -378,8 +378,15 @@ literal|"probe"
 block|,
 name|TAILQ_HEAD_INITIALIZER
 argument_list|(
-argument|probe_driver.units
+name|probe_driver
+operator|.
+name|units
 argument_list|)
+block|,
+comment|/* generation */
+literal|0
+block|,
+name|CAM_PERIPH_DRV_EARLY
 block|}
 decl_stmt|;
 end_decl_stmt

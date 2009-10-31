@@ -5769,6 +5769,9 @@ name|ccb_scsiio
 modifier|*
 name|csio
 decl_stmt|;
+name|u_int32_t
+name|priority
+decl_stmt|;
 name|softc
 operator|=
 operator|(
@@ -5779,6 +5782,16 @@ operator|)
 name|periph
 operator|->
 name|softc
+expr_stmt|;
+name|priority
+operator|=
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|pinfo
+operator|.
+name|priority
 expr_stmt|;
 name|csio
 operator|=
@@ -6246,8 +6259,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|priority
 argument_list|)
 expr_stmt|;
 return|return;

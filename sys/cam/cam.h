@@ -122,6 +122,10 @@ name|priority
 decl_stmt|;
 define|#
 directive|define
+name|CAM_PRIORITY_BUS
+value|0
+define|#
+directive|define
 name|CAM_PRIORITY_DEV
 value|0
 define|#
