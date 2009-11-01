@@ -2776,6 +2776,37 @@ operator|&
 name|pg_ps_enabled
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pg_ps_enabled
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|MAXPAGESIZES
+operator|>
+literal|1
+operator|&&
+name|pagesizes
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_init: can't assign to pagesizes[1]"
+operator|)
+argument_list|)
+expr_stmt|;
+name|pagesizes
+index|[
+literal|1
+index|]
+operator|=
+name|NBPDR
+expr_stmt|;
+block|}
 comment|/* 	 * Calculate the size of the pv head table for superpages. 	 */
 for|for
 control|(
