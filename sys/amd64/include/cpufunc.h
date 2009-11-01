@@ -942,16 +942,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|__asm__
-name|__volatile
-argument_list|(
-literal|"mfence"
-operator|:
-operator|:
-operator|:
-literal|"memory"
-argument_list|)
-decl_stmt|;
+asm|__asm __volatile("mfence" : : : "memory");
 block|}
 end_function
 
@@ -1405,7 +1396,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|cpu_monitor
 parameter_list|(
@@ -1443,7 +1434,7 @@ end_function
 
 begin_function
 unit|}  static
-specifier|inline
+name|__inline
 name|void
 name|cpu_mwait
 parameter_list|(
