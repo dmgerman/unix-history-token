@@ -1113,7 +1113,6 @@ parameter_list|(
 name|void
 modifier|*
 name|data
-name|__unused
 parameter_list|)
 block|{
 name|printf
