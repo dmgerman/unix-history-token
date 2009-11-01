@@ -55,8 +55,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_INTR_SMB_MASK
+value|0xe
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_INTR_SMB_SMI
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_INTR_SMB_IRQ_PCI
+value|2
 end_define
 
 begin_define
