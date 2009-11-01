@@ -343,6 +343,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if USB transfer can be 					 * cancelled immediately */
+name|uint8_t
+name|doing_callback
+range|:
+literal|1
+decl_stmt|;
+comment|/* set if executing the callback */
 block|}
 struct|;
 end_struct
