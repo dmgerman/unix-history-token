@@ -69,6 +69,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIE_REGMAX
+value|4095
+end_define
+
+begin_comment
+comment|/* highest supported config register addr. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_MAXHDRTYPE
 value|2
 end_define
