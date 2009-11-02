@@ -7668,14 +7668,19 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Update physical map if necessary. Worry about copy-on-write 		 * here. 		 */
+comment|/* 		 * When restricting access, update the physical map.  Worry 		 * about copy-on-write here. 		 */
 if|if
 condition|(
+operator|(
+name|old_prot
+operator|&
+operator|~
 name|current
 operator|->
 name|protection
+operator|)
 operator|!=
-name|old_prot
+literal|0
 condition|)
 block|{
 define|#
