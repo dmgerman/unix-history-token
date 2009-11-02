@@ -2125,8 +2125,6 @@ name|sc
 operator|->
 name|aac_daemontime
 argument_list|,
-literal|30
-operator|*
 literal|60
 operator|*
 name|hz
