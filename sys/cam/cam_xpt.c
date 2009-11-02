@@ -17827,6 +17827,12 @@ operator|!=
 name|CAM_LUN_WILDCARD
 condition|)
 continue|continue;
+comment|/* 			 * The async callback could free the device. 			 * If it is a broadcast async, it doesn't hold 			 * device reference, so take our own reference. 			 */
+name|xpt_acquire_device
+argument_list|(
+name|device
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 operator|(
@@ -17861,6 +17867,11 @@ argument_list|,
 name|path
 argument_list|,
 name|async_arg
+argument_list|)
+expr_stmt|;
+name|xpt_release_device
+argument_list|(
+name|device
 argument_list|)
 expr_stmt|;
 block|}
