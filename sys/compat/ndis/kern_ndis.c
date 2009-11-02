@@ -5016,7 +5016,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|status
+name|ENXIO
 operator|)
 return|;
 block|}
