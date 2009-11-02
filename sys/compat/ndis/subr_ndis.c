@@ -5646,7 +5646,7 @@ name|ndis_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|uint32_t
+name|int
 name|rsclen
 decl_stmt|;
 name|block
