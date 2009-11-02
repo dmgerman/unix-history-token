@@ -435,7 +435,7 @@ name|swap_total
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Total amount of available swap storage."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -463,7 +463,7 @@ name|swap_reserved
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Amount of swap storage needed to back all allocated anonymous memory."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -493,7 +493,8 @@ name|overcommit
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Configure virtual memory overcommit behavior. See tuning(7) "
+literal|"for details."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
