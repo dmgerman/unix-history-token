@@ -26,7 +26,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)zdump.c	8.9"
+literal|"@(#)zdump.c	8.10"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,11 +854,6 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|progname
-parameter_list|,
 name|FILE
 modifier|*
 name|stream
@@ -1728,8 +1723,6 @@ condition|)
 block|{
 name|usage
 argument_list|(
-name|progname
-argument_list|,
 name|stdout
 argument_list|,
 name|EXIT_SUCCESS
@@ -1812,8 +1805,6 @@ condition|)
 block|{
 name|usage
 argument_list|(
-name|progname
-argument_list|,
 name|stderr
 argument_list|,
 name|EXIT_FAILURE
@@ -2871,11 +2862,6 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|progname
-parameter_list|,
 name|FILE
 modifier|*
 name|stream
