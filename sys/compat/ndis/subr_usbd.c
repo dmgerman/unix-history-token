@@ -2734,7 +2734,9 @@ operator|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|USBD_STATUS_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -6704,7 +6706,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 operator|*
 name|len
@@ -6718,7 +6722,9 @@ operator|.
 name|uuh_len
 expr_stmt|;
 return|return
+operator|(
 name|urb
+operator|)
 return|;
 block|}
 end_function
@@ -6856,7 +6862,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|selconf
 operator|->
@@ -7109,7 +7117,6 @@ name|uvi_supported_vers
 operator|=
 name|USB_VER_2_0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7354,7 +7361,6 @@ argument_list|(
 literal|"USBD dummy called\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
