@@ -123,6 +123,14 @@ name|msgbufp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|msgbuf_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|msgbufinit
