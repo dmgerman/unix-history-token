@@ -455,6 +455,26 @@ name|cam_error_scsi_flags
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CAM_EAF_PRINT_NONE
+init|=
+literal|0x00
+block|,
+name|CAM_EAF_PRINT_STATUS
+init|=
+literal|0x10
+block|,
+name|CAM_EAF_PRINT_RESULT
+init|=
+literal|0x20
+block|}
+name|cam_error_ata_flags
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|cam_status_entry

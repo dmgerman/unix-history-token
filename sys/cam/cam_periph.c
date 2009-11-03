@@ -6466,6 +6466,15 @@ argument_list|,
 literal|"Request completed with CAM_ATA_STATUS_ERROR\n"
 argument_list|)
 expr_stmt|;
+name|cam_error_print
+argument_list|(
+name|ccb
+argument_list|,
+name|CAM_ESF_ALL
+argument_list|,
+name|CAM_EPF_ALL
+argument_list|)
+expr_stmt|;
 name|printed
 operator|++
 expr_stmt|;
