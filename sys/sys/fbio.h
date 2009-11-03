@@ -1065,6 +1065,10 @@ define|#
 directive|define
 name|V_INFO_VESA
 value|(1<< 3)
+define|#
+directive|define
+name|V_INFO_NONVGA
+value|(1<< 4)
 name|int
 name|vi_width
 decl_stmt|;
