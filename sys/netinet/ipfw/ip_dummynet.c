@@ -1422,6 +1422,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Flow queue is idle if:  *   1) it's empty for at least 1 tick  *   2) it has invalid timestamp (WF2Q case)  *   3) parent pipe has no 'exhausted' burst.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_IS_IDLE
+parameter_list|(
+name|q
+parameter_list|)
+value|((q)->head == NULL&& (q)->S == (q)->F + 1&& \ 	curr_time> (q)->idle_time + 1&& \ 	((q)->numbytes + (curr_time - (q)->idle_time - 1) * \ 	(q)->fs->pipe->bandwidth>= q->fs->pipe->burst))
+end_define
+
+begin_comment
 comment|/*  * Heap management functions.  *  * In the heap, first node is element 0. Children of i are 2i+1 and 2i+2.  * Some macros help finding parent/children so we can optimize them.  *  * heap_init() is called to expand the heap when needed.  * Increment size in blocks of 16 entries.  * XXX failure to allocate a new element is a pretty bad failure  * as we basically stall a whole queue forever!!  * Returns 1 on error, 0 on success  */
 end_comment
 
@@ -4732,21 +4746,11 @@ condition|;
 control|)
 if|if
 condition|(
+operator|!
+name|QUEUE_IS_IDLE
+argument_list|(
 name|q
-operator|->
-name|head
-operator|!=
-name|NULL
-operator|||
-name|q
-operator|->
-name|S
-operator|!=
-name|q
-operator|->
-name|F
-operator|+
-literal|1
+argument_list|)
 condition|)
 block|{
 name|prev
@@ -5765,21 +5769,10 @@ if|if
 condition|(
 name|pipe_expire
 operator|&&
+name|QUEUE_IS_IDLE
+argument_list|(
 name|q
-operator|->
-name|head
-operator|==
-name|NULL
-operator|&&
-name|q
-operator|->
-name|S
-operator|==
-name|q
-operator|->
-name|F
-operator|+
-literal|1
+argument_list|)
 condition|)
 block|{
 comment|/* entry is idle and not in any heap, expire it */
@@ -6981,6 +6974,8 @@ operator|-
 name|q
 operator|->
 name|idle_time
+operator|-
+literal|1
 operator|)
 operator|*
 name|pipe
@@ -7042,6 +7037,8 @@ operator|-
 name|pipe
 operator|->
 name|idle_time
+operator|-
+literal|1
 operator|)
 operator|*
 name|pipe
@@ -7050,6 +7047,12 @@ name|bandwidth
 expr_stmt|;
 if|if
 condition|(
+name|pipe
+operator|->
+name|numbytes
+operator|>
+literal|0
+operator|&&
 name|pipe
 operator|->
 name|numbytes
