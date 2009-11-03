@@ -1256,6 +1256,13 @@ argument_list|,
 name|dunit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|child
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* 	 * Set hard-wired resources for hinted child using 	 * specific RIDs. 	 */
 name|mem_hints_count
 operator|=
@@ -1510,6 +1517,30 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|child
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|bus
+argument_list|,
+literal|"failed to add child: %s%d\n"
+argument_list|,
+name|name
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* should we free this in nexus_child_detached? */
 name|device_set_ivars
 argument_list|(
