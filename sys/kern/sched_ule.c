@@ -2414,11 +2414,9 @@ condition|(
 operator|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_flag
+name|td_flags
 operator|&
-name|P_NOLOAD
+name|TDF_NOLOAD
 operator|)
 operator|==
 literal|0
@@ -2508,11 +2506,9 @@ condition|(
 operator|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_flag
+name|td_flags
 operator|&
-name|P_NOLOAD
+name|TDF_NOLOAD
 operator|)
 operator|==
 literal|0
