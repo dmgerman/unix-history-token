@@ -12271,7 +12271,7 @@ name|wh
 operator|->
 name|i_fc
 index|[
-literal|10
+literal|0
 index|]
 operator|&
 name|IEEE80211_FC0_TYPE_MASK
