@@ -2146,6 +2146,10 @@ name|uint32_t
 name|eslots
 decl_stmt|;
 comment|/* Slots in error */
+name|uint32_t
+name|toslots
+decl_stmt|;
+comment|/* Slots in timeout */
 name|int
 name|numrslots
 decl_stmt|;
@@ -2166,6 +2170,10 @@ name|readlog
 decl_stmt|;
 comment|/* Our READ LOG active */
 name|int
+name|fatalerr
+decl_stmt|;
+comment|/* Fatal error happend */
+name|int
 name|recovery
 decl_stmt|;
 comment|/* Some slots are in error */
@@ -2173,10 +2181,6 @@ name|int
 name|lastslot
 decl_stmt|;
 comment|/* Last used slot */
-name|int
-name|taggedtarget
-decl_stmt|;
-comment|/* Last tagged target */
 name|union
 name|ccb
 modifier|*
