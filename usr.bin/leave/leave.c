@@ -113,6 +113,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|doalarm
 parameter_list|(
