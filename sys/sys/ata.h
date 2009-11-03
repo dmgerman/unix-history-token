@@ -704,11 +704,11 @@ value|0x000F
 define|#
 directive|define
 name|ATA_PSS_LSSABOVE512
-value|0x2000
+value|0x1000
 define|#
 directive|define
 name|ATA_PSS_MULTLS
-value|0x4000
+value|0x2000
 comment|/*107*/
 name|u_int16_t
 name|isd
