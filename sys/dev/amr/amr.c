@@ -949,24 +949,14 @@ name|sc
 argument_list|)
 operator|)
 condition|)
-block|)
-function|return
-parameter_list|(
+return|return
+operator|(
 name|ENXIO
-parameter_list|)
-function|;
-end_function
-
-begin_endif
+operator|)
+return|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*      * Quiz controller for features and limits.      */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|amr_query_controller
@@ -979,9 +969,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-end_if
-
-begin_expr_stmt
 name|debug
 argument_list|(
 literal|2
@@ -989,33 +976,18 @@ argument_list|,
 literal|"controller query complete"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*      * Setup sysctls.      */
-end_comment
-
-begin_expr_stmt
 name|amr_init_sysctl
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|#
 directive|if
 name|AMR_ENABLE_CAM
 operator|!=
 literal|0
-end_if
-
-begin_comment
 comment|/*      * Attach our 'real' SCSI channels to CAM.      */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|amr_cam_attach
@@ -1028,9 +1000,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-end_if
-
-begin_expr_stmt
 name|debug
 argument_list|(
 literal|2
@@ -1038,18 +1007,9 @@ argument_list|,
 literal|"CAM attach done"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*      * Create the control device.      */
-end_comment
-
-begin_expr_stmt
 name|sc
 operator|->
 name|amr_dev_t
@@ -1084,9 +1044,6 @@ name|amr_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|amr_dev_t
@@ -1095,15 +1052,9 @@ name|si_drv1
 operator|=
 name|sc
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|linux_no_adapter
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|device_get_unit
@@ -1124,13 +1075,7 @@ argument_list|,
 literal|"megadev0"
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/*      * Schedule ourselves to bring the controller up once interrupts are      * available.      */
-end_comment
-
-begin_expr_stmt
 name|bzero
 argument_list|(
 operator|&
@@ -1145,9 +1090,6 @@ name|intr_config_hook
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|amr_ich
@@ -1156,9 +1098,6 @@ name|ich_func
 operator|=
 name|amr_startup
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|amr_ich
@@ -1167,9 +1106,6 @@ name|ich_arg
 operator|=
 name|sc
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|config_intrhook_establish
@@ -1198,21 +1134,12 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-end_if
-
-begin_comment
 comment|/*      * Print a little information about the controller.      */
-end_comment
-
-begin_expr_stmt
 name|amr_describe_controller
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|debug
 argument_list|(
 literal|2
@@ -1220,23 +1147,20 @@ argument_list|,
 literal|"attach complete"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/********************************************************************************  * Locate disk resources and attach children to them.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|void
 name|amr_startup
 parameter_list|(
