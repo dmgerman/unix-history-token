@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -92,6 +92,9 @@ name|TerminatorInst
 decl_stmt|;
 name|class
 name|LLVMContext
+decl_stmt|;
+name|class
+name|BlockAddress
 decl_stmt|;
 name|template
 operator|<
@@ -217,6 +220,10 @@ decl|<
 name|BasicBlock
 decl|>
 block|{
+name|friend
+name|class
+name|BlockAddress
+decl_stmt|;
 name|public
 label|:
 typedef|typedef
@@ -396,9 +403,9 @@ name|Parent
 return|;
 block|}
 comment|/// use_back - Specialize the methods defined in Value, as we know that an
-comment|/// BasicBlock can only be used by Instructions (specifically PHI nodes and
-comment|/// terminators).
-name|Instruction
+comment|/// BasicBlock can only be used by Users (specifically PHI nodes, terminators,
+comment|/// and BlockAddress's).
+name|User
 modifier|*
 name|use_back
 parameter_list|()
@@ -406,7 +413,7 @@ block|{
 return|return
 name|cast
 operator|<
-name|Instruction
+name|User
 operator|>
 operator|(
 operator|*
@@ -416,7 +423,7 @@ operator|)
 return|;
 block|}
 specifier|const
-name|Instruction
+name|User
 operator|*
 name|use_back
 argument_list|()
@@ -425,7 +432,7 @@ block|{
 return|return
 name|cast
 operator|<
-name|Instruction
+name|User
 operator|>
 operator|(
 operator|*
@@ -857,6 +864,51 @@ init|=
 literal|""
 parameter_list|)
 function_decl|;
+comment|/// hasAddressTaken - returns true if there are any uses of this basic block
+comment|/// other than direct branches, switches, etc. to it.
+name|bool
+name|hasAddressTaken
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubclassData
+operator|!=
+literal|0
+return|;
+block|}
+name|private
+label|:
+comment|/// AdjustBlockAddressRefCount - BasicBlock stores the number of BlockAddress
+comment|/// objects using it.  This is almost always 0, sometimes one, possibly but
+comment|/// almost never 2, and inconceivably 3 or more.
+name|void
+name|AdjustBlockAddressRefCount
+parameter_list|(
+name|int
+name|Amt
+parameter_list|)
+block|{
+name|SubclassData
+operator|+=
+name|Amt
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|int
+operator|)
+operator|(
+name|char
+operator|)
+name|SubclassData
+operator|>=
+literal|0
+operator|&&
+literal|"Refcount wrap-around"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 block|}

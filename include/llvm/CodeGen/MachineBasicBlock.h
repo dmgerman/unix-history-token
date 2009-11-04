@@ -303,6 +303,11 @@ comment|/// exception handler.
 name|bool
 name|IsLandingPad
 decl_stmt|;
+comment|/// AddressTaken - Indicate that this basic block is potentially the
+comment|/// target of an indirect branch.
+name|bool
+name|AddressTaken
+decl_stmt|;
 comment|// Intrusive list support
 name|MachineBasicBlock
 argument_list|()
@@ -344,6 +349,28 @@ block|{
 return|return
 name|BB
 return|;
+block|}
+comment|/// hasAddressTaken - Test whether this block is potentially the target
+comment|/// of an indirect branch.
+name|bool
+name|hasAddressTaken
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AddressTaken
+return|;
+block|}
+comment|/// setHasAddressTaken - Set this block to reflect that it potentially
+comment|/// is the target of an indirect branch.
+name|void
+name|setHasAddressTaken
+parameter_list|()
+block|{
+name|AddressTaken
+operator|=
+name|true
+expr_stmt|;
 block|}
 comment|/// getParent - Return the MachineFunction containing this basic block.
 comment|///

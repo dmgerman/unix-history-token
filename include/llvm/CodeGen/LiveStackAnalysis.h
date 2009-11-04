@@ -214,13 +214,6 @@ name|end
 argument_list|()
 return|;
 block|}
-name|void
-name|scaleNumbering
-parameter_list|(
-name|int
-name|factor
-parameter_list|)
-function_decl|;
 name|unsigned
 name|getNumIntervals
 argument_list|()

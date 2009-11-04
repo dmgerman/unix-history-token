@@ -471,6 +471,11 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createNEONMoveFixPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createThumb2ITBlockPass
 parameter_list|()
 function_decl|;

@@ -422,6 +422,22 @@ argument|unsigned OpNum
 argument_list|)
 block|;
 name|void
+name|printVFPf32ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|)
+block|{}
+name|void
+name|printVFPf64ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|)
+block|{}
+name|void
 name|printPCLabel
 argument_list|(
 argument|const MCInst *MI

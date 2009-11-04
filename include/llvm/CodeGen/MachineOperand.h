@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -79,13 +79,13 @@ name|class
 name|ConstantFP
 decl_stmt|;
 name|class
+name|BlockAddress
+decl_stmt|;
+name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|GlobalValue
-decl_stmt|;
-name|class
-name|MDNode
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -136,8 +136,8 @@ comment|///< Name of external global symbol
 name|MO_GlobalAddress
 block|,
 comment|///< Address of a global value
-name|MO_Metadata
-comment|///< Metadata info
+name|MO_BlockAddress
+comment|///< Address of a basic block
 block|}
 enum|;
 name|private
@@ -269,11 +269,11 @@ modifier|*
 name|GV
 decl_stmt|;
 comment|// For MO_GlobalAddress.
-name|MDNode
+name|BlockAddress
 modifier|*
-name|Node
+name|BA
 decl_stmt|;
-comment|// For MO_Metadata.
+comment|// For MO_BlockAddress.
 block|}
 name|Val
 union|;
@@ -508,16 +508,16 @@ operator|==
 name|MO_ExternalSymbol
 return|;
 block|}
-comment|/// isMetadata - Tests if this is a MO_Metadata operand.
+comment|/// isBlockAddress - Tests if this is a MO_BlockAddress operand.
 name|bool
-name|isMetadata
+name|isBlockAddress
 argument_list|()
 specifier|const
 block|{
 return|return
 name|OpKind
 operator|==
-name|MO_Metadata
+name|MO_BlockAddress
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1025,12 +1025,20 @@ operator|.
 name|GV
 return|;
 block|}
-name|MDNode
+name|BlockAddress
 operator|*
-name|getMDNode
+name|getBlockAddress
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|isBlockAddress
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
 return|return
 name|Contents
 operator|.
@@ -1038,7 +1046,7 @@ name|OffsetedInfo
 operator|.
 name|Val
 operator|.
-name|Node
+name|BA
 return|;
 block|}
 comment|/// getOffset - Return the offset from the symbol in this operand. This always
@@ -1058,6 +1066,9 @@ name|isSymbol
 argument_list|()
 operator|||
 name|isCPI
+argument_list|()
+operator|||
+name|isBlockAddress
 argument_list|()
 operator|)
 operator|&&
@@ -1141,7 +1152,7 @@ operator|||
 name|isCPI
 argument_list|()
 operator|||
-name|isMetadata
+name|isBlockAddress
 argument_list|()
 operator|)
 operator|&&
@@ -1673,62 +1684,6 @@ return|;
 block|}
 specifier|static
 name|MachineOperand
-name|CreateMDNode
-parameter_list|(
-name|MDNode
-modifier|*
-name|N
-parameter_list|,
-name|int64_t
-name|Offset
-parameter_list|,
-name|unsigned
-name|char
-name|TargetFlags
-init|=
-literal|0
-parameter_list|)
-block|{
-name|MachineOperand
-name|Op
-argument_list|(
-name|MachineOperand
-operator|::
-name|MO_Metadata
-argument_list|)
-decl_stmt|;
-name|Op
-operator|.
-name|Contents
-operator|.
-name|OffsetedInfo
-operator|.
-name|Val
-operator|.
-name|Node
-operator|=
-name|N
-expr_stmt|;
-name|Op
-operator|.
-name|setOffset
-argument_list|(
-name|Offset
-argument_list|)
-expr_stmt|;
-name|Op
-operator|.
-name|setTargetFlags
-argument_list|(
-name|TargetFlags
-argument_list|)
-expr_stmt|;
-return|return
-name|Op
-return|;
-block|}
-specifier|static
-name|MachineOperand
 name|CreateES
 parameter_list|(
 specifier|const
@@ -1778,6 +1733,47 @@ argument_list|(
 name|TargetFlags
 argument_list|)
 expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
+name|CreateBA
+parameter_list|(
+name|BlockAddress
+modifier|*
+name|BA
+parameter_list|)
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_BlockAddress
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|OffsetedInfo
+operator|.
+name|Val
+operator|.
+name|BA
+operator|=
+name|BA
+expr_stmt|;
+name|Op
+operator|.
+name|setOffset
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// Offset is always 0.
 return|return
 name|Op
 return|;

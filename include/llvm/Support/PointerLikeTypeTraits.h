@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -137,7 +137,7 @@ name|P
 operator|)
 return|;
 block|}
-comment|/// Note, we assume here that malloc returns objects at least 8-byte aligned.
+comment|/// Note, we assume here that malloc returns objects at least 4-byte aligned.
 comment|/// However, this may be wrong, or pointers may be from something other than
 comment|/// malloc.  In this case, you should specialize this template to reduce this.
 comment|///

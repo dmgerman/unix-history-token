@@ -228,7 +228,23 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
-block|;     }
+block|;
+name|virtual
+name|bool
+name|AnalyzeBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *&TBB
+argument_list|,
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify
+argument_list|)
+specifier|const
+block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt

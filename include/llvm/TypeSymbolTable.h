@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -183,9 +189,18 @@ parameter_list|(
 specifier|const
 name|StringRef
 modifier|&
-name|name
+name|Name
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|tmap
+operator|.
+name|find
+argument_list|(
+name|Name
+argument_list|)
+return|;
+block|}
 comment|/// Lookup the type associated with name.
 comment|/// @returns end() if the name is not found, or an iterator at the entry for
 comment|/// Type.
@@ -195,10 +210,19 @@ argument_list|(
 specifier|const
 name|StringRef
 operator|&
-name|name
+name|Name
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|tmap
+operator|.
+name|find
+argument_list|(
+name|Name
+argument_list|)
+return|;
+block|}
 comment|/// @returns true iff the symbol table is empty.
 comment|/// @brief Determine if the symbol table is empty
 specifier|inline

@@ -337,8 +337,8 @@ function_decl|;
 comment|/// SplitCriticalEdge - If this edge is a critical edge, insert a new node to
 comment|/// split the critical edge.  This will update DominatorTree and
 comment|/// DominatorFrontier information if it is available, thus calling this pass
-comment|/// will not invalidate either of them. This returns true if the edge was split,
-comment|/// false otherwise.
+comment|/// will not invalidate either of them. This returns the new block if the edge
+comment|/// was split, null otherwise.
 comment|///
 comment|/// If MergeIdenticalEdges is true (not the default), *all* edges from TI to the
 comment|/// specified successor will be merged into the same critical edge block.
@@ -346,6 +346,11 @@ comment|/// This is most commonly interesting with switch instructions, which ma
 comment|/// have many edges to any one destination.  This ensures that all edges to that
 comment|/// dest go to one block instead of each going to a different block, but isn't
 comment|/// the standard definition of a "critical edge".
+comment|///
+comment|/// It is invalid to call this function on a critical edge that starts at an
+comment|/// IndirectBrInst.  Splitting these edges will almost always create an invalid
+comment|/// program because the address of the new block won't be the one that is jumped
+comment|/// to.
 comment|///
 name|BasicBlock
 modifier|*

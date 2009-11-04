@@ -250,6 +250,23 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+comment|/// getMatchingSuperRegClass - Return a subclass of the specified register
+comment|/// class A so that each register in it has a sub-register of the
+comment|/// specified sub-register index which is in the specified register class B.
+name|virtual
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getMatchingSuperRegClass
+argument_list|(
+argument|const TargetRegisterClass *A
+argument_list|,
+argument|const TargetRegisterClass *B
+argument_list|,
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -308,6 +325,13 @@ specifier|const
 block|;
 name|bool
 name|hasFP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|needsStackRealignment
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)

@@ -2394,6 +2394,29 @@ argument_list|,
 argument|unsigned Encoding
 argument_list|)
 block|;
+comment|/// CreateBasicType - Create a basic type like int, float, etc.
+name|DIBasicType
+name|CreateBasicTypeEx
+argument_list|(
+argument|DIDescriptor Context
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|DICompileUnit CompileUnit
+argument_list|,
+argument|unsigned LineNumber
+argument_list|,
+argument|Constant *SizeInBits
+argument_list|,
+argument|Constant *AlignInBits
+argument_list|,
+argument|Constant *OffsetInBits
+argument_list|,
+argument|unsigned Flags
+argument_list|,
+argument|unsigned Encoding
+argument_list|)
+block|;
 comment|/// CreateDerivedType - Create a derived type like const qualified type,
 comment|/// pointer, typedef, etc.
 name|DIDerivedType
@@ -2420,6 +2443,32 @@ argument_list|,
 argument|DIType DerivedFrom
 argument_list|)
 block|;
+comment|/// CreateDerivedType - Create a derived type like const qualified type,
+comment|/// pointer, typedef, etc.
+name|DIDerivedType
+name|CreateDerivedTypeEx
+argument_list|(
+argument|unsigned Tag
+argument_list|,
+argument|DIDescriptor Context
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|DICompileUnit CompileUnit
+argument_list|,
+argument|unsigned LineNumber
+argument_list|,
+argument|Constant *SizeInBits
+argument_list|,
+argument|Constant *AlignInBits
+argument_list|,
+argument|Constant *OffsetInBits
+argument_list|,
+argument|unsigned Flags
+argument_list|,
+argument|DIType DerivedFrom
+argument_list|)
+block|;
 comment|/// CreateCompositeType - Create a composite type like array, struct, etc.
 name|DICompositeType
 name|CreateCompositeType
@@ -2439,6 +2488,36 @@ argument_list|,
 argument|uint64_t AlignInBits
 argument_list|,
 argument|uint64_t OffsetInBits
+argument_list|,
+argument|unsigned Flags
+argument_list|,
+argument|DIType DerivedFrom
+argument_list|,
+argument|DIArray Elements
+argument_list|,
+argument|unsigned RunTimeLang =
+literal|0
+argument_list|)
+block|;
+comment|/// CreateCompositeType - Create a composite type like array, struct, etc.
+name|DICompositeType
+name|CreateCompositeTypeEx
+argument_list|(
+argument|unsigned Tag
+argument_list|,
+argument|DIDescriptor Context
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|DICompileUnit CompileUnit
+argument_list|,
+argument|unsigned LineNumber
+argument_list|,
+argument|Constant *SizeInBits
+argument_list|,
+argument|Constant *AlignInBits
+argument_list|,
+argument|Constant *OffsetInBits
 argument_list|,
 argument|unsigned Flags
 argument_list|,

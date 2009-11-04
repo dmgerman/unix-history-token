@@ -257,7 +257,7 @@ name|Commutable
 block|,
 name|ConvertibleTo3Addr
 block|,
-name|UsesCustomDAGSchedInserter
+name|UsesCustomInserter
 block|,
 name|Rematerializable
 block|,
@@ -1035,7 +1035,7 @@ name|ConvertibleTo3Addr
 operator|)
 return|;
 block|}
-comment|/// usesCustomDAGSchedInsertionHook - Return true if this instruction requires
+comment|/// usesCustomInsertionHook - Return true if this instruction requires
 comment|/// custom insertion support when the DAG scheduler is inserting it into a
 comment|/// machine basic block.  If this is true for the instruction, it basically
 comment|/// means that it is a pseudo instruction used at SelectionDAG time that is
@@ -1044,7 +1044,7 @@ comment|///
 comment|/// If this is true, the TargetLoweringInfo::InsertAtEndOfBasicBlock method
 comment|/// is used to insert this into the MachineBasicBlock.
 name|bool
-name|usesCustomDAGSchedInsertionHook
+name|usesCustomInsertionHook
 argument_list|()
 specifier|const
 block|{
@@ -1056,7 +1056,7 @@ literal|1
 operator|<<
 name|TID
 operator|::
-name|UsesCustomDAGSchedInserter
+name|UsesCustomInserter
 operator|)
 return|;
 block|}

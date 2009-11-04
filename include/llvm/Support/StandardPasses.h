@@ -320,28 +320,6 @@ if|if
 condition|(
 name|UnitAtATime
 condition|)
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createRaiseAllocationsPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|// call %malloc -> malloc inst
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createCFGSimplificationPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|// Clean up disgusting code
-if|if
-condition|(
-name|UnitAtATime
-condition|)
 block|{
 name|PM
 operator|->
@@ -356,20 +334,11 @@ name|PM
 operator|->
 name|add
 argument_list|(
-name|createGlobalDCEPass
+name|createIPSCCPPass
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|// Remove unused fns and globs
-comment|// IP Constant Propagation
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createIPConstantPropagationPass
-argument_list|()
-argument_list|)
-expr_stmt|;
+comment|// IP SCCP
 name|PM
 operator|->
 name|add
@@ -398,13 +367,11 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Clean up after IPCP& DAE
+comment|// Start of CallGraph SCC passes.
 if|if
 condition|(
 name|UnitAtATime
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|HaveExceptions
 condition|)
 name|PM
@@ -416,16 +383,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Remove dead EH info
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createFunctionAttrsPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|// Set readonly/readnone attrs
-block|}
 if|if
 condition|(
 name|InliningPass
@@ -437,6 +394,19 @@ argument_list|(
 name|InliningPass
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|UnitAtATime
+condition|)
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createFunctionAttrsPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|// Set readonly/readnone attrs
 if|if
 condition|(
 name|OptimizationLevel
@@ -452,6 +422,16 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Scalarize uninlined fn args
+comment|// Start of function pass.
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createScalarReplAggregatesPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|// Break up aggregate allocas
 if|if
 condition|(
 name|SimplifyLibCalls
@@ -496,20 +476,12 @@ name|PM
 operator|->
 name|add
 argument_list|(
-name|createScalarReplAggregatesPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|// Break up aggregate allocas
-name|PM
-operator|->
-name|add
-argument_list|(
 name|createInstructionCombiningPass
 argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Combine silly seq's
+comment|// FIXME: CondProp breaks critical edges, which is slow.
 name|PM
 operator|->
 name|add
@@ -571,6 +543,10 @@ argument_list|(
 name|createLoopUnswitchPass
 argument_list|(
 name|OptimizeSize
+operator|||
+name|OptimizationLevel
+operator|<
+literal|3
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -718,14 +694,28 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Eliminate dead types
-block|}
+comment|// GlobalOpt already deletes dead functions and globals, at -O3 try a
+comment|// late pass of GlobalDCE.  It is capable of deleting dead cycles.
+if|if
+condition|(
+name|OptimizationLevel
+operator|>
+literal|2
+condition|)
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createGlobalDCEPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|// Remove dead fns and globals.
 if|if
 condition|(
 name|OptimizationLevel
 operator|>
 literal|1
-operator|&&
-name|UnitAtATime
 condition|)
 name|PM
 operator|->
@@ -736,6 +726,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Merge dup global constants
+block|}
 block|}
 specifier|static
 specifier|inline

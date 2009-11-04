@@ -434,6 +434,19 @@ argument_list|(
 argument|const GlobalAddressSDNode *GA
 argument_list|)
 specifier|const
+block|;
+comment|/// isFPImmLegal - Returns true if the target can instruction select the
+comment|/// specified FP immediate natively. If false, the legalizer will
+comment|/// materialize the FP immediate as a load from a constant pool.
+name|virtual
+name|bool
+name|isFPImmLegal
+argument_list|(
+argument|const APFloat&Imm
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

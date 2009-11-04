@@ -1603,7 +1603,9 @@ block|;
 comment|/// getOpcodeAfterMemoryUnfold - Returns the opcode of the would be new
 comment|/// instruction after load / store are unfolded from an instruction of the
 comment|/// specified opcode. It returns zero if the specified unfolding is not
-comment|/// possible.
+comment|/// possible. If LoadRegIndex is non-null, it is filled in with the operand
+comment|/// index of the operand which will hold the register holding the loaded
+comment|/// value.
 name|virtual
 name|unsigned
 name|getOpcodeAfterMemoryUnfold
@@ -1613,6 +1615,9 @@ argument_list|,
 argument|bool UnfoldLoad
 argument_list|,
 argument|bool UnfoldStore
+argument_list|,
+argument|unsigned *LoadRegIndex =
+literal|0
 argument_list|)
 specifier|const
 block|;

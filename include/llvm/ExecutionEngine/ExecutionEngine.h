@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ValueMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
@@ -156,64 +162,80 @@ name|ExecutionEngineState
 block|{
 name|public
 label|:
-name|class
-name|MapUpdatingCVH
+name|struct
+name|AddressMapConfig
 range|:
 name|public
-name|CallbackVH
-block|{
-name|ExecutionEngineState
-operator|&
-name|EES
-block|;
-name|public
-operator|:
-name|MapUpdatingCVH
-argument_list|(
-name|ExecutionEngineState
-operator|&
-name|EES
-argument_list|,
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
-argument_list|)
-block|;
-name|operator
-specifier|const
-name|GlobalValue
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-name|cast
+name|ValueMapConfig
 operator|<
+specifier|const
 name|GlobalValue
-operator|>
-operator|(
-name|getValPtr
-argument_list|()
-operator|)
-return|;
-block|}
-name|virtual
-name|void
-name|deleted
-argument_list|()
-block|;
-name|virtual
-name|void
-name|allUsesReplacedWith
-argument_list|(
-name|Value
 operator|*
-name|new_value
+operator|>
+block|{
+typedef|typedef
+name|ExecutionEngineState
+modifier|*
+name|ExtraData
+typedef|;
+specifier|static
+name|sys
+operator|::
+name|Mutex
+operator|*
+name|getMutex
+argument_list|(
+name|ExecutionEngineState
+operator|*
+name|EES
 argument_list|)
-block|;   }
 decl_stmt|;
+specifier|static
+name|void
+name|onDelete
+parameter_list|(
+name|ExecutionEngineState
+modifier|*
+name|EES
+parameter_list|,
+specifier|const
+name|GlobalValue
+modifier|*
+name|Old
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|onRAUW
+parameter_list|(
+name|ExecutionEngineState
+modifier|*
+parameter_list|,
+specifier|const
+name|GlobalValue
+modifier|*
+parameter_list|,
+specifier|const
+name|GlobalValue
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+typedef|typedef
+name|ValueMap
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|AddressMapConfig
+operator|>
+name|GlobalAddressMapTy
+expr_stmt|;
 name|private
 label|:
 name|ExecutionEngine
@@ -222,17 +244,9 @@ name|EE
 decl_stmt|;
 comment|/// GlobalAddressMap - A mapping between LLVM global values and their
 comment|/// actualized version...
-name|std
-operator|::
-name|map
-operator|<
-name|MapUpdatingCVH
-operator|,
-name|void
-operator|*
-operator|>
+name|GlobalAddressMapTy
 name|GlobalAddressMap
-expr_stmt|;
+decl_stmt|;
 comment|/// GlobalAddressReverseMap - This is the reverse mapping of GlobalAddressMap,
 comment|/// used to convert raw addresses into the LLVM global value that is emitted
 comment|/// at the address.  This map is not computed unless getGlobalValueAtAddress
@@ -260,42 +274,15 @@ name|ExecutionEngine
 operator|&
 name|EE
 argument_list|)
-operator|:
-name|EE
-argument_list|(
-argument|EE
-argument_list|)
-block|{}
-name|MapUpdatingCVH
-name|getVH
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|)
-block|{
-return|return
-name|MapUpdatingCVH
-argument_list|(
-operator|*
-name|this
-argument_list|,
-name|GV
-argument_list|)
-return|;
-block|}
-name|std
-operator|::
-name|map
-operator|<
-name|MapUpdatingCVH
-operator|,
-name|void
-operator|*
-operator|>
-operator|&
+expr_stmt|;
+name|GlobalAddressMapTy
+modifier|&
 name|getGlobalAddressMap
-argument_list|(
-argument|const MutexGuard&
-argument_list|)
+parameter_list|(
+specifier|const
+name|MutexGuard
+modifier|&
+parameter_list|)
 block|{
 return|return
 name|GlobalAddressMap
@@ -340,7 +327,13 @@ name|ToUnmap
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|ExecutionEngine
 block|{
@@ -353,7 +346,7 @@ name|ExecutionEngineState
 name|EEState
 decl_stmt|;
 name|bool
-name|LazyCompilationDisabled
+name|CompilingLazily
 decl_stmt|;
 name|bool
 name|GVCompilationDisabled
@@ -823,9 +816,8 @@ function_decl|;
 comment|/// getPointerToFunction - The different EE's represent function bodies in
 comment|/// different ways.  They should each implement this to say what a function
 comment|/// pointer should look like.  When F is destroyed, the ExecutionEngine will
-comment|/// remove its global mapping but will not yet free its machine code.  Call
-comment|/// freeMachineCodeForFunction(F) explicitly to do that.  Note that global
-comment|/// optimizations can destroy Functions without notifying the ExecutionEngine.
+comment|/// remove its global mapping and free any machine code.  Be sure no threads
+comment|/// are running inside F when that happens.
 comment|///
 name|virtual
 name|void
@@ -835,6 +827,22 @@ parameter_list|(
 name|Function
 modifier|*
 name|F
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// getPointerToBasicBlock - The different EE's represent basic blocks in
+comment|/// different ways.  Return the representation for a blockaddress of the
+comment|/// specified block.
+comment|///
+name|virtual
+name|void
+modifier|*
+name|getPointerToBasicBlock
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
 parameter_list|)
 init|=
 literal|0
@@ -998,8 +1006,19 @@ name|JITEventListener
 modifier|*
 parameter_list|)
 block|{}
-comment|/// DisableLazyCompilation - If called, the JIT will abort if lazy compilation
-comment|/// is ever attempted.
+comment|/// DisableLazyCompilation - When lazy compilation is off (the default), the
+comment|/// JIT will eagerly compile every function reachable from the argument to
+comment|/// getPointerToFunction.  If lazy compilation is turned on, the JIT will only
+comment|/// compile the one function and emit stubs to compile the rest when they're
+comment|/// first called.  If lazy compilation is turned off again while some lazy
+comment|/// stubs are still around, and one of those stubs is called, the program will
+comment|/// abort.
+comment|///
+comment|/// In order to safely compile lazily in a threaded program, the user must
+comment|/// ensure that 1) only one thread at a time can call any particular lazy
+comment|/// stub, and 2) any thread modifying LLVM IR must hold the JIT's lock
+comment|/// (ExecutionEngine::lock) or otherwise ensure that no other thread calls a
+comment|/// lazy stub.  See http://llvm.org/PR5184 for details.
 name|void
 name|DisableLazyCompilation
 parameter_list|(
@@ -1009,18 +1028,31 @@ init|=
 name|true
 parameter_list|)
 block|{
-name|LazyCompilationDisabled
+name|CompilingLazily
 operator|=
+operator|!
 name|Disabled
 expr_stmt|;
 block|}
+name|bool
+name|isCompilingLazily
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CompilingLazily
+return|;
+block|}
+comment|// Deprecated in favor of isCompilingLazily (to reduce double-negatives).
+comment|// Remove this in LLVM 2.8.
 name|bool
 name|isLazyCompilationDisabled
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LazyCompilationDisabled
+operator|!
+name|CompilingLazily
 return|;
 block|}
 comment|/// DisableGVCompilation - If called, the JIT will abort if it's asked to
@@ -1221,7 +1253,13 @@ name|Ty
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|namespace
 name|EngineKind
 block|{
@@ -1253,9 +1291,21 @@ name|Interpreter
 argument_list|)
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// EngineBuilder - Builder class for ExecutionEngines.  Use this by
+end_comment
+
+begin_comment
 comment|/// stack-allocating a builder, chaining the various set* methods, and
+end_comment
+
+begin_comment
 comment|/// terminating it with a .create() call.
+end_comment
+
+begin_decl_stmt
 name|class
 name|EngineBuilder
 block|{
@@ -1464,53 +1514,14 @@ name|create
 parameter_list|()
 function_decl|;
 block|}
-empty_stmt|;
-specifier|inline
-name|bool
-name|operator
-operator|<
-operator|(
-specifier|const
-name|ExecutionEngineState
-operator|::
-name|MapUpdatingCVH
-operator|&
-name|lhs
-operator|,
-specifier|const
-name|ExecutionEngineState
-operator|::
-name|MapUpdatingCVH
-operator|&
-name|rhs
-operator|)
-block|{
-return|return
-name|static_cast
-operator|<
-specifier|const
-name|GlobalValue
-operator|*
-operator|>
-operator|(
-name|lhs
-operator|)
-operator|<
-name|static_cast
-operator|<
-specifier|const
-name|GlobalValue
-operator|*
-operator|>
-operator|(
-name|rhs
-operator|)
-return|;
-block|}
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

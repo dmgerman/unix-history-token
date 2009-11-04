@@ -16,7 +16,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/* LLVM Header File #include "llvm/Support/DataTypes.h" */
+comment|/* LLVM Header File #include "llvm/System/DataTypes.h" */
 end_comment
 
 begin_comment

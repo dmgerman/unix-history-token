@@ -96,18 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/System/RWMutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<map>
 end_include
 
@@ -1630,7 +1618,7 @@ comment|// ConstantCreator - A class that is used to create constants by
 end_comment
 
 begin_comment
-comment|// ValueMap*.  This class should be partially specialized if there is
+comment|// ConstantUniqueMap*.  This class should be partially specialized if there is
 end_comment
 
 begin_comment
@@ -2917,7 +2905,7 @@ name|false
 comment|/*true for arrays and structs*/
 operator|>
 name|class
-name|ValueMap
+name|ConstantUniqueMap
 operator|:
 name|public
 name|AbstractTypeUser
@@ -3050,33 +3038,10 @@ name|AbstractTypeMap
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/// ValueMapLock - Mutex for this map.
-end_comment
-
-begin_expr_stmt
-name|sys
-operator|::
-name|SmartMutex
-operator|<
-name|true
-operator|>
-name|ValueMapLock
-expr_stmt|;
-end_expr_stmt
-
 begin_label
 name|public
 label|:
 end_label
-
-begin_comment
-comment|// NOTE: This function is not locked.  It is the caller's responsibility
-end_comment
-
-begin_comment
-comment|// to enforce proper synchronization.
-end_comment
 
 begin_expr_stmt
 name|typename
@@ -3181,14 +3146,6 @@ end_comment
 
 begin_comment
 comment|/// I->second == 0, and should be filled in.
-end_comment
-
-begin_comment
-comment|/// NOTE: This function is not locked.  It is the caller's responsibility
-end_comment
-
-begin_comment
-comment|// to enforce proper synchronization.
 end_comment
 
 begin_expr_stmt
@@ -3634,17 +3591,6 @@ modifier|&
 name|V
 parameter_list|)
 block|{
-name|sys
-operator|::
-name|SmartScopedLock
-operator|<
-name|true
-operator|>
-name|Lock
-argument_list|(
-name|ValueMapLock
-argument_list|)
-expr_stmt|;
 name|MapKey
 name|Lookup
 argument_list|(
@@ -3884,17 +3830,6 @@ modifier|*
 name|CP
 parameter_list|)
 block|{
-name|sys
-operator|::
-name|SmartScopedLock
-operator|<
-name|true
-operator|>
-name|Lock
-argument_list|(
-name|ValueMapLock
-argument_list|)
-expr_stmt|;
 name|typename
 name|MapTy
 operator|::
@@ -3996,14 +3931,6 @@ end_comment
 
 begin_comment
 comment|/// fact.
-end_comment
-
-begin_comment
-comment|/// NOTE: This function is not locked. It is the responsibility of the
-end_comment
-
-begin_comment
-comment|/// caller to enforce proper synchronization if using this method.
 end_comment
 
 begin_decl_stmt
@@ -4164,17 +4091,6 @@ modifier|*
 name|NewTy
 parameter_list|)
 block|{
-name|sys
-operator|::
-name|SmartScopedLock
-operator|<
-name|true
-operator|>
-name|Lock
-argument_list|(
-name|ValueMapLock
-argument_list|)
-expr_stmt|;
 name|typename
 name|AbstractTypeMapTy
 operator|::
@@ -4447,7 +4363,7 @@ argument_list|(
 name|errs
 argument_list|()
 operator|<<
-literal|"Constant.cpp: ValueMap\n"
+literal|"Constant.cpp: ConstantUniqueMap\n"
 argument_list|)
 block|;   }
 end_expr_stmt

@@ -217,6 +217,19 @@ name|AttrListPtr
 operator|>
 name|Attributes
 expr_stmt|;
+comment|/// GlobalBasicBlockIDs - This map memoizes the basic block ID's referenced by
+comment|/// the "getGlobalBasicBlockID" method.
+name|mutable
+name|DenseMap
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|GlobalBasicBlockIDs
+expr_stmt|;
 typedef|typedef
 name|DenseMap
 operator|<
@@ -501,6 +514,19 @@ return|return
 name|Attributes
 return|;
 block|}
+comment|/// getGlobalBasicBlockID - This returns the function-specific ID for the
+comment|/// specified basic block.  This is relatively expensive information, so it
+comment|/// should only be used by rare constructs such as address-of-label.
+name|unsigned
+name|getGlobalBasicBlockID
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// incorporateFunction/purgeFunction - If you'd like to deal with a function,
 comment|/// use these two methods to get its data into the ValueEnumerator!
 comment|///

@@ -63,12 +63,6 @@ directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
 begin_decl_stmt
 name|using
 name|namespace

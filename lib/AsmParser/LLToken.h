@@ -394,6 +394,8 @@ name|kw_br
 block|,
 name|kw_switch
 block|,
+name|kw_indirectbr
+block|,
 name|kw_invoke
 block|,
 name|kw_unwind
@@ -423,6 +425,8 @@ block|,
 name|kw_extractvalue
 block|,
 name|kw_insertvalue
+block|,
+name|kw_blockaddress
 block|,
 comment|// Unsigned Valued tokens (UIntVal).
 name|GlobalID

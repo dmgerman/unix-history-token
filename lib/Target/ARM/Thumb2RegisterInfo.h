@@ -134,13 +134,6 @@ argument|unsigned PredReg =
 literal|0
 argument_list|)
 specifier|const
-block|;
-name|bool
-name|requiresRegisterScavenging
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
 block|; }
 decl_stmt|;
 block|}

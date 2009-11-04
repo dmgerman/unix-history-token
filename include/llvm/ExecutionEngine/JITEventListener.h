@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -179,16 +179,14 @@ block|{}
 comment|/// NotifyFreeingMachineCode - This is called inside of
 comment|/// freeMachineCodeForFunction(), after the global mapping is removed, but
 comment|/// before the machine code is returned to the allocator.  OldPtr is the
-comment|/// address of the machine code.
+comment|/// address of the machine code and will be the same as the Code parameter to
+comment|/// a previous NotifyFunctionEmitted call.  The Function passed to
+comment|/// NotifyFunctionEmitted may have been destroyed by the time of the matching
+comment|/// NotifyFreeingMachineCode call.
 name|virtual
 name|void
 name|NotifyFreeingMachineCode
 parameter_list|(
-specifier|const
-name|Function
-modifier|&
-name|F
-parameter_list|,
 name|void
 modifier|*
 name|OldPtr

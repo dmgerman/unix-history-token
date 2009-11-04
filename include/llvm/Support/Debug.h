@@ -111,26 +111,32 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// DebugFlag - This boolean is set to true if the '-debug' command line option
-comment|// is specified.  This should probably not be referenced directly, instead, use
-comment|// the DEBUG macro below.
-comment|//
+comment|/// DEBUG_TYPE macro - Files can specify a DEBUG_TYPE as a string, which causes
+comment|/// all of their DEBUG statements to be activatable with -debug-only=thatstring.
+ifndef|#
+directive|ifndef
+name|DEBUG_TYPE
+define|#
+directive|define
+name|DEBUG_TYPE
+value|""
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|NDEBUG
+comment|/// DebugFlag - This boolean is set to true if the '-debug' command line option
+comment|/// is specified.  This should probably not be referenced directly, instead, use
+comment|/// the DEBUG macro below.
+comment|///
 specifier|extern
 name|bool
 name|DebugFlag
 decl_stmt|;
-endif|#
-directive|endif
-comment|// isCurrentDebugType - Return true if the specified string is the debug type
-comment|// specified on the command line, or if none was specified on the command line
-comment|// with the -debug-only=X option.
-comment|//
-ifndef|#
-directive|ifndef
-name|NDEBUG
+comment|/// isCurrentDebugType - Return true if the specified string is the debug type
+comment|/// specified on the command line, or if none was specified on the command line
+comment|/// with the -debug-only=X option.
+comment|///
 name|bool
 name|isCurrentDebugType
 parameter_list|(
@@ -140,40 +146,28 @@ modifier|*
 name|Type
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-define|#
-directive|define
-name|isCurrentDebugType
+comment|/// SetCurrentDebugType - Set the current debug type, as if the -debug-only=X
+comment|/// option were specified.  Note that DebugFlag also needs to be set to true for
+comment|/// debug output to be produced.
+comment|///
+name|void
+name|SetCurrentDebugType
 parameter_list|(
-name|X
+specifier|const
+name|char
+modifier|*
+name|Type
 parameter_list|)
-value|(false)
-endif|#
-directive|endif
-comment|// DEBUG_WITH_TYPE macro - This macro should be used by passes to emit debug
-comment|// information.  In the '-debug' option is specified on the commandline, and if
-comment|// this is a debug build, then the code specified as the option to the macro
-comment|// will be executed.  Otherwise it will not be.  Example:
-comment|//
-comment|// DEBUG_WITH_TYPE("bitset", errs()<< "Bitset contains: "<< Bitset<< "\n");
-comment|//
-comment|// This will emit the debug information if -debug is present, and -debug-only is
-comment|// not specified, or is specified as "bitset".
-ifdef|#
-directive|ifdef
-name|NDEBUG
-define|#
-directive|define
-name|DEBUG_WITH_TYPE
-parameter_list|(
-name|TYPE
-parameter_list|,
-name|X
-parameter_list|)
-value|do { } while (0)
-else|#
-directive|else
+function_decl|;
+comment|/// DEBUG_WITH_TYPE macro - This macro should be used by passes to emit debug
+comment|/// information.  In the '-debug' option is specified on the commandline, and if
+comment|/// this is a debug build, then the code specified as the option to the macro
+comment|/// will be executed.  Otherwise it will not be.  Example:
+comment|///
+comment|/// DEBUG_WITH_TYPE("bitset", errs()<< "Bitset contains: "<< Bitset<< "\n");
+comment|///
+comment|/// This will emit the debug information if -debug is present, and -debug-only
+comment|/// is not specified, or is specified as "bitset".
 define|#
 directive|define
 name|DEBUG_WITH_TYPE
@@ -184,6 +178,30 @@ name|X
 parameter_list|)
 define|\
 value|do { if (DebugFlag&& isCurrentDebugType(TYPE)) { X; } } while (0)
+else|#
+directive|else
+define|#
+directive|define
+name|isCurrentDebugType
+parameter_list|(
+name|X
+parameter_list|)
+value|(false)
+define|#
+directive|define
+name|SetCurrentDebugType
+parameter_list|(
+name|X
+parameter_list|)
+define|#
+directive|define
+name|DEBUG_WITH_TYPE
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|X
+parameter_list|)
+value|do { } while (0)
 endif|#
 directive|endif
 comment|// DEBUG macro - This macro should be used by passes to emit debug information.
@@ -193,15 +211,6 @@ comment|// executed.  Otherwise it will not be.  Example:
 comment|//
 comment|// DEBUG(errs()<< "Bitset contains: "<< Bitset<< "\n");
 comment|//
-ifndef|#
-directive|ifndef
-name|DEBUG_TYPE
-define|#
-directive|define
-name|DEBUG_TYPE
-value|""
-endif|#
-directive|endif
 define|#
 directive|define
 name|DEBUG

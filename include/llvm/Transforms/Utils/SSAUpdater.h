@@ -127,6 +127,7 @@ name|public
 label|:
 comment|/// SSAUpdater constructor.  If InsertedPHIs is specified, it will be filled
 comment|/// in with all PHI Nodes created by rewriting.
+name|explicit
 name|SSAUpdater
 argument_list|(
 name|SmallVectorImpl
@@ -139,7 +140,7 @@ name|InsertedPHIs
 operator|=
 literal|0
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 operator|~
 name|SSAUpdater
 argument_list|()

@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/ValueMap.h"
 end_include
 
 begin_include
@@ -463,7 +463,7 @@ operator|*
 name|FunctionDbgScope
 block|;
 comment|/// DbgScopeMap - Tracks the scopes in the current function.
-name|DenseMap
+name|ValueMap
 operator|<
 name|MDNode
 operator|*
@@ -510,7 +510,7 @@ name|DbgScopeEndMap
 decl_stmt|;
 comment|/// DbgAbstractScopeMap - Tracks abstract instance scopes in the current
 comment|/// function.
-name|DenseMap
+name|ValueMap
 operator|<
 name|MDNode
 operator|*
@@ -522,7 +522,7 @@ name|DbgAbstractScopeMap
 expr_stmt|;
 comment|/// DbgConcreteScopeMap - Tracks concrete instance scopes in the current
 comment|/// function.
-name|DenseMap
+name|ValueMap
 operator|<
 name|MDNode
 operator|*
@@ -539,7 +539,7 @@ name|DbgConcreteScopeMap
 expr_stmt|;
 comment|/// InlineInfo - Keep track of inlined functions and their location.  This
 comment|/// information is used to populate debug_inlined section.
-name|DenseMap
+name|ValueMap
 operator|<
 name|MDNode
 operator|*

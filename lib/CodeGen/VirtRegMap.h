@@ -299,7 +299,7 @@ comment|/// Virt2SplitKillMap - This is splitted virtual register to its last us
 comment|/// (kill) index mapping.
 name|IndexedMap
 operator|<
-name|LiveIndex
+name|SlotIndex
 operator|>
 name|Virt2SplitKillMap
 expr_stmt|;
@@ -494,7 +494,7 @@ argument_list|)
 operator|,
 name|Virt2SplitKillMap
 argument_list|(
-name|LiveIndex
+name|SlotIndex
 argument_list|()
 argument_list|)
 operator|,
@@ -957,7 +957,7 @@ parameter_list|(
 name|unsigned
 name|virtReg
 parameter_list|,
-name|LiveIndex
+name|SlotIndex
 name|index
 parameter_list|)
 block|{
@@ -969,7 +969,7 @@ operator|=
 name|index
 expr_stmt|;
 block|}
-name|LiveIndex
+name|SlotIndex
 name|getKillPoint
 argument_list|(
 name|unsigned
@@ -997,7 +997,7 @@ index|[
 name|virtReg
 index|]
 operator|=
-name|LiveIndex
+name|SlotIndex
 argument_list|()
 expr_stmt|;
 block|}

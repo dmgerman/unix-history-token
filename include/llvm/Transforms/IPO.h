@@ -153,15 +153,6 @@ name|createGlobalOptimizerPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// createRaiseAllocationsPass - Return a new pass that transforms malloc and
-comment|/// free function calls into malloc and free instructions.
-comment|///
-name|ModulePass
-modifier|*
-name|createRaiseAllocationsPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
 comment|/// createDeadTypeEliminationPass - Return a new pass that eliminates symbol
 comment|/// table entries for types that are never used.
 comment|///

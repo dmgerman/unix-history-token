@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -869,6 +869,7 @@ operator|...
 argument_list|)
 name|END_WITH_NULL
 decl_stmt|;
+comment|/// getOrInsertFunction - Same as above, but without the attributes.
 name|Constant
 modifier|*
 name|getOrInsertFunction

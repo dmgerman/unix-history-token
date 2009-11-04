@@ -603,11 +603,11 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// isLoopExit - True if terminator in the block can branch to another block
+comment|/// isLoopExiting - True if terminator in the block can branch to another block
 comment|/// that is outside of the current loop.
 comment|///
 name|bool
-name|isLoopExit
+name|isLoopExiting
 argument_list|(
 specifier|const
 name|BlockT
@@ -2948,14 +2948,14 @@ literal|"<latch>"
 expr_stmt|;
 if|if
 condition|(
-name|isLoopExit
+name|isLoopExiting
 argument_list|(
 name|BB
 argument_list|)
 condition|)
 name|OS
 operator|<<
-literal|"<exit>"
+literal|"<exiting>"
 expr_stmt|;
 block|}
 name|OS

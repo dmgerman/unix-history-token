@@ -96,6 +96,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BlockAddress
+decl_stmt|;
+name|class
 name|GCStrategy
 decl_stmt|;
 name|class
@@ -897,6 +900,35 @@ name|GetMBBSymbol
 argument_list|(
 name|unsigned
 name|MBBID
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// GetBlockAddressSymbol - Return the MCSymbol used to satisfy BlockAddress
+comment|/// uses of the specified basic block.
+name|MCSymbol
+modifier|*
+name|GetBlockAddressSymbol
+argument_list|(
+specifier|const
+name|BlockAddress
+operator|*
+name|BA
+argument_list|)
+decl|const
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|GetBlockAddressSymbol
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|F
+argument_list|,
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
 argument_list|)
 decl|const
 decl_stmt|;

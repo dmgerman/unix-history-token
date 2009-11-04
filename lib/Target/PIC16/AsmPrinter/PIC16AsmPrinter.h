@@ -294,6 +294,14 @@ name|M
 argument_list|)
 block|;
 name|void
+name|EmitSharedUdata
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+block|;
+name|void
 name|EmitUserSections
 argument_list|(
 name|Module

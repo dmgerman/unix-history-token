@@ -288,7 +288,7 @@ name|bool
 name|hasDelaySlot
 decl_stmt|;
 name|bool
-name|usesCustomDAGSchedInserter
+name|usesCustomInserter
 decl_stmt|;
 name|bool
 name|isVariadic

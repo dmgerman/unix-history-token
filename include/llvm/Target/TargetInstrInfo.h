@@ -368,8 +368,9 @@ decl|const
 decl_stmt|;
 name|public
 label|:
-comment|/// Return true if the instruction is a register to register move and return
-comment|/// the source and dest operands and their sub-register indices by reference.
+comment|/// isMoveInstr - Return true if the instruction is a register to register
+comment|/// move and return the source and dest operands and their sub-register
+comment|/// indices by reference.
 name|virtual
 name|bool
 name|isMoveInstr
@@ -397,6 +398,133 @@ name|DstSubIdx
 argument_list|)
 decl|const
 block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// isIdentityCopy - Return true if the instruction is a copy (or
+comment|/// extract_subreg, insert_subreg, subreg_to_reg) where the source and
+comment|/// destination registers are the same.
+name|bool
+name|isIdentityCopy
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
+block|{
+name|unsigned
+name|SrcReg
+decl_stmt|,
+name|DstReg
+decl_stmt|,
+name|SrcSubIdx
+decl_stmt|,
+name|DstSubIdx
+decl_stmt|;
+if|if
+condition|(
+name|isMoveInstr
+argument_list|(
+name|MI
+argument_list|,
+name|SrcReg
+argument_list|,
+name|DstReg
+argument_list|,
+name|SrcSubIdx
+argument_list|,
+name|DstSubIdx
+argument_list|)
+operator|&&
+name|SrcReg
+operator|==
+name|DstReg
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|MI
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|TargetInstrInfo
+operator|::
+name|EXTRACT_SUBREG
+operator|&&
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+operator|==
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+operator|(
+name|MI
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|TargetInstrInfo
+operator|::
+name|INSERT_SUBREG
+operator|||
+name|MI
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|TargetInstrInfo
+operator|::
+name|SUBREG_TO_REG
+operator|)
+operator|&&
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+operator|==
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+literal|2
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
 return|return
 name|false
 return|;
@@ -1116,7 +1244,9 @@ block|}
 comment|/// getOpcodeAfterMemoryUnfold - Returns the opcode of the would be new
 comment|/// instruction after load / store are unfolded from an instruction of the
 comment|/// specified opcode. It returns zero if the specified unfolding is not
-comment|/// possible.
+comment|/// possible. If LoadRegIndex is non-null, it is filled in with the operand
+comment|/// index of the operand which will hold the register holding the loaded
+comment|/// value.
 name|virtual
 name|unsigned
 name|getOpcodeAfterMemoryUnfold
@@ -1129,6 +1259,12 @@ name|UnfoldLoad
 argument_list|,
 name|bool
 name|UnfoldStore
+argument_list|,
+name|unsigned
+operator|*
+name|LoadRegIndex
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{

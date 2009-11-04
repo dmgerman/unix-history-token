@@ -1,0 +1,525 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//=- llvm/CodeGen/AggressiveAntiDepBreaker.h - Anti-Dep Support -*- C++ -*-=//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file implements the AggressiveAntiDepBreaker class, which
+end_comment
+
+begin_comment
+comment|// implements register anti-dependence breaking during post-RA
+end_comment
+
+begin_comment
+comment|// scheduling. It attempts to break all anti-dependencies within a
+end_comment
+
+begin_comment
+comment|// block.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_CODEGEN_AGGRESSIVEANTIDEPBREAKER_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CODEGEN_AGGRESSIVEANTIDEPBREAKER_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|"AntiDepBreaker.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFrameInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ScheduleDAG.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+comment|/// Class AggressiveAntiDepState
+comment|/// Contains all the state necessary for anti-dep breaking. We place
+comment|/// into a separate class so be can conveniently save/restore it to
+comment|/// enable multi-pass anti-dep breaking.
+name|class
+name|AggressiveAntiDepState
+block|{
+name|public
+label|:
+comment|/// RegisterReference - Information about a register reference
+comment|/// within a liverange
+typedef|typedef
+struct|struct
+block|{
+comment|/// Operand - The registers operand
+name|MachineOperand
+modifier|*
+name|Operand
+decl_stmt|;
+comment|/// RC - The register class
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+decl_stmt|;
+block|}
+name|RegisterReference
+typedef|;
+name|private
+label|:
+comment|/// GroupNodes - Implements a disjoint-union data structure to
+comment|/// form register groups. A node is represented by an index into
+comment|/// the vector. A node can "point to" itself to indicate that it
+comment|/// is the parent of a group, or point to another node to indicate
+comment|/// that it is a member of the same group as that node.
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|GroupNodes
+expr_stmt|;
+comment|/// GroupNodeIndices - For each register, the index of the GroupNode
+comment|/// currently representing the group that the register belongs to.
+comment|/// Register 0 is always represented by the 0 group, a group
+comment|/// composed of registers that are not eligible for anti-aliasing.
+name|unsigned
+name|GroupNodeIndices
+index|[
+name|TargetRegisterInfo
+operator|::
+name|FirstVirtualRegister
+index|]
+decl_stmt|;
+comment|/// RegRefs - Map registers to all their references within a live range.
+name|std
+operator|::
+name|multimap
+operator|<
+name|unsigned
+operator|,
+name|RegisterReference
+operator|>
+name|RegRefs
+expr_stmt|;
+comment|/// KillIndices - The index of the most recent kill (proceding bottom-up),
+comment|/// or ~0u if the register is not live.
+name|unsigned
+name|KillIndices
+index|[
+name|TargetRegisterInfo
+operator|::
+name|FirstVirtualRegister
+index|]
+decl_stmt|;
+comment|/// DefIndices - The index of the most recent complete def (proceding bottom
+comment|/// up), or ~0u if the register is live.
+name|unsigned
+name|DefIndices
+index|[
+name|TargetRegisterInfo
+operator|::
+name|FirstVirtualRegister
+index|]
+decl_stmt|;
+name|public
+label|:
+name|AggressiveAntiDepState
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|BB
+argument_list|)
+expr_stmt|;
+comment|/// GetKillIndices - Return the kill indices.
+name|unsigned
+modifier|*
+name|GetKillIndices
+parameter_list|()
+block|{
+return|return
+name|KillIndices
+return|;
+block|}
+comment|/// GetDefIndices - Return the define indices.
+name|unsigned
+modifier|*
+name|GetDefIndices
+parameter_list|()
+block|{
+return|return
+name|DefIndices
+return|;
+block|}
+comment|/// GetRegRefs - Return the RegRefs map.
+name|std
+operator|::
+name|multimap
+operator|<
+name|unsigned
+operator|,
+name|RegisterReference
+operator|>
+operator|&
+name|GetRegRefs
+argument_list|()
+block|{
+return|return
+name|RegRefs
+return|;
+block|}
+comment|// GetGroup - Get the group for a register. The returned value is
+comment|// the index of the GroupNode representing the group.
+name|unsigned
+name|GetGroup
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+comment|// GetGroupRegs - Return a vector of the registers belonging to a
+comment|// group.
+name|void
+name|GetGroupRegs
+argument_list|(
+name|unsigned
+name|Group
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|Regs
+argument_list|)
+decl_stmt|;
+comment|// UnionGroups - Union Reg1's and Reg2's groups to form a new
+comment|// group. Return the index of the GroupNode representing the
+comment|// group.
+name|unsigned
+name|UnionGroups
+parameter_list|(
+name|unsigned
+name|Reg1
+parameter_list|,
+name|unsigned
+name|Reg2
+parameter_list|)
+function_decl|;
+comment|// LeaveGroup - Remove a register from its current group and place
+comment|// it alone in its own group. Return the index of the GroupNode
+comment|// representing the registers new group.
+name|unsigned
+name|LeaveGroup
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+comment|/// IsLive - Return true if Reg is live
+name|bool
+name|IsLive
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+comment|/// Class AggressiveAntiDepBreaker
+name|class
+name|AggressiveAntiDepBreaker
+range|:
+name|public
+name|AntiDepBreaker
+block|{
+name|MachineFunction
+operator|&
+name|MF
+block|;
+name|MachineRegisterInfo
+operator|&
+name|MRI
+block|;
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+block|;
+comment|/// AllocatableSet - The set of allocatable registers.
+comment|/// We'll be ignoring anti-dependencies on non-allocatable registers,
+comment|/// because they may not be safe to break.
+specifier|const
+name|BitVector
+name|AllocatableSet
+block|;
+comment|/// State - The state used to identify and rename anti-dependence
+comment|/// registers.
+name|AggressiveAntiDepState
+operator|*
+name|State
+block|;
+comment|/// SavedState - The state for the start of an anti-dep
+comment|/// region. Used to restore the state at the beginning of each
+comment|/// pass
+name|AggressiveAntiDepState
+operator|*
+name|SavedState
+block|;
+name|public
+operator|:
+name|AggressiveAntiDepBreaker
+argument_list|(
+name|MachineFunction
+operator|&
+name|MFi
+argument_list|)
+block|;
+operator|~
+name|AggressiveAntiDepBreaker
+argument_list|()
+block|;
+comment|/// GetMaxTrials - As anti-dependencies are broken, additional
+comment|/// dependencies may be exposed, so multiple passes are required.
+name|unsigned
+name|GetMaxTrials
+argument_list|()
+block|;
+comment|/// NeedCandidates - Candidates required.
+name|bool
+name|NeedCandidates
+argument_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Start - Initialize anti-dep breaking for a new basic block.
+name|void
+name|StartBlock
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|BB
+argument_list|)
+block|;
+comment|/// BreakAntiDependencies - Identifiy anti-dependencies along the critical path
+comment|/// of the ScheduleDAG and break them by renaming registers.
+comment|///
+name|unsigned
+name|BreakAntiDependencies
+argument_list|(
+argument|std::vector<SUnit>& SUnits
+argument_list|,
+argument|CandidateMap& Candidates
+argument_list|,
+argument|MachineBasicBlock::iterator& Begin
+argument_list|,
+argument|MachineBasicBlock::iterator& End
+argument_list|,
+argument|unsigned InsertPosIndex
+argument_list|)
+block|;
+comment|/// Observe - Update liveness information to account for the current
+comment|/// instruction, which will not be scheduled.
+comment|///
+name|void
+name|Observe
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned Count
+argument_list|,
+argument|unsigned InsertPosIndex
+argument_list|)
+block|;
+comment|/// Finish - Finish anti-dep breaking for a basic block.
+name|void
+name|FinishBlock
+argument_list|()
+block|;
+name|private
+operator|:
+comment|/// IsImplicitDefUse - Return true if MO represents a register
+comment|/// that is both implicitly used and defined in MI
+name|bool
+name|IsImplicitDefUse
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineOperand
+operator|&
+name|MO
+argument_list|)
+block|;
+comment|/// GetPassthruRegs - If MI implicitly def/uses a register, then
+comment|/// return that register and all subregisters.
+name|void
+name|GetPassthruRegs
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|std
+operator|::
+name|set
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|PassthruRegs
+argument_list|)
+block|;
+name|void
+name|HandleLastUse
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|unsigned KillIdx
+argument_list|,
+argument|const char *tag
+argument_list|)
+block|;
+name|void
+name|PrescanInstruction
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned Count
+argument_list|,
+argument|std::set<unsigned>& PassthruRegs
+argument_list|)
+block|;
+name|void
+name|ScanInstruction
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned Count
+argument_list|)
+block|;
+name|BitVector
+name|GetRenameRegisters
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|;
+name|bool
+name|FindSuitableFreeRegisters
+argument_list|(
+argument|unsigned AntiDepGroupIndex
+argument_list|,
+argument|std::map<unsigned
+argument_list|,
+argument|unsigned>&RenameMap
+argument_list|)
+block|;   }
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+end_unit
+

@@ -148,20 +148,6 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|requiresRegisterScavenging
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|requiresFrameIndexScavenging
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
 name|hasReservedCallFrame
 argument_list|(
 argument|MachineFunction&MF

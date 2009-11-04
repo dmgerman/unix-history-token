@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -142,16 +142,6 @@ argument_list|(
 argument|kInvalid
 argument_list|)
 block|{}
-name|MCOperand
-argument_list|(
-argument|const MCOperand&RHS
-argument_list|)
-block|{
-operator|*
-name|this
-operator|=
-name|RHS
-block|; }
 name|bool
 name|isValid
 argument_list|()

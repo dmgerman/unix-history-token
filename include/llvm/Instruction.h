@@ -173,6 +173,15 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 empty_stmt|;
+name|virtual
+name|Instruction
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 name|public
 label|:
 comment|// Out of line virtual method, so the vtable, etc has a home.
@@ -185,14 +194,11 @@ comment|/// ways except the following:
 comment|///   * The instruction has no parent
 comment|///   * The instruction has no name
 comment|///
-name|virtual
 name|Instruction
 operator|*
 name|clone
 argument_list|()
 specifier|const
-operator|=
-literal|0
 expr_stmt|;
 comment|/// isIdenticalTo - Return true if the specified instruction is exactly
 comment|/// identical to the current one.  This means that all operands match and any

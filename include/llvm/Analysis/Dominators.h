@@ -5221,7 +5221,7 @@ block|}
 end_decl_stmt
 
 begin_function
-name|void
+name|iterator
 name|addBasicBlock
 parameter_list|(
 name|BasicBlock
@@ -5247,6 +5247,7 @@ operator|&&
 literal|"Block already in DominanceFrontier!"
 argument_list|)
 expr_stmt|;
+return|return
 name|Frontiers
 operator|.
 name|insert
@@ -5260,7 +5261,9 @@ argument_list|,
 name|frontier
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|.
+name|first
+return|;
 block|}
 end_function
 

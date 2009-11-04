@@ -136,7 +136,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -285,6 +285,8 @@ name|ConstantPool
 block|,
 name|ExternalSymbol
 block|,
+name|BlockAddress
+block|,
 comment|// The address of the GOT
 name|GLOBAL_OFFSET_TABLE
 block|,
@@ -340,6 +342,8 @@ block|,
 name|TargetConstantPool
 block|,
 name|TargetExternalSymbol
+block|,
+name|TargetBlockAddress
 block|,
 comment|/// RESULT = INTRINSIC_WO_CHAIN(INTRINSICID, arg1, arg2, ...)
 comment|/// This node represents a target intrinsic function with no side effects.
@@ -7238,6 +7242,100 @@ operator|==
 name|ISD
 operator|::
 name|DBG_STOPPOINT
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|BlockAddressSDNode
+operator|:
+name|public
+name|SDNode
+block|{
+name|BlockAddress
+operator|*
+name|BA
+block|;
+name|friend
+name|class
+name|SelectionDAG
+block|;
+name|BlockAddressSDNode
+argument_list|(
+argument|unsigned NodeTy
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|BlockAddress *ba
+argument_list|)
+operator|:
+name|SDNode
+argument_list|(
+name|NodeTy
+argument_list|,
+name|dl
+argument_list|,
+name|getSDVTList
+argument_list|(
+name|VT
+argument_list|)
+argument_list|)
+block|,
+name|BA
+argument_list|(
+argument|ba
+argument_list|)
+block|{   }
+name|public
+operator|:
+name|BlockAddress
+operator|*
+name|getBlockAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BA
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const BlockAddressSDNode *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|BlockAddress
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|TargetBlockAddress
 return|;
 block|}
 expr|}

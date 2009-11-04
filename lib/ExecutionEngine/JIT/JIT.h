@@ -414,6 +414,24 @@ operator|*
 name|F
 argument_list|)
 block|;
+name|void
+operator|*
+name|getPointerToBasicBlock
+argument_list|(
+argument|BasicBlock *BB
+argument_list|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"JIT does not support address-of-label yet!"
+argument_list|)
+block|;
+return|return
+literal|0
+return|;
+block|}
 comment|/// getOrEmitGlobalVariable - Return the address of the specified global
 comment|/// variable, possibly emitting it to memory if needed.  This is used by the
 comment|/// Emitter.
@@ -575,11 +593,6 @@ block|;
 name|void
 name|NotifyFreeingMachineCode
 argument_list|(
-specifier|const
-name|Function
-operator|&
-name|F
-argument_list|,
 name|void
 operator|*
 name|OldPtr

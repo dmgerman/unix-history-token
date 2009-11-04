@@ -202,17 +202,17 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|public
-operator|:
 name|virtual
 name|TerminatorInst
 operator|*
-name|clone
+name|clone_impl
 argument_list|()
 specifier|const
 operator|=
 literal|0
 block|;
+name|public
+operator|:
 comment|/// getNumSuccessors - Return the number of successors that this terminator
 comment|/// has.
 name|unsigned
@@ -483,15 +483,6 @@ argument_list|()
 operator|==
 name|Instruction
 operator|::
-name|Free
-operator|||
-name|I
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|Instruction
-operator|::
 name|Load
 operator|||
 name|I
@@ -639,6 +630,13 @@ argument|const Twine&Name
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
+block|;
+name|virtual
+name|BinaryOperator
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
 block|;
 name|public
 operator|:
@@ -1370,13 +1368,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
-name|BinaryOperator
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// swapOperands - Exchange the two operands to this instruction.
 comment|/// This instruction is safe to use on any binary instruction and
 comment|/// does not modify the semantics of the instruction.  If the instruction
@@ -2689,6 +2680,66 @@ name|bool
 name|isEquality
 argument_list|()
 block|;
+comment|/// @returns true if the comparison is signed, false otherwise.
+comment|/// @brief Determine if this instruction is using a signed comparison.
+name|bool
+name|isSigned
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSigned
+argument_list|(
+name|getPredicate
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// @returns true if the comparison is unsigned, false otherwise.
+comment|/// @brief Determine if this instruction is using an unsigned comparison.
+name|bool
+name|isUnsigned
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isUnsigned
+argument_list|(
+name|getPredicate
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// This is just a convenience.
+comment|/// @brief Determine if this is true when both operands are the same.
+name|bool
+name|isTrueWhenEqual
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isTrueWhenEqual
+argument_list|(
+name|getPredicate
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// This is just a convenience.
+comment|/// @brief Determine if this is false when both operands are the same.
+name|bool
+name|isFalseWhenEqual
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isFalseWhenEqual
+argument_list|(
+name|getPredicate
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// @returns true if the predicate is unsigned, false otherwise.
 comment|/// @brief Determine if the predicate is an unsigned operation.
 specifier|static
@@ -2719,6 +2770,22 @@ comment|/// @brief Determine if the predicate is an unordered operation.
 specifier|static
 name|bool
 name|isUnordered
+argument_list|(
+argument|unsigned short predicate
+argument_list|)
+block|;
+comment|/// Determine if the predicate is true when comparing a value with itself.
+specifier|static
+name|bool
+name|isTrueWhenEqual
+argument_list|(
+argument|unsigned short predicate
+argument_list|)
+block|;
+comment|/// Determine if the predicate is false when comparing a value with itself.
+specifier|static
+name|bool
+name|isFalseWhenEqual
 argument_list|(
 argument|unsigned short predicate
 argument_list|)

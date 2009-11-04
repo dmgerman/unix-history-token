@@ -1369,39 +1369,25 @@ name|VT
 argument_list|)
 decl|const
 decl_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
+comment|/// isFPImmLegal - Returns true if the target can instruction select the
+comment|/// specified FP immediate natively. If false, the legalizer will materialize
+comment|/// the FP immediate as a load from a constant pool.
+name|virtual
+name|bool
+name|isFPImmLegal
+argument_list|(
+specifier|const
 name|APFloat
-operator|>
-operator|::
-name|const_iterator
-name|legal_fpimm_iterator
-expr_stmt|;
-name|legal_fpimm_iterator
-name|legal_fpimm_begin
-argument_list|()
-specifier|const
+operator|&
+name|Imm
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
 block|{
 return|return
-name|LegalFPImmediates
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|legal_fpimm_iterator
-name|legal_fpimm_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LegalFPImmediates
-operator|.
-name|end
-argument_list|()
+name|false
 return|;
 block|}
 comment|/// isShuffleMaskLegal - Targets can use this to indicate that they only
@@ -4614,25 +4600,6 @@ operator|.
 name|SimpleTy
 expr_stmt|;
 block|}
-comment|/// addLegalFPImmediate - Indicate that this target can instruction select
-comment|/// the specified FP immediate natively.
-name|void
-name|addLegalFPImmediate
-parameter_list|(
-specifier|const
-name|APFloat
-modifier|&
-name|Imm
-parameter_list|)
-block|{
-name|LegalFPImmediates
-operator|.
-name|push_back
-argument_list|(
-name|Imm
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// setTargetDAGCombine - Targets should invoke this method for each target
 comment|/// independent node that they want to provide a custom DAG combiner for by
 comment|/// implementing the PerformDAGCombine virtual method.
@@ -5804,13 +5771,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|// Scheduler hooks
+comment|// Instruction Emitting Hooks
 comment|//
 comment|// EmitInstrWithCustomInserter - This method should be implemented by targets
-comment|// that mark instructions with the 'usesCustomDAGSchedInserter' flag.  These
+comment|// that mark instructions with the 'usesCustomInserter' flag.  These
 comment|// instructions are special in various ways, which require special support to
 comment|// insert.  The specified MachineInstr is created but not inserted into any
-comment|// basic blocks, and the scheduler passes ownership of it to this method.
+comment|// basic blocks, and this method is called to expand it into a sequence of
+comment|// instructions, potentially also creating new basic blocks and control flow.
 comment|// When new basic blocks are inserted and the edges from MBB to its successors
 comment|// are modified, the method should insert pairs of<OldSucc, NewSucc> into the
 comment|// DenseMap.
@@ -6451,14 +6419,6 @@ decl_stmt|;
 name|ValueTypeActionImpl
 name|ValueTypeActions
 decl_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|APFloat
-operator|>
-name|LegalFPImmediates
-expr_stmt|;
 name|std
 operator|::
 name|vector

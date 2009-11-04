@@ -79,9 +79,6 @@ decl_stmt|;
 name|class
 name|Instruction
 decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
 typedef|typedef
 name|DenseMap
 operator|<
@@ -106,10 +103,6 @@ parameter_list|,
 name|ValueMapTy
 modifier|&
 name|VM
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
 parameter_list|)
 function_decl|;
 name|void

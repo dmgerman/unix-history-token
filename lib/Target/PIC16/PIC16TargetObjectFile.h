@@ -168,6 +168,11 @@ name|PIC16Section
 operator|*
 name|ROMDATASection_
 block|;
+name|mutable
+name|PIC16Section
+operator|*
+name|SHAREDUDATASection_
+block|;
 comment|/// Standard Auto Sections.
 name|mutable
 name|std
@@ -323,6 +328,18 @@ argument|const std::string&Addr
 argument_list|)
 specifier|const
 block|;
+comment|/// Allocate a shared variable to SHARED section.
+specifier|const
+name|MCSection
+operator|*
+name|allocateSHARED
+argument_list|(
+argument|const GlobalVariable *GV
+argument_list|,
+argument|Mangler *Mang
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|PIC16TargetObjectFile
@@ -456,6 +473,17 @@ specifier|const
 block|{
 return|return
 name|ROMDATASection_
+return|;
+block|}
+specifier|const
+name|PIC16Section
+operator|*
+name|SHAREDUDATASection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SHAREDUDATASection_
 return|;
 block|}
 specifier|const

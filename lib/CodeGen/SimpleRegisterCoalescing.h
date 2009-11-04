@@ -489,7 +489,7 @@ comment|/// and return true.
 name|bool
 name|TrimLiveIntervalToLastUse
 parameter_list|(
-name|LiveIndex
+name|SlotIndex
 name|CopyIdx
 parameter_list|,
 name|MachineBasicBlock
@@ -677,6 +677,27 @@ modifier|&
 name|RealDstReg
 parameter_list|)
 function_decl|;
+comment|/// ValueLiveAt - Return true if the LiveRange pointed to by the given
+comment|/// iterator, or any subsequent range with the same value number,
+comment|/// is live at the given point.
+name|bool
+name|ValueLiveAt
+argument_list|(
+name|LiveInterval
+operator|::
+name|iterator
+name|LRItr
+argument_list|,
+name|LiveInterval
+operator|::
+name|iterator
+name|LREnd
+argument_list|,
+name|SlotIndex
+name|defPoint
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// RangeIsDefinedByCopyFromReg - Return true if the specified live range of
 comment|/// the specified live interval is defined by a copy from the specified
 comment|/// register.
@@ -777,16 +798,16 @@ name|MachineOperand
 modifier|*
 name|lastRegisterUse
 argument_list|(
-name|LiveIndex
+name|SlotIndex
 name|Start
 argument_list|,
-name|LiveIndex
+name|SlotIndex
 name|End
 argument_list|,
 name|unsigned
 name|Reg
 argument_list|,
-name|LiveIndex
+name|SlotIndex
 operator|&
 name|LastUseIdx
 argument_list|)

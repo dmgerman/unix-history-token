@@ -70,6 +70,12 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Constant
+decl_stmt|;
+name|class
+name|BlockAddress
+decl_stmt|;
+name|class
 name|GlobalValue
 decl_stmt|;
 name|class
@@ -83,24 +89,28 @@ name|ARMCPKind
 block|{
 name|CPValue
 block|,
+name|CPExtSymbol
+block|,
+name|CPBlockAddress
+block|,
 name|CPLSDA
 block|}
 enum|;
 block|}
 comment|/// ARMConstantPoolValue - ARM specific constantpool value. This is used to
-comment|/// represent PC relative displacement between the address of the load
-comment|/// instruction and the global value being loaded, i.e. (&GV-(LPIC+8)).
+comment|/// represent PC-relative displacement between the address of the load
+comment|/// instruction and the constant being loaded, i.e. (&GV-(LPIC+8)).
 name|class
 name|ARMConstantPoolValue
 range|:
 name|public
 name|MachineConstantPoolValue
 block|{
-name|GlobalValue
+name|Constant
 operator|*
-name|GV
+name|CVal
 block|;
-comment|// GlobalValue being loaded.
+comment|// Constant being loaded.
 specifier|const
 name|char
 operator|*
@@ -116,12 +126,12 @@ operator|::
 name|ARMCPKind
 name|Kind
 block|;
-comment|// Value or LSDA?
+comment|// Kind of constant.
 name|unsigned
 name|char
 name|PCAdjust
 block|;
-comment|// Extra adjustment if constantpool is pc relative.
+comment|// Extra adjustment if constantpool is pc-relative.
 comment|// 8 for ARM, 4 for Thumb.
 specifier|const
 name|char
@@ -136,7 +146,7 @@ name|public
 operator|:
 name|ARMConstantPoolValue
 argument_list|(
-argument|GlobalValue *gv
+argument|Constant *cval
 argument_list|,
 argument|unsigned id
 argument_list|,
@@ -190,11 +200,7 @@ operator|*
 name|getGV
 argument_list|()
 specifier|const
-block|{
-return|return
-name|GV
-return|;
-block|}
+block|;
 specifier|const
 name|char
 operator|*
@@ -206,6 +212,12 @@ return|return
 name|S
 return|;
 block|}
+name|BlockAddress
+operator|*
+name|getBlockAddress
+argument_list|()
+specifier|const
+block|;
 specifier|const
 name|char
 operator|*
@@ -254,6 +266,44 @@ specifier|const
 block|{
 return|return
 name|PCAdjust
+return|;
+block|}
+name|bool
+name|isGlobalValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|ARMCP
+operator|::
+name|CPValue
+return|;
+block|}
+name|bool
+name|isExtSymbol
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|ARMCP
+operator|::
+name|CPExtSymbol
+return|;
+block|}
+name|bool
+name|isBlockAddress
+argument_list|()
+block|{
+return|return
+name|Kind
+operator|==
+name|ARMCP
+operator|::
+name|CPBlockAddress
 return|;
 block|}
 name|bool

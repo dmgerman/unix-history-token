@@ -746,6 +746,34 @@ operator|>
 expr|>
 name|DeferredFunctionInfo
 expr_stmt|;
+comment|/// BlockAddrFwdRefs - These are blockaddr references to basic blocks.  These
+comment|/// are resolved lazily when functions are loaded.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|GlobalVariable
+operator|*
+operator|>
+name|BlockAddrRefTy
+expr_stmt|;
+name|DenseMap
+operator|<
+name|Function
+operator|*
+operator|,
+name|std
+operator|::
+name|vector
+operator|<
+name|BlockAddrRefTy
+operator|>
+expr|>
+name|BlockAddrFwdRefs
+expr_stmt|;
 name|public
 label|:
 name|explicit

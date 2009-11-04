@@ -88,19 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CallingConv.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/LLVMContext.h"
 end_include
 
 begin_include
@@ -135,25 +123,117 @@ name|class
 name|DominatorTree
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|//                             AllocationInst Class
+comment|//                                AllocaInst Class
 comment|//===----------------------------------------------------------------------===//
-comment|/// AllocationInst - This class is the base class of AllocaInst.
+comment|/// AllocaInst - an instruction to allocate memory on the stack
 comment|///
 name|class
-name|AllocationInst
+name|AllocaInst
 range|:
 name|public
 name|UnaryInstruction
 block|{
 name|protected
 operator|:
-name|AllocationInst
+name|virtual
+name|AllocaInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
+name|public
+operator|:
+name|explicit
+name|AllocaInst
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|Value
+operator|*
+name|ArraySize
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|,
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+literal|0
+argument_list|)
+block|;
+name|AllocaInst
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|Value
+operator|*
+name|ArraySize
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+argument_list|,
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+argument_list|)
+block|;
+name|AllocaInst
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+argument_list|,
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+literal|0
+argument_list|)
+block|;
+name|AllocaInst
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+argument_list|,
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+argument_list|)
+block|;
+name|AllocaInst
 argument_list|(
 argument|const Type *Ty
 argument_list|,
 argument|Value *ArraySize
-argument_list|,
-argument|unsigned iTy
 argument_list|,
 argument|unsigned Align
 argument_list|,
@@ -164,13 +244,11 @@ argument|Instruction *InsertBefore =
 literal|0
 argument_list|)
 block|;
-name|AllocationInst
+name|AllocaInst
 argument_list|(
 argument|const Type *Ty
 argument_list|,
 argument|Value *ArraySize
-argument_list|,
-argument|unsigned iTy
 argument_list|,
 argument|unsigned Align
 argument_list|,
@@ -179,12 +257,10 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
-name|public
-operator|:
 comment|// Out of line virtual method, so the vtable, etc. has a home.
 name|virtual
 operator|~
-name|AllocationInst
+name|AllocaInst
 argument_list|()
 block|;
 comment|/// isArrayAllocation - Return true if there is an allocation size parameter
@@ -282,301 +358,6 @@ argument_list|(
 argument|unsigned Align
 argument_list|)
 block|;
-name|virtual
-name|AllocationInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const AllocationInst *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
-block|{
-return|return
-name|I
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|Instruction
-operator|::
-name|Alloca
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
-block|{
-return|return
-name|isa
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-operator|&&
-name|classof
-argument_list|(
-name|cast
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
-comment|//===----------------------------------------------------------------------===//
-comment|//                                AllocaInst Class
-comment|//===----------------------------------------------------------------------===//
-comment|/// AllocaInst - an instruction to allocate memory on the stack
-comment|///
-name|class
-name|AllocaInst
-operator|:
-name|public
-name|AllocationInst
-block|{
-name|public
-operator|:
-name|explicit
-name|AllocaInst
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|,
-name|Value
-operator|*
-name|ArraySize
-operator|=
-literal|0
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-operator|=
-literal|""
-argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-literal|0
-argument_list|)
-operator|:
-name|AllocationInst
-argument_list|(
-argument|Ty
-argument_list|,
-argument|ArraySize
-argument_list|,
-argument|Alloca
-argument_list|,
-literal|0
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertBefore
-argument_list|)
-block|{}
-name|AllocaInst
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|,
-name|Value
-operator|*
-name|ArraySize
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAtEnd
-argument_list|)
-operator|:
-name|AllocationInst
-argument_list|(
-argument|Ty
-argument_list|,
-argument|ArraySize
-argument_list|,
-argument|Alloca
-argument_list|,
-literal|0
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertAtEnd
-argument_list|)
-block|{}
-name|AllocaInst
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-literal|0
-argument_list|)
-operator|:
-name|AllocationInst
-argument_list|(
-argument|Ty
-argument_list|,
-literal|0
-argument_list|,
-argument|Alloca
-argument_list|,
-literal|0
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertBefore
-argument_list|)
-block|{}
-name|AllocaInst
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAtEnd
-argument_list|)
-operator|:
-name|AllocationInst
-argument_list|(
-argument|Ty
-argument_list|,
-literal|0
-argument_list|,
-argument|Alloca
-argument_list|,
-literal|0
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertAtEnd
-argument_list|)
-block|{}
-name|AllocaInst
-argument_list|(
-argument|const Type *Ty
-argument_list|,
-argument|Value *ArraySize
-argument_list|,
-argument|unsigned Align
-argument_list|,
-argument|const Twine&NameStr =
-literal|""
-argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
-argument_list|)
-operator|:
-name|AllocationInst
-argument_list|(
-argument|Ty
-argument_list|,
-argument|ArraySize
-argument_list|,
-argument|Alloca
-argument_list|,
-argument|Align
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertBefore
-argument_list|)
-block|{}
-name|AllocaInst
-argument_list|(
-argument|const Type *Ty
-argument_list|,
-argument|Value *ArraySize
-argument_list|,
-argument|unsigned Align
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
-argument_list|)
-operator|:
-name|AllocationInst
-argument_list|(
-argument|Ty
-argument_list|,
-argument|ArraySize
-argument_list|,
-argument|Alloca
-argument_list|,
-argument|Align
-argument_list|,
-argument|NameStr
-argument_list|,
-argument|InsertAtEnd
-argument_list|)
-block|{}
-name|virtual
-name|AllocaInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// isStaticAlloca - Return true if this alloca is in the entry block of the
 comment|/// function and is a constant size.  If so, the code generator will fold it
 comment|/// into the prolog/epilog code, so it is basically free.
@@ -651,147 +432,6 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|//                                 FreeInst Class
-comment|//===----------------------------------------------------------------------===//
-comment|/// FreeInst - an instruction to deallocate memory
-comment|///
-name|class
-name|FreeInst
-operator|:
-name|public
-name|UnaryInstruction
-block|{
-name|void
-name|AssertOK
-argument_list|()
-block|;
-name|public
-operator|:
-name|explicit
-name|FreeInst
-argument_list|(
-name|Value
-operator|*
-name|Ptr
-argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-literal|0
-argument_list|)
-block|;
-name|FreeInst
-argument_list|(
-name|Value
-operator|*
-name|Ptr
-argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAfter
-argument_list|)
-block|;
-name|virtual
-name|FreeInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
-comment|// Accessor methods for consistency with other memory operations
-name|Value
-operator|*
-name|getPointerOperand
-argument_list|()
-block|{
-return|return
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-return|;
-block|}
-specifier|const
-name|Value
-operator|*
-name|getPointerOperand
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-return|;
-block|}
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const FreeInst *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
-block|{
-return|return
-operator|(
-name|I
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|Instruction
-operator|::
-name|Free
-operator|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
-block|{
-return|return
-name|isa
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-operator|&&
-name|classof
-argument_list|(
-name|cast
-operator|<
-name|Instruction
-operator|>
-operator|(
-name|V
-operator|)
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
-comment|//===----------------------------------------------------------------------===//
 comment|//                                LoadInst Class
 comment|//===----------------------------------------------------------------------===//
 comment|/// LoadInst - an instruction for reading from memory.  This uses the
@@ -806,6 +446,15 @@ block|{
 name|void
 name|AssertOK
 argument_list|()
+block|;
+name|protected
+operator|:
+name|virtual
+name|LoadInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
 block|;
 name|public
 operator|:
@@ -987,13 +636,6 @@ operator|:
 literal|0
 operator|)
 block|;   }
-name|virtual
-name|LoadInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// getAlignment - Return the alignment of the access that is being performed
 comment|///
 name|unsigned
@@ -1166,6 +808,15 @@ comment|// DO NOT IMPLEMENT
 name|void
 name|AssertOK
 argument_list|()
+block|;
+name|protected
+operator|:
+name|virtual
+name|StoreInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
 block|;
 name|public
 operator|:
@@ -1341,13 +992,6 @@ name|setAlignment
 argument_list|(
 argument|unsigned Align
 argument_list|)
-block|;
-name|virtual
-name|StoreInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 name|Value
 operator|*
@@ -1818,6 +1462,15 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
+name|protected
+operator|:
+name|virtual
+name|GetElementPtrInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|template
@@ -2200,13 +1853,6 @@ return|return
 name|GEP
 return|;
 block|}
-name|virtual
-name|GetElementPtrInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -2692,6 +2338,16 @@ operator|:
 name|public
 name|CmpInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an indentical ICmpInst
+name|virtual
+name|ICmpInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics.
@@ -3141,87 +2797,6 @@ name|P
 argument_list|)
 return|;
 block|}
-comment|/// @returns true if the predicate of this ICmpInst is signed, false otherwise
-comment|/// @brief Determine if this instruction's predicate is signed.
-name|bool
-name|isSignedPredicate
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSignedPredicate
-argument_list|(
-name|getPredicate
-argument_list|()
-argument_list|)
-return|;
-block|}
-comment|/// @returns true if the predicate provided is signed, false otherwise
-comment|/// @brief Determine if the predicate is signed.
-specifier|static
-name|bool
-name|isSignedPredicate
-argument_list|(
-argument|Predicate pred
-argument_list|)
-block|;
-comment|/// @returns true if the specified compare predicate is
-comment|/// true when both operands are equal...
-comment|/// @brief Determine if the icmp is true when both operands are equal
-specifier|static
-name|bool
-name|isTrueWhenEqual
-argument_list|(
-argument|ICmpInst::Predicate pred
-argument_list|)
-block|{
-return|return
-name|pred
-operator|==
-name|ICmpInst
-operator|::
-name|ICMP_EQ
-operator|||
-name|pred
-operator|==
-name|ICmpInst
-operator|::
-name|ICMP_UGE
-operator|||
-name|pred
-operator|==
-name|ICmpInst
-operator|::
-name|ICMP_SGE
-operator|||
-name|pred
-operator|==
-name|ICmpInst
-operator|::
-name|ICMP_ULE
-operator|||
-name|pred
-operator|==
-name|ICmpInst
-operator|::
-name|ICMP_SLE
-return|;
-block|}
-comment|/// @returns true if the specified compare instruction is
-comment|/// true when both operands are equal...
-comment|/// @brief Determine if the ICmpInst returns true when both operands are equal
-name|bool
-name|isTrueWhenEqual
-argument_list|()
-block|{
-return|return
-name|isTrueWhenEqual
-argument_list|(
-name|getPredicate
-argument_list|()
-argument_list|)
-return|;
-block|}
 comment|/// Initialize a set of values that all satisfy the predicate with C.
 comment|/// @brief Make a ConstantRange for a relation with a constant value.
 specifier|static
@@ -3264,13 +2839,6 @@ operator|(
 operator|)
 argument_list|)
 block|;   }
-name|virtual
-name|ICmpInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -3347,6 +2915,16 @@ operator|:
 name|public
 name|CmpInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an indentical FCmpInst
+name|virtual
+name|FCmpInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics.
@@ -3699,13 +3277,6 @@ operator|(
 operator|)
 argument_list|)
 block|;   }
-name|virtual
-name|FCmpInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -4020,6 +3591,15 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
+name|protected
+operator|:
+name|virtual
+name|CallInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|template
@@ -4306,6 +3886,34 @@ operator|=
 literal|""
 argument_list|)
 block|;
+comment|/// CreateFree - Generate the IR for a call to the builtin free function.
+specifier|static
+name|void
+name|CreateFree
+argument_list|(
+name|Value
+operator|*
+name|Source
+argument_list|,
+name|Instruction
+operator|*
+name|InsertBefore
+argument_list|)
+block|;
+specifier|static
+name|Instruction
+operator|*
+name|CreateFree
+argument_list|(
+name|Value
+operator|*
+name|Source
+argument_list|,
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+argument_list|)
+block|;
 operator|~
 name|CallInst
 argument_list|()
@@ -4341,13 +3949,6 @@ argument_list|(
 name|isTC
 argument_list|)
 block|;   }
-name|virtual
-name|CallInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -5142,6 +4743,15 @@ argument_list|(
 name|NameStr
 argument_list|)
 block|;   }
+name|protected
+operator|:
+name|virtual
+name|SelectInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 specifier|static
@@ -5351,13 +4961,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
-name|SelectInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -5455,6 +5058,15 @@ operator|:
 name|public
 name|UnaryInstruction
 block|{
+name|protected
+operator|:
+name|virtual
+name|VAArgInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|VAArgInst
@@ -5535,13 +5147,6 @@ argument_list|(
 name|NameStr
 argument_list|)
 block|;   }
-name|virtual
-name|VAArgInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -5659,6 +5264,15 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
+name|protected
+operator|:
+name|virtual
+name|ExtractElementInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 specifier|static
@@ -5741,13 +5355,6 @@ name|Value
 operator|*
 name|Idx
 argument_list|)
-block|;
-name|virtual
-name|ExtractElementInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 name|Value
 operator|*
@@ -5987,6 +5594,15 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
+name|protected
+operator|:
+name|virtual
+name|InsertElementInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 specifier|static
@@ -6082,13 +5698,6 @@ name|Value
 operator|*
 name|Idx
 argument_list|)
-block|;
-name|virtual
-name|InsertElementInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// getType - Overload to return most specific vector type.
 comment|///
@@ -6217,6 +5826,15 @@ operator|:
 name|public
 name|Instruction
 block|{
+name|protected
+operator|:
+name|virtual
+name|ShuffleVectorInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|// allocate space for exactly three operands
@@ -6313,13 +5931,6 @@ name|Value
 operator|*
 name|Mask
 argument_list|)
-block|;
-name|virtual
-name|ShuffleVectorInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// getType - Overload to return most specific vector type.
 comment|///
@@ -6716,6 +6327,15 @@ literal|1
 argument_list|)
 return|;
 block|}
+name|protected
+operator|:
+name|virtual
+name|ExtractValueInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|template
@@ -6883,13 +6503,6 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
-name|virtual
-name|ExtractValueInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// getIndexedType - Returns the type of the element that would be extracted
 comment|/// with an extractvalue instruction with the specified parameters.
 comment|///
@@ -7392,6 +7005,15 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
+name|protected
+operator|:
+name|virtual
+name|InsertValueInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|// allocate space for exactly two operands
@@ -7568,13 +7190,6 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
-name|virtual
-name|InsertValueInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -8042,6 +7657,15 @@ argument_list|(
 name|NameStr
 argument_list|)
 block|;   }
+name|protected
+operator|:
+name|virtual
+name|PHINode
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 specifier|static
@@ -8115,13 +7739,6 @@ operator|*
 literal|2
 argument_list|)
 block|;   }
-name|virtual
-name|PHINode
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -8349,6 +7966,10 @@ literal|2
 operator|+
 literal|1
 argument_list|,
+operator|(
+name|Value
+operator|*
+operator|)
 name|BB
 argument_list|)
 block|;   }
@@ -8468,6 +8089,10 @@ operator|+
 literal|1
 index|]
 operator|=
+operator|(
+name|Value
+operator|*
+operator|)
 name|BB
 block|;   }
 comment|/// removeIncomingValue - Remove an incoming value.  This is useful if a
@@ -8570,6 +8195,11 @@ operator|.
 name|get
 argument_list|()
 operator|==
+operator|(
+specifier|const
+name|Value
+operator|*
+operator|)
 name|BB
 condition|)
 return|return
@@ -8790,6 +8420,15 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
+name|protected
+operator|:
+name|virtual
+name|ReturnInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 specifier|static
@@ -8875,13 +8514,6 @@ name|virtual
 operator|~
 name|ReturnInst
 argument_list|()
-block|;
-name|virtual
-name|ReturnInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -9133,6 +8765,15 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
+name|protected
+operator|:
+name|virtual
+name|BranchInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 specifier|static
@@ -9259,13 +8900,6 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
-name|virtual
-name|BranchInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 name|bool
 name|isUnconditional
 argument_list|()
@@ -9355,6 +8989,10 @@ operator|>
 operator|(
 operator|)
 operator|=
+operator|(
+name|Value
+operator|*
+operator|)
 name|Dest
 block|;
 if|if
@@ -9481,6 +9119,10 @@ operator|-
 name|idx
 operator|)
 operator|=
+operator|(
+name|Value
+operator|*
+operator|)
 name|NewSucc
 block|;   }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
@@ -9630,7 +9272,7 @@ argument_list|(
 specifier|const
 name|SwitchInst
 operator|&
-name|RI
+name|SI
 argument_list|)
 block|;
 name|void
@@ -9682,8 +9324,7 @@ argument|BasicBlock *Default
 argument_list|,
 argument|unsigned NumCases
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore
 argument_list|)
 block|;
 comment|/// SwitchInst ctor - Create a new switch instruction, specifying a value to
@@ -9700,6 +9341,15 @@ argument|unsigned NumCases
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
+block|;
+name|protected
+operator|:
+name|virtual
+name|SwitchInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
 block|;
 name|public
 operator|:
@@ -10034,13 +9684,6 @@ argument_list|(
 argument|unsigned idx
 argument_list|)
 block|;
-name|virtual
-name|SwitchInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 name|unsigned
 name|getNumSuccessors
 argument_list|()
@@ -10114,6 +9757,10 @@ literal|2
 operator|+
 literal|1
 argument_list|,
+operator|(
+name|Value
+operator|*
+operator|)
 name|NewSucc
 argument_list|)
 block|;   }
@@ -10260,6 +9907,444 @@ block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|SwitchInst
+argument_list|,
+argument|Value
+argument_list|)
+comment|//===----------------------------------------------------------------------===//
+comment|//                             IndirectBrInst Class
+comment|//===----------------------------------------------------------------------===//
+comment|//===---------------------------------------------------------------------------
+comment|/// IndirectBrInst - Indirect Branch Instruction.
+comment|///
+name|class
+name|IndirectBrInst
+operator|:
+name|public
+name|TerminatorInst
+block|{
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+name|size_t
+argument_list|,
+name|unsigned
+argument_list|)
+block|;
+comment|// DO NOT IMPLEMENT
+name|unsigned
+name|ReservedSpace
+block|;
+comment|// Operand[0]    = Value to switch on
+comment|// Operand[1]    = Default basic block destination
+comment|// Operand[2n  ] = Value to match
+comment|// Operand[2n+1] = BasicBlock to go to on match
+name|IndirectBrInst
+argument_list|(
+specifier|const
+name|IndirectBrInst
+operator|&
+name|IBI
+argument_list|)
+block|;
+name|void
+name|init
+argument_list|(
+argument|Value *Address
+argument_list|,
+argument|unsigned NumDests
+argument_list|)
+block|;
+name|void
+name|resizeOperands
+argument_list|(
+argument|unsigned No
+argument_list|)
+block|;
+comment|// allocate space for exactly zero operands
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// IndirectBrInst ctor - Create a new indirectbr instruction, specifying an
+comment|/// Address to jump to.  The number of expected destinations can be specified
+comment|/// here to make memory allocation more efficient.  This constructor can also
+comment|/// autoinsert before another instruction.
+name|IndirectBrInst
+argument_list|(
+argument|Value *Address
+argument_list|,
+argument|unsigned NumDests
+argument_list|,
+argument|Instruction *InsertBefore
+argument_list|)
+block|;
+comment|/// IndirectBrInst ctor - Create a new indirectbr instruction, specifying an
+comment|/// Address to jump to.  The number of expected destinations can be specified
+comment|/// here to make memory allocation more efficient.  This constructor also
+comment|/// autoinserts at the end of the specified BasicBlock.
+name|IndirectBrInst
+argument_list|(
+argument|Value *Address
+argument_list|,
+argument|unsigned NumDests
+argument_list|,
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|;
+name|protected
+operator|:
+name|virtual
+name|IndirectBrInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
+name|public
+operator|:
+specifier|static
+name|IndirectBrInst
+operator|*
+name|Create
+argument_list|(
+argument|Value *Address
+argument_list|,
+argument|unsigned NumDests
+argument_list|,
+argument|Instruction *InsertBefore =
+literal|0
+argument_list|)
+block|{
+return|return
+name|new
+name|IndirectBrInst
+argument_list|(
+name|Address
+argument_list|,
+name|NumDests
+argument_list|,
+name|InsertBefore
+argument_list|)
+return|;
+block|}
+specifier|static
+name|IndirectBrInst
+operator|*
+name|Create
+argument_list|(
+argument|Value *Address
+argument_list|,
+argument|unsigned NumDests
+argument_list|,
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|{
+return|return
+name|new
+name|IndirectBrInst
+argument_list|(
+name|Address
+argument_list|,
+name|NumDests
+argument_list|,
+name|InsertAtEnd
+argument_list|)
+return|;
+block|}
+operator|~
+name|IndirectBrInst
+argument_list|()
+block|;
+comment|/// Provide fast operand accessors.
+name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+name|Value
+argument_list|)
+block|;
+comment|// Accessor Methods for IndirectBrInst instruction.
+name|Value
+operator|*
+name|getAddress
+argument_list|()
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|const
+name|Value
+operator|*
+name|getAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+name|void
+name|setAddress
+argument_list|(
+argument|Value *V
+argument_list|)
+block|{
+name|setOperand
+argument_list|(
+literal|0
+argument_list|,
+name|V
+argument_list|)
+block|; }
+comment|/// getNumDestinations - return the number of possible destinations in this
+comment|/// indirectbr instruction.
+name|unsigned
+name|getNumDestinations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumOperands
+argument_list|()
+operator|-
+literal|1
+return|;
+block|}
+comment|/// getDestination - Return the specified destination.
+name|BasicBlock
+operator|*
+name|getDestination
+argument_list|(
+argument|unsigned i
+argument_list|)
+block|{
+return|return
+name|getSuccessor
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+specifier|const
+name|BasicBlock
+operator|*
+name|getDestination
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getSuccessor
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+comment|/// addDestination - Add a destination.
+comment|///
+name|void
+name|addDestination
+argument_list|(
+name|BasicBlock
+operator|*
+name|Dest
+argument_list|)
+block|;
+comment|/// removeDestination - This method removes the specified successor from the
+comment|/// indirectbr instruction.
+name|void
+name|removeDestination
+argument_list|(
+argument|unsigned i
+argument_list|)
+block|;
+name|unsigned
+name|getNumSuccessors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumOperands
+argument_list|()
+operator|-
+literal|1
+return|;
+block|}
+name|BasicBlock
+operator|*
+name|getSuccessor
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|BasicBlock
+operator|>
+operator|(
+name|getOperand
+argument_list|(
+name|i
+operator|+
+literal|1
+argument_list|)
+operator|)
+return|;
+block|}
+name|void
+name|setSuccessor
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|BasicBlock *NewSucc
+argument_list|)
+block|{
+name|setOperand
+argument_list|(
+name|i
+operator|+
+literal|1
+argument_list|,
+operator|(
+name|Value
+operator|*
+operator|)
+name|NewSucc
+argument_list|)
+block|;   }
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const IndirectBrInst *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Instruction *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|Instruction
+operator|::
+name|IndirectBr
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|isa
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+name|classof
+argument_list|(
+name|cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+name|virtual
+name|BasicBlock
+operator|*
+name|getSuccessorV
+argument_list|(
+argument|unsigned idx
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getNumSuccessorsV
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|void
+name|setSuccessorV
+argument_list|(
+argument|unsigned idx
+argument_list|,
+argument|BasicBlock *B
+argument_list|)
+block|; }
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|OperandTraits
+operator|<
+name|IndirectBrInst
+operator|>
+operator|:
+name|public
+name|HungoffOperandTraits
+operator|<
+literal|1
+operator|>
+block|{ }
+block|;
+name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+argument|IndirectBrInst
 argument_list|,
 argument|Value
 argument_list|)
@@ -10429,6 +10514,15 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
+name|protected
+operator|:
+name|virtual
+name|InvokeInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|template
@@ -10553,13 +10647,6 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
-name|virtual
-name|InvokeInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
-block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -11015,6 +11102,10 @@ name|setOperand
 argument_list|(
 literal|1
 argument_list|,
+operator|(
+name|Value
+operator|*
+operator|)
 name|B
 argument_list|)
 block|;   }
@@ -11028,6 +11119,10 @@ name|setOperand
 argument_list|(
 literal|2
 argument_list|,
+operator|(
+name|Value
+operator|*
+operator|)
 name|B
 argument_list|)
 block|;   }
@@ -11083,6 +11178,10 @@ name|idx
 operator|+
 literal|1
 argument_list|,
+operator|(
+name|Value
+operator|*
+operator|)
 name|NewSucc
 argument_list|)
 block|;   }
@@ -11343,6 +11442,15 @@ name|unsigned
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
+name|protected
+operator|:
+name|virtual
+name|UnwindInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|// allocate space for exactly zero operands
@@ -11391,13 +11499,6 @@ name|BasicBlock
 operator|*
 name|InsertAtEnd
 argument_list|)
-block|;
-name|virtual
-name|UnwindInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 name|unsigned
 name|getNumSuccessors
@@ -11521,6 +11622,15 @@ name|unsigned
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
+name|protected
+operator|:
+name|virtual
+name|UnreachableInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|// allocate space for exactly zero operands
@@ -11569,13 +11679,6 @@ name|BasicBlock
 operator|*
 name|InsertAtEnd
 argument_list|)
-block|;
-name|virtual
-name|UnreachableInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 name|unsigned
 name|getNumSuccessors
@@ -11684,6 +11787,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical TruncInst
+name|virtual
+name|TruncInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -11741,14 +11854,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical TruncInst
-name|virtual
-name|TruncInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -11821,6 +11926,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical ZExtInst
+name|virtual
+name|ZExtInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -11878,14 +11993,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical ZExtInst
-name|virtual
-name|ZExtInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -11958,6 +12065,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical SExtInst
+name|virtual
+name|SExtInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12015,14 +12132,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical SExtInst
-name|virtual
-name|SExtInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -12095,6 +12204,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical FPTruncInst
+name|virtual
+name|FPTruncInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12152,14 +12271,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical FPTruncInst
-name|virtual
-name|FPTruncInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -12232,6 +12343,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical FPExtInst
+name|virtual
+name|FPExtInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12289,14 +12410,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical FPExtInst
-name|virtual
-name|FPExtInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -12369,6 +12482,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical UIToFPInst
+name|virtual
+name|UIToFPInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12426,14 +12549,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical UIToFPInst
-name|virtual
-name|UIToFPInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -12506,6 +12621,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical SIToFPInst
+name|virtual
+name|SIToFPInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12563,14 +12688,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical SIToFPInst
-name|virtual
-name|SIToFPInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -12643,6 +12760,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical FPToUIInst
+name|virtual
+name|FPToUIInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12700,14 +12827,6 @@ operator|*
 name|InsertAtEnd
 comment|///< Where to insert the new instruction
 argument_list|)
-block|;
-comment|/// @brief Clone an identical FPToUIInst
-name|virtual
-name|FPToUIInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -12780,6 +12899,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical FPToSIInst
+name|virtual
+name|FPToSIInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -12837,14 +12966,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical FPToSIInst
-name|virtual
-name|FPToSIInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -12979,7 +13100,7 @@ comment|/// @brief Clone an identical IntToPtrInst
 name|virtual
 name|IntToPtrInst
 operator|*
-name|clone
+name|clone_impl
 argument_list|()
 specifier|const
 block|;
@@ -13054,6 +13175,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical PtrToIntInst
+name|virtual
+name|PtrToIntInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -13111,14 +13242,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical PtrToIntInst
-name|virtual
-name|PtrToIntInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -13191,6 +13314,16 @@ operator|:
 name|public
 name|CastInst
 block|{
+name|protected
+operator|:
+comment|/// @brief Clone an identical BitCastInst
+name|virtual
+name|BitCastInst
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics
@@ -13248,14 +13381,6 @@ operator|*
 name|InsertAtEnd
 comment|///< The block to insert the instruction into
 argument_list|)
-block|;
-comment|/// @brief Clone an identical BitCastInst
-name|virtual
-name|BitCastInst
-operator|*
-name|clone
-argument_list|()
-specifier|const
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static

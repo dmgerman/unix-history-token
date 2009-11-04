@@ -490,7 +490,7 @@ name|mode
 operator|=
 name|TargetSubtarget
 operator|::
-name|ANTIDEP_NONE
+name|ANTIDEP_CRITICAL
 block|;
 return|return
 name|PostRAScheduler

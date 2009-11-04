@@ -90,12 +90,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMapInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -109,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/AlignOf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/SlotIndexes.h"
 end_include
 
 begin_include
@@ -128,6 +128,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|LiveIntervals
+decl_stmt|;
+name|class
 name|MachineInstr
 decl_stmt|;
 name|class
@@ -139,892 +142,6 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// LiveIndex - An opaque wrapper around machine indexes.
-name|class
-name|LiveIndex
-block|{
-name|friend
-name|class
-name|VNInfo
-decl_stmt|;
-name|friend
-name|class
-name|LiveInterval
-decl_stmt|;
-name|friend
-name|class
-name|LiveIntervals
-decl_stmt|;
-name|friend
-block|struct
-name|DenseMapInfo
-operator|<
-name|LiveIndex
-operator|>
-expr_stmt|;
-name|public
-label|:
-enum|enum
-name|Slot
-block|{
-name|LOAD
-block|,
-name|USE
-block|,
-name|DEF
-block|,
-name|STORE
-block|,
-name|NUM
-block|}
-enum|;
-name|private
-label|:
-name|unsigned
-name|index
-decl_stmt|;
-specifier|static
-specifier|const
-name|unsigned
-name|PHI_BIT
-init|=
-literal|1
-operator|<<
-literal|31
-decl_stmt|;
-name|public
-label|:
-comment|/// Construct a default LiveIndex pointing to a reserved index.
-name|LiveIndex
-argument_list|()
-operator|:
-name|index
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-comment|/// Construct an index from the given index, pointing to the given slot.
-name|LiveIndex
-argument_list|(
-argument|LiveIndex m
-argument_list|,
-argument|Slot s
-argument_list|)
-operator|:
-name|index
-argument_list|(
-argument|(m.index / NUM) * NUM + s
-argument_list|)
-block|{}
-comment|/// Print this index to the given raw_ostream.
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&os
-argument_list|)
-specifier|const
-expr_stmt|;
-comment|/// Compare two LiveIndex objects for equality.
-name|bool
-name|operator
-operator|==
-operator|(
-name|LiveIndex
-name|other
-operator|)
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|==
-operator|(
-name|other
-operator|.
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|)
-return|;
-block|}
-comment|/// Compare two LiveIndex objects for inequality.
-name|bool
-name|operator
-operator|!=
-operator|(
-name|LiveIndex
-name|other
-operator|)
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|!=
-operator|(
-name|other
-operator|.
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|)
-return|;
-block|}
-comment|/// Compare two LiveIndex objects. Return true if the first index
-comment|/// is strictly lower than the second.
-name|bool
-name|operator
-operator|<
-operator|(
-name|LiveIndex
-name|other
-operator|)
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|<
-operator|(
-name|other
-operator|.
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|)
-return|;
-block|}
-comment|/// Compare two LiveIndex objects. Return true if the first index
-comment|/// is lower than, or equal to, the second.
-name|bool
-name|operator
-operator|<=
-operator|(
-name|LiveIndex
-name|other
-operator|)
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|<=
-operator|(
-name|other
-operator|.
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|)
-return|;
-block|}
-comment|/// Compare two LiveIndex objects. Return true if the first index
-comment|/// is greater than the second.
-name|bool
-name|operator
-operator|>
-operator|(
-name|LiveIndex
-name|other
-operator|)
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|>
-operator|(
-name|other
-operator|.
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|)
-return|;
-block|}
-comment|/// Compare two LiveIndex objects. Return true if the first index
-comment|/// is greater than, or equal to, the second.
-name|bool
-name|operator
-operator|>=
-operator|(
-name|LiveIndex
-name|other
-operator|)
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|>=
-operator|(
-name|other
-operator|.
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|)
-return|;
-block|}
-comment|/// Returns true if this index represents a load.
-name|bool
-name|isLoad
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|%
-name|NUM
-operator|)
-operator|==
-name|LOAD
-operator|)
-return|;
-block|}
-comment|/// Returns true if this index represents a use.
-name|bool
-name|isUse
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|%
-name|NUM
-operator|)
-operator|==
-name|USE
-operator|)
-return|;
-block|}
-comment|/// Returns true if this index represents a def.
-name|bool
-name|isDef
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|%
-name|NUM
-operator|)
-operator|==
-name|DEF
-operator|)
-return|;
-block|}
-comment|/// Returns true if this index represents a store.
-name|bool
-name|isStore
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|%
-name|NUM
-operator|)
-operator|==
-name|STORE
-operator|)
-return|;
-block|}
-comment|/// Returns the slot for this LiveIndex.
-name|Slot
-name|getSlot
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|Slot
-operator|>
-operator|(
-name|index
-operator|%
-name|NUM
-operator|)
-return|;
-block|}
-comment|/// Returns true if this index represents a non-PHI use/def.
-name|bool
-name|isNonPHIIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|&
-name|PHI_BIT
-operator|)
-operator|==
-literal|0
-operator|)
-return|;
-block|}
-comment|/// Returns true if this index represents a PHI use/def.
-name|bool
-name|isPHIIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-operator|(
-name|index
-operator|&
-name|PHI_BIT
-operator|)
-operator|==
-name|PHI_BIT
-operator|)
-return|;
-block|}
-name|private
-label|:
-comment|/// Construct an index from the given index, with its PHI kill marker set.
-name|LiveIndex
-argument_list|(
-argument|bool phi
-argument_list|,
-argument|LiveIndex o
-argument_list|)
-block|:
-name|index
-argument_list|(
-argument|o.index
-argument_list|)
-block|{
-if|if
-condition|(
-name|phi
-condition|)
-name|index
-operator||=
-name|PHI_BIT
-expr_stmt|;
-else|else
-name|index
-operator|&=
-operator|~
-name|PHI_BIT
-expr_stmt|;
-block|}
-name|explicit
-name|LiveIndex
-argument_list|(
-argument|unsigned idx
-argument_list|)
-block|:
-name|index
-argument_list|(
-argument|idx& ~PHI_BIT
-argument_list|)
-block|{}
-name|LiveIndex
-argument_list|(
-argument|bool phi
-argument_list|,
-argument|unsigned idx
-argument_list|)
-block|:
-name|index
-argument_list|(
-argument|idx& ~PHI_BIT
-argument_list|)
-block|{
-if|if
-condition|(
-name|phi
-condition|)
-name|index
-operator||=
-name|PHI_BIT
-expr_stmt|;
-block|}
-name|LiveIndex
-argument_list|(
-argument|bool phi
-argument_list|,
-argument|unsigned idx
-argument_list|,
-argument|Slot slot
-argument_list|)
-block|:
-name|index
-argument_list|(
-argument|((idx / NUM) * NUM + slot)& ~PHI_BIT
-argument_list|)
-block|{
-if|if
-condition|(
-name|phi
-condition|)
-name|index
-operator||=
-name|PHI_BIT
-expr_stmt|;
-block|}
-name|LiveIndex
-name|nextSlot_
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|(
-name|index
-operator|&
-name|PHI_BIT
-operator|)
-operator|==
-operator|(
-operator|(
-name|index
-operator|+
-literal|1
-operator|)
-operator|&
-name|PHI_BIT
-operator|)
-operator|&&
-literal|"Index out of bounds."
-argument_list|)
-block|;
-return|return
-name|LiveIndex
-argument_list|(
-name|index
-operator|+
-literal|1
-argument_list|)
-return|;
-block|}
-name|LiveIndex
-name|nextIndex_
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|(
-name|index
-operator|&
-name|PHI_BIT
-operator|)
-operator|==
-operator|(
-operator|(
-name|index
-operator|+
-name|NUM
-operator|)
-operator|&
-name|PHI_BIT
-operator|)
-operator|&&
-literal|"Index out of bounds."
-argument_list|)
-block|;
-return|return
-name|LiveIndex
-argument_list|(
-name|index
-operator|+
-name|NUM
-argument_list|)
-return|;
-block|}
-name|LiveIndex
-name|prevSlot_
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|(
-name|index
-operator|&
-name|PHI_BIT
-operator|)
-operator|==
-operator|(
-operator|(
-name|index
-operator|-
-literal|1
-operator|)
-operator|&
-name|PHI_BIT
-operator|)
-operator|&&
-literal|"Index out of bounds."
-argument_list|)
-block|;
-return|return
-name|LiveIndex
-argument_list|(
-name|index
-operator|-
-literal|1
-argument_list|)
-return|;
-block|}
-name|LiveIndex
-name|prevIndex_
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|(
-name|index
-operator|&
-name|PHI_BIT
-operator|)
-operator|==
-operator|(
-operator|(
-name|index
-operator|-
-name|NUM
-operator|)
-operator|&
-name|PHI_BIT
-operator|)
-operator|&&
-literal|"Index out of bounds."
-argument_list|)
-block|;
-return|return
-name|LiveIndex
-argument_list|(
-name|index
-operator|-
-name|NUM
-argument_list|)
-return|;
-block|}
-name|int
-name|distance
-argument_list|(
-name|LiveIndex
-name|other
-argument_list|)
-decl|const
-block|{
-return|return
-operator|(
-name|other
-operator|.
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|-
-operator|(
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-return|;
-block|}
-comment|/// Returns an unsigned number suitable as an index into a
-comment|/// vector over all instructions.
-name|unsigned
-name|getVecIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|/
-name|NUM
-return|;
-block|}
-comment|/// Scale this index by the given factor.
-name|LiveIndex
-name|scale
-argument_list|(
-name|unsigned
-name|factor
-argument_list|)
-decl|const
-block|{
-name|unsigned
-name|i
-init|=
-operator|(
-name|index
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|/
-name|NUM
-decl_stmt|,
-name|o
-init|=
-operator|(
-name|index
-operator|%
-operator|~
-name|PHI_BIT
-operator|)
-operator|%
-name|NUM
-decl_stmt|;
-name|assert
-argument_list|(
-name|index
-operator|<=
-operator|(
-operator|~
-literal|0U
-operator|&
-operator|~
-name|PHI_BIT
-operator|)
-operator|/
-operator|(
-name|factor
-operator|*
-name|NUM
-operator|)
-operator|&&
-literal|"Rescaled interval would overflow"
-argument_list|)
-expr_stmt|;
-return|return
-name|LiveIndex
-argument_list|(
-name|i
-operator|*
-name|NUM
-operator|*
-name|factor
-argument_list|,
-name|o
-argument_list|)
-return|;
-block|}
-specifier|static
-name|LiveIndex
-name|emptyKey
-parameter_list|()
-block|{
-return|return
-name|LiveIndex
-argument_list|(
-name|true
-argument_list|,
-literal|0x7fffffff
-argument_list|)
-return|;
-block|}
-specifier|static
-name|LiveIndex
-name|tombstoneKey
-parameter_list|()
-block|{
-return|return
-name|LiveIndex
-argument_list|(
-name|true
-argument_list|,
-literal|0x7ffffffe
-argument_list|)
-return|;
-block|}
-specifier|static
-name|unsigned
-name|getHashValue
-parameter_list|(
-specifier|const
-name|LiveIndex
-modifier|&
-name|v
-parameter_list|)
-block|{
-return|return
-name|v
-operator|.
-name|index
-operator|*
-literal|37
-return|;
-block|}
-block|}
-empty_stmt|;
-specifier|inline
-name|raw_ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|raw_ostream
-operator|&
-name|os
-operator|,
-name|LiveIndex
-name|mi
-operator|)
-block|{
-name|mi
-operator|.
-name|print
-argument_list|(
-name|os
-argument_list|)
-block|;
-return|return
-name|os
-return|;
-block|}
-comment|/// Densemap specialization for LiveIndex.
-name|template
-operator|<
-operator|>
-expr|struct
-name|DenseMapInfo
-operator|<
-name|LiveIndex
-operator|>
-block|{
-specifier|static
-specifier|inline
-name|LiveIndex
-name|getEmptyKey
-argument_list|()
-block|{
-return|return
-name|LiveIndex
-operator|::
-name|emptyKey
-argument_list|()
-return|;
-block|}
-specifier|static
-specifier|inline
-name|LiveIndex
-name|getTombstoneKey
-argument_list|()
-block|{
-return|return
-name|LiveIndex
-operator|::
-name|tombstoneKey
-argument_list|()
-return|;
-block|}
-specifier|static
-specifier|inline
-name|unsigned
-name|getHashValue
-argument_list|(
-argument|const LiveIndex&v
-argument_list|)
-block|{
-return|return
-name|LiveIndex
-operator|::
-name|getHashValue
-argument_list|(
-name|v
-argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|isEqual
-argument_list|(
-argument|const LiveIndex&LHS
-argument_list|,
-argument|const LiveIndex&RHS
-argument_list|)
-block|{
-return|return
-operator|(
-name|LHS
-operator|==
-name|RHS
-operator|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
 comment|/// VNInfo - Value Number Information.
 comment|/// This class holds information about a machine level values, including
 comment|/// definition and use points.
@@ -1044,59 +161,60 @@ name|class
 name|VNInfo
 block|{
 name|private
-operator|:
-expr|enum
+label|:
+enum|enum
 block|{
 name|HAS_PHI_KILL
-operator|=
+init|=
 literal|1
 block|,
 name|REDEF_BY_EC
-operator|=
+init|=
 literal|1
 operator|<<
 literal|1
 block|,
 name|IS_PHI_DEF
-operator|=
+init|=
 literal|1
 operator|<<
 literal|2
 block|,
 name|IS_UNUSED
-operator|=
+init|=
 literal|1
 operator|<<
 literal|3
 block|,
 name|IS_DEF_ACCURATE
-operator|=
+init|=
 literal|1
 operator|<<
 literal|4
 block|}
-block|;
+enum|;
 name|unsigned
 name|char
 name|flags
-block|;
-expr|union
+decl_stmt|;
+union|union
 block|{
 name|MachineInstr
-operator|*
+modifier|*
 name|copy
-block|;
+decl_stmt|;
 name|unsigned
 name|reg
-block|;     }
+decl_stmt|;
+block|}
 name|cr
-block|;
+union|;
 name|public
-operator|:
+label|:
 typedef|typedef
 name|SmallVector
 operator|<
-name|LiveIndex
+name|SlotIndex
 operator|,
 literal|4
 operator|>
@@ -1105,34 +223,15 @@ expr_stmt|;
 comment|/// The ID number of this value.
 name|unsigned
 name|id
-block|;
+decl_stmt|;
 comment|/// The index of the defining instruction (if isDefAccurate() returns true).
-name|LiveIndex
+name|SlotIndex
 name|def
-block|;
+decl_stmt|;
 name|KillSet
 name|kills
-block|;
-name|VNInfo
-argument_list|()
-operator|:
-name|flags
-argument_list|(
-name|IS_UNUSED
-argument_list|)
-block|,
-name|id
-argument_list|(
-argument|~
-literal|1U
-argument_list|)
-block|{
-name|cr
-operator|.
-name|copy
-operator|=
-literal|0
-block|; }
+decl_stmt|;
+comment|/*     VNInfo(LiveIntervals&li_)       : defflags(IS_UNUSED), id(~1U) { cr.copy = 0; }     */
 comment|/// VNInfo constructor.
 comment|/// d is presumed to point to the actual defining instr. If it doesn't
 comment|/// setIsDefAccurate(false) should be called after construction.
@@ -1140,21 +239,21 @@ name|VNInfo
 argument_list|(
 argument|unsigned i
 argument_list|,
-argument|LiveIndex d
+argument|SlotIndex d
 argument_list|,
 argument|MachineInstr *c
 argument_list|)
-operator|:
+block|:
 name|flags
 argument_list|(
 name|IS_DEF_ACCURATE
 argument_list|)
-block|,
+operator|,
 name|id
 argument_list|(
 name|i
 argument_list|)
-block|,
+operator|,
 name|def
 argument_list|(
 argument|d
@@ -1180,26 +279,26 @@ name|orig
 operator|.
 name|flags
 argument_list|)
-block|,
+operator|,
 name|cr
 argument_list|(
 name|orig
 operator|.
 name|cr
 argument_list|)
-block|,
+operator|,
 name|id
 argument_list|(
 name|i
 argument_list|)
-block|,
+operator|,
 name|def
 argument_list|(
 name|orig
 operator|.
 name|def
 argument_list|)
-block|,
+operator|,
 name|kills
 argument_list|(
 argument|orig.kills
@@ -1248,16 +347,18 @@ return|;
 block|}
 name|void
 name|setFlags
-argument_list|(
-argument|unsigned flags
-argument_list|)
+parameter_list|(
+name|unsigned
+name|flags
+parameter_list|)
 block|{
 name|this
 operator|->
 name|flags
 operator|=
 name|flags
-block|; }
+expr_stmt|;
+block|}
 comment|/// For a register interval, if this VN was definied by a copy instr
 comment|/// getCopy() returns a pointer to it, otherwise returns 0.
 comment|/// For a stack interval the behaviour of this method is undefined.
@@ -1278,16 +379,19 @@ comment|/// This method should not be called on stack intervals as it may lead t
 comment|/// undefined behavior.
 name|void
 name|setCopy
-argument_list|(
-argument|MachineInstr *c
-argument_list|)
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|c
+parameter_list|)
 block|{
 name|cr
 operator|.
 name|copy
 operator|=
 name|c
-block|; }
+expr_stmt|;
+block|}
 comment|/// For a stack interval, returns the reg which this stack interval was
 comment|/// defined from.
 comment|/// For a register interval the behaviour of this method is undefined.
@@ -1307,16 +411,18 @@ comment|/// This method should not be called on register intervals as it may lea
 comment|/// to undefined behaviour.
 name|void
 name|setReg
-argument_list|(
-argument|unsigned reg
-argument_list|)
+parameter_list|(
+name|unsigned
+name|reg
+parameter_list|)
 block|{
 name|cr
 operator|.
 name|reg
 operator|=
 name|reg
-block|; }
+expr_stmt|;
+block|}
 comment|/// Returns true if one or more kills are PHI nodes.
 name|bool
 name|hasPHIKill
@@ -1332,9 +438,10 @@ block|}
 comment|/// Set the PHI kill flag on this value.
 name|void
 name|setHasPHIKill
-argument_list|(
-argument|bool hasKill
-argument_list|)
+parameter_list|(
+name|bool
+name|hasKill
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1367,9 +474,10 @@ block|}
 comment|/// Set the "redef by early clobber" flag on this value.
 name|void
 name|setHasRedefByEC
-argument_list|(
-argument|bool hasRedef
-argument_list|)
+parameter_list|(
+name|bool
+name|hasRedef
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1402,9 +510,10 @@ block|}
 comment|/// Set the "phi def" flag on this value.
 name|void
 name|setIsPHIDef
-argument_list|(
-argument|bool phiDef
-argument_list|)
+parameter_list|(
+name|bool
+name|phiDef
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1436,9 +545,10 @@ block|}
 comment|/// Set the "is unused" flag on this value.
 name|void
 name|setIsUnused
-argument_list|(
-argument|bool unused
-argument_list|)
+parameter_list|(
+name|bool
+name|unused
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1470,9 +580,10 @@ block|}
 comment|/// Set the "is def accurate" flag on this value.
 name|void
 name|setIsDefAccurate
-argument_list|(
-argument|bool defAccurate
-argument_list|)
+parameter_list|(
+name|bool
+name|defAccurate
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1493,9 +604,10 @@ comment|/// Returns true if the given index is a kill of this value.
 name|bool
 name|isKill
 argument_list|(
-argument|LiveIndex k
+name|SlotIndex
+name|k
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|KillSet
 operator|::
@@ -1518,7 +630,7 @@ argument_list|()
 argument_list|,
 name|k
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 operator|(
 name|i
@@ -1539,9 +651,10 @@ comment|/// addKill - Add a kill instruction index to the specified value
 comment|/// number.
 name|void
 name|addKill
-argument_list|(
-argument|LiveIndex k
-argument_list|)
+parameter_list|(
+name|SlotIndex
+name|k
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1598,9 +711,10 @@ comment|/// Remove the specified kill index from this value's kills list.
 comment|/// Returns true if the value was present, otherwise returns false.
 name|bool
 name|removeKill
-argument_list|(
-argument|LiveIndex k
-argument_list|)
+parameter_list|(
+name|SlotIndex
+name|k
+parameter_list|)
 block|{
 name|KillSet
 operator|::
@@ -1623,7 +737,7 @@ argument_list|()
 argument_list|,
 name|k
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -1657,11 +771,13 @@ block|}
 comment|/// Remove all kills in the range [s, e).
 name|void
 name|removeKills
-argument_list|(
-argument|LiveIndex s
-argument_list|,
-argument|LiveIndex e
-argument_list|)
+parameter_list|(
+name|SlotIndex
+name|s
+parameter_list|,
+name|SlotIndex
+name|e
+parameter_list|)
 block|{
 name|KillSet
 operator|::
@@ -1684,7 +800,7 @@ argument_list|()
 argument_list|,
 name|s
 argument_list|)
-block|,
+operator|,
 name|se
 operator|=
 name|std
@@ -1703,7 +819,7 @@ argument_list|()
 argument_list|,
 name|e
 argument_list|)
-block|;
+expr_stmt|;
 name|kills
 operator|.
 name|erase
@@ -1712,47 +828,48 @@ name|si
 argument_list|,
 name|se
 argument_list|)
-block|;     }
-expr|}
-block|;
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 comment|/// LiveRange structure - This represents a simple register range in the
 comment|/// program, with an inclusive start point and an exclusive end point.
 comment|/// These ranges are rendered as [start,end).
-block|struct
+struct|struct
 name|LiveRange
 block|{
-name|LiveIndex
+name|SlotIndex
 name|start
-block|;
+decl_stmt|;
 comment|// Start point of the interval (inclusive)
-name|LiveIndex
+name|SlotIndex
 name|end
-block|;
+decl_stmt|;
 comment|// End point of the interval (exclusive)
 name|VNInfo
-operator|*
+modifier|*
 name|valno
-block|;
+decl_stmt|;
 comment|// identifier for the value contained in this interval.
 name|LiveRange
 argument_list|(
-argument|LiveIndex S
+argument|SlotIndex S
 argument_list|,
-argument|LiveIndex E
+argument|SlotIndex E
 argument_list|,
 argument|VNInfo *V
 argument_list|)
-operator|:
+block|:
 name|start
 argument_list|(
 name|S
 argument_list|)
-block|,
+operator|,
 name|end
 argument_list|(
 name|E
 argument_list|)
-block|,
+operator|,
 name|valno
 argument_list|(
 argument|V
@@ -1772,7 +889,7 @@ comment|///
 name|bool
 name|contains
 argument_list|(
-argument|LiveIndex I
+argument|SlotIndex I
 argument_list|)
 specifier|const
 block|{
@@ -1791,11 +908,13 @@ comment|/// this range.
 name|bool
 name|containsRange
 argument_list|(
-argument|LiveIndex S
+name|SlotIndex
+name|S
 argument_list|,
-argument|LiveIndex E
+name|SlotIndex
+name|E
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -1807,7 +926,7 @@ operator|)
 operator|&&
 literal|"Backwards interval?"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 operator|(
 name|start
@@ -1892,22 +1011,24 @@ name|void
 name|dump
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|void
 name|print
 argument_list|(
-argument|raw_ostream&os
+name|raw_ostream
+operator|&
+name|os
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|private
-operator|:
+label|:
 name|LiveRange
 argument_list|()
-block|;
+expr_stmt|;
 comment|// DO NOT IMPLEMENT
 block|}
-block|;
+struct|;
 name|raw_ostream
 operator|&
 name|operator
@@ -1922,13 +1043,13 @@ name|LiveRange
 operator|&
 name|LR
 operator|)
-block|;
+expr_stmt|;
 specifier|inline
 name|bool
 name|operator
 operator|<
 operator|(
-name|LiveIndex
+name|SlotIndex
 name|V
 operator|,
 specifier|const
@@ -1955,7 +1076,7 @@ name|LiveRange
 operator|&
 name|LR
 operator|,
-name|LiveIndex
+name|SlotIndex
 name|V
 operator|)
 block|{
@@ -1974,7 +1095,7 @@ name|class
 name|LiveInterval
 block|{
 name|public
-operator|:
+label|:
 typedef|typedef
 name|SmallVector
 operator|<
@@ -1996,7 +1117,7 @@ name|VNInfoList
 expr_stmt|;
 name|unsigned
 name|reg
-expr_stmt|;
+decl_stmt|;
 comment|// the register or stack slot of this interval
 comment|// if the top bits is set, it represents a stack slot.
 name|float
@@ -2209,7 +1330,7 @@ parameter_list|(
 name|iterator
 name|I
 parameter_list|,
-name|LiveIndex
+name|SlotIndex
 name|Pos
 parameter_list|)
 block|{
@@ -2424,7 +1545,7 @@ name|VNInfo
 modifier|*
 name|getNextValue
 parameter_list|(
-name|LiveIndex
+name|SlotIndex
 name|def
 parameter_list|,
 name|MachineInstr
@@ -2738,6 +1859,10 @@ comment|/// VNInfoAllocator since it will create a new val#.
 name|void
 name|MergeInClobberRanges
 parameter_list|(
+name|LiveIntervals
+modifier|&
+name|li_
+parameter_list|,
 specifier|const
 name|LiveInterval
 modifier|&
@@ -2753,10 +1878,14 @@ comment|/// single LiveRange only.
 name|void
 name|MergeInClobberRange
 parameter_list|(
-name|LiveIndex
+name|LiveIntervals
+modifier|&
+name|li_
+parameter_list|,
+name|SlotIndex
 name|Start
 parameter_list|,
-name|LiveIndex
+name|SlotIndex
 name|End
 parameter_list|,
 name|BumpPtrAllocator
@@ -2837,20 +1966,20 @@ argument_list|()
 return|;
 block|}
 comment|/// beginIndex - Return the lowest numbered slot covered by interval.
-name|LiveIndex
+name|SlotIndex
 name|beginIndex
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
+operator|!
 name|empty
 argument_list|()
-condition|)
-return|return
-name|LiveIndex
-argument_list|()
-return|;
+operator|&&
+literal|"Call to beginIndex() on empty interval."
+argument_list|)
+block|;
 return|return
 name|ranges
 operator|.
@@ -2860,34 +1989,22 @@ operator|.
 name|start
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// endNumber - return the maximum point of the interval of the whole,
-end_comment
-
-begin_comment
 comment|/// exclusive.
-end_comment
-
-begin_expr_stmt
-name|LiveIndex
+name|SlotIndex
 name|endIndex
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+name|assert
+argument_list|(
+operator|!
 name|empty
 argument_list|()
-condition|)
-return|return
-name|LiveIndex
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_return
+operator|&&
+literal|"Call to endIndex() on empty interval."
+argument_list|)
+block|;
 return|return
 name|ranges
 operator|.
@@ -2896,18 +2013,14 @@ argument_list|()
 operator|.
 name|end
 return|;
-end_return
-
-begin_macro
-unit|}      bool
+block|}
+name|bool
 name|expiredAt
 argument_list|(
-argument|LiveIndex index
+name|SlotIndex
+name|index
 argument_list|)
-end_macro
-
-begin_expr_stmt
-specifier|const
+decl|const
 block|{
 return|return
 name|index
@@ -2916,57 +2029,33 @@ name|endIndex
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|bool
 name|liveAt
 argument_list|(
-name|LiveIndex
+name|SlotIndex
 name|index
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// liveBeforeAndAt - Check if the interval is live at the index and the
-end_comment
-
-begin_comment
 comment|// index just before it. If index is liveAt, check if it starts a new live
-end_comment
-
-begin_comment
 comment|// range.If it does, then check if the previous live range ends at index-1.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|liveBeforeAndAt
 argument_list|(
-name|LiveIndex
+name|SlotIndex
 name|index
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// getLiveRangeContaining - Return the live range that contains the
-end_comment
-
-begin_comment
 comment|/// specified index, or null if there is none.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|LiveRange
 modifier|*
 name|getLiveRangeContaining
 argument_list|(
-name|LiveIndex
+name|SlotIndex
 name|Idx
 argument_list|)
 decl|const
@@ -2992,22 +2081,13 @@ operator|*
 name|I
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getLiveRangeContaining - Return the live range that contains the
-end_comment
-
-begin_comment
 comment|/// specified index, or null if there is none.
-end_comment
-
-begin_function
 name|LiveRange
 modifier|*
 name|getLiveRangeContaining
 parameter_list|(
-name|LiveIndex
+name|SlotIndex
 name|Idx
 parameter_list|)
 block|{
@@ -3032,74 +2112,38 @@ operator|*
 name|I
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// FindLiveRangeContaining - Return an iterator to the live range that
-end_comment
-
-begin_comment
 comment|/// contains the specified index, or end() if there is none.
-end_comment
-
-begin_decl_stmt
 name|const_iterator
 name|FindLiveRangeContaining
 argument_list|(
-name|LiveIndex
+name|SlotIndex
 name|Idx
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// FindLiveRangeContaining - Return an iterator to the live range that
-end_comment
-
-begin_comment
 comment|/// contains the specified index, or end() if there is none.
-end_comment
-
-begin_function_decl
 name|iterator
 name|FindLiveRangeContaining
 parameter_list|(
-name|LiveIndex
+name|SlotIndex
 name|Idx
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// findDefinedVNInfo - Find the by the specified
-end_comment
-
-begin_comment
 comment|/// index (register interval) or defined
-end_comment
-
-begin_decl_stmt
 name|VNInfo
 modifier|*
 name|findDefinedVNInfoForRegInt
 argument_list|(
-name|LiveIndex
+name|SlotIndex
 name|Idx
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// findDefinedVNInfo - Find the VNInfo that's defined by the specified
-end_comment
-
-begin_comment
 comment|/// register (stack inteval only).
-end_comment
-
-begin_decl_stmt
 name|VNInfo
 modifier|*
 name|findDefinedVNInfoForStackInt
@@ -3109,17 +2153,8 @@ name|Reg
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// overlaps - Return true if the intersection of the two live intervals is
-end_comment
-
-begin_comment
 comment|/// not empty.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|overlaps
 argument_list|(
@@ -3142,43 +2177,22 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// overlaps - Return true if the live interval overlaps a range specified
-end_comment
-
-begin_comment
 comment|/// by [Start, End).
-end_comment
-
-begin_decl_stmt
 name|bool
 name|overlaps
 argument_list|(
-name|LiveIndex
+name|SlotIndex
 name|Start
 argument_list|,
-name|LiveIndex
+name|SlotIndex
 name|End
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// overlapsFrom - Return true if the intersection of the two live intervals
-end_comment
-
-begin_comment
 comment|/// is not empty.  The specified iterator is a hint that we can begin
-end_comment
-
-begin_comment
 comment|/// scanning the Other interval starting at I.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|overlapsFrom
 argument_list|(
@@ -3192,21 +2206,9 @@ name|I
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// addRange - Add the specified LiveRange to this interval, merging
-end_comment
-
-begin_comment
 comment|/// intervals as appropriate.  This returns an iterator to the inserted live
-end_comment
-
-begin_comment
 comment|/// range (which may have grown since it was inserted.
-end_comment
-
-begin_function
 name|void
 name|addRange
 parameter_list|(
@@ -3225,21 +2227,9 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// join - Join two live intervals (this, and other) together.  This applies
-end_comment
-
-begin_comment
 comment|/// mappings to the value numbers in the LHS/RHS intervals as specified.  If
-end_comment
-
-begin_comment
 comment|/// the intervals are not joinable, this aborts.
-end_comment
-
-begin_decl_stmt
 name|void
 name|join
 argument_list|(
@@ -3272,45 +2262,27 @@ operator|*
 name|MRI
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// isInOneLiveRange - Return true if the range specified is entirely in the
-end_comment
-
-begin_comment
 comment|/// a single LiveRange of the live interval.
-end_comment
-
-begin_function_decl
 name|bool
 name|isInOneLiveRange
 parameter_list|(
-name|LiveIndex
+name|SlotIndex
 name|Start
 parameter_list|,
-name|LiveIndex
+name|SlotIndex
 name|End
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// removeRange - Remove the specified range from this interval.  Note that
-end_comment
-
-begin_comment
 comment|/// the range must be a single LiveRange in its entirety.
-end_comment
-
-begin_function_decl
 name|void
 name|removeRange
 parameter_list|(
-name|LiveIndex
+name|SlotIndex
 name|Start
 parameter_list|,
-name|LiveIndex
+name|SlotIndex
 name|End
 parameter_list|,
 name|bool
@@ -3319,9 +2291,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
 name|void
 name|removeRange
 parameter_list|(
@@ -3348,17 +2317,8 @@ name|RemoveDeadValNo
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// removeValNo - Remove all the ranges defined by the specified value#.
-end_comment
-
-begin_comment
 comment|/// Also remove the value# from value# list.
-end_comment
-
-begin_function_decl
 name|void
 name|removeValNo
 parameter_list|(
@@ -3367,17 +2327,8 @@ modifier|*
 name|ValNo
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// scaleNumbering - Renumber VNI and ranges to provide gaps for new
-end_comment
-
-begin_comment
 comment|/// instructions.
-end_comment
-
-begin_function_decl
 name|void
 name|scaleNumbering
 parameter_list|(
@@ -3385,33 +2336,15 @@ name|unsigned
 name|factor
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// getSize - Returns the sum of sizes of all the LiveRange's.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getSize
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// ComputeJoinedWeight - Set the weight of a live interval after
-end_comment
-
-begin_comment
 comment|/// Other has been merged into it.
-end_comment
-
-begin_function_decl
 name|void
 name|ComputeJoinedWeight
 parameter_list|(
@@ -3421,9 +2354,6 @@ modifier|&
 name|Other
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|bool
 name|operator
 operator|<
@@ -3436,7 +2366,7 @@ operator|)
 specifier|const
 block|{
 specifier|const
-name|LiveIndex
+name|SlotIndex
 operator|&
 name|thisIndex
 operator|=
@@ -3444,7 +2374,7 @@ name|beginIndex
 argument_list|()
 block|;
 specifier|const
-name|LiveIndex
+name|SlotIndex
 operator|&
 name|otherIndex
 operator|=
@@ -3473,9 +2403,6 @@ operator|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -3492,22 +2419,13 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_expr_stmt
 name|Ranges
 operator|::
 name|iterator
@@ -3518,9 +2436,6 @@ argument_list|,
 argument|Ranges::iterator From
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|extendIntervalEndTo
 argument_list|(
@@ -3529,13 +2444,10 @@ operator|::
 name|iterator
 name|I
 argument_list|,
-name|LiveIndex
+name|SlotIndex
 name|NewEnd
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|Ranges
 operator|::
 name|iterator
@@ -3543,12 +2455,9 @@ name|extendIntervalStartTo
 argument_list|(
 argument|Ranges::iterator I
 argument_list|,
-argument|LiveIndex NewStr
+argument|SlotIndex NewStr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|LiveInterval
 modifier|&
 name|operator
@@ -3560,14 +2469,9 @@ operator|&
 name|rhs
 operator|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// DO NOT IMPLEMENT
-end_comment
-
-begin_expr_stmt
-unit|};
+block|}
+empty_stmt|;
 specifier|inline
 name|raw_ostream
 operator|&
@@ -3595,10 +2499,10 @@ return|return
 name|OS
 return|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

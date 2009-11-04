@@ -667,6 +667,9 @@ comment|// This is an instance of GlobalVariable
 name|UndefValueVal
 block|,
 comment|// This is an instance of UndefValue
+name|BlockAddressVal
+block|,
+comment|// This is an instance of BlockAddress
 name|ConstantExprVal
 block|,
 comment|// This is an instance of ConstantExpr

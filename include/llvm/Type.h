@@ -52,19 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/LLVMContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -112,6 +106,9 @@ name|raw_ostream
 decl_stmt|;
 name|class
 name|Module
+decl_stmt|;
+name|class
+name|LLVMContext
 decl_stmt|;
 comment|/// This file contains the declaration of the Type class.  For more "Type" type
 comment|/// stuff, look in DerivedTypes.h.

@@ -108,18 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/System/RWMutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Assembly/Writer.h"
 end_include
 
@@ -622,7 +610,7 @@ name|MDNode
 operator|>
 name|MDNodeSet
 expr_stmt|;
-name|ValueMap
+name|ConstantUniqueMap
 operator|<
 name|char
 operator|,
@@ -633,7 +621,7 @@ operator|>
 name|AggZeroConstants
 expr_stmt|;
 typedef|typedef
-name|ValueMap
+name|ConstantUniqueMap
 operator|<
 name|std
 operator|::
@@ -656,7 +644,7 @@ name|ArrayConstantsTy
 name|ArrayConstants
 decl_stmt|;
 typedef|typedef
-name|ValueMap
+name|ConstantUniqueMap
 operator|<
 name|std
 operator|::
@@ -679,7 +667,7 @@ name|StructConstantsTy
 name|StructConstants
 decl_stmt|;
 typedef|typedef
-name|ValueMap
+name|ConstantUniqueMap
 operator|<
 name|std
 operator|::
@@ -698,7 +686,7 @@ expr_stmt|;
 name|VectorConstantsTy
 name|VectorConstants
 decl_stmt|;
-name|ValueMap
+name|ConstantUniqueMap
 operator|<
 name|char
 operator|,
@@ -708,7 +696,7 @@ name|ConstantPointerNull
 operator|>
 name|NullPtrConstants
 expr_stmt|;
-name|ValueMap
+name|ConstantUniqueMap
 operator|<
 name|char
 operator|,
@@ -718,7 +706,25 @@ name|UndefValue
 operator|>
 name|UndefValueConstants
 expr_stmt|;
-name|ValueMap
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|Function
+operator|*
+operator|,
+name|BasicBlock
+operator|*
+operator|>
+operator|,
+name|BlockAddress
+operator|*
+operator|>
+name|BlockAddresses
+expr_stmt|;
+name|ConstantUniqueMap
 operator|<
 name|ExprMapKeyType
 operator|,
@@ -736,40 +742,11 @@ name|ConstantInt
 modifier|*
 name|TheFalseVal
 decl_stmt|;
-comment|// Lock used for guarding access to the leak detector
-name|sys
-operator|::
-name|SmartMutex
-operator|<
-name|true
-operator|>
-name|LLVMObjectsLock
-expr_stmt|;
 name|LeakDetectorImpl
 operator|<
 name|Value
 operator|>
 name|LLVMObjects
-expr_stmt|;
-comment|// Lock used for guarding access to the type maps.
-name|sys
-operator|::
-name|SmartMutex
-operator|<
-name|true
-operator|>
-name|TypeMapLock
-expr_stmt|;
-comment|// Recursive lock used for guarding access to AbstractTypeUsers.
-comment|// NOTE: The true template parameter means this will no-op when we're not in
-comment|// multithreaded mode.
-name|sys
-operator|::
-name|SmartMutex
-operator|<
-name|true
-operator|>
-name|AbstractTypeUsersLock
 expr_stmt|;
 comment|// Basic type instances.
 specifier|const

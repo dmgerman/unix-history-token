@@ -400,24 +400,6 @@ name|LoopSimplifyID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// LowerAllocations - Turn free instructions into @free calls.
-comment|//
-comment|//   AU.addRequiredID(LowerAllocationsID);
-comment|//
-name|Pass
-modifier|*
-name|createLowerAllocationsPass
-parameter_list|()
-function_decl|;
-specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
-name|LowerAllocationsID
-decl_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// TailCallElimination - This pass eliminates call instructions to the current
 comment|// function which occur immediately before return instructions.
 comment|//
@@ -507,7 +489,12 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createGVNPass
-parameter_list|()
+parameter_list|(
+name|bool
+name|NoPRE
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -565,15 +552,6 @@ parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// CodeGenLICM - This pass performs late LICM; hoisting constants out of loops.
-comment|//
-name|Pass
-modifier|*
-name|createCodeGenLICMPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// InstructionNamer - Give any unnamed non-void instructions "tmp" names.
 comment|//
 name|FunctionPass
@@ -606,6 +584,33 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createSSIEverythingPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// GEPSplitter - Split complex GEPs into simple ones
+comment|//
+name|FunctionPass
+modifier|*
+name|createGEPSplitterPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// SCCVN - Aggressively eliminate redundant scalar values
+comment|//
+name|FunctionPass
+modifier|*
+name|createSCCVNPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// ABCD - Elimination of Array Bounds Checks on Demand
+comment|//
+name|FunctionPass
+modifier|*
+name|createABCDPass
 parameter_list|()
 function_decl|;
 block|}

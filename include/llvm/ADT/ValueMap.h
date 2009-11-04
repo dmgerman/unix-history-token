@@ -36,7 +36,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines the ValueMap class.
+comment|// This file defines the ValueMap class.  ValueMap maps Value* or any subclass
+end_comment
+
+begin_comment
+comment|// to an arbitrary other type.  It provides the DenseMap interface but updates
+end_comment
+
+begin_comment
+comment|// itself to remain safe when keys are RAUWed or deleted.  By default, when a
+end_comment
+
+begin_comment
+comment|// key is RAUWed from V1 to V2, the old mapping V1->target is removed, and a new
+end_comment
+
+begin_comment
+comment|// mapping V2->target is added.  If V2 already existed, its old target is
+end_comment
+
+begin_comment
+comment|// overwritten.  When a key is deleted, its mapping is removed.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// You can override a ValueMap's Config parameter to control exactly what
+end_comment
+
+begin_comment
+comment|// happens on RAUW and destruction and to get called back on each event.  It's
+end_comment
+
+begin_comment
+comment|// legal to call back into the ValueMap from a Config's callbacks.  Config
+end_comment
+
+begin_comment
+comment|// parameters should inherit from ValueMapConfig<KeyT> to get default
+end_comment
+
+begin_comment
+comment|// implementations of all the methods ValueMap uses.  See ValueMapConfig for
+end_comment
+
+begin_comment
+comment|// documentation of the functions you can override.
 end_comment
 
 begin_comment
@@ -132,6 +180,9 @@ operator|>
 name|class
 name|ValueMapConstIterator
 expr_stmt|;
+comment|/// This class defines the default behavior for configurable aspects of
+comment|/// ValueMap<>.  User Configs should inherit from this class to be as compatible
+comment|/// as possible with future versions of ValueMap.
 name|template
 operator|<
 name|typename
@@ -180,7 +231,7 @@ name|ExtraDataT
 operator|>
 specifier|static
 name|void
-name|onDeleted
+name|onDelete
 argument_list|(
 argument|const ExtraDataT&Data
 argument_list|,
@@ -189,7 +240,7 @@ argument_list|)
 block|{}
 comment|/// Returns a mutex that should be acquired around any changes to the map.
 comment|/// This is only acquired from the CallbackVH (and held around calls to onRAUW
-comment|/// and onDeleted) and not inside other ValueMap methods.  NULL means that no
+comment|/// and onDelete) and not inside other ValueMap methods.  NULL means that no
 comment|/// mutex is necessary.
 name|template
 operator|<
@@ -212,17 +263,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ValueMap maps Value* or any subclass to an arbitrary other
-comment|/// type. It provides the DenseMap interface.  When the key values are
-comment|/// deleted or RAUWed, ValueMap relies on the Config to decide what to
-comment|/// do.  Config parameters should inherit from ValueMapConfig<KeyT> to
-comment|/// get default implementations of all the methods ValueMap uses.
-comment|///
-comment|/// By default, when a key is RAUWed from V1 to V2, the old mapping
-comment|/// V1->target is removed, and a new mapping V2->target is added.  If
-comment|/// V2 already existed, its old target is overwritten.  When a key is
-comment|/// deleted, its mapping is removed.  You can override Config to get
-comment|/// called back on each event.
+comment|/// See the file comment.
 name|template
 operator|<
 name|typename
@@ -863,6 +904,9 @@ return|;
 block|}
 name|private
 label|:
+comment|// Takes a key being looked up in the map and wraps it into a
+comment|// ValueMapCallbackVH, the actual key type of the map.  We use a helper
+comment|// function because ValueMapCVH is constructed with a second parameter.
 name|ValueMapCVH
 name|Wrap
 argument_list|(
@@ -897,6 +941,14 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// This CallbackVH updates its ValueMap when the contained Value changes,
+end_comment
+
+begin_comment
+comment|// according to the user's preferences expressed through the Config object.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -933,7 +985,7 @@ name|ValueInfoT
 operator|>
 block|;
 name|friend
-name|class
+expr|struct
 name|DenseMapInfo
 operator|<
 name|ValueMapCallbackVH
@@ -1074,7 +1126,7 @@ argument_list|()
 expr_stmt|;
 name|Config
 operator|::
-name|onDeleted
+name|onDelete
 argument_list|(
 name|Copy
 operator|.

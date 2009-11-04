@@ -353,6 +353,28 @@ modifier|&
 name|DAG
 parameter_list|)
 function_decl|;
+comment|/// getVFPf32Imm / getVFPf64Imm - If the given fp immediate can be
+comment|/// materialized with a VMOV.f32 / VMOV.f64 (i.e. fconsts / fconstd)
+comment|/// instruction, returns its 8-bit integer representation. Otherwise,
+comment|/// returns -1.
+name|int
+name|getVFPf32Imm
+parameter_list|(
+specifier|const
+name|APFloat
+modifier|&
+name|FPImm
+parameter_list|)
+function_decl|;
+name|int
+name|getVFPf64Imm
+parameter_list|(
+specifier|const
+name|APFloat
+modifier|&
+name|FPImm
+parameter_list|)
+function_decl|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|//  ARMTargetLowering - ARM Implementation of the TargetLowering interface
@@ -628,6 +650,19 @@ argument|const GlobalAddressSDNode *GA
 argument_list|)
 specifier|const
 block|;
+comment|/// isFPImmLegal - Returns true if the target can instruction select the
+comment|/// specified FP immediate natively. If false, the legalizer will
+comment|/// materialize the FP immediate as a load from a constant pool.
+name|virtual
+name|bool
+name|isFPImmLegal
+argument_list|(
+argument|const APFloat&Imm
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 comment|/// Subtarget - Keep a pointer to the ARMSubtarget around so that we can
@@ -790,6 +825,17 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
+name|SDValue
+name|LowerBlockAddress
 parameter_list|(
 name|SDValue
 name|Op

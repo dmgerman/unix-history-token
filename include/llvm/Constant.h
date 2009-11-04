@@ -152,6 +152,23 @@ name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
+name|void
+name|setOperand
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Value *V
+argument_list|)
+block|{
+name|User
+operator|::
+name|setOperand
+argument_list|(
+name|i
+argument_list|,
+name|V
+argument_list|)
+block|;   }
 name|public
 operator|:
 comment|/// isNullValue - Return true if this is the value that would be returned by
@@ -183,7 +200,14 @@ name|bool
 name|canTrap
 argument_list|()
 specifier|const
-block|;    enum
+block|;
+comment|/// isConstantUsed - Return true if the constant has users other than constant
+comment|/// exprs and other dangling things.
+name|bool
+name|isConstantUsed
+argument_list|()
+specifier|const
+block|;      enum
 name|PossibleRelocationsTy
 block|{
 name|NoRelocation
@@ -218,9 +242,9 @@ name|getRelocationInfo
 argument_list|()
 specifier|const
 block|;
-comment|// Specialize get/setOperand for Constants as their operands are always
-comment|// constants as well.
-name|Constant
+comment|// Specialize get/setOperand for Users as their operands are always
+comment|// constants or BasicBlocks as well.
+name|User
 operator|*
 name|getOperand
 argument_list|(
@@ -230,7 +254,7 @@ block|{
 return|return
 name|static_cast
 operator|<
-name|Constant
+name|User
 operator|*
 operator|>
 operator|(
@@ -244,7 +268,7 @@ operator|)
 return|;
 block|}
 specifier|const
-name|Constant
+name|User
 operator|*
 name|getOperand
 argument_list|(
@@ -256,7 +280,7 @@ return|return
 name|static_cast
 operator|<
 specifier|const
-name|Constant
+name|User
 operator|*
 operator|>
 operator|(
@@ -269,23 +293,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|void
-name|setOperand
-argument_list|(
-argument|unsigned i
-argument_list|,
-argument|Constant *C
-argument_list|)
-block|{
-name|User
-operator|::
-name|setOperand
-argument_list|(
-name|i
-argument_list|,
-name|C
-argument_list|)
-block|;   }
 comment|/// getVectorElements - This method, which is only valid on constant of vector
 comment|/// type, returns the elements of the vector in the specified smallvector.
 comment|/// This handles breaking down a vector undef into undef elements, etc.  For

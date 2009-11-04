@@ -121,7 +121,7 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
-comment|/** See llvm::createRaiseAllocationsPass function. */
+comment|// FIXME: Remove in LLVM 3.0.
 name|void
 name|LLVMAddRaiseAllocationsPass
 parameter_list|(

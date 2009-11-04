@@ -267,6 +267,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|unsigned
+operator|)
 name|Str
 operator|.
 name|size
@@ -775,6 +778,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|unsigned
+operator|)
 name|Node
 operator|.
 name|size

@@ -105,11 +105,6 @@ block|{
 name|ARMRegisterInfo
 name|RI
 block|;
-specifier|const
-name|ARMSubtarget
-operator|&
-name|Subtarget
-block|;
 name|public
 operator|:
 name|explicit

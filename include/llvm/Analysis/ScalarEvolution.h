@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -2033,12 +2033,11 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// forgetLoopBackedgeTakenCount - This method should be called by the
-comment|/// client when it has changed a loop in a way that may effect
-comment|/// ScalarEvolution's ability to compute a trip count, or if the loop
-comment|/// is deleted.
+comment|/// forgetLoop - This method should be called by the client when it has
+comment|/// changed a loop in a way that may effect ScalarEvolution's ability to
+comment|/// compute a trip count, or if the loop is deleted.
 name|void
-name|forgetLoopBackedgeTakenCount
+name|forgetLoop
 argument_list|(
 specifier|const
 name|Loop

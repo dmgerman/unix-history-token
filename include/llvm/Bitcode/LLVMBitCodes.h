@@ -438,7 +438,12 @@ comment|// SHUFVEC_EX:    [opty, opval, opval, opval]
 name|CST_CODE_CE_INBOUNDS_GEP
 init|=
 literal|20
+block|,
 comment|// INBOUNDS_GEP:  [n x operands]
+name|CST_CODE_BLOCKADDRESS
+init|=
+literal|21
+comment|// CST_CODE_BLOCKADDRESS [fnty, fnval, bb#]
 block|}
 enum|;
 comment|/// CastOpcodes - These are values used in the bitcode files to encode which
@@ -647,7 +652,7 @@ name|FUNC_CODE_INST_SWITCH
 init|=
 literal|12
 block|,
-comment|// SWITCH:     [opty, opval, n, n x ops]
+comment|// SWITCH:     [opty, op0, op1, ...]
 name|FUNC_CODE_INST_INVOKE
 init|=
 literal|13
@@ -744,7 +749,12 @@ comment|// VSELECT:    [ty,opval,opval,predty,pred]
 name|FUNC_CODE_INST_INBOUNDS_GEP
 init|=
 literal|30
+block|,
 comment|// INBOUNDS_GEP: [n x operands]
+name|FUNC_CODE_INST_INDIRECTBR
+init|=
+literal|31
+comment|// INDIRECTBR: [opty, op0, op1, ...]
 block|}
 enum|;
 block|}

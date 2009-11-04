@@ -1074,6 +1074,19 @@ argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
+comment|/// isFPImmLegal - Returns true if the target can instruction select the
+comment|/// specified FP immediate natively. If false, the legalizer will
+comment|/// materialize the FP immediate as a load from a constant pool.
+name|virtual
+name|bool
+name|isFPImmLegal
+argument_list|(
+argument|const APFloat&Imm
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
 comment|/// isShuffleMaskLegal - Targets can use this to indicate that they only
 comment|/// support *some* VECTOR_SHUFFLE operations, those with specific masks.
 comment|/// By default, if a target supports the VECTOR_SHUFFLE node, all mask
@@ -1310,6 +1323,30 @@ block|;
 name|bool
 name|X86ScalarSSEf64
 block|;
+comment|/// LegalFPImmediates - A list of legal fp immediates.
+name|std
+operator|::
+name|vector
+operator|<
+name|APFloat
+operator|>
+name|LegalFPImmediates
+block|;
+comment|/// addLegalFPImmediate - Indicate that this x86 target can instruction
+comment|/// select the specified FP immediate natively.
+name|void
+name|addLegalFPImmediate
+argument_list|(
+argument|const APFloat& Imm
+argument_list|)
+block|{
+name|LegalFPImmediates
+operator|.
+name|push_back
+argument_list|(
+name|Imm
+argument_list|)
+block|;     }
 name|SDValue
 name|LowerCallResult
 argument_list|(
@@ -1492,6 +1529,14 @@ argument_list|)
 block|;
 name|SDValue
 name|LowerConstantPool
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
+name|LowerBlockAddress
 argument_list|(
 argument|SDValue Op
 argument_list|,

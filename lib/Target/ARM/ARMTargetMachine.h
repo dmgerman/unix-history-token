@@ -463,7 +463,7 @@ operator|&
 name|FS
 argument_list|)
 block|;
-comment|/// returns either Thumb1RegisterInfo of Thumb2RegisterInfo
+comment|/// returns either Thumb1RegisterInfo or Thumb2RegisterInfo
 name|virtual
 specifier|const
 name|ARMBaseRegisterInfo

@@ -124,6 +124,16 @@ argument|const MachineFrameInfo *
 argument_list|)
 specifier|const
 block|;
+comment|/// mayAlias - Return true if the memory pointed to by this
+comment|/// PseudoSourceValue can ever alias a LLVM IR Value.
+name|virtual
+name|bool
+name|mayAlias
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+block|;
 comment|/// classof - Methods for support type inquiry through isa, cast, and
 comment|/// dyn_cast:
 comment|///
