@@ -6446,8 +6446,15 @@ name|usbd_transfer_pending
 argument_list|(
 name|xfer
 argument_list|)
+operator|||
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|doing_callback
 condition|)
 block|{
+comment|/*  		 * It is allowed that the callback can drop its 		 * transfer mutex. In that case checking only 		 * "usbd_transfer_pending()" is not enough to tell if 		 * the USB transfer is fully drained. We also need to 		 * check the internal "doing_callback" flag. 		 */
 name|xfer
 operator|->
 name|flags_int
@@ -7320,6 +7327,15 @@ name|curr
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* set flag in case of drain */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|doing_callback
+operator|=
+literal|1
+expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
 name|info
@@ -7526,6 +7542,15 @@ name|USB_ST_ERROR
 operator|)
 condition|)
 block|{
+comment|/* clear flag in case of drain */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|doing_callback
+operator|=
+literal|0
+expr_stmt|;
 comment|/* try to loop, but not recursivly */
 name|usb_command_wrapper
 argument_list|(
@@ -7541,6 +7566,15 @@ return|return;
 block|}
 name|done
 label|:
+comment|/* clear flag in case of drain */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|doing_callback
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Check if we are draining. 	 */
 if|if
 condition|(
