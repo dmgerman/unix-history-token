@@ -2449,7 +2449,7 @@ name|uap
 parameter_list|)
 block|{
 name|struct
-name|nameidat
+name|nameidata
 name|nd
 decl_stmt|;
 name|int
