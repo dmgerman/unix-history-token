@@ -318,10 +318,6 @@ define|#
 directive|define
 name|CAM_PERIPH_RECOVERY_INPROG
 value|0x20
-define|#
-directive|define
-name|CAM_PERIPH_POLLED
-value|0x40
 name|u_int32_t
 name|immediate_priority
 decl_stmt|;
