@@ -2682,6 +2682,44 @@ operator||=
 name|FXP_FLAG_WOLCAP
 expr_stmt|;
 block|}
+comment|/* Receiver lock-up workaround detection. */
+name|fxp_read_eeprom
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|data
+argument_list|,
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|data
+operator|&
+literal|0x03
+operator|)
+operator|!=
+literal|0x03
+condition|)
+block|{
+name|sc
+operator|->
+name|flags
+operator||=
+name|FXP_FLAG_RXBUG
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Enabling Rx lock-up workaround\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Determine whether we must use the 503 serial interface. 	 */
 name|fxp_read_eeprom
 argument_list|(
@@ -9581,7 +9619,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|FXP_FLAG_RXBUG
+condition|)
 block|{
 comment|/* 		 * Receiver's been idle for another second. 		 */
 name|sc
