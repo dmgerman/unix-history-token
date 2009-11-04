@@ -435,25 +435,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|fxp_ident
-block|{
-name|uint16_t
-name|devid
-decl_stmt|;
-name|int16_t
-name|revid
-decl_stmt|;
-comment|/* -1 matches anything */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Claim various Intel PCI device identifiers for this driver.  The  * sub-vendor and sub-device field are extensively used to identify  * particular variants, but we don't currently differentiate between  * them.  */
 end_comment
@@ -472,6 +453,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|0
+block|,
 literal|"Intel 82559 PCI/CardBus Pro/100"
 block|}
 block|,
@@ -480,6 +463,8 @@ literal|0x1030
 block|,
 operator|-
 literal|1
+block|,
+literal|0
 block|,
 literal|"Intel 82559 Pro/100 Ethernet"
 block|}
@@ -490,6 +475,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|3
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VE Ethernet"
 block|}
 block|,
@@ -498,6 +485,8 @@ literal|0x1032
 block|,
 operator|-
 literal|1
+block|,
+literal|3
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VE Ethernet"
 block|}
@@ -508,6 +497,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|3
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
 block|,
@@ -516,6 +507,8 @@ literal|0x1034
 block|,
 operator|-
 literal|1
+block|,
+literal|3
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
@@ -526,6 +519,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|3
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
 block|,
@@ -534,6 +529,8 @@ literal|0x1036
 block|,
 operator|-
 literal|1
+block|,
+literal|3
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
@@ -544,6 +541,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|3
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
 block|,
@@ -552,6 +551,8 @@ literal|0x1038
 block|,
 operator|-
 literal|1
+block|,
+literal|3
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
@@ -562,6 +563,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|4
+block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VE Ethernet"
 block|}
 block|,
@@ -570,6 +573,8 @@ literal|0x103A
 block|,
 operator|-
 literal|1
+block|,
+literal|4
 block|,
 literal|"Intel 82801DB (ICH4) Pro/100 Ethernet"
 block|}
@@ -580,6 +585,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|4
+block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VM Ethernet"
 block|}
 block|,
@@ -588,6 +595,8 @@ literal|0x103C
 block|,
 operator|-
 literal|1
+block|,
+literal|4
 block|,
 literal|"Intel 82801DB (ICH4) Pro/100 Ethernet"
 block|}
@@ -598,6 +607,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|4
+block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VE Ethernet"
 block|}
 block|,
@@ -606,6 +617,8 @@ literal|0x103E
 block|,
 operator|-
 literal|1
+block|,
+literal|4
 block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VM Ethernet"
 block|}
@@ -616,6 +629,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|5
+block|,
 literal|"Intel 82801BA (D865) Pro/100 VE Ethernet"
 block|}
 block|,
@@ -624,6 +639,8 @@ literal|0x1051
 block|,
 operator|-
 literal|1
+block|,
+literal|5
 block|,
 literal|"Intel 82562ET (ICH5/ICH5R) Pro/100 VE Ethernet"
 block|}
@@ -634,6 +651,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|0
+block|,
 literal|"Intel 82551QM Pro/100 M Mobile Connection"
 block|}
 block|,
@@ -642,6 +661,8 @@ literal|0x1064
 block|,
 operator|-
 literal|1
+block|,
+literal|6
 block|,
 literal|"Intel 82562EZ (ICH6)"
 block|}
@@ -652,6 +673,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|6
+block|,
 literal|"Intel 82562ET/EZ/GT/GZ PRO/100 VE Ethernet"
 block|}
 block|,
@@ -660,6 +683,8 @@ literal|0x1068
 block|,
 operator|-
 literal|1
+block|,
+literal|6
 block|,
 literal|"Intel 82801FBM (ICH6-M) Pro/100 VE Ethernet"
 block|}
@@ -670,6 +695,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|6
+block|,
 literal|"Intel 82562EM/EX/GX Pro/100 Ethernet"
 block|}
 block|,
@@ -678,6 +705,8 @@ literal|0x1091
 block|,
 operator|-
 literal|1
+block|,
+literal|7
 block|,
 literal|"Intel 82562GX Pro/100 Ethernet"
 block|}
@@ -688,6 +717,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|7
+block|,
 literal|"Intel Pro/100 VE Network Connection"
 block|}
 block|,
@@ -696,6 +727,8 @@ literal|0x1093
 block|,
 operator|-
 literal|1
+block|,
+literal|7
 block|,
 literal|"Intel Pro/100 VM Network Connection"
 block|}
@@ -706,6 +739,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|7
+block|,
 literal|"Intel Pro/100 946GZ (ICH7) Network Connection"
 block|}
 block|,
@@ -715,6 +750,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|0
+block|,
 literal|"Intel 82559ER Embedded 10/100 Ethernet"
 block|}
 block|,
@@ -722,6 +759,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x01
+block|,
+literal|0
 block|,
 literal|"Intel 82557 Pro/100 Ethernet"
 block|}
@@ -731,6 +770,8 @@ literal|0x1229
 block|,
 literal|0x02
 block|,
+literal|0
+block|,
 literal|"Intel 82557 Pro/100 Ethernet"
 block|}
 block|,
@@ -738,6 +779,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x03
+block|,
+literal|0
 block|,
 literal|"Intel 82557 Pro/100 Ethernet"
 block|}
@@ -747,6 +790,8 @@ literal|0x1229
 block|,
 literal|0x04
 block|,
+literal|0
+block|,
 literal|"Intel 82558 Pro/100 Ethernet"
 block|}
 block|,
@@ -754,6 +799,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x05
+block|,
+literal|0
 block|,
 literal|"Intel 82558 Pro/100 Ethernet"
 block|}
@@ -763,6 +810,8 @@ literal|0x1229
 block|,
 literal|0x06
 block|,
+literal|0
+block|,
 literal|"Intel 82559 Pro/100 Ethernet"
 block|}
 block|,
@@ -770,6 +819,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x07
+block|,
+literal|0
 block|,
 literal|"Intel 82559 Pro/100 Ethernet"
 block|}
@@ -779,6 +830,8 @@ literal|0x1229
 block|,
 literal|0x08
 block|,
+literal|0
+block|,
 literal|"Intel 82559 Pro/100 Ethernet"
 block|}
 block|,
@@ -786,6 +839,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x09
+block|,
+literal|0
 block|,
 literal|"Intel 82559ER Pro/100 Ethernet"
 block|}
@@ -795,6 +850,8 @@ literal|0x1229
 block|,
 literal|0x0c
 block|,
+literal|0
+block|,
 literal|"Intel 82550 Pro/100 Ethernet"
 block|}
 block|,
@@ -802,6 +859,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x0d
+block|,
+literal|0
 block|,
 literal|"Intel 82550 Pro/100 Ethernet"
 block|}
@@ -811,6 +870,8 @@ literal|0x1229
 block|,
 literal|0x0e
 block|,
+literal|0
+block|,
 literal|"Intel 82550 Pro/100 Ethernet"
 block|}
 block|,
@@ -818,6 +879,8 @@ block|{
 literal|0x1229
 block|,
 literal|0x0f
+block|,
+literal|0
 block|,
 literal|"Intel 82551 Pro/100 Ethernet"
 block|}
@@ -827,6 +890,8 @@ literal|0x1229
 block|,
 literal|0x10
 block|,
+literal|0
+block|,
 literal|"Intel 82551 Pro/100 Ethernet"
 block|}
 block|,
@@ -835,6 +900,8 @@ literal|0x1229
 block|,
 operator|-
 literal|1
+block|,
+literal|0
 block|,
 literal|"Intel 82557/8/9 Pro/100 Ethernet"
 block|}
@@ -845,6 +912,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|2
+block|,
 literal|"Intel 82801BA/CAM (ICH2/3) Pro/100 Ethernet"
 block|}
 block|,
@@ -854,6 +923,8 @@ block|,
 operator|-
 literal|1
 block|,
+literal|7
+block|,
 literal|"Intel 82801GB (ICH7) 10/100 Ethernet"
 block|}
 block|,
@@ -862,6 +933,8 @@ literal|0
 block|,
 operator|-
 literal|1
+block|,
+literal|0
 block|,
 name|NULL
 block|}
@@ -958,6 +1031,19 @@ begin_function_decl
 specifier|static
 name|int
 name|fxp_resume
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|fxp_ident
+modifier|*
+name|fxp_find_ident
 parameter_list|(
 name|device_t
 name|dev
@@ -2054,14 +2140,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Return identification string if this device is ours.  */
-end_comment
-
 begin_function
 specifier|static
-name|int
-name|fxp_probe
+name|struct
+name|fxp_ident
+modifier|*
+name|fxp_find_ident
 parameter_list|(
 name|device_t
 name|dev
@@ -2142,6 +2226,54 @@ literal|1
 operator|)
 condition|)
 block|{
+return|return
+operator|(
+name|ident
+operator|)
+return|;
+block|}
+block|}
+block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return identification string if this device is ours.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|fxp_probe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|fxp_ident
+modifier|*
+name|ident
+decl_stmt|;
+name|ident
+operator|=
+name|fxp_find_ident
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ident
+operator|!=
+name|NULL
+condition|)
+block|{
 name|device_set_desc
 argument_list|(
 name|dev
@@ -2156,8 +2288,6 @@ operator|(
 name|BUS_PROBE_DEFAULT
 operator|)
 return|;
-block|}
-block|}
 block|}
 return|return
 operator|(
@@ -2585,6 +2715,36 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find out the chip revision; lump all 82557 revs together. 	 */
+name|sc
+operator|->
+name|ident
+operator|=
+name|fxp_find_ident
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Assume ICH controllers are 82559. */
+name|sc
+operator|->
+name|revision
+operator|=
+name|FXP_REV_82559_A0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fxp_read_eeprom
 argument_list|(
 name|sc
@@ -2623,6 +2783,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Check availability of WOL. 82559ER does not support WOL. 	 */
 if|if
 condition|(
@@ -2992,34 +3153,41 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Enable workarounds for certain chip revision deficiencies. 	 * 	 * Systems based on the ICH2/ICH2-M chip from Intel, and possibly 	 * some systems based a normal 82559 design, have a defect where 	 * the chip can cause a PCI protocol violation if it receives 	 * a CU_RESUME command when it is entering the IDLE state.  The 	 * workaround is to disable Dynamic Standby Mode, so the chip never 	 * deasserts CLKRUN#, and always remains in an active state. 	 * 	 * See Intel 82801BA/82801BAM Specification Update, Errata #30. 	 */
-name|i
-operator|=
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|i
-operator|==
-literal|0x2449
-operator|||
 operator|(
-name|i
-operator|>
-literal|0x1030
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|>=
+literal|2
 operator|&&
-name|i
-operator|<
-literal|0x1039
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|<=
+literal|3
 operator|)
 operator|||
+operator|(
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|==
+literal|0
+operator|&&
 name|sc
 operator|->
 name|revision
 operator|>=
 name|FXP_REV_82559_A0
+operator|)
 condition|)
 block|{
 name|fxp_read_eeprom
@@ -10363,7 +10531,18 @@ argument_list|,
 name|FXP_SCB_COMMAND_CU_DUMP_ADR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attempt to load microcode if requested. 	 */
+comment|/* 	 * Attempt to load microcode if requested. 	 * For ICH based controllers do not load microcode. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|ident
+operator|->
+name|ich
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|ifp
@@ -10387,6 +10566,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Set IFF_ALLMULTI status. It's needed in configure action 	 * command. 	 */
 name|fxp_mc_addrs
 argument_list|(
