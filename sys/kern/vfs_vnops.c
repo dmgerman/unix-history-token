@@ -1019,6 +1019,8 @@ name|O_APPEND
 condition|)
 name|accmode
 operator||=
+name|VWRITE
+operator||
 name|VAPPEND
 expr_stmt|;
 ifdef|#
