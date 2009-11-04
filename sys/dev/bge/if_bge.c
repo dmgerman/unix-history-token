@@ -5395,7 +5395,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_mtag_jumbo
 argument_list|,
 name|sc
 operator|->
