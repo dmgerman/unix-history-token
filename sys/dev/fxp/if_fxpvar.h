@@ -340,9 +340,13 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 name|bus_dma_tag_t
-name|fxp_mtag
+name|fxp_txmtag
 decl_stmt|;
-comment|/* bus DMA tag for mbufs */
+comment|/* bus DMA tag for Tx mbufs */
+name|bus_dma_tag_t
+name|fxp_rxmtag
+decl_stmt|;
+comment|/* bus DMA tag for Rx mbufs */
 name|bus_dma_tag_t
 name|fxp_stag
 decl_stmt|;
