@@ -4741,7 +4741,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -4883,7 +4883,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -5550,7 +5550,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -5570,7 +5570,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -5955,7 +5955,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -5975,7 +5975,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -9789,7 +9789,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -9879,7 +9879,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -9898,7 +9898,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
 condition|)
 name|bus_dma_tag_destroy
 argument_list|(
@@ -9906,7 +9906,24 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_tx_mtag
+condition|)
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_tx_mtag
 argument_list|)
 expr_stmt|;
 comment|/* Destroy standard RX ring. */
@@ -10482,7 +10499,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Create tag for mbufs. 	 */
+comment|/* 	 * Create tag for Tx mbufs. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -10524,7 +10541,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|)
 expr_stmt|;
 if|if
@@ -10538,7 +10555,70 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not allocate TX dma tag\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
+comment|/* 	 * Create tag for Rx mbufs. 	 */
+name|error
+operator|=
+name|bus_dma_tag_create
+argument_list|(
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_parent_tag
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|BUS_SPACE_MAXADDR
+argument_list|,
+name|BUS_SPACE_MAXADDR
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|MCLBYTES
+argument_list|,
+literal|1
+argument_list|,
+name|MCLBYTES
+argument_list|,
+name|BUS_DMA_ALLOCNOW
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_rx_mtag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|bge_dev
+argument_list|,
+literal|"could not allocate RX dma tag\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10570,7 +10650,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
 argument_list|,
 literal|0
 argument_list|,
@@ -10629,7 +10709,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 literal|0
 argument_list|,
@@ -10655,7 +10735,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"can't create DMA map for RX\n"
+literal|"can't create DMA map for TX\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -15419,7 +15499,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -15439,7 +15519,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_rx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -16075,7 +16155,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -16095,7 +16175,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 name|sc
 operator|->
@@ -17470,7 +17550,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 name|map
 argument_list|,
@@ -17539,7 +17619,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 name|map
 argument_list|,
@@ -17609,7 +17689,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 name|map
 argument_list|)
@@ -17626,7 +17706,7 @@ name|sc
 operator|->
 name|bge_cdata
 operator|.
-name|bge_mtag
+name|bge_tx_mtag
 argument_list|,
 name|map
 argument_list|,
