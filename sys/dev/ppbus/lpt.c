@@ -1649,10 +1649,6 @@ name|sc
 operator|->
 name|sc_backoff
 operator|=
-name|sc
-operator|->
-name|sc_backoff
-operator|>
 name|hz
 operator|/
 name|LPTOUTMAX
