@@ -840,6 +840,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -1150,6 +1152,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1184,6 +1188,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -1294,6 +1300,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -2441,7 +2449,7 @@ name|uap
 parameter_list|)
 block|{
 name|struct
-name|nameidata
+name|nameidat
 name|nd
 decl_stmt|;
 name|int
