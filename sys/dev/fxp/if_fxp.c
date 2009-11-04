@@ -2539,7 +2539,7 @@ literal|"I/O"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Reset to a stable state. 	 */
+comment|/* 	 * Put CU/RU idle state and prepare full reset. 	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -2552,6 +2552,30 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|10
+argument_list|)
+expr_stmt|;
+comment|/* Full reset and disable interrupts. */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_PORT
+argument_list|,
+name|FXP_PORT_SOFTWARE_RESET
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_INTRCNTL
+argument_list|,
+name|FXP_SCB_INTR_DISABLE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find out how large of an SEEPROM we have. 	 */
