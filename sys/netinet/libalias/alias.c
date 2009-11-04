@@ -6590,6 +6590,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|fclose
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
