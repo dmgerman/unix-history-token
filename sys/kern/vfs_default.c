@@ -1326,6 +1326,17 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Many VOP_APPEND implementations don't expect VAPPEND without VWRITE 	 * being set, e.g. they check whether the filesystem is read-only only 	 * when VWRITE is set.  Make sure we don't confuse them. 	 */
+if|if
+condition|(
+name|accmode
+operator|&
+name|VAPPEND
+condition|)
+name|accmode
+operator||=
+name|VWRITE
+expr_stmt|;
 return|return
 operator|(
 name|VOP_ACCESS
