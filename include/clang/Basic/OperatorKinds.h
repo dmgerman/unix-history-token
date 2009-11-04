@@ -95,6 +95,17 @@ file|"clang/Basic/OperatorKinds.def"
 name|NUM_OVERLOADED_OPERATORS
 block|}
 enum|;
+comment|/// \brief Retrieve the spelling of the given overloaded operator, without
+comment|/// the preceding "operator" keyword.
+specifier|const
+name|char
+modifier|*
+name|getOperatorSpelling
+parameter_list|(
+name|OverloadedOperatorKind
+name|Operator
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

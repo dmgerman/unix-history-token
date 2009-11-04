@@ -15,6 +15,12 @@ directive|define
 name|CLANG_C_INDEX_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -25,6 +31,32 @@ begin_extern
 extern|extern
 literal|"C"
 block|{
+endif|#
+directive|endif
+comment|/* MSVC DLL import/export. */
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+ifdef|#
+directive|ifdef
+name|_CINDEX_LIB_
+define|#
+directive|define
+name|CINDEX_LINKAGE
+value|__declspec(dllexport)
+else|#
+directive|else
+define|#
+directive|define
+name|CINDEX_LINKAGE
+value|__declspec(dllimport)
+endif|#
+directive|endif
+else|#
+directive|else
+define|#
+directive|define
+name|CINDEX_LINKAGE
 endif|#
 directive|endif
 comment|/*    Clang indeX abstractions. The backing store for the following API's will be     clangs AST file (currently based on PCH). AST files are created as follows:        "clang -emit-ast<sourcefile.langsuffix> -o<sourcefile.ast>".         Naming Conventions: To avoid namespace pollution, data types are prefixed     with "CX" and functions are prefixed with "clang_". */
@@ -40,6 +72,12 @@ modifier|*
 name|CXTranslationUnit
 typedef|;
 comment|/* A translation unit instance. */
+typedef|typedef
+name|void
+modifier|*
+name|CXFile
+typedef|;
+comment|/* A source file */
 typedef|typedef
 name|void
 modifier|*
@@ -256,6 +294,7 @@ modifier|*
 name|CXEntity
 typedef|;
 comment|/**    * \brief clang_createIndex() provides a shared context for creating  * translation units. It provides two options:  *  * - excludeDeclarationsFromPCH: When non-zero, allows enumeration of "local"  * declarations (when loading any new translation units). A "local" declaration  * is one that belongs in the translation unit itself and not in a precompiled   * header that was used by the translation unit. If zero, all declarations  * will be enumerated.  *  * - displayDiagnostics: when non-zero, diagnostics will be output. If zero,  * diagnostics will be ignored.  *  * Here is an example:  *  *   // excludeDeclsFromPCH = 1, displayDiagnostics = 1  *   Idx = clang_createIndex(1, 1);  *  *   // IndexTest.pch was produced with the following command:  *   // "clang -x c IndexTest.h -emit-ast -o IndexTest.pch"  *   TU = clang_createTranslationUnit(Idx, "IndexTest.pch");  *  *   // This will load all the symbols from 'IndexTest.pch'  *   clang_loadTranslationUnit(TU, TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  *   // This will load all the symbols from 'IndexTest.c', excluding symbols  *   // from 'IndexTest.pch'.  *   char *args[] = { "-Xclang", "-include-pch=IndexTest.pch", 0 };  *   TU = clang_createTranslationUnitFromSourceFile(Idx, "IndexTest.c", 2, args);  *   clang_loadTranslationUnit(TU, TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  * This process of creating the 'pch', loading it separately, and using it (via  * -include-pch) allows 'excludeDeclsFromPCH' to remove redundant callbacks  * (which gives the indexer the same performance benefit as the compiler).  */
+name|CINDEX_LINKAGE
 name|CXIndex
 name|clang_createIndex
 parameter_list|(
@@ -266,12 +305,14 @@ name|int
 name|displayDiagnostics
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|void
 name|clang_disposeIndex
 parameter_list|(
 name|CXIndex
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 specifier|const
 name|char
 modifier|*
@@ -282,6 +323,7 @@ name|CTUnit
 parameter_list|)
 function_decl|;
 comment|/*   * \brief Create a translation unit from an AST file (-emit-ast).  */
+name|CINDEX_LINKAGE
 name|CXTranslationUnit
 name|clang_createTranslationUnit
 parameter_list|(
@@ -294,6 +336,7 @@ name|ast_filename
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Destroy the specified CXTranslationUnit object.  */
+name|CINDEX_LINKAGE
 name|void
 name|clang_disposeTranslationUnit
 parameter_list|(
@@ -301,6 +344,7 @@ name|CXTranslationUnit
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Return the CXTranslationUnit for a given source file and the provided  * command line arguments one would pass to the compiler.  *  * Note: The 'source_filename' argument is optional.  If the caller provides a NULL pointer,  *  the name of the source file is expected to reside in the specified command line arguments.  *  * Note: When encountered in 'clang_command_line_args', the following options are ignored:  *  *   '-c'  *   '-emit-ast'  *   '-fsyntax-only'  *   '-o<output file>'  (both '-o' and '<output file>' are ignored)  *  */
+name|CINDEX_LINKAGE
 name|CXTranslationUnit
 name|clang_createTranslationUnitFromSourceFile
 parameter_list|(
@@ -343,6 +387,7 @@ parameter_list|,
 name|CXClientData
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|void
 name|clang_loadTranslationUnit
 parameter_list|(
@@ -368,6 +413,7 @@ parameter_list|,
 name|CXClientData
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|void
 name|clang_loadDeclaration
 parameter_list|(
@@ -378,7 +424,27 @@ parameter_list|,
 name|CXClientData
 parameter_list|)
 function_decl|;
+comment|/*  * CXFile Operations.  */
+name|CINDEX_LINKAGE
+specifier|const
+name|char
+modifier|*
+name|clang_getFileName
+parameter_list|(
+name|CXFile
+name|SFile
+parameter_list|)
+function_decl|;
+name|CINDEX_LINKAGE
+name|time_t
+name|clang_getFileTime
+parameter_list|(
+name|CXFile
+name|SFile
+parameter_list|)
+function_decl|;
 comment|/*  * CXEntity Operations.  */
+name|CINDEX_LINKAGE
 specifier|const
 name|char
 modifier|*
@@ -387,6 +453,7 @@ parameter_list|(
 name|CXEntity
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 specifier|const
 name|char
 modifier|*
@@ -395,6 +462,7 @@ parameter_list|(
 name|CXEntity
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|CXEntity
 name|clang_getEntity
 parameter_list|(
@@ -405,18 +473,21 @@ name|URI
 parameter_list|)
 function_decl|;
 comment|/*  * CXDecl Operations.  */
+name|CINDEX_LINKAGE
 name|CXCursor
 name|clang_getCursorFromDecl
 parameter_list|(
 name|CXDecl
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|CXEntity
 name|clang_getEntityFromDecl
 parameter_list|(
 name|CXDecl
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 specifier|const
 name|char
 modifier|*
@@ -425,18 +496,21 @@ parameter_list|(
 name|CXDecl
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|unsigned
 name|clang_getDeclLine
 parameter_list|(
 name|CXDecl
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|unsigned
 name|clang_getDeclColumn
 parameter_list|(
 name|CXDecl
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 specifier|const
 name|char
 modifier|*
@@ -445,8 +519,17 @@ parameter_list|(
 name|CXDecl
 parameter_list|)
 function_decl|;
+comment|/* deprecate */
+name|CINDEX_LINKAGE
+name|CXFile
+name|clang_getDeclSourceFile
+parameter_list|(
+name|CXDecl
+parameter_list|)
+function_decl|;
 comment|/*  * CXCursor Operations.  */
 comment|/**    Usage: clang_getCursor() will translate a source/line/column position    into an AST cursor (to derive semantic information from the source code).  */
+name|CINDEX_LINKAGE
 name|CXCursor
 name|clang_getCursor
 parameter_list|(
@@ -464,40 +547,7 @@ name|unsigned
 name|column
 parameter_list|)
 function_decl|;
-comment|/**    Usage: clang_getCursorWithHint() provides the same functionality as    clang_getCursor() except that it takes an option 'hint' argument.    The 'hint' is a temporary CXLookupHint object (whose lifetime is managed by     the caller) that should be initialized with clang_initCXLookupHint().     FIXME: Add a better comment once getCursorWithHint() has more functionality.  */
-typedef|typedef
-name|CXCursor
-name|CXLookupHint
-typedef|;
-name|CXCursor
-name|clang_getCursorWithHint
-parameter_list|(
-name|CXTranslationUnit
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|source_name
-parameter_list|,
-name|unsigned
-name|line
-parameter_list|,
-name|unsigned
-name|column
-parameter_list|,
-name|CXLookupHint
-modifier|*
-name|hint
-parameter_list|)
-function_decl|;
-name|void
-name|clang_initCXLookupHint
-parameter_list|(
-name|CXLookupHint
-modifier|*
-name|hint
-parameter_list|)
-function_decl|;
+name|CINDEX_LINKAGE
 name|enum
 name|CXCursorKind
 name|clang_getCursorKind
@@ -505,6 +555,7 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|unsigned
 name|clang_isDeclaration
 parameter_list|(
@@ -512,6 +563,7 @@ name|enum
 name|CXCursorKind
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|unsigned
 name|clang_isReference
 parameter_list|(
@@ -519,6 +571,7 @@ name|enum
 name|CXCursorKind
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|unsigned
 name|clang_isDefinition
 parameter_list|(
@@ -526,6 +579,7 @@ name|enum
 name|CXCursorKind
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|unsigned
 name|clang_isInvalid
 parameter_list|(
@@ -533,26 +587,21 @@ name|enum
 name|CXCursorKind
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|unsigned
 name|clang_getCursorLine
 parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|unsigned
 name|clang_getCursorColumn
 parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
-name|clang_getCursorSource
-parameter_list|(
-name|CXCursor
-parameter_list|)
-function_decl|;
+name|CINDEX_LINKAGE
 specifier|const
 name|char
 modifier|*
@@ -561,7 +610,25 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
+specifier|const
+name|char
+modifier|*
+name|clang_getCursorSource
+parameter_list|(
+name|CXCursor
+parameter_list|)
+function_decl|;
+comment|/* deprecate */
+name|CINDEX_LINKAGE
+name|CXFile
+name|clang_getCursorSourceFile
+parameter_list|(
+name|CXCursor
+parameter_list|)
+function_decl|;
 comment|/* for debug/testing */
+name|CINDEX_LINKAGE
 specifier|const
 name|char
 modifier|*
@@ -572,6 +639,7 @@ name|CXCursorKind
 name|Kind
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
 name|void
 name|clang_getDefinitionSpellingAndExtent
 parameter_list|(
@@ -607,6 +675,7 @@ name|endColumn
 parameter_list|)
 function_decl|;
 comment|/*  * If CXCursorKind == Cursor_Reference, then this will return the referenced  * declaration.  * If CXCursorKind == Cursor_Declaration, then this will return the declaration.  */
+name|CINDEX_LINKAGE
 name|CXDecl
 name|clang_getCursorDecl
 parameter_list|(

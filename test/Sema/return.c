@@ -853,6 +853,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+name|longjmp
+argument_list|(
+name|test30_j
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|_longjmp
 argument_list|(
 name|test30_j
@@ -860,6 +880,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

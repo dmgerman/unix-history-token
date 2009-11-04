@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/TemplateBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -152,7 +158,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -1437,6 +1443,26 @@ name|SourceRange
 operator|>
 operator|&
 name|Comments
+argument_list|)
+decl_stmt|;
+comment|/// \brief Reads a TemplateArgumentLocInfo appropriate for the
+comment|/// given TemplateArgument kind.
+name|TemplateArgumentLocInfo
+name|GetTemplateArgumentLocInfo
+argument_list|(
+name|TemplateArgument
+operator|::
+name|ArgKind
+name|Kind
+argument_list|,
+specifier|const
+name|RecordData
+operator|&
+name|Record
+argument_list|,
+name|unsigned
+operator|&
+name|Idx
 argument_list|)
 decl_stmt|;
 comment|/// \brief Reads a declarator info from the given record.

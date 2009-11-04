@@ -23,6 +23,21 @@ begin_if
 if|#
 directive|if
 name|__STDC_HOSTED__
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|__has_include_next
+argument_list|)
+operator|&&
+name|__has_include_next
+argument_list|(
+operator|<
+name|stdint
+operator|.
+name|h
+operator|>
+argument_list|)
 end_if
 
 begin_empty

@@ -4,19 +4,7 @@ comment|// Example from C99 6.10.3.4p9
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'fprintf(stderr, "Flag");'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'fprintf(stderr, "X = %d\n", x);'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'puts("The first, second, and third items.");'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '((x>y)?puts("x>y"): printf("x is %d but y is %d", x, y));'
+comment|// RUN: clang-cc -E %s | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define
@@ -59,6 +47,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// CHECK: fprintf(stderr, "Flag");
+end_comment
+
 begin_expr_stmt
 name|debug
 argument_list|(
@@ -68,6 +60,10 @@ name|x
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// CHECK: fprintf(stderr, "X = %d\n", x);
+end_comment
 
 begin_macro
 name|showlist
@@ -84,6 +80,10 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// CHECK: puts("The first, second, and third items.");
+end_comment
+
 begin_expr_stmt
 name|report
 argument_list|(
@@ -99,6 +99,10 @@ name|y
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// CHECK: ((x>y)?puts("x>y"): printf("x is %d but y is %d", x, y));
+end_comment
 
 end_unit
 

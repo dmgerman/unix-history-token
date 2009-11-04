@@ -381,5 +381,64 @@ index|]
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// rdar://problem/7222956
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|incomplete
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|// expected-note 2 {{forward declaration of 'struct incomplete'}}
+end_comment
+
+begin_decl_stmt
+name|int
+name|test1
+index|[
+name|__builtin_offsetof
+argument_list|(
+expr|struct
+name|incomplete
+argument_list|,
+name|foo
+argument_list|)
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{offsetof of incomplete type 'struct incomplete'}}
+end_comment
+
+begin_decl_stmt
+name|int
+name|test1
+index|[
+name|__builtin_offsetof
+argument_list|(
+expr|struct
+name|incomplete
+index|[
+literal|10
+index|]
+argument_list|,
+index|[
+literal|4
+index|]
+operator|.
+name|foo
+argument_list|)
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{array has incomplete element type 'struct incomplete'}}
+end_comment
+
 end_unit
 

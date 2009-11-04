@@ -19,6 +19,18 @@ begin_comment
 comment|// RUN: grep "I'm a little driver, short and stout." %t.out
 end_comment
 
+begin_comment
+comment|// FIXME: We don't have a usable assembler on Windows, so we can't build real
+end_comment
+
+begin_comment
+comment|// apps yet.
+end_comment
+
+begin_comment
+comment|// XFAIL: win32
+end_comment
+
 begin_include
 include|#
 directive|include

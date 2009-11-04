@@ -278,5 +278,25 @@ begin_comment
 comment|//int h2 = __builtin_expect(0, 0);
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|long
+name|int
+name|bi0
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern __typeof__(__builtin_expect(0
+operator|,
+extern|0
+end_extern
+
+begin_expr_stmt
+unit|))
+name|bi0
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

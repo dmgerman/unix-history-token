@@ -204,5 +204,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+modifier|*
+name|test10
+parameter_list|()
+block|{
+name|bar
+label|:
+return|return
+operator|&&
+name|bar
+return|;
+comment|// expected-warning {{returning address of label, which is local}}
+block|}
+end_function
+
 end_unit
 

@@ -614,6 +614,9 @@ name|CGDebugInfo
 modifier|*
 name|DebugInfo
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USEINDIRECTBRANCH
 comment|/// LabelIDs - Track arbitrary ids assigned to labels for use in implementing
 comment|/// the GCC address-of-label extension and indirect goto. IDs are assigned to
 comment|/// labels inside getIDForAddrOfLabel().
@@ -629,6 +632,23 @@ name|unsigned
 operator|>
 name|LabelIDs
 expr_stmt|;
+else|#
+directive|else
+comment|/// IndirectBranch - The first time an indirect goto is seen we create a
+comment|/// block with an indirect branch.  Every time we see the address of a label
+comment|/// taken, we add the label to the indirect goto.  Every subsequent indirect
+comment|/// goto is codegen'd as a jump to the IndirectBranch's basic block.
+name|llvm
+operator|::
+name|IndirectBrInst
+operator|*
+name|IndirectBranch
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|USEINDIRECTBRANCH
 comment|/// IndirectGotoSwitch - The first time an indirect goto is seen we create a
 comment|/// block with the switch for the indirect gotos.  Every time we see the
 comment|/// address of a label taken, we add the label to the indirect goto.  Every
@@ -640,6 +660,8 @@ name|SwitchInst
 operator|*
 name|IndirectGotoSwitch
 expr_stmt|;
+endif|#
+directive|endif
 comment|/// LocalDeclMap - This keeps track of the LLVM allocas or globals for local C
 comment|/// decls.
 name|llvm
@@ -1325,6 +1347,22 @@ operator|*
 name|RD
 argument_list|)
 expr_stmt|;
+comment|/// DynamicTypeAdjust - Do the non-virtual and virtual adjustments on an
+comment|/// object pointer to alter the dynamic type of the pointer.  Used by
+comment|/// GenerateCovariantThunk for building thunks.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|DynamicTypeAdjust
+argument_list|(
+argument|llvm::Value *V
+argument_list|,
+argument|int64_t nv
+argument_list|,
+argument|int64_t v
+argument_list|)
+expr_stmt|;
 comment|/// GenerateThunk - Generate a thunk for the given method
 name|llvm
 operator|::
@@ -1760,7 +1798,13 @@ block|{
 name|Qualifiers
 name|Quals
 init|=
+name|getContext
+argument_list|()
+operator|.
+name|getCanonicalType
+argument_list|(
 name|T
+argument_list|)
 operator|.
 name|getQualifiers
 argument_list|()
@@ -1989,6 +2033,9 @@ operator|*
 name|Elts
 argument_list|)
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USEINDIRECTBRANCH
 name|unsigned
 name|GetIDForAddrOfLabel
 parameter_list|(
@@ -1998,6 +2045,22 @@ modifier|*
 name|L
 parameter_list|)
 function_decl|;
+else|#
+directive|else
+name|llvm
+operator|::
+name|BlockAddress
+operator|*
+name|GetAddrOfLabel
+argument_list|(
+specifier|const
+name|LabelStmt
+operator|*
+name|L
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|llvm
 operator|::
 name|BasicBlock
@@ -3105,7 +3168,7 @@ name|LValue
 name|EmitPointerToDataMemberLValue
 parameter_list|(
 specifier|const
-name|QualifiedDeclRefExpr
+name|DeclRefExpr
 modifier|*
 name|E
 parameter_list|)
@@ -3985,6 +4048,15 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+name|void
+name|EmitCXXThrowExpr
+parameter_list|(
+specifier|const
+name|CXXThrowExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//                             Internal Helpers
 comment|//===--------------------------------------------------------------------===//

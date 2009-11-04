@@ -141,6 +141,9 @@ decl_stmt|;
 name|class
 name|CXXMemberCallExpr
 decl_stmt|;
+name|class
+name|TemplateArgumentLoc
+decl_stmt|;
 comment|/// Expr - This represents one expression.  Note that Expr's are subclasses of
 comment|/// Stmt.  This allows an expression to be transparently used any place a Stmt
 comment|/// is required.
@@ -403,6 +406,8 @@ argument_list|,
 argument|SourceRange&R1
 argument_list|,
 argument|SourceRange&R2
+argument_list|,
+argument|ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -645,6 +650,17 @@ argument|ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
+comment|/// EvaluateAsAny - The same as Evaluate, except that it also succeeds on
+comment|/// stack based objects.
+name|bool
+name|EvaluateAsAny
+argument_list|(
+argument|EvalResult&Result
+argument_list|,
+argument|ASTContext&Ctx
+argument_list|)
+specifier|const
+block|;
 comment|/// isEvaluatable - Call Evaluate to see if this expression can be constant
 comment|/// folded, but discard the result.
 name|bool
@@ -879,6 +895,83 @@ block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Primary Expressions.
 comment|//===----------------------------------------------------------------------===//
+comment|/// \brief Represents the qualifier that may precede a C++ name, e.g., the
+comment|/// "std::" in "std::sort".
+block|struct
+name|NameQualifier
+block|{
+comment|/// \brief The nested name specifier.
+name|NestedNameSpecifier
+operator|*
+name|NNS
+block|;
+comment|/// \brief The source range covered by the nested name specifier.
+name|SourceRange
+name|Range
+block|; }
+block|;
+comment|/// \brief Represents an explicit template argument list in C++, e.g.,
+comment|/// the "<int>" in "sort<int>".
+block|struct
+name|ExplicitTemplateArgumentList
+block|{
+comment|/// \brief The source location of the left angle bracket ('<');
+name|SourceLocation
+name|LAngleLoc
+block|;
+comment|/// \brief The source location of the right angle bracket ('>');
+name|SourceLocation
+name|RAngleLoc
+block|;
+comment|/// \brief The number of template arguments in TemplateArgs.
+comment|/// The actual template arguments (if any) are stored after the
+comment|/// ExplicitTemplateArgumentList structure.
+name|unsigned
+name|NumTemplateArgs
+block|;
+comment|/// \brief Retrieve the template arguments
+name|TemplateArgumentLoc
+operator|*
+name|getTemplateArgs
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|TemplateArgumentLoc
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the template arguments
+specifier|const
+name|TemplateArgumentLoc
+operator|*
+name|getTemplateArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|TemplateArgumentLoc
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// DeclRefExpr - [C99 6.5.1p2] - A reference to a declared variable, function,
 comment|/// enum, etc.
 name|class
@@ -886,16 +979,211 @@ name|DeclRefExpr
 operator|:
 name|public
 name|Expr
+block|{   enum
 block|{
+comment|// Flag on DecoratedD that specifies when this declaration reference
+comment|// expression has a C++ nested-name-specifier.
+name|HasQualifierFlag
+operator|=
+literal|0x01
+block|,
+comment|// Flag on DecoratedD that specifies when this declaration reference
+comment|// expression has an explicit C++ template argument list.
+name|HasExplicitTemplateArgumentListFlag
+operator|=
+literal|0x02
+block|}
+block|;
+comment|// DecoratedD - The declaration that we are referencing, plus two bits to
+comment|// indicate whether (1) the declaration's name was explicitly qualified and
+comment|// (2) the declaration's name was followed by an explicit template
+comment|// argument list.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|NamedDecl
 operator|*
-name|D
+block|,
+literal|2
+operator|>
+name|DecoratedD
 block|;
+comment|// Loc - The location of the declaration name itself.
 name|SourceLocation
 name|Loc
 block|;
+comment|/// \brief Retrieve the qualifier that preceded the declaration name, if any.
+name|NameQualifier
+operator|*
+name|getNameQualifier
+argument_list|()
+block|{
+if|if
+condition|(
+operator|(
+name|DecoratedD
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|HasQualifierFlag
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|reinterpret_cast
+operator|<
+name|NameQualifier
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the qualifier that preceded the member name, if any.
+specifier|const
+name|NameQualifier
+operator|*
+name|getNameQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|DeclRefExpr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNameQualifier
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the explicit template argument list that followed the
+comment|/// member template name, if any.
+name|ExplicitTemplateArgumentList
+operator|*
+name|getExplicitTemplateArgumentList
+argument_list|()
+block|{
+if|if
+condition|(
+operator|(
+name|DecoratedD
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|HasExplicitTemplateArgumentListFlag
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|(
+name|DecoratedD
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|HasQualifierFlag
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+name|reinterpret_cast
+operator|<
+name|ExplicitTemplateArgumentList
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+return|return
+name|reinterpret_cast
+operator|<
+name|ExplicitTemplateArgumentList
+operator|*
+operator|>
+operator|(
+name|getNameQualifier
+argument_list|()
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the explicit template argument list that followed the
+comment|/// member template name, if any.
+specifier|const
+name|ExplicitTemplateArgumentList
+operator|*
+name|getExplicitTemplateArgumentList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|DeclRefExpr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getExplicitTemplateArgumentList
+argument_list|()
+return|;
+block|}
+name|DeclRefExpr
+argument_list|(
+argument|NestedNameSpecifier *Qualifier
+argument_list|,
+argument|SourceRange QualifierRange
+argument_list|,
+argument|NamedDecl *D
+argument_list|,
+argument|SourceLocation NameLoc
+argument_list|,
+argument|bool HasExplicitTemplateArgumentList
+argument_list|,
+argument|SourceLocation LAngleLoc
+argument_list|,
+argument|const TemplateArgumentLoc *ExplicitTemplateArgs
+argument_list|,
+argument|unsigned NumExplicitTemplateArgs
+argument_list|,
+argument|SourceLocation RAngleLoc
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|bool TD
+argument_list|,
+argument|bool VD
+argument_list|)
+empty_stmt|;
 name|protected
-operator|:
+label|:
 comment|// FIXME: Eventually, this constructor will go away and all subclasses
 comment|// will have to provide the type- and value-dependent flags.
 name|DeclRefExpr
@@ -908,19 +1196,21 @@ argument|QualType t
 argument_list|,
 argument|SourceLocation l
 argument_list|)
-operator|:
+block|:
 name|Expr
 argument_list|(
 name|SC
 argument_list|,
 name|t
 argument_list|)
-block|,
-name|D
+operator|,
+name|DecoratedD
 argument_list|(
 name|d
+argument_list|,
+literal|0
 argument_list|)
-block|,
+operator|,
 name|Loc
 argument_list|(
 argument|l
@@ -951,12 +1241,14 @@ name|TD
 argument_list|,
 name|VD
 argument_list|)
-block|,
-name|D
+operator|,
+name|DecoratedD
 argument_list|(
 name|d
+argument_list|,
+literal|0
 argument_list|)
-block|,
+operator|,
 name|Loc
 argument_list|(
 argument|l
@@ -981,12 +1273,14 @@ name|DeclRefExprClass
 argument_list|,
 name|t
 argument_list|)
-block|,
-name|D
+operator|,
+name|DecoratedD
 argument_list|(
 name|d
+argument_list|,
+literal|0
 argument_list|)
-block|,
+operator|,
 name|Loc
 argument_list|(
 argument|l
@@ -1015,12 +1309,14 @@ name|TD
 argument_list|,
 name|VD
 argument_list|)
-block|,
-name|D
+operator|,
+name|DecoratedD
 argument_list|(
 name|d
+argument_list|,
+literal|0
 argument_list|)
-block|,
+operator|,
 name|Loc
 argument_list|(
 argument|l
@@ -1040,13 +1336,88 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
-name|NamedDecl
+specifier|static
+name|DeclRefExpr
 operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|NestedNameSpecifier *Qualifier
+argument_list|,
+argument|SourceRange QualifierRange
+argument_list|,
+argument|NamedDecl *D
+argument_list|,
+argument|SourceLocation NameLoc
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|bool TD
+argument_list|,
+argument|bool VD
+argument_list|)
+expr_stmt|;
+specifier|static
+name|DeclRefExpr
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+parameter_list|,
+name|SourceRange
+name|QualifierRange
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|,
+name|SourceLocation
+name|NameLoc
+parameter_list|,
+name|bool
+name|HasExplicitTemplateArgumentList
+parameter_list|,
+name|SourceLocation
+name|LAngleLoc
+parameter_list|,
+specifier|const
+name|TemplateArgumentLoc
+modifier|*
+name|ExplicitTemplateArgs
+parameter_list|,
+name|unsigned
+name|NumExplicitTemplateArgs
+parameter_list|,
+name|SourceLocation
+name|RAngleLoc
+parameter_list|,
+name|QualType
+name|T
+parameter_list|,
+name|bool
+name|TD
+parameter_list|,
+name|bool
+name|VD
+parameter_list|)
+function_decl|;
+name|NamedDecl
+modifier|*
 name|getDecl
-argument_list|()
+parameter_list|()
 block|{
 return|return
-name|D
+name|DecoratedD
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 specifier|const
@@ -1057,19 +1428,28 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|D
+name|DecoratedD
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 name|void
 name|setDecl
-argument_list|(
-argument|NamedDecl *NewD
-argument_list|)
-block|{
-name|D
-operator|=
+parameter_list|(
+name|NamedDecl
+modifier|*
 name|NewD
-block|; }
+parameter_list|)
+block|{
+name|DecoratedD
+operator|.
+name|setPointer
+argument_list|(
+name|NewD
+argument_list|)
+expr_stmt|;
+block|}
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -1081,33 +1461,289 @@ return|;
 block|}
 name|void
 name|setLocation
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|Loc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
 name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+expr_stmt|;
+comment|/// \brief Determine whether this declaration reference was preceded by a
+comment|/// C++ nested-name-specifier, e.g., \c N::foo.
+name|bool
+name|hasQualifier
+argument_list|()
+specifier|const
 block|{
 return|return
-name|SourceRange
-argument_list|(
-name|Loc
-argument_list|)
+name|DecoratedD
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|HasQualifierFlag
 return|;
 block|}
-specifier|static
+comment|/// \brief If the name was qualified, retrieves the source range of
+comment|/// the nested-name-specifier that precedes the name. Otherwise,
+comment|/// returns an empty source range.
+name|SourceRange
+name|getQualifierRange
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasQualifier
+argument_list|()
+condition|)
+return|return
+name|SourceRange
+argument_list|()
+return|;
+return|return
+name|getNameQualifier
+argument_list|()
+operator|->
+name|Range
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief If the name was qualified, retrieves the nested-name-specifier
+end_comment
+
+begin_comment
+comment|/// that precedes the name. Otherwise, returns NULL.
+end_comment
+
+begin_expr_stmt
+name|NestedNameSpecifier
+operator|*
+name|getQualifier
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasQualifier
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getNameQualifier
+argument_list|()
+operator|->
+name|NNS
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Determines whether this member expression actually had a C++
+end_comment
+
+begin_comment
+comment|/// template argument list explicitly specified, e.g., x.f<int>.
+end_comment
+
+begin_macro
+unit|bool
+name|hasExplicitTemplateArgumentList
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|DecoratedD
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|HasExplicitTemplateArgumentListFlag
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the location of the left angle bracket following the
+end_comment
+
+begin_comment
+comment|/// member name ('<'), if any.
+end_comment
+
+begin_expr_stmt
+name|SourceLocation
+name|getLAngleLoc
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasExplicitTemplateArgumentList
+argument_list|()
+condition|)
+return|return
+name|SourceLocation
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getExplicitTemplateArgumentList
+argument_list|()
+operator|->
+name|LAngleLoc
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Retrieve the template arguments provided as part of this
+end_comment
+
+begin_comment
+comment|/// template-id.
+end_comment
+
+begin_expr_stmt
+unit|const
+name|TemplateArgumentLoc
+operator|*
+name|getTemplateArgs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasExplicitTemplateArgumentList
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getExplicitTemplateArgumentList
+argument_list|()
+operator|->
+name|getTemplateArgs
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Retrieve the number of template arguments provided as part of this
+end_comment
+
+begin_comment
+comment|/// template-id.
+end_comment
+
+begin_macro
+unit|unsigned
+name|getNumTemplateArgs
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasExplicitTemplateArgumentList
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getExplicitTemplateArgumentList
+argument_list|()
+operator|->
+name|NumTemplateArgs
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Retrieve the location of the right angle bracket following the
+end_comment
+
+begin_comment
+comment|/// template arguments ('>').
+end_comment
+
+begin_macro
+unit|SourceLocation
+name|getRAngleLoc
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasExplicitTemplateArgumentList
+argument_list|()
+condition|)
+return|return
+name|SourceLocation
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getExplicitTemplateArgumentList
+argument_list|()
+operator|->
+name|RAngleLoc
+return|;
+end_return
+
+begin_function
+unit|}      static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -1123,42 +1759,55 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CXXConditionDeclExprClass
-operator|||
-name|T
-operator|->
-name|getStmtClass
-argument_list|()
-operator|==
-name|QualifiedDeclRefExprClass
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const DeclRefExpr *
-argument_list|)
+parameter_list|(
+specifier|const
+name|DeclRefExpr
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Iterators
+end_comment
+
+begin_function_decl
 name|virtual
 name|child_iterator
 name|child_begin
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|child_iterator
 name|child_end
-argument_list|()
-block|; }
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+unit|};
 comment|/// PredefinedExpr - [C99 6.4.2.2] - A predefined identifier such as __func__.
+end_comment
+
+begin_decl_stmt
 name|class
 name|PredefinedExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -1336,10 +1985,13 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|IntegerLiteral
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -1499,10 +2151,13 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|CharacterLiteral
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -1672,10 +2327,13 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|FloatingLiteral
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -1870,15 +2528,33 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// ImaginaryLiteral - We support imaginary integer and floating point literals,
+end_comment
+
+begin_comment
 comment|/// like "1.0i".  We represent these as a wrapper around FloatingLiteral and
+end_comment
+
+begin_comment
 comment|/// IntegerLiteral classes.  Instances of this class always have a Complex type
+end_comment
+
+begin_comment
 comment|/// whose element type matches the subexpression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|ImaginaryLiteral
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -2014,26 +2690,77 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// StringLiteral - This represents a string literal expression, e.g. "foo"
+end_comment
+
+begin_comment
 comment|/// or L"bar" (wide strings).  The actual string is returned by getStrData()
+end_comment
+
+begin_comment
 comment|/// is NOT null-terminated, and the length of the string is determined by
+end_comment
+
+begin_comment
 comment|/// calling getByteLength().  The C type for a string is always a
+end_comment
+
+begin_comment
 comment|/// ConstantArrayType.  In C++, the char type is const qualified, in C it is
+end_comment
+
+begin_comment
 comment|/// not.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that strings in C can be formed by concatenation of multiple string
+end_comment
+
+begin_comment
 comment|/// literal pptokens in translation phase #6.  This keeps track of the locations
+end_comment
+
+begin_comment
 comment|/// of each of these pieces.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Strings in C can also be truncated and extended by assigning into arrays,
+end_comment
+
+begin_comment
 comment|/// e.g. with constructs like:
+end_comment
+
+begin_comment
 comment|///   char X[2] = "foobar";
+end_comment
+
+begin_comment
 comment|/// In this case, getByteLength() will return 6, but the string literal will
+end_comment
+
+begin_comment
 comment|/// have type "char[2]".
+end_comment
+
+begin_decl_stmt
 name|class
 name|StringLiteral
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -2279,8 +3006,17 @@ return|return
 name|false
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getNumConcatenated - Get the number of string literal tokens that were
+end_comment
+
+begin_comment
 comment|/// concatenated in translation phase #6 to form this string literal.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getNumConcatenated
 argument_list|()
@@ -2290,12 +3026,16 @@ return|return
 name|NumConcatenated
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|SourceLocation
 name|getStrTokenLoc
 argument_list|(
-argument|unsigned TokNum
+name|unsigned
+name|TokNum
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -2305,7 +3045,7 @@ name|NumConcatenated
 operator|&&
 literal|"Invalid tok number"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|TokLocs
 index|[
@@ -2313,13 +3053,18 @@ name|TokNum
 index|]
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setStrTokenLoc
-argument_list|(
-argument|unsigned TokNum
-argument_list|,
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|unsigned
+name|TokNum
+parameter_list|,
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -2329,20 +3074,27 @@ name|NumConcatenated
 operator|&&
 literal|"Invalid tok number"
 argument_list|)
-block|;
+expr_stmt|;
 name|TokLocs
 index|[
 name|TokNum
 index|]
 operator|=
 name|L
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_typedef
 typedef|typedef
 specifier|const
 name|SourceLocation
 modifier|*
 name|tokloc_iterator
 typedef|;
+end_typedef
+
+begin_expr_stmt
 name|tokloc_iterator
 name|tokloc_begin
 argument_list|()
@@ -2352,6 +3104,9 @@ return|return
 name|TokLocs
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|tokloc_iterator
 name|tokloc_end
 argument_list|()
@@ -2363,6 +3118,9 @@ operator|+
 name|NumConcatenated
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -2386,12 +3144,18 @@ index|]
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -2402,36 +3166,46 @@ operator|==
 name|StringLiteralClass
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const StringLiteral *
-argument_list|)
+parameter_list|(
+specifier|const
+name|StringLiteral
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Iterators
+end_comment
+
+begin_function_decl
 name|virtual
 name|child_iterator
 name|child_begin
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|child_iterator
 name|child_end
 parameter_list|()
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_comment
+unit|};
 comment|/// ParenExpr - This represents a parethesized expression, e.g. "(1)".  This
 end_comment
 
@@ -3180,7 +3954,7 @@ block|;
 comment|// true if operand is a type, false if an expression
 expr|union
 block|{
-name|void
+name|DeclaratorInfo
 operator|*
 name|Ty
 block|;
@@ -3212,7 +3986,7 @@ name|SizeOfAlignOfExpr
 argument_list|(
 argument|bool issizeof
 argument_list|,
-argument|QualType T
+argument|DeclaratorInfo *DInfo
 argument_list|,
 argument|QualType resultType
 argument_list|,
@@ -3231,7 +4005,10 @@ name|false
 argument_list|,
 comment|// Never type-dependent (C++ [temp.dep.expr]p3).
 comment|// Value-dependent if the argument is type-dependent.
-name|T
+name|DInfo
+operator|->
+name|getType
+argument_list|()
 operator|->
 name|isDependentType
 argument_list|()
@@ -3261,10 +4038,7 @@ name|Argument
 operator|.
 name|Ty
 operator|=
-name|T
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+name|DInfo
 block|;   }
 name|SizeOfAlignOfExpr
 argument_list|(
@@ -3368,6 +4142,20 @@ name|getArgumentType
 argument_list|()
 specifier|const
 block|{
+return|return
+name|getArgumentTypeInfo
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
+name|DeclaratorInfo
+operator|*
+name|getArgumentTypeInfo
+argument_list|()
+specifier|const
+block|{
 name|assert
 argument_list|(
 name|isArgumentType
@@ -3377,14 +4165,9 @@ literal|"calling getArgumentType() when arg is expr"
 argument_list|)
 block|;
 return|return
-name|QualType
-operator|::
-name|getFromOpaquePtr
-argument_list|(
 name|Argument
 operator|.
 name|Ty
-argument_list|)
 return|;
 block|}
 name|Expr
@@ -3454,17 +4237,14 @@ block|; }
 name|void
 name|setArgument
 argument_list|(
-argument|QualType T
+argument|DeclaratorInfo *DInfo
 argument_list|)
 block|{
 name|Argument
 operator|.
 name|Ty
 operator|=
-name|T
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+name|DInfo
 block|;
 name|isType
 operator|=
@@ -4619,102 +5399,6 @@ end_function_decl
 
 begin_comment
 unit|};
-comment|/// \brief Represents the qualifier that may precede a C++ name, e.g., the
-end_comment
-
-begin_comment
-comment|/// "std::" in "std::sort".
-end_comment
-
-begin_struct
-struct|struct
-name|NameQualifier
-block|{
-comment|/// \brief The nested name specifier.
-name|NestedNameSpecifier
-modifier|*
-name|NNS
-decl_stmt|;
-comment|/// \brief The source range covered by the nested name specifier.
-name|SourceRange
-name|Range
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/// \brief Represents an explicit template argument list in C++, e.g.,
-end_comment
-
-begin_comment
-comment|/// the "<int>" in "sort<int>".
-end_comment
-
-begin_struct
-struct|struct
-name|ExplicitTemplateArgumentList
-block|{
-comment|/// \brief The source location of the left angle bracket ('<');
-name|SourceLocation
-name|LAngleLoc
-decl_stmt|;
-comment|/// \brief The source location of the right angle bracket ('>');
-name|SourceLocation
-name|RAngleLoc
-decl_stmt|;
-comment|/// \brief The number of template arguments in TemplateArgs.
-comment|/// The actual template arguments (if any) are stored after the
-comment|/// ExplicitTemplateArgumentList structure.
-name|unsigned
-name|NumTemplateArgs
-decl_stmt|;
-comment|/// \brief Retrieve the template arguments
-name|TemplateArgument
-modifier|*
-name|getTemplateArgs
-parameter_list|()
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-name|TemplateArgument
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-comment|/// \brief Retrieve the template arguments
-specifier|const
-name|TemplateArgument
-operator|*
-name|getTemplateArgs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-specifier|const
-name|TemplateArgument
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/// MemberExpr - [C99 6.5.2.3] Structure and Union Members.  X->F and X.F.
 end_comment
 
@@ -4932,7 +5616,7 @@ argument|bool has_explicit
 argument_list|,
 argument|SourceLocation langle
 argument_list|,
-argument|const TemplateArgument *targs
+argument|const TemplateArgumentLoc *targs
 argument_list|,
 argument|unsigned numtargs
 argument_list|,
@@ -5062,7 +5746,7 @@ argument|bool has_explicit
 argument_list|,
 argument|SourceLocation langle
 argument_list|,
-argument|const TemplateArgument *targs
+argument|const TemplateArgumentLoc *targs
 argument_list|,
 argument|unsigned numtargs
 argument_list|,
@@ -5322,7 +6006,7 @@ end_comment
 
 begin_expr_stmt
 unit|const
-name|TemplateArgument
+name|TemplateArgumentLoc
 operator|*
 name|getTemplateArgs
 argument_list|()
@@ -5946,6 +6630,10 @@ block|,
 comment|/// CK_BaseToDerivedMemberPointer - Member pointer in base class to
 comment|/// member pointer in derived class.
 name|CK_BaseToDerivedMemberPointer
+block|,
+comment|/// CK_DerivedToBaseMemberPointer - Member pointer in derived class to
+comment|/// member pointer in base class.
+name|CK_DerivedToBaseMemberPointer
 block|,
 comment|/// CK_UserDefinedConversion - Conversion using a user defined type
 comment|/// conversion function.
@@ -7167,10 +7855,12 @@ name|Opc
 argument_list|)
 return|;
 block|}
+specifier|static
 name|bool
 name|isBitwiseOp
-argument_list|()
-specifier|const
+argument_list|(
+argument|Opcode Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -7180,6 +7870,18 @@ operator|&&
 name|Opc
 operator|<=
 name|Or
+return|;
+block|}
+name|bool
+name|isBitwiseOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isBitwiseOp
+argument_list|(
+name|Opc
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -7235,6 +7937,35 @@ specifier|const
 block|{
 return|return
 name|isEqualityOp
+argument_list|(
+name|Opc
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isComparisonOp
+argument_list|(
+argument|Opcode Opc
+argument_list|)
+block|{
+return|return
+name|Opc
+operator|>=
+name|LT
+operator|&&
+name|Opc
+operator|<=
+name|NE
+return|;
+block|}
+name|bool
+name|isComparisonOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isComparisonOp
 argument_list|(
 name|Opc
 argument_list|)

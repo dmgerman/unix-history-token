@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-pc-linux-gnu -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-pc-linux-gnu -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '@_Z2f0i' %t&&
-end_comment
-
-begin_comment
-comment|// RUN: grep '@_Z2f0l' %t&&
+comment|// CHECK: @"\01foo"
 end_comment
 
 begin_comment
@@ -18,6 +14,10 @@ end_comment
 begin_empty
 empty|# 1 "somesystemheader.h" 1 3 4
 end_empty
+
+begin_comment
+comment|// CHECK: @_Z2f0i
+end_comment
 
 begin_decl_stmt
 name|void
@@ -35,6 +35,10 @@ argument_list|)
 block|{}
 end_decl_stmt
 
+begin_comment
+comment|// CHECK: @_Z2f0l
+end_comment
+
 begin_decl_stmt
 name|void
 name|__attribute__
@@ -50,6 +54,10 @@ name|b
 argument_list|)
 block|{}
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: @"\01bar"
+end_comment
 
 begin_comment
 comment|// These should get merged.
@@ -74,14 +82,6 @@ end_expr_stmt
 begin_asm
 asm|__asm__("bar");
 end_asm
-
-begin_comment
-comment|// RUN: grep '@"\\01foo"' %t&&
-end_comment
-
-begin_comment
-comment|// RUN: grep '@"\\01bar"' %t
-end_comment
 
 begin_decl_stmt
 name|int
@@ -231,6 +231,50 @@ init|=
 literal|42
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// PR4412
+end_comment
+
+begin_function_decl
+name|int
+name|func
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|func
+argument_list|(
+name|void
+argument_list|)
+name|__asm__
+argument_list|(
+literal|"FUNC"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: @"\01FUNC"
+end_comment
+
+begin_function
+name|int
+name|func
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+literal|42
+return|;
+block|}
+end_function
 
 end_unit
 

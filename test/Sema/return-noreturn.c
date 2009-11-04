@@ -171,5 +171,30 @@ begin_comment
 comment|// expected-warning{{function declared 'noreturn' should not return}}
 end_comment
 
+begin_comment
+comment|// PR5298 - -Wmissing-noreturn shouldn't warn if the function is already
+end_comment
+
+begin_comment
+comment|// declared noreturn.
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|noreturn
+operator|)
+argument_list|)
+name|test4
+argument_list|()
+block|{
+name|test2_positive
+argument_list|()
+expr_stmt|;
+block|}
+end_decl_stmt
+
 end_unit
 

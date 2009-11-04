@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -x assembler-with-cpp -fdollars-in-identifiers=0 -E %s> %t&&
+comment|// RUN: clang-cc -x assembler-with-cpp -fdollars-in-identifiers=0 -E %s -o - | FileCheck -strict-whitespace -check-prefix=CHECK-Identifiers-False %s&&
 end_comment
 
 begin_ifndef
@@ -24,10 +24,6 @@ begin_comment
 comment|// Invalid token pasting is ok.
 end_comment
 
-begin_comment
-comment|// RUN: grep '1: X .' %t&&
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -39,14 +35,14 @@ begin_expr_stmt
 literal|1
 operator|:
 name|A
+comment|// CHECK-Identifiers-False: 1: X .
 comment|// Line markers are not linemarkers in .S files, they are passed through.
-comment|// RUN: grep '# 321' %t&&
 empty|# 321
+comment|// CHECK-Identifiers-False: # 321
 comment|// Unknown directives are passed through.
-comment|// RUN: grep '# B C' %t&&
 empty|# B C
+comment|// CHECK-Identifiers-False: # B C
 comment|// Unknown directives are expanded.
-comment|// RUN: grep '# BAR42' %t&&
 define|#
 directive|define
 name|D
@@ -55,20 +51,20 @@ name|x
 parameter_list|)
 value|BAR ## x
 empty|# D(42)
+comment|// CHECK-Identifiers-False: # BAR42
 comment|// Unmatched quotes are permitted.
-comment|// RUN: grep "2: '" %t&&
-comment|// RUN: grep '3: "' %t&&
 literal|2
 operator|:
-literal|' 3: "  // (balance quotes to keep editors happy): "'
+literal|' 3: " // CHECK-Identifiers-False: 2: '
+comment|// CHECK-Identifiers-False: 3: "
+comment|// (balance quotes to keep editors happy): "'
 comment|// Empty char literals are ok.
-comment|// RUN: grep "4: ''" %t&&
 literal|4
 operator|:
 literal|''
+comment|// CHECK-Identifiers-False: 4: ''
 comment|// Portions of invalid pasting should still expand as macros.
 comment|// rdar://6709206
-comment|// RUN: grep "5: expanded (" %t&&
 define|#
 directive|define
 name|M4
@@ -82,8 +78,8 @@ literal|5
 operator|:
 name|M5
 argument_list|()
+comment|// CHECK-Identifiers-False: 5: expanded (
 comment|// rdar://6804322
-comment|// RUN: grep -F "6: blarg $foo" %t&&
 define|#
 directive|define
 name|FOO
@@ -97,8 +93,8 @@ name|FOO
 argument_list|(
 name|blarg
 argument_list|)
-comment|// RUN: clang-cc -x assembler-with-cpp -fdollars-in-identifiers=1 -E %s> %t&&
-comment|// RUN: grep -F "7: blarg$foo" %t&&
+comment|// CHECK-Identifiers-False: 6: blarg $foo
+comment|// RUN: clang-cc -x assembler-with-cpp -fdollars-in-identifiers=1 -E %s -o - | FileCheck -check-prefix=CHECK-Identifiers-True -strict-whitespace %s&&
 define|#
 directive|define
 name|FOO
@@ -112,6 +108,7 @@ name|FOO
 argument_list|(
 name|blarg
 argument_list|)
+comment|// CHECK-Identifiers-True: 7: blarg$foo
 comment|//
 define|#
 directive|define
@@ -135,10 +132,9 @@ name|T7
 argument_list|(
 name|foo
 argument_list|)
-comment|// RUN: grep '8: T6 #nostring' %t&&
-comment|// RUN: grep '9: T7 "foo"' %t&&
+comment|// CHECK-Identifiers-True: 8: T6 #nostring
+comment|// CHECK-Identifiers-True: 9: T7 "foo"
 comment|// Concatenation with period doesn't leave a space
-comment|// RUN: grep -F '10: .T8' %t&&
 define|#
 directive|define
 name|T8
@@ -156,8 +152,8 @@ operator|.
 argument_list|,
 name|T8
 argument_list|)
+comment|// CHECK-Identifiers-True: 10: .T8
 comment|// This should not crash.
-comment|// RUN: grep '11: #0' %t&&
 define|#
 directive|define
 name|T11
@@ -172,6 +168,10 @@ argument_list|(
 argument|b
 argument_list|)
 end_expr_stmt
+
+begin_comment
+comment|// CHECK-Identifiers-True: 11: #0
+end_comment
 
 begin_comment
 comment|// RUN: true

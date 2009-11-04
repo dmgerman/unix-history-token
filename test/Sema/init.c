@@ -153,7 +153,7 @@ comment|// expected-error {{initialization with '{...}' expected}}
 name|int
 operator|+
 expr_stmt|;
-comment|// expected-error {{expected identifier or '('}} expected-error {{expected ';' at end of declaration}}
+comment|// expected-error {{expected identifier or '('}}
 block|}
 end_function
 

@@ -126,7 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -782,14 +782,9 @@ modifier|*
 name|bindDecl
 argument_list|(
 specifier|const
-name|VarDecl
+name|VarRegion
 operator|*
-name|VD
-argument_list|,
-specifier|const
-name|LocationContext
-operator|*
-name|LC
+name|VR
 argument_list|,
 name|SVal
 name|V
@@ -802,14 +797,9 @@ modifier|*
 name|bindDeclWithNoInit
 argument_list|(
 specifier|const
-name|VarDecl
+name|VarRegion
 operator|*
-name|VD
-argument_list|,
-specifier|const
-name|LocationContext
-operator|*
-name|LC
+name|VR
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2705,9 +2695,7 @@ name|GRState
 operator|::
 name|bindDecl
 argument_list|(
-argument|const VarDecl* VD
-argument_list|,
-argument|const LocationContext *LC
+argument|const VarRegion* VR
 argument_list|,
 argument|SVal IVal
 argument_list|)
@@ -2723,9 +2711,7 @@ name|BindDecl
 argument_list|(
 name|this
 argument_list|,
-name|VD
-argument_list|,
-name|LC
+name|VR
 argument_list|,
 name|IVal
 argument_list|)
@@ -2742,9 +2728,7 @@ name|GRState
 operator|::
 name|bindDeclWithNoInit
 argument_list|(
-argument|const VarDecl* VD
-argument_list|,
-argument|const LocationContext *LC
+argument|const VarRegion* VR
 argument_list|)
 specifier|const
 block|{
@@ -2758,9 +2742,7 @@ name|BindDeclWithNoInit
 argument_list|(
 name|this
 argument_list|,
-name|VD
-argument_list|,
-name|LC
+name|VR
 argument_list|)
 return|;
 block|}

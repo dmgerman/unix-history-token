@@ -57,20 +57,6 @@ name|or
 literal|'('
 block|}
 block|}
-expr|\
-name|expected
-operator|-
-name|error
-block|{
-block|{
-name|expected
-literal|';'
-name|at
-name|end
-name|of
-name|declaration
-block|}
-block|}
 block|}
 end_function
 

@@ -12,7 +12,7 @@ comment|// 1 declaration, 1 bar, 1 test_block_dbg and 1 for the block.
 end_comment
 
 begin_comment
-comment|// XFAIL
+comment|// XFAIL: *
 end_comment
 
 begin_decl_stmt

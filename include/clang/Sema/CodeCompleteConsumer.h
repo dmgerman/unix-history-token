@@ -101,6 +101,9 @@ name|class
 name|FunctionTemplateDecl
 decl_stmt|;
 name|class
+name|IdentifierInfo
+decl_stmt|;
+name|class
 name|NamedDecl
 decl_stmt|;
 name|class
@@ -459,7 +462,10 @@ literal|0
 block|,
 comment|//< Refers to a declaration
 name|RK_Keyword
+block|,
 comment|//< Refers to a keyword or symbol.
+name|RK_Macro
+comment|//< Refers to a macro
 block|}
 enum|;
 comment|/// \brief The kind of result stored here.
@@ -480,6 +486,11 @@ specifier|const
 name|char
 modifier|*
 name|Keyword
+decl_stmt|;
+comment|/// \brief When Kind == RK_Macro, the identifier that refers to a macro.
+name|IdentifierInfo
+modifier|*
+name|Macro
 decl_stmt|;
 block|}
 union|;
@@ -578,6 +589,49 @@ operator|,
 name|Keyword
 argument_list|(
 name|Keyword
+argument_list|)
+operator|,
+name|Rank
+argument_list|(
+name|Rank
+argument_list|)
+operator|,
+name|Hidden
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|QualifierIsInformative
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|StartsNestedNameSpecifier
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Qualifier
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+comment|/// \brief Build a result that refers to a macro.
+name|Result
+argument_list|(
+argument|IdentifierInfo *Macro
+argument_list|,
+argument|unsigned Rank
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|RK_Macro
+argument_list|)
+operator|,
+name|Macro
+argument_list|(
+name|Macro
 argument_list|)
 operator|,
 name|Rank

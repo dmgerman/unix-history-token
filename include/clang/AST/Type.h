@@ -390,6 +390,9 @@ name|class
 name|TemplateArgument
 decl_stmt|;
 name|class
+name|TemplateArgumentLoc
+decl_stmt|;
+name|class
 name|QualifiedNameType
 decl_stmt|;
 struct_decl|struct
@@ -9828,6 +9831,15 @@ argument_list|,
 argument|unsigned NumArgs
 argument_list|)
 block|;
+specifier|static
+name|bool
+name|anyDependentTemplateArguments
+argument_list|(
+argument|const TemplateArgumentLoc *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|)
+block|;
 comment|/// \brief Print a template argument list, including the '<' and '>'
 comment|/// enclosing the template arguments.
 specifier|static
@@ -9837,6 +9849,19 @@ name|string
 name|PrintTemplateArgumentList
 argument_list|(
 argument|const TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|const PrintingPolicy&Policy
+argument_list|)
+block|;
+specifier|static
+name|std
+operator|::
+name|string
+name|PrintTemplateArgumentList
+argument_list|(
+argument|const TemplateArgumentLoc *Args
 argument_list|,
 argument|unsigned NumArgs
 argument_list|,

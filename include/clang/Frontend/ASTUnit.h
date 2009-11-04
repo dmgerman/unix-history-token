@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Index/ASTLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -122,6 +128,10 @@ name|ASTContext
 decl_stmt|;
 name|class
 name|Decl
+decl_stmt|;
+name|using
+name|namespace
+name|idx
 decl_stmt|;
 comment|/// \brief Utility class for loading a ASTContext from a PCH file.
 comment|///
@@ -178,6 +188,10 @@ comment|// FIXME: This is temporary; eventually, CIndex will always do this.
 name|bool
 name|OnlyLocalDecls
 decl_stmt|;
+comment|// Critical optimization when using clang_getCursor().
+name|ASTLocation
+name|LastLoc
+decl_stmt|;
 name|ASTUnit
 argument_list|(
 specifier|const
@@ -197,9 +211,6 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
-name|ASTUnit
-argument_list|()
-expr_stmt|;
 name|public
 label|:
 name|ASTUnit
@@ -363,6 +374,27 @@ specifier|const
 block|{
 return|return
 name|OnlyLocalDecls
+return|;
+block|}
+name|void
+name|setLastASTLocation
+parameter_list|(
+name|ASTLocation
+name|ALoc
+parameter_list|)
+block|{
+name|LastLoc
+operator|=
+name|ALoc
+expr_stmt|;
+block|}
+name|ASTLocation
+name|getLastASTLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LastLoc
 return|;
 block|}
 comment|/// \brief Create a ASTUnit from a PCH file.

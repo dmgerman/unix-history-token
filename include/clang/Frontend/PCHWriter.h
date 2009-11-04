@@ -1015,6 +1015,20 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
+comment|/// \brief Emits a template argument location.
+name|void
+name|AddTemplateArgumentLoc
+parameter_list|(
+specifier|const
+name|TemplateArgumentLoc
+modifier|&
+name|Arg
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit a reference to a declaration.
 name|void
 name|AddDeclRef

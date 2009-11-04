@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/OperatorKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdlib>
 end_include
 
@@ -135,18 +141,16 @@ decl_stmt|;
 comment|/// Kind - The actual flavor of token this is.
 comment|///
 name|unsigned
+name|char
 name|Kind
-range|:
-literal|8
 decl_stmt|;
 comment|// DON'T make Kind a 'tok::TokenKind';
 comment|// MSVC will treat it as a signed char and
 comment|// TokenKinds> 127 won't be handled correctly.
 comment|/// Flags - Bits we track about this token, members of the TokenFlags enum.
 name|unsigned
+name|char
 name|Flags
-range|:
-literal|8
 decl_stmt|;
 name|public
 label|:
@@ -898,6 +902,10 @@ comment|/// FIXME: Temporarily stores the name of a specialization
 name|IdentifierInfo
 modifier|*
 name|Name
+decl_stmt|;
+comment|/// FIXME: Temporarily stores the overloaded operator kind.
+name|OverloadedOperatorKind
+name|Operator
 decl_stmt|;
 comment|/// The declaration of the template corresponding to the
 comment|/// template-name. This is an Action::DeclTy*.

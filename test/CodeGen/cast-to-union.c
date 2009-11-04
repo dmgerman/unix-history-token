@@ -4,7 +4,7 @@ comment|// RUN: clang-cc -emit-llvm  %s -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: w = global %0 { i32 2, [4 x i8] zeroinitializer }
+comment|// CHECK: w = global %0 { i32 2, [4 x i8] undef }
 end_comment
 
 begin_comment

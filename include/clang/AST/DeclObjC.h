@@ -1495,6 +1495,16 @@ name|PropertyId
 argument_list|)
 decl|const
 decl_stmt|;
+name|ObjCPropertyDecl
+modifier|*
+name|FindPropertyVisibleInPrimaryClass
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|PropertyId
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Marks the end of the container.
 name|SourceLocation
 name|getAtEndLoc
@@ -3737,7 +3747,7 @@ operator|:
 name|public
 name|ObjCContainerDecl
 block|{
-comment|/// Class interface for this category implementation
+comment|/// Class interface for this class/category implementation
 name|ObjCInterfaceDecl
 operator|*
 name|ClassInterface
@@ -4014,8 +4024,14 @@ argument_list|,
 argument|ObjCInterfaceDecl *classInterface
 argument_list|)
 block|;
-comment|/// getIdentifier - Get the identifier that names the class
+comment|/// getIdentifier - Get the identifier that names the category
 comment|/// interface associated with this implementation.
+comment|/// FIXME: This is a bad API, we are overriding the NamedDecl::getIdentifier()
+comment|/// to mean something different. For example:
+comment|/// ((NamedDecl *)SomeCategoryImplDecl)->getIdentifier()
+comment|/// returns the class interface name, whereas
+comment|/// ((ObjCCategoryImplDecl *)SomeCategoryImplDecl)->getIdentifier()
+comment|/// returns the category name.
 name|IdentifierInfo
 operator|*
 name|getIdentifier
@@ -4038,7 +4054,7 @@ name|II
 block|; }
 name|ObjCCategoryDecl
 operator|*
-name|getCategoryClass
+name|getCategoryDecl
 argument_list|()
 specifier|const
 block|;

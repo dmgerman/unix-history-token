@@ -4,11 +4,7 @@ comment|// Example from C99 6.10.3.4p7
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'int j[] = { 123, 45, 67, 89,'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '10, 11, 12, };'
+comment|// RUN: clang-cc -E %s | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define
@@ -83,6 +79,14 @@ argument_list|,)
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: int j[] = { 123, 45, 67, 89,
+end_comment
+
+begin_comment
+comment|// CHECK: 10, 11, 12, };
+end_comment
 
 end_unit
 

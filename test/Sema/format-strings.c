@@ -32,6 +32,44 @@ name|global_fmt
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|snprintf
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|check_string_literal
@@ -546,9 +584,8 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{incompatible pointer types}}, expected-warning {{should not be a wide string}}
-name|vasprintf
+name|vsprintf
 argument_list|(
-operator|&
 name|b
 argument_list|,
 literal|L"bar %d"

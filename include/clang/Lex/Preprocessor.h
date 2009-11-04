@@ -287,6 +287,16 @@ modifier|*
 name|Ident__has_builtin
 decl_stmt|;
 comment|// __has_builtin
+name|IdentifierInfo
+modifier|*
+name|Ident__has_include
+decl_stmt|;
+comment|// __has_include
+name|IdentifierInfo
+modifier|*
+name|Ident__has_include_next
+decl_stmt|;
+comment|// __has_include_next
 name|SourceLocation
 name|DATELoc
 decl_stmt|,
@@ -863,7 +873,20 @@ operator|==
 name|L
 return|;
 block|}
-comment|/// getCurrentLexer - Return the current file lexer being lexed from.  Note
+comment|/// getCurrentLexer - Return the current lexer being lexed from.  Note
+comment|/// that this ignores any potentially active macro expansions and _Pragma
+comment|/// expansions going on at the time.
+name|PreprocessorLexer
+operator|*
+name|getCurrentLexer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurPPLexer
+return|;
+block|}
+comment|/// getCurrentFileLexer - Return the current file lexer being lexed from.  Note
 comment|/// that this ignores any potentially active macro expansions and _Pragma
 comment|/// expansions going on at the time.
 name|PreprocessorLexer
@@ -2062,6 +2085,109 @@ name|SourceLocation
 name|L
 parameter_list|)
 function_decl|;
+comment|/// GetIncludeFilenameSpelling - Turn the specified lexer token into a fully
+comment|/// checked and spelled filename, e.g. as an operand of #include. This returns
+comment|/// true if the input filename was in<>'s or false if it were in ""'s.  The
+comment|/// caller is expected to provide a buffer that is large enough to hold the
+comment|/// spelling of the filename, but is also expected to handle the case when
+comment|/// this method decides to use a different buffer.
+name|bool
+name|GetIncludeFilenameSpelling
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|BufStart
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|BufEnd
+parameter_list|)
+function_decl|;
+comment|/// LookupFile - Given a "foo" or<foo> reference, look up the indicated file,
+comment|/// return null on failure.  isAngled indicates whether the file reference is
+comment|/// for system #include's or not (i.e. using<> instead of "").
+specifier|const
+name|FileEntry
+modifier|*
+name|LookupFile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|FilenameStart
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|FilenameEnd
+parameter_list|,
+name|bool
+name|isAngled
+parameter_list|,
+specifier|const
+name|DirectoryLookup
+modifier|*
+name|FromDir
+parameter_list|,
+specifier|const
+name|DirectoryLookup
+modifier|*
+modifier|&
+name|CurDir
+parameter_list|)
+function_decl|;
+comment|/// GetCurLookup - The DirectoryLookup structure used to find the current
+comment|/// FileEntry, if CurLexer is non-null and if applicable.  This allows us to
+comment|/// implement #include_next and find directory-specific properties.
+specifier|const
+name|DirectoryLookup
+modifier|*
+name|GetCurDirLookup
+parameter_list|()
+block|{
+return|return
+name|CurDirLookup
+return|;
+block|}
+comment|/// isInPrimaryFile - Return true if we're in the top-level file, not in a
+comment|/// #include.
+name|bool
+name|isInPrimaryFile
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// ConcatenateIncludeName - Handle cases where the #include name is expanded
+comment|/// from a macro as multiple tokens, which need to be glued together.  This
+comment|/// occurs for code like:
+comment|///    #define FOO<a/b.h>
+comment|///    #include FOO
+comment|/// because in this case, "<a/b.h>" is returned as 7 tokens, not one.
+comment|///
+comment|/// This code concatenates and consumes tokens up to the '>' token.  It returns
+comment|/// false if the> was found, otherwise it returns true if it finds and consumes
+comment|/// the EOM marker.
+name|bool
+name|ConcatenateIncludeName
+argument_list|(
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|char
+argument_list|,
+literal|128
+operator|>
+operator|&
+name|FilenameBuffer
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 name|void
@@ -2174,13 +2300,6 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// isInPrimaryFile - Return true if we're in the top-level file, not in a
-comment|/// #include.
-name|bool
-name|isInPrimaryFile
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// ReadMacroName - Lex and validate a macro name, which occurs after a
 comment|/// #define or #undef.  This emits a diagnostic, sets the token kind to eom,
 comment|/// and discards the rest of the macro line if the macro name is invalid.
@@ -2351,64 +2470,6 @@ specifier|const
 name|DirectoryLookup
 modifier|*
 name|Dir
-parameter_list|)
-function_decl|;
-comment|/// GetIncludeFilenameSpelling - Turn the specified lexer token into a fully
-comment|/// checked and spelled filename, e.g. as an operand of #include. This returns
-comment|/// true if the input filename was in<>'s or false if it were in ""'s.  The
-comment|/// caller is expected to provide a buffer that is large enough to hold the
-comment|/// spelling of the filename, but is also expected to handle the case when
-comment|/// this method decides to use a different buffer.
-name|bool
-name|GetIncludeFilenameSpelling
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|BufStart
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|BufEnd
-parameter_list|)
-function_decl|;
-comment|/// LookupFile - Given a "foo" or<foo> reference, look up the indicated file,
-comment|/// return null on failure.  isAngled indicates whether the file reference is
-comment|/// for system #include's or not (i.e. using<> instead of "").
-specifier|const
-name|FileEntry
-modifier|*
-name|LookupFile
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|FilenameStart
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|FilenameEnd
-parameter_list|,
-name|bool
-name|isAngled
-parameter_list|,
-specifier|const
-name|DirectoryLookup
-modifier|*
-name|FromDir
-parameter_list|,
-specifier|const
-name|DirectoryLookup
-modifier|*
-modifier|&
-name|CurDir
 parameter_list|)
 function_decl|;
 comment|/// IsFileLexer - Returns true if we are lexing from a file and not a

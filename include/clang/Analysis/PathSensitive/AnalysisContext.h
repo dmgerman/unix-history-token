@@ -304,6 +304,11 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|virtual
+operator|~
+name|LocationContext
+argument_list|()
+block|{}
 name|ContextKind
 name|getKind
 argument_list|()
@@ -405,6 +410,7 @@ name|getSelfDecl
 argument_list|()
 return|;
 block|}
+name|virtual
 name|void
 name|Profile
 argument_list|(
@@ -492,6 +498,11 @@ argument_list|(
 argument|s
 argument_list|)
 block|{}
+name|virtual
+operator|~
+name|StackFrameContext
+argument_list|()
+block|{}
 name|Stmt
 specifier|const
 operator|*
@@ -503,6 +514,7 @@ return|return
 name|CallSite
 return|;
 block|}
+name|virtual
 name|void
 name|Profile
 argument_list|(
@@ -609,6 +621,12 @@ argument_list|(
 argument|s
 argument_list|)
 block|{}
+name|virtual
+operator|~
+name|ScopeContext
+argument_list|()
+block|{}
+name|virtual
 name|void
 name|Profile
 argument_list|(

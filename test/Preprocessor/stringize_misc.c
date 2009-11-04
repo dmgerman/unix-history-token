@@ -1,26 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '"f(1, 2)" "g((x=y++, y))"'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '"{a=1" "b=2;}"'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '"<" "["'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '"(,)" "(...)"'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '{a=1 c=3; b=2;}'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '"a COMMA b" "(a, b)"'
+comment|// RUN: clang-cc -E %s | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define
@@ -48,6 +28,10 @@ argument|g((x=y++, y))
 argument_list|)
 end_macro
 
+begin_comment
+comment|// CHECK: "f(1, 2)" "g((x=y++, y))"
+end_comment
+
 begin_macro
 name|M
 argument_list|(
@@ -64,6 +48,10 @@ begin_comment
 comment|/* A semicolon is not a comma */
 end_comment
 
+begin_comment
+comment|// CHECK: "{a=1" "b=2;}"
+end_comment
+
 begin_macro
 name|M
 argument_list|(
@@ -77,6 +65,10 @@ begin_comment
 comment|/* Passes the arguments< and [ */
 end_comment
 
+begin_comment
+comment|// CHECK: "<" "["
+end_comment
+
 begin_macro
 name|M
 argument_list|(
@@ -88,6 +80,10 @@ end_macro
 
 begin_comment
 comment|/* Passes the arguments (,) and (...) */
+end_comment
+
+begin_comment
+comment|// CHECK: "(,)" "(...)"
 end_comment
 
 begin_define
@@ -119,6 +115,10 @@ comment|/* braces are not parentheses */
 end_comment
 
 begin_comment
+comment|// CHECK: {a=1 c=3; b=2;}
+end_comment
+
+begin_comment
 comment|/*   * To pass a comma token as an argument it is   * necessary to write:   */
 end_comment
 
@@ -137,6 +137,10 @@ argument_list|,
 argument|(a, b)
 argument_list|)
 end_macro
+
+begin_comment
+comment|// CHECK: "a COMMA b" "(a, b)"
+end_comment
 
 end_unit
 

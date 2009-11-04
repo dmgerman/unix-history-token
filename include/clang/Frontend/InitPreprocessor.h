@@ -377,6 +377,9 @@ specifier|const
 name|PreprocessorInitOptions
 modifier|&
 name|InitOptions
+parameter_list|,
+name|bool
+name|undef_macros
 parameter_list|)
 function_decl|;
 block|}

@@ -703,6 +703,72 @@ begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
+begin_typedef
+typedef|typedef
+name|uintptr_t
+name|ParsingDeclStackState
+typedef|;
+end_typedef
+
+begin_comment
+comment|/// PushParsingDeclaration - Notes that the parser has begun
+end_comment
+
+begin_comment
+comment|/// processing a declaration of some sort.  Guaranteed to be matched
+end_comment
+
+begin_comment
+comment|/// by a call to PopParsingDeclaration with the value returned by
+end_comment
+
+begin_comment
+comment|/// this method.
+end_comment
+
+begin_function
+name|virtual
+name|ParsingDeclStackState
+name|PushParsingDeclaration
+parameter_list|()
+block|{
+return|return
+name|ParsingDeclStackState
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// PopParsingDeclaration - Notes that the parser has completed
+end_comment
+
+begin_comment
+comment|/// processing a declaration of some sort.  The decl will be empty
+end_comment
+
+begin_comment
+comment|/// if the declaration didn't correspond to a full declaration (or
+end_comment
+
+begin_comment
+comment|/// if the actions module returned an empty decl for it).
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|PopParsingDeclaration
+parameter_list|(
+name|ParsingDeclStackState
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|D
+parameter_list|)
+block|{   }
+end_function
+
 begin_comment
 comment|/// ConvertDeclToDeclGroup - If the parser has one decl in a context where it
 end_comment
@@ -1042,7 +1108,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Determine whether the given identifier refers to the name of a
+comment|/// \brief Determine whether the given name refers to a template.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This callback is used by the parser after it has seen a '<' to determine
+end_comment
+
+begin_comment
+comment|/// whether the given name refers to a template and, if so, what kind of
 end_comment
 
 begin_comment
@@ -1054,7 +1132,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param S the scope in which name lookup occurs
+comment|/// \param S the scope in which the name occurs.
 end_comment
 
 begin_comment
@@ -1062,19 +1140,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param II the identifier that we are querying to determine whether it
+comment|/// \param SS the C++ nested-name-specifier that precedes the template name,
 end_comment
 
 begin_comment
-comment|/// is a template.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param IdLoc the source location of the identifier
+comment|/// if any.
 end_comment
 
 begin_comment
@@ -1082,11 +1152,31 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param SS the C++ scope specifier that precedes the template name, if
+comment|/// \param Name the name that we are querying to determine whether it is
 end_comment
 
 begin_comment
-comment|/// any.
+comment|/// a template.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ObjectType if we are determining whether the given name is a
+end_comment
+
+begin_comment
+comment|/// template name in the context of a member access expression (e.g.,
+end_comment
+
+begin_comment
+comment|/// \c p->X<int>), this is the type of the object referred to by the
+end_comment
+
+begin_comment
+comment|/// member access (e.g., \c p).
 end_comment
 
 begin_comment
@@ -1098,7 +1188,11 @@ comment|/// \param EnteringContext whether we are potentially entering the conte
 end_comment
 
 begin_comment
-comment|/// referred to by the scope specifier \p SS
+comment|/// referred to by the nested-name-specifier \p SS, which allows semantic
+end_comment
+
+begin_comment
+comment|/// analysis to look into uninstantiated templates.
 end_comment
 
 begin_comment
@@ -1131,17 +1225,13 @@ modifier|*
 name|S
 parameter_list|,
 specifier|const
-name|IdentifierInfo
-modifier|&
-name|II
-parameter_list|,
-name|SourceLocation
-name|IdLoc
-parameter_list|,
-specifier|const
 name|CXXScopeSpec
-modifier|*
+modifier|&
 name|SS
+parameter_list|,
+name|UnqualifiedId
+modifier|&
+name|Name
 parameter_list|,
 name|TypeTy
 modifier|*
@@ -3650,172 +3740,100 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// ActOnIdentifierExpr - Parse an identifier in expression context.
+comment|/// \brief Parsed an id-expression (C++) or identifier (C) in expression
 end_comment
 
 begin_comment
-comment|/// 'HasTrailingLParen' indicates whether or not the identifier has a '('
+comment|/// context, e.g., the expression "x" that refers to a variable named "x".
 end_comment
 
 begin_comment
-comment|/// token immediately after it.
+comment|///
 end_comment
 
 begin_comment
-comment|/// An optional CXXScopeSpec can be passed to indicate the C++ scope (class or
+comment|/// \param S the scope in which this id-expression or identifier occurs.
 end_comment
 
 begin_comment
-comment|/// namespace) that the identifier must be a member of.
+comment|///
 end_comment
 
 begin_comment
-comment|/// i.e. for "foo::bar", 'II' will be "bar" and 'SS' will be "foo::".
+comment|/// \param SS the C++ nested-name-specifier that qualifies the name of the
+end_comment
+
+begin_comment
+comment|/// value, e.g., "std::" in "std::sort".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Name the name to which the id-expression refers. In C, this will
+end_comment
+
+begin_comment
+comment|/// always be an identifier. In C++, it may also be an overloaded operator,
+end_comment
+
+begin_comment
+comment|/// destructor name (if there is a nested-name-specifier), or template-id.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param HasTrailingLParen whether the next token following the
+end_comment
+
+begin_comment
+comment|/// id-expression or identifier is a left parentheses ('(').
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IsAddressOfOperand whether the token that precedes this
+end_comment
+
+begin_comment
+comment|/// id-expression or identifier was an ampersand ('&'), indicating that
+end_comment
+
+begin_comment
+comment|/// we will be taking the address of this expression.
 end_comment
 
 begin_function
 name|virtual
 name|OwningExprResult
-name|ActOnIdentifierExpr
+name|ActOnIdExpression
 parameter_list|(
 name|Scope
 modifier|*
 name|S
-parameter_list|,
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|IdentifierInfo
-modifier|&
-name|II
-parameter_list|,
-name|bool
-name|HasTrailingLParen
-parameter_list|,
-specifier|const
-name|CXXScopeSpec
-modifier|*
-name|SS
-init|=
-literal|0
-parameter_list|,
-name|bool
-name|isAddressOfOperand
-init|=
-name|false
-parameter_list|)
-block|{
-return|return
-name|ExprEmpty
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// ActOnOperatorFunctionIdExpr - Parse a C++ overloaded operator
-end_comment
-
-begin_comment
-comment|/// name (e.g., @c operator+ ) as an expression. This is very
-end_comment
-
-begin_comment
-comment|/// similar to ActOnIdentifierExpr, except that instead of providing
-end_comment
-
-begin_comment
-comment|/// an identifier the parser provides the kind of overloaded
-end_comment
-
-begin_comment
-comment|/// operator that was parsed.
-end_comment
-
-begin_function
-name|virtual
-name|OwningExprResult
-name|ActOnCXXOperatorFunctionIdExpr
-parameter_list|(
-name|Scope
-modifier|*
-name|S
-parameter_list|,
-name|SourceLocation
-name|OperatorLoc
-parameter_list|,
-name|OverloadedOperatorKind
-name|Op
-parameter_list|,
-name|bool
-name|HasTrailingLParen
 parameter_list|,
 specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
 parameter_list|,
-name|bool
-name|isAddressOfOperand
-init|=
-name|false
-parameter_list|)
-block|{
-return|return
-name|ExprEmpty
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// ActOnCXXConversionFunctionExpr - Parse a C++ conversion function
-end_comment
-
-begin_comment
-comment|/// name (e.g., @c operator void const *) as an expression. This is
-end_comment
-
-begin_comment
-comment|/// very similar to ActOnIdentifierExpr, except that instead of
-end_comment
-
-begin_comment
-comment|/// providing an identifier the parser provides the type of the
-end_comment
-
-begin_comment
-comment|/// conversion function.
-end_comment
-
-begin_function
-name|virtual
-name|OwningExprResult
-name|ActOnCXXConversionFunctionExpr
-parameter_list|(
-name|Scope
-modifier|*
-name|S
-parameter_list|,
-name|SourceLocation
-name|OperatorLoc
-parameter_list|,
-name|TypeTy
-modifier|*
-name|Type
+name|UnqualifiedId
+modifier|&
+name|Name
 parameter_list|,
 name|bool
 name|HasTrailingLParen
 parameter_list|,
-specifier|const
-name|CXXScopeSpec
-modifier|&
-name|SS
-parameter_list|,
 name|bool
-name|isAddressOfOperand
-init|=
-name|false
+name|IsAddressOfOperand
 parameter_list|)
 block|{
 return|return
@@ -4017,10 +4035,110 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Parsed a member access expresion (C99 6.5.2.3, C++ [expr.ref])
+end_comment
+
+begin_comment
+comment|/// of the form \c x.m or \c p->m.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the member access expression occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Base the class or pointer to class into which this member
+end_comment
+
+begin_comment
+comment|/// access expression refers, e.g., \c x in \c x.m.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OpLoc the location of the "." or "->" operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OpKind the kind of member access operator, which will be either
+end_comment
+
+begin_comment
+comment|/// tok::arrow ("->") or tok::period (".").
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS in C++, the nested-name-specifier that precedes the member
+end_comment
+
+begin_comment
+comment|/// name, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Member the name of the member that we are referring to. In C,
+end_comment
+
+begin_comment
+comment|/// this will always store an identifier; in C++, we may also have operator
+end_comment
+
+begin_comment
+comment|/// names, conversion function names, destructors, and template names.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ObjCImpDecl the Objective-C implementation declaration.
+end_comment
+
+begin_comment
+comment|/// FIXME: Do we really need this?
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param HasTrailingLParen whether this member name is immediately followed
+end_comment
+
+begin_comment
+comment|/// by a left parentheses ('(').
+end_comment
+
 begin_decl_stmt
 name|virtual
 name|OwningExprResult
-name|ActOnMemberReferenceExpr
+name|ActOnMemberAccessExpr
 argument_list|(
 name|Scope
 operator|*
@@ -4037,22 +4155,20 @@ operator|::
 name|TokenKind
 name|OpKind
 argument_list|,
-name|SourceLocation
-name|MemberLoc
+specifier|const
+name|CXXScopeSpec
+operator|&
+name|SS
 argument_list|,
-name|IdentifierInfo
+name|UnqualifiedId
 operator|&
 name|Member
 argument_list|,
 name|DeclPtrTy
 name|ObjCImpDecl
 argument_list|,
-specifier|const
-name|CXXScopeSpec
-operator|*
-name|SS
-operator|=
-literal|0
+name|bool
+name|HasTrailingLParen
 argument_list|)
 block|{
 return|return
@@ -5826,468 +5942,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// ActOnDestructorReferenceExpr - Parsed a destructor reference, for example:
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// t->~T();
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|OwningExprResult
-name|ActOnDestructorReferenceExpr
-argument_list|(
-name|Scope
-operator|*
-name|S
-argument_list|,
-name|ExprArg
-name|Base
-argument_list|,
-name|SourceLocation
-name|OpLoc
-argument_list|,
-name|tok
-operator|::
-name|TokenKind
-name|OpKind
-argument_list|,
-name|SourceLocation
-name|ClassNameLoc
-argument_list|,
-name|IdentifierInfo
-operator|*
-name|ClassName
-argument_list|,
-specifier|const
-name|CXXScopeSpec
-operator|&
-name|SS
-argument_list|,
-name|bool
-name|HasTrailingLParen
-argument_list|)
-block|{
-return|return
-name|ExprEmpty
-argument_list|()
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Parsed a C++ destructor reference that refers to a type.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This action is used when parsing a destructor reference that uses a
-end_comment
-
-begin_comment
-comment|/// template-id, e.g.,
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
-comment|/// t->~Tmpl<T1, T2>
-end_comment
-
-begin_comment
-comment|/// \endcode
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param S the scope in which the destructor reference occurs.
-end_comment
-
-begin_comment
-comment|/// \param Base the base object of the destructor reference expression.
-end_comment
-
-begin_comment
-comment|/// \param OpLoc the location of the operator ('.' or '->').
-end_comment
-
-begin_comment
-comment|/// \param OpKind the kind of the destructor reference operator ('.' or '->').
-end_comment
-
-begin_comment
-comment|/// \param TypeRange the source range that covers the destructor type.
-end_comment
-
-begin_comment
-comment|/// \param Type the type that is being destroyed.
-end_comment
-
-begin_comment
-comment|/// \param SS the scope specifier that precedes the destructor name.
-end_comment
-
-begin_comment
-comment|/// \param HasTrailingLParen whether the destructor name is followed by a '('.
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|OwningExprResult
-name|ActOnDestructorReferenceExpr
-argument_list|(
-name|Scope
-operator|*
-name|S
-argument_list|,
-name|ExprArg
-name|Base
-argument_list|,
-name|SourceLocation
-name|OpLoc
-argument_list|,
-name|tok
-operator|::
-name|TokenKind
-name|OpKind
-argument_list|,
-name|SourceRange
-name|TypeRange
-argument_list|,
-name|TypeTy
-operator|*
-name|Type
-argument_list|,
-specifier|const
-name|CXXScopeSpec
-operator|&
-name|SS
-argument_list|,
-name|bool
-name|HasTrailingLParen
-argument_list|)
-block|{
-return|return
-name|ExprEmpty
-argument_list|()
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// ActOnOverloadedOperatorReferenceExpr - Parsed an overloaded operator
-end_comment
-
-begin_comment
-comment|/// reference, for example:
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// t.operator++();
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|OwningExprResult
-name|ActOnOverloadedOperatorReferenceExpr
-argument_list|(
-name|Scope
-operator|*
-name|S
-argument_list|,
-name|ExprArg
-name|Base
-argument_list|,
-name|SourceLocation
-name|OpLoc
-argument_list|,
-name|tok
-operator|::
-name|TokenKind
-name|OpKind
-argument_list|,
-name|SourceLocation
-name|ClassNameLoc
-argument_list|,
-name|OverloadedOperatorKind
-name|OverOpKind
-argument_list|,
-specifier|const
-name|CXXScopeSpec
-operator|*
-name|SS
-operator|=
-literal|0
-argument_list|)
-block|{
-return|return
-name|ExprEmpty
-argument_list|()
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// ActOnConversionOperatorReferenceExpr - Parsed an overloaded conversion
-end_comment
-
-begin_comment
-comment|/// function reference, for example:
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// t.operator int();
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|OwningExprResult
-name|ActOnConversionOperatorReferenceExpr
-argument_list|(
-name|Scope
-operator|*
-name|S
-argument_list|,
-name|ExprArg
-name|Base
-argument_list|,
-name|SourceLocation
-name|OpLoc
-argument_list|,
-name|tok
-operator|::
-name|TokenKind
-name|OpKind
-argument_list|,
-name|SourceLocation
-name|ClassNameLoc
-argument_list|,
-name|TypeTy
-operator|*
-name|Ty
-argument_list|,
-specifier|const
-name|CXXScopeSpec
-operator|*
-name|SS
-operator|=
-literal|0
-argument_list|)
-block|{
-return|return
-name|ExprEmpty
-argument_list|()
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Parsed a reference to a member template-id.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This callback will occur instead of ActOnMemberReferenceExpr() when the
-end_comment
-
-begin_comment
-comment|/// member in question is a template for which the code provides an
-end_comment
-
-begin_comment
-comment|/// explicitly-specified template argument list, e.g.,
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
-comment|/// x.f<int>()
-end_comment
-
-begin_comment
-comment|/// \endcode
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param S the scope in which the member reference expression occurs
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Base the expression to the left of the "." or "->".
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param OpLoc the location of the "." or "->".
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param OpKind the kind of operator, which will be "." or "->".
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param SS the scope specifier that precedes the template-id in, e.g.,
-end_comment
-
-begin_comment
-comment|/// \c x.Base::f<int>().
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Template the declaration of the template that is being referenced.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param TemplateNameLoc the location of the template name referred to by
-end_comment
-
-begin_comment
-comment|/// \p Template.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param LAngleLoc the location of the left angle bracket ('<')
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param TemplateArgs the (possibly-empty) template argument list provided
-end_comment
-
-begin_comment
-comment|/// as part of the member reference.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param RAngleLoc the location of the right angle bracket ('>')
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|OwningExprResult
-name|ActOnMemberTemplateIdReferenceExpr
-argument_list|(
-name|Scope
-operator|*
-name|S
-argument_list|,
-name|ExprArg
-name|Base
-argument_list|,
-name|SourceLocation
-name|OpLoc
-argument_list|,
-name|tok
-operator|::
-name|TokenKind
-name|OpKind
-argument_list|,
-specifier|const
-name|CXXScopeSpec
-operator|&
-name|SS
-argument_list|,
-comment|// FIXME: "template" keyword?
-name|TemplateTy
-name|Template
-argument_list|,
-name|SourceLocation
-name|TemplateNameLoc
-argument_list|,
-name|SourceLocation
-name|LAngleLoc
-argument_list|,
-name|ASTTemplateArgsPtr
-name|TemplateArgs
-argument_list|,
-name|SourceLocation
-operator|*
-name|TemplateArgLocs
-argument_list|,
-name|SourceLocation
-name|RAngleLoc
-argument_list|)
-block|{
-return|return
-name|ExprEmpty
-argument_list|()
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// ActOnFinishFullExpr - Called whenever a full expression has been parsed.
 end_comment
 
@@ -7166,139 +6820,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Form a reference to a template-id (that will refer to a function)
-end_comment
-
-begin_comment
-comment|/// from a template and a list of template arguments.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This action forms an expression that references the given template-id,
-end_comment
-
-begin_comment
-comment|/// possibly checking well-formedness of the template arguments. It does not
-end_comment
-
-begin_comment
-comment|/// imply the declaration of any entity.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param SS  The scope specifier that may precede the template name.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Template  A template whose specialization results in a
-end_comment
-
-begin_comment
-comment|/// function or a dependent template.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param TemplateNameLoc The location of the template name.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param LAngleLoc The location of the left angle bracket ('<') that starts
-end_comment
-
-begin_comment
-comment|/// the template argument list.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param TemplateArgs The template arguments in the template argument list,
-end_comment
-
-begin_comment
-comment|/// which may be empty.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param TemplateArgLocs The locations of the template arguments.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param RAngleLoc The location of the right angle bracket ('>') that
-end_comment
-
-begin_comment
-comment|/// closes the template argument list.
-end_comment
-
-begin_function
-name|virtual
-name|OwningExprResult
-name|ActOnTemplateIdExpr
-parameter_list|(
-specifier|const
-name|CXXScopeSpec
-modifier|&
-name|SS
-parameter_list|,
-name|TemplateTy
-name|Template
-parameter_list|,
-name|SourceLocation
-name|TemplateNameLoc
-parameter_list|,
-name|SourceLocation
-name|LAngleLoc
-parameter_list|,
-name|ASTTemplateArgsPtr
-name|TemplateArgs
-parameter_list|,
-name|SourceLocation
-modifier|*
-name|TemplateArgLocs
-parameter_list|,
-name|SourceLocation
-name|RAngleLoc
-parameter_list|)
-block|{
-return|return
-name|ExprError
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/// \brief Form a dependent template name.
 end_comment
 
@@ -7339,27 +6860,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param Name the name of the template (an identifier)
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param NameLoc the location of the identifier
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
 comment|/// \param SS the nested-name-specifier that precedes the "template" keyword
 end_comment
 
 begin_comment
-comment|/// or the template name. FIXME: If the dependent template name occurs in
+comment|/// or the template name. If the dependent template name occurs in
 end_comment
 
 begin_comment
@@ -7368,6 +6873,14 @@ end_comment
 
 begin_comment
 comment|/// nested-name-specifier will be empty.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Name the name of the template.
 end_comment
 
 begin_comment
@@ -7395,17 +6908,13 @@ name|SourceLocation
 name|TemplateKWLoc
 parameter_list|,
 specifier|const
-name|IdentifierInfo
-modifier|&
-name|Name
-parameter_list|,
-name|SourceLocation
-name|NameLoc
-parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
+parameter_list|,
+name|UnqualifiedId
+modifier|&
+name|Name
 parameter_list|,
 name|TypeTy
 modifier|*
@@ -10162,11 +9671,9 @@ name|isTemplateName
 argument_list|(
 argument|Scope *S
 argument_list|,
-argument|const IdentifierInfo&II
+argument|const CXXScopeSpec&SS
 argument_list|,
-argument|SourceLocation IdLoc
-argument_list|,
-argument|const CXXScopeSpec *SS
+argument|UnqualifiedId&Name
 argument_list|,
 argument|TypeTy *ObjectType
 argument_list|,

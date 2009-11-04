@@ -746,15 +746,61 @@ comment|/// By default, this operation transforms the type, expression, or
 comment|/// declaration stored within the template argument and constructs a
 comment|/// new template argument from the transformed result. Subclasses may
 comment|/// override this function to provide alternate behavior.
-name|TemplateArgument
+comment|///
+comment|/// Returns true if there was an error.
+name|bool
 name|TransformTemplateArgument
+parameter_list|(
+specifier|const
+name|TemplateArgumentLoc
+modifier|&
+name|Input
+parameter_list|,
+name|TemplateArgumentLoc
+modifier|&
+name|Output
+parameter_list|)
+function_decl|;
+comment|/// \brief Fakes up a TemplateArgumentLoc for a given TemplateArgument.
+name|void
+name|InventTemplateArgumentLoc
 parameter_list|(
 specifier|const
 name|TemplateArgument
 modifier|&
 name|Arg
+parameter_list|,
+name|TemplateArgumentLoc
+modifier|&
+name|ArgLoc
 parameter_list|)
 function_decl|;
+comment|/// \brief Fakes up a DeclaratorInfo for a type.
+name|DeclaratorInfo
+modifier|*
+name|InventDeclaratorInfo
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+return|return
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getTrivialDeclaratorInfo
+argument_list|(
+name|T
+argument_list|,
+name|getDerived
+argument_list|()
+operator|.
+name|getBaseLocation
+argument_list|()
+argument_list|)
+return|;
+block|}
 define|#
 directive|define
 name|ABSTRACT_TYPELOC
@@ -777,12 +823,37 @@ include|#
 directive|include
 file|"clang/AST/TypeLocNodes.def"
 name|QualType
+name|TransformReferenceType
+parameter_list|(
+name|TypeLocBuilder
+modifier|&
+name|TLB
+parameter_list|,
+name|ReferenceTypeLoc
+name|TL
+parameter_list|)
+function_decl|;
+name|QualType
 name|TransformTemplateSpecializationType
 parameter_list|(
 specifier|const
 name|TemplateSpecializationType
 modifier|*
 name|T
+parameter_list|,
+name|QualType
+name|ObjectType
+parameter_list|)
+function_decl|;
+name|QualType
+name|TransformTemplateSpecializationType
+parameter_list|(
+name|TypeLocBuilder
+modifier|&
+name|TLB
+parameter_list|,
+name|TemplateSpecializationTypeLoc
+name|TL
 parameter_list|,
 name|QualType
 name|ObjectType
@@ -818,7 +889,7 @@ parameter_list|,
 name|Parent
 parameter_list|)
 define|\
-value|OwningExprResult Transform##Node(Node *E);
+value|OwningExprResult Transform##Node(Node *E, bool isAddressOfOperand);
 define|#
 directive|define
 name|ABSTRACT_EXPR
@@ -839,6 +910,9 @@ name|RebuildPointerType
 parameter_list|(
 name|QualType
 name|PointeeType
+parameter_list|,
+name|SourceLocation
+name|Sigil
 parameter_list|)
 function_decl|;
 comment|/// \brief Build a new block pointer type given its pointee type.
@@ -850,28 +924,30 @@ name|RebuildBlockPointerType
 parameter_list|(
 name|QualType
 name|PointeeType
+parameter_list|,
+name|SourceLocation
+name|Sigil
 parameter_list|)
 function_decl|;
-comment|/// \brief Build a new lvalue reference type given the type it references.
+comment|/// \brief Build a new reference type given the type it references.
 comment|///
-comment|/// By default, performs semantic analysis when building the lvalue reference
-comment|/// type. Subclasses may override this routine to provide different behavior.
+comment|/// By default, performs semantic analysis when building the
+comment|/// reference type. Subclasses may override this routine to provide
+comment|/// different behavior.
+comment|///
+comment|/// \param LValue whether the type was written with an lvalue sigil
+comment|/// or an rvalue sigil.
 name|QualType
-name|RebuildLValueReferenceType
+name|RebuildReferenceType
 parameter_list|(
 name|QualType
 name|ReferentType
-parameter_list|)
-function_decl|;
-comment|/// \brief Build a new rvalue reference type given the type it references.
-comment|///
-comment|/// By default, performs semantic analysis when building the rvalue reference
-comment|/// type. Subclasses may override this routine to provide different behavior.
-name|QualType
-name|RebuildRValueReferenceType
-parameter_list|(
-name|QualType
-name|ReferentType
+parameter_list|,
+name|bool
+name|LValue
+parameter_list|,
+name|SourceLocation
+name|Sigil
 parameter_list|)
 function_decl|;
 comment|/// \brief Build a new member pointer type given the pointee type and the
@@ -887,6 +963,9 @@ name|PointeeType
 parameter_list|,
 name|QualType
 name|ClassType
+parameter_list|,
+name|SourceLocation
+name|Sigil
 parameter_list|)
 function_decl|;
 comment|/// \brief Build a new Objective C object pointer type.
@@ -895,6 +974,9 @@ name|RebuildObjCObjectPointerType
 parameter_list|(
 name|QualType
 name|PointeeType
+parameter_list|,
+name|SourceLocation
+name|Sigil
 parameter_list|)
 function_decl|;
 comment|/// \brief Build a new array type given the element type, size
@@ -958,6 +1040,9 @@ name|Size
 argument_list|,
 name|unsigned
 name|IndexTypeQuals
+argument_list|,
+name|SourceRange
+name|BracketsRange
 argument_list|)
 decl_stmt|;
 comment|/// \brief Build a new incomplete array type given the element type, size
@@ -978,6 +1063,9 @@ name|SizeMod
 argument_list|,
 name|unsigned
 name|IndexTypeQuals
+argument_list|,
+name|SourceRange
+name|BracketsRange
 argument_list|)
 decl_stmt|;
 comment|/// \brief Build a new variable-length array type given the element type,
@@ -1244,13 +1332,22 @@ parameter_list|(
 name|TemplateName
 name|Template
 parameter_list|,
+name|SourceLocation
+name|TemplateLoc
+parameter_list|,
+name|SourceLocation
+name|LAngleLoc
+parameter_list|,
 specifier|const
-name|TemplateArgument
+name|TemplateArgumentLoc
 modifier|*
 name|Args
 parameter_list|,
 name|unsigned
 name|NumArgs
+parameter_list|,
+name|SourceLocation
+name|RAngleLoc
 parameter_list|)
 function_decl|;
 comment|/// \brief Build a new qualified name type.
@@ -1352,6 +1449,9 @@ specifier|const
 name|IdentifierInfo
 modifier|*
 name|Id
+parameter_list|,
+name|SourceRange
+name|SR
 parameter_list|)
 block|{
 return|return
@@ -1364,14 +1464,7 @@ argument_list|,
 operator|*
 name|Id
 argument_list|,
-name|SourceRange
-argument_list|(
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseLocation
-argument_list|()
-argument_list|)
+name|SR
 argument_list|)
 return|;
 block|}
@@ -1510,6 +1603,27 @@ specifier|const
 name|IdentifierInfo
 modifier|&
 name|II
+parameter_list|,
+name|QualType
+name|ObjectType
+parameter_list|)
+function_decl|;
+comment|/// \brief Build a new template name given a nested name specifier and the
+comment|/// overloaded operator name that is referred to as a template.
+comment|///
+comment|/// By default, performs semantic analysis to determine whether the name can
+comment|/// be resolved to a specific template, then builds the appropriate kind of
+comment|/// template name. Subclasses may override this routine to provide different
+comment|/// behavior.
+name|TemplateName
+name|RebuildTemplateName
+parameter_list|(
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+parameter_list|,
+name|OverloadedOperatorKind
+name|Operator
 parameter_list|,
 name|QualType
 name|ObjectType
@@ -2268,14 +2382,41 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|OwningExprResult
 name|RebuildDeclRefExpr
 parameter_list|(
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+parameter_list|,
+name|SourceRange
+name|QualifierRange
+parameter_list|,
 name|NamedDecl
 modifier|*
 name|ND
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|bool
+name|isAddressOfOperand
 parameter_list|)
 block|{
+name|CXXScopeSpec
+name|SS
+decl_stmt|;
+name|SS
+operator|.
+name|setScopeRep
+argument_list|(
+name|Qualifier
+argument_list|)
+expr_stmt|;
+name|SS
+operator|.
+name|setRange
+argument_list|(
+name|QualifierRange
+argument_list|)
+expr_stmt|;
 return|return
 name|getSema
 argument_list|()
@@ -2289,11 +2430,10 @@ argument_list|,
 comment|/*FIXME:*/
 name|false
 argument_list|,
-comment|/*SS=*/
-literal|0
+operator|&
+name|SS
 argument_list|,
-comment|/*FIXME:*/
-name|false
+name|isAddressOfOperand
 argument_list|)
 return|;
 block|}
@@ -2496,8 +2636,9 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|OwningExprResult
 name|RebuildSizeOfAlignOf
 parameter_list|(
-name|QualType
-name|T
+name|DeclaratorInfo
+modifier|*
+name|DInfo
 parameter_list|,
 name|SourceLocation
 name|OpLoc
@@ -2515,7 +2656,7 @@ argument_list|()
 operator|.
 name|CreateSizeOfAlignOfExpr
 argument_list|(
-name|T
+name|DInfo
 argument_list|,
 name|OpLoc
 argument_list|,
@@ -3166,7 +3307,7 @@ return|return
 name|getSema
 argument_list|()
 operator|.
-name|ActOnMemberReferenceExpr
+name|BuildMemberReferenceExpr
 argument_list|(
 comment|/*Scope=*/
 literal|0
@@ -3184,7 +3325,11 @@ name|period
 argument_list|,
 name|AccessorLoc
 argument_list|,
+name|DeclarationName
+argument_list|(
+operator|&
 name|Accessor
+argument_list|)
 argument_list|,
 comment|/*FIXME?*/
 name|Sema
@@ -4556,74 +4701,6 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-comment|/// \brief Build a new qualified declaration reference expression.
-comment|///
-comment|/// By default, performs semantic analysis to build the new expression.
-comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
-name|RebuildQualifiedDeclRefExpr
-parameter_list|(
-name|NestedNameSpecifier
-modifier|*
-name|NNS
-parameter_list|,
-name|SourceRange
-name|QualifierRange
-parameter_list|,
-name|NamedDecl
-modifier|*
-name|ND
-parameter_list|,
-name|SourceLocation
-name|Location
-parameter_list|,
-name|bool
-name|IsAddressOfOperand
-parameter_list|)
-block|{
-name|CXXScopeSpec
-name|SS
-decl_stmt|;
-name|SS
-operator|.
-name|setRange
-argument_list|(
-name|QualifierRange
-argument_list|)
-expr_stmt|;
-name|SS
-operator|.
-name|setScopeRep
-argument_list|(
-name|NNS
-argument_list|)
-expr_stmt|;
-return|return
-name|getSema
-argument_list|()
-operator|.
-name|ActOnDeclarationNameExpr
-argument_list|(
-comment|/*Scope=*/
-literal|0
-argument_list|,
-name|Location
-argument_list|,
-name|ND
-operator|->
-name|getDeclName
-argument_list|()
-argument_list|,
-comment|/*Trailing lparen=*/
-name|false
-argument_list|,
-operator|&
-name|SS
-argument_list|,
-name|IsAddressOfOperand
-argument_list|)
-return|;
-block|}
 comment|/// \brief Build a new (previously unresolved) declaration reference
 comment|/// expression.
 comment|///
@@ -4712,7 +4789,7 @@ parameter_list|,
 name|SourceLocation
 name|LAngleLoc
 parameter_list|,
-name|TemplateArgument
+name|TemplateArgumentLoc
 modifier|*
 name|TemplateArgs
 parameter_list|,
@@ -5060,7 +5137,7 @@ name|SourceLocation
 name|LAngleLoc
 parameter_list|,
 specifier|const
-name|TemplateArgument
+name|TemplateArgumentLoc
 modifier|*
 name|TemplateArgs
 parameter_list|,
@@ -5112,7 +5189,7 @@ name|Qualifier
 argument_list|)
 expr_stmt|;
 comment|// FIXME: We're going to end up looking up the template based on its name,
-comment|// twice! Also, duplicates part of Sema::ActOnMemberTemplateIdReferenceExpr.
+comment|// twice! Also, duplicates part of Sema::BuildMemberAccessExpr.
 name|DeclarationName
 name|Name
 decl_stmt|;
@@ -5154,16 +5231,48 @@ name|getDeclName
 argument_list|()
 expr_stmt|;
 else|else
-name|Name
-operator|=
+block|{
+name|DependentTemplateName
+modifier|*
+name|DTN
+init|=
 name|Template
 operator|.
 name|getAsDependentTemplateName
 argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|DTN
 operator|->
-name|getName
+name|isIdentifier
+argument_list|()
+condition|)
+name|Name
+operator|=
+name|DTN
+operator|->
+name|getIdentifier
 argument_list|()
 expr_stmt|;
+else|else
+name|Name
+operator|=
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|DeclarationNames
+operator|.
+name|getCXXOperatorName
+argument_list|(
+name|DTN
+operator|->
+name|getOperator
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|SemaRef
 operator|.
@@ -5745,7 +5854,7 @@ parameter_list|,
 name|Parent
 parameter_list|)
 define|\
-value|case Stmt::Node##Class: return getDerived().Transform##Node(cast<Node>(E));
+value|case Stmt::Node##Class: return getDerived().Transform##Node(cast<Node>(E), \                                                             isAddressOfOperand);
 include|#
 directive|include
 file|"clang/AST/StmtNodes.def"
@@ -6016,6 +6125,21 @@ operator|::
 name|TypeSpec
 case|:
 block|{
+name|TemporaryBase
+name|Rebase
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+argument_list|,
+name|DeclarationName
+argument_list|()
+argument_list|)
+decl_stmt|;
 name|QualType
 name|T
 init|=
@@ -6644,7 +6768,14 @@ name|Name
 return|;
 end_if
 
-begin_return
+begin_if
+if|if
+condition|(
+name|DTN
+operator|->
+name|isIdentifier
+argument_list|()
+condition|)
 return|return
 name|getDerived
 argument_list|()
@@ -6656,7 +6787,26 @@ argument_list|,
 operator|*
 name|DTN
 operator|->
-name|getName
+name|getIdentifier
+argument_list|()
+argument_list|,
+name|ObjectType
+argument_list|)
+return|;
+end_if
+
+begin_return
+return|return
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildTemplateName
+argument_list|(
+name|NNS
+argument_list|,
+name|DTN
+operator|->
+name|getOperator
 argument_list|()
 argument_list|,
 name|ObjectType
@@ -6823,7 +6973,130 @@ operator|<
 name|typename
 name|Derived
 operator|>
+name|void
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|InventTemplateArgumentLoc
+argument_list|(
+argument|const TemplateArgument&Arg
+argument_list|,
+argument|TemplateArgumentLoc&Output
+argument_list|)
+block|{
+name|SourceLocation
+name|Loc
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|getBaseLocation
+argument_list|()
+block|;
+switch|switch
+condition|(
+name|Arg
+operator|.
+name|getKind
+argument_list|()
+condition|)
+block|{
+case|case
 name|TemplateArgument
+operator|::
+name|Null
+case|:
+name|llvm
+operator|::
+name|llvm_unreachable
+argument_list|(
+literal|"null template argument in TreeTransform"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TemplateArgument
+operator|::
+name|Type
+case|:
+name|Output
+operator|=
+name|TemplateArgumentLoc
+argument_list|(
+name|Arg
+argument_list|,
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getTrivialDeclaratorInfo
+argument_list|(
+name|Arg
+operator|.
+name|getAsType
+argument_list|()
+argument_list|,
+name|Loc
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TemplateArgument
+operator|::
+name|Expression
+case|:
+name|Output
+operator|=
+name|TemplateArgumentLoc
+argument_list|(
+name|Arg
+argument_list|,
+name|Arg
+operator|.
+name|getAsExpr
+argument_list|()
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TemplateArgument
+operator|::
+name|Declaration
+case|:
+case|case
+name|TemplateArgument
+operator|::
+name|Integral
+case|:
+case|case
+name|TemplateArgument
+operator|::
+name|Pack
+case|:
+name|Output
+operator|=
+name|TemplateArgumentLoc
+argument_list|(
+name|Arg
+argument_list|,
+name|TemplateArgumentLocInfo
+argument_list|()
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
 name|TreeTransform
 operator|<
 name|Derived
@@ -6831,9 +7104,21 @@ operator|>
 operator|::
 name|TransformTemplateArgument
 argument_list|(
-argument|const TemplateArgument&Arg
+argument|const TemplateArgumentLoc&Input
+argument_list|,
+argument|TemplateArgumentLoc&Output
 argument_list|)
 block|{
+specifier|const
+name|TemplateArgument
+operator|&
+name|Arg
+operator|=
+name|Input
+operator|.
+name|getArgument
+argument_list|()
+block|;
 switch|switch
 condition|(
 name|Arg
@@ -6852,8 +7137,12 @@ name|TemplateArgument
 operator|::
 name|Integral
 case|:
+name|Output
+operator|=
+name|Input
+expr_stmt|;
 return|return
-name|Arg
+name|false
 return|;
 case|case
 name|TemplateArgument
@@ -6861,41 +7150,69 @@ operator|::
 name|Type
 case|:
 block|{
-name|QualType
-name|T
+name|DeclaratorInfo
+modifier|*
+name|DI
 init|=
+name|Input
+operator|.
+name|getSourceDeclaratorInfo
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|DI
+operator|==
+name|NULL
+condition|)
+name|DI
+operator|=
+name|InventDeclaratorInfo
+argument_list|(
+name|Input
+operator|.
+name|getArgument
+argument_list|()
+operator|.
+name|getAsType
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|DI
+operator|=
 name|getDerived
 argument_list|()
 operator|.
 name|TransformType
 argument_list|(
-name|Arg
-operator|.
-name|getAsType
-argument_list|()
+name|DI
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-name|T
-operator|.
-name|isNull
-argument_list|()
+operator|!
+name|DI
 condition|)
 return|return
-name|TemplateArgument
-argument_list|()
+name|true
 return|;
-return|return
+name|Output
+operator|=
+name|TemplateArgumentLoc
+argument_list|(
 name|TemplateArgument
 argument_list|(
-name|Arg
-operator|.
-name|getLocation
+name|DI
+operator|->
+name|getType
 argument_list|()
-argument_list|,
-name|T
 argument_list|)
+argument_list|,
+name|DI
+argument_list|)
+expr_stmt|;
+return|return
+name|false
 return|;
 block|}
 end_expr_stmt
@@ -6910,6 +7227,46 @@ end_case
 
 begin_block
 block|{
+comment|// FIXME: we should never have to transform one of these.
+name|DeclarationName
+name|Name
+decl_stmt|;
+if|if
+condition|(
+name|NamedDecl
+modifier|*
+name|ND
+init|=
+name|dyn_cast
+operator|<
+name|NamedDecl
+operator|>
+operator|(
+name|Arg
+operator|.
+name|getAsDecl
+argument_list|()
+operator|)
+condition|)
+name|Name
+operator|=
+name|ND
+operator|->
+name|getDeclName
+argument_list|()
+expr_stmt|;
+name|TemporaryBase
+name|Rebase
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|Name
+argument_list|)
+decl_stmt|;
 name|Decl
 modifier|*
 name|D
@@ -6931,19 +7288,91 @@ operator|!
 name|D
 condition|)
 return|return
-name|TemplateArgument
-argument_list|()
+name|true
 return|;
-return|return
-name|TemplateArgument
-argument_list|(
-name|Arg
+name|Expr
+modifier|*
+name|SourceExpr
+init|=
+name|Input
 operator|.
-name|getLocation
+name|getSourceDeclExpression
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|SourceExpr
+condition|)
+block|{
+name|EnterExpressionEvaluationContext
+name|Unevaluated
+argument_list|(
+name|getSema
 argument_list|()
 argument_list|,
+name|Action
+operator|::
+name|Unevaluated
+argument_list|)
+decl_stmt|;
+name|Sema
+operator|::
+name|OwningExprResult
+name|E
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformExpr
+argument_list|(
+name|SourceExpr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|E
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+name|SourceExpr
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
+name|SourceExpr
+operator|=
+name|E
+operator|.
+name|takeAs
+operator|<
+name|Expr
+operator|>
+operator|(
+operator|)
+expr_stmt|;
+name|SourceExpr
+operator|->
+name|Retain
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+name|Output
+operator|=
+name|TemplateArgumentLoc
+argument_list|(
+name|TemplateArgument
+argument_list|(
 name|D
 argument_list|)
+argument_list|,
+name|SourceExpr
+argument_list|)
+expr_stmt|;
+return|return
+name|false
 return|;
 block|}
 end_block
@@ -6970,6 +7399,30 @@ operator|::
 name|Unevaluated
 argument_list|)
 decl_stmt|;
+name|Expr
+modifier|*
+name|InputExpr
+init|=
+name|Input
+operator|.
+name|getSourceExpression
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|InputExpr
+condition|)
+name|InputExpr
+operator|=
+name|Input
+operator|.
+name|getArgument
+argument_list|()
+operator|.
+name|getAsExpr
+argument_list|()
+expr_stmt|;
 name|Sema
 operator|::
 name|OwningExprResult
@@ -6980,10 +7433,7 @@ argument_list|()
 operator|.
 name|TransformExpr
 argument_list|(
-name|Arg
-operator|.
-name|getAsExpr
-argument_list|()
+name|InputExpr
 argument_list|)
 expr_stmt|;
 if|if
@@ -6994,12 +7444,12 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|TemplateArgument
-argument_list|()
+name|true
 return|;
-return|return
-name|TemplateArgument
-argument_list|(
+name|Expr
+modifier|*
+name|ETaken
+init|=
 name|E
 operator|.
 name|takeAs
@@ -7008,7 +7458,26 @@ name|Expr
 operator|>
 operator|(
 operator|)
+decl_stmt|;
+name|ETaken
+operator|->
+name|Retain
+argument_list|()
+expr_stmt|;
+name|Output
+operator|=
+name|TemplateArgumentLoc
+argument_list|(
+name|TemplateArgument
+argument_list|(
+name|ETaken
 argument_list|)
+argument_list|,
+name|ETaken
+argument_list|)
+expr_stmt|;
+return|return
+name|false
 return|;
 block|}
 end_block
@@ -7070,33 +7539,48 @@ operator|++
 name|A
 control|)
 block|{
-name|TemplateArgument
-name|TA
-init|=
+comment|// FIXME: preserve source information here when we start
+comment|// caring about parameter packs.
+name|TemplateArgumentLoc
+name|InputArg
+decl_stmt|;
+name|TemplateArgumentLoc
+name|OutputArg
+decl_stmt|;
+name|getDerived
+argument_list|()
+operator|.
+name|InventTemplateArgumentLoc
+argument_list|(
+operator|*
+name|A
+argument_list|,
+name|InputArg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|getDerived
 argument_list|()
 operator|.
 name|TransformTemplateArgument
 argument_list|(
-operator|*
-name|A
+name|InputArg
+argument_list|,
+name|OutputArg
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|TA
-operator|.
-name|isNull
-argument_list|()
 condition|)
 return|return
-name|TA
+name|true
 return|;
 name|TransformedArgs
 operator|.
 name|push_back
 argument_list|(
-name|TA
+name|OutputArg
+operator|.
+name|getArgument
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -7120,8 +7604,20 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-return|return
+name|Output
+operator|=
+name|TemplateArgumentLoc
+argument_list|(
 name|Result
+argument_list|,
+name|Input
+operator|.
+name|getLocInfo
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|false
 return|;
 block|}
 end_block
@@ -7133,8 +7629,7 @@ end_comment
 
 begin_expr_stmt
 unit|return
-name|TemplateArgument
-argument_list|()
+name|true
 expr_stmt|;
 end_expr_stmt
 
@@ -7639,29 +8134,7 @@ name|TransformPointerLikeType
 parameter_list|(
 name|TypeClass
 parameter_list|)
-value|do { \   QualType PointeeType                                       \     = getDerived().TransformType(TLB, TL.getPointeeLoc());   \   if (PointeeType.isNull())                                  \     return QualType();                                       \                                                              \   QualType Result = TL.getType();                            \   if (getDerived().AlwaysRebuild() ||                        \       PointeeType != TL.getPointeeLoc().getType()) {         \     Result = getDerived().Rebuild##TypeClass(PointeeType);   \     if (Result.isNull())                                     \       return QualType();                                     \   }                                                          \                                                              \   TypeClass##Loc NewT = TLB.push<TypeClass##Loc>(Result);    \   NewT.setSigilLoc(TL.getSigilLoc());                        \                                                              \   return Result;                                             \ } while(0)
-end_define
-
-begin_comment
-comment|// Reference collapsing forces us to transform reference types
-end_comment
-
-begin_comment
-comment|// differently from the other pointer-like types.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TransformReferenceType
-parameter_list|(
-name|TypeClass
-parameter_list|)
-value|do { \   QualType PointeeType                                       \     = getDerived().TransformType(TLB, TL.getPointeeLoc());   \   if (PointeeType.isNull())                                  \     return QualType();                                       \                                                              \   QualType Result = TL.getType();                            \   if (getDerived().AlwaysRebuild() ||                        \       PointeeType != TL.getPointeeLoc().getType()) {         \     Result = getDerived().Rebuild##TypeClass(PointeeType);   \     if (Result.isNull())                                     \       return QualType();                                     \   }                                                          \                                                              \
-comment|/* Workaround: rebuild doesn't always change the type */
-value|\
-comment|/* FIXME: avoid losing this location information. */
-value|\   if (Result == PointeeType)                                 \     return Result;                                           \   ReferenceTypeLoc NewTL;                                    \   if (isa<LValueReferenceType>(Result))                      \     NewTL = TLB.push<LValueReferenceTypeLoc>(Result);        \   else                                                       \     NewTL = TLB.push<RValueReferenceTypeLoc>(Result);        \   NewTL.setSigilLoc(TL.getSigilLoc());                       \   return Result;                                             \ } while (0)
+value|do { \   QualType PointeeType                                       \     = getDerived().TransformType(TLB, TL.getPointeeLoc());   \   if (PointeeType.isNull())                                  \     return QualType();                                       \                                                              \   QualType Result = TL.getType();                            \   if (getDerived().AlwaysRebuild() ||                        \       PointeeType != TL.getPointeeLoc().getType()) {         \     Result = getDerived().Rebuild##TypeClass(PointeeType,    \                                           TL.getSigilLoc()); \     if (Result.isNull())                                     \       return QualType();                                     \   }                                                          \                                                              \   TypeClass##Loc NewT = TLB.push<TypeClass##Loc>(Result);    \   NewT.setSigilLoc(TL.getSigilLoc());                        \                                                              \   return Result;                                             \ } while(0)
 end_define
 
 begin_expr_stmt
@@ -7802,7 +8275,196 @@ argument_list|(
 name|BlockPointerType
 argument_list|)
 block|; }
+comment|/// Transforms a reference type.  Note that somewhat paradoxically we
+comment|/// don't care whether the type itself is an l-value type or an r-value
+comment|/// type;  we only care if the type was *written* as an l-value type
+comment|/// or an r-value type.
 name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|QualType
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformReferenceType
+argument_list|(
+argument|TypeLocBuilder&TLB
+argument_list|,
+argument|ReferenceTypeLoc TL
+argument_list|)
+block|{
+specifier|const
+name|ReferenceType
+operator|*
+name|T
+operator|=
+name|TL
+operator|.
+name|getTypePtr
+argument_list|()
+block|;
+comment|// Note that this works with the pointee-as-written.
+name|QualType
+name|PointeeType
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformType
+argument_list|(
+name|TLB
+argument_list|,
+name|TL
+operator|.
+name|getPointeeLoc
+argument_list|()
+argument_list|)
+block|;
+if|if
+condition|(
+name|PointeeType
+operator|.
+name|isNull
+argument_list|()
+condition|)
+return|return
+name|QualType
+argument_list|()
+return|;
+name|QualType
+name|Result
+operator|=
+name|TL
+operator|.
+name|getType
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|getDerived
+argument_list|()
+operator|.
+name|AlwaysRebuild
+argument_list|()
+operator|||
+name|PointeeType
+operator|!=
+name|T
+operator|->
+name|getPointeeTypeAsWritten
+argument_list|()
+condition|)
+block|{
+name|Result
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|RebuildReferenceType
+argument_list|(
+name|PointeeType
+argument_list|,
+name|T
+operator|->
+name|isSpelledAsLValue
+argument_list|()
+argument_list|,
+name|TL
+operator|.
+name|getSigilLoc
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Result
+operator|.
+name|isNull
+argument_list|()
+condition|)
+return|return
+name|QualType
+argument_list|()
+return|;
+block|}
+end_if
+
+begin_comment
+comment|// r-value references can be rebuilt as l-value references.
+end_comment
+
+begin_decl_stmt
+name|ReferenceTypeLoc
+name|NewTL
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|isa
+operator|<
+name|LValueReferenceType
+operator|>
+operator|(
+name|Result
+operator|)
+condition|)
+name|NewTL
+operator|=
+name|TLB
+operator|.
+name|push
+operator|<
+name|LValueReferenceTypeLoc
+operator|>
+operator|(
+name|Result
+operator|)
+expr_stmt|;
+else|else
+name|NewTL
+operator|=
+name|TLB
+operator|.
+name|push
+operator|<
+name|RValueReferenceTypeLoc
+operator|>
+operator|(
+name|Result
+operator|)
+expr_stmt|;
+end_if
+
+begin_expr_stmt
+name|NewTL
+operator|.
+name|setSigilLoc
+argument_list|(
+name|TL
+operator|.
+name|getSigilLoc
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|Result
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
 operator|<
 name|typename
 name|Derived
@@ -7820,11 +8482,18 @@ argument_list|,
 argument|LValueReferenceTypeLoc TL
 argument_list|)
 block|{
+return|return
 name|TransformReferenceType
 argument_list|(
-name|LValueReferenceType
+name|TLB
+argument_list|,
+name|TL
 argument_list|)
-block|; }
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -7843,11 +8512,18 @@ argument_list|,
 argument|RValueReferenceTypeLoc TL
 argument_list|)
 block|{
+return|return
 name|TransformReferenceType
 argument_list|(
-name|RValueReferenceType
+name|TLB
+argument_list|,
+name|TL
 argument_list|)
-block|; }
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -7988,6 +8664,11 @@ argument_list|(
 name|PointeeType
 argument_list|,
 name|ClassType
+argument_list|,
+name|TL
+operator|.
+name|getStarLoc
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -8143,6 +8824,11 @@ argument_list|,
 name|T
 operator|->
 name|getIndexTypeCVRQualifiers
+argument_list|()
+argument_list|,
+name|TL
+operator|.
+name|getBracketsRange
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -8366,6 +9052,11 @@ argument_list|,
 name|T
 operator|->
 name|getIndexTypeCVRQualifiers
+argument_list|()
+argument_list|,
+name|TL
+operator|.
+name|getBracketsRange
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -8620,8 +9311,8 @@ operator|->
 name|getIndexTypeCVRQualifiers
 argument_list|()
 argument_list|,
-name|T
-operator|->
+name|TL
+operator|.
 name|getBracketsRange
 argument_list|()
 argument_list|)
@@ -8883,8 +9574,8 @@ operator|->
 name|getIndexTypeCVRQualifiers
 argument_list|()
 argument_list|,
-name|T
-operator|->
+name|TL
+operator|.
 name|getBracketsRange
 argument_list|()
 argument_list|)
@@ -9095,14 +9786,13 @@ operator|.
 name|AlwaysRebuild
 argument_list|()
 operator|||
-operator|(
 name|ElementType
 operator|!=
 name|T
 operator|->
 name|getElementType
 argument_list|()
-operator|&&
+operator|||
 name|Size
 operator|.
 name|get
@@ -9112,7 +9802,6 @@ name|T
 operator|->
 name|getSizeExpr
 argument_list|()
-operator|)
 condition|)
 block|{
 name|Result
@@ -11254,34 +11943,47 @@ argument_list|,
 argument|TemplateSpecializationTypeLoc TL
 argument_list|)
 block|{
-comment|// TODO: figure out how make this work with an ObjectType.
-name|QualType
-name|Result
-operator|=
+return|return
 name|TransformTemplateSpecializationType
 argument_list|(
+name|TLB
+argument_list|,
 name|TL
-operator|.
-name|getTypePtr
-argument_list|()
 argument_list|,
 name|QualType
 argument_list|()
 argument_list|)
-block|;
-if|if
-condition|(
-name|Result
-operator|.
-name|isNull
-argument_list|()
-condition|)
-return|return
-name|QualType
-argument_list|()
 return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|QualType
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TransformTemplateSpecializationType
+argument_list|(
+argument|const TemplateSpecializationType *TST
+argument_list|,
+argument|QualType ObjectType
+argument_list|)
+block|{
+comment|// FIXME: this entire method is a temporary workaround; callers
+comment|// should be rewritten to provide real type locs.
+comment|// Fake up a TemplateSpecializationTypeLoc.
+name|TypeLocBuilder
+name|TLB
+block|;
 name|TemplateSpecializationTypeLoc
-name|NewTL
+name|TL
 operator|=
 name|TLB
 operator|.
@@ -11290,27 +11992,119 @@ operator|<
 name|TemplateSpecializationTypeLoc
 operator|>
 operator|(
-name|Result
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|NewTL
-operator|.
-name|setNameLoc
+name|QualType
 argument_list|(
+name|TST
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+block|;
+name|SourceLocation
+name|BaseLoc
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|getBaseLocation
+argument_list|()
+block|;
 name|TL
 operator|.
-name|getNameLoc
+name|setTemplateNameLoc
+argument_list|(
+name|BaseLoc
+argument_list|)
+block|;
+name|TL
+operator|.
+name|setLAngleLoc
+argument_list|(
+name|BaseLoc
+argument_list|)
+block|;
+name|TL
+operator|.
+name|setRAngleLoc
+argument_list|(
+name|BaseLoc
+argument_list|)
+block|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|TL
+operator|.
+name|getNumArgs
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+block|{
+specifier|const
+name|TemplateArgument
+modifier|&
+name|TA
+init|=
+name|TST
+operator|->
+name|getArg
+argument_list|(
+name|i
+argument_list|)
+decl_stmt|;
+name|TemplateArgumentLoc
+name|TAL
+decl_stmt|;
+name|getDerived
+argument_list|()
+operator|.
+name|InventTemplateArgumentLoc
+argument_list|(
+name|TA
+argument_list|,
+name|TAL
+argument_list|)
+expr_stmt|;
+name|TL
+operator|.
+name|setArgLocInfo
+argument_list|(
+name|i
+argument_list|,
+name|TAL
+operator|.
+name|getLocInfo
 argument_list|()
 argument_list|)
+expr_stmt|;
+block|}
+name|TypeLocBuilder
+name|IgnoredTLB
 expr_stmt|;
 end_expr_stmt
 
 begin_return
 return|return
-name|Result
+name|TransformTemplateSpecializationType
+argument_list|(
+name|IgnoredTLB
+argument_list|,
+name|TL
+argument_list|,
+name|ObjectType
+argument_list|)
 return|;
 end_return
 
@@ -11328,11 +12122,23 @@ operator|>
 operator|::
 name|TransformTemplateSpecializationType
 argument_list|(
-argument|const TemplateSpecializationType *T
+argument|TypeLocBuilder&TLB
+argument_list|,
+argument|TemplateSpecializationTypeLoc TL
 argument_list|,
 argument|QualType ObjectType
 argument_list|)
 block|{
+specifier|const
+name|TemplateSpecializationType
+operator|*
+name|T
+operator|=
+name|TL
+operator|.
+name|getTypePtr
+argument_list|()
+block|;
 name|TemplateName
 name|Template
 operator|=
@@ -11364,18 +12170,11 @@ name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|TemplateArgument
+name|TemplateArgumentLoc
 operator|,
 literal|4
 operator|>
 name|NewTemplateArgs
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|NewTemplateArgs
-operator|.
-name|reserve
 argument_list|(
 name|T
 operator|->
@@ -11388,84 +12187,75 @@ end_expr_stmt
 begin_for
 for|for
 control|(
-name|TemplateSpecializationType
-operator|::
-name|iterator
-name|Arg
-operator|=
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
 name|T
 operator|->
-name|begin
-argument_list|()
-operator|,
-name|ArgEnd
-operator|=
-name|T
-operator|->
-name|end
+name|getNumArgs
 argument_list|()
 init|;
-name|Arg
+name|i
 operator|!=
-name|ArgEnd
+name|e
 condition|;
 operator|++
-name|Arg
+name|i
 control|)
-block|{
-name|TemplateArgument
-name|NewArg
-init|=
+if|if
+condition|(
 name|getDerived
 argument_list|()
 operator|.
 name|TransformTemplateArgument
 argument_list|(
-operator|*
-name|Arg
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|NewArg
+name|TL
 operator|.
-name|isNull
-argument_list|()
+name|getArgLoc
+argument_list|(
+name|i
+argument_list|)
+argument_list|,
+name|NewTemplateArgs
+index|[
+name|i
+index|]
+argument_list|)
 condition|)
 return|return
 name|QualType
 argument_list|()
 return|;
-name|NewTemplateArgs
-operator|.
-name|push_back
-argument_list|(
-name|NewArg
-argument_list|)
-expr_stmt|;
-block|}
 end_for
 
 begin_comment
-comment|// FIXME: early abort if all of the template arguments and such are the
+comment|// FIXME: maybe don't rebuild if all the template arguments are the same.
 end_comment
 
-begin_comment
-comment|// same.
-end_comment
-
-begin_comment
-comment|// FIXME: We're missing the locations of the template name, '<', and '>'.
-end_comment
-
-begin_return
-return|return
+begin_decl_stmt
+name|QualType
+name|Result
+init|=
 name|getDerived
 argument_list|()
 operator|.
 name|RebuildTemplateSpecializationType
 argument_list|(
 name|Template
+argument_list|,
+name|TL
+operator|.
+name|getTemplateNameLoc
+argument_list|()
+argument_list|,
+name|TL
+operator|.
+name|getLAngleLoc
+argument_list|()
 argument_list|,
 name|NewTemplateArgs
 operator|.
@@ -11476,7 +12266,110 @@ name|NewTemplateArgs
 operator|.
 name|size
 argument_list|()
+argument_list|,
+name|TL
+operator|.
+name|getRAngleLoc
+argument_list|()
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+operator|!
+name|Result
+operator|.
+name|isNull
+argument_list|()
+condition|)
+block|{
+name|TemplateSpecializationTypeLoc
+name|NewTL
+init|=
+name|TLB
+operator|.
+name|push
+operator|<
+name|TemplateSpecializationTypeLoc
+operator|>
+operator|(
+name|Result
+operator|)
+decl_stmt|;
+name|NewTL
+operator|.
+name|setTemplateNameLoc
+argument_list|(
+name|TL
+operator|.
+name|getTemplateNameLoc
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|NewTL
+operator|.
+name|setLAngleLoc
+argument_list|(
+name|TL
+operator|.
+name|getLAngleLoc
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|NewTL
+operator|.
+name|setRAngleLoc
+argument_list|(
+name|TL
+operator|.
+name|getRAngleLoc
+argument_list|()
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|NewTemplateArgs
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+name|NewTL
+operator|.
+name|setArgLocInfo
+argument_list|(
+name|i
+argument_list|,
+name|NewTemplateArgs
+index|[
+name|i
+index|]
+operator|.
+name|getLocInfo
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_return
+return|return
+name|Result
 return|;
 end_return
 
@@ -11689,6 +12582,16 @@ operator|.
 name|getTypePtr
 argument_list|()
 block|;
+comment|/* FIXME: preserve source information better than this */
+name|SourceRange
+name|SR
+argument_list|(
+name|TL
+operator|.
+name|getNameLoc
+argument_list|()
+argument_list|)
+block|;
 name|NestedNameSpecifier
 operator|*
 name|NNS
@@ -11703,15 +12606,7 @@ operator|->
 name|getQualifier
 argument_list|()
 argument_list|,
-name|SourceRange
-argument_list|(
-comment|/*FIXME:*/
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseLocation
-argument_list|()
-argument_list|)
+name|SR
 argument_list|)
 block|;
 if|if
@@ -11830,6 +12725,8 @@ name|T
 operator|->
 name|getIdentifier
 argument_list|()
+argument_list|,
+name|SR
 argument_list|)
 expr_stmt|;
 block|}
@@ -14845,6 +15742,8 @@ operator|::
 name|TransformPredefinedExpr
 argument_list|(
 argument|PredefinedExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -14878,8 +15777,54 @@ operator|::
 name|TransformDeclRefExpr
 argument_list|(
 argument|DeclRefExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
+name|NestedNameSpecifier
+operator|*
+name|Qualifier
+operator|=
+literal|0
+block|;
+if|if
+condition|(
+name|E
+operator|->
+name|getQualifier
+argument_list|()
+condition|)
+block|{
+name|Qualifier
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformNestedNameSpecifier
+argument_list|(
+name|E
+operator|->
+name|getQualifier
+argument_list|()
+argument_list|,
+name|E
+operator|->
+name|getQualifierRange
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Qualifier
+condition|)
+return|return
+name|SemaRef
+operator|.
+name|ExprError
+argument_list|()
+return|;
+block|}
 name|NamedDecl
 operator|*
 name|ND
@@ -14900,7 +15845,10 @@ name|getDecl
 argument_list|()
 argument_list|)
 operator|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -14912,7 +15860,7 @@ operator|.
 name|ExprError
 argument_list|()
 return|;
-end_expr_stmt
+end_if
 
 begin_if
 if|if
@@ -14924,11 +15872,24 @@ operator|.
 name|AlwaysRebuild
 argument_list|()
 operator|&&
+name|Qualifier
+operator|==
+name|E
+operator|->
+name|getQualifier
+argument_list|()
+operator|&&
 name|ND
 operator|==
 name|E
 operator|->
 name|getDecl
+argument_list|()
+operator|&&
+operator|!
+name|E
+operator|->
+name|hasExplicitTemplateArgumentList
 argument_list|()
 condition|)
 return|return
@@ -14944,6 +15905,86 @@ argument_list|)
 return|;
 end_if
 
+begin_comment
+comment|// FIXME: We're losing the explicit template arguments in this transformation.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|TemplateArgumentLoc
+operator|,
+literal|4
+operator|>
+name|TransArgs
+argument_list|(
+name|E
+operator|->
+name|getNumTemplateArgs
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|,
+name|N
+init|=
+name|E
+operator|->
+name|getNumTemplateArgs
+argument_list|()
+init|;
+name|I
+operator|!=
+name|N
+condition|;
+operator|++
+name|I
+control|)
+block|{
+if|if
+condition|(
+name|getDerived
+argument_list|()
+operator|.
+name|TransformTemplateArgument
+argument_list|(
+name|E
+operator|->
+name|getTemplateArgs
+argument_list|()
+index|[
+name|I
+index|]
+argument_list|,
+name|TransArgs
+index|[
+name|I
+index|]
+argument_list|)
+condition|)
+return|return
+name|SemaRef
+operator|.
+name|ExprError
+argument_list|()
+return|;
+block|}
+end_for
+
+begin_comment
+comment|// FIXME: Pass the qualifier/qualifier range along.
+end_comment
+
 begin_return
 return|return
 name|getDerived
@@ -14951,12 +15992,21 @@ argument_list|()
 operator|.
 name|RebuildDeclRefExpr
 argument_list|(
+name|Qualifier
+argument_list|,
+name|E
+operator|->
+name|getQualifierRange
+argument_list|()
+argument_list|,
 name|ND
 argument_list|,
 name|E
 operator|->
 name|getLocation
 argument_list|()
+argument_list|,
+name|isAddressOfOperand
 argument_list|)
 return|;
 end_return
@@ -14978,6 +16028,8 @@ operator|::
 name|TransformIntegerLiteral
 argument_list|(
 argument|IntegerLiteral *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -15011,6 +16063,8 @@ operator|::
 name|TransformFloatingLiteral
 argument_list|(
 argument|FloatingLiteral *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -15044,6 +16098,8 @@ operator|::
 name|TransformImaginaryLiteral
 argument_list|(
 argument|ImaginaryLiteral *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -15077,6 +16133,8 @@ operator|::
 name|TransformStringLiteral
 argument_list|(
 argument|StringLiteral *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -15110,6 +16168,8 @@ operator|::
 name|TransformCharacterLiteral
 argument_list|(
 argument|CharacterLiteral *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -15143,6 +16203,8 @@ operator|::
 name|TransformParenExpr
 argument_list|(
 argument|ParenExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -15249,6 +16311,8 @@ operator|::
 name|TransformUnaryOperator
 argument_list|(
 argument|UnaryOperator *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -15263,6 +16327,15 @@ name|E
 operator|->
 name|getSubExpr
 argument_list|()
+argument_list|,
+name|E
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|UnaryOperator
+operator|::
+name|AddrOf
 argument_list|)
 block|;
 if|if
@@ -15355,6 +16428,8 @@ operator|::
 name|TransformSizeOfAlignOfExpr
 argument_list|(
 argument|SizeOfAlignOfExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 if|if
@@ -15365,26 +16440,31 @@ name|isArgumentType
 argument_list|()
 condition|)
 block|{
-name|QualType
-name|T
+name|DeclaratorInfo
+modifier|*
+name|OldT
+init|=
+name|E
+operator|->
+name|getArgumentTypeInfo
+argument_list|()
+decl_stmt|;
+name|DeclaratorInfo
+modifier|*
+name|NewT
 init|=
 name|getDerived
 argument_list|()
 operator|.
 name|TransformType
 argument_list|(
-name|E
-operator|->
-name|getArgumentType
-argument_list|()
+name|OldT
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|T
-operator|.
-name|isNull
-argument_list|()
+operator|!
+name|NewT
 condition|)
 return|return
 name|SemaRef
@@ -15401,12 +16481,9 @@ operator|.
 name|AlwaysRebuild
 argument_list|()
 operator|&&
-name|T
+name|OldT
 operator|==
-name|E
-operator|->
-name|getArgumentType
-argument_list|()
+name|NewT
 condition|)
 return|return
 name|SemaRef
@@ -15425,7 +16502,7 @@ argument_list|()
 operator|.
 name|RebuildSizeOfAlignOf
 argument_list|(
-name|T
+name|NewT
 argument_list|,
 name|E
 operator|->
@@ -15575,6 +16652,8 @@ operator|::
 name|TransformArraySubscriptExpr
 argument_list|(
 argument|ArraySubscriptExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -15730,6 +16809,8 @@ operator|::
 name|TransformCallExpr
 argument_list|(
 argument|CallExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// Transform the callee.
@@ -16019,6 +17100,8 @@ operator|::
 name|TransformMemberExpr
 argument_list|(
 argument|MemberExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -16264,6 +17347,8 @@ operator|::
 name|TransformCastExpr
 argument_list|(
 argument|CastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|assert
@@ -16304,6 +17389,8 @@ operator|::
 name|TransformBinaryOperator
 argument_list|(
 argument|BinaryOperator *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -16455,6 +17542,8 @@ operator|::
 name|TransformCompoundAssignOperator
 argument_list|(
 argument|CompoundAssignOperator *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -16464,6 +17553,8 @@ operator|.
 name|TransformBinaryOperator
 argument_list|(
 name|E
+argument_list|,
+name|isAddressOfOperand
 argument_list|)
 return|;
 block|}
@@ -16486,6 +17577,8 @@ operator|::
 name|TransformConditionalOperator
 argument_list|(
 argument|ConditionalOperator *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -16685,8 +17778,27 @@ operator|::
 name|TransformImplicitCastExpr
 argument_list|(
 argument|ImplicitCastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
+name|TemporaryBase
+name|Rebase
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|E
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|DeclarationName
+argument_list|()
+argument_list|)
+block|;
+comment|// FIXME: Will we ever have type information here? It seems like we won't,
+comment|// so do we even need to transform the type?
 name|QualType
 name|T
 operator|=
@@ -16830,6 +17942,8 @@ operator|::
 name|TransformExplicitCastExpr
 argument_list|(
 argument|ExplicitCastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|assert
@@ -16870,6 +17984,8 @@ operator|::
 name|TransformCStyleCastExpr
 argument_list|(
 argument|CStyleCastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|QualType
@@ -17047,6 +18163,8 @@ operator|::
 name|TransformCompoundLiteralExpr
 argument_list|(
 argument|CompoundLiteralExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|QualType
@@ -17228,6 +18346,8 @@ operator|::
 name|TransformExtVectorElementExpr
 argument_list|(
 argument|ExtVectorElementExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -17361,6 +18481,8 @@ operator|::
 name|TransformInitListExpr
 argument_list|(
 argument|InitListExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|bool
@@ -17534,6 +18656,8 @@ operator|::
 name|TransformDesignatedInitExpr
 argument_list|(
 argument|DesignatedInitExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|Designation
@@ -17980,8 +19104,27 @@ operator|::
 name|TransformImplicitValueInitExpr
 argument_list|(
 argument|ImplicitValueInitExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
+name|TemporaryBase
+name|Rebase
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|E
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|DeclarationName
+argument_list|()
+argument_list|)
+block|;
+comment|// FIXME: Will we ever have proper type location here? Will we actually
+comment|// need to transform the type?
 name|QualType
 name|T
 operator|=
@@ -18070,6 +19213,8 @@ operator|::
 name|TransformVAArgExpr
 argument_list|(
 argument|VAArgExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: Do we want the type as written?
@@ -18236,6 +19381,8 @@ operator|::
 name|TransformParenListExpr
 argument_list|(
 argument|ParenListExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|bool
@@ -18404,6 +19551,8 @@ operator|::
 name|TransformAddrLabelExpr
 argument_list|(
 argument|AddrLabelExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -18448,6 +19597,8 @@ operator|::
 name|TransformStmtExpr
 argument_list|(
 argument|StmtExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningStmtResult
@@ -18556,6 +19707,8 @@ operator|::
 name|TransformTypesCompatibleExpr
 argument_list|(
 argument|TypesCompatibleExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|QualType
@@ -18713,6 +19866,8 @@ operator|::
 name|TransformChooseExpr
 argument_list|(
 argument|ChooseExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -18912,6 +20067,8 @@ operator|::
 name|TransformGNUNullExpr
 argument_list|(
 argument|GNUNullExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -18945,6 +20102,8 @@ operator|::
 name|TransformCXXOperatorCallExpr
 argument_list|(
 argument|CXXOperatorCallExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -18988,6 +20147,20 @@ name|getArg
 argument_list|(
 literal|0
 argument_list|)
+argument_list|,
+name|E
+operator|->
+name|getNumArgs
+argument_list|()
+operator|==
+literal|1
+operator|&&
+name|E
+operator|->
+name|getOperator
+argument_list|()
+operator|==
+name|OO_Amp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -19177,6 +20350,8 @@ operator|::
 name|TransformCXXMemberCallExpr
 argument_list|(
 argument|CXXMemberCallExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -19186,6 +20361,8 @@ operator|.
 name|TransformCallExpr
 argument_list|(
 name|E
+argument_list|,
+name|isAddressOfOperand
 argument_list|)
 return|;
 block|}
@@ -19208,6 +20385,8 @@ operator|::
 name|TransformCXXNamedCastExpr
 argument_list|(
 argument|CXXNamedCastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|QualType
@@ -19456,6 +20635,8 @@ operator|::
 name|TransformCXXStaticCastExpr
 argument_list|(
 argument|CXXStaticCastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -19465,6 +20646,8 @@ operator|.
 name|TransformCXXNamedCastExpr
 argument_list|(
 name|E
+argument_list|,
+name|isAddressOfOperand
 argument_list|)
 return|;
 block|}
@@ -19487,6 +20670,8 @@ operator|::
 name|TransformCXXDynamicCastExpr
 argument_list|(
 argument|CXXDynamicCastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -19496,6 +20681,8 @@ operator|.
 name|TransformCXXNamedCastExpr
 argument_list|(
 name|E
+argument_list|,
+name|isAddressOfOperand
 argument_list|)
 return|;
 block|}
@@ -19518,6 +20705,8 @@ operator|::
 name|TransformCXXReinterpretCastExpr
 argument_list|(
 argument|CXXReinterpretCastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -19527,6 +20716,8 @@ operator|.
 name|TransformCXXNamedCastExpr
 argument_list|(
 name|E
+argument_list|,
+name|isAddressOfOperand
 argument_list|)
 return|;
 block|}
@@ -19549,6 +20740,8 @@ operator|::
 name|TransformCXXConstCastExpr
 argument_list|(
 argument|CXXConstCastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -19558,6 +20751,8 @@ operator|.
 name|TransformCXXNamedCastExpr
 argument_list|(
 name|E
+argument_list|,
+name|isAddressOfOperand
 argument_list|)
 return|;
 block|}
@@ -19580,6 +20775,8 @@ operator|::
 name|TransformCXXFunctionalCastExpr
 argument_list|(
 argument|CXXFunctionalCastExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|QualType
@@ -19761,6 +20958,8 @@ operator|::
 name|TransformCXXTypeidExpr
 argument_list|(
 argument|CXXTypeidExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 if|if
@@ -19996,6 +21195,8 @@ operator|::
 name|TransformCXXBoolLiteralExpr
 argument_list|(
 argument|CXXBoolLiteralExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -20029,6 +21230,8 @@ operator|::
 name|TransformCXXNullPtrLiteralExpr
 argument_list|(
 argument|CXXNullPtrLiteralExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -20062,6 +21265,8 @@ operator|::
 name|TransformCXXThisExpr
 argument_list|(
 argument|CXXThisExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|TemporaryBase
@@ -20172,6 +21377,8 @@ operator|::
 name|TransformCXXThrowExpr
 argument_list|(
 argument|CXXThrowExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -20273,6 +21480,8 @@ operator|::
 name|TransformCXXDefaultArgExpr
 argument_list|(
 argument|CXXDefaultArgExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|ParmVarDecl
@@ -20367,6 +21576,8 @@ operator|::
 name|TransformCXXZeroInitValueExpr
 argument_list|(
 argument|CXXZeroInitValueExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|TemporaryBase
@@ -20488,6 +21699,8 @@ operator|::
 name|TransformCXXConditionDeclExpr
 argument_list|(
 argument|CXXConditionDeclExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|VarDecl
@@ -20594,6 +21807,8 @@ operator|::
 name|TransformCXXNewExpr
 argument_list|(
 argument|CXXNewExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// Transform the type that we're allocating
@@ -21015,6 +22230,8 @@ operator|::
 name|TransformCXXDeleteExpr
 argument_list|(
 argument|CXXDeleteExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -21126,6 +22343,8 @@ operator|::
 name|TransformCXXPseudoDestructorExpr
 argument_list|(
 argument|CXXPseudoDestructorExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -21351,6 +22570,8 @@ operator|::
 name|TransformUnresolvedFunctionNameExpr
 argument_list|(
 argument|UnresolvedFunctionNameExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// There is no transformation we can apply to an unresolved function name.
@@ -21385,6 +22606,8 @@ operator|::
 name|TransformUnaryTypeTraitExpr
 argument_list|(
 argument|UnaryTypeTraitExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|TemporaryBase
@@ -21528,160 +22751,11 @@ operator|<
 name|Derived
 operator|>
 operator|::
-name|TransformQualifiedDeclRefExpr
-argument_list|(
-argument|QualifiedDeclRefExpr *E
-argument_list|)
-block|{
-name|NestedNameSpecifier
-operator|*
-name|NNS
-operator|=
-name|getDerived
-argument_list|()
-operator|.
-name|TransformNestedNameSpecifier
-argument_list|(
-name|E
-operator|->
-name|getQualifier
-argument_list|()
-argument_list|,
-name|E
-operator|->
-name|getQualifierRange
-argument_list|()
-argument_list|)
-block|;
-if|if
-condition|(
-operator|!
-name|NNS
-condition|)
-return|return
-name|SemaRef
-operator|.
-name|ExprError
-argument_list|()
-return|;
-name|NamedDecl
-operator|*
-name|ND
-operator|=
-name|dyn_cast_or_null
-operator|<
-name|NamedDecl
-operator|>
-operator|(
-name|getDerived
-argument_list|()
-operator|.
-name|TransformDecl
-argument_list|(
-name|E
-operator|->
-name|getDecl
-argument_list|()
-argument_list|)
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-operator|!
-name|ND
-condition|)
-return|return
-name|SemaRef
-operator|.
-name|ExprError
-argument_list|()
-return|;
-end_if
-
-begin_if
-if|if
-condition|(
-operator|!
-name|getDerived
-argument_list|()
-operator|.
-name|AlwaysRebuild
-argument_list|()
-operator|&&
-name|NNS
-operator|==
-name|E
-operator|->
-name|getQualifier
-argument_list|()
-operator|&&
-name|ND
-operator|==
-name|E
-operator|->
-name|getDecl
-argument_list|()
-condition|)
-return|return
-name|SemaRef
-operator|.
-name|Owned
-argument_list|(
-name|E
-operator|->
-name|Retain
-argument_list|()
-argument_list|)
-return|;
-end_if
-
-begin_return
-return|return
-name|getDerived
-argument_list|()
-operator|.
-name|RebuildQualifiedDeclRefExpr
-argument_list|(
-name|NNS
-argument_list|,
-name|E
-operator|->
-name|getQualifierRange
-argument_list|()
-argument_list|,
-name|ND
-argument_list|,
-name|E
-operator|->
-name|getLocation
-argument_list|()
-argument_list|,
-comment|/*FIXME:*/
-name|false
-argument_list|)
-return|;
-end_return
-
-begin_expr_stmt
-unit|}  template
-operator|<
-name|typename
-name|Derived
-operator|>
-name|Sema
-operator|::
-name|OwningExprResult
-name|TreeTransform
-operator|<
-name|Derived
-operator|>
-operator|::
 name|TransformUnresolvedDeclRefExpr
 argument_list|(
 argument|UnresolvedDeclRefExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|NestedNameSpecifier
@@ -21808,8 +22882,7 @@ operator|->
 name|getLocation
 argument_list|()
 argument_list|,
-comment|/*FIXME:*/
-name|false
+name|isAddressOfOperand
 argument_list|)
 return|;
 end_return
@@ -21831,8 +22904,25 @@ operator|::
 name|TransformTemplateIdRefExpr
 argument_list|(
 argument|TemplateIdRefExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
+name|TemporaryBase
+name|Rebase
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|E
+operator|->
+name|getTemplateNameLoc
+argument_list|()
+argument_list|,
+name|DeclarationName
+argument_list|()
+argument_list|)
+block|;
 name|TemplateName
 name|Template
 operator|=
@@ -21914,11 +23004,17 @@ name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|TemplateArgument
+name|TemplateArgumentLoc
 operator|,
 literal|4
 operator|>
 name|TransArgs
+argument_list|(
+name|E
+operator|->
+name|getNumTemplateArgs
+argument_list|()
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -21945,9 +23041,8 @@ operator|++
 name|I
 control|)
 block|{
-name|TemplateArgument
-name|TransArg
-init|=
+if|if
+condition|(
 name|getDerived
 argument_list|()
 operator|.
@@ -21960,14 +23055,12 @@ argument_list|()
 index|[
 name|I
 index|]
+argument_list|,
+name|TransArgs
+index|[
+name|I
+index|]
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|TransArg
-operator|.
-name|isNull
-argument_list|()
 condition|)
 return|return
 name|SemaRef
@@ -21975,13 +23068,6 @@ operator|.
 name|ExprError
 argument_list|()
 return|;
-name|TransArgs
-operator|.
-name|push_back
-argument_list|(
-name|TransArg
-argument_list|)
-expr_stmt|;
 block|}
 end_for
 
@@ -22066,6 +23152,8 @@ operator|::
 name|TransformCXXConstructExpr
 argument_list|(
 argument|CXXConstructExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|TemporaryBase
@@ -22359,6 +23447,8 @@ operator|::
 name|TransformCXXBindTemporaryExpr
 argument_list|(
 argument|CXXBindTemporaryExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -22454,6 +23544,8 @@ operator|::
 name|TransformCXXExprWithTemporaries
 argument_list|(
 argument|CXXExprWithTemporaries *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|OwningExprResult
@@ -22530,6 +23622,8 @@ operator|::
 name|TransformCXXTemporaryObjectExpr
 argument_list|(
 argument|CXXTemporaryObjectExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|TemporaryBase
@@ -22876,6 +23970,8 @@ operator|::
 name|TransformCXXUnresolvedConstructExpr
 argument_list|(
 argument|CXXUnresolvedConstructExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|TemporaryBase
@@ -23148,6 +24244,8 @@ operator|::
 name|TransformCXXUnresolvedMemberExpr
 argument_list|(
 argument|CXXUnresolvedMemberExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// Transform the base of the expression.
@@ -23490,14 +24588,59 @@ begin_comment
 comment|// be looked up multiple times. Yuck!
 end_comment
 
-begin_comment
-comment|// FIXME: This also won't work for, e.g., x->template operator+<int>
-end_comment
+begin_decl_stmt
+name|TemporaryBase
+name|Rebase
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|E
+operator|->
+name|getMemberLoc
+argument_list|()
+argument_list|,
+name|DeclarationName
+argument_list|()
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|TemplateName
 name|OrigTemplateName
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|II
 init|=
+name|Name
+operator|.
+name|getAsIdentifierInfo
+argument_list|()
+condition|)
+name|OrigTemplateName
+operator|=
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getDependentTemplateName
+argument_list|(
+literal|0
+argument_list|,
+name|II
+argument_list|)
+expr_stmt|;
+else|else
+name|OrigTemplateName
+operator|=
 name|SemaRef
 operator|.
 name|Context
@@ -23508,11 +24651,11 @@ literal|0
 argument_list|,
 name|Name
 operator|.
-name|getAsIdentifierInfo
+name|getCXXOverloadedOperator
 argument_list|()
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_if
 
 begin_decl_stmt
 name|TemplateName
@@ -23556,11 +24699,17 @@ name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|TemplateArgument
+name|TemplateArgumentLoc
 operator|,
 literal|4
 operator|>
 name|TransArgs
+argument_list|(
+name|E
+operator|->
+name|getNumTemplateArgs
+argument_list|()
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -23587,9 +24736,8 @@ operator|++
 name|I
 control|)
 block|{
-name|TemplateArgument
-name|TransArg
-init|=
+if|if
+condition|(
 name|getDerived
 argument_list|()
 operator|.
@@ -23602,14 +24750,12 @@ argument_list|()
 index|[
 name|I
 index|]
+argument_list|,
+name|TransArgs
+index|[
+name|I
+index|]
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|TransArg
-operator|.
-name|isNull
-argument_list|()
 condition|)
 return|return
 name|SemaRef
@@ -23617,13 +24763,6 @@ operator|.
 name|ExprError
 argument_list|()
 return|;
-name|TransArgs
-operator|.
-name|push_back
-argument_list|(
-name|TransArg
-argument_list|)
-expr_stmt|;
 block|}
 end_for
 
@@ -23705,6 +24844,8 @@ operator|::
 name|TransformObjCStringLiteral
 argument_list|(
 argument|ObjCStringLiteral *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -23738,6 +24879,8 @@ operator|::
 name|TransformObjCEncodeExpr
 argument_list|(
 argument|ObjCEncodeExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: poor source location
@@ -23854,6 +24997,8 @@ operator|::
 name|TransformObjCMessageExpr
 argument_list|(
 argument|ObjCMessageExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: Implement this!
@@ -23895,6 +25040,8 @@ operator|::
 name|TransformObjCSelectorExpr
 argument_list|(
 argument|ObjCSelectorExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 return|return
@@ -23928,6 +25075,8 @@ operator|::
 name|TransformObjCProtocolExpr
 argument_list|(
 argument|ObjCProtocolExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|ObjCProtocolDecl
@@ -24045,6 +25194,8 @@ operator|::
 name|TransformObjCIvarRefExpr
 argument_list|(
 argument|ObjCIvarRefExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: Implement this!
@@ -24086,6 +25237,8 @@ operator|::
 name|TransformObjCPropertyRefExpr
 argument_list|(
 argument|ObjCPropertyRefExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: Implement this!
@@ -24127,6 +25280,8 @@ operator|::
 name|TransformObjCImplicitSetterGetterRefExpr
 argument_list|(
 argument|ObjCImplicitSetterGetterRefExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: Implement this!
@@ -24168,6 +25323,8 @@ operator|::
 name|TransformObjCSuperExpr
 argument_list|(
 argument|ObjCSuperExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: Implement this!
@@ -24209,6 +25366,8 @@ operator|::
 name|TransformObjCIsaExpr
 argument_list|(
 argument|ObjCIsaExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: Implement this!
@@ -24250,6 +25409,8 @@ operator|::
 name|TransformShuffleVectorExpr
 argument_list|(
 argument|ShuffleVectorExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 name|bool
@@ -24421,6 +25582,8 @@ operator|::
 name|TransformBlockExpr
 argument_list|(
 argument|BlockExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: Implement this!
@@ -24462,6 +25625,8 @@ operator|::
 name|TransformBlockDeclRefExpr
 argument_list|(
 argument|BlockDeclRefExpr *E
+argument_list|,
+argument|bool isAddressOfOperand
 argument_list|)
 block|{
 comment|// FIXME: Implement this!
@@ -24513,6 +25678,8 @@ operator|::
 name|RebuildPointerType
 argument_list|(
 argument|QualType PointeeType
+argument_list|,
+argument|SourceLocation Star
 argument_list|)
 block|{
 return|return
@@ -24525,11 +25692,7 @@ argument_list|,
 name|Qualifiers
 argument_list|()
 argument_list|,
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseLocation
-argument_list|()
+name|Star
 argument_list|,
 name|getDerived
 argument_list|()
@@ -24556,6 +25719,8 @@ operator|::
 name|RebuildBlockPointerType
 argument_list|(
 argument|QualType PointeeType
+argument_list|,
+argument|SourceLocation Star
 argument_list|)
 block|{
 return|return
@@ -24568,11 +25733,7 @@ argument_list|,
 name|Qualifiers
 argument_list|()
 argument_list|,
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseLocation
-argument_list|()
+name|Star
 argument_list|,
 name|getDerived
 argument_list|()
@@ -24596,9 +25757,13 @@ operator|<
 name|Derived
 operator|>
 operator|::
-name|RebuildLValueReferenceType
+name|RebuildReferenceType
 argument_list|(
 argument|QualType ReferentType
+argument_list|,
+argument|bool WrittenAsLValue
+argument_list|,
+argument|SourceLocation Sigil
 argument_list|)
 block|{
 return|return
@@ -24608,61 +25773,12 @@ name|BuildReferenceType
 argument_list|(
 name|ReferentType
 argument_list|,
-name|true
+name|WrittenAsLValue
 argument_list|,
 name|Qualifiers
 argument_list|()
 argument_list|,
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseLocation
-argument_list|()
-argument_list|,
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseEntity
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|Derived
-operator|>
-name|QualType
-name|TreeTransform
-operator|<
-name|Derived
-operator|>
-operator|::
-name|RebuildRValueReferenceType
-argument_list|(
-argument|QualType ReferentType
-argument_list|)
-block|{
-return|return
-name|SemaRef
-operator|.
-name|BuildReferenceType
-argument_list|(
-name|ReferentType
-argument_list|,
-name|false
-argument_list|,
-name|Qualifiers
-argument_list|()
-argument_list|,
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseLocation
-argument_list|()
+name|Sigil
 argument_list|,
 name|getDerived
 argument_list|()
@@ -24691,6 +25807,8 @@ argument_list|(
 argument|QualType PointeeType
 argument_list|,
 argument|QualType ClassType
+argument_list|,
+argument|SourceLocation Sigil
 argument_list|)
 block|{
 return|return
@@ -24705,11 +25823,7 @@ argument_list|,
 name|Qualifiers
 argument_list|()
 argument_list|,
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseLocation
-argument_list|()
+name|Sigil
 argument_list|,
 name|getDerived
 argument_list|()
@@ -24736,6 +25850,8 @@ operator|::
 name|RebuildObjCObjectPointerType
 argument_list|(
 argument|QualType PointeeType
+argument_list|,
+argument|SourceLocation Sigil
 argument_list|)
 block|{
 return|return
@@ -24748,11 +25864,7 @@ argument_list|,
 name|Qualifiers
 argument_list|()
 argument_list|,
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseLocation
-argument_list|()
+name|Sigil
 argument_list|,
 name|getDerived
 argument_list|()
@@ -25024,6 +26136,8 @@ argument_list|,
 argument|const llvm::APInt&Size
 argument_list|,
 argument|unsigned IndexTypeQuals
+argument_list|,
+argument|SourceRange BracketsRange
 argument_list|)
 block|{
 return|return
@@ -25043,8 +26157,7 @@ literal|0
 argument_list|,
 name|IndexTypeQuals
 argument_list|,
-name|SourceRange
-argument_list|()
+name|BracketsRange
 argument_list|)
 return|;
 block|}
@@ -25069,6 +26182,8 @@ argument_list|,
 argument|ArrayType::ArraySizeModifier SizeMod
 argument_list|,
 argument|unsigned IndexTypeQuals
+argument_list|,
+argument|SourceRange BracketsRange
 argument_list|)
 block|{
 return|return
@@ -25087,8 +26202,7 @@ literal|0
 argument_list|,
 name|IndexTypeQuals
 argument_list|,
-name|SourceRange
-argument_list|()
+name|BracketsRange
 argument_list|)
 return|;
 block|}
@@ -25563,12 +26677,17 @@ name|RebuildTemplateSpecializationType
 argument_list|(
 argument|TemplateName Template
 argument_list|,
-argument|const TemplateArgument *Args
+argument|SourceLocation TemplateNameLoc
+argument_list|,
+argument|SourceLocation LAngleLoc
+argument_list|,
+argument|const TemplateArgumentLoc *Args
 argument_list|,
 argument|unsigned NumArgs
+argument_list|,
+argument|SourceLocation RAngleLoc
 argument_list|)
 block|{
-comment|// FIXME: Missing source locations for the template name,<,>.
 return|return
 name|SemaRef
 operator|.
@@ -25576,21 +26695,15 @@ name|CheckTemplateIdType
 argument_list|(
 name|Template
 argument_list|,
-name|getDerived
-argument_list|()
-operator|.
-name|getBaseLocation
-argument_list|()
+name|TemplateNameLoc
 argument_list|,
-name|SourceLocation
-argument_list|()
+name|LAngleLoc
 argument_list|,
 name|Args
 argument_list|,
 name|NumArgs
 argument_list|,
-name|SourceLocation
-argument_list|()
+name|RAngleLoc
 argument_list|)
 return|;
 block|}
@@ -25944,6 +27057,24 @@ argument_list|(
 name|Qualifier
 argument_list|)
 block|;
+name|UnqualifiedId
+name|Name
+block|;
+name|Name
+operator|.
+name|setIdentifier
+argument_list|(
+operator|&
+name|II
+argument_list|,
+comment|/*FIXME:*/
+name|getDerived
+argument_list|()
+operator|.
+name|getBaseLocation
+argument_list|()
+argument_list|)
+block|;
 return|return
 name|getSema
 argument_list|()
@@ -25957,8 +27088,104 @@ operator|.
 name|getBaseLocation
 argument_list|()
 argument_list|,
-name|II
+name|SS
 argument_list|,
+name|Name
+argument_list|,
+name|ObjectType
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+operator|.
+name|template
+name|getAsVal
+operator|<
+name|TemplateName
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|TemplateName
+name|TreeTransform
+operator|<
+name|Derived
+operator|>
+operator|::
+name|RebuildTemplateName
+argument_list|(
+argument|NestedNameSpecifier *Qualifier
+argument_list|,
+argument|OverloadedOperatorKind Operator
+argument_list|,
+argument|QualType ObjectType
+argument_list|)
+block|{
+name|CXXScopeSpec
+name|SS
+block|;
+name|SS
+operator|.
+name|setRange
+argument_list|(
+name|SourceRange
+argument_list|(
+name|getDerived
+argument_list|()
+operator|.
+name|getBaseLocation
+argument_list|()
+argument_list|)
+argument_list|)
+block|;
+name|SS
+operator|.
+name|setScopeRep
+argument_list|(
+name|Qualifier
+argument_list|)
+block|;
+name|UnqualifiedId
+name|Name
+block|;
+name|SourceLocation
+name|SymbolLocations
+index|[
+literal|3
+index|]
+block|;
+comment|// FIXME: Bogus location information.
+name|Name
+operator|.
+name|setOperatorFunctionId
+argument_list|(
+comment|/*FIXME:*/
+name|getDerived
+argument_list|()
+operator|.
+name|getBaseLocation
+argument_list|()
+argument_list|,
+name|Operator
+argument_list|,
+name|SymbolLocations
+argument_list|)
+block|;
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|ActOnDependentTemplateName
+argument_list|(
 comment|/*FIXME:*/
 name|getDerived
 argument_list|()
@@ -25967,6 +27194,8 @@ name|getBaseLocation
 argument_list|()
 argument_list|,
 name|SS
+argument_list|,
+name|Name
 argument_list|,
 name|ObjectType
 operator|.
@@ -26038,6 +27267,30 @@ operator|.
 name|get
 argument_list|()
 block|;
+name|DeclRefExpr
+operator|*
+name|DRE
+operator|=
+name|cast
+operator|<
+name|DeclRefExpr
+operator|>
+operator|(
+operator|(
+operator|(
+name|Expr
+operator|*
+operator|)
+name|Callee
+operator|.
+name|get
+argument_list|()
+operator|)
+operator|->
+name|IgnoreParenCasts
+argument_list|()
+operator|)
+block|;
 name|bool
 name|isPostIncDec
 operator|=
@@ -26054,6 +27307,62 @@ name|OO_MinusMinus
 operator|)
 block|;
 comment|// Determine whether this should be a builtin operation.
+if|if
+condition|(
+name|Op
+operator|==
+name|OO_Subscript
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|FirstExpr
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isOverloadableType
+argument_list|()
+operator|&&
+operator|!
+name|SecondExpr
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isOverloadableType
+argument_list|()
+condition|)
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|CreateBuiltinArraySubscriptExpr
+argument_list|(
+name|move
+argument_list|(
+name|First
+argument_list|)
+argument_list|,
+name|DRE
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|move
+argument_list|(
+name|Second
+argument_list|)
+argument_list|,
+name|OpLoc
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_elseif
+elseif|else
 if|if
 condition|(
 name|SecondExpr
@@ -26108,10 +27417,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+block|}
+end_elseif
 
-begin_block
-unit|} else
+begin_else
+else|else
 block|{
 if|if
 condition|(
@@ -26195,7 +27505,7 @@ argument_list|)
 return|;
 block|}
 block|}
-end_block
+end_else
 
 begin_comment
 comment|// Compute the transformed set of functions (and function templates) to be
@@ -26212,33 +27522,6 @@ name|FunctionSet
 name|Functions
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|DeclRefExpr
-modifier|*
-name|DRE
-init|=
-name|cast
-operator|<
-name|DeclRefExpr
-operator|>
-operator|(
-operator|(
-operator|(
-name|Expr
-operator|*
-operator|)
-name|Callee
-operator|.
-name|get
-argument_list|()
-operator|)
-operator|->
-name|IgnoreParenCasts
-argument_list|()
-operator|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|// FIXME: Do we have to check
@@ -26337,6 +27620,9 @@ name|ArgumentDependentLookup
 argument_list|(
 name|OpName
 argument_list|,
+comment|/*Operator*/
+name|true
+argument_list|,
 name|Args
 argument_list|,
 name|NumArgs
@@ -26392,6 +27678,38 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|Op
+operator|==
+name|OO_Subscript
+condition|)
+return|return
+name|SemaRef
+operator|.
+name|CreateOverloadedArraySubscriptExpr
+argument_list|(
+name|DRE
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|OpLoc
+argument_list|,
+name|move
+argument_list|(
+name|First
+argument_list|)
+argument_list|,
+name|move
+argument_list|(
+name|Second
+argument_list|)
+argument_list|)
+return|;
 end_if
 
 begin_comment

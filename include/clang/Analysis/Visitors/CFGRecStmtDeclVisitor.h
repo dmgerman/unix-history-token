@@ -296,13 +296,6 @@ argument_list|)
 comment|// FIXME: (same)
 name|DISPATCH_CASE
 argument_list|(
-argument|OriginalParmVar
-argument_list|,
-argument|OriginalParmVarDecl
-argument_list|)
-comment|// FIXME: (same)
-name|DISPATCH_CASE
-argument_list|(
 argument|ImplicitParam
 argument_list|,
 argument|ImplicitParamDecl
@@ -349,10 +342,6 @@ argument_list|)
 name|DEFAULT_DISPATCH
 argument_list|(
 argument|FunctionDecl
-argument_list|)
-name|DEFAULT_DISPATCH_VARDECL
-argument_list|(
-argument|OriginalParmVarDecl
 argument_list|)
 name|DEFAULT_DISPATCH_VARDECL
 argument_list|(

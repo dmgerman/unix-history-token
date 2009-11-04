@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'char p[] = "x ## y";'
+comment|// RUN: clang-cc -E %s | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define
@@ -55,6 +55,10 @@ name|y
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: char p[] = "x ## y";
+end_comment
 
 end_unit
 

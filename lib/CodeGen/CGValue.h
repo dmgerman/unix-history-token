@@ -172,7 +172,7 @@ return|return
 name|Volatile
 return|;
 block|}
-comment|/// getScalar() - Return the Value* of this scalar value.
+comment|/// getScalarVal() - Return the Value* of this scalar value.
 name|llvm
 operator|::
 name|Value

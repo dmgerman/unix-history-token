@@ -71,6 +71,12 @@ directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/OperatorKinds.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -645,15 +651,40 @@ name|FoldingSetNode
 block|{
 comment|/// \brief The nested name specifier that qualifies the template
 comment|/// name.
+comment|///
+comment|/// The bit stored in this qualifier describes whether the \c Name field
+comment|/// is interpreted as an IdentifierInfo pointer (when clear) or as an
+comment|/// overloaded operator kind (when set).
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|NestedNameSpecifier
 operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
 name|Qualifier
 block|;
 comment|/// \brief The dependent template name.
+expr|union
+block|{
+comment|/// \brief The identifier template name.
+comment|///
+comment|/// Only valid when the bit on \c Qualifier is clear.
 specifier|const
 name|IdentifierInfo
 operator|*
-name|Name
+name|Identifier
+block|;
+comment|/// \brief The overloaded operator name.
+comment|///
+comment|/// Only valid when the bit on \c Qualifier is set.
+name|OverloadedOperatorKind
+name|Operator
+block|;   }
 block|;
 comment|/// \brief The canonical template name to which this dependent
 comment|/// template name refers.
@@ -677,17 +708,19 @@ argument_list|,
 specifier|const
 name|IdentifierInfo
 operator|*
-name|Name
+name|Identifier
 argument_list|)
 operator|:
 name|Qualifier
 argument_list|(
 name|Qualifier
+argument_list|,
+name|false
 argument_list|)
 block|,
-name|Name
+name|Identifier
 argument_list|(
-name|Name
+name|Identifier
 argument_list|)
 block|,
 name|CanonicalTemplateName
@@ -699,7 +732,7 @@ name|DependentTemplateName
 argument_list|(
 argument|NestedNameSpecifier *Qualifier
 argument_list|,
-argument|const IdentifierInfo *Name
+argument|const IdentifierInfo *Identifier
 argument_list|,
 argument|TemplateName Canon
 argument_list|)
@@ -707,11 +740,63 @@ operator|:
 name|Qualifier
 argument_list|(
 name|Qualifier
+argument_list|,
+name|false
 argument_list|)
 block|,
-name|Name
+name|Identifier
 argument_list|(
-name|Name
+name|Identifier
+argument_list|)
+block|,
+name|CanonicalTemplateName
+argument_list|(
+argument|Canon
+argument_list|)
+block|{ }
+name|DependentTemplateName
+argument_list|(
+argument|NestedNameSpecifier *Qualifier
+argument_list|,
+argument|OverloadedOperatorKind Operator
+argument_list|)
+operator|:
+name|Qualifier
+argument_list|(
+name|Qualifier
+argument_list|,
+name|true
+argument_list|)
+block|,
+name|Operator
+argument_list|(
+name|Operator
+argument_list|)
+block|,
+name|CanonicalTemplateName
+argument_list|(
+argument|this
+argument_list|)
+block|{ }
+name|DependentTemplateName
+argument_list|(
+argument|NestedNameSpecifier *Qualifier
+argument_list|,
+argument|OverloadedOperatorKind Operator
+argument_list|,
+argument|TemplateName Canon
+argument_list|)
+operator|:
+name|Qualifier
+argument_list|(
+name|Qualifier
+argument_list|,
+name|true
+argument_list|)
+block|,
+name|Operator
+argument_list|(
+name|Operator
 argument_list|)
 block|,
 name|CanonicalTemplateName
@@ -730,19 +815,75 @@ specifier|const
 block|{
 return|return
 name|Qualifier
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
-comment|/// \brief Return the name to which this dependent template name
-comment|/// refers.
-specifier|const
-name|IdentifierInfo
-operator|*
-name|getName
+comment|/// \brief Determine whether this template name refers to an identifier.
+name|bool
+name|isIdentifier
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Name
+operator|!
+name|Qualifier
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+comment|/// \brief Returns the identifier to which this template name refers.
+specifier|const
+name|IdentifierInfo
+operator|*
+name|getIdentifier
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isIdentifier
+argument_list|()
+operator|&&
+literal|"Template name isn't an identifier?"
+argument_list|)
+block|;
+return|return
+name|Identifier
+return|;
+block|}
+comment|/// \brief Determine whether this template name refers to an overloaded
+comment|/// operator.
+name|bool
+name|isOverloadedOperator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Qualifier
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return the overloaded operator to which this template name refers.
+name|OverloadedOperatorKind
+name|getOperator
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOverloadedOperator
+argument_list|()
+operator|&&
+literal|"Template name isn't an overloaded operator?"
+argument_list|)
+block|;
+return|return
+name|Operator
 return|;
 block|}
 name|void
@@ -751,6 +892,11 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 block|{
+if|if
+condition|(
+name|isIdentifier
+argument_list|()
+condition|)
 name|Profile
 argument_list|(
 name|ID
@@ -758,10 +904,23 @@ argument_list|,
 name|getQualifier
 argument_list|()
 argument_list|,
-name|getName
+name|getIdentifier
 argument_list|()
 argument_list|)
-block|;   }
+expr_stmt|;
+else|else
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getQualifier
+argument_list|()
+argument_list|,
+name|getOperator
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 specifier|static
 name|void
 name|Profile
@@ -770,7 +929,7 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|NestedNameSpecifier *NNS
 argument_list|,
-argument|const IdentifierInfo *Name
+argument|const IdentifierInfo *Identifier
 argument_list|)
 block|{
 name|ID
@@ -782,9 +941,48 @@ argument_list|)
 block|;
 name|ID
 operator|.
+name|AddBoolean
+argument_list|(
+name|false
+argument_list|)
+block|;
+name|ID
+operator|.
 name|AddPointer
 argument_list|(
-name|Name
+name|Identifier
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|NestedNameSpecifier *NNS
+argument_list|,
+argument|OverloadedOperatorKind Operator
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|NNS
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|true
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|Operator
 argument_list|)
 block|;   }
 expr|}

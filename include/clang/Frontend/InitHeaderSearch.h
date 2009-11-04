@@ -267,6 +267,43 @@ modifier|&
 name|Lang
 parameter_list|)
 function_decl|;
+comment|// AddDefaultCIncludePaths - Add paths that should always be searched.
+name|void
+name|AddDefaultCIncludePaths
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|triple
+argument_list|)
+decl_stmt|;
+comment|// AddDefaultCPlusPlusIncludePaths -  Add paths that should be searched when
+comment|//  compiling c++.
+name|void
+name|AddDefaultCPlusPlusIncludePaths
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|triple
+argument_list|)
+decl_stmt|;
+comment|// AddDefaultFrameworkIncludePaths - Add the framework paths. Used on darwin.
+name|void
+name|AddDefaultFrameworkIncludePaths
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|triple
+argument_list|)
+decl_stmt|;
 comment|/// AddDefaultSystemIncludePaths - Adds the default system include paths so
 comment|///  that e.g. stdio.h is found.
 name|void

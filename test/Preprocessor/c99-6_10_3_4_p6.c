@@ -4,23 +4,7 @@ comment|// Example from C99 6.10.3.4p6
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'printf("x" "1" "= %d, x" "2" "= s" x1, x2);'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep 'fputs("strncmp(\\"abc\\\\0d\\" \\"abc\\", .\\\\4.) == 0" ": @\\n", s);'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'include "vers2.h"'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '"hello";'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F '"hello" ", world"'
+comment|// RUN: clang-cc -E %s | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define
@@ -181,6 +165,26 @@ argument_list|,
 argument|LOW
 argument_list|)
 end_macro
+
+begin_comment
+comment|// CHECK: printf("x" "1" "= %d, x" "2" "= s" x1, x2);
+end_comment
+
+begin_comment
+comment|// CHECK: fputs("strncmp(\"abc\\0d\" \"abc\", '\\4') == 0" ": @\n", s);
+end_comment
+
+begin_comment
+comment|// CHECK: include "vers2.h"
+end_comment
+
+begin_comment
+comment|// CHECK: "hello";
+end_comment
+
+begin_comment
+comment|// CHECK: "hello" ", world"
+end_comment
 
 end_unit
 

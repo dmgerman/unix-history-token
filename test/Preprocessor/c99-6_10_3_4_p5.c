@@ -4,19 +4,7 @@ comment|// Example from C99 6.10.3.4p5
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'f(2 * (y+1)) + f(2 * (f(2 * (z[0])))) % f(2 * (0)) + t(1);'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'f(2 * (2 +(3,4)-0,1)) | f(2 * (~ 5))& f(2 * (0,1))^m(0,1);'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'int i[] = { 1, 23, 4, 5, };'&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F 'char c[2][6] = { "hello", "" };'
+comment|// RUN: clang-cc -E %s | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define
@@ -267,6 +255,22 @@ argument_list|()
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: f(2 * (y+1)) + f(2 * (f(2 * (z[0])))) % f(2 * (0)) + t(1);
+end_comment
+
+begin_comment
+comment|// CHECK: f(2 * (2 +(3,4)-0,1)) | f(2 * (~ 5))& f(2 * (0,1))^m(0,1);
+end_comment
+
+begin_comment
+comment|// CHECK: int i[] = { 1, 23, 4, 5, };
+end_comment
+
+begin_comment
+comment|// CHECK: char c[2][6] = { "hello", "" };
+end_comment
 
 end_unit
 

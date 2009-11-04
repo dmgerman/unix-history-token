@@ -1,38 +1,38 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -Os -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define signext i8 @f0(i32 %x) nounwind' %t&&
+comment|// CHECK: define signext i8 @f0(i32 %x) nounwind
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define zeroext i8 @f1(i32 %x) nounwind' %t&&
+comment|// CHECK: define zeroext i8 @f1(i32 %x) nounwind
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f2(i8 signext %x) nounwind' %t&&
+comment|// CHECK: define void @f2(i8 signext %x) nounwind
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f3(i8 zeroext %x) nounwind' %t&&
+comment|// CHECK: define void @f3(i8 zeroext %x) nounwind
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define signext i16 @f4(i32 %x) nounwind' %t&&
+comment|// CHECK: define signext i16 @f4(i32 %x) nounwind
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define zeroext i16 @f5(i32 %x) nounwind' %t&&
+comment|// CHECK: define zeroext i16 @f5(i32 %x) nounwind
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f6(i16 signext %x) nounwind' %t&&
+comment|// CHECK: define void @f6(i16 signext %x) nounwind
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f7(i16 zeroext %x) nounwind' %t&&
+comment|// CHECK: define void @f7(i16 zeroext %x) nounwind
 end_comment
 
 begin_function
@@ -140,7 +140,19 @@ block|{ }
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f8() nounwind alwaysinline' %t&&
+comment|// CHECK: define void @f8()
+end_comment
+
+begin_comment
+comment|// CHECK: nounwind
+end_comment
+
+begin_comment
+comment|// CHECK: alwaysinline
+end_comment
+
+begin_comment
+comment|// CHECK: {
 end_comment
 
 begin_decl_stmt
@@ -159,7 +171,15 @@ block|{ }
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep 'call void @f9_t() noreturn' %t&&
+comment|// CHECK: call void @f9_t()
+end_comment
+
+begin_comment
+comment|// CHECK: noreturn
+end_comment
+
+begin_comment
+comment|// CHECK: {
 end_comment
 
 begin_decl_stmt
@@ -195,7 +215,15 @@ comment|// FIXME: We should be setting nounwind on calls.
 end_comment
 
 begin_comment
-comment|// RUN: grep 'call i32 @f10_t() readnone' %t&&
+comment|// CHECK: call i32 @f10_t()
+end_comment
+
+begin_comment
+comment|// CHECK: readnone
+end_comment
+
+begin_comment
+comment|// CHECK: {
 end_comment
 
 begin_decl_stmt
@@ -263,7 +291,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f13() nounwind readnone' %t&&
+comment|// CHECK: define void @f13() nounwind readnone
 end_comment
 
 begin_function_decl
@@ -302,7 +330,15 @@ comment|// Ensure that these get inlined: rdar://6853279
 end_comment
 
 begin_comment
-comment|// RUN: not grep '@ai_' %t&&
+comment|// CHECK: define void @f14
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: @ai_
+end_comment
+
+begin_comment
+comment|// CHECK: call void @f14_end
 end_comment
 
 begin_decl_stmt
@@ -365,23 +401,60 @@ block|}
 end_block
 
 begin_function
+name|void
+name|f14
+parameter_list|(
 name|int
-name|foo
-parameter_list|()
+name|a
+parameter_list|)
 block|{
+specifier|extern
+name|void
+name|f14_end
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|a
+condition|)
 name|ai_2
 argument_list|()
 expr_stmt|;
-return|return
 name|ai_1
 argument_list|()
-return|;
+expr_stmt|;
+name|f14_end
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|// RUN: true
+comment|//<rdar://problem/7102668> [irgen] clang isn't setting the optsize bit on functions
 end_comment
+
+begin_comment
+comment|// CHECK: define void @f15
+end_comment
+
+begin_comment
+comment|// CHECK: optsize
+end_comment
+
+begin_comment
+comment|// CHECK: {
+end_comment
+
+begin_function
+name|void
+name|f15
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
 
 end_unit
 

@@ -54,7 +54,9 @@ name|fastcall
 operator|)
 argument_list|)
 name|foo3
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +86,9 @@ name|fastcall
 operator|)
 argument_list|)
 name|foo4
-argument_list|()
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

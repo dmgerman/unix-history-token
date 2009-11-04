@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s | grep -F "1: F, (, 'a', 'b', );"&&
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E %s | grep -F "2: 'a' + 'b';"
+comment|// RUN: clang-cc -E %s | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define
@@ -81,6 +77,14 @@ end_expr_stmt
 
 begin_comment
 comment|/* 2nd invocation */
+end_comment
+
+begin_comment
+comment|// CHECK: 1: F, (, 'a', 'b', );
+end_comment
+
+begin_comment
+comment|// CHECK: 2: 'a' + 'b';
 end_comment
 
 end_unit

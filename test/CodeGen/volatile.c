@@ -4,7 +4,7 @@ comment|// RUN: clang-cc -emit-llvm< %s -o %t&&
 end_comment
 
 begin_comment
-comment|// RUN: grep volatile %t | count 25&&
+comment|// RUN: grep volatile %t | count 29&&
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: grep memcpy %t | count 7
 end_comment
 
 begin_comment
-comment|// The number 25 comes from the current codegen for volatile loads;
+comment|// The number 29 comes from the current codegen for volatile loads;
 end_comment
 
 begin_comment
@@ -253,6 +253,20 @@ argument_list|)
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+specifier|volatile
+name|int
+name|volatile_int
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|volatile_int
+name|vtS
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -391,6 +405,10 @@ argument_list|()
 operator|.
 name|x
 expr_stmt|;
+name|i
+operator|=
+name|vtS
+expr_stmt|;
 comment|// store
 name|S
 operator|=
@@ -488,6 +506,10 @@ index|]
 operator|=
 name|i
 expr_stmt|;
+name|vtS
+operator|=
+name|i
+expr_stmt|;
 comment|// other ops:
 operator|++
 name|S
@@ -502,6 +524,9 @@ expr_stmt|;
 name|i
 operator|+=
 name|vS
+expr_stmt|;
+operator|++
+name|vtS
 expr_stmt|;
 operator|(
 name|void

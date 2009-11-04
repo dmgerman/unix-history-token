@@ -379,6 +379,30 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Returns the most recent (re)declaration of this declaration.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|decl_type
+operator|*
+name|getMostRecentDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFirstDeclaration
+argument_list|()
+operator|->
+name|RedeclLink
+operator|.
+name|getNext
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Set the previous declaration. If PrevDecl is NULL, set this as the
 end_comment
 

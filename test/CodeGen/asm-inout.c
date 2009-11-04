@@ -8,7 +8,7 @@ comment|// RUN: grep "load i8\*\*\* %p.addr"  %t | count 1
 end_comment
 
 begin_comment
-comment|// XFAIL
+comment|// XFAIL: *
 end_comment
 
 begin_comment

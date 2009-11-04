@@ -164,6 +164,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Set when -mno-implicit-float is enabled.
+name|unsigned
+name|MergeAllConstants
+range|:
+literal|1
+decl_stmt|;
+comment|// Merge identical constants.
 comment|/// Inlining - The kind of inlining to perform.
 name|InliningMethod
 name|Inlining
@@ -236,6 +242,10 @@ expr_stmt|;
 name|NoImplicitFloat
 operator|=
 literal|0
+expr_stmt|;
+name|MergeAllConstants
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}

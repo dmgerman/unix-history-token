@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -440,10 +440,10 @@ name|T
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getTypeSigned - Return whether an integer types is signed. Returns true if
+comment|/// isTypeSigned - Return whether an integer types is signed. Returns true if
 comment|/// the type is signed; false otherwise.
 name|bool
-name|getTypeSigned
+name|isTypeSigned
 argument_list|(
 name|IntType
 name|T

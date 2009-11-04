@@ -59,5 +59,55 @@ comment|// expected-error {{attribute requires 0 argument(s)}}
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|fastcall
+operator|)
+argument_list|)
+name|test0
+argument_list|()
+block|{
+comment|// expected-error {{function with no prototype cannot use 'fastcall' calling convention}}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|fastcall
+operator|)
+argument_list|)
+name|test1
+argument_list|(
+name|void
+argument_list|)
+block|{ }
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|fastcall
+operator|)
+argument_list|)
+name|test2
+argument_list|(
+name|int
+name|a
+argument_list|,
+operator|...
+argument_list|)
+block|{
+comment|// expected-error {{variadic function cannot use 'fastcall' calling convention}}
+block|}
+end_decl_stmt
+
 end_unit
 

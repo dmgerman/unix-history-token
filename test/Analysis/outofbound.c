@@ -4,7 +4,7 @@ comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region -verify 
 end_comment
 
 begin_comment
-comment|// XFAIL
+comment|// XFAIL: *
 end_comment
 
 begin_function

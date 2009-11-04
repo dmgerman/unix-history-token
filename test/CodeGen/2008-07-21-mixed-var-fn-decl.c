@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o - %s | grep -e "@g[0-9] " | count 2
+comment|// RUN: clang-cc -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_decl_stmt
@@ -20,6 +20,14 @@ decl_stmt|,
 name|g1
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: @g0 = common global i32 0, align 4
+end_comment
+
+begin_comment
+comment|// CHECK: @g1 = common global i32 0, align 4
+end_comment
 
 end_unit
 

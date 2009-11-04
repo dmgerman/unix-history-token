@@ -184,6 +184,14 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+name|void
+name|RegisterNSAutoreleasePoolChecks
+parameter_list|(
+name|GRExprEngine
+modifier|&
+name|Eng
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

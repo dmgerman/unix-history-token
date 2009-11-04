@@ -4189,145 +4189,11 @@ name|child_end
 argument_list|()
 block|; }
 block|;
-comment|/// QualifiedDeclRefExpr - A reference to a declared variable,
-comment|/// function, enum, etc., that includes a qualification, e.g.,
-comment|/// "N::foo".
-name|class
-name|QualifiedDeclRefExpr
-operator|:
-name|public
-name|DeclRefExpr
-block|{
-comment|/// QualifierRange - The source range that covers the
-comment|/// nested-name-specifier.
-name|SourceRange
-name|QualifierRange
-block|;
-comment|/// \brief The nested-name-specifier that qualifies this declaration
-comment|/// name.
-name|NestedNameSpecifier
-operator|*
-name|NNS
-block|;
-name|public
-operator|:
-name|QualifiedDeclRefExpr
-argument_list|(
-argument|NamedDecl *d
-argument_list|,
-argument|QualType t
-argument_list|,
-argument|SourceLocation l
-argument_list|,
-argument|bool TD
-argument_list|,
-argument|bool VD
-argument_list|,
-argument|SourceRange R
-argument_list|,
-argument|NestedNameSpecifier *NNS
-argument_list|)
-operator|:
-name|DeclRefExpr
-argument_list|(
-name|QualifiedDeclRefExprClass
-argument_list|,
-name|d
-argument_list|,
-name|t
-argument_list|,
-name|l
-argument_list|,
-name|TD
-argument_list|,
-name|VD
-argument_list|)
-block|,
-name|QualifierRange
-argument_list|(
-name|R
-argument_list|)
-block|,
-name|NNS
-argument_list|(
-argument|NNS
-argument_list|)
-block|{ }
-comment|/// \brief Retrieve the source range of the nested-name-specifier.
-name|SourceRange
-name|getQualifierRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualifierRange
-return|;
-block|}
-comment|/// \brief Retrieve the nested-name-specifier that qualifies this
-comment|/// declaration.
-name|NestedNameSpecifier
-operator|*
-name|getQualifier
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NNS
-return|;
-block|}
-name|virtual
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|QualifierRange
-operator|.
-name|getBegin
-argument_list|()
-argument_list|,
-name|getLocation
-argument_list|()
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getStmtClass
-argument_list|()
-operator|==
-name|QualifiedDeclRefExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const QualifiedDeclRefExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
 comment|/// \brief A qualified reference to a name whose declaration cannot
 comment|/// yet be resolved.
 comment|///
-comment|/// UnresolvedDeclRefExpr is similar to QualifiedDeclRefExpr in that
-comment|/// it expresses a qualified reference to a declaration such as
+comment|/// UnresolvedDeclRefExpr is similar to eclRefExpr in that
+comment|/// it expresses a reference to a declaration such as
 comment|/// X<T>::value. The difference, however, is that an
 comment|/// UnresolvedDeclRefExpr node is used only within C++ templates when
 comment|/// the qualification (e.g., X<T>::) refers to a dependent type. In
@@ -4335,8 +4201,8 @@ comment|/// this case, X<T>::value cannot resolve to a declaration because the
 comment|/// declaration will differ from on instantiation of X<T> to the
 comment|/// next. Therefore, UnresolvedDeclRefExpr keeps track of the
 comment|/// qualifier (X<T>::) and the name of the entity being referenced
-comment|/// ("value"). Such expressions will instantiate to
-comment|/// QualifiedDeclRefExprs.
+comment|/// ("value"). Such expressions will instantiate to a DeclRefExpr once the
+comment|/// declaration can be found.
 name|class
 name|UnresolvedDeclRefExpr
 operator|:
@@ -4363,6 +4229,7 @@ operator|*
 name|NNS
 block|;
 comment|/// \brief Whether this expr is an address of (&) operand.
+comment|/// FIXME: Stash this bit into NNS!
 name|bool
 name|IsAddressOfOperand
 block|;
@@ -4581,7 +4448,7 @@ argument|SourceLocation TemplateNameLoc
 argument_list|,
 argument|SourceLocation LAngleLoc
 argument_list|,
-argument|const TemplateArgument *TemplateArgs
+argument|const TemplateArgumentLoc *TemplateArgs
 argument_list|,
 argument|unsigned NumTemplateArgs
 argument_list|,
@@ -4618,7 +4485,7 @@ argument|SourceLocation TemplateNameLoc
 argument_list|,
 argument|SourceLocation LAngleLoc
 argument_list|,
-argument|const TemplateArgument *TemplateArgs
+argument|const TemplateArgumentLoc *TemplateArgs
 argument_list|,
 argument|unsigned NumTemplateArgs
 argument_list|,
@@ -4685,7 +4552,7 @@ block|}
 comment|/// \brief Retrieve the template arguments provided as part of this
 comment|/// template-id.
 specifier|const
-name|TemplateArgument
+name|TemplateArgumentLoc
 operator|*
 name|getTemplateArgs
 argument_list|()
@@ -4695,7 +4562,7 @@ return|return
 name|reinterpret_cast
 operator|<
 specifier|const
-name|TemplateArgument
+name|TemplateArgumentLoc
 operator|*
 operator|>
 operator|(
@@ -5452,7 +5319,7 @@ argument|bool HasExplicitTemplateArgs
 argument_list|,
 argument|SourceLocation LAngleLoc
 argument_list|,
-argument|const TemplateArgument *TemplateArgs
+argument|const TemplateArgumentLoc *TemplateArgs
 argument_list|,
 argument|unsigned NumTemplateArgs
 argument_list|,
@@ -5567,7 +5434,7 @@ argument|bool HasExplicitTemplateArgs
 argument_list|,
 argument|SourceLocation LAngleLoc
 argument_list|,
-argument|const TemplateArgument *TemplateArgs
+argument|const TemplateArgumentLoc *TemplateArgs
 argument_list|,
 argument|unsigned NumTemplateArgs
 argument_list|,
@@ -5764,7 +5631,7 @@ block|}
 comment|/// \brief Retrieve the template arguments provided as part of this
 comment|/// template-id.
 specifier|const
-name|TemplateArgument
+name|TemplateArgumentLoc
 operator|*
 name|getTemplateArgs
 argument_list|()
@@ -5871,6 +5738,9 @@ name|MemberLoc
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -5890,6 +5760,9 @@ operator|==
 name|CXXUnresolvedMemberExprClass
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -5903,26 +5776,30 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Iterators
+end_comment
+
+begin_function_decl
 name|virtual
 name|child_iterator
 name|child_begin
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|child_iterator
 name|child_end
 parameter_list|()
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace clang
 end_comment
 

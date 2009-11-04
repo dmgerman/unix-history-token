@@ -21,23 +21,15 @@ comment|/* abc  next comment ends with normal escaped newline: */
 end_comment
 
 begin_comment
-comment|/* expected-warning {{escaped newline}} expected-warning {{backslash and newline}}  *\   /  int bar  /* xyz  next comment ends with a trigraph escaped newline: */
+comment|/* expected-warning {{escaped newline}} expected-warning {{backslash and newline}}  *\   /  int bar /* expected-error {{invalid token after top level declarator}} */
 end_comment
 
 begin_comment
-comment|/* expected-warning {{escaped newline between}}   expected-warning {{backslash and newline separated by space}}    expected-warning {{trigraph ends block comment}}   *??/     /  foo /* expected-error {{invalid token after top level declarator}} */
+comment|/* xyz  next comment ends with a trigraph escaped newline: */
 end_comment
 
 begin_comment
-comment|// rdar://6060752 - We should not get warnings about trigraphs in comments:
-end_comment
-
-begin_comment
-comment|// '????'
-end_comment
-
-begin_comment
-comment|/* ???? */
+comment|/* expected-warning {{escaped newline between}}   expected-warning {{backslash and newline separated by space}}    expected-warning {{trigraph ends block comment}}   *??/     /  foo   // rdar://6060752 - We should not get warnings about trigraphs in comments: // '????' /* ???? */
 end_comment
 
 end_unit

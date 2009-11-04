@@ -172,26 +172,6 @@ argument|int>::type =
 literal|0
 argument_list|)
 block|;
-comment|/// \brief Implicit conversion to the underlying pointer.
-comment|///
-comment|/// Also provides the ability to use canonical types in a boolean context,
-comment|/// e.g.,
-comment|/// @code
-comment|///   if (CanQual<PointerType> Ptr = T->getAs<PointerType>()) { ... }
-comment|/// @endcode
-name|operator
-specifier|const
-name|T
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-name|getTypePtr
-argument_list|()
-return|;
-block|}
 comment|/// \brief Retrieve the underlying type pointer, which refers to a
 comment|/// canonical type.
 name|T
@@ -221,6 +201,18 @@ specifier|const
 block|{
 return|return
 name|Stored
+return|;
+block|}
+name|bool
+name|isNull
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Stored
+operator|.
+name|isNull
+argument_list|()
 return|;
 block|}
 comment|/// \brief Retrieve a canonical type pointer with a different static type,
@@ -349,32 +341,18 @@ name|getUnqualifiedType
 argument_list|()
 specifier|const
 expr_stmt|;
-name|CanQual
-operator|<
-name|T
-operator|>
-name|getQualifiedType
-argument_list|(
-argument|unsigned TQs
-argument_list|)
+comment|/// \brief Retrieves a version of this type with const applied.
+comment|/// Note that this does not always yield a canonical type.
+name|QualType
+name|withConst
+argument_list|()
 specifier|const
 block|{
 return|return
-name|CanQual
-operator|<
-name|T
-operator|>
-operator|::
-name|CreateUnsafe
-argument_list|(
-name|QualType
-argument_list|(
-name|getTypePtr
+name|Stored
+operator|.
+name|withConst
 argument_list|()
-argument_list|,
-name|TQs
-argument_list|)
-argument_list|)
 return|;
 block|}
 comment|/// \brief Determines whether this canonical type is more qualified than

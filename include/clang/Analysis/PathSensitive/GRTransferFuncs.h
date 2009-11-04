@@ -95,9 +95,6 @@ name|class
 name|GRExprEngine
 decl_stmt|;
 name|class
-name|BugReporter
-decl_stmt|;
-name|class
 name|ObjCMessageExpr
 decl_stmt|;
 name|class
@@ -127,7 +124,7 @@ name|virtual
 name|void
 name|RegisterChecks
 argument_list|(
-argument|BugReporter& BR
+argument|GRExprEngine& Eng
 argument_list|)
 block|{}
 comment|// Calls.

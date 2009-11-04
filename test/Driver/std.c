@@ -1,26 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -std=c99 -trigraphs -std=gnu99 %s -E -o %t&&
+comment|// RUN: clang -std=c99 -trigraphs -std=gnu99 %s -E -o - | FileCheck -check-prefix=OVERRIDE %s&&
 end_comment
 
 begin_comment
-comment|// RUN: grep '??(??)' %t&&
+comment|// OVERRIDE: ??(??)
 end_comment
 
 begin_comment
-comment|// RUN: clang -ansi %s -E -o %t&&
+comment|// RUN: clang -ansi %s -E -o - | FileCheck -check-prefix=ANSI %s&&
 end_comment
 
 begin_comment
-comment|// RUN: grep -F '[]' %t&&
+comment|// ANSI: []
 end_comment
 
 begin_comment
-comment|// RUN: clang -std=gnu99 -trigraphs %s -E -o %t&&
+comment|// RUN: clang -std=gnu99 -trigraphs %s -E -o - | FileCheck -check-prefix=EXPLICIT %s
 end_comment
 
 begin_comment
-comment|// RUN: grep -F '[]' %t
+comment|// EXPLICIT: []
 end_comment
 
 begin_expr_stmt

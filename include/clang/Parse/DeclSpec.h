@@ -1899,6 +1899,478 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|/// \brief Represents a C++ unqualified-id that has been parsed.
+name|class
+name|UnqualifiedId
+block|{
+name|private
+label|:
+specifier|const
+name|UnqualifiedId
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|UnqualifiedId
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
+name|public
+label|:
+comment|/// \brief Describes the kind of unqualified-id parsed.
+enum|enum
+name|IdKind
+block|{
+comment|/// \brief An identifier.
+name|IK_Identifier
+block|,
+comment|/// \brief An overloaded operator name, e.g., operator+.
+name|IK_OperatorFunctionId
+block|,
+comment|/// \brief A conversion function name, e.g., operator int.
+name|IK_ConversionFunctionId
+block|,
+comment|/// \brief A constructor name.
+name|IK_ConstructorName
+block|,
+comment|/// \brief A destructor name.
+name|IK_DestructorName
+block|,
+comment|/// \brief A template-id, e.g., f<int>.
+name|IK_TemplateId
+block|}
+name|Kind
+enum|;
+comment|/// \brief Anonymous union that holds extra data associated with the
+comment|/// parsed unqualified-id.
+union|union
+block|{
+comment|/// \brief When Kind == IK_Identifier, the parsed identifier.
+name|IdentifierInfo
+modifier|*
+name|Identifier
+decl_stmt|;
+comment|/// \brief When Kind == IK_OperatorFunctionId, the overloaded operator
+comment|/// that we parsed.
+struct|struct
+block|{
+comment|/// \brief The kind of overloaded operator.
+name|OverloadedOperatorKind
+name|Operator
+decl_stmt|;
+comment|/// \brief The source locations of the individual tokens that name
+comment|/// the operator, e.g., the "new", "[", and "]" tokens in
+comment|/// operator new [].
+comment|///
+comment|/// Different operators have different numbers of tokens in their name,
+comment|/// up to three. Any remaining source locations in this array will be
+comment|/// set to an invalid value for operators with fewer than three tokens.
+name|unsigned
+name|SymbolLocations
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|OperatorFunctionId
+struct|;
+comment|/// \brief When Kind == IK_ConversionFunctionId, the type that the
+comment|/// conversion function names.
+name|ActionBase
+operator|::
+name|TypeTy
+operator|*
+name|ConversionFunctionId
+expr_stmt|;
+comment|/// \brief When Kind == IK_ConstructorName, the class-name of the type
+comment|/// whose constructor is being referenced.
+name|ActionBase
+operator|::
+name|TypeTy
+operator|*
+name|ConstructorName
+expr_stmt|;
+comment|/// \brief When Kind == IK_DestructorName, the type referred to by the
+comment|/// class-name.
+name|ActionBase
+operator|::
+name|TypeTy
+operator|*
+name|DestructorName
+expr_stmt|;
+comment|/// \brief When Kind == IK_TemplateId, the template-id annotation that
+comment|/// contains the template name and template arguments.
+name|TemplateIdAnnotation
+modifier|*
+name|TemplateId
+decl_stmt|;
+block|}
+union|;
+comment|/// \brief The location of the first token that describes this unqualified-id,
+comment|/// which will be the location of the identifier, "operator" keyword,
+comment|/// tilde (for a destructor), or the template name of a template-id.
+name|SourceLocation
+name|StartLocation
+decl_stmt|;
+comment|/// \brief The location of the last token that describes this unqualified-id.
+name|SourceLocation
+name|EndLocation
+decl_stmt|;
+name|UnqualifiedId
+argument_list|()
+operator|:
+name|Kind
+argument_list|(
+name|IK_Identifier
+argument_list|)
+operator|,
+name|Identifier
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+comment|/// \brief Do not use this copy constructor. It is temporary, and only
+comment|/// exists because we are holding FieldDeclarators in a SmallVector when we
+comment|/// don't actually need them.
+comment|///
+comment|/// FIXME: Kill this copy constructor.
+name|UnqualifiedId
+argument_list|(
+specifier|const
+name|UnqualifiedId
+operator|&
+name|Other
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|IK_Identifier
+argument_list|)
+operator|,
+name|Identifier
+argument_list|(
+name|Other
+operator|.
+name|Identifier
+argument_list|)
+operator|,
+name|StartLocation
+argument_list|(
+name|Other
+operator|.
+name|StartLocation
+argument_list|)
+operator|,
+name|EndLocation
+argument_list|(
+argument|Other.EndLocation
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Other
+operator|.
+name|Kind
+operator|==
+name|IK_Identifier
+operator|&&
+literal|"Cannot copy non-identifiers"
+argument_list|)
+block|;   }
+comment|/// \brief Destroy this unqualified-id.
+operator|~
+name|UnqualifiedId
+argument_list|()
+block|{
+name|clear
+argument_list|()
+block|; }
+comment|/// \brief Clear out this unqualified-id, setting it to default (invalid)
+comment|/// state.
+name|void
+name|clear
+argument_list|()
+expr_stmt|;
+comment|/// \brief Determine whether this unqualified-id refers to a valid name.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StartLocation
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determine whether this unqualified-id refers to an invalid name.
+name|bool
+name|isInvalid
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determine what kind of name we have.
+name|IdKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+comment|/// \brief Specify that this unqualified-id was parsed as an identifier.
+comment|///
+comment|/// \param Id the parsed identifier.
+comment|/// \param IdLoc the location of the parsed identifier.
+name|void
+name|setIdentifier
+parameter_list|(
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|Id
+parameter_list|,
+name|SourceLocation
+name|IdLoc
+parameter_list|)
+block|{
+name|Kind
+operator|=
+name|IK_Identifier
+expr_stmt|;
+name|Identifier
+operator|=
+name|const_cast
+operator|<
+name|IdentifierInfo
+operator|*
+operator|>
+operator|(
+name|Id
+operator|)
+expr_stmt|;
+name|StartLocation
+operator|=
+name|EndLocation
+operator|=
+name|IdLoc
+expr_stmt|;
+block|}
+comment|/// \brief Specify that this unqualified-id was parsed as an
+comment|/// operator-function-id.
+comment|///
+comment|/// \param OperatorLoc the location of the 'operator' keyword.
+comment|///
+comment|/// \param Op the overloaded operator.
+comment|///
+comment|/// \param SymbolLocations the locations of the individual operator symbols
+comment|/// in the operator.
+name|void
+name|setOperatorFunctionId
+parameter_list|(
+name|SourceLocation
+name|OperatorLoc
+parameter_list|,
+name|OverloadedOperatorKind
+name|Op
+parameter_list|,
+name|SourceLocation
+name|SymbolLocations
+index|[
+literal|3
+index|]
+parameter_list|)
+function_decl|;
+comment|/// \brief Specify that this unqualified-id was parsed as a
+comment|/// conversion-function-id.
+comment|///
+comment|/// \param OperatorLoc the location of the 'operator' keyword.
+comment|///
+comment|/// \param Ty the type to which this conversion function is converting.
+comment|///
+comment|/// \param EndLoc the location of the last token that makes up the type name.
+name|void
+name|setConversionFunctionId
+argument_list|(
+name|SourceLocation
+name|OperatorLoc
+argument_list|,
+name|ActionBase
+operator|::
+name|TypeTy
+operator|*
+name|Ty
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+block|{
+name|Kind
+operator|=
+name|IK_ConversionFunctionId
+expr_stmt|;
+name|StartLocation
+operator|=
+name|OperatorLoc
+expr_stmt|;
+name|EndLocation
+operator|=
+name|EndLoc
+expr_stmt|;
+name|ConversionFunctionId
+operator|=
+name|Ty
+expr_stmt|;
+block|}
+comment|/// \brief Specify that this unqualified-id was parsed as a constructor name.
+comment|///
+comment|/// \param ClassType the class type referred to by the constructor name.
+comment|///
+comment|/// \param ClassNameLoc the location of the class name.
+comment|///
+comment|/// \param EndLoc the location of the last token that makes up the type name.
+name|void
+name|setConstructorName
+argument_list|(
+name|ActionBase
+operator|::
+name|TypeTy
+operator|*
+name|ClassType
+argument_list|,
+name|SourceLocation
+name|ClassNameLoc
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+block|{
+name|Kind
+operator|=
+name|IK_ConstructorName
+expr_stmt|;
+name|StartLocation
+operator|=
+name|ClassNameLoc
+expr_stmt|;
+name|EndLocation
+operator|=
+name|EndLoc
+expr_stmt|;
+name|ConstructorName
+operator|=
+name|ClassType
+expr_stmt|;
+block|}
+comment|/// \brief Specify that this unqualified-id was parsed as a destructor name.
+comment|///
+comment|/// \param TildeLoc the location of the '~' that introduces the destructor
+comment|/// name.
+comment|///
+comment|/// \param ClassType the name of the class referred to by the destructor name.
+name|void
+name|setDestructorName
+argument_list|(
+name|SourceLocation
+name|TildeLoc
+argument_list|,
+name|ActionBase
+operator|::
+name|TypeTy
+operator|*
+name|ClassType
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+block|{
+name|Kind
+operator|=
+name|IK_DestructorName
+expr_stmt|;
+name|StartLocation
+operator|=
+name|TildeLoc
+expr_stmt|;
+name|EndLocation
+operator|=
+name|EndLoc
+expr_stmt|;
+name|DestructorName
+operator|=
+name|ClassType
+expr_stmt|;
+block|}
+comment|/// \brief Specify that this unqualified-id was parsed as a template-id.
+comment|///
+comment|/// \param TemplateId the template-id annotation that describes the parsed
+comment|/// template-id. This UnqualifiedId instance will take ownership of the
+comment|/// \p TemplateId and will free it on destruction.
+name|void
+name|setTemplateId
+parameter_list|(
+name|TemplateIdAnnotation
+modifier|*
+name|TemplateId
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|TemplateId
+operator|&&
+literal|"NULL template-id annotation?"
+argument_list|)
+expr_stmt|;
+name|Kind
+operator|=
+name|IK_TemplateId
+expr_stmt|;
+name|this
+operator|->
+name|TemplateId
+operator|=
+name|TemplateId
+expr_stmt|;
+name|StartLocation
+operator|=
+name|TemplateId
+operator|->
+name|TemplateNameLoc
+expr_stmt|;
+name|EndLocation
+operator|=
+name|TemplateId
+operator|->
+name|RAngleLoc
+expr_stmt|;
+block|}
+comment|/// \brief Return the source range that covers this unqualified-id.
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|StartLocation
+argument_list|,
+name|EndLocation
+argument_list|)
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// CachedTokens - A set of tokens that has been cached for later
 comment|/// parsing.
 typedef|typedef
@@ -2982,34 +3454,6 @@ name|BlockLiteralContext
 comment|// Block literal declarator.
 block|}
 enum|;
-comment|/// DeclaratorKind - The kind of declarator this represents.
-enum|enum
-name|DeclaratorKind
-block|{
-name|DK_Abstract
-block|,
-comment|// An abstract declarator (has no identifier)
-name|DK_Normal
-block|,
-comment|// A normal declarator (has an identifier).
-name|DK_Constructor
-block|,
-comment|// A C++ constructor (identifier is the class name)
-name|DK_Destructor
-block|,
-comment|// A C++ destructor  (identifier is ~class name)
-name|DK_Operator
-block|,
-comment|// A C++ overloaded operator name
-name|DK_Conversion
-block|,
-comment|// A C++ conversion function (identifier is
-comment|// "operator " then the type name)
-name|DK_TemplateId
-comment|// A C++ template-id naming a function template
-comment|// specialization.
-block|}
-enum|;
 name|private
 label|:
 specifier|const
@@ -3020,12 +3464,8 @@ decl_stmt|;
 name|CXXScopeSpec
 name|SS
 decl_stmt|;
-name|IdentifierInfo
-modifier|*
-name|Identifier
-decl_stmt|;
-name|SourceLocation
-name|IdentifierLoc
+name|UnqualifiedId
+name|Name
 decl_stmt|;
 name|SourceRange
 name|Range
@@ -3034,10 +3474,6 @@ comment|/// Context - Where we are parsing this declarator.
 comment|///
 name|TheContext
 name|Context
-decl_stmt|;
-comment|/// Kind - What kind of declarator this is.
-name|DeclaratorKind
-name|Kind
 decl_stmt|;
 comment|/// DeclTypeInfo - This holds each type that the declarator includes as it is
 comment|/// parsed.  This is pushed from the identifier out, which means that element
@@ -3077,30 +3513,6 @@ name|ExprTy
 operator|*
 name|AsmLabel
 expr_stmt|;
-union|union
-block|{
-comment|// When Kind is DK_Constructor, DK_Destructor, or DK_Conversion, the
-comment|// type associated with the constructor, destructor, or conversion
-comment|// operator.
-name|ActionBase
-operator|::
-name|TypeTy
-operator|*
-name|Type
-expr_stmt|;
-comment|/// When Kind is DK_Operator, this is the actual overloaded
-comment|/// operator that this declarator names.
-name|OverloadedOperatorKind
-name|OperatorKind
-decl_stmt|;
-comment|/// When Kind is DK_TemplateId, this is the template-id annotation that
-comment|/// contains the template and its template arguments.
-name|TemplateIdAnnotation
-modifier|*
-name|TemplateId
-decl_stmt|;
-block|}
-union|;
 comment|/// InlineParams - This is a local array used for the first function decl
 comment|/// chunk to avoid going to the heap for the common case when we have one
 comment|/// function chunk in the declarator.
@@ -3139,11 +3551,6 @@ argument_list|(
 name|ds
 argument_list|)
 operator|,
-name|Identifier
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|Range
 argument_list|(
 name|ds
@@ -3155,11 +3562,6 @@ operator|,
 name|Context
 argument_list|(
 name|C
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-name|DK_Abstract
 argument_list|)
 operator|,
 name|InvalidType
@@ -3185,11 +3587,6 @@ literal|0
 argument_list|)
 operator|,
 name|AsmLabel
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Type
 argument_list|(
 literal|0
 argument_list|)
@@ -3267,6 +3664,16 @@ return|return
 name|SS
 return|;
 block|}
+comment|/// \brief Retrieve the name specified by this declarator.
+name|UnqualifiedId
+modifier|&
+name|getName
+parameter_list|()
+block|{
+return|return
+name|Name
+return|;
+block|}
 name|TheContext
 name|getContext
 argument_list|()
@@ -3274,15 +3681,6 @@ specifier|const
 block|{
 return|return
 name|Context
-return|;
-block|}
-name|DeclaratorKind
-name|getKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
 return|;
 block|}
 comment|/// getSourceRange - Get the source range that spans this declarator.
@@ -3432,13 +3830,9 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
-name|Identifier
-operator|=
-literal|0
-expr_stmt|;
-name|IdentifierLoc
-operator|=
-name|SourceLocation
+name|Name
+operator|.
+name|clear
 argument_list|()
 expr_stmt|;
 name|Range
@@ -3447,21 +3841,6 @@ name|DS
 operator|.
 name|getSourceRange
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|Kind
-operator|==
-name|DK_TemplateId
-condition|)
-name|TemplateId
-operator|->
-name|Destroy
-argument_list|()
-expr_stmt|;
-name|Kind
-operator|=
-name|DK_Abstract
 expr_stmt|;
 for|for
 control|(
@@ -3505,10 +3884,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|AsmLabel
-operator|=
-literal|0
-expr_stmt|;
-name|Type
 operator|=
 literal|0
 expr_stmt|;
@@ -3600,7 +3975,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IdentifierLoc
+name|Name
 operator|.
 name|isValid
 argument_list|()
@@ -3615,10 +3990,18 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|Name
+operator|.
 name|getKind
 argument_list|()
 operator|!=
-name|DK_Abstract
+name|UnqualifiedId
+operator|::
+name|IK_Identifier
+operator|||
+name|Name
+operator|.
+name|Identifier
 return|;
 block|}
 name|IdentifierInfo
@@ -3627,8 +4010,24 @@ name|getIdentifier
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|Name
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|UnqualifiedId
+operator|::
+name|IK_Identifier
+condition|)
 return|return
+name|Name
+operator|.
 name|Identifier
+return|;
+return|return
+literal|0
 return|;
 block|}
 name|SourceLocation
@@ -3637,257 +4036,31 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IdentifierLoc
+name|Name
+operator|.
+name|StartLocation
 return|;
 block|}
+comment|/// \brief Set the name of this declarator to be the given identifier.
 name|void
 name|SetIdentifier
 parameter_list|(
 name|IdentifierInfo
 modifier|*
-name|ID
+name|Id
 parameter_list|,
 name|SourceLocation
-name|Loc
+name|IdLoc
 parameter_list|)
 block|{
-name|Identifier
-operator|=
-name|ID
-expr_stmt|;
-name|IdentifierLoc
-operator|=
-name|Loc
-expr_stmt|;
-if|if
-condition|(
-name|ID
-condition|)
-name|Kind
-operator|=
-name|DK_Normal
-expr_stmt|;
-else|else
-name|Kind
-operator|=
-name|DK_Abstract
-expr_stmt|;
-name|SetRangeEnd
-argument_list|(
-name|Loc
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// setConstructor - Set this declarator to be a C++ constructor
-comment|/// declarator. Also extends the range.
-name|void
-name|setConstructor
-argument_list|(
-name|ActionBase
-operator|::
-name|TypeTy
-operator|*
-name|Ty
-argument_list|,
-name|SourceLocation
-name|Loc
-argument_list|)
-block|{
-name|IdentifierLoc
-operator|=
-name|Loc
-expr_stmt|;
-name|Kind
-operator|=
-name|DK_Constructor
-expr_stmt|;
-name|Type
-operator|=
-name|Ty
-expr_stmt|;
-name|SetRangeEnd
-argument_list|(
-name|Loc
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// setDestructor - Set this declarator to be a C++ destructor
-comment|/// declarator. Also extends the range to End, which should be the identifier
-comment|/// token.
-name|void
-name|setDestructor
-argument_list|(
-name|ActionBase
-operator|::
-name|TypeTy
-operator|*
-name|Ty
-argument_list|,
-name|SourceLocation
-name|Loc
-argument_list|,
-name|SourceLocation
-name|EndLoc
-argument_list|)
-block|{
-name|IdentifierLoc
-operator|=
-name|Loc
-expr_stmt|;
-name|Kind
-operator|=
-name|DK_Destructor
-expr_stmt|;
-name|Type
-operator|=
-name|Ty
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|EndLoc
+name|Name
 operator|.
-name|isInvalid
-argument_list|()
-condition|)
-name|SetRangeEnd
+name|setIdentifier
 argument_list|(
-name|EndLoc
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// setConversionFunction - Set this declarator to be a C++
-comment|/// conversion function declarator (e.g., @c operator int const *).
-comment|/// Also extends the range to EndLoc, which should be the last token of the
-comment|/// type name.
-name|void
-name|setConversionFunction
-argument_list|(
-name|ActionBase
-operator|::
-name|TypeTy
-operator|*
-name|Ty
+name|Id
 argument_list|,
-name|SourceLocation
-name|Loc
-argument_list|,
-name|SourceLocation
-name|EndLoc
+name|IdLoc
 argument_list|)
-block|{
-name|Identifier
-operator|=
-literal|0
-expr_stmt|;
-name|IdentifierLoc
-operator|=
-name|Loc
-expr_stmt|;
-name|Kind
-operator|=
-name|DK_Conversion
-expr_stmt|;
-name|Type
-operator|=
-name|Ty
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|EndLoc
-operator|.
-name|isInvalid
-argument_list|()
-condition|)
-name|SetRangeEnd
-argument_list|(
-name|EndLoc
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// setOverloadedOperator - Set this declaration to be a C++
-comment|/// overloaded operator declarator (e.g., @c operator+).
-comment|/// Also extends the range to EndLoc, which should be the last token of the
-comment|/// operator.
-name|void
-name|setOverloadedOperator
-parameter_list|(
-name|OverloadedOperatorKind
-name|Op
-parameter_list|,
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|SourceLocation
-name|EndLoc
-parameter_list|)
-block|{
-name|IdentifierLoc
-operator|=
-name|Loc
-expr_stmt|;
-name|Kind
-operator|=
-name|DK_Operator
-expr_stmt|;
-name|OperatorKind
-operator|=
-name|Op
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|EndLoc
-operator|.
-name|isInvalid
-argument_list|()
-condition|)
-name|SetRangeEnd
-argument_list|(
-name|EndLoc
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief Set this declaration to be a C++ template-id, which includes the
-comment|/// template (or set of function templates) along with template arguments.
-name|void
-name|setTemplateId
-parameter_list|(
-name|TemplateIdAnnotation
-modifier|*
-name|TemplateId
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|TemplateId
-operator|&&
-literal|"NULL template-id provided to declarator?"
-argument_list|)
-expr_stmt|;
-name|IdentifierLoc
-operator|=
-name|TemplateId
-operator|->
-name|TemplateNameLoc
-expr_stmt|;
-name|Kind
-operator|=
-name|DK_TemplateId
-expr_stmt|;
-name|SetRangeEnd
-argument_list|(
-name|TemplateId
-operator|->
-name|RAngleLoc
-argument_list|)
-expr_stmt|;
-name|this
-operator|->
-name|TemplateId
-operator|=
-name|TemplateId
 expr_stmt|;
 block|}
 comment|/// AddTypeInfo - Add a chunk to this declarator. Also extend the range to
@@ -3996,6 +4169,40 @@ index|[
 name|i
 index|]
 return|;
+block|}
+name|void
+name|DropFirstTypeObject
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+operator|!
+name|DeclTypeInfo
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"No type chunks to drop."
+argument_list|)
+expr_stmt|;
+name|DeclTypeInfo
+operator|.
+name|front
+argument_list|()
+operator|.
+name|destroy
+argument_list|()
+expr_stmt|;
+name|DeclTypeInfo
+operator|.
+name|erase
+argument_list|(
+name|DeclTypeInfo
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// isFunctionDeclarator - Once this declarator is fully parsed and formed,
 comment|/// this method returns true if the identifier is a function declarator.
@@ -4140,6 +4347,9 @@ return|return
 name|false
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|setAsmLabel
 argument_list|(
@@ -4155,6 +4365,9 @@ operator|=
 name|E
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|ActionBase
 operator|::
 name|ExprTy
@@ -4167,6 +4380,9 @@ return|return
 name|AsmLabel
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setExtension
 parameter_list|(
@@ -4181,6 +4397,9 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|getExtension
 argument_list|()
@@ -4190,73 +4409,9 @@ return|return
 name|Extension
 return|;
 block|}
-name|ActionBase
-operator|::
-name|TypeTy
-operator|*
-name|getDeclaratorIdType
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|(
-name|Kind
-operator|==
-name|DK_Constructor
-operator|||
-name|Kind
-operator|==
-name|DK_Destructor
-operator|||
-name|Kind
-operator|==
-name|DK_Conversion
-operator|)
-operator|&&
-literal|"Declarator kind does not have a type"
-argument_list|)
-block|;
-return|return
-name|Type
-return|;
-block|}
-name|OverloadedOperatorKind
-name|getOverloadedOperator
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|Kind
-operator|==
-name|DK_Operator
-operator|&&
-literal|"Declarator is not an overloaded operator"
-argument_list|)
-block|;
-return|return
-name|OperatorKind
-return|;
-block|}
-name|TemplateIdAnnotation
-modifier|*
-name|getTemplateId
-parameter_list|()
-block|{
-name|assert
-argument_list|(
-name|Kind
-operator|==
-name|DK_TemplateId
-operator|&&
-literal|"Declarator is not a template-id"
-argument_list|)
-expr_stmt|;
-return|return
-name|TemplateId
-return|;
-block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setInvalidType
 parameter_list|(
@@ -4271,6 +4426,9 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isInvalidType
 argument_list|()
@@ -4289,6 +4447,9 @@ operator|::
 name|TST_error
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setGroupingParens
 parameter_list|(
@@ -4301,6 +4462,9 @@ operator|=
 name|flag
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|hasGroupingParens
 argument_list|()
@@ -4310,14 +4474,10 @@ return|return
 name|GroupingParens
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// FieldDeclarator - This little struct is used to capture information about
 end_comment
 

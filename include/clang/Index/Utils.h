@@ -73,9 +73,6 @@ decl_stmt|;
 name|class
 name|SourceLocation
 decl_stmt|;
-name|class
-name|Decl
-decl_stmt|;
 name|namespace
 name|idx
 block|{
@@ -96,9 +93,9 @@ parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|Decl
+name|ASTLocation
 modifier|*
-name|RelativeToDecl
+name|LastLoc
 init|=
 literal|0
 parameter_list|)

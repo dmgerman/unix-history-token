@@ -12,19 +12,19 @@ comment|// RUN: env MACOSX_DEPLOYMENT_TARGET=10.5 clang -ccc-host-triple i386-ap
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-analyze"' %t.log&&
+comment|// RUN: FileCheck --input-file=%t.log %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '"--fmath-errno=0"' %t.log&&
+comment|// CHECK: "-analyze"
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-target-feature" "+sse"' %t.log&&
+comment|// CHECK: "-target-feature" "+sse"
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-mmacosx-version-min=10.5"' %t.log
+comment|// CHECK: "--fmath-errno=0"
 end_comment
 
 end_unit

@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -896,9 +896,6 @@ name|DECL_IMPLICIT_PARAM
 block|,
 comment|/// \brief A ParmVarDecl record.
 name|DECL_PARM_VAR
-block|,
-comment|/// \brief An OriginalParmVarDecl record.
-name|DECL_ORIGINAL_PARM_VAR
 block|,
 comment|/// \brief A FileScopeAsmDecl record.
 name|DECL_FILE_SCOPE_ASM

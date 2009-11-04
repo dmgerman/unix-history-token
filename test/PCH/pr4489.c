@@ -4,7 +4,11 @@ comment|// RUN: clang -x c-header -o %t.pch %s&&
 end_comment
 
 begin_comment
-comment|// RUN: clang -include %t -x c /dev/null -emit-llvm -S -o -
+comment|// RUN: echo> %t.empty.c&&
+end_comment
+
+begin_comment
+comment|// RUN: clang -include %t -x c %t.empty.c -emit-llvm -S -o -
 end_comment
 
 begin_comment

@@ -230,7 +230,6 @@ begin_decl_stmt
 name|int
 name|test2
 index|[
-operator|(
 sizeof|sizeof
 argument_list|(
 name|float3
@@ -240,9 +239,9 @@ sizeof|sizeof
 argument_list|(
 name|float4
 argument_list|)
-operator|)
-operator|*
-literal|2
+condition|?
+literal|1
+else|:
 operator|-
 literal|1
 index|]

@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s -o %t&&
-end_comment
-
-begin_comment
-comment|// This should print as ".. ." to avoid turning into ...
-end_comment
-
-begin_comment
-comment|// RUN: grep -F 'A: . . .' %t&&
+comment|// RUN: clang-cc -E %s -o - | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define
@@ -34,7 +26,11 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|// RUN: grep -F 'C: .. .' %t&&
+comment|// This should print as ".. ." to avoid turning into ...
+end_comment
+
+begin_comment
+comment|// CHECK: A: . . .
 end_comment
 
 begin_define
@@ -52,7 +48,7 @@ end_label
 begin_expr_stmt
 operator|..
 name|DOT
-comment|// RUN: grep -F 'D: + + - - + + = = =' %t&&
+comment|// CHECK: C: .. .
 define|#
 directive|define
 name|PLUS
@@ -80,8 +76,7 @@ name|f
 argument_list|(
 argument|=
 argument_list|)
-comment|// RUN: grep -F 'E: L "str"' %t
-comment|// Should expand to L "str" not L"str"
+comment|// CHECK: D: + + - - + + = = =
 define|#
 directive|define
 name|test
@@ -96,6 +91,14 @@ argument_list|(
 argument|str
 argument_list|)
 end_expr_stmt
+
+begin_comment
+comment|// Should expand to L "str" not L"str"
+end_comment
+
+begin_comment
+comment|// CHECK: E: L "str"
+end_comment
 
 end_unit
 

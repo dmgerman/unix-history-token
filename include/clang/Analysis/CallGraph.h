@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/ASTUnit.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -441,7 +435,7 @@ block|}
 name|void
 name|addTU
 parameter_list|(
-name|ASTUnit
+name|ASTContext
 modifier|&
 name|AST
 parameter_list|)

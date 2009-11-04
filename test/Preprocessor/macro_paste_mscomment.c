@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -P -E -fms-extensions %s | sed '/^#.\+/d' | tr -d '\n'> %t&&
-end_comment
-
-begin_comment
-comment|// RUN: grep '^int foo;int bar;int baz;$' %t | count 1
+comment|// RUN: clang-cc -P -E -fms-extensions %s | FileCheck -strict-whitespace %s
 end_comment
 
 begin_comment
@@ -29,6 +25,10 @@ name|foo
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// CHECK: int foo;
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -45,6 +45,10 @@ name|int
 name|bar
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: int bar;
+end_comment
 
 begin_define
 define|#
@@ -71,6 +75,14 @@ name|dead
 name|tokens
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: int baz
+end_comment
+
+begin_comment
+comment|// CHECK: ;
+end_comment
 
 end_unit
 
