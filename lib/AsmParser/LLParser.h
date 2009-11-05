@@ -337,8 +337,7 @@ name|map
 operator|<
 name|unsigned
 operator|,
-name|MetadataBase
-operator|*
+name|WeakVH
 operator|>
 name|MetadataCache
 expr_stmt|;
@@ -352,8 +351,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|MetadataBase
-operator|*
+name|WeakVH
 operator|,
 name|LocTy
 operator|>

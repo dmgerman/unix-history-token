@@ -127,6 +127,12 @@ directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -140,6 +146,45 @@ name|IndexListEntry
 block|{
 name|private
 label|:
+specifier|static
+name|std
+operator|::
+name|auto_ptr
+operator|<
+name|IndexListEntry
+operator|>
+name|emptyKeyEntry
+operator|,
+name|tombstoneKeyEntry
+expr_stmt|;
+typedef|typedef
+enum|enum
+block|{
+name|EMPTY_KEY
+block|,
+name|TOMBSTONE_KEY
+block|}
+name|ReservedEntryType
+typedef|;
+specifier|static
+specifier|const
+name|unsigned
+name|EMPTY_KEY_INDEX
+init|=
+operator|~
+literal|0U
+operator|&
+operator|~
+literal|3U
+decl_stmt|,
+name|TOMBSTONE_KEY_INDEX
+init|=
+operator|~
+literal|0U
+operator|&
+operator|~
+literal|7U
+decl_stmt|;
 name|IndexListEntry
 modifier|*
 name|next
@@ -154,6 +199,50 @@ decl_stmt|;
 name|unsigned
 name|index
 decl_stmt|;
+comment|// This constructor is only to be used by getEmptyKeyEntry
+comment|//& getTombstoneKeyEntry. It sets index to the given
+comment|// value and mi to zero.
+name|IndexListEntry
+argument_list|(
+argument|ReservedEntryType r
+argument_list|)
+block|:
+name|mi
+argument_list|(
+literal|0
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|r
+condition|)
+block|{
+case|case
+name|EMPTY_KEY
+case|:
+name|index
+operator|=
+name|EMPTY_KEY_INDEX
+expr_stmt|;
+break|break;
+case|case
+name|TOMBSTONE_KEY
+case|:
+name|index
+operator|=
+name|TOMBSTONE_KEY_INDEX
+expr_stmt|;
+break|break;
+default|default:
+name|assert
+argument_list|(
+name|false
+operator|&&
+literal|"Invalid value for constructor."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|public
 label|:
 name|IndexListEntry
@@ -172,7 +261,26 @@ name|index
 argument_list|(
 argument|index
 argument_list|)
-block|{}
+block|{
+if|if
+condition|(
+name|index
+operator|==
+name|EMPTY_KEY_INDEX
+operator|||
+name|index
+operator|==
+name|TOMBSTONE_KEY_INDEX
+condition|)
+block|{
+name|llvm_report_error
+argument_list|(
+literal|"Attempt to create invalid index. "
+literal|"Available indexes may have been exhausted?."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|MachineInstr
 operator|*
 name|getInstr
@@ -291,6 +399,72 @@ operator|=
 name|prev
 expr_stmt|;
 block|}
+comment|// This function returns the index list entry that is to be used for empty
+comment|// SlotIndex keys.
+specifier|static
+name|IndexListEntry
+modifier|*
+name|getEmptyKeyEntry
+parameter_list|()
+block|{
+if|if
+condition|(
+name|emptyKeyEntry
+operator|.
+name|get
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+name|emptyKeyEntry
+operator|.
+name|reset
+argument_list|(
+argument|new IndexListEntry(EMPTY_KEY)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|emptyKeyEntry
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+comment|// This function returns the index list entry that is to be used for
+comment|// tombstone SlotIndex keys.
+specifier|static
+name|IndexListEntry
+modifier|*
+name|getTombstoneKeyEntry
+parameter_list|()
+block|{
+if|if
+condition|(
+name|tombstoneKeyEntry
+operator|.
+name|get
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+name|tombstoneKeyEntry
+operator|.
+name|reset
+argument_list|(
+argument|new IndexListEntry(TOMBSTONE_KEY)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|tombstoneKeyEntry
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|// Specialize PointerLikeTypeTraits for IndexListEntry.
@@ -364,19 +538,6 @@ operator|>
 expr_stmt|;
 name|private
 label|:
-comment|// FIXME: Is there any way to statically allocate these things and have
-comment|// them 8-byte aligned?
-specifier|static
-name|std
-operator|::
-name|auto_ptr
-operator|<
-name|IndexListEntry
-operator|>
-name|emptyKeyPtr
-operator|,
-name|tombstoneKeyPtr
-expr_stmt|;
 specifier|static
 specifier|const
 name|unsigned
@@ -427,18 +588,6 @@ name|entry
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|lie
-operator|.
-name|getPointer
-argument_list|()
-operator|!=
-literal|0
-operator|&&
-literal|"Use of invalid index."
-argument_list|)
-block|;
 return|return
 operator|*
 name|lie
@@ -534,36 +683,12 @@ name|SlotIndex
 name|getEmptyKey
 parameter_list|()
 block|{
-comment|// FIXME: How do we guarantee these numbers don't get allocated to
-comment|// legit indexes?
-if|if
-condition|(
-name|emptyKeyPtr
-operator|.
-name|get
-argument_list|()
-operator|==
-literal|0
-condition|)
-name|emptyKeyPtr
-operator|.
-name|reset
-argument_list|(
-argument|new IndexListEntry(
-literal|0
-argument|, ~
-literal|0U
-argument|& ~
-literal|3U
-argument|)
-argument_list|)
-expr_stmt|;
 return|return
 name|SlotIndex
 argument_list|(
-name|emptyKeyPtr
-operator|.
-name|get
+name|IndexListEntry
+operator|::
+name|getEmptyKeyEntry
 argument_list|()
 argument_list|,
 literal|0
@@ -576,36 +701,12 @@ name|SlotIndex
 name|getTombstoneKey
 parameter_list|()
 block|{
-comment|// FIXME: How do we guarantee these numbers don't get allocated to
-comment|// legit indexes?
-if|if
-condition|(
-name|tombstoneKeyPtr
-operator|.
-name|get
-argument_list|()
-operator|==
-literal|0
-condition|)
-name|tombstoneKeyPtr
-operator|.
-name|reset
-argument_list|(
-argument|new IndexListEntry(
-literal|0
-argument|, ~
-literal|0U
-argument|& ~
-literal|7U
-argument|)
-argument_list|)
-expr_stmt|;
 return|return
 name|SlotIndex
 argument_list|(
-name|tombstoneKeyPtr
-operator|.
-name|get
+name|IndexListEntry
+operator|::
+name|getTombstoneKeyEntry
 argument_list|()
 argument_list|,
 literal|0
@@ -618,7 +719,7 @@ argument_list|()
 operator|:
 name|lie
 argument_list|(
-argument|&getEmptyKey().entry()
+argument|IndexListEntry::getEmptyKeyEntry()
 argument_list|,
 literal|0
 argument_list|)

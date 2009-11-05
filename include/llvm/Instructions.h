@@ -3835,6 +3835,10 @@ name|AllocTy
 argument_list|,
 name|Value
 operator|*
+name|AllocSize
+argument_list|,
+name|Value
+operator|*
 name|ArraySize
 operator|=
 literal|0
@@ -3865,6 +3869,10 @@ specifier|const
 name|Type
 operator|*
 name|AllocTy
+argument_list|,
+name|Value
+operator|*
+name|AllocSize
 argument_list|,
 name|Value
 operator|*

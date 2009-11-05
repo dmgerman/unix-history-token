@@ -59,6 +59,12 @@ directive|define
 name|LLVM_TARGET_TARGETINTRINSICINFO_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -108,19 +114,29 @@ name|TargetIntrinsicInfo
 argument_list|()
 expr_stmt|;
 comment|/// Return the name of a target intrinsic, e.g. "llvm.bfin.ssync".
+comment|/// The Tys and numTys parameters are for intrinsics with overloaded types
+comment|/// (e.g., those using iAny or fAny). For a declaration for an overloaded
+comment|/// intrinsic, Tys should point to an array of numTys pointers to Type,
+comment|/// and must provide exactly one type for each overloaded type in the
+comment|/// intrinsic.
 name|virtual
-specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
 name|getName
 argument_list|(
-name|unsigned
-name|IntrID
-argument_list|)
-decl|const
-init|=
+argument|unsigned IID
+argument_list|,
+argument|const Type **Tys =
 literal|0
-decl_stmt|;
+argument_list|,
+argument|unsigned numTys =
+literal|0
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|/// Look up target intrinsic by name. Return intrinsic ID or 0 for unknown
 comment|/// names.
 name|virtual
@@ -149,6 +165,50 @@ operator|*
 name|F
 argument_list|)
 decl|const
+decl_stmt|;
+comment|/// Returns true if the intrinsic can be overloaded.
+name|virtual
+name|bool
+name|isOverloaded
+argument_list|(
+name|unsigned
+name|IID
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// Create or insert an LLVM Function declaration for an intrinsic,
+comment|/// and return it. The Tys and numTys are for intrinsics with overloaded
+comment|/// types. See above for more information.
+name|virtual
+name|Function
+modifier|*
+name|getDeclaration
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+name|unsigned
+name|ID
+argument_list|,
+specifier|const
+name|Type
+operator|*
+operator|*
+name|Tys
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|numTys
+operator|=
+literal|0
+argument_list|)
+decl|const
+init|=
+literal|0
 decl_stmt|;
 block|}
 empty_stmt|;

@@ -98,6 +98,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdio>
 end_include
 

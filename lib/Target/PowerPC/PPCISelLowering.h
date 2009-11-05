@@ -849,6 +849,14 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
+name|LowerBlockAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
 name|LowerGlobalAddress
 argument_list|(
 argument|SDValue Op

@@ -77,6 +77,18 @@ directive|include
 file|"llvm/Constants.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/InstrTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

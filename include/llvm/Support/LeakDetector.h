@@ -102,6 +102,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|Value
 decl_stmt|;
 struct|struct

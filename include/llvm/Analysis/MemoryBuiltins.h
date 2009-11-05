@@ -186,8 +186,10 @@ name|TD
 parameter_list|)
 function_decl|;
 comment|/// getMallocType - Returns the PointerType resulting from the malloc call.
-comment|/// This PointerType is the result type of the call's only bitcast use.
-comment|/// If there is no unique bitcast use, then return NULL.
+comment|/// The PointerType depends on the number of bitcast uses of the malloc call:
+comment|///   0: PointerType is the malloc calls' return type.
+comment|///   1: PointerType is the bitcast's result type.
+comment|///>1: Unique PointerType cannot be determined, return NULL.
 specifier|const
 name|PointerType
 modifier|*
@@ -199,9 +201,11 @@ modifier|*
 name|CI
 parameter_list|)
 function_decl|;
-comment|/// getMallocAllocatedType - Returns the Type allocated by malloc call. This
-comment|/// Type is the result type of the call's only bitcast use. If there is no
-comment|/// unique bitcast use, then return NULL.
+comment|/// getMallocAllocatedType - Returns the Type allocated by malloc call.
+comment|/// The Type depends on the number of bitcast uses of the malloc call:
+comment|///   0: PointerType is the malloc calls' return type.
+comment|///   1: PointerType is the bitcast's result type.
+comment|///>1: Unique PointerType cannot be determined, return NULL.
 specifier|const
 name|Type
 modifier|*

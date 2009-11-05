@@ -435,6 +435,21 @@ argument_list|()
 block|;
 name|private
 operator|:
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|,
+name|TargetRegisterClass
+operator|::
+name|const_iterator
+operator|>
+name|RenameOrderType
+expr_stmt|;
 comment|/// IsImplicitDefUse - Return true if MO represents a register
 comment|/// that is both implicitly used and defined in MI
 name|bool
@@ -448,7 +463,7 @@ name|MachineOperand
 operator|&
 name|MO
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// GetPassthruRegs - If MI implicitly def/uses a register, then
 comment|/// return that register and all subregisters.
 name|void
@@ -467,56 +482,91 @@ operator|>
 operator|&
 name|PassthruRegs
 argument_list|)
-block|;
+decl_stmt|;
 name|void
 name|HandleLastUse
-argument_list|(
-argument|unsigned Reg
-argument_list|,
-argument|unsigned KillIdx
-argument_list|,
-argument|const char *tag
-argument_list|)
-block|;
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|unsigned
+name|KillIdx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
 name|void
 name|PrescanInstruction
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|*
+name|MI
 argument_list|,
-argument|unsigned Count
+name|unsigned
+name|Count
 argument_list|,
-argument|std::set<unsigned>& PassthruRegs
+name|std
+operator|::
+name|set
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|PassthruRegs
 argument_list|)
-block|;
+decl_stmt|;
 name|void
 name|ScanInstruction
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|unsigned Count
-argument_list|)
-block|;
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|Count
+parameter_list|)
+function_decl|;
 name|BitVector
 name|GetRenameRegisters
-argument_list|(
-argument|unsigned Reg
-argument_list|)
-block|;
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
 name|bool
 name|FindSuitableFreeRegisters
 argument_list|(
-argument|unsigned AntiDepGroupIndex
+name|unsigned
+name|AntiDepGroupIndex
 argument_list|,
-argument|std::map<unsigned
+name|RenameOrderType
+operator|&
+name|RenameOrder
 argument_list|,
-argument|unsigned>&RenameMap
+name|std
+operator|::
+name|map
+operator|<
+name|unsigned
+argument_list|,
+name|unsigned
+operator|>
+operator|&
+name|RenameMap
 argument_list|)
-block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

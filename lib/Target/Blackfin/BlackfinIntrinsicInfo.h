@@ -77,12 +77,18 @@ name|TargetIntrinsicInfo
 block|{
 name|public
 operator|:
-specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
 name|getName
 argument_list|(
 argument|unsigned IntrID
+argument_list|,
+argument|const Type **Tys =
+literal|0
+argument_list|,
+argument|unsigned numTys =
+literal|0
 argument_list|)
 specifier|const
 block|;
@@ -92,6 +98,29 @@ argument_list|(
 argument|const char *Name
 argument_list|,
 argument|unsigned Len
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isOverloaded
+argument_list|(
+argument|unsigned IID
+argument_list|)
+specifier|const
+block|;
+name|Function
+operator|*
+name|getDeclaration
+argument_list|(
+argument|Module *M
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|const Type **Tys =
+literal|0
+argument_list|,
+argument|unsigned numTys =
+literal|0
 argument_list|)
 specifier|const
 block|;   }

@@ -1049,6 +1049,18 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// printKill - This method prints the specified kill machine instruction.
+name|virtual
+name|void
+name|printKill
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// printPICJumpTableSetLabel - This method prints a set label for the
 comment|/// specified MachineBasicBlock for a jumptable entry.
 name|virtual

@@ -153,6 +153,7 @@ block|{
 return|return
 name|Base
 operator|.
+name|template
 name|Allocate
 operator|<
 name|SubClass
