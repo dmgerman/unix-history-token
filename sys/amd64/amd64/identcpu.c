@@ -2349,20 +2349,12 @@ argument_list|)
 operator|<=
 literal|0x3f
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"WARNING: This architecture revision has known SMP "
 literal|"hardware bugs which may cause random instability\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"WARNING: For details see: "
-literal|"http://bugzilla.kernel.org/show_bug.cgi?id=11305\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
