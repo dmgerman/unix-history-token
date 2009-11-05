@@ -328,7 +328,7 @@ name|BugType
 argument_list|(
 name|n
 argument_list|,
-literal|"Logic errors"
+literal|"Logic error"
 argument_list|)
 block|,
 name|Eng
@@ -358,7 +358,7 @@ name|BugType
 argument_list|(
 name|n
 argument_list|,
-literal|"Logic errors"
+literal|"Logic error"
 argument_list|)
 block|,
 name|Eng

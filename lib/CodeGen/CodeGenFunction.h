@@ -397,14 +397,22 @@ name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|CleanupBlock
+name|CleanupEntryBlock
+argument_list|,
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|CleanupExitBlock
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// CleanupBlockInfo - A struct representing a popped cleanup block.
 struct|struct
 name|CleanupBlockInfo
 block|{
-comment|/// CleanupBlock - the cleanup block
+comment|/// CleanupEntryBlock - the cleanup entry block
 name|llvm
 operator|::
 name|BasicBlock
@@ -491,7 +499,13 @@ name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|CleanupBB
+name|CleanupEntryBB
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|CleanupExitBB
 expr_stmt|;
 name|public
 label|:
@@ -509,27 +523,63 @@ argument_list|)
 operator|,
 name|CurBB
 argument_list|(
-argument|CGF.Builder.GetInsertBlock()
+name|CGF
+operator|.
+name|Builder
+operator|.
+name|GetInsertBlock
+argument_list|()
 argument_list|)
-block|{
-name|CleanupBB
-operator|=
+operator|,
+name|CleanupEntryBB
+argument_list|(
 name|CGF
 operator|.
 name|createBasicBlock
 argument_list|(
 literal|"cleanup"
 argument_list|)
-block|;
+argument_list|)
+operator|,
+name|CleanupExitBB
+argument_list|(
+literal|0
+argument_list|)
+block|{
 name|CGF
 operator|.
 name|Builder
 operator|.
 name|SetInsertPoint
 argument_list|(
-name|CleanupBB
+name|CleanupEntryBB
 argument_list|)
 block|;     }
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|getCleanupExitBlock
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|CleanupExitBB
+condition|)
+name|CleanupExitBB
+operator|=
+name|CGF
+operator|.
+name|createBasicBlock
+argument_list|(
+literal|"cleanup.exit"
+argument_list|)
+expr_stmt|;
+return|return
+name|CleanupExitBB
+return|;
+block|}
 operator|~
 name|CleanupScope
 argument_list|()
@@ -538,7 +588,9 @@ name|CGF
 operator|.
 name|PushCleanupBlock
 argument_list|(
-name|CleanupBB
+name|CleanupEntryBB
+argument_list|,
+name|CleanupExitBB
 argument_list|)
 block|;
 comment|// FIXME: This is silly, move this into the builder.
@@ -802,12 +854,19 @@ decl_stmt|;
 struct|struct
 name|CleanupEntry
 block|{
-comment|/// CleanupBlock - The block of code that does the actual cleanup.
+comment|/// CleanupEntryBlock - The block of code that does the actual cleanup.
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|CleanupBlock
+name|CleanupEntryBlock
+expr_stmt|;
+comment|/// CleanupExitBlock - The cleanup exit block.
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|CleanupExitBlock
 expr_stmt|;
 comment|/// Blocks - Basic blocks that were emitted in the current cleanup scope.
 name|std
@@ -841,12 +900,23 @@ name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|cb
+name|CleanupEntryBlock
+argument_list|,
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|CleanupExitBlock
 argument_list|)
 range|:
-name|CleanupBlock
+name|CleanupEntryBlock
 argument_list|(
-argument|cb
+name|CleanupEntryBlock
+argument_list|)
+decl_stmt|,
+name|CleanupExitBlock
+argument_list|(
+name|CleanupExitBlock
 argument_list|)
 block|{}
 block|}
@@ -1659,8 +1729,17 @@ return|;
 endif|#
 directive|endif
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getBasicBlockForLabel - Return the LLVM basicblock that the specified
+end_comment
+
+begin_comment
 comment|/// label maps to.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
@@ -1673,9 +1752,21 @@ operator|*
 name|S
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// SimplifyForwardingBlocks - If the given basic block is only a
+end_comment
+
+begin_comment
 comment|/// branch to another basic block, simplify it. This assumes that no
+end_comment
+
+begin_comment
 comment|/// other code could potentially reference the basic block.
+end_comment
+
+begin_decl_stmt
 name|void
 name|SimplifyForwardingBlocks
 argument_list|(
@@ -1686,14 +1777,41 @@ operator|*
 name|BB
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitBlock - Emit the given block \arg BB and set it as the insert point,
+end_comment
+
+begin_comment
 comment|/// adding a fall-through branch from the current insert block if
+end_comment
+
+begin_comment
 comment|/// necessary. It is legal to call this function even if there is no current
+end_comment
+
+begin_comment
 comment|/// insertion point.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// IsFinished - If true, indicates that the caller has finished emitting
+end_comment
+
+begin_comment
 comment|/// branches to the given block and does not expect to emit code into it. This
+end_comment
+
+begin_comment
 comment|/// means the block can be ignored if it is unreachable.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitBlock
 argument_list|(
@@ -1709,14 +1827,41 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitBranch - Emit a branch to the specified basic block from the current
+end_comment
+
+begin_comment
 comment|/// insert block, taking care to avoid creation of branches from dummy
+end_comment
+
+begin_comment
 comment|/// blocks. It is legal to call this function even if there is no current
+end_comment
+
+begin_comment
 comment|/// insertion point.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This function clears the current insertion point. The caller should follow
+end_comment
+
+begin_comment
 comment|/// calls to this function with calls to Emit*Block prior to generation new
+end_comment
+
+begin_comment
 comment|/// code.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitBranch
 argument_list|(
@@ -1727,8 +1872,17 @@ operator|*
 name|Block
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// HaveInsertPoint - True if an insertion point is defined. If not, this
+end_comment
+
+begin_comment
 comment|/// indicates that the current code being emitted is unreachable.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|HaveInsertPoint
 argument_list|()
@@ -1743,10 +1897,25 @@ operator|!=
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// EnsureInsertPoint - Ensure that an insertion point is defined so that
+end_comment
+
+begin_comment
 comment|/// emitted IR has a place to go. Note that by definition, if this function
+end_comment
+
+begin_comment
 comment|/// creates a block then that block is unreachable; callers may do better to
+end_comment
+
+begin_comment
 comment|/// detect when no insertion point is defined and simply skip IR generation.
+end_comment
+
+begin_function
 name|void
 name|EnsureInsertPoint
 parameter_list|()
@@ -1764,8 +1933,17 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// ErrorUnsupported - Print out an error that codegen doesn't support the
+end_comment
+
+begin_comment
 comment|/// specified stmt yet.
+end_comment
+
+begin_function_decl
 name|void
 name|ErrorUnsupported
 parameter_list|(
@@ -1785,9 +1963,21 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                                  Helpers
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_function
 name|Qualifiers
 name|MakeQualifiers
 parameter_list|(
@@ -1826,8 +2016,17 @@ return|return
 name|Quals
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// CreateTempAlloca - This creates a alloca and inserts it into the entry
+end_comment
+
+begin_comment
 comment|/// block.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|AllocaInst
@@ -1851,8 +2050,17 @@ operator|=
 literal|"tmp"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EvaluateExprAsBool - Perform the usual unary conversions on the specified
+end_comment
+
+begin_comment
 comment|/// expression and compare the result against zero, returning an Int1Ty value.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -1865,12 +2073,33 @@ operator|*
 name|E
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitAnyExpr - Emit code to compute the specified expression which can have
+end_comment
+
+begin_comment
 comment|/// any type.  The result is returned as an RValue struct.  If this is an
+end_comment
+
+begin_comment
 comment|/// aggregate expression, the aggloc/agglocvolatile arguments indicate where
+end_comment
+
+begin_comment
 comment|/// the result should be returned.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param IgnoreResult - True if the resulting value isn't used.
+end_comment
+
+begin_decl_stmt
 name|RValue
 name|EmitAnyExpr
 argument_list|(
@@ -1903,8 +2132,17 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// EmitVAListRef - Emit a "reference" to a va_list; this is either the address
+end_comment
+
+begin_comment
 comment|// or the value of the expression, depending on how va_list is defined.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -1917,8 +2155,17 @@ operator|*
 name|E
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitAnyExprToTemp - Similary to EmitAnyExpr(), however, the result will
+end_comment
+
+begin_comment
 comment|/// always be accessible even if no aggregate location is provided.
+end_comment
+
+begin_function_decl
 name|RValue
 name|EmitAnyExprToTemp
 parameter_list|(
@@ -1938,10 +2185,25 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitAggregateCopy - Emit an aggrate copy.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param isVolatile - True iff either the source or the destination is
+end_comment
+
+begin_comment
 comment|/// volatile.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitAggregateCopy
 argument_list|(
@@ -1966,6 +2228,9 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitAggregateClear
 argument_list|(
@@ -1979,8 +2244,17 @@ name|QualType
 name|Ty
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// StartBlock - Start new block named N. If insert block is a dummy block
+end_comment
+
+begin_comment
 comment|/// then reuse it.
+end_comment
+
+begin_function_decl
 name|void
 name|StartBlock
 parameter_list|(
@@ -1990,7 +2264,13 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// GetAddrOfStaticLocalVar - Return the address of a static local variable.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Constant
@@ -2003,7 +2283,13 @@ operator|*
 name|BVD
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// GetAddrOfLocalVar - Return the address of a local variable.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -2016,8 +2302,17 @@ operator|*
 name|VD
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getAccessedFieldNo - Given an encoded value and a result number, return
+end_comment
+
+begin_comment
 comment|/// the input field number being accessed.
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|unsigned
 name|getAccessedFieldNo
@@ -2033,9 +2328,15 @@ operator|*
 name|Elts
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|USEINDIRECTBRANCH
+end_ifndef
+
+begin_function_decl
 name|unsigned
 name|GetIDForAddrOfLabel
 parameter_list|(
@@ -2045,8 +2346,14 @@ modifier|*
 name|L
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BlockAddress
@@ -2059,8 +2366,14 @@ operator|*
 name|L
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
@@ -2068,7 +2381,13 @@ operator|*
 name|GetIndirectGotoBlock
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitMemSetToZero - Generate code to memset a value of the given type to 0.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitMemSetToZero
 argument_list|(
@@ -2082,10 +2401,25 @@ name|QualType
 name|Ty
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// EmitVAArg - Generate code to get an argument from the passed in pointer
+end_comment
+
+begin_comment
 comment|// and update it accordingly. The return value is a pointer to the argument.
+end_comment
+
+begin_comment
 comment|// FIXME: We should be able to get rid of this method and use the va_arg
+end_comment
+
+begin_comment
 comment|// instruction in LLVM instead once it works well enough.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -2097,11 +2431,29 @@ argument_list|,
 argument|QualType Ty
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// EmitVLASize - Generate code for any VLA size expressions that might occur
+end_comment
+
+begin_comment
 comment|// in a variably modified type. If Ty is a VLA, will return the value that
+end_comment
+
+begin_comment
 comment|// corresponds to the size in bytes of the VLA type. Will return 0 otherwise.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This function can be called with a null (unreachable) insert point.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -2111,8 +2463,17 @@ argument_list|(
 argument|QualType Ty
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// GetVLASize - Returns an LLVM value that corresponds to the size in bytes
+end_comment
+
+begin_comment
 comment|// of a variable length array type.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -2124,8 +2485,17 @@ name|VariableArrayType
 operator|*
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// LoadCXXThis - Load the value of 'this'. This function is only valid while
+end_comment
+
+begin_comment
 comment|/// generating code for an C++ member function.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -2133,10 +2503,25 @@ operator|*
 name|LoadCXXThis
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// GetAddressCXXOfBaseClass - This function will add the necessary delta
+end_comment
+
+begin_comment
 comment|/// to the load of 'this' and returns address of the base class.
+end_comment
+
+begin_comment
 comment|// FIXME. This currently only does a derived to non-virtual base conversion.
+end_comment
+
+begin_comment
 comment|// Other kinds of conversions will come later.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -2152,6 +2537,9 @@ argument_list|,
 argument|bool NullCheckValue
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -2175,6 +2563,9 @@ operator|*
 name|BaseClassDecl
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|EmitClassAggrMemberwiseCopy
 argument_list|(
@@ -2204,6 +2595,9 @@ name|QualType
 name|Ty
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitClassAggrCopyAssignment
 argument_list|(
@@ -2233,6 +2627,9 @@ name|QualType
 name|Ty
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitClassMemberwiseCopy
 argument_list|(
@@ -2262,6 +2659,9 @@ name|QualType
 name|Ty
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitClassCopyAssignment
 argument_list|(
@@ -2291,6 +2691,9 @@ name|QualType
 name|Ty
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitCXXConstructorCall
 argument_list|(
@@ -2319,6 +2722,9 @@ name|const_arg_iterator
 name|ArgEnd
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitCXXAggrConstructorCall
 argument_list|(
@@ -2339,6 +2745,9 @@ operator|*
 name|ArrayPtr
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitCXXAggrConstructorCall
 argument_list|(
@@ -2360,6 +2769,9 @@ operator|*
 name|ArrayPtr
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitCXXAggrDestructorCall
 argument_list|(
@@ -2380,6 +2792,9 @@ operator|*
 name|This
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitCXXDestructorCall
 argument_list|(
@@ -2398,6 +2813,9 @@ operator|*
 name|This
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|PushCXXTemporary
 argument_list|(
@@ -2413,10 +2831,16 @@ operator|*
 name|Ptr
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|PopCXXTemporary
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -2429,6 +2853,9 @@ operator|*
 name|E
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|EmitCXXDeleteExpr
 parameter_list|(
@@ -2438,12 +2865,33 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                            Declaration Emission
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// EmitDecl - Emit a declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This function can be called with a null (unreachable) insert point.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitDecl
 parameter_list|(
@@ -2453,9 +2901,21 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitBlockVarDecl - Emit a block variable declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This function can be called with a null (unreachable) insert point.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitBlockVarDecl
 parameter_list|(
@@ -2465,9 +2925,21 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitLocalBlockVarDecl - Emit a local block variable declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This function can be called with a null (unreachable) insert point.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitLocalBlockVarDecl
 parameter_list|(
@@ -2477,6 +2949,9 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitStaticBlockVarDecl
 parameter_list|(
@@ -2486,7 +2961,13 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitParmDecl - Emit a ParmVarDecl or an ImplicitParamDecl.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitParmDecl
 argument_list|(
@@ -2502,10 +2983,25 @@ operator|*
 name|Arg
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                             Statement Emission
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// EmitStopPoint - Emit a debug stoppoint if we are emitting debug info.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitStopPoint
 parameter_list|(
@@ -2515,12 +3011,33 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitStmt - Emit the code for the statement \arg S. It is legal to call
+end_comment
+
+begin_comment
 comment|/// this function even if there is no current insertion point.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This function may clear the current insertion point; callers should use
+end_comment
+
+begin_comment
 comment|/// EnsureInsertPoint if they wish to subsequently generate code without first
+end_comment
+
+begin_comment
 comment|/// calling EmitBlock, EmitBranch, or EmitStmt.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitStmt
 parameter_list|(
@@ -2530,12 +3047,33 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitSimpleStmt - Try to emit a "simple" statement which does not
+end_comment
+
+begin_comment
 comment|/// necessarily require an insertion point or debug information; typically
+end_comment
+
+begin_comment
 comment|/// because the statement amounts to a jump or a container of other
+end_comment
+
+begin_comment
 comment|/// statements.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \return True if the statement was handled.
+end_comment
+
+begin_function_decl
 name|bool
 name|EmitSimpleStmt
 parameter_list|(
@@ -2545,6 +3083,9 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|RValue
 name|EmitCompoundStmt
 argument_list|(
@@ -2572,8 +3113,17 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitLabel - Emit the block for the given label. It is legal to call this
+end_comment
+
+begin_comment
 comment|/// function even if there is no current insertion point.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitLabel
 parameter_list|(
@@ -2583,7 +3133,13 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// helper for EmitLabelStmt.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitLabelStmt
 parameter_list|(
@@ -2593,6 +3149,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitGotoStmt
 parameter_list|(
@@ -2602,6 +3161,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitIndirectGotoStmt
 parameter_list|(
@@ -2611,6 +3173,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitIfStmt
 parameter_list|(
@@ -2620,6 +3185,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitWhileStmt
 parameter_list|(
@@ -2629,6 +3197,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitDoStmt
 parameter_list|(
@@ -2638,6 +3209,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitForStmt
 parameter_list|(
@@ -2647,6 +3221,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitReturnStmt
 parameter_list|(
@@ -2656,6 +3233,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitDeclStmt
 parameter_list|(
@@ -2665,6 +3245,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitBreakStmt
 parameter_list|(
@@ -2674,6 +3257,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitContinueStmt
 parameter_list|(
@@ -2683,6 +3269,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitSwitchStmt
 parameter_list|(
@@ -2692,6 +3281,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitDefaultStmt
 parameter_list|(
@@ -2701,6 +3293,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitCaseStmt
 parameter_list|(
@@ -2710,6 +3305,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitCaseStmtRange
 parameter_list|(
@@ -2719,6 +3317,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitAsmStmt
 parameter_list|(
@@ -2728,6 +3329,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitObjCForCollectionStmt
 parameter_list|(
@@ -2737,6 +3341,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitObjCAtTryStmt
 parameter_list|(
@@ -2746,6 +3353,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitObjCAtThrowStmt
 parameter_list|(
@@ -2755,6 +3365,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitObjCAtSynchronizedStmt
 parameter_list|(
@@ -2764,6 +3377,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitCXXTryStmt
 parameter_list|(
@@ -2773,10 +3389,25 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                         LValue Expression Emission
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// GetUndefRValue - Get an appropriate 'undef' rvalue for the given type.
+end_comment
+
+begin_function_decl
 name|RValue
 name|GetUndefRValue
 parameter_list|(
@@ -2784,9 +3415,21 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitUnsupportedRValue - Emit a dummy r-value using the type of E
+end_comment
+
+begin_comment
 comment|/// and issue an ErrorUnsupported style diagnostic (using the
+end_comment
+
+begin_comment
 comment|/// provided Name).
+end_comment
+
+begin_function_decl
 name|RValue
 name|EmitUnsupportedRValue
 parameter_list|(
@@ -2801,8 +3444,17 @@ modifier|*
 name|Name
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitUnsupportedLValue - Emit a dummy l-value using the type of E and issue
+end_comment
+
+begin_comment
 comment|/// an ErrorUnsupported style diagnostic (using the provided Name).
+end_comment
+
+begin_function_decl
 name|LValue
 name|EmitUnsupportedLValue
 parameter_list|(
@@ -2817,22 +3469,73 @@ modifier|*
 name|Name
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitLValue - Emit code to compute a designator that specifies the location
+end_comment
+
+begin_comment
 comment|/// of the expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This can return one of two things: a simple address or a bitfield
+end_comment
+
+begin_comment
 comment|/// reference.  In either case, the LLVM Value* in the LValue structure is
+end_comment
+
+begin_comment
 comment|/// guaranteed to be an LLVM pointer type.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If this returns a bitfield reference, nothing about the pointee type of
+end_comment
+
+begin_comment
 comment|/// the LLVM value is known: For example, it may not be a pointer to an
+end_comment
+
+begin_comment
 comment|/// integer.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If this returns a normal address, and if the lvalue's C type is fixed
+end_comment
+
+begin_comment
 comment|/// size, this method guarantees that the returned pointer type will point to
+end_comment
+
+begin_comment
 comment|/// an LLVM type of the same size of the lvalue's type.  If the lvalue has a
+end_comment
+
+begin_comment
 comment|/// variable length type, this is not possible.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function_decl
 name|LValue
 name|EmitLValue
 parameter_list|(
@@ -2842,9 +3545,21 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitLoadOfScalar - Load a scalar value from an address, taking
+end_comment
+
+begin_comment
 comment|/// care to appropriately convert from the memory representation to
+end_comment
+
+begin_comment
 comment|/// the LLVM value representation.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -2858,9 +3573,21 @@ argument_list|,
 argument|QualType Ty
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitStoreOfScalar - Store a scalar value to an address, taking
+end_comment
+
+begin_comment
 comment|/// care to appropriately convert from the memory representation to
+end_comment
+
+begin_comment
 comment|/// the LLVM value representation.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitStoreOfScalar
 argument_list|(
@@ -2883,9 +3610,21 @@ name|QualType
 name|Ty
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitLoadOfLValue - Given an expression that represents a value lvalue,
+end_comment
+
+begin_comment
 comment|/// this method emits the address of the lvalue, then loads the result as an
+end_comment
+
+begin_comment
 comment|/// rvalue, returning the rvalue.
+end_comment
+
+begin_function_decl
 name|RValue
 name|EmitLoadOfLValue
 parameter_list|(
@@ -2896,6 +3635,9 @@ name|QualType
 name|LVType
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitLoadOfExtVectorElementLValue
 parameter_list|(
@@ -2906,6 +3648,9 @@ name|QualType
 name|LVType
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitLoadOfBitfieldLValue
 parameter_list|(
@@ -2916,6 +3661,9 @@ name|QualType
 name|ExprType
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitLoadOfPropertyRefLValue
 parameter_list|(
@@ -2926,6 +3674,9 @@ name|QualType
 name|ExprType
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitLoadOfKVCRefLValue
 parameter_list|(
@@ -2936,9 +3687,21 @@ name|QualType
 name|ExprType
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitStoreThroughLValue - Store the specified rvalue into the specified
+end_comment
+
+begin_comment
 comment|/// lvalue, where both are guaranteed to the have the same type, and that type
+end_comment
+
+begin_comment
 comment|/// is 'Ty'.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitStoreThroughLValue
 parameter_list|(
@@ -2952,6 +3715,9 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitStoreThroughExtVectorComponentLValue
 parameter_list|(
@@ -2965,6 +3731,9 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitStoreThroughPropertyRefLValue
 parameter_list|(
@@ -2978,6 +3747,9 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitStoreThroughKVCRefLValue
 parameter_list|(
@@ -2991,12 +3763,33 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitStoreThroughLValue - Store Src into Dst with same constraints as
+end_comment
+
+begin_comment
 comment|/// EmitStoreThroughLValue.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Result [out] - If non-null, this will be set to a Value* for the
+end_comment
+
+begin_comment
 comment|/// bit-field contents after the store, appropriate for use as the result of
+end_comment
+
+begin_comment
 comment|/// an assignment to the bit-field.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitStoreThroughBitfieldLValue
 argument_list|(
@@ -3019,7 +3812,13 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Note: only availabe for agg return types
+end_comment
+
+begin_function_decl
 name|LValue
 name|EmitBinaryOperatorLValue
 parameter_list|(
@@ -3029,7 +3828,13 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Note: only available for agg return types
+end_comment
+
+begin_function_decl
 name|LValue
 name|EmitCallExprLValue
 parameter_list|(
@@ -3039,7 +3844,13 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Note: only available for agg return types
+end_comment
+
+begin_function_decl
 name|LValue
 name|EmitVAArgExprLValue
 parameter_list|(
@@ -3049,6 +3860,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitDeclRefLValue
 parameter_list|(
@@ -3058,6 +3872,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitStringLiteralLValue
 parameter_list|(
@@ -3067,6 +3884,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitObjCEncodeExprLValue
 parameter_list|(
@@ -3076,6 +3896,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitPredefinedFunctionName
 parameter_list|(
@@ -3083,6 +3906,9 @@ name|unsigned
 name|Type
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitPredefinedLValue
 parameter_list|(
@@ -3092,6 +3918,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitUnaryOpLValue
 parameter_list|(
@@ -3101,6 +3930,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitArraySubscriptExpr
 parameter_list|(
@@ -3110,6 +3942,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitExtVectorElementExpr
 parameter_list|(
@@ -3119,6 +3954,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitMemberExpr
 parameter_list|(
@@ -3128,6 +3966,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitCompoundLiteralLValue
 parameter_list|(
@@ -3137,6 +3978,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitConditionalOperatorLValue
 parameter_list|(
@@ -3146,6 +3990,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitCastLValue
 parameter_list|(
@@ -3155,6 +4002,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitNullInitializationLValue
 parameter_list|(
@@ -3164,6 +4014,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitPointerToDataMemberLValue
 parameter_list|(
@@ -3173,6 +4026,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3190,6 +4046,9 @@ operator|*
 name|Ivar
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|LValue
 name|EmitLValueForField
 argument_list|(
@@ -3210,6 +4069,9 @@ name|unsigned
 name|CVRQualifiers
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|LValue
 name|EmitLValueForIvar
 argument_list|(
@@ -3231,6 +4093,9 @@ name|unsigned
 name|CVRQualifiers
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|LValue
 name|EmitLValueForBitfield
 argument_list|(
@@ -3248,6 +4113,9 @@ name|unsigned
 name|CVRQualifiers
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|LValue
 name|EmitBlockDeclRefLValue
 parameter_list|(
@@ -3257,6 +4125,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitCXXConditionDeclLValue
 parameter_list|(
@@ -3266,6 +4137,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitCXXConstructLValue
 parameter_list|(
@@ -3275,6 +4149,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitCXXBindTemporaryLValue
 parameter_list|(
@@ -3284,6 +4161,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitCXXExprWithTemporariesLValue
 parameter_list|(
@@ -3293,6 +4173,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitObjCMessageExprLValue
 parameter_list|(
@@ -3302,6 +4185,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitObjCIvarRefLValue
 parameter_list|(
@@ -3311,6 +4197,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitObjCPropertyRefLValue
 parameter_list|(
@@ -3320,6 +4209,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitObjCKVCRefLValue
 parameter_list|(
@@ -3329,6 +4221,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitObjCSuperExprLValue
 parameter_list|(
@@ -3338,6 +4233,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitStmtExprLValue
 parameter_list|(
@@ -3347,6 +4245,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|LValue
 name|EmitPointerToDataMemberBinaryExpr
 parameter_list|(
@@ -3356,16 +4257,49 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                         Scalar Expression Emission
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// EmitCall - Generate a call of the given function, expecting the given
+end_comment
+
+begin_comment
 comment|/// result type, and using the given argument list which specifies both the
+end_comment
+
+begin_comment
 comment|/// LLVM arguments and the types they were derived from.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param TargetDecl - If given, the decl of the function in a
+end_comment
+
+begin_comment
 comment|/// direct call; used to set attributes on the call (noreturn,
+end_comment
+
+begin_comment
 comment|/// etc.).
+end_comment
+
+begin_decl_stmt
 name|RValue
 name|EmitCall
 argument_list|(
@@ -3393,6 +4327,9 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|RValue
 name|EmitCall
 argument_list|(
@@ -3423,6 +4360,9 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|RValue
 name|EmitCallExpr
 parameter_list|(
@@ -3432,6 +4372,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3458,6 +4401,9 @@ operator|*
 name|Ty
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|RValue
 name|EmitCXXMemberCall
 argument_list|(
@@ -3489,6 +4435,9 @@ name|const_arg_iterator
 name|ArgEnd
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|RValue
 name|EmitCXXMemberCallExpr
 parameter_list|(
@@ -3498,6 +4447,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitCXXMemberPointerCallExpr
 parameter_list|(
@@ -3507,6 +4459,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitCXXOperatorMemberCallExpr
 parameter_list|(
@@ -3521,6 +4476,9 @@ modifier|*
 name|MD
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitBuiltinExpr
 parameter_list|(
@@ -3538,6 +4496,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitBlockCallExpr
 parameter_list|(
@@ -3547,8 +4508,17 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitTargetBuiltinExpr - Emit the given builtin call. Returns 0 if the call
+end_comment
+
+begin_comment
 comment|/// is unhandled by the current target.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3560,6 +4530,9 @@ argument_list|,
 argument|const CallExpr *E
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3571,6 +4544,9 @@ argument_list|,
 argument|const CallExpr *E
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3582,6 +4558,9 @@ argument_list|,
 argument|const CallExpr *E
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3603,6 +4582,9 @@ argument_list|,
 operator|...
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3616,6 +4598,9 @@ argument_list|,
 argument|bool isSplat = false
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3628,6 +4613,9 @@ operator|*
 name|E
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3640,6 +4628,9 @@ operator|*
 name|E
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3652,6 +4643,9 @@ operator|*
 name|E
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|RValue
 name|EmitObjCMessageExpr
 parameter_list|(
@@ -3661,6 +4655,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitObjCPropertyGet
 parameter_list|(
@@ -3670,6 +4667,9 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|RValue
 name|EmitObjCSuperPropertyGet
 parameter_list|(
@@ -3684,6 +4684,9 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitObjCPropertySet
 parameter_list|(
@@ -3696,6 +4699,9 @@ name|RValue
 name|Src
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|EmitObjCSuperPropertySet
 parameter_list|(
@@ -3713,8 +4719,17 @@ name|RValue
 name|Src
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitReferenceBindingToExpr - Emits a reference binding to the passed in
+end_comment
+
+begin_comment
 comment|/// expression. Will emit a temporary variable if E is not an LValue.
+end_comment
+
+begin_function_decl
 name|RValue
 name|EmitReferenceBindingToExpr
 parameter_list|(
@@ -3732,12 +4747,33 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                           Expression Emission
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Expressions are broken into three classes: scalar, complex, aggregate.
+end_comment
+
+begin_comment
 comment|/// EmitScalarExpr - Emit the computation of the specified expression of LLVM
+end_comment
+
+begin_comment
 comment|/// scalar type, returning the result.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3749,8 +4785,17 @@ argument_list|,
 argument|bool IgnoreResultAssign = false
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitScalarConversion - Emit a conversion from the specified type to the
+end_comment
+
+begin_comment
 comment|/// specified destination type, both of which are LLVM scalar types.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3764,9 +4809,21 @@ argument_list|,
 argument|QualType DstTy
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitComplexToScalarConversion - Emit a conversion from the specified
+end_comment
+
+begin_comment
 comment|/// complex type to the specified destination type, where the destination type
+end_comment
+
+begin_comment
 comment|/// is an LLVM scalar type.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -3780,9 +4837,21 @@ argument_list|,
 argument|QualType DstTy
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitAggExpr - Emit the computation of the specified expression of
+end_comment
+
+begin_comment
 comment|/// aggregate type.  The result is computed into DestPtr.  Note that if
+end_comment
+
+begin_comment
 comment|/// DestPtr is null, the value of the aggregate expression is not needed.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitAggExpr
 argument_list|(
@@ -3816,8 +4885,17 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitGCMemmoveCollectable - Emit special API for structs with object
+end_comment
+
+begin_comment
 comment|/// pointers.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitGCMemmoveCollectable
 argument_list|(
@@ -3837,8 +4915,17 @@ name|QualType
 name|Ty
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitComplexExpr - Emit the computation of the specified expression of
+end_comment
+
+begin_comment
 comment|/// complex type, returning the result.
+end_comment
+
+begin_function_decl
 name|ComplexPairTy
 name|EmitComplexExpr
 parameter_list|(
@@ -3868,8 +4955,17 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitComplexExprIntoAddr - Emit the computation of the specified expression
+end_comment
+
+begin_comment
 comment|/// of complex type, storing into the specified Value*.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitComplexExprIntoAddr
 argument_list|(
@@ -3888,7 +4984,13 @@ name|bool
 name|DestIsVolatile
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// StoreComplexToAddr - Store a complex number into the specified address.
+end_comment
+
+begin_decl_stmt
 name|void
 name|StoreComplexToAddr
 argument_list|(
@@ -3905,7 +5007,13 @@ name|bool
 name|DestIsVolatile
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// LoadComplexFromAddr - Load a complex number from the specified address.
+end_comment
+
+begin_decl_stmt
 name|ComplexPairTy
 name|LoadComplexFromAddr
 argument_list|(
@@ -3919,8 +5027,17 @@ name|bool
 name|SrcIsVolatile
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// CreateStaticBlockVarDecl - Create a zero-initialized LLVM global
+end_comment
+
+begin_comment
 comment|/// for a static block var decl.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|GlobalVariable
@@ -3934,8 +5051,17 @@ argument_list|,
 argument|llvm::GlobalValue::LinkageTypes                                                   Linkage
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitStaticCXXBlockVarDeclInit - Create the initializer for a C++
+end_comment
+
+begin_comment
 comment|/// runtime initialized static block var decl.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitStaticCXXBlockVarDeclInit
 argument_list|(
@@ -3951,8 +5077,17 @@ operator|*
 name|GV
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitCXXGlobalVarDeclInit - Create the initializer for a C++
+end_comment
+
+begin_comment
 comment|/// variable with global storage.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitCXXGlobalVarDeclInit
 argument_list|(
@@ -3968,8 +5103,17 @@ operator|*
 name|DeclPtr
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitCXXGlobalDtorRegistration - Emits a call to register the global ptr
+end_comment
+
+begin_comment
 comment|/// with the C++ runtime so that its destructor will be called at exit.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitCXXGlobalDtorRegistration
 argument_list|(
@@ -3985,8 +5129,17 @@ operator|*
 name|DeclPtr
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// GenerateCXXGlobalInitFunc - Generates code for initializing global
+end_comment
+
+begin_comment
 comment|/// variables.
+end_comment
+
+begin_decl_stmt
 name|void
 name|GenerateCXXGlobalInitFunc
 argument_list|(
@@ -4006,6 +5159,9 @@ name|unsigned
 name|NumDecls
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|EmitCXXConstructExpr
 argument_list|(
@@ -4021,6 +5177,9 @@ operator|*
 name|E
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|RValue
 name|EmitCXXExprWithTemporaries
 argument_list|(
@@ -4048,6 +5207,9 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|EmitCXXThrowExpr
 parameter_list|(
@@ -4057,12 +5219,33 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                             Internal Helpers
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// ContainsLabel - Return true if the statement contains a label in it.  If
+end_comment
+
+begin_comment
 comment|/// this statement is not executed normally, it not containing a label means
+end_comment
+
+begin_comment
 comment|/// that we can just remove the code.
+end_comment
+
+begin_function_decl
 specifier|static
 name|bool
 name|ContainsLabel
@@ -4078,10 +5261,25 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// ConstantFoldsToSimpleInteger - If the specified expression does not fold
+end_comment
+
+begin_comment
 comment|/// to a constant, or if it does but contains a label, return 0.  If it
+end_comment
+
+begin_comment
 comment|/// constant folds to 'true' and does not contain a label, return 1, if it
+end_comment
+
+begin_comment
 comment|/// constant folds to 'false' and does not contain a label, return -1.
+end_comment
+
+begin_function_decl
 name|int
 name|ConstantFoldsToSimpleInteger
 parameter_list|(
@@ -4091,9 +5289,21 @@ modifier|*
 name|Cond
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitBranchOnBoolExpr - Emit a branch on a boolean condition (e.g. for an
+end_comment
+
+begin_comment
 comment|/// if statement) to the specified blocks.  Based on the condition, this might
+end_comment
+
+begin_comment
 comment|/// try to simplify the codegen of the conditional based on the branch.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitBranchOnBoolExpr
 argument_list|(
@@ -4115,8 +5325,14 @@ operator|*
 name|FalseBlock
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_function_decl
 name|void
 name|EmitReturnOfRValue
 parameter_list|(
@@ -4127,12 +5343,33 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// ExpandTypeFromArgs - Reconstruct a structure of type \arg Ty
+end_comment
+
+begin_comment
 comment|/// from function arguments into \arg Dst. See ABIArgInfo::Expand.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param AI - The first function argument of the expansion.
+end_comment
+
+begin_comment
 comment|/// \return The argument following the last expanded function
+end_comment
+
+begin_comment
 comment|/// argument.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Function
@@ -4147,9 +5384,21 @@ argument_list|,
 argument|llvm::Function::arg_iterator AI
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// ExpandTypeToArgs - Expand an RValue \arg Src, with the LLVM type for \arg
+end_comment
+
+begin_comment
 comment|/// Ty, into individual arguments on the provided vector \arg Args. See
+end_comment
+
+begin_comment
 comment|/// ABIArgInfo::Expand.
+end_comment
+
+begin_decl_stmt
 name|void
 name|ExpandTypeToArgs
 argument_list|(
@@ -4174,6 +5423,9 @@ operator|&
 name|Args
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -4204,13 +5456,28 @@ operator|&
 name|ConstraintStr
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitCleanupBlock - emits a single cleanup block.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitCleanupBlock
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// AddBranchFixup - adds a branch instruction to the list of fixups for the
+end_comment
+
+begin_comment
 comment|/// current cleanup scope.
+end_comment
+
+begin_decl_stmt
 name|void
 name|AddBranchFixup
 argument_list|(
@@ -4221,7 +5488,13 @@ operator|*
 name|BI
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// EmitCallArg - Emit a single call argument.
+end_comment
+
+begin_function_decl
 name|RValue
 name|EmitCallArg
 parameter_list|(
@@ -4234,9 +5507,21 @@ name|QualType
 name|ArgType
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitCallArgs - Emit call arguments for a function.
+end_comment
+
+begin_comment
 comment|/// The CallArgTypeInfo parameter is used for iterating over the known
+end_comment
+
+begin_comment
 comment|/// argument types of the function being called.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4376,27 +5661,33 @@ operator|&&
 literal|"Extra arguments in non-variadic function!"
 argument_list|)
 expr_stmt|;
-block|}
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|// If we still have any arguments, emit them using the type of the argument.
-for|for
-control|(
-init|;
+end_comment
+
+begin_expr_stmt
+unit|for
+operator|(
+expr|;
 name|Arg
 operator|!=
 name|ArgEnd
-condition|;
+expr|;
 operator|++
 name|Arg
-control|)
+operator|)
 block|{
 name|QualType
 name|ArgType
-init|=
+operator|=
 name|Arg
 operator|->
 name|getType
 argument_list|()
-decl_stmt|;
+block|;
 name|Args
 operator|.
 name|push_back
@@ -4416,13 +5707,11 @@ argument_list|,
 name|ArgType
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_decl_stmt
+block|;     }
+end_expr_stmt
 
 begin_empty_stmt
+unit|} }
 empty_stmt|;
 end_empty_stmt
 

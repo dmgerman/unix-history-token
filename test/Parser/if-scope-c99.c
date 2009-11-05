@@ -15,6 +15,9 @@ if|if
 condition|(
 name|z
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|enum

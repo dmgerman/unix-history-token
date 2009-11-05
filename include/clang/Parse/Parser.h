@@ -4784,49 +4784,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// C++ 13.5: Overloaded operators [over.oper]
-end_comment
-
-begin_comment
-comment|// EndLoc, if non-NULL, is filled with the location of the last token of
-end_comment
-
-begin_comment
-comment|// the ID.
-end_comment
-
-begin_function_decl
-name|OverloadedOperatorKind
-name|TryParseOperatorFunctionId
-parameter_list|(
-name|SourceLocation
-modifier|*
-name|EndLoc
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|TypeTy
-modifier|*
-name|ParseConversionFunctionId
-parameter_list|(
-name|SourceLocation
-modifier|*
-name|EndLoc
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// C++ 14: Templates [temp]
 end_comment
 

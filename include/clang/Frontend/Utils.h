@@ -110,9 +110,6 @@ name|class
 name|SourceManager
 decl_stmt|;
 name|class
-name|PreprocessorFactory
-decl_stmt|;
-name|class
 name|LangOptions
 decl_stmt|;
 name|class

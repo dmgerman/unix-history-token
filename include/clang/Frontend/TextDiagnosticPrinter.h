@@ -146,14 +146,23 @@ name|diags
 argument_list|)
 block|;
 name|void
-name|setLangOptions
+name|BeginSourceFile
 argument_list|(
-argument|const LangOptions *LO
+argument|const LangOptions&LO
 argument_list|)
 block|{
 name|LangOpts
 operator|=
+operator|&
 name|LO
+block|;   }
+name|void
+name|EndSourceFile
+argument_list|()
+block|{
+name|LangOpts
+operator|=
+literal|0
 block|;   }
 name|void
 name|PrintIncludeStack

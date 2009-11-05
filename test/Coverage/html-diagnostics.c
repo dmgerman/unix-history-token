@@ -4,7 +4,19 @@ comment|// RUN: rm -rf %t&&
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc --html-diags=%t -checker-cfref %s
+comment|// RUN: clang-cc -analyze -analyzer-output=html -checker-cfref -o %t %s&&
+end_comment
+
+begin_comment
+comment|// RUN: cat %t/*.html | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK:<h3>Annotated Source Code</h3>
+end_comment
+
+begin_comment
+comment|// CHECK: Dereference of null pointer
 end_comment
 
 begin_function

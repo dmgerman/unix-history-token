@@ -384,6 +384,11 @@ argument_list|(
 specifier|const
 name|CXXRecordDecl
 operator|*
+name|Class
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
 name|RD
 argument_list|,
 specifier|const
@@ -391,7 +396,7 @@ name|CXXRecordDecl
 operator|*
 name|PB
 argument_list|,
-name|int64_t
+name|uint64_t
 name|Offset
 argument_list|,
 name|llvm
@@ -480,6 +485,16 @@ name|FD
 parameter_list|,
 name|uint64_t
 name|Offset
+parameter_list|)
+function_decl|;
+comment|/// getBaseOffset - Get the offset of a direct base class.
+name|uint64_t
+name|getBaseOffset
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Base
 parameter_list|)
 function_decl|;
 comment|/// FinishLayout - Finalize record layout. Adjust record size based on the

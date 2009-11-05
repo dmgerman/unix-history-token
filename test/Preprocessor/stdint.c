@@ -8,43 +8,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// ARM:typedef short int16_t;
-end_comment
-
-begin_comment
-comment|// ARM:typedef int int32_t;
-end_comment
-
-begin_comment
 comment|// ARM:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// ARM:typedef unsigned long long int uint64_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef unsigned char uint8_t;
+comment|// ARM:typedef int64_t int_least64_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef int8_t int_least8_t;
+comment|// ARM:typedef uint64_t uint_least64_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef uint8_t uint_least8_t;
+comment|// ARM:typedef int64_t int_fast64_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// ARM:typedef uint8_t uint_fast8_t;
+comment|// ARM:typedef uint64_t uint_fast64_t;
 end_comment
 
 begin_comment
@@ -52,27 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef unsigned short uint16_t;
-end_comment
-
-begin_comment
-comment|// ARM:typedef int16_t int_least16_t;
-end_comment
-
-begin_comment
-comment|// ARM:typedef uint16_t uint_least16_t;
-end_comment
-
-begin_comment
-comment|// ARM:typedef int16_t int_fast16_t;
-end_comment
-
-begin_comment
-comment|// ARM:typedef uint16_t uint_fast16_t;
-end_comment
-
-begin_comment
-comment|//
+comment|// ARM:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -100,23 +64,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef unsigned long long int uint64_t;
+comment|// ARM:typedef short int16_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef int64_t int_least64_t;
+comment|// ARM:typedef unsigned short uint16_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef uint64_t uint_least64_t;
+comment|// ARM:typedef int16_t int_least16_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef int64_t int_fast64_t;
+comment|// ARM:typedef uint16_t uint_least16_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef uint64_t uint_fast64_t;
+comment|// ARM:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// ARM:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ARM:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// ARM:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// ARM:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// ARM:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// ARM:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// ARM:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -444,47 +440,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// BFIN:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// BFIN:typedef short int16_t;
-end_comment
-
-begin_comment
-comment|// BFIN:typedef int int32_t;
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// BFIN:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// BFIN:typedef unsigned long long int uint64_t;
 end_comment
 
 begin_comment
-comment|// BFIN:typedef unsigned char uint8_t;
+comment|// BFIN:typedef int64_t int_least64_t;
 end_comment
 
 begin_comment
-comment|// BFIN:typedef int8_t int_least8_t;
+comment|// BFIN:typedef uint64_t uint_least64_t;
 end_comment
 
 begin_comment
-comment|// BFIN:typedef uint8_t uint_least8_t;
+comment|// BFIN:typedef int64_t int_fast64_t;
 end_comment
 
 begin_comment
-comment|// BFIN:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// BFIN:typedef uint8_t uint_fast8_t;
+comment|// BFIN:typedef uint64_t uint_fast64_t;
 end_comment
 
 begin_comment
@@ -492,27 +468,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// BFIN:typedef unsigned short uint16_t;
-end_comment
-
-begin_comment
-comment|// BFIN:typedef int16_t int_least16_t;
-end_comment
-
-begin_comment
-comment|// BFIN:typedef uint16_t uint_least16_t;
-end_comment
-
-begin_comment
-comment|// BFIN:typedef int16_t int_fast16_t;
-end_comment
-
-begin_comment
-comment|// BFIN:typedef uint16_t uint_fast16_t;
-end_comment
-
-begin_comment
-comment|//
+comment|// BFIN:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -540,23 +496,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// BFIN:typedef unsigned long long int uint64_t;
+comment|// BFIN:typedef short int16_t;
 end_comment
 
 begin_comment
-comment|// BFIN:typedef int64_t int_least64_t;
+comment|// BFIN:typedef unsigned short uint16_t;
 end_comment
 
 begin_comment
-comment|// BFIN:typedef uint64_t uint_least64_t;
+comment|// BFIN:typedef int16_t int_least16_t;
 end_comment
 
 begin_comment
-comment|// BFIN:typedef int64_t int_fast64_t;
+comment|// BFIN:typedef uint16_t uint_least16_t;
 end_comment
 
 begin_comment
-comment|// BFIN:typedef uint64_t uint_fast64_t;
+comment|// BFIN:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// BFIN:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// BFIN:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// BFIN:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// BFIN:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// BFIN:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// BFIN:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// BFIN:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -884,43 +872,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// I386:typedef short int16_t;
-end_comment
-
-begin_comment
-comment|// I386:typedef int int32_t;
-end_comment
-
-begin_comment
 comment|// I386:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// I386:typedef unsigned long long int uint64_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef unsigned char uint8_t;
+comment|// I386:typedef int64_t int_least64_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef int8_t int_least8_t;
+comment|// I386:typedef uint64_t uint_least64_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef uint8_t uint_least8_t;
+comment|// I386:typedef int64_t int_fast64_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// I386:typedef uint8_t uint_fast8_t;
+comment|// I386:typedef uint64_t uint_fast64_t;
 end_comment
 
 begin_comment
@@ -928,27 +900,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef unsigned short uint16_t;
-end_comment
-
-begin_comment
-comment|// I386:typedef int16_t int_least16_t;
-end_comment
-
-begin_comment
-comment|// I386:typedef uint16_t uint_least16_t;
-end_comment
-
-begin_comment
-comment|// I386:typedef int16_t int_fast16_t;
-end_comment
-
-begin_comment
-comment|// I386:typedef uint16_t uint_fast16_t;
-end_comment
-
-begin_comment
-comment|//
+comment|// I386:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -976,23 +928,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef unsigned long long int uint64_t;
+comment|// I386:typedef short int16_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef int64_t int_least64_t;
+comment|// I386:typedef unsigned short uint16_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef uint64_t uint_least64_t;
+comment|// I386:typedef int16_t int_least16_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef int64_t int_fast64_t;
+comment|// I386:typedef uint16_t uint_least16_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef uint64_t uint_fast64_t;
+comment|// I386:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// I386:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// I386:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// I386:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// I386:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// I386:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// I386:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// I386:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -1316,43 +1300,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// MSP430:typedef short int16_t;
-end_comment
-
-begin_comment
 comment|// MSP430:typedef long long int32_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// MSP430:typedef unsigned long long uint32_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef unsigned char uint8_t;
+comment|// MSP430:typedef int32_t int_least32_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef int8_t int_least8_t;
+comment|// MSP430:typedef uint32_t uint_least32_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef uint8_t uint_least8_t;
+comment|// MSP430:typedef int32_t int_fast32_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// MSP430:typedef uint8_t uint_fast8_t;
+comment|// MSP430:typedef uint32_t uint_fast32_t;
 end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// MSP430:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -1380,23 +1356,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:typedef unsigned long long uint32_t;
+comment|// MSP430:typedef signed char int8_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef int32_t int_least32_t;
+comment|// MSP430:typedef unsigned char uint8_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef uint32_t uint_least32_t;
+comment|// MSP430:typedef int8_t int_least8_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef int32_t int_fast32_t;
+comment|// MSP430:typedef uint8_t uint_least8_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef uint32_t uint_fast32_t;
+comment|// MSP430:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// MSP430:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -1720,43 +1700,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// PIC16:typedef short int16_t;
-end_comment
-
-begin_comment
 comment|// PIC16:typedef long long int32_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// PIC16:typedef unsigned long long uint32_t;
 end_comment
 
 begin_comment
-comment|// PIC16:typedef unsigned char uint8_t;
+comment|// PIC16:typedef int32_t int_least32_t;
 end_comment
 
 begin_comment
-comment|// PIC16:typedef int8_t int_least8_t;
+comment|// PIC16:typedef uint32_t uint_least32_t;
 end_comment
 
 begin_comment
-comment|// PIC16:typedef uint8_t uint_least8_t;
+comment|// PIC16:typedef int32_t int_fast32_t;
 end_comment
 
 begin_comment
-comment|// PIC16:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// PIC16:typedef uint8_t uint_fast8_t;
+comment|// PIC16:typedef uint32_t uint_fast32_t;
 end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// PIC16:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -1784,23 +1756,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:typedef unsigned long long uint32_t;
+comment|// PIC16:typedef signed char int8_t;
 end_comment
 
 begin_comment
-comment|// PIC16:typedef int32_t int_least32_t;
+comment|// PIC16:typedef unsigned char uint8_t;
 end_comment
 
 begin_comment
-comment|// PIC16:typedef uint32_t uint_least32_t;
+comment|// PIC16:typedef int8_t int_least8_t;
 end_comment
 
 begin_comment
-comment|// PIC16:typedef int32_t int_fast32_t;
+comment|// PIC16:typedef uint8_t uint_least8_t;
 end_comment
 
 begin_comment
-comment|// PIC16:typedef uint32_t uint_fast32_t;
+comment|// PIC16:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// PIC16:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -2124,43 +2100,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// PPC64:typedef short int16_t;
-end_comment
-
-begin_comment
-comment|// PPC64:typedef int int32_t;
-end_comment
-
-begin_comment
 comment|// PPC64:typedef long int int64_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// PPC64:typedef unsigned long int uint64_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef unsigned char uint8_t;
+comment|// PPC64:typedef int64_t int_least64_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef int8_t int_least8_t;
+comment|// PPC64:typedef uint64_t uint_least64_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef uint8_t uint_least8_t;
+comment|// PPC64:typedef int64_t int_fast64_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// PPC64:typedef uint8_t uint_fast8_t;
+comment|// PPC64:typedef uint64_t uint_fast64_t;
 end_comment
 
 begin_comment
@@ -2168,27 +2128,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef unsigned short uint16_t;
-end_comment
-
-begin_comment
-comment|// PPC64:typedef int16_t int_least16_t;
-end_comment
-
-begin_comment
-comment|// PPC64:typedef uint16_t uint_least16_t;
-end_comment
-
-begin_comment
-comment|// PPC64:typedef int16_t int_fast16_t;
-end_comment
-
-begin_comment
-comment|// PPC64:typedef uint16_t uint_fast16_t;
-end_comment
-
-begin_comment
-comment|//
+comment|// PPC64:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -2216,23 +2156,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef unsigned long int uint64_t;
+comment|// PPC64:typedef short int16_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef int64_t int_least64_t;
+comment|// PPC64:typedef unsigned short uint16_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef uint64_t uint_least64_t;
+comment|// PPC64:typedef int16_t int_least16_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef int64_t int_fast64_t;
+comment|// PPC64:typedef uint16_t uint_least16_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef uint64_t uint_fast64_t;
+comment|// PPC64:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// PPC64:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// PPC64:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// PPC64:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// PPC64:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// PPC64:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// PPC64:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -2556,15 +2528,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// PPC:typedef short int16_t;
-end_comment
-
-begin_comment
-comment|// PPC:typedef int int32_t;
+comment|//
 end_comment
 
 begin_comment
@@ -2572,27 +2536,23 @@ comment|// PPC:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// PPC:typedef unsigned long long int uint64_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef unsigned char uint8_t;
+comment|// PPC:typedef int64_t int_least64_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef int8_t int_least8_t;
+comment|// PPC:typedef uint64_t uint_least64_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef uint8_t uint_least8_t;
+comment|// PPC:typedef int64_t int_fast64_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// PPC:typedef uint8_t uint_fast8_t;
+comment|// PPC:typedef uint64_t uint_fast64_t;
 end_comment
 
 begin_comment
@@ -2600,27 +2560,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef unsigned short uint16_t;
-end_comment
-
-begin_comment
-comment|// PPC:typedef int16_t int_least16_t;
-end_comment
-
-begin_comment
-comment|// PPC:typedef uint16_t uint_least16_t;
-end_comment
-
-begin_comment
-comment|// PPC:typedef int16_t int_fast16_t;
-end_comment
-
-begin_comment
-comment|// PPC:typedef uint16_t uint_fast16_t;
-end_comment
-
-begin_comment
-comment|//
+comment|// PPC:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -2648,23 +2588,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef unsigned long long int uint64_t;
+comment|// PPC:typedef short int16_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef int64_t int_least64_t;
+comment|// PPC:typedef unsigned short uint16_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef uint64_t uint_least64_t;
+comment|// PPC:typedef int16_t int_least16_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef int64_t int_fast64_t;
+comment|// PPC:typedef uint16_t uint_least16_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef uint64_t uint_fast64_t;
+comment|// PPC:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// PPC:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// PPC:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// PPC:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// PPC:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// PPC:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// PPC:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -2988,43 +2960,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// S390X:typedef short int16_t;
-end_comment
-
-begin_comment
-comment|// S390X:typedef int int32_t;
-end_comment
-
-begin_comment
 comment|// S390X:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// S390X:typedef unsigned long long int uint64_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef unsigned char uint8_t;
+comment|// S390X:typedef int64_t int_least64_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef int8_t int_least8_t;
+comment|// S390X:typedef uint64_t uint_least64_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef uint8_t uint_least8_t;
+comment|// S390X:typedef int64_t int_fast64_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// S390X:typedef uint8_t uint_fast8_t;
+comment|// S390X:typedef uint64_t uint_fast64_t;
 end_comment
 
 begin_comment
@@ -3032,27 +2988,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef unsigned short uint16_t;
-end_comment
-
-begin_comment
-comment|// S390X:typedef int16_t int_least16_t;
-end_comment
-
-begin_comment
-comment|// S390X:typedef uint16_t uint_least16_t;
-end_comment
-
-begin_comment
-comment|// S390X:typedef int16_t int_fast16_t;
-end_comment
-
-begin_comment
-comment|// S390X:typedef uint16_t uint_fast16_t;
-end_comment
-
-begin_comment
-comment|//
+comment|// S390X:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -3080,23 +3016,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef unsigned long long int uint64_t;
+comment|// S390X:typedef short int16_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef int64_t int_least64_t;
+comment|// S390X:typedef unsigned short uint16_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef uint64_t uint_least64_t;
+comment|// S390X:typedef int16_t int_least16_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef int64_t int_fast64_t;
+comment|// S390X:typedef uint16_t uint_least16_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef uint64_t uint_fast64_t;
+comment|// S390X:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// S390X:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// S390X:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// S390X:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// S390X:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// S390X:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// S390X:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// S390X:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -3420,43 +3388,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// SPARC:typedef short int16_t;
-end_comment
-
-begin_comment
-comment|// SPARC:typedef int int32_t;
-end_comment
-
-begin_comment
 comment|// SPARC:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// SPARC:typedef unsigned long long int uint64_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef unsigned char uint8_t;
+comment|// SPARC:typedef int64_t int_least64_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef int8_t int_least8_t;
+comment|// SPARC:typedef uint64_t uint_least64_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef uint8_t uint_least8_t;
+comment|// SPARC:typedef int64_t int_fast64_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// SPARC:typedef uint8_t uint_fast8_t;
+comment|// SPARC:typedef uint64_t uint_fast64_t;
 end_comment
 
 begin_comment
@@ -3464,27 +3416,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef unsigned short uint16_t;
-end_comment
-
-begin_comment
-comment|// SPARC:typedef int16_t int_least16_t;
-end_comment
-
-begin_comment
-comment|// SPARC:typedef uint16_t uint_least16_t;
-end_comment
-
-begin_comment
-comment|// SPARC:typedef int16_t int_fast16_t;
-end_comment
-
-begin_comment
-comment|// SPARC:typedef uint16_t uint_fast16_t;
-end_comment
-
-begin_comment
-comment|//
+comment|// SPARC:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -3512,23 +3444,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef unsigned long long int uint64_t;
+comment|// SPARC:typedef short int16_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef int64_t int_least64_t;
+comment|// SPARC:typedef unsigned short uint16_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef uint64_t uint_least64_t;
+comment|// SPARC:typedef int16_t int_least16_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef int64_t int_fast64_t;
+comment|// SPARC:typedef uint16_t uint_least16_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef uint64_t uint_fast64_t;
+comment|// SPARC:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// SPARC:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// SPARC:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// SPARC:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// SPARC:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// SPARC:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// SPARC:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// SPARC:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -3852,43 +3816,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// TCE:typedef short int16_t;
-end_comment
-
-begin_comment
 comment|// TCE:typedef int int32_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// TCE:typedef unsigned int uint32_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef unsigned char uint8_t;
+comment|// TCE:typedef int32_t int_least32_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef int8_t int_least8_t;
+comment|// TCE:typedef uint32_t uint_least32_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef uint8_t uint_least8_t;
+comment|// TCE:typedef int32_t int_fast32_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// TCE:typedef uint8_t uint_fast8_t;
+comment|// TCE:typedef uint32_t uint_fast32_t;
 end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// TCE:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -3916,23 +3872,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:typedef unsigned int uint32_t;
+comment|// TCE:typedef signed char int8_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef int32_t int_least32_t;
+comment|// TCE:typedef unsigned char uint8_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef uint32_t uint_least32_t;
+comment|// TCE:typedef int8_t int_least8_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef int32_t int_fast32_t;
+comment|// TCE:typedef uint8_t uint_least8_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef uint32_t uint_fast32_t;
+comment|// TCE:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// TCE:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment
@@ -4256,15 +4216,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef signed char int8_t;
-end_comment
-
-begin_comment
-comment|// X86_64:typedef short int16_t;
-end_comment
-
-begin_comment
-comment|// X86_64:typedef int int32_t;
+comment|//
 end_comment
 
 begin_comment
@@ -4272,27 +4224,23 @@ comment|// X86_64:typedef long int int64_t;
 end_comment
 
 begin_comment
-comment|//
+comment|// X86_64:typedef unsigned long int uint64_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef unsigned char uint8_t;
+comment|// X86_64:typedef int64_t int_least64_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef int8_t int_least8_t;
+comment|// X86_64:typedef uint64_t uint_least64_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef uint8_t uint_least8_t;
+comment|// X86_64:typedef int64_t int_fast64_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef int8_t int_fast8_t;
-end_comment
-
-begin_comment
-comment|// X86_64:typedef uint8_t uint_fast8_t;
+comment|// X86_64:typedef uint64_t uint_fast64_t;
 end_comment
 
 begin_comment
@@ -4300,27 +4248,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef unsigned short uint16_t;
-end_comment
-
-begin_comment
-comment|// X86_64:typedef int16_t int_least16_t;
-end_comment
-
-begin_comment
-comment|// X86_64:typedef uint16_t uint_least16_t;
-end_comment
-
-begin_comment
-comment|// X86_64:typedef int16_t int_fast16_t;
-end_comment
-
-begin_comment
-comment|// X86_64:typedef uint16_t uint_fast16_t;
-end_comment
-
-begin_comment
-comment|//
+comment|// X86_64:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -4348,23 +4276,55 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef unsigned long int uint64_t;
+comment|// X86_64:typedef short int16_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef int64_t int_least64_t;
+comment|// X86_64:typedef unsigned short uint16_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef uint64_t uint_least64_t;
+comment|// X86_64:typedef int16_t int_least16_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef int64_t int_fast64_t;
+comment|// X86_64:typedef uint16_t uint_least16_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef uint64_t uint_fast64_t;
+comment|// X86_64:typedef int16_t int_fast16_t;
+end_comment
+
+begin_comment
+comment|// X86_64:typedef uint16_t uint_fast16_t;
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// X86_64:typedef signed char int8_t;
+end_comment
+
+begin_comment
+comment|// X86_64:typedef unsigned char uint8_t;
+end_comment
+
+begin_comment
+comment|// X86_64:typedef int8_t int_least8_t;
+end_comment
+
+begin_comment
+comment|// X86_64:typedef uint8_t uint_least8_t;
+end_comment
+
+begin_comment
+comment|// X86_64:typedef int8_t int_fast8_t;
+end_comment
+
+begin_comment
+comment|// X86_64:typedef uint8_t uint_fast8_t;
 end_comment
 
 begin_comment

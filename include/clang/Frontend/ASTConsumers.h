@@ -105,9 +105,6 @@ name|class
 name|Preprocessor
 decl_stmt|;
 name|class
-name|PreprocessorFactory
-decl_stmt|;
-name|class
 name|CompileOptions
 decl_stmt|;
 name|class
@@ -264,8 +261,8 @@ operator|&
 name|C
 argument_list|)
 decl_stmt|;
-comment|// HTML printer: uses the rewriter to convert source code to HTML with
-comment|// syntax highlighting suitable for viewing in a web-browser.
+comment|/// CreateHTMLPrinter - Create an AST consumer which rewrites source code to
+comment|/// HTML with syntax highlighting suitable for viewing in a web-browser.
 name|ASTConsumer
 modifier|*
 name|CreateHTMLPrinter
@@ -276,17 +273,19 @@ name|raw_ostream
 operator|*
 name|OS
 argument_list|,
-name|Diagnostic
-operator|&
-name|D
-argument_list|,
 name|Preprocessor
-operator|*
+operator|&
 name|PP
 argument_list|,
-name|PreprocessorFactory
-operator|*
-name|PPF
+name|bool
+name|SyntaxHighlight
+operator|=
+name|true
+argument_list|,
+name|bool
+name|HighlightMacros
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|// PCH generator: generates a precompiled header file; this file can be

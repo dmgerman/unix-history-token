@@ -77,9 +77,6 @@ name|class
 name|Preprocessor
 decl_stmt|;
 name|class
-name|PreprocessorFactory
-decl_stmt|;
-name|class
 name|LangOptions
 decl_stmt|;
 comment|/// Analysis - Set of available source code analyses.
@@ -232,22 +229,10 @@ name|ASTConsumer
 modifier|*
 name|CreateAnalysisConsumer
 argument_list|(
-name|Diagnostic
-operator|&
-name|diags
-argument_list|,
-name|Preprocessor
-operator|*
-name|pp
-argument_list|,
-name|PreprocessorFactory
-operator|*
-name|ppf
-argument_list|,
 specifier|const
-name|LangOptions
+name|Preprocessor
 operator|&
-name|lopts
+name|pp
 argument_list|,
 specifier|const
 name|std

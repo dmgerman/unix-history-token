@@ -108,7 +108,9 @@ name|PreVisitBind
 argument_list|(
 argument|CheckerContext&C
 argument_list|,
-argument|const Stmt *S
+argument|const Stmt *AssignE
+argument_list|,
+argument|const Stmt *StoreE
 argument_list|,
 argument|SVal location
 argument_list|,

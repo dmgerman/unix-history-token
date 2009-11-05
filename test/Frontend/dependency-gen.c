@@ -4,7 +4,7 @@ comment|// rdar://6533411
 end_comment
 
 begin_comment
-comment|// RUN: clang -MD -MF %t.d -c -x c -o %t.o %s&&
+comment|// RUN: clang -MD -MF %t.d -S -x c -o %t.o %s&&
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: grep 'dependency-gen.c' %t.d&&
 end_comment
 
 begin_comment
-comment|// RUN: clang -M -x c %s -o %t.d&&
+comment|// RUN: clang -S -M -x c %s -o %t.d&&
 end_comment
 
 begin_comment

@@ -5006,7 +5006,123 @@ block|}
 end_function
 
 begin_comment
-comment|/// ActOnUsingDirective - This is called when using-directive is parsed.
+comment|/// \brief Parsed a C++ using-declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This callback will be invoked when the parser has parsed a C++
+end_comment
+
+begin_comment
+comment|/// using-declaration, e.g.,
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// namespace std {
+end_comment
+
+begin_comment
+comment|///   template<typename T, typename Alloc> class vector;
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// using std::vector; // using-declaration here
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CurScope the scope in which this using declaration was parsed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AS the currently-active access specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param UsingLoc the location of the 'using' keyword.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS the nested-name-specifier that precedes the name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Name the name to which the using declaration refers.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AttrList attributes applied to this using declaration, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IsTypeName whether this using declaration started with the
+end_comment
+
+begin_comment
+comment|/// 'typename' keyword. FIXME: This will eventually be split into a
+end_comment
+
+begin_comment
+comment|/// separate action.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns a representation of the using declaration.
 end_comment
 
 begin_function_decl
@@ -5029,15 +5145,9 @@ name|CXXScopeSpec
 modifier|&
 name|SS
 parameter_list|,
-name|SourceLocation
-name|IdentLoc
-parameter_list|,
-name|IdentifierInfo
-modifier|*
-name|TargetName
-parameter_list|,
-name|OverloadedOperatorKind
-name|Op
+name|UnqualifiedId
+modifier|&
+name|Name
 parameter_list|,
 name|AttributeList
 modifier|*

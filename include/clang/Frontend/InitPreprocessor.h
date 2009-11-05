@@ -132,8 +132,44 @@ name|string
 operator|>
 name|MacroIncludes
 expr_stmt|;
+name|unsigned
+name|UsePredefines
+range|:
+literal|1
+decl_stmt|;
+comment|/// Initialize the preprocessor with the compiler
+comment|/// and target specific predefines.
 name|public
 label|:
+name|PreprocessorInitOptions
+argument_list|()
+operator|:
+name|UsePredefines
+argument_list|(
+argument|true
+argument_list|)
+block|{}
+name|bool
+name|getUsePredefines
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsePredefines
+return|;
+block|}
+name|void
+name|setUsePredefines
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|UsePredefines
+operator|=
+name|Value
+expr_stmt|;
+block|}
 name|void
 name|addMacroDef
 argument_list|(
@@ -364,9 +400,9 @@ block|}
 block|}
 empty_stmt|;
 comment|/// InitializePreprocessor - Initialize the preprocessor getting it and the
-comment|/// environment ready to process a single file. This returns true on error.
+comment|/// environment ready to process a single file.
 comment|///
-name|bool
+name|void
 name|InitializePreprocessor
 parameter_list|(
 name|Preprocessor
@@ -377,9 +413,6 @@ specifier|const
 name|PreprocessorInitOptions
 modifier|&
 name|InitOptions
-parameter_list|,
-name|bool
-name|undef_macros
 parameter_list|)
 function_decl|;
 block|}

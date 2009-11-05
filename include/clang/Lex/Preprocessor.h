@@ -340,6 +340,7 @@ decl_stmt|;
 comment|// True if parsing fn macro invocation args.
 comment|/// Identifiers - This is mapping/lookup information for all identifiers in
 comment|/// the program, including program keywords.
+name|mutable
 name|IdentifierTable
 name|Identifiers
 decl_stmt|;
@@ -1073,17 +1074,13 @@ comment|/// std::string).
 name|IdentifierInfo
 modifier|*
 name|getIdentifierInfo
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|NameStart
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|NameEnd
-parameter_list|)
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Name
+argument_list|)
+decl|const
 block|{
 return|return
 operator|&
@@ -1091,33 +1088,7 @@ name|Identifiers
 operator|.
 name|get
 argument_list|(
-name|NameStart
-argument_list|,
-name|NameEnd
-argument_list|)
-return|;
-block|}
-name|IdentifierInfo
-modifier|*
-name|getIdentifierInfo
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|NameStr
-parameter_list|)
-block|{
-return|return
-name|getIdentifierInfo
-argument_list|(
-name|NameStr
-argument_list|,
-name|NameStr
-operator|+
-name|strlen
-argument_list|(
-name|NameStr
-argument_list|)
+name|Name
 argument_list|)
 return|;
 block|}
@@ -1948,19 +1919,20 @@ comment|/// identifier information for the token and install it into the token.
 name|IdentifierInfo
 modifier|*
 name|LookUpIdentifierInfo
-parameter_list|(
+argument_list|(
 name|Token
-modifier|&
+operator|&
 name|Identifier
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|BufPtr
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// HandleIdentifier - This callback is invoked when the lexer reads an
 comment|/// identifier and has filled in the tokens IdentifierInfo member.  This
 comment|/// callback potentially macro expands it or turns it into a named token (like
@@ -2813,28 +2785,6 @@ parameter_list|(
 name|SourceRange
 name|Comment
 parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
-comment|/// PreprocessorFactory - A generic factory interface for lazily creating
-comment|///  Preprocessor objects on-demand when they are needed.
-name|class
-name|PreprocessorFactory
-block|{
-name|public
-label|:
-name|virtual
-operator|~
-name|PreprocessorFactory
-argument_list|()
-expr_stmt|;
-name|virtual
-name|Preprocessor
-modifier|*
-name|CreatePreprocessor
-parameter_list|()
-init|=
-literal|0
 function_decl|;
 block|}
 empty_stmt|;

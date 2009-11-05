@@ -253,6 +253,13 @@ argument_list|(
 argument|trim
 argument_list|)
 block|{}
+operator|~
+name|AnalysisManager
+argument_list|()
+block|{
+name|FlushDiagnostics
+argument_list|()
+block|; }
 name|void
 name|ClearContexts
 argument_list|()
@@ -341,6 +348,23 @@ operator|.
 name|get
 argument_list|()
 return|;
+block|}
+name|void
+name|FlushDiagnostics
+argument_list|()
+block|{
+if|if
+condition|(
+name|PD
+operator|.
+name|get
+argument_list|()
+condition|)
+name|PD
+operator|->
+name|FlushDiagnostics
+argument_list|()
+expr_stmt|;
 block|}
 name|bool
 name|shouldVisualizeGraphviz

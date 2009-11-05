@@ -113,7 +113,7 @@ name|ASTConsumer
 argument_list|()
 block|{}
 comment|/// Initialize - This is called to initialize the consumer, providing the
-comment|/// ASTContext and the Action.
+comment|/// ASTContext.
 name|virtual
 name|void
 name|Initialize
@@ -122,9 +122,9 @@ argument|ASTContext&Context
 argument_list|)
 block|{}
 comment|/// HandleTopLevelDecl - Handle the specified top-level declaration.  This is
-comment|///  called by the parser to process every top-level Decl*. Note that D can
-comment|///  be the head of a chain of Decls (e.g. for `int a, b` the chain will have
-comment|///  two elements). Use Decl::getNextDeclarator() to walk the chain.
+comment|/// called by the parser to process every top-level Decl*. Note that D can be
+comment|/// the head of a chain of Decls (e.g. for `int a, b` the chain will have two
+comment|/// elements). Use Decl::getNextDeclarator() to walk the chain.
 name|virtual
 name|void
 name|HandleTopLevelDecl
@@ -133,7 +133,7 @@ argument|DeclGroupRef D
 argument_list|)
 expr_stmt|;
 comment|/// HandleTranslationUnit - This method is called when the ASTs for entire
-comment|///  translation unit have been parsed.
+comment|/// translation unit have been parsed.
 name|virtual
 name|void
 name|HandleTranslationUnit
@@ -156,9 +156,9 @@ modifier|*
 name|D
 parameter_list|)
 block|{}
-comment|/// \brief Callback invoked at the end of a translation unit to
-comment|/// notify the consumer that the given tentative definition should
-comment|/// be completed.
+comment|/// CompleteTentativeDefinition - Callback invoked at the end of a translation
+comment|/// unit to notify the consumer that the given tentative definition should be
+comment|/// completed.
 comment|///
 comment|/// The variable declaration itself will be a tentative
 comment|/// definition. If it had an incomplete array type, its type will
@@ -179,7 +179,7 @@ name|virtual
 name|void
 name|PrintStats
 parameter_list|()
-block|{   }
+block|{}
 comment|// Support isa/cast/dyn_cast
 specifier|static
 name|bool

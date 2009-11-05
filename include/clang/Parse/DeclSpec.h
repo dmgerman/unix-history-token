@@ -347,6 +347,12 @@ name|Friend_specified
 range|:
 literal|1
 decl_stmt|;
+comment|// constexpr-specifier
+name|bool
+name|Constexpr_specified
+range|:
+literal|1
+decl_stmt|;
 comment|/// TypeRep - This contains action-specific information about a specific TST.
 comment|/// For example, for a typedef or struct, it might contain the declaration for
 comment|/// these.
@@ -414,6 +420,8 @@ name|FS_explicitLoc
 decl_stmt|;
 name|SourceLocation
 name|FriendLoc
+decl_stmt|,
+name|ConstexprLoc
 decl_stmt|;
 name|DeclSpec
 argument_list|(
@@ -494,6 +502,11 @@ name|false
 argument_list|)
 operator|,
 name|Friend_specified
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Constexpr_specified
 argument_list|(
 name|false
 argument_list|)
@@ -1256,6 +1269,23 @@ name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
+name|SetConstexprSpec
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
+parameter_list|)
+function_decl|;
+name|bool
 name|isFriendSpecified
 argument_list|()
 specifier|const
@@ -1271,6 +1301,24 @@ specifier|const
 block|{
 return|return
 name|FriendLoc
+return|;
+block|}
+name|bool
+name|isConstexprSpecified
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Constexpr_specified
+return|;
+block|}
+name|SourceLocation
+name|getConstexprSpecLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ConstexprLoc
 return|;
 block|}
 comment|/// AddAttributes - contatenates two attribute lists.
