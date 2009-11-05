@@ -4148,11 +4148,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|arge_rx_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+block|{
+comment|/* XXX: handle promisc& multi flags */
+block|}
 block|}
 else|else
 block|{
