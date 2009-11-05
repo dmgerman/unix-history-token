@@ -3341,6 +3341,28 @@ name|mips_bus_space_generic
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Special bus space for RMI processors */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TARGET_XLR_XLS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|bus_space_tag_t
+name|rmi_bus_space
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
