@@ -464,6 +464,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -517,6 +521,10 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -554,6 +562,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -606,6 +618,10 @@ name|xlrirq
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&

@@ -15,6 +15,13 @@ directive|define
 name|_RMI_PIC_H_
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|rmi_spin_mutex_safe
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
@@ -1080,6 +1087,10 @@ decl_stmt|;
 name|__uint32_t
 name|reg
 decl_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1093,6 +1104,10 @@ argument_list|,
 name|PIC_CTRL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1124,6 +1139,10 @@ argument_list|(
 name|XLR_IO_PIC_OFFSET
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1139,6 +1158,10 @@ argument_list|,
 name|control
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1167,6 +1190,10 @@ argument_list|(
 name|XLR_IO_PIC_OFFSET
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1191,6 +1218,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1237,6 +1268,10 @@ name|irq
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1260,6 +1295,10 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1309,6 +1348,10 @@ name|irq
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1332,6 +1375,10 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&

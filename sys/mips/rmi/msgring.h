@@ -1982,7 +1982,7 @@ name|lock
 parameter_list|,
 name|mflags
 parameter_list|)
-value|do {                \   mtx_lock_spin(lock);                                       \   msgrng_flags_save(mflags);                                 \  }while(0)
+value|do {                \   if (rmi_spin_mutex_safe) mtx_lock_spin(lock);              \   msgrng_flags_save(mflags);                                 \  }while(0)
 end_define
 
 begin_define
@@ -1994,7 +1994,7 @@ name|lock
 parameter_list|,
 name|mflags
 parameter_list|)
-value|do {             \   msgrng_flags_restore(mflags);                              \   mtx_unlock_spin(lock);                                     \  }while(0)
+value|do {             \   msgrng_flags_restore(mflags);                              \   if (rmi_spin_mutex_safe) mtx_unlock_spin(lock);            \  }while(0)
 end_define
 
 begin_define

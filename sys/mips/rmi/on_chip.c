@@ -1129,6 +1129,10 @@ return|return
 literal|1
 return|;
 comment|//dbg_msg("major=%d, action=%p, dev_id=%p\n", major, action, dev_id);
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1153,6 +1157,10 @@ name|dev_id
 operator|=
 name|dev_id
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1304,6 +1312,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|dbg_msg
+argument_list|(
+literal|"PIC init now done\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

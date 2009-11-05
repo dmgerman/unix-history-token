@@ -24,6 +24,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|XLR_DEVICE_REGISTER_BASE
+value|0x1EF00000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_XLR_IO_BASE
 value|0xffffffffbef00000ULL
 end_define
@@ -187,6 +194,13 @@ define|#
 directive|define
 name|XLR_IO_UART_1_OFFSET
 value|0x15000
+end_define
+
+begin_define
+define|#
+directive|define
+name|XLR_UART0ADDR
+value|(XLR_IO_UART_0_OFFSET+XLR_DEVICE_REGISTER_BASE)
 end_define
 
 begin_define

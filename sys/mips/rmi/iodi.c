@@ -409,6 +409,10 @@ literal|0
 condition|)
 block|{
 comment|/* FIXME uart 1? */
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -462,6 +466,10 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -520,6 +528,10 @@ argument_list|(
 name|ires
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -570,6 +582,10 @@ literal|31
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -618,6 +634,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -668,6 +688,10 @@ literal|31
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmi_spin_mutex_safe
+condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
