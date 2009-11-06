@@ -272,6 +272,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AHA_39320LPE
+value|0x8017900500459005ull
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AIC7902_PCI_REV_A4
 value|0x3
 end_define
@@ -603,6 +610,16 @@ block|,
 name|ID_ALL_MASK
 block|,
 literal|"Adaptec (HP OEM) 39320D Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7902_setup
+block|}
+block|,
+block|{
+name|ID_AHA_39320LPE
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 39320LPE Ultra320 SCSI adapter"
 block|,
 name|ahd_aic7902_setup
 block|}
