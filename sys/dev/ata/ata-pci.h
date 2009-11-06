@@ -393,6 +393,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_ADAPTEC_1430
+value|0x02439005
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ATI_ID
 value|0x1002
 end_define
@@ -1156,8 +1163,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_M88SX6042
+value|0x604211ab
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_M88SX6081
 value|0x608111ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX7042
+value|0x704211ab
 end_define
 
 begin_define
