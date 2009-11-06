@@ -91,15 +91,6 @@ end_include
 
 begin_function_decl
 name|void
-name|xlr_putc
-parameter_list|(
-name|char
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|xlr_print_int
 parameter_list|(
 name|uint32_t

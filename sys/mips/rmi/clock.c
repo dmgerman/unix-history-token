@@ -651,6 +651,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|tick_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|platform_initclocks
@@ -983,6 +992,9 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+name|tick_init
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
