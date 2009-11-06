@@ -2157,6 +2157,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|ln
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|done
 goto|;
