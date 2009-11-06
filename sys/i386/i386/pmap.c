@@ -2142,14 +2142,14 @@ operator|!=
 name|CPU_VENDOR_INTEL
 operator|||
 operator|(
-name|I386_CPU_FAMILY
+name|CPUID_TO_FAMILY
 argument_list|(
 name|cpu_id
 argument_list|)
 operator|==
 literal|6
 operator|&&
-name|I386_CPU_MODEL
+name|CPUID_TO_MODEL
 argument_list|(
 name|cpu_id
 argument_list|)
