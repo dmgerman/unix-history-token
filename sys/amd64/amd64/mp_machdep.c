@@ -513,6 +513,11 @@ name|cpu_disabled
 range|:
 literal|1
 decl_stmt|;
+name|int
+name|cpu_hyperthread
+range|:
+literal|1
+decl_stmt|;
 block|}
 decl|static
 name|cpu_info
@@ -1380,13 +1385,6 @@ literal|"BSP's APIC ID doesn't match boot_cpu_id"
 operator|)
 argument_list|)
 expr_stmt|;
-name|assign_cpu_ids
-argument_list|()
-expr_stmt|;
-comment|/* Start each Application Processor */
-name|start_all_aps
-argument_list|()
-expr_stmt|;
 comment|/* Setup the initial logical CPUs info. */
 name|logical_cpus
 operator|=
@@ -1519,6 +1517,13 @@ operator|=
 name|logical_cpus
 expr_stmt|;
 block|}
+name|assign_cpu_ids
+argument_list|()
+expr_stmt|;
+comment|/* Start each Application Processor */
+name|start_all_aps
+argument_list|()
+expr_stmt|;
 name|set_interrupt_apic_ids
 argument_list|()
 expr_stmt|;
@@ -1536,10 +1541,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|hyperthread
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* List active CPUs first. */
+comment|/* List Active CPUs first. */
 name|printf
 argument_list|(
 literal|" cpu0 (BSP): APIC ID: %2d\n"
@@ -2469,6 +2479,27 @@ operator|.
 name|cpu_bsp
 condition|)
 continue|continue;
+if|if
+condition|(
+name|hyperthreading_cpus
+operator|>
+literal|1
+operator|&&
+name|i
+operator|%
+name|hyperthreading_cpus
+operator|!=
+literal|0
+condition|)
+name|cpu_info
+index|[
+name|i
+index|]
+operator|.
+name|cpu_hyperthread
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Don't use this CPU if it has been disabled by a tunable. */
 if|if
 condition|(
@@ -2492,7 +2523,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* 	 * Assign CPU IDs to local APIC IDs and disable any CPUs 	 * beyond MAXCPU.  CPU 0 is always assigned to the BSP. 	 * 	 * To minimize confusion for userland, we attempt to number 	 * CPUs such that all threads and cores in a package are 	 * grouped together.  For now we assume that the BSP is always 	 * the first thread in a package and just start adding APs 	 * starting with the BSP's APIC ID. 	 */
+comment|/* 	 * Assign CPU IDs to local APIC IDs and disable any CPUs 	 * beyond MAXCPU.  CPU 0 is always assigned to the BSP. 	 *  	 * To minimize confusion for userland, we attempt to number 	 * CPUs such that all the threads and cores in a package are 	 * grouped together. For now we assume that the BSP is always 	 * the first thread in a package and just start adding APs 	 * starting with the BSP's APIC ID. 	 */
 name|mp_ncpus
 operator|=
 literal|1
@@ -2503,13 +2534,6 @@ literal|0
 index|]
 operator|=
 name|boot_cpu_id
-expr_stmt|;
-name|apic_cpuids
-index|[
-name|boot_cpu_id
-index|]
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
