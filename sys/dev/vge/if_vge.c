@@ -4204,12 +4204,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|vge_unit
-operator|=
-name|unit
-expr_stmt|;
 comment|/* 	 * Allocate the parent bus DMA tag appropriate for PCI. 	 */
 define|#
 directive|define
@@ -4301,13 +4295,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vge%d: can not if_alloc()\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|vge_unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4336,13 +4328,11 @@ name|vge_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vge%d: MII without any phy!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|vge_unit
+literal|"MII without any phy!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -7450,13 +7440,13 @@ operator|!=
 name|EFBIG
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vge%d: can't map mbuf (error %d)\n"
-argument_list|,
 name|sc
 operator|->
-name|vge_unit
+name|vge_ifp
+argument_list|,
+literal|"can't map mbuf (error %d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -7555,13 +7545,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vge%d: can't map mbuf (error %d)\n"
-argument_list|,
 name|sc
 operator|->
-name|vge_unit
+name|vge_ifp
+argument_list|,
+literal|"can't map mbuf (error %d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -9469,13 +9459,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"vge%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|vge_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|ifp

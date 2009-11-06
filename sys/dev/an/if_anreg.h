@@ -1872,9 +1872,6 @@ modifier|*
 name|an_ifp
 decl_stmt|;
 name|int
-name|an_unit
-decl_stmt|;
-name|int
 name|port_rid
 decl_stmt|;
 comment|/* resource id for port range */

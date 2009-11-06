@@ -838,9 +838,6 @@ decl_stmt|;
 name|int
 name|io_rid
 decl_stmt|;
-name|u_int8_t
-name|unit
-decl_stmt|;
 name|struct
 name|mtx
 name|mtx
