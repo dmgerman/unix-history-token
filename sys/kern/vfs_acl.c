@@ -682,7 +682,7 @@ break|break;
 default|default:
 if|if
 condition|(
-name|fuword
+name|fuword32
 argument_list|(
 operator|(
 name|char
