@@ -277,6 +277,14 @@ block|,
 block|{
 name|AIRONET_VENDORID
 block|,
+name|AIRONET_DEVICEID_MPI350
+block|,
+literal|"Cisco Aironet MPI350"
+block|}
+block|,
+block|{
+name|AIRONET_VENDORID
+block|,
 name|AIRONET_DEVICEID_4500
 block|,
 literal|"Aironet PCI4500"
@@ -442,41 +450,6 @@ name|t
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|AIRONET_VENDORID
-operator|&&
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|AIRONET_DEVICEID_MPI350
-condition|)
-block|{
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Cisco Aironet MPI350"
-argument_list|)
-expr_stmt|;
-name|an_pci_probe
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|BUS_PROBE_DEFAULT
-operator|)
-return|;
-block|}
 return|return
 operator|(
 name|ENXIO
@@ -505,8 +478,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|flags
 decl_stmt|,
 name|error
@@ -516,13 +487,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -617,11 +581,11 @@ name|PCIM_CMD_PORTEN
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: failed to enable I/O ports!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to enable I/O ports!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -657,11 +621,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: couldn't map ports\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -726,11 +690,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: couldn't map memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map memory\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -787,11 +751,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: couldn't map aux memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map aux memory\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -873,11 +837,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: couldn't get DMA region\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't get DMA region\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -902,6 +866,13 @@ condition|(
 name|error
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"couldn't get interrupt\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -918,11 +889,6 @@ name|an_attach
 argument_list|(
 name|sc
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
@@ -931,6 +897,13 @@ condition|(
 name|error
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"couldn't attach\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -958,6 +931,17 @@ operator|&
 name|sc
 operator|->
 name|irq_handle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"couldn't setup interrupt\n"
 argument_list|)
 expr_stmt|;
 name|fail

@@ -3383,9 +3383,6 @@ modifier|*
 name|sc
 parameter_list|,
 name|int
-name|unit
-parameter_list|,
-name|int
 name|flags
 parameter_list|)
 block|{

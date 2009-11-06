@@ -539,11 +539,6 @@ name|an_attach
 argument_list|(
 name|sc
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
