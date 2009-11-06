@@ -1231,14 +1231,14 @@ name|CPU_VENDOR_CENTAUR
 case|:
 if|if
 condition|(
-name|AMD64_CPU_FAMILY
+name|CPUID_TO_FAMILY
 argument_list|(
 name|cpu_id
 argument_list|)
 operator|==
 literal|0x6
 operator|&&
-name|AMD64_CPU_MODEL
+name|CPUID_TO_MODEL
 argument_list|(
 name|cpu_id
 argument_list|)
