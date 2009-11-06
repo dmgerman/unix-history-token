@@ -13190,41 +13190,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_JRAWLEN
-value|(BGE_JUMBO_FRAMELEN + ETHER_ALIGN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_JLEN
-value|(BGE_JRAWLEN + (sizeof(uint64_t) - \ 	(BGE_JRAWLEN % sizeof(uint64_t))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_JPAGESZ
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_RESID
-value|(BGE_JPAGESZ - (BGE_JLEN * BGE_JSLOTS) % BGE_JPAGESZ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_JMEM
-value|((BGE_JLEN * BGE_JSLOTS) + BGE_RESID)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BGE_NSEG_JUMBO
 value|4
 end_define
