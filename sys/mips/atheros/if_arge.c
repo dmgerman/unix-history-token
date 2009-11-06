@@ -2954,7 +2954,7 @@ name|sec_cfg
 operator|=
 name|ATH_READ_REG
 argument_list|(
-name|AR71XX_PLL_CPU_CONFIG
+name|AR71XX_PLL_SEC_CONFIG
 argument_list|)
 expr_stmt|;
 name|sec_cfg
