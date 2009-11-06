@@ -3343,12 +3343,6 @@ name|ath_start
 expr_stmt|;
 name|ifp
 operator|->
-name|if_watchdog
-operator|=
-name|NULL
-expr_stmt|;
-name|ifp
-operator|->
 name|if_ioctl
 operator|=
 name|ath_ioctl

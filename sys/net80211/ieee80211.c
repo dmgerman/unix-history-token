@@ -1984,13 +1984,6 @@ name|ieee80211_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_watchdog
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* NB: no watchdog routine */
-name|ifp
-operator|->
 name|if_init
 operator|=
 name|ieee80211_init

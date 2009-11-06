@@ -5289,19 +5289,6 @@ name|cxgb_start
 expr_stmt|;
 name|ifp
 operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Disable ifnet watchdog */
-name|ifp
-operator|->
-name|if_watchdog
-operator|=
-name|NULL
-expr_stmt|;
-name|ifp
-operator|->
 name|if_snd
 operator|.
 name|ifq_drv_maxlen
