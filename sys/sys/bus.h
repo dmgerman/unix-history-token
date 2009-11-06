@@ -2267,6 +2267,10 @@ name|dc
 parameter_list|,
 name|kobj_class_t
 name|driver
+parameter_list|,
+name|devclass_t
+modifier|*
+name|dcp
 parameter_list|)
 function_decl|;
 end_function_decl
