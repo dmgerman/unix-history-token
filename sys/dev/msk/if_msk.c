@@ -228,12 +228,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mii/brgphyreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
