@@ -429,6 +429,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|E500
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -442,6 +448,11 @@ name|vers
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -750,6 +761,9 @@ name|vers
 argument_list|)
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|E500
 case|case
 name|IBM970
 case|:
@@ -770,6 +784,8 @@ name|vers
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|FSL_E500v1
 case|:
@@ -1657,6 +1673,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|E500
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -1810,6 +1832,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
 unit|}
+endif|#
+directive|endif
+end_endif
+
 end_unit
 
