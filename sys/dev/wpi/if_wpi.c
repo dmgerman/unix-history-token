@@ -250,12 +250,6 @@ directive|include
 file|<dev/wpi/if_wpivar.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|WPI_DEBUG
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
