@@ -13552,12 +13552,6 @@ name|bge_init
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_snd
 operator|.
 name|ifq_drv_maxlen
@@ -14043,6 +14037,19 @@ operator|->
 name|bge_mtx
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Tell upper layer we support long frames. */
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_hdrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_vlan_header
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Hookup IRQ last. 	 */
