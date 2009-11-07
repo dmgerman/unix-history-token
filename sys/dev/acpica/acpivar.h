@@ -212,9 +212,6 @@ comment|/* ACPI ivars */
 name|ACPI_HANDLE
 name|ad_handle
 decl_stmt|;
-name|uintptr_t
-name|ad_magic
-decl_stmt|;
 name|void
 modifier|*
 name|ad_private
@@ -727,9 +724,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_IVAR_MAGIC
+name|ACPI_IVAR_UNUSED
 value|0x101
 end_define
+
+begin_comment
+comment|/* Unused/reserved. */
+end_comment
 
 begin_define
 define|#
@@ -780,21 +781,6 @@ argument_list|,
 argument|HANDLE
 argument_list|,
 argument|ACPI_HANDLE
-argument_list|)
-end_macro
-
-begin_macro
-name|__ACPI_BUS_ACCESSOR
-argument_list|(
-argument|acpi
-argument_list|,
-argument|magic
-argument_list|,
-argument|ACPI
-argument_list|,
-argument|MAGIC
-argument_list|,
-argument|uintptr_t
 argument_list|)
 end_macro
 
