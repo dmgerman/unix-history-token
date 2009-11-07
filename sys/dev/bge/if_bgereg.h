@@ -13362,10 +13362,16 @@ name|BGE_TX_RING_CNT
 index|]
 decl_stmt|;
 name|bus_dmamap_t
+name|bge_rx_std_sparemap
+decl_stmt|;
+name|bus_dmamap_t
 name|bge_rx_std_dmamap
 index|[
 name|BGE_STD_RX_RING_CNT
 index|]
+decl_stmt|;
+name|bus_dmamap_t
+name|bge_rx_jumbo_sparemap
 decl_stmt|;
 name|bus_dmamap_t
 name|bge_rx_jumbo_dmamap
