@@ -2304,7 +2304,7 @@ name|USB_PRODUCT_OLYMPUS_C700
 block|,
 name|RID_WILDCARD
 block|,
-name|UMASS_PROTO_SCSI
+name|UMASS_PROTO_DEFAULT
 block|,
 name|NO_GETMAXLUN
 block|}
