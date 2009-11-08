@@ -1103,6 +1103,17 @@ name|AR71XX_MAC1_BASE
 value|0x1A000000
 end_define
 
+begin_comment
+comment|/*  * All 5 PHYs accessible only through MAC0 register space  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR71XX_MII_BASE
+value|0x19000000
+end_define
+
 begin_define
 define|#
 directive|define

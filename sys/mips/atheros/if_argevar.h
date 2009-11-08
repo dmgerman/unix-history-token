@@ -206,6 +206,34 @@ define|\
 value|ARGE_WRITE(sc, reg, ARGE_READ(sc, (reg))& ~(bits))
 end_define
 
+begin_comment
+comment|/*  * MII registers access macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARGE_MII_READ
+parameter_list|(
+name|reg
+parameter_list|)
+define|\
+value|*((volatile uint32_t *)MIPS_PHYS_TO_KSEG1((AR71XX_MII_BASE + reg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGE_MII_WRITE
+parameter_list|(
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|*((volatile uint32_t *)MIPS_PHYS_TO_KSEG1((AR71XX_MII_BASE + reg))) = (val)
+end_define
+
 begin_define
 define|#
 directive|define
