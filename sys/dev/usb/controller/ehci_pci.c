@@ -1071,14 +1071,6 @@ comment|/* fallthrough */
 case|case
 name|PCI_USB_REV_2_0
 case|:
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|usbrev
-operator|=
-name|USB_REV_2_0
-expr_stmt|;
 break|break;
 default|default:
 comment|/* Quirk for Parallels Desktop 4.0 */
@@ -1088,14 +1080,6 @@ name|self
 argument_list|,
 literal|"USB revision is unknown. Assuming v2.0.\n"
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|usbrev
-operator|=
-name|USB_REV_2_0
 expr_stmt|;
 break|break;
 block|}
