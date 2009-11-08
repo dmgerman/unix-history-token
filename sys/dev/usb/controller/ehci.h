@@ -1434,6 +1434,10 @@ name|struct
 name|usb_callout
 name|sc_tmo_pcd
 decl_stmt|;
+name|struct
+name|usb_callout
+name|sc_tmo_poll
+decl_stmt|;
 name|union
 name|ehci_hub_desc
 name|sc_hub_desc
@@ -1549,6 +1553,11 @@ directive|define
 name|EHCI_SCFLG_TT
 value|0x0020
 comment|/* transaction translator present */
+define|#
+directive|define
+name|EHCI_SCFLG_LOSTINTRBUG
+value|0x0040
+comment|/* workaround for VIA / ATI chipsets */
 name|uint8_t
 name|sc_offs
 decl_stmt|;
