@@ -9021,6 +9021,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"                       eg. zfs:tank\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"                       eg. ufs:/dev/da0s1a\n"
 argument_list|)
 expr_stmt|;
