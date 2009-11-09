@@ -13649,6 +13649,7 @@ name|ifp
 operator|->
 name|if_capenable
 operator|&=
+operator|~
 name|IFCAP_HWCSUM
 expr_stmt|;
 name|ifp
