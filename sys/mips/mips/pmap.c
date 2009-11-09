@@ -1488,21 +1488,6 @@ argument_list|,
 name|MSGBUF_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* Steal memory for the dynamic per-cpu area. */
-name|dpcpu_init
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|pmap_steal_memory
-argument_list|(
-name|DPCPU_SIZE
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Steal thread0 kstack. 	 */
 name|kstack0
 operator|=
