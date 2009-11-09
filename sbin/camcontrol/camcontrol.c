@@ -19660,7 +19660,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 name|u_char
