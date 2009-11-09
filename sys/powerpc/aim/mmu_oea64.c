@@ -4134,7 +4134,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|size
+name|sz
 operator|>
 sizeof|sizeof
 argument_list|(
