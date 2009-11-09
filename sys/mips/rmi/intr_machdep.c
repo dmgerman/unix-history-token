@@ -542,9 +542,11 @@ condition|(
 operator|(
 name|eirr
 operator|&
+operator|(
 literal|1ULL
 operator|<<
 name|i
+operator|)
 operator|)
 operator|==
 literal|0
