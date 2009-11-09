@@ -30,7 +30,7 @@ value|(xlr_boot1_info.cpu_frequency)
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|count_compare_clockhandler
 parameter_list|(
 name|struct
@@ -41,7 +41,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pic_hardclockhandler
 parameter_list|(
 name|struct

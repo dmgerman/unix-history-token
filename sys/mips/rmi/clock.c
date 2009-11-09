@@ -288,7 +288,7 @@ comment|/* * count_compare_clockhandler: * * Handle the clock interrupt when cou
 end_comment
 
 begin_function
-name|void
+name|int
 name|count_compare_clockhandler
 parameter_list|(
 name|struct
@@ -413,11 +413,16 @@ block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|pic_hardclockhandler
 parameter_list|(
 name|struct
@@ -525,6 +530,11 @@ block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -568,7 +578,7 @@ argument_list|(
 name|XLR_IO_PIC_OFFSET
 argument_list|)
 decl_stmt|;
-comment|/* We do this to get the PIC time counter running right 	 * after system start. Otherwise the DELAY() function will 	 * not be able to work since it won't have a TC to read. 	 */
+comment|/* 	 * We do this to get the PIC time counter running right after system 	 * start. Otherwise the DELAY() function will not be able to work 	 * since it won't have a TC to read. 	 */
 name|xlr_write_reg
 argument_list|(
 name|mmio
@@ -685,13 +695,13 @@ name|cpu_establish_hardintr
 argument_list|(
 literal|"compare"
 argument_list|,
-name|NULL
-argument_list|,
 operator|(
-name|driver_intr_t
+name|driver_filter_t
 operator|*
 operator|)
 name|count_compare_clockhandler
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -710,13 +720,13 @@ name|cpu_establish_hardintr
 argument_list|(
 literal|"hardclk"
 argument_list|,
-name|NULL
-argument_list|,
 operator|(
-name|driver_intr_t
+name|driver_filter_t
 operator|*
 operator|)
 name|pic_hardclockhandler
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
