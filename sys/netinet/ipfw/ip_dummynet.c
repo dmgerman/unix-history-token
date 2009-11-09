@@ -1432,7 +1432,7 @@ name|QUEUE_IS_IDLE
 parameter_list|(
 name|q
 parameter_list|)
-value|((q)->head == NULL&& (q)->S == (q)->F + 1&& \ 	curr_time> (q)->idle_time + 1&& \ 	((q)->numbytes + (curr_time - (q)->idle_time - 1) * \ 	(q)->fs->pipe->bandwidth>= q->fs->pipe->burst))
+value|((q)->head == NULL&& (q)->S == (q)->F + 1&& \ 	curr_time> (q)->idle_time + 1&& \ 	((q)->numbytes + (curr_time - (q)->idle_time - 1) * \ 	(q)->fs->pipe->bandwidth>= (q)->fs->pipe->burst))
 end_define
 
 begin_comment
