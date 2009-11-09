@@ -727,7 +727,7 @@ name|cookiep
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* This causes a panic and looks recursive to me (RRS). 	BUS_SETUP_INTR(device_get_parent(dev), 	    child, ires, flags, filt, intr, arg, cookiep); 	*/
+comment|/* 	 * This causes a panic and looks recursive to me (RRS). 	 * BUS_SETUP_INTR(device_get_parent(dev), child, ires, flags, filt, 	 * intr, arg, cookiep); 	 */
 return|return
 operator|(
 literal|0
