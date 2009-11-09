@@ -105,6 +105,31 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * -1: automatic (default)  *  0: keep enable CLFLUSH  *  1: force disable CLFLUSH  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|hw_clflush_disable
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.clflush_disable"
+argument_list|,
+operator|&
+name|hw_clflush_disable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|int
 name|cpu
@@ -750,6 +775,14 @@ operator|*
 literal|8
 expr_stmt|;
 comment|/* 	 * XXXKIB: (temporary) hack to work around traps generated when 	 * CLFLUSHing APIC registers window. 	 */
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.clflush_disable"
+argument_list|,
+operator|&
+name|hw_clflush_disable
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cpu_vendor_id
@@ -762,12 +795,31 @@ name|cpu_feature
 operator|&
 name|CPUID_SS
 operator|)
+operator|&&
+name|hw_clflush_disable
+operator|==
+operator|-
+literal|1
 condition|)
 name|cpu_feature
 operator|&=
 operator|~
 name|CPUID_CLFSH
 expr_stmt|;
+comment|/* 	 * Allow to disable CLFLUSH feature manually by 	 * hw.clflush_disable tunable.  This may help Xen guest on some AMD 	 * CPUs. 	 */
+if|if
+condition|(
+name|hw_clflush_disable
+operator|==
+literal|1
+condition|)
+block|{
+name|cpu_feature
+operator|&=
+operator|~
+name|CPUID_CLFSH
+expr_stmt|;
+block|}
 block|}
 end_function
 
