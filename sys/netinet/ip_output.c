@@ -1888,9 +1888,6 @@ name|flags
 argument_list|,
 operator|&
 name|error
-argument_list|,
-operator|&
-name|ifp
 argument_list|)
 condition|)
 block|{
