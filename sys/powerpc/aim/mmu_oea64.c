@@ -743,7 +743,7 @@ name|struct
 name|ofw_map
 name|translations
 index|[
-literal|64
+literal|96
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -4119,6 +4119,28 @@ condition|)
 name|panic
 argument_list|(
 literal|"moea64_bootstrap: can't get ofw translation count"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|>
+sizeof|sizeof
+argument_list|(
+name|translations
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"moea64_bootstrap: too many ofw translations (%d)"
+argument_list|,
+name|sz
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|translations
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bzero
