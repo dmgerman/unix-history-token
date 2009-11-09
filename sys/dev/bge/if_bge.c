@@ -18335,6 +18335,25 @@ literal|0
 condition|)
 comment|/* No packets were dequeued. */
 return|return;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_tx_ring_tag
+argument_list|,
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_tx_ring_map
+argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
+name|BUS_DMASYNC_PREWRITE
+argument_list|)
+expr_stmt|;
 comment|/* Transmit. */
 name|bge_writembx
 argument_list|(
