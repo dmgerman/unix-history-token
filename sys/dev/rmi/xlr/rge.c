@@ -10082,17 +10082,21 @@ operator|%
 literal|4
 expr_stmt|;
 comment|/* Set the IRQ into the rid field */
-name|rman_set_rid
-argument_list|(
-operator|&
+comment|/* note this is a hack to pass the irq to the iodi interrupt setup routines */
 name|sc
 operator|->
 name|rge_irq
-argument_list|,
+operator|.
+name|__r_i
+operator|=
+operator|(
+expr|struct
+name|resource_i
+operator|*
+operator|)
 name|sc
 operator|->
 name|irq
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
