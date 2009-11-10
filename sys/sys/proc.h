@@ -4615,6 +4615,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cpu_set_syscall_retval
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cpu_set_upcall
 parameter_list|(
 name|struct
