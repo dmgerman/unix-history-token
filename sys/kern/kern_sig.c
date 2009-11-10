@@ -7706,6 +7706,13 @@ operator||=
 name|TDP_OLDMASK
 expr_stmt|;
 comment|/* 	 * Process signals now. Otherwise, we can get spurious wakeup 	 * due to signal entered process queue, but delivered to other 	 * thread. But sigsuspend should return only on signal 	 * delivery. 	 */
+name|cpu_set_syscall_retval
+argument_list|(
+name|td
+argument_list|,
+name|EINTR
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|has_sig
@@ -7774,17 +7781,13 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
+name|has_sig
+operator|+=
 name|postsig
 argument_list|(
 name|sig
 argument_list|)
 expr_stmt|;
-name|has_sig
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -7801,10 +7804,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* always return EINTR rather than ERESTART... */
 return|return
 operator|(
-name|EINTR
+name|EJUSTRETURN
 operator|)
 return|;
 block|}
@@ -12908,7 +12910,7 @@ comment|/*  * Take the action for the specified signal  * from the current set o
 end_comment
 
 begin_function
-name|void
+name|int
 name|postsig
 parameter_list|(
 name|sig
@@ -13023,7 +13025,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|ksi
 operator|.
 name|ksi_signo
@@ -13368,6 +13374,11 @@ name|returnmask
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
