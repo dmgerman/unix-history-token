@@ -2050,6 +2050,9 @@ decl_stmt|;
 name|int
 name|an_was_monitor
 decl_stmt|;
+name|int
+name|an_timer
+decl_stmt|;
 name|u_char
 name|buf_802_11
 index|[
