@@ -6204,8 +6204,6 @@ name|bge_cdata
 operator|.
 name|bge_tx_ring_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
-operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -16237,8 +16235,6 @@ name|bge_cdata
 operator|.
 name|bge_tx_ring_map
 argument_list|,
-name|BUS_DMASYNC_POSTREAD
-operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
@@ -18401,8 +18397,6 @@ name|bge_cdata
 operator|.
 name|bge_tx_ring_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
-operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
