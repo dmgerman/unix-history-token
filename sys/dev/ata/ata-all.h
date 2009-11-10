@@ -1821,6 +1821,24 @@ name|ATA_MAX_28BIT_LBA
 value|268435455UL
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_REQUEST_TIMEOUT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ATA_REQUEST_TIMEOUT
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* structure used for composite atomic operations */
 end_comment

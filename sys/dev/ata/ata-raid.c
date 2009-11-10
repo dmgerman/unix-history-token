@@ -1915,7 +1915,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|1
+name|ATA_REQUEST_TIMEOUT
 expr_stmt|;
 name|request
 operator|->
@@ -26112,7 +26112,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|5
+name|ATA_REQUEST_TIMEOUT
 expr_stmt|;
 name|request
 operator|->
@@ -26487,7 +26487,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|10
+name|ATA_REQUEST_TIMEOUT
 expr_stmt|;
 name|request
 operator|->
