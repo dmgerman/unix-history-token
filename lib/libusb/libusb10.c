@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libusb20.h"
 end_include
 
@@ -838,14 +844,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* get device into libUSB v1.0 list */
-name|libusb20_be_dequeue_device
-argument_list|(
-name|usb_backend
-argument_list|,
-name|pdev
-argument_list|)
-expr_stmt|;
 name|dev
 operator|=
 name|malloc
@@ -910,6 +908,14 @@ name|LIBUSB_ERROR_NO_MEM
 operator|)
 return|;
 block|}
+comment|/* get device into libUSB v1.0 list */
+name|libusb20_be_dequeue_device
+argument_list|(
+name|usb_backend
+argument_list|,
+name|pdev
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|dev
@@ -1855,6 +1861,7 @@ argument_list|(
 name|pdev
 argument_list|)
 expr_stmt|;
+comment|/* unref will free the "pdev" when the refcount reaches zero */
 name|libusb_unref_device
 argument_list|(
 name|dev
@@ -4977,8 +4984,7 @@ name|libusb_device
 modifier|*
 name|dev
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|endpoint
 decl_stmt|;
 name|int
@@ -5243,8 +5249,7 @@ name|libusb_device
 modifier|*
 name|dev
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|endpoint
 decl_stmt|;
 if|if
@@ -5531,6 +5536,44 @@ name|dev
 parameter_list|)
 block|{
 comment|/* TODO */
+block|}
+end_function
+
+begin_function
+name|uint16_t
+name|libusb_cpu_to_le16
+parameter_list|(
+name|uint16_t
+name|x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|htole16
+argument_list|(
+name|x
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint16_t
+name|libusb_le16_to_cpu
+parameter_list|(
+name|uint16_t
+name|x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|le16toh
+argument_list|(
+name|x
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

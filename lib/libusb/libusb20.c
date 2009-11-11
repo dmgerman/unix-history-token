@@ -2487,6 +2487,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* make sure memory is initialised */
+name|memset
+argument_list|(
+name|ptr
+argument_list|,
+literal|0
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -4437,7 +4447,12 @@ name|pbe
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+comment|/* free backend */
+name|free
+argument_list|(
+name|pbe
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4479,7 +4494,6 @@ argument_list|,
 name|dev_entry
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4512,7 +4526,6 @@ argument_list|,
 name|dev_entry
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

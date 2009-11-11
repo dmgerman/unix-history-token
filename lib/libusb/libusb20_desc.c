@@ -435,6 +435,16 @@ operator|)
 return|;
 comment|/* out of memory */
 block|}
+comment|/* make sure memory is initialised */
+name|memset
+argument_list|(
+name|lub_config
+argument_list|,
+literal|0
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 name|lub_interface
 operator|=
 operator|(
