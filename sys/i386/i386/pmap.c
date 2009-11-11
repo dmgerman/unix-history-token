@@ -701,7 +701,7 @@ name|OID_AUTO
 argument_list|,
 name|pg_ps_enabled
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pg_ps_enabled
