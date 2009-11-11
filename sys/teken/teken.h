@@ -794,28 +794,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|TKEY_INSERT
+name|TKEY_HOME
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|TKEY_DELETE
+name|TKEY_END
 value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|TKEY_HOME
+name|TKEY_INSERT
 value|0x06
 end_define
 
 begin_define
 define|#
 directive|define
-name|TKEY_END
+name|TKEY_DELETE
 value|0x07
 end_define
 
