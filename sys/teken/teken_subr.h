@@ -5975,6 +5975,7 @@ operator|.
 name|tp_row
 expr_stmt|;
 block|}
+comment|/* Apply scrolling region. */
 name|t
 operator|->
 name|t_scrollreg
@@ -5999,8 +6000,6 @@ name|t_stateflags
 operator|&
 name|TS_ORIGIN
 condition|)
-block|{
-comment|/* XXX: home cursor? */
 name|t
 operator|->
 name|t_originreg
@@ -6009,6 +6008,7 @@ name|t
 operator|->
 name|t_scrollreg
 expr_stmt|;
+comment|/* Home cursor to the top left of the scrolling region. */
 name|t
 operator|->
 name|t_cursor
@@ -6041,7 +6041,6 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
