@@ -1554,6 +1554,23 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+specifier|const
+name|char
+modifier|*
+name|sc_term_fkeystr_t
+parameter_list|(
+name|scr_stat
+modifier|*
+name|scp
+parameter_list|,
+name|int
+name|c
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|sc_term_sw
 block|{
@@ -1621,6 +1638,10 @@ decl_stmt|;
 name|sc_term_input_t
 modifier|*
 name|te_input
+decl_stmt|;
+name|sc_term_fkeystr_t
+modifier|*
+name|te_fkeystr
 decl_stmt|;
 block|}
 name|sc_term_sw_t

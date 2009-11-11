@@ -350,6 +350,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|sc_term_fkeystr_t
+name|scterm_fkeystr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|sc_term_sw_t
 name|sc_term_sc
 init|=
@@ -394,6 +401,8 @@ block|,
 name|scterm_notify
 block|,
 name|scterm_input
+block|,
+name|scterm_fkeystr
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5992,6 +6001,29 @@ parameter_list|)
 block|{
 return|return
 name|FALSE
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|scterm_fkeystr
+parameter_list|(
+name|scr_stat
+modifier|*
+name|scp
+parameter_list|,
+name|int
+name|c
+parameter_list|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 end_function

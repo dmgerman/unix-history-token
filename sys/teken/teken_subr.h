@@ -4486,14 +4486,12 @@ case|case
 literal|1
 case|:
 comment|/* Cursor keys mode. */
-name|teken_funcs_param
-argument_list|(
 name|t
-argument_list|,
-name|TP_CURSORKEYS
-argument_list|,
-literal|0
-argument_list|)
+operator|->
+name|t_stateflags
+operator|&=
+operator|~
+name|TS_CURSORKEYS
 expr_stmt|;
 break|break;
 case|case
@@ -5167,14 +5165,11 @@ case|case
 literal|1
 case|:
 comment|/* Cursor keys mode. */
-name|teken_funcs_param
-argument_list|(
 name|t
-argument_list|,
-name|TP_CURSORKEYS
-argument_list|,
-literal|1
-argument_list|)
+operator|->
+name|t_stateflags
+operator||=
+name|TS_CURSORKEYS
 expr_stmt|;
 break|break;
 case|case
