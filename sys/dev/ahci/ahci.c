@@ -634,9 +634,980 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * AHCI v1.x compliant SATA chipset support functions  */
-end_comment
+begin_struct
+specifier|static
+struct|struct
+block|{
+name|uint32_t
+name|id
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+block|}
+name|ahci_ids
+index|[]
+init|=
+block|{
+block|{
+literal|0x43801002
+block|,
+literal|"ATI IXP600"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x43901002
+block|,
+literal|"ATI IXP700"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x43911002
+block|,
+literal|"ATI IXP700"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x43921002
+block|,
+literal|"ATI IXP700"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x43931002
+block|,
+literal|"ATI IXP700"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x43941002
+block|,
+literal|"ATI IXP800"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x43951002
+block|,
+literal|"ATI IXP800"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x26528086
+block|,
+literal|"Intel ICH6"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x26538086
+block|,
+literal|"Intel ICH6M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x26818086
+block|,
+literal|"Intel ESB2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x26828086
+block|,
+literal|"Intel ESB2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x26838086
+block|,
+literal|"Intel ESB2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x27c18086
+block|,
+literal|"Intel ICH7"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x27c38086
+block|,
+literal|"Intel ICH7"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x27c58086
+block|,
+literal|"Intel ICH7M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x27c68086
+block|,
+literal|"Intel ICH7M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x28218086
+block|,
+literal|"Intel ICH8"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x28228086
+block|,
+literal|"Intel ICH8"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x28248086
+block|,
+literal|"Intel ICH8"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x28298086
+block|,
+literal|"Intel ICH8M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x282a8086
+block|,
+literal|"Intel ICH8M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x29228086
+block|,
+literal|"Intel ICH9"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x29238086
+block|,
+literal|"Intel ICH9"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x29248086
+block|,
+literal|"Intel ICH9"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x29258086
+block|,
+literal|"Intel ICH9"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x29278086
+block|,
+literal|"Intel ICH9"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x29298086
+block|,
+literal|"Intel ICH9M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x292a8086
+block|,
+literal|"Intel ICH9M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x292b8086
+block|,
+literal|"Intel ICH9M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x292c8086
+block|,
+literal|"Intel ICH9M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x292f8086
+block|,
+literal|"Intel ICH9M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x294d8086
+block|,
+literal|"Intel ICH9"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x294e8086
+block|,
+literal|"Intel ICH9M"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3a058086
+block|,
+literal|"Intel ICH10"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3a228086
+block|,
+literal|"Intel ICH10"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3a258086
+block|,
+literal|"Intel ICH10"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3b228086
+block|,
+literal|"Intel PCH"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3b238086
+block|,
+literal|"Intel PCH"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3b248086
+block|,
+literal|"Intel PCH"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3b258086
+block|,
+literal|"Intel PCH"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3b298086
+block|,
+literal|"Intel PCH"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3b2b8086
+block|,
+literal|"Intel PCH"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3b2c8086
+block|,
+literal|"Intel PCH"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x3b2f8086
+block|,
+literal|"Intel PCH"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x044c10de
+block|,
+literal|"NVIDIA MCP65"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x044d10de
+block|,
+literal|"NVIDIA MCP65"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x044e10de
+block|,
+literal|"NVIDIA MCP65"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x044f10de
+block|,
+literal|"NVIDIA MCP65"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x045c10de
+block|,
+literal|"NVIDIA MCP65"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x045d10de
+block|,
+literal|"NVIDIA MCP65"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x045e10de
+block|,
+literal|"NVIDIA MCP65"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x045f10de
+block|,
+literal|"NVIDIA MCP65"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055010de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055110de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055210de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055310de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055410de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055510de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055610de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055710de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055810de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055910de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055A10de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x055B10de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x058410de
+block|,
+literal|"NVIDIA MCP67"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f010de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f110de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f210de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f310de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f410de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f510de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f610de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f710de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f810de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07f910de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07fa10de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x07fb10de
+block|,
+literal|"NVIDIA MCP73"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad010de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad110de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad210de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad310de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad410de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad510de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad610de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad710de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad810de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ad910de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ada10de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0adb10de
+block|,
+literal|"NVIDIA MCP77"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ab410de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ab510de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ab610de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ab710de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ab810de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0ab910de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0aba10de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0abb10de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0abc10de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0abd10de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0abe10de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0abf10de
+block|,
+literal|"NVIDIA MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8410de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8510de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8610de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8710de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8810de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8910de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8a10de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8b10de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8c10de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8d10de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8e10de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x0d8f10de
+block|,
+literal|"NVIDIA MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x33491106
+block|,
+literal|"VIA VT8251"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x62871106
+block|,
+literal|"VIA VT8251"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x11841039
+block|,
+literal|"SiS 966"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x11851039
+block|,
+literal|"SiS 968"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x01861039
+block|,
+literal|"SiS 968"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+struct|;
+end_struct
 
 begin_function
 specifier|static
@@ -647,7 +1618,89 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* is this a possible AHCI candidate ? */
+name|char
+name|buf
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|uint32_t
+name|devid
+init|=
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+comment|/* Is this a known AHCI chip? */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|ahci_ids
+index|[
+name|i
+index|]
+operator|.
+name|id
+operator|!=
+literal|0
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ahci_ids
+index|[
+name|i
+index|]
+operator|.
+name|id
+operator|==
+name|devid
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s AHCI SATA controller"
+argument_list|,
+name|ahci_ids
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+name|device_set_desc_copy
+argument_list|(
+name|dev
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|BUS_PROBE_VENDOR
+operator|)
+return|;
+block|}
+block|}
+comment|/* Is this a possible AHCI candidate? */
 if|if
 condition|(
 name|pci_get_class
@@ -663,15 +1716,7 @@ name|dev
 argument_list|)
 operator|!=
 name|PCIS_STORAGE_SATA
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-comment|/* is this PCI device flagged as an AHCI compliant chip ? */
-if|if
-condition|(
+operator|||
 name|pci_get_progif
 argument_list|(
 name|dev
@@ -688,7 +1733,7 @@ name|device_set_desc_copy
 argument_list|(
 name|dev
 argument_list|,
-literal|"AHCI controller"
+literal|"AHCI SATA controller"
 argument_list|)
 expr_stmt|;
 return|return
