@@ -397,17 +397,39 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|//static struct ada_quirk_entry ada_quirk_table[] =
-end_comment
-
-begin_comment
-comment|//{
-end_comment
-
-begin_comment
-comment|//};
-end_comment
+begin_decl_stmt
+specifier|static
+name|struct
+name|ada_quirk_entry
+name|ada_quirk_table
+index|[]
+init|=
+block|{
+block|{
+comment|/* Default */
+block|{
+name|T_ANY
+block|,
+name|SIP_MEDIA_REMOVABLE
+operator||
+name|SIP_MEDIA_FIXED
+block|,
+comment|/*vendor*/
+literal|"*"
+block|,
+comment|/*product*/
+literal|"*"
+block|,
+comment|/*revision*/
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2703,11 +2725,9 @@ name|ATA_SUPPORT_NCQ
 operator|&&
 name|cgd
 operator|->
-name|ident_data
-operator|.
-name|queue
-operator|>=
-literal|31
+name|inq_flags
+operator|&
+name|SID_CmdQue
 condition|)
 name|softc
 operator|->
@@ -2728,13 +2748,42 @@ operator|=
 name|softc
 expr_stmt|;
 comment|/* 	 * See if this device has any quirks. 	 */
-comment|//	match = cam_quirkmatch((caddr_t)&cgd->inq_data,
-comment|//			       (caddr_t)ada_quirk_table,
-comment|//			       sizeof(ada_quirk_table)/sizeof(*ada_quirk_table),
-comment|//			       sizeof(*ada_quirk_table), scsi_inquiry_match);
 name|match
 operator|=
-name|NULL
+name|cam_quirkmatch
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|cgd
+operator|->
+name|ident_data
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|ada_quirk_table
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ada_quirk_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ada_quirk_table
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ada_quirk_table
+argument_list|)
+argument_list|,
+name|ata_identify_match
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3252,29 +3301,6 @@ argument_list|,
 name|announce_buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|softc
-operator|->
-name|flags
-operator|&
-name|ADA_FLAG_CAN_NCQ
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s%d: Native Command Queueing enabled\n"
-argument_list|,
-name|periph
-operator|->
-name|periph_name
-argument_list|,
-name|periph
-operator|->
-name|unit_number
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Add async callbacks for bus reset and 	 * bus device reset calls.  I don't bother 	 * checking if this fails as, in most cases, 	 * the system will function just fine without 	 * them and the only alternative would be to 	 * not attach the device on failure. 	 */
 name|xpt_register_async
 argument_list|(
