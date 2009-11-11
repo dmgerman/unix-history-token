@@ -119,6 +119,12 @@ directive|include
 file|<mips/rmi/clock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mips/rmi/pic.h>
+end_include
+
 begin_comment
 comment|/*#include<machine/intrcnt.h>*/
 end_comment
@@ -669,6 +675,11 @@ operator|<<
 name|i
 argument_list|)
 expr_stmt|;
+name|pic_ack
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -712,6 +723,11 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|pic_delayed_ack
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 block|}
 name|critical_exit
 argument_list|()

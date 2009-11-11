@@ -917,7 +917,7 @@ argument_list|,
 name|PIC_TIMER_6_MAXVAL_1
 argument_list|,
 operator|(
-literal|0xffffffff
+literal|0x0
 operator|&
 literal|0xffffffff
 operator|)
