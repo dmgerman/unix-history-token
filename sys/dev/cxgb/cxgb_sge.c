@@ -10014,13 +10014,6 @@ argument_list|(
 name|qs
 argument_list|)
 expr_stmt|;
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"no desc available\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOSPC
@@ -10088,6 +10081,9 @@ name|TXQ_UNLOCK
 argument_list|(
 name|qs
 argument_list|)
+expr_stmt|;
+name|wmb
+argument_list|()
 expr_stmt|;
 name|t3_write_reg
 argument_list|(
@@ -10170,17 +10166,6 @@ name|port
 operator|->
 name|adapter
 decl_stmt|;
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"Restart_ctrlq in_use=%d\n"
-argument_list|,
-name|q
-operator|->
-name|in_use
-argument_list|)
-expr_stmt|;
 name|TXQ_LOCK
 argument_list|(
 name|qs
@@ -16674,20 +16659,11 @@ operator|>
 literal|1
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"restarting tx on %p\n"
-argument_list|,
-name|qs
-argument_list|)
-expr_stmt|;
 name|restart_tx
 argument_list|(
 name|qs
 argument_list|)
 expr_stmt|;
-block|}
 name|__refill_fl_lt
 argument_list|(
 name|adap
