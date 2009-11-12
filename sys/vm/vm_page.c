@@ -195,15 +195,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|mtx
-name|vm_page_queue_mtx
+name|vpglocks
+name|vm_page_queue_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|mtx
-name|vm_page_queue_free_mtx
+name|vpglocks
+name|vm_page_queue_free_lock
 decl_stmt|;
 end_decl_stmt
 

@@ -4686,6 +4686,8 @@ block|}
 while|while
 condition|(
 name|narg
+operator|>
+literal|0
 condition|)
 block|{
 name|print_number

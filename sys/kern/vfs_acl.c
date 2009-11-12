@@ -682,7 +682,7 @@ break|break;
 default|default:
 if|if
 condition|(
-name|fuword
+name|fuword32
 argument_list|(
 operator|(
 name|char
@@ -840,6 +840,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -1150,6 +1152,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1184,6 +1188,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -1294,6 +1300,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out

@@ -1110,7 +1110,7 @@ operator|(
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 ifdef|#
 directive|ifdef
@@ -1119,7 +1119,7 @@ operator|||
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|)
 endif|#
 directive|endif
@@ -1248,7 +1248,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|,
 name|mp
 argument_list|,
@@ -1318,7 +1318,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|,
 name|mp
 argument_list|,

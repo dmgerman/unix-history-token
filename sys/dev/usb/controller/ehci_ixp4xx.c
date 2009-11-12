@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/controller/ehcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/xscale/ixp425/ixp425reg.h>
 end_include
 
@@ -622,14 +628,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|usbrev
-operator|=
-name|USB_REV_2_0
-expr_stmt|;
 comment|/* NB: hints fix the memory location and irq */
 name|rid
 operator|=
@@ -949,14 +947,6 @@ operator||
 name|EHCI_SCFLG_BIGEMMIO
 operator||
 name|EHCI_SCFLG_NORESTERM
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ehci_reset
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 name|err
 operator|=

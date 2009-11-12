@@ -1324,6 +1324,13 @@ begin_comment
 comment|/* Count of defined aux entry types. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ET_DYN_LOAD_ADDR
+value|0x0120000
+end_define
+
 begin_endif
 endif|#
 directive|endif

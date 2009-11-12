@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '$2 == "T"&& $3 !~ /^ssh_/ { print "#define", $3, "ssh_" $3 }'  *  * $FreeBSD$  */
+comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '/[0-9a-z] [A-Z] /&& $3 !~ /^ssh_/ { print "#define", $3, "ssh_" $3 }'  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -43,6 +43,13 @@ define|#
 directive|define
 name|add_host_to_hostfile
 value|ssh_add_host_to_hostfile
+end_define
+
+begin_define
+define|#
+directive|define
+name|add_recv_bytes
+value|ssh_add_recv_bytes
 end_define
 
 begin_define
@@ -699,6 +706,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|channel_post
+value|ssh_channel_post
+end_define
+
+begin_define
+define|#
+directive|define
+name|channel_pre
+value|ssh_channel_pre
+end_define
+
+begin_define
+define|#
+directive|define
 name|channel_prepare_select
 value|ssh_channel_prepare_select
 end_define
@@ -972,6 +993,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ciphers
+value|ssh_ciphers
+end_define
+
+begin_define
+define|#
+directive|define
 name|ciphers_valid
 value|ssh_ciphers_valid
 end_define
@@ -1007,6 +1035,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|compat13
+value|ssh_compat13
+end_define
+
+begin_define
+define|#
+directive|define
+name|compat20
+value|ssh_compat20
+end_define
+
+begin_define
+define|#
+directive|define
 name|compat_cipher_proposal
 value|ssh_compat_cipher_proposal
 end_define
@@ -1023,6 +1065,20 @@ define|#
 directive|define
 name|convtime
 value|ssh_convtime
+end_define
+
+begin_define
+define|#
+directive|define
+name|current_keys
+value|ssh_current_keys
+end_define
+
+begin_define
+define|#
+directive|define
+name|datafellows
+value|ssh_datafellows
 end_define
 
 begin_define
@@ -1142,6 +1198,13 @@ define|#
 directive|define
 name|dh_pub_is_valid
 value|ssh_dh_pub_is_valid
+end_define
+
+begin_define
+define|#
+directive|define
+name|dispatch
+value|ssh_dispatch
 end_define
 
 begin_define
@@ -1357,6 +1420,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|get_recv_bytes
+value|ssh_get_recv_bytes
+end_define
+
+begin_define
+define|#
+directive|define
 name|get_remote_ipaddr
 value|ssh_get_remote_ipaddr
 end_define
@@ -1413,6 +1483,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|glob
+value|ssh_glob
+end_define
+
+begin_define
+define|#
+directive|define
+name|globfree
+value|ssh_globfree
+end_define
+
+begin_define
+define|#
+directive|define
 name|host_hash
 value|ssh_host_hash
 end_define
@@ -1429,6 +1513,13 @@ define|#
 directive|define
 name|hpdelim
 value|ssh_hpdelim
+end_define
+
+begin_define
+define|#
+directive|define
+name|incoming_stream
+value|ssh_incoming_stream
 end_define
 
 begin_define
@@ -1798,6 +1889,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|macs
+value|ssh_macs
+end_define
+
+begin_define
+define|#
+directive|define
 name|match_host_and_ip
 value|ssh_match_host_and_ip
 end_define
@@ -1870,6 +1968,13 @@ define|#
 directive|define
 name|mysignal
 value|ssh_mysignal
+end_define
+
+begin_define
+define|#
+directive|define
+name|outgoing_stream
+value|ssh_outgoing_stream
 end_define
 
 begin_define
@@ -2463,6 +2568,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|resume_in_progress
+value|ssh_resume_in_progress
+end_define
+
+begin_define
+define|#
+directive|define
+name|resume_kex
+value|ssh_resume_kex
+end_define
+
+begin_define
+define|#
+directive|define
 name|rijndael_decrypt
 value|ssh_rijndael_decrypt
 end_define
@@ -2479,6 +2598,20 @@ define|#
 directive|define
 name|rijndael_set_key
 value|ssh_rijndael_set_key
+end_define
+
+begin_define
+define|#
+directive|define
+name|roaming_read
+value|ssh_roaming_read
+end_define
+
+begin_define
+define|#
+directive|define
+name|roaming_write
+value|ssh_roaming_write
 end_define
 
 begin_define
@@ -2668,6 +2801,13 @@ define|#
 directive|define
 name|tun_open
 value|ssh_tun_open
+end_define
+
+begin_define
+define|#
+directive|define
+name|umac_ctx
+value|ssh_umac_ctx
 end_define
 
 begin_define

@@ -364,7 +364,7 @@ name|dma
 operator|.
 name|dma_slots
 operator|=
-literal|6
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1513,18 +1513,6 @@ name|parent
 argument_list|)
 decl_stmt|;
 name|struct
-name|ata_device
-modifier|*
-name|atadev
-init|=
-name|device_get_softc
-argument_list|(
-name|request
-operator|->
-name|dev
-argument_list|)
-decl_stmt|;
-name|struct
 name|ata_dmasetprd_args
 name|dspa
 decl_stmt|;
@@ -1549,7 +1537,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"FAILURE - already active DMA on this device\n"
 argument_list|)
@@ -1570,7 +1558,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"FAILURE - zero length DMA transfer attempted\n"
 argument_list|)
@@ -1600,7 +1588,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"FAILURE - odd-sized DMA transfer attempt %d %% %d\n"
 argument_list|,
@@ -1636,7 +1624,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"FAILURE - oversized DMA transfer attempt %d> %d\n"
 argument_list|,
@@ -1655,7 +1643,7 @@ return|return
 name|EIO
 return|;
 block|}
-comment|/* set our slot, unit for simplicity XXX SOS NCQ will change that */
+comment|/* set our slot. XXX SOS NCQ will change that */
 name|request
 operator|->
 name|dma
@@ -1667,9 +1655,7 @@ name|dma
 operator|.
 name|slot
 index|[
-name|atadev
-operator|->
-name|unit
+literal|0
 index|]
 expr_stmt|;
 if|if
@@ -1746,7 +1732,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"FAILURE - load data\n"
 argument_list|)

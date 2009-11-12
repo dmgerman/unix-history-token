@@ -1022,7 +1022,7 @@ literal|252
 index|]
 decl_stmt|;
 name|u_int8_t
-name|reserved
+name|inq_flags
 decl_stmt|;
 name|u_int8_t
 name|serial_num_len
@@ -2714,6 +2714,33 @@ end_struct
 
 begin_struct
 struct|struct
+name|ccb_trans_settings_ata
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+define|#
+directive|define
+name|CTS_ATA_VALID_MODE
+value|0x01
+define|#
+directive|define
+name|CTS_ATA_VALID_BYTECOUNT
+value|0x04
+name|u_int32_t
+name|mode
+decl_stmt|;
+name|u_int
+name|bytecount
+decl_stmt|;
+comment|/* Length of PIO transaction */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ccb_trans_settings_sata
 block|{
 name|u_int
@@ -2728,6 +2755,10 @@ define|#
 directive|define
 name|CTS_SATA_VALID_PM
 value|0x02
+define|#
+directive|define
+name|CTS_SATA_VALID_BYTECOUNT
+value|0x04
 name|u_int32_t
 name|bitrate
 decl_stmt|;
@@ -2736,6 +2767,10 @@ name|u_int
 name|pm_present
 decl_stmt|;
 comment|/* PM is present (XPT->SIM) */
+name|u_int
+name|bytecount
+decl_stmt|;
+comment|/* Length of PIO transaction */
 block|}
 struct|;
 end_struct
@@ -2798,6 +2833,10 @@ decl_stmt|;
 name|struct
 name|ccb_trans_settings_sas
 name|sas
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_ata
+name|ata
 decl_stmt|;
 name|struct
 name|ccb_trans_settings_sata

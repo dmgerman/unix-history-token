@@ -4917,7 +4917,7 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
-comment|/* 	 * Only some systems allow us to retrieve the keyboard repeat  	 * rate previously set via the BIOS... 	 */
+comment|/* 	 * Only some systems allow us to retrieve the keyboard repeat 	 * rate previously set via the BIOS... 	 */
 name|x86regs_t
 name|regs
 decl_stmt|;
@@ -4925,16 +4925,32 @@ name|uint8_t
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|x86bios_get_intr
+argument_list|(
+literal|0x15
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|x86bios_get_intr
+argument_list|(
+literal|0x16
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
 comment|/* Is BIOS system configuration table supported? */
-name|bzero
+name|x86bios_init_regs
 argument_list|(
 operator|&
 name|regs
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|regs
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|regs
@@ -4974,7 +4990,7 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-comment|/* Is int 16, function 0x09 supported? */
+comment|/* Is int 0x16, function 0x09 supported? */
 name|p
 operator|=
 name|x86bios_offset
@@ -5019,16 +5035,11 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-comment|/* Is int 16, function 0x0306 supported? */
-name|bzero
+comment|/* Is int 0x16, function 0x0306 supported? */
+name|x86bios_init_regs
 argument_list|(
 operator|&
 name|regs
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|regs
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|regs
@@ -5062,15 +5073,10 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-name|bzero
+name|x86bios_init_regs
 argument_list|(
 operator|&
 name|regs
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|regs
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|regs

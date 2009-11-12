@@ -2389,8 +2389,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_synchronize_cache
@@ -2737,14 +2736,6 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * check it's not too big a transfer for our adapter 	 */
-block|scsi_minphys(bp,&sd_switch);
-endif|#
-directive|endif
-comment|/* 	 * Mask interrupts so that the pack cannot be invalidated until 	 * after we are in the queue.  Otherwise, we might not properly 	 * clean up one of the buffers. 	 */
 comment|/* 	 * If the device has been made invalid, error out 	 */
 if|if
 condition|(
@@ -2789,8 +2780,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_periph_unlock
@@ -2923,12 +2913,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|periph
-operator|->
-name|flags
-operator||=
-name|CAM_PERIPH_POLLED
-expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&
@@ -2940,8 +2924,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -3068,12 +3051,6 @@ operator|.
 name|scsi_status
 argument_list|)
 expr_stmt|;
-name|periph
-operator|->
-name|flags
-operator||=
-name|CAM_PERIPH_POLLED
-expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -3116,8 +3093,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -3267,13 +3243,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|periph
-operator|->
-name|flags
-operator|&=
-operator|~
-name|CAM_PERIPH_POLLED
-expr_stmt|;
 name|cam_periph_unlock
 argument_list|(
 name|periph
@@ -4388,8 +4357,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -5267,8 +5235,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5783,6 +5750,9 @@ name|ccb_scsiio
 modifier|*
 name|csio
 decl_stmt|;
+name|u_int32_t
+name|priority
+decl_stmt|;
 name|softc
 operator|=
 operator|(
@@ -5793,6 +5763,16 @@ operator|)
 name|periph
 operator|->
 name|softc
+expr_stmt|;
+name|priority
+operator|=
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|pinfo
+operator|.
+name|priority
 expr_stmt|;
 name|csio
 operator|=
@@ -6260,8 +6240,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|priority
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6529,8 +6508,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
@@ -7152,8 +7130,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_prevent
@@ -7354,8 +7331,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_read_capacity
@@ -7623,6 +7599,38 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|block_len
+operator|>=
+name|MAXPHYS
+operator|||
+name|block_len
+operator|==
+literal|0
+condition|)
+block|{
+name|xpt_print
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+literal|"unsupportable block size %ju\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|block_len
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+else|else
 name|dasetgeom
 argument_list|(
 name|periph
@@ -7632,6 +7640,7 @@ argument_list|,
 name|maxsector
 argument_list|)
 expr_stmt|;
+block|}
 name|xpt_release_ccb
 argument_list|(
 name|ccb
@@ -7727,8 +7736,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccg
@@ -8069,8 +8077,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb

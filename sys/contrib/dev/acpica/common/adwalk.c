@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/include/acdebug.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/acpica/include/acdisasm.h>
 end_include
 
@@ -226,7 +220,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpTree  *  * PARAMETERS:  Origin          - Starting object  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to format and output the nodes  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpTree  *  * PARAMETERS:  Origin              - Starting object  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to format and output the nodes  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -299,7 +293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmFindOrphanMethods  *  * PARAMETERS:  Origin          - Starting object  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to find "orphaned" method invocations -- methods  *              that are not resolved in the namespace  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmFindOrphanMethods  *  * PARAMETERS:  Origin              - Starting object  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to find "orphaned" method invocations -- methods  *              that are not resolved in the namespace  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -743,11 +737,6 @@ name|Info
 init|=
 name|Context
 decl_stmt|;
-specifier|const
-name|ACPI_OPCODE_INFO
-modifier|*
-name|OpInfo
-decl_stmt|;
 name|char
 modifier|*
 name|Path
@@ -764,23 +753,12 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|OpInfo
-operator|=
-name|AcpiPsGetOpcodeInfo
-argument_list|(
-name|Op
-operator|->
-name|Common
-operator|.
-name|AmlOpcode
-argument_list|)
-expr_stmt|;
+comment|/* Most of the information (count, level, name) here */
 name|Info
 operator|->
 name|Count
 operator|++
 expr_stmt|;
-comment|/* Most of the information (count, level, name) here */
 name|AcpiOsPrintf
 argument_list|(
 literal|"% 5d [%2.2d] "
@@ -923,12 +901,17 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%4.4s"
 argument_list|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
 operator|&
 name|Op
 operator|->
 name|Named
 operator|.
 name|Name
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1111,6 +1094,8 @@ comment|/* This NamePath has no args, assume it is an integer */
 name|AcpiDmAddToExternalList
 argument_list|(
 name|ChildOp
+argument_list|,
+name|ChildOp
 operator|->
 name|Common
 operator|.
@@ -1163,6 +1148,8 @@ comment|/* One Arg means this is just a Store(Name,Target) */
 name|AcpiDmAddToExternalList
 argument_list|(
 name|ChildOp
+argument_list|,
+name|ChildOp
 operator|->
 name|Common
 operator|.
@@ -1183,6 +1170,8 @@ return|;
 block|}
 name|AcpiDmAddToExternalList
 argument_list|(
+name|ChildOp
+argument_list|,
 name|ChildOp
 operator|->
 name|Common
@@ -1251,6 +1240,8 @@ comment|/* This NamePath has no args, assume it is an integer */
 name|AcpiDmAddToExternalList
 argument_list|(
 name|ChildOp
+argument_list|,
+name|ChildOp
 operator|->
 name|Common
 operator|.
@@ -1291,6 +1282,8 @@ comment|/* One Arg means this is just a Store(Name,Target) */
 name|AcpiDmAddToExternalList
 argument_list|(
 name|ChildOp
+argument_list|,
+name|ChildOp
 operator|->
 name|Common
 operator|.
@@ -1311,6 +1304,8 @@ return|;
 block|}
 name|AcpiDmAddToExternalList
 argument_list|(
+name|ChildOp
+argument_list|,
 name|ChildOp
 operator|->
 name|Common
@@ -1459,6 +1454,8 @@ block|{
 name|AcpiDmAddToExternalList
 argument_list|(
 name|Op
+argument_list|,
+name|Op
 operator|->
 name|Common
 operator|.
@@ -1477,6 +1474,8 @@ block|}
 comment|/*              * This is a standalone namestring (not a parameter to another              * operator) - it *must* be a method invocation, nothing else is              * grammatically possible.              */
 name|AcpiDmAddToExternalList
 argument_list|(
+name|Op
+argument_list|,
 name|Op
 operator|->
 name|Common
@@ -2225,6 +2224,8 @@ condition|)
 block|{
 name|AcpiDmAddToExternalList
 argument_list|(
+name|Op
+argument_list|,
 name|Path
 argument_list|,
 operator|(
@@ -2295,6 +2296,8 @@ condition|)
 block|{
 name|AcpiDmAddToExternalList
 argument_list|(
+name|Op
+argument_list|,
 name|Path
 argument_list|,
 name|ACPI_TYPE_METHOD
@@ -2311,6 +2314,8 @@ else|else
 block|{
 name|AcpiDmAddToExternalList
 argument_list|(
+name|Op
+argument_list|,
 name|Path
 argument_list|,
 operator|(

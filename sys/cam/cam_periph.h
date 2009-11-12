@@ -133,6 +133,13 @@ expr_stmt|;
 name|u_int
 name|generation
 decl_stmt|;
+name|u_int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|CAM_PERIPH_DRV_EARLY
+value|0x01
 block|}
 struct|;
 end_struct
@@ -311,10 +318,6 @@ define|#
 directive|define
 name|CAM_PERIPH_RECOVERY_INPROG
 value|0x20
-define|#
-directive|define
-name|CAM_PERIPH_POLLED
-value|0x40
 name|u_int32_t
 name|immediate_priority
 decl_stmt|;

@@ -387,7 +387,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"cannot start '%s' - not yet supported"
+literal|"unable to start '%s' - not yet supported"
 argument_list|,
 name|argv
 argument_list|)
@@ -1287,8 +1287,8 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"can't rebuild %s, subdisk(s) have no "
-literal|"drives"
+literal|"unable to rebuild %s, subdisk(s) have"
+literal|" no drives"
 argument_list|,
 name|p
 operator|->

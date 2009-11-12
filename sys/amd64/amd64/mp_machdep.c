@@ -430,6 +430,7 @@ begin_decl_stmt
 name|struct
 name|xpcb
 modifier|*
+modifier|*
 name|stopxpcbs
 init|=
 name|NULL
@@ -5081,7 +5082,7 @@ name|stopxpcbs
 index|[
 name|cpu
 index|]
-operator|.
+operator|->
 name|xpcb_pcb
 operator|.
 name|pcb_save
@@ -5090,7 +5091,6 @@ if|if
 condition|(
 name|savectx2
 argument_list|(
-operator|&
 name|stopxpcbs
 index|[
 name|cpu

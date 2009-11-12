@@ -1872,9 +1872,6 @@ modifier|*
 name|an_ifp
 decl_stmt|;
 name|int
-name|an_unit
-decl_stmt|;
-name|int
 name|port_rid
 decl_stmt|;
 comment|/* resource id for port range */
@@ -2053,6 +2050,9 @@ decl_stmt|;
 name|int
 name|an_was_monitor
 decl_stmt|;
+name|int
+name|an_timer
+decl_stmt|;
 name|u_char
 name|buf_802_11
 index|[
@@ -2227,8 +2227,6 @@ parameter_list|(
 name|struct
 name|an_softc
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|)

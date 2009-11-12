@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -1162,18 +1168,18 @@ name|NN
 block|,
 name|NN
 block|,
-literal|115
+literal|123
 block|,
 comment|/* 80 - 87 */
-literal|112
+literal|124
 block|,
 literal|125
 block|,
-literal|121
+literal|126
 block|,
-literal|123
+literal|127
 block|,
-name|NN
+literal|128
 block|,
 name|NN
 block|,
@@ -1812,6 +1818,14 @@ argument_list|,
 literal|"polling\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kdb_active
+operator|==
+literal|0
+condition|)
+return|return;
+comment|/* Only poll if KDB is active */
 while|while
 condition|(
 name|sc
@@ -3865,7 +3879,7 @@ return|;
 else|else
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -3961,7 +3975,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-literal|0
+name|BUS_PROBE_GENERIC
 expr_stmt|;
 block|}
 else|else
@@ -7897,79 +7911,136 @@ name|scan
 index|[]
 init|=
 block|{
-literal|0x1c
+comment|/* 89 */
+literal|0x11c
 block|,
-literal|0x1d
+comment|/* Enter */
+comment|/* 90-99 */
+literal|0x11d
 block|,
-literal|0x35
+comment|/* Ctrl-R */
+literal|0x135
 block|,
-literal|0x37
+comment|/* Divide */
+literal|0x137
 operator||
 name|SCAN_PREFIX_SHIFT
 block|,
 comment|/* PrintScreen */
-literal|0x38
+literal|0x138
 block|,
-literal|0x47
+comment|/* Alt-R */
+literal|0x147
 block|,
-literal|0x48
+comment|/* Home */
+literal|0x148
 block|,
-literal|0x49
+comment|/* Up */
+literal|0x149
 block|,
-literal|0x4b
+comment|/* PageUp */
+literal|0x14b
 block|,
-literal|0x4d
+comment|/* Left */
+literal|0x14d
 block|,
-literal|0x4f
+comment|/* Right */
+literal|0x14f
 block|,
-literal|0x50
+comment|/* End */
+comment|/* 100-109 */
+literal|0x150
 block|,
-literal|0x51
+comment|/* Down */
+literal|0x151
 block|,
-literal|0x52
+comment|/* PageDown */
+literal|0x152
 block|,
-literal|0x53
+comment|/* Insert */
+literal|0x153
 block|,
-literal|0x46
+comment|/* Delete */
+literal|0x146
 block|,
 comment|/* XXX Pause/Break */
-literal|0x5b
+literal|0x15b
 block|,
+comment|/* Win_L(Super_L) */
+literal|0x15c
+block|,
+comment|/* Win_R(Super_R) */
+literal|0x15d
+block|,
+comment|/* Application(Menu) */
+comment|/* SUN TYPE 6 USB KEYBOARD */
+literal|0x168
+block|,
+comment|/* Sun Type 6 Help */
+literal|0x15e
+block|,
+comment|/* Sun Type 6 Stop */
+comment|/* 110 - 119 */
+literal|0x15f
+block|,
+comment|/* Sun Type 6 Again */
+literal|0x160
+block|,
+comment|/* Sun Type 6 Props */
+literal|0x161
+block|,
+comment|/* Sun Type 6 Undo */
+literal|0x162
+block|,
+comment|/* Sun Type 6 Front */
+literal|0x163
+block|,
+comment|/* Sun Type 6 Copy */
+literal|0x164
+block|,
+comment|/* Sun Type 6 Open */
+literal|0x165
+block|,
+comment|/* Sun Type 6 Paste */
+literal|0x166
+block|,
+comment|/* Sun Type 6 Find */
+literal|0x167
+block|,
+comment|/* Sun Type 6 Cut */
+literal|0x125
+block|,
+comment|/* Sun Type 6 Mute */
+comment|/* 120 - 128 */
+literal|0x11f
+block|,
+comment|/* Sun Type 6 VolumeDown */
+literal|0x11e
+block|,
+comment|/* Sun Type 6 VolumeUp */
+literal|0x120
+block|,
+comment|/* Sun Type 6 PowerDown */
+comment|/* Japanese 106/109 keyboard */
+literal|0x73
+block|,
+comment|/* Keyboard Intl' 1 (backslash / underscore) */
+literal|0x70
+block|,
+comment|/* Keyboard Intl' 2 (Katakana / Hiragana) */
+literal|0x7d
+block|,
+comment|/* Keyboard Intl' 3 (Yen sign) (Not using in jp106/109) */
+literal|0x79
+block|,
+comment|/* Keyboard Intl' 4 (Henkan) */
+literal|0x7b
+block|,
+comment|/* Keyboard Intl' 5 (Muhenkan) */
 literal|0x5c
 block|,
-literal|0x5d
-block|,
-comment|/* SUN TYPE 6 USB KEYBOARD */
-literal|0x68
-block|,
-literal|0x5e
-block|,
-literal|0x5f
-block|,
-literal|0x60
-block|,
-literal|0x61
-block|,
-literal|0x62
-block|,
-literal|0x63
-block|,
-literal|0x64
-block|,
-literal|0x65
-block|,
-literal|0x66
-block|,
-literal|0x67
-block|,
-literal|0x25
-block|,
-literal|0x1f
-block|,
-literal|0x1e
-block|,
-literal|0x20
-block|, 	}
+comment|/* Keyboard Intl' 6 (Keypad ,) (For PC-9821 layout) */
+block|}
 decl_stmt|;
 if|if
 condition|(
@@ -8011,8 +8082,6 @@ name|code
 operator|-
 literal|89
 index|]
-operator||
-name|SCAN_PREFIX_E0
 expr_stmt|;
 block|}
 comment|/* Pause/Break */

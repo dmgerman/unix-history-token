@@ -11184,7 +11184,7 @@ name|char
 modifier|*
 name|direction
 init|=
-name|NULL
+literal|"d"
 decl_stmt|;
 name|struct
 name|text

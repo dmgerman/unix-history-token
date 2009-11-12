@@ -2466,7 +2466,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[amd,%d] ri %d null pcd"
+literal|"[pmc,%d] ri %d null pcd"
 operator|,
 name|__LINE__
 operator|,
@@ -3174,7 +3174,7 @@ operator|&&
 name|pp
 operator|->
 name|pp_refcnt
-operator|<
+operator|<=
 operator|(
 operator|(
 name|int
@@ -3444,7 +3444,7 @@ operator|&&
 name|pp
 operator|->
 name|pp_refcnt
-operator|<
+operator|<=
 operator|(
 name|int
 operator|)
@@ -4567,7 +4567,7 @@ operator|&&
 name|pp
 operator|->
 name|pp_refcnt
-operator|<
+operator|<=
 operator|(
 name|int
 operator|)
@@ -7250,7 +7250,7 @@ operator|&&
 name|pp
 operator|->
 name|pp_refcnt
-operator|<
+operator|<=
 operator|(
 name|int
 operator|)

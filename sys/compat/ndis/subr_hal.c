@@ -544,7 +544,6 @@ argument_list|(
 name|usecs
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -579,7 +578,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -610,7 +608,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -641,7 +638,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -684,7 +680,6 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -727,7 +722,6 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -770,7 +764,6 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -903,7 +896,6 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -946,7 +938,6 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -989,7 +980,6 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1054,7 +1044,6 @@ argument_list|(
 name|newirql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1223,7 +1212,6 @@ expr_stmt|;
 name|sched_unpin
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1268,7 +1256,6 @@ argument_list|(
 name|oldirql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1283,7 +1270,6 @@ argument_list|(
 literal|"hal dummy called...\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

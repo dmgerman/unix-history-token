@@ -1513,7 +1513,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTICS
+name|DIAGNOSTIC
 name|SMBERROR
 argument_list|(
 literal|"mp=%p\n"

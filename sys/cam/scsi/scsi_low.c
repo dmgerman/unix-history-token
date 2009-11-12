@@ -3357,9 +3357,16 @@ name|splp
 operator|==
 name|NULL
 condition|)
+block|{
+name|SCSI_LOW_FREE
+argument_list|(
+name|sap
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|SCSI_LOW_BZERO
 argument_list|(
 name|sap

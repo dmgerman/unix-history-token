@@ -60,6 +60,22 @@ name|ARGUMENT_INFO
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_execute_walk
+block|{
+name|UINT32
+name|Count
+decl_stmt|;
+name|UINT32
+name|MaxCount
+decl_stmt|;
+block|}
+name|ACPI_EXECUTE_WALK
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -427,7 +443,9 @@ begin_function_decl
 name|void
 name|AcpiDbBatchExecute
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|CountArg
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -436,23 +436,6 @@ argument_list|,
 literal|"/boot"
 argument_list|)
 block|,
-ifdef|#
-directive|ifdef
-name|WITH_SMP
-name|DTE_TARBALL
-argument_list|(
-literal|"SMP"
-argument_list|,
-operator|&
-name|KernelDists
-argument_list|,
-name|KERNEL_SMP
-argument_list|,
-literal|"/boot"
-argument_list|)
-block|,
-endif|#
-directive|endif
 name|DTE_END
 block|, }
 decl_stmt|;
@@ -1184,26 +1167,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|WITH_SMP
-comment|/* select default kernel based on deduced cpu count */
-return|return
-name|NCpus
-operator|>
-literal|1
-condition|?
-name|DIST_KERNEL_SMP
-else|:
-name|DIST_KERNEL_GENERIC
-return|;
-else|#
-directive|else
 return|return
 name|DIST_KERNEL_GENERIC
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 

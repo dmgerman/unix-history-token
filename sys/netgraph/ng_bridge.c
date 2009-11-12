@@ -2669,7 +2669,7 @@ comment|/* Run packet through ipfw processing, if enabled */
 if|#
 directive|if
 literal|0
-block|if (priv->conf.ipfw[linkNum]&& V_fw_enable&& ip_fw_chk_ptr != NULL) {
+block|if (priv->conf.ipfw[linkNum]&& V_fw_enable&& V_ip_fw_chk_ptr != NULL) {
 comment|/* XXX not implemented yet */
 block|}
 endif|#

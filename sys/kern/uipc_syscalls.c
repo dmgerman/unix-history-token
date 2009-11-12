@@ -9706,6 +9706,17 @@ argument_list|,
 name|xfsize
 argument_list|)
 expr_stmt|;
+name|xfsize
+operator|=
+name|omin
+argument_list|(
+name|space
+operator|-
+name|loopbytes
+argument_list|,
+name|xfsize
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xfsize
@@ -9723,23 +9734,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* all data sent */
-break|break;
-block|}
-comment|/* 			 * Don't overflow the send buffer. 			 * Stop here and send out what we've 			 * already got. 			 */
-if|if
-condition|(
-name|space
-operator|<
-name|loopbytes
-operator|+
-name|xfsize
-condition|)
-block|{
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|obj
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 comment|/* 			 * Attempt to look up the page.  Allocate 			 * if not found or wait and loop if busy. 			 */

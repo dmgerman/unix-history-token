@@ -364,7 +364,7 @@ name|kvm
 parameter_list|)
 block|{
 name|u_int
-name|db_capture_bufsize
+name|db_capture_bufoff
 decl_stmt|;
 name|char
 modifier|*
@@ -408,14 +408,14 @@ name|kread_symbol
 argument_list|(
 name|kvm
 argument_list|,
-name|X_DB_CAPTURE_BUFSIZE
+name|X_DB_CAPTURE_BUFOFF
 argument_list|,
 operator|&
-name|db_capture_bufsize
+name|db_capture_bufoff
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|db_capture_bufsize
+name|db_capture_bufoff
 argument_list|)
 argument_list|,
 literal|0
@@ -428,14 +428,14 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"kvm: unable to read db_capture_bufsize"
+literal|"kvm: unable to read db_capture_bufoff"
 argument_list|)
 expr_stmt|;
 name|buffer
 operator|=
 name|malloc
 argument_list|(
-name|db_capture_bufsize
+name|db_capture_bufoff
 operator|+
 literal|1
 argument_list|)
@@ -451,16 +451,16 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"malloc: db_capture_bufsize (%u)"
+literal|"malloc: db_capture_bufoff (%u)"
 argument_list|,
-name|db_capture_bufsize
+name|db_capture_bufoff
 argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
 name|buffer
 argument_list|,
-name|db_capture_bufsize
+name|db_capture_bufoff
 operator|+
 literal|1
 argument_list|)
@@ -475,7 +475,7 @@ name|db_capture_buf
 argument_list|,
 name|buffer
 argument_list|,
-name|db_capture_bufsize
+name|db_capture_bufoff
 argument_list|,
 literal|0
 argument_list|)
@@ -759,7 +759,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"kvm: unable to read db_capture_inpgoress"
+literal|"kvm: unable to read db_capture_inprogress"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -976,6 +976,10 @@ operator|=
 name|NULL
 expr_stmt|;
 name|nflag
+operator|=
+name|NULL
+expr_stmt|;
+name|kvm
 operator|=
 name|NULL
 expr_stmt|;

@@ -689,6 +689,12 @@ name|u_char
 name|if_alloctype
 decl_stmt|;
 comment|/* if_type at time of allocation */
+name|struct
+name|sbuf
+modifier|*
+name|if_description
+decl_stmt|;
+comment|/* interface description */
 comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
 name|char
 name|if_cspare
@@ -700,7 +706,7 @@ name|void
 modifier|*
 name|if_pspare
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
 name|int

@@ -1977,6 +1977,14 @@ name|cmdtype
 operator|=
 name|CMDUNKNOWN
 expr_stmt|;
+name|entry
+operator|->
+name|u
+operator|.
+name|index
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 name|success
 label|:

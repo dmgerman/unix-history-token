@@ -299,38 +299,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * 'mmap_zero' determines whether or not MAP_FIXED mmap() requests for  * virtual address zero are permitted.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|mmap_zero
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_security_bsd
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mmap_zero
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|mmap_zero
-argument_list|,
-literal|0
-argument_list|,
-literal|"Processes may map an object at virtual address zero"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Set the maximum number of vm_map_entry structures per process.  Roughly  * speaking vm_map_entry structures are tiny, so allowing them to eat 1/100  * of our KVM malloc space still results in generous limits.  We want a  * default that is good enough to prevent the kernel running out of resources  * if attacked from compromised user account but generous enough such that  * multi-threaded processes are not unduly inconvenienced.  */
 end_comment
 
@@ -966,21 +934,6 @@ condition|(
 name|addr
 operator|&
 name|PAGE_MASK
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-comment|/* 		 * Mapping to address zero is only permitted if 		 * mmap_zero is enabled. 		 */
-if|if
-condition|(
-name|addr
-operator|==
-literal|0
-operator|&&
-operator|!
-name|mmap_zero
 condition|)
 return|return
 operator|(

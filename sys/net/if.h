@@ -1080,6 +1080,17 @@ name|struct
 name|sockaddr
 name|ifru_broadaddr
 decl_stmt|;
+struct|struct
+block|{
+name|size_t
+name|length
+decl_stmt|;
+name|caddr_t
+name|buffer
+decl_stmt|;
+block|}
+name|ifru_buffer
+struct|;
 name|short
 name|ifru_flags
 index|[
@@ -1131,6 +1142,11 @@ directive|define
 name|ifr_broadaddr
 value|ifr_ifru.ifru_broadaddr
 comment|/* broadcast address */
+define|#
+directive|define
+name|ifr_buffer
+value|ifr_ifru.ifru_buffer
+comment|/* user supplied buffer with its length */
 define|#
 directive|define
 name|ifr_flags

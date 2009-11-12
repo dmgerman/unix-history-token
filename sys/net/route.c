@@ -4726,6 +4726,9 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX 		 * "flow-table" only support IPv4 at the moment. 		 */
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|dst
@@ -4917,6 +4920,8 @@ block|}
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
 comment|/* XXX mtu manipulation will be done in rnh_addaddr -- itojun */
 name|rn
 operator|=
@@ -5009,6 +5014,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|flowtable_route_flush
 argument_list|(
 name|V_ip_ft
@@ -5016,6 +5024,8 @@ argument_list|,
 name|rt0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|RTFREE
 argument_list|(
 name|rt0

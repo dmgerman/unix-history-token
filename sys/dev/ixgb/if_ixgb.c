@@ -1147,14 +1147,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"ixgb%d: %s\n"
-argument_list|,
-name|device_get_unit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"%s\n"
 argument_list|,
 name|ixgb_copyright
 argument_list|)
@@ -1178,9 +1175,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb: adapter structure allocation failed\n"
+name|dev
+argument_list|,
+literal|"adapter structure allocation failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1213,15 +1212,6 @@ operator|.
 name|dev
 operator|=
 name|dev
-expr_stmt|;
-name|adapter
-operator|->
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 name|IXGB_LOCK_INIT
 argument_list|(
@@ -1412,13 +1402,11 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Allocation of PCI resources failed\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Allocation of PCI resources failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1464,13 +1452,11 @@ name|BUS_DMA_NOWAIT
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Unable to allocate TxDescriptor memory\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate TxDescriptor memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1531,13 +1517,11 @@ name|BUS_DMA_NOWAIT
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Unable to allocate rx_desc memory\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate rx_desc memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1572,13 +1556,11 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Unable to initialize the hardware\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to initialize the hardware\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2677,13 +2659,11 @@ name|IXGB_TX_TIMEOUT
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|if_printf
 argument_list|(
-literal|"ixgb%d: watchdog timeout -- resetting\n"
+name|ifp
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"watchdog timeout -- resetting\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2747,13 +2727,17 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|=
+name|adapter
+operator|->
+name|ifp
+expr_stmt|;
 comment|/* Get the latest mac address, User can use a LAA */
 name|bcopy
 argument_list|(
 name|IF_LLADDR
 argument_list|(
-name|adapter
-operator|->
 name|ifp
 argument_list|)
 argument_list|,
@@ -2775,13 +2759,11 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ixgb%d: Unable to initialize the hardware\n"
+name|ifp
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to initialize the hardware\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2800,13 +2782,11 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ixgb%d: Could not setup transmit structures\n"
+name|ifp
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Could not setup transmit structures\n"
 argument_list|)
 expr_stmt|;
 name|ixgb_stop
@@ -2836,13 +2816,11 @@ name|adapter
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ixgb%d: Could not setup receive structures\n"
+name|ifp
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Could not setup receive structures\n"
 argument_list|)
 expr_stmt|;
 name|ixgb_stop
@@ -3916,14 +3894,12 @@ operator|->
 name|no_tx_dma_setup
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ixgb%d: ixgb_encap: bus_dmamap_load_mbuf failed; "
-literal|"error %u\n"
+name|ifp
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"ixgb_encap: bus_dmamap_load_mbuf failed; "
+literal|"error %u\n"
 argument_list|,
 name|error
 argument_list|)
@@ -4751,13 +4727,13 @@ operator|->
 name|link_active
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ixgb%d: Link is up %d Mbps %s \n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|ifp
+argument_list|,
+literal|"Link is up %d Mbps %s \n"
 argument_list|,
 literal|10000
 argument_list|,
@@ -4781,13 +4757,13 @@ operator|->
 name|link_active
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ixgb%d: Link is Down \n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|ifp
+argument_list|,
+literal|"Link is Down \n"
 argument_list|)
 expr_stmt|;
 name|adapter
@@ -4951,13 +4927,11 @@ operator|)
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Memory Access and/or Bus Master bits were not set!\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Memory Access and/or Bus Master bits were not set!\n"
 argument_list|)
 expr_stmt|;
 name|adapter
@@ -5093,13 +5067,11 @@ operator|.
 name|device_id
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: unsupported device id 0x%x\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"unsupported device id 0x%x\n"
 argument_list|,
 name|adapter
 operator|->
@@ -5168,13 +5140,11 @@ name|res_memory
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Unable to allocate bus resource: memory\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate bus resource: memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5265,13 +5235,11 @@ name|res_interrupt
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Unable to allocate bus resource: interrupt\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Unable to allocate bus resource: interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5317,13 +5285,11 @@ name|int_handler_tag
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Error registering interrupt handler!\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"Error registering interrupt handler!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5493,13 +5459,13 @@ name|hw
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: The EEPROM Checksum Is Not Valid\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"The EEPROM Checksum Is Not Valid\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5520,13 +5486,13 @@ name|hw
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Hardware Initialization Failed"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Hardware Initialization Failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5618,9 +5584,10 @@ name|ifp
 operator|->
 name|if_unit
 operator|=
-name|adapter
-operator|->
-name|unit
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -5912,9 +5879,18 @@ name|int
 name|mapflags
 parameter_list|)
 block|{
+name|device_t
+name|dev
+decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+name|dev
+operator|=
+name|adapter
+operator|->
+name|dev
+expr_stmt|;
 name|r
 operator|=
 name|bus_dma_tag_create
@@ -5976,14 +5952,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: ixgb_dma_malloc: bus_dma_tag_create failed; "
-literal|"error %u\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"ixgb_dma_malloc: bus_dma_tag_create failed; "
+literal|"error %u\n"
 argument_list|,
 name|r
 argument_list|)
@@ -6025,14 +5999,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: ixgb_dma_malloc: bus_dmamem_alloc failed; "
-literal|"error %u\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"ixgb_dma_malloc: bus_dmamem_alloc failed; "
+literal|"error %u\n"
 argument_list|,
 name|r
 argument_list|)
@@ -6078,14 +6050,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: ixgb_dma_malloc: bus_dmamap_load failed; "
-literal|"error %u\n"
+name|dev
 argument_list|,
-name|adapter
-operator|->
-name|unit
+literal|"ixgb_dma_malloc: bus_dmamap_load failed; "
+literal|"error %u\n"
 argument_list|,
 name|r
 argument_list|)
@@ -6245,13 +6215,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Unable to allocate tx_buffer memory\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Unable to allocate tx_buffer memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6348,13 +6318,13 @@ name|txtag
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Unable to allocate TX DMA tag\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Unable to allocate TX DMA tag\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7627,13 +7597,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Unable to allocate rx_buffer memory\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Unable to allocate rx_buffer memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7720,14 +7690,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: ixgb_allocate_receive_structures: "
-literal|"bus_dma_tag_create failed; error %u\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"ixgb_allocate_receive_structures: "
+literal|"bus_dma_tag_create failed; error %u\n"
 argument_list|,
 name|error
 argument_list|)
@@ -7784,14 +7754,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: ixgb_allocate_receive_structures: "
-literal|"bus_dmamap_create failed; error %u\n"
-argument_list|,
 name|adapter
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"ixgb_allocate_receive_structures: "
+literal|"bus_dmamap_create failed; error %u\n"
 argument_list|,
 name|error
 argument_list|)
@@ -10727,43 +10697,45 @@ decl_stmt|;
 name|ixgb_bus_type
 name|bus_type
 decl_stmt|;
-name|int
-name|unit
-init|=
+name|device_t
+name|dev
+decl_stmt|;
+name|dev
+operator|=
 name|adapter
 operator|->
-name|unit
-decl_stmt|;
+name|dev
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_SV_
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Packets not Avail = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Packets not Avail = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|no_pkts_avail
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: CleanTxInterrupts = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"CleanTxInterrupts = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|clean_tx_interrupts
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: ICR RXDMT0 = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"ICR RXDMT0 = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -10776,11 +10748,11 @@ operator|.
 name|icr_rxdmt0
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: ICR RXO = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"ICR RXO = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -10793,11 +10765,11 @@ operator|.
 name|icr_rxo
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: ICR RXT0 = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"ICR RXT0 = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -10810,11 +10782,11 @@ operator|.
 name|icr_rxt0
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: ICR TXDW = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"ICR TXDW = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -10881,11 +10853,11 @@ else|:
 literal|"UNKNOWN"
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: PCI_Bus_Speed = %s\n"
+name|dev
 argument_list|,
-name|unit
+literal|"PCI_Bus_Speed = %s\n"
 argument_list|,
 name|buf_speed
 argument_list|)
@@ -10909,64 +10881,64 @@ else|:
 literal|"UNKNOWN"
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: PCI_Bus_Type = %s\n"
+name|dev
 argument_list|,
-name|unit
+literal|"PCI_Bus_Type = %s\n"
 argument_list|,
 name|buf_type
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Tx Descriptors not Avail1 = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Tx Descriptors not Avail1 = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|no_tx_desc_avail1
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Tx Descriptors not Avail2 = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Tx Descriptors not Avail2 = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|no_tx_desc_avail2
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Std Mbuf Failed = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Std Mbuf Failed = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|mbuf_alloc_failed
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Std Cluster Failed = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Std Cluster Failed = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|mbuf_cluster_failed
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Defer count = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Defer count = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -10979,11 +10951,11 @@ operator|.
 name|dc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Missed Packets = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Missed Packets = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -10996,11 +10968,11 @@ operator|.
 name|mpc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Receive No Buffers = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Receive No Buffers = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11013,11 +10985,11 @@ operator|.
 name|rnbc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Receive length errors = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Receive length errors = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11030,11 +11002,11 @@ operator|.
 name|rlec
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Crc errors = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Crc errors = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11047,22 +11019,22 @@ operator|.
 name|crcerrs
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Driver dropped packets = %ld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Driver dropped packets = %ld\n"
 argument_list|,
 name|adapter
 operator|->
 name|dropped_pkts
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: XON Rcvd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"XON Rcvd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11075,11 +11047,11 @@ operator|.
 name|xonrxc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: XON Xmtd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"XON Xmtd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11092,11 +11064,11 @@ operator|.
 name|xontxc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: XOFF Rcvd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"XOFF Rcvd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11109,11 +11081,11 @@ operator|.
 name|xoffrxc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: XOFF Xmtd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"XOFF Xmtd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11126,11 +11098,11 @@ operator|.
 name|xofftxc
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Good Packets Rcvd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Good Packets Rcvd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11143,11 +11115,11 @@ operator|.
 name|gprcl
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Good Packets Xmtd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Good Packets Xmtd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11160,11 +11132,11 @@ operator|.
 name|gptcl
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Jumbo frames recvd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Jumbo frames recvd = %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -11177,11 +11149,11 @@ operator|.
 name|jprcl
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ixgb%d: Jumbo frames Xmtd = %lld\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Jumbo frames Xmtd = %lld\n"
 argument_list|,
 operator|(
 name|long

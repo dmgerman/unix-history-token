@@ -309,9 +309,16 @@ name|video_adapter
 modifier|*
 name|adp
 decl_stmt|;
+name|device_t
+name|pci_dev
+decl_stmt|;
 name|void
 modifier|*
 name|state_buf
+decl_stmt|;
+name|void
+modifier|*
+name|pal_buf
 decl_stmt|;
 ifdef|#
 directive|ifdef

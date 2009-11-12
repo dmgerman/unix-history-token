@@ -1178,12 +1178,6 @@ name|ng_sppp_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_watchdog
-operator|=
-name|NULL
-expr_stmt|;
-name|ifp
-operator|->
 name|if_flags
 operator|=
 operator|(

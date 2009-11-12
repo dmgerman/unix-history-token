@@ -1888,9 +1888,6 @@ name|flags
 argument_list|,
 operator|&
 name|error
-argument_list|,
-operator|&
-name|ifp
 argument_list|)
 condition|)
 block|{
@@ -1963,7 +1960,7 @@ operator|!
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 condition|)
 goto|goto
@@ -1985,7 +1982,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|,
 operator|&
 name|m

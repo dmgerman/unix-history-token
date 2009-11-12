@@ -1630,7 +1630,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|aac_fast_intr
+name|aac_filter
 parameter_list|(
 name|void
 modifier|*

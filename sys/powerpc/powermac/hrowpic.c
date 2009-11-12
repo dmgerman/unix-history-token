@@ -691,7 +691,7 @@ operator|)
 operator|&&
 operator|(
 name|irq
-operator|<
+operator|<=
 name|HROWPIC_IRQMAX
 operator|)
 argument_list|,
@@ -700,6 +700,14 @@ literal|"en irq out of range"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Humor the SMP layer if it wants to set up an IPI handler. 	 */
+if|if
+condition|(
+name|irq
+operator|==
+name|HROWPIC_IRQMAX
+condition|)
+return|return;
 comment|/* 	 * Calculate prim/sec register bank for the IRQ, update soft copy, 	 * and enable the IRQ as an interrupt source 	 */
 name|roffset
 operator|=

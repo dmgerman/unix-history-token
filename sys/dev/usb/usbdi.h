@@ -2245,6 +2245,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint8_t
+name|usbd_xfer_get_fps_shift
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|usb_frlength_t
 name|usbd_xfer_frame_len
 parameter_list|(

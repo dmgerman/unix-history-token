@@ -3193,12 +3193,6 @@ literal|0
 expr_stmt|;
 name|ifp
 operator|->
-name|if_watchdog
-operator|=
-name|NULL
-expr_stmt|;
-name|ifp
-operator|->
 name|if_init
 operator|=
 name|nfe_init

@@ -12,6 +12,8 @@ enum|enum
 block|{
 name|URTW_8187B_BULK_RX
 block|,
+name|URTW_8187B_BULK_TX_STATUS
+block|,
 name|URTW_8187B_BULK_TX_BE
 block|,
 name|URTW_8187B_BULK_TX_BK
@@ -24,7 +26,7 @@ name|URTW_8187B_BULK_TX_EP12
 block|,
 name|URTW_8187B_N_XFERS
 init|=
-literal|6
+literal|7
 block|}
 enum|;
 end_enum
@@ -142,6 +144,13 @@ define|#
 directive|define
 name|URTW_TX_MAXSIZE
 value|0x9c4
+end_define
+
+begin_define
+define|#
+directive|define
+name|URTW_TX_MAXRETRY
+value|11
 end_define
 
 begin_struct
@@ -539,6 +548,17 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|sc_txpwr_ofdm_base
+decl_stmt|;
+name|uint8_t
+name|sc_acmctl
+decl_stmt|;
+name|uint64_t
+name|sc_txstatus
+decl_stmt|;
+comment|/* only for 8187B */
+name|struct
+name|task
+name|sc_updateslot_task
 decl_stmt|;
 name|struct
 name|urtw_rx_radiotap_header

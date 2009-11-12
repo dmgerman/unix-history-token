@@ -263,12 +263,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_flag
-operator||=
-name|P_NOLOAD
-expr_stmt|;
 name|thread_lock
 argument_list|(
 name|td
@@ -284,6 +278,8 @@ operator|->
 name|td_flags
 operator||=
 name|TDF_IDLETD
+operator||
+name|TDF_NOLOAD
 expr_stmt|;
 name|sched_class
 argument_list|(

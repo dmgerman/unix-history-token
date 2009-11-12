@@ -152,12 +152,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<arm/xscale/xscalevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_timer.h"
 end_include
 

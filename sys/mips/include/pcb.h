@@ -49,6 +49,9 @@ name|int
 name|pcb_onfault
 decl_stmt|;
 comment|/* for copyin/copyout faults */
+name|register_t
+name|pcb_tpc
+decl_stmt|;
 block|}
 struct|;
 end_struct

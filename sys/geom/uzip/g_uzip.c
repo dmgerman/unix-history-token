@@ -1859,6 +1859,20 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+comment|/* Skip providers that are already open for writing. */
+if|if
+condition|(
+name|pp
+operator|->
+name|acw
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|buf
 operator|=
 name|NULL

@@ -366,7 +366,7 @@ specifier|static
 name|int
 name|wpi_debug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 

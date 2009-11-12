@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -1098,8 +1104,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"f_bsize=%llu\n"
+literal|"f_bsize=%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|buf
 operator|.
 name|f_bsize
@@ -1110,8 +1119,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"f_blocks=%llu\n"
+literal|"f_blocks=%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|buf
 operator|.
 name|f_blocks
@@ -1122,8 +1134,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"f_bfree=%llu\n"
+literal|"f_bfree=%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|buf
 operator|.
 name|f_bfree
@@ -1134,8 +1149,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"f_files=%llu\n"
+literal|"f_files=%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|buf
 operator|.
 name|f_files

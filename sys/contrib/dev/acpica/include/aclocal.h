@@ -3445,6 +3445,56 @@ value|0x30
 end_define
 
 begin_comment
+comment|/*****************************************************************************  *  * Disassembler  *  ****************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_external_list
+block|{
+name|char
+modifier|*
+name|Path
+decl_stmt|;
+name|char
+modifier|*
+name|InternalPath
+decl_stmt|;
+name|struct
+name|acpi_external_list
+modifier|*
+name|Next
+decl_stmt|;
+name|UINT32
+name|Value
+decl_stmt|;
+name|UINT16
+name|Length
+decl_stmt|;
+name|UINT8
+name|Type
+decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
+block|}
+name|ACPI_EXTERNAL_LIST
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for Flags field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IPATH_ALLOCATED
+value|0x01
+end_define
+
+begin_comment
 comment|/*****************************************************************************  *  * Debugger  *  ****************************************************************************/
 end_comment
 

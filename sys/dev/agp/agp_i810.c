@@ -647,6 +647,16 @@ literal|"Intel G45 SVGA controller"
 block|}
 block|,
 block|{
+literal|0x2E328086
+block|,
+name|CHIP_G4X
+block|,
+literal|0x00020000
+block|,
+literal|"Intel G41 SVGA controller"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0

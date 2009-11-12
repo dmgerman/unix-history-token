@@ -822,12 +822,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|struct
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|pfil_head
+argument_list|,
 name|inet_pfil_hook
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Packet filter hooks */
@@ -1578,6 +1582,43 @@ expr_stmt|;
 name|maxnipq_update
 argument_list|()
 expr_stmt|;
+comment|/* Initialize packet filter hooks. */
+name|V_inet_pfil_hook
+operator|.
+name|ph_type
+operator|=
+name|PFIL_TYPE_AF
+expr_stmt|;
+name|V_inet_pfil_hook
+operator|.
+name|ph_af
+operator|=
+name|AF_INET
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|pfil_head_register
+argument_list|(
+operator|&
+name|V_inet_pfil_hook
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s: WARNING: unable to register pfil hook, "
+literal|"error %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FLOWTABLE
@@ -1715,43 +1756,6 @@ operator|-
 name|inetsw
 expr_stmt|;
 block|}
-comment|/* Initialize packet filter hooks. */
-name|inet_pfil_hook
-operator|.
-name|ph_type
-operator|=
-name|PFIL_TYPE_AF
-expr_stmt|;
-name|inet_pfil_hook
-operator|.
-name|ph_af
-operator|=
-name|AF_INET
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|i
-operator|=
-name|pfil_head_register
-argument_list|(
-operator|&
-name|inet_pfil_hook
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"%s: WARNING: unable to register pfil hook, "
-literal|"error %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 comment|/* Start ipport_tick. */
 name|callout_init
 argument_list|(
@@ -2408,7 +2412,7 @@ operator|!
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 condition|)
 goto|goto
@@ -2425,7 +2429,7 @@ condition|(
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|,
 operator|&
 name|m
@@ -2526,7 +2530,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Directly ship on the packet.  This allows to forward packets 		 * that were destined for us to some other directly connected 		 * host. 		 */
+comment|/* 		 * Directly ship the packet on.  This allows forwarding 		 * packets originally destined to us to some other directly 		 * connected host. 		 */
 name|ip_forward
 argument_list|(
 name|m

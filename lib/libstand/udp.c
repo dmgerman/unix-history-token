@@ -301,7 +301,7 @@ name|ip
 operator|->
 name|ip_ttl
 operator|=
-name|IP_TTL
+name|IPDEFTTL
 expr_stmt|;
 comment|/* char */
 name|ip

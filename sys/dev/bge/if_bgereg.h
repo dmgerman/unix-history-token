@@ -913,6 +913,13 @@ name|BGE_PCI_ISR_MBX_LO
 value|0xB4
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_PCI_PRODID_ASICREV
+value|0xBC
+end_define
+
 begin_comment
 comment|/* PCI Misc. Host control register */
 end_comment
@@ -983,6 +990,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_PCIMISCCTL_ASICREV_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_HIF_SWAP_OPTIONS
 value|(BGE_PCIMISCCTL_ENDIAN_WORDSWAP)
 end_define
@@ -1033,77 +1047,77 @@ begin_define
 define|#
 directive|define
 name|BGE_CHIPID_TIGON_I
-value|0x40000000
+value|0x4000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_TIGON_II
-value|0x60000000
+value|0x6000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5700_A0
-value|0x70000000
+value|0x7000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5700_A1
-value|0x70010000
+value|0x7001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5700_B0
-value|0x71000000
+value|0x7100
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5700_B1
-value|0x71010000
+value|0x7101
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5700_B2
-value|0x71020000
+value|0x7102
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5700_B3
-value|0x71030000
+value|0x7103
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5700_ALTIMA
-value|0x71040000
+value|0x7104
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5700_C0
-value|0x72000000
+value|0x7200
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5701_A0
-value|0x00000000
+value|0x0000
 end_define
 
 begin_comment
@@ -1114,322 +1128,364 @@ begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5701_B0
-value|0x01000000
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5701_B2
-value|0x01020000
+value|0x0102
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5701_B5
-value|0x01050000
+value|0x0105
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5703_A0
-value|0x10000000
+value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5703_A1
-value|0x10010000
+value|0x1001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5703_A2
-value|0x10020000
+value|0x1002
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5703_A3
-value|0x10030000
+value|0x1003
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5703_B0
-value|0x11000000
+value|0x1100
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5704_A0
-value|0x20000000
+value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5704_A1
-value|0x20010000
+value|0x2001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5704_A2
-value|0x20020000
+value|0x2002
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5704_A3
-value|0x20030000
+value|0x2003
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5704_B0
-value|0x21000000
+value|0x2100
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5705_A0
-value|0x30000000
+value|0x3000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5705_A1
-value|0x30010000
+value|0x3001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5705_A2
-value|0x30020000
+value|0x3002
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5705_A3
-value|0x30030000
+value|0x3003
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5750_A0
-value|0x40000000
+value|0x4000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5750_A1
-value|0x40010000
+value|0x4001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5750_A3
-value|0x40030000
+value|0x4000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5750_B0
-value|0x41000000
+value|0x4100
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5750_B1
-value|0x41010000
+value|0x4101
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5750_C0
-value|0x42000000
+value|0x4200
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5750_C1
-value|0x42010000
+value|0x4201
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5750_C2
-value|0x42020000
+value|0x4202
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5714_A0
-value|0x50000000
+value|0x5000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5752_A0
-value|0x60000000
+value|0x6000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5752_A1
-value|0x60010000
+value|0x6001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5752_A2
-value|0x60020000
+value|0x6002
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5714_B0
-value|0x80000000
+value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5714_B3
-value|0x80030000
+value|0x8003
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5715_A0
-value|0x90000000
+value|0x9000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5715_A1
-value|0x90010000
+value|0x9001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5715_A3
-value|0x90030000
+value|0x9003
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5755_A0
-value|0xa0000000
+value|0xa000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5755_A1
-value|0xa0010000
+value|0xa001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5755_A2
-value|0xa0020000
+value|0xa002
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5722_A0
-value|0xa2000000
+value|0xa200
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5754_A0
-value|0xb0000000
+value|0xb000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5754_A1
-value|0xb0010000
+value|0xb001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5754_A2
-value|0xb0020000
+value|0xb002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM5761_A0
+value|0x5761000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM5761_A1
+value|0x5761100
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM5784_A0
+value|0x5784000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM5784_A1
+value|0x5784100
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5787_A0
-value|0xb0000000
+value|0xb000
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5787_A1
-value|0xb0010000
+value|0xb001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5787_A2
-value|0xb0020000
+value|0xb002
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5906_A1
-value|0xc0010000
+value|0xc001
 end_define
 
 begin_define
 define|#
 directive|define
 name|BGE_CHIPID_BCM5906_A2
-value|0xc0020000
+value|0xc002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM57780_A0
+value|0x57780000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM57780_A1
+value|0x57780001
 end_define
 
 begin_comment
@@ -1443,7 +1499,7 @@ name|BGE_ASICREV
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>> 28)
+value|((x)>> 12)
 end_define
 
 begin_define
@@ -1545,6 +1601,49 @@ value|0x0c
 end_define
 
 begin_comment
+comment|/* Should consult BGE_PCI_PRODID_ASICREV for ChipID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_USE_PRODID_REG
+value|0x0f
+end_define
+
+begin_comment
+comment|/* BGE_PCI_PRODID_ASICREV ASIC rev. identifiers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5761
+value|0x5761
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5784
+value|0x5784
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5785
+value|0x5785
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM57780
+value|0x57780
+end_define
+
+begin_comment
 comment|/* chip revisions */
 end_comment
 
@@ -1555,7 +1654,7 @@ name|BGE_CHIPREV
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>> 24)
+value|((x)>> 8)
 end_define
 
 begin_define
@@ -1619,6 +1718,24 @@ define|#
 directive|define
 name|BGE_CHIPREV_5750_BX
 value|0x41
+end_define
+
+begin_comment
+comment|/* BGE_PCI_PRODID_ASICREV chip rev. identifiers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_5761_AX
+value|0x57611
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_5784_AX
+value|0x57841
 end_define
 
 begin_comment
@@ -4920,6 +5037,13 @@ name|BGE_SDCMODE_ATTN
 value|0x00000004
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_SDCMODE_CDELAY
+value|0x00000010
+end_define
+
 begin_comment
 comment|/* Send Data completion status register */
 end_comment
@@ -7898,6 +8022,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_RDMAMODE_BD_SBD_CRPT_ATTN
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMAMODE_MBUF_RBD_CRPT_ATTN
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMAMODE_MBUF_SBD_CRPT_ATTN
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_RDMAMODE_FIFO_SIZE_128
 value|0x00020000
 end_define
@@ -8066,6 +8211,13 @@ define|#
 directive|define
 name|BGE_WDMAMODE_ALL_ATTNS
 value|0x000003FC
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_WDMAMODE_STATUS_TAG_FIX
+value|0x20000000
 end_define
 
 begin_comment
@@ -9743,36 +9895,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_MSIMODE_PCI_TGT_ABRT_ATTN
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_MSIMODE_PCI_MSTR_ABRT_ATTN
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_MSIMODE_PCI_PERR_ATTN
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_MSIMODE_MSI_FIFOUFLOW_ATTN
+name|BGE_MSIMODE_ONE_SHOT_DISABLE
 value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_MSIMODE_MSI_FIFOOFLOW_ATTN
-value|0x00000040
+name|BGE_MSIMODE_MULTIVEC_ENABLE
+value|0x00000080
 end_define
 
 begin_comment
@@ -11691,6 +11822,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM5723
+value|0x165B
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM5750
 value|0x1676
 end_define
@@ -11789,6 +11927,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM5761
+value|0x1681
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5761E
+value|0x1680
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5761S
+value|0x1688
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5761SE
+value|0x1689
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5764
+value|0x1684
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM5780
 value|0x166A
 end_define
@@ -11817,6 +11990,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM5784
+value|0x1698
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5785F
+value|0x16a0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5785G
+value|0x1699
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM5786
 value|0x169A
 end_define
@@ -11833,6 +12027,13 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5787M
 value|0x1693
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5787F
+value|0x167f
 end_define
 
 begin_define
@@ -11882,6 +12083,34 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5906M
 value|0x1713
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57760
+value|0x1690
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57780
+value|0x1692
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57788
+value|0x1691
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM57790
+value|0x1694
 end_define
 
 begin_comment
@@ -12044,6 +12273,42 @@ directive|define
 name|SUN_VENDORID
 value|0x108e
 end_define
+
+begin_comment
+comment|/*  * Fujitsu vendor/device IDs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FJTSU_VENDORID
+value|0x10cf
+end_define
+
+begin_define
+define|#
+directive|define
+name|FJTSU_DEVICEID_PW008GE5
+value|0x11a1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FJTSU_DEVICEID_PW008GE4
+value|0x11a2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FJTSU_DEVICEID_PP250450
+value|0x11cc
+end_define
+
+begin_comment
+comment|/* PRIMEPOWER250/450 LAN */
+end_comment
 
 begin_comment
 comment|/*  * Offset of MAC address inside EEPROM.  */
@@ -12925,41 +13190,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_JRAWLEN
-value|(BGE_JUMBO_FRAMELEN + ETHER_ALIGN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_JLEN
-value|(BGE_JRAWLEN + (sizeof(uint64_t) - \ 	(BGE_JRAWLEN % sizeof(uint64_t))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_JPAGESZ
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_RESID
-value|(BGE_JPAGESZ - (BGE_JLEN * BGE_JSLOTS) % BGE_JPAGESZ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_JMEM
-value|((BGE_JLEN * BGE_JSLOTS) + BGE_RESID)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BGE_NSEG_JUMBO
 value|4
 end_define
@@ -13114,13 +13344,17 @@ name|bus_dma_tag_t
 name|bge_stats_tag
 decl_stmt|;
 name|bus_dma_tag_t
-name|bge_mtag
+name|bge_rx_mtag
 decl_stmt|;
-comment|/* mbuf mapping tag */
+comment|/* Rx mbuf mapping tag */
+name|bus_dma_tag_t
+name|bge_tx_mtag
+decl_stmt|;
+comment|/* Tx mbuf mapping tag */
 name|bus_dma_tag_t
 name|bge_mtag_jumbo
 decl_stmt|;
-comment|/* mbuf mapping tag */
+comment|/* Jumbo mbuf mapping tag */
 name|bus_dmamap_t
 name|bge_tx_dmamap
 index|[
@@ -13128,10 +13362,16 @@ name|BGE_TX_RING_CNT
 index|]
 decl_stmt|;
 name|bus_dmamap_t
+name|bge_rx_std_sparemap
+decl_stmt|;
+name|bus_dmamap_t
 name|bge_rx_std_dmamap
 index|[
 name|BGE_STD_RX_RING_CNT
 index|]
+decl_stmt|;
+name|bus_dmamap_t
+name|bge_rx_jumbo_sparemap
 decl_stmt|;
 name|bus_dmamap_t
 name|bge_rx_jumbo_dmamap
@@ -13370,6 +13610,10 @@ name|BGE_FLAG_575X_PLUS
 value|0x00008000
 define|#
 directive|define
+name|BGE_FLAG_5755_PLUS
+value|0x00010000
+define|#
+directive|define
 name|BGE_FLAG_RX_ALIGNBUG
 value|0x00100000
 define|#
@@ -13407,10 +13651,10 @@ value|0x20000000
 name|uint32_t
 name|bge_chipid
 decl_stmt|;
-name|uint8_t
+name|uint32_t
 name|bge_asicrev
 decl_stmt|;
-name|uint8_t
+name|uint32_t
 name|bge_chiprev
 decl_stmt|;
 name|uint8_t

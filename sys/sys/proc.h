@@ -1160,12 +1160,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED18
+name|TDF_NOLOAD
 value|0x00040000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Ignore during load avg calculations. */
 end_comment
 
 begin_define
@@ -2531,12 +2531,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_NOLOAD
+name|P_UNUSED0
 value|0x00008
 end_define
 
 begin_comment
-comment|/* Ignore during load avg calculations. */
+comment|/* available. */
 end_comment
 
 begin_define
@@ -4609,6 +4609,19 @@ parameter_list|)
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_set_syscall_retval
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1871,7 +1871,7 @@ name|AHCI_SLOT_LOADING
 block|,
 name|AHCI_SLOT_RUNNING
 block|,
-name|AHCI_SLOT_WAITING
+name|AHCI_SLOT_EXECUTING
 block|}
 enum|;
 end_enum
@@ -2029,6 +2029,10 @@ name|int
 name|readlog
 decl_stmt|;
 comment|/* Our READ LOG active */
+name|int
+name|fatalerr
+decl_stmt|;
+comment|/* Fatal error happend */
 name|int
 name|lastslot
 decl_stmt|;

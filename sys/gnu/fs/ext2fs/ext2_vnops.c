@@ -1745,6 +1745,27 @@ operator|!=
 name|VNOVAL
 condition|)
 block|{
+comment|/* Disallow flags not supported by ext2fs. */
+if|if
+condition|(
+name|vap
+operator|->
+name|va_flags
+operator|&
+operator|~
+operator|(
+name|SF_APPEND
+operator||
+name|SF_IMMUTABLE
+operator||
+name|UF_NODUMP
+operator|)
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 if|if
 condition|(
 name|vp

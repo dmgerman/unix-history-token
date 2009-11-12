@@ -360,10 +360,6 @@ name|bus_dma_tag_t
 name|vge_tag
 decl_stmt|;
 name|u_int8_t
-name|vge_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|vge_type
 decl_stmt|;
 name|int

@@ -7608,6 +7608,20 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+comment|/* Skip providers that are already open for writing. */
+if|if
+condition|(
+name|pp
+operator|->
+name|acw
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 comment|/* 	 * Create a GEOM with consumer and hook it up to the provider. 	 * With that we become part of the topology. Optain read access 	 * to the provider. 	 */
 name|gp
 operator|=

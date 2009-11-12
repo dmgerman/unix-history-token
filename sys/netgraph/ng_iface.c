@@ -2223,12 +2223,6 @@ name|ng_iface_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_watchdog
-operator|=
-name|NULL
-expr_stmt|;
-name|ifp
-operator|->
 name|if_mtu
 operator|=
 name|NG_IFACE_MTU_DEFAULT

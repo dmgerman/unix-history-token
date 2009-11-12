@@ -831,41 +831,6 @@ name|ATA_SACTIVE
 value|16
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIIS_SII3124
-value|0x31241095
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIIS_SII3132
-value|0x31321095
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIIS_SII3132_1
-value|0x02421095
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIIS_SII3132_2
-value|0x02441095
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIIS_SII3531
-value|0x35311095
-end_define
-
 begin_comment
 comment|/*  * Global registers  */
 end_comment
@@ -2146,6 +2111,10 @@ name|uint32_t
 name|eslots
 decl_stmt|;
 comment|/* Slots in error */
+name|uint32_t
+name|toslots
+decl_stmt|;
+comment|/* Slots in timeout */
 name|int
 name|numrslots
 decl_stmt|;
@@ -2166,6 +2135,10 @@ name|readlog
 decl_stmt|;
 comment|/* Our READ LOG active */
 name|int
+name|fatalerr
+decl_stmt|;
+comment|/* Fatal error happend */
+name|int
 name|recovery
 decl_stmt|;
 comment|/* Some slots are in error */
@@ -2173,10 +2146,6 @@ name|int
 name|lastslot
 decl_stmt|;
 comment|/* Last used slot */
-name|int
-name|taggedtarget
-decl_stmt|;
-comment|/* Last tagged target */
 name|union
 name|ccb
 modifier|*

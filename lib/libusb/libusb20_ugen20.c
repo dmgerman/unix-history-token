@@ -1962,6 +1962,20 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* make sure memory is initialised */
+name|memset
+argument_list|(
+operator|&
+name|cdesc
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cdesc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -2067,6 +2081,16 @@ name|LIBUSB20_ERROR_NO_MEM
 operator|)
 return|;
 block|}
+comment|/* make sure memory is initialised */
+name|memset
+argument_list|(
+name|ptr
+argument_list|,
+literal|0
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|gen_desc
 operator|.
 name|ugd_data
@@ -3497,6 +3521,22 @@ operator||=
 name|USB_FS_FLAG_CLEAR_STALL
 expr_stmt|;
 block|}
+comment|/* NOTE: The "fsep->timeout" variable is 16-bit. */
+if|if
+condition|(
+name|xfer
+operator|->
+name|timeout
+operator|>
+literal|65535
+condition|)
+name|fsep
+operator|->
+name|timeout
+operator|=
+literal|65535
+expr_stmt|;
+else|else
 name|fsep
 operator|->
 name|timeout

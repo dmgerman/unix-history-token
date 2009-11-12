@@ -3135,8 +3135,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_move_medium
@@ -3471,8 +3470,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_exchange_medium
@@ -3677,8 +3675,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_position_to_element
@@ -4380,8 +4377,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_read_element_status
@@ -4924,8 +4920,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_initialize_element_status
@@ -5277,8 +5272,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_send_volume_tag
@@ -5419,8 +5413,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The scsi_mode_sense_data structure is just a convenience 	 * structure that allows us to easily calculate the worst-case 	 * storage size of the mode sense buffer. 	 */

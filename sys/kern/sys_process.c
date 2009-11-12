@@ -809,7 +809,7 @@ name|EFAULT
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Now we need to get the page.  out_entry, out_prot, wired, 		 * and single_use aren't used.  One would think the vm code 		 * would be a *bit* nicer...  We use tmap because 		 * vm_map_lookup() can change the map argument. 		 */
+comment|/* 		 * Now we need to get the page.  out_entry, wired, 		 * and single_use aren't used.  One would think the vm code 		 * would be a *bit* nicer...  We use tmap because 		 * vm_map_lookup() can change the map argument. 		 */
 name|tmap
 operator|=
 name|map
@@ -969,6 +969,29 @@ argument_list|,
 name|len
 argument_list|,
 name|uio
+argument_list|)
+expr_stmt|;
+comment|/* Make the I-cache coherent for breakpoints. */
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|writing
+operator|&&
+operator|(
+name|out_prot
+operator|&
+name|VM_PROT_EXECUTE
+operator|)
+condition|)
+name|vm_sync_icache
+argument_list|(
+name|map
+argument_list|,
+name|uva
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Release the page. 		 */

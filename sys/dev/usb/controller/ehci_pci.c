@@ -199,6 +199,12 @@ directive|include
 file|<dev/usb/controller/ehci.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/controller/ehcireg.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1065,14 +1071,6 @@ comment|/* fallthrough */
 case|case
 name|PCI_USB_REV_2_0
 case|:
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|usbrev
-operator|=
-name|USB_REV_2_0
-expr_stmt|;
 break|break;
 default|default:
 comment|/* Quirk for Parallels Desktop 4.0 */
@@ -1082,14 +1080,6 @@ name|self
 argument_list|,
 literal|"USB revision is unknown. Assuming v2.0.\n"
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|usbrev
-operator|=
-name|USB_REV_2_0
 expr_stmt|;
 break|break;
 block|}
@@ -1623,6 +1613,42 @@ case|:
 name|ehci_pci_via_quirk
 argument_list|(
 name|self
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+comment|/* Dropped interrupts workaround */
+switch|switch
+condition|(
+name|pci_get_vendor
+argument_list|(
+name|self
+argument_list|)
+condition|)
+block|{
+case|case
+name|PCI_EHCI_VENDORID_ATI
+case|:
+case|case
+name|PCI_EHCI_VENDORID_VIA
+case|:
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|EHCI_SCFLG_LOSTINTRBUG
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"Dropped interrupts workaround enabled\n"
 argument_list|)
 expr_stmt|;
 break|break;

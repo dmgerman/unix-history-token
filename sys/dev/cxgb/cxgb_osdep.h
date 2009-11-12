@@ -83,6 +83,14 @@ name|adapter_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|struct
+name|port_info
+name|pinfo_t
+typedef|;
+end_typedef
+
 begin_struct_decl
 struct_decl|struct
 name|sge_rspq
@@ -1175,28 +1183,28 @@ begin_define
 define|#
 directive|define
 name|ADVERTISE_PAUSE_ASYM
-value|ANAR_X_PAUSE_ASYM
+value|0x800
 end_define
 
 begin_define
 define|#
 directive|define
 name|ADVERTISE_PAUSE
-value|ANAR_X_PAUSE_SYM
+value|ANAR_FC
 end_define
 
 begin_define
 define|#
 directive|define
 name|ADVERTISE_1000HALF
-value|ANAR_X_HD
+value|0x100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ADVERTISE_1000FULL
-value|ANAR_X_FD
+value|0x200
 end_define
 
 begin_define
@@ -1270,21 +1278,21 @@ value|ANAR_NP
 end_define
 
 begin_comment
-comment|/* Standard PCI Extended Capaibilities definitions */
+comment|/* Standard PCI Extended Capabilities definitions */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PCI_CAP_ID_VPD
-value|0x03
+value|PCIY_VPD
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_VPD_ADDR
-value|2
+value|PCIR_VPD_ADDR
 end_define
 
 begin_define
@@ -1298,42 +1306,49 @@ begin_define
 define|#
 directive|define
 name|PCI_VPD_DATA
-value|4
+value|PCIR_VPD_DATA
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_CAP_ID_EXP
-value|0x10
+value|PCIY_EXPRESS
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_DEVCTL
-value|8
+value|PCIR_EXPRESS_DEVICE_CTL
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_DEVCTL_PAYLOAD
-value|0x00e0
+value|PCIM_EXP_CTL_MAX_PAYLOAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_EXP_DEVCTL_READRQ
+value|PCIM_EXP_CTL_MAX_READ_REQUEST
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_LNKCTL
-value|16
+value|PCIR_EXPRESS_LINK_CTL
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_EXP_LNKSTA
-value|18
+value|PCIR_EXPRESS_LINK_STA
 end_define
 
 begin_comment

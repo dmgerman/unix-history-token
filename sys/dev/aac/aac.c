@@ -2125,8 +2125,6 @@ name|sc
 operator|->
 name|aac_daemontime
 argument_list|,
-literal|30
-operator|*
 literal|60
 operator|*
 name|hz
@@ -4567,9 +4565,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Interrupt filter for !NEW_COMM interface.  */
+end_comment
+
 begin_function
 name|int
-name|aac_fast_intr
+name|aac_filter
 parameter_list|(
 name|void
 modifier|*
@@ -10012,7 +10014,7 @@ name|aac_irq
 argument_list|,
 name|INTR_TYPE_BIO
 argument_list|,
-name|aac_fast_intr
+name|aac_filter
 argument_list|,
 name|NULL
 argument_list|,
@@ -10031,49 +10033,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"can't set up FAST interrupt\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bus_setup_intr
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-name|sc
-operator|->
-name|aac_irq
-argument_list|,
-name|INTR_MPSAFE
-operator||
-name|INTR_TYPE_BIO
-argument_list|,
-name|NULL
-argument_list|,
-operator|(
-name|driver_intr_t
-operator|*
-operator|)
-name|aac_fast_intr
-argument_list|,
-name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|aac_intr
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-literal|"can't set up MPSAFE interrupt\n"
+literal|"can't set up interrupt filter\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10081,7 +10041,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 block|}
 block|}
 return|return

@@ -19,10 +19,6 @@ begin_struct
 struct|struct
 name|mdthread
 block|{
-name|struct
-name|mtx
-name|md_highfp_mtx
-decl_stmt|;
 name|int
 name|md_spinlock_count
 decl_stmt|;

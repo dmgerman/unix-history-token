@@ -701,7 +701,7 @@ name|OID_AUTO
 argument_list|,
 name|pg_ps_enabled
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pg_ps_enabled
@@ -21068,6 +21068,22 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|pmap_sync_icache
+parameter_list|(
+name|pmap_t
+name|pm
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_size_t
+name|sz
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment

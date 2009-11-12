@@ -524,6 +524,25 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* fts_open() requires at least one path */
+if|if
+condition|(
+operator|*
+name|argv
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* Allocate/initialize the stream. */
 if|if
 condition|(

@@ -919,8 +919,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_periph_unlock
@@ -1840,8 +1839,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}

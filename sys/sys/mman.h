@@ -283,6 +283,32 @@ begin_comment
 comment|/* allocated from memory, swap space */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAP_ANONYMOUS
+value|MAP_ANON
+end_define
+
+begin_comment
+comment|/* For compatibility. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
 begin_comment
 comment|/*  * Extended flags  */
 end_comment

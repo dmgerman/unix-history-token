@@ -1056,12 +1056,6 @@ name|IFF_SIMPLEX
 expr_stmt|;
 name|ifp
 operator|->
-name|if_watchdog
-operator|=
-name|NULL
-expr_stmt|;
-name|ifp
-operator|->
 name|if_init
 operator|=
 name|patm_init
@@ -1077,12 +1071,6 @@ operator|->
 name|if_start
 operator|=
 name|patm_start
-expr_stmt|;
-name|ifp
-operator|->
-name|if_watchdog
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* do this early so we can destroy unconditionally */
 name|mtx_init

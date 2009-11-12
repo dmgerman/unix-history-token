@@ -1110,7 +1110,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|5
+name|ATA_REQUEST_TIMEOUT
 expr_stmt|;
 name|request
 operator|->
@@ -1273,7 +1273,12 @@ name|request
 operator|->
 name|timeout
 operator|=
+name|MAX
+argument_list|(
+name|ATA_REQUEST_TIMEOUT
+argument_list|,
 literal|31
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1282,7 +1287,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|5
+name|ATA_REQUEST_TIMEOUT
 expr_stmt|;
 block|}
 name|request
@@ -2482,7 +2487,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|5
+name|ATA_REQUEST_TIMEOUT
 expr_stmt|;
 name|request
 operator|->
@@ -2594,7 +2599,7 @@ name|request
 operator|->
 name|timeout
 operator|=
-literal|5
+name|ATA_REQUEST_TIMEOUT
 expr_stmt|;
 name|request
 operator|->

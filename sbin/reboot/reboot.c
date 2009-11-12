@@ -881,7 +881,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -890,16 +892,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-%slnpq] [-k kernel]\n"
-argument_list|,
-name|getprogname
-argument_list|()
-argument_list|,
 name|dohalt
 condition|?
-literal|""
+literal|"usage: halt [-lnpq] [-k kernel]\n"
 else|:
-literal|"d"
+literal|"usage: reboot [-dlnpq] [-k kernel]\n"
 argument_list|)
 expr_stmt|;
 name|exit

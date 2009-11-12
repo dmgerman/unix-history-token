@@ -1270,10 +1270,6 @@ name|struct
 name|callout
 name|sge_timer_ch
 decl_stmt|;
-name|unsigned
-name|int
-name|check_task_cnt
-decl_stmt|;
 comment|/* Register lock for use by the hardware layer */
 name|struct
 name|mtx
@@ -2012,6 +2008,9 @@ name|duplex
 parameter_list|,
 name|int
 name|fc
+parameter_list|,
+name|int
+name|mac_was_reset
 parameter_list|)
 function_decl|;
 end_function_decl

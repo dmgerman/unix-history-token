@@ -406,6 +406,8 @@ block|{
 comment|/*              * Table disassembly:              * Target of Scope() not found. Generate an External for it, and              * insert the name into the namespace.              */
 name|AcpiDmAddToExternalList
 argument_list|(
+name|Op
+argument_list|,
 name|Path
 argument_list|,
 name|ACPI_TYPE_DEVICE
@@ -1742,7 +1744,59 @@ break|break;
 case|case
 name|AML_SCOPE_OP
 case|:
-comment|/*          * The Path is an object reference to an existing object.          * Don't enter the name into the namespace, but look it up          * for use later.          */
+comment|/* Special case for Scope(\) -> refers to the Root node */
+if|if
+condition|(
+name|Op
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Named
+operator|.
+name|Node
+operator|==
+name|AcpiGbl_RootNode
+operator|)
+condition|)
+block|{
+name|Node
+operator|=
+name|Op
+operator|->
+name|Named
+operator|.
+name|Node
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiDsScopeStackPush
+argument_list|(
+name|Node
+argument_list|,
+name|ObjectType
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/*              * The Path is an object reference to an existing object.              * Don't enter the name into the namespace, but look it up              * for use later.              */
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -1816,6 +1870,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/*          * We must check to make sure that the target is          * one of the opcodes that actually opens a scope          */
 switch|switch

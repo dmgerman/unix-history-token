@@ -2015,7 +2015,6 @@ name|type
 operator|&
 name|DT_STOR_MMC
 condition|)
-empty_stmt|;
 return|return
 operator|(
 literal|"MMC"
@@ -2527,14 +2526,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-if|#
-directive|if
-literal|0
-block|if (last&& strncmp(env, last, strlen(last)) == 0);
-comment|/* error, trying to enumerate non existing env. variable */
-block|return NULL;
-endif|#
-directive|endif
 comment|/* next enumerated env var */
 name|memset
 argument_list|(

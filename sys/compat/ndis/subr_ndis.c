@@ -2399,7 +2399,6 @@ name|dre_adddevicefunc
 operator|=
 name|NdisAddDevice
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2421,7 +2420,6 @@ name|syspec
 decl_stmt|;
 block|{
 comment|/* Nothing to see here, move along. */
-return|return;
 block|}
 end_function
 
@@ -2739,7 +2737,6 @@ argument_list|(
 name|vaddr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2846,7 +2843,6 @@ name|status
 operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2889,7 +2885,6 @@ name|status
 operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2932,7 +2927,6 @@ name|status
 operator|=
 name|NDIS_STATUS_FAILURE
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3580,7 +3574,6 @@ name|status
 operator|=
 name|NDIS_STATUS_FAILURE
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|ndis_status
@@ -3958,7 +3951,6 @@ name|status
 operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -4058,7 +4050,6 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 comment|/*  * Initialize a Windows spinlock.  */
 specifier|static
@@ -4086,7 +4077,6 @@ name|nsl_kirql
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * Destroy a Windows spinlock. This is a no-op for now. There are two reasons  * for this. One is that it's sort of superfluous: we don't have to do anything  * special to deallocate the spinlock. The other is that there are some buggy  * drivers which call NdisFreeSpinLock() _after_ calling NdisFreeMemory() on  * the block of memory in which the spinlock resides. (Yes, ADMtek, I'm  * talking to you.)  */
 specifier|static
@@ -4119,7 +4109,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 comment|/*  * Acquire a spinlock from IRQL<= DISPATCH_LEVEL.  */
 specifier|static
@@ -4146,7 +4135,6 @@ operator|->
 name|nsl_kirql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * Release a spinlock from IRQL == DISPATCH_LEVEL.  */
 specifier|static
@@ -4172,7 +4160,6 @@ operator|->
 name|nsl_kirql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * Acquire a spinlock when already running at IRQL == DISPATCH_LEVEL.  */
 specifier|static
@@ -4194,7 +4181,6 @@ operator|->
 name|nsl_spinlock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * Release a spinlock without leaving IRQL == DISPATCH_LEVEL.  */
 specifier|static
@@ -4216,7 +4202,6 @@ operator|->
 name|nsl_spinlock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -4256,7 +4241,6 @@ name|nrl_rsvd
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -4312,7 +4296,6 @@ literal|1
 index|]
 operator|++
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -4371,7 +4354,6 @@ literal|1
 index|]
 operator|--
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|uint32_t
@@ -4903,7 +4885,6 @@ operator|&
 name|as
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -5004,7 +4985,6 @@ name|nma_cnt
 operator|=
 name|nseg
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -5160,7 +5140,6 @@ name|nma
 operator|.
 name|nma_cnt
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -5261,7 +5240,6 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * This is an older (?) timer init routine which doesn't  * accept a miniport context handle. Serialized miniports should  * never call this function.  */
 specifier|static
@@ -5316,7 +5294,6 @@ argument_list|,
 name|KDPC_IMPORTANCE_LOW
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -5403,7 +5380,6 @@ operator|->
 name|nmb_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * For a long time I wondered why there were two NDIS timer initialization  * routines, and why this one needed an NDIS_MINIPORT_TIMER and the  * MiniportAdapterHandle. The NDIS_MINIPORT_TIMER has its own callout  * function and context pointers separate from those in the DPC, which  * allows for another level of indirection: when the timer fires, we  * can have our own timer function invoked, and from there we can call  * the driver's function. But why go to all that trouble? Then it hit  * me: for serialized miniports, the timer callouts are not re-entrant.  * By trapping the callouts and having access to the MiniportAdapterHandle,  * we can protect the driver callouts by acquiring the NDIS serialization  * lock. This is essential for allowing serialized miniports to work  * correctly on SMP systems. On UP hosts, setting IRQL to DISPATCH_LEVEL  * is enough to prevent other threads from pre-empting you, but with  * SMP, you must acquire a lock as well, otherwise the other CPU is  * free to clobber you.  */
 specifier|static
@@ -5560,7 +5536,6 @@ operator|->
 name|nt_kdpc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -5603,7 +5578,6 @@ operator|->
 name|nmt_kdpc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * Technically, this is really NdisCancelTimer(), but we also  * (ab)use it for NdisMCancelTimer(), since in our implementation  * we don't need the extra info in the ndis_miniport_timer  * structure just to cancel a timer.  */
 specifier|static
@@ -5634,7 +5608,6 @@ operator|->
 name|nt_ktimer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -5761,7 +5734,6 @@ name|status
 operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|ndis_status
@@ -5905,9 +5877,7 @@ name|void
 modifier|*
 name|offset
 decl_stmt|;
-block|{
-return|return;
-block|}
+block|{ }
 specifier|static
 name|void
 name|NdisReadNetworkAddress
@@ -6131,7 +6101,6 @@ operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 block|}
-return|return;
 block|}
 specifier|static
 name|ndis_status
@@ -6438,7 +6407,6 @@ operator|->
 name|ndis_mtag
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -6495,7 +6463,6 @@ index|]
 operator|.
 name|ds_addr
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * This maps to bus_dmamem_alloc().  */
 specifier|static
@@ -6798,7 +6765,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 struct|struct
 name|ndis_allocwork
@@ -6956,7 +6922,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|ndis_status
@@ -7337,7 +7302,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|ndis_status
@@ -7437,7 +7401,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|uint32_t
@@ -7798,7 +7761,6 @@ name|status
 operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|NdisAllocatePacketPoolEx
@@ -8014,7 +7976,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|NdisAllocatePacket
@@ -8216,7 +8177,6 @@ name|status
 operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|NdisFreePacket
@@ -8331,7 +8291,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 specifier|static
 name|void
@@ -8429,7 +8388,6 @@ operator|->
 name|mdl_next
 expr_stmt|;
 block|}
-return|return;
 block|}
 specifier|static
 name|void
@@ -8554,7 +8512,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 comment|/*  * The NDIS "buffer" is really an MDL (memory descriptor list)  * which is used to describe a buffer in a way that allows it  * to mapped into different contexts. We have to be careful how  * we handle them: in some versions of Windows, the NdisFreeBuffer()  * routine is an actual function in the NDIS API, but in others  * it's just a macro wrapper around IoFreeMdl(). There's really  * no way to use the 'descnum' parameter to count how many  * "buffers" are allocated since in order to use IoFreeMdl() to  * dispose of a buffer, we have to use IoAllocateMdl() to allocate  * them, and IoAllocateMdl() just grabs them out of the heap.  */
 specifier|static
@@ -8590,7 +8547,6 @@ name|status
 operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -8601,9 +8557,7 @@ parameter_list|)
 name|ndis_handle
 name|pool
 decl_stmt|;
-block|{
-return|return;
-block|}
+block|{ }
 specifier|static
 name|void
 name|NdisAllocateBuffer
@@ -8686,7 +8640,6 @@ name|status
 operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -8704,7 +8657,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/* Aw c'mon. */
 specifier|static
@@ -8774,7 +8726,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/* Same as above -- we don't care about the priority. */
 specifier|static
@@ -8828,7 +8779,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/* Damnit Microsoft!! How many ways can you do the same thing?! */
 specifier|static
@@ -8901,7 +8851,6 @@ argument_list|)
 operator|=
 name|len
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|uint32_t
@@ -8985,7 +8934,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -9010,7 +8958,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -9031,7 +8978,6 @@ operator|->
 name|ne_event
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|uint8_t
@@ -9594,7 +9540,6 @@ operator|->
 name|ni_dpccountlock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|ndis_status
@@ -9927,7 +9872,6 @@ operator|->
 name|ni_dpcevt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -10007,7 +9951,6 @@ name|nmc_rsvd0
 operator|=
 name|shutdownctx
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -10076,7 +10019,6 @@ name|nmc_rsvd0
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|uint32_t
@@ -10163,7 +10105,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -10211,7 +10152,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|NdisMSleep
@@ -10276,7 +10216,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 specifier|static
 name|uint32_t
@@ -10869,7 +10808,6 @@ argument_list|(
 name|tval
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * Return the number of milliseconds since the system booted.  */
 specifier|static
@@ -10908,7 +10846,6 @@ name|tv_sec
 operator|*
 literal|1000
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -10948,7 +10885,6 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -10966,7 +10902,6 @@ argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|ndis_status
@@ -11009,7 +10944,6 @@ argument_list|,
 name|src
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -11035,7 +10969,6 @@ argument_list|,
 name|src
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -11131,7 +11064,6 @@ name|block
 operator|->
 name|nmb_nextdeviceobj
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -11256,7 +11188,6 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 specifier|static
 name|void
@@ -12173,7 +12104,6 @@ name|status
 operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -12449,7 +12379,6 @@ operator|->
 name|nf_map
 expr_stmt|;
 block|}
-return|return;
 block|}
 specifier|static
 name|void
@@ -12503,7 +12432,6 @@ name|nf_map
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -12652,7 +12580,6 @@ argument_list|(
 name|fh
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|uint8_t
@@ -12730,7 +12657,6 @@ argument_list|,
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -12792,7 +12718,6 @@ argument_list|,
 name|slen
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * The DDK documentation says that you should use IoQueueWorkItem()  * instead of ExQueueWorkItem(). The problem is, IoQueueWorkItem()  * is fundamentally incompatible with NdisScheduleWorkItem(), which  * depends on the API semantics of ExQueueWorkItem(). In our world,  * ExQueueWorkItem() is implemented on top of IoAllocateQueueItem()  * anyway.  *  * There are actually three distinct APIs here. NdisScheduleWorkItem()  * takes a pointer to an NDIS_WORK_ITEM. ExQueueWorkItem() takes a pointer  * to a WORK_QUEUE_ITEM. And finally, IoQueueWorkItem() takes a pointer  * to an opaque work item thingie which you get from IoAllocateWorkItem().  * An NDIS_WORK_ITEM is not the same as a WORK_QUEUE_ITEM. However,  * the NDIS_WORK_ITEM has some opaque storage at the end of it, and we  * (ab)use this storage as a WORK_QUEUE_ITEM, which is what we submit  * to ExQueueWorkItem().  *  * Got all that? (Sheesh.)  */
 name|ndis_status
@@ -13222,7 +13147,6 @@ name|cpylen
 operator|=
 name|copied
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -13282,7 +13206,6 @@ argument_list|,
 name|cpylen
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -13531,9 +13454,7 @@ name|void
 modifier|*
 name|func
 decl_stmt|;
-block|{
-return|return;
-block|}
+block|{ }
 specifier|static
 name|void
 name|dummy
@@ -13544,7 +13465,6 @@ argument_list|(
 literal|"NDIS dummy called...\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * Note: a couple of entries in this table specify the  * number of arguments as "foo + 1". These are routines  * that accept a 64-bit argument, passed by value. On  * x86, these arguments consume two longwords on the stack,  * so we lie and say there's one additional argument so  * that the wrapping routines will do the right thing.  */
 name|image_patch_table
