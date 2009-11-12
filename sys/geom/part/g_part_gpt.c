@@ -2760,6 +2760,24 @@ name|last
 operator|-
 name|tblsz
 expr_stmt|;
+comment|/* Allocate space for the header */
+name|table
+operator|->
+name|hdr
+operator|=
+name|g_malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|gpt_hdr
+argument_list|)
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|GPT_HDR_SIG
