@@ -18,6 +18,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGE_NPHY
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGE_TX_RING_COUNT
 value|128
 end_define
@@ -421,6 +428,17 @@ name|device_t
 name|arge_dev
 decl_stmt|;
 name|struct
+name|ifmedia
+name|arge_ifmedia
+decl_stmt|;
+comment|/* 	 * Media& duples settings for multiPHY MAC 	 */
+name|uint32_t
+name|arge_media_type
+decl_stmt|;
+name|uint32_t
+name|arge_duplex_mode
+decl_stmt|;
+name|struct
 name|resource
 modifier|*
 name|arge_res
@@ -479,7 +497,7 @@ name|int
 name|arge_mac_unit
 decl_stmt|;
 name|int
-name|arge_phy_num
+name|arge_phymask
 decl_stmt|;
 name|uint32_t
 name|arge_ddr_flush_reg
