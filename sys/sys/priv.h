@@ -1924,17 +1924,6 @@ begin_comment
 comment|/* Move interface to vnet. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PRIV_NET_SETIFDESCR
-value|418
-end_define
-
-begin_comment
-comment|/* Set interface description. */
-end_comment
-
 begin_comment
 comment|/*  * 802.11-related privileges.  */
 end_comment
