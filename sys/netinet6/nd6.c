@@ -1808,6 +1808,9 @@ name|long
 name|tick
 parameter_list|)
 block|{
+name|int
+name|canceled
+decl_stmt|;
 if|if
 condition|(
 name|tick
@@ -1827,18 +1830,14 @@ name|ln_ntick
 operator|=
 literal|0
 expr_stmt|;
+name|canceled
+operator|=
 name|callout_stop
 argument_list|(
 operator|&
 name|ln
 operator|->
 name|ln_timer_ch
-argument_list|)
-expr_stmt|;
-comment|/* 		 * XXX - do we know that there is 		 * callout installed? i.e. are we  		 * guaranteed that we're not dropping 		 * a reference that we did not add? 		 * KMM  		 */
-name|LLE_REMREF
-argument_list|(
-name|ln
 argument_list|)
 expr_stmt|;
 block|}
@@ -1874,6 +1873,8 @@ name|tick
 operator|-
 name|INT_MAX
 expr_stmt|;
+name|canceled
+operator|=
 name|callout_reset
 argument_list|(
 operator|&
@@ -1897,6 +1898,8 @@ name|ln_ntick
 operator|=
 literal|0
 expr_stmt|;
+name|canceled
+operator|=
 name|callout_reset
 argument_list|(
 operator|&
@@ -1913,6 +1916,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|canceled
+condition|)
+name|LLE_REMREF
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3963,6 +3975,21 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|LLE_WLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
+name|LLE_REMREF
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
+name|LLE_WUNLOCK
+argument_list|(
+name|ln
 argument_list|)
 expr_stmt|;
 return|return
