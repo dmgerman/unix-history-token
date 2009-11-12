@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -39,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -653,19 +653,9 @@ argument_list|(
 name|fd1
 argument_list|)
 expr_stmt|;
-name|fd2
-operator|=
-operator|-
-literal|42
-expr_stmt|;
 if|if
 condition|(
-name|vfork
-argument_list|()
-operator|==
-literal|0
-condition|)
-block|{
+operator|(
 name|fd2
 operator|=
 name|flopen
@@ -676,39 +666,22 @@ name|O_RDWR
 operator||
 name|O_NONBLOCK
 argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|result
+operator|=
+literal|"second open succeeded"
 expr_stmt|;
 name|close
 argument_list|(
 name|fd2
 argument_list|)
 expr_stmt|;
-name|_exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
-if|if
-condition|(
-name|fd2
-operator|==
-operator|-
-literal|42
-condition|)
-name|result
-operator|=
-literal|"vfork() doesn't work as expected"
-expr_stmt|;
-if|if
-condition|(
-name|fd2
-operator|>=
-literal|0
-condition|)
-name|result
-operator|=
-literal|"second open succeeded"
-expr_stmt|;
 name|kill
 argument_list|(
 name|pid
