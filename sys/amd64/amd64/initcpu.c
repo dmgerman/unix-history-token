@@ -119,17 +119,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.clflush_disable"
-argument_list|,
-operator|&
-name|hw_clflush_disable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|int
 name|cpu
@@ -813,13 +802,11 @@ name|hw_clflush_disable
 operator|==
 literal|1
 condition|)
-block|{
 name|cpu_feature
 operator|&=
 operator|~
 name|CPUID_CLFSH
 expr_stmt|;
-block|}
 block|}
 end_function
 
