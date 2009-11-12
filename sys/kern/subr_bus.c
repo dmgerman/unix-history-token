@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -6168,9 +6174,7 @@ name|dc
 operator|->
 name|name
 argument_list|,
-name|dev
-operator|->
-name|unit
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 if|if
