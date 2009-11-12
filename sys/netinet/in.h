@@ -3580,6 +3580,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|inet_aton
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* in libkern */
+end_comment
+
+begin_function_decl
 name|char
 modifier|*
 name|inet_ntoa
