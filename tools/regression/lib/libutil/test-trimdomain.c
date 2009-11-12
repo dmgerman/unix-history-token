@@ -208,6 +208,9 @@ name|hostsize
 operator|<
 literal|0
 condition|?
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|testhost
@@ -275,13 +278,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
+name|void
 parameter_list|)
 block|{
 name|printf
