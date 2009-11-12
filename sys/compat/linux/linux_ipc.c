@@ -4278,7 +4278,7 @@ name|linux_msg
 argument_list|(
 name|td
 argument_list|,
-literal|"ipc typ=%d not implemented"
+literal|"ipc type %d not implemented"
 argument_list|,
 name|args
 operator|->
