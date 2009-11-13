@@ -113,6 +113,67 @@ directive|include
 file|<teken/teken.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEKEN_XTERM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TEKEN_CONS25
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"xterm and cons25 are mutually exclusive."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XXX: Use cons25 on i386, for compatibility with pc98. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TEKEN_XTERM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TEKEN_CONS25
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TEKEN_CONS25
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -498,9 +559,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !TEKEN_UTF8 */
-ifndef|#
-directive|ifndef
-name|TEKEN_XTERM
+ifdef|#
+directive|ifdef
+name|TEKEN_CONS25
 name|teken_set_cons25
 argument_list|(
 operator|&
@@ -511,7 +572,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !TEKEN_XTERM */
+comment|/* TEKEN_CONS25 */
 name|tp
 operator|.
 name|tp_row
