@@ -96,6 +96,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1062,6 +1068,18 @@ name|struct
 name|ahd_softc
 modifier|*
 name|rahd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_sysctl
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
 parameter_list|)
 function_decl|;
 end_function_decl

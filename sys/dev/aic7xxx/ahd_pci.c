@@ -453,6 +453,11 @@ name|error
 operator|)
 return|;
 block|}
+name|ahd_sysctl
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_attach
 argument_list|(
 name|ahd
@@ -770,6 +775,11 @@ name|regs
 operator|=
 name|NULL
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -850,6 +860,11 @@ argument_list|,
 literal|"can't allocate register resources\n"
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -915,6 +930,11 @@ operator|->
 name|dev_softc
 argument_list|,
 literal|"can't allocate register resources\n"
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 return|return
