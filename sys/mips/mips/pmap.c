@@ -9579,7 +9579,7 @@ name|MIPS_KSEG0_LARGEST_PHYS
 operator|)
 condition|)
 block|{
-comment|/* easy case, all can be accessed via KSEG1 */
+comment|/* easy case, all can be accessed via KSEG0 */
 comment|/* 			 * Flush all caches for VA that are mapped to this page 			 * to make sure that data in SDRAM is up to date 			 */
 name|pmap_flush_pvcache
 argument_list|(
@@ -9598,14 +9598,14 @@ argument_list|)
 expr_stmt|;
 name|va_src
 operator|=
-name|MIPS_PHYS_TO_UNCACHED
+name|MIPS_PHYS_TO_CACHED
 argument_list|(
 name|phy_src
 argument_list|)
 expr_stmt|;
 name|va_dst
 operator|=
-name|MIPS_PHYS_TO_UNCACHED
+name|MIPS_PHYS_TO_CACHED
 argument_list|(
 name|phy_dst
 argument_list|)
@@ -9620,6 +9620,13 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
+name|va_dst
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|mips_dcache_wbinv_range
+argument_list|(
 name|va_dst
 argument_list|,
 name|PAGE_SIZE
