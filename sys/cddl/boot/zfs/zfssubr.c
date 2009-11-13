@@ -3601,11 +3601,14 @@ operator|)
 operator|<<
 name|unit_shift
 decl_stmt|;
-name|int
+name|uint64_t
 name|q
 decl_stmt|,
 name|r
 decl_stmt|,
+name|coff
+decl_stmt|;
+name|int
 name|c
 decl_stmt|,
 name|c1
@@ -3615,8 +3618,6 @@ decl_stmt|,
 name|col
 decl_stmt|,
 name|acols
-decl_stmt|,
-name|coff
 decl_stmt|,
 name|devidx
 decl_stmt|,
