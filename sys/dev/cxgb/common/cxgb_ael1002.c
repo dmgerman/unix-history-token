@@ -5436,10 +5436,6 @@ condition|(
 name|err
 operator|==
 name|phy_modtype_none
-operator|||
-name|err
-operator|==
-name|phy_modtype_unknown
 condition|)
 name|err
 operator|=
@@ -8381,10 +8377,6 @@ condition|(
 name|err
 operator|==
 name|phy_modtype_none
-operator|||
-name|err
-operator|==
-name|phy_modtype_unknown
 condition|)
 name|err
 operator|=
