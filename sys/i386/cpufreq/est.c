@@ -7931,6 +7931,8 @@ block|}
 block|}
 if|if
 condition|(
+name|check
+operator|&&
 name|count
 operator|>=
 literal|2
