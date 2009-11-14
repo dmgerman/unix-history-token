@@ -5003,9 +5003,10 @@ name|ATA_AHCI_P_IX_DHR
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* only probe for PortMultiplier if HW has support */
+comment|/*      * Only probe for PortMultiplier if HW has support.      * Ignore Marvell, which is not working,      */
 if|if
 condition|(
+operator|(
 name|ATA_INL
 argument_list|(
 name|ctlr
@@ -5016,6 +5017,16 @@ name|ATA_AHCI_CAP
 argument_list|)
 operator|&
 name|ATA_AHCI_CAP_SPM
+operator|)
+operator|&&
+name|pci_get_vendor
+argument_list|(
+name|ctlr
+operator|->
+name|dev
+argument_list|)
+operator|!=
+literal|0x11ab
 condition|)
 block|{
 name|signature
