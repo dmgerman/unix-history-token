@@ -2455,9 +2455,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 name|done
 label|:
 if|if
@@ -2470,6 +2467,9 @@ name|LLE_FREE
 argument_list|(
 name|ln
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
