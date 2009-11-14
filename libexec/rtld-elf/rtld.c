@@ -16802,7 +16802,7 @@ return|;
 block|}
 name|_rtld_error
 argument_list|(
-literal|"%s: Unexpected  inconsistency: dependency %s not found"
+literal|"%s: Unexpected inconsistency: dependency %s not found"
 argument_list|,
 name|obj
 operator|->
