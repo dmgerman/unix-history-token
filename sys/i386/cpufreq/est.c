@@ -7640,6 +7640,10 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|check
+init|=
+literal|1
 decl_stmt|;
 name|uint16_t
 name|saved_id16
@@ -7781,6 +7785,8 @@ operator|&
 name|saved_id16
 argument_list|)
 expr_stmt|;
+name|restart
+label|:
 for|for
 control|(
 name|i
@@ -7812,8 +7818,10 @@ operator|>
 literal|0
 condition|)
 block|{
-name|error
-operator|=
+if|if
+condition|(
+name|check
+operator|&&
 name|est_set_id16
 argument_list|(
 name|dev
@@ -7830,10 +7838,6 @@ index|]
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 operator|!=
 literal|0
 condition|)
@@ -7924,6 +7928,39 @@ name|j
 expr_stmt|;
 block|}
 block|}
+block|}
+if|if
+condition|(
+name|count
+operator|>=
+literal|2
+operator|&&
+name|j
+operator|<
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Too much freqs ignored. "
+literal|"May be a check problem. Restore all.\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|check
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|restart
+goto|;
 block|}
 comment|/* restore saved setting */
 name|est_set_id16
