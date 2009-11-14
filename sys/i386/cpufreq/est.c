@@ -355,6 +355,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|strict
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.est.strict"
+argument_list|,
+operator|&
+name|strict
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Default bus clock value for Centrino processors. */
 end_comment
@@ -7393,6 +7414,22 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+comment|/* On SMP system we can't guarantie independent freq setting. */
+if|if
+condition|(
+name|strict
+operator|==
+operator|-
+literal|1
+operator|&&
+name|mp_ncpus
+operator|>
+literal|1
+condition|)
+name|strict
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Check CPU for supported settings. */
 if|if
 condition|(
@@ -7640,10 +7677,6 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|j
-decl_stmt|,
-name|check
-init|=
-literal|1
 decl_stmt|;
 name|uint16_t
 name|saved_id16
@@ -7785,8 +7818,6 @@ operator|&
 name|saved_id16
 argument_list|)
 expr_stmt|;
-name|restart
-label|:
 for|for
 control|(
 name|i
@@ -7818,10 +7849,8 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|check
-operator|&&
+name|error
+operator|=
 name|est_set_id16
 argument_list|(
 name|dev
@@ -7838,8 +7867,14 @@ index|]
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
+operator|&&
+name|strict
 condition|)
 block|{
 if|if
@@ -7861,9 +7896,34 @@ operator|.
 name|freq
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|bootverbose
+condition|)
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Can't check freq %u, "
+literal|"it may be invalid\n"
+argument_list|,
+name|sets
+index|[
+name|i
+index|]
+operator|.
+name|freq
+argument_list|)
+expr_stmt|;
+block|}
 name|table
 index|[
 name|j
@@ -7927,42 +7987,6 @@ operator|++
 name|j
 expr_stmt|;
 block|}
-block|}
-block|}
-if|if
-condition|(
-name|check
-operator|&&
-name|count
-operator|>=
-literal|2
-operator|&&
-name|j
-operator|<
-literal|2
-condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Too much freqs ignored. "
-literal|"May be a check problem. Restore all.\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|check
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|restart
-goto|;
 block|}
 comment|/* restore saved setting */
 name|est_set_id16
