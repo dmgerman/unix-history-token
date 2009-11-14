@@ -6035,6 +6035,16 @@ goto|goto
 name|sense_error_done
 goto|;
 block|}
+comment|/* 			 * Clear freeze flag for original request here, as 			 * this freeze will be dropped as part of ERESTART. 			 */
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&=
+operator|~
+name|CAM_DEV_QFRZN
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|ccb

@@ -1422,14 +1422,6 @@ name|dev_openings
 operator|=
 name|openings
 expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|ccbq
-operator|->
-name|active_ccbs
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
