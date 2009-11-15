@@ -1450,11 +1450,11 @@ name|dd_state
 condition|)
 block|{
 case|case
-name|DIS_ALIVE
+name|DS_ALIVE
 case|:
 comment|/* probe succeeded */
 case|case
-name|DIS_NOTPRESENT
+name|DS_NOTPRESENT
 case|:
 comment|/* not probed or probe failed */
 return|return
@@ -1463,11 +1463,11 @@ name|DS_DOWN
 operator|)
 return|;
 case|case
-name|DIS_ATTACHED
+name|DS_ATTACHED
 case|:
 comment|/* attach method called */
 case|case
-name|DIS_BUSY
+name|DS_BUSY
 case|:
 comment|/* device is open */
 return|return
