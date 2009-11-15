@@ -34915,7 +34915,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_comment
@@ -35014,7 +35014,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ZERO_COPY_SOCKETS */
+comment|/* BCE_JUMBO_HDRSPLIT */
 end_comment
 
 begin_define
@@ -35966,7 +35966,7 @@ decl_stmt|;
 comment|/* Counts the bytes used.  */
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|u16
 name|pg_prod
 decl_stmt|;
@@ -36005,7 +36005,7 @@ name|rx_bd_mbuf_align_pad
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|int
 name|pg_bd_mbuf_alloc_size
 decl_stmt|;
@@ -36069,7 +36069,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 comment|/* H/W maintained page buffer descriptor chain structure. */
 name|bus_dma_tag_t
 name|pg_bd_chain_tag
@@ -36178,7 +36178,7 @@ name|tx_mbuf_tag
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|bus_dma_tag_t
 name|pg_mbuf_tag
 decl_stmt|;
@@ -36216,7 +36216,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 comment|/* S/W maintained mbuf page chain structure. */
 name|bus_dmamap_t
 name|pg_mbuf_map
@@ -36249,7 +36249,7 @@ name|max_tx_bd
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|u16
 name|free_pg_bd
 decl_stmt|;
@@ -36477,7 +36477,7 @@ name|debug_rx_mbuf_alloc
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|int
 name|debug_pg_mbuf_alloc
 decl_stmt|;
@@ -36513,7 +36513,7 @@ decl_stmt|;
 comment|/* Number of times the RX chain was empty. */
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|u32
 name|pg_low_watermark
 decl_stmt|;
