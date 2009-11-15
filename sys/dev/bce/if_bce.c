@@ -1192,7 +1192,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_function_decl
@@ -1255,7 +1255,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_function_decl
@@ -1360,7 +1360,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_function_decl
@@ -2229,7 +2229,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_function_decl
@@ -3503,7 +3503,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|printf
 argument_list|(
 literal|"SPLT "
@@ -5053,7 +5053,7 @@ expr_stmt|;
 comment|/* 	 * Assume standard mbuf sizes for buffer allocation. 	 * This may change later if the MTU size is set to 	 * something other than 1500. 	 */
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|sc
 operator|->
 name|rx_bd_mbuf_alloc_size
@@ -12198,7 +12198,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 comment|/* Free, unmap and destroy all page buffer descriptor chain pages. */
 for|for
 control|(
@@ -12516,7 +12516,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 comment|/* Unload and destroy the page mbuf maps. */
 for|for
 control|(
@@ -14195,7 +14195,7 @@ block|}
 comment|/* 	 * Create a DMA tag for RX mbufs. 	 */
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|max_size
 operator|=
 name|max_seg_size
@@ -14367,7 +14367,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 comment|/* 	 * Create a DMA tag for the page buffer descriptor chain, 	 * allocate and clear the memory, and fetch the physical 	 * address of the blocks. 	 */
 if|if
 condition|(
@@ -19377,7 +19377,7 @@ expr_stmt|;
 comment|/* Free RX buffers. */
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|bce_free_pg_chain
 argument_list|(
 name|sc
@@ -21069,7 +21069,7 @@ empty_stmt|;
 comment|/* This is a new mbuf allocation. */
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|MGETHDR
 argument_list|(
 name|m_new
@@ -21442,7 +21442,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_comment
@@ -21927,7 +21927,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ZERO_COPY_SOCKETS */
+comment|/* BCE_JUMBO_HDRSPLIT */
 end_comment
 
 begin_comment
@@ -23588,7 +23588,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_comment
@@ -24378,7 +24378,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ZERO_COPY_SOCKETS */
+comment|/* BCE_JUMBO_HDRSPLIT */
 end_comment
 
 begin_comment
@@ -24989,7 +24989,7 @@ name|status
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|unsigned
 name|int
 name|rem_len
@@ -25073,7 +25073,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 comment|/* Prepare the page chain pages to be accessed by the host CPU. */
 for|for
 control|(
@@ -25128,7 +25128,7 @@ name|rx_cons
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|sw_pg_cons
 operator|=
 name|sc
@@ -25306,7 +25306,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 comment|/* 		 * Check whether the received frame fits in a single 		 * mbuf or not (i.e. packet data + FCS<= 		 * sc->rx_bd_mbuf_data_len bytes). 		 */
 if|if
 condition|(
@@ -25823,7 +25823,7 @@ name|sw_rx_cons
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|sc
 operator|->
 name|pg_cons
@@ -25863,7 +25863,7 @@ name|rx_cons
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|sw_pg_cons
 operator|=
 name|sc
@@ -25895,7 +25895,7 @@ block|}
 comment|/* No new packets to process.  Refill the RX and page chains and exit. */
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|sc
 operator|->
 name|pg_cons
@@ -25953,7 +25953,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 for|for
 control|(
 name|int
@@ -26876,7 +26876,7 @@ expr_stmt|;
 comment|/* 	 * Calculate and program the hardware Ethernet MTU 	 * size. Be generous on the receive if we have room. 	 */
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 if|if
 condition|(
 name|ifp
@@ -27020,7 +27020,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|DBPRINT
 argument_list|(
 name|sc
@@ -29119,7 +29119,7 @@ name|IFF_DRV_RUNNING
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 comment|/* No buffer allocation size changes are necessary. */
 else|#
 directive|else
@@ -31674,7 +31674,7 @@ expr_stmt|;
 comment|/* Top off the receive and page chains. */
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|bce_fill_pg_chain
 argument_list|(
 name|sc
@@ -32365,7 +32365,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_comment
@@ -35093,7 +35093,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -36411,7 +36411,7 @@ begin_ifdef
 unit|}
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_comment
@@ -36938,7 +36938,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_comment
@@ -39686,7 +39686,7 @@ begin_ifdef
 unit|}
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_comment
@@ -41529,7 +41529,7 @@ argument_list|)
 block|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|val_hi
 operator|=
 name|BCE_ADDR_HI
@@ -41615,7 +41615,7 @@ argument_list|)
 block|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|val_hi
 operator|=
 name|BCE_ADDR_HI
@@ -41826,7 +41826,7 @@ argument_list|)
 block|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|BCE_PRINTF
 argument_list|(
 literal|"     0x%04X(0x%04X) - (sc->pg_prod) page producer index\n"
@@ -44123,7 +44123,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ZERO_COPY_SOCKETS
+name|BCE_JUMBO_HDRSPLIT
 name|bce_dump_pgbd
 argument_list|(
 name|sc
