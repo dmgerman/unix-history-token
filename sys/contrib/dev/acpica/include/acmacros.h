@@ -1448,6 +1448,16 @@ parameter_list|)
 value|AcpiUtPredefinedWarning plist
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_INFO_PREDEFINED
+parameter_list|(
+name|plist
+parameter_list|)
+value|AcpiUtPredefinedInfo plist
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1487,6 +1497,15 @@ begin_define
 define|#
 directive|define
 name|ACPI_WARN_PREDEFINED
+parameter_list|(
+name|plist
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INFO_PREDEFINED
 parameter_list|(
 name|plist
 parameter_list|)

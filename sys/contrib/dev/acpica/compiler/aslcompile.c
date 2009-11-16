@@ -1919,27 +1919,6 @@ name|Gbl_NsLookupCount
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Close all open files */
-for|for
-control|(
-name|i
-operator|=
-literal|2
-init|;
-name|i
-operator|<
-name|ASL_MAX_FILE_TYPE
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|FlCloseFile
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * TBD: SourceOutput should be .TMP, then rename if we want to keep it?      */
 if|if
 condition|(
@@ -2010,6 +1989,27 @@ argument_list|(
 name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
+comment|/* Close all open files */
+for|for
+control|(
+name|i
+operator|=
+literal|2
+init|;
+name|i
+operator|<
+name|ASL_MAX_FILE_TYPE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|FlCloseFile
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

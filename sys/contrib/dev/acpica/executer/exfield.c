@@ -379,9 +379,12 @@ block|{
 comment|/* Field will fit within an Integer (normal case) */
 name|BufferDesc
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -399,14 +402,6 @@ block|}
 name|Length
 operator|=
 name|AcpiGbl_IntegerByteWidth
-expr_stmt|;
-name|BufferDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-literal|0
 expr_stmt|;
 name|Buffer
 operator|=

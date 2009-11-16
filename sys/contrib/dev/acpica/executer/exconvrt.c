@@ -302,9 +302,9 @@ block|}
 comment|/* Create a new integer */
 name|ReturnDesc
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+name|Result
 argument_list|)
 expr_stmt|;
 if|if
@@ -334,14 +334,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Save the Result */
-name|ReturnDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|Result
-expr_stmt|;
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|ReturnDesc

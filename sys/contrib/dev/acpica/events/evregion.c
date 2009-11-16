@@ -606,9 +606,16 @@ index|[
 literal|0
 index|]
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
 argument_list|)
 expr_stmt|;
 if|if
@@ -633,9 +640,12 @@ index|[
 literal|1
 index|]
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+name|Function
 argument_list|)
 expr_stmt|;
 if|if
@@ -655,33 +665,6 @@ goto|goto
 name|Cleanup2
 goto|;
 block|}
-comment|/* Setup the parameter objects */
-name|Args
-index|[
-literal|0
-index|]
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|SpaceId
-expr_stmt|;
-name|Args
-index|[
-literal|1
-index|]
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|Function
-expr_stmt|;
 name|Args
 index|[
 literal|2
@@ -689,6 +672,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Terminate list */
 comment|/* Execute the method, no return value */
 name|ACPI_DEBUG_EXEC
 argument_list|(
@@ -2502,6 +2486,8 @@ name|ACPI_NS_WALK_UNLOCK
 argument_list|,
 name|AcpiEvInstallHandler
 argument_list|,
+name|NULL
+argument_list|,
 name|HandlerObj
 argument_list|,
 name|NULL
@@ -2555,6 +2541,8 @@ argument_list|,
 name|ACPI_NS_WALK_UNLOCK
 argument_list|,
 name|AcpiEvRegRun
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|SpaceId

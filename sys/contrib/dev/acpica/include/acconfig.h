@@ -146,15 +146,19 @@ value|0x800
 end_define
 
 begin_comment
-comment|/* Size of cached memory mapping for system memory operation region */
+comment|/* Default page size for use in mapping memory for operation regions */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_SYSMEM_REGION_WINDOW_SIZE
+name|ACPI_DEFAULT_PAGE_SIZE
 value|4096
 end_define
+
+begin_comment
+comment|/* Must be power of 2 */
+end_comment
 
 begin_comment
 comment|/* OwnerId tracking. 8 entries allows for 255 OwnerIds */

@@ -1212,6 +1212,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Print the full pathname for each namespace node */
@@ -1235,6 +1237,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|LsDoOnePathname
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1351,6 +1355,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|LsCompareOneNamespaceObject
+argument_list|,
+name|NULL
 argument_list|,
 name|Name
 argument_list|,
@@ -1671,6 +1677,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|LkIsObjectUsed
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

@@ -342,7 +342,7 @@ name|ReferenceCount
 operator|--
 expr_stmt|;
 block|}
-name|ACPI_WARN_PREDEFINED
+name|ACPI_INFO_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
@@ -374,7 +374,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_WARN_PREDEFINED
+name|ACPI_INFO_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
@@ -493,7 +493,7 @@ name|Flags
 operator||=
 name|ACPI_OBJECT_REPAIRED
 expr_stmt|;
-name|ACPI_WARN_PREDEFINED
+name|ACPI_INFO_PREDEFINED
 argument_list|(
 operator|(
 name|AE_INFO
@@ -506,7 +506,7 @@ name|Data
 operator|->
 name|NodeFlags
 operator|,
-literal|"Incorrectly formed Package, attempting repair"
+literal|"Repaired Incorrectly formed Package"
 operator|)
 argument_list|)
 expr_stmt|;

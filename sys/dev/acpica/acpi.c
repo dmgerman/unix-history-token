@@ -7237,6 +7237,8 @@ name|max_depth
 argument_list|,
 name|acpi_device_scan_cb
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|ctx
 argument_list|,
@@ -7709,6 +7711,8 @@ argument_list|,
 literal|100
 argument_list|,
 name|acpi_probe_child
+argument_list|,
+name|NULL
 argument_list|,
 name|bus
 argument_list|,
@@ -12124,6 +12128,8 @@ argument_list|,
 literal|100
 argument_list|,
 name|acpi_wake_prep
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|sstate
