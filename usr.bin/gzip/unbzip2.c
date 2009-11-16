@@ -38,6 +38,10 @@ name|int
 name|ret
 decl_stmt|,
 name|end_of_file
+decl_stmt|,
+name|cold
+init|=
+literal|0
 decl_stmt|;
 name|off_t
 name|bytes_out
@@ -278,10 +282,28 @@ name|BZ_OK
 operator|&&
 name|end_of_file
 condition|)
-name|maybe_err
+block|{
+comment|/* 				 * If we hit this after a stream end, consider 				 * it as the end of the whole file and don't 				 * bail out. 				 */
+if|if
+condition|(
+name|cold
+operator|==
+literal|1
+condition|)
+name|ret
+operator|=
+name|BZ_STREAM_END
+expr_stmt|;
+else|else
+name|maybe_errx
 argument_list|(
-literal|"read"
+literal|"truncated file"
 argument_list|)
+expr_stmt|;
+block|}
+name|cold
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -365,6 +387,10 @@ name|maybe_errx
 argument_list|(
 literal|"bzip2 re-init"
 argument_list|)
+expr_stmt|;
+name|cold
+operator|=
+literal|1
 expr_stmt|;
 name|ret
 operator|=
