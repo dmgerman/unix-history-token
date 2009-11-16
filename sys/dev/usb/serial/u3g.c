@@ -824,6 +824,15 @@ parameter_list|,
 name|i
 parameter_list|)
 value|{ USB_VPI(USB_VENDOR_##v, USB_PRODUCT_##v##_##p, i) }
+name|U3G_DEV
+argument_list|(
+name|CURITEL
+argument_list|,
+name|UM175
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* OEM: Option */
 name|U3G_DEV
 argument_list|(
