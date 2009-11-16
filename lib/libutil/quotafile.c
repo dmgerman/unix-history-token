@@ -158,7 +158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Check to see if a particular quota is to be enabled.  * XXX merge into quota_open  */
+comment|/*  * Check to see if a particular quota is to be enabled.  */
 end_comment
 
 begin_function
@@ -214,7 +214,7 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-comment|/* 	 * XXX 	 * 1) we only need one of these 	 * 2) fstab may specify a different filename 	 */
+comment|/* 	 * 1) we only need one of these 	 * 2) fstab may specify a different filename 	 */
 if|if
 condition|(
 operator|!
@@ -1083,6 +1083,87 @@ argument_list|(
 name|qf
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|quota_on
+parameter_list|(
+name|struct
+name|quotafile
+modifier|*
+name|qf
+parameter_list|)
+block|{
+name|int
+name|qcmd
+decl_stmt|;
+name|qcmd
+operator|=
+name|QCMD
+argument_list|(
+name|Q_QUOTAON
+argument_list|,
+name|qf
+operator|->
+name|quotatype
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|quotactl
+argument_list|(
+name|qf
+operator|->
+name|fsname
+argument_list|,
+name|qcmd
+argument_list|,
+literal|0
+argument_list|,
+name|qf
+operator|->
+name|qfname
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|quota_off
+parameter_list|(
+name|struct
+name|quotafile
+modifier|*
+name|qf
+parameter_list|)
+block|{
+return|return
+operator|(
+name|quotactl
+argument_list|(
+name|qf
+operator|->
+name|fsname
+argument_list|,
+name|QCMD
+argument_list|(
+name|Q_QUOTAOFF
+argument_list|,
+name|qf
+operator|->
+name|quotatype
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
