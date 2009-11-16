@@ -737,7 +737,14 @@ parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|RootObj
+name|ParentObj
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ParentNode
+decl_stmt|;
+name|ACPI_OBJECT_TYPE
+name|Type
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -746,6 +753,36 @@ name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|NsExecModuleCode
 argument_list|)
+expr_stmt|;
+comment|/*      * Get the parent node. We cheat by using the NextObject field      * of the method object descriptor.      */
+name|ParentNode
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_NAMESPACE_NODE
+argument_list|,
+name|MethodObj
+operator|->
+name|Method
+operator|.
+name|NextObject
+argument_list|)
+expr_stmt|;
+name|Type
+operator|=
+name|AcpiNsGetType
+argument_list|(
+name|ParentNode
+argument_list|)
+expr_stmt|;
+comment|/* Must clear NextObject (AcpiNsAttachObject needs the field) */
+name|MethodObj
+operator|->
+name|Method
+operator|.
+name|NextObject
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Initialize the evaluation information block */
 name|ACPI_MEMSET
@@ -764,27 +801,33 @@ name|Info
 operator|->
 name|PrefixNode
 operator|=
-name|AcpiGbl_RootNode
+name|ParentNode
 expr_stmt|;
-comment|/*      * Get the currently attached root object. Add a reference, because the      * ref count will be decreased when the method object is installed to      * the root node.      */
-name|RootObj
+comment|/*      * Get the currently attached parent object. Add a reference, because the      * ref count will be decreased when the method object is installed to      * the parent node.      */
+name|ParentObj
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-name|AcpiGbl_RootNode
+name|ParentNode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ParentObj
+condition|)
+block|{
 name|AcpiUtAddReference
 argument_list|(
-name|RootObj
+name|ParentObj
 argument_list|)
 expr_stmt|;
-comment|/* Install the method (module-level code) in the root node */
+block|}
+comment|/* Install the method (module-level code) in the parent node */
 name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-name|AcpiGbl_RootNode
+name|ParentNode
 argument_list|,
 name|MethodObj
 argument_list|,
@@ -803,7 +846,7 @@ goto|goto
 name|Exit
 goto|;
 block|}
-comment|/* Execute the root node as a control method */
+comment|/* Execute the parent node as a control method */
 name|Status
 operator|=
 name|AcpiNsEvaluate
@@ -829,28 +872,52 @@ expr_stmt|;
 comment|/* Detach the temporary method object */
 name|AcpiNsDetachObject
 argument_list|(
-name|AcpiGbl_RootNode
+name|ParentNode
 argument_list|)
 expr_stmt|;
-comment|/* Restore the original root object */
+comment|/* Restore the original parent object */
+if|if
+condition|(
+name|ParentObj
+condition|)
+block|{
 name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-name|AcpiGbl_RootNode
+name|ParentNode
 argument_list|,
-name|RootObj
+name|ParentObj
 argument_list|,
-name|ACPI_TYPE_DEVICE
+name|Type
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ParentNode
+operator|->
+name|Type
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|Type
+expr_stmt|;
+block|}
 name|Exit
 label|:
+if|if
+condition|(
+name|ParentObj
+condition|)
+block|{
 name|AcpiUtRemoveReference
 argument_list|(
-name|RootObj
+name|ParentObj
 argument_list|)
 expr_stmt|;
+block|}
 name|return_VOID
 expr_stmt|;
 block|}

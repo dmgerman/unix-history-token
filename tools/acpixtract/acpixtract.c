@@ -1637,6 +1637,10 @@ operator|(
 name|ACPI_TABLE_HEADER
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|Header
 decl_stmt|;
 comment|/* Open input in text mode, output is in binary mode */

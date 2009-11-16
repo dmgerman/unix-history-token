@@ -2517,6 +2517,8 @@ name|ACPI_NS_WALK_NO_UNLOCK
 argument_list|,
 name|AcpiEvSaveMethodInfo
 argument_list|,
+name|NULL
+argument_list|,
 name|GpeBlock
 argument_list|,
 name|NULL
@@ -2689,6 +2691,8 @@ argument_list|,
 name|ACPI_NS_WALK_UNLOCK
 argument_list|,
 name|AcpiEvMatchPrwAndGpe
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|GpeInfo

@@ -197,6 +197,8 @@ name|ACPI_UINT32_MAX
 argument_list|,
 name|AcpiNsInitOneObject
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|Info
 argument_list|,
@@ -369,6 +371,8 @@ name|FALSE
 argument_list|,
 name|AcpiNsFindIniMethods
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|Info
 argument_list|,
@@ -486,6 +490,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|AcpiNsInitOneDevice
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|Info

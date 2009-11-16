@@ -124,9 +124,10 @@ comment|/*  Timer () */
 comment|/* Create a return object of type Integer */
 name|ReturnDesc
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+name|AcpiOsGetTimer
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -143,15 +144,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|ReturnDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|AcpiOsGetTimer
-argument_list|()
-expr_stmt|;
 break|break;
 default|default:
 comment|/*  Unknown opcode  */
@@ -1551,9 +1543,12 @@ case|:
 comment|/* LNot (Operand) */
 name|ReturnDesc
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1794,9 +1789,12 @@ block|}
 comment|/* Allocate a descriptor to hold the type. */
 name|ReturnDesc
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+name|Type
 argument_list|)
 expr_stmt|;
 if|if
@@ -1813,14 +1811,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|ReturnDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|Type
-expr_stmt|;
 break|break;
 case|case
 name|AML_SIZE_OF_OP
@@ -1962,9 +1952,9 @@ block|}
 comment|/*          * Now that we have the size of the object, create a result          * object to hold the value          */
 name|ReturnDesc
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+name|Value
 argument_list|)
 expr_stmt|;
 if|if
@@ -1981,14 +1971,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|ReturnDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|Value
-expr_stmt|;
 break|break;
 case|case
 name|AML_REF_OF_OP
@@ -2425,12 +2407,29 @@ name|Reference
 operator|.
 name|Object
 expr_stmt|;
-comment|/*                      * Create a new object that contains one element of the                      * buffer -- the element pointed to by the index.                      *                      * NOTE: index into a buffer is NOT a pointer to a                      * sub-buffer of the main buffer, it is only a pointer to a                      * single element (byte) of the buffer!                      */
+comment|/*                      * Create a new object that contains one element of the                      * buffer -- the element pointed to by the index.                      *                      * NOTE: index into a buffer is NOT a pointer to a                      * sub-buffer of the main buffer, it is only a pointer to a                      * single element (byte) of the buffer!                      *                      * Since we are returning the value of the buffer at the                      * indexed location, we don't need to add an additional                      * reference to the buffer itself.                      */
 name|ReturnDesc
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+name|TempDesc
+operator|->
+name|Buffer
+operator|.
+name|Pointer
+index|[
+name|Operand
+index|[
+literal|0
+index|]
+operator|->
+name|Reference
+operator|.
+name|Value
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -2447,29 +2446,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*                      * Since we are returning the value of the buffer at the                      * indexed location, we don't need to add an additional                      * reference to the buffer itself.                      */
-name|ReturnDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|TempDesc
-operator|->
-name|Buffer
-operator|.
-name|Pointer
-index|[
-name|Operand
-index|[
-literal|0
-index|]
-operator|->
-name|Reference
-operator|.
-name|Value
-index|]
-expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_PACKAGE

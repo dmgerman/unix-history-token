@@ -1094,6 +1094,11 @@ expr_stmt|;
 name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 return|return;
 block|}

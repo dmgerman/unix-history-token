@@ -731,6 +731,8 @@ name|ACPI_UINT32_MAX
 argument_list|,
 name|AcpiDbWalkForReferences
 argument_list|,
+name|NULL
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -973,6 +975,8 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|,
 name|AcpiDbWalkForPredefinedNames
+argument_list|,
+name|NULL
 argument_list|,
 operator|(
 name|void
@@ -1375,6 +1379,8 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|,
 name|AcpiDbWalkForExecute
+argument_list|,
+name|NULL
 argument_list|,
 operator|(
 name|void
@@ -2462,9 +2468,12 @@ block|}
 comment|/* Create and initialize the new object */
 name|ObjDesc
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+name|Value
 argument_list|)
 expr_stmt|;
 if|if
@@ -2480,14 +2489,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|Value
-expr_stmt|;
 comment|/* Store the new object into the target */
 switch|switch
 condition|(
@@ -2891,6 +2892,8 @@ name|ACPI_UINT32_MAX
 argument_list|,
 name|AcpiDbWalkForSpecificObjects
 argument_list|,
+name|NULL
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -3218,6 +3221,8 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|,
 name|AcpiDbWalkAndMatchName
+argument_list|,
+name|NULL
 argument_list|,
 name|AcpiName
 argument_list|,
@@ -4547,6 +4552,8 @@ name|ACPI_UINT32_MAX
 argument_list|,
 name|AcpiDbIntegrityWalk
 argument_list|,
+name|NULL
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -5063,6 +5070,8 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|,
 name|AcpiDbBusWalk
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

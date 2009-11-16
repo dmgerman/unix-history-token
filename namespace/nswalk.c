@@ -201,7 +201,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartNode           - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              Flags               - Whether to unlock the NS before invoking  *                                    the callback routine  *              UserFunction        - Called when an object of "Type" is found  *              Context             - Passed to user function  *              ReturnValue         - from the UserFunction if terminated early.  *                                    Otherwise, returns NULL.  * RETURNS:     Status  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the node specified by StartHandle.  *              The UserFunction is called whenever a node that matches  *              the type parameter is found.  If the user function returns  *              a non-zero value, the search is terminated immediately and  *              this value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services;  the User Function can be tailored  *              to each task, whether it is a print function, a compare  *              function, etc.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartNode           - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              Flags               - Whether to unlock the NS before invoking  *                                    the callback routine  *              PreOrderVisit       - Called during tree pre-order visit  *                                    when an object of "Type" is found  *              PostOrderVisit      - Called during tree post-order visit  *                                    when an object of "Type" is found  *              Context             - Passed to user function(s) above  *              ReturnValue         - from the UserFunction if terminated  *                                    early. Otherwise, returns NULL.  * RETURNS:     Status  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the node specified by StartHandle.  *              The callback function is called whenever a node that matches  *              the type parameter is found. If the callback function returns  *              a non-zero value, the search is terminated immediately and  *              this value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services; the callback function(s) can be  *              tailored to each task, whether it is a print function,  *              a compare function, etc.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -221,7 +221,10 @@ name|UINT32
 name|Flags
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|UserFunction
+name|PreOrderVisit
+parameter_list|,
+name|ACPI_WALK_CALLBACK
+name|PostOrderVisit
 parameter_list|,
 name|void
 modifier|*
@@ -253,6 +256,11 @@ decl_stmt|;
 name|UINT32
 name|Level
 decl_stmt|;
+name|BOOLEAN
+name|NodePreviouslyVisited
+init|=
+name|FALSE
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|NsWalkNamespace
@@ -278,7 +286,12 @@ name|StartNode
 expr_stmt|;
 name|ChildNode
 operator|=
+name|AcpiNsGetNextNode
+argument_list|(
+name|ParentNode
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 name|ChildType
 operator|=
@@ -294,27 +307,14 @@ condition|(
 name|Level
 operator|>
 literal|0
+operator|&&
+name|ChildNode
 condition|)
 block|{
-comment|/* Get the next node in this scope.  Null if not found */
 name|Status
 operator|=
 name|AE_OK
 expr_stmt|;
-name|ChildNode
-operator|=
-name|AcpiNsGetNextNode
-argument_list|(
-name|ParentNode
-argument_list|,
-name|ChildNode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ChildNode
-condition|)
-block|{
 comment|/* Found next child, get the type if we are not searching for ANY */
 if|if
 condition|(
@@ -330,7 +330,7 @@ operator|->
 name|Type
 expr_stmt|;
 block|}
-comment|/*              * Ignore all temporary namespace nodes (created during control              * method execution) unless told otherwise. These temporary nodes              * can cause a race condition because they can be deleted during              * the execution of the user function (if the namespace is              * unlocked before invocation of the user function.) Only the              * debugger namespace dump will examine the temporary nodes.              */
+comment|/*          * Ignore all temporary namespace nodes (created during control          * method execution) unless told otherwise. These temporary nodes          * can cause a race condition because they can be deleted during          * the execution of the user function (if the namespace is          * unlocked before invocation of the user function.) Only the          * debugger namespace dump will examine the temporary nodes.          */
 if|if
 condition|(
 operator|(
@@ -363,7 +363,7 @@ operator|==
 name|Type
 condition|)
 block|{
-comment|/*                  * Found a matching node, invoke the user callback function.                  * Unlock the namespace if flag is set.                  */
+comment|/*              * Found a matching node, invoke the user callback function.              * Unlock the namespace if flag is set.              */
 if|if
 condition|(
 name|Flags
@@ -393,9 +393,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/*              * Invoke the user function, either pre-order or post-order              * or both.              */
+if|if
+condition|(
+operator|!
+name|NodePreviouslyVisited
+condition|)
+block|{
+if|if
+condition|(
+name|PreOrderVisit
+condition|)
+block|{
 name|Status
 operator|=
-name|UserFunction
+name|PreOrderVisit
 argument_list|(
 name|ChildNode
 argument_list|,
@@ -406,6 +418,30 @@ argument_list|,
 name|ReturnValue
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|PostOrderVisit
+condition|)
+block|{
+name|Status
+operator|=
+name|PostOrderVisit
+argument_list|(
+name|ChildNode
+argument_list|,
+name|Level
+argument_list|,
+name|Context
+argument_list|,
+name|ReturnValue
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|Flags
@@ -466,9 +502,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*              * Depth first search: Attempt to go down another level in the              * namespace if we are allowed to.  Don't go any further if we have              * reached the caller specified maximum depth or if the user              * function has specified that the maximum depth has been reached.              */
+comment|/*          * Depth first search: Attempt to go down another level in the          * namespace if we are allowed to.  Don't go any further if we have          * reached the caller specified maximum depth or if the user          * function has specified that the maximum depth has been reached.          */
 if|if
 condition|(
+operator|!
+name|NodePreviouslyVisited
+operator|&&
 operator|(
 name|Level
 operator|<
@@ -499,11 +538,50 @@ name|ChildNode
 expr_stmt|;
 name|ChildNode
 operator|=
+name|AcpiNsGetNextNode
+argument_list|(
+name|ParentNode
+argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+block|}
+comment|/* No more children, re-visit this node */
+if|if
+condition|(
+operator|!
+name|NodePreviouslyVisited
+condition|)
+block|{
+name|NodePreviouslyVisited
+operator|=
+name|TRUE
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* No more children, visit peers */
+name|ChildNode
+operator|=
+name|AcpiNsGetNextNode
+argument_list|(
+name|ParentNode
+argument_list|,
+name|ChildNode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ChildNode
+condition|)
+block|{
+name|NodePreviouslyVisited
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
-block|}
-block|}
+comment|/* No peers, re-visit parent */
 else|else
 block|{
 comment|/*              * No more children of this node (AcpiNsGetNextNode failed), go              * back upwards in the namespace tree to the node's parent.              */
@@ -520,6 +598,10 @@ name|AcpiNsGetParentNode
 argument_list|(
 name|ParentNode
 argument_list|)
+expr_stmt|;
+name|NodePreviouslyVisited
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 block|}

@@ -385,6 +385,64 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateIntegerObject  *  * PARAMETERS:  InitialValue        - Initial value for the integer  *  * RETURN:      Pointer to a new Integer object, null on failure  *  * DESCRIPTION: Create an initialized integer object  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|AcpiUtCreateIntegerObject
+parameter_list|(
+name|UINT64
+name|InitialValue
+parameter_list|)
+block|{
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|IntegerDesc
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|UtCreateIntegerObject
+argument_list|)
+expr_stmt|;
+comment|/* Create and initialize a new integer object */
+name|IntegerDesc
+operator|=
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|ACPI_TYPE_INTEGER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IntegerDesc
+condition|)
+block|{
+name|return_PTR
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|IntegerDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+name|InitialValue
+expr_stmt|;
+name|return_PTR
+argument_list|(
+name|IntegerDesc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateBufferObject  *  * PARAMETERS:  BufferSize             - Size of buffer to be created  *  * RETURN:      Pointer to a new Buffer object, null on failure  *  * DESCRIPTION: Create a fully initialized buffer object  *  ******************************************************************************/
 end_comment
 

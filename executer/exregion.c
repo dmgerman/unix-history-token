@@ -96,7 +96,10 @@ name|UINT32
 name|Length
 decl_stmt|;
 name|ACPI_SIZE
-name|WindowSize
+name|MapLength
+decl_stmt|;
+name|ACPI_SIZE
+name|PageBoundaryMapLength
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -261,8 +264,8 @@ name|MappedLength
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Don't attempt to map memory beyond the end of the region, and          * constrain the maximum mapping size to something reasonable.          */
-name|WindowSize
+comment|/*          * October 2009: Attempt to map from the requested address to the          * end of the region. However, we will never map more than one          * page, nor will we cross a page boundary.          */
+name|MapLength
 operator|=
 call|(
 name|ACPI_SIZE
@@ -281,16 +284,40 @@ operator|-
 name|Address
 argument_list|)
 expr_stmt|;
+comment|/*          * If mapping the entire remaining portion of the region will cross          * a page boundary, just map up to the page boundary, do not cross.          * On some systems, crossing a page boundary while mapping regions          * can cause warnings if the pages have different attributes          * due to resource management.          *          * This has the added benefit of constraining a single mapping to          * one page, which is similar to the original code that used a 4k          * maximum window.          */
+name|PageBoundaryMapLength
+operator|=
+name|ACPI_ROUND_UP
+argument_list|(
+name|Address
+argument_list|,
+name|ACPI_DEFAULT_PAGE_SIZE
+argument_list|)
+operator|-
+name|Address
+expr_stmt|;
 if|if
 condition|(
-name|WindowSize
-operator|>
-name|ACPI_SYSMEM_REGION_WINDOW_SIZE
+name|PageBoundaryMapLength
+operator|==
+literal|0
 condition|)
 block|{
-name|WindowSize
+name|PageBoundaryMapLength
 operator|=
-name|ACPI_SYSMEM_REGION_WINDOW_SIZE
+name|ACPI_DEFAULT_PAGE_SIZE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|MapLength
+operator|>
+name|PageBoundaryMapLength
+condition|)
+block|{
+name|MapLength
+operator|=
+name|PageBoundaryMapLength
 expr_stmt|;
 block|}
 comment|/* Create a new mapping starting at the address given */
@@ -305,7 +332,7 @@ name|ACPI_PHYSICAL_ADDRESS
 operator|)
 name|Address
 argument_list|,
-name|WindowSize
+name|MapLength
 argument_list|)
 expr_stmt|;
 if|if
@@ -331,7 +358,7 @@ operator|,
 operator|(
 name|UINT32
 operator|)
-name|WindowSize
+name|MapLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -358,7 +385,7 @@ name|MemInfo
 operator|->
 name|MappedLength
 operator|=
-name|WindowSize
+name|MapLength
 expr_stmt|;
 block|}
 comment|/*      * Generate a logical pointer corresponding to the address we want to      * access      */

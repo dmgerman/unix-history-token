@@ -422,9 +422,12 @@ block|}
 comment|/* Table not found, return an Integer=0 and AE_OK */
 name|DdbHandle
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -439,14 +442,6 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-name|DdbHandle
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-literal|0
-expr_stmt|;
 operator|*
 name|ReturnDesc
 operator|=

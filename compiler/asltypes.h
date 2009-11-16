@@ -719,7 +719,9 @@ name|ASL_MSG_INVALID_TYPE
 block|,
 name|ASL_MSG_INVALID_UUID
 block|,
-name|ASL_MSG_LIST_LENGTH
+name|ASL_MSG_LIST_LENGTH_LONG
+block|,
+name|ASL_MSG_LIST_LENGTH_SHORT
 block|,
 name|ASL_MSG_LISTING_FILE_OPEN
 block|,
@@ -1009,8 +1011,11 @@ block|,
 comment|/*    ASL_MSG_INVALID_UUID */
 literal|"UUID string must be of the form \"aabbccdd-eeff-gghh-iijj-kkllmmnnoopp\""
 block|,
-comment|/*    ASL_MSG_LIST_LENGTH */
-literal|"Initializer list too long"
+comment|/*    ASL_MSG_LIST_LENGTH_LONG */
+literal|"Initializer list longer than declared package length"
+block|,
+comment|/*    ASL_MSG_LIST_LENGTH_SHORT */
+literal|"Initializer list shorter than declared package length"
 block|,
 comment|/*    ASL_MSG_LISTING_FILE_OPEN */
 literal|"Could not open listing file"
