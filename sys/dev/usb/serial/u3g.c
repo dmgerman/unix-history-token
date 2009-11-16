@@ -833,6 +833,34 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* OEM: Huawei */
+name|U3G_DEV
+argument_list|(
+name|HUAWEI
+argument_list|,
+name|MOBILE
+argument_list|,
+name|U3GFL_HUAWEI_INIT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|HUAWEI
+argument_list|,
+name|E180V
+argument_list|,
+name|U3GFL_HUAWEI_INIT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|HUAWEI
+argument_list|,
+name|E220
+argument_list|,
+name|U3GFL_HUAWEI_INIT
+argument_list|)
+block|,
 comment|/* OEM: Option */
 name|U3G_DEV
 argument_list|(
@@ -934,32 +962,14 @@ argument_list|,
 name|U3GFL_SCSI_EJECT
 argument_list|)
 block|,
-comment|/* OEM: Huawei */
+comment|/* OEM: Merlin */
 name|U3G_DEV
 argument_list|(
-name|HUAWEI
+name|MERLIN
 argument_list|,
-name|MOBILE
+name|V620
 argument_list|,
-name|U3GFL_HUAWEI_INIT
-argument_list|)
-block|,
-name|U3G_DEV
-argument_list|(
-name|HUAWEI
-argument_list|,
-name|E180V
-argument_list|,
-name|U3GFL_HUAWEI_INIT
-argument_list|)
-block|,
-name|U3G_DEV
-argument_list|(
-name|HUAWEI
-argument_list|,
-name|E220
-argument_list|,
-name|U3GFL_HUAWEI_INIT
+literal|0
 argument_list|)
 block|,
 comment|/* OEM: Novatel */
@@ -1112,16 +1122,6 @@ argument_list|(
 name|DELL
 argument_list|,
 name|U740
-argument_list|,
-literal|0
-argument_list|)
-block|,
-comment|/* OEM: Merlin */
-name|U3G_DEV
-argument_list|(
-name|MERLIN
-argument_list|,
-name|V620
 argument_list|,
 literal|0
 argument_list|)
