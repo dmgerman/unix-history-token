@@ -1970,6 +1970,9 @@ name|caps2
 decl_stmt|;
 comment|/* Controller capabilities */
 name|int
+name|quirks
+decl_stmt|;
+name|int
 name|numslots
 decl_stmt|;
 comment|/* Number of present slots */
@@ -2128,6 +2131,9 @@ name|uint32_t
 name|caps2
 decl_stmt|;
 comment|/* Controller capabilities */
+name|int
+name|quirks
+decl_stmt|;
 name|int
 name|numirqs
 decl_stmt|;
