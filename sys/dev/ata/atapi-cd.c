@@ -11766,6 +11766,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+return|return
 name|g_modevent
 argument_list|(
 literal|0
@@ -11775,9 +11776,6 @@ argument_list|,
 operator|&
 name|acd_class
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 end_function
