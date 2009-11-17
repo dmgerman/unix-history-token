@@ -8104,23 +8104,7 @@ operator|->
 name|numrslots
 argument_list|)
 expr_stmt|;
-comment|/* Handle command with timeout. */
-name|ahci_end_transaction
-argument_list|(
-operator|&
-name|ch
-operator|->
-name|slot
-index|[
-name|slot
-operator|->
-name|slot
-index|]
-argument_list|,
-name|AHCI_ERR_TIMEOUT
-argument_list|)
-expr_stmt|;
-comment|/* Handle the rest of commands. */
+comment|/* Handle frozen command. */
 if|if
 condition|(
 name|ch
@@ -8159,6 +8143,23 @@ name|fccb
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Handle command with timeout. */
+name|ahci_end_transaction
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|slot
+index|[
+name|slot
+operator|->
+name|slot
+index|]
+argument_list|,
+name|AHCI_ERR_TIMEOUT
+argument_list|)
+expr_stmt|;
+comment|/* Handle the rest of commands. */
 for|for
 control|(
 name|i
