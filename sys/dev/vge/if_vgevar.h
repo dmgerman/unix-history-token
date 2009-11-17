@@ -328,14 +328,6 @@ comment|/* interface info */
 name|device_t
 name|vge_dev
 decl_stmt|;
-name|bus_space_handle_t
-name|vge_bhandle
-decl_stmt|;
-comment|/* bus space handle */
-name|bus_space_tag_t
-name|vge_btag
-decl_stmt|;
-comment|/* bus space tag */
 name|struct
 name|resource
 modifier|*
@@ -458,7 +450,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_stream_4(sc->vge_btag, sc->vge_bhandle, reg, val)
+value|bus_write_stream_4(sc->vge_res, reg, val)
 end_define
 
 begin_define
@@ -473,7 +465,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->vge_btag, sc->vge_bhandle, reg, val)
+value|bus_write_4(sc->vge_res, reg, val)
 end_define
 
 begin_define
@@ -488,7 +480,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(sc->vge_btag, sc->vge_bhandle, reg, val)
+value|bus_write_2(sc->vge_res, reg, val)
 end_define
 
 begin_define
@@ -503,7 +495,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->vge_btag, sc->vge_bhandle, reg, val)
+value|bus_write_1(sc->vge_res, reg, val)
 end_define
 
 begin_define
@@ -516,7 +508,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->vge_btag, sc->vge_bhandle, reg)
+value|bus_read_4(sc->vge_res, reg)
 end_define
 
 begin_define
@@ -529,7 +521,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2(sc->vge_btag, sc->vge_bhandle, reg)
+value|bus_read_2(sc->vge_res, reg)
 end_define
 
 begin_define
@@ -542,7 +534,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1(sc->vge_btag, sc->vge_bhandle, reg)
+value|bus_read_1(sc->vge_res, reg)
 end_define
 
 begin_define
