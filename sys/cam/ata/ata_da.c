@@ -1597,12 +1597,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|periph
-operator|->
-name|flags
-operator||=
-name|CAM_PERIPH_POLLED
-expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&
@@ -1923,13 +1917,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|periph
-operator|->
-name|flags
-operator|&=
-operator|~
-name|CAM_PERIPH_POLLED
-expr_stmt|;
 name|cam_periph_unlock
 argument_list|(
 name|periph
