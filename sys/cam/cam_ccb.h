@@ -1022,7 +1022,7 @@ literal|252
 index|]
 decl_stmt|;
 name|u_int8_t
-name|reserved
+name|inq_flags
 decl_stmt|;
 name|u_int8_t
 name|serial_num_len

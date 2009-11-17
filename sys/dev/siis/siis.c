@@ -2751,9 +2751,9 @@ name|ch
 operator|->
 name|mtx
 argument_list|,
-name|SIIS_MAX_SLOTS
+literal|2
 argument_list|,
-literal|0
+name|SIIS_MAX_SLOTS
 argument_list|,
 name|devq
 argument_list|)
