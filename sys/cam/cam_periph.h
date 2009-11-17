@@ -133,6 +133,13 @@ expr_stmt|;
 name|u_int
 name|generation
 decl_stmt|;
+name|u_int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|CAM_PERIPH_DRV_EARLY
+value|0x01
 block|}
 struct|;
 end_struct
