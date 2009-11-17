@@ -19620,6 +19620,38 @@ operator|->
 name|bge_stat_ch
 argument_list|)
 expr_stmt|;
+comment|/* Disable host interrupts. */
+name|BGE_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_PCI_MISC_CTL
+argument_list|,
+name|BGE_PCIMISCCTL_MASK_PCI_INTR
+argument_list|)
+expr_stmt|;
+name|bge_writembx
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MBX_IRQ0_LO
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Tell firmware we're shutting down. 	 */
+name|bge_stop_fw
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bge_sig_pre_reset
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_RESET_STOP
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Disable all of the receiver blocks. 	 */
 name|BGE_CLRBIT
 argument_list|(
@@ -19854,38 +19886,6 @@ name|BGE_MARBMODE_ENABLE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Disable host interrupts. */
-name|BGE_SETBIT
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_PCI_MISC_CTL
-argument_list|,
-name|BGE_PCIMISCCTL_MASK_PCI_INTR
-argument_list|)
-expr_stmt|;
-name|bge_writembx
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MBX_IRQ0_LO
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Tell firmware we're shutting down. 	 */
-name|bge_stop_fw
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|bge_sig_pre_reset
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_RESET_STOP
-argument_list|)
-expr_stmt|;
 name|bge_reset
 argument_list|(
 name|sc
