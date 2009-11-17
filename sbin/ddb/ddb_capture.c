@@ -979,6 +979,10 @@ name|nflag
 operator|=
 name|NULL
 expr_stmt|;
+name|kvm
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
