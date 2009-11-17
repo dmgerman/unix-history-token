@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isa/isavar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -1508,11 +1514,21 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
+comment|/* Do not claim some ISA PnP device by accident. */
+if|if
+condition|(
+name|isa_get_logicalid
+argument_list|(
 name|dev
-expr_stmt|;
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 return|return
 operator|(
 literal|0
