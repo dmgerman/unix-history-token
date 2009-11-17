@@ -4459,7 +4459,7 @@ expr_stmt|;
 comment|/* 	 * To ensure that this is printed in one piece, 	 * mask out CAM interrupts. 	 */
 name|printf
 argument_list|(
-literal|"%s%d at %s%d bus %d target %d lun %d\n"
+literal|"%s%d at %s%d bus %d scbus%d target %d lun %d\n"
 argument_list|,
 name|periph
 operator|->
@@ -4492,6 +4492,12 @@ operator|->
 name|sim
 operator|->
 name|bus_id
+argument_list|,
+name|path
+operator|->
+name|bus
+operator|->
+name|path_id
 argument_list|,
 name|path
 operator|->
@@ -20576,7 +20582,7 @@ block|{
 name|printf
 argument_list|(
 literal|"xptconfigfunc: xpt_create_path failed with "
-literal|"status %#x for bus %d\n"
+literal|"status %#x for scbus%d\n"
 argument_list|,
 name|status
 argument_list|,
@@ -20650,7 +20656,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xptconfigfunc: CPI failed on bus %d "
+literal|"xptconfigfunc: CPI failed on scbus%d "
 literal|"with status %d\n"
 argument_list|,
 name|bus
