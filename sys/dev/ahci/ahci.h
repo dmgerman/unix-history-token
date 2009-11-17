@@ -2030,6 +2030,10 @@ name|readlog
 decl_stmt|;
 comment|/* Our READ LOG active */
 name|int
+name|fatalerr
+decl_stmt|;
+comment|/* Fatal error happend */
+name|int
 name|lastslot
 decl_stmt|;
 comment|/* Last used slot */
