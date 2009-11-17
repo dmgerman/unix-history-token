@@ -1617,12 +1617,24 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * If the incoming datagram is for IGMP, allow it 			 * through unconditionally to the raw socket. 			 * 			 * In the case of IGMPv2, we may not have explicitly 			 * joined the group, and may have set IFF_ALLMULTI 			 * on the interface. imo_multi_filter() may discard 			 * control traffic we actually need to see. 			 * 			 * Userland multicast routing daemons should continue 			 * filter the control traffic appropriately. 			 */
+name|int
+name|blocked
+decl_stmt|;
+name|blocked
+operator|=
+name|MCAST_PASS
+expr_stmt|;
+if|if
+condition|(
+name|proto
+operator|!=
+name|IPPROTO_IGMP
+condition|)
+block|{
 name|struct
 name|sockaddr_in
 name|group
-decl_stmt|;
-name|int
-name|blocked
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -1687,6 +1699,7 @@ operator|&
 name|ripsrc
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|blocked
