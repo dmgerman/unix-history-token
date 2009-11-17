@@ -3530,7 +3530,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_periph_runccb
@@ -4623,8 +4623,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cts
@@ -4679,8 +4678,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -10399,8 +10397,7 @@ argument_list|,
 operator|&
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
@@ -10519,8 +10516,7 @@ argument_list|,
 operator|&
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -16854,8 +16850,7 @@ argument_list|,
 operator|&
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -20285,8 +20280,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|crs
@@ -20420,8 +20414,7 @@ argument_list|,
 operator|&
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -20642,8 +20635,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|work_ccb
@@ -20747,8 +20739,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|work_ccb

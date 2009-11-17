@@ -1170,8 +1170,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_fill_ataio
@@ -1469,8 +1468,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_periph_unlock
@@ -1638,8 +1636,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -1807,8 +1804,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -2412,7 +2408,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-literal|0
+name|CAM_PRIORITY_DEV
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2916,8 +2912,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -4102,8 +4097,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -4592,7 +4586,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5198,8 +5192,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb

@@ -2389,8 +2389,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_synchronize_cache
@@ -2781,8 +2780,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_periph_unlock
@@ -2932,8 +2930,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -3108,8 +3105,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -4380,8 +4376,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -5259,8 +5254,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -6521,8 +6515,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
@@ -7144,8 +7137,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_prevent
@@ -7346,8 +7338,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_read_capacity
@@ -7719,8 +7710,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccg
@@ -8061,8 +8051,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb

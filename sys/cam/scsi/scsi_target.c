@@ -1436,8 +1436,7 @@ name|softc
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|0
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cdbg
@@ -1887,8 +1886,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|en_ccb
@@ -2039,8 +2037,7 @@ name|ccb_h
 argument_list|,
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -2776,8 +2773,7 @@ if|if
 condition|(
 name|priority
 operator|==
-operator|-
-literal|1
+name|CAM_PRIORITY_NONE
 condition|)
 block|{
 name|error
@@ -5289,8 +5285,7 @@ name|softc
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|0
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cab

@@ -14269,8 +14269,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
@@ -14639,8 +14638,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd

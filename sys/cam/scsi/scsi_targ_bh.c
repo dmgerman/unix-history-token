@@ -935,8 +935,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|immed_ccb
@@ -1113,8 +1112,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|atio
@@ -1296,8 +1294,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|inot
@@ -1509,8 +1506,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -1585,8 +1581,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -1633,8 +1628,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -2363,8 +2357,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2907,7 +2900,7 @@ argument_list|)
 expr_stmt|;
 name|priority
 operator|=
-literal|1
+name|CAM_PRIORITY_NORMAL
 expr_stmt|;
 block|}
 name|xpt_schedule
