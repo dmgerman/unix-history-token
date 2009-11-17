@@ -3838,7 +3838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Routine:  *		vm_fault_copy_entry  *	Function:  *		Copy all of the pages from a wired-down map entry to another.  *  *	In/out conditions:  *		The source and destination maps must be locked for write.  *		The source map entry must be wired down (or be a sharing map  *		entry corresponding to a main map entry that is wired down).  */
+comment|/*  *	Routine:  *		vm_fault_copy_entry  *	Function:  *		Create new shadow object backing dst_entry with private copy of  *		all underlying pages. When src_entry is equal to dst_entry,  *		function implements COW for wired-down map entry. Otherwise,  *		it forks wired entry into dst_map.  *  *	In/out conditions:  *		The source and destination maps must be locked for write.  *		The source map entry must be wired down (or be a sharing map  *		entry corresponding to a main map entry that is wired down).  */
 end_comment
 
 begin_function
@@ -3868,8 +3868,7 @@ decl_stmt|,
 name|dst_object
 decl_stmt|,
 name|object
-decl_stmt|;
-name|vm_object_t
+decl_stmt|,
 name|src_object
 decl_stmt|;
 name|vm_pindex_t
@@ -3880,6 +3879,8 @@ decl_stmt|,
 name|src_pindex
 decl_stmt|;
 name|vm_prot_t
+name|access
+decl_stmt|,
 name|prot
 decl_stmt|;
 name|vm_offset_t
@@ -3893,6 +3894,8 @@ name|src_m
 decl_stmt|;
 name|boolean_t
 name|src_readonly
+decl_stmt|,
+name|upgrade
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3903,6 +3906,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* lint */
+name|upgrade
+operator|=
+name|src_entry
+operator|==
+name|dst_entry
+expr_stmt|;
 name|src_object
 operator|=
 name|src_entry
@@ -3982,6 +3991,8 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|upgrade
+operator|||
 name|dst_entry
 operator|->
 name|object
@@ -4011,6 +4022,38 @@ literal|0
 expr_stmt|;
 name|dst_object
 operator|->
+name|charge
+operator|=
+name|dst_entry
+operator|->
+name|end
+operator|-
+name|dst_entry
+operator|->
+name|start
+expr_stmt|;
+if|if
+condition|(
+name|fork_charge
+operator|!=
+name|NULL
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|dst_entry
+operator|->
+name|uip
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"vm_fault_copy_entry: leaked swp charge"
+operator|)
+argument_list|)
+expr_stmt|;
+name|dst_object
+operator|->
 name|uip
 operator|=
 name|curthread
@@ -4026,31 +4069,6 @@ operator|->
 name|uip
 argument_list|)
 expr_stmt|;
-name|dst_object
-operator|->
-name|charge
-operator|=
-name|dst_entry
-operator|->
-name|end
-operator|-
-name|dst_entry
-operator|->
-name|start
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|dst_entry
-operator|->
-name|uip
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"vm_fault_copy_entry: leaked swp charge"
-operator|)
-argument_list|)
-expr_stmt|;
 operator|*
 name|fork_charge
 operator|+=
@@ -4058,11 +4076,42 @@ name|dst_object
 operator|->
 name|charge
 expr_stmt|;
+block|}
+else|else
+block|{
+name|dst_object
+operator|->
+name|uip
+operator|=
+name|dst_entry
+operator|->
+name|uip
+expr_stmt|;
+name|dst_entry
+operator|->
+name|uip
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|access
+operator|=
 name|prot
 operator|=
 name|dst_entry
 operator|->
 name|max_protection
+expr_stmt|;
+comment|/* 	 * If not an upgrade, then enter the mappings in the pmap as 	 * read and/or execute accesses.  Otherwise, enter them as 	 * write accesses. 	 * 	 * A writeable large page mapping is only created if all of 	 * the constituent small page mappings are modified. Marking 	 * PTEs as modified on inception allows promotion to happen 	 * without taking potentially large number of soft faults. 	 */
+if|if
+condition|(
+operator|!
+name|upgrade
+condition|)
+name|access
+operator|&=
+operator|~
+name|VM_PROT_WRITE
 expr_stmt|;
 comment|/* 	 * Loop through all of the pages in the entry's range, copying each 	 * one from the source object (it should be there) to the destination 	 * object. 	 */
 for|for
@@ -4236,7 +4285,7 @@ argument_list|(
 name|dst_object
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Enter it in the pmap as a read and/or execute access. 		 */
+comment|/* 		 * Enter it in the pmap. If a wired, copy-on-write 		 * mapping is being replaced by a write-enabled 		 * mapping, then wire that new mapping. 		 */
 name|pmap_enter
 argument_list|(
 name|dst_map
@@ -4245,16 +4294,13 @@ name|pmap
 argument_list|,
 name|vaddr
 argument_list|,
-name|prot
-operator|&
-operator|~
-name|VM_PROT_WRITE
+name|access
 argument_list|,
 name|dst_m
 argument_list|,
 name|prot
 argument_list|,
-name|FALSE
+name|upgrade
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Mark it no longer busy, and put it on the active list. 		 */
@@ -4266,6 +4312,25 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|upgrade
+condition|)
+block|{
+name|vm_page_unwire
+argument_list|(
+name|src_m
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|vm_page_wire
+argument_list|(
+name|dst_m
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|vm_page_activate
 argument_list|(
 name|dst_m
@@ -4285,6 +4350,28 @@ argument_list|(
 name|dst_object
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|upgrade
+condition|)
+block|{
+name|dst_entry
+operator|->
+name|eflags
+operator|&=
+operator|~
+operator|(
+name|MAP_ENTRY_COW
+operator||
+name|MAP_ENTRY_NEEDS_COPY
+operator|)
+expr_stmt|;
+name|vm_object_deallocate
+argument_list|(
+name|src_object
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
