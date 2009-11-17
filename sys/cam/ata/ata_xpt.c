@@ -1668,7 +1668,10 @@ name|bytecount
 operator|=
 name|sectors
 operator|*
-literal|512
+name|ata_logical_sector_size
+argument_list|(
+name|ident_buf
+argument_list|)
 expr_stmt|;
 name|cts
 operator|.
@@ -1693,7 +1696,10 @@ name|bytecount
 operator|=
 name|sectors
 operator|*
-literal|512
+name|ata_logical_sector_size
+argument_list|(
+name|ident_buf
+argument_list|)
 expr_stmt|;
 name|cts
 operator|.

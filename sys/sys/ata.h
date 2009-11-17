@@ -826,7 +826,7 @@ index|]
 decl_stmt|;
 comment|/*209*/
 name|u_int16_t
-name|lbalign
+name|lsalign
 decl_stmt|;
 comment|/*210*/
 name|u_int16_t
