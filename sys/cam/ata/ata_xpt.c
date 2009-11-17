@@ -3013,6 +3013,16 @@ operator|->
 name|mintags
 operator|!=
 literal|0
+operator|&&
+name|path
+operator|->
+name|bus
+operator|->
+name|sim
+operator|->
+name|max_tagged_dev_openings
+operator|!=
+literal|0
 condition|)
 block|{
 name|xpt_start_tags
