@@ -3538,7 +3538,9 @@ expr_stmt|;
 comment|/* 	 * Adjust the RXWIN0SENT flag - indicate that we have advertised 	 * a 0 window.  This may cause the remote transmitter to stall.  This 	 * flag tells soreceive() to disable delayed acknowledgements when 	 * draining the buffer.  This can occur if the receiver is attempting 	 * to read more data then can be buffered prior to transmitting on 	 * the connection. 	 */
 if|if
 condition|(
-name|recwin
+name|th
+operator|->
+name|th_win
 operator|==
 literal|0
 condition|)
