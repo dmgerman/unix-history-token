@@ -3095,17 +3095,6 @@ name|pid
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 					 * We don't really want to restart a 					 * job from scratch just because it 					 * continued, especially not without 					 * killing the continuing process! 					 * That's why this is ifdef'ed out. 					 * FD - 9/17/90 					 */
-name|JobRestart
-argument_list|(
-name|job
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|job
 operator|->
