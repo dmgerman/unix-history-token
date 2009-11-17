@@ -314,9 +314,6 @@ modifier|*
 name|serial_num
 decl_stmt|;
 name|u_int32_t
-name|qfrozen_cnt
-decl_stmt|;
-name|u_int32_t
 name|flags
 decl_stmt|;
 define|#
