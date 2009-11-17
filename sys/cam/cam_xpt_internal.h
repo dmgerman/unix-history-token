@@ -352,6 +352,10 @@ define|#
 directive|define
 name|CAM_DEV_DV_HIT_BOTTOM
 value|0x100
+define|#
+directive|define
+name|CAM_DEV_IDENTIFY_DATA_VALID
+value|0x200
 name|u_int32_t
 name|tag_delay_count
 decl_stmt|;
