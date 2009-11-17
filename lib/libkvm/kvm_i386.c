@@ -1473,12 +1473,11 @@ expr_stmt|;
 if|if
 condition|(
 name|s
-operator|<
-sizeof|sizeof
-name|pde
+operator|==
+literal|0
 condition|)
 block|{
-name|_kvm_syserr
+name|_kvm_err
 argument_list|(
 name|kd
 argument_list|,
@@ -1486,7 +1485,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"_kvm_vatop: pde_pa not found"
+literal|"_kvm_vatop: 4MB page address not in dump"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1975,12 +1974,11 @@ expr_stmt|;
 if|if
 condition|(
 name|s
-operator|<
-sizeof|sizeof
-name|pde
+operator|==
+literal|0
 condition|)
 block|{
-name|_kvm_syserr
+name|_kvm_err
 argument_list|(
 name|kd
 argument_list|,
@@ -1988,7 +1986,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"_kvm_vatop_pae: pde_pa not found"
+literal|"_kvm_vatop: 2MB page address not in dump"
 argument_list|)
 expr_stmt|;
 goto|goto
