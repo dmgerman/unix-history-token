@@ -1153,13 +1153,6 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|UMA_ZFLAG_FULL
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_ZONE_INIT
 parameter_list|(
 name|zone
@@ -1170,7 +1163,7 @@ name|size
 parameter_list|,
 name|number
 parameter_list|)
-value|{ \ 	zone = uma_zcreate(name, size, NULL, NULL, NULL, NULL, UMA_ALIGN_PTR,\ 		UMA_ZFLAG_FULL); \ 	uma_zone_set_max(zone, number); \ }
+value|{ \ 	zone = uma_zcreate(name, size, NULL, NULL, NULL, NULL, UMA_ALIGN_PTR,\ 		0); \ 	uma_zone_set_max(zone, number); \ }
 end_define
 
 begin_define
