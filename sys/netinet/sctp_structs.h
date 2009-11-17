@@ -912,10 +912,6 @@ name|uint8_t
 name|book_size_scale
 decl_stmt|;
 name|uint8_t
-name|addr_over
-decl_stmt|;
-comment|/* flag which is set if the dest address for 				 * this chunk is overridden by user. Used for 				 * CMT (iyengar@cis.udel.edu, 2005/06/21) */
-name|uint8_t
 name|no_fr_allowed
 decl_stmt|;
 name|uint8_t
@@ -1112,9 +1108,6 @@ name|msg_is_complete
 decl_stmt|;
 name|uint8_t
 name|some_taken
-decl_stmt|;
-name|uint8_t
-name|addr_over
 decl_stmt|;
 name|uint8_t
 name|pr_sctp_on
