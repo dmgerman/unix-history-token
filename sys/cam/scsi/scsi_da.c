@@ -2737,14 +2737,6 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * check it's not too big a transfer for our adapter 	 */
-block|scsi_minphys(bp,&sd_switch);
-endif|#
-directive|endif
-comment|/* 	 * Mask interrupts so that the pack cannot be invalidated until 	 * after we are in the queue.  Otherwise, we might not properly 	 * clean up one of the buffers. 	 */
 comment|/* 	 * If the device has been made invalid, error out 	 */
 if|if
 condition|(
