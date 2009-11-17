@@ -437,7 +437,7 @@ parameter_list|,
 name|int
 name|port
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|val
 parameter_list|)
 function_decl|;
