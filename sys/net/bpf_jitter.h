@@ -29,18 +29,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BPF_JIT_MAXSIZE
-value|PAGE_SIZE
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -87,6 +75,9 @@ block|{
 comment|/* The native filtering binary, in the form of a bpf_filter_func. */
 name|bpf_filter_func
 name|func
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 name|int
 name|mem
