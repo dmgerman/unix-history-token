@@ -4172,6 +4172,14 @@ argument_list|,
 name|abort_flag
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|abort_flag
+condition|)
+block|{
+return|return;
+block|}
 block|}
 if|if
 condition|(
