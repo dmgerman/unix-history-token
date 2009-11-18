@@ -9487,8 +9487,6 @@ name|saved_start
 argument_list|,
 name|saved_end
 argument_list|,
-name|user_wire
-argument_list|,
 name|fictitious
 argument_list|)
 expr_stmt|;
@@ -14460,6 +14458,10 @@ name|prot
 operator|)
 operator|!=
 name|fault_type
+operator|||
+name|prot
+operator|==
+name|VM_PROT_NONE
 condition|)
 block|{
 name|vm_map_unlock_read
