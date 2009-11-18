@@ -1885,7 +1885,7 @@ name|sn
 init|=
 name|arg
 decl_stmt|;
-name|_pthread_cleanup_push
+name|pthread_cleanup_push
 argument_list|(
 name|worker_cleanup
 argument_list|,
@@ -1899,7 +1899,7 @@ argument_list|(
 name|sn
 argument_list|)
 expr_stmt|;
-name|_pthread_cleanup_pop
+name|pthread_cleanup_pop
 argument_list|(
 literal|1
 argument_list|)
