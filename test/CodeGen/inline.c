@@ -1,142 +1,142 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: echo "GNU89 tests:"&&
+comment|// RUN: echo "GNU89 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -S -o %t -std=gnu89&&
+comment|// RUN: clang %s -emit-llvm -S -o %t -std=gnu89
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @ei()" %t&&
+comment|// RUN: grep "define available_externally i32 @ei()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @foo()" %t&&
+comment|// RUN: grep "define i32 @foo()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @bar()" %t&&
+comment|// RUN: grep "define i32 @bar()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @unreferenced1()" %t&&
+comment|// RUN: grep "define void @unreferenced1()" %t
 end_comment
 
 begin_comment
-comment|// RUN: not grep unreferenced2 %t&&
+comment|// RUN: not grep unreferenced2 %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @gnu_inline()" %t&&
+comment|// RUN: grep "define void @gnu_inline()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally void @gnu_ei_inline()" %t&&
+comment|// RUN: grep "define available_externally void @gnu_ei_inline()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test1" %t&&
+comment|// RUN: grep "define i32 @test1" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test2" %t&&
+comment|// RUN: grep "define i32 @test2" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @test3()" %t&&
+comment|// RUN: grep "define void @test3()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @test4" %t&&
+comment|// RUN: grep "define available_externally i32 @test4" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @test5" %t&&
+comment|// RUN: grep "define available_externally i32 @test5" %t
 end_comment
 
 begin_comment
-comment|// RUN: echo "\nC99 tests:"&&
+comment|// RUN: echo "\nC99 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -S -o %t -std=c99&&
+comment|// RUN: clang %s -emit-llvm -S -o %t -std=c99
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @ei()" %t&&
+comment|// RUN: grep "define i32 @ei()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @foo()" %t&&
+comment|// RUN: grep "define available_externally i32 @foo()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @bar()" %t&&
+comment|// RUN: grep "define i32 @bar()" %t
 end_comment
 
 begin_comment
-comment|// RUN: not grep unreferenced1 %t&&
+comment|// RUN: not grep unreferenced1 %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @unreferenced2()" %t&&
+comment|// RUN: grep "define void @unreferenced2()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @gnu_inline()" %t&&
+comment|// RUN: grep "define void @gnu_inline()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally void @gnu_ei_inline()" %t&&
+comment|// RUN: grep "define available_externally void @gnu_ei_inline()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test1" %t&&
+comment|// RUN: grep "define i32 @test1" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @test2" %t&&
+comment|// RUN: grep "define i32 @test2" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @test3" %t&&
+comment|// RUN: grep "define void @test3" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @test4" %t&&
+comment|// RUN: grep "define available_externally i32 @test4" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define available_externally i32 @test5" %t&&
+comment|// RUN: grep "define available_externally i32 @test5" %t
 end_comment
 
 begin_comment
-comment|// RUN: echo "\nC++ tests:"&&
+comment|// RUN: echo "\nC++ tests:"
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -S -o %t -std=c++98&&
+comment|// RUN: clang %s -emit-llvm -S -o %t -std=c++98
 end_comment
 
 begin_comment
-comment|// RUN: grep "define linkonce_odr i32 @_Z2eiv()" %t&&
+comment|// RUN: grep "define linkonce_odr i32 @_Z2eiv()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define linkonce_odr i32 @_Z3foov()" %t&&
+comment|// RUN: grep "define linkonce_odr i32 @_Z3foov()" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define i32 @_Z3barv()" %t&&
+comment|// RUN: grep "define i32 @_Z3barv()" %t
 end_comment
 
 begin_comment
-comment|// RUN: not grep unreferenced %t&&
+comment|// RUN: not grep unreferenced %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "define void @_Z10gnu_inlinev()" %t&&
+comment|// RUN: grep "define void @_Z10gnu_inlinev()" %t
 end_comment
 
 begin_comment

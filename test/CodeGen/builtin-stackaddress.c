@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm< %s | grep "llvm.returnaddress"&&
+comment|// RUN: clang-cc -emit-llvm< %s | grep "llvm.returnaddress"
 end_comment
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: rm -rf %t&&
+comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-output=html -checker-cfref -o %t %s&&
+comment|// RUN: clang-cc -analyze -analyzer-output=html -checker-cfref -o %t %s
 end_comment
 
 begin_comment

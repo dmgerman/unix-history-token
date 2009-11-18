@@ -181,6 +181,14 @@ name|ID
 name|Id
 parameter_list|)
 function_decl|;
+comment|/// isObjC - Is this an "ObjC" input (Obj-C and Obj-C++ sources and headers).
+name|bool
+name|isObjC
+parameter_list|(
+name|ID
+name|Id
+parameter_list|)
+function_decl|;
 comment|/// lookupTypeForExtension - Lookup the type to use for the file
 comment|/// extension \arg Ext.
 name|ID

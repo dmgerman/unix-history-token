@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-pch %s -o %t.ast&&
+comment|// RUN: clang-cc -emit-pch %s -o %t.ast
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:8:4 -print-decls | count 2&&
+comment|// RUN: index-test %t.ast -point-at %s:8:4 -print-decls | count 2
 end_comment
 
 begin_comment

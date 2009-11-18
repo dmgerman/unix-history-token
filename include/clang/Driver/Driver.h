@@ -175,9 +175,6 @@ name|Diags
 operator|.
 name|Report
 argument_list|(
-name|FullSourceLoc
-argument_list|()
-argument_list|,
 name|DiagID
 argument_list|)
 return|;

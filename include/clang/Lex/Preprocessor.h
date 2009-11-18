@@ -195,6 +195,7 @@ decl_stmt|;
 name|LangOptions
 name|Features
 decl_stmt|;
+specifier|const
 name|TargetInfo
 modifier|&
 name|Target
@@ -338,6 +339,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// True if parsing fn macro invocation args.
+comment|/// Whether the preprocessor owns the header search object.
+name|bool
+name|OwnsHeaderSearch
+range|:
+literal|1
+decl_stmt|;
 comment|/// Identifiers - This is mapping/lookup information for all identifiers in
 comment|/// the program, including program keywords.
 name|mutable
@@ -652,34 +659,22 @@ name|public
 label|:
 name|Preprocessor
 argument_list|(
-name|Diagnostic
-operator|&
-name|diags
+argument|Diagnostic&diags
 argument_list|,
-specifier|const
-name|LangOptions
-operator|&
-name|opts
+argument|const LangOptions&opts
 argument_list|,
-name|TargetInfo
-operator|&
-name|target
+argument|const TargetInfo&target
 argument_list|,
-name|SourceManager
-operator|&
-name|SM
+argument|SourceManager&SM
 argument_list|,
-name|HeaderSearch
-operator|&
-name|Headers
+argument|HeaderSearch&Headers
 argument_list|,
-name|IdentifierInfoLookup
-operator|*
-name|IILookup
-operator|=
+argument|IdentifierInfoLookup *IILookup =
 literal|0
+argument_list|,
+argument|bool OwnsHeaderSearch = false
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|Preprocessor
 argument_list|()
@@ -720,6 +715,7 @@ return|return
 name|Features
 return|;
 block|}
+specifier|const
 name|TargetInfo
 operator|&
 name|getTargetInfo
@@ -1681,6 +1677,33 @@ argument_list|(
 argument|const Token&Tok
 argument_list|)
 specifier|const
+expr_stmt|;
+comment|/// getSpelling() - Return the 'spelling' of the Tok token.  The spelling of a
+comment|/// token is the characters used to represent the token in the source file
+comment|/// after trigraph expansion and escaped-newline folding.  In particular, this
+comment|/// wants to get the true, uncanonicalized, spelling of things like digraphs
+comment|/// UCNs, etc.
+specifier|static
+name|std
+operator|::
+name|string
+name|getSpelling
+argument_list|(
+specifier|const
+name|Token
+operator|&
+name|Tok
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SourceMgr
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|Features
+argument_list|)
 expr_stmt|;
 comment|/// getSpelling - This method is used to get the spelling of a token into a
 comment|/// preallocated buffer, instead of as an std::string.  The caller is required

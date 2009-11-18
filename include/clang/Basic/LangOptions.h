@@ -246,6 +246,12 @@ literal|1
 decl_stmt|;
 comment|// block extension to C
 name|unsigned
+name|BlockIntrospection
+range|:
+literal|1
+decl_stmt|;
+comment|// block have ObjC type encodings.
+name|unsigned
 name|EmitAllDecls
 range|:
 literal|1
@@ -332,6 +338,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Whether char is a signed or unsigned type
+name|unsigned
+name|ShortWChar
+range|:
+literal|1
+decl_stmt|;
+comment|// Force wchar_t to be unsigned short int.
 name|unsigned
 name|OpenCL
 range|:
@@ -481,13 +493,15 @@ literal|0
 expr_stmt|;
 name|Exceptions
 operator|=
-name|NeXTRuntime
-operator|=
 name|Freestanding
 operator|=
 name|NoBuiltin
 operator|=
 literal|0
+expr_stmt|;
+name|NeXTRuntime
+operator|=
+literal|1
 expr_stmt|;
 name|Rtti
 operator|=
@@ -526,6 +540,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|Blocks
+operator|=
+literal|0
+expr_stmt|;
+name|BlockIntrospection
 operator|=
 literal|0
 expr_stmt|;
@@ -585,6 +603,10 @@ expr_stmt|;
 name|CharIsSigned
 operator|=
 literal|1
+expr_stmt|;
+name|ShortWChar
+operator|=
+literal|0
 expr_stmt|;
 name|MainFileName
 operator|=

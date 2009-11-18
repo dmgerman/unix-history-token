@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm %s -o %t&&
+comment|// RUN: clang-cc -emit-llvm %s -o %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'private constant \[10 x i8\]' %t&&
+comment|// RUN: grep 'private constant \[10 x i8\]' %t
 end_comment
 
 begin_comment
-comment|// RUN: not grep -F "[5 x i8]" %t&&
+comment|// RUN: not grep -F "[5 x i8]" %t
 end_comment
 
 begin_comment

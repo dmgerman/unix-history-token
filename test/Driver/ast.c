@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -emit-ast %s 2> %t&&
+comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -emit-ast %s 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: echo 'END'>> %t&&
+comment|// RUN: echo 'END'>> %t
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix EMIT-AST-PHASES -input-file %t %s&&
+comment|// RUN: FileCheck -check-prefix EMIT-AST-PHASES -input-file %t %s
 end_comment
 
 begin_comment
@@ -36,15 +36,15 @@ comment|// EMIT-AST-PHASES: END
 end_comment
 
 begin_comment
-comment|// RUN: touch %t.ast&&
+comment|// RUN: touch %t.ast
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -c %t.ast 2> %t&&
+comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -c %t.ast 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: echo 'END'>> %t&&
+comment|// RUN: echo 'END'>> %t
 end_comment
 
 begin_comment

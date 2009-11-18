@@ -94,14 +94,30 @@ name|_PreVisit
 argument_list|(
 argument|CheckerContext&C
 argument_list|,
-argument|const Stmt *stmt
+argument|const Stmt *S
 argument_list|)
 block|{
 name|PreVisit
 argument_list|(
 name|C
 argument_list|,
-name|stmt
+name|S
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|_PostVisit
+argument_list|(
+argument|CheckerContext&C
+argument_list|,
+argument|const Stmt *S
+argument_list|)
+block|{
+name|PostVisit
+argument_list|(
+name|C
+argument_list|,
+name|S
 argument_list|)
 block|;   }
 name|void
@@ -129,6 +145,46 @@ literal|"Unsupport statement."
 argument_list|)
 expr_stmt|;
 return|return;
+case|case
+name|Stmt
+operator|::
+name|ImplicitCastExprClass
+case|:
+case|case
+name|Stmt
+operator|::
+name|ExplicitCastExprClass
+case|:
+case|case
+name|Stmt
+operator|::
+name|CStyleCastExprClass
+case|:
+name|static_cast
+operator|<
+name|ImplClass
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|PreVisitCastExpr
+argument_list|(
+name|C
+argument_list|,
+name|static_cast
+operator|<
+specifier|const
+name|CastExpr
+operator|*
+operator|>
+operator|(
+name|S
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|Stmt
 operator|::
@@ -172,6 +228,44 @@ directive|include
 file|"clang/Analysis/PathSensitive/CheckerVisitor.def"
 block|}
 block|}
+name|void
+name|PostVisit
+argument_list|(
+argument|CheckerContext&C
+argument_list|,
+argument|const Stmt *S
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|S
+operator|->
+name|getStmtClass
+argument_list|()
+condition|)
+block|{
+default|default:
+name|assert
+argument_list|(
+name|false
+operator|&&
+literal|"Unsupport statement."
+argument_list|)
+expr_stmt|;
+return|return;
+define|#
+directive|define
+name|POSTVISIT
+parameter_list|(
+name|NAME
+parameter_list|)
+define|\
+value|case Stmt::NAME ## Class:\ static_cast<ImplClass*>(this)->\ PostVisit ## NAME(C,static_cast<const NAME*>(S));\ break;
+include|#
+directive|include
+file|"clang/Analysis/PathSensitive/CheckerVisitor.def"
+block|}
+block|}
 define|#
 directive|define
 name|PREVISIT
@@ -180,6 +274,17 @@ name|NAME
 parameter_list|)
 define|\
 value|void PreVisit ## NAME(CheckerContext&C, const NAME* S) {}
+include|#
+directive|include
+file|"clang/Analysis/PathSensitive/CheckerVisitor.def"
+define|#
+directive|define
+name|POSTVISIT
+parameter_list|(
+name|NAME
+parameter_list|)
+define|\
+value|void PostVisit ## NAME(CheckerContext&C, const NAME* S) {}
 include|#
 directive|include
 file|"clang/Analysis/PathSensitive/CheckerVisitor.def"

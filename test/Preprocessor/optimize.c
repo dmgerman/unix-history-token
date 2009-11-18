@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -Eonly %s -DOPT_O2 -O2 -verify&&
+comment|// RUN: clang-cc -Eonly %s -DOPT_O2 -O2 -verify
 end_comment
 
 begin_ifdef
@@ -49,7 +49,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// RUN: clang-cc -Eonly %s -DOPT_O0 -O0 -verify&&
+comment|// RUN: clang-cc -Eonly %s -DOPT_O0 -O0 -verify
 end_comment
 
 begin_ifdef

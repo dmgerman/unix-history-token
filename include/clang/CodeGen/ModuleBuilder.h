@@ -95,7 +95,7 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
-name|CompileOptions
+name|CodeGenOptions
 decl_stmt|;
 name|class
 name|CodeGenerator
@@ -142,9 +142,9 @@ operator|&
 name|ModuleName
 argument_list|,
 specifier|const
-name|CompileOptions
+name|CodeGenOptions
 operator|&
-name|CO
+name|CGO
 argument_list|,
 name|llvm
 operator|::

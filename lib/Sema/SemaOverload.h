@@ -344,6 +344,17 @@ comment|///   object parameter of the conversion function.
 name|StandardConversionSequence
 name|Before
 decl_stmt|;
+comment|/// EllipsisConversion - When this is true, it means user-defined
+comment|/// conversion sequence starts with a ... (elipsis) conversion, instead of
+comment|/// a standard conversion. In this case, 'Before' field must be ignored.
+comment|// FIXME. I much rather put this as the first field. But there seems to be
+comment|// a gcc code gen. bug which causes a crash in a test. Putting it here seems
+comment|// to work around the crash.
+name|bool
+name|EllipsisConversion
+range|:
+literal|1
+decl_stmt|;
 comment|/// After - Represents the standard conversion that occurs after
 comment|/// the actual user-defined conversion.
 name|StandardConversionSequence

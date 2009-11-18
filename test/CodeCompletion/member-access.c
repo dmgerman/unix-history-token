@@ -28,11 +28,10 @@ parameter_list|)
 block|{
 name|p
 operator|->
-comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:8:6 %s -o - | FileCheck -check-prefix=CC1 %s&&
+comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:8:6 %s -o - | FileCheck -check-prefix=CC1 %s
 comment|// CHECK-CC1: x
 comment|// CHECK-CC1: y
 comment|// CHECK-CC1: z
-comment|// RUN: true
 end_function
 
 end_unit

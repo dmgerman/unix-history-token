@@ -350,6 +350,9 @@ decl_stmt|;
 name|class
 name|CXXTemporary
 decl_stmt|;
+name|class
+name|LookupResult
+decl_stmt|;
 comment|/// BlockSemaInfo - When a block is being parsed, this contains information
 comment|/// about the block.  It is pointed to from Sema::CurBlock.
 struct|struct
@@ -1148,6 +1151,9 @@ argument_list|,
 argument|ASTConsumer&consumer
 argument_list|,
 argument|bool CompleteTranslationUnit = true
+argument_list|,
+argument|CodeCompleteConsumer *CompletionConsumer =
+literal|0
 argument_list|)
 empty_stmt|;
 operator|~
@@ -3562,6 +3568,9 @@ operator|::
 name|CastKind
 operator|&
 name|Kind
+argument_list|,
+name|bool
+name|IgnoreBaseAccess
 argument_list|)
 decl_stmt|;
 name|bool
@@ -3600,6 +3609,9 @@ operator|::
 name|CastKind
 operator|&
 name|Kind
+argument_list|,
+name|bool
+name|IgnoreBaseAccess
 argument_list|)
 decl_stmt|;
 name|bool
@@ -3911,6 +3923,40 @@ name|CandidateSet
 parameter_list|,
 name|bool
 name|SuppressUserConversions
+init|=
+name|false
+parameter_list|)
+function_decl|;
+name|void
+name|AddMethodCandidate
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|Decl
+parameter_list|,
+name|Expr
+modifier|*
+name|Object
+parameter_list|,
+name|Expr
+modifier|*
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|,
+name|OverloadCandidateSet
+modifier|&
+name|CandidateSet
+parameter_list|,
+name|bool
+name|SuppressUserConversion
+init|=
+name|false
+parameter_list|,
+name|bool
+name|ForceRValue
 init|=
 name|false
 parameter_list|)
@@ -4739,666 +4785,16 @@ comment|/// Look up the name of an Objective-C category implementation
 name|LookupObjCCategoryImplName
 block|}
 enum|;
-comment|/// @brief Represents the results of name lookup.
-comment|///
-comment|/// An instance of the LookupResult class captures the results of a
-comment|/// single name lookup, which can return no result (nothing found),
-comment|/// a single declaration, a set of overloaded functions, or an
-comment|/// ambiguity. Use the getKind() method to determine which of these
-comment|/// results occurred for a given lookup.
-comment|///
-comment|/// Any non-ambiguous lookup can be converted into a single
-comment|/// (possibly NULL) @c NamedDecl* via the getAsSingleDecl() method.
-comment|/// This permits the common-case usage in C and Objective-C where
-comment|/// name lookup will always return a single declaration.  Use of
-comment|/// this is largely deprecated; callers should handle the possibility
-comment|/// of multiple declarations.
-name|class
-name|LookupResult
-block|{
-name|public
-label|:
 enum|enum
-name|LookupKind
+name|RedeclarationKind
 block|{
-comment|/// @brief No entity found met the criteria.
-name|NotFound
-init|=
-literal|0
+name|NotForRedeclaration
 block|,
-comment|/// @brief Name lookup found a single declaration that met the
-comment|/// criteria. getAsDecl will return this declaration.
-name|Found
-block|,
-comment|/// @brief Name lookup found a set of overloaded functions that
-comment|/// met the criteria. getAsDecl will turn this set of overloaded
-comment|/// functions into an OverloadedFunctionDecl.
-name|FoundOverloaded
-block|,
-comment|/// @brief Name lookup results in an ambiguity; use
-comment|/// getAmbiguityKind to figure out what kind of ambiguity
-comment|/// we have.
-name|Ambiguous
+name|ForRedeclaration
 block|}
 enum|;
-enum|enum
-name|AmbiguityKind
-block|{
-comment|/// Name lookup results in an ambiguity because multiple
-comment|/// entities that meet the lookup criteria were found in
-comment|/// subobjects of different types. For example:
-comment|/// @code
-comment|/// struct A { void f(int); }
-comment|/// struct B { void f(double); }
-comment|/// struct C : A, B { };
-comment|/// void test(C c) {
-comment|///   c.f(0); // error: A::f and B::f come from subobjects of different
-comment|///           // types. overload resolution is not performed.
-comment|/// }
-comment|/// @endcode
-name|AmbiguousBaseSubobjectTypes
-block|,
-comment|/// Name lookup results in an ambiguity because multiple
-comment|/// nonstatic entities that meet the lookup criteria were found
-comment|/// in different subobjects of the same type. For example:
-comment|/// @code
-comment|/// struct A { int x; };
-comment|/// struct B : A { };
-comment|/// struct C : A { };
-comment|/// struct D : B, C { };
-comment|/// int test(D d) {
-comment|///   return d.x; // error: 'x' is found in two A subobjects (of B and C)
-comment|/// }
-comment|/// @endcode
-name|AmbiguousBaseSubobjects
-block|,
-comment|/// Name lookup results in an ambiguity because multiple definitions
-comment|/// of entity that meet the lookup criteria were found in different
-comment|/// declaration contexts.
-comment|/// @code
-comment|/// namespace A {
-comment|///   int i;
-comment|///   namespace B { int i; }
-comment|///   int test() {
-comment|///     using namespace B;
-comment|///     return i; // error 'i' is found in namespace A and A::B
-comment|///    }
-comment|/// }
-comment|/// @endcode
-name|AmbiguousReference
-block|,
-comment|/// Name lookup results in an ambiguity because an entity with a
-comment|/// tag name was hidden by an entity with an ordinary name from
-comment|/// a different context.
-comment|/// @code
-comment|/// namespace A { struct Foo {}; }
-comment|/// namespace B { void Foo(); }
-comment|/// namespace C {
-comment|///   using namespace A;
-comment|///   using namespace B;
-comment|/// }
-comment|/// void test() {
-comment|///   C::Foo(); // error: tag 'A::Foo' is hidden by an object in a
-comment|///             // different namespace
-comment|/// }
-comment|/// @endcode
-name|AmbiguousTagHiding
-block|}
-enum|;
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|NamedDecl
-operator|*
-operator|,
-literal|4
-operator|>
-name|DeclsTy
-expr_stmt|;
-typedef|typedef
-name|DeclsTy
-operator|::
-name|const_iterator
-name|iterator
-expr_stmt|;
-name|LookupResult
-argument_list|()
-operator|:
-name|Kind
-argument_list|(
-name|NotFound
-argument_list|)
-operator|,
-name|Paths
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-operator|~
-name|LookupResult
-argument_list|()
-block|{
-if|if
-condition|(
-name|Paths
-condition|)
-name|deletePaths
-argument_list|(
-name|Paths
-argument_list|)
-expr_stmt|;
-block|}
-name|bool
-name|isAmbiguous
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getKind
-argument_list|()
-operator|==
-name|Ambiguous
-return|;
-block|}
-name|LookupKind
-name|getKind
-argument_list|()
-specifier|const
-block|{
-name|sanity
-argument_list|()
-block|;
-return|return
-name|Kind
-return|;
-block|}
-name|AmbiguityKind
-name|getAmbiguityKind
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isAmbiguous
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|Ambiguity
-return|;
-block|}
-name|iterator
-name|begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Decls
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|iterator
-name|end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Decls
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-comment|/// \brief Return true if no decls were found
-name|bool
-name|empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Decls
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-comment|/// \brief Return the base paths structure that's associated with
-comment|/// these results, or null if none is.
-name|CXXBasePaths
-operator|*
-name|getBasePaths
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Paths
-return|;
-block|}
-comment|/// \brief Add a declaration to these results.
-name|void
-name|addDecl
-parameter_list|(
-name|NamedDecl
-modifier|*
-name|D
-parameter_list|)
-block|{
-name|Decls
-operator|.
-name|push_back
-argument_list|(
-name|D
-operator|->
-name|getUnderlyingDecl
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|Kind
-operator|=
-name|Found
-expr_stmt|;
-block|}
-comment|/// \brief Add all the declarations from another set of lookup
-comment|/// results.
-name|void
-name|addAllDecls
-parameter_list|(
-specifier|const
-name|LookupResult
-modifier|&
-name|Other
-parameter_list|)
-block|{
-name|Decls
-operator|.
-name|append
-argument_list|(
-name|Other
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Other
-operator|.
-name|end
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|Kind
-operator|=
-name|Found
-expr_stmt|;
-block|}
-comment|/// \brief Hides a set of declarations.
-name|template
-operator|<
-name|class
-name|NamedDeclSet
-operator|>
-name|void
-name|hideDecls
-argument_list|(
-argument|const NamedDeclSet&Set
-argument_list|)
-block|{
-name|unsigned
-name|I
-operator|=
-literal|0
-block|,
-name|N
-operator|=
-name|Decls
-operator|.
-name|size
-argument_list|()
-block|;
-while|while
-condition|(
-name|I
-operator|<
-name|N
-condition|)
-block|{
-if|if
-condition|(
-name|Set
-operator|.
-name|count
-argument_list|(
-name|Decls
-index|[
-name|I
-index|]
-argument_list|)
-condition|)
-name|Decls
-index|[
-name|I
-index|]
-operator|=
-name|Decls
-index|[
-operator|--
-name|N
-index|]
-expr_stmt|;
-else|else
-name|I
-operator|++
-expr_stmt|;
-block|}
-name|Decls
-operator|.
-name|set_size
-argument_list|(
-name|N
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief Resolves the kind of the lookup, possibly hiding decls.
-comment|///
-comment|/// This should be called in any environment where lookup might
-comment|/// generate multiple lookup results.
-name|void
-name|resolveKind
-parameter_list|()
-function_decl|;
-comment|/// \brief Fetch this as an unambiguous single declaration
-comment|/// (possibly an overloaded one).
-comment|///
-comment|/// This is deprecated; users should be written to handle
-comment|/// ambiguous and overloaded lookups.
-name|NamedDecl
-modifier|*
-name|getAsSingleDecl
-argument_list|(
-name|ASTContext
-operator|&
-name|Context
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Fetch the unique decl found by this lookup.  Asserts
-comment|/// that one was found.
-comment|///
-comment|/// This is intended for users who have examined the result kind
-comment|/// and are certain that there is only one result.
-name|NamedDecl
-operator|*
-name|getFoundDecl
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|getKind
-argument_list|()
-operator|==
-name|Found
-operator|&&
-literal|"getFoundDecl called on non-unique result"
-argument_list|)
-block|;
-return|return
-operator|*
-name|Decls
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-comment|/// \brief Asks if the result is a single tag decl.
-name|bool
-name|isSingleTagDecl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getKind
-argument_list|()
-operator|==
-name|Found
-operator|&&
-name|isa
-operator|<
-name|TagDecl
-operator|>
-operator|(
-name|getFoundDecl
-argument_list|()
-operator|)
-return|;
-block|}
-comment|/// \brief Make these results show that the name was found in
-comment|/// base classes of different types.
-comment|///
-comment|/// The given paths object is copied and invalidated.
-name|void
-name|setAmbiguousBaseSubobjectTypes
-parameter_list|(
-name|CXXBasePaths
-modifier|&
-name|P
-parameter_list|)
-function_decl|;
-comment|/// \brief Make these results show that the name was found in
-comment|/// distinct base classes of the same type.
-comment|///
-comment|/// The given paths object is copied and invalidated.
-name|void
-name|setAmbiguousBaseSubobjects
-parameter_list|(
-name|CXXBasePaths
-modifier|&
-name|P
-parameter_list|)
-function_decl|;
-comment|/// \brief Make these results show that the name was found in
-comment|/// different contexts and a tag decl was hidden by an ordinary
-comment|/// decl in a different context.
-name|void
-name|setAmbiguousQualifiedTagHiding
-parameter_list|()
-block|{
-name|setAmbiguous
-argument_list|(
-name|AmbiguousTagHiding
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief Clears out any current state.
-name|void
-name|clear
-parameter_list|()
-block|{
-name|Kind
-operator|=
-name|NotFound
-expr_stmt|;
-name|Decls
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|Paths
-condition|)
-name|deletePaths
-argument_list|(
-name|Paths
-argument_list|)
-expr_stmt|;
-name|Paths
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-name|void
-name|print
-argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-argument_list|)
-decl_stmt|;
 name|private
 label|:
-name|void
-name|setAmbiguous
-parameter_list|(
-name|AmbiguityKind
-name|AK
-parameter_list|)
-block|{
-name|Kind
-operator|=
-name|Ambiguous
-expr_stmt|;
-name|Ambiguity
-operator|=
-name|AK
-expr_stmt|;
-block|}
-name|void
-name|addDeclsFromBasePaths
-parameter_list|(
-specifier|const
-name|CXXBasePaths
-modifier|&
-name|P
-parameter_list|)
-function_decl|;
-comment|// Sanity checks.
-name|void
-name|sanity
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|Kind
-operator|!=
-name|NotFound
-operator|||
-name|Decls
-operator|.
-name|size
-argument_list|()
-operator|==
-literal|0
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|Kind
-operator|!=
-name|Found
-operator|||
-name|Decls
-operator|.
-name|size
-argument_list|()
-operator|==
-literal|1
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|Kind
-operator|==
-name|NotFound
-operator|||
-name|Kind
-operator|==
-name|Found
-operator|||
-operator|(
-name|Kind
-operator|==
-name|Ambiguous
-operator|&&
-name|Ambiguity
-operator|==
-name|AmbiguousBaseSubobjects
-operator|)
-operator|||
-name|Decls
-operator|.
-name|size
-argument_list|()
-operator|>
-literal|1
-argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|(
-name|Paths
-operator|!=
-name|NULL
-operator|)
-operator|==
-operator|(
-name|Kind
-operator|==
-name|Ambiguous
-operator|&&
-operator|(
-name|Ambiguity
-operator|==
-name|AmbiguousBaseSubobjectTypes
-operator|||
-name|Ambiguity
-operator|==
-name|AmbiguousBaseSubobjects
-operator|)
-operator|)
-argument_list|)
-block|;     }
-specifier|static
-name|void
-name|deletePaths
-argument_list|(
-name|CXXBasePaths
-operator|*
-argument_list|)
-expr_stmt|;
-name|LookupKind
-name|Kind
-decl_stmt|;
-name|AmbiguityKind
-name|Ambiguity
-decl_stmt|;
-comment|// ill-defined unless ambiguous
-name|DeclsTy
-name|Decls
-decl_stmt|;
-name|CXXBasePaths
-modifier|*
-name|Paths
-decl_stmt|;
-block|}
-empty_stmt|;
-name|private
-label|:
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|LookupResult
-operator|,
-literal|3
-operator|>
-name|LookupResultsVecTy
-expr_stmt|;
 name|bool
 name|CppLookupName
 parameter_list|(
@@ -5409,15 +4805,6 @@ parameter_list|,
 name|Scope
 modifier|*
 name|S
-parameter_list|,
-name|DeclarationName
-name|Name
-parameter_list|,
-name|LookupNameKind
-name|NameKind
-parameter_list|,
-name|bool
-name|RedeclarationOnly
 parameter_list|)
 function_decl|;
 name|public
@@ -5586,37 +4973,12 @@ parameter_list|,
 name|LookupNameKind
 name|NameKind
 parameter_list|,
-name|bool
-name|RedeclarationOnly
+name|RedeclarationKind
+name|Redecl
 init|=
-name|false
+name|NotForRedeclaration
 parameter_list|)
-block|{
-name|LookupResult
-name|R
-decl_stmt|;
-name|LookupName
-argument_list|(
-name|R
-argument_list|,
-name|S
-argument_list|,
-name|Name
-argument_list|,
-name|NameKind
-argument_list|,
-name|RedeclarationOnly
-argument_list|)
-expr_stmt|;
-return|return
-name|R
-operator|.
-name|getAsSingleDecl
-argument_list|(
-name|Context
-argument_list|)
-return|;
-block|}
+function_decl|;
 name|bool
 name|LookupName
 parameter_list|(
@@ -5628,27 +4990,10 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-name|DeclarationName
-name|Name
-parameter_list|,
-name|LookupNameKind
-name|NameKind
-parameter_list|,
-name|bool
-name|RedeclarationOnly
-init|=
-name|false
-parameter_list|,
 name|bool
 name|AllowBuiltinCreation
 init|=
 name|false
-parameter_list|,
-name|SourceLocation
-name|Loc
-init|=
-name|SourceLocation
-argument_list|()
 parameter_list|)
 function_decl|;
 name|bool
@@ -5661,17 +5006,6 @@ parameter_list|,
 name|DeclContext
 modifier|*
 name|LookupCtx
-parameter_list|,
-name|DeclarationName
-name|Name
-parameter_list|,
-name|LookupNameKind
-name|NameKind
-parameter_list|,
-name|bool
-name|RedeclarationOnly
-init|=
-name|false
 parameter_list|)
 function_decl|;
 name|bool
@@ -5690,27 +5024,10 @@ name|CXXScopeSpec
 modifier|*
 name|SS
 parameter_list|,
-name|DeclarationName
-name|Name
-parameter_list|,
-name|LookupNameKind
-name|NameKind
-parameter_list|,
-name|bool
-name|RedeclarationOnly
-init|=
-name|false
-parameter_list|,
 name|bool
 name|AllowBuiltinCreation
 init|=
 name|false
-parameter_list|,
-name|SourceLocation
-name|Loc
-init|=
-name|SourceLocation
-argument_list|()
 parameter_list|,
 name|bool
 name|EnteringContext
@@ -5805,18 +5122,6 @@ parameter_list|(
 name|LookupResult
 modifier|&
 name|Result
-parameter_list|,
-name|DeclarationName
-name|Name
-parameter_list|,
-name|SourceLocation
-name|NameLoc
-parameter_list|,
-name|SourceRange
-name|LookupRange
-init|=
-name|SourceRange
-argument_list|()
 parameter_list|)
 function_decl|;
 comment|//@}
@@ -6031,6 +5336,21 @@ name|bool
 name|IncompleteImpl
 init|=
 name|false
+parameter_list|)
+function_decl|;
+comment|/// AtomicPropertySetterGetterRules - This routine enforces the rule (via
+comment|/// warning) when atomic property has one but not the other user-declared
+comment|/// setter or getter.
+name|void
+name|AtomicPropertySetterGetterRules
+parameter_list|(
+name|ObjCImplDecl
+modifier|*
+name|IMPDecl
+parameter_list|,
+name|ObjCContainerDecl
+modifier|*
+name|IDecl
 parameter_list|)
 function_decl|;
 comment|/// MatchTwoMethodDeclarations - Checks if two methods' type match and returns
@@ -6781,6 +6101,11 @@ specifier|const
 name|PartialDiagnostic
 modifier|&
 name|PD
+parameter_list|,
+name|bool
+name|Equality
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|virtual
@@ -7455,26 +6780,6 @@ name|RParenLoc
 parameter_list|)
 function_decl|;
 name|void
-name|BuildBaseOrMemberInitializers
-parameter_list|(
-name|ASTContext
-modifier|&
-name|C
-parameter_list|,
-name|CXXConstructorDecl
-modifier|*
-name|Constructor
-parameter_list|,
-name|CXXBaseOrMemberInitializer
-modifier|*
-modifier|*
-name|Initializers
-parameter_list|,
-name|unsigned
-name|NumInitializers
-parameter_list|)
-function_decl|;
-name|void
 name|DeconstructCallFunction
 parameter_list|(
 name|Expr
@@ -8037,6 +7342,13 @@ name|NamedDecl
 modifier|*
 name|BuildUsingDeclaration
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|AccessSpecifier
+name|AS
+parameter_list|,
 name|SourceLocation
 name|UsingLoc
 parameter_list|,
@@ -8056,7 +7368,13 @@ modifier|*
 name|AttrList
 parameter_list|,
 name|bool
+name|IsInstantiation
+parameter_list|,
+name|bool
 name|IsTypeName
+parameter_list|,
+name|SourceLocation
+name|TypenameLoc
 parameter_list|)
 function_decl|;
 name|virtual
@@ -8088,6 +7406,9 @@ name|AttrList
 parameter_list|,
 name|bool
 name|IsTypeName
+parameter_list|,
+name|SourceLocation
+name|TypenameLoc
 parameter_list|)
 function_decl|;
 comment|/// AddCXXDirectInitializerToDecl - This action is called immediately after
@@ -8340,6 +7661,28 @@ name|IK_Default
 comment|///< Default initialization
 block|}
 enum|;
+name|CXXConstructorDecl
+modifier|*
+name|TryInitializationByConstructor
+parameter_list|(
+name|QualType
+name|ClassType
+parameter_list|,
+name|Expr
+modifier|*
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|InitializationKind
+name|Kind
+parameter_list|)
+function_decl|;
 name|CXXConstructorDecl
 modifier|*
 name|PerformInitializationByConstructor
@@ -8715,6 +8058,25 @@ name|Return
 parameter_list|,
 name|QualType
 name|Argument
+parameter_list|)
+function_decl|;
+name|bool
+name|FindDeallocationFunction
+parameter_list|(
+name|SourceLocation
+name|StartLoc
+parameter_list|,
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|,
+name|FunctionDecl
+modifier|*
+modifier|&
+name|Operator
 parameter_list|)
 function_decl|;
 comment|/// ActOnCXXDelete - Parsed a C++ 'delete' expression
@@ -9395,48 +8757,30 @@ modifier|*
 name|ClassDecl
 parameter_list|)
 function_decl|;
-name|void
+name|bool
 name|SetBaseOrMemberInitializers
-argument_list|(
+parameter_list|(
 name|CXXConstructorDecl
-operator|*
+modifier|*
 name|Constructor
-argument_list|,
+parameter_list|,
 name|CXXBaseOrMemberInitializer
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|Initializers
-argument_list|,
+parameter_list|,
 name|unsigned
 name|NumInitializers
-argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|CXXBaseSpecifier
-operator|*
-operator|>
-operator|&
-name|Bases
-argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|FieldDecl
-operator|*
-operator|>
-operator|&
-name|Members
-argument_list|)
-decl_stmt|;
-comment|/// computeBaseOrMembersToDestroy - Compute information in current
-comment|/// destructor decl's AST of bases and non-static data members which will be
-comment|/// implicitly destroyed. We are storing the destruction in the order that
-comment|/// they should occur (which is the reverse of construction order).
+parameter_list|,
+name|bool
+name|IsImplicitConstructor
+parameter_list|)
+function_decl|;
+comment|/// MarkBaseAndMemberDestructorsReferenced - Given a destructor decl,
+comment|/// mark all its non-trivial member and base destructor declarations
+comment|/// as referenced.
 name|void
-name|computeBaseOrMembersToDestroy
+name|MarkBaseAndMemberDestructorsReferenced
 parameter_list|(
 name|CXXDestructorDecl
 modifier|*
@@ -9627,6 +8971,14 @@ name|SC
 argument_list|)
 decl_stmt|;
 name|void
+name|CheckDestructor
+parameter_list|(
+name|CXXDestructorDecl
+modifier|*
+name|Destructor
+parameter_list|)
+function_decl|;
+name|void
 name|CheckConversionDeclarator
 argument_list|(
 name|Declarator
@@ -9798,6 +9150,11 @@ name|Loc
 parameter_list|,
 name|SourceRange
 name|Range
+parameter_list|,
+name|bool
+name|IgnoreAccess
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|bool
@@ -10190,7 +9547,9 @@ parameter_list|,
 name|SourceLocation
 name|EqualLoc
 parameter_list|,
-name|ExprArg
+specifier|const
+name|ParsedTemplateArgument
+modifier|&
 name|Default
 parameter_list|)
 function_decl|;
@@ -10306,17 +9665,11 @@ name|ASTTemplateArgsPtr
 operator|&
 name|TemplateArgsIn
 argument_list|,
-name|SourceLocation
-operator|*
-name|TemplateArgLocsIn
-argument_list|,
 name|llvm
 operator|::
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|TemplateArgumentLoc
-argument_list|,
-literal|16
 operator|>
 operator|&
 name|TempArgs
@@ -10361,10 +9714,6 @@ name|LAngleLoc
 parameter_list|,
 name|ASTTemplateArgsPtr
 name|TemplateArgs
-parameter_list|,
-name|SourceLocation
-modifier|*
-name|TemplateArgLocs
 parameter_list|,
 name|SourceLocation
 name|RAngleLoc
@@ -10441,10 +9790,6 @@ name|ASTTemplateArgsPtr
 name|TemplateArgs
 parameter_list|,
 name|SourceLocation
-modifier|*
-name|TemplateArgLocs
-parameter_list|,
-name|SourceLocation
 name|RAngleLoc
 parameter_list|)
 function_decl|;
@@ -10519,10 +9864,6 @@ name|LAngleLoc
 parameter_list|,
 name|ASTTemplateArgsPtr
 name|TemplateArgs
-parameter_list|,
-name|SourceLocation
-modifier|*
-name|TemplateArgLocs
 parameter_list|,
 name|SourceLocation
 name|RAngleLoc
@@ -10672,10 +10013,6 @@ name|ASTTemplateArgsPtr
 name|TemplateArgs
 parameter_list|,
 name|SourceLocation
-modifier|*
-name|TemplateArgLocs
-parameter_list|,
-name|SourceLocation
 name|RAngleLoc
 parameter_list|,
 name|AttributeList
@@ -10737,6 +10074,33 @@ parameter_list|,
 name|Declarator
 modifier|&
 name|D
+parameter_list|)
+function_decl|;
+name|bool
+name|CheckTemplateArgument
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|Param
+parameter_list|,
+specifier|const
+name|TemplateArgumentLoc
+modifier|&
+name|Arg
+parameter_list|,
+name|TemplateDecl
+modifier|*
+name|Template
+parameter_list|,
+name|SourceLocation
+name|TemplateLoc
+parameter_list|,
+name|SourceLocation
+name|RAngleLoc
+parameter_list|,
+name|TemplateArgumentListBuilder
+modifier|&
+name|Converted
 parameter_list|)
 function_decl|;
 name|bool
@@ -10820,10 +10184,9 @@ name|Expr
 modifier|*
 name|Arg
 parameter_list|,
-name|NamedDecl
-modifier|*
+name|TemplateArgument
 modifier|&
-name|Member
+name|Converted
 parameter_list|)
 function_decl|;
 name|bool
@@ -10853,11 +10216,48 @@ name|TemplateTemplateParmDecl
 modifier|*
 name|Param
 parameter_list|,
-name|DeclRefExpr
-modifier|*
+specifier|const
+name|TemplateArgumentLoc
+modifier|&
 name|Arg
 parameter_list|)
 function_decl|;
+comment|/// \brief Enumeration describing how template parameter lists are compared
+comment|/// for equality.
+enum|enum
+name|TemplateParameterListEqualKind
+block|{
+comment|/// \brief We are matching the template parameter lists of two templates
+comment|/// that might be redeclarations.
+comment|///
+comment|/// \code
+comment|/// template<typename T> struct X;
+comment|/// template<typename T> struct X;
+comment|/// \endcode
+name|TPL_TemplateMatch
+block|,
+comment|/// \brief We are matching the template parameter lists of two template
+comment|/// template parameters as part of matching the template parameter lists
+comment|/// of two templates that might be redeclarations.
+comment|///
+comment|/// \code
+comment|/// template<template<int I> class TT> struct X;
+comment|/// template<template<int Value> class Other> struct X;
+comment|/// \endcode
+name|TPL_TemplateTemplateParmMatch
+block|,
+comment|/// \brief We are matching the template parameter lists of a template
+comment|/// template argument against the template parameter lists of a template
+comment|/// template parameter.
+comment|///
+comment|/// \code
+comment|/// template<template<int Value> class Metafun> struct X;
+comment|/// template<int Value> struct integer_c;
+comment|/// X<integer_c> xic;
+comment|/// \endcode
+name|TPL_TemplateTemplateArgumentMatch
+block|}
+enum|;
 name|bool
 name|TemplateParameterListsAreEqual
 parameter_list|(
@@ -10872,10 +10272,8 @@ parameter_list|,
 name|bool
 name|Complain
 parameter_list|,
-name|bool
-name|IsTemplateTemplateParm
-init|=
-name|false
+name|TemplateParameterListEqualKind
+name|Kind
 parameter_list|,
 name|SourceLocation
 name|TemplateArgLoc
@@ -10995,6 +10393,18 @@ specifier|const
 name|TemplateArgumentList
 operator|&
 name|Args
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|getTemplateArgumentBindingsText
+argument_list|(
+argument|const TemplateParameterList *Params
+argument_list|,
+argument|const TemplateArgument *Args
+argument_list|,
+argument|unsigned NumArgs
 argument_list|)
 expr_stmt|;
 comment|/// \brief Describes the result of template argument deduction.
@@ -11482,6 +10892,13 @@ parameter_list|(
 name|NamedDecl
 modifier|*
 name|D
+parameter_list|,
+specifier|const
+name|TemplateArgumentList
+modifier|*
+name|Innermost
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// \brief A template instantiation that is currently in progress.
@@ -11518,6 +10935,15 @@ comment|/// partial specialization or a function template. The
 comment|/// Entity is either a ClassTemplatePartialSpecializationDecl or
 comment|/// a FunctionTemplateDecl.
 name|DeducedTemplateArgumentSubstitution
+block|,
+comment|/// We are substituting prior template arguments into a new
+comment|/// template parameter. The template parameter itself is either a
+comment|/// NonTypeTemplateParmDecl or a TemplateTemplateParmDecl.
+name|PriorTemplateArgumentSubstitution
+block|,
+comment|/// We are checking the validity of a default template argument that
+comment|/// has been used when naming a template-id.
+name|DefaultTemplateArgumentChecking
 block|}
 name|Kind
 enum|;
@@ -11525,12 +10951,18 @@ comment|/// \brief The point of instantiation within the source code.
 name|SourceLocation
 name|PointOfInstantiation
 decl_stmt|;
+comment|/// \brief The template in which we are performing the instantiation,
+comment|/// for substitutions of prior template arguments.
+name|TemplateDecl
+modifier|*
+name|Template
+decl_stmt|;
 comment|/// \brief The entity that is being instantiated.
 name|uintptr_t
 name|Entity
 decl_stmt|;
-comment|// \brief If this the instantiation of a default template
-comment|// argument, the list of template arguments.
+comment|/// \brief The list of template arguments we are substituting, if they
+comment|/// are not part of the entity.
 specifier|const
 name|TemplateArgument
 modifier|*
@@ -11554,6 +10986,11 @@ argument_list|(
 name|TemplateInstantiation
 argument_list|)
 operator|,
+name|Template
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Entity
 argument_list|(
 literal|0
@@ -11569,6 +11006,13 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|/// \brief Determines whether this template is an actual instantiation
+comment|/// that should be counted toward the maximum instantiation depth.
+name|bool
+name|isInstantiationRecord
+argument_list|()
+specifier|const
+expr_stmt|;
 name|friend
 name|bool
 name|operator
@@ -11624,6 +11068,26 @@ case|:
 return|return
 name|true
 return|;
+case|case
+name|PriorTemplateArgumentSubstitution
+case|:
+case|case
+name|DefaultTemplateArgumentChecking
+case|:
+if|if
+condition|(
+name|X
+operator|.
+name|Template
+operator|!=
+name|Y
+operator|.
+name|Template
+condition|)
+return|return
+name|false
+return|;
+comment|// Fall through
 case|case
 name|DefaultTemplateArgumentInstantiation
 case|:
@@ -11718,6 +11182,24 @@ operator|>
 name|ActiveTemplateInstantiations
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief The number of ActiveTemplateInstantiation entries in
+end_comment
+
+begin_comment
+comment|/// \c ActiveTemplateInstantiations that are not actual instantiations and,
+end_comment
+
+begin_comment
+comment|/// therefore, should not be counted as part of the instantiation depth.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|NonInstantiationEntries
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief The last template from which a template instantiation
@@ -11881,6 +11363,61 @@ argument_list|,
 argument|unsigned NumTemplateArgs
 argument_list|,
 argument|SourceRange InstantiationRange = SourceRange()
+argument_list|)
+empty_stmt|;
+comment|/// \brief Note that we are substituting prior template arguments into a
+comment|/// non-type or template template parameter.
+name|InstantiatingTemplate
+argument_list|(
+argument|Sema&SemaRef
+argument_list|,
+argument|SourceLocation PointOfInstantiation
+argument_list|,
+argument|TemplateDecl *Template
+argument_list|,
+argument|NonTypeTemplateParmDecl *Param
+argument_list|,
+argument|const TemplateArgument *TemplateArgs
+argument_list|,
+argument|unsigned NumTemplateArgs
+argument_list|,
+argument|SourceRange InstantiationRange
+argument_list|)
+empty_stmt|;
+name|InstantiatingTemplate
+argument_list|(
+argument|Sema&SemaRef
+argument_list|,
+argument|SourceLocation PointOfInstantiation
+argument_list|,
+argument|TemplateDecl *Template
+argument_list|,
+argument|TemplateTemplateParmDecl *Param
+argument_list|,
+argument|const TemplateArgument *TemplateArgs
+argument_list|,
+argument|unsigned NumTemplateArgs
+argument_list|,
+argument|SourceRange InstantiationRange
+argument_list|)
+empty_stmt|;
+comment|/// \brief Note that we are checking the default template argument
+comment|/// against the template parameter for a given template-id.
+name|InstantiatingTemplate
+argument_list|(
+argument|Sema&SemaRef
+argument_list|,
+argument|SourceLocation PointOfInstantiation
+argument_list|,
+argument|TemplateDecl *Template
+argument_list|,
+argument|NamedDecl *Param
+argument_list|,
+argument|const TemplateArgument *TemplateArgs
+argument_list|,
+argument|unsigned NumTemplateArgs
+argument_list|,
+argument|SourceRange InstantiationRange
 argument_list|)
 empty_stmt|;
 comment|/// \brief Note that we have finished instantiating this template.
@@ -13040,6 +12577,10 @@ modifier|*
 modifier|*
 name|IdentList
 parameter_list|,
+name|SourceLocation
+modifier|*
+name|IdentLocs
+parameter_list|,
 name|unsigned
 name|NumElts
 parameter_list|)
@@ -13996,6 +13537,12 @@ comment|/// CompatiblePointerDiscardsQualifiers - The assignment discards
 comment|/// c/v/r qualifiers, which we accept as an extension.
 name|CompatiblePointerDiscardsQualifiers
 block|,
+comment|/// IncompatibleNestedPointerQualifiers - The assignment is between two
+comment|/// nested pointer types, and the qualifiers other than the first two
+comment|/// levels differ e.g. char ** -> const char **, but we accept them as an
+comment|/// extension.
+name|IncompatibleNestedPointerQualifiers
+block|,
 comment|/// IncompatibleVectors - The assignment is between two vector types that
 comment|/// have the same size, which we accept as an extension.
 name|IncompatibleVectors
@@ -14282,6 +13829,11 @@ specifier|const
 name|char
 modifier|*
 name|Flavor
+parameter_list|,
+name|bool
+name|IgnoreBaseAccess
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -14307,6 +13859,9 @@ specifier|const
 name|char
 modifier|*
 name|Flavor
+parameter_list|,
+name|bool
+name|IgnoreBaseAccess
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15038,6 +14593,11 @@ modifier|*
 name|ICS
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|IgnoreBaseAccess
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15491,17 +15051,6 @@ comment|//@{
 end_comment
 
 begin_function_decl
-name|void
-name|setCodeCompleteConsumer
-parameter_list|(
-name|CodeCompleteConsumer
-modifier|*
-name|CCC
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|CodeCompleteOrdinaryName
@@ -15678,6 +15227,68 @@ parameter_list|,
 name|ObjCDeclSpec
 modifier|&
 name|ODS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|CodeCompleteObjCClassMessage
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|FName
+parameter_list|,
+name|SourceLocation
+name|FNameLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|CodeCompleteObjCInstanceMessage
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|ExprTy
+modifier|*
+name|Receiver
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|CodeCompleteObjCProtocolReferences
+parameter_list|(
+name|IdentifierLocPair
+modifier|*
+name|Protocols
+parameter_list|,
+name|unsigned
+name|NumProtocols
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|CodeCompleteObjCProtocolDecl
+parameter_list|(
+name|Scope
+modifier|*
+name|S
 parameter_list|)
 function_decl|;
 end_function_decl

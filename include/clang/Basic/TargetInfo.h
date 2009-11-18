@@ -120,13 +120,16 @@ name|class
 name|Diagnostic
 decl_stmt|;
 name|class
+name|LangOptions
+decl_stmt|;
+name|class
 name|SourceLocation
 decl_stmt|;
 name|class
 name|SourceManager
 decl_stmt|;
 name|class
-name|LangOptions
+name|TargetOptions
 decl_stmt|;
 name|namespace
 name|Builtin
@@ -157,24 +160,6 @@ name|char
 name|PointerWidth
 decl_stmt|,
 name|PointerAlign
-decl_stmt|;
-name|unsigned
-name|char
-name|WCharWidth
-decl_stmt|,
-name|WCharAlign
-decl_stmt|;
-name|unsigned
-name|char
-name|Char16Width
-decl_stmt|,
-name|Char16Align
-decl_stmt|;
-name|unsigned
-name|char
-name|Char32Width
-decl_stmt|,
-name|Char32Align
 decl_stmt|;
 name|unsigned
 name|char
@@ -211,10 +196,6 @@ name|char
 name|LongLongWidth
 decl_stmt|,
 name|LongLongAlign
-decl_stmt|;
-name|unsigned
-name|char
-name|IntMaxTWidth
 decl_stmt|;
 specifier|const
 name|char
@@ -258,21 +239,22 @@ argument_list|)
 expr_stmt|;
 name|public
 label|:
-comment|/// CreateTargetInfo - Return the target info object for the specified target
-comment|/// triple.
+comment|/// CreateTargetInfo - Construct a target for the given options.
 specifier|static
 name|TargetInfo
 modifier|*
 name|CreateTargetInfo
-argument_list|(
+parameter_list|(
+name|Diagnostic
+modifier|&
+name|Diags
+parameter_list|,
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Triple
-argument_list|)
-decl_stmt|;
+name|TargetOptions
+modifier|&
+name|Opts
+parameter_list|)
+function_decl|;
 name|virtual
 operator|~
 name|TargetInfo
@@ -434,6 +416,16 @@ comment|/// getTypeWidth - Return the width (in bits) of the specified integer t
 comment|/// enum. For example, SignedInt -> getIntWidth().
 name|unsigned
 name|getTypeWidth
+argument_list|(
+name|IntType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getTypeAlign - Return the alignment (in bits) of the specified integer
+comment|/// type enum. For example, SignedInt -> getIntAlign().
+name|unsigned
+name|getTypeAlign
 argument_list|(
 name|IntType
 name|T
@@ -636,7 +628,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|WCharWidth
+name|getTypeWidth
+argument_list|(
+name|WCharType
+argument_list|)
 return|;
 block|}
 name|unsigned
@@ -645,7 +640,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|WCharAlign
+name|getTypeAlign
+argument_list|(
+name|WCharType
+argument_list|)
 return|;
 block|}
 comment|/// getChar16Width/Align - Return the size of 'char16_t' for this target, in
@@ -656,7 +654,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Char16Width
+name|getTypeWidth
+argument_list|(
+name|Char16Type
+argument_list|)
 return|;
 block|}
 name|unsigned
@@ -665,7 +666,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Char16Align
+name|getTypeAlign
+argument_list|(
+name|Char16Type
+argument_list|)
 return|;
 block|}
 comment|/// getChar32Width/Align - Return the size of 'char32_t' for this target, in
@@ -676,7 +680,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Char32Width
+name|getTypeWidth
+argument_list|(
+name|Char32Type
+argument_list|)
 return|;
 block|}
 name|unsigned
@@ -685,7 +692,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Char32Align
+name|getTypeAlign
+argument_list|(
+name|Char32Type
+argument_list|)
 return|;
 block|}
 comment|/// getFloatWidth/Align/Format - Return the size/align/format of 'float'.
@@ -796,7 +806,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IntMaxTWidth
+name|getTypeWidth
+argument_list|(
+name|IntMaxType
+argument_list|)
 return|;
 block|}
 comment|/// getUserLabelPrefix - This returns the default value of the
@@ -1427,18 +1440,18 @@ return|return
 literal|""
 return|;
 block|}
-comment|/// getDefaultLangOptions - Allow the target to specify default settings for
-comment|/// various language options.  These may be overridden by command line
-comment|/// options.
+comment|/// setForcedLangOptions - Set forced language options.
+comment|/// Apply changes to the target information with respect to certain
+comment|/// language options which change the target configuration.
 name|virtual
 name|void
-name|getDefaultLangOptions
+name|setForcedLangOptions
 parameter_list|(
 name|LangOptions
 modifier|&
 name|Opts
 parameter_list|)
-block|{}
+function_decl|;
 comment|/// getDefaultFeatures - Get the default set of target features for
 comment|/// the \args CPU; this should include all legal feature strings on
 comment|/// the target.
@@ -1529,18 +1542,21 @@ return|return
 name|false
 return|;
 block|}
-comment|/// HandleTargetOptions - Perform initialization based on the user
-comment|/// configured set of features.
+comment|/// HandleTargetOptions - Perform initialization based on the user configured
+comment|/// set of features (e.g., +sse4). The list is guaranteed to have at most one
+comment|/// entry per feature.
 name|virtual
 name|void
 name|HandleTargetFeatures
 argument_list|(
 specifier|const
-name|llvm
+name|std
 operator|::
-name|StringMap
+name|vector
 operator|<
-name|bool
+name|std
+operator|::
+name|string
 operator|>
 operator|&
 name|Features

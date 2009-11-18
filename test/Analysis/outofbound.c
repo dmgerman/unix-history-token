@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region -verify %s
-end_comment
-
-begin_comment
-comment|// XFAIL: *
+comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -verify %s
 end_comment
 
 begin_function
@@ -35,7 +31,7 @@ index|]
 operator|+
 name|c
 return|;
-comment|// expected-warning{{Load or store into an out-of-bound memory position.}}
+comment|// expected-warning{{Access out-of-bound array element (buffer overflow)}}
 block|}
 end_function
 

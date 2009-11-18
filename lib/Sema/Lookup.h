@@ -1,0 +1,1078 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//===--- Lookup.h - Classes for name lookup ---------------------*- C++ -*-===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file defines the LookupResult class, which is integral to
+end_comment
+
+begin_comment
+comment|// Sema's name-lookup subsystem.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_CLANG_SEMA_LOOKUP_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CLANG_SEMA_LOOKUP_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|"Sema.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|clang
+block|{
+comment|/// @brief Represents the results of name lookup.
+comment|///
+comment|/// An instance of the LookupResult class captures the results of a
+comment|/// single name lookup, which can return no result (nothing found),
+comment|/// a single declaration, a set of overloaded functions, or an
+comment|/// ambiguity. Use the getKind() method to determine which of these
+comment|/// results occurred for a given lookup.
+comment|///
+comment|/// Any non-ambiguous lookup can be converted into a single
+comment|/// (possibly NULL) @c NamedDecl* via the getAsSingleDecl() method.
+comment|/// This permits the common-case usage in C and Objective-C where
+comment|/// name lookup will always return a single declaration.  Use of
+comment|/// this is largely deprecated; callers should handle the possibility
+comment|/// of multiple declarations.
+name|class
+name|LookupResult
+block|{
+name|public
+label|:
+enum|enum
+name|LookupResultKind
+block|{
+comment|/// @brief No entity found met the criteria.
+name|NotFound
+init|=
+literal|0
+block|,
+comment|/// @brief Name lookup found a single declaration that met the
+comment|/// criteria. getAsDecl will return this declaration.
+name|Found
+block|,
+comment|/// @brief Name lookup found a set of overloaded functions that
+comment|/// met the criteria. getAsDecl will turn this set of overloaded
+comment|/// functions into an OverloadedFunctionDecl.
+name|FoundOverloaded
+block|,
+comment|/// @brief Name lookup found an unresolvable value declaration
+comment|/// and cannot yet complete.  This only happens in C++ dependent
+comment|/// contexts with dependent using declarations.
+name|FoundUnresolvedValue
+block|,
+comment|/// @brief Name lookup results in an ambiguity; use
+comment|/// getAmbiguityKind to figure out what kind of ambiguity
+comment|/// we have.
+name|Ambiguous
+block|}
+enum|;
+enum|enum
+name|AmbiguityKind
+block|{
+comment|/// Name lookup results in an ambiguity because multiple
+comment|/// entities that meet the lookup criteria were found in
+comment|/// subobjects of different types. For example:
+comment|/// @code
+comment|/// struct A { void f(int); }
+comment|/// struct B { void f(double); }
+comment|/// struct C : A, B { };
+comment|/// void test(C c) {
+comment|///   c.f(0); // error: A::f and B::f come from subobjects of different
+comment|///           // types. overload resolution is not performed.
+comment|/// }
+comment|/// @endcode
+name|AmbiguousBaseSubobjectTypes
+block|,
+comment|/// Name lookup results in an ambiguity because multiple
+comment|/// nonstatic entities that meet the lookup criteria were found
+comment|/// in different subobjects of the same type. For example:
+comment|/// @code
+comment|/// struct A { int x; };
+comment|/// struct B : A { };
+comment|/// struct C : A { };
+comment|/// struct D : B, C { };
+comment|/// int test(D d) {
+comment|///   return d.x; // error: 'x' is found in two A subobjects (of B and C)
+comment|/// }
+comment|/// @endcode
+name|AmbiguousBaseSubobjects
+block|,
+comment|/// Name lookup results in an ambiguity because multiple definitions
+comment|/// of entity that meet the lookup criteria were found in different
+comment|/// declaration contexts.
+comment|/// @code
+comment|/// namespace A {
+comment|///   int i;
+comment|///   namespace B { int i; }
+comment|///   int test() {
+comment|///     using namespace B;
+comment|///     return i; // error 'i' is found in namespace A and A::B
+comment|///    }
+comment|/// }
+comment|/// @endcode
+name|AmbiguousReference
+block|,
+comment|/// Name lookup results in an ambiguity because an entity with a
+comment|/// tag name was hidden by an entity with an ordinary name from
+comment|/// a different context.
+comment|/// @code
+comment|/// namespace A { struct Foo {}; }
+comment|/// namespace B { void Foo(); }
+comment|/// namespace C {
+comment|///   using namespace A;
+comment|///   using namespace B;
+comment|/// }
+comment|/// void test() {
+comment|///   C::Foo(); // error: tag 'A::Foo' is hidden by an object in a
+comment|///             // different namespace
+comment|/// }
+comment|/// @endcode
+name|AmbiguousTagHiding
+block|}
+enum|;
+comment|/// A little identifier for flagging temporary lookup results.
+enum|enum
+name|TemporaryToken
+block|{
+name|Temporary
+block|}
+enum|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|NamedDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|DeclsTy
+expr_stmt|;
+typedef|typedef
+name|DeclsTy
+operator|::
+name|const_iterator
+name|iterator
+expr_stmt|;
+name|LookupResult
+argument_list|(
+argument|Sema&SemaRef
+argument_list|,
+argument|DeclarationName Name
+argument_list|,
+argument|SourceLocation NameLoc
+argument_list|,
+argument|Sema::LookupNameKind LookupKind
+argument_list|,
+argument|Sema::RedeclarationKind Redecl = Sema::NotForRedeclaration
+argument_list|)
+block|:
+name|ResultKind
+argument_list|(
+name|NotFound
+argument_list|)
+operator|,
+name|Paths
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|SemaRef
+argument_list|(
+name|SemaRef
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+name|Name
+argument_list|)
+operator|,
+name|NameLoc
+argument_list|(
+name|NameLoc
+argument_list|)
+operator|,
+name|LookupKind
+argument_list|(
+name|LookupKind
+argument_list|)
+operator|,
+name|IDNS
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Redecl
+argument_list|(
+name|Redecl
+operator|!=
+name|Sema
+operator|::
+name|NotForRedeclaration
+argument_list|)
+operator|,
+name|HideTags
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|Diagnose
+argument_list|(
+argument|Redecl == Sema::NotForRedeclaration
+argument_list|)
+block|{}
+comment|/// Creates a temporary lookup result, initializing its core data
+comment|/// using the information from another result.  Diagnostics are always
+comment|/// disabled.
+name|LookupResult
+argument_list|(
+argument|TemporaryToken _
+argument_list|,
+argument|const LookupResult&Other
+argument_list|)
+operator|:
+name|ResultKind
+argument_list|(
+name|NotFound
+argument_list|)
+operator|,
+name|Paths
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|SemaRef
+argument_list|(
+name|Other
+operator|.
+name|SemaRef
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+name|Other
+operator|.
+name|Name
+argument_list|)
+operator|,
+name|NameLoc
+argument_list|(
+name|Other
+operator|.
+name|NameLoc
+argument_list|)
+operator|,
+name|LookupKind
+argument_list|(
+name|Other
+operator|.
+name|LookupKind
+argument_list|)
+operator|,
+name|IDNS
+argument_list|(
+name|Other
+operator|.
+name|IDNS
+argument_list|)
+operator|,
+name|Redecl
+argument_list|(
+name|Other
+operator|.
+name|Redecl
+argument_list|)
+operator|,
+name|HideTags
+argument_list|(
+name|Other
+operator|.
+name|HideTags
+argument_list|)
+operator|,
+name|Diagnose
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+operator|~
+name|LookupResult
+argument_list|()
+block|{
+if|if
+condition|(
+name|Diagnose
+condition|)
+name|diagnose
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Paths
+condition|)
+name|deletePaths
+argument_list|(
+name|Paths
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Gets the name to look up.
+name|DeclarationName
+name|getLookupName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
+comment|/// Gets the kind of lookup to perform.
+name|Sema
+operator|::
+name|LookupNameKind
+name|getLookupKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LookupKind
+return|;
+block|}
+comment|/// True if this lookup is just looking for an existing declaration.
+name|bool
+name|isForRedeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Redecl
+return|;
+block|}
+comment|/// Sets whether tag declarations should be hidden by non-tag
+comment|/// declarations during resolution.  The default is true.
+name|void
+name|setHideTags
+parameter_list|(
+name|bool
+name|Hide
+parameter_list|)
+block|{
+name|HideTags
+operator|=
+name|Hide
+expr_stmt|;
+block|}
+comment|/// The identifier namespace of this lookup.  This information is
+comment|/// private to the lookup routines.
+name|unsigned
+name|getIdentifierNamespace
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|IDNS
+argument_list|)
+block|;
+return|return
+name|IDNS
+return|;
+block|}
+name|void
+name|setIdentifierNamespace
+parameter_list|(
+name|unsigned
+name|NS
+parameter_list|)
+block|{
+name|IDNS
+operator|=
+name|NS
+expr_stmt|;
+block|}
+name|bool
+name|isAmbiguous
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getResultKind
+argument_list|()
+operator|==
+name|Ambiguous
+return|;
+block|}
+name|LookupResultKind
+name|getResultKind
+argument_list|()
+specifier|const
+block|{
+name|sanity
+argument_list|()
+block|;
+return|return
+name|ResultKind
+return|;
+block|}
+name|AmbiguityKind
+name|getAmbiguityKind
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isAmbiguous
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Ambiguity
+return|;
+block|}
+name|iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Decls
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Decls
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return true if no decls were found
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Decls
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return the base paths structure that's associated with
+comment|/// these results, or null if none is.
+name|CXXBasePaths
+operator|*
+name|getBasePaths
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Paths
+return|;
+block|}
+comment|/// \brief Add a declaration to these results.
+name|void
+name|addDecl
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|)
+block|{
+name|Decls
+operator|.
+name|push_back
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+name|ResultKind
+operator|=
+name|Found
+expr_stmt|;
+block|}
+comment|/// \brief Add all the declarations from another set of lookup
+comment|/// results.
+name|void
+name|addAllDecls
+parameter_list|(
+specifier|const
+name|LookupResult
+modifier|&
+name|Other
+parameter_list|)
+block|{
+name|Decls
+operator|.
+name|append
+argument_list|(
+name|Other
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Other
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|ResultKind
+operator|=
+name|Found
+expr_stmt|;
+block|}
+comment|/// \brief Hides a set of declarations.
+name|template
+operator|<
+name|class
+name|NamedDeclSet
+operator|>
+name|void
+name|hideDecls
+argument_list|(
+argument|const NamedDeclSet&Set
+argument_list|)
+block|{
+name|unsigned
+name|I
+operator|=
+literal|0
+block|,
+name|N
+operator|=
+name|Decls
+operator|.
+name|size
+argument_list|()
+block|;
+while|while
+condition|(
+name|I
+operator|<
+name|N
+condition|)
+block|{
+if|if
+condition|(
+name|Set
+operator|.
+name|count
+argument_list|(
+name|Decls
+index|[
+name|I
+index|]
+argument_list|)
+condition|)
+name|Decls
+index|[
+name|I
+index|]
+operator|=
+name|Decls
+index|[
+operator|--
+name|N
+index|]
+expr_stmt|;
+else|else
+name|I
+operator|++
+expr_stmt|;
+block|}
+name|Decls
+operator|.
+name|set_size
+argument_list|(
+name|N
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Resolves the kind of the lookup, possibly hiding decls.
+comment|///
+comment|/// This should be called in any environment where lookup might
+comment|/// generate multiple lookup results.
+name|void
+name|resolveKind
+parameter_list|()
+function_decl|;
+comment|/// \brief Fetch this as an unambiguous single declaration
+comment|/// (possibly an overloaded one).
+comment|///
+comment|/// This is deprecated; users should be written to handle
+comment|/// ambiguous and overloaded lookups.
+name|NamedDecl
+modifier|*
+name|getAsSingleDecl
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Fetch the unique decl found by this lookup.  Asserts
+comment|/// that one was found.
+comment|///
+comment|/// This is intended for users who have examined the result kind
+comment|/// and are certain that there is only one result.
+name|NamedDecl
+operator|*
+name|getFoundDecl
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getResultKind
+argument_list|()
+operator|==
+name|Found
+operator|&&
+literal|"getFoundDecl called on non-unique result"
+argument_list|)
+block|;
+return|return
+name|Decls
+index|[
+literal|0
+index|]
+operator|->
+name|getUnderlyingDecl
+argument_list|()
+return|;
+block|}
+comment|/// \brief Asks if the result is a single tag decl.
+name|bool
+name|isSingleTagDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getResultKind
+argument_list|()
+operator|==
+name|Found
+operator|&&
+name|isa
+operator|<
+name|TagDecl
+operator|>
+operator|(
+name|getFoundDecl
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Make these results show that the name was found in
+comment|/// base classes of different types.
+comment|///
+comment|/// The given paths object is copied and invalidated.
+name|void
+name|setAmbiguousBaseSubobjectTypes
+parameter_list|(
+name|CXXBasePaths
+modifier|&
+name|P
+parameter_list|)
+function_decl|;
+comment|/// \brief Make these results show that the name was found in
+comment|/// distinct base classes of the same type.
+comment|///
+comment|/// The given paths object is copied and invalidated.
+name|void
+name|setAmbiguousBaseSubobjects
+parameter_list|(
+name|CXXBasePaths
+modifier|&
+name|P
+parameter_list|)
+function_decl|;
+comment|/// \brief Make these results show that the name was found in
+comment|/// different contexts and a tag decl was hidden by an ordinary
+comment|/// decl in a different context.
+name|void
+name|setAmbiguousQualifiedTagHiding
+parameter_list|()
+block|{
+name|setAmbiguous
+argument_list|(
+name|AmbiguousTagHiding
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Clears out any current state.
+name|void
+name|clear
+parameter_list|()
+block|{
+name|ResultKind
+operator|=
+name|NotFound
+expr_stmt|;
+name|Decls
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Paths
+condition|)
+name|deletePaths
+argument_list|(
+name|Paths
+argument_list|)
+expr_stmt|;
+name|Paths
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/// \brief Clears out any current state and re-initializes for a
+comment|/// different kind of lookup.
+name|void
+name|clear
+argument_list|(
+name|Sema
+operator|::
+name|LookupNameKind
+name|Kind
+argument_list|)
+block|{
+name|clear
+argument_list|()
+expr_stmt|;
+name|LookupKind
+operator|=
+name|Kind
+expr_stmt|;
+block|}
+name|void
+name|print
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+argument_list|)
+decl_stmt|;
+comment|/// Suppress the diagnostics that would normally fire because of this
+comment|/// lookup.  This happens during (e.g.) redeclaration lookups.
+name|void
+name|suppressDiagnostics
+parameter_list|()
+block|{
+name|Diagnose
+operator|=
+name|false
+expr_stmt|;
+block|}
+comment|/// Sets a 'context' source range.
+name|void
+name|setContextRange
+parameter_list|(
+name|SourceRange
+name|SR
+parameter_list|)
+block|{
+name|NameContextRange
+operator|=
+name|SR
+expr_stmt|;
+block|}
+comment|/// Gets the source range of the context of this name; for C++
+comment|/// qualified lookups, this is the source range of the scope
+comment|/// specifier.
+name|SourceRange
+name|getContextRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameContextRange
+return|;
+block|}
+comment|/// Gets the location of the identifier.  This isn't always defined:
+comment|/// sometimes we're doing lookups on synthesized names.
+name|SourceLocation
+name|getNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameLoc
+return|;
+block|}
+name|private
+label|:
+name|void
+name|diagnose
+parameter_list|()
+block|{
+if|if
+condition|(
+name|isAmbiguous
+argument_list|()
+condition|)
+name|SemaRef
+operator|.
+name|DiagnoseAmbiguousLookup
+argument_list|(
+operator|*
+name|this
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|setAmbiguous
+parameter_list|(
+name|AmbiguityKind
+name|AK
+parameter_list|)
+block|{
+name|ResultKind
+operator|=
+name|Ambiguous
+expr_stmt|;
+name|Ambiguity
+operator|=
+name|AK
+expr_stmt|;
+block|}
+name|void
+name|addDeclsFromBasePaths
+parameter_list|(
+specifier|const
+name|CXXBasePaths
+modifier|&
+name|P
+parameter_list|)
+function_decl|;
+comment|// Sanity checks.
+name|void
+name|sanity
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ResultKind
+operator|!=
+name|NotFound
+operator|||
+name|Decls
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|0
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|ResultKind
+operator|!=
+name|Found
+operator|||
+name|Decls
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|1
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|ResultKind
+operator|==
+name|NotFound
+operator|||
+name|ResultKind
+operator|==
+name|Found
+operator|||
+name|ResultKind
+operator|==
+name|FoundUnresolvedValue
+operator|||
+operator|(
+name|ResultKind
+operator|==
+name|Ambiguous
+operator|&&
+name|Ambiguity
+operator|==
+name|AmbiguousBaseSubobjects
+operator|)
+operator|||
+name|Decls
+operator|.
+name|size
+argument_list|()
+operator|>
+literal|1
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|Paths
+operator|!=
+name|NULL
+operator|)
+operator|==
+operator|(
+name|ResultKind
+operator|==
+name|Ambiguous
+operator|&&
+operator|(
+name|Ambiguity
+operator|==
+name|AmbiguousBaseSubobjectTypes
+operator|||
+name|Ambiguity
+operator|==
+name|AmbiguousBaseSubobjects
+operator|)
+operator|)
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|deletePaths
+argument_list|(
+name|CXXBasePaths
+operator|*
+argument_list|)
+expr_stmt|;
+comment|// Results.
+name|LookupResultKind
+name|ResultKind
+decl_stmt|;
+name|AmbiguityKind
+name|Ambiguity
+decl_stmt|;
+comment|// ill-defined unless ambiguous
+name|DeclsTy
+name|Decls
+decl_stmt|;
+name|CXXBasePaths
+modifier|*
+name|Paths
+decl_stmt|;
+comment|// Parameters.
+name|Sema
+modifier|&
+name|SemaRef
+decl_stmt|;
+name|DeclarationName
+name|Name
+decl_stmt|;
+name|SourceLocation
+name|NameLoc
+decl_stmt|;
+name|SourceRange
+name|NameContextRange
+decl_stmt|;
+name|Sema
+operator|::
+name|LookupNameKind
+name|LookupKind
+expr_stmt|;
+name|unsigned
+name|IDNS
+decl_stmt|;
+comment|// ill-defined until set by lookup
+name|bool
+name|Redecl
+decl_stmt|;
+comment|/// \brief True if tag declarations should be hidden if non-tags
+comment|///   are present
+name|bool
+name|HideTags
+decl_stmt|;
+name|bool
+name|Diagnose
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+end_unit
+

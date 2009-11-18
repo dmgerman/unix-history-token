@@ -199,6 +199,8 @@ block|,
 comment|// Represent GCC asm label extension.
 name|Blocks
 block|,
+name|CDecl
+block|,
 name|Cleanup
 block|,
 name|Const
@@ -2183,6 +2185,11 @@ block|;
 name|DEF_SIMPLE_ATTR
 argument_list|(
 name|StdCall
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|CDecl
 argument_list|)
 block|;
 name|DEF_SIMPLE_ATTR

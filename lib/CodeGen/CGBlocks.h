@@ -238,6 +238,14 @@ literal|1
 operator|<<
 literal|29
 operator|)
+block|,
+name|BLOCK_HAS_OBJC_TYPE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|30
+operator|)
 block|}
 enum|;
 block|}

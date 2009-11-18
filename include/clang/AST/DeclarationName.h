@@ -967,6 +967,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|};
 comment|/// Ordering on two declaration names. If both names are identifiers,

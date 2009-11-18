@@ -8,7 +8,7 @@ operator|%
 operator|:
 name|include
 operator|<
-name|stdio
+name|stdint
 operator|.
 name|h
 operator|>

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -Wno-unused-value -emit-llvm< %s -o %t&&
+comment|// RUN: clang-cc -Wno-unused-value -emit-llvm< %s -o %t
 end_comment
 
 begin_comment
-comment|// RUN: grep volatile %t | count 145&&
+comment|// RUN: grep volatile %t | count 145
 end_comment
 
 begin_comment
@@ -83,11 +83,18 @@ begin_comment
 comment|//void operator =(volatile struct S&o1, volatile struct S&o2) volatile;
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_function_decl
+name|int
+name|printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int

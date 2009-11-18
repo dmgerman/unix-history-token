@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm %s -o %t&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm %s -o %t
 end_comment
 
 begin_function
@@ -117,7 +117,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep "T7 NAMED: \$1" %t&&
+comment|// RUN: grep "T7 NAMED: \$1" %t
 end_comment
 
 begin_function
@@ -135,7 +135,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep "T8 NAMED MODIFIER: \${0:c}" %t&&
+comment|// RUN: grep "T8 NAMED MODIFIER: \${0:c}" %t
 end_comment
 
 begin_function

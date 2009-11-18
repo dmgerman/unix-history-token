@@ -1,30 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -E -o %t -C %s&&
+comment|// RUN: clang -E -o %t -C %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '^int x; // comment' %t&&
+comment|// RUN: grep '^int x; // comment' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '^x x' %t&&
+comment|// RUN: grep '^x x' %t
 end_comment
 
 begin_comment
-comment|// RUN: clang -E -o %t -CC %s&&
+comment|// RUN: clang -E -o %t -CC %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '^int x; // comment' %t&&
+comment|// RUN: grep '^int x; // comment' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '^x /\* comment \*/ x /\* comment \*/' %t&&
-end_comment
-
-begin_comment
-comment|// RUN: true
+comment|// RUN: grep '^x /\* comment \*/ x /\* comment \*/' %t
 end_comment
 
 begin_decl_stmt

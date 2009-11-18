@@ -66,13 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclBase.h"
+file|"clang/AST/Decl.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/AST/DeclarationName.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclCXX.h"
 end_include
 
 begin_include

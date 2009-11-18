@@ -1,34 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-pc-linux-gnu -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-pc-linux-gnu -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare i32 @f0() readnone$' %t&&
+comment|// RUN: grep 'declare i32 @f0() readnone$' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare i32 @f1() readonly$' %t&&
+comment|// RUN: grep 'declare i32 @f1() readonly$' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f2(.* noalias sret)$' %t&&
+comment|// RUN: grep 'declare void @f2(.* noalias sret)$' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f3(.* noalias sret)$' %t&&
+comment|// RUN: grep 'declare void @f3(.* noalias sret)$' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f4(.* byval)$' %t&&
+comment|// RUN: grep 'declare void @f4(.* byval)$' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f5(.* byval)$' %t&&
-end_comment
-
-begin_comment
-comment|// RUN: true
+comment|// RUN: grep 'declare void @f5(.* byval)$' %t
 end_comment
 
 begin_comment

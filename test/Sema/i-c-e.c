@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -fsyntax-only -verify -pedantic -fpascal-strings
+comment|// RUN: clang %s -fsyntax-only -Xclang -verify -pedantic -fpascal-strings
 end_comment
 
 begin_include

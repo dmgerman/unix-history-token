@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -ccc-echo -o %t %s 2> %t.log&&
+comment|// RUN: clang -ccc-echo -o %t %s 2> %t.log
 end_comment
 
 begin_comment
@@ -8,11 +8,11 @@ comment|// Make sure we used clang.
 end_comment
 
 begin_comment
-comment|// RUN: grep 'clang-cc" .*hello.c' %t.log&&
+comment|// RUN: grep 'clang-cc" .*hello.c' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: %t> %t.out&&
+comment|// RUN: %t> %t.out
 end_comment
 
 begin_comment

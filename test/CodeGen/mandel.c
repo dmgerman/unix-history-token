@@ -146,11 +146,15 @@ name|I
 value|1.0iF
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_function_decl
+name|int
+name|putchar
+parameter_list|(
+name|char
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|volatile

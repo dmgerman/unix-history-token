@@ -81,6 +81,12 @@ directive|include
 file|"clang/AST/Type.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/AST/TemplateName.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -157,6 +163,8 @@ comment|/// \brief The type of template argument we're storing.
 enum|enum
 name|ArgKind
 block|{
+comment|/// \brief Represents an empty template argument, e.g., one that has not
+comment|/// been deduced.
 name|Null
 init|=
 literal|0
@@ -164,30 +172,26 @@ block|,
 comment|/// The template argument is a type. Its value is stored in the
 comment|/// TypeOrValue field.
 name|Type
-init|=
-literal|1
 block|,
-comment|/// The template argument is a declaration
+comment|/// The template argument is a declaration that was provided for a pointer
+comment|/// or reference non-type template parameter.
 name|Declaration
-init|=
-literal|2
 block|,
-comment|/// The template argument is an integral value stored in an llvm::APSInt.
+comment|/// The template argument is an integral value stored in an llvm::APSInt
+comment|/// that was provided for an integral non-type template parameter.
 name|Integral
-init|=
-literal|3
+block|,
+comment|/// The template argument is a template name that was provided for a
+comment|/// template template parameter.
+name|Template
 block|,
 comment|/// The template argument is a value- or type-dependent expression
 comment|/// stored in an Expr*.
 name|Expression
-init|=
-literal|4
 block|,
 comment|/// The template argument is actually a parameter pack. Arguments are stored
 comment|/// in the Args struct.
 name|Pack
-init|=
-literal|5
 block|}
 name|Kind
 enum|;
@@ -287,6 +291,35 @@ name|Type
 operator|.
 name|getAsOpaquePtr
 argument_list|()
+block|;   }
+comment|/// \brief Construct a template argument that is a template.
+comment|///
+comment|/// This form of template argument is generally used for template template
+comment|/// parameters. However, the template name could be a dependent template
+comment|/// name that ends up being instantiated to a function template whose address
+comment|/// is taken.
+name|TemplateArgument
+argument_list|(
+argument|TemplateName Name
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+argument|Template
+argument_list|)
+block|{
+name|TypeOrValue
+operator|=
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|Name
+operator|.
+name|getAsVoidPointer
+argument_list|()
+operator|)
 block|;   }
 comment|/// \brief Construct a template argument that is an expression.
 comment|///
@@ -703,11 +736,52 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Retrieve the template argument as a template name.
+end_comment
+
+begin_expr_stmt
+name|TemplateName
+name|getAsTemplate
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|Kind
+operator|!=
+name|Template
+condition|)
+return|return
+name|TemplateName
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|TemplateName
+operator|::
+name|getFromVoidPointer
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
+name|TypeOrValue
+operator|)
+argument_list|)
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Retrieve the template argument as an integral value.
 end_comment
 
 begin_expr_stmt
-name|llvm
+unit|llvm
 operator|::
 name|APSInt
 operator|*
@@ -1046,6 +1120,20 @@ name|DeclaratorInfo
 modifier|*
 name|Declarator
 decl_stmt|;
+struct|struct
+block|{
+name|unsigned
+name|QualifierRange
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|unsigned
+name|TemplateNameLoc
+decl_stmt|;
+block|}
+name|Template
+struct|;
 block|}
 union|;
 ifndef|#
@@ -1059,6 +1147,8 @@ block|,
 name|K_DeclaratorInfo
 block|,
 name|K_Expression
+block|,
+name|K_Template
 block|}
 name|Kind
 enum|;
@@ -1128,6 +1218,62 @@ argument_list|)
 endif|#
 directive|endif
 block|{}
+name|TemplateArgumentLocInfo
+argument_list|(
+argument|SourceRange QualifierRange
+argument_list|,
+argument|SourceLocation TemplateNameLoc
+argument_list|)
+ifndef|#
+directive|ifndef
+name|NDEBUG
+operator|:
+name|Kind
+argument_list|(
+argument|K_Template
+argument_list|)
+endif|#
+directive|endif
+block|{
+name|Template
+operator|.
+name|QualifierRange
+index|[
+literal|0
+index|]
+operator|=
+name|QualifierRange
+operator|.
+name|getBegin
+argument_list|()
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;
+name|Template
+operator|.
+name|QualifierRange
+index|[
+literal|1
+index|]
+operator|=
+name|QualifierRange
+operator|.
+name|getEnd
+argument_list|()
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;
+name|Template
+operator|.
+name|TemplateNameLoc
+operator|=
+name|TemplateNameLoc
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;   }
 name|DeclaratorInfo
 operator|*
 name|getAsDeclaratorInfo
@@ -1160,6 +1306,70 @@ argument_list|)
 block|;
 return|return
 name|Expression
+return|;
+block|}
+name|SourceRange
+name|getTemplateQualifierRange
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|K_Template
+argument_list|)
+block|;
+return|return
+name|SourceRange
+argument_list|(
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Template
+operator|.
+name|QualifierRange
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Template
+operator|.
+name|QualifierRange
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getTemplateNameLoc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|K_Template
+argument_list|)
+block|;
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Template
+operator|.
+name|TemplateNameLoc
+argument_list|)
 return|;
 block|}
 ifndef|#
@@ -1210,6 +1420,19 @@ argument_list|(
 name|Kind
 operator|==
 name|K_Expression
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TemplateArgument
+operator|::
+name|Template
+case|:
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|K_Template
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1359,12 +1582,60 @@ operator|::
 name|Expression
 argument_list|)
 block|;   }
-comment|/// \brief - Fetches the start location of the argument.
+name|TemplateArgumentLoc
+argument_list|(
+argument|const TemplateArgument&Argument
+argument_list|,
+argument|SourceRange QualifierRange
+argument_list|,
+argument|SourceLocation TemplateNameLoc
+argument_list|)
+operator|:
+name|Argument
+argument_list|(
+name|Argument
+argument_list|)
+operator|,
+name|LocInfo
+argument_list|(
+argument|QualifierRange
+argument_list|,
+argument|TemplateNameLoc
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Argument
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|TemplateArgument
+operator|::
+name|Template
+argument_list|)
+block|;   }
+comment|/// \brief - Fetches the primary location of the argument.
 name|SourceLocation
 name|getLocation
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|Argument
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|TemplateArgument
+operator|::
+name|Template
+condition|)
+return|return
+name|getTemplateNameLoc
+argument_list|()
+return|;
 return|return
 name|getSourceRange
 argument_list|()
@@ -1373,12 +1644,21 @@ name|getBegin
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief - Fetches the full source range of the argument.
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|TemplateArgument
 operator|&
@@ -1390,6 +1670,9 @@ return|return
 name|Argument
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|TemplateArgumentLocInfo
 name|getLocInfo
 argument_list|()
@@ -1399,6 +1682,9 @@ return|return
 name|LocInfo
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|DeclaratorInfo
 operator|*
 name|getSourceDeclaratorInfo
@@ -1424,6 +1710,9 @@ name|getAsDeclaratorInfo
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getSourceExpression
@@ -1449,6 +1738,9 @@ name|getAsExpr
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getSourceDeclExpression
@@ -1474,15 +1766,64 @@ name|getAsExpr
 argument_list|()
 return|;
 block|}
-block|}
-end_decl_stmt
+end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+name|SourceRange
+name|getTemplateQualifierRange
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Argument
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|TemplateArgument
+operator|::
+name|Template
+argument_list|)
+block|;
+return|return
+name|LocInfo
+operator|.
+name|getTemplateQualifierRange
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|SourceLocation
+name|getTemplateNameLoc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Argument
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|TemplateArgument
+operator|::
+name|Template
+argument_list|)
+block|;
+return|return
+name|LocInfo
+operator|.
+name|getTemplateNameLoc
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_endif
-unit|}
+unit|};  }
 endif|#
 directive|endif
 end_endif

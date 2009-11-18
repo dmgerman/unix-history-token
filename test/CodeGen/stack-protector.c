@@ -1,54 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i686-unknown-unknown -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -emit-llvm -o - %s -stack-protector=0 | FileCheck -check-prefix=NOSSP %s
 end_comment
 
 begin_comment
-comment|// RUN: not grep 'ssp' %t&&
+comment|// NOSSP: define void @test1(i8* %msg) nounwind {
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i686-apple-darwin9 -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -emit-llvm -o - %s -stack-protector=1 | FileCheck -check-prefix=WITHSSP %s
 end_comment
 
 begin_comment
-comment|// RUN: not grep 'ssp' %t&&
+comment|// WITHSSP: define void @test1(i8* %msg) nounwind ssp {
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i686-apple-darwin10 -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -emit-llvm -o - %s -stack-protector=2 | FileCheck -check-prefix=SSPREQ %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'ssp' %t&&
-end_comment
-
-begin_comment
-comment|// RUN: clang -fstack-protector-all -emit-llvm -S -o %t %s&&
-end_comment
-
-begin_comment
-comment|// RUN: grep 'sspreq' %t&&
-end_comment
-
-begin_comment
-comment|// RUN: clang -fstack-protector -emit-llvm -S -o %t %s&&
-end_comment
-
-begin_comment
-comment|// RUN: grep 'ssp' %t&&
-end_comment
-
-begin_comment
-comment|// RUN: clang -fno-stack-protector -emit-llvm -S -o %t %s&&
-end_comment
-
-begin_comment
-comment|// RUN: not grep 'ssp' %t&&
-end_comment
-
-begin_comment
-comment|// RUN: true
+comment|// SSPREQ: define void @test1(i8* %msg) nounwind sspreq {
 end_comment
 
 begin_function_decl

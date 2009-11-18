@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-pc-linux-gnu -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-pc-linux-gnu -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep "g.b = internal global i8. getelementptr" %t&&
+comment|// RUN: grep "g.b = internal global i8. getelementptr" %t
 end_comment
 
 begin_struct

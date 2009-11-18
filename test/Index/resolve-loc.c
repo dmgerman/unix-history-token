@@ -68,55 +68,55 @@ struct|;
 end_struct
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch %s -o %t.ast&&
+comment|// RUN: clang-cc -emit-pch %s -o %t.ast
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:3:8 | grep top_var&&
+comment|// RUN: index-test %t.ast -point-at %s:3:8 | grep top_var
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:5:15 | grep top_func_decl&&
+comment|// RUN: index-test %t.ast -point-at %s:5:15 | grep top_func_decl
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:5:25 | grep param1&&
+comment|// RUN: index-test %t.ast -point-at %s:5:25 | grep param1
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:7:17 | grep top_func_def&&
+comment|// RUN: index-test %t.ast -point-at %s:7:17 | grep top_func_def
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:7:23 | grep param2&&
+comment|// RUN: index-test %t.ast -point-at %s:7:23 | grep param2
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:8:10 | grep local_var1&&
+comment|// RUN: index-test %t.ast -point-at %s:8:10 | grep local_var1
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:9:15 | grep for_var&&
+comment|// RUN: index-test %t.ast -point-at %s:9:15 | grep for_var
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:9:43> %t&&
+comment|// RUN: index-test %t.ast -point-at %s:9:43> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '++for_var' %t&&
+comment|// RUN: grep '++for_var' %t
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:10:9 | grep local_var2&&
+comment|// RUN: index-test %t.ast -point-at %s:10:9 | grep local_var2
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:10:30> %t&&
+comment|// RUN: index-test %t.ast -point-at %s:10:30> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'for_var + 1' %t&&
+comment|// RUN: grep 'for_var + 1' %t
 end_comment
 
 begin_comment

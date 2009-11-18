@@ -8,27 +8,27 @@ comment|// builds with and without asserts. We need a better solution for this.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fblocks -triple x86_64-apple-darwin10 -emit-llvm-bc -o - %s | opt -strip | llvm-dis> %t&&
+comment|// RUN: clang-cc -fblocks -triple x86_64-apple-darwin10 -emit-llvm-bc -o - %s | opt -strip | llvm-dis> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '%6 = call i32 (...)\* @rhs()' %t | count 1&&
+comment|// RUN: grep '%6 = call i32 (...)\* @rhs()' %t | count 1
 end_comment
 
 begin_comment
-comment|// RUN: grep '%7 = getelementptr inbounds %0\* %1, i32 0, i32 1' %t | count 1&&
+comment|// RUN: grep '%7 = getelementptr inbounds %0\* %1, i32 0, i32 1' %t | count 1
 end_comment
 
 begin_comment
-comment|// RUN: grep '%8 = load %0\*\* %7' %t | count 1&&
+comment|// RUN: grep '%8 = load %0\*\* %7' %t | count 1
 end_comment
 
 begin_comment
-comment|// RUN: grep '%10 = call i32 (...)\* @rhs()' %t | count 1&&
+comment|// RUN: grep '%10 = call i32 (...)\* @rhs()' %t | count 1
 end_comment
 
 begin_comment
-comment|// RUN: grep '%11 = getelementptr inbounds %0\* %1, i32 0, i32 1' %t | count 1&&
+comment|// RUN: grep '%11 = getelementptr inbounds %0\* %1, i32 0, i32 1' %t | count 1
 end_comment
 
 begin_comment

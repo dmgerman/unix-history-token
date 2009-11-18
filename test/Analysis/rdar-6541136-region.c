@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -verify -analyze -checker-cfref -analyzer-store=region %s
+comment|// RUN: clang-cc -verify -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region %s
 end_comment
 
 begin_struct
@@ -35,7 +35,77 @@ end_comment
 
 begin_function
 name|void
-name|foo
+name|test1
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|kernel_tea_cheese_t
+modifier|*
+name|wonky
+init|=
+operator|&
+name|_wonky_gesticulate_cheese
+decl_stmt|;
+name|struct
+name|load_wine
+modifier|*
+name|cmd
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|wonky
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|cmd
+operator|=
+name|cmd
+expr_stmt|;
+name|char
+modifier|*
+name|p
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|wonky
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|kernel_tea_cheese_t
+modifier|*
+name|q
+init|=
+operator|&
+name|wonky
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|// This test case tests both the RegionStore logic (doesn't crash) and
+comment|// the out-of-bounds checking.  We don't expect the warning for now since
+comment|// out-of-bound checking is temporarily disabled.
+name|kernel_tea_cheese_t
+name|r
+init|=
+operator|*
+name|q
+decl_stmt|;
+comment|// expected-warning{{Access out-of-bound array element (buffer overflow)}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test1_b
 parameter_list|(
 name|void
 parameter_list|)
@@ -85,27 +155,7 @@ name|p
 operator|=
 literal|1
 expr_stmt|;
-comment|// no-warning
-name|kernel_tea_cheese_t
-modifier|*
-name|q
-init|=
-operator|&
-name|wonky
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|// This test case tests both the RegionStore logic (doesn't crash) and
-comment|// the out-of-bounds checking.  We don't expect the warning for now since
-comment|// out-of-bound checking is temporarily disabled.
-name|kernel_tea_cheese_t
-name|r
-init|=
-operator|*
-name|q
-decl_stmt|;
-comment|// eventually-warning{{out-of-bound memory position}}
+comment|// expected-warning{{Access out-of-bound array element (buffer overflow)}}
 block|}
 end_function
 

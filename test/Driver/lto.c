@@ -8,19 +8,19 @@ comment|// files.
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-print-phases -c %s -flto 2> %t.log&&
+comment|// RUN: clang -ccc-print-phases -c %s -flto 2> %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '2: compiler, {1}, llvm-bc' %t.log&&
+comment|// RUN: grep '2: compiler, {1}, llvm-bc' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-print-phases -c %s -O4 2> %t.log&&
+comment|// RUN: clang -ccc-print-phases -c %s -O4 2> %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '2: compiler, {1}, llvm-bc' %t.log&&
+comment|// RUN: grep '2: compiler, {1}, llvm-bc' %t.log
 end_comment
 
 begin_comment
@@ -28,23 +28,23 @@ comment|// and -emit-llvm doesn't alter pipeline (unfortunately?).
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-print-phases %s -emit-llvm 2> %t.log&&
+comment|// RUN: clang -ccc-print-phases %s -emit-llvm 2> %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '0: input, ".*lto.c", c' %t.log&&
+comment|// RUN: grep '0: input, ".*lto.c", c' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '1: preprocessor, {0}, cpp-output' %t.log&&
+comment|// RUN: grep '1: preprocessor, {0}, cpp-output' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '2: compiler, {1}, llvm-bc' %t.log&&
+comment|// RUN: grep '2: compiler, {1}, llvm-bc' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '3: linker, {2}, image' %t.log&&
+comment|// RUN: grep '3: linker, {2}, image' %t.log
 end_comment
 
 begin_comment
@@ -56,31 +56,27 @@ comment|// (unfortunately).
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -save-temps -### 2> %t.log&&
+comment|// RUN: clang %s -emit-llvm -save-temps -### 2> %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-o" ".*lto\.i" "-x" "c" ".*lto\.c"' %t.log&&
+comment|// RUN: grep '"-o" ".*lto\.i" "-x" "c" ".*lto\.c"' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-o" ".*lto\.o" .*".*lto\.i"' %t.log&&
+comment|// RUN: grep '"-o" ".*lto\.o" .*".*lto\.i"' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '".*a.out" .*".*lto\.o"' %t.log&&
+comment|// RUN: grep '".*a.out" .*".*lto\.o"' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -S -### 2> %t.log&&
+comment|// RUN: clang %s -emit-llvm -S -### 2> %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-o" ".*lto\.s" "-x" "c" ".*lto\.c"' %t.log&&
-end_comment
-
-begin_comment
-comment|// RUN: true
+comment|// RUN: grep '"-o" ".*lto\.s" "-x" "c" ".*lto\.c"' %t.log
 end_comment
 
 end_unit

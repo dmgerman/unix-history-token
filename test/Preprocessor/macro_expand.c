@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s | grep '^A: Y$'&&
+comment|// RUN: clang-cc -E %s | grep '^A: Y$'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E %s | grep '^B: f()$'&&
+comment|// RUN: clang-cc -E %s | grep '^B: f()$'
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown %s -emit-llvm -o %t -fblocks&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown %s -emit-llvm -o %t -fblocks
 end_comment
 
 begin_function_decl
@@ -74,7 +74,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// RUN: grep 'internal void @__f2_block_invoke_(.struct.s0\* noalias sret .*, .*, .* byval .*)' %t&&
+comment|// RUN: grep 'internal void @__f2_block_invoke_(.struct.s0\* noalias sret .*, .*, .* byval .*)' %t
 end_comment
 
 begin_function
@@ -160,10 +160,6 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
 unit|};
-comment|// RUN: true
-end_comment
-
 end_unit
 

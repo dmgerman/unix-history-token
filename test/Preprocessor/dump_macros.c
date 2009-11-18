@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E -dM %s -o %t&&
+comment|// RUN: clang-cc -E -dM %s -o %t
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|// Space even without expansion tokens
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define A(x) " %t&&
+comment|// RUN: grep "#define A(x) " %t
 end_comment
 
 begin_define
@@ -25,7 +25,7 @@ comment|// Space before expansion list.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define B(x,y) x y" %t&&
+comment|// RUN: grep "#define B(x,y) x y" %t
 end_comment
 
 begin_define
@@ -45,7 +45,7 @@ comment|// No space in expansion list.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define C(x,y) x y" %t&&
+comment|// RUN: grep "#define C(x,y) x y" %t
 end_comment
 
 begin_define
@@ -65,7 +65,7 @@ comment|// No paste avoidance.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define X() .." %t&&
+comment|// RUN: grep "#define X() .." %t
 end_comment
 
 begin_define
@@ -81,11 +81,11 @@ comment|// Simple test.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define Y ." %t&&
+comment|// RUN: grep "#define Y ." %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define Z X()Y" %t&&
+comment|// RUN: grep "#define Z X()Y" %t
 end_comment
 
 begin_define
@@ -107,7 +107,7 @@ comment|// gcc prints macros at end of translation unit, so last one wins.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define foo 2" %t&&
+comment|// RUN: grep "#define foo 2" %t
 end_comment
 
 begin_comment

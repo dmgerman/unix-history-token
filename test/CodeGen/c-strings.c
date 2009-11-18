@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep "hello" %t | count 3&&
+comment|// RUN: grep "hello" %t | count 3
 end_comment
 
 begin_comment
-comment|// RUN: grep 'c"hello\\00"' %t | count 2&&
+comment|// RUN: grep 'c"hello\\00"' %t | count 2
 end_comment
 
 begin_comment
-comment|// RUN: grep 'c"hello\\00\\00\\00"' %t | count 1&&
+comment|// RUN: grep 'c"hello\\00\\00\\00"' %t | count 1
 end_comment
 
 begin_comment

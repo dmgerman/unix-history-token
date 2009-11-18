@@ -1,41 +1,48 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -emit-llvm -o %t -fblocks&&
+comment|// RUN: clang-cc %s -emit-llvm -o %t -fblocks
 end_comment
 
 begin_comment
-comment|// RUN: grep "_Block_object_dispose" %t | count 17&&
+comment|// RUN: grep "_Block_object_dispose" %t | count 17
 end_comment
 
 begin_comment
-comment|// RUN: grep "__copy_helper_block_" %t | count 16&&
+comment|// RUN: grep "__copy_helper_block_" %t | count 16
 end_comment
 
 begin_comment
-comment|// RUN: grep "__destroy_helper_block_" %t | count 16&&
+comment|// RUN: grep "__destroy_helper_block_" %t | count 16
 end_comment
 
 begin_comment
-comment|// RUN: grep "__Block_byref_id_object_copy_" %t | count 2&&
+comment|// RUN: grep "__Block_byref_id_object_copy_" %t | count 2
 end_comment
 
 begin_comment
-comment|// RUN: grep "__Block_byref_id_object_dispose_" %t | count 2&&
+comment|// RUN: grep "__Block_byref_id_object_dispose_" %t | count 2
 end_comment
 
 begin_comment
-comment|// RUN: grep "i32 135)" %t | count 2&&
+comment|// RUN: grep "i32 135)" %t | count 2
 end_comment
 
 begin_comment
 comment|// RUN: grep "_Block_object_assign" %t | count 10
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_function_decl
+name|int
+name|printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

@@ -170,6 +170,9 @@ name|class
 name|ASTRecordLayout
 decl_stmt|;
 name|class
+name|BlockExpr
+decl_stmt|;
+name|class
 name|Expr
 decl_stmt|;
 name|class
@@ -220,9 +223,6 @@ name|TypeDecl
 decl_stmt|;
 name|class
 name|TypedefDecl
-decl_stmt|;
-name|class
-name|UnresolvedUsingDecl
 decl_stmt|;
 name|class
 name|UsingDecl
@@ -699,7 +699,7 @@ operator|<
 name|UsingDecl
 operator|*
 operator|,
-name|UnresolvedUsingDecl
+name|NamedDecl
 operator|*
 operator|>
 name|InstantiatedFromUnresolvedUsingDecl
@@ -767,6 +767,7 @@ name|DeclComments
 expr_stmt|;
 name|public
 label|:
+specifier|const
 name|TargetInfo
 modifier|&
 name|Target
@@ -991,7 +992,7 @@ parameter_list|)
 function_decl|;
 comment|/// \brief If this using decl is instantiated from an unresolved using decl,
 comment|/// return it.
-name|UnresolvedUsingDecl
+name|NamedDecl
 modifier|*
 name|getInstantiatedFromUnresolvedUsingDecl
 parameter_list|(
@@ -1009,7 +1010,7 @@ name|UsingDecl
 modifier|*
 name|Inst
 parameter_list|,
-name|UnresolvedUsingDecl
+name|NamedDecl
 modifier|*
 name|Tmpl
 parameter_list|)
@@ -1144,7 +1145,7 @@ argument|const LangOptions& LOpts
 argument_list|,
 argument|SourceManager&SM
 argument_list|,
-argument|TargetInfo&t
+argument|const TargetInfo&t
 argument_list|,
 argument|IdentifierTable&idents
 argument_list|,
@@ -2283,6 +2284,23 @@ operator|&
 name|S
 argument_list|)
 decl_stmt|;
+comment|/// getObjCEncodingForBlockDecl - Return the encoded type for this block
+comment|/// declaration.
+name|void
+name|getObjCEncodingForBlock
+argument_list|(
+specifier|const
+name|BlockExpr
+operator|*
+name|Expr
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|S
+argument_list|)
+decl_stmt|;
 comment|/// getObjCEncodingForPropertyDecl - Return the encoded type for
 comment|/// this method declaration. If non-NULL, Container must be either
 comment|/// an ObjCCategoryImplDecl or ObjCImplementationDecl; it should
@@ -3059,27 +3077,29 @@ name|QualType
 name|T2
 parameter_list|)
 block|{
-name|T1
-operator|=
+name|CanQualType
+name|CT1
+init|=
 name|getCanonicalType
 argument_list|(
 name|T1
 argument_list|)
-expr_stmt|;
-name|T2
-operator|=
+decl_stmt|;
+name|CanQualType
+name|CT2
+init|=
 name|getCanonicalType
 argument_list|(
 name|T2
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 return|return
-name|T1
+name|CT1
 operator|.
 name|getUnqualifiedType
 argument_list|()
 operator|==
-name|T2
+name|CT2
 operator|.
 name|getUnqualifiedType
 argument_list|()
@@ -3141,6 +3161,18 @@ name|getCanonicalTemplateName
 parameter_list|(
 name|TemplateName
 name|Name
+parameter_list|)
+function_decl|;
+comment|/// \brief Determine whether the given template names refer to the same
+comment|/// template.
+name|bool
+name|hasSameTemplateName
+parameter_list|(
+name|TemplateName
+name|X
+parameter_list|,
+name|TemplateName
+name|Y
 parameter_list|)
 function_decl|;
 comment|/// \brief Retrieve the "canonical" template argument.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -emit-llvm -o %t&&
+comment|// RUN: clang-cc %s -emit-llvm -o %t
 end_comment
 
 begin_function_decl
@@ -93,7 +93,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f0()' %t&&
+comment|// RUN: grep 'define void @f0()' %t
 end_comment
 
 begin_function
@@ -111,7 +111,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// RUN: grep 'call void @f1()' %t&&
+comment|// RUN: grep 'call void @f1()' %t
 end_comment
 
 begin_function
@@ -134,7 +134,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f1()' %t&&
+comment|// RUN: grep 'define void @f1()' %t
 end_comment
 
 begin_function

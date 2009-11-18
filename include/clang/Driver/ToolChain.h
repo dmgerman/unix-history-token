@@ -358,6 +358,41 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// IsBlocksDefault - Does this tool chain enable -fblocks by default.
+name|virtual
+name|bool
+name|IsBlocksDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// IsObjCNonFragileABIDefault - Does this tool chain set
+comment|/// -fobjc-nonfragile-abi by default.
+name|virtual
+name|bool
+name|IsObjCNonFragileABIDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// GetDefaultStackProtectorLevel - Get the default stack protector level for
+comment|/// this tool chain (0=off, 1=on, 2=all).
+name|virtual
+name|unsigned
+name|GetDefaultStackProtectorLevel
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// IsUnwindTablesDefault - Does this tool chain use -funwind-tables
 comment|/// by default.
 name|virtual

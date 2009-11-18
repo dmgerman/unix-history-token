@@ -3114,11 +3114,66 @@ operator|:
 name|public
 name|Decl
 block|{
-name|ObjCList
-operator|<
+name|public
+operator|:
+name|class
+name|ObjCClassRef
+block|{
 name|ObjCInterfaceDecl
-operator|>
+operator|*
+name|ID
+block|;
+name|SourceLocation
+name|L
+block|;
+name|public
+operator|:
+name|ObjCClassRef
+argument_list|(
+argument|ObjCInterfaceDecl *d
+argument_list|,
+argument|SourceLocation l
+argument_list|)
+operator|:
+name|ID
+argument_list|(
+name|d
+argument_list|)
+block|,
+name|L
+argument_list|(
+argument|l
+argument_list|)
+block|{}
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|L
+return|;
+block|}
+name|ObjCInterfaceDecl
+operator|*
+name|getInterface
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+return|;
+block|}
+expr|}
+block|;
+name|private
+operator|:
+name|ObjCClassRef
+operator|*
 name|ForwardDecls
+block|;
+name|unsigned
+name|NumDecls
 block|;
 name|ObjCClassDecl
 argument_list|(
@@ -3127,6 +3182,8 @@ argument_list|,
 argument|SourceLocation L
 argument_list|,
 argument|ObjCInterfaceDecl *const *Elts
+argument_list|,
+argument|const SourceLocation *Locs
 argument_list|,
 argument|unsigned nElts
 argument_list|,
@@ -3164,19 +3221,25 @@ argument_list|,
 argument|ObjCInterfaceDecl *const *Elts =
 literal|0
 argument_list|,
+argument|const SourceLocation *Locs =
+literal|0
+argument_list|,
 argument|unsigned nElts =
 literal|0
 argument_list|)
 block|;
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|;
 typedef|typedef
-name|ObjCList
-operator|<
-name|ObjCInterfaceDecl
-operator|>
-operator|::
+specifier|const
+name|ObjCClassRef
+modifier|*
 name|iterator
-name|iterator
-expr_stmt|;
+typedef|;
 name|iterator
 name|begin
 argument_list|()
@@ -3184,9 +3247,6 @@ specifier|const
 block|{
 return|return
 name|ForwardDecls
-operator|.
-name|begin
-argument_list|()
 return|;
 block|}
 name|iterator
@@ -3196,9 +3256,8 @@ specifier|const
 block|{
 return|return
 name|ForwardDecls
-operator|.
-name|end
-argument_list|()
+operator|+
+name|NumDecls
 return|;
 block|}
 name|unsigned
@@ -3207,10 +3266,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ForwardDecls
-operator|.
-name|size
-argument_list|()
+name|NumDecls
 return|;
 block|}
 comment|/// setClassList - Set the list of forward classes.
@@ -3221,20 +3277,11 @@ argument|ASTContext&C
 argument_list|,
 argument|ObjCInterfaceDecl*const*List
 argument_list|,
+argument|const SourceLocation *Locs
+argument_list|,
 argument|unsigned Num
 argument_list|)
-block|{
-name|ForwardDecls
-operator|.
-name|set
-argument_list|(
-name|List
-argument_list|,
-name|Num
-argument_list|,
-name|C
-argument_list|)
-block|;   }
+block|;
 specifier|static
 name|bool
 name|classof

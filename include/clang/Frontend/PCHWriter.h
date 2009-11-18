@@ -238,7 +238,7 @@ argument_list|(
 operator|!
 name|T
 operator|.
-name|getFastQualifiers
+name|getLocalFastQualifiers
 argument_list|()
 operator|&&
 literal|"hash invalid for types with fast quals"

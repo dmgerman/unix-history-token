@@ -859,6 +859,10 @@ name|Flags
 operator|=
 name|ScopeFlags
 expr_stmt|;
+name|WithinElse
+operator|=
+name|false
+expr_stmt|;
 if|if
 condition|(
 name|AnyParent
@@ -900,12 +904,6 @@ name|AnyParent
 operator|->
 name|TemplateParamParent
 expr_stmt|;
-name|WithinElse
-operator|=
-name|AnyParent
-operator|->
-name|WithinElse
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -926,10 +924,6 @@ expr_stmt|;
 name|TemplateParamParent
 operator|=
 literal|0
-expr_stmt|;
-name|WithinElse
-operator|=
-name|false
 expr_stmt|;
 block|}
 comment|// If this scope is a function or contains breaks/continues, remember it.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -verify %s
+comment|// RUN: clang-cc -fsyntax-only -verify -triple x86_64-apple-darwin9 %s
 end_comment
 
 begin_typedef
@@ -72,6 +72,22 @@ else|:
 operator|-
 literal|1
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// PR5435
+end_comment
+
+begin_decl_stmt
+name|__uint128_t
+name|b
+init|=
+operator|(
+name|__uint128_t
+operator|)
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 

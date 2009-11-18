@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-pch -x c -o %t.pch %S/c-index-pch.h&&
+comment|// RUN: clang-cc -emit-pch -x c -o %t.pch %S/Inputs/c-index-pch.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include-pch %t.pch -x c -emit-pch -o %t.ast %s&&
+comment|// RUN: clang-cc -include-pch %t.pch -x c -emit-pch -o %t.ast %s
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test %t.ast all | FileCheck -check-prefix=ALL %s&&
+comment|// RUN: c-index-test -test-load-tu %t.ast all | FileCheck -check-prefix=ALL %s
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test %t.ast local | FileCheck -check-prefix=LOCAL %s
+comment|// RUN: c-index-test -test-load-tu %t.ast local | FileCheck -check-prefix=LOCAL %s
 end_comment
 
 begin_comment

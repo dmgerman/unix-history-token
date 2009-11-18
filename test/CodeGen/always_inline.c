@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -emit-llvm -S -o %t %s&&
+comment|// RUN: clang -emit-llvm -S -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: not grep '@f0' %t&&
+comment|// RUN: not grep '@f0' %t
 end_comment
 
 begin_comment
-comment|// RUN: not grep 'call ' %t&&
+comment|// RUN: not grep 'call ' %t
 end_comment
 
 begin_comment
-comment|// RUN: clang -mllvm -disable-llvm-optzns -emit-llvm -S -o %t %s&&
+comment|// RUN: clang -mllvm -disable-llvm-optzns -emit-llvm -S -o %t %s
 end_comment
 
 begin_comment

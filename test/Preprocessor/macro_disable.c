@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s | grep 'a: 2 + M_0(3)(4)(5);'&&
+comment|// RUN: clang-cc -E %s | grep 'a: 2 + M_0(3)(4)(5);'
 end_comment
 
 begin_comment

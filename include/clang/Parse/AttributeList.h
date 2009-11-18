@@ -193,6 +193,8 @@ name|AT_annotate
 block|,
 name|AT_blocks
 block|,
+name|AT_cdecl
+block|,
 name|AT_cleanup
 block|,
 name|AT_const

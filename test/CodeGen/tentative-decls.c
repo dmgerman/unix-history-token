@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '@r = common global \[1 x .*\] zeroinitializer' %t&&
+comment|// RUN: grep '@r = common global \[1 x .*\] zeroinitializer' %t
 end_comment
 
 begin_decl_stmt
@@ -41,7 +41,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@x = common global .struct.s0 zeroinitializer' %t&&
+comment|// RUN: grep '@x = common global .struct.s0 zeroinitializer' %t
 end_comment
 
 begin_decl_stmt
@@ -52,7 +52,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep '@y = common global .struct.s0 zeroinitializer' %t&&
+comment|// RUN: grep '@y = common global .struct.s0 zeroinitializer' %t
 end_comment
 
 begin_function
@@ -81,7 +81,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// RUN: grep '@b = common global \[1 x .*\] zeroinitializer' %t&&
+comment|// RUN: grep '@b = common global \[1 x .*\] zeroinitializer' %t
 end_comment
 
 begin_decl_stmt
@@ -108,7 +108,7 @@ comment|// Check that the most recent tentative definition wins.
 end_comment
 
 begin_comment
-comment|// RUN: grep '@c = common global \[4 x .*\] zeroinitializer' %t&&
+comment|// RUN: grep '@c = common global \[4 x .*\] zeroinitializer' %t
 end_comment
 
 begin_decl_stmt
@@ -132,7 +132,7 @@ comment|// Check that we emit static tentative definitions
 end_comment
 
 begin_comment
-comment|// RUN: grep '@c5 = internal global \[1 x .*\] zeroinitializer' %t&&
+comment|// RUN: grep '@c5 = internal global \[1 x .*\] zeroinitializer' %t
 end_comment
 
 begin_decl_stmt
@@ -169,10 +169,6 @@ argument_list|()
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// RUN: true
-end_comment
 
 end_unit
 

@@ -704,5 +704,50 @@ literal|1
 argument_list|)
 end_macro
 
+begin_comment
+comment|// No PR. Mismatched bitwidths lead to a crash on second evaluation.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|_Bool
+name|constbool
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|35
+argument_list|,
+argument|constbool
+argument_list|)
+end_macro
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|36
+argument_list|,
+argument|constbool
+argument_list|)
+end_macro
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|37
+argument_list|,
+argument|(
+literal|1
+argument|,
+literal|2.0
+argument|) ==
+literal|2.0
+argument_list|)
+end_macro
+
 end_unit
 

@@ -69,39 +69,39 @@ comment|///< This is a member comment.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t.ast %s&&
+comment|// RUN: clang-cc -emit-pch -o %t.ast %s
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:11:6> %t&&
+comment|// RUN: index-test %t.ast -point-at %s:11:6> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "starts here" %t&&
+comment|// RUN: grep "starts here" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "block comment" %t&&
+comment|// RUN: grep "block comment" %t
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:17:6> %t&&
+comment|// RUN: index-test %t.ast -point-at %s:17:6> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "BCPL" %t&&
+comment|// RUN: grep "BCPL" %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "But" %t&&
+comment|// RUN: grep "But" %t
 end_comment
 
 begin_comment
-comment|// RUN: index-test %t.ast -point-at %s:19:6> %t&&
+comment|// RUN: index-test %t.ast -point-at %s:19:6> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "NOT" %t | count 0&&
+comment|// RUN: grep "NOT" %t | count 0
 end_comment
 
 begin_comment

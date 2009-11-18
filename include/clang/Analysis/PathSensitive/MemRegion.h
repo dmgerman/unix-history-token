@@ -277,6 +277,13 @@ name|getBaseRegion
 argument_list|()
 specifier|const
 block|;
+specifier|const
+name|MemRegion
+operator|*
+name|StripCasts
+argument_list|()
+specifier|const
+block|;
 name|bool
 name|hasStackStorage
 argument_list|()

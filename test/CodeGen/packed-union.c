@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple x86_64-apple-darwin10 -emit-llvm %s -o %t&&
+comment|// RUN: clang-cc -triple x86_64-apple-darwin10 -emit-llvm %s -o %t
 end_comment
 
 begin_comment
-comment|// RUN: grep "struct._attrs = type<{ i32, i8 }>" %t&&
+comment|// RUN: grep "struct._attrs = type<{ i32, i8 }>" %t
 end_comment
 
 begin_typedef

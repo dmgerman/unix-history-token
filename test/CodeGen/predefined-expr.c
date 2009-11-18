@@ -35,11 +35,18 @@ begin_comment
 comment|// CHECK: @__PRETTY_FUNCTION__.staticFunction = private constant [22 x i8] c"void staticFunction()\00"
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_function_decl
+name|int
+name|printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

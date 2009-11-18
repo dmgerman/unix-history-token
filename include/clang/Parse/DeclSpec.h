@@ -102,6 +102,9 @@ decl_stmt|;
 name|class
 name|Declarator
 decl_stmt|;
+struct_decl|struct
+name|TemplateIdAnnotation
+struct_decl|;
 comment|/// DeclSpec - This class captures information about "declaration specifiers",
 comment|/// which encompasses storage-class-specifiers, type-specifiers,
 comment|/// type-qualifiers, and function-specifiers.
@@ -2371,37 +2374,7 @@ name|TemplateIdAnnotation
 modifier|*
 name|TemplateId
 parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|TemplateId
-operator|&&
-literal|"NULL template-id annotation?"
-argument_list|)
-expr_stmt|;
-name|Kind
-operator|=
-name|IK_TemplateId
-expr_stmt|;
-name|this
-operator|->
-name|TemplateId
-operator|=
-name|TemplateId
-expr_stmt|;
-name|StartLocation
-operator|=
-name|TemplateId
-operator|->
-name|TemplateNameLoc
-expr_stmt|;
-name|EndLocation
-operator|=
-name|TemplateId
-operator|->
-name|RAngleLoc
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// \brief Return the source range that covers this unqualified-id.
 name|SourceRange
 name|getSourceRange

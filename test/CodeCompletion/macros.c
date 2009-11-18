@@ -78,7 +78,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:17:14 %s -o - | FileCheck -check-prefix=CC1 %s&&
+comment|// RUN: clang-cc -fsyntax-only -code-completion-macros -code-completion-at=%s:17:14 %s -o - | FileCheck -check-prefix=CC1 %s
 switch|switch
 condition|(
 name|p
@@ -89,7 +89,7 @@ name|color
 argument_list|)
 condition|)
 block|{
-comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:19:9 %s -o - | FileCheck -check-prefix=CC2 %s&&
+comment|// RUN: clang-cc -fsyntax-only -code-completion-macros -code-completion-at=%s:19:9 %s -o - | FileCheck -check-prefix=CC2 %s
 case|case
 block|}
 comment|// CC1: color
@@ -107,7 +107,6 @@ comment|// CC2: BAR(<#X#>,<#Y#>)
 comment|// CC2: FOO
 comment|// CC2: IDENTITY(<#X#>)
 comment|// CC2: WIBBLE
-comment|// RUN: true
 block|}
 end_function
 

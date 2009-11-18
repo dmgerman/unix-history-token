@@ -65,6 +65,12 @@ directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -80,6 +86,8 @@ name|Redeclarable
 block|{
 name|protected
 operator|:
+comment|// FIXME: PointerIntPair is a value class that should not be inherited from.
+comment|// This should change to using containment.
 expr|struct
 name|DeclLink
 operator|:

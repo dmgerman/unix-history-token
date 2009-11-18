@@ -382,7 +382,7 @@ literal|0
 function_decl|;
 comment|// FIXME: Make out-of-line.
 name|virtual
-name|SVal
+name|DefinedOrUnknownSVal
 name|getSizeInElements
 parameter_list|(
 specifier|const
@@ -782,20 +782,21 @@ function_decl|;
 comment|/// CastRetrievedVal - Used by subclasses of StoreManager to implement
 comment|///  implicit casts that arise from loads from regions that are reinterpreted
 comment|///  as another region.
-name|SValuator
-operator|::
-name|CastResult
+name|SVal
 name|CastRetrievedVal
-argument_list|(
-argument|SVal val
-argument_list|,
-argument|const GRState *state
-argument_list|,
-argument|const TypedRegion *R
-argument_list|,
-argument|QualType castTy
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|SVal
+name|val
+parameter_list|,
+specifier|const
+name|TypedRegion
+modifier|*
+name|R
+parameter_list|,
+name|QualType
+name|castTy
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|// FIXME: Do we still need this?

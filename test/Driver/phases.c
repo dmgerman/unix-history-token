@@ -4,7 +4,7 @@ comment|// Basic compilation for various types of files.
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -x c %s -x objective-c %s -x c++ %s -x objective-c++ -x assembler %s -x assembler-with-cpp %s -x none %s 2>&1 | FileCheck -check-prefix=BASIC %s&&
+comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -x c %s -x objective-c %s -x c++ %s -x objective-c++ -x assembler %s -x assembler-with-cpp %s -x none %s 2>&1 | FileCheck -check-prefix=BASIC %s
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|// Universal linked image.
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -x c %s -arch ppc -arch i386 2>&1 | FileCheck -check-prefix=ULI %s&&
+comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -x c %s -arch ppc -arch i386 2>&1 | FileCheck -check-prefix=ULI %s
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ comment|// Universal object file.
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -c -x c %s -arch ppc -arch i386 2>&1 | FileCheck -check-prefix=UOF %s&&
+comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -c -x c %s -arch ppc -arch i386 2>&1 | FileCheck -check-prefix=UOF %s
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ comment|// Arch defaulting
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -c -x assembler %s 2>&1 | FileCheck -check-prefix=ARCH1 %s&&
+comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -c -x assembler %s 2>&1 | FileCheck -check-prefix=ARCH1 %s
 end_comment
 
 begin_comment
@@ -184,7 +184,7 @@ comment|// ARCH1: 2: bind-arch, "i386", {1}, object
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -c -x assembler %s -m32 -m64 2>&1 | FileCheck -check-prefix=ARCH2 %s&&
+comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -c -x assembler %s -m32 -m64 2>&1 | FileCheck -check-prefix=ARCH2 %s
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ comment|// ARCH2: 2: bind-arch, "x86_64", {1}, object
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple x86_64-apple-darwin9 -ccc-print-phases -c -x assembler %s 2>&1 | FileCheck -check-prefix=ARCH3 %s&&
+comment|// RUN: clang -ccc-host-triple x86_64-apple-darwin9 -ccc-print-phases -c -x assembler %s 2>&1 | FileCheck -check-prefix=ARCH3 %s
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ comment|// ARCH3: 2: bind-arch, "x86_64", {1}, object
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple x86_64-apple-darwin9 -ccc-print-phases -c -x assembler %s -m64 -m32 2>&1 | FileCheck -check-prefix=ARCH4 %s&&
+comment|// RUN: clang -ccc-host-triple x86_64-apple-darwin9 -ccc-print-phases -c -x assembler %s -m64 -m32 2>&1 | FileCheck -check-prefix=ARCH4 %s
 end_comment
 
 begin_comment
@@ -212,7 +212,7 @@ comment|// Analyzer
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases --analyze %s 2>&1 | FileCheck -check-prefix=ANALYZE %s&&
+comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases --analyze %s 2>&1 | FileCheck -check-prefix=ANALYZE %s
 end_comment
 
 begin_comment
@@ -232,7 +232,7 @@ comment|// Precompiler
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -x c-header %s 2>&1 | FileCheck -check-prefix=PCH %s&&
+comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -x c-header %s 2>&1 | FileCheck -check-prefix=PCH %s
 end_comment
 
 begin_comment
@@ -252,11 +252,11 @@ comment|// Darwin overrides the handling for .s
 end_comment
 
 begin_comment
-comment|// RUN: touch %t.s&&
+comment|// RUN: touch %t.s
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -c %t.s 2>&1 | FileCheck -check-prefix=DARWIN1 %s&&
+comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -ccc-print-phases -c %t.s 2>&1 | FileCheck -check-prefix=DARWIN1 %s
 end_comment
 
 begin_comment
@@ -268,7 +268,7 @@ comment|// DARWIN1: 1: assembler, {0}, object
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -c %t.s 2>&1 | FileCheck -check-prefix=DARWIN2 %s&&
+comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -ccc-print-phases -c %t.s 2>&1 | FileCheck -check-prefix=DARWIN2 %s
 end_comment
 
 begin_comment
@@ -281,10 +281,6 @@ end_comment
 
 begin_comment
 comment|// DARWIN2: 2: assembler, {1}, object
-end_comment
-
-begin_comment
-comment|// RUN: true
 end_comment
 
 end_unit

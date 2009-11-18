@@ -8,15 +8,15 @@ comment|/* Check that we get one load for each simple assign and two for the    
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -O0 -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -O0 -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'load ' %t | count 5&&
+comment|// RUN: grep 'load ' %t | count 5
 end_comment
 
 begin_comment
-comment|// RUN: grep "@g0" %t | count 4&&
+comment|// RUN: grep "@g0" %t | count 4
 end_comment
 
 begin_comment
@@ -24,11 +24,11 @@ comment|// Check that we got the right value.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -O3 -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -O3 -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'load ' %t | count 0&&
+comment|// RUN: grep 'load ' %t | count 0
 end_comment
 
 begin_comment

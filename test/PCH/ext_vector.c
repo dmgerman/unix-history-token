@@ -4,7 +4,7 @@ comment|// Test this without pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include %S/ext_vector.h -fsyntax-only -verify %s&&
+comment|// RUN: clang-cc -include %S/ext_vector.h -fsyntax-only -verify %s
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t %S/ext_vector.h&&
+comment|// RUN: clang-cc -emit-pch -o %t %S/ext_vector.h
 end_comment
 
 begin_comment

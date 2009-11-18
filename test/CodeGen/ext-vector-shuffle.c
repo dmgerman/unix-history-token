@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -x cl -emit-llvm -o - | not grep 'extractelement'&&
+comment|// RUN: clang-cc %s -x cl -emit-llvm -o - | not grep 'extractelement'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -x cl -emit-llvm -o - | not grep 'insertelement'&&
+comment|// RUN: clang-cc %s -x cl -emit-llvm -o - | not grep 'insertelement'
 end_comment
 
 begin_comment

@@ -304,19 +304,11 @@ block|;   }
 block|;
 name|BugReport
 argument_list|(
-name|BugType
-operator|&
-name|bt
+argument|BugType& bt
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|desc
+argument|llvm::StringRef desc
 argument_list|,
-specifier|const
-name|ExplodedNode
-operator|*
-name|n
+argument|const ExplodedNode *n
 argument_list|)
 operator|:
 name|BT
@@ -336,24 +328,13 @@ argument_list|)
 block|{}
 name|BugReport
 argument_list|(
-name|BugType
-operator|&
-name|bt
+argument|BugType& bt
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|shortDesc
+argument|llvm::StringRef shortDesc
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|desc
+argument|llvm::StringRef desc
 argument_list|,
-specifier|const
-name|ExplodedNode
-operator|*
-name|n
+argument|const ExplodedNode *n
 argument_list|)
 operator|:
 name|BT
@@ -966,18 +947,11 @@ name|public
 operator|:
 name|RangedBugReport
 argument_list|(
-name|BugType
-operator|&
-name|D
+argument|BugType& D
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|description
+argument|llvm::StringRef description
 argument_list|,
-name|ExplodedNode
-operator|*
-name|n
+argument|ExplodedNode *n
 argument_list|)
 operator|:
 name|BugReport
@@ -991,23 +965,13 @@ argument_list|)
 block|{}
 name|RangedBugReport
 argument_list|(
-name|BugType
-operator|&
-name|D
+argument|BugType& D
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|shortDescription
+argument|llvm::StringRef shortDescription
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|description
+argument|llvm::StringRef description
 argument_list|,
-name|ExplodedNode
-operator|*
-name|n
+argument|ExplodedNode *n
 argument_list|)
 operator|:
 name|BugReport
@@ -1145,20 +1109,13 @@ name|public
 label|:
 name|EnhancedBugReport
 argument_list|(
-name|BugType
-operator|&
-name|D
+argument|BugType& D
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|description
+argument|llvm::StringRef description
 argument_list|,
-name|ExplodedNode
-operator|*
-name|n
+argument|ExplodedNode *n
 argument_list|)
-operator|:
+block|:
 name|RangedBugReport
 argument_list|(
 argument|D
@@ -1170,25 +1127,15 @@ argument_list|)
 block|{}
 name|EnhancedBugReport
 argument_list|(
-name|BugType
-operator|&
-name|D
+argument|BugType& D
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|shortDescription
+argument|llvm::StringRef shortDescription
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|description
+argument|llvm::StringRef description
 argument_list|,
-name|ExplodedNode
-operator|*
-name|n
+argument|ExplodedNode *n
 argument_list|)
-operator|:
+block|:
 name|RangedBugReport
 argument_list|(
 argument|D

@@ -3,11 +3,18 @@ begin_comment
 comment|// RUN: clang-cc -fsyntax-only -verify %s
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_function_decl
+name|int
+name|printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|const

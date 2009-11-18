@@ -1,46 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fblocks -triple i386-apple-darwin9 -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -fblocks -triple i386-apple-darwin9 -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define signext i8 @f0()' %t&&
+comment|// RUN: grep 'define signext i8 @f0()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define signext i16 @f1()' %t&&
+comment|// RUN: grep 'define signext i16 @f1()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define i32 @f2()' %t&&
+comment|// RUN: grep 'define i32 @f2()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define float @f3()' %t&&
+comment|// RUN: grep 'define float @f3()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define double @f4()' %t&&
+comment|// RUN: grep 'define double @f4()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define x86_fp80 @f5()' %t&&
+comment|// RUN: grep 'define x86_fp80 @f5()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8\* %a4)' %t&&
+comment|// RUN: grep 'define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8\* %a4)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f7(i32 %a0)' %t&&
+comment|// RUN: grep 'define void @f7(i32 %a0)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define i64 @f8_1()' %t&&
+comment|// RUN: grep 'define i64 @f8_1()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f8_2(i32 %a0.0, i32 %a0.1)' %t&&
+comment|// RUN: grep 'define void @f8_2(i32 %a0.0, i32 %a0.1)' %t
 end_comment
 
 begin_function
@@ -216,7 +216,7 @@ comment|// This should be passed just as s8.
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define i64 @f9_1()' %t&&
+comment|// RUN: grep 'define i64 @f9_1()' %t
 end_comment
 
 begin_comment
@@ -228,7 +228,7 @@ comment|// backend in terms of optimization but doesn't change the ABI.
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f9_2(%.truct.s9\* byval %a0)' %t&&
+comment|// RUN: grep 'define void @f9_2(%.truct.s9\* byval %a0)' %t
 end_comment
 
 begin_struct
@@ -279,7 +279,7 @@ comment|// Return of small structures and unions
 end_comment
 
 begin_comment
-comment|// RUN: grep 'float @f10()' %t&&
+comment|// RUN: grep 'float @f10()' %t
 end_comment
 
 begin_struct
@@ -305,12 +305,12 @@ condition|)
 block|{}
 block|}
 comment|// Small vectors and 1 x {i64,double} are returned in registers
-comment|// RUN: grep 'i32 @f11()' %t&&
-comment|// RUN: grep -F 'void @f12(<2 x i32>* noalias sret %agg.result)' %t&&
-comment|// RUN: grep 'i64 @f13()' %t&&
-comment|// RUN: grep 'i64 @f14()' %t&&
-comment|// RUN: grep '<2 x i64> @f15()' %t&&
-comment|// RUN: grep '<2 x i64> @f16()' %t&&
+comment|// RUN: grep 'i32 @f11()' %t
+comment|// RUN: grep -F 'void @f12(<2 x i32>* noalias sret %agg.result)' %t
+comment|// RUN: grep 'i64 @f13()' %t
+comment|// RUN: grep 'i64 @f14()' %t
+comment|// RUN: grep '<2 x i64> @f15()' %t
+comment|// RUN: grep '<2 x i64> @f16()' %t
 decl|typedef
 name|short
 name|T11
@@ -477,27 +477,27 @@ comment|// 128-bits).
 end_comment
 
 begin_comment
-comment|// RUN: grep 'i32 @f17()' %t&&
+comment|// RUN: grep 'i32 @f17()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep -F 'void @f18(%2* noalias sret %agg.result)' %t&&
+comment|// RUN: grep -F 'void @f18(%2* noalias sret %agg.result)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep -F 'void @f19(%3* noalias sret %agg.result)' %t&&
+comment|// RUN: grep -F 'void @f19(%3* noalias sret %agg.result)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep -F 'void @f20(%4* noalias sret %agg.result)' %t&&
+comment|// RUN: grep -F 'void @f20(%4* noalias sret %agg.result)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep -F 'void @f21(%5* noalias sret %agg.result)' %t&&
+comment|// RUN: grep -F 'void @f21(%5* noalias sret %agg.result)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep -F 'void @f22(%6* noalias sret %agg.result)' %t&&
+comment|// RUN: grep -F 'void @f22(%6* noalias sret %agg.result)' %t
 end_comment
 
 begin_struct
@@ -604,9 +604,9 @@ condition|)
 block|{}
 block|}
 comment|// Single element structures are handled specially
-comment|// RUN: grep -F 'float @f23()' %t&&
-comment|// RUN: grep -F 'float @f24()' %t&&
-comment|// RUN: grep -F 'float @f25()' %t&&
+comment|// RUN: grep -F 'float @f23()' %t
+comment|// RUN: grep -F 'float @f24()' %t
+comment|// RUN: grep -F 'float @f25()' %t
 decl|struct
 block|{
 name|float
@@ -674,8 +674,8 @@ condition|)
 block|{}
 block|}
 comment|// Small structures are handled recursively
-comment|// RUN: grep -F 'i32 @f26()' %t&&
-comment|// RUN: grep 'void @f27(%.truct.s27\* noalias sret %agg.result)' %t&&
+comment|// RUN: grep -F 'i32 @f26()' %t
+comment|// RUN: grep 'void @f27(%.truct.s27\* noalias sret %agg.result)' %t
 decl|struct
 name|s26
 block|{
@@ -746,7 +746,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'void @f28(%.truct.s28\* noalias sret %agg.result)' %t&&
+comment|// RUN: grep 'void @f28(%.truct.s28\* noalias sret %agg.result)' %t
 decl|struct
 name|s28
 block|{
@@ -769,7 +769,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define i16 @f29()' %t&&
+comment|// RUN: grep 'define i16 @f29()' %t
 decl|struct
 name|s29
 block|{
@@ -798,7 +798,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define i16 @f30()' %t&&
+comment|// RUN: grep 'define i16 @f30()' %t
 decl|struct
 name|s30
 block|{
@@ -822,7 +822,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define float @f31()' %t&&
+comment|// RUN: grep 'define float @f31()' %t
 decl|struct
 name|s31
 block|{
@@ -849,7 +849,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define i32 @f32()' %t&&
+comment|// RUN: grep 'define i32 @f32()' %t
 decl|struct
 name|s32
 block|{
@@ -872,7 +872,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define float @f33()' %t&&
+comment|// RUN: grep 'define float @f33()' %t
 decl|struct
 name|s33
 block|{
@@ -896,7 +896,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define float @f34()' %t&&
+comment|// RUN: grep 'define float @f34()' %t
 decl|struct
 name|s34
 block|{
@@ -924,7 +924,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define i16 @f35()' %t&&
+comment|// RUN: grep 'define i16 @f35()' %t
 decl|struct
 name|s35
 block|{
@@ -955,7 +955,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define i16 @f36()' %t&&
+comment|// RUN: grep 'define i16 @f36()' %t
 decl|struct
 name|s36
 block|{
@@ -992,7 +992,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define float @f37()' %t&&
+comment|// RUN: grep 'define float @f37()' %t
 decl|struct
 name|s37
 block|{
@@ -1017,7 +1017,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define void @f38(.struct.s38. noalias sret .agg.result)' %t&&
+comment|// RUN: grep 'define void @f38(.struct.s38. noalias sret .agg.result)' %t
 decl|struct
 name|s38
 block|{
@@ -1042,7 +1042,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define void @f39(.struct.s39. byval align 16 .x)' %t&&
+comment|// RUN: grep 'define void @f39(.struct.s39. byval align 16 .x)' %t
 decl|typedef
 name|int
 name|v39
@@ -1085,7 +1085,7 @@ comment|//<rdar://problem/7247671>
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define i32 @f40()' %t&&
+comment|// RUN: grep 'define i32 @f40()' %t
 end_comment
 
 begin_enum
@@ -1110,7 +1110,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void ()\* @f41()' %t&&
+comment|// RUN: grep 'define void ()\* @f41()' %t
 end_comment
 
 begin_typedef
@@ -1136,7 +1136,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// RUN: grep 'define i32 @f42()' %t&&
+comment|// RUN: grep 'define i32 @f42()' %t
 end_comment
 
 begin_struct
@@ -1153,7 +1153,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{  }
-comment|// RUN: grep 'define i64 @f43()' %t&&
+comment|// RUN: grep 'define i64 @f43()' %t
 decl|struct
 name|s43
 block|{
@@ -1170,7 +1170,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{  }
-comment|// RUN: grep 'define i32 @f44()' %t&&
+comment|// RUN: grep 'define i32 @f44()' %t
 decl|struct
 name|s44
 block|{
@@ -1183,7 +1183,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{  }
-comment|// RUN: grep 'define i64 @f45()' %t&&
+comment|// RUN: grep 'define i64 @f45()' %t
 decl|struct
 name|s45
 block|{
@@ -1199,7 +1199,7 @@ argument_list|(
 name|void
 argument_list|)
 block|{  }
-comment|// RUN: grep 'define void @f46(i32 %a0)' %t&&
+comment|// RUN: grep 'define void @f46(i32 %a0)' %t
 name|void
 name|f46
 argument_list|(
@@ -1208,7 +1208,7 @@ name|e40
 name|a0
 argument_list|)
 block|{ }
-comment|// RUN: grep 'define void @f47(void ()\* %a1)' %t&&
+comment|// RUN: grep 'define void @f47(void ()\* %a1)' %t
 name|void
 name|f47
 argument_list|(
@@ -1216,7 +1216,7 @@ name|vvbp
 name|a1
 argument_list|)
 block|{ }
-comment|// RUN: grep 'define void @f48(i32 %a0.0)' %t&&
+comment|// RUN: grep 'define void @f48(i32 %a0.0)' %t
 decl|struct
 name|s48
 block|{
@@ -1240,7 +1240,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f49(i32 %a0.0, i32 %a0.1)' %t&&
+comment|// RUN: grep 'define void @f49(i32 %a0.0, i32 %a0.1)' %t
 end_comment
 
 begin_struct
@@ -1270,7 +1270,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f50(void ()\* %a0.0)' %t&&
+comment|// RUN: grep 'define void @f50(void ()\* %a0.0)' %t
 end_comment
 
 begin_struct
@@ -1296,7 +1296,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f51(void ()\* %a0.0, i32 %a0.1)' %t&&
+comment|// RUN: grep 'define void @f51(void ()\* %a0.0, i32 %a0.1)' %t
 end_comment
 
 begin_struct
@@ -1323,10 +1323,6 @@ name|a0
 parameter_list|)
 block|{ }
 end_function
-
-begin_comment
-comment|// RUN: true
-end_comment
 
 end_unit
 

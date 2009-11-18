@@ -2280,8 +2280,7 @@ name|protected
 name|TemplateParmPosition
 block|{
 comment|/// \brief The default template argument, if any.
-name|Expr
-operator|*
+name|TemplateArgumentLoc
 name|DefaultArgument
 block|;
 name|TemplateTemplateParmDecl
@@ -2320,9 +2319,7 @@ name|P
 argument_list|)
 block|,
 name|DefaultArgument
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 block|{ }
 name|public
 operator|:
@@ -2369,12 +2366,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|DefaultArgument
+operator|.
+name|getArgument
+argument_list|()
+operator|.
+name|isNull
+argument_list|()
 return|;
 block|}
 comment|/// \brief Retrieve the default argument, if any.
-name|Expr
-operator|*
+specifier|const
+name|TemplateArgumentLoc
+operator|&
 name|getDefaultArgument
 argument_list|()
 specifier|const
@@ -2383,17 +2388,11 @@ return|return
 name|DefaultArgument
 return|;
 block|}
-comment|/// \brief Retrieve the location of the default argument, if any.
-name|SourceLocation
-name|getDefaultArgumentLoc
-argument_list|()
-specifier|const
-block|;
 comment|/// \brief Set the default argument for this template parameter.
 name|void
 name|setDefaultArgument
 argument_list|(
-argument|Expr *DefArg
+argument|const TemplateArgumentLoc&DefArg
 argument_list|)
 block|{
 name|DefaultArgument

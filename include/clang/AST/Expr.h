@@ -293,13 +293,13 @@ comment|// considered an lvalue.
 name|assert
 argument_list|(
 operator|(
-name|TR
+name|t
 operator|.
 name|isNull
 argument_list|()
 operator|||
 operator|!
-name|TR
+name|t
 operator|->
 name|isReferenceType
 argument_list|()
@@ -665,6 +665,17 @@ comment|/// isEvaluatable - Call Evaluate to see if this expression can be const
 comment|/// folded, but discard the result.
 name|bool
 name|isEvaluatable
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|)
+specifier|const
+block|;
+comment|/// HasSideEffects - This routine returns true for all those expressions
+comment|/// which must be evaluated each time and must not be optimization away
+comment|/// or evaluated at compile time. Example is a function call, volatile
+comment|/// variable read.
+name|bool
+name|HasSideEffects
 argument_list|(
 argument|ASTContext&Ctx
 argument_list|)
@@ -6608,6 +6619,9 @@ name|CK_BitCast
 block|,
 comment|/// CK_NoOp - Used for const_cast.
 name|CK_NoOp
+block|,
+comment|/// CK_BaseToDerived - Base to derived class casts.
+name|CK_BaseToDerived
 block|,
 comment|/// CK_DerivedToBase - Derived to base class casts.
 name|CK_DerivedToBase

@@ -1,34 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -triple=i686-pc-linux-gnu -emit-llvm -o -> %t1&&
+comment|// RUN: clang-cc %s -triple=i686-pc-linux-gnu -emit-llvm -o -> %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep "ax" %t1&&
+comment|// RUN: grep "ax" %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep "bx" %t1&&
+comment|// RUN: grep "bx" %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep "cx" %t1&&
+comment|// RUN: grep "cx" %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep "dx" %t1&&
+comment|// RUN: grep "dx" %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep "di" %t1&&
+comment|// RUN: grep "di" %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep "si" %t1&&
+comment|// RUN: grep "si" %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep "st" %t1&&
+comment|// RUN: grep "st" %t1
 end_comment
 
 begin_comment

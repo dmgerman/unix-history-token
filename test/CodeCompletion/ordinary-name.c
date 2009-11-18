@@ -29,7 +29,7 @@ decl_stmt|;
 end_function
 
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:6:9 %s -o - | FileCheck -check-prefix=CHECK-CC1 %s&&
+comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:6:9 %s -o - | FileCheck -check-prefix=CHECK-CC1 %s
 end_comment
 
 begin_comment
@@ -46,10 +46,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-CC1-NEXT: TYPEDEF : 2
-end_comment
-
-begin_comment
-comment|// RUN: true
 end_comment
 
 end_unit

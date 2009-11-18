@@ -1399,6 +1399,30 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|virtual
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|CXXRecordDecl
+operator|>
+operator|(
+name|RecordDecl
+operator|::
+name|getCanonicalDecl
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|CXXRecordDecl
@@ -3085,16 +3109,18 @@ begin_comment
 comment|/// \returns true if this class is derived from Base, false otherwise.
 end_comment
 
-begin_expr_stmt
+begin_macro
 unit|bool
 name|isDerivedFrom
 argument_list|(
-name|CXXRecordDecl
-operator|*
-name|Base
+argument|CXXRecordDecl *Base
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+specifier|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Determine whether this class is derived from the type \p Base.
@@ -3160,20 +3186,21 @@ begin_comment
 comment|/// tangling input and output in \p Paths
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|bool
 name|isDerivedFrom
-parameter_list|(
+argument_list|(
 name|CXXRecordDecl
-modifier|*
+operator|*
 name|Base
-parameter_list|,
+argument_list|,
 name|CXXBasePaths
-modifier|&
+operator|&
 name|Paths
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Function type used by lookupInBases() to determine whether a
@@ -3232,6 +3259,7 @@ typedef|typedef
 name|bool
 name|BaseMatchesCallback
 parameter_list|(
+specifier|const
 name|CXXBaseSpecifier
 modifier|*
 name|Specifier
@@ -3327,24 +3355,25 @@ begin_comment
 comment|/// subobject that matches the search criteria.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|bool
 name|lookupInBases
-parameter_list|(
+argument_list|(
 name|BaseMatchesCallback
-modifier|*
+operator|*
 name|BaseMatches
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|UserData
-parameter_list|,
+argument_list|,
 name|CXXBasePaths
-modifier|&
+operator|&
 name|Paths
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Base-class lookup callback that determines whether the given
@@ -3379,6 +3408,7 @@ specifier|static
 name|bool
 name|FindBaseClass
 parameter_list|(
+specifier|const
 name|CXXBaseSpecifier
 modifier|*
 name|Specifier
@@ -3423,6 +3453,7 @@ specifier|static
 name|bool
 name|FindTagMember
 parameter_list|(
+specifier|const
 name|CXXBaseSpecifier
 modifier|*
 name|Specifier
@@ -3467,6 +3498,7 @@ specifier|static
 name|bool
 name|FindOrdinaryMember
 parameter_list|(
+specifier|const
 name|CXXBaseSpecifier
 modifier|*
 name|Specifier
@@ -3511,6 +3543,7 @@ specifier|static
 name|bool
 name|FindNestedNameSpecifierMember
 parameter_list|(
+specifier|const
 name|CXXBaseSpecifier
 modifier|*
 name|Specifier
@@ -5035,6 +5068,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Determine whether this is a member template specialization that
+end_comment
+
+begin_comment
+comment|/// looks like a copy constructor. Such constructors are never used to copy
+end_comment
+
+begin_comment
+comment|/// an object.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isCopyConstructorLikeSpecialization
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
 end_comment
 
@@ -5121,26 +5174,6 @@ range|:
 name|public
 name|CXXMethodDecl
 block|{
-name|public
-operator|:
-expr|enum
-name|KindOfObjectToDestroy
-block|{
-name|VBASE
-operator|=
-literal|0x1
-block|,
-name|DRCTNONVBASE
-operator|=
-literal|0x2
-block|,
-name|ANYBASE
-operator|=
-literal|0x3
-block|}
-block|;
-name|private
-operator|:
 comment|/// ImplicitlyDefined - Whether this destructor was implicitly
 comment|/// defined by the compiler. When false, the destructor was defined
 comment|/// by the user. In C++03, this flag will have the same value as
@@ -5152,18 +5185,9 @@ name|ImplicitlyDefined
 operator|:
 literal|1
 block|;
-comment|/// Support for base and member destruction.
-comment|/// BaseOrMemberDestructions - The arguments used to destruct the base
-comment|/// or member. Each uintptr_t value represents one of base classes (either
-comment|/// virtual or direct non-virtual base), or non-static data member
-comment|/// to be destroyed. The low two bits encode the kind of object
-comment|/// being destroyed.
-name|uintptr_t
+name|FunctionDecl
 operator|*
-name|BaseOrMemberDestructions
-block|;
-name|unsigned
-name|NumBaseOrMemberDestructions
+name|OperatorDelete
 block|;
 name|CXXDestructorDecl
 argument_list|(
@@ -5205,12 +5229,7 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|BaseOrMemberDestructions
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NumBaseOrMemberDestructions
+name|OperatorDelete
 argument_list|(
 literal|0
 argument_list|)
@@ -5220,15 +5239,6 @@ argument_list|(
 name|isImplicitlyDeclared
 argument_list|)
 block|;   }
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 name|public
 operator|:
 specifier|static
@@ -5292,399 +5302,34 @@ name|ImplicitlyDefined
 operator|=
 name|ID
 block|;   }
-comment|/// destr_iterator - Iterates through the member/base destruction list.
-comment|/// destr_const_iterator - Iterates through the member/base destruction list.
-typedef|typedef
-name|uintptr_t
-specifier|const
-name|destr_const_iterator
-typedef|;
-comment|/// destr_begin() - Retrieve an iterator to the first destructed member/base.
-name|uintptr_t
-operator|*
-name|destr_begin
-argument_list|()
-block|{
-return|return
-name|BaseOrMemberDestructions
-return|;
-block|}
-comment|/// destr_begin() - Retrieve an iterator to the first destructed member/base.
-name|uintptr_t
-operator|*
-name|destr_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BaseOrMemberDestructions
-return|;
-block|}
-comment|/// destr_end() - Retrieve an iterator past the last destructed member/base.
-name|uintptr_t
-operator|*
-name|destr_end
-argument_list|()
-block|{
-return|return
-name|BaseOrMemberDestructions
-operator|+
-name|NumBaseOrMemberDestructions
-return|;
-block|}
-comment|/// destr_end() - Retrieve an iterator past the last destructed member/base.
-name|uintptr_t
-operator|*
-name|destr_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BaseOrMemberDestructions
-operator|+
-name|NumBaseOrMemberDestructions
-return|;
-block|}
-comment|/// getNumBaseOrMemberDestructions - Number of base and non-static members
-comment|/// to destroy.
-name|unsigned
-name|getNumBaseOrMemberDestructions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumBaseOrMemberDestructions
-return|;
-block|}
-comment|/// setNumBaseOrMemberDestructions - Set number of base and non-static members
-comment|/// to destroy.
 name|void
-name|setNumBaseOrMemberDestructions
+name|setOperatorDelete
 argument_list|(
-argument|unsigned numBaseOrMemberDestructions
+argument|FunctionDecl *OD
 argument_list|)
 block|{
-name|NumBaseOrMemberDestructions
+name|OperatorDelete
 operator|=
-name|numBaseOrMemberDestructions
-block|;   }
-comment|/// getBaseOrMemberToDestroy - get the generic 'member' representing either
-comment|/// the field or a base class.
-name|uintptr_t
+name|OD
+block|; }
+specifier|const
+name|FunctionDecl
 operator|*
-name|getBaseOrMemberToDestroy
+name|getOperatorDelete
 argument_list|()
 specifier|const
 block|{
 return|return
-name|BaseOrMemberDestructions
+name|OperatorDelete
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
-comment|/// setBaseOrMemberToDestroy - set the generic 'member' representing either
-end_comment
-
-begin_comment
-comment|/// the field or a base class.
-end_comment
-
-begin_function
-name|void
-name|setBaseOrMemberDestructions
-parameter_list|(
-name|uintptr_t
-modifier|*
-name|baseOrMemberDestructions
-parameter_list|)
-block|{
-name|BaseOrMemberDestructions
-operator|=
-name|baseOrMemberDestructions
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// isVbaseToDestroy - returns true, if object is virtual base.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isVbaseToDestroy
-argument_list|(
-name|uintptr_t
-name|Vbase
-argument_list|)
-decl|const
-block|{
-return|return
-operator|(
-name|Vbase
-operator|&
-name|VBASE
-operator|)
-operator|!=
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// isDirectNonVBaseToDestroy - returns true, if object is direct non-virtual
-end_comment
-
-begin_comment
-comment|/// base.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isDirectNonVBaseToDestroy
-argument_list|(
-name|uintptr_t
-name|DrctNonVbase
-argument_list|)
-decl|const
-block|{
-return|return
-operator|(
-name|DrctNonVbase
-operator|&
-name|DRCTNONVBASE
-operator|)
-operator|!=
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// isAnyBaseToDestroy - returns true, if object is any base (virtual or
-end_comment
-
-begin_comment
-comment|/// direct non-virtual)
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isAnyBaseToDestroy
-argument_list|(
-name|uintptr_t
-name|AnyBase
-argument_list|)
-decl|const
-block|{
-return|return
-operator|(
-name|AnyBase
-operator|&
-name|ANYBASE
-operator|)
-operator|!=
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// isMemberToDestroy - returns true if object is a non-static data member.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isMemberToDestroy
-argument_list|(
-name|uintptr_t
-name|Member
-argument_list|)
-decl|const
-block|{
-return|return
-operator|(
-name|Member
-operator|&
-name|ANYBASE
-operator|)
-operator|==
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// getAnyBaseClassToDestroy - Get the type for the given base class object.
-end_comment
-
-begin_decl_stmt
-name|Type
-modifier|*
-name|getAnyBaseClassToDestroy
-argument_list|(
-name|uintptr_t
-name|Base
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|isAnyBaseToDestroy
-argument_list|(
-name|Base
-argument_list|)
-condition|)
-return|return
-name|reinterpret_cast
-operator|<
-name|Type
-operator|*
-operator|>
-operator|(
-name|Base
-operator|&
-operator|~
-literal|0x03
-operator|)
-return|;
-return|return
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// getMemberToDestroy - Get the member for the given object.
-end_comment
-
-begin_decl_stmt
-name|FieldDecl
-modifier|*
-name|getMemberToDestroy
-argument_list|(
-name|uintptr_t
-name|Member
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|isMemberToDestroy
-argument_list|(
-name|Member
-argument_list|)
-condition|)
-return|return
-name|reinterpret_cast
-operator|<
-name|FieldDecl
-operator|*
-operator|>
-operator|(
-name|Member
-operator|)
-return|;
-return|return
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// getVbaseClassToDestroy - Get the virtual base.
-end_comment
-
-begin_decl_stmt
-name|Type
-modifier|*
-name|getVbaseClassToDestroy
-argument_list|(
-name|uintptr_t
-name|Vbase
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|isVbaseToDestroy
-argument_list|(
-name|Vbase
-argument_list|)
-condition|)
-return|return
-name|reinterpret_cast
-operator|<
-name|Type
-operator|*
-operator|>
-operator|(
-name|Vbase
-operator|&
-operator|~
-literal|0x01
-operator|)
-return|;
-return|return
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// getDirectNonVBaseClassToDestroy - Get the virtual base.
-end_comment
-
-begin_decl_stmt
-name|Type
-modifier|*
-name|getDirectNonVBaseClassToDestroy
-argument_list|(
-name|uintptr_t
-name|Base
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|isDirectNonVBaseToDestroy
-argument_list|(
-name|Base
-argument_list|)
-condition|)
-return|return
-name|reinterpret_cast
-operator|<
-name|Type
-operator|*
-operator|>
-operator|(
-name|Base
-operator|&
-operator|~
-literal|0x02
-operator|)
-return|;
-return|return
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|// Implement isa/cast/dyncast/etc.
-end_comment
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
+argument_list|(
+argument|const Decl *D
+argument_list|)
 block|{
 return|return
 name|D
@@ -5695,66 +5340,31 @@ operator|==
 name|CXXDestructor
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|CXXDestructorDecl
-modifier|*
-name|D
-parameter_list|)
+argument_list|(
+argument|const CXXDestructorDecl *D
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|/// CXXConversionDecl - Represents a C++ conversion function within a
-end_comment
-
-begin_comment
 comment|/// class. For example:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @code
-end_comment
-
-begin_comment
 comment|/// class X {
-end_comment
-
-begin_comment
 comment|/// public:
-end_comment
-
-begin_comment
 comment|///   operator bool();
-end_comment
-
-begin_comment
 comment|/// };
-end_comment
-
-begin_comment
 comment|/// @endcode
-end_comment
-
-begin_decl_stmt
 name|class
 name|CXXConversionDecl
-range|:
+operator|:
 name|public
 name|CXXMethodDecl
 block|{
@@ -6800,6 +6410,167 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// UsingShadowDecl - Represents a shadow declaration introduced into
+comment|/// a scope by a (resolved) using declaration.  For example,
+comment|///
+comment|/// namespace A {
+comment|///   void foo();
+comment|/// }
+comment|/// namespace B {
+comment|///   using A::foo(); //<- a UsingDecl
+comment|///                   // Also creates a UsingShadowDecl for A::foo in B
+comment|/// }
+comment|///
+name|class
+name|UsingShadowDecl
+operator|:
+name|public
+name|NamedDecl
+block|{
+comment|/// The referenced declaration.
+name|NamedDecl
+operator|*
+name|Underlying
+block|;
+comment|/// The using declaration which introduced this decl.
+name|UsingDecl
+operator|*
+name|Using
+block|;
+name|UsingShadowDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|UsingDecl *Using
+argument_list|,
+argument|NamedDecl *Target
+argument_list|)
+operator|:
+name|NamedDecl
+argument_list|(
+name|UsingShadow
+argument_list|,
+name|DC
+argument_list|,
+name|Loc
+argument_list|,
+name|Target
+operator|->
+name|getDeclName
+argument_list|()
+argument_list|)
+block|,
+name|Underlying
+argument_list|(
+name|Target
+argument_list|)
+block|,
+name|Using
+argument_list|(
+argument|Using
+argument_list|)
+block|{
+name|IdentifierNamespace
+operator|=
+name|Target
+operator|->
+name|getIdentifierNamespace
+argument_list|()
+block|;
+name|setImplicit
+argument_list|()
+block|;   }
+name|public
+operator|:
+specifier|static
+name|UsingShadowDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|UsingDecl *Using
+argument_list|,
+argument|NamedDecl *Target
+argument_list|)
+block|{
+return|return
+name|new
+argument_list|(
+argument|C
+argument_list|)
+name|UsingShadowDecl
+argument_list|(
+name|DC
+argument_list|,
+name|Loc
+argument_list|,
+name|Using
+argument_list|,
+name|Target
+argument_list|)
+return|;
+block|}
+comment|/// Gets the underlying declaration which has been brought into the
+comment|/// local scope.
+name|NamedDecl
+operator|*
+name|getTargetDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Underlying
+return|;
+block|}
+comment|/// Gets the using declaration to which this declaration is tied.
+name|UsingDecl
+operator|*
+name|getUsingDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Using
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|D
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|Decl
+operator|::
+name|UsingShadow
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const UsingShadowDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// UsingDecl - Represents a C++ using-declaration. For example:
 comment|///    using someNameSpace::someIdentifier;
 name|class
@@ -6813,23 +6584,28 @@ comment|/// preceding the declaration name.
 name|SourceRange
 name|NestedNameRange
 block|;
-comment|/// \brief The source location of the target declaration name.
-name|SourceLocation
-name|TargetNameLocation
-block|;
 comment|/// \brief The source location of the "using" location itself.
 name|SourceLocation
 name|UsingLocation
 block|;
-comment|/// \brief Target declaration.
-name|NamedDecl
-operator|*
-name|TargetDecl
-block|;
 comment|/// \brief Target nested name specifier.
 name|NestedNameSpecifier
 operator|*
-name|TargetNestedNameDecl
+name|TargetNestedName
+block|;
+comment|/// \brief The collection of shadow declarations associated with
+comment|/// this using declaration.  This set can change as a class is
+comment|/// processed.
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+name|UsingShadowDecl
+operator|*
+block|,
+literal|8
+operator|>
+name|Shadows
 block|;
 comment|// \brief Has 'typename' keyword.
 name|bool
@@ -6843,13 +6619,11 @@ argument|SourceLocation L
 argument_list|,
 argument|SourceRange NNR
 argument_list|,
-argument|SourceLocation TargetNL
-argument_list|,
 argument|SourceLocation UL
 argument_list|,
-argument|NamedDecl* Target
-argument_list|,
 argument|NestedNameSpecifier* TargetNNS
+argument_list|,
+argument|DeclarationName Name
 argument_list|,
 argument|bool IsTypeNameArg
 argument_list|)
@@ -6864,10 +6638,7 @@ name|DC
 argument_list|,
 name|L
 argument_list|,
-name|Target
-operator|->
-name|getDeclName
-argument_list|()
+name|Name
 argument_list|)
 block|,
 name|NestedNameRange
@@ -6875,22 +6646,12 @@ argument_list|(
 name|NNR
 argument_list|)
 block|,
-name|TargetNameLocation
-argument_list|(
-name|TargetNL
-argument_list|)
-block|,
 name|UsingLocation
 argument_list|(
 name|UL
 argument_list|)
 block|,
-name|TargetDecl
-argument_list|(
-name|Target
-argument_list|)
-block|,
-name|TargetNestedNameDecl
+name|TargetNestedName
 argument_list|(
 name|TargetNNS
 argument_list|)
@@ -6899,16 +6660,7 @@ name|IsTypeName
 argument_list|(
 argument|IsTypeNameArg
 argument_list|)
-block|{
-name|this
-operator|->
-name|IdentifierNamespace
-operator|=
-name|TargetDecl
-operator|->
-name|getIdentifierNamespace
-argument_list|()
-block|;   }
+block|{   }
 name|public
 operator|:
 comment|/// \brief Returns the source range that covers the nested-name-specifier
@@ -6921,15 +6673,6 @@ return|return
 name|NestedNameRange
 return|;
 block|}
-comment|/// \brief Returns the source location of the target declaration name.
-name|SourceLocation
-name|getTargetNameLocation
-argument_list|()
-block|{
-return|return
-name|TargetNameLocation
-return|;
-block|}
 comment|/// \brief Returns the source location of the "using" location itself.
 name|SourceLocation
 name|getUsingLocation
@@ -6939,27 +6682,6 @@ return|return
 name|UsingLocation
 return|;
 block|}
-comment|/// \brief getTargetDecl - Returns target specified by using-decl.
-name|NamedDecl
-operator|*
-name|getTargetDecl
-argument_list|()
-block|{
-return|return
-name|TargetDecl
-return|;
-block|}
-specifier|const
-name|NamedDecl
-operator|*
-name|getTargetDecl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetDecl
-return|;
-block|}
 comment|/// \brief Get target nested name declaration.
 name|NestedNameSpecifier
 operator|*
@@ -6967,7 +6689,7 @@ name|getTargetNestedNameDecl
 argument_list|()
 block|{
 return|return
-name|TargetNestedNameDecl
+name|TargetNestedName
 return|;
 block|}
 comment|/// isTypeName - Return true if using decl has 'typename'.
@@ -6980,6 +6702,116 @@ return|return
 name|IsTypeName
 return|;
 block|}
+typedef|typedef
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+name|UsingShadowDecl
+operator|*
+operator|,
+literal|8
+operator|>
+operator|::
+name|const_iterator
+name|shadow_iterator
+expr_stmt|;
+name|shadow_iterator
+name|shadow_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Shadows
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|shadow_iterator
+name|shadow_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Shadows
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|void
+name|addShadowDecl
+argument_list|(
+argument|UsingShadowDecl *S
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|S
+operator|->
+name|getUsingDecl
+argument_list|()
+operator|==
+name|this
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|Shadows
+operator|.
+name|insert
+argument_list|(
+name|S
+argument_list|)
+condition|)
+block|{
+name|assert
+argument_list|(
+name|false
+operator|&&
+literal|"declaration already in set"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|void
+name|removeShadowDecl
+argument_list|(
+argument|UsingShadowDecl *S
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|S
+operator|->
+name|getUsingDecl
+argument_list|()
+operator|==
+name|this
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|Shadows
+operator|.
+name|erase
+argument_list|(
+name|S
+argument_list|)
+condition|)
+block|{
+name|assert
+argument_list|(
+name|false
+operator|&&
+literal|"declaration not in set"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 specifier|static
 name|UsingDecl
 operator|*
@@ -6989,17 +6821,15 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation IdentL
 argument_list|,
 argument|SourceRange NNR
 argument_list|,
-argument|SourceLocation TargetNL
-argument_list|,
-argument|SourceLocation UL
-argument_list|,
-argument|NamedDecl* Target
+argument|SourceLocation UsingL
 argument_list|,
 argument|NestedNameSpecifier* TargetNNS
+argument_list|,
+argument|DeclarationName Name
 argument_list|,
 argument|bool IsTypeNameArg
 argument_list|)
@@ -7035,37 +6865,38 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// UnresolvedUsingDecl - Represents a using declaration whose name can not
-comment|/// yet be resolved.
+comment|/// UnresolvedUsingValueDecl - Represents a dependent using
+comment|/// declaration which was not marked with 'typename'.  Unlike
+comment|/// non-dependent using declarations, these *only* bring through
+comment|/// non-types; otherwise they would break two-phase lookup.
+comment|///
+comment|/// template<class T> class A : public Base<T> {
+comment|///   using Base<T>::foo;
+comment|/// };
 name|class
-name|UnresolvedUsingDecl
+name|UnresolvedUsingValueDecl
 operator|:
 name|public
-name|NamedDecl
+name|ValueDecl
 block|{
 comment|/// \brief The source range that covers the nested-name-specifier
 comment|/// preceding the declaration name.
 name|SourceRange
 name|TargetNestedNameRange
 block|;
-comment|/// \brief The source location of the target declaration name.
+comment|/// \brief The source location of the 'using' keyword
 name|SourceLocation
-name|TargetNameLocation
+name|UsingLocation
 block|;
 name|NestedNameSpecifier
 operator|*
 name|TargetNestedNameSpecifier
 block|;
-name|DeclarationName
-name|TargetName
-block|;
-comment|// \brief Has 'typename' keyword.
-name|bool
-name|IsTypeName
-block|;
-name|UnresolvedUsingDecl
+name|UnresolvedUsingValueDecl
 argument_list|(
 argument|DeclContext *DC
+argument_list|,
+argument|QualType Ty
 argument_list|,
 argument|SourceLocation UsingLoc
 argument_list|,
@@ -7076,21 +6907,21 @@ argument_list|,
 argument|SourceLocation TargetNameLoc
 argument_list|,
 argument|DeclarationName TargetName
-argument_list|,
-argument|bool IsTypeNameArg
 argument_list|)
 operator|:
-name|NamedDecl
+name|ValueDecl
 argument_list|(
 name|Decl
 operator|::
-name|UnresolvedUsing
+name|UnresolvedUsingValue
 argument_list|,
 name|DC
 argument_list|,
-name|UsingLoc
+name|TargetNameLoc
 argument_list|,
 name|TargetName
+argument_list|,
+name|Ty
 argument_list|)
 block|,
 name|TargetNestedNameRange
@@ -7098,24 +6929,14 @@ argument_list|(
 name|TargetNNR
 argument_list|)
 block|,
-name|TargetNameLocation
+name|UsingLocation
 argument_list|(
-name|TargetNameLoc
+name|UsingLoc
 argument_list|)
 block|,
 name|TargetNestedNameSpecifier
 argument_list|(
-name|TargetNNS
-argument_list|)
-block|,
-name|TargetName
-argument_list|(
-name|TargetName
-argument_list|)
-block|,
-name|IsTypeName
-argument_list|(
-argument|IsTypeNameArg
+argument|TargetNNS
 argument_list|)
 block|{ }
 name|public
@@ -7141,37 +6962,18 @@ return|return
 name|TargetNestedNameSpecifier
 return|;
 block|}
-comment|/// \brief Returns the source location of the target declaration name.
+comment|/// \brief Returns the source location of the 'using' keyword.
 name|SourceLocation
-name|getTargetNameLocation
+name|getUsingLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetNameLocation
-return|;
-block|}
-comment|/// \brief Returns the source location of the target declaration name.
-name|DeclarationName
-name|getTargetName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetName
-return|;
-block|}
-name|bool
-name|isTypeName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsTypeName
+name|UsingLocation
 return|;
 block|}
 specifier|static
-name|UnresolvedUsingDecl
+name|UnresolvedUsingValueDecl
 operator|*
 name|Create
 argument_list|(
@@ -7188,8 +6990,6 @@ argument_list|,
 argument|SourceLocation TargetNameLoc
 argument_list|,
 argument|DeclarationName TargetName
-argument_list|,
-argument|bool IsTypeNameArg
 argument_list|)
 block|;
 specifier|static
@@ -7207,14 +7007,192 @@ argument_list|()
 operator|==
 name|Decl
 operator|::
-name|UnresolvedUsing
+name|UnresolvedUsingValue
 return|;
 block|}
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const UnresolvedUsingDecl *D
+argument|const UnresolvedUsingValueDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// UnresolvedUsingTypenameDecl - Represents a dependent using
+comment|/// declaration which was marked with 'typename'.
+comment|///
+comment|/// template<class T> class A : public Base<T> {
+comment|///   using typename Base<T>::foo;
+comment|/// };
+comment|///
+comment|/// The type associated with a unresolved using typename decl is
+comment|/// currently always a typename type.
+name|class
+name|UnresolvedUsingTypenameDecl
+operator|:
+name|public
+name|TypeDecl
+block|{
+comment|/// \brief The source range that covers the nested-name-specifier
+comment|/// preceding the declaration name.
+name|SourceRange
+name|TargetNestedNameRange
+block|;
+comment|/// \brief The source location of the 'using' keyword
+name|SourceLocation
+name|UsingLocation
+block|;
+comment|/// \brief The source location of the 'typename' keyword
+name|SourceLocation
+name|TypenameLocation
+block|;
+name|NestedNameSpecifier
+operator|*
+name|TargetNestedNameSpecifier
+block|;
+name|UnresolvedUsingTypenameDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation UsingLoc
+argument_list|,
+argument|SourceLocation TypenameLoc
+argument_list|,
+argument|SourceRange TargetNNR
+argument_list|,
+argument|NestedNameSpecifier *TargetNNS
+argument_list|,
+argument|SourceLocation TargetNameLoc
+argument_list|,
+argument|IdentifierInfo *TargetName
+argument_list|)
+operator|:
+name|TypeDecl
+argument_list|(
+name|Decl
+operator|::
+name|UnresolvedUsingTypename
+argument_list|,
+name|DC
+argument_list|,
+name|TargetNameLoc
+argument_list|,
+name|TargetName
+argument_list|)
+block|,
+name|TargetNestedNameRange
+argument_list|(
+name|TargetNNR
+argument_list|)
+block|,
+name|UsingLocation
+argument_list|(
+name|UsingLoc
+argument_list|)
+block|,
+name|TypenameLocation
+argument_list|(
+name|TypenameLoc
+argument_list|)
+block|,
+name|TargetNestedNameSpecifier
+argument_list|(
+argument|TargetNNS
+argument_list|)
+block|{ }
+name|public
+operator|:
+comment|/// \brief Returns the source range that covers the nested-name-specifier
+comment|/// preceding the namespace name.
+name|SourceRange
+name|getTargetNestedNameRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetNestedNameRange
+return|;
+block|}
+comment|/// \brief Get target nested name declaration.
+name|NestedNameSpecifier
+operator|*
+name|getTargetNestedNameSpecifier
+argument_list|()
+block|{
+return|return
+name|TargetNestedNameSpecifier
+return|;
+block|}
+comment|/// \brief Returns the source location of the 'using' keyword.
+name|SourceLocation
+name|getUsingLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsingLocation
+return|;
+block|}
+comment|/// \brief Returns the source location of the 'typename' keyword.
+name|SourceLocation
+name|getTypenameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypenameLocation
+return|;
+block|}
+specifier|static
+name|UnresolvedUsingTypenameDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation UsingLoc
+argument_list|,
+argument|SourceLocation TypenameLoc
+argument_list|,
+argument|SourceRange TargetNNR
+argument_list|,
+argument|NestedNameSpecifier *TargetNNS
+argument_list|,
+argument|SourceLocation TargetNameLoc
+argument_list|,
+argument|DeclarationName TargetName
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|D
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|Decl
+operator|::
+name|UnresolvedUsingTypename
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const UnresolvedUsingTypenameDecl *D
 argument_list|)
 block|{
 return|return

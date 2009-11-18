@@ -134,9 +134,6 @@ block|}
 name|AScope
 block|;
 name|bool
-name|DisplayedFunction
-block|;
-name|bool
 name|VisualizeEGDot
 block|;
 name|bool
@@ -220,12 +217,6 @@ block|,
 name|AScope
 argument_list|(
 name|ScopeDecl
-argument_list|)
-block|,
-name|DisplayedFunction
-argument_list|(
-operator|!
-name|displayProgress
 argument_list|)
 block|,
 name|VisualizeEGDot
@@ -422,14 +413,6 @@ return|return
 name|EagerlyAssume
 return|;
 block|}
-name|void
-name|DisplayFunction
-argument_list|(
-name|Decl
-operator|*
-name|D
-argument_list|)
-block|;
 name|CFG
 operator|*
 name|getCFG

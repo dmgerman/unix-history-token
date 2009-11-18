@@ -4,11 +4,11 @@ comment|// Test transparent PTH support.
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-pch-is-pth -x c-header %s -o %t.h.pth -### 2> %t.log&&
+comment|// RUN: clang -ccc-pch-is-pth -x c-header %s -o %t.h.pth -### 2> %t.log
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix CHECK1 -input-file %t.log %s&&
+comment|// RUN: FileCheck -check-prefix CHECK1 -input-file %t.log %s
 end_comment
 
 begin_comment
@@ -16,11 +16,11 @@ comment|// CHECK1: "{{.*}}/clang-cc{{.*}}" {{.*}} "-o" "{{.*}}.h.pth" "-x" "c-he
 end_comment
 
 begin_comment
-comment|// RUN: touch %t.h.pth&&
+comment|// RUN: touch %t.h.pth
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-pch-is-pth -E -include %t.h %s -### 2> %t.log&&
+comment|// RUN: clang -ccc-pch-is-pth -E -include %t.h %s -### 2> %t.log
 end_comment
 
 begin_comment

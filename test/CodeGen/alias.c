@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-pc-linux-gnu -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-pc-linux-gnu -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g0 = common global i32 0' %t&&
+comment|// RUN: grep '@g0 = common global i32 0' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@f1 = alias void ()\* @f0' %t&&
+comment|// RUN: grep '@f1 = alias void ()\* @f0' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g1 = alias i32\* @g0' %t&&
+comment|// RUN: grep '@g1 = alias i32\* @g0' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f0() nounwind {' %t&&
+comment|// RUN: grep 'define void @f0() nounwind {' %t
 end_comment
 
 begin_function
@@ -95,7 +95,7 @@ comment|// PR3200
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define internal i32 @foo1()' %t&&
+comment|// RUN: grep 'define internal i32 @foo1()' %t
 end_comment
 
 begin_function

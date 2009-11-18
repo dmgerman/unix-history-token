@@ -4,7 +4,7 @@ comment|// Comma is not allowed in C89
 end_comment
 
 begin_comment
-comment|// RUN: not clang-cc -E %s -std=c89 -pedantic-errors&&
+comment|// RUN: not clang-cc -E %s -std=c89 -pedantic-errors
 end_comment
 
 begin_comment

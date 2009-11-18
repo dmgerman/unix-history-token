@@ -4,15 +4,15 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple x86_64-apple-darwin9 -emit-pch -o %t.pch %S/tentative-defs.h&&
+comment|// RUN: clang-cc -triple x86_64-apple-darwin9 -emit-pch -o %t.pch %S/tentative-defs.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple x86_64-apple-darwin9 -include-pch %t.pch -verify -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple x86_64-apple-darwin9 -include-pch %t.pch -verify -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep "@variable = common global i32 0" %t | count 1&&
+comment|// RUN: grep "@variable = common global i32 0" %t | count 1
 end_comment
 
 begin_comment

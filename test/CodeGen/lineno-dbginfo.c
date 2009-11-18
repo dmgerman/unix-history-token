@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: echo "#include<stdio.h>"> %t.h&&
+comment|// RUN: echo "#include<stdio.h>"> %t.h
 end_comment
 
 begin_comment
-comment|// RUN: clang -S -save-temps -g -include %t.h %s -emit-llvm -o %t.ll&&
+comment|// RUN: clang -S -save-temps -g -include %t.h %s -emit-llvm -o %t.ll
 end_comment
 
 begin_comment
-comment|// RUN: grep "i32 5" %t.ll&&
+comment|// RUN: grep "i32 5" %t.ll
 end_comment
 
 begin_comment

@@ -67,6 +67,30 @@ block|{
 name|public
 label|:
 name|unsigned
+name|IgnoreWarnings
+range|:
+literal|1
+decl_stmt|;
+comment|/// -w
+name|unsigned
+name|NoRewriteMacros
+range|:
+literal|1
+decl_stmt|;
+comment|/// -Wno-rewrite-macros
+name|unsigned
+name|Pedantic
+range|:
+literal|1
+decl_stmt|;
+comment|/// -pedantic
+name|unsigned
+name|PedanticErrors
+range|:
+literal|1
+decl_stmt|;
+comment|/// -pedantic-errors
+name|unsigned
 name|ShowColumn
 range|:
 literal|1
@@ -109,24 +133,69 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Show diagnostics with ANSI color sequences.
+name|unsigned
+name|VerifyDiagnostics
+decl_stmt|;
+comment|/// Check that diagnostics match the expected
+comment|/// diagnostics, indicated by markers in the
+comment|/// input source file.
 comment|/// Column limit for formatting message diagnostics, or 0 if unused.
 name|unsigned
 name|MessageLength
 decl_stmt|;
+comment|/// If non-empty, a file to log extended build information to, for development
+comment|/// testing and analysis.
+name|std
+operator|::
+name|string
+name|DumpBuildInformation
+expr_stmt|;
+comment|/// The list of -W... options used to alter the diagnostic mappings, with the
+comment|/// prefixes removed.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Warnings
+expr_stmt|;
 name|public
 label|:
 name|DiagnosticOptions
 argument_list|()
 block|{
-name|ShowColumn
+name|IgnoreWarnings
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-name|ShowLocation
+name|MessageLength
 operator|=
-literal|1
+literal|0
+expr_stmt|;
+name|NoRewriteMacros
+operator|=
+literal|0
+expr_stmt|;
+name|Pedantic
+operator|=
+literal|0
+expr_stmt|;
+name|PedanticErrors
+operator|=
+literal|0
 expr_stmt|;
 name|ShowCarets
+operator|=
+literal|1
+expr_stmt|;
+name|ShowColors
+operator|=
+literal|0
+expr_stmt|;
+name|ShowColumn
 operator|=
 literal|1
 expr_stmt|;
@@ -134,19 +203,19 @@ name|ShowFixits
 operator|=
 literal|1
 expr_stmt|;
-name|ShowSourceRanges
+name|ShowLocation
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|ShowOptionNames
 operator|=
 literal|0
 expr_stmt|;
-name|ShowColors
+name|ShowSourceRanges
 operator|=
 literal|0
 expr_stmt|;
-name|MessageLength
+name|VerifyDiagnostics
 operator|=
 literal|0
 expr_stmt|;

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 7 | count 1&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 7 | count 1
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 11 | count 1&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 11 | count 1
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 13 | count 1&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 13 | count 1
 end_comment
 
 begin_comment

@@ -15,19 +15,19 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:  %retval = alloca i32
+comment|// CHECK:  [[retval:%.*]] = alloca i32
 end_comment
 
 begin_comment
-comment|// CHECK:  store i32 1, i32* %retval
+comment|// CHECK:  store i32 1, i32* [[retval]]
 end_comment
 
 begin_comment
-comment|// CHECK:  %0 = load i32* %retval
+comment|// CHECK:  [[load:%.*]] = load i32* [[retval]]
 end_comment
 
 begin_comment
-comment|// CHECK:  ret i32 %0
+comment|// CHECK:  ret i32 [[load]]
 end_comment
 
 begin_function_decl
@@ -72,23 +72,23 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:  %retval = alloca i32
+comment|// CHECK:  [[retval:%.*]] = alloca i32
 end_comment
 
 begin_comment
-comment|// CHECK:  %call = call i32 (...)* @f()
+comment|// CHECK:  [[call:%.*]] = call i32 (...)* @f()
 end_comment
 
 begin_comment
-comment|// CHECK:  store i32 %call, i32* %retval
+comment|// CHECK:  store i32 [[call]], i32* [[retval]]
 end_comment
 
 begin_comment
-comment|// CHECK:  %0 = load i32* %retval
+comment|// CHECK:  [[load:%.*]] = load i32* [[retval]]
 end_comment
 
 begin_comment
-comment|// CHECK:  ret i32 %0
+comment|// CHECK:  ret i32 [[load]]
 end_comment
 
 end_unit

@@ -216,6 +216,14 @@ name|T
 operator|>
 expr|struct
 name|simplify_type
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|simplify_type
 operator|<
 specifier|const
 operator|::

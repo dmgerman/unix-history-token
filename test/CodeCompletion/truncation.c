@@ -10,7 +10,7 @@ struct_decl|struct
 end_struct_decl
 
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s.h:4:8 -o - %s | FileCheck -check-prefix=CC1 %s&&
+comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s.h:4:8 -o - %s | FileCheck -check-prefix=CC1 %s
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ comment|// CHECK-CC1-NEXT: Y : 1
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:3:8 -o - %s | FileCheck -check-prefix=CC2 %s&&
+comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:3:8 -o - %s | FileCheck -check-prefix=CC2 %s
 end_comment
 
 begin_comment
@@ -35,10 +35,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-CC2: Y : 1
-end_comment
-
-begin_comment
-comment|// RUN: true
 end_comment
 
 end_unit

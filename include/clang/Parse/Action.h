@@ -5122,6 +5122,14 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param TypenameLoc the location of the 'typename' keyword, if present
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \returns a representation of the using declaration.
 end_comment
 
@@ -5155,6 +5163,9 @@ name|AttrList
 parameter_list|,
 name|bool
 name|IsTypeName
+parameter_list|,
+name|SourceLocation
+name|TypenameLoc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6625,7 +6636,9 @@ parameter_list|,
 name|SourceLocation
 name|EqualLoc
 parameter_list|,
-name|ExprArg
+specifier|const
+name|ParsedTemplateArgument
+modifier|&
 name|Default
 parameter_list|)
 block|{   }
@@ -6834,10 +6847,6 @@ name|LAngleLoc
 parameter_list|,
 name|ASTTemplateArgsPtr
 name|TemplateArgs
-parameter_list|,
-name|SourceLocation
-modifier|*
-name|TemplateArgLocs
 parameter_list|,
 name|SourceLocation
 name|RAngleLoc
@@ -7258,10 +7267,6 @@ name|ASTTemplateArgsPtr
 name|TemplateArgs
 parameter_list|,
 name|SourceLocation
-modifier|*
-name|TemplateArgLocs
-parameter_list|,
-name|SourceLocation
 name|RAngleLoc
 parameter_list|,
 name|AttributeList
@@ -7564,10 +7569,6 @@ name|LAngleLoc
 parameter_list|,
 name|ASTTemplateArgsPtr
 name|TemplateArgs
-parameter_list|,
-name|SourceLocation
-modifier|*
-name|TemplateArgLocs
 parameter_list|,
 name|SourceLocation
 name|RAngleLoc
@@ -8728,6 +8729,10 @@ modifier|*
 modifier|*
 name|IdentList
 parameter_list|,
+name|SourceLocation
+modifier|*
+name|IdentLocs
+parameter_list|,
 name|unsigned
 name|NumElts
 parameter_list|)
@@ -9651,6 +9656,192 @@ block|{ }
 end_function
 
 begin_comment
+comment|/// \brief Code completion for an ObjC message expression that refers to
+end_comment
+
+begin_comment
+comment|/// a class method.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token is
+end_comment
+
+begin_comment
+comment|/// found after the class name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the message expression occurs.
+end_comment
+
+begin_comment
+comment|/// \param FName the factory name.
+end_comment
+
+begin_comment
+comment|/// \param FNameLoc the source location of the factory name.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCClassMessage
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|FName
+parameter_list|,
+name|SourceLocation
+name|FNameLoc
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for an ObjC message expression that refers to
+end_comment
+
+begin_comment
+comment|/// an instance method.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token is
+end_comment
+
+begin_comment
+comment|/// found after the receiver expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the operator keyword occurs.
+end_comment
+
+begin_comment
+comment|/// \param Receiver an expression for the receiver of the message.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCInstanceMessage
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|ExprTy
+modifier|*
+name|Receiver
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a list of protocol references in Objective-C,
+end_comment
+
+begin_comment
+comment|/// such as P1 and P2 in \c id<P1,P2>.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked prior to each identifier
+end_comment
+
+begin_comment
+comment|/// in the protocol list.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Protocols the set of protocols that have already been parsed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NumProtocols the number of protocols that have already been
+end_comment
+
+begin_comment
+comment|/// parsed.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCProtocolReferences
+parameter_list|(
+name|IdentifierLocPair
+modifier|*
+name|Protocols
+parameter_list|,
+name|unsigned
+name|NumProtocols
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a protocol declaration or definition, after
+end_comment
+
+begin_comment
+comment|/// the @protocol but before any identifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the protocol declaration occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCProtocolDecl
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|//@}
 end_comment
 
@@ -9835,6 +10026,8 @@ argument_list|(
 argument|SourceLocation AtClassLoc
 argument_list|,
 argument|IdentifierInfo **IdentList
+argument_list|,
+argument|SourceLocation *SLocs
 argument_list|,
 argument|unsigned NumElts
 argument_list|)

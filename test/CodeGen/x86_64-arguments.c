@@ -1,50 +1,50 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple x86_64-unknown-unknown -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple x86_64-unknown-unknown -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define signext i8 @f0()' %t&&
+comment|// RUN: grep 'define signext i8 @f0()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define signext i16 @f1()' %t&&
+comment|// RUN: grep 'define signext i16 @f1()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define i32 @f2()' %t&&
+comment|// RUN: grep 'define i32 @f2()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define float @f3()' %t&&
+comment|// RUN: grep 'define float @f3()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define double @f4()' %t&&
+comment|// RUN: grep 'define double @f4()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define x86_fp80 @f5()' %t&&
+comment|// RUN: grep 'define x86_fp80 @f5()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8\* %a4)' %t&&
+comment|// RUN: grep 'define void @f6(i8 signext %a0, i16 signext %a1, i32 %a2, i64 %a3, i8\* %a4)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f7(i32 %a0)' %t&&
+comment|// RUN: grep 'define void @f7(i32 %a0)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '.0 = type { i64, double }' %t&&
+comment|// RUN: grep '.0 = type { i64, double }' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define .0 @f8_1()' %t&&
+comment|// RUN: grep 'define .0 @f8_1()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f8_2(.0)' %t&&
+comment|// RUN: grep 'define void @f8_2(.0)' %t
 end_comment
 
 begin_function
@@ -219,7 +219,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define i64 @f9()' %t&&
+comment|// RUN: grep 'define i64 @f9()' %t
 end_comment
 
 begin_struct
@@ -248,7 +248,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define void @f10(i64)' %t&&
+comment|// RUN: grep 'define void @f10(i64)' %t
 decl|struct
 name|s10
 block|{
@@ -278,7 +278,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f11(.union.anon. noalias sret .agg.result)' %t&&
+comment|// RUN: grep 'define void @f11(.union.anon. noalias sret .agg.result)' %t
 end_comment
 
 begin_union
@@ -301,8 +301,8 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// RUN: grep 'define i64 @f12_0()' %t&&
-comment|// RUN: grep 'define void @f12_1(i64)' %t&&
+comment|// RUN: grep 'define i64 @f12_0()' %t
+comment|// RUN: grep 'define void @f12_1(i64)' %t
 decl|struct
 name|s12
 block|{
@@ -358,7 +358,7 @@ comment|// registers.
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define void @f13(.struct.s13_0. noalias sret .agg.result, i32 .a, i32 .b, i32 .c, i32 .d, .struct.s13_1. byval .e, i32 .f)' %t&&
+comment|// RUN: grep 'define void @f13(.struct.s13_0. noalias sret .agg.result, i32 .a, i32 .b, i32 .c, i32 .d, .struct.s13_1. byval .e, i32 .f)' %t
 end_comment
 
 begin_struct
@@ -425,7 +425,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f14(.*, i8 signext .X)' %t&&
+comment|// RUN: grep 'define void @f14(.*, i8 signext .X)' %t
 end_comment
 
 begin_function
@@ -457,7 +457,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f15(.*, i8\* .X)' %t&&
+comment|// RUN: grep 'define void @f15(.*, i8\* .X)' %t
 end_comment
 
 begin_function
@@ -490,7 +490,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f16(.*, float .X)' %t&&
+comment|// RUN: grep 'define void @f16(.*, float .X)' %t
 end_comment
 
 begin_function
@@ -528,7 +528,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f17(.*, x86_fp80 .X)' %t&&
+comment|// RUN: grep 'define void @f17(.*, x86_fp80 .X)' %t
 end_comment
 
 begin_function
@@ -571,15 +571,15 @@ comment|// Check for valid coercion.
 end_comment
 
 begin_comment
-comment|// RUN: grep '.. = bitcast i64. .* to .struct.f18_s0.' %t&&
+comment|// RUN: grep '.. = bitcast i64. .* to .struct.f18_s0.' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '.. = load .struct.f18_s0. .., align 1' %t&&
+comment|// RUN: grep '.. = load .struct.f18_s0. .., align 1' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'store .struct.f18_s0 .., .struct.f18_s0. .f18_arg1' %t&&
+comment|// RUN: grep 'store .struct.f18_s0 .., .struct.f18_s0. .f18_arg1' %t
 end_comment
 
 begin_struct
@@ -612,10 +612,6 @@ condition|)
 block|{}
 block|}
 end_function
-
-begin_comment
-comment|// RUN: true
-end_comment
 
 end_unit
 

@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fmath-errno=1 -emit-llvm -o %t %s -triple i386-unknown-unknown&&
+comment|// RUN: clang-cc -fmath-errno=1 -emit-llvm -o %t %s -triple i386-unknown-unknown
 end_comment
 
 begin_comment
-comment|// RUN: grep "declare " %t | count 6&&
+comment|// RUN: grep "declare " %t | count 6
 end_comment
 
 begin_comment
-comment|// RUN: grep "declare " %t | grep "@llvm." | count 1&&
+comment|// RUN: grep "declare " %t | grep "@llvm." | count 1
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fmath-errno=0 -emit-llvm -o %t %s -triple i386-unknown-unknown&&
+comment|// RUN: clang-cc -fmath-errno=0 -emit-llvm -o %t %s -triple i386-unknown-unknown
 end_comment
 
 begin_comment
-comment|// RUN: grep "declare " %t | count 6&&
+comment|// RUN: grep "declare " %t | count 6
 end_comment
 
 begin_comment

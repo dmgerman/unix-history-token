@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -verify -pedantic -fms-extensions=0 %s&&
+comment|// RUN: clang-cc -fsyntax-only -verify -pedantic -fms-extensions=0 %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E %s 2>&1 | grep 'blonk.c:92:2: error: #error ABC'&&
+comment|// RUN: clang-cc -E %s 2>&1 | grep 'blonk.c:92:2: error: #error ABC'
 end_comment
 
 begin_comment

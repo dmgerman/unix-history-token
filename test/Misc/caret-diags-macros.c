@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only %s> %t 2>&1&&
+comment|// RUN: clang-cc -fsyntax-only %s> %t 2>&1
 end_comment
 
 begin_define
@@ -14,7 +14,7 @@ value|x
 end_define
 
 begin_comment
-comment|// RUN: grep ":6:12: note: instantiated from:" %t&&
+comment|// RUN: grep ":6:12: note: instantiated from:" %t
 end_comment
 
 begin_define
@@ -29,17 +29,17 @@ name|void
 name|foo
 parameter_list|()
 block|{
-comment|// RUN: grep ":10:2: warning: expression result unused" %t&&
+comment|// RUN: grep ":10:2: warning: expression result unused" %t
 name|M1
 argument_list|(
-comment|// RUN: grep ":12:5: note: instantiated from:" %t&&
+comment|// RUN: grep ":12:5: note: instantiated from:" %t
 argument|M2
 argument_list|)
 block|}
 end_function
 
 begin_comment
-comment|// RUN: grep ":16:11: note: instantiated from:" %t&&
+comment|// RUN: grep ":16:11: note: instantiated from:" %t
 end_comment
 
 begin_define
@@ -50,7 +50,7 @@ value|1
 end_define
 
 begin_comment
-comment|// RUN: grep ":18:11: note: instantiated from:" %t&&
+comment|// RUN: grep ":18:11: note: instantiated from:" %t
 end_comment
 
 begin_define
@@ -61,7 +61,7 @@ value|A
 end_define
 
 begin_comment
-comment|// RUN: grep ":20:11: note: instantiated from:" %t&&
+comment|// RUN: grep ":20:11: note: instantiated from:" %t
 end_comment
 
 begin_define

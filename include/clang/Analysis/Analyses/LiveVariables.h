@@ -279,6 +279,7 @@ name|ValTy
 operator|&
 name|V
 argument_list|,
+specifier|const
 name|SourceManager
 operator|&
 name|M
@@ -290,6 +291,7 @@ comment|///  associated with each basic block.
 name|void
 name|dumpBlockLiveness
 argument_list|(
+specifier|const
 name|SourceManager
 operator|&
 name|M

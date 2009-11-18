@@ -4,7 +4,7 @@ comment|// Verify that -include isn't included twice with -save-temps.
 end_comment
 
 begin_comment
-comment|// RUN: clang -S -o - %s -include %t.h -save-temps -### 2> %t.log&&
+comment|// RUN: clang -S -o - %s -include %t.h -save-temps -### 2> %t.log
 end_comment
 
 begin_comment

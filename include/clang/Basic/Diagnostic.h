@@ -133,6 +133,9 @@ name|class
 name|PartialDiagnostic
 decl_stmt|;
 name|class
+name|Preprocessor
+decl_stmt|;
+name|class
 name|SourceRange
 decl_stmt|;
 comment|// Import the diagnostic enums themselves.
@@ -304,32 +307,55 @@ operator|,
 name|InsertionLoc
 argument_list|()
 block|{ }
+name|bool
+name|isNull
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|RemoveRange
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+operator|!
+name|InsertionLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
 comment|/// \brief Create a code modification hint that inserts the given
 comment|/// code string at a specific location.
 specifier|static
 name|CodeModificationHint
 name|CreateInsertion
 argument_list|(
-argument|SourceLocation InsertionLoc
+name|SourceLocation
+name|InsertionLoc
 argument_list|,
-argument|llvm::StringRef Code
+name|llvm
+operator|::
+name|StringRef
+name|Code
 argument_list|)
 block|{
 name|CodeModificationHint
 name|Hint
-block|;
+decl_stmt|;
 name|Hint
 operator|.
 name|InsertionLoc
 operator|=
 name|InsertionLoc
-block|;
+expr_stmt|;
 name|Hint
 operator|.
 name|CodeToInsert
 operator|=
 name|Code
-block|;
+expr_stmt|;
 return|return
 name|Hint
 return|;
@@ -1174,6 +1200,14 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
+specifier|inline
+name|DiagnosticBuilder
+name|Report
+parameter_list|(
+name|unsigned
+name|DiagID
+parameter_list|)
+function_decl|;
 comment|/// \brief Clear out the current diagnostic.
 name|void
 name|Clear
@@ -1827,6 +1861,14 @@ name|Hint
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|Hint
+operator|.
+name|isNull
+argument_list|()
+condition|)
+return|return;
 name|assert
 argument_list|(
 name|NumCodeModificationHints
@@ -2267,6 +2309,28 @@ return|return
 name|DiagnosticBuilder
 argument_list|(
 name|this
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|DiagnosticBuilder
+name|Diagnostic
+operator|::
+name|Report
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|{
+return|return
+name|Report
+argument_list|(
+name|FullSourceLoc
+argument_list|()
+argument_list|,
+name|DiagID
 argument_list|)
 return|;
 block|}
@@ -2781,6 +2845,13 @@ specifier|const
 name|LangOptions
 modifier|&
 name|LangOpts
+parameter_list|,
+specifier|const
+name|Preprocessor
+modifier|*
+name|PP
+init|=
+literal|0
 parameter_list|)
 block|{}
 comment|/// EndSourceFile - Callback to inform the diagnostic client that processing

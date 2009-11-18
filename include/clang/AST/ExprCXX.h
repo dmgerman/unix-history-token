@@ -304,6 +304,12 @@ operator|*
 name|getImplicitObjectArgument
 argument_list|()
 block|;
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof

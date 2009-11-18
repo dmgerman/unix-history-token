@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region -verify -triple x86_64-apple-darwin9 %s&&
+comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -verify -triple x86_64-apple-darwin9 %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region -verify -triple i686-apple-darwin9 %s
+comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -verify -triple i686-apple-darwin9 %s
 end_comment
 
 begin_function
@@ -155,6 +155,149 @@ expr_stmt|;
 return|return
 name|port
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|f3
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|,
+name|y
+decl_stmt|;
+name|int
+name|d
+init|=
+operator|&
+name|y
+operator|-
+operator|&
+name|x
+decl_stmt|;
+comment|// expected-warning{{Subtraction of two pointers that do not point to the same memory chunk may cause incorrect result.}}
+name|int
+name|a
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|int
+modifier|*
+name|p
+init|=
+operator|&
+name|a
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int
+modifier|*
+name|q
+init|=
+operator|&
+name|a
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|d
+operator|=
+name|q
+operator|-
+name|p
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|f4
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+literal|0x10000
+expr_stmt|;
+comment|// expected-warning{{Using a fixed address is not portable because that address will probably not be valid in all environments or platforms.}}
+block|}
+end_function
+
+begin_function
+name|void
+name|f5
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|,
+name|y
+decl_stmt|;
+name|int
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+operator|&
+name|x
+operator|+
+literal|1
+expr_stmt|;
+comment|// expected-warning{{Pointer arithmetic done on non-array variables means reliance on memory layout, which is dangerous.}}
+name|int
+name|a
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|p
+operator|=
+name|a
+operator|+
+literal|1
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// Allow arithmetic on different symbolic regions.
+end_comment
+
+begin_function
+name|void
+name|f6
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|,
+name|int
+modifier|*
+name|q
+parameter_list|)
+block|{
+name|int
+name|d
+init|=
+name|q
+operator|-
+name|p
+decl_stmt|;
+comment|// no-warning
 block|}
 end_function
 

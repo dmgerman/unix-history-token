@@ -201,8 +201,13 @@ name|vector
 operator|<
 name|llvm
 operator|::
-name|DIDescriptor
+name|TrackingVH
+operator|<
+name|llvm
+operator|::
+name|MDNode
 operator|>
+expr|>
 name|RegionStack
 expr_stmt|;
 comment|/// Helper functions for getOrCreateType.
@@ -332,6 +337,30 @@ name|DIType
 name|CreateType
 argument_list|(
 argument|const ArrayType *Ty
+argument_list|,
+argument|llvm::DICompileUnit U
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|CreateType
+argument_list|(
+argument|const LValueReferenceType *Ty
+argument_list|,
+argument|llvm::DICompileUnit U
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|CreatePointerLikeType
+argument_list|(
+argument|unsigned Tag
+argument_list|,
+argument|const Type *Ty
+argument_list|,
+argument|QualType PointeeTy
 argument_list|,
 argument|llvm::DICompileUnit U
 argument_list|)

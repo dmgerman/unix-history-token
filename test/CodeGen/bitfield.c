@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown %s -emit-llvm -o %t -O3&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown %s -emit-llvm -o %t -O3
 end_comment
 
 begin_comment
-comment|// RUN: grep "ret i32" %t | count 4&&
+comment|// RUN: grep "ret i32" %t | count 4
 end_comment
 
 begin_comment

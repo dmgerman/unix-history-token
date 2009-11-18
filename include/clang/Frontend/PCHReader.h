@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Bitcode/BitstreamReader.h"
 end_include
 
@@ -287,11 +293,9 @@ name|virtual
 name|bool
 name|ReadTargetTriple
 argument_list|(
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|Triple
 argument_list|)
 block|{
@@ -304,10 +308,10 @@ comment|///
 comment|/// \param PCHPredef The start of the predefines buffer in the PCH
 comment|/// file.
 comment|///
-comment|/// \param PCHPredefLen The length of the predefines buffer in the PCH
-comment|/// file.
-comment|///
 comment|/// \param PCHBufferID The FileID for the PCH predefines buffer.
+comment|///
+comment|/// \param OriginalFileName The original file name for the PCH, which will
+comment|/// appear as an entry in the predefines buffer.
 comment|///
 comment|/// \param SuggestedPredefines If necessary, additional definitions are added
 comment|/// here.
@@ -317,16 +321,18 @@ name|virtual
 name|bool
 name|ReadPredefinesBuffer
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|PCHPredef
-argument_list|,
-name|unsigned
-name|PCHPredefLen
 argument_list|,
 name|FileID
 name|PCHBufferID
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|OriginalFileName
 argument_list|,
 name|std
 operator|::
@@ -422,23 +428,18 @@ name|virtual
 name|bool
 name|ReadTargetTriple
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Triple
+argument|llvm::StringRef Triple
 argument_list|)
 block|;
 name|virtual
 name|bool
 name|ReadPredefinesBuffer
 argument_list|(
-argument|const char *PCHPredef
-argument_list|,
-argument|unsigned PCHPredefLen
+argument|llvm::StringRef PCHPredef
 argument_list|,
 argument|FileID PCHBufferID
+argument_list|,
+argument|llvm::StringRef OriginalFileName
 argument_list|,
 argument|std::string&SuggestedPredefines
 argument_list|)
@@ -827,12 +828,18 @@ literal|4
 operator|>
 name|ObjCCategoryImpls
 expr_stmt|;
-comment|/// \brief The original file name that was used to build the PCH
-comment|/// file.
+comment|/// \brief The original file name that was used to build the PCH file, which
+comment|/// may have been modified for relocatable-pch support.
 name|std
 operator|::
 name|string
 name|OriginalFileName
+expr_stmt|;
+comment|/// \brief The actual original file name that was used to build the PCH file.
+name|std
+operator|::
+name|string
+name|ActualOriginalFileName
 expr_stmt|;
 comment|/// \brief Whether this precompiled header is a relocatable PCH file.
 name|bool
@@ -1115,19 +1122,16 @@ parameter_list|()
 function_decl|;
 name|bool
 name|CheckPredefinesBuffer
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|PCHPredef
-parameter_list|,
-name|unsigned
-name|PCHPredefLen
-parameter_list|,
+argument_list|,
 name|FileID
 name|PCHBufferID
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|ParseLineTable
 argument_list|(
@@ -1637,12 +1641,11 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Retrieve the IdentifierInfo for the named identifier.
 comment|///
-comment|/// This routine builds a new IdentifierInfo for the given
-comment|/// identifier. If any declarations with this name are visible from
-comment|/// translation unit scope, their declarations will be deserialized
-comment|/// and introduced into the declaration chain of the
-comment|/// identifier. FIXME: if this identifier names a macro, deserialize
-comment|/// the macro.
+comment|/// This routine builds a new IdentifierInfo for the given identifier. If any
+comment|/// declarations with this name are visible from translation unit scope, their
+comment|/// declarations will be deserialized and introduced into the declaration
+comment|/// chain of the identifier. FIXME: if this identifier names a macro,
+comment|/// deserialize the macro.
 name|virtual
 name|IdentifierInfo
 modifier|*
@@ -1659,6 +1662,31 @@ modifier|*
 name|NameEnd
 parameter_list|)
 function_decl|;
+name|IdentifierInfo
+modifier|*
+name|get
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Name
+argument_list|)
+block|{
+return|return
+name|get
+argument_list|(
+name|Name
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Name
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// \brief Load the contents of the global method pool for a given
 comment|/// selector.
 comment|///

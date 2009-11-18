@@ -1,18 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -O3 -emit-llvm -S -o %t %s&&
+comment|// RUN: clang -O3 -emit-llvm -S -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'ret i64 4294967292' %t | count 2&&
+comment|// RUN: grep 'ret i64 4294967292' %t | count 2
 end_comment
 
 begin_comment
-comment|// RUN: grep 'ret i64 -4' %t | count 1&&
-end_comment
-
-begin_comment
-comment|// RUN: true
+comment|// RUN: grep 'ret i64 -4' %t | count 1
 end_comment
 
 begin_function

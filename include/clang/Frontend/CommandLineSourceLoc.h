@@ -126,6 +126,7 @@ operator|>
 block|{
 name|public
 operator|:
+specifier|inline
 name|bool
 name|parse
 argument_list|(

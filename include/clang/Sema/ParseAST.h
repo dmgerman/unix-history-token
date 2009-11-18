@@ -87,6 +87,9 @@ comment|///
 comment|/// \param CompleteTranslationUnit When true, the parsed file is
 comment|/// considered to be a complete translation unit, and any
 comment|/// end-of-translation-unit wrapup will be performed.
+comment|///
+comment|/// \param CompletionConsumer If given, an object to consume code completion
+comment|/// results.
 name|void
 name|ParseAST
 parameter_list|(
@@ -114,24 +117,7 @@ name|true
 parameter_list|,
 name|CodeCompleteConsumer
 modifier|*
-function_decl|(
-modifier|*
-name|CreateCodeCompleter
-function_decl|)
-parameter_list|(
-name|Sema
-modifier|&
-parameter_list|,
-name|void
-modifier|*
-name|Data
-parameter_list|)
-init|=
-literal|0
-parameter_list|,
-name|void
-modifier|*
-name|CreateCodeCompleterData
+name|CompletionConsumer
 init|=
 literal|0
 parameter_list|)

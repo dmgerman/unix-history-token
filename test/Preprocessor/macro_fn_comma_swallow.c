@@ -4,15 +4,15 @@ comment|// Test the GNU comma swallowing extension.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | grep 'foo{A, }'&&
+comment|// RUN: clang-cc %s -E | grep 'foo{A, }'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | grep 'fo2{A,}'&&
+comment|// RUN: clang-cc %s -E | grep 'fo2{A,}'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | grep '{foo}'&&
+comment|// RUN: clang-cc %s -E | grep '{foo}'
 end_comment
 
 begin_define

@@ -203,6 +203,18 @@ return|return
 name|Stored
 return|;
 block|}
+comment|/// \brief Implicit conversion to bool.
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isNull
+argument_list|()
+return|;
+block|}
 name|bool
 name|isNull
 argument_list|()
@@ -266,7 +278,7 @@ block|{
 return|return
 name|Stored
 operator|.
-name|getQualifiers
+name|getLocalQualifiers
 argument_list|()
 return|;
 block|}
@@ -279,7 +291,7 @@ block|{
 return|return
 name|Stored
 operator|.
-name|getCVRQualifiers
+name|getLocalCVRQualifiers
 argument_list|()
 return|;
 block|}
@@ -292,7 +304,7 @@ block|{
 return|return
 name|Stored
 operator|.
-name|hasQualifiers
+name|hasLocalQualifiers
 argument_list|()
 return|;
 block|}
@@ -304,7 +316,7 @@ block|{
 return|return
 name|Stored
 operator|.
-name|isConstQualified
+name|isLocalConstQualified
 argument_list|()
 return|;
 block|}
@@ -316,7 +328,7 @@ block|{
 return|return
 name|Stored
 operator|.
-name|isVolatileQualified
+name|isLocalVolatileQualified
 argument_list|()
 return|;
 block|}
@@ -328,7 +340,7 @@ block|{
 return|return
 name|Stored
 operator|.
-name|isRestrictQualified
+name|isLocalRestrictQualified
 argument_list|()
 return|;
 block|}
@@ -2845,7 +2857,7 @@ name|CreateUnsafe
 argument_list|(
 name|Stored
 operator|.
-name|getUnqualifiedType
+name|getLocalUnqualifiedType
 argument_list|()
 argument_list|)
 return|;

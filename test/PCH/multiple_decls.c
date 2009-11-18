@@ -4,7 +4,7 @@ comment|// Test this without pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include %S/multiple_decls.h -fsyntax-only -ast-print -o - %s&&
+comment|// RUN: clang-cc -include %S/multiple_decls.h -fsyntax-only -ast-print -o - %s
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t %S/multiple_decls.h&&
+comment|// RUN: clang-cc -emit-pch -o %t %S/multiple_decls.h
 end_comment
 
 begin_comment

@@ -283,6 +283,7 @@ operator|&
 name|CGM
 block|;
 comment|// Per-module state.
+specifier|const
 name|TargetInfo
 operator|&
 name|Target
@@ -666,26 +667,6 @@ name|CGDebugInfo
 modifier|*
 name|DebugInfo
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|USEINDIRECTBRANCH
-comment|/// LabelIDs - Track arbitrary ids assigned to labels for use in implementing
-comment|/// the GCC address-of-label extension and indirect goto. IDs are assigned to
-comment|/// labels inside getIDForAddrOfLabel().
-name|std
-operator|::
-name|map
-operator|<
-specifier|const
-name|LabelStmt
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|LabelIDs
-expr_stmt|;
-else|#
-directive|else
 comment|/// IndirectBranch - The first time an indirect goto is seen we create a
 comment|/// block with an indirect branch.  Every time we see the address of a label
 comment|/// taken, we add the label to the indirect goto.  Every subsequent indirect
@@ -696,24 +677,6 @@ name|IndirectBrInst
 operator|*
 name|IndirectBranch
 expr_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|USEINDIRECTBRANCH
-comment|/// IndirectGotoSwitch - The first time an indirect goto is seen we create a
-comment|/// block with the switch for the indirect gotos.  Every time we see the
-comment|/// address of a label taken, we add the label to the indirect goto.  Every
-comment|/// subsequent indirect goto is codegen'd as a jump to the
-comment|/// IndirectGotoSwitch's basic block.
-name|llvm
-operator|::
-name|SwitchInst
-operator|*
-name|IndirectGotoSwitch
-expr_stmt|;
-endif|#
-directive|endif
 comment|/// LocalDeclMap - This keeps track of the LLVM allocas or globals for local C
 comment|/// decls.
 name|llvm
@@ -1404,19 +1367,6 @@ name|SourceLocation
 argument_list|()
 parameter_list|)
 function_decl|;
-comment|/// GenerateVtable - Generate the vtable for the given type.
-name|llvm
-operator|::
-name|Value
-operator|*
-name|GenerateVtable
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|)
-expr_stmt|;
 comment|/// DynamicTypeAdjust - Do the non-virtual and virtual adjustments on an
 comment|/// object pointer to alter the dynamic type of the pointer.  Used by
 comment|/// GenerateCovariantThunk for building thunks.
@@ -2330,29 +2280,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USEINDIRECTBRANCH
-end_ifndef
-
-begin_function_decl
-name|unsigned
-name|GetIDForAddrOfLabel
-parameter_list|(
-specifier|const
-name|LabelStmt
-modifier|*
-name|L
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_expr_stmt
 name|llvm
 operator|::
@@ -2367,11 +2294,6 @@ name|L
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|llvm
@@ -2796,6 +2718,56 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|EmitCXXAggrDestructorCall
+argument_list|(
+specifier|const
+name|CXXDestructorDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|NumElements
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|This
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GenerateCXXAggrDestructorHelper
+argument_list|(
+specifier|const
+name|CXXDestructorDecl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|ArrayType
+operator|*
+name|Array
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|This
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|void
 name|EmitCXXDestructorCall
 argument_list|(
 specifier|const
@@ -2866,6 +2838,63 @@ name|E
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|EmitDeleteCall
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|DeleteFD
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Ptr
+argument_list|,
+name|QualType
+name|DeleteTy
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitCXXTypeidExpr
+argument_list|(
+specifier|const
+name|CXXTypeidExpr
+operator|*
+name|E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitDynamicCast
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|V
+argument_list|,
+specifier|const
+name|CXXDynamicCastExpr
+operator|*
+name|DCE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -4021,9 +4050,9 @@ name|LValue
 name|EmitPointerToDataMemberLValue
 parameter_list|(
 specifier|const
-name|DeclRefExpr
+name|FieldDecl
 modifier|*
-name|E
+name|Field
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4058,6 +4087,7 @@ name|Value
 operator|*
 name|Base
 argument_list|,
+specifier|const
 name|FieldDecl
 operator|*
 name|Field
@@ -4105,6 +4135,7 @@ name|Value
 operator|*
 name|Base
 argument_list|,
+specifier|const
 name|FieldDecl
 operator|*
 name|Field
@@ -4169,6 +4200,18 @@ name|EmitCXXExprWithTemporariesLValue
 parameter_list|(
 specifier|const
 name|CXXExprWithTemporaries
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LValue
+name|EmitCXXTypeidLValue
+parameter_list|(
+specifier|const
+name|CXXTypeidExpr
 modifier|*
 name|E
 parameter_list|)
@@ -4390,7 +4433,6 @@ name|llvm
 operator|::
 name|Value
 operator|*
-operator|&
 name|This
 argument_list|,
 specifier|const
@@ -4399,6 +4441,24 @@ operator|::
 name|Type
 operator|*
 name|Ty
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|BuildVirtualCall
+argument_list|(
+argument|const CXXDestructorDecl *DD
+argument_list|,
+argument|CXXDtorType Type
+argument_list|,
+argument|llvm::Value *&This
+argument_list|,
+argument|const llvm::Type *Ty
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5117,10 +5177,11 @@ begin_decl_stmt
 name|void
 name|EmitCXXGlobalDtorRegistration
 argument_list|(
-specifier|const
-name|CXXDestructorDecl
+name|llvm
+operator|::
+name|Constant
 operator|*
-name|Dtor
+name|DtorFn
 argument_list|,
 name|llvm
 operator|::
@@ -5583,6 +5644,15 @@ operator|++
 name|Arg
 control|)
 block|{
+name|assert
+argument_list|(
+name|Arg
+operator|!=
+name|ArgEnd
+operator|&&
+literal|"Running over edge of argument list!"
+argument_list|)
+expr_stmt|;
 name|QualType
 name|ArgType
 init|=

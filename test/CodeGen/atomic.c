@@ -1,46 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -emit-llvm -o - -triple=i686-apple-darwin9> %t1&&
+comment|// RUN: clang-cc %s -emit-llvm -o - -triple=i686-apple-darwin9> %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.load.add.i32 %t1 | count 3&&
+comment|// RUN: grep @llvm.atomic.load.add.i32 %t1 | count 3
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.load.sub.i8 %t1 | count 2&&
+comment|// RUN: grep @llvm.atomic.load.sub.i8 %t1 | count 2
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.load.min.i32 %t1&&
+comment|// RUN: grep @llvm.atomic.load.min.i32 %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.load.max.i32 %t1&&
+comment|// RUN: grep @llvm.atomic.load.max.i32 %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.load.umin.i32 %t1&&
+comment|// RUN: grep @llvm.atomic.load.umin.i32 %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.load.umax.i32 %t1&&
+comment|// RUN: grep @llvm.atomic.load.umax.i32 %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.swap.i32 %t1&&
+comment|// RUN: grep @llvm.atomic.swap.i32 %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.cmp.swap.i32 %t1 | count 4&&
+comment|// RUN: grep @llvm.atomic.cmp.swap.i32 %t1 | count 4
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.load.and.i32 %t1 | count 2&&
+comment|// RUN: grep @llvm.atomic.load.and.i32 %t1 | count 2
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.load.or.i8 %t1&&
+comment|// RUN: grep @llvm.atomic.load.or.i8 %t1
 end_comment
 
 begin_comment

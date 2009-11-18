@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E -dM -x=assembler-with-cpp< /dev/null | FileCheck -check-prefix ASM %s&&
+comment|// RUN: clang-cc -E -dM -x=assembler-with-cpp< /dev/null | FileCheck -check-prefix ASM %s
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fblocks -E -dM< /dev/null | FileCheck -check-prefix BLOCKS %s&&
+comment|// RUN: clang-cc -fblocks -E -dM< /dev/null | FileCheck -check-prefix BLOCKS %s
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=c++ -std=c++0x -E -dM< /dev/null | FileCheck -check-prefix CXX0X %s&&
+comment|// RUN: clang-cc -x=c++ -std=c++0x -E -dM< /dev/null | FileCheck -check-prefix CXX0X %s
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=c++ -std=c++98 -E -dM< /dev/null | FileCheck -check-prefix CXX98 %s&&
+comment|// RUN: clang-cc -x=c++ -std=c++98 -E -dM< /dev/null | FileCheck -check-prefix CXX98 %s
 end_comment
 
 begin_comment
@@ -128,7 +128,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -std=c99 -E -dM< /dev/null | FileCheck -check-prefix C99 %s&&
+comment|// RUN: clang-cc -std=c99 -E -dM< /dev/null | FileCheck -check-prefix C99 %s
 end_comment
 
 begin_comment
@@ -152,7 +152,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -fms-extensions=0< /dev/null | FileCheck -check-prefix COMMON %s&&
+comment|// RUN: clang-cc -E -dM -fms-extensions=0< /dev/null | FileCheck -check-prefix COMMON %s
 end_comment
 
 begin_comment
@@ -220,7 +220,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -ffreestanding -E -dM< /dev/null | FileCheck -check-prefix FREESTANDING %s&&
+comment|// RUN: clang-cc -ffreestanding -E -dM< /dev/null | FileCheck -check-prefix FREESTANDING %s
 end_comment
 
 begin_comment
@@ -232,7 +232,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=c++ -std=gnu++98 -E -dM< /dev/null | FileCheck -check-prefix GXX98 %s&&
+comment|// RUN: clang-cc -x=c++ -std=gnu++98 -E -dM< /dev/null | FileCheck -check-prefix GXX98 %s
 end_comment
 
 begin_comment
@@ -272,7 +272,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -std=iso9899:199409 -E -dM< /dev/null | FileCheck -check-prefix C94 %s&&
+comment|// RUN: clang-cc -std=iso9899:199409 -E -dM< /dev/null | FileCheck -check-prefix C94 %s
 end_comment
 
 begin_comment
@@ -292,7 +292,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fms-extensions -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s&&
+comment|// RUN: clang-cc -fms-extensions -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s
 end_comment
 
 begin_comment
@@ -328,7 +328,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=objective-c -E -dM< /dev/null | FileCheck -check-prefix OBJC %s&&
+comment|// RUN: clang-cc -x=objective-c -E -dM< /dev/null | FileCheck -check-prefix OBJC %s
 end_comment
 
 begin_comment
@@ -337,6 +337,10 @@ end_comment
 
 begin_comment
 comment|// OBJC:#define OBJC_NEW_PROPERTIES 1
+end_comment
+
+begin_comment
+comment|// OBJC:#define __NEXT_RUNTIME__ 1
 end_comment
 
 begin_comment
@@ -352,7 +356,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=objective-c -fobjc-gc -E -dM< /dev/null | FileCheck -check-prefix OBJCGC %s&&
+comment|// RUN: clang-cc -x=objective-c -fobjc-gc -E -dM< /dev/null | FileCheck -check-prefix OBJCGC %s
 end_comment
 
 begin_comment
@@ -372,27 +376,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=objective-c -fnext-runtime -E -dM< /dev/null | FileCheck -check-prefix NEXTRT %s&&
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// NEXTRT:#define __NEXT_RUNTIME__ 1
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -x=objective-c -fobjc-nonfragile-abi -E -dM< /dev/null | FileCheck -check-prefix NONFRAGILE %s&&
+comment|// RUN: clang-cc -x=objective-c -fobjc-nonfragile-abi -E -dM< /dev/null | FileCheck -check-prefix NONFRAGILE %s
 end_comment
 
 begin_comment
@@ -416,7 +400,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -O1 -E -dM< /dev/null | FileCheck -check-prefix O1 %s&&
+comment|// RUN: clang-cc -O1 -E -dM< /dev/null | FileCheck -check-prefix O1 %s
 end_comment
 
 begin_comment
@@ -436,7 +420,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fpascal-strings -E -dM< /dev/null | FileCheck -check-prefix PASCAL %s&&
+comment|// RUN: clang-cc -fpascal-strings -E -dM< /dev/null | FileCheck -check-prefix PASCAL %s
 end_comment
 
 begin_comment
@@ -456,7 +440,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fsigned-char -E -dM -fms-extensions=0< /dev/null | FileCheck -check-prefix SCHAR %s&&
+comment|// RUN: clang-cc -fsigned-char -E -dM -fms-extensions=0< /dev/null | FileCheck -check-prefix SCHAR %s
 end_comment
 
 begin_comment
@@ -480,7 +464,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=arm-none-none< /dev/null | FileCheck -check-prefix ARM %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=arm-none-none< /dev/null | FileCheck -check-prefix ARM %s
 end_comment
 
 begin_comment
@@ -625,6 +609,10 @@ end_comment
 
 begin_comment
 comment|// ARM:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
@@ -780,7 +768,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=bfin-none-none< /dev/null | FileCheck -check-prefix BFIN %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=bfin-none-none< /dev/null | FileCheck -check-prefix BFIN %s
 end_comment
 
 begin_comment
@@ -936,6 +924,10 @@ comment|// BFIN:#define __INT32_TYPE__ int
 end_comment
 
 begin_comment
+comment|// BFIN:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
 comment|// BFIN:#define __INT64_TYPE__ long long int
 end_comment
 
@@ -1080,7 +1072,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=i386-none-none< /dev/null | FileCheck -check-prefix I386 %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=i386-none-none< /dev/null | FileCheck -check-prefix I386 %s
 end_comment
 
 begin_comment
@@ -1213,6 +1205,10 @@ end_comment
 
 begin_comment
 comment|// I386:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// I386:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
@@ -1384,7 +1380,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=msp430-none-none< /dev/null | FileCheck -check-prefix MSP430 %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=msp430-none-none< /dev/null | FileCheck -check-prefix MSP430 %s
 end_comment
 
 begin_comment
@@ -1520,7 +1516,11 @@ comment|// MSP430:#define __INT16_TYPE__ short
 end_comment
 
 begin_comment
-comment|// MSP430:#define __INT32_TYPE__ long long
+comment|// MSP430:#define __INT32_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT32_TYPE__ long int
 end_comment
 
 begin_comment
@@ -1640,7 +1640,7 @@ comment|// MSP430:#define __USER_LABEL_PREFIX__ _
 end_comment
 
 begin_comment
-comment|// MSP430:#define __WCHAR_MAX__ 2147483647
+comment|// MSP430:#define __WCHAR_MAX__ 32767
 end_comment
 
 begin_comment
@@ -1660,7 +1660,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=pic16-none-none< /dev/null | FileCheck -check-prefix PIC16 %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=pic16-none-none< /dev/null | FileCheck -check-prefix PIC16 %s
 end_comment
 
 begin_comment
@@ -1796,7 +1796,11 @@ comment|// PIC16:#define __INT16_TYPE__ short
 end_comment
 
 begin_comment
-comment|// PIC16:#define __INT32_TYPE__ long long
+comment|// PIC16:#define __INT32_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// PIC16:#define __INT32_TYPE__ long int
 end_comment
 
 begin_comment
@@ -1912,7 +1916,7 @@ comment|// PIC16:#define __USER_LABEL_PREFIX__ _
 end_comment
 
 begin_comment
-comment|// PIC16:#define __WCHAR_MAX__ 2147483647
+comment|// PIC16:#define __WCHAR_MAX__ 32767
 end_comment
 
 begin_comment
@@ -1960,7 +1964,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc64-none-none< /dev/null | FileCheck -check-prefix PPC64 %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc64-none-none -fsigned-char=0< /dev/null | FileCheck -check-prefix PPC64 %s
 end_comment
 
 begin_comment
@@ -2117,6 +2121,10 @@ end_comment
 
 begin_comment
 comment|// PPC64:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
@@ -2280,7 +2288,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc-none-none< /dev/null | FileCheck -check-prefix PPC %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc-none-none -fsigned-char=0< /dev/null | FileCheck -check-prefix PPC %s
 end_comment
 
 begin_comment
@@ -2429,6 +2437,10 @@ end_comment
 
 begin_comment
 comment|// PPC:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
@@ -2584,7 +2596,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=s390x-none-none< /dev/null | FileCheck -check-prefix S390X %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=s390x-none-none -fsigned-char=0< /dev/null | FileCheck -check-prefix S390X %s
 end_comment
 
 begin_comment
@@ -2724,7 +2736,11 @@ comment|// S390X:#define __INT32_TYPE__ int
 end_comment
 
 begin_comment
-comment|// S390X:#define __INT64_TYPE__ long long int
+comment|// S390X:#define __INT64_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
@@ -2864,7 +2880,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=sparc-none-none< /dev/null | FileCheck -check-prefix SPARC %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=sparc-none-none< /dev/null | FileCheck -check-prefix SPARC %s
 end_comment
 
 begin_comment
@@ -2997,6 +3013,10 @@ end_comment
 
 begin_comment
 comment|// SPARC:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
@@ -3156,7 +3176,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=tce-none-none< /dev/null | FileCheck -check-prefix TCE %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=tce-none-none< /dev/null | FileCheck -check-prefix TCE %s
 end_comment
 
 begin_comment
@@ -3440,7 +3460,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=x86_64-none-none< /dev/null | FileCheck -check-prefix X86_64 %s&&
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=x86_64-none-none< /dev/null | FileCheck -check-prefix X86_64 %s
 end_comment
 
 begin_comment
@@ -3577,6 +3597,10 @@ end_comment
 
 begin_comment
 comment|// X86_64:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
@@ -3773,10 +3797,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|// RUN: true
 end_comment
 
 end_unit

@@ -126,29 +126,38 @@ block|;
 name|FullSourceLoc
 name|LastLoc
 block|;
-name|bool
+name|unsigned
 name|LastCaretDiagnosticWasNote
+operator|:
+literal|1
+block|;
+name|unsigned
+name|OwnsOutputStream
+operator|:
+literal|1
 block|;
 name|public
 operator|:
 name|TextDiagnosticPrinter
 argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|os
+argument|llvm::raw_ostream&os
 argument_list|,
-specifier|const
-name|DiagnosticOptions
-operator|&
-name|diags
+argument|const DiagnosticOptions&diags
+argument_list|,
+argument|bool OwnsOutputStream = false
 argument_list|)
+block|;
+name|virtual
+operator|~
+name|TextDiagnosticPrinter
+argument_list|()
 block|;
 name|void
 name|BeginSourceFile
 argument_list|(
 argument|const LangOptions&LO
+argument_list|,
+argument|const Preprocessor *PP
 argument_list|)
 block|{
 name|LangOpts

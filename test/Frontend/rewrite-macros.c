@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -verify --rewrite-macros -o %t %s&&
+comment|// RUN: clang-cc -verify --rewrite-macros -o %t %s
 end_comment
 
 begin_define
@@ -16,7 +16,7 @@ value|a ## b
 end_define
 
 begin_comment
-comment|// RUN: grep '12 */\*A\*/ /\*(1,2)\*/' %t&&
+comment|// RUN: grep '12 */\*A\*/ /\*(1,2)\*/' %t
 end_comment
 
 begin_macro
@@ -29,7 +29,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|// RUN: grep '/\*_Pragma("mark")\*/' %t&&
+comment|// RUN: grep '/\*_Pragma("mark")\*/' %t
 end_comment
 
 begin_macro
@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|// RUN: grep "//#warning eek" %t&&
+comment|// RUN: grep "//#warning eek" %t
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ warning|eek
 end_warning
 
 begin_comment
-comment|// RUN: grep "//#pragma mark mark" %t&&
+comment|// RUN: grep "//#pragma mark mark" %t
 end_comment
 
 begin_pragma
@@ -63,10 +63,6 @@ directive|pragma
 name|mark
 name|mark
 end_pragma
-
-begin_comment
-comment|// RUN: true
-end_comment
 
 end_unit
 

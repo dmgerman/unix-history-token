@@ -6,14 +6,21 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
+
+begin_function_decl
+name|int
+name|vprintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|va_list
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|const

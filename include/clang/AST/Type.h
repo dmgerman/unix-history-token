@@ -1736,27 +1736,6 @@ name|FastWidth
 operator|>
 name|Value
 block|;
-name|bool
-name|hasExtQuals
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Value
-operator|.
-name|getPointer
-argument_list|()
-operator|.
-name|is
-operator|<
-specifier|const
-name|ExtQuals
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
 specifier|const
 name|ExtQuals
 operator|*
@@ -1803,6 +1782,11 @@ operator|(
 operator|)
 return|;
 block|}
+name|QualType
+name|getUnqualifiedTypeSlow
+argument_list|()
+specifier|const
+block|;
 name|friend
 name|class
 name|QualifierCollector
@@ -1841,7 +1825,7 @@ argument|Quals
 argument_list|)
 block|{}
 name|unsigned
-name|getFastQualifiers
+name|getLocalFastQualifiers
 argument_list|()
 specifier|const
 block|{
@@ -1853,7 +1837,7 @@ argument_list|()
 return|;
 block|}
 name|void
-name|setFastQualifiers
+name|setLocalFastQualifiers
 argument_list|(
 argument|unsigned Quals
 argument_list|)
@@ -1876,7 +1860,7 @@ specifier|const
 block|{
 if|if
 condition|(
-name|hasNonFastQualifiers
+name|hasLocalNonFastQualifiers
 argument_list|()
 condition|)
 return|return
@@ -1994,14 +1978,17 @@ name|isNull
 argument_list|()
 return|;
 block|}
+comment|/// \brief Determine whether this particular QualType instance has the
+comment|/// "const" qualifier set, without looking through typedefs that may have
+comment|/// added "const" at a different level.
 name|bool
-name|isConstQualified
+name|isLocalConstQualified
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|(
-name|getFastQualifiers
+name|getLocalFastQualifiers
 argument_list|()
 operator|&
 name|Qualifiers
@@ -2010,14 +1997,23 @@ name|Const
 operator|)
 return|;
 block|}
+comment|/// \brief Determine whether this type is const-qualified.
 name|bool
-name|isRestrictQualified
+name|isConstQualified
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determine whether this particular QualType instance has the
+comment|/// "restrict" qualifier set, without looking through typedefs that may have
+comment|/// added "restrict" at a different level.
+name|bool
+name|isLocalRestrictQualified
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|(
-name|getFastQualifiers
+name|getLocalFastQualifiers
 argument_list|()
 operator|&
 name|Qualifiers
@@ -2026,14 +2022,23 @@ name|Restrict
 operator|)
 return|;
 block|}
+comment|/// \brief Determine whether this type is restrict-qualified.
 name|bool
-name|isVolatileQualified
+name|isRestrictQualified
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determine whether this particular QualType instance has the
+comment|/// "volatile" qualifier set, without looking through typedefs that may have
+comment|/// added "volatile" at a different level.
+name|bool
+name|isLocalVolatileQualified
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|(
-name|hasNonFastQualifiers
+name|hasLocalNonFastQualifiers
 argument_list|()
 operator|&&
 name|getExtQualsUnsafe
@@ -2044,33 +2049,63 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|// Determines whether this type has any direct qualifiers.
+comment|/// \brief Determine whether this type is volatile-qualified.
+name|bool
+name|isVolatileQualified
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determine whether this particular QualType instance has any
+comment|/// qualifiers, without looking through any typedefs that might add
+comment|/// qualifiers at a different level.
+name|bool
+name|hasLocalQualifiers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalFastQualifiers
+argument_list|()
+operator|||
+name|hasLocalNonFastQualifiers
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determine whether this type has any qualifiers.
 name|bool
 name|hasQualifiers
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getFastQualifiers
-argument_list|()
-operator|||
-name|hasNonFastQualifiers
-argument_list|()
-return|;
-block|}
+expr_stmt|;
+comment|/// \brief Determine whether this particular QualType instance has any
+comment|/// "non-fast" qualifiers, e.g., those that are stored in an ExtQualType
+comment|/// instance.
 name|bool
-name|hasNonFastQualifiers
+name|hasLocalNonFastQualifiers
 argument_list|()
 specifier|const
 block|{
 return|return
-name|hasExtQuals
+name|Value
+operator|.
+name|getPointer
 argument_list|()
+operator|.
+name|is
+operator|<
+specifier|const
+name|ExtQuals
+operator|*
+operator|>
+operator|(
+operator|)
 return|;
 block|}
-comment|// Retrieves the set of qualifiers belonging to this type.
+comment|/// \brief Retrieve the set of qualifiers local to this particular QualType
+comment|/// instance, not including any qualifiers acquired through typedefs or
+comment|/// other sugar.
 name|Qualifiers
-name|getQualifiers
+name|getLocalQualifiers
 argument_list|()
 specifier|const
 block|{
@@ -2079,7 +2114,7 @@ name|Quals
 block|;
 if|if
 condition|(
-name|hasNonFastQualifiers
+name|hasLocalNonFastQualifiers
 argument_list|()
 condition|)
 name|Quals
@@ -2094,7 +2129,7 @@ name|Quals
 operator|.
 name|addFastQualifiers
 argument_list|(
-name|getFastQualifiers
+name|getLocalFastQualifiers
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -2105,24 +2140,44 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Retrieves the CVR qualifiers of this type.
+comment|/// \brief Retrieve the set of qualifiers applied to this type.
+end_comment
+
+begin_expr_stmt
+name|Qualifiers
+name|getQualifiers
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the set of CVR (const-volatile-restrict) qualifiers
+end_comment
+
+begin_comment
+comment|/// local to this particular QualType instance, not including any qualifiers
+end_comment
+
+begin_comment
+comment|/// acquired through typedefs or other sugar.
 end_comment
 
 begin_expr_stmt
 name|unsigned
-name|getCVRQualifiers
+name|getLocalCVRQualifiers
 argument_list|()
 specifier|const
 block|{
 name|unsigned
 name|CVR
 operator|=
-name|getFastQualifiers
+name|getLocalFastQualifiers
 argument_list|()
 block|;
 if|if
 condition|(
-name|isVolatileQualified
+name|isLocalVolatileQualified
 argument_list|()
 condition|)
 name|CVR
@@ -2139,16 +2194,35 @@ name|CVR
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// \brief Retrieve the set of CVR (const-volatile-restrict) qualifiers
+end_comment
+
+begin_comment
+comment|/// applied to this type.
+end_comment
+
 begin_macro
-unit|}    bool
-name|isConstant
-argument_list|(
-argument|ASTContext& Ctx
-argument_list|)
+unit|unsigned
+name|getCVRQualifiers
+argument_list|()
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|isConstant
+argument_list|(
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
 block|{
 return|return
 name|QualType
@@ -2162,7 +2236,7 @@ name|Ctx
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|// Don't promise in the API that anything besides 'const' can be
@@ -2245,6 +2319,18 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// FIXME: The remove* functions are semantically broken, because they might
+end_comment
+
+begin_comment
+comment|// not remove a qualifier stored on a typedef. Most of the with* functions
+end_comment
+
+begin_comment
+comment|// have the same problem.
+end_comment
 
 begin_function_decl
 name|void
@@ -2423,9 +2509,21 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Return this type with all of the instance-specific qualifiers
+end_comment
+
+begin_comment
+comment|/// removed, but without removing any qualifiers that may have been applied
+end_comment
+
+begin_comment
+comment|/// through typedefs.
+end_comment
+
 begin_expr_stmt
 name|QualType
-name|getUnqualifiedType
+name|getLocalUnqualifiedType
 argument_list|()
 specifier|const
 block|{
@@ -2441,14 +2539,56 @@ return|;
 block|}
 end_expr_stmt
 
-begin_decl_stmt
-name|bool
+begin_comment
+comment|/// \brief Return the unqualified form of the given type, which might be
+end_comment
+
+begin_comment
+comment|/// desugared to eliminate qualifiers introduced via typedefs.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getUnqualifiedType
+argument_list|()
+specifier|const
+block|{
+name|QualType
+name|T
+operator|=
+name|getLocalUnqualifiedType
+argument_list|()
+block|;
+if|if
+condition|(
+operator|!
+name|T
+operator|.
+name|hasQualifiers
+argument_list|()
+condition|)
+return|return
+name|T
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getUnqualifiedTypeSlow
+argument_list|()
+return|;
+end_return
+
+begin_macro
+unit|}      bool
 name|isMoreQualifiedThan
 argument_list|(
-name|QualType
-name|Other
+argument|QualType Other
 argument_list|)
-decl|const
+end_macro
+
+begin_decl_stmt
+specifier|const
 decl_stmt|;
 end_decl_stmt
 
@@ -3743,25 +3883,6 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|InnerString
-argument_list|,
-specifier|const
-name|PrintingPolicy
-operator|&
-name|Policy
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
 specifier|static
 name|bool
 name|classof
@@ -3981,16 +4102,66 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
+name|bool
+name|isInteger
+argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|TypeKind
+operator|>=
+name|Bool
+operator|&&
+name|TypeKind
+operator|<=
+name|Int128
+return|;
+block|}
+name|bool
+name|isSignedInteger
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeKind
+operator|>=
+name|Char_S
+operator|&&
+name|TypeKind
+operator|<=
+name|Int128
+return|;
+block|}
+name|bool
+name|isUnsignedInteger
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeKind
+operator|>=
+name|Bool
+operator|&&
+name|TypeKind
+operator|<=
+name|UInt128
+return|;
+block|}
+name|bool
+name|isFloatingPoint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeKind
+operator|>=
+name|Float
+operator|&&
+name|TypeKind
+operator|<=
+name|LongDouble
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -4114,16 +4285,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -4210,16 +4371,6 @@ return|return
 name|ElementType
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -4352,16 +4503,6 @@ block|;
 comment|// ASTContext creates these.
 name|public
 operator|:
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|QualType
 name|getPointeeType
 argument_list|()
@@ -4516,16 +4657,6 @@ return|return
 name|PointeeType
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -4858,16 +4989,6 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -4953,16 +5074,6 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -5101,16 +5212,6 @@ return|return
 name|Class
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -5511,16 +5612,6 @@ return|return
 name|Size
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -5685,16 +5776,6 @@ block|;
 comment|// ASTContext creates these.
 name|public
 operator|:
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -5946,16 +6027,6 @@ name|getEnd
 argument_list|()
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -6170,16 +6241,6 @@ name|getEnd
 argument_list|()
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -6396,16 +6457,6 @@ return|return
 name|loc
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -6603,16 +6654,6 @@ return|return
 name|NumElements
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -7007,16 +7048,6 @@ return|return
 name|false
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -7277,16 +7308,6 @@ comment|// ASTContext creates these.
 name|public
 operator|:
 comment|// No additional state past what FunctionType provides.
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -7816,16 +7837,6 @@ operator|+
 name|NumExceptions
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -8008,16 +8019,6 @@ name|desugar
 argument_list|()
 specifier|const
 block|;
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -8100,16 +8101,6 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -8323,16 +8314,6 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -8439,16 +8420,6 @@ name|isDependentType
 argument_list|()
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -8656,16 +8627,6 @@ operator|:
 literal|0
 argument_list|)
 block|; }
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -9188,16 +9149,6 @@ literal|"enum"
 return|;
 block|}
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|void
 name|Profile
 argument_list|(
@@ -9433,16 +9384,6 @@ return|return
 name|Name
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -9648,16 +9589,6 @@ name|getCanonicalTypeInternal
 argument_list|()
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -9942,16 +9873,6 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -10144,16 +10065,6 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|void
 name|Profile
 argument_list|(
@@ -10412,16 +10323,6 @@ operator|(
 operator|)
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -10668,16 +10569,6 @@ operator|==
 literal|0
 return|;
 block|}
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -11086,16 +10977,6 @@ argument_list|,
 argument|unsigned NumProtocols
 argument_list|)
 block|;
-name|virtual
-name|void
-name|getAsStringInternal
-argument_list|(
-argument|std::string&InnerString
-argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|)
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -11195,7 +11076,7 @@ name|addFastQualifiers
 argument_list|(
 name|QT
 operator|.
-name|getFastQualifiers
+name|getLocalFastQualifiers
 argument_list|()
 argument_list|)
 block|;
@@ -11203,7 +11084,7 @@ if|if
 condition|(
 name|QT
 operator|.
-name|hasNonFastQualifiers
+name|hasLocalNonFastQualifiers
 argument_list|()
 condition|)
 block|{
@@ -11283,7 +11164,7 @@ argument_list|()
 block|;
 if|if
 condition|(
-name|hasQualifiers
+name|hasLocalQualifiers
 argument_list|()
 condition|)
 return|return
@@ -11318,7 +11199,7 @@ specifier|const
 block|{
 if|if
 condition|(
-name|hasQualifiers
+name|hasLocalQualifiers
 argument_list|()
 condition|)
 return|return
@@ -11355,6 +11236,148 @@ operator|>
 operator|(
 name|T
 operator|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|QualType
+operator|::
+name|isConstQualified
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isLocalConstQualified
+argument_list|()
+operator|||
+name|getTypePtr
+argument_list|()
+operator|->
+name|getCanonicalTypeInternal
+argument_list|()
+operator|.
+name|isLocalConstQualified
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|bool
+name|QualType
+operator|::
+name|isRestrictQualified
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isLocalRestrictQualified
+argument_list|()
+operator|||
+name|getTypePtr
+argument_list|()
+operator|->
+name|getCanonicalTypeInternal
+argument_list|()
+operator|.
+name|isLocalRestrictQualified
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|bool
+name|QualType
+operator|::
+name|isVolatileQualified
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isLocalVolatileQualified
+argument_list|()
+operator|||
+name|getTypePtr
+argument_list|()
+operator|->
+name|getCanonicalTypeInternal
+argument_list|()
+operator|.
+name|isLocalVolatileQualified
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|bool
+name|QualType
+operator|::
+name|hasQualifiers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasLocalQualifiers
+argument_list|()
+operator|||
+name|getTypePtr
+argument_list|()
+operator|->
+name|getCanonicalTypeInternal
+argument_list|()
+operator|.
+name|hasLocalQualifiers
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|Qualifiers
+name|QualType
+operator|::
+name|getQualifiers
+argument_list|()
+specifier|const
+block|{
+name|Qualifiers
+name|Quals
+operator|=
+name|getLocalQualifiers
+argument_list|()
+block|;
+name|Quals
+operator|.
+name|addQualifiers
+argument_list|(
+name|getTypePtr
+argument_list|()
+operator|->
+name|getCanonicalTypeInternal
+argument_list|()
+operator|.
+name|getLocalQualifiers
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Quals
+return|;
+block|}
+specifier|inline
+name|unsigned
+name|QualType
+operator|::
+name|getCVRQualifiers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalCVRQualifiers
+argument_list|()
+operator||
+name|getTypePtr
+argument_list|()
+operator|->
+name|getCanonicalTypeInternal
+argument_list|()
+operator|.
+name|getLocalCVRQualifiers
+argument_list|()
 return|;
 block|}
 specifier|inline
@@ -11522,7 +11545,7 @@ specifier|const
 block|{
 if|if
 condition|(
-name|hasNonFastQualifiers
+name|hasLocalNonFastQualifiers
 argument_list|()
 condition|)
 block|{
@@ -11561,7 +11584,7 @@ if|if
 condition|(
 name|CT
 operator|.
-name|hasNonFastQualifiers
+name|hasLocalNonFastQualifiers
 argument_list|()
 condition|)
 block|{
@@ -11651,7 +11674,7 @@ specifier|const
 block|{
 if|if
 condition|(
-name|hasNonFastQualifiers
+name|hasLocalNonFastQualifiers
 argument_list|()
 condition|)
 block|{
@@ -11690,7 +11713,7 @@ if|if
 condition|(
 name|CT
 operator|.
-name|hasNonFastQualifiers
+name|hasLocalNonFastQualifiers
 argument_list|()
 condition|)
 block|{
@@ -12092,8 +12115,6 @@ return|return
 literal|0
 return|;
 block|}
-comment|// NOTE: All of these methods use "getUnqualifiedType" to strip off address
-comment|// space qualifiers if present.
 specifier|inline
 name|bool
 name|Type
@@ -12109,9 +12130,6 @@ name|FunctionType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12130,9 +12148,6 @@ name|PointerType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12167,9 +12182,6 @@ name|BlockPointerType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12188,9 +12200,6 @@ name|ReferenceType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12209,9 +12218,6 @@ name|LValueReferenceType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12230,9 +12236,6 @@ name|RValueReferenceType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12287,9 +12290,6 @@ name|MemberPointerType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12344,9 +12344,6 @@ name|ArrayType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12365,9 +12362,6 @@ name|ConstantArrayType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12386,9 +12380,6 @@ name|IncompleteArrayType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12407,9 +12398,6 @@ name|VariableArrayType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12428,9 +12416,6 @@ name|DependentSizedArrayType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12449,9 +12434,6 @@ name|RecordType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12470,9 +12452,6 @@ name|ComplexType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12491,9 +12470,6 @@ name|VectorType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12512,9 +12488,6 @@ name|ExtVectorType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12533,9 +12506,6 @@ name|ObjCObjectPointerType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12554,9 +12524,6 @@ name|ObjCInterfaceType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12719,9 +12686,6 @@ name|TemplateTypeParmType
 operator|>
 operator|(
 name|CanonicalType
-operator|.
-name|getUnqualifiedType
-argument_list|()
 operator|)
 return|;
 block|}
@@ -12887,6 +12851,57 @@ return|return
 name|DB
 return|;
 block|}
+comment|// Helper class template that is used by Type::getAs to ensure that one does
+comment|// not try to look through a qualified type to get to an array type.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|bool
+name|isArrayType
+operator|=
+operator|(
+name|llvm
+operator|::
+name|is_same
+operator|<
+name|T
+operator|,
+name|ArrayType
+operator|>
+operator|::
+name|value
+operator|||
+name|llvm
+operator|::
+name|is_base_of
+operator|<
+name|ArrayType
+operator|,
+name|T
+operator|>
+operator|::
+name|value
+operator|)
+operator|>
+expr|struct
+name|ArrayType_cannot_be_used_with_getAs
+block|{ }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|ArrayType_cannot_be_used_with_getAs
+operator|<
+name|T
+operator|,
+name|true
+operator|>
+expr_stmt|;
 comment|/// Member-template getAs<specific type>'.
 name|template
 operator|<
@@ -12902,6 +12917,17 @@ name|getAs
 argument_list|()
 specifier|const
 block|{
+name|ArrayType_cannot_be_used_with_getAs
+operator|<
+name|T
+operator|>
+name|at
+block|;
+operator|(
+name|void
+operator|)
+name|at
+block|;
 comment|// If this is directly a T type, return it.
 if|if
 condition|(

@@ -4,7 +4,7 @@ comment|// Test this without pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple=x86_64-unknown-freebsd7.0 -include %S/va_arg.h %s -emit-llvm -o -&&
+comment|// RUN: clang-cc -triple=x86_64-unknown-freebsd7.0 -include %S/va_arg.h %s -emit-llvm -o -
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple=x86_64-unknown-freebsd7.0 -emit-pch -o %t %S/va_arg.h&&
+comment|// RUN: clang-cc -triple=x86_64-unknown-freebsd7.0 -emit-pch -o %t %S/va_arg.h
 end_comment
 
 begin_comment

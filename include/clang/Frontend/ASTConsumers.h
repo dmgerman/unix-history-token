@@ -96,19 +96,22 @@ name|class
 name|ASTConsumer
 decl_stmt|;
 name|class
+name|CodeGenOptions
+decl_stmt|;
+name|class
 name|Diagnostic
 decl_stmt|;
 name|class
 name|FileManager
 decl_stmt|;
 name|class
+name|LangOptions
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
-name|CompileOptions
-decl_stmt|;
-name|class
-name|LangOptions
+name|TargetOptions
 decl_stmt|;
 comment|// AST pretty-printer: prints out the AST in a format that is close to the
 comment|// original C code.  The output is intended to be in a format such that
@@ -202,7 +205,7 @@ name|SilenceRewriteMacroWarning
 argument_list|)
 decl_stmt|;
 comment|// LLVM code generator: uses the code generation backend to generate LLVM
-comment|// assembly. This runs optimizations depending on the CompileOptions
+comment|// assembly. This runs optimizations depending on the CodeGenOptions
 comment|// parameter. The output depends on the Action parameter.
 enum|enum
 name|BackendAction
@@ -237,9 +240,14 @@ operator|&
 name|Features
 argument_list|,
 specifier|const
-name|CompileOptions
+name|CodeGenOptions
 operator|&
-name|CompileOpts
+name|CodeGenOpts
+argument_list|,
+specifier|const
+name|TargetOptions
+operator|&
+name|TargetOpts
 argument_list|,
 specifier|const
 name|std

@@ -434,6 +434,11 @@ name|UnknownKind
 return|;
 block|}
 name|bool
+name|isConstant
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|isZeroConstant
 argument_list|()
 specifier|const
@@ -1873,7 +1878,7 @@ block|}
 specifier|const
 name|MemRegion
 operator|*
-name|getBaseRegion
+name|StripCasts
 argument_list|()
 specifier|const
 block|;

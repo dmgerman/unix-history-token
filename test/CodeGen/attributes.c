@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -triple i386-linux-gnu -o %t %s&&
+comment|// RUN: clang-cc -emit-llvm -triple i386-linux-gnu -o %t %s
 end_comment
 
 begin_comment
@@ -464,11 +464,7 @@ comment|// CHECK:define void @t20() nounwind {
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:entry:
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: call void @abort()
+comment|// CHECK: call void @abort()
 end_comment
 
 begin_comment

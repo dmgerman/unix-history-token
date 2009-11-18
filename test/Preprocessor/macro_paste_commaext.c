@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -E | grep 'V);'&&
+comment|// RUN: clang-cc %s -E | grep 'V);'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | grep 'W, 1, 2);'&&
+comment|// RUN: clang-cc %s -E | grep 'W, 1, 2);'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | grep 'X, 1, 2);'&&
+comment|// RUN: clang-cc %s -E | grep 'X, 1, 2);'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | grep 'Y, );'&&
+comment|// RUN: clang-cc %s -E | grep 'Y, );'
 end_comment
 
 begin_comment

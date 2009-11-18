@@ -1,10 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -g %s -emit-llvm -o %t -fblocks&&
+comment|// RUN: clang-cc -g %s -emit-llvm -o %t -fblocks
 end_comment
 
 begin_comment
 comment|// RUN: grep "func.start" %t | count 4
+end_comment
+
+begin_comment
+comment|// RUN: clang-cc -g %s -triple i386-unknown-unknown -emit-llvm -o %t -fblocks -fblock-introspection
+end_comment
+
+begin_comment
+comment|// RUN: grep "v8@?0i4" %t | count 1
+end_comment
+
+begin_comment
+comment|// RUN: clang-cc -g %s -triple i386-unknown-unknown -emit-llvm -o %t -fblocks
+end_comment
+
+begin_comment
+comment|// RUN: grep "v8@?0i4" %t | count 0
 end_comment
 
 begin_comment

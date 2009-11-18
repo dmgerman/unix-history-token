@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -verify -fsyntax-only %s&&
+comment|// RUN: clang -Xclang -verify -fsyntax-only %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o %t %s&&
+comment|// RUN: clang -emit-llvm -S -o %t %s
 end_comment
 
 begin_include
@@ -191,7 +191,7 @@ comment|// no-warning
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define noalias .* @xalloc(' %t&&
+comment|// RUN: grep 'define noalias .* @xalloc(' %t
 end_comment
 
 begin_define

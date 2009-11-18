@@ -65,6 +65,12 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"GlobalDecl.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -95,9 +101,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
-specifier|const
-name|CXXMethodDecl
-operator|*
+name|GlobalDecl
 operator|,
 name|int64_t
 operator|>
@@ -137,6 +141,21 @@ expr_stmt|;
 name|VirtualBaseClassIndiciesTy
 name|VirtualBaseClassIndicies
 decl_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|Vtables
+expr_stmt|;
 name|public
 label|:
 name|CGVtableInfo
@@ -157,10 +176,7 @@ comment|/// stored.
 name|int64_t
 name|getMethodVtableIndex
 argument_list|(
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|MD
+argument|GlobalDecl GD
 argument_list|)
 expr_stmt|;
 comment|/// getVirtualBaseOffsetIndex - Return the index (relative to the vtable
@@ -182,6 +198,31 @@ modifier|*
 name|VBase
 parameter_list|)
 function_decl|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getVtable
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getCtorVtable
+argument_list|(
+argument|const CXXRecordDecl *RD
+argument_list|,
+argument|const CXXRecordDecl *Class
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

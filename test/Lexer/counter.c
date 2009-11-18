@@ -4,7 +4,7 @@ comment|// __COUNTER__ support: rdar://4329310
 end_comment
 
 begin_comment
-comment|// RUN: clang -E %s> %t&&
+comment|// RUN: clang -E %s> %t
 end_comment
 
 begin_define
@@ -42,7 +42,7 @@ value|PASTE1(x,__COUNTER__)
 end_define
 
 begin_comment
-comment|// RUN: grep "A: 0" %t&&
+comment|// RUN: grep "A: 0" %t
 end_comment
 
 begin_label
@@ -52,7 +52,7 @@ end_label
 
 begin_decl_stmt
 name|__COUNTER__
-comment|// RUN: grep "B: foo1" %t&&
+comment|// RUN: grep "B: foo1" %t
 name|B
 range|:
 name|UNIQUE
@@ -63,7 +63,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// RUN: grep "C: foo2" %t&&
+comment|// RUN: grep "C: foo2" %t
 end_comment
 
 begin_label

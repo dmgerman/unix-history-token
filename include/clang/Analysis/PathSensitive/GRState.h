@@ -698,6 +698,24 @@ name|assumption
 argument_list|)
 decl|const
 decl_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|GRState
+operator|*
+operator|,
+specifier|const
+name|GRState
+operator|*
+operator|>
+name|Assume
+argument_list|(
+argument|DefinedOrUnknownSVal cond
+argument_list|)
+specifier|const
+expr_stmt|;
 specifier|const
 name|GRState
 modifier|*
@@ -1369,22 +1387,6 @@ name|Out
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Tags used for the Generic Data Map.
-struct|struct
-name|NullDerefTag
-block|{
-specifier|static
-name|int
-name|TagInt
-decl_stmt|;
-typedef|typedef
-specifier|const
-name|SVal
-modifier|*
-name|data_type
-typedef|;
-block|}
-struct|;
 block|}
 end_decl_stmt
 
@@ -1686,12 +1688,6 @@ name|BumpPtrAllocator
 operator|&
 name|Alloc
 expr_stmt|;
-comment|/// CurrentStmt - The block-level statement currently being visited.  This
-comment|///  is set by GRExprEngine.
-name|Stmt
-modifier|*
-name|CurrentStmt
-decl_stmt|;
 comment|/// TF - Object that represents a bundle of transfer functions
 comment|///  for manipulating and creating SVals.
 name|GRTransferFuncs
@@ -2576,6 +2572,69 @@ name|Cond
 operator|)
 argument_list|,
 name|Assumption
+argument_list|)
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    inline
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|GRState
+operator|*
+operator|,
+specifier|const
+name|GRState
+operator|*
+operator|>
+name|GRState
+operator|::
+name|Assume
+argument_list|(
+argument|DefinedOrUnknownSVal Cond
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|Cond
+operator|.
+name|isUnknown
+argument_list|()
+condition|)
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|this
+argument_list|,
+name|this
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getStateManager
+argument_list|()
+operator|.
+name|ConstraintMgr
+operator|->
+name|AssumeDual
+argument_list|(
+name|this
+argument_list|,
+name|cast
+operator|<
+name|DefinedSVal
+operator|>
+operator|(
+name|Cond
+operator|)
 argument_list|)
 return|;
 end_return

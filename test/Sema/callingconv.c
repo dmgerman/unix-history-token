@@ -109,5 +109,41 @@ comment|// expected-error {{variadic function cannot use 'fastcall' calling conv
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|cdecl
+operator|)
+argument_list|)
+name|ctest0
+argument_list|()
+block|{}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|cdecl
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+name|ctest1
+argument_list|(
+name|float
+name|x
+argument_list|)
+block|{}
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{attribute requires 0 argument(s)}}
+end_comment
+
 end_unit
 

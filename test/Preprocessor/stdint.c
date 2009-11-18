@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=arm-none-none %s | FileCheck -check-prefix ARM %s&&
+comment|// RUN: clang-cc -E -ffreestanding -triple=arm-none-none %s | FileCheck -check-prefix ARM %s
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef long long int int64_t;
+comment|// ARM:typedef signed long long int int64_t;
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef int int32_t;
+comment|// ARM:typedef signed int int32_t;
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef short int16_t;
+comment|// ARM:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -148,7 +148,7 @@ comment|// ARM:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// ARM:INT8_MIN_ (-128)
+comment|// ARM:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ comment|// ARM:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// ARM:INT_LEAST8_MIN_ (-128)
+comment|// ARM:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -168,7 +168,7 @@ comment|// ARM:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// ARM:INT_FAST8_MIN_ (-128)
+comment|// ARM:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ comment|// ARM:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// ARM:INT16_MIN_ (-32768)
+comment|// ARM:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -196,7 +196,7 @@ comment|// ARM:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// ARM:INT_LEAST16_MIN_ (-32768)
+comment|// ARM:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -208,7 +208,7 @@ comment|// ARM:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// ARM:INT_FAST16_MIN_ (-32768)
+comment|// ARM:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -380,47 +380,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:INT8_C_(0) (0)
+comment|// ARM:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// ARM:UINT8_C_(0) (0U)
+comment|// ARM:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// ARM:INT16_C_(0) (0)
+comment|// ARM:INT16_C_(0) 0
 end_comment
 
 begin_comment
-comment|// ARM:UINT16_C_(0) (0U)
+comment|// ARM:UINT16_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// ARM:INT32_C_(0) (0)
+comment|// ARM:INT32_C_(0) 0
 end_comment
 
 begin_comment
-comment|// ARM:UINT32_C_(0) (0U)
+comment|// ARM:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// ARM:INT64_C_(0) (0LL)
+comment|// ARM:INT64_C_(0) 0LL
 end_comment
 
 begin_comment
-comment|// ARM:UINT64_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// ARM:INTMAX_C_(0) (0LL)
-end_comment
-
-begin_comment
-comment|// ARM:UINTMAX_C_(0) (0ULL)
+comment|// ARM:UINT64_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -428,11 +416,23 @@ comment|//
 end_comment
 
 begin_comment
+comment|// ARM:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// ARM:UINTMAX_C_(0) 0ULL
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=bfin-none-none %s | FileCheck -check-prefix BFIN %s&&
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: clang-cc -E -ffreestanding -triple=bfin-none-none %s | FileCheck -check-prefix BFIN %s
 end_comment
 
 begin_comment
@@ -440,7 +440,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// BFIN:typedef long long int int64_t;
+comment|// BFIN:typedef signed long long int int64_t;
 end_comment
 
 begin_comment
@@ -468,7 +468,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// BFIN:typedef int int32_t;
+comment|// BFIN:typedef signed int int32_t;
 end_comment
 
 begin_comment
@@ -496,7 +496,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// BFIN:typedef short int16_t;
+comment|// BFIN:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -580,7 +580,7 @@ comment|// BFIN:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// BFIN:INT8_MIN_ (-128)
+comment|// BFIN:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -588,7 +588,7 @@ comment|// BFIN:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// BFIN:INT_LEAST8_MIN_ (-128)
+comment|// BFIN:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -600,7 +600,7 @@ comment|// BFIN:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// BFIN:INT_FAST8_MIN_ (-128)
+comment|// BFIN:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -620,7 +620,7 @@ comment|// BFIN:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// BFIN:INT16_MIN_ (-32768)
+comment|// BFIN:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -628,7 +628,7 @@ comment|// BFIN:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// BFIN:INT_LEAST16_MIN_ (-32768)
+comment|// BFIN:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -640,7 +640,7 @@ comment|// BFIN:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// BFIN:INT_FAST16_MIN_ (-32768)
+comment|// BFIN:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -812,47 +812,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// BFIN:INT8_C_(0) (0)
+comment|// BFIN:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// BFIN:UINT8_C_(0) (0U)
+comment|// BFIN:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// BFIN:INT16_C_(0) (0)
+comment|// BFIN:INT16_C_(0) 0
 end_comment
 
 begin_comment
-comment|// BFIN:UINT16_C_(0) (0U)
+comment|// BFIN:UINT16_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// BFIN:INT32_C_(0) (0)
+comment|// BFIN:INT32_C_(0) 0
 end_comment
 
 begin_comment
-comment|// BFIN:UINT32_C_(0) (0U)
+comment|// BFIN:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// BFIN:INT64_C_(0) (0LL)
+comment|// BFIN:INT64_C_(0) 0LL
 end_comment
 
 begin_comment
-comment|// BFIN:UINT64_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// BFIN:INTMAX_C_(0) (0LL)
-end_comment
-
-begin_comment
-comment|// BFIN:UINTMAX_C_(0) (0ULL)
+comment|// BFIN:UINT64_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -860,11 +848,23 @@ comment|//
 end_comment
 
 begin_comment
+comment|// BFIN:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// BFIN:UINTMAX_C_(0) 0ULL
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=i386-none-none %s | FileCheck -check-prefix I386 %s&&
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: clang-cc -E -ffreestanding -triple=i386-none-none %s | FileCheck -check-prefix I386 %s
 end_comment
 
 begin_comment
@@ -872,7 +872,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef long long int int64_t;
+comment|// I386:typedef signed long long int int64_t;
 end_comment
 
 begin_comment
@@ -900,7 +900,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef int int32_t;
+comment|// I386:typedef signed int int32_t;
 end_comment
 
 begin_comment
@@ -928,7 +928,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef short int16_t;
+comment|// I386:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -1012,7 +1012,7 @@ comment|// I386:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// I386:INT8_MIN_ (-128)
+comment|// I386:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -1020,7 +1020,7 @@ comment|// I386:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// I386:INT_LEAST8_MIN_ (-128)
+comment|// I386:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -1032,7 +1032,7 @@ comment|// I386:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// I386:INT_FAST8_MIN_ (-128)
+comment|// I386:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -1052,7 +1052,7 @@ comment|// I386:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// I386:INT16_MIN_ (-32768)
+comment|// I386:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1060,7 +1060,7 @@ comment|// I386:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// I386:INT_LEAST16_MIN_ (-32768)
+comment|// I386:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1072,7 +1072,7 @@ comment|// I386:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// I386:INT_FAST16_MIN_ (-32768)
+comment|// I386:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1244,47 +1244,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:INT8_C_(0) (0)
+comment|// I386:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// I386:UINT8_C_(0) (0U)
+comment|// I386:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// I386:INT16_C_(0) (0)
+comment|// I386:INT16_C_(0) 0
 end_comment
 
 begin_comment
-comment|// I386:UINT16_C_(0) (0U)
+comment|// I386:UINT16_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// I386:INT32_C_(0) (0)
+comment|// I386:INT32_C_(0) 0
 end_comment
 
 begin_comment
-comment|// I386:UINT32_C_(0) (0U)
+comment|// I386:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// I386:INT64_C_(0) (0LL)
+comment|// I386:INT64_C_(0) 0LL
 end_comment
 
 begin_comment
-comment|// I386:UINT64_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// I386:INTMAX_C_(0) (0LL)
-end_comment
-
-begin_comment
-comment|// I386:UINTMAX_C_(0) (0ULL)
+comment|// I386:UINT64_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -1292,7 +1280,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=msp430-none-none %s | FileCheck -check-prefix MSP430 %s&&
+comment|// I386:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// I386:UINTMAX_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -1300,11 +1292,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:typedef long long int32_t;
+comment|// RUN: clang-cc -E -ffreestanding -triple=msp430-none-none %s | FileCheck -check-prefix MSP430 %s
 end_comment
 
 begin_comment
-comment|// MSP430:typedef unsigned long long uint32_t;
+comment|//
+end_comment
+
+begin_comment
+comment|// MSP430:typedef signed long int int32_t;
+end_comment
+
+begin_comment
+comment|// MSP430:typedef unsigned long int uint32_t;
 end_comment
 
 begin_comment
@@ -1328,7 +1328,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:typedef short int16_t;
+comment|// MSP430:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -1412,7 +1412,7 @@ comment|// MSP430:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// MSP430:INT8_MIN_ (-128)
+comment|// MSP430:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -1420,7 +1420,7 @@ comment|// MSP430:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// MSP430:INT_LEAST8_MIN_ (-128)
+comment|// MSP430:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -1432,7 +1432,7 @@ comment|// MSP430:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// MSP430:INT_FAST8_MIN_ (-128)
+comment|// MSP430:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -1452,7 +1452,7 @@ comment|// MSP430:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// MSP430:INT16_MIN_ (-32768)
+comment|// MSP430:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1460,7 +1460,7 @@ comment|// MSP430:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// MSP430:INT_LEAST16_MIN_ (-32768)
+comment|// MSP430:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1472,7 +1472,7 @@ comment|// MSP430:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// MSP430:INT_FAST16_MIN_ (-32768)
+comment|// MSP430:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1488,39 +1488,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:INT32_MAX_ 2147483647
+comment|// MSP430:INT32_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// MSP430:INT32_MIN_ (-2147483647 -1)
+comment|// MSP430:INT32_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// MSP430:UINT32_MAX_ 4294967295U
+comment|// MSP430:UINT32_MAX_ 4294967295UL
 end_comment
 
 begin_comment
-comment|// MSP430:INT_LEAST32_MIN_ (-2147483647 -1)
+comment|// MSP430:INT_LEAST32_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// MSP430:INT_LEAST32_MAX_ 2147483647
+comment|// MSP430:INT_LEAST32_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// MSP430:UINT_LEAST32_MAX_ 4294967295U
+comment|// MSP430:UINT_LEAST32_MAX_ 4294967295UL
 end_comment
 
 begin_comment
-comment|// MSP430:INT_FAST32_MIN_ (-2147483647 -1)
+comment|// MSP430:INT_FAST32_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// MSP430:INT_FAST32_MAX_ 2147483647
+comment|// MSP430:INT_FAST32_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// MSP430:UINT_FAST32_MAX_ 4294967295U
+comment|// MSP430:UINT_FAST32_MAX_ 4294967295UL
 end_comment
 
 begin_comment
@@ -1568,7 +1568,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:INTPTR_MIN_ (-32768)
+comment|// MSP430:INTPTR_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1580,7 +1580,7 @@ comment|// MSP430:UINTPTR_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// MSP430:PTRDIFF_MIN_ (-32768)
+comment|// MSP430:PTRDIFF_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1612,31 +1612,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:SIG_ATOMIC_MIN_ (-2147483647 -1)
+comment|// MSP430:SIG_ATOMIC_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// MSP430:SIG_ATOMIC_MAX_ 2147483647
+comment|// MSP430:SIG_ATOMIC_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// MSP430:WINT_MIN_ (-2147483647 -1)
+comment|// MSP430:WINT_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// MSP430:WINT_MAX_ 2147483647
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// MSP430:WCHAR_MAX_ 2147483647
-end_comment
-
-begin_comment
-comment|// MSP430:WCHAR_MIN_ (-2147483647 -1)
+comment|// MSP430:WINT_MAX_ 2147483647L
 end_comment
 
 begin_comment
@@ -1644,27 +1632,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:INT8_C_(0) (0)
+comment|// MSP430:WCHAR_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// MSP430:UINT8_C_(0) (0U)
+comment|// MSP430:WCHAR_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
-comment|// MSP430:INT16_C_(0) (0)
+comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:UINT16_C_(0) (0U)
+comment|// MSP430:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// MSP430:INT32_C_(0) (0)
+comment|// MSP430:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// MSP430:UINT32_C_(0) (0U)
+comment|// MSP430:INT16_C_(0) 0
+end_comment
+
+begin_comment
+comment|// MSP430:UINT16_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// MSP430:INT32_C_(0) 0L
+end_comment
+
+begin_comment
+comment|// MSP430:UINT32_C_(0) 0UL
 end_comment
 
 begin_comment
@@ -1680,19 +1680,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:INTMAX_C_(0) (0LL)
+comment|// MSP430:INTMAX_C_(0) 0LL
 end_comment
 
 begin_comment
-comment|// MSP430:UINTMAX_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=pic16-none-none %s | FileCheck -check-prefix PIC16 %s&&
+comment|// MSP430:UINTMAX_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -1700,11 +1692,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:typedef long long int32_t;
+comment|// RUN: clang-cc -E -ffreestanding -triple=pic16-none-none %s | FileCheck -check-prefix PIC16 %s
 end_comment
 
 begin_comment
-comment|// PIC16:typedef unsigned long long uint32_t;
+comment|//
+end_comment
+
+begin_comment
+comment|// PIC16:typedef signed long int int32_t;
+end_comment
+
+begin_comment
+comment|// PIC16:typedef unsigned long int uint32_t;
 end_comment
 
 begin_comment
@@ -1728,7 +1728,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:typedef short int16_t;
+comment|// PIC16:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -1812,7 +1812,7 @@ comment|// PIC16:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// PIC16:INT8_MIN_ (-128)
+comment|// PIC16:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -1820,7 +1820,7 @@ comment|// PIC16:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// PIC16:INT_LEAST8_MIN_ (-128)
+comment|// PIC16:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -1832,7 +1832,7 @@ comment|// PIC16:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// PIC16:INT_FAST8_MIN_ (-128)
+comment|// PIC16:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -1852,7 +1852,7 @@ comment|// PIC16:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// PIC16:INT16_MIN_ (-32768)
+comment|// PIC16:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1860,7 +1860,7 @@ comment|// PIC16:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// PIC16:INT_LEAST16_MIN_ (-32768)
+comment|// PIC16:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1872,7 +1872,7 @@ comment|// PIC16:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// PIC16:INT_FAST16_MIN_ (-32768)
+comment|// PIC16:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1888,39 +1888,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:INT32_MAX_ 2147483647
+comment|// PIC16:INT32_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// PIC16:INT32_MIN_ (-2147483647 -1)
+comment|// PIC16:INT32_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// PIC16:UINT32_MAX_ 4294967295U
+comment|// PIC16:UINT32_MAX_ 4294967295UL
 end_comment
 
 begin_comment
-comment|// PIC16:INT_LEAST32_MIN_ (-2147483647 -1)
+comment|// PIC16:INT_LEAST32_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// PIC16:INT_LEAST32_MAX_ 2147483647
+comment|// PIC16:INT_LEAST32_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// PIC16:UINT_LEAST32_MAX_ 4294967295U
+comment|// PIC16:UINT_LEAST32_MAX_ 4294967295UL
 end_comment
 
 begin_comment
-comment|// PIC16:INT_FAST32_MIN_ (-2147483647 -1)
+comment|// PIC16:INT_FAST32_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// PIC16:INT_FAST32_MAX_ 2147483647
+comment|// PIC16:INT_FAST32_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// PIC16:UINT_FAST32_MAX_ 4294967295U
+comment|// PIC16:UINT_FAST32_MAX_ 4294967295UL
 end_comment
 
 begin_comment
@@ -1968,7 +1968,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:INTPTR_MIN_ (-32768)
+comment|// PIC16:INTPTR_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -1980,7 +1980,7 @@ comment|// PIC16:UINTPTR_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// PIC16:PTRDIFF_MIN_ (-32768)
+comment|// PIC16:PTRDIFF_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -2012,31 +2012,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:SIG_ATOMIC_MIN_ (-2147483647 -1)
+comment|// PIC16:SIG_ATOMIC_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// PIC16:SIG_ATOMIC_MAX_ 2147483647
+comment|// PIC16:SIG_ATOMIC_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// PIC16:WINT_MIN_ (-2147483647 -1)
+comment|// PIC16:WINT_MIN_ (-2147483647L -1)
 end_comment
 
 begin_comment
-comment|// PIC16:WINT_MAX_ 2147483647
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// PIC16:WCHAR_MAX_ 2147483647
-end_comment
-
-begin_comment
-comment|// PIC16:WCHAR_MIN_ (-2147483647 -1)
+comment|// PIC16:WINT_MAX_ 2147483647L
 end_comment
 
 begin_comment
@@ -2044,27 +2032,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:INT8_C_(0) (0)
+comment|// PIC16:WCHAR_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// PIC16:UINT8_C_(0) (0U)
+comment|// PIC16:WCHAR_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
-comment|// PIC16:INT16_C_(0) (0)
+comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:UINT16_C_(0) (0U)
+comment|// PIC16:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// PIC16:INT32_C_(0) (0)
+comment|// PIC16:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// PIC16:UINT32_C_(0) (0U)
+comment|// PIC16:INT16_C_(0) 0
+end_comment
+
+begin_comment
+comment|// PIC16:UINT16_C_(0) 0U
+end_comment
+
+begin_comment
+comment|// PIC16:INT32_C_(0) 0L
+end_comment
+
+begin_comment
+comment|// PIC16:UINT32_C_(0) 0UL
 end_comment
 
 begin_comment
@@ -2080,19 +2080,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:INTMAX_C_(0) (0LL)
+comment|// PIC16:INTMAX_C_(0) 0LL
 end_comment
 
 begin_comment
-comment|// PIC16:UINTMAX_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=powerpc64-none-none %s | FileCheck -check-prefix PPC64 %s&&
+comment|// PIC16:UINTMAX_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -2100,7 +2092,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef long int int64_t;
+comment|// RUN: clang-cc -E -ffreestanding -triple=powerpc64-none-none %s | FileCheck -check-prefix PPC64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPC64:typedef signed long int int64_t;
 end_comment
 
 begin_comment
@@ -2128,7 +2128,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef int int32_t;
+comment|// PPC64:typedef signed int int32_t;
 end_comment
 
 begin_comment
@@ -2156,7 +2156,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef short int16_t;
+comment|// PPC64:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -2240,7 +2240,7 @@ comment|// PPC64:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// PPC64:INT8_MIN_ (-128)
+comment|// PPC64:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -2248,7 +2248,7 @@ comment|// PPC64:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// PPC64:INT_LEAST8_MIN_ (-128)
+comment|// PPC64:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -2260,7 +2260,7 @@ comment|// PPC64:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// PPC64:INT_FAST8_MIN_ (-128)
+comment|// PPC64:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -2280,7 +2280,7 @@ comment|// PPC64:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// PPC64:INT16_MIN_ (-32768)
+comment|// PPC64:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -2288,7 +2288,7 @@ comment|// PPC64:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// PPC64:INT_LEAST16_MIN_ (-32768)
+comment|// PPC64:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -2300,7 +2300,7 @@ comment|// PPC64:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// PPC64:INT_FAST16_MIN_ (-32768)
+comment|// PPC64:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -2356,39 +2356,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:INT64_MAX_ 9223372036854775807LL
+comment|// PPC64:INT64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// PPC64:INT64_MIN_ (-9223372036854775807LL -1)
+comment|// PPC64:INT64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// PPC64:UINT64_MAX_ 18446744073709551615ULL
+comment|// PPC64:UINT64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// PPC64:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
+comment|// PPC64:INT_LEAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// PPC64:INT_LEAST64_MAX_ 9223372036854775807LL
+comment|// PPC64:INT_LEAST64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// PPC64:UINT_LEAST64_MAX_ 18446744073709551615ULL
+comment|// PPC64:UINT_LEAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// PPC64:INT_FAST64_MIN_ (-9223372036854775807LL -1)
+comment|// PPC64:INT_FAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// PPC64:INT_FAST64_MAX_ 9223372036854775807LL
+comment|// PPC64:INT_FAST64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// PPC64:UINT_FAST64_MAX_ 18446744073709551615ULL
+comment|// PPC64:UINT_FAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -2396,27 +2396,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:INTPTR_MIN_ (-9223372036854775807LL -1)
+comment|// PPC64:INTPTR_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// PPC64:INTPTR_MAX_ 9223372036854775807LL
+comment|// PPC64:INTPTR_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// PPC64:UINTPTR_MAX_ 18446744073709551615ULL
+comment|// PPC64:UINTPTR_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// PPC64:PTRDIFF_MIN_ (-9223372036854775807LL -1)
+comment|// PPC64:PTRDIFF_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// PPC64:PTRDIFF_MAX_ 9223372036854775807LL
+comment|// PPC64:PTRDIFF_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// PPC64:SIZE_MAX_ 18446744073709551615ULL
+comment|// PPC64:SIZE_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -2472,47 +2472,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:INT8_C_(0) (0)
+comment|// PPC64:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// PPC64:UINT8_C_(0) (0U)
+comment|// PPC64:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// PPC64:INT16_C_(0) (0)
+comment|// PPC64:INT16_C_(0) 0
 end_comment
 
 begin_comment
-comment|// PPC64:UINT16_C_(0) (0U)
+comment|// PPC64:UINT16_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// PPC64:INT32_C_(0) (0)
+comment|// PPC64:INT32_C_(0) 0
 end_comment
 
 begin_comment
-comment|// PPC64:UINT32_C_(0) (0U)
+comment|// PPC64:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// PPC64:INT64_C_(0) (0LL)
+comment|// PPC64:INT64_C_(0) 0L
 end_comment
 
 begin_comment
-comment|// PPC64:UINT64_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// PPC64:INTMAX_C_(0) (0LL)
-end_comment
-
-begin_comment
-comment|// PPC64:UINTMAX_C_(0) (0ULL)
+comment|// PPC64:UINT64_C_(0) 0UL
 end_comment
 
 begin_comment
@@ -2520,7 +2508,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=powerpc-none-none %s | FileCheck -check-prefix PPC %s&&
+comment|// PPC64:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// PPC64:UINTMAX_C_(0) 0ULL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: clang-cc -E -ffreestanding -triple=powerpc-none-none %s | FileCheck -check-prefix PPC %s
 end_comment
 
 begin_comment
@@ -2532,7 +2532,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef long long int int64_t;
+comment|// PPC:typedef signed long long int int64_t;
 end_comment
 
 begin_comment
@@ -2560,7 +2560,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef int int32_t;
+comment|// PPC:typedef signed int int32_t;
 end_comment
 
 begin_comment
@@ -2588,7 +2588,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef short int16_t;
+comment|// PPC:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -2672,7 +2672,7 @@ comment|// PPC:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// PPC:INT8_MIN_ (-128)
+comment|// PPC:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -2680,7 +2680,7 @@ comment|// PPC:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// PPC:INT_LEAST8_MIN_ (-128)
+comment|// PPC:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -2692,7 +2692,7 @@ comment|// PPC:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// PPC:INT_FAST8_MIN_ (-128)
+comment|// PPC:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -2712,7 +2712,7 @@ comment|// PPC:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// PPC:INT16_MIN_ (-32768)
+comment|// PPC:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -2720,7 +2720,7 @@ comment|// PPC:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// PPC:INT_LEAST16_MIN_ (-32768)
+comment|// PPC:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -2732,7 +2732,7 @@ comment|// PPC:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// PPC:INT_FAST16_MIN_ (-32768)
+comment|// PPC:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -2904,47 +2904,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:INT8_C_(0) (0)
+comment|// PPC:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// PPC:UINT8_C_(0) (0U)
+comment|// PPC:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// PPC:INT16_C_(0) (0)
+comment|// PPC:INT16_C_(0) 0
 end_comment
 
 begin_comment
-comment|// PPC:UINT16_C_(0) (0U)
+comment|// PPC:UINT16_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// PPC:INT32_C_(0) (0)
+comment|// PPC:INT32_C_(0) 0
 end_comment
 
 begin_comment
-comment|// PPC:UINT32_C_(0) (0U)
+comment|// PPC:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// PPC:INT64_C_(0) (0LL)
+comment|// PPC:INT64_C_(0) 0LL
 end_comment
 
 begin_comment
-comment|// PPC:UINT64_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// PPC:INTMAX_C_(0) (0LL)
-end_comment
-
-begin_comment
-comment|// PPC:UINTMAX_C_(0) (0ULL)
+comment|// PPC:UINT64_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -2952,7 +2940,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=s390x-none-none %s | FileCheck -check-prefix S390X %s&&
+comment|// PPC:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// PPC:UINTMAX_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -2960,11 +2952,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef long long int int64_t;
+comment|// RUN: clang-cc -E -ffreestanding -triple=s390x-none-none %s | FileCheck -check-prefix S390X %s
 end_comment
 
 begin_comment
-comment|// S390X:typedef unsigned long long int uint64_t;
+comment|//
+end_comment
+
+begin_comment
+comment|// S390X:typedef signed long int int64_t;
+end_comment
+
+begin_comment
+comment|// S390X:typedef unsigned long int uint64_t;
 end_comment
 
 begin_comment
@@ -2988,7 +2988,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef int int32_t;
+comment|// S390X:typedef signed int int32_t;
 end_comment
 
 begin_comment
@@ -3016,7 +3016,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef short int16_t;
+comment|// S390X:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -3100,7 +3100,7 @@ comment|// S390X:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// S390X:INT8_MIN_ (-128)
+comment|// S390X:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -3108,7 +3108,7 @@ comment|// S390X:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// S390X:INT_LEAST8_MIN_ (-128)
+comment|// S390X:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -3120,7 +3120,7 @@ comment|// S390X:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// S390X:INT_FAST8_MIN_ (-128)
+comment|// S390X:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -3140,7 +3140,7 @@ comment|// S390X:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// S390X:INT16_MIN_ (-32768)
+comment|// S390X:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -3148,7 +3148,7 @@ comment|// S390X:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// S390X:INT_LEAST16_MIN_ (-32768)
+comment|// S390X:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -3160,7 +3160,7 @@ comment|// S390X:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// S390X:INT_FAST16_MIN_ (-32768)
+comment|// S390X:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -3216,39 +3216,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:INT64_MAX_ 9223372036854775807LL
+comment|// S390X:INT64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// S390X:INT64_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:INT64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// S390X:UINT64_MAX_ 18446744073709551615ULL
+comment|// S390X:UINT64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// S390X:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:INT_LEAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// S390X:INT_LEAST64_MAX_ 9223372036854775807LL
+comment|// S390X:INT_LEAST64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// S390X:UINT_LEAST64_MAX_ 18446744073709551615ULL
+comment|// S390X:UINT_LEAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// S390X:INT_FAST64_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:INT_FAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// S390X:INT_FAST64_MAX_ 9223372036854775807LL
+comment|// S390X:INT_FAST64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// S390X:UINT_FAST64_MAX_ 18446744073709551615ULL
+comment|// S390X:UINT_FAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -3256,27 +3256,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:INTPTR_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:INTPTR_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// S390X:INTPTR_MAX_ 9223372036854775807LL
+comment|// S390X:INTPTR_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// S390X:UINTPTR_MAX_ 18446744073709551615ULL
+comment|// S390X:UINTPTR_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// S390X:PTRDIFF_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:PTRDIFF_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// S390X:PTRDIFF_MAX_ 9223372036854775807LL
+comment|// S390X:PTRDIFF_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// S390X:SIZE_MAX_ 18446744073709551615ULL
+comment|// S390X:SIZE_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -3332,47 +3332,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:INT8_C_(0) (0)
+comment|// S390X:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// S390X:UINT8_C_(0) (0U)
+comment|// S390X:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// S390X:INT16_C_(0) (0)
+comment|// S390X:INT16_C_(0) 0
 end_comment
 
 begin_comment
-comment|// S390X:UINT16_C_(0) (0U)
+comment|// S390X:UINT16_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// S390X:INT32_C_(0) (0)
+comment|// S390X:INT32_C_(0) 0
 end_comment
 
 begin_comment
-comment|// S390X:UINT32_C_(0) (0U)
+comment|// S390X:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// S390X:INT64_C_(0) (0LL)
+comment|// S390X:INT64_C_(0) 0L
 end_comment
 
 begin_comment
-comment|// S390X:UINT64_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// S390X:INTMAX_C_(0) (0LL)
-end_comment
-
-begin_comment
-comment|// S390X:UINTMAX_C_(0) (0ULL)
+comment|// S390X:UINT64_C_(0) 0UL
 end_comment
 
 begin_comment
@@ -3380,7 +3368,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=sparc-none-none %s | FileCheck -check-prefix SPARC %s&&
+comment|// S390X:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// S390X:UINTMAX_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -3388,7 +3380,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef long long int int64_t;
+comment|// RUN: clang-cc -E -ffreestanding -triple=sparc-none-none %s | FileCheck -check-prefix SPARC %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// SPARC:typedef signed long long int int64_t;
 end_comment
 
 begin_comment
@@ -3416,7 +3416,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef int int32_t;
+comment|// SPARC:typedef signed int int32_t;
 end_comment
 
 begin_comment
@@ -3444,7 +3444,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef short int16_t;
+comment|// SPARC:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -3528,7 +3528,7 @@ comment|// SPARC:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// SPARC:INT8_MIN_ (-128)
+comment|// SPARC:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -3536,7 +3536,7 @@ comment|// SPARC:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// SPARC:INT_LEAST8_MIN_ (-128)
+comment|// SPARC:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -3548,7 +3548,7 @@ comment|// SPARC:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// SPARC:INT_FAST8_MIN_ (-128)
+comment|// SPARC:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -3568,7 +3568,7 @@ comment|// SPARC:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// SPARC:INT16_MIN_ (-32768)
+comment|// SPARC:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -3576,7 +3576,7 @@ comment|// SPARC:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// SPARC:INT_LEAST16_MIN_ (-32768)
+comment|// SPARC:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -3588,7 +3588,7 @@ comment|// SPARC:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// SPARC:INT_FAST16_MIN_ (-32768)
+comment|// SPARC:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -3760,47 +3760,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:INT8_C_(0) (0)
+comment|// SPARC:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// SPARC:UINT8_C_(0) (0U)
+comment|// SPARC:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// SPARC:INT16_C_(0) (0)
+comment|// SPARC:INT16_C_(0) 0
 end_comment
 
 begin_comment
-comment|// SPARC:UINT16_C_(0) (0U)
+comment|// SPARC:UINT16_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// SPARC:INT32_C_(0) (0)
+comment|// SPARC:INT32_C_(0) 0
 end_comment
 
 begin_comment
-comment|// SPARC:UINT32_C_(0) (0U)
+comment|// SPARC:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// SPARC:INT64_C_(0) (0LL)
+comment|// SPARC:INT64_C_(0) 0LL
 end_comment
 
 begin_comment
-comment|// SPARC:UINT64_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// SPARC:INTMAX_C_(0) (0LL)
-end_comment
-
-begin_comment
-comment|// SPARC:UINTMAX_C_(0) (0ULL)
+comment|// SPARC:UINT64_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -3808,7 +3796,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=tce-none-none %s | FileCheck -check-prefix TCE %s&&
+comment|// SPARC:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// SPARC:UINTMAX_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -3816,7 +3808,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:typedef int int32_t;
+comment|// RUN: clang-cc -E -ffreestanding -triple=tce-none-none %s | FileCheck -check-prefix TCE %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// TCE:typedef signed int int32_t;
 end_comment
 
 begin_comment
@@ -3844,7 +3844,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:typedef short int16_t;
+comment|// TCE:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -3928,7 +3928,7 @@ comment|// TCE:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// TCE:INT8_MIN_ (-128)
+comment|// TCE:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -3936,7 +3936,7 @@ comment|// TCE:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// TCE:INT_LEAST8_MIN_ (-128)
+comment|// TCE:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -3948,7 +3948,7 @@ comment|// TCE:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// TCE:INT_FAST8_MIN_ (-128)
+comment|// TCE:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -3968,7 +3968,7 @@ comment|// TCE:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// TCE:INT16_MIN_ (-32768)
+comment|// TCE:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -3976,7 +3976,7 @@ comment|// TCE:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// TCE:INT_LEAST16_MIN_ (-32768)
+comment|// TCE:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -3988,7 +3988,7 @@ comment|// TCE:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// TCE:INT_FAST16_MIN_ (-32768)
+comment|// TCE:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -4160,27 +4160,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:INT8_C_(0) (0)
+comment|// TCE:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// TCE:UINT8_C_(0) (0U)
+comment|// TCE:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// TCE:INT16_C_(0) (0)
+comment|// TCE:INT16_C_(0) 0
 end_comment
 
 begin_comment
-comment|// TCE:UINT16_C_(0) (0U)
+comment|// TCE:UINT16_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// TCE:INT32_C_(0) (0)
+comment|// TCE:INT32_C_(0) 0
 end_comment
 
 begin_comment
-comment|// TCE:UINT32_C_(0) (0U)
+comment|// TCE:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
@@ -4196,19 +4196,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:INTMAX_C_(0) (0LL)
+comment|// TCE:INTMAX_C_(0) 0LL
 end_comment
 
 begin_comment
-comment|// TCE:UINTMAX_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=x86_64-none-none %s | FileCheck -check-prefix X86_64 %s&&
+comment|// TCE:UINTMAX_C_(0) 0ULL
 end_comment
 
 begin_comment
@@ -4216,11 +4208,19 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: clang-cc -E -ffreestanding -triple=x86_64-none-none %s | FileCheck -check-prefix X86_64 %s
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef long int int64_t;
+comment|//
+end_comment
+
+begin_comment
+comment|// X86_64:typedef signed long int int64_t;
 end_comment
 
 begin_comment
@@ -4248,7 +4248,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef int int32_t;
+comment|// X86_64:typedef signed int int32_t;
 end_comment
 
 begin_comment
@@ -4276,7 +4276,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef short int16_t;
+comment|// X86_64:typedef signed short int16_t;
 end_comment
 
 begin_comment
@@ -4360,7 +4360,7 @@ comment|// X86_64:INT8_MAX_ 127
 end_comment
 
 begin_comment
-comment|// X86_64:INT8_MIN_ (-128)
+comment|// X86_64:INT8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -4368,7 +4368,7 @@ comment|// X86_64:UINT8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// X86_64:INT_LEAST8_MIN_ (-128)
+comment|// X86_64:INT_LEAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -4380,7 +4380,7 @@ comment|// X86_64:UINT_LEAST8_MAX_ 255
 end_comment
 
 begin_comment
-comment|// X86_64:INT_FAST8_MIN_ (-128)
+comment|// X86_64:INT_FAST8_MIN_ (-127 -1)
 end_comment
 
 begin_comment
@@ -4400,7 +4400,7 @@ comment|// X86_64:INT16_MAX_ 32767
 end_comment
 
 begin_comment
-comment|// X86_64:INT16_MIN_ (-32768)
+comment|// X86_64:INT16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -4408,7 +4408,7 @@ comment|// X86_64:UINT16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// X86_64:INT_LEAST16_MIN_ (-32768)
+comment|// X86_64:INT_LEAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -4420,7 +4420,7 @@ comment|// X86_64:UINT_LEAST16_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// X86_64:INT_FAST16_MIN_ (-32768)
+comment|// X86_64:INT_FAST16_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
@@ -4476,39 +4476,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:INT64_MAX_ 9223372036854775807LL
+comment|// X86_64:INT64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// X86_64:INT64_MIN_ (-9223372036854775807LL -1)
+comment|// X86_64:INT64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// X86_64:UINT64_MAX_ 18446744073709551615ULL
+comment|// X86_64:UINT64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// X86_64:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
+comment|// X86_64:INT_LEAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// X86_64:INT_LEAST64_MAX_ 9223372036854775807LL
+comment|// X86_64:INT_LEAST64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// X86_64:UINT_LEAST64_MAX_ 18446744073709551615ULL
+comment|// X86_64:UINT_LEAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// X86_64:INT_FAST64_MIN_ (-9223372036854775807LL -1)
+comment|// X86_64:INT_FAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// X86_64:INT_FAST64_MAX_ 9223372036854775807LL
+comment|// X86_64:INT_FAST64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// X86_64:UINT_FAST64_MAX_ 18446744073709551615ULL
+comment|// X86_64:UINT_FAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -4516,27 +4516,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:INTPTR_MIN_ (-9223372036854775807LL -1)
+comment|// X86_64:INTPTR_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// X86_64:INTPTR_MAX_ 9223372036854775807LL
+comment|// X86_64:INTPTR_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// X86_64:UINTPTR_MAX_ 18446744073709551615ULL
+comment|// X86_64:UINTPTR_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// X86_64:PTRDIFF_MIN_ (-9223372036854775807LL -1)
+comment|// X86_64:PTRDIFF_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
-comment|// X86_64:PTRDIFF_MAX_ 9223372036854775807LL
+comment|// X86_64:PTRDIFF_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// X86_64:SIZE_MAX_ 18446744073709551615ULL
+comment|// X86_64:SIZE_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
@@ -4592,47 +4592,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:INT8_C_(0) (0)
+comment|// X86_64:INT8_C_(0) 0
 end_comment
 
 begin_comment
-comment|// X86_64:UINT8_C_(0) (0U)
+comment|// X86_64:UINT8_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// X86_64:INT16_C_(0) (0)
+comment|// X86_64:INT16_C_(0) 0
 end_comment
 
 begin_comment
-comment|// X86_64:UINT16_C_(0) (0U)
+comment|// X86_64:UINT16_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// X86_64:INT32_C_(0) (0)
+comment|// X86_64:INT32_C_(0) 0
 end_comment
 
 begin_comment
-comment|// X86_64:UINT32_C_(0) (0U)
+comment|// X86_64:UINT32_C_(0) 0U
 end_comment
 
 begin_comment
-comment|// X86_64:INT64_C_(0) (0LL)
+comment|// X86_64:INT64_C_(0) 0L
 end_comment
 
 begin_comment
-comment|// X86_64:UINT64_C_(0) (0ULL)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// X86_64:INTMAX_C_(0) (0LL)
-end_comment
-
-begin_comment
-comment|// X86_64:UINTMAX_C_(0) (0ULL)
+comment|// X86_64:UINT64_C_(0) 0UL
 end_comment
 
 begin_comment
@@ -4640,7 +4628,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: true
+comment|// X86_64:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// X86_64:UINTMAX_C_(0) 0ULL
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_include

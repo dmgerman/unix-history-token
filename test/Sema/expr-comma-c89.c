@@ -7,12 +7,6 @@ begin_comment
 comment|// rdar://6095180
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
 begin_struct
 struct|struct
 name|s

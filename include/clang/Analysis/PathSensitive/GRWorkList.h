@@ -69,10 +69,22 @@ directive|include
 file|"clang/Analysis/PathSensitive/GRBlockCounter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|CFGBlock
+decl_stmt|;
+name|class
+name|ExplodedNode
+decl_stmt|;
 name|class
 name|ExplodedNodeImpl
 decl_stmt|;
@@ -93,6 +105,7 @@ decl_stmt|;
 name|unsigned
 name|BlockIdx
 decl_stmt|;
+comment|// This is the index of the next statement.
 name|public
 label|:
 name|GRWorkListUnit

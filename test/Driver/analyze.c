@@ -8,7 +8,7 @@ comment|// (at least for a few key ones).
 end_comment
 
 begin_comment
-comment|// RUN: env MACOSX_DEPLOYMENT_TARGET=10.5 clang -ccc-host-triple i386-apple-darwin9  -### --analyze -o /dev/null %s -msse 2> %t.log&&
+comment|// RUN: env MACOSX_DEPLOYMENT_TARGET=10.5 clang -ccc-host-triple i386-apple-darwin9  -### --analyze -o /dev/null %s -msse 2> %t.log
 end_comment
 
 begin_comment

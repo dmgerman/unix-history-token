@@ -80,8 +80,8 @@ name|test1
 parameter_list|()
 block|{
 comment|// CHECK:       movabsq $59, %rdx
-comment|// CHECK-NEXT:  movq    %rax, %rdi
-comment|// CHECK-NEXT:  movq    %rcx, %rsi
+comment|// CHECK-NEXT:  movq
+comment|// CHECK-NEXT:  movq
 comment|// CHECK-NEXT:  call    ___strcpy_chk
 name|strcpy
 argument_list|(
@@ -103,8 +103,8 @@ name|test2
 parameter_list|()
 block|{
 comment|// CHECK:       movabsq $63, %rdx
-comment|// CHECK-NEXT:  movq    %rax, %rdi
-comment|// CHECK-NEXT:  movq    %rcx, %rsi
+comment|// CHECK-NEXT:  movq
+comment|// CHECK-NEXT:  movq
 comment|// CHECK-NEXT:  call    ___strcpy_chk
 name|strcpy
 argument_list|(
@@ -122,8 +122,8 @@ name|test3
 parameter_list|()
 block|{
 comment|// CHECK:       movabsq $0, %rdx
-comment|// CHECK-NEXT:  movq    %rax, %rdi
-comment|// CHECK-NEXT:  movq    %rcx, %rsi
+comment|// CHECK-NEXT:  movq
+comment|// CHECK-NEXT:  movq
 comment|// CHECK-NEXT:  call    ___strcpy_chk
 name|strcpy
 argument_list|(
@@ -145,8 +145,8 @@ name|test4
 parameter_list|()
 block|{
 comment|// CHECK:       movabsq $0, %rdx
-comment|// CHECK-NEXT:  movq    %rax, %rdi
-comment|// CHECK-NEXT:  movq    %rcx, %rsi
+comment|// CHECK-NEXT:  movq
+comment|// CHECK-NEXT:  movq
 comment|// CHECK-NEXT:  call    ___strcpy_chk
 name|strcpy
 argument_list|(
@@ -176,8 +176,8 @@ name|void
 name|test5
 parameter_list|()
 block|{
-comment|// CHECK:       movb    $0, %al
-comment|// CHECK-NEXT:  testb   %al, %al
+comment|// CHECK:       movq    $-1, %rax
+comment|// CHECK-NEXT:  cmpq    $-1, %rax
 comment|// CHECK:       call    ___inline_strcpy_chk
 name|strcpy
 argument_list|(
@@ -201,8 +201,8 @@ literal|57
 index|]
 decl_stmt|;
 comment|// CHECK:       movabsq $53, %rdx
-comment|// CHECK-NEXT:  movq    %rax, %rdi
-comment|// CHECK-NEXT:  movq    %rcx, %rsi
+comment|// CHECK-NEXT:  movq
+comment|// CHECK-NEXT:  movq
 comment|// CHECK-NEXT:  call    ___strcpy_chk
 name|strcpy
 argument_list|(

@@ -268,6 +268,7 @@ name|ASTContext
 modifier|&
 name|Context
 decl_stmt|;
+specifier|const
 name|TargetInfo
 modifier|&
 name|Target
@@ -523,6 +524,7 @@ return|return
 name|TheTargetData
 return|;
 block|}
+specifier|const
 name|TargetInfo
 operator|&
 name|getTarget

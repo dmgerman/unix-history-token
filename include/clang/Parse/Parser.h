@@ -358,6 +358,7 @@ name|getLangOptions
 argument_list|()
 return|;
 block|}
+specifier|const
 name|TargetInfo
 operator|&
 name|getTargetInfo
@@ -657,6 +658,10 @@ name|DeclGroupPtrTy
 modifier|&
 name|Result
 parameter_list|)
+function_decl|;
+name|DeclGroupPtrTy
+name|RetrievePendingObjCImpDecl
+parameter_list|()
 function_decl|;
 name|private
 label|:
@@ -1169,7 +1174,7 @@ comment|/// after the token consumption is done, Commit() or Revert() is called 
 comment|/// either "commit the consumed tokens" or revert to the previously marked
 comment|/// token position. Example:
 comment|///
-comment|///   TentativeParsingAction TPA;
+comment|///   TentativeParsingAction TPA(*this);
 comment|///   ConsumeToken();
 comment|///   ....
 comment|///   TPA.Revert();
@@ -2544,6 +2549,16 @@ argument_list|)
 block|;
 name|DeclPtrTy
 name|ObjCImpDecl
+block|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|DeclPtrTy
+block|,
+literal|4
+operator|>
+name|PendingObjCImpDecl
 block|;
 name|DeclPtrTy
 name|ParseObjCAtImplementationDeclaration
@@ -4153,6 +4168,9 @@ decl_stmt|;
 name|bool
 name|EnteredScope
 decl_stmt|;
+name|bool
+name|CreatedScope
+decl_stmt|;
 name|public
 label|:
 name|DeclaratorScopeObj
@@ -4177,6 +4195,11 @@ name|ss
 argument_list|)
 operator|,
 name|EnteredScope
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|CreatedScope
 argument_list|(
 argument|false
 argument_list|)
@@ -4203,6 +4226,18 @@ operator|&&
 literal|"C++ scope was not set!"
 argument_list|)
 block|;
+name|CreatedScope
+operator|=
+name|true
+block|;
+name|P
+operator|.
+name|EnterScope
+argument_list|(
+literal|0
+argument_list|)
+block|;
+comment|// Not a decl scope.
 if|if
 condition|(
 name|P
@@ -4271,6 +4306,15 @@ name|SS
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|CreatedScope
+condition|)
+name|P
+operator|.
+name|ExitScope
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt
@@ -4963,40 +5007,11 @@ name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|void
-operator|*
+name|ParsedTemplateArgument
 operator|,
 literal|16
 operator|>
 name|TemplateArgList
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|bool
-operator|,
-literal|16
-operator|>
-name|TemplateArgIsTypeList
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|SourceLocation
-operator|,
-literal|16
-operator|>
-name|TemplateArgLocationList
 expr_stmt|;
 end_typedef
 
@@ -5025,14 +5040,6 @@ parameter_list|,
 name|TemplateArgList
 modifier|&
 name|TemplateArgs
-parameter_list|,
-name|TemplateArgIsTypeList
-modifier|&
-name|TemplateArgIsType
-parameter_list|,
-name|TemplateArgLocationList
-modifier|&
-name|TemplateArgLocations
 parameter_list|,
 name|SourceLocation
 modifier|&
@@ -5095,27 +5102,21 @@ parameter_list|(
 name|TemplateArgList
 modifier|&
 name|TemplateArgs
-parameter_list|,
-name|TemplateArgIsTypeList
-modifier|&
-name|TemplateArgIsType
-parameter_list|,
-name|TemplateArgLocationList
-modifier|&
-name|TemplateArgLocations
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-modifier|*
+name|ParsedTemplateArgument
+name|ParseTemplateTemplateArgument
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ParsedTemplateArgument
 name|ParseTemplateArgument
-parameter_list|(
-name|bool
-modifier|&
-name|ArgIsType
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 

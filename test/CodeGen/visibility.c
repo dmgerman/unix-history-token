@@ -1,102 +1,98 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility=default -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility=default -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_com = common global i32 0' %t&&
+comment|// RUN: grep '@g_com = common global i32 0' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_def = global i32 0' %t&&
+comment|// RUN: grep '@g_def = global i32 0' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_ext = external global i32' %t&&
+comment|// RUN: grep '@g_ext = external global i32' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_deferred = internal global' %t&&
+comment|// RUN: grep '@g_deferred = internal global' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f_ext()' %t&&
+comment|// RUN: grep 'declare void @f_ext()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define internal void @f_deferred()' %t&&
+comment|// RUN: grep 'define internal void @f_deferred()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define i32 @f_def()' %t&&
+comment|// RUN: grep 'define i32 @f_def()' %t
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility=protected -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility=protected -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_com = common protected global i32 0' %t&&
+comment|// RUN: grep '@g_com = common protected global i32 0' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_def = protected global i32 0' %t&&
+comment|// RUN: grep '@g_def = protected global i32 0' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_ext = external global i32' %t&&
+comment|// RUN: grep '@g_ext = external global i32' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_deferred = internal global' %t&&
+comment|// RUN: grep '@g_deferred = internal global' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f_ext()' %t&&
+comment|// RUN: grep 'declare void @f_ext()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define internal void @f_deferred()' %t&&
+comment|// RUN: grep 'define internal void @f_deferred()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define protected i32 @f_def()' %t&&
+comment|// RUN: grep 'define protected i32 @f_def()' %t
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility=hidden -emit-llvm -o %t %s&&
+comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility=hidden -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_com = common hidden global i32 0' %t&&
+comment|// RUN: grep '@g_com = common hidden global i32 0' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_def = hidden global i32 0' %t&&
+comment|// RUN: grep '@g_def = hidden global i32 0' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_ext = external global i32' %t&&
+comment|// RUN: grep '@g_ext = external global i32' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g_deferred = internal global' %t&&
+comment|// RUN: grep '@g_deferred = internal global' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f_ext()' %t&&
+comment|// RUN: grep 'declare void @f_ext()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define internal void @f_deferred()' %t&&
+comment|// RUN: grep 'define internal void @f_deferred()' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'define hidden i32 @f_def()' %t&&
-end_comment
-
-begin_comment
-comment|// RUN: true
+comment|// RUN: grep 'define hidden i32 @f_def()' %t
 end_comment
 
 begin_decl_stmt

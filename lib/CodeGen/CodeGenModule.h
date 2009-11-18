@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"GlobalDecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"Mangle.h"
 end_include
 
@@ -154,13 +160,6 @@ include|#
 directive|include
 file|<list>
 end_include
-
-begin_define
-define|#
-directive|define
-name|ATTACH_DEBUG_INFO_TO_AN_INSN
-value|1
-end_define
 
 begin_decl_stmt
 name|namespace
@@ -246,7 +245,7 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
-name|CompileOptions
+name|CodeGenOptions
 decl_stmt|;
 name|class
 name|Diagnostic
@@ -269,227 +268,6 @@ decl_stmt|;
 name|class
 name|CGObjCRuntime
 decl_stmt|;
-comment|/// GlobalDecl - represents a global declaration. This can either be a
-comment|/// CXXConstructorDecl and the constructor type (Base, Complete).
-comment|/// a CXXDestructorDecl and the destructor type (Base, Complete) or
-comment|/// a VarDecl, a FunctionDecl or a BlockDecl.
-name|class
-name|GlobalDecl
-block|{
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-specifier|const
-name|Decl
-operator|*
-operator|,
-literal|2
-operator|>
-name|Value
-expr_stmt|;
-name|void
-name|Init
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|isa
-operator|<
-name|CXXConstructorDecl
-operator|>
-operator|(
-name|D
-operator|)
-operator|&&
-literal|"Use other ctor with ctor decls!"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|!
-name|isa
-operator|<
-name|CXXDestructorDecl
-operator|>
-operator|(
-name|D
-operator|)
-operator|&&
-literal|"Use other ctor with dtor decls!"
-argument_list|)
-expr_stmt|;
-name|Value
-operator|.
-name|setPointer
-argument_list|(
-name|D
-argument_list|)
-expr_stmt|;
-block|}
-name|public
-label|:
-name|GlobalDecl
-argument_list|()
-block|{}
-name|GlobalDecl
-argument_list|(
-argument|const VarDecl *D
-argument_list|)
-block|{
-name|Init
-argument_list|(
-name|D
-argument_list|)
-expr_stmt|;
-block|}
-name|GlobalDecl
-argument_list|(
-argument|const FunctionDecl *D
-argument_list|)
-block|{
-name|Init
-argument_list|(
-name|D
-argument_list|)
-expr_stmt|;
-block|}
-name|GlobalDecl
-argument_list|(
-argument|const BlockDecl *D
-argument_list|)
-block|{
-name|Init
-argument_list|(
-name|D
-argument_list|)
-expr_stmt|;
-block|}
-name|GlobalDecl
-argument_list|(
-argument|const ObjCMethodDecl *D
-argument_list|)
-block|{
-name|Init
-argument_list|(
-name|D
-argument_list|)
-expr_stmt|;
-block|}
-name|GlobalDecl
-argument_list|(
-argument|const CXXConstructorDecl *D
-argument_list|,
-argument|CXXCtorType Type
-argument_list|)
-block|:
-name|Value
-argument_list|(
-argument|D
-argument_list|,
-argument|Type
-argument_list|)
-block|{}
-name|GlobalDecl
-argument_list|(
-argument|const CXXDestructorDecl *D
-argument_list|,
-argument|CXXDtorType Type
-argument_list|)
-block|:
-name|Value
-argument_list|(
-argument|D
-argument_list|,
-argument|Type
-argument_list|)
-block|{}
-specifier|const
-name|Decl
-operator|*
-name|getDecl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Value
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
-name|CXXCtorType
-name|getCtorType
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isa
-operator|<
-name|CXXConstructorDecl
-operator|>
-operator|(
-name|getDecl
-argument_list|()
-operator|)
-operator|&&
-literal|"Decl is not a ctor!"
-argument_list|)
-block|;
-return|return
-name|static_cast
-operator|<
-name|CXXCtorType
-operator|>
-operator|(
-name|Value
-operator|.
-name|getInt
-argument_list|()
-operator|)
-return|;
-block|}
-name|CXXDtorType
-name|getDtorType
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isa
-operator|<
-name|CXXDestructorDecl
-operator|>
-operator|(
-name|getDecl
-argument_list|()
-operator|)
-operator|&&
-literal|"Decl is not a dtor!"
-argument_list|)
-block|;
-return|return
-name|static_cast
-operator|<
-name|CXXDtorType
-operator|>
-operator|(
-name|Value
-operator|.
-name|getInt
-argument_list|()
-operator|)
-return|;
-block|}
-block|}
-empty_stmt|;
 comment|/// CodeGenModule - This class organizes the cross-function state that is used
 comment|/// while generating LLVM code.
 name|class
@@ -545,9 +323,9 @@ modifier|&
 name|Features
 decl_stmt|;
 specifier|const
-name|CompileOptions
+name|CodeGenOptions
 modifier|&
-name|CompileOpts
+name|CodeGenOpts
 decl_stmt|;
 name|llvm
 operator|::
@@ -761,9 +539,9 @@ operator|&
 name|C
 argument_list|,
 specifier|const
-name|CompileOptions
+name|CodeGenOptions
 operator|&
-name|CompileOpts
+name|CodeGenOpts
 argument_list|,
 name|llvm
 operator|::
@@ -843,14 +621,14 @@ name|Context
 return|;
 block|}
 specifier|const
-name|CompileOptions
+name|CodeGenOptions
 operator|&
-name|getCompileOpts
+name|getCodeGenOpts
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CompileOpts
+name|CodeGenOpts
 return|;
 block|}
 specifier|const
@@ -1005,6 +783,38 @@ argument|const llvm::Type *Ty =
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/// GenerateVtable - Generate the vtable for the given type.  LayoutClass is
+comment|/// the class to use for the virtual base layout information.  For
+comment|/// non-construction vtables, this is always the same as RD.  Offset is the
+comment|/// offset in bits for the RD object in the LayoutClass, if we're generating a
+comment|/// construction vtable, otherwise 0.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GenerateVtable
+argument_list|(
+argument|const CXXRecordDecl *LayoutClass
+argument_list|,
+argument|const CXXRecordDecl *RD
+argument_list|,
+argument|uint64_t Offset=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/// GenerateVTT - Generate the VTT for the given type.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GenerateVTT
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+expr_stmt|;
 comment|/// GenerateRtti - Generate the rtti information for the given type.
 name|llvm
 operator|::
@@ -1016,6 +826,31 @@ specifier|const
 name|CXXRecordDecl
 operator|*
 name|RD
+argument_list|)
+expr_stmt|;
+comment|/// GenerateRttiRef - Generate a reference to the rtti information for the
+comment|/// given type.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GenerateRttiRef
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+expr_stmt|;
+comment|/// GenerateRttiNonClass - Generate the rtti information for the given
+comment|/// non-class type.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GenerateRttiNonClass
+argument_list|(
+argument|QualType Ty
 argument_list|)
 expr_stmt|;
 comment|/// BuildThunk - Build a thunk for the given method
@@ -1053,6 +888,53 @@ argument|int64_t nv_r
 argument_list|,
 argument|int64_t v_r
 argument_list|)
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|CtorVtable_t
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|CtorVtable_t
+operator|,
+name|int64_t
+operator|>
+operator|*
+operator|>
+name|AddrMap_t
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|AddrMap_t
+operator|*
+operator|>
+name|AddressPoints
 expr_stmt|;
 comment|/// GetCXXBaseClassOffset - Returns the offset from a derived class to its
 comment|/// base class. Returns null if the offset is 0.

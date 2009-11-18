@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -pedantic -fixit %s -o - | clang-cc -pedantic -Werror -x c -
+comment|// RUN: clang-cc -pedantic -fixit %s -o - | clang-cc -pedantic -Werror -x c -
 end_comment
 
 begin_comment

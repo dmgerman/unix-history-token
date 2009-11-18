@@ -292,9 +292,11 @@ comment|/// IdentifierNamespace - According to C99 6.2.3, there are four
 comment|/// namespaces, labels, tags, members and ordinary
 comment|/// identifiers. These are meant as bitmasks, so that searches in
 comment|/// C++ can look into the "tag" namespace during ordinary lookup. We
-comment|/// use additional namespaces for Objective-C entities.  We also
-comment|/// put C++ friend declarations (of previously-undeclared entities) in
-comment|/// shadow namespaces.
+comment|/// use additional namespaces for Objective-C entities.  We also put
+comment|/// C++ friend declarations (of previously-undeclared entities) in
+comment|/// shadow namespaces, and 'using' declarations (as opposed to their
+comment|/// implicit shadow declarations) can be found in their own
+comment|/// namespace.
 enum|enum
 name|IdentifierNamespace
 block|{
@@ -333,6 +335,10 @@ block|,
 name|IDNS_TagFriend
 init|=
 literal|0x100
+block|,
+name|IDNS_Using
+init|=
+literal|0x200
 block|}
 enum|;
 comment|/// ObjCDeclQualifier - Qualifier used on types in method declarations
