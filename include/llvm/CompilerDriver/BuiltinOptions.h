@@ -109,6 +109,10 @@ extern|extern llvm::cl::opt<bool> DryRun;
 end_extern
 
 begin_extern
+extern|extern llvm::cl::opt<bool> Time;
+end_extern
+
+begin_extern
 extern|extern llvm::cl::opt<bool> VerboseMode;
 end_extern
 
@@ -117,11 +121,11 @@ extern|extern llvm::cl::opt<bool> CheckGraph;
 end_extern
 
 begin_extern
-extern|extern llvm::cl::opt<bool> WriteGraph;
+extern|extern llvm::cl::opt<bool> ViewGraph;
 end_extern
 
 begin_extern
-extern|extern llvm::cl::opt<bool> ViewGraph;
+extern|extern llvm::cl::opt<bool> WriteGraph;
 end_extern
 
 begin_extern

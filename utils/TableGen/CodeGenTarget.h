@@ -1155,7 +1155,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-expr_stmt|;
 name|ComplexPattern
 argument_list|(
 name|Record

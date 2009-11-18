@@ -585,9 +585,7 @@ comment|/// must provide a name for the module upon construction.
 name|explicit
 name|Module
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|ModuleID
 parameter_list|,
 name|LLVMContext
@@ -701,9 +699,7 @@ comment|/// Set the module identifier.
 name|void
 name|setModuleIdentifier
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|ID
 parameter_list|)
 block|{
@@ -716,9 +712,7 @@ comment|/// Set the data layout
 name|void
 name|setDataLayout
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|DL
 parameter_list|)
 block|{
@@ -731,9 +725,7 @@ comment|/// Set the target triple.
 name|void
 name|setTargetTriple
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|T
 parameter_list|)
 block|{
@@ -746,9 +738,7 @@ comment|/// Set the module-scope inline assembly blocks.
 name|void
 name|setModuleInlineAsm
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Asm
 parameter_list|)
 block|{
@@ -762,9 +752,7 @@ comment|/// appending a newline to the end.
 name|void
 name|appendModuleInlineAsm
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Asm
 parameter_list|)
 block|{
@@ -787,9 +775,7 @@ name|GlobalValue
 modifier|*
 name|getNamedValue
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|)
 decl|const
@@ -812,9 +798,7 @@ name|Constant
 modifier|*
 name|getOrInsertFunction
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Name
 parameter_list|,
 specifier|const
@@ -830,9 +814,7 @@ name|Constant
 modifier|*
 name|getOrInsertFunction
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Name
 parameter_list|,
 specifier|const
@@ -852,9 +834,7 @@ name|Constant
 modifier|*
 name|getOrInsertFunction
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|,
 name|AttrListPtr
@@ -874,9 +854,7 @@ name|Constant
 modifier|*
 name|getOrInsertFunction
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|,
 specifier|const
@@ -892,9 +870,7 @@ name|Constant
 modifier|*
 name|getOrInsertTargetIntrinsic
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Name
 parameter_list|,
 specifier|const
@@ -912,9 +888,7 @@ name|Function
 modifier|*
 name|getFunction
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|)
 decl|const
@@ -932,9 +906,7 @@ name|GlobalVariable
 modifier|*
 name|getGlobalVariable
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|,
 name|bool
@@ -951,9 +923,7 @@ name|GlobalVariable
 modifier|*
 name|getNamedGlobal
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|)
 decl|const
@@ -978,9 +948,7 @@ name|Constant
 modifier|*
 name|getOrInsertGlobal
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Name
 parameter_list|,
 specifier|const
@@ -1001,9 +969,7 @@ name|GlobalAlias
 modifier|*
 name|getNamedAlias
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|)
 decl|const
@@ -1020,9 +986,7 @@ name|NamedMDNode
 modifier|*
 name|getNamedMetadata
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|)
 decl|const
@@ -1034,9 +998,7 @@ name|NamedMDNode
 modifier|*
 name|getOrInsertNamedMetadata
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Name
 parameter_list|)
 function_decl|;
@@ -1051,9 +1013,7 @@ comment|/// table is not modified.
 name|bool
 name|addTypeName
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Name
 parameter_list|,
 specifier|const
@@ -1080,9 +1040,7 @@ name|Type
 modifier|*
 name|getTypeByName
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|)
 decl|const
@@ -1508,9 +1466,7 @@ comment|/// @brief Add a library to the list of dependent libraries
 name|void
 name|addLibrary
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Lib
 parameter_list|)
 function_decl|;
@@ -1518,9 +1474,7 @@ comment|/// @brief Remove a library from the list of dependent libraries
 name|void
 name|removeLibrary
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Lib
 parameter_list|)
 function_decl|;

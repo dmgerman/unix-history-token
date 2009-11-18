@@ -4103,15 +4103,9 @@ name|VT
 operator|.
 name|SimpleTy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|LoadExtActions
-index|[
-literal|0
-index|]
-argument_list|)
-operator|*
-literal|4
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 name|ExtType
 operator|<
@@ -4195,15 +4189,9 @@ name|MemVT
 operator|.
 name|SimpleTy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|TruncStoreActions
-index|[
-literal|0
-index|]
-argument_list|)
-operator|*
-literal|4
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
@@ -4420,15 +4408,9 @@ name|ToVT
 operator|.
 name|SimpleTy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|ConvertActions
-index|[
-literal|0
-index|]
-argument_list|)
-operator|*
-literal|4
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
@@ -4499,15 +4481,9 @@ name|VT
 operator|.
 name|SimpleTy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|CondCodeActions
-index|[
-literal|0
-index|]
-argument_list|)
-operator|*
-literal|4
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 operator|(
 name|unsigned
@@ -5015,6 +4991,50 @@ name|SDValue
 argument_list|()
 return|;
 comment|// this is here to silence compiler errors
+block|}
+comment|/// CanLowerReturn - This hook should be implemented to check whether the
+comment|/// return values described by the Outs array can fit into the return
+comment|/// registers.  If false is returned, an sret-demotion is performed.
+comment|///
+name|virtual
+name|bool
+name|CanLowerReturn
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|EVT
+operator|>
+operator|&
+name|OutTys
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|ArgFlagsTy
+operator|>
+operator|&
+name|ArgsFlags
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+block|{
+comment|// Return true by default to get preexisting behavior.
+return|return
+name|true
+return|;
 block|}
 comment|/// LowerReturn - This hook must be implemented to lower outgoing
 comment|/// return values, described by the Outs array, into the specified
@@ -5981,6 +6001,23 @@ decl|const
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
+comment|/// icmp immediate, that is the target has icmp instructions which can compare
+comment|/// a register against the immediate without having to materialize the
+comment|/// immediate into a register.
+name|virtual
+name|bool
+name|isLegalICmpImmediate
+argument_list|(
+name|int64_t
+name|Imm
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//

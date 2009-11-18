@@ -100,8 +100,11 @@ specifier|const
 block|;
 name|public
 operator|:
+name|explicit
 name|PseudoSourceValue
-argument_list|()
+argument_list|(
+argument|enum ValueTy Subclass = PseudoSourceValueVal
+argument_list|)
 block|;
 comment|/// isConstant - Test whether the memory pointed to by this
 comment|/// PseudoSourceValue has a constant value.
@@ -164,6 +167,13 @@ name|getValueID
 argument_list|()
 operator|==
 name|PseudoSourceValueVal
+operator|||
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|==
+name|FixedStackPseudoSourceValueVal
 return|;
 block|}
 comment|/// A pseudo source value referencing a fixed stack frame entry,
@@ -215,7 +225,112 @@ name|getJumpTable
 argument_list|()
 block|;   }
 decl_stmt|;
+comment|/// FixedStackPseudoSourceValue - A specialized PseudoSourceValue
+comment|/// for holding FixedStack values, which must include a frame
+comment|/// index.
+name|class
+name|FixedStackPseudoSourceValue
+range|:
+name|public
+name|PseudoSourceValue
+block|{
+specifier|const
+name|int
+name|FI
+block|;
+name|public
+operator|:
+name|explicit
+name|FixedStackPseudoSourceValue
+argument_list|(
+argument|int fi
+argument_list|)
+operator|:
+name|PseudoSourceValue
+argument_list|(
+name|FixedStackPseudoSourceValueVal
+argument_list|)
+block|,
+name|FI
+argument_list|(
+argument|fi
+argument_list|)
+block|{}
+comment|/// classof - Methods for support type inquiry through isa, cast, and
+comment|/// dyn_cast:
+comment|///
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const FixedStackPseudoSourceValue *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
 block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|==
+name|FixedStackPseudoSourceValueVal
+return|;
+block|}
+name|virtual
+name|bool
+name|isConstant
+argument_list|(
+argument|const MachineFrameInfo *MFI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isAliased
+argument_list|(
+argument|const MachineFrameInfo *MFI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|mayAlias
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|printCustom
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getFrameIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FI
+return|;
+block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment

@@ -1497,7 +1497,7 @@ argument|unsigned Abbrev
 argument_list|,
 argument|SmallVectorImpl<uintty>&Vals
 argument_list|,
-argument|const StringRef&Blob
+argument|StringRef Blob
 argument_list|)
 block|{
 specifier|const
@@ -2211,7 +2211,7 @@ argument|unsigned Abbrev
 argument_list|,
 argument|SmallVectorImpl<uintty>&Vals
 argument_list|,
-argument|const StringRef&Blob
+argument|StringRef Blob
 argument_list|)
 block|{
 name|EmitRecordWithAbbrevImpl
@@ -2279,7 +2279,7 @@ argument|unsigned Abbrev
 argument_list|,
 argument|SmallVectorImpl<uintty>&Vals
 argument_list|,
-argument|const StringRef&Array
+argument|StringRef Array
 argument_list|)
 block|{
 name|EmitRecordWithAbbrevImpl

@@ -294,6 +294,7 @@ expr|}
 block|;
 comment|/// ReplaceUses - replace all uses of the old node F with the use
 comment|/// of the new node T.
+name|DISABLE_INLINE
 name|void
 name|ReplaceUses
 argument_list|(
@@ -301,7 +302,6 @@ argument|SDValue F
 argument_list|,
 argument|SDValue T
 argument_list|)
-name|DISABLE_INLINE
 block|{
 name|ISelUpdater
 name|ISU
@@ -323,6 +323,7 @@ argument_list|)
 block|; }
 comment|/// ReplaceUses - replace all uses of the old nodes F with the use
 comment|/// of the new nodes T.
+name|DISABLE_INLINE
 name|void
 name|ReplaceUses
 argument_list|(
@@ -332,7 +333,6 @@ argument|const SDValue *T
 argument_list|,
 argument|unsigned Num
 argument_list|)
-name|DISABLE_INLINE
 block|{
 name|ISelUpdater
 name|ISU
@@ -356,6 +356,7 @@ argument_list|)
 block|; }
 comment|/// ReplaceUses - replace all uses of the old node F with the use
 comment|/// of the new node T.
+name|DISABLE_INLINE
 name|void
 name|ReplaceUses
 argument_list|(
@@ -363,7 +364,6 @@ argument|SDNode *F
 argument_list|,
 argument|SDNode *T
 argument_list|)
-name|DISABLE_INLINE
 block|{
 name|ISelUpdater
 name|ISU

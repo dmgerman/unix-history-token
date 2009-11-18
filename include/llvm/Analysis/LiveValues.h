@@ -282,15 +282,12 @@ name|BB
 argument_list|)
 block|; }
 decl_stmt|;
-comment|/// createLiveValuesPass - This creates an instance of the LiveValues pass.
-comment|///
-name|FunctionPass
-modifier|*
-name|createLiveValuesPass
-parameter_list|()
-function_decl|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

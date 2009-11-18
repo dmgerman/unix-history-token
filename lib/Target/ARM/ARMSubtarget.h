@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ARMBaseRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -146,6 +152,10 @@ comment|/// specified. Use the method useNEONForSinglePrecisionFP() to
 comment|/// determine if NEON should actually be used.
 name|bool
 name|UseNEONForSinglePrecisionFP
+block|;
+comment|/// HasBranchTargetBuffer - True if processor can predict indirect branches.
+name|bool
+name|HasBranchTargetBuffer
 block|;
 comment|/// IsThumb - True if we are in thumb mode, false if in ARM mode.
 name|bool
@@ -454,6 +464,15 @@ name|Thumb2
 return|;
 block|}
 name|bool
+name|hasBranchTargetBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasBranchTargetBuffer
+return|;
+block|}
+name|bool
 name|isR9Reserved
 argument_list|()
 specifier|const
@@ -475,33 +494,18 @@ return|return
 name|CPUString
 return|;
 block|}
-comment|/// enablePostRAScheduler - True at 'More' optimization except
-comment|/// for Thumb1.
+comment|/// enablePostRAScheduler - True at 'More' optimization.
 name|bool
 name|enablePostRAScheduler
 argument_list|(
 argument|CodeGenOpt::Level OptLevel
 argument_list|,
-argument|TargetSubtarget::AntiDepBreakMode& mode
+argument|TargetSubtarget::AntiDepBreakMode& Mode
+argument_list|,
+argument|RegClassVector& CriticalPathRCs
 argument_list|)
 specifier|const
-block|{
-name|mode
-operator|=
-name|TargetSubtarget
-operator|::
-name|ANTIDEP_CRITICAL
 block|;
-return|return
-name|PostRAScheduler
-operator|&&
-name|OptLevel
-operator|>=
-name|CodeGenOpt
-operator|::
-name|Default
-return|;
-block|}
 comment|/// getInstrItins - Return the instruction itineraies based on subtarget
 comment|/// selection.
 specifier|const

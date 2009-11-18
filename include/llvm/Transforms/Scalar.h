@@ -316,17 +316,6 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// CondPropagationPass - This pass propagates information about conditional
-comment|// expressions through the program, allowing it to eliminate conditional
-comment|// branches in some cases.
-comment|//
-name|FunctionPass
-modifier|*
-name|createCondPropagationPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// TailDuplication - Eliminate unconditional branches through controlled code
 comment|// duplication, creating simpler CFG structures.
 comment|//
@@ -492,6 +481,11 @@ name|createGVNPass
 parameter_list|(
 name|bool
 name|NoPRE
+init|=
+name|false
+parameter_list|,
+name|bool
+name|NoLoads
 init|=
 name|false
 parameter_list|)

@@ -199,13 +199,6 @@ directive|include
 file|"llvm/Metadata.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|ATTACH_DEBUG_INFO_TO_AN_INSN
-value|1
-end_define
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -459,6 +452,20 @@ name|ID
 block|;
 comment|// Pass identification, replacement for typeid
 typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|TrackingVH
+operator|<
+name|MDNode
+operator|>
+expr|>
+name|UnsignedAndMDNodePair
+expr_stmt|;
+typedef|typedef
 name|SmallVector
 operator|<
 name|std
@@ -470,7 +477,7 @@ operator|<
 name|MDNode
 operator|>
 operator|,
-name|unsigned
+name|UnsignedAndMDNodePair
 operator|>
 operator|,
 literal|4
@@ -1387,7 +1394,11 @@ modifier|*
 name|N
 parameter_list|,
 name|unsigned
-name|S
+name|Slot
+parameter_list|,
+name|MDNode
+modifier|*
+name|Scope
 parameter_list|)
 block|{
 name|VariableDbgInfo
@@ -1400,7 +1411,14 @@ name|make_pair
 argument_list|(
 name|N
 argument_list|,
-name|S
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Slot
+argument_list|,
+name|Scope
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

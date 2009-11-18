@@ -104,9 +104,9 @@ name|Reserved2
 block|;
 name|MCSectionMachO
 argument_list|(
-argument|const StringRef&Segment
+argument|StringRef Segment
 argument_list|,
-argument|const StringRef&Section
+argument|StringRef Section
 argument_list|,
 argument|unsigned TAA
 argument_list|,
@@ -227,9 +227,9 @@ name|MCSectionMachO
 operator|*
 name|Create
 argument_list|(
-argument|const StringRef&Segment
+argument|StringRef Segment
 argument_list|,
-argument|const StringRef&Section
+argument|StringRef Section
 argument_list|,
 argument|unsigned TypeAndAttributes
 argument_list|,

@@ -461,6 +461,11 @@ parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createARMExpandPseudoPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createARMConstantIslandPass
 parameter_list|()
 function_decl|;
@@ -482,6 +487,11 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createThumb2SizeReductionPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createARMMaxStackAlignmentCalculatorPass
 parameter_list|()
 function_decl|;
 specifier|extern

@@ -5169,16 +5169,20 @@ name|private
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|Factory
 argument_list|(
-argument|const Factory& RHS
+specifier|const
+name|Factory
+operator|&
+name|RHS
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_block
-block|{}
-end_block
+begin_comment
+comment|// DO NOT IMPLEMENT
+end_comment
 
 begin_decl_stmt
 name|void
@@ -5190,8 +5194,12 @@ name|Factory
 operator|&
 name|RHS
 operator|)
-block|{}
+decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// DO NOT IMPLEMENT
+end_comment
 
 begin_decl_stmt
 unit|};

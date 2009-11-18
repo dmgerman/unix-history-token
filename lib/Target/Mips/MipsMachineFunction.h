@@ -375,6 +375,20 @@ operator|=
 name|FI
 block|; }
 name|bool
+name|needGPSaveRestore
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GPHolder
+operator|.
+name|SPOffset
+operator|!=
+operator|-
+literal|1
+return|;
+block|}
+name|bool
 name|hasLoadArgs
 argument_list|()
 specifier|const

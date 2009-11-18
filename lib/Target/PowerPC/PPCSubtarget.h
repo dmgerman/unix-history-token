@@ -269,9 +269,9 @@ return|return
 name|isPPC64
 argument_list|()
 operator|?
-literal|"E-p:64:64-f64:64:64-i64:64:64-f128:64:128"
+literal|"E-p:64:64-f64:64:64-i64:64:64-f128:64:128-n32:64"
 operator|:
-literal|"E-p:32:32-f64:32:64-i64:32:64-f128:64:128"
+literal|"E-p:32:32-f64:32:64-i64:32:64-f128:64:128-n32"
 return|;
 block|}
 comment|/// isPPC64 - Return true if we are generating code for 64-bit pointer mode.

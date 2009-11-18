@@ -480,7 +480,7 @@ comment|/// isMOVHPMask - Return true if the specified VECTOR_SHUFFLE operand
 comment|/// specifies a shuffle of elements that is suitable for MOVHP{S|D}.
 comment|/// as well as MOVLHPS.
 name|bool
-name|isMOVHPMask
+name|isMOVLHPSMask
 parameter_list|(
 name|ShuffleVectorSDNode
 modifier|*
@@ -1923,6 +1923,21 @@ argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|CanLowerReturn
+argument_list|(
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<EVT>&OutTys
+argument_list|,
+argument|const SmallVectorImpl<ISD::ArgFlagsTy>&ArgsFlags
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)

@@ -97,6 +97,12 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -343,9 +349,7 @@ name|AnalysisUsage
 modifier|&
 name|addPreserved
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Arg
 parameter_list|)
 block|{

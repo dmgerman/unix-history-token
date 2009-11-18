@@ -111,9 +111,6 @@ decl_stmt|;
 name|class
 name|Constant
 decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -223,8 +220,6 @@ comment|/// GlobalVariable ctor - If a parent module is specified, the global is
 comment|/// automatically inserted into the end of the specified modules global list.
 name|GlobalVariable
 argument_list|(
-argument|LLVMContext&Context
-argument_list|,
 argument|const Type *Ty
 argument_list|,
 argument|bool isConstant
@@ -407,72 +402,17 @@ argument_list|()
 operator|)
 return|;
 block|}
-specifier|inline
+comment|/// setInitializer - Sets the initializer for this global variable, removing
+comment|/// any existing initializer if InitVal==NULL.  If this GV has type T*, the
+comment|/// initializer must have type T.
 name|void
 name|setInitializer
 parameter_list|(
 name|Constant
 modifier|*
-name|CPV
+name|InitVal
 parameter_list|)
-block|{
-if|if
-condition|(
-name|CPV
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|hasInitializer
-argument_list|()
-condition|)
-block|{
-name|Op
-operator|<
-literal|0
-operator|>
-operator|(
-operator|)
-operator|.
-name|set
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|NumOperands
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|!
-name|hasInitializer
-argument_list|()
-condition|)
-name|NumOperands
-operator|=
-literal|1
-expr_stmt|;
-name|Op
-operator|<
-literal|0
-operator|>
-operator|(
-operator|)
-operator|.
-name|set
-argument_list|(
-name|CPV
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+function_decl|;
 comment|/// If the value is a global constant, its value is immutable throughout the
 comment|/// runtime execution of the program.  Assigning a value into the constant
 comment|/// leads to undefined behavior.

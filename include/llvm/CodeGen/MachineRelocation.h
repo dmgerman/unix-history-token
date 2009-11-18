@@ -182,11 +182,11 @@ literal|4
 decl_stmt|;
 comment|// The field of Target to use
 name|bool
-name|NeedStub
+name|MayNeedFarStub
 range|:
 literal|1
 decl_stmt|;
-comment|// True if this relocation requires a stub
+comment|// True if this relocation may require a far-stub
 name|bool
 name|GOTRelative
 range|:
@@ -232,7 +232,7 @@ init|=
 literal|0
 parameter_list|,
 name|bool
-name|NeedStub
+name|MayNeedFarStub
 init|=
 literal|0
 parameter_list|,
@@ -285,9 +285,9 @@ name|isGV
 expr_stmt|;
 name|Result
 operator|.
-name|NeedStub
+name|MayNeedFarStub
 operator|=
-name|NeedStub
+name|MayNeedFarStub
 expr_stmt|;
 name|Result
 operator|.
@@ -335,7 +335,7 @@ init|=
 literal|0
 parameter_list|,
 name|bool
-name|NeedStub
+name|MayNeedFarStub
 init|=
 literal|0
 parameter_list|,
@@ -388,9 +388,9 @@ name|isIndirectSym
 expr_stmt|;
 name|Result
 operator|.
-name|NeedStub
+name|MayNeedFarStub
 operator|=
-name|NeedStub
+name|MayNeedFarStub
 expr_stmt|;
 name|Result
 operator|.
@@ -481,7 +481,7 @@ name|isBB
 expr_stmt|;
 name|Result
 operator|.
-name|NeedStub
+name|MayNeedFarStub
 operator|=
 name|false
 expr_stmt|;
@@ -581,7 +581,7 @@ name|isExtSym
 expr_stmt|;
 name|Result
 operator|.
-name|NeedStub
+name|MayNeedFarStub
 operator|=
 name|true
 expr_stmt|;
@@ -679,7 +679,7 @@ name|isConstPool
 expr_stmt|;
 name|Result
 operator|.
-name|NeedStub
+name|MayNeedFarStub
 operator|=
 name|false
 expr_stmt|;
@@ -777,7 +777,7 @@ name|isJumpTable
 expr_stmt|;
 name|Result
 operator|.
-name|NeedStub
+name|MayNeedFarStub
 operator|=
 name|false
 expr_stmt|;
@@ -943,18 +943,19 @@ return|return
 name|GOTRelative
 return|;
 block|}
-comment|/// doesntNeedStub - This function returns true if the JIT for this target
-comment|/// target is capable of directly handling the relocated GlobalValue reference
-comment|/// without using either a stub function or issuing an extra load to get the
-comment|/// GV address.
+comment|/// mayNeedFarStub - This function returns true if the JIT for this target may
+comment|/// need either a stub function or an indirect global-variable load to handle
+comment|/// the relocated GlobalValue reference.  For example, the x86-64 call
+comment|/// instruction can only call functions within +/-2GB of the call site.
+comment|/// Anything farther away needs a longer mov+call sequence, which can't just
+comment|/// be written on top of the existing call.
 name|bool
-name|doesntNeedStub
+name|mayNeedFarStub
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|NeedStub
+name|MayNeedFarStub
 return|;
 block|}
 comment|/// letTargetResolve - Return true if the target JITInfo is usually

@@ -1408,8 +1408,55 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+unit|}  template
+operator|<
+name|class
+name|IteratorTy
+operator|>
+specifier|static
+specifier|inline
+name|void
+name|array_pod_sort
+argument_list|(
+argument|IteratorTy Start
+argument_list|,
+argument|IteratorTy End
+argument_list|,
+argument|int (*Compare)(const void*, const void*)
+argument_list|)
+block|{
+comment|// Don't dereference start iterator of empty sequence.
+if|if
+condition|(
+name|Start
+operator|==
+name|End
+condition|)
+return|return;
+name|qsort
+argument_list|(
+operator|&
+operator|*
+name|Start
+argument_list|,
+name|End
+operator|-
+name|Start
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|Start
+argument_list|)
+argument_list|,
+name|Compare
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-unit|}  }
+unit|}    }
 comment|// End llvm namespace
 end_comment
 

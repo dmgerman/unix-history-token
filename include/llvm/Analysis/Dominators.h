@@ -1829,16 +1829,6 @@ condition|)
 return|return
 name|true
 return|;
-name|SmallPtrSet
-operator|<
-specifier|const
-name|NodeT
-operator|*
-operator|,
-literal|4
-operator|>
-name|MyBBs
-expr_stmt|;
 for|for
 control|(
 name|typename

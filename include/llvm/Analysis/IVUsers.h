@@ -510,6 +510,19 @@ argument_list|(
 argument|new IVStrideUse(this, Offset, User, Operand)
 argument_list|)
 block|;   }
+name|void
+name|removeUser
+argument_list|(
+argument|IVStrideUse *User
+argument_list|)
+block|{
+name|Users
+operator|.
+name|erase
+argument_list|(
+name|User
+argument_list|)
+block|;   }
 block|}
 decl_stmt|;
 name|class
@@ -632,6 +645,28 @@ argument_list|(
 name|Instruction
 operator|*
 name|I
+argument_list|)
+block|;
+name|void
+name|AddUser
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|Stride
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Offset
+argument_list|,
+name|Instruction
+operator|*
+name|User
+argument_list|,
+name|Value
+operator|*
+name|Operand
 argument_list|)
 block|;
 comment|/// getReplacementExpr - Return a SCEV expression which computes the

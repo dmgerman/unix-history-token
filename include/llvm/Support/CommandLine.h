@@ -1991,10 +1991,12 @@ empty_stmt|;
 comment|//--------------------------------------------------
 comment|// basic_parser - Super class of parsers to provide boilerplate code
 comment|//
-struct|struct
+name|class
 name|basic_parser_impl
 block|{
 comment|// non-template implementation of basic_parser<t>
+name|public
+label|:
 name|virtual
 operator|~
 name|basic_parser_impl
@@ -2076,7 +2078,7 @@ name|anchor
 parameter_list|()
 function_decl|;
 block|}
-struct|;
+empty_stmt|;
 comment|// basic_parser - The real basic parser is just a template wrapper that provides
 comment|// a typedef for the provided data type.
 comment|//
@@ -2085,12 +2087,14 @@ operator|<
 name|class
 name|DataType
 operator|>
-expr|struct
+name|class
 name|basic_parser
 operator|:
 name|public
 name|basic_parser_impl
 block|{
+name|public
+operator|:
 typedef|typedef
 name|DataType
 name|parser_data_type
@@ -3076,6 +3080,18 @@ operator|*
 name|Location
 return|;
 block|}
+name|operator
+name|DataType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getValue
+argument_list|()
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -3242,6 +3258,19 @@ specifier|const
 block|{
 return|return
 name|Value
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|operator
+name|DataType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getValue
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -3534,21 +3563,6 @@ name|Parser
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|operator
-name|DataType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|this
-operator|->
-name|getValue
-argument_list|()
-return|;
-block|}
-end_expr_stmt
 
 begin_expr_stmt
 name|template

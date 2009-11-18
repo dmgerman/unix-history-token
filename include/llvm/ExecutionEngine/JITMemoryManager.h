@@ -190,33 +190,6 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// SetDlsymTable - If the JIT must be able to relocate stubs after they have
-comment|/// been emitted, potentially because they are being copied to a process
-comment|/// where external symbols live at different addresses than in the JITing
-comment|///  process, allocate a table with sufficient information to do so.
-name|virtual
-name|void
-name|SetDlsymTable
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// getDlsymTable - If this is managing a table of entries so that stubs to
-comment|/// external symbols can be later relocated, this method should return a
-comment|/// pointer to it.
-name|virtual
-name|void
-operator|*
-name|getDlsymTable
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
 comment|/// NeedsExactSize - If the memory manager requires to know the size of the
 comment|/// objects to be emitted
 name|bool

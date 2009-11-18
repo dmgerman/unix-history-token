@@ -49,14 +49,6 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
-comment|/** See llvm::createCondPropagationPass function. */
-name|void
-name|LLVMAddCondPropagationPass
-parameter_list|(
-name|LLVMPassManagerRef
-name|PM
-parameter_list|)
-function_decl|;
 comment|/** See llvm::createDeadStoreEliminationPass function. */
 name|void
 name|LLVMAddDeadStoreEliminationPass

@@ -1722,7 +1722,105 @@ argument_list|)
 return|;
 block|}
 expr|}
-block|;    }
+block|;
+comment|/// MemoryUseIntrinsic - This is the common base class for the memory use
+comment|/// marker intrinsics.
+comment|///
+block|struct
+name|MemoryUseIntrinsic
+operator|:
+name|public
+name|IntrinsicInst
+block|{
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const MemoryUseIntrinsic *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const IntrinsicInst *I
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|I
+operator|->
+name|getIntrinsicID
+argument_list|()
+condition|)
+block|{
+case|case
+name|Intrinsic
+operator|::
+name|lifetime_start
+case|:
+case|case
+name|Intrinsic
+operator|::
+name|lifetime_end
+case|:
+case|case
+name|Intrinsic
+operator|::
+name|invariant_start
+case|:
+case|case
+name|Intrinsic
+operator|::
+name|invariant_end
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|isa
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+name|classof
+argument_list|(
+name|cast
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_endif

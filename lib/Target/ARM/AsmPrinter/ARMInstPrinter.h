@@ -438,6 +438,38 @@ argument|int OpNum
 argument_list|)
 block|{}
 name|void
+name|printHex8ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|)
+block|{}
+name|void
+name|printHex16ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|)
+block|{}
+name|void
+name|printHex32ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|)
+block|{}
+name|void
+name|printHex64ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int OpNum
+argument_list|)
+block|{}
+name|void
 name|printPCLabel
 argument_list|(
 argument|const MCInst *MI

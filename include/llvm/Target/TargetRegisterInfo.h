@@ -1924,6 +1924,23 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// getSubRegIndex - For a given register pair, return the sub-register index
+comment|/// if they are second register is a sub-register of the second. Return zero
+comment|/// otherwise.
+name|virtual
+name|unsigned
+name|getSubRegIndex
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|,
+name|unsigned
+name|SubRegNo
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|/// getMatchingSuperReg - Return a super-register of the specified register
 comment|/// Reg so its sub-register of index SubIdx is Reg.
 name|unsigned
@@ -2625,6 +2642,7 @@ name|virtual
 name|unsigned
 name|getFrameRegister
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF

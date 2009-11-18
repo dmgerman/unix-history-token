@@ -354,9 +354,6 @@ decl_stmt|;
 name|bool
 name|SymbolSearchingDisabled
 decl_stmt|;
-name|bool
-name|DlsymStubsEnabled
-decl_stmt|;
 name|friend
 name|class
 name|EngineBuilder
@@ -433,6 +430,11 @@ name|OptLevel
 operator|,
 name|bool
 name|GVsWithCode
+operator|,
+name|CodeModel
+operator|::
+name|Model
+name|CMM
 operator|)
 expr_stmt|;
 specifier|static
@@ -570,6 +572,8 @@ argument_list|,
 argument|CodeGenOpt::Level OptLevel =                                       CodeGenOpt::Default
 argument_list|,
 argument|bool GVsWithCode = true
+argument_list|,
+argument|CodeModel::Model CMM = 				      CodeModel::Default
 argument_list|)
 argument_list|;
 comment|/// addModuleProvider - Add a ModuleProvider to the list of modules that we
@@ -1107,30 +1111,6 @@ return|return
 name|SymbolSearchingDisabled
 return|;
 block|}
-comment|/// EnableDlsymStubs -
-name|void
-name|EnableDlsymStubs
-parameter_list|(
-name|bool
-name|Enabled
-init|=
-name|true
-parameter_list|)
-block|{
-name|DlsymStubsEnabled
-operator|=
-name|Enabled
-expr_stmt|;
-block|}
-name|bool
-name|areDlsymStubsEnabled
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DlsymStubsEnabled
-return|;
-block|}
 comment|/// InstallLazyFunctionCreator - If an unknown function is needed, the
 comment|/// specified function pointer is invoked to create it.  If it returns null,
 comment|/// the JIT will abort.
@@ -1338,6 +1318,11 @@ decl_stmt|;
 name|bool
 name|AllocateGVsWithCode
 decl_stmt|;
+name|CodeModel
+operator|::
+name|Model
+name|CMModel
+expr_stmt|;
 comment|/// InitEngine - Does the common initialization of default options.
 comment|///
 name|void
@@ -1367,6 +1352,12 @@ expr_stmt|;
 name|AllocateGVsWithCode
 operator|=
 name|false
+expr_stmt|;
+name|CMModel
+operator|=
+name|CodeModel
+operator|::
+name|Default
 expr_stmt|;
 block|}
 name|public
@@ -1478,6 +1469,27 @@ block|{
 name|OptLevel
 operator|=
 name|l
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setCodeModel - Set the CodeModel that the ExecutionEngine target
+comment|/// data is using. Defaults to target specific default "CodeModel::Default".
+name|EngineBuilder
+modifier|&
+name|setCodeModel
+argument_list|(
+name|CodeModel
+operator|::
+name|Model
+name|M
+argument_list|)
+block|{
+name|CMModel
+operator|=
+name|M
 expr_stmt|;
 return|return
 operator|*

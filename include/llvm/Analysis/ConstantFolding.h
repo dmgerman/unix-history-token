@@ -101,9 +101,6 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
 comment|/// ConstantFoldInstruction - Attempt to constant fold the specified
 comment|/// instruction.  If successful, the constant result is returned, if not, null
 comment|/// is returned.  Note that this function can only fail when attempting to fold
@@ -116,10 +113,6 @@ parameter_list|(
 name|Instruction
 modifier|*
 name|I
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
 parameter_list|,
 specifier|const
 name|TargetData
@@ -139,10 +132,6 @@ parameter_list|(
 name|ConstantExpr
 modifier|*
 name|CE
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
 parameter_list|,
 specifier|const
 name|TargetData
@@ -179,10 +168,6 @@ parameter_list|,
 name|unsigned
 name|NumOps
 parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 specifier|const
 name|TargetData
 modifier|*
@@ -204,16 +189,11 @@ name|Predicate
 parameter_list|,
 name|Constant
 modifier|*
-specifier|const
+name|LHS
+parameter_list|,
+name|Constant
 modifier|*
-name|Ops
-parameter_list|,
-name|unsigned
-name|NumOps
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
+name|RHS
 parameter_list|,
 specifier|const
 name|TargetData

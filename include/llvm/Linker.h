@@ -169,10 +169,10 @@ comment|/// name \p progname. \p progname will also be used for error messages.
 comment|/// @brief Construct with empty module
 name|Linker
 argument_list|(
-argument|const StringRef&progname
+argument|StringRef progname
 argument_list|,
 comment|///< name of tool running linker
-argument|const StringRef&modulename
+argument|StringRef modulename
 argument_list|,
 comment|///< name of linker's end-result module
 argument|LLVMContext&C
@@ -188,7 +188,7 @@ comment|/// \p progname for the name of the program in error messages.
 comment|/// @brief Construct with existing module
 name|Linker
 argument_list|(
-argument|const StringRef& progname
+argument|StringRef progname
 argument_list|,
 argument|Module* aModule
 argument_list|,
@@ -461,9 +461,7 @@ comment|/// @brief Link one library into the module
 name|bool
 name|LinkInLibrary
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Library
 parameter_list|,
 comment|///< The library to link in
@@ -578,10 +576,7 @@ operator|::
 name|Path
 name|FindLib
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|Filename
+argument|StringRef Filename
 argument_list|)
 expr_stmt|;
 comment|/// @}
@@ -610,27 +605,21 @@ expr_stmt|;
 name|bool
 name|warning
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|message
 parameter_list|)
 function_decl|;
 name|bool
 name|error
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|message
 parameter_list|)
 function_decl|;
 name|void
 name|verbose
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|message
 parameter_list|)
 function_decl|;

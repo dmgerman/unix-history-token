@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Instruction.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/InstrTypes.h"
 end_include
 

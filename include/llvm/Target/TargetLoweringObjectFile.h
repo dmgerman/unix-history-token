@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
@@ -96,9 +102,6 @@ name|MCContext
 decl_stmt|;
 name|class
 name|GlobalValue
-decl_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -1068,9 +1071,9 @@ name|MCSectionMachO
 operator|*
 name|getMachOSection
 argument_list|(
-argument|const StringRef&Segment
+argument|StringRef Segment
 argument_list|,
-argument|const StringRef&Section
+argument|StringRef Section
 argument_list|,
 argument|unsigned TypeAndAttributes
 argument_list|,
@@ -1098,9 +1101,9 @@ name|MCSectionMachO
 operator|*
 name|getMachOSection
 argument_list|(
-argument|const StringRef&Segment
+argument|StringRef Segment
 argument_list|,
-argument|const StringRef&Section
+argument|StringRef Section
 argument_list|,
 argument|unsigned TypeAndAttributes
 argument_list|,

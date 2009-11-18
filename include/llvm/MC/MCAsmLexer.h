@@ -180,7 +180,7 @@ name|AsmToken
 argument_list|(
 argument|TokenKind _Kind
 argument_list|,
-argument|const StringRef&_Str
+argument|StringRef _Str
 argument_list|,
 argument|int64_t _IntVal =
 literal|0

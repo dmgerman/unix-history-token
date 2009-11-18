@@ -92,6 +92,9 @@ name|class
 name|Function
 decl_stmt|;
 name|class
+name|Instruction
+decl_stmt|;
+name|class
 name|Pass
 decl_stmt|;
 name|class
@@ -508,6 +511,12 @@ specifier|const
 name|TargetData
 operator|*
 name|TD
+operator|=
+literal|0
+argument_list|,
+name|Instruction
+operator|*
+name|TheCall
 operator|=
 literal|0
 argument_list|)

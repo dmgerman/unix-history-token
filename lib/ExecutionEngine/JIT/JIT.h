@@ -287,6 +287,8 @@ argument_list|,
 argument|CodeGenOpt::Level OptLevel =                                    CodeGenOpt::Default
 argument_list|,
 argument|bool GVsWithCode = true
+argument_list|,
+argument|CodeModel::Model CMM = CodeModel::Default
 argument_list|)
 block|{
 return|return
@@ -303,6 +305,8 @@ argument_list|,
 name|OptLevel
 argument_list|,
 name|GVsWithCode
+argument_list|,
+name|CMM
 argument_list|)
 return|;
 block|}
@@ -540,6 +544,8 @@ argument_list|,
 argument|CodeGenOpt::Level OptLevel
 argument_list|,
 argument|bool GVsWithCode
+argument_list|,
+argument|CodeModel::Model CMM
 argument_list|)
 block|;
 comment|// Run the JIT on F and return information about the generated code
@@ -638,10 +644,6 @@ name|Function
 operator|*
 name|F
 argument_list|)
-block|;
-name|void
-name|updateDlsymStubTable
-argument_list|()
 block|;
 name|protected
 operator|:

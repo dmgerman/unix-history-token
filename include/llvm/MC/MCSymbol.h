@@ -152,7 +152,7 @@ name|MCContext
 decl_stmt|;
 name|MCSymbol
 argument_list|(
-argument|const StringRef&_Name
+argument|StringRef _Name
 argument_list|,
 argument|bool _IsTemporary
 argument_list|)

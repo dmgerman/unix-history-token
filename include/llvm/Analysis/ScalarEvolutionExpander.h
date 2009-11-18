@@ -182,7 +182,7 @@ name|Builder
 argument_list|(
 argument|se.getContext()
 argument_list|,
-argument|TargetFolder(se.TD, se.getContext())
+argument|TargetFolder(se.TD)
 argument_list|)
 block|{}
 comment|/// clear - Erase the contents of the InsertedExpressions map so that users

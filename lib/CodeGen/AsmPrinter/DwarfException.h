@@ -103,6 +103,9 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCExpr
+decl_stmt|;
+name|class
 name|Timer
 decl_stmt|;
 name|class
@@ -112,7 +115,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DwarfException - Emits Dwarf exception handling directives.
 comment|///
 name|class
-name|VISIBILITY_HIDDEN
 name|DwarfException
 range|:
 name|public
@@ -480,6 +482,17 @@ operator|&
 name|FirstActions
 argument_list|)
 block|;
+comment|/// CallToNoUnwindFunction - Return `true' if this is a call to a function
+comment|/// marked `nounwind'. Return `false' otherwise.
+name|bool
+name|CallToNoUnwindFunction
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+block|;
 comment|/// ComputeCallSiteTable - Compute the call-site table.  The entry for an
 comment|/// invoke has a try-range containing the call, a non-zero landing pad and an
 comment|/// appropriate action.  The entry for an ordinary call has a try-range
@@ -524,6 +537,21 @@ block|;
 name|void
 name|EmitExceptionTable
 argument_list|()
+block|;
+comment|/// CreateLabelDiff - Emit a label and subtract it from the expression we
+comment|/// already have.  This is equivalent to emitting "foo - .", but we have to
+comment|/// emit the label for "." directly.
+specifier|const
+name|MCExpr
+operator|*
+name|CreateLabelDiff
+argument_list|(
+argument|const MCExpr *ExprRef
+argument_list|,
+argument|const char *LabelName
+argument_list|,
+argument|unsigned Index
+argument_list|)
 block|;
 name|public
 operator|:

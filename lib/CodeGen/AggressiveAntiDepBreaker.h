@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
@@ -271,7 +277,7 @@ name|Reg
 parameter_list|)
 function_decl|;
 comment|// GetGroupRegs - Return a vector of the registers belonging to a
-comment|// group.
+comment|// group. If RegRefs is non-NULL then only included referenced registers.
 name|void
 name|GetGroupRegs
 argument_list|(
@@ -286,6 +292,19 @@ name|unsigned
 operator|>
 operator|&
 name|Regs
+argument_list|,
+name|std
+operator|::
+name|multimap
+operator|<
+name|unsigned
+argument_list|,
+name|AggressiveAntiDepState
+operator|::
+name|RegisterReference
+operator|>
+operator|*
+name|RegRefs
 argument_list|)
 decl_stmt|;
 comment|// UnionGroups - Union Reg1's and Reg2's groups to form a new
@@ -348,6 +367,11 @@ specifier|const
 name|BitVector
 name|AllocatableSet
 block|;
+comment|/// CriticalPathSet - The set of registers that should only be
+comment|/// renamed if they are on the critical path.
+name|BitVector
+name|CriticalPathSet
+block|;
 comment|/// State - The state used to identify and rename anti-dependence
 comment|/// registers.
 name|AggressiveAntiDepState
@@ -368,6 +392,12 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MFi
+argument_list|,
+name|TargetSubtarget
+operator|::
+name|RegClassVector
+operator|&
+name|CriticalPathRCs
 argument_list|)
 block|;
 operator|~

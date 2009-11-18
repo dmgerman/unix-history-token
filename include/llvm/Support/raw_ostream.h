@@ -474,9 +474,7 @@ operator|&
 name|operator
 operator|<<
 operator|(
-specifier|const
 name|StringRef
-operator|&
 name|Str
 operator|)
 block|{

@@ -6878,7 +6878,7 @@ comment|/// Returns the splat element value in SplatValue.  Any undefined bits i
 comment|/// that value are zero, and the corresponding bits in the SplatUndef mask
 comment|/// are set.  The SplatBitSize value is set to the splat element size in
 comment|/// bits.  HasAnyUndefs is set to true if any bits in the vector are
-comment|/// undefined.
+comment|/// undefined.  isBigEndian describes the endianness of the target.
 name|bool
 name|isConstantSplat
 argument_list|(
@@ -6892,6 +6892,8 @@ argument|bool&HasAnyUndefs
 argument_list|,
 argument|unsigned MinSplatBits =
 literal|0
+argument_list|,
+argument|bool isBigEndian = false
 argument_list|)
 block|;
 specifier|static

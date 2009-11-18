@@ -321,6 +321,15 @@ return|return
 name|true
 return|;
 block|}
+comment|/// findKill - Find a kill instruction in MBB. Return NULL if none is found.
+name|MachineInstr
+operator|*
+name|findKill
+argument_list|(
+argument|const MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
 name|void
 name|dump
 argument_list|()
@@ -963,6 +972,22 @@ parameter_list|,
 name|MachineInstr
 modifier|*
 name|MI
+parameter_list|)
+function_decl|;
+comment|/// addNewBlock - Add a new basic block BB as an empty succcessor to
+comment|/// DomBB. All variables that are live out of DomBB will be marked as passing
+comment|/// live through BB. This method assumes that the machine code is still in SSA
+comment|/// form.
+name|void
+name|addNewBlock
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|DomBB
 parameter_list|)
 function_decl|;
 block|}

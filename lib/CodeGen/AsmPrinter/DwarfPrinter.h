@@ -115,7 +115,6 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
-name|VISIBILITY_HIDDEN
 name|Dwarf
 block|{
 name|protected

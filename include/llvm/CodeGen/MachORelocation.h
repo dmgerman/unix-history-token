@@ -59,6 +59,12 @@ directive|define
 name|LLVM_CODEGEN_MACHO_RELOCATION_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/System/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

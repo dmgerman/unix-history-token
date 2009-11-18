@@ -416,9 +416,7 @@ name|virtual
 name|void
 name|EmitBytes
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Data
 parameter_list|)
 init|=

@@ -899,6 +899,7 @@ operator|(
 name|int
 operator|)
 operator|(
+name|signed
 name|char
 operator|)
 name|SubclassData

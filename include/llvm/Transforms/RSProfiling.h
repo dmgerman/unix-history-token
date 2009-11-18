@@ -63,10 +63,19 @@ directive|define
 name|LLVM_TRANSFORMS_RSPROFILING_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Value
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// RSProfilers - The basic Random Sampling Profiler Interface  Any profiler
 comment|/// that implements this interface can be transformed by the random sampling

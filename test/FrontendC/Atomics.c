@@ -40,7 +40,7 @@ comment|// PPC32 does not translate the long long variants, so fails this test.
 end_comment
 
 begin_comment
-comment|// XFAIL: sparc|arm|powerpc
+comment|// XFAIL: sparc,arm,powerpc
 end_comment
 
 begin_decl_stmt

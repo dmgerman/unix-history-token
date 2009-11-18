@@ -222,9 +222,7 @@ name|MemoryBuffer
 modifier|*
 name|getFile
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Filename
 argument_list|,
 name|std
@@ -325,16 +323,13 @@ parameter_list|(
 name|size_t
 name|Size
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|BufferName
 init|=
 literal|""
 parameter_list|)
 function_decl|;
-comment|/// getSTDIN - Read all of stdin into a file buffer, and return it.  This
-comment|/// returns null if stdin is empty.
+comment|/// getSTDIN - Read all of stdin into a file buffer, and return it.
 specifier|static
 name|MemoryBuffer
 modifier|*
@@ -343,16 +338,13 @@ parameter_list|()
 function_decl|;
 comment|/// getFileOrSTDIN - Open the specified file as a MemoryBuffer, or open stdin
 comment|/// if the Filename is "-".  If an error occurs, this returns null and fills
-comment|/// in *ErrStr with a reason.  If stdin is empty, this API (unlike getSTDIN)
-comment|/// returns an empty buffer.
+comment|/// in *ErrStr with a reason.
 specifier|static
 name|MemoryBuffer
 modifier|*
 name|getFileOrSTDIN
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Filename
 argument_list|,
 name|std
@@ -370,50 +362,6 @@ operator|-
 literal|1
 argument_list|)
 decl_stmt|;
-comment|/// getFileOrSTDIN - Open the specified file as a MemoryBuffer, or open stdin
-comment|/// if the Filename is "-".  If an error occurs, this returns null and fills
-comment|/// in *ErrStr with a reason.
-specifier|static
-name|MemoryBuffer
-modifier|*
-name|getFileOrSTDIN
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FN
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrStr
-operator|=
-literal|0
-argument_list|,
-name|int64_t
-name|FileSize
-operator|=
-operator|-
-literal|1
-argument_list|)
-block|{
-return|return
-name|getFileOrSTDIN
-argument_list|(
-name|FN
-operator|.
-name|c_str
-argument_list|()
-argument_list|,
-name|ErrStr
-argument_list|,
-name|FileSize
-argument_list|)
-return|;
-block|}
 block|}
 empty_stmt|;
 block|}

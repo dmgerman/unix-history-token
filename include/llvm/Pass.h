@@ -518,9 +518,7 @@ name|PassInfo
 modifier|*
 name|lookupPassInfo
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Arg
 parameter_list|)
 function_decl|;

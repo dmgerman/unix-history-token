@@ -185,7 +185,7 @@ name|IsDirective
 block|;
 name|MCSectionCOFF
 argument_list|(
-argument|const StringRef&name
+argument|StringRef name
 argument_list|,
 argument|bool isDirective
 argument_list|,
@@ -214,7 +214,7 @@ name|MCSectionCOFF
 operator|*
 name|Create
 argument_list|(
-argument|const StringRef&Name
+argument|StringRef Name
 argument_list|,
 argument|bool IsDirective
 argument_list|,

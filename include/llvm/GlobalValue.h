@@ -390,7 +390,7 @@ block|}
 name|void
 name|setSection
 argument_list|(
-argument|const StringRef&S
+argument|StringRef S
 argument_list|)
 block|{
 name|Section

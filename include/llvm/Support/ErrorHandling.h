@@ -149,16 +149,17 @@ comment|/// If no error handler is installed the default is to print the message
 comment|/// standard error, followed by a newline.
 comment|/// After the error handler is called this function will call exit(1), it
 comment|/// does not return.
+name|NORETURN
 name|void
 name|llvm_report_error
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|reason
-argument_list|)
+parameter_list|)
+function_decl|;
 name|NORETURN
-decl_stmt|;
 name|void
 name|llvm_report_error
 argument_list|(
@@ -169,45 +170,44 @@ name|string
 operator|&
 name|reason
 argument_list|)
-name|NORETURN
 decl_stmt|;
+name|NORETURN
 name|void
 name|llvm_report_error
-argument_list|(
+parameter_list|(
 specifier|const
 name|Twine
-operator|&
+modifier|&
 name|reason
-argument_list|)
-name|NORETURN
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// This function calls abort(), and prints the optional message to stderr.
 comment|/// Use the llvm_unreachable macro (that adds location info), instead of
 comment|/// calling this function directly.
+name|NORETURN
 name|void
 name|llvm_unreachable_internal
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|msg
-operator|=
+init|=
 literal|0
-argument_list|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|file
-operator|=
+init|=
 literal|0
-argument_list|,
+parameter_list|,
 name|unsigned
 name|line
-operator|=
+init|=
 literal|0
-argument_list|)
-name|NORETURN
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

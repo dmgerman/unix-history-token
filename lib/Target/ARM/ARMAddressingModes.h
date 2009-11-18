@@ -2098,8 +2098,8 @@ else|:
 name|add
 return|;
 block|}
-comment|/// getAM5Opc - This function encodes the addrmode5 opc field for FLDM and
-comment|/// FSTM instructions.
+comment|/// getAM5Opc - This function encodes the addrmode5 opc field for VLDM and
+comment|/// VSTM instructions.
 specifier|static
 specifier|inline
 name|unsigned
@@ -2204,13 +2204,15 @@ comment|//===-------------------------------------------------------------------
 comment|//
 comment|// This is used for NEON load / store instructions.
 comment|//
-comment|// addrmode6 := reg with optional writeback
+comment|// addrmode6 := reg with optional writeback and alignment
 comment|//
-comment|// This is stored in three operands [regaddr, regupdate, opc].  The first is
-comment|// the address register.  The second register holds the value of a post-access
-comment|// increment for writeback or reg0 if no writeback or if the writeback
-comment|// increment is the size of the memory access.  The third operand encodes
-comment|// whether there is writeback to the address register.
+comment|// This is stored in four operands [regaddr, regupdate, opc, align].  The
+comment|// first is the address register.  The second register holds the value of
+comment|// a post-access increment for writeback or reg0 if no writeback or if the
+comment|// writeback increment is the size of the memory access.  The third
+comment|// operand encodes whether there is writeback to the address register. The
+comment|// fourth operand is the value of the alignment specifier to use or zero if
+comment|// no explicit alignment.
 specifier|static
 specifier|inline
 name|unsigned

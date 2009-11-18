@@ -92,25 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
 end_include
 
 begin_decl_stmt
@@ -131,6 +113,9 @@ name|StructType
 decl_stmt|;
 name|class
 name|StructLayout
+decl_stmt|;
+name|class
+name|StructLayoutMap
 decl_stmt|;
 name|class
 name|GlobalVariable
@@ -270,8 +255,22 @@ name|char
 name|PointerPrefAlign
 block|;
 comment|///< Pointer preferred alignment
-comment|//! Where the primitive type alignment data is stored.
-comment|/*!    @sa init().    @note Could support multiple size pointer alignments, e.g., 32-bit pointers    vs. 64-bit pointers by extending TargetAlignment, but for now, we don't.    */
+name|SmallVector
+operator|<
+name|unsigned
+name|char
+block|,
+literal|8
+operator|>
+name|LegalIntWidths
+block|;
+comment|///< Legal Integers.
+comment|/// Alignments- Where the primitive type alignment data is stored.
+comment|///
+comment|/// @sa init().
+comment|/// @note Could support multiple size pointer alignments, e.g., 32-bit
+comment|/// pointers vs. 64-bit pointers by extending TargetAlignment, but for now,
+comment|/// we don't.
 name|SmallVector
 operator|<
 name|TargetAlignElem
@@ -280,151 +279,89 @@ literal|16
 operator|>
 name|Alignments
 block|;
-comment|//! Alignment iterator shorthand
-typedef|typedef
-name|SmallVector
-operator|<
-name|TargetAlignElem
-operator|,
-literal|16
-operator|>
-operator|::
-name|iterator
-name|align_iterator
-expr_stmt|;
-comment|//! Constant alignment iterator shorthand
-typedef|typedef
-name|SmallVector
-operator|<
-name|TargetAlignElem
-operator|,
-literal|16
-operator|>
-operator|::
-name|const_iterator
-name|align_const_iterator
-expr_stmt|;
-comment|//! Invalid alignment.
-comment|/*!     This member is a signal that a requested alignment type and bit width were     not found in the SmallVector.    */
+comment|/// InvalidAlignmentElem - This member is a signal that a requested alignment
+comment|/// type and bit width were not found in the SmallVector.
 specifier|static
 specifier|const
 name|TargetAlignElem
 name|InvalidAlignmentElem
-decl_stmt|;
-comment|// Opaque pointer for the StructType -> StructLayout map.
+block|;
+comment|// The StructType -> StructLayout map.
 name|mutable
-name|void
-modifier|*
+name|StructLayoutMap
+operator|*
 name|LayoutMap
-decl_stmt|;
+block|;
 comment|//! Set/initialize target alignments
 name|void
 name|setAlignment
-parameter_list|(
-name|AlignTypeEnum
-name|align_type
-parameter_list|,
-name|unsigned
-name|char
-name|abi_align
-parameter_list|,
-name|unsigned
-name|char
-name|pref_align
-parameter_list|,
-name|uint32_t
-name|bit_width
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|AlignTypeEnum align_type
+argument_list|,
+argument|unsigned char abi_align
+argument_list|,
+argument|unsigned char pref_align
+argument_list|,
+argument|uint32_t bit_width
+argument_list|)
+block|;
 name|unsigned
 name|getAlignmentInfo
 argument_list|(
-name|AlignTypeEnum
-name|align_type
+argument|AlignTypeEnum align_type
 argument_list|,
-name|uint32_t
-name|bit_width
+argument|uint32_t bit_width
 argument_list|,
-name|bool
-name|ABIAlign
+argument|bool ABIAlign
 argument_list|,
-specifier|const
-name|Type
-operator|*
-name|Ty
+argument|const Type *Ty
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|//! Internal helper method that returns requested alignment for type.
 name|unsigned
 name|char
 name|getAlignment
 argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
+argument|const Type *Ty
 argument_list|,
-name|bool
-name|abi_or_pref
+argument|bool abi_or_pref
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// Valid alignment predicate.
 comment|///
 comment|/// Predicate that tests a TargetAlignElem reference returned by get() against
 comment|/// InvalidAlignmentElem.
-specifier|inline
 name|bool
 name|validAlignment
 argument_list|(
-specifier|const
-name|TargetAlignElem
-operator|&
-name|align
+argument|const TargetAlignElem&align
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
-operator|(
 operator|&
 name|align
 operator|!=
 operator|&
 name|InvalidAlignmentElem
-operator|)
 return|;
 block|}
 name|public
-label|:
+operator|:
 comment|/// Default ctor.
 comment|///
 comment|/// @note This has to exist, because this is a pass, but it should never be
 comment|/// used.
 name|TargetData
 argument_list|()
-operator|:
-name|ImmutablePass
-argument_list|(
-argument|&ID
-argument_list|)
-block|{
-name|llvm_report_error
-argument_list|(
-literal|"Bad TargetData ctor used.  "
-literal|"Tool did not specify a TargetData to use?"
-argument_list|)
-block|;   }
+block|;
 comment|/// Constructs a TargetData from a specification string. See init().
 name|explicit
 name|TargetData
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TargetDescription
+argument|StringRef TargetDescription
 argument_list|)
 operator|:
 name|ImmutablePass
@@ -446,7 +383,7 @@ name|Module
 operator|*
 name|M
 argument_list|)
-expr_stmt|;
+block|;
 name|TargetData
 argument_list|(
 specifier|const
@@ -460,7 +397,7 @@ argument_list|(
 operator|&
 name|ID
 argument_list|)
-operator|,
+block|,
 name|LittleEndian
 argument_list|(
 name|TD
@@ -468,35 +405,42 @@ operator|.
 name|isLittleEndian
 argument_list|()
 argument_list|)
-operator|,
+block|,
 name|PointerMemSize
 argument_list|(
 name|TD
 operator|.
 name|PointerMemSize
 argument_list|)
-operator|,
+block|,
 name|PointerABIAlign
 argument_list|(
 name|TD
 operator|.
 name|PointerABIAlign
 argument_list|)
-operator|,
+block|,
 name|PointerPrefAlign
 argument_list|(
 name|TD
 operator|.
 name|PointerPrefAlign
 argument_list|)
-operator|,
+block|,
+name|LegalIntWidths
+argument_list|(
+name|TD
+operator|.
+name|LegalIntWidths
+argument_list|)
+block|,
 name|Alignments
 argument_list|(
 name|TD
 operator|.
 name|Alignments
 argument_list|)
-operator|,
+block|,
 name|LayoutMap
 argument_list|(
 literal|0
@@ -505,20 +449,15 @@ block|{ }
 operator|~
 name|TargetData
 argument_list|()
-expr_stmt|;
+block|;
 comment|// Not virtual, do not subclass this class
 comment|//! Parse a target data layout string and initialize TargetData alignments.
 name|void
 name|init
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TargetDescription
+argument|StringRef TargetDescription
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Target endianness...
 name|bool
 name|isLittleEndian
@@ -548,7 +487,74 @@ name|string
 name|getStringRepresentation
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
+comment|/// isLegalInteger - This function returns true if the specified type is
+comment|/// known tobe a native integer type supported by the CPU.  For example,
+comment|/// i64 is not native on most 32-bit CPUs and i37 is not native on any known
+comment|/// one.  This returns false if the integer width is not legal.
+comment|///
+comment|/// The width is specified in bits.
+comment|///
+name|bool
+name|isLegalInteger
+argument_list|(
+argument|unsigned Width
+argument_list|)
+specifier|const
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|LegalIntWidths
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|LegalIntWidths
+index|[
+name|i
+index|]
+operator|==
+name|Width
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isIllegalInteger
+argument_list|(
+name|unsigned
+name|Width
+argument_list|)
+decl|const
+block|{
+return|return
+operator|!
+name|isLegalInteger
+argument_list|(
+name|Width
+argument_list|)
+return|;
+block|}
 comment|/// Target pointer alignment
 name|unsigned
 name|char

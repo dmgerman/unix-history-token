@@ -71,9 +71,6 @@ name|class
 name|CallInst
 decl_stmt|;
 name|class
-name|LLVMContext
-decl_stmt|;
-name|class
 name|PointerType
 decl_stmt|;
 name|class
@@ -147,24 +144,6 @@ function_decl|;
 comment|/// isArrayMalloc - Returns the corresponding CallInst if the instruction
 comment|/// is a call to malloc whose array size can be determined and the array size
 comment|/// is not constant 1.  Otherwise, return NULL.
-name|CallInst
-modifier|*
-name|isArrayMalloc
-parameter_list|(
-name|Value
-modifier|*
-name|I
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
-specifier|const
-name|TargetData
-modifier|*
-name|TD
-parameter_list|)
-function_decl|;
 specifier|const
 name|CallInst
 modifier|*
@@ -174,10 +153,6 @@ specifier|const
 name|Value
 modifier|*
 name|I
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
 parameter_list|,
 specifier|const
 name|TargetData
@@ -230,14 +205,15 @@ name|CallInst
 modifier|*
 name|CI
 parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 specifier|const
 name|TargetData
 modifier|*
 name|TD
+parameter_list|,
+name|bool
+name|LookThroughSExt
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

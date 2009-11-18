@@ -365,14 +365,9 @@ name|MCSymbolRefExpr
 operator|*
 name|Create
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|Name
+argument|StringRef Name
 argument_list|,
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|)
 block|;
 comment|/// @}

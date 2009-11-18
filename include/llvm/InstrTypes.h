@@ -877,6 +877,125 @@ return|return
 name|BO
 return|;
 block|}
+comment|/// CreateNUWAdd - Create an Add operator with the NUW flag set.
+comment|///
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWAdd
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name =
+literal|""
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateAdd
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoUnsignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWAdd
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|BasicBlock *BB
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateAdd
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|BB
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoUnsignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWAdd
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|Instruction *I
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateAdd
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|I
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoUnsignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
 comment|/// CreateNSWSub - Create an Sub operator with the NSW flag set.
 comment|///
 specifier|static
@@ -988,6 +1107,125 @@ block|;
 name|BO
 operator|->
 name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+comment|/// CreateNUWSub - Create an Sub operator with the NUW flag set.
+comment|///
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWSub
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name =
+literal|""
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateSub
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoUnsignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWSub
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|BasicBlock *BB
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateSub
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|BB
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoUnsignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWSub
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|Instruction *I
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateSub
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|I
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoUnsignedWrap
 argument_list|(
 name|true
 argument_list|)
@@ -2598,6 +2836,66 @@ name|SubclassData
 operator|=
 name|P
 block|; }
+specifier|static
+name|bool
+name|isFPPredicate
+argument_list|(
+argument|Predicate P
+argument_list|)
+block|{
+return|return
+name|P
+operator|>=
+name|FIRST_FCMP_PREDICATE
+operator|&&
+name|P
+operator|<=
+name|LAST_FCMP_PREDICATE
+return|;
+block|}
+specifier|static
+name|bool
+name|isIntPredicate
+argument_list|(
+argument|Predicate P
+argument_list|)
+block|{
+return|return
+name|P
+operator|>=
+name|FIRST_ICMP_PREDICATE
+operator|&&
+name|P
+operator|<=
+name|LAST_ICMP_PREDICATE
+return|;
+block|}
+name|bool
+name|isFPPredicate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isFPPredicate
+argument_list|(
+name|getPredicate
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|bool
+name|isIntPredicate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isIntPredicate
+argument_list|(
+name|getPredicate
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// For example, EQ -> NE, UGT -> ULE, SLT -> SGE,
 comment|///              OEQ -> UNE, UGT -> OLE, OLT -> UGE, etc.
 comment|/// @returns the inverse predicate for the instruction's current predicate.

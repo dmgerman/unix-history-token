@@ -105,6 +105,12 @@ directive|include
 file|"llvm/Attributes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -578,6 +584,7 @@ name|unsigned
 name|getIntrinsicID
 argument_list|()
 specifier|const
+name|ATTRIBUTE_READONLY
 expr_stmt|;
 name|bool
 name|isIntrinsic

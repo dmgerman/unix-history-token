@@ -119,13 +119,6 @@ directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|ATTACH_DEBUG_INFO_TO_AN_INSN
-value|1
-end_define
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -178,17 +171,17 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
+comment|/// DIDescriptor - A thin wraper around MDNode to access encoded debug info. This should not
+comment|/// be stored in a container, because underly MDNode may change in certain situations.
 name|class
 name|DIDescriptor
 block|{
 name|protected
 label|:
-name|TrackingVH
-operator|<
 name|MDNode
-operator|>
+modifier|*
 name|DbgNode
-expr_stmt|;
+decl_stmt|;
 comment|/// DIDescriptor constructor.  If the specified node is non-null, check
 comment|/// to make sure that the tag in the descriptor matches 'RequiredTag'.  If
 comment|/// not, the debug info is corrupt and we ignore it.
@@ -2232,7 +2225,6 @@ name|LLVMContext
 operator|&
 name|VMContext
 block|;
-comment|// Cached values for uniquing and faster lookups.
 specifier|const
 name|Type
 operator|*
@@ -2241,45 +2233,9 @@ block|;
 comment|// "{}*".
 name|Function
 operator|*
-name|StopPointFn
-block|;
-comment|// llvm.dbg.stoppoint
-name|Function
-operator|*
-name|FuncStartFn
-block|;
-comment|// llvm.dbg.func.start
-name|Function
-operator|*
-name|RegionStartFn
-block|;
-comment|// llvm.dbg.region.start
-name|Function
-operator|*
-name|RegionEndFn
-block|;
-comment|// llvm.dbg.region.end
-name|Function
-operator|*
 name|DeclareFn
 block|;
 comment|// llvm.dbg.declare
-name|StringMap
-operator|<
-name|Constant
-operator|*
-operator|>
-name|StringCache
-block|;
-name|DenseMap
-operator|<
-name|Constant
-operator|*
-block|,
-name|DIDescriptor
-operator|>
-name|SimpleConstantCache
-block|;
 name|DIFactory
 argument_list|(
 specifier|const
@@ -2345,11 +2301,11 @@ name|CreateCompileUnit
 argument_list|(
 argument|unsigned LangID
 argument_list|,
-argument|StringRef Filenae
+argument|const char * Filename
 argument_list|,
-argument|StringRef Directory
+argument|const char * Directory
 argument_list|,
-argument|StringRef Producer
+argument|const char * Producer
 argument_list|,
 argument|bool isMain = false
 argument_list|,
@@ -2366,7 +2322,7 @@ comment|/// CreateEnumerator - Create a single enumerator value.
 name|DIEnumerator
 name|CreateEnumerator
 argument_list|(
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
 argument|uint64_t Val
 argument_list|)
@@ -2377,7 +2333,7 @@ name|CreateBasicType
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2400,7 +2356,7 @@ name|CreateBasicTypeEx
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2426,7 +2382,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2452,7 +2408,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2477,7 +2433,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2507,7 +2463,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2536,11 +2492,11 @@ name|CreateSubprogram
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
-argument|StringRef DisplayName
+argument|const char * DisplayName
 argument_list|,
-argument|StringRef LinkageName
+argument|const char * LinkageName
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2559,11 +2515,11 @@ name|CreateGlobalVariable
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
-argument|StringRef DisplayName
+argument|const char * DisplayName
 argument_list|,
-argument|StringRef LinkageName
+argument|const char * LinkageName
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2586,7 +2542,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|StringRef Name
+argument|const char * Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2639,52 +2595,9 @@ argument_list|,
 argument|DILocation OrigLoc
 argument_list|)
 block|;
-comment|/// InsertStopPoint - Create a new llvm.dbg.stoppoint intrinsic invocation,
-comment|/// inserting it at the end of the specified basic block.
-name|void
-name|InsertStopPoint
-argument_list|(
-argument|DICompileUnit CU
-argument_list|,
-argument|unsigned LineNo
-argument_list|,
-argument|unsigned ColNo
-argument_list|,
-argument|BasicBlock *BB
-argument_list|)
-block|;
-comment|/// InsertSubprogramStart - Create a new llvm.dbg.func.start intrinsic to
-comment|/// mark the start of the specified subprogram.
-name|void
-name|InsertSubprogramStart
-argument_list|(
-argument|DISubprogram SP
-argument_list|,
-argument|BasicBlock *BB
-argument_list|)
-block|;
-comment|/// InsertRegionStart - Insert a new llvm.dbg.region.start intrinsic call to
-comment|/// mark the start of a region for the specified scoping descriptor.
-name|void
-name|InsertRegionStart
-argument_list|(
-argument|DIDescriptor D
-argument_list|,
-argument|BasicBlock *BB
-argument_list|)
-block|;
-comment|/// InsertRegionEnd - Insert a new llvm.dbg.region.end intrinsic call to
-comment|/// mark the end of a region for the specified scoping descriptor.
-name|void
-name|InsertRegionEnd
-argument_list|(
-argument|DIDescriptor D
-argument_list|,
-argument|BasicBlock *BB
-argument_list|)
-block|;
 comment|/// InsertDeclare - Insert a new llvm.dbg.declare intrinsic call.
-name|void
+name|Instruction
+operator|*
 name|InsertDeclare
 argument_list|(
 argument|llvm::Value *Storage
@@ -2695,7 +2608,8 @@ argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
 comment|/// InsertDeclare - Insert a new llvm.dbg.declare intrinsic call.
-name|void
+name|Instruction
+operator|*
 name|InsertDeclare
 argument_list|(
 argument|llvm::Value *Storage
@@ -2892,35 +2806,6 @@ operator|&
 name|DebugLocInfo
 argument_list|)
 block|;
-comment|/// isInlinedFnStart - Return true if FSI is starting an inlined function.
-name|bool
-name|isInlinedFnStart
-argument_list|(
-name|DbgFuncStartInst
-operator|&
-name|FSI
-argument_list|,
-specifier|const
-name|Function
-operator|*
-name|CurrentFn
-argument_list|)
-block|;
-comment|/// isInlinedFnEnd - Return true if REI is ending an inlined function.
-name|bool
-name|isInlinedFnEnd
-argument_list|(
-name|DbgRegionEndInst
-operator|&
-name|REI
-argument_list|,
-specifier|const
-name|Function
-operator|*
-name|CurrentFn
-argument_list|)
-block|;
-comment|/// DebugInfoFinder - This object collects DebugInfo from a module.
 name|class
 name|DebugInfoFinder
 block|{
@@ -2959,42 +2844,6 @@ argument_list|(
 argument|DISubprogram SP
 argument_list|)
 block|;
-comment|/// processStopPoint - Process DbgStopPointInst.
-name|void
-name|processStopPoint
-argument_list|(
-name|DbgStopPointInst
-operator|*
-name|SPI
-argument_list|)
-block|;
-comment|/// processFuncStart - Process DbgFuncStartInst.
-name|void
-name|processFuncStart
-argument_list|(
-name|DbgFuncStartInst
-operator|*
-name|FSI
-argument_list|)
-block|;
-comment|/// processRegionStart - Process DbgRegionStart.
-name|void
-name|processRegionStart
-argument_list|(
-name|DbgRegionStartInst
-operator|*
-name|DRS
-argument_list|)
-block|;
-comment|/// processRegionEnd - Process DbgRegionEnd.
-name|void
-name|processRegionEnd
-argument_list|(
-name|DbgRegionEndInst
-operator|*
-name|DRE
-argument_list|)
-block|;
 comment|/// processDeclare - Process DbgDeclareInst.
 name|void
 name|processDeclare
@@ -3002,6 +2851,13 @@ argument_list|(
 name|DbgDeclareInst
 operator|*
 name|DDI
+argument_list|)
+block|;
+comment|/// processLocation - Process DILocation.
+name|void
+name|processLocation
+argument_list|(
+argument|DILocation Loc
 argument_list|)
 block|;
 comment|/// addCompileUnit - Add compile unit into CUs.

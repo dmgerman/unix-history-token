@@ -1116,6 +1116,14 @@ modifier|*
 name|NewBefore
 parameter_list|)
 function_decl|;
+comment|/// updateTerminator - Update the terminator instructions in block to account
+comment|/// for changes to the layout. If the block previously used a fallthrough,
+comment|/// it may now need a branch, and if it previously used branching it may now
+comment|/// be able to use a fallthrough.
+name|void
+name|updateTerminator
+parameter_list|()
+function_decl|;
 comment|// Machine-CFG mutators
 comment|/// addSuccessor - Add succ as a successor of this MachineBasicBlock.
 comment|/// The Predecessors list of succ is automatically updated.
@@ -1152,7 +1160,7 @@ parameter_list|)
 function_decl|;
 comment|/// transferSuccessors - Transfers all the successors from MBB to this
 comment|/// machine basic block (i.e., copies all the successors fromMBB and
-comment|/// remove all the successors fromBB).
+comment|/// remove all the successors from fromMBB).
 name|void
 name|transferSuccessors
 parameter_list|(
@@ -1565,6 +1573,23 @@ name|MBB
 operator|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|void
+name|WriteAsOperand
+parameter_list|(
+name|raw_ostream
+modifier|&
+parameter_list|,
+specifier|const
+name|MachineBasicBlock
+modifier|*
+parameter_list|,
+name|bool
+name|t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//

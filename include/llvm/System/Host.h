@@ -119,6 +119,17 @@ name|string
 name|getHostTriple
 argument_list|()
 expr_stmt|;
+comment|/// getHostCPUName - Get the LLVM name for the host CPU. The particular format
+comment|/// of the name is target dependent, and suitable for passing as -mcpu to the
+comment|/// target which matches the host.
+comment|///
+comment|/// \return - The host CPU name, or empty if the CPU could not be determined.
+name|std
+operator|::
+name|string
+name|getHostCPUName
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt

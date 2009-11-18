@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- Thumb2RegisterInfo.h - Thumb-2 Register Information Impl ----*- C++ -*-===//
+comment|//===- Thumb2RegisterInfo.h - Thumb-2 Register Information Impl -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,7 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file contains the Thumb-2 implementation of the TargetRegisterInfo class.
+comment|// This file contains the Thumb-2 implementation of the TargetRegisterInfo
+end_comment
+
+begin_comment
+comment|// class.
 end_comment
 
 begin_comment

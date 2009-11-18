@@ -787,6 +787,34 @@ name|CCAssignFn
 name|Fn
 argument_list|)
 decl_stmt|;
+comment|/// CheckReturn - Analyze the return values of a function, returning
+comment|/// true if the return can be performed without sret-demotion, and
+comment|/// false otherwise.
+name|bool
+name|CheckReturn
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|EVT
+operator|>
+operator|&
+name|OutTys
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|ArgFlagsTy
+operator|>
+operator|&
+name|ArgsFlags
+argument_list|,
+name|CCAssignFn
+name|Fn
+argument_list|)
+decl_stmt|;
 comment|/// AnalyzeCallOperands - Analyze the outgoing arguments to a call,
 comment|/// incorporating info about the passed values into this state.
 name|void

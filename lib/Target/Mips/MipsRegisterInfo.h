@@ -236,7 +236,7 @@ block|;
 name|unsigned
 name|getFrameRegister
 argument_list|(
-argument|MachineFunction&MF
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;

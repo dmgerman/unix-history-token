@@ -133,9 +133,9 @@ name|InlineAsm
 argument_list|(
 argument|const FunctionType *Ty
 argument_list|,
-argument|const StringRef&AsmString
+argument|StringRef AsmString
 argument_list|,
-argument|const StringRef&Constraints
+argument|StringRef Constraints
 argument_list|,
 argument|bool hasSideEffects
 argument_list|,
@@ -158,9 +158,9 @@ name|get
 argument_list|(
 argument|const FunctionType *Ty
 argument_list|,
-argument|const StringRef&AsmString
+argument|StringRef AsmString
 argument_list|,
-argument|const StringRef&Constraints
+argument|StringRef Constraints
 argument_list|,
 argument|bool hasSideEffects
 argument_list|,
@@ -252,15 +252,9 @@ specifier|static
 name|bool
 name|Verify
 argument_list|(
-specifier|const
-name|FunctionType
-operator|*
-name|Ty
+argument|const FunctionType *Ty
 argument_list|,
-specifier|const
-name|StringRef
-operator|&
-name|Constraints
+argument|StringRef Constraints
 argument_list|)
 block|;
 comment|// Constraint String Parsing
@@ -341,21 +335,9 @@ comment|/// return true, otherwise return false.
 name|bool
 name|Parse
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|Str
+argument|StringRef Str
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|InlineAsm
-operator|::
-name|ConstraintInfo
-operator|>
-operator|&
-name|ConstraintsSoFar
+argument|std::vector<InlineAsm::ConstraintInfo>&ConstraintsSoFar
 argument_list|)
 block|;   }
 block|;
@@ -371,10 +353,7 @@ name|ConstraintInfo
 operator|>
 name|ParseConstraints
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|ConstraintString
+argument|StringRef ConstraintString
 argument_list|)
 block|;
 comment|/// ParseConstraints - Parse the constraints of this inlineasm object,

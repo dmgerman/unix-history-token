@@ -955,6 +955,7 @@ condition|)
 return|return
 name|Val
 operator|.
+name|template
 name|is
 operator|<
 name|InnerUnion
@@ -964,6 +965,7 @@ operator|)
 operator|&&
 name|Val
 operator|.
+name|template
 name|get
 operator|<
 name|InnerUnion
@@ -971,6 +973,7 @@ operator|>
 operator|(
 operator|)
 operator|.
+name|template
 name|is
 operator|<
 name|T
@@ -984,6 +987,7 @@ begin_return
 return|return
 name|Val
 operator|.
+name|template
 name|is
 operator|<
 name|T
@@ -1051,6 +1055,7 @@ condition|)
 return|return
 name|Val
 operator|.
+name|template
 name|get
 operator|<
 name|InnerUnion
@@ -1058,6 +1063,7 @@ operator|>
 operator|(
 operator|)
 operator|.
+name|template
 name|get
 operator|<
 name|T
@@ -1071,6 +1077,7 @@ begin_return
 return|return
 name|Val
 operator|.
+name|template
 name|get
 operator|<
 name|T
@@ -1618,6 +1625,7 @@ condition|)
 return|return
 name|Val
 operator|.
+name|template
 name|is
 operator|<
 name|InnerUnion1
@@ -1627,6 +1635,7 @@ operator|)
 operator|&&
 name|Val
 operator|.
+name|template
 name|get
 operator|<
 name|InnerUnion1
@@ -1634,6 +1643,7 @@ operator|>
 operator|(
 operator|)
 operator|.
+name|template
 name|is
 operator|<
 name|T
@@ -1647,6 +1657,7 @@ begin_return
 return|return
 name|Val
 operator|.
+name|template
 name|is
 operator|<
 name|InnerUnion2
@@ -1656,6 +1667,7 @@ operator|)
 operator|&&
 name|Val
 operator|.
+name|template
 name|get
 operator|<
 name|InnerUnion2
@@ -1663,6 +1675,7 @@ operator|>
 operator|(
 operator|)
 operator|.
+name|template
 name|is
 operator|<
 name|T
@@ -1730,6 +1743,7 @@ condition|)
 return|return
 name|Val
 operator|.
+name|template
 name|get
 operator|<
 name|InnerUnion1
@@ -1737,6 +1751,7 @@ operator|>
 operator|(
 operator|)
 operator|.
+name|template
 name|get
 operator|<
 name|T
@@ -1750,6 +1765,7 @@ begin_return
 return|return
 name|Val
 operator|.
+name|template
 name|get
 operator|<
 name|InnerUnion2
@@ -1757,6 +1773,7 @@ operator|>
 operator|(
 operator|)
 operator|.
+name|template
 name|get
 operator|<
 name|T

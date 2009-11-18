@@ -112,7 +112,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIEAbbrevData - Dwarf abbreviation data, describes the one attribute of a
 comment|/// Dwarf abbreviation.
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEAbbrevData
 block|{
 comment|/// Attribute - Dwarf attribute code.
@@ -180,7 +179,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIEAbbrev - Dwarf abbreviation, describes the organization of a debug
 comment|/// information object.
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEAbbrev
 range|:
 name|public
@@ -408,7 +406,6 @@ name|class
 name|DIEValue
 decl_stmt|;
 name|class
-name|VISIBILITY_HIDDEN
 name|DIE
 range|:
 name|public
@@ -753,7 +750,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIEValue - A debug information entry value.
 comment|///
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEValue
 range|:
 name|public
@@ -894,7 +890,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIEInteger - An integer value DIE.
 comment|///
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEInteger
 range|:
 name|public
@@ -1135,7 +1130,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIEString - A string value DIE.
 comment|///
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEString
 range|:
 name|public
@@ -1283,7 +1277,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIEDwarfLabel - A Dwarf internal label expression DIE.
 comment|//
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEDwarfLabel
 range|:
 name|public
@@ -1411,7 +1404,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIEObjectLabel - A label to an object in code or data.
 comment|//
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEObjectLabel
 range|:
 name|public
@@ -1545,7 +1537,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIESectionOffset - A section offset DIE.
 comment|///
 name|class
-name|VISIBILITY_HIDDEN
 name|DIESectionOffset
 range|:
 name|public
@@ -1709,7 +1700,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIEDelta - A simple label difference DIE.
 comment|///
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEDelta
 range|:
 name|public
@@ -1856,7 +1846,6 @@ comment|/// DIEntry - A pointer to another debug information entry.  An instance
 comment|/// this class can also be used as a proxy for a debug information entry not
 comment|/// yet defined (ie. types.)
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEEntry
 range|:
 name|public
@@ -2009,7 +1998,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIEBlock - A block of values.  Primarily used for location expressions.
 comment|//
 name|class
-name|VISIBILITY_HIDDEN
 name|DIEBlock
 range|:
 name|public

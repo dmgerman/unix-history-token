@@ -160,7 +160,7 @@ operator|::
 name|string
 name|getUniqueName
 argument_list|(
-argument|const StringRef&BaseName
+argument|StringRef BaseName
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -173,9 +173,7 @@ name|Type
 modifier|*
 name|lookup
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|name
 argument_list|)
 decl|const
@@ -186,9 +184,7 @@ comment|/// Type.
 name|iterator
 name|find
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Name
 parameter_list|)
 block|{
@@ -207,9 +203,7 @@ comment|/// Type.
 name|const_iterator
 name|find
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|)
 decl|const
@@ -335,9 +329,7 @@ comment|/// @brief Insert a type under a new name.
 name|void
 name|insert
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Name
 parameter_list|,
 specifier|const

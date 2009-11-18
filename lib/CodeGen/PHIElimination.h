@@ -376,16 +376,85 @@ modifier|&
 name|Fn
 parameter_list|)
 function_decl|;
-comment|// FindCopyInsertPoint - Find a safe place in MBB to insert a copy from
-comment|// SrcReg.  This needs to be after any def or uses of SrcReg, but before
-comment|// any subsequent point where control flow might jump out of the basic
-comment|// block.
+comment|/// Split critical edges where necessary for good coalescer performance.
+name|bool
+name|SplitPHIEdges
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+function_decl|;
+comment|/// isLiveOut - Determine if Reg is live out from MBB, when not
+comment|/// considering PHI nodes. This means that Reg is either killed by
+comment|/// a successor block or passed through one.
+name|bool
+name|isLiveOut
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|,
+name|LiveVariables
+modifier|&
+name|LV
+parameter_list|)
+function_decl|;
+comment|/// isLiveIn - Determine if Reg is live in to MBB, not considering PHI
+comment|/// source registers. This means that Reg is either killed by MBB or passes
+comment|/// through it.
+name|bool
+name|isLiveIn
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|,
+name|LiveVariables
+modifier|&
+name|LV
+parameter_list|)
+function_decl|;
+comment|/// SplitCriticalEdge - Split a critical edge from A to B by
+comment|/// inserting a new MBB. Update branches in A and PHI instructions
+comment|/// in B. Return the new block.
+name|MachineBasicBlock
+modifier|*
+name|SplitCriticalEdge
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|A
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|B
+parameter_list|)
+function_decl|;
+comment|/// FindCopyInsertPoint - Find a safe place in MBB to insert a copy from
+comment|/// SrcReg when following the CFG edge to SuccMBB. This needs to be after
+comment|/// any def of SrcReg, but before any subsequent point where control flow
+comment|/// might jump out of the basic block.
 name|MachineBasicBlock
 operator|::
 name|iterator
 name|FindCopyInsertPoint
 argument_list|(
 argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock&SuccMBB
 argument_list|,
 argument|unsigned SrcReg
 argument_list|)

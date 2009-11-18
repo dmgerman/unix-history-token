@@ -75,6 +75,17 @@ decl_stmt|;
 name|class
 name|SUnit
 decl_stmt|;
+name|class
+name|TargetRegisterClass
+decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetSubtarget - Generic base class for all target subtargets.  All
@@ -123,6 +134,14 @@ name|ANTIDEP_ALL
 block|}
 name|AntiDepBreakMode
 typedef|;
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|TargetRegisterClass
+operator|*
+operator|>
+name|RegClassVector
+expr_stmt|;
 name|virtual
 operator|~
 name|TargetSubtarget
@@ -144,7 +163,9 @@ return|;
 block|}
 comment|// enablePostRAScheduler - If the target can benefit from post-regalloc
 comment|// scheduling and the specified optimization level meets the requirement
-comment|// return true to enable post-register-allocation scheduling.
+comment|// return true to enable post-register-allocation scheduling. In
+comment|// CriticalPathRCs return any register classes that should only be broken
+comment|// if on the critical path.
 name|virtual
 name|bool
 name|enablePostRAScheduler
@@ -156,18 +177,14 @@ name|OptLevel
 argument_list|,
 name|AntiDepBreakMode
 operator|&
-name|mode
+name|Mode
+argument_list|,
+name|RegClassVector
+operator|&
+name|CriticalPathRCs
 argument_list|)
 decl|const
-block|{
-name|mode
-operator|=
-name|ANTIDEP_NONE
-expr_stmt|;
-return|return
-name|false
-return|;
-block|}
+decl_stmt|;
 comment|// adjustSchedDependency - Perform target specific adjustments to
 comment|// the latency of a schedule dependency.
 name|virtual

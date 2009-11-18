@@ -187,6 +187,35 @@ function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Control Flow Graph Restructuring.
 comment|//
+comment|/// RemovePredecessorAndSimplify - Like BasicBlock::removePredecessor, this
+comment|/// method is called when we're about to delete Pred as a predecessor of BB.  If
+comment|/// BB contains any PHI nodes, this drops the entries in the PHI nodes for Pred.
+comment|///
+comment|/// Unlike the removePredecessor method, this attempts to simplify uses of PHI
+comment|/// nodes that collapse into identity values.  For example, if we have:
+comment|///   x = phi(1, 0, 0, 0)
+comment|///   y = and x, z
+comment|///
+comment|/// .. and delete the predecessor corresponding to the '1', this will attempt to
+comment|/// recursively fold the 'and' to 0.
+name|void
+name|RemovePredecessorAndSimplify
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|Pred
+parameter_list|,
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// MergeBasicBlockIntoOnlyPred - BB is a block with one predecessor and its
 comment|/// predecessor is known to have one successor (BB!).  Eliminate the edge
 comment|/// between them, moving the instructions in the predecessor into BB.  This
@@ -204,6 +233,19 @@ modifier|*
 name|P
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+comment|/// TryToSimplifyUncondBranchFromEmptyBlock - BB is known to contain an
+comment|/// unconditional branch, and contains no instructions other than PHI nodes,
+comment|/// potential debug intrinsics and the branch.  If possible, eliminate BB by
+comment|/// rewriting all the predecessors to branch to the successor block and return
+comment|/// true.  If we can't transform, return false.
+name|bool
+name|TryToSimplifyUncondBranchFromEmptyBlock
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
 parameter_list|)
 function_decl|;
 comment|/// SimplifyCFG - This function is used to do simplification of a CFG.  For

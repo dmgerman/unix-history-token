@@ -251,38 +251,10 @@ argument_list|,
 argument|MDNode *Scope
 argument_list|)
 block|;
-comment|/// RecordRegionStart - Indicate the start of a region.
-name|unsigned
-name|RecordRegionStart
-argument_list|(
-name|MDNode
-operator|*
-name|N
-argument_list|)
-block|;
-comment|/// RecordRegionEnd - Indicate the end of a region.
-name|unsigned
-name|RecordRegionEnd
-argument_list|(
-name|MDNode
-operator|*
-name|N
-argument_list|)
-block|;
 comment|/// getRecordSourceLineCount - Count source lines.
 name|unsigned
 name|getRecordSourceLineCount
 argument_list|()
-block|;
-comment|/// RecordVariable - Indicate the declaration of  a local variable.
-comment|///
-name|void
-name|RecordVariable
-argument_list|(
-argument|MDNode *N
-argument_list|,
-argument|unsigned FrameIndex
-argument_list|)
 block|;
 comment|/// ShouldEmitDwarfDebug - Returns true if Dwarf debugging declarations should
 comment|/// be emitted.
@@ -291,40 +263,21 @@ name|ShouldEmitDwarfDebug
 argument_list|()
 specifier|const
 block|;
-comment|//// RecordInlinedFnStart - Indicate the start of a inlined function.
-name|unsigned
-name|RecordInlinedFnStart
-argument_list|(
-argument|DISubprogram SP
-argument_list|,
-argument|DICompileUnit CU
-argument_list|,
-argument|unsigned Line
-argument_list|,
-argument|unsigned Col
-argument_list|)
-block|;
-comment|/// RecordInlinedFnEnd - Indicate the end of inlined subroutine.
-name|unsigned
-name|RecordInlinedFnEnd
-argument_list|(
-argument|DISubprogram SP
-argument_list|)
-block|;
 name|void
-name|SetDbgScopeBeginLabels
+name|BeginScope
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
-argument|unsigned L
+argument|unsigned Label
 argument_list|)
 block|;
 name|void
-name|SetDbgScopeEndLabels
+name|EndScope
 argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned L
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
 argument_list|)
 block|; }
 decl_stmt|;

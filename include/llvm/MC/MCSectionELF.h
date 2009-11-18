@@ -100,7 +100,7 @@ name|protected
 operator|:
 name|MCSectionELF
 argument_list|(
-argument|const StringRef&Section
+argument|StringRef Section
 argument_list|,
 argument|unsigned type
 argument_list|,
@@ -146,7 +146,7 @@ name|MCSectionELF
 operator|*
 name|Create
 argument_list|(
-argument|const StringRef&Section
+argument|StringRef Section
 argument_list|,
 argument|unsigned Type
 argument_list|,

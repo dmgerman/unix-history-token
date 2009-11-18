@@ -401,6 +401,24 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 block|;
+name|virtual
+name|bool
+name|getPostIndexedAddressParts
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|SDNode *Op
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|,
+argument|ISD::MemIndexedMode&AM
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 specifier|const
 name|MSP430Subtarget
 operator|&

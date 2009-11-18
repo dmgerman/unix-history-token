@@ -348,6 +348,16 @@ operator|&
 name|ID
 argument_list|)
 block|;
+comment|/// hasSameValue - Return true if this ARM constpool value
+comment|/// can share the same constantpool entry as another ARM constpool value.
+name|bool
+name|hasSameValue
+argument_list|(
+name|ARMConstantPoolValue
+operator|*
+name|ACPV
+argument_list|)
+block|;
 name|void
 name|print
 argument_list|(

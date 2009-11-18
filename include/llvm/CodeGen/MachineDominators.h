@@ -97,21 +97,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-specifier|inline
-name|void
-name|WriteAsOperand
-parameter_list|(
-name|raw_ostream
-modifier|&
-parameter_list|,
-specifier|const
-name|MachineBasicBlock
-modifier|*
-parameter_list|,
-name|bool
-name|t
-parameter_list|)
-block|{  }
 name|template
 operator|<
 operator|>

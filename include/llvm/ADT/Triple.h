@@ -212,6 +212,8 @@ name|NetBSD
 block|,
 name|OpenBSD
 block|,
+name|Psp
+block|,
 name|Solaris
 block|,
 name|Win32
@@ -432,6 +434,22 @@ end_comment
 begin_comment
 comment|/// @{
 end_comment
+
+begin_expr_stmt
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|str
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 specifier|const
@@ -695,9 +713,7 @@ begin_function_decl
 name|void
 name|setArchName
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Str
 parameter_list|)
 function_decl|;
@@ -715,9 +731,7 @@ begin_function_decl
 name|void
 name|setVendorName
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Str
 parameter_list|)
 function_decl|;
@@ -735,9 +749,7 @@ begin_function_decl
 name|void
 name|setOSName
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Str
 parameter_list|)
 function_decl|;
@@ -755,9 +767,7 @@ begin_function_decl
 name|void
 name|setEnvironmentName
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Str
 parameter_list|)
 function_decl|;
@@ -775,11 +785,26 @@ begin_function_decl
 name|void
 name|setOSAndEnvironmentName
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Str
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// getArchNameForAssembler - Get an architecture name that is understood by the
+end_comment
+
+begin_comment
+comment|/// target assembler.
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|getArchNameForAssembler
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -916,9 +941,7 @@ specifier|static
 name|ArchType
 name|getArchTypeForLLVMName
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Str
 parameter_list|)
 function_decl|;
@@ -941,9 +964,7 @@ specifier|static
 name|ArchType
 name|getArchTypeForDarwinArchName
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Str
 parameter_list|)
 function_decl|;

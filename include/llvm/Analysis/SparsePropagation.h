@@ -536,7 +536,7 @@ operator|,
 name|LatticeVal
 operator|>
 operator|::
-name|iterator
+name|const_iterator
 name|I
 operator|=
 name|ValueState

@@ -340,7 +340,7 @@ name|get
 argument_list|(
 argument|const IntegerType *Ty
 argument_list|,
-argument|const StringRef&Str
+argument|StringRef Str
 argument_list|,
 argument|uint8_t radix
 argument_list|)
@@ -806,15 +806,9 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
+argument|const Type* Ty
 argument_list|,
-specifier|const
-name|StringRef
-operator|&
-name|Str
+argument|StringRef Str
 argument_list|)
 block|;
 specifier|static
@@ -1261,7 +1255,7 @@ name|get
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|const StringRef&Initializer
+argument|StringRef Initializer
 argument_list|,
 argument|bool AddNull = true
 argument_list|)

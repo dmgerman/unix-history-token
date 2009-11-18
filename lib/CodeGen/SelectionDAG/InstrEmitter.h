@@ -357,7 +357,7 @@ modifier|*
 name|Node
 parameter_list|)
 function_decl|;
-comment|/// EmitNode - Generate machine code for an node and needed dependencies.
+comment|/// EmitNode - Generate machine code for a node and needed dependencies.
 comment|///
 name|void
 name|EmitNode

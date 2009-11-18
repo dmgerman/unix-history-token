@@ -709,9 +709,15 @@ comment|// This is an instance of InlineAsm
 name|PseudoSourceValueVal
 block|,
 comment|// This is an instance of PseudoSourceValue
+name|FixedStackPseudoSourceValueVal
+block|,
+comment|// This is an instance of
+comment|// FixedStackPseudoSourceValue
 name|InstructionVal
 block|,
 comment|// This is an instance of Instruction
+comment|// Enum values starting at InstructionVal are used for Instructions;
+comment|// don't add new values here!
 comment|// Markers:
 name|ConstantFirstVal
 init|=

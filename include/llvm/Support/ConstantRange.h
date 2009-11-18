@@ -528,6 +528,26 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// zextOrTrunc - make this range have the bit width given by \p BitWidth. The
+comment|/// value is zero extended, truncated, or left alone to make it that width.
+name|ConstantRange
+name|zextOrTrunc
+argument_list|(
+name|uint32_t
+name|BitWidth
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// sextOrTrunc - make this range have the bit width given by \p BitWidth. The
+comment|/// value is sign extended, truncated, or left alone to make it that width.
+name|ConstantRange
+name|sextOrTrunc
+argument_list|(
+name|uint32_t
+name|BitWidth
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// add - Return a new range representing the possible values resulting
 comment|/// from an addition of a value in this range and a value in Other.
 name|ConstantRange
@@ -587,6 +607,42 @@ specifier|const
 name|ConstantRange
 operator|&
 name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// shl - Return a new range representing the possible values resulting
+comment|/// from a left shift of a value in this range by the Amount value.
+name|ConstantRange
+name|shl
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Amount
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// ashr - Return a new range representing the possible values resulting from
+comment|/// an arithmetic right shift of a value in this range by the Amount value.
+name|ConstantRange
+name|ashr
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Amount
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// shr - Return a new range representing the possible values resulting
+comment|/// from a logical right shift of a value in this range by the Amount value.
+name|ConstantRange
+name|lshr
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Amount
 argument_list|)
 decl|const
 decl_stmt|;

@@ -312,6 +312,16 @@ name|MachineRegisterInfo
 modifier|*
 name|RegInfo
 decl_stmt|;
+comment|/// CanLowerReturn - true iff the function's return value can be lowered to
+comment|/// registers.
+name|bool
+name|CanLowerReturn
+decl_stmt|;
+comment|/// DemoteRegister - if CanLowerReturn is false, DemoteRegister is a vreg
+comment|/// allocated to hold a pointer to the hidden sret parameter.
+name|unsigned
+name|DemoteRegister
+decl_stmt|;
 name|explicit
 name|FunctionLoweringInfo
 parameter_list|(
@@ -681,12 +691,14 @@ argument_list|(
 argument|bb
 argument_list|)
 block|{ }
-name|uint64_t
+name|APInt
 name|size
 argument_list|()
 specifier|const
 block|{
-name|uint64_t
+specifier|const
+name|APInt
+operator|&
 name|rHigh
 operator|=
 name|cast
@@ -697,10 +709,12 @@ operator|(
 name|High
 operator|)
 operator|->
-name|getSExtValue
+name|getValue
 argument_list|()
 block|;
-name|uint64_t
+specifier|const
+name|APInt
+operator|&
 name|rLow
 operator|=
 name|cast
@@ -711,7 +725,7 @@ operator|(
 name|Low
 operator|)
 operator|->
-name|getSExtValue
+name|getValue
 argument_list|()
 block|;
 return|return

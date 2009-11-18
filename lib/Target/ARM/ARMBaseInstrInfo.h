@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ARMBaseInstrInfo.h - ARM Base Instruction Information -------------*- C++ -*-===//
+comment|//===- ARMBaseInstrInfo.h - ARM Base Instruction Information ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -920,7 +920,47 @@ argument_list|,
 argument|MachineInstr* LoadMI
 argument_list|)
 specifier|const
-block|;  }
+block|;
+name|virtual
+name|void
+name|reMaterialize
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|unsigned SubIdx
+argument_list|,
+argument|const MachineInstr *Orig
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isIdentical
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineInstr *Other
+argument_list|,
+argument|const MachineRegisterInfo *MRI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|TailDuplicationLimit
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned DefaultLimit
+argument_list|)
+specifier|const
+block|; }
 decl_stmt|;
 specifier|static
 specifier|inline

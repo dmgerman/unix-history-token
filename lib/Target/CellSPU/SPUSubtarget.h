@@ -219,7 +219,7 @@ block|{
 return|return
 literal|"E-p:32:32:128-f64:64:128-f32:32:128-i64:32:128-i32:32:128"
 literal|"-i16:16:128-i8:8:128-i1:8:128-a:0:128-v64:128:128-v128:128:128"
-literal|"-s:128:128"
+literal|"-s:128:128-n32:64"
 return|;
 block|}
 expr|}

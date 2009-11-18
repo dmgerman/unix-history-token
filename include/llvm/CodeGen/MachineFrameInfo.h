@@ -68,7 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -81,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits>
 end_include
 
 begin_include
@@ -273,12 +285,11 @@ argument|uint64_t Sz
 argument_list|,
 argument|unsigned Al
 argument_list|,
-argument|int64_t SP =
-literal|0
+argument|int64_t SP
 argument_list|,
-argument|bool IM = false
+argument|bool IM
 argument_list|,
-argument|bool isSS = false
+argument|bool isSS
 argument_list|)
 block|:
 name|SPOffset
@@ -400,6 +411,16 @@ comment|/// CSIValid - Has CSInfo been set yet?
 name|bool
 name|CSIValid
 decl_stmt|;
+comment|/// SpillObjects - A vector indicating which frame indices refer to
+comment|/// spill slots.
+name|SmallVector
+operator|<
+name|bool
+operator|,
+literal|8
+operator|>
+name|SpillObjects
+expr_stmt|;
 comment|/// MMI - This field is set (via setMachineModuleInfo) by a module info
 comment|/// consumer (ex. DwarfWriter) to indicate that frame layout information
 comment|/// should be acquired.  Typically, it's the responsibility of the target's
@@ -1006,8 +1027,9 @@ name|SPOffset
 parameter_list|,
 name|bool
 name|Immutable
-init|=
-name|true
+parameter_list|,
+name|bool
+name|isSS
 parameter_list|)
 function_decl|;
 comment|/// isFixedObjectIndex - Returns true if the specified index corresponds to a
@@ -1154,8 +1176,8 @@ operator|~
 literal|0ULL
 return|;
 block|}
-comment|/// CreateStackObject - Create a new statically sized stack object, returning
-comment|/// a nonnegative identifier to represent it.
+comment|/// CreateStackObject - Create a new statically sized stack object,
+comment|/// returning a nonnegative identifier to represent it.
 comment|///
 name|int
 name|CreateStackObject
@@ -1168,8 +1190,6 @@ name|Alignment
 parameter_list|,
 name|bool
 name|isSS
-init|=
-name|false
 parameter_list|)
 block|{
 name|assert
@@ -1199,7 +1219,9 @@ name|isSS
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
+name|int
+name|Index
+init|=
 operator|(
 name|int
 operator|)
@@ -1211,6 +1233,60 @@ operator|-
 name|NumFixedObjects
 operator|-
 literal|1
+decl_stmt|;
+name|assert
+argument_list|(
+name|Index
+operator|>=
+literal|0
+operator|&&
+literal|"Bad frame index!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Index
+return|;
+block|}
+comment|/// CreateSpillStackObject - Create a new statically sized stack
+comment|/// object that represents a spill slot, returning a nonnegative
+comment|/// identifier to represent it.
+comment|///
+name|int
+name|CreateSpillStackObject
+parameter_list|(
+name|uint64_t
+name|Size
+parameter_list|,
+name|unsigned
+name|Alignment
+parameter_list|)
+block|{
+name|CreateStackObject
+argument_list|(
+name|Size
+argument_list|,
+name|Alignment
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+name|int
+name|Index
+init|=
+operator|(
+name|int
+operator|)
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|-
+name|NumFixedObjects
+operator|-
+literal|1
+decl_stmt|;
+return|return
+name|Index
 return|;
 block|}
 comment|/// RemoveStackObject - Remove or mark dead a statically sized stack object.
@@ -1258,6 +1334,12 @@ argument_list|(
 literal|0
 argument_list|,
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 argument_list|)
 expr_stmt|;

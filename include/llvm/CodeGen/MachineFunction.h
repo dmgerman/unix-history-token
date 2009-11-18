@@ -105,12 +105,6 @@ directive|include
 file|"llvm/Support/Recycler.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -362,6 +356,24 @@ comment|// The alignment of the function.
 name|unsigned
 name|Alignment
 decl_stmt|;
+name|MachineFunction
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// intentionally unimplemented
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|MachineFunction
+operator|&
+operator|)
+decl_stmt|;
+comment|// intentionally unimplemented
 name|public
 label|:
 name|MachineFunction
@@ -764,6 +776,13 @@ comment|/// dump - Print the current MachineFunction to cerr, useful for debugge
 comment|///
 name|void
 name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// verify - Run the current MachineFunction through the machine code
+comment|/// verifier, useful for debugger use.
+name|void
+name|verify
 argument_list|()
 specifier|const
 expr_stmt|;

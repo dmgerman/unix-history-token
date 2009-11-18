@@ -93,7 +93,7 @@ block|{
 comment|// Elements to provide:
 comment|// typedef NodeType          - Type of Node in the graph
 comment|// typedef ChildIteratorType - Type used to iterate over children in graph
-comment|// static NodeType *getEntryNode(GraphType *)
+comment|// static NodeType *getEntryNode(const GraphType&)
 comment|//    Return the entry node of the graph
 comment|// static ChildIteratorType child_begin(NodeType *)
 comment|// static ChildIteratorType child_end  (NodeType *)

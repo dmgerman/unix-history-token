@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Instruction.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/InstrTypes.h"
 end_include
 
@@ -110,9 +104,6 @@ block|{
 name|class
 name|TargetData
 decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
 comment|/// TargetFolder - Create constants with target dependent folding.
 name|class
 name|TargetFolder
@@ -121,10 +112,6 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
-decl_stmt|;
-name|LLVMContext
-modifier|&
-name|Context
 decl_stmt|;
 comment|/// Fold - Fold the constant using target specific information.
 name|Constant
@@ -161,8 +148,6 @@ name|ConstantFoldConstantExpression
 argument_list|(
 name|CE
 argument_list|,
-name|Context
-argument_list|,
 name|TD
 argument_list|)
 condition|)
@@ -182,20 +167,11 @@ specifier|const
 name|TargetData
 operator|*
 name|TheTD
-argument_list|,
-name|LLVMContext
-operator|&
-name|C
 argument_list|)
 operator|:
 name|TD
 argument_list|(
-name|TheTD
-argument_list|)
-operator|,
-name|Context
-argument_list|(
-argument|C
+argument|TheTD
 argument_list|)
 block|{}
 comment|//===--------------------------------------------------------------------===//

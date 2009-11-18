@@ -1281,8 +1281,62 @@ argument|int&FrameIndex
 argument_list|)
 specifier|const
 block|;
+comment|/// isLoadFromStackSlotPostFE - Check for post-frame ptr elimination
+comment|/// stack locations as well.  This uses a heuristic so it isn't
+comment|/// reliable for correctness.
+name|unsigned
+name|isLoadFromStackSlotPostFE
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&FrameIndex
+argument_list|)
+specifier|const
+block|;
+comment|/// hasLoadFromStackSlot - If the specified machine instruction has
+comment|/// a load from a stack slot, return true along with the FrameIndex
+comment|/// of the loaded stack slot.  If not, return false.  Unlike
+comment|/// isLoadFromStackSlot, this returns true for any instructions that
+comment|/// loads from the stack.  This is a hint only and may not catch all
+comment|/// cases.
+name|bool
+name|hasLoadFromStackSlot
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&FrameIndex
+argument_list|)
+specifier|const
+block|;
 name|unsigned
 name|isStoreToStackSlot
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&FrameIndex
+argument_list|)
+specifier|const
+block|;
+comment|/// isStoreToStackSlotPostFE - Check for post-frame ptr elimination
+comment|/// stack locations as well.  This uses a heuristic so it isn't
+comment|/// reliable for correctness.
+name|unsigned
+name|isStoreToStackSlotPostFE
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int&FrameIndex
+argument_list|)
+specifier|const
+block|;
+comment|/// hasStoreToStackSlot - If the specified machine instruction has a
+comment|/// store to a stack slot, return true along with the FrameIndex of
+comment|/// the loaded stack slot.  If not, return false.  Unlike
+comment|/// isStoreToStackSlot, this returns true for any instructions that
+comment|/// loads from the stack.  This is a hint only and may not catch all
+comment|/// cases.
+name|bool
+name|hasStoreToStackSlot
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
@@ -1311,6 +1365,8 @@ argument_list|,
 argument|unsigned SubIdx
 argument_list|,
 argument|const MachineInstr *Orig
+argument_list|,
+argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
@@ -1789,6 +1845,19 @@ argument_list|,
 argument|unsigned Size
 argument_list|,
 argument|unsigned Alignment
+argument_list|)
+specifier|const
+block|;
+comment|/// isFrameOperand - Return true and the FrameIndex if the specified
+comment|/// operand and follow operands form a reference to the stack frame.
+name|bool
+name|isFrameOperand
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned int Op
+argument_list|,
+argument|int&FrameIndex
 argument_list|)
 specifier|const
 block|; }

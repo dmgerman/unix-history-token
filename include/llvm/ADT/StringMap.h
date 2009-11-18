@@ -301,9 +301,7 @@ comment|/// of the string.
 name|unsigned
 name|LookupBucketFor
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Key
 parameter_list|)
 function_decl|;
@@ -313,9 +311,7 @@ comment|/// This does not modify the map.
 name|int
 name|FindKey
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Key
 argument_list|)
 decl|const
@@ -336,9 +332,7 @@ name|StringMapEntryBase
 modifier|*
 name|RemoveKey
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Key
 parameter_list|)
 function_decl|;
@@ -1126,9 +1120,7 @@ block|}
 name|iterator
 name|find
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Key
 parameter_list|)
 block|{
@@ -1163,9 +1155,7 @@ block|}
 name|const_iterator
 name|find
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Key
 argument_list|)
 decl|const
@@ -1203,9 +1193,7 @@ comment|/// constructed value if no such entry exists.
 name|ValueTy
 name|lookup
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Key
 argument_list|)
 decl|const
@@ -1240,9 +1228,7 @@ modifier|&
 name|operator
 function|[]
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Key
 parameter_list|)
 block|{
@@ -1259,9 +1245,7 @@ block|}
 name|size_type
 name|count
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Key
 argument_list|)
 decl|const
@@ -1455,7 +1439,7 @@ operator|>
 operator|&
 name|GetOrCreateValue
 argument_list|(
-argument|const StringRef&Key
+argument|StringRef Key
 argument_list|,
 argument|InitTy Val
 argument_list|)
@@ -1572,7 +1556,7 @@ operator|>
 operator|&
 name|GetOrCreateValue
 argument_list|(
-argument|const StringRef&Key
+argument|StringRef Key
 argument_list|)
 block|{
 return|return
@@ -1714,9 +1698,7 @@ begin_function
 name|bool
 name|erase
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Key
 parameter_list|)
 block|{

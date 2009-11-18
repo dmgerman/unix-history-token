@@ -262,7 +262,7 @@ comment|//! Get the stack frame register (SP, aka R1)
 name|unsigned
 name|getFrameRegister
 argument_list|(
-argument|MachineFunction&MF
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;

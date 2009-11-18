@@ -139,13 +139,13 @@ name|class
 name|CompileUnit
 decl_stmt|;
 name|class
-name|DbgVariable
+name|DbgConcreteScope
 decl_stmt|;
 name|class
 name|DbgScope
 decl_stmt|;
 name|class
-name|DbgConcreteScope
+name|DbgVariable
 decl_stmt|;
 name|class
 name|MachineFrameInfo
@@ -163,7 +163,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// SrcLineInfo - This class is used to record source line correspondence.
 comment|///
 name|class
-name|VISIBILITY_HIDDEN
 name|SrcLineInfo
 block|{
 name|unsigned
@@ -255,7 +254,6 @@ block|}
 block|}
 empty_stmt|;
 name|class
-name|VISIBILITY_HIDDEN
 name|DwarfDebug
 range|:
 name|public
@@ -456,13 +454,14 @@ comment|///
 name|bool
 name|shouldEmit
 block|;
-comment|// FunctionDbgScope - Top level scope for the current function.
+comment|// CurrentFnDbgScope - Top level scope for the current function.
 comment|//
 name|DbgScope
 operator|*
-name|FunctionDbgScope
+name|CurrentFnDbgScope
 block|;
 comment|/// DbgScopeMap - Tracks the scopes in the current function.
+comment|///
 name|ValueMap
 operator|<
 name|MDNode
@@ -472,6 +471,71 @@ name|DbgScope
 operator|*
 operator|>
 name|DbgScopeMap
+block|;
+comment|/// ConcreteScopes - Tracks the concrete scopees in the current function.
+comment|/// These scopes are also included in DbgScopeMap.
+name|ValueMap
+operator|<
+name|MDNode
+operator|*
+block|,
+name|DbgScope
+operator|*
+operator|>
+name|ConcreteScopes
+block|;
+comment|/// AbstractScopes - Tracks the abstract scopes a module. These scopes are
+comment|/// not included DbgScopeMap.
+name|ValueMap
+operator|<
+name|MDNode
+operator|*
+block|,
+name|DbgScope
+operator|*
+operator|>
+name|AbstractScopes
+block|;
+name|SmallVector
+operator|<
+name|DbgScope
+operator|*
+block|,
+literal|4
+operator|>
+name|AbstractScopesList
+block|;
+comment|/// AbstractVariables - Collection on abstract variables.
+name|ValueMap
+operator|<
+name|MDNode
+operator|*
+block|,
+name|DbgVariable
+operator|*
+operator|>
+name|AbstractVariables
+block|;
+comment|/// InliendSubprogramDIEs - Collection of subprgram DIEs that are marked
+comment|/// (at the end of the module) as DW_AT_inline.
+name|SmallPtrSet
+operator|<
+name|DIE
+operator|*
+block|,
+literal|4
+operator|>
+name|InlinedSubprogramDIEs
+block|;
+comment|/// AbstractSubprogramDIEs - Collection of abstruct subprogram DIEs.
+name|SmallPtrSet
+operator|<
+name|DIE
+operator|*
+block|,
+literal|4
+operator|>
+name|AbstractSubprogramDIEs
 block|;
 comment|/// ScopedGVs - Tracks global variables that are not at file scope.
 comment|/// For example void f() { static int b = 42; }
@@ -484,12 +548,6 @@ operator|>
 name|ScopedGVs
 block|;
 typedef|typedef
-name|DenseMap
-operator|<
-specifier|const
-name|MachineInstr
-operator|*
-operator|,
 name|SmallVector
 operator|<
 name|DbgScope
@@ -497,10 +555,20 @@ operator|*
 operator|,
 literal|2
 operator|>
-expr|>
+name|ScopeVector
+expr_stmt|;
+typedef|typedef
+name|DenseMap
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|,
+name|ScopeVector
+operator|>
 name|InsnToDbgScopeMapTy
 expr_stmt|;
-comment|/// DbgScopeBeginMap - Maps instruction with a list DbgScopes it starts.
+comment|/// DbgScopeBeginMap - Maps instruction with a list of DbgScopes it starts.
 name|InsnToDbgScopeMapTy
 name|DbgScopeBeginMap
 decl_stmt|;
@@ -508,37 +576,20 @@ comment|/// DbgScopeEndMap - Maps instruction with a list DbgScopes it ends.
 name|InsnToDbgScopeMapTy
 name|DbgScopeEndMap
 decl_stmt|;
-comment|/// DbgAbstractScopeMap - Tracks abstract instance scopes in the current
-comment|/// function.
-name|ValueMap
-operator|<
-name|MDNode
-operator|*
-operator|,
-name|DbgScope
-operator|*
-operator|>
-name|DbgAbstractScopeMap
-expr_stmt|;
-comment|/// DbgConcreteScopeMap - Tracks concrete instance scopes in the current
-comment|/// function.
-name|ValueMap
-operator|<
-name|MDNode
-operator|*
-operator|,
-name|SmallVector
-operator|<
-name|DbgScope
-operator|*
-operator|,
-literal|8
-operator|>
-expr|>
-name|DbgConcreteScopeMap
-expr_stmt|;
 comment|/// InlineInfo - Keep track of inlined functions and their location.  This
 comment|/// information is used to populate debug_inlined section.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|DIE
+operator|*
+operator|>
+name|InlineInfoLabels
+expr_stmt|;
 name|ValueMap
 operator|<
 name|MDNode
@@ -546,49 +597,21 @@ operator|*
 operator|,
 name|SmallVector
 operator|<
-name|unsigned
+name|InlineInfoLabels
 operator|,
 literal|4
 operator|>
 expr|>
 name|InlineInfo
 expr_stmt|;
-comment|/// AbstractInstanceRootMap - Map of abstract instance roots of inlined
-comment|/// functions. These are subroutine entries that contain a DW_AT_inline
-comment|/// attribute.
-name|DenseMap
+name|SmallVector
 operator|<
-specifier|const
 name|MDNode
 operator|*
 operator|,
-name|DbgScope
-operator|*
+literal|4
 operator|>
-name|AbstractInstanceRootMap
-expr_stmt|;
-comment|/// AbstractInstanceRootList - List of abstract instance roots of inlined
-comment|/// functions. These are subroutine entries that contain a DW_AT_inline
-comment|/// attribute.
-name|SmallVector
-operator|<
-name|DbgScope
-operator|*
-operator|,
-literal|32
-operator|>
-name|AbstractInstanceRootList
-expr_stmt|;
-comment|/// LexicalScopeStack - A stack of lexical scopes. The top one is the current
-comment|/// scope.
-name|SmallVector
-operator|<
-name|DbgScope
-operator|*
-operator|,
-literal|16
-operator|>
-name|LexicalScopeStack
+name|InlinedSPNodes
 expr_stmt|;
 comment|/// CompileUnitOffsets - A vector of the offsets of the compile units. This is
 comment|/// used when calculating the "origin" of a concrete instance of an inlined
@@ -1321,20 +1344,11 @@ modifier|*
 name|Unit
 parameter_list|)
 function_decl|;
-comment|/// getDbgScope - Returns the scope associated with the given descriptor.
-comment|///
+comment|/// getUpdatedDbgScope - Find or create DbgScope assicated with
+comment|/// the instruction. Initialize scope and update scope hierarchy.
 name|DbgScope
 modifier|*
-name|getOrCreateScope
-parameter_list|(
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-name|DbgScope
-modifier|*
-name|getDbgScope
+name|getUpdatedDbgScope
 parameter_list|(
 name|MDNode
 modifier|*
@@ -1348,6 +1362,98 @@ parameter_list|,
 name|MDNode
 modifier|*
 name|InlinedAt
+parameter_list|)
+function_decl|;
+comment|/// createDbgScope - Create DbgScope for the scope.
+name|void
+name|createDbgScope
+parameter_list|(
+name|MDNode
+modifier|*
+name|Scope
+parameter_list|,
+name|MDNode
+modifier|*
+name|InlinedAt
+parameter_list|)
+function_decl|;
+name|DbgScope
+modifier|*
+name|getOrCreateAbstractScope
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// findAbstractVariable - Find abstract variable associated with Var.
+name|DbgVariable
+modifier|*
+name|findAbstractVariable
+parameter_list|(
+name|DIVariable
+modifier|&
+name|Var
+parameter_list|,
+name|unsigned
+name|FrameIdx
+parameter_list|,
+name|DILocation
+modifier|&
+name|Loc
+parameter_list|)
+function_decl|;
+name|DIE
+modifier|*
+name|UpdateSubprogramScopeDIE
+parameter_list|(
+name|MDNode
+modifier|*
+name|SPNode
+parameter_list|)
+function_decl|;
+name|DIE
+modifier|*
+name|ConstructLexicalScopeDIE
+parameter_list|(
+name|DbgScope
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+name|DIE
+modifier|*
+name|ConstructScopeDIE
+parameter_list|(
+name|DbgScope
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+name|DIE
+modifier|*
+name|ConstructInlinedScopeDIE
+parameter_list|(
+name|DbgScope
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+name|DIE
+modifier|*
+name|ConstructVariableDIE
+parameter_list|(
+name|DbgVariable
+modifier|*
+name|DV
+parameter_list|,
+name|DbgScope
+modifier|*
+name|S
+parameter_list|,
+name|CompileUnit
+modifier|*
+name|Unit
 parameter_list|)
 function_decl|;
 comment|/// ConstructDbgScope - Construct the components of a scope.
@@ -1372,31 +1478,6 @@ parameter_list|,
 name|CompileUnit
 modifier|*
 name|Unit
-parameter_list|)
-function_decl|;
-comment|/// ConstructFunctionDbgScope - Construct the scope for the subprogram.
-comment|///
-name|void
-name|ConstructFunctionDbgScope
-parameter_list|(
-name|DbgScope
-modifier|*
-name|RootScope
-parameter_list|,
-name|bool
-name|AbstractScope
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// ConstructDefaultDbgScope - Construct a default scope for the subprogram.
-comment|///
-name|void
-name|ConstructDefaultDbgScope
-parameter_list|(
-name|MachineFunction
-modifier|*
-name|MF
 parameter_list|)
 function_decl|;
 comment|/// EmitInitial - Emit initial Dwarf declarations.  This is necessary for cc
@@ -1746,63 +1827,6 @@ operator|&
 name|FileName
 argument_list|)
 decl_stmt|;
-comment|/// RecordRegionStart - Indicate the start of a region.
-name|unsigned
-name|RecordRegionStart
-parameter_list|(
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// RecordRegionEnd - Indicate the end of a region.
-name|unsigned
-name|RecordRegionEnd
-parameter_list|(
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// RecordVariable - Indicate the declaration of  a local variable.
-name|void
-name|RecordVariable
-parameter_list|(
-name|MDNode
-modifier|*
-name|N
-parameter_list|,
-name|unsigned
-name|FrameIndex
-parameter_list|)
-function_decl|;
-comment|//// RecordInlinedFnStart - Indicate the start of inlined subroutine.
-name|unsigned
-name|RecordInlinedFnStart
-parameter_list|(
-name|DISubprogram
-modifier|&
-name|SP
-parameter_list|,
-name|DICompileUnit
-name|CU
-parameter_list|,
-name|unsigned
-name|Line
-parameter_list|,
-name|unsigned
-name|Col
-parameter_list|)
-function_decl|;
-comment|/// RecordInlinedFnEnd - Indicate the end of inlined subroutine.
-name|unsigned
-name|RecordInlinedFnEnd
-parameter_list|(
-name|DISubprogram
-modifier|&
-name|SP
-parameter_list|)
-function_decl|;
 comment|/// ExtractScopeInformation - Scan machine instructions in this function
 comment|/// and collect DbgScopes. Return true, if atleast one scope was found.
 name|bool
@@ -1818,20 +1842,6 @@ name|void
 name|CollectVariableInfo
 parameter_list|()
 function_decl|;
-comment|/// SetDbgScopeBeginLabels - Update DbgScope begin labels for the scopes that
-comment|/// start with this machine instruction.
-name|void
-name|SetDbgScopeBeginLabels
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|,
-name|unsigned
-name|Label
-parameter_list|)
-function_decl|;
 comment|/// SetDbgScopeEndLabels - Update DbgScope end labels for the scopes that
 comment|/// end with this machine instruction.
 name|void
@@ -1844,6 +1854,29 @@ name|MI
 parameter_list|,
 name|unsigned
 name|Label
+parameter_list|)
+function_decl|;
+comment|/// BeginScope - Process beginning of a scope starting at Label.
+name|void
+name|BeginScope
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|Label
+parameter_list|)
+function_decl|;
+comment|/// EndScope - Prcess end of a scope.
+name|void
+name|EndScope
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
 parameter_list|)
 function_decl|;
 block|}

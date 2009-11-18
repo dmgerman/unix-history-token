@@ -111,7 +111,7 @@ block|;
 name|explicit
 name|MachineFunctionAnalysis
 argument_list|(
-argument|TargetMachine&tm
+argument|const TargetMachine&tm
 argument_list|,
 argument|CodeGenOpt::Level OL = CodeGenOpt::Default
 argument_list|)

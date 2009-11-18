@@ -243,9 +243,7 @@ name|Value
 modifier|*
 name|lookup
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Name
 argument_list|)
 decl|const
@@ -382,9 +380,7 @@ name|ValueName
 modifier|*
 name|createValueName
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Name
 parameter_list|,
 name|Value

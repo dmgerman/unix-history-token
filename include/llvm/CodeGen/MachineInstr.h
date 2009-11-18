@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/AsmPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineOperand.h"
 end_include
 
@@ -165,6 +171,16 @@ name|NumImplicitOps
 decl_stmt|;
 comment|// Number of implicit operands (which
 comment|// are determined at construction time).
+name|unsigned
+name|short
+name|AsmPrinterFlags
+decl_stmt|;
+comment|// Various bits of information used by
+comment|// the AsmPrinter to emit helpful
+comment|// comments.  This is *not* semantic
+comment|// information.  Do not use this for
+comment|// anything other than to convey comment
+comment|// information to AsmPrinter.
 name|std
 operator|::
 name|vector
@@ -358,6 +374,51 @@ block|{
 return|return
 name|Parent
 return|;
+block|}
+comment|/// getAsmPrinterFlags - Return the asm printer flags bitvector.
+comment|///
+name|unsigned
+name|short
+name|getAsmPrinterFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AsmPrinterFlags
+return|;
+block|}
+comment|/// getAsmPrinterFlag - Return whether an AsmPrinter flag is set.
+comment|///
+name|bool
+name|getAsmPrinterFlag
+argument_list|(
+name|AsmPrinter
+operator|::
+name|CommentFlag
+name|Flag
+argument_list|)
+decl|const
+block|{
+return|return
+name|AsmPrinterFlags
+operator|&
+name|Flag
+return|;
+block|}
+comment|/// setAsmPrinterFlag - Set a flag for the AsmPrinter.
+comment|///
+name|void
+name|setAsmPrinterFlag
+parameter_list|(
+name|unsigned
+name|short
+name|Flag
+parameter_list|)
+block|{
+name|AsmPrinterFlags
+operator||=
+name|Flag
+expr_stmt|;
 block|}
 comment|/// getDebugLoc - Returns the debug location id of this MachineInstr.
 comment|///

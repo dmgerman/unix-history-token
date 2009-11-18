@@ -112,6 +112,8 @@ name|SRA_I64
 block|,
 name|SRA_I128
 block|,
+name|MUL_I8
+block|,
 name|MUL_I16
 block|,
 name|MUL_I32
@@ -119,6 +121,8 @@ block|,
 name|MUL_I64
 block|,
 name|MUL_I128
+block|,
+name|SDIV_I8
 block|,
 name|SDIV_I16
 block|,
@@ -128,6 +132,8 @@ name|SDIV_I64
 block|,
 name|SDIV_I128
 block|,
+name|UDIV_I8
+block|,
 name|UDIV_I16
 block|,
 name|UDIV_I32
@@ -136,6 +142,8 @@ name|UDIV_I64
 block|,
 name|UDIV_I128
 block|,
+name|SREM_I8
+block|,
 name|SREM_I16
 block|,
 name|SREM_I32
@@ -143,6 +151,8 @@ block|,
 name|SREM_I64
 block|,
 name|SREM_I128
+block|,
+name|UREM_I8
 block|,
 name|UREM_I16
 block|,

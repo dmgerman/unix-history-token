@@ -481,16 +481,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Combine silly seq's
-comment|// FIXME: CondProp breaks critical edges, which is slow.
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createCondPropagationPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|// Propagate conditionals
 name|PM
 operator|->
 name|add
@@ -639,11 +629,11 @@ name|PM
 operator|->
 name|add
 argument_list|(
-name|createCondPropagationPass
+name|createJumpThreadingPass
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|// Propagate conditionals
+comment|// Thread jumps
 name|PM
 operator|->
 name|add

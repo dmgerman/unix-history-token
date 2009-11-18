@@ -199,6 +199,37 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// ComputeMultiple - This function computes the integer multiple of Base that
+comment|/// equals V.  If successful, it returns true and returns the multiple in
+comment|/// Multiple.  If unsuccessful, it returns false.  Also, if V can be
+comment|/// simplified to an integer, then the simplified V is returned in Val.  Look
+comment|/// through sext only if LookThroughSExt=true.
+name|bool
+name|ComputeMultiple
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|unsigned
+name|Base
+parameter_list|,
+name|Value
+modifier|*
+modifier|&
+name|Multiple
+parameter_list|,
+name|bool
+name|LookThroughSExt
+init|=
+name|false
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// CannotBeNegativeZero - Return true if we can prove that the specified FP
 comment|/// value is never equal to -0.0.
 comment|///

@@ -637,6 +637,7 @@ specifier|inline
 name|_Self
 name|begin
 parameter_list|(
+specifier|const
 name|GraphT
 modifier|&
 name|G
@@ -659,6 +660,7 @@ specifier|inline
 name|_Self
 name|end
 parameter_list|(
+specifier|const
 name|GraphT
 modifier|&
 name|G
@@ -934,7 +936,7 @@ name|T
 operator|>
 name|scc_begin
 argument_list|(
-argument|T G
+argument|const T& G
 argument_list|)
 block|{
 return|return
@@ -963,7 +965,7 @@ name|T
 operator|>
 name|scc_end
 argument_list|(
-argument|T G
+argument|const T& G
 argument_list|)
 block|{
 return|return
@@ -971,6 +973,76 @@ name|scc_iterator
 operator|<
 name|T
 operator|>
+operator|::
+name|end
+argument_list|(
+name|G
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|scc_iterator
+operator|<
+name|Inverse
+operator|<
+name|T
+operator|>
+expr|>
+name|scc_begin
+argument_list|(
+argument|const Inverse<T>& G
+argument_list|)
+block|{
+return|return
+name|scc_iterator
+operator|<
+name|Inverse
+operator|<
+name|T
+operator|>
+expr|>
+operator|::
+name|begin
+argument_list|(
+name|G
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|scc_iterator
+operator|<
+name|Inverse
+operator|<
+name|T
+operator|>
+expr|>
+name|scc_end
+argument_list|(
+argument|const Inverse<T>& G
+argument_list|)
+block|{
+return|return
+name|scc_iterator
+operator|<
+name|Inverse
+operator|<
+name|T
+operator|>
+expr|>
 operator|::
 name|end
 argument_list|(

@@ -180,9 +180,7 @@ name|Target
 modifier|&
 name|T
 parameter_list|,
-specifier|const
 name|StringRef
-modifier|&
 name|TT
 parameter_list|)
 function_decl|;
@@ -513,9 +511,7 @@ name|MCAsmInfo
 modifier|*
 name|createAsmInfo
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Triple
 argument_list|)
 decl|const
@@ -1817,7 +1813,7 @@ name|Allocator
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|const StringRef&TT
+argument|StringRef TT
 argument_list|)
 block|{
 return|return

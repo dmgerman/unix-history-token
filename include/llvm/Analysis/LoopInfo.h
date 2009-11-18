@@ -603,8 +603,8 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// isLoopExiting - True if terminator in the block can branch to another block
-comment|/// that is outside of the current loop.
+comment|/// isLoopExiting - True if terminator in the block can branch to another
+comment|/// block that is outside of the current loop.
 comment|///
 name|bool
 name|isLoopExiting
@@ -3219,6 +3219,13 @@ comment|/// the LoopSimplify form transforms loops to, which is sometimes called
 comment|/// normal form.
 name|bool
 name|isLoopSimplifyForm
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// hasDedicatedExits - Return true if no exit block for the loop
+comment|/// has a predecessor that is outside the loop.
+name|bool
+name|hasDedicatedExits
 argument_list|()
 specifier|const
 expr_stmt|;

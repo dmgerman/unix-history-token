@@ -1004,9 +1004,7 @@ name|Pass
 modifier|*
 name|P
 parameter_list|,
-specifier|const
 name|StringRef
-modifier|&
 name|Msg
 parameter_list|,
 name|enum
@@ -1021,9 +1019,7 @@ name|Pass
 modifier|*
 name|P
 parameter_list|,
-specifier|const
 name|StringRef
-modifier|&
 name|Msg
 parameter_list|,
 name|enum
@@ -1253,9 +1249,7 @@ name|enum
 name|PassDebuggingString
 name|S2
 parameter_list|,
-specifier|const
 name|StringRef
-modifier|&
 name|Msg
 parameter_list|)
 function_decl|;
@@ -1432,9 +1426,7 @@ label|:
 name|void
 name|dumpAnalysisUsage
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|Msg
 argument_list|,
 specifier|const

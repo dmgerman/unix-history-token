@@ -190,10 +190,10 @@ comment|// V,Flag = sra_flag X -> sra X, 1 + save carry out.
 name|RRX
 block|,
 comment|// V = RRX X, Flag     -> srl X, 1 + shift in carry flag.
-name|FMRRD
+name|VMOVRRD
 block|,
 comment|// double to two gprs.
-name|FMDRR
+name|VMOVDRR
 block|,
 comment|// Two gprs to double.
 name|EH_SJLJ_SETJMP
@@ -494,6 +494,18 @@ argument_list|(
 argument|const AddrMode&AM
 argument_list|,
 argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
+comment|/// icmp immediate, that is the target has icmp instructions which can compare
+comment|/// a register against the immediate without having to materialize the
+comment|/// immediate into a register.
+name|virtual
+name|bool
+name|isLegalICmpImmediate
+argument_list|(
+argument|int64_t Imm
 argument_list|)
 specifier|const
 block|;
@@ -925,6 +937,28 @@ name|DAG
 parameter_list|)
 function_decl|;
 name|SDValue
+name|LowerSELECT_CC
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
+name|SDValue
+name|LowerBR_CC
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
+name|SDValue
 name|LowerFRAMEADDR
 parameter_list|(
 name|SDValue
@@ -937,6 +971,28 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|LowerDYNAMIC_STACKALLOC
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
+name|SDValue
+name|LowerShiftRightParts
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
+parameter_list|)
+function_decl|;
+name|SDValue
+name|LowerShiftLeftParts
 parameter_list|(
 name|SDValue
 name|Op
@@ -1160,6 +1216,32 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|)
+decl_stmt|;
+name|SDValue
+name|getARMCmp
+argument_list|(
+name|SDValue
+name|LHS
+argument_list|,
+name|SDValue
+name|RHS
+argument_list|,
+name|ISD
+operator|::
+name|CondCode
+name|CC
+argument_list|,
+name|SDValue
+operator|&
+name|ARMCC
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|DebugLoc
+name|dl
 argument_list|)
 decl_stmt|;
 block|}

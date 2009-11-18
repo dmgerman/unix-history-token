@@ -133,6 +133,23 @@ argument|const MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;
+name|void
+name|reMaterialize
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|unsigned SubIdx
+argument_list|,
+argument|const MachineInstr *Orig
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).
@@ -148,23 +165,8 @@ return|return
 name|RI
 return|;
 block|}
-name|void
-name|reMaterialize
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|unsigned SubIdx
-argument_list|,
-argument|const MachineInstr *Orig
-argument_list|)
-specifier|const
-block|; }
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_endif

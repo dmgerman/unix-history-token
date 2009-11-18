@@ -255,6 +255,18 @@ name|DW
 decl_stmt|;
 name|public
 label|:
+comment|/// Flags to specify different kinds of comments to output in
+comment|/// assembly code.  These flags carry semantic information not
+comment|/// otherwise easily derivable from the IR text.
+comment|///
+enum|enum
+name|CommentFlag
+block|{
+name|ReloadReuse
+init|=
+literal|0x1
+block|}
+enum|;
 comment|/// Output stream on which we're printing assembly code.
 comment|///
 name|formatted_raw_ostream
@@ -442,7 +454,6 @@ name|EmitStartOfAsmFile
 parameter_list|(
 name|Module
 modifier|&
-name|M
 parameter_list|)
 block|{}
 comment|/// EmitEndOfAsmFile - This virtual method can be overridden by targets that
@@ -453,7 +464,6 @@ name|EmitEndOfAsmFile
 parameter_list|(
 name|Module
 modifier|&
-name|M
 parameter_list|)
 block|{}
 comment|/// doFinalization - Shut down the asmprinter.  If you override this in your
@@ -1038,7 +1048,6 @@ decl|const
 decl_stmt|;
 comment|/// printImplicitDef - This method prints the specified machine instruction
 comment|/// that is an implicit def.
-name|virtual
 name|void
 name|printImplicitDef
 argument_list|(
@@ -1050,7 +1059,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// printKill - This method prints the specified kill machine instruction.
-name|virtual
 name|void
 name|printKill
 argument_list|(

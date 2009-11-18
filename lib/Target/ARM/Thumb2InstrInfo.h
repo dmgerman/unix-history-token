@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- Thumb2InstrInfo.h - Thumb-2 Instruction Information ----------*- C++ -*-===//
+comment|//===- Thumb2InstrInfo.h - Thumb-2 Instruction Information ------*- C++ -*-===//
 end_comment
 
 begin_comment

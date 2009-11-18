@@ -262,6 +262,23 @@ modifier|*
 name|New
 parameter_list|)
 function_decl|;
+comment|/// ReplaceMBBInJumpTable - If Old is a target of the jump tables, update
+comment|/// the jump table to branch to New instead.
+name|bool
+name|ReplaceMBBInJumpTable
+parameter_list|(
+name|unsigned
+name|Idx
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|Old
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|New
+parameter_list|)
+function_decl|;
 comment|/// getEntrySize - Returns the size of an individual field in a jump table.
 comment|///
 name|unsigned

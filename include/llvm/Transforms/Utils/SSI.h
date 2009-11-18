@@ -94,6 +94,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 

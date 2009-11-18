@@ -553,6 +553,53 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// isLoadFromStackSlotPostFE - Check for post-frame ptr elimination
+comment|/// stack locations as well.  This uses a heuristic so it isn't
+comment|/// reliable for correctness.
+name|virtual
+name|unsigned
+name|isLoadFromStackSlotPostFE
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|int
+operator|&
+name|FrameIndex
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// hasLoadFromStackSlot - If the specified machine instruction has
+comment|/// a load from a stack slot, return true along with the FrameIndex
+comment|/// of the loaded stack slot.  If not, return false.  Unlike
+comment|/// isLoadFromStackSlot, this returns true for any instructions that
+comment|/// loads from the stack.  This is just a hint, as some cases may be
+comment|/// missed.
+name|virtual
+name|bool
+name|hasLoadFromStackSlot
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|int
+operator|&
+name|FrameIndex
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// isStoreToStackSlot - If the specified machine instruction is a direct
 comment|/// store to a stack slot, return the virtual or physical register number of
 comment|/// the source reg along with the FrameIndex of the loaded stack slot.  If
@@ -561,6 +608,53 @@ comment|/// any side effects other than storing to the stack slot.
 name|virtual
 name|unsigned
 name|isStoreToStackSlot
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|int
+operator|&
+name|FrameIndex
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// isStoreToStackSlotPostFE - Check for post-frame ptr elimination
+comment|/// stack locations as well.  This uses a heuristic so it isn't
+comment|/// reliable for correctness.
+name|virtual
+name|unsigned
+name|isStoreToStackSlotPostFE
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|int
+operator|&
+name|FrameIndex
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// hasStoreToStackSlot - If the specified machine instruction has a
+comment|/// store to a stack slot, return true along with the FrameIndex of
+comment|/// the loaded stack slot.  If not, return false.  Unlike
+comment|/// isStoreToStackSlot, this returns true for any instructions that
+comment|/// loads from the stack.  This is just a hint, as some cases may be
+comment|/// missed.
+name|virtual
+name|bool
+name|hasStoreToStackSlot
 argument_list|(
 specifier|const
 name|MachineInstr
@@ -602,6 +696,11 @@ specifier|const
 name|MachineInstr
 operator|*
 name|Orig
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
 argument_list|)
 decl|const
 init|=
@@ -692,6 +791,33 @@ argument_list|,
 name|unsigned
 operator|&
 name|SrcOpIdx2
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// isIdentical - Return true if two instructions are identical. This differs
+comment|/// from MachineInstr::isIdenticalTo() in that it does not require the
+comment|/// virtual destination registers to be the same. This is used by MachineLICM
+comment|/// and other MI passes to perform CSE.
+name|virtual
+name|bool
+name|isIdentical
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|Other
+argument_list|,
+specifier|const
+name|MachineRegisterInfo
+operator|*
+name|MRI
 argument_list|)
 decl|const
 init|=
@@ -1509,6 +1635,26 @@ name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// TailDuplicationLimit - Returns the limit on the number of instructions
+comment|/// in basic block MBB beyond which it will not be tail-duplicated.
+name|virtual
+name|unsigned
+name|TailDuplicationLimit
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|unsigned
+name|DefaultLimit
+argument_list|)
+decl|const
+block|{
+return|return
+name|DefaultLimit
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// TargetInstrInfoImpl - This is the default implementation of
@@ -1585,6 +1731,20 @@ argument_list|,
 argument|unsigned SubReg
 argument_list|,
 argument|const MachineInstr *Orig
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isIdentical
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineInstr *Other
+argument_list|,
+argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
 block|;

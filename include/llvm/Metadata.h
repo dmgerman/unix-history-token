@@ -252,6 +252,21 @@ argument_list|,
 argument|StringRef Str
 argument_list|)
 block|;
+specifier|static
+name|MDString
+operator|*
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Str
+argument_list|)
+block|;
 name|StringRef
 name|getString
 argument_list|()
