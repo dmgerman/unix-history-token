@@ -57,6 +57,12 @@ index|[
 name|APB_NIRQS
 index|]
 decl_stmt|;
+name|mips_intrcnt_t
+name|sc_intr_counter
+index|[
+name|APB_NIRQS
+index|]
+decl_stmt|;
 comment|/* Resources and cookies for MIPS CPU INTs */
 name|struct
 name|resource
