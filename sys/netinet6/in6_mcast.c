@@ -10452,8 +10452,14 @@ operator|.
 name|msfr_nsrcs
 operator|>
 name|in6_mcast_maxsocksrc
-operator|||
+condition|)
+return|return
 operator|(
+name|ENOBUFS
+operator|)
+return|;
+if|if
+condition|(
 name|msfr
 operator|.
 name|msfr_fmode
@@ -10465,7 +10471,6 @@ operator|.
 name|msfr_fmode
 operator|!=
 name|MCAST_INCLUDE
-operator|)
 condition|)
 return|return
 operator|(
