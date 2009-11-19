@@ -279,7 +279,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->sc_mem_bt, (sc)->sc_mem_bh, (reg), (val))
+value|bus_write_4((sc)->sc_mem_res, (reg), (val))
 end_define
 
 begin_define
@@ -292,7 +292,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->sc_mem_bt, (sc)->sc_mem_bh, (reg))
+value|bus_read_4((sc)->sc_mem_res, (reg))
 end_define
 
 begin_define
@@ -777,12 +777,6 @@ name|sc_mtx
 decl_stmt|;
 name|device_t
 name|sc_miibus
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_mem_bh
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_mem_bt
 decl_stmt|;
 name|void
 modifier|*
