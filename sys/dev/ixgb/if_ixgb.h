@@ -838,6 +838,9 @@ decl_stmt|;
 name|int
 name|io_rid
 decl_stmt|;
+name|int
+name|tx_timer
+decl_stmt|;
 name|struct
 name|mtx
 name|mtx
