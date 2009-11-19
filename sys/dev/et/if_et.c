@@ -2095,7 +2095,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* XXX Destroy lock here */
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
