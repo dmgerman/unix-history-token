@@ -4941,41 +4941,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LRO_SUPPORTED
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IFCAP_LRO
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|IFCAP_LRO
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|IFCAP_LRO
-value|0x0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -10028,12 +9993,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
-end_ifdef
-
 begin_comment
 comment|/*  * Mark lro enabled or disabled in all qsets for this port  */
 end_comment
@@ -10126,11 +10085,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -10620,9 +10574,6 @@ name|EINVAL
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 if|if
 condition|(
 name|mask
@@ -10649,8 +10600,6 @@ name|IFCAP_LRO
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|mask
