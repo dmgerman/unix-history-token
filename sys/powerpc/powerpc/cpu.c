@@ -1649,6 +1649,11 @@ block|{
 name|register_t
 name|hid0
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|hid0
 operator|=
 name|mfspr
