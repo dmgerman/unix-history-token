@@ -81,11 +81,18 @@ name|vx_callout
 decl_stmt|;
 comment|/* Callout for timeouts		 */
 name|struct
+name|callout
+name|vx_watchdog
+decl_stmt|;
+name|struct
 name|mtx
 name|vx_mtx
 decl_stmt|;
 name|int
 name|vx_buffill_pending
+decl_stmt|;
+name|int
+name|vx_timer
 decl_stmt|;
 block|}
 struct|;

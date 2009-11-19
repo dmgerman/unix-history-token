@@ -938,6 +938,13 @@ modifier|*
 name|sc_tq
 decl_stmt|;
 comment|/* private task queue */
+name|struct
+name|callout
+name|sc_watchdog
+decl_stmt|;
+name|int
+name|sc_tx_timer
+decl_stmt|;
 name|unsigned
 name|int
 name|sc_invalid

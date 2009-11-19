@@ -34,6 +34,13 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|struct
+name|callout
+name|watchdog
+decl_stmt|;
+name|int
+name|timer
+decl_stmt|;
 name|int
 name|pages_wanted
 decl_stmt|;

@@ -72,6 +72,13 @@ name|void
 modifier|*
 name|ep_intrhand
 decl_stmt|;
+name|struct
+name|callout
+name|watchdog_timer
+decl_stmt|;
+name|int
+name|tx_timer
+decl_stmt|;
 name|u_short
 name|ep_connectors
 decl_stmt|;

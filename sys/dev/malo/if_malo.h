@@ -1893,6 +1893,13 @@ name|malo_txtask
 decl_stmt|;
 comment|/* tx int processing */
 name|struct
+name|callout
+name|malo_watchdog_timer
+decl_stmt|;
+name|int
+name|malo_timer
+decl_stmt|;
+name|struct
 name|malo_tx_radiotap_header
 name|malo_tx_th
 decl_stmt|;
