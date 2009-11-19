@@ -783,9 +783,20 @@ comment|/// verify - Run the current MachineFunction through the machine code
 comment|/// verifier, useful for debugger use.
 name|void
 name|verify
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|Pass
+operator|*
+name|p
+operator|=
+name|NULL
+argument_list|,
+name|bool
+name|allowDoubleDefs
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Provide accessors for the MachineBasicBlock list...
 typedef|typedef
 name|BasicBlockListType

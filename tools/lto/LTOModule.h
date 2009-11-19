@@ -554,15 +554,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_extern
-extern|extern std::string getFeatureString(const char *TargetTriple
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
 begin_endif
 endif|#
 directive|endif

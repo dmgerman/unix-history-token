@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -67,6 +73,9 @@ name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineInstr
+decl_stmt|;
+name|class
+name|MachineLoopInfo
 decl_stmt|;
 name|class
 name|VirtRegMap
@@ -105,28 +114,14 @@ argument_list|(
 name|LiveInterval
 operator|*
 name|li
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-comment|/// Intra-block split.
-name|virtual
-name|std
-operator|::
-name|vector
+argument_list|,
+name|SmallVectorImpl
 operator|<
 name|LiveInterval
 operator|*
 operator|>
-name|intraBlockSplit
-argument_list|(
-name|LiveInterval
-operator|*
-name|li
-argument_list|,
-name|VNInfo
-operator|*
-name|valno
+operator|&
+name|spillIs
 argument_list|)
 operator|=
 literal|0
@@ -149,6 +144,11 @@ parameter_list|,
 name|LiveStacks
 modifier|*
 name|ls
+parameter_list|,
+specifier|const
+name|MachineLoopInfo
+modifier|*
+name|loopInfo
 parameter_list|,
 name|VirtRegMap
 modifier|*

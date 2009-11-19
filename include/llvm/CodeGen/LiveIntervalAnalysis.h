@@ -236,16 +236,6 @@ expr_stmt|;
 name|Reg2IntervalMap
 name|r2iMap_
 decl_stmt|;
-comment|/// phiJoinCopies - Copy instructions which are PHI joins.
-name|SmallVector
-operator|<
-name|MachineInstr
-operator|*
-operator|,
-literal|16
-operator|>
-name|phiJoinCopies
-expr_stmt|;
 comment|/// allocatableRegs_ - A bit vector of allocatable registers.
 name|BitVector
 name|allocatableRegs_
@@ -1174,42 +1164,6 @@ label|:
 comment|/// computeIntervals - Compute live intervals.
 name|void
 name|computeIntervals
-parameter_list|()
-function_decl|;
-name|bool
-name|isSafeAndProfitableToCoalesce
-argument_list|(
-name|LiveInterval
-operator|&
-name|DstInt
-argument_list|,
-name|LiveInterval
-operator|&
-name|SrcInt
-argument_list|,
-name|SmallVector
-operator|<
-name|MachineInstr
-operator|*
-argument_list|,
-literal|16
-operator|>
-operator|&
-name|IdentCopies
-argument_list|,
-name|SmallVector
-operator|<
-name|MachineInstr
-operator|*
-argument_list|,
-literal|16
-operator|>
-operator|&
-name|OtherCopies
-argument_list|)
-decl_stmt|;
-name|void
-name|performEarlyCoalescing
 parameter_list|()
 function_decl|;
 comment|/// handleRegisterDef - update intervals for a register def

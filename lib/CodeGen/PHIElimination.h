@@ -387,6 +387,10 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|&
 name|MBB
+parameter_list|,
+name|LiveVariables
+modifier|&
+name|LV
 parameter_list|)
 function_decl|;
 comment|/// isLiveOut - Determine if Reg is live out from MBB, when not

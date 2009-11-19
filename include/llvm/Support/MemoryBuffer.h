@@ -85,7 +85,7 @@ comment|/// MemoryBuffer - This interface provides simple read-only access to a 
 comment|/// of memory, and provides simple methods for reading files and standard input
 comment|/// into a memory buffer.  In addition to basic access to the characters in the
 comment|/// file, this interface guarantees you can read one character past the end of
-comment|/// @verbatim the file, and that this character will read as '\0'. @endverbatim
+comment|/// the file, and that this character will read as '\0'.
 name|class
 name|MemoryBuffer
 block|{

@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
@@ -371,6 +377,20 @@ name|void
 name|dump
 argument_list|()
 specifier|const
+expr_stmt|;
+comment|/// Retrieve a formatted string of the default features for
+comment|/// the specified target triple.
+specifier|static
+name|std
+operator|::
+name|string
+name|getDefaultSubtargetFeatures
+argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|Triple
+argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;

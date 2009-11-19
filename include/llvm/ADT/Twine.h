@@ -210,16 +210,14 @@ modifier|*
 name|RHS
 decl_stmt|;
 comment|/// LHSKind - The NodeKind of the left hand side, \see getLHSKind().
-name|NodeKind
+name|unsigned
+name|char
 name|LHSKind
-range|:
-literal|8
 decl_stmt|;
 comment|/// RHSKind - The NodeKind of the left hand side, \see getLHSKind().
-name|NodeKind
+name|unsigned
+name|char
 name|RHSKind
-range|:
-literal|8
 decl_stmt|;
 name|private
 label|:
@@ -517,6 +515,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|NodeKind
+operator|)
 name|LHSKind
 return|;
 block|}
@@ -527,6 +528,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|NodeKind
+operator|)
 name|RHSKind
 return|;
 block|}

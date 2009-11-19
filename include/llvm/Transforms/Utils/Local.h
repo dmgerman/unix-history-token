@@ -248,6 +248,19 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
+comment|/// EliminateDuplicatePHINodes - Check for and eliminate duplicate PHI
+comment|/// nodes in this block. This doesn't try to be clever about PHI nodes
+comment|/// which differ only in the order of the incoming values, but instcombine
+comment|/// orders them so it usually won't matter.
+comment|///
+name|bool
+name|EliminateDuplicatePHINodes
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
 comment|/// SimplifyCFG - This function is used to do simplification of a CFG.  For
 comment|/// example, it adjusts branches to branches to eliminate the extra hop, it
 comment|/// eliminates unreachable basic blocks, and does other "peephole" optimization

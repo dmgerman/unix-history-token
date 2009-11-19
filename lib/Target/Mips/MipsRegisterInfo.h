@@ -90,6 +90,25 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
+name|namespace
+name|Mips
+block|{
+comment|/// SubregIndex - The index of various sized subregister classes. Note that
+comment|/// these indices must be kept in sync with the class indices in the
+comment|/// MipsRegisterInfo.td file.
+enum|enum
+name|SubregIndex
+block|{
+name|SUBREG_FPEVEN
+init|=
+literal|1
+block|,
+name|SUBREG_FPODD
+init|=
+literal|2
+block|}
+enum|;
+block|}
 name|struct
 name|MipsRegisterInfo
 range|:
