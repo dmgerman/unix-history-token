@@ -1829,6 +1829,9 @@ decl_stmt|;
 name|int
 name|wb_cachesize
 decl_stmt|;
+name|int
+name|wb_timer
+decl_stmt|;
 name|caddr_t
 name|wb_ldata_ptr
 decl_stmt|;
