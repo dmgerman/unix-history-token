@@ -2327,7 +2327,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|~
-literal|0ULL
+literal|0UL
 argument_list|,
 literal|16
 argument_list|,
