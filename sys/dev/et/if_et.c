@@ -247,7 +247,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.re.msi_disable"
+literal|"hw.et.msi_disable"
 argument_list|,
 operator|&
 name|msi_disable
@@ -1670,7 +1670,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MSI count : %d\n"
+literal|"MSI count: %d\n"
 argument_list|,
 name|msic
 argument_list|)
