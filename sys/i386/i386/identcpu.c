@@ -1155,7 +1155,7 @@ name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"/P54T Overdrive"
+literal|"/P24T"
 argument_list|)
 expr_stmt|;
 break|break;
