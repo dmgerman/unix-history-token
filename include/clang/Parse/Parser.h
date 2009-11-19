@@ -2668,9 +2668,13 @@ block|;
 name|void
 name|ParseObjCPropertyAttribute
 argument_list|(
-name|ObjCDeclSpec
-operator|&
-name|DS
+argument|ObjCDeclSpec&DS
+argument_list|,
+argument|DeclPtrTy ClassDecl
+argument_list|,
+argument|DeclPtrTy *Methods
+argument_list|,
+argument|unsigned NumMethods
 argument_list|)
 block|;
 name|DeclPtrTy

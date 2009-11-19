@@ -1009,6 +1009,34 @@ begin_comment
 comment|/* C99 7.18.1.4 Integer types capable of holding object pointers.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__stdint_join3
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|a ## b ## c
+end_define
+
+begin_define
+define|#
+directive|define
+name|__stdint_exjoin3
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|__stdint_join3(a,b,c)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1017,9 +1045,16 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|__INTPTR_TYPE__
+name|__stdint_exjoin3
+argument_list|(
+argument|int
+argument_list|,
+argument|__INTPTR_WIDTH__
+argument_list|,
+argument|_t
+argument_list|)
 name|intptr_t
-typedef|;
+expr_stmt|;
 end_typedef
 
 begin_define
@@ -1035,10 +1070,16 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__INTPTR_TYPE__
+name|__stdint_exjoin3
+argument_list|(
+argument|uint
+argument_list|,
+argument|__INTPTR_WIDTH__
+argument_list|,
+argument|_t
+argument_list|)
 name|uintptr_t
-typedef|;
+expr_stmt|;
 end_typedef
 
 begin_comment
@@ -1047,16 +1088,30 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__INTMAX_TYPE__
+name|__stdint_exjoin3
+argument_list|(
+argument|int
+argument_list|,
+argument|__INTMAX_WIDTH__
+argument_list|,
+argument|_t
+argument_list|)
 name|intmax_t
-typedef|;
+expr_stmt|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|__UINTMAX_TYPE__
+name|__stdint_exjoin3
+argument_list|(
+argument|uint
+argument_list|,
+argument|__INTMAX_WIDTH__
+argument_list|,
+argument|_t
+argument_list|)
 name|uintmax_t
-typedef|;
+expr_stmt|;
 end_typedef
 
 begin_comment
@@ -3249,6 +3304,27 @@ begin_comment
 comment|/* C99 7.18.3 Limits of other integer types. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INTPTR_MIN
+value|__stdint_exjoin3( INT, __INTPTR_WIDTH__, _MIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTPTR_MAX
+value|__stdint_exjoin3( INT, __INTPTR_WIDTH__, _MAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINTPTR_MAX
+value|__stdint_exjoin3(UINT, __INTPTR_WIDTH__, _MAX)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -3256,27 +3332,6 @@ name|__POINTER_WIDTH__
 operator|==
 literal|64
 end_if
-
-begin_define
-define|#
-directive|define
-name|INTPTR_MIN
-value|INT64_MIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTPTR_MAX
-value|INT64_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|UINTPTR_MAX
-value|UINT64_MAX
-end_define
 
 begin_define
 define|#
@@ -3310,27 +3365,6 @@ end_elif
 begin_define
 define|#
 directive|define
-name|INTPTR_MIN
-value|INT32_MIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTPTR_MAX
-value|INT32_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|UINTPTR_MAX
-value|UINT32_MAX
-end_define
-
-begin_define
-define|#
-directive|define
 name|PTRDIFF_MIN
 value|INT32_MIN
 end_define
@@ -3356,27 +3390,6 @@ name|__POINTER_WIDTH__
 operator|==
 literal|16
 end_elif
-
-begin_define
-define|#
-directive|define
-name|INTPTR_MIN
-value|INT16_MIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTPTR_MAX
-value|INT16_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|UINTPTR_MAX
-value|UINT16_MAX
-end_define
 
 begin_define
 define|#
@@ -3423,21 +3436,21 @@ begin_define
 define|#
 directive|define
 name|INTMAX_MIN
-value|(-__INTMAX_MAX__-1)
+value|__stdint_exjoin3( INT, __INTMAX_WIDTH__, _MIN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTMAX_MAX
-value|__INTMAX_MAX__
+value|__stdint_exjoin3( INT, __INTMAX_WIDTH__, _MAX)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UINTMAX_MAX
-value|(__INTMAX_MAX__*2ULL+1ULL)
+value|__stdint_exjoin3(UINT, __INTMAX_WIDTH__, _MAX)
 end_define
 
 begin_comment
@@ -3523,7 +3536,7 @@ name|INTMAX_C
 parameter_list|(
 name|v
 parameter_list|)
-value|v##LL
+value|__stdint_exjoin3( INT, __INTMAX_WIDTH__, _C(v))
 end_define
 
 begin_define
@@ -3533,7 +3546,7 @@ name|UINTMAX_C
 parameter_list|(
 name|v
 parameter_list|)
-value|v##ULL
+value|__stdint_exjoin3(UINT, __INTMAX_WIDTH__, _C(v))
 end_define
 
 begin_endif

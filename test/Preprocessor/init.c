@@ -628,11 +628,15 @@ comment|// ARM:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// ARM:#define __INTMAX_TYPE__ long long int
+comment|// ARM:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
 comment|// ARM:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// ARM:#define __INTPTR_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -729,10 +733,6 @@ end_comment
 
 begin_comment
 comment|// ARM:#define __THUMB_INTERWORK__ 1
-end_comment
-
-begin_comment
-comment|// ARM:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -940,11 +940,15 @@ comment|// BFIN:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// BFIN:#define __INTMAX_TYPE__ long long int
+comment|// BFIN:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
 comment|// BFIN:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// BFIN:#define __INTPTR_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -1033,10 +1037,6 @@ end_comment
 
 begin_comment
 comment|// BFIN:#define __SIZE_TYPE__ long unsigned int
-end_comment
-
-begin_comment
-comment|// BFIN:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -1224,11 +1224,15 @@ comment|// I386:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// I386:#define __INTMAX_TYPE__ long long int
+comment|// I386:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
 comment|// I386:#define __INTPTR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// I386:#define __INTPTR_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -1329,10 +1333,6 @@ end_comment
 
 begin_comment
 comment|// I386:#define __SIZE_TYPE__ unsigned int
-end_comment
-
-begin_comment
-comment|// I386:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -1532,11 +1532,15 @@ comment|// MSP430:#define __INTMAX_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// MSP430:#define __INTMAX_TYPE__ long int
+comment|// MSP430:#define __INTMAX_WIDTH__ 32
 end_comment
 
 begin_comment
 comment|// MSP430:#define __INTPTR_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INTPTR_WIDTH__ 16
 end_comment
 
 begin_comment
@@ -1629,10 +1633,6 @@ end_comment
 
 begin_comment
 comment|// MSP430:#define __SIZE_TYPE__ unsigned int
-end_comment
-
-begin_comment
-comment|// MSP430:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -1812,11 +1812,15 @@ comment|// PIC16:#define __INTMAX_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// PIC16:#define __INTMAX_TYPE__ long int
+comment|// PIC16:#define __INTMAX_WIDTH__ 32
 end_comment
 
 begin_comment
 comment|// PIC16:#define __INTPTR_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PIC16:#define __INTPTR_WIDTH__ 16
 end_comment
 
 begin_comment
@@ -1905,10 +1909,6 @@ end_comment
 
 begin_comment
 comment|// PIC16:#define __SIZE_TYPE__ unsigned int
-end_comment
-
-begin_comment
-comment|// PIC16:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -2140,11 +2140,15 @@ comment|// PPC64:#define __INTMAX_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// PPC64:#define __INTMAX_TYPE__ long int
+comment|// PPC64:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
 comment|// PPC64:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INTPTR_WIDTH__ 64
 end_comment
 
 begin_comment
@@ -2253,10 +2257,6 @@ end_comment
 
 begin_comment
 comment|// PPC64:#define __SIZE_TYPE__ long unsigned int
-end_comment
-
-begin_comment
-comment|// PPC64:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -2456,11 +2456,15 @@ comment|// PPC:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// PPC:#define __INTMAX_TYPE__ long long int
+comment|// PPC:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
 comment|// PPC:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC:#define __INTPTR_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -2565,10 +2569,6 @@ end_comment
 
 begin_comment
 comment|// PPC:#define __SIZE_TYPE__ long unsigned int
-end_comment
-
-begin_comment
-comment|// PPC:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -2752,11 +2752,15 @@ comment|// S390X:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// S390X:#define __INTMAX_TYPE__ long long int
+comment|// S390X:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
 comment|// S390X:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// S390X:#define __INTPTR_WIDTH__ 64
 end_comment
 
 begin_comment
@@ -2845,10 +2849,6 @@ end_comment
 
 begin_comment
 comment|// S390X:#define __SIZE_TYPE__ long unsigned int
-end_comment
-
-begin_comment
-comment|// S390X:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -3032,11 +3032,15 @@ comment|// SPARC:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// SPARC:#define __INTMAX_TYPE__ long long int
+comment|// SPARC:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
 comment|// SPARC:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INTPTR_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -3129,10 +3133,6 @@ end_comment
 
 begin_comment
 comment|// SPARC:#define __SIZE_TYPE__ long unsigned int
-end_comment
-
-begin_comment
-comment|// SPARC:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -3320,11 +3320,15 @@ comment|// TCE:#define __INTMAX_MAX__ 2147483647L
 end_comment
 
 begin_comment
-comment|// TCE:#define __INTMAX_TYPE__ long int
+comment|// TCE:#define __INTMAX_WIDTH__ 32
 end_comment
 
 begin_comment
 comment|// TCE:#define __INTPTR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// TCE:#define __INTPTR_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -3421,10 +3425,6 @@ end_comment
 
 begin_comment
 comment|// TCE:#define __TCE__ 1
-end_comment
-
-begin_comment
-comment|// TCE:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -3616,11 +3616,15 @@ comment|// X86_64:#define __INTMAX_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// X86_64:#define __INTMAX_TYPE__ long int
+comment|// X86_64:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
 comment|// X86_64:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INTPTR_WIDTH__ 64
 end_comment
 
 begin_comment
@@ -3745,10 +3749,6 @@ end_comment
 
 begin_comment
 comment|// X86_64:#define __SSE__ 1
-end_comment
-
-begin_comment
-comment|// X86_64:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment

@@ -8,10 +8,6 @@ comment|// RUN: grep -F '"-fblocks"' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep -F '"--fmath-errno=1"' %t
-end_comment
-
-begin_comment
 comment|// RUN: grep -F '"-fpascal-strings"' %t
 end_comment
 
@@ -20,7 +16,7 @@ comment|// RUN: clang -### -S -x c /dev/null -fblocks -fbuiltin -fmath-errno -fc
 end_comment
 
 begin_comment
-comment|// RUN: grep -F '"-fbuiltin=0"' %t
+comment|// RUN: grep -F '"-fno-builtin"' %t
 end_comment
 
 begin_comment
@@ -28,7 +24,7 @@ comment|// RUN: grep -F '"-fno-common"' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep -F '"--fmath-errno=0"' %t
+comment|// RUN: grep -F '"-fno-math-errno"' %t
 end_comment
 
 begin_comment

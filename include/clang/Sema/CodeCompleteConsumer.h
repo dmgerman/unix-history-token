@@ -298,6 +298,12 @@ name|StringRef
 name|CurrentParameter
 argument_list|)
 decl_stmt|;
+comment|/// \brief Clone the given chunk.
+name|Chunk
+name|Clone
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Destroy this chunk, deallocating any memory it owns.
 name|void
 name|Destroy
@@ -623,12 +629,27 @@ name|C
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Returns the text in the TypedText chunk.
+specifier|const
+name|char
+operator|*
+name|getTypedText
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Retrieve a string representation of the code completion string,
 comment|/// which is mainly useful for debugging.
 name|std
 operator|::
 name|string
 name|getAsString
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Clone this code-completion string.
+name|CodeCompletionString
+operator|*
+name|Clone
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -708,7 +729,10 @@ name|RK_Keyword
 block|,
 comment|//< Refers to a keyword or symbol.
 name|RK_Macro
+block|,
 comment|//< Refers to a macro
+name|RK_Pattern
+comment|//< Refers to a precomputed pattern.
 block|}
 enum|;
 comment|/// \brief The kind of result stored here.
@@ -730,6 +754,12 @@ name|char
 modifier|*
 name|Keyword
 decl_stmt|;
+comment|/// \brief When Kind == RK_Pattern, the code-completion string that
+comment|/// describes the completion text to insert.
+name|CodeCompletionString
+modifier|*
+name|Pattern
+decl_stmt|;
 comment|/// \brief When Kind == RK_Macro, the identifier that refers to a macro.
 name|IdentifierInfo
 modifier|*
@@ -741,6 +771,11 @@ comment|/// \brief Describes how good this result is, with zero being the best
 comment|/// result and progressively higher numbers representing poorer results.
 name|unsigned
 name|Rank
+decl_stmt|;
+comment|/// \brief Specifiers which parameter (of a function, Objective-C method,
+comment|/// macro, etc.) we should start with when formatting the result.
+name|unsigned
+name|StartParameter
 decl_stmt|;
 comment|/// \brief Whether this result is hidden by another name.
 name|bool
@@ -758,6 +793,13 @@ comment|/// \brief Whether this declaration is the beginning of a
 comment|/// nested-name-specifier and, therefore, should be followed by '::'.
 name|bool
 name|StartsNestedNameSpecifier
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether all parameters (of a function, Objective-C
+comment|/// method, etc.) should be considered "informative".
+name|bool
+name|AllParametersAreInformative
 range|:
 literal|1
 decl_stmt|;
@@ -796,6 +838,11 @@ argument_list|(
 name|Rank
 argument_list|)
 operator|,
+name|StartParameter
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Hidden
 argument_list|(
 name|false
@@ -807,6 +854,11 @@ name|QualifierIsInformative
 argument_list|)
 operator|,
 name|StartsNestedNameSpecifier
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|AllParametersAreInformative
 argument_list|(
 name|false
 argument_list|)
@@ -839,6 +891,11 @@ argument_list|(
 name|Rank
 argument_list|)
 operator|,
+name|StartParameter
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Hidden
 argument_list|(
 name|false
@@ -850,6 +907,11 @@ literal|0
 argument_list|)
 operator|,
 name|StartsNestedNameSpecifier
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|AllParametersAreInformative
 argument_list|(
 name|false
 argument_list|)
@@ -882,6 +944,11 @@ argument_list|(
 name|Rank
 argument_list|)
 operator|,
+name|StartParameter
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Hidden
 argument_list|(
 name|false
@@ -893,6 +960,64 @@ literal|0
 argument_list|)
 operator|,
 name|StartsNestedNameSpecifier
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|AllParametersAreInformative
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Qualifier
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+comment|/// \brief Build a result that refers to a pattern.
+name|Result
+argument_list|(
+argument|CodeCompletionString *Pattern
+argument_list|,
+argument|unsigned Rank
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|RK_Pattern
+argument_list|)
+operator|,
+name|Pattern
+argument_list|(
+name|Pattern
+argument_list|)
+operator|,
+name|Rank
+argument_list|(
+name|Rank
+argument_list|)
+operator|,
+name|StartParameter
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Hidden
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|QualifierIsInformative
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|StartsNestedNameSpecifier
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|AllParametersAreInformative
 argument_list|(
 name|false
 argument_list|)
@@ -953,6 +1078,10 @@ name|Sema
 modifier|&
 name|S
 parameter_list|)
+function_decl|;
+name|void
+name|Destroy
+parameter_list|()
 function_decl|;
 block|}
 struct|;

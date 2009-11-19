@@ -3482,7 +3482,7 @@ comment|/// @interface NSView (MyViewMethods)
 comment|/// - myMethod;
 comment|/// @end
 comment|///
-comment|/// Cateogries also allow you to split the implementation of a class across
+comment|/// Categories also allow you to split the implementation of a class across
 comment|/// several files (a feature more naturally supported in C++).
 comment|///
 comment|/// Categories were originally inspired by dynamic languages such as Common

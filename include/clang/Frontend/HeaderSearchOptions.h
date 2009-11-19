@@ -216,7 +216,7 @@ label|:
 name|HeaderSearchOptions
 argument_list|(
 argument|llvm::StringRef _Sysroot =
-literal|""
+literal|"/"
 argument_list|)
 block|:
 name|Sysroot
@@ -226,7 +226,12 @@ argument_list|)
 operator|,
 name|UseStandardIncludes
 argument_list|(
-argument|true
+name|true
+argument_list|)
+operator|,
+name|Verbose
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// AddPath - Add the \arg Path path to the specified \arg Group list.

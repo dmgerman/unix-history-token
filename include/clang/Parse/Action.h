@@ -9642,7 +9642,7 @@ end_comment
 begin_function
 name|virtual
 name|void
-name|CodeCompleteObjCProperty
+name|CodeCompleteObjCPropertyFlags
 parameter_list|(
 name|Scope
 modifier|*
@@ -9653,6 +9653,162 @@ modifier|&
 name|ODS
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the getter of an Objective-C property
+end_comment
+
+begin_comment
+comment|/// declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion
+end_comment
+
+begin_comment
+comment|/// token is found after the "getter = " in a property declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the property is being declared.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ClassDecl the Objective-C class or category in which the property
+end_comment
+
+begin_comment
+comment|/// is being defined.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Methods the set of methods declared thus far within \p ClassDecl.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NumMethods the number of methods in \p Methods
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCPropertyGetter
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|ClassDecl
+parameter_list|,
+name|DeclPtrTy
+modifier|*
+name|Methods
+parameter_list|,
+name|unsigned
+name|NumMethods
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the setter of an Objective-C property
+end_comment
+
+begin_comment
+comment|/// declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion
+end_comment
+
+begin_comment
+comment|/// token is found after the "setter = " in a property declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the property is being declared.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ClassDecl the Objective-C class or category in which the property
+end_comment
+
+begin_comment
+comment|/// is being defined.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Methods the set of methods declared thus far within \p ClassDecl.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NumMethods the number of methods in \p Methods
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCPropertySetter
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|ClassDecl
+parameter_list|,
+name|DeclPtrTy
+modifier|*
+name|Methods
+parameter_list|,
+name|unsigned
+name|NumMethods
+parameter_list|)
+block|{   }
 end_function
 
 begin_comment
@@ -9672,7 +9828,7 @@ comment|/// This code completion action is invoked when the code-completion toke
 end_comment
 
 begin_comment
-comment|/// found after the class name.
+comment|/// found after the class name and after each argument.
 end_comment
 
 begin_comment
@@ -9691,6 +9847,14 @@ begin_comment
 comment|/// \param FNameLoc the source location of the factory name.
 end_comment
 
+begin_comment
+comment|/// \param SelIdents the identifiers that describe the selector (thus far).
+end_comment
+
+begin_comment
+comment|/// \param NumSelIdents the number of identifiers in \p SelIdents.
+end_comment
+
 begin_function
 name|virtual
 name|void
@@ -9706,6 +9870,14 @@ name|FName
 parameter_list|,
 name|SourceLocation
 name|FNameLoc
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+modifier|*
+name|SelIdents
+parameter_list|,
+name|unsigned
+name|NumSelIdents
 parameter_list|)
 block|{ }
 end_function
@@ -9727,7 +9899,7 @@ comment|/// This code completion action is invoked when the code-completion toke
 end_comment
 
 begin_comment
-comment|/// found after the receiver expression.
+comment|/// found after the receiver expression and after each argument.
 end_comment
 
 begin_comment
@@ -9742,6 +9914,14 @@ begin_comment
 comment|/// \param Receiver an expression for the receiver of the message.
 end_comment
 
+begin_comment
+comment|/// \param SelIdents the identifiers that describe the selector (thus far).
+end_comment
+
+begin_comment
+comment|/// \param NumSelIdents the number of identifiers in \p SelIdents.
+end_comment
+
 begin_function
 name|virtual
 name|void
@@ -9754,6 +9934,14 @@ parameter_list|,
 name|ExprTy
 modifier|*
 name|Receiver
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+modifier|*
+name|SelIdents
+parameter_list|,
+name|unsigned
+name|NumSelIdents
 parameter_list|)
 block|{ }
 end_function
@@ -9839,6 +10027,232 @@ modifier|*
 name|S
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for an Objective-C interface, after the
+end_comment
+
+begin_comment
+comment|/// @interface but before any identifier.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCInterfaceDecl
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the superclass of an Objective-C
+end_comment
+
+begin_comment
+comment|/// interface, after the ':'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the interface declaration occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ClassName the name of the class being defined.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCSuperclass
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|ClassName
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for an Objective-C implementation, after the
+end_comment
+
+begin_comment
+comment|/// @implementation but before any identifier.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCImplementationDecl
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the category name in an Objective-C interface
+end_comment
+
+begin_comment
+comment|/// declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked after the '(' that indicates
+end_comment
+
+begin_comment
+comment|/// a category name within an Objective-C interface declaration.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCInterfaceCategory
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|ClassName
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the category name in an Objective-C category
+end_comment
+
+begin_comment
+comment|/// implementation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked after the '(' that indicates
+end_comment
+
+begin_comment
+comment|/// the category name within an Objective-C category implementation.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCImplementationCategory
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|ClassName
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the property names when defining an
+end_comment
+
+begin_comment
+comment|/// Objective-C property.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked after @synthesize or @dynamic and
+end_comment
+
+begin_comment
+comment|/// after each "," within one of those definitions.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCPropertyDefinition
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|ObjCImpDecl
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the instance variable name that should
+end_comment
+
+begin_comment
+comment|/// follow an '=' when synthesizing an Objective-C property.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked after each '=' that occurs within
+end_comment
+
+begin_comment
+comment|/// an @synthesized definition.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCPropertySynthesizeIvar
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|PropertyName
+parameter_list|,
+name|DeclPtrTy
+name|ObjCImpDecl
+parameter_list|)
+block|{   }
 end_function
 
 begin_comment

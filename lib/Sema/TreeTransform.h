@@ -13277,6 +13277,18 @@ argument_list|(
 argument|CaseStmt *S
 argument_list|)
 block|{
+name|OwningExprResult
+name|LHS
+argument_list|(
+name|SemaRef
+argument_list|)
+block|,
+name|RHS
+argument_list|(
+name|SemaRef
+argument_list|)
+block|;
+block|{
 comment|// The case value expressions are not potentially evaluated.
 name|EnterExpressionEvaluationContext
 name|Unevaluated
@@ -13289,7 +13301,6 @@ name|Unevaluated
 argument_list|)
 block|;
 comment|// Transform the left-hand case value.
-name|OwningExprResult
 name|LHS
 operator|=
 name|getDerived
@@ -13317,7 +13328,6 @@ name|StmtError
 argument_list|()
 return|;
 comment|// Transform the right-hand case value (for the GNU case-range extension).
-name|OwningExprResult
 name|RHS
 operator|=
 name|getDerived
@@ -13330,10 +13340,7 @@ operator|->
 name|getRHS
 argument_list|()
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
+block|;
 if|if
 condition|(
 name|RHS
@@ -13347,7 +13354,8 @@ operator|.
 name|StmtError
 argument_list|()
 return|;
-end_if
+block|}
+end_expr_stmt
 
 begin_comment
 comment|// Build the case statement.

@@ -24,7 +24,7 @@ comment|// CHECK: "-target-feature" "+sse"
 end_comment
 
 begin_comment
-comment|// CHECK: "--fmath-errno=0"
+comment|// CHECK: "-fno-math-errno"
 end_comment
 
 end_unit

@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Options.h"
+file|"clang/Driver/OptSpecifier.h"
 end_include
 
 begin_include
@@ -158,11 +158,10 @@ label|:
 name|OptionClass
 name|Kind
 decl_stmt|;
-name|options
-operator|::
+comment|/// The option ID.
+name|OptSpecifier
 name|ID
-name|ID
-expr_stmt|;
+decl_stmt|;
 comment|/// The option name.
 specifier|const
 name|char
@@ -230,7 +229,7 @@ name|Option
 argument_list|(
 argument|OptionClass Kind
 argument_list|,
-argument|options::ID ID
+argument|OptSpecifier ID
 argument_list|,
 argument|const char *Name
 argument_list|,
@@ -246,15 +245,16 @@ operator|~
 name|Option
 argument_list|()
 expr_stmt|;
-name|options
-operator|::
-name|ID
-name|getId
+name|unsigned
+name|getID
 argument_list|()
 specifier|const
 block|{
 return|return
 name|ID
+operator|.
+name|getID
+argument_list|()
 return|;
 block|}
 name|OptionClass
@@ -501,23 +501,15 @@ return|;
 block|}
 comment|/// matches - Predicate for whether this option is part of the
 comment|/// given option (which may be a group).
+comment|///
+comment|/// Note that matches against options which are an alias should never be
+comment|/// done -- aliases do not participate in matching and so such a query will
+comment|/// always be false.
 name|bool
 name|matches
 argument_list|(
-specifier|const
-name|Option
-operator|*
-name|Opt
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|matches
-argument_list|(
-name|options
-operator|::
+name|OptSpecifier
 name|ID
-name|Id
 argument_list|)
 decl|const
 decl_stmt|;
@@ -578,7 +570,7 @@ name|public
 operator|:
 name|OptionGroup
 argument_list|(
-argument|options::ID ID
+argument|OptSpecifier ID
 argument_list|,
 argument|const char *Name
 argument_list|,
@@ -638,7 +630,9 @@ block|{
 name|public
 operator|:
 name|InputOption
-argument_list|()
+argument_list|(
+argument|OptSpecifier ID
+argument_list|)
 block|;
 name|virtual
 name|Arg
@@ -692,7 +686,9 @@ block|{
 name|public
 operator|:
 name|UnknownOption
-argument_list|()
+argument_list|(
+argument|OptSpecifier ID
+argument_list|)
 block|;
 name|virtual
 name|Arg
@@ -747,7 +743,7 @@ name|public
 operator|:
 name|FlagOption
 argument_list|(
-argument|options::ID ID
+argument|OptSpecifier ID
 argument_list|,
 argument|const char *Name
 argument_list|,
@@ -808,7 +804,7 @@ name|public
 operator|:
 name|JoinedOption
 argument_list|(
-argument|options::ID ID
+argument|OptSpecifier ID
 argument_list|,
 argument|const char *Name
 argument_list|,
@@ -869,7 +865,7 @@ name|public
 operator|:
 name|SeparateOption
 argument_list|(
-argument|options::ID ID
+argument|OptSpecifier ID
 argument_list|,
 argument|const char *Name
 argument_list|,
@@ -930,7 +926,7 @@ name|public
 operator|:
 name|CommaJoinedOption
 argument_list|(
-argument|options::ID ID
+argument|OptSpecifier ID
 argument_list|,
 argument|const char *Name
 argument_list|,
@@ -997,7 +993,7 @@ name|public
 operator|:
 name|MultiArgOption
 argument_list|(
-argument|options::ID ID
+argument|OptSpecifier ID
 argument_list|,
 argument|const char *Name
 argument_list|,
@@ -1071,7 +1067,7 @@ name|public
 operator|:
 name|JoinedOrSeparateOption
 argument_list|(
-argument|options::ID ID
+argument|OptSpecifier ID
 argument_list|,
 argument|const char *Name
 argument_list|,
@@ -1134,7 +1130,7 @@ name|public
 operator|:
 name|JoinedAndSeparateOption
 argument_list|(
-argument|options::ID ID
+argument|OptSpecifier ID
 argument_list|,
 argument|const char *Name
 argument_list|,

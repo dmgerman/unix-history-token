@@ -8,7 +8,7 @@ comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -analyzer-experime
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -analyzer-purge-dead=false -verify %s
+comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -analyzer-no-purge-dead -verify %s
 end_comment
 
 begin_comment

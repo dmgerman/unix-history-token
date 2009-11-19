@@ -692,7 +692,6 @@ return|return
 name|Client
 return|;
 block|}
-empty_stmt|;
 specifier|const
 name|DiagnosticClient
 operator|*
@@ -704,7 +703,6 @@ return|return
 name|Client
 return|;
 block|}
-empty_stmt|;
 comment|/// pushMappings - Copies the current DiagMappings and pushes the new copy
 comment|/// onto the top of the stack.
 name|void

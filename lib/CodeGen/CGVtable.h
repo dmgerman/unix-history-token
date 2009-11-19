@@ -223,6 +223,18 @@ argument_list|,
 argument|uint64_t Offset
 argument_list|)
 expr_stmt|;
+comment|/// GenerateClassData - Generate all the class data requires to be generated
+comment|/// upon definition of a KeyFunction.  This includes the vtable, the
+comment|/// rtti data structure and the VTT.
+name|void
+name|GenerateClassData
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

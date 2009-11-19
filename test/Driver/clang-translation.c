@@ -28,10 +28,6 @@ comment|// RUN: grep '"--unwind-tables=0"' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '"--fmath-errno=1"' %t.log
-end_comment
-
-begin_comment
 comment|// RUN: grep '"-Os"' %t.log
 end_comment
 
