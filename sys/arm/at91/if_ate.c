@@ -1273,12 +1273,6 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
-name|ifp
-operator|->
 name|if_linkmib
 operator|=
 operator|&
@@ -5027,12 +5021,6 @@ condition|(
 name|ifp
 condition|)
 block|{
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags

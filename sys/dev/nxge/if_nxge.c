@@ -12063,12 +12063,6 @@ decl_stmt|;
 name|u8
 name|t_code
 decl_stmt|;
-name|ifnetp
-operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|xge_hal_fifo_dtr_next_completed
@@ -12780,12 +12774,6 @@ argument_list|)
 expr_stmt|;
 name|_exit
 label|:
-name|ifnetp
-operator|->
-name|if_timer
-operator|=
-literal|15
-expr_stmt|;
 block|}
 end_function
 
@@ -13487,12 +13475,6 @@ name|XGE_DRV_STATS
 argument_list|(
 name|tx_completions
 argument_list|)
-expr_stmt|;
-name|ifnetp
-operator|->
-name|if_timer
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * For each completed descriptor: Get private structure, free buffer, 	 * do unmapping, and free descriptor 	 */
 do|do
