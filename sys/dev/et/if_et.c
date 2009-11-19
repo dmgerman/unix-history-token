@@ -957,7 +957,9 @@ specifier|static
 name|int
 name|et_bus_config
 parameter_list|(
-name|device_t
+name|struct
+name|et_softc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1829,7 +1831,7 @@ name|error
 operator|=
 name|et_bus_config
 argument_list|(
-name|dev
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3027,8 +3029,10 @@ specifier|static
 name|int
 name|et_bus_config
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|et_softc
+modifier|*
+name|sc
 parameter_list|)
 block|{
 name|uint32_t
@@ -3044,6 +3048,8 @@ decl_stmt|;
 comment|/* 	 * Test whether EEPROM is valid 	 * NOTE: Read twice to get the correct value 	 */
 name|pci_read_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 name|ET_PCIR_EEPROM_STATUS
@@ -3055,6 +3061,8 @@ name|val
 operator|=
 name|pci_read_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 name|ET_PCIR_EEPROM_STATUS
@@ -3071,6 +3079,8 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 literal|"EEPROM status error 0x%02x\n"
@@ -3085,14 +3095,37 @@ operator|)
 return|;
 block|}
 comment|/* TODO: LED */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|ET_FLAG_PCIE
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Configure ACK latency and replay timer according to 	 * max playload size 	 */
 name|val
 operator|=
 name|pci_read_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
-name|ET_PCIR_DEVICE_CAPS
+name|sc
+operator|->
+name|sc_expcap
+operator|+
+name|PCIR_EXPRESS_DEVICE_CAP
 argument_list|,
 literal|4
 argument_list|)
@@ -3101,7 +3134,7 @@ name|max_plsz
 operator|=
 name|val
 operator|&
-name|ET_PCIM_DEVICE_CAPS_MAX_PLSZ
+name|PCIM_EXP_CAP_MAX_PAYLOAD
 expr_stmt|;
 switch|switch
 condition|(
@@ -3137,6 +3170,8 @@ name|ack_latency
 operator|=
 name|pci_read_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 name|ET_PCIR_ACK_LATENCY
@@ -3148,6 +3183,8 @@ name|replay_timer
 operator|=
 name|pci_read_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 name|ET_PCIR_REPLAY_TIMER
@@ -3157,6 +3194,8 @@ argument_list|)
 expr_stmt|;
 name|device_printf
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 literal|"ack latency %u, replay timer %u\n"
@@ -3177,6 +3216,8 @@ condition|)
 block|{
 name|pci_write_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 name|ET_PCIR_ACK_LATENCY
@@ -3188,6 +3229,8 @@ argument_list|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 name|ET_PCIR_REPLAY_TIMER
@@ -3203,6 +3246,8 @@ name|val
 operator|=
 name|pci_read_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 name|ET_PCIR_L0S_L1_LATENCY
@@ -3231,6 +3276,8 @@ literal|0x00028000
 expr_stmt|;
 name|pci_write_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
 name|ET_PCIR_L0S_L1_LATENCY
@@ -3245,9 +3292,15 @@ name|val
 operator|=
 name|pci_read_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
-name|ET_PCIR_DEVICE_CTRL
+name|sc
+operator|->
+name|sc_expcap
+operator|+
+name|PCIR_EXPRESS_DEVICE_CTL
 argument_list|,
 literal|2
 argument_list|)
@@ -3255,7 +3308,7 @@ expr_stmt|;
 name|val
 operator|&=
 operator|~
-name|ET_PCIM_DEVICE_CTRL_MAX_RRSZ
+name|PCIM_EXP_CTL_MAX_READ_REQUEST
 expr_stmt|;
 name|val
 operator||=
@@ -3263,9 +3316,15 @@ name|ET_PCIV_DEVICE_CTRL_RRSZ_2K
 expr_stmt|;
 name|pci_write_config
 argument_list|(
+name|sc
+operator|->
 name|dev
 argument_list|,
-name|ET_PCIR_DEVICE_CTRL
+name|sc
+operator|->
+name|sc_expcap
+operator|+
+name|PCIR_EXPRESS_DEVICE_CTL
 argument_list|,
 name|val
 argument_list|,
