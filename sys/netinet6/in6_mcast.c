@@ -8756,19 +8756,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * MCAST_JOIN_GROUP on an existing inclusive 			 * membership is an error; if you want to change 			 * filter mode, you must use the userland API 			 * setsourcefilter(). 			 */
-if|if
-condition|(
-name|imf
-operator|->
-name|im6f_st
-index|[
-literal|1
-index|]
-operator|==
-name|MCAST_INCLUDE
-condition|)
-block|{
+comment|/* 			 * MCAST_JOIN_GROUP alone, on any existing membership, 			 * is rejected, to stop the same inpcb tying up 			 * multiple refs to the in_multi. 			 * On an existing inclusive membership, this is also 			 * an error; if you want to change filter mode, 			 * you must use the userland API setsourcefilter(). 			 * XXX We don't reject this for imf in UNDEFINED 			 * state at t1, because allocation of a filter 			 * is atomic with allocation of a membership. 			 */
 name|error
 operator|=
 name|EINVAL
@@ -8776,7 +8764,6 @@ expr_stmt|;
 goto|goto
 name|out_in6p_locked
 goto|;
-block|}
 block|}
 block|}
 comment|/* 	 * Begin state merge transaction at socket layer. 	 */
@@ -8880,7 +8867,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Graft new source into filter list for this inpcb's 	 * membership of the group. The in6_multi may not have 	 * been allocated yet if this is a new membership, however, 	 * the in_mfilter slot will be allocated and must be initialized. 	 */
+comment|/* 	 * Graft new source into filter list for this inpcb's 	 * membership of the group. The in6_multi may not have 	 * been allocated yet if this is a new membership, however, 	 * the in_mfilter slot will be allocated and must be initialized. 	 * 	 * Note: Grafting of exclusive mode filters doesn't happen 	 * in this path. 	 */
 if|if
 condition|(
 name|ssa
