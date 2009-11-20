@@ -79,6 +79,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mman.h>
 end_include
 
@@ -324,11 +330,11 @@ name|i
 decl_stmt|,
 name|pass
 decl_stmt|;
-comment|/* 	 * NOTE: do not modify the name of this variable, as it's used by 	 * the macros to emit code. 	 */
+comment|/* 	 * NOTE: Do not modify the name of this variable, as it's used by 	 * the macros to emit code. 	 */
 name|emit_func
 name|emitm
 decl_stmt|;
-comment|/* Allocate the reference table for the jumps */
+comment|/* Allocate the reference table for the jumps. */
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -352,6 +358,8 @@ argument_list|,
 name|M_BPFJIT
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 else|#
@@ -389,31 +397,31 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* Reset the reference table */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nins
-operator|+
-literal|1
-condition|;
-name|i
-operator|++
-control|)
+ifndef|#
+directive|ifndef
+name|_KERNEL
+name|memset
+argument_list|(
 name|stream
 operator|.
 name|refs
-index|[
-name|i
-index|]
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+operator|(
+name|nins
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int
+argument_list|)
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|stream
 operator|.
 name|cur_ip
@@ -426,26 +434,36 @@ name|bpf_pc
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * the first pass will emit the lengths of the instructions 	 * to create the reference table 	 */
+name|stream
+operator|.
+name|ibuf
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 	 * The first pass will emit the lengths of the instructions 	 * to create the reference table. 	 */
 name|emitm
 operator|=
 name|emit_length
 expr_stmt|;
+for|for
+control|(
 name|pass
 operator|=
 literal|0
-expr_stmt|;
-for|for
-control|(
 init|;
+name|pass
+operator|<
+literal|2
 condition|;
+name|pass
+operator|++
 control|)
 block|{
 name|ins
 operator|=
 name|prog
 expr_stmt|;
-comment|/* create the procedure header */
+comment|/* Create the procedure header. */
 name|PUSH
 argument_list|(
 name|EBP
@@ -2266,59 +2284,13 @@ name|ins
 operator|++
 expr_stmt|;
 block|}
-name|pass
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|pass
-operator|>=
-literal|2
-condition|)
-block|{
-ifndef|#
-directive|ifndef
-name|_KERNEL
-if|if
-condition|(
-name|mprotect
-argument_list|(
-name|stream
-operator|.
-name|ibuf
-argument_list|,
-name|stream
-operator|.
-name|cur_ip
-argument_list|,
-name|PROT_READ
-operator||
-name|PROT_EXEC
-argument_list|)
-operator|!=
+operator|>
 literal|0
 condition|)
-block|{
-name|munmap
-argument_list|(
-name|stream
-operator|.
-name|ibuf
-argument_list|,
-name|stream
-operator|.
-name|cur_ip
-argument_list|)
-expr_stmt|;
-name|stream
-operator|.
-name|ibuf
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-endif|#
-directive|endif
+continue|continue;
 operator|*
 name|size
 operator|=
@@ -2326,8 +2298,6 @@ name|stream
 operator|.
 name|cur_ip
 expr_stmt|;
-break|break;
-block|}
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -2337,9 +2307,8 @@ name|ibuf
 operator|=
 name|malloc
 argument_list|(
-name|stream
-operator|.
-name|cur_ip
+operator|*
+name|size
 argument_list|,
 name|M_BPFJIT
 argument_list|,
@@ -2365,9 +2334,8 @@ name|mmap
 argument_list|(
 name|NULL
 argument_list|,
-name|stream
-operator|.
-name|cur_ip
+operator|*
+name|size
 argument_list|,
 name|PROT_READ
 operator||
@@ -2400,7 +2368,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* 		 * modify the reference table to contain the offsets and 		 * not the lengths of the instructions 		 */
+comment|/* 		 * Modify the reference table to contain the offsets and 		 * not the lengths of the instructions. 		 */
 for|for
 control|(
 name|i
@@ -2432,7 +2400,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-comment|/* Reset the counters */
+comment|/* Reset the counters. */
 name|stream
 operator|.
 name|cur_ip
@@ -2445,13 +2413,13 @@ name|bpf_pc
 operator|=
 literal|0
 expr_stmt|;
-comment|/* the second pass creates the actual code */
+comment|/* The second pass creates the actual code. */
 name|emitm
 operator|=
 name|emit_code
 expr_stmt|;
 block|}
-comment|/* 	 * the reference table is needed only during compilation, 	 * now we can free it 	 */
+comment|/* 	 * The reference table is needed only during compilation, 	 * now we can free it. 	 */
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -2473,6 +2441,48 @@ operator|.
 name|refs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stream
+operator|.
+name|ibuf
+operator|!=
+name|NULL
+operator|&&
+name|mprotect
+argument_list|(
+name|stream
+operator|.
+name|ibuf
+argument_list|,
+operator|*
+name|size
+argument_list|,
+name|PROT_READ
+operator||
+name|PROT_EXEC
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|munmap
+argument_list|(
+name|stream
+operator|.
+name|ibuf
+argument_list|,
+operator|*
+name|size
+argument_list|)
+expr_stmt|;
+name|stream
+operator|.
+name|ibuf
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
