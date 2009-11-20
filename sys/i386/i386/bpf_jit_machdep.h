@@ -485,6 +485,22 @@ value|do {						\ 	emitm(&stream, 0x2d, 1);					\ 	emitm(&stream, i32, 4);						
 end_define
 
 begin_comment
+comment|/* subl i8,r32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBib
+parameter_list|(
+name|i8
+parameter_list|,
+name|r32
+parameter_list|)
+value|do {						\ 	emitm(&stream, 0x83, 1);					\ 	emitm(&stream, (29<< 3) | (r32& 0x7), 1);			\ 	emitm(&stream, i8, 1);						\ } while (0)
+end_define
+
+begin_comment
 comment|/* mull r32 */
 end_comment
 

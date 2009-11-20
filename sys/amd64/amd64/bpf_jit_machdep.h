@@ -615,15 +615,29 @@ value|do {							\ 	emitm(&stream, 0xc486, 2);					\ } while (0)
 end_define
 
 begin_comment
-comment|/* ret */
+comment|/* pushq r64 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RET
+name|PUSH
+parameter_list|(
+name|r64
+parameter_list|)
+value|do {							\ 	emitm(&stream, (5<< 4) | (0<< 3) | (r64& 0x7), 1);		\ } while (0)
+end_define
+
+begin_comment
+comment|/* leave/ret */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LEAVE_RET
 parameter_list|()
-value|do {						\ 	emitm(&stream, 0xc3, 1);					\ } while (0)
+value|do {						\ 	emitm(&stream, 0xc3c9, 2);					\ } while (0)
 end_define
 
 begin_comment
@@ -700,6 +714,22 @@ parameter_list|(
 name|i32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x2d, 1);					\ 	emitm(&stream, i32, 4);						\ } while (0)
+end_define
+
+begin_comment
+comment|/* subq i8,r64 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBib
+parameter_list|(
+name|i8
+parameter_list|,
+name|r64
+parameter_list|)
+value|do {						\ 	emitm(&stream, 0x8348, 2);					\ 	emitm(&stream, (29<< 3) | (r64& 0x7), 1);			\ 	emitm(&stream, i8, 1);						\ } while (0)
 end_define
 
 begin_comment

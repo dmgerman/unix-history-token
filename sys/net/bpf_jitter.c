@@ -123,9 +123,6 @@ name|u_int
 parameter_list|,
 name|size_t
 modifier|*
-parameter_list|,
-name|int
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -247,8 +244,6 @@ argument_list|,
 name|M_BPFJIT
 argument_list|,
 name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -304,10 +299,6 @@ operator|&
 name|filter
 operator|->
 name|size
-argument_list|,
-name|filter
-operator|->
-name|mem
 argument_list|)
 operator|)
 operator|==
@@ -352,15 +343,11 @@ name|func
 operator|!=
 name|bpf_jit_accept_all
 condition|)
-name|contigfree
+name|free
 argument_list|(
 name|filter
 operator|->
 name|func
-argument_list|,
-name|filter
-operator|->
-name|size
 argument_list|,
 name|M_BPFJIT
 argument_list|)
@@ -426,19 +413,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|memset
-argument_list|(
-name|filter
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|filter
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* No filter means accept all */
 if|if
 condition|(
@@ -481,10 +455,6 @@ operator|&
 name|filter
 operator|->
 name|size
-argument_list|,
-name|filter
-operator|->
-name|mem
 argument_list|)
 operator|)
 operator|==
