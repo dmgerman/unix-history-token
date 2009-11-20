@@ -471,10 +471,6 @@ index|]
 decl_stmt|;
 comment|/* using nchan */
 name|uint32_t
-name|mod
-decl_stmt|;
-comment|/* modulus */
-name|uint32_t
 name|mul
 decl_stmt|;
 name|uint32_t
@@ -6224,6 +6220,21 @@ name|ch
 operator|->
 name|sample_rate
 expr_stmt|;
+comment|/* setup mutex and PCM channel */
+name|ch
+operator|->
+name|pcm_ch
+operator|=
+name|c
+expr_stmt|;
+name|ch
+operator|->
+name|pcm_mtx
+operator|=
+name|c
+operator|->
+name|lock
+expr_stmt|;
 if|if
 condition|(
 name|ch
@@ -6592,20 +6603,6 @@ operator|=
 name|ch
 operator|->
 name|buf
-expr_stmt|;
-name|ch
-operator|->
-name|pcm_ch
-operator|=
-name|c
-expr_stmt|;
-name|ch
-operator|->
-name|pcm_mtx
-operator|=
-name|c
-operator|->
-name|lock
 expr_stmt|;
 name|ch
 operator|->
@@ -7389,12 +7386,6 @@ name|maxval
 operator|=
 literal|1
 expr_stmt|;
-name|mc
-operator|->
-name|mod
-operator|=
-literal|1
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -7405,14 +7396,7 @@ name|type
 operator|==
 name|MIX_SELECTOR
 condition|)
-block|{
-name|mc
-operator|->
-name|mod
-operator|=
-literal|1
-expr_stmt|;
-block|}
+block|{ 	}
 else|else
 block|{
 comment|/* determine min and max values */
@@ -7550,39 +7534,15 @@ argument_list|,
 name|mc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|DPRINTF
+argument_list|(
+literal|"Resolution = %d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
 name|res
-operator|==
-literal|0
-condition|)
-name|res
-operator|=
-literal|1
-expr_stmt|;
-name|mc
-operator|->
-name|mod
-operator|=
-name|mc
-operator|->
-name|mul
-operator|/
-name|res
-expr_stmt|;
-if|if
-condition|(
-name|mc
-operator|->
-name|mod
-operator|==
-literal|0
-condition|)
-name|mc
-operator|->
-name|mod
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|uaudio_mixer_add_ctl_sub
@@ -14941,19 +14901,6 @@ name|mul
 operator|)
 operator|/
 literal|255
-expr_stmt|;
-comment|/* align volume level */
-name|val
-operator|=
-name|val
-operator|-
-operator|(
-name|val
-operator|%
-name|mc
-operator|->
-name|mod
-operator|)
 expr_stmt|;
 comment|/* add lower offset */
 name|val
