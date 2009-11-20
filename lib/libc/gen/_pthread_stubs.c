@@ -509,7 +509,7 @@ comment|/* PJT_MUTEX_UNLOCK */
 block|{
 name|PJT_DUAL_ENTRY
 argument_list|(
-argument|stub_zero
+argument|_libc_once
 argument_list|)
 block|}
 block|,
