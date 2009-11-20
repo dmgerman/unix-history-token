@@ -1965,8 +1965,7 @@ name|ifp
 operator|->
 name|if_capabilities
 operator|=
-comment|/*IFCAP_TXCSUM*/
-name|IFCAP_HWCSUM
+name|IFCAP_TXCSUM
 operator||
 name|IFCAP_VLAN_MTU
 expr_stmt|;
