@@ -2435,7 +2435,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" CIU core %d  int: %d  en: %d  ip: %d  Add: %p  enabled: 0x%llX  SR: %x\n"
+literal|" CIU core %d  int: %d  en: %d  ip: %d  Add: %#llx  enabled: %#llx  SR: %x\n"
 argument_list|,
 name|core_num
 argument_list|,
@@ -2446,8 +2446,9 @@ argument_list|,
 name|ciu_ip
 argument_list|,
 operator|(
-name|void
-operator|*
+name|unsigned
+name|long
+name|long
 operator|)
 name|ciu_intr_reg_addr
 argument_list|,
