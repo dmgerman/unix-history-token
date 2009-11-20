@@ -4304,6 +4304,10 @@ name|start
 argument_list|)
 expr_stmt|;
 block|}
+name|flags
+operator||=
+name|RF_SHAREABLE
+expr_stmt|;
 return|return
 operator|(
 name|BUS_ALLOC_RESOURCE
