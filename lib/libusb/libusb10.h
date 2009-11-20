@@ -137,8 +137,16 @@ name|uint32_t
 name|last_len
 decl_stmt|;
 name|uint8_t
-name|flags
+name|state
 decl_stmt|;
+define|#
+directive|define
+name|LIBUSB_SUPER_XFER_ST_NONE
+value|0
+define|#
+directive|define
+name|LIBUSB_SUPER_XFER_ST_PEND
+value|1
 block|}
 struct|;
 end_struct

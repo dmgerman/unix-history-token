@@ -3523,11 +3523,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* set transfer status */
 name|uxfer
 operator|->
 name|status
 operator|=
 name|status
+expr_stmt|;
+comment|/* update super transfer state */
+name|sxfer
+operator|->
+name|state
+operator|=
+name|LIBUSB_SUPER_XFER_ST_NONE
 expr_stmt|;
 name|dev
 operator|=
@@ -4640,6 +4648,14 @@ expr_stmt|;
 if|if
 condition|(
 name|sxfer
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* cancelling */
+if|if
+condition|(
+name|sxfer
 operator|->
 name|rem_len
 condition|)
@@ -4661,6 +4677,14 @@ argument_list|(
 name|pxfer0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sxfer
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* cancelling */
 if|if
 condition|(
 name|sxfer
@@ -5160,6 +5184,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* set pending state */
+name|sxfer
+operator|->
+name|state
+operator|=
+name|LIBUSB_SUPER_XFER_ST_PEND
+expr_stmt|;
+comment|/* insert transfer into transfer head list */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5172,6 +5204,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
+comment|/* start work transfers */
 name|libusb10_submit_transfer_sub
 argument_list|(
 name|uxfer
@@ -5252,6 +5285,9 @@ decl_stmt|;
 name|uint32_t
 name|endpoint
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
 if|if
 condition|(
 name|uxfer
@@ -5263,6 +5299,7 @@ operator|(
 name|LIBUSB_ERROR_INVALID_PARAM
 operator|)
 return|;
+comment|/* check if not initialised */
 if|if
 condition|(
 name|uxfer
@@ -5273,7 +5310,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|LIBUSB_ERROR_INVALID_PARAM
+name|LIBUSB_ERROR_NOT_FOUND
 operator|)
 return|;
 name|endpoint
@@ -5334,6 +5371,10 @@ name|sxfer
 argument_list|)
 operator|)
 expr_stmt|;
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 name|CTX_LOCK
 argument_list|(
 name|dev
@@ -5367,6 +5408,28 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sxfer
+operator|->
+name|state
+operator|!=
+name|LIBUSB_SUPER_XFER_ST_PEND
+condition|)
+block|{
+comment|/* only update the transfer status */
+name|uxfer
+operator|->
+name|status
+operator|=
+name|LIBUSB_TRANSFER_CANCELLED
+expr_stmt|;
+name|retval
+operator|=
+name|LIBUSB_ERROR_NOT_FOUND
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|sxfer
@@ -5422,6 +5485,10 @@ name|NULL
 condition|)
 block|{
 comment|/* not started */
+name|retval
+operator|=
+name|LIBUSB_ERROR_NOT_FOUND
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -5498,6 +5565,10 @@ block|}
 else|else
 block|{
 comment|/* not started */
+name|retval
+operator|=
+name|LIBUSB_ERROR_NOT_FOUND
+expr_stmt|;
 block|}
 name|CTX_UNLOCK
 argument_list|(
@@ -5519,7 +5590,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|retval
 operator|)
 return|;
 block|}
