@@ -1948,6 +1948,7 @@ name|r
 parameter_list|)
 block|{
 comment|/* 	 * If this is a memory resource, track the direct mapping 	 * in the uncached MIPS KSEG1 segment. 	 */
+comment|/* XXX we shouldn't be supporting sys_res_ioport here */
 if|if
 condition|(
 operator|(
@@ -2038,6 +2039,9 @@ name|r
 argument_list|,
 operator|(
 name|bus_space_handle_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|vaddr
 argument_list|)
