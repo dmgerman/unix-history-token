@@ -9472,6 +9472,8 @@ operator|->
 name|m_len
 operator|=
 name|buflen
+operator|-
+name|ETHER_CRC_LEN
 expr_stmt|;
 name|m
 operator|->
@@ -9480,14 +9482,6 @@ operator|.
 name|rcvif
 operator|=
 name|ifp
-expr_stmt|;
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-operator|-
-name|ETHER_CRC_LEN
-argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
