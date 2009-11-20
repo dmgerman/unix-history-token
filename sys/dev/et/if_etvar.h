@@ -339,10 +339,9 @@ comment|/* ET_TDCTRL2_ */
 block|}
 end_block
 
-begin_expr_stmt
-name|__packed
-expr_stmt|;
-end_expr_stmt
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -387,7 +386,6 @@ name|rd_ctrl
 decl_stmt|;
 comment|/* ET_RDCTRL_ */
 block|}
-name|__packed
 struct|;
 end_struct
 
@@ -410,7 +408,6 @@ name|rxst_info2
 decl_stmt|;
 comment|/* ET_RXST_INFO2_ */
 block|}
-name|__packed
 struct|;
 end_struct
 
@@ -468,7 +465,6 @@ name|rxs_stat_ring
 decl_stmt|;
 comment|/* ET_RXS_STATRING_ */
 block|}
-name|__packed
 struct|;
 end_struct
 
