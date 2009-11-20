@@ -320,24 +320,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|_libc_once
-parameter_list|(
-name|pthread_once_t
-modifier|*
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Set the TLS thread pointer  */
 end_comment

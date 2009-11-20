@@ -42,10 +42,11 @@ file|"libc_private.h"
 end_include
 
 begin_comment
-comment|/*  * This implements pthread_once() for the single-threaded case.  It is  * non-static so that it can be used by _pthread_stubs.c.  */
+comment|/* This implements pthread_once() for the single-threaded case. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|_libc_once
 parameter_list|(
