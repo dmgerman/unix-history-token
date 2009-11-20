@@ -15,6 +15,12 @@ directive|define
 name|__OCTEON_PCMAP_REGS_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"opt_cputype.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1830,11 +1836,11 @@ begin_comment
 comment|/*  PTR_SIZE == sizeof(uint32_t)  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISA_MIPS32
+end_ifdef
 
 begin_define
 define|#
