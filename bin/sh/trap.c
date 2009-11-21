@@ -587,6 +587,11 @@ decl_stmt|;
 name|int
 name|signo
 decl_stmt|;
+name|int
+name|errors
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -826,14 +831,20 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+block|{
+name|out2fmt_flush
 argument_list|(
-literal|"bad signal %s"
+literal|"trap: bad signal %s\n"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+name|errors
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|INTOFF
 expr_stmt|;
 if|if
@@ -887,7 +898,7 @@ operator|++
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|errors
 return|;
 block|}
 end_function
