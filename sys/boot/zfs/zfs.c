@@ -395,7 +395,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Unexpected object set type %lld\n"
+literal|"Unexpected object set type %llu\n"
 argument_list|,
 name|spa
 operator|->
@@ -1897,7 +1897,7 @@ literal|1
 init|;
 name|slice
 operator|<=
-literal|4
+literal|128
 condition|;
 name|slice
 operator|++

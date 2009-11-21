@@ -1218,6 +1218,56 @@ name|VDEV_LABELS
 value|4
 end_define
 
+begin_comment
+comment|/*  * Gang block headers are self-checksumming and contain an array  * of block pointers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPA_GANGBLOCKSIZE
+value|SPA_MINBLOCKSIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_GBH_NBLKPTRS
+value|((SPA_GANGBLOCKSIZE - \ 	sizeof (zio_block_tail_t)) / sizeof (blkptr_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_GBH_FILLER
+value|((SPA_GANGBLOCKSIZE - \ 	sizeof (zio_block_tail_t) - \ 	(SPA_GBH_NBLKPTRS * sizeof (blkptr_t))) /\ 	sizeof (uint64_t))
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|zio_gbh
+block|{
+name|blkptr_t
+name|zg_blkptr
+index|[
+name|SPA_GBH_NBLKPTRS
+index|]
+decl_stmt|;
+name|uint64_t
+name|zg_filler
+index|[
+name|SPA_GBH_FILLER
+index|]
+decl_stmt|;
+name|zio_block_tail_t
+name|zg_tail
+decl_stmt|;
+block|}
+name|zio_gbh_phys_t
+typedef|;
+end_typedef
+
 begin_enum
 enum|enum
 name|zio_checksum
