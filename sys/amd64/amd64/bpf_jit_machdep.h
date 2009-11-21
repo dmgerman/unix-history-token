@@ -328,7 +328,40 @@ value|3
 end_define
 
 begin_comment
-comment|/* A stream of native binary code.*/
+comment|/* Optimization flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_JIT_FLAG_RET
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JIT_FLAG_JMP
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JIT_FLAG_MEM
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JIT_FLAG_ALL
+define|\
+value|(BPF_JIT_FLAG_JMP | BPF_JIT_FLAG_MEM)
+end_define
+
+begin_comment
+comment|/* A stream of native binary code */
 end_comment
 
 begin_typedef
@@ -385,7 +418,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * native Instruction Macros  */
+comment|/*  * Native instruction macros  */
 end_comment
 
 begin_comment
@@ -629,15 +662,27 @@ value|do {							\ 	emitm(&stream, (5<< 4) | (0<< 3) | (r64& 0x7), 1);		\ } whil
 end_define
 
 begin_comment
-comment|/* leave/ret */
+comment|/* leaveq */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LEAVE_RET
+name|LEAVE
 parameter_list|()
-value|do {						\ 	emitm(&stream, 0xc3c9, 2);					\ } while (0)
+value|do {							\ 	emitm(&stream, 0xc9, 1);					\ } while (0)
+end_define
+
+begin_comment
+comment|/* retq */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RET
+parameter_list|()
+value|do {							\ 	emitm(&stream, 0xc3, 1);					\ } while (0)
 end_define
 
 begin_comment
