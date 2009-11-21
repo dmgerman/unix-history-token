@@ -7148,6 +7148,7 @@ name|el
 condition|)
 endif|#
 directive|endif
+block|{
 name|out2str
 argument_list|(
 name|getprompt
@@ -7156,6 +7157,12 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|flushout
+argument_list|(
+name|out2
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

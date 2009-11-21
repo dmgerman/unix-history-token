@@ -815,7 +815,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: turning off NDELAY mode\n"
 argument_list|)
@@ -1243,7 +1243,7 @@ name|sp
 decl_stmt|;
 name|INTOFF
 expr_stmt|;
-comment|/*dprintf("*** calling pushstring: %s, %d\n", s, len);*/
+comment|/*out2fmt_flush("*** calling pushstring: %s, %d\n", s, len);*/
 if|if
 condition|(
 name|parsefile
@@ -1386,7 +1386,7 @@ name|sp
 operator|->
 name|prevlleft
 expr_stmt|;
-comment|/*dprintf("*** calling popstring: restoring to '%s'\n", parsenextc);*/
+comment|/*out2fmt_flush("*** calling popstring: restoring to '%s'\n", parsenextc);*/
 if|if
 condition|(
 name|sp

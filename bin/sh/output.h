@@ -265,7 +265,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|dprintf
+name|out2fmt_flush
 parameter_list|(
 specifier|const
 name|char

@@ -288,7 +288,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 else|else
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: can't initialize history\n"
 argument_list|)
@@ -422,7 +422,7 @@ else|else
 block|{
 name|bad
 label|:
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: can't initialize editing\n"
 argument_list|)
@@ -1361,6 +1361,11 @@ block|{
 name|out2str
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|flushout
+argument_list|(
+name|out2
 argument_list|)
 expr_stmt|;
 block|}

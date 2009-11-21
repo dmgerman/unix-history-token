@@ -729,7 +729,7 @@ condition|)
 block|{
 name|out
 label|:
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: can't access tty; job control turned off\n"
 argument_list|)
@@ -5276,7 +5276,7 @@ operator|==
 name|JOBSTOPPED
 condition|)
 block|{
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"You have stopped jobs.\n"
 argument_list|)

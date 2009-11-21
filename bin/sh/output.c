@@ -214,7 +214,7 @@ literal|0
 block|,
 name|NULL
 block|,
-literal|100
+literal|256
 block|,
 literal|2
 block|,
@@ -426,17 +426,6 @@ operator|*
 name|p
 operator|++
 argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|file
-operator|==
-name|out2
-condition|)
-name|flushout
-argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
@@ -1011,7 +1000,7 @@ end_function
 
 begin_function
 name|void
-name|dprintf
+name|out2fmt_flush
 parameter_list|(
 specifier|const
 name|char

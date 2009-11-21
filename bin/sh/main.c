@@ -518,7 +518,7 @@ name|NULL
 operator|&&
 name|iflag
 condition|)
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: cannot determine working directory\n"
 argument_list|)
@@ -816,7 +816,7 @@ operator|!
 name|Iflag
 condition|)
 break|break;
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"\nUse \"exit\" to leave shell.\n"
 argument_list|)
