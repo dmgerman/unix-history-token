@@ -13202,6 +13202,44 @@ value|32
 end_define
 
 begin_comment
+comment|/* Maximum DMA address for controllers that have 40bit DMA address bug. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BUS_SPACE_MAXADDR
+operator|<
+literal|0xFFFFFFFFFF
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BGE_DMA_MAXADDR
+value|BUS_SPACE_MAXADDR
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BGE_DMA_MAXADDR
+value|0xFFFFFFFFFF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Ring structures. Most of these reside in host memory and we tell  * the NIC where they are via the ring control blocks. The exceptions  * are the tx and command rings, which live in NIC memory and which  * we access via the shared memory window.  */
 end_comment
 
@@ -13621,6 +13659,14 @@ define|#
 directive|define
 name|BGE_FLAG_5755_PLUS
 value|0x00010000
+define|#
+directive|define
+name|BGE_FLAG_40BIT_BUG
+value|0x00020000
+define|#
+directive|define
+name|BGE_FLAG_4G_BNDRY_BUG
+value|0x00040000
 define|#
 directive|define
 name|BGE_FLAG_RX_ALIGNBUG
