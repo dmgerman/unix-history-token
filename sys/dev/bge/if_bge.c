@@ -1771,6 +1771,27 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|struct
+name|mbuf
+modifier|*
+name|bge_setup_tso
+parameter_list|(
+name|struct
+name|bge_softc
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|uint16_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|bge_encap
 parameter_list|(
