@@ -7763,6 +7763,9 @@ name|initializecpu
 argument_list|()
 expr_stmt|;
 comment|/* Initialize CPU registers */
+name|initializecpucache
+argument_list|()
+expr_stmt|;
 comment|/* make an initial tss so cpu can get interrupt stack on syscall! */
 name|common_tss
 index|[
