@@ -2562,7 +2562,7 @@ if|if
 condition|(
 name|ep
 operator|->
-name|refcount
+name|refcount_alloc
 operator|!=
 literal|0
 condition|)

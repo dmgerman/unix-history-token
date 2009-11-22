@@ -529,9 +529,6 @@ comment|/* set by HC driver */
 name|uint16_t
 name|isoc_next
 decl_stmt|;
-name|uint16_t
-name|refcount
-decl_stmt|;
 name|uint8_t
 name|toggle_next
 range|:
@@ -559,6 +556,31 @@ name|uint8_t
 name|iface_index
 decl_stmt|;
 comment|/* not used by "default endpoint" */
+name|uint8_t
+name|refcount_alloc
+decl_stmt|;
+comment|/* allocation refcount */
+name|uint8_t
+name|refcount_bw
+decl_stmt|;
+comment|/* bandwidth refcount */
+define|#
+directive|define
+name|USB_EP_REF_MAX
+value|0x3f
+comment|/* High-Speed resource allocation (valid if "refcount_bw"> 0) */
+name|uint8_t
+name|usb_smask
+decl_stmt|;
+comment|/* USB start mask */
+name|uint8_t
+name|usb_cmask
+decl_stmt|;
+comment|/* USB complete mask */
+name|uint8_t
+name|usb_uframe
+decl_stmt|;
+comment|/* USB microframe */
 block|}
 struct|;
 end_struct
