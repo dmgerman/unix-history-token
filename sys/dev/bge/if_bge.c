@@ -5536,8 +5536,6 @@ name|bge_cdata
 operator|.
 name|bge_rx_std_ring_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
-operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
@@ -5796,8 +5794,6 @@ name|bge_cdata
 operator|.
 name|bge_rx_jumbo_ring_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
-operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
