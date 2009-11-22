@@ -13561,6 +13561,15 @@ name|ifmedia
 name|bge_ifmedia
 decl_stmt|;
 comment|/* TBI media info */
+name|int
+name|bge_expcap
+decl_stmt|;
+name|int
+name|bge_msicap
+decl_stmt|;
+name|int
+name|bge_pcixcap
+decl_stmt|;
 name|uint32_t
 name|bge_flags
 decl_stmt|;
