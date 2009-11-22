@@ -240,7 +240,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This structure is associated with the FIFO vnode and stores  * the state associated with the FIFO.  */
+comment|/*  * This structure is associated with the FIFO vnode and stores  * the state associated with the FIFO.  * Notes about locking:  *   - fi_readsock and fi_writesock are invariant since init time.  *   - fi_readers and fi_writers are vnode lock protected.  *   - fi_wgen is fif_mtx lock protected.  */
 end_comment
 
 begin_struct
@@ -993,7 +993,7 @@ operator|=
 name|fip
 expr_stmt|;
 block|}
-comment|/* 	 * General access to fi_readers and fi_writers is protected using 	 * the vnode lock. 	 * 	 * Protect the increment of fi_readers and fi_writers and the 	 * associated calls to wakeup() with the fifo mutex in addition 	 * to the vnode lock.  This allows the vnode lock to be dropped 	 * for the msleep() calls below, and using the fifo mutex with 	 * msleep() prevents the wakeup from being missed. 	 */
+comment|/* 	 * Use the fifo_mtx lock here, in addition to the vnode lock, 	 * in order to allow vnode lock dropping before msleep() calls 	 * and still avoiding missed wakeups. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1123,6 +1123,19 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|fifo_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fip
+operator|->
+name|fi_writers
+operator|==
+literal|0
+condition|)
+name|fifo_cleanup
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
