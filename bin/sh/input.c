@@ -1867,6 +1867,67 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return current file (to go back to it later using popfilesupto()).  */
+end_comment
+
+begin_function
+name|struct
+name|parsefile
+modifier|*
+name|getcurrentfile
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|parsefile
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Pop files until the given file is on top again. Useful for regular  * builtins that read shell commands from files or strings.  * If the given file is not an active file, an error is raised.  */
+end_comment
+
+begin_function
+name|void
+name|popfilesupto
+parameter_list|(
+name|struct
+name|parsefile
+modifier|*
+name|file
+parameter_list|)
+block|{
+while|while
+condition|(
+name|parsefile
+operator|!=
+name|file
+operator|&&
+name|parsefile
+operator|!=
+operator|&
+name|basepf
+condition|)
+name|popfile
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|parsefile
+operator|!=
+name|file
+condition|)
+name|error
+argument_list|(
+literal|"popfilesupto() misused"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return to top level.  */
 end_comment
 

@@ -2738,6 +2738,11 @@ name|localvar
 modifier|*
 name|savelocalvars
 decl_stmt|;
+name|struct
+name|parsefile
+modifier|*
+name|savetopfile
+decl_stmt|;
 specifier|volatile
 name|int
 name|e
@@ -4063,6 +4068,11 @@ name|savecmdname
 operator|=
 name|commandname
 expr_stmt|;
+name|savetopfile
+operator|=
+name|getcurrentfile
+argument_list|()
+expr_stmt|;
 name|cmdenviron
 operator|=
 name|varlist
@@ -4256,6 +4266,11 @@ condition|)
 name|exraise
 argument_list|(
 name|e
+argument_list|)
+expr_stmt|;
+name|popfilesupto
+argument_list|(
+name|savetopfile
 argument_list|)
 expr_stmt|;
 name|FORCEINTON
