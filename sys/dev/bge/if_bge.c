@@ -8980,6 +8980,30 @@ name|bge_tx_cons_idx
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Set up status block size. */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5700
+operator|&&
+name|sc
+operator|->
+name|bge_chipid
+operator|!=
+name|BGE_CHIPID_BCM5700_C0
+condition|)
+name|val
+operator|=
+name|BGE_STATBLKSZ_FULL
+expr_stmt|;
+else|else
+name|val
+operator|=
+name|BGE_STATBLKSZ_32BYTE
+expr_stmt|;
 comment|/* Turn on host coalescing state machine */
 name|CSR_WRITE_4
 argument_list|(
@@ -8987,6 +9011,8 @@ name|sc
 argument_list|,
 name|BGE_HCC_MODE
 argument_list|,
+name|val
+operator||
 name|BGE_HCCMODE_ENABLE
 argument_list|)
 expr_stmt|;
@@ -10686,6 +10712,8 @@ name|bus_addr_t
 name|lowaddr
 decl_stmt|;
 name|bus_size_t
+name|sbsz
+decl_stmt|,
 name|txsegsz
 decl_stmt|,
 name|txmaxsegsz
@@ -12031,7 +12059,30 @@ name|ctx
 operator|.
 name|bge_busaddr
 expr_stmt|;
-comment|/* Create tag for status block. */
+comment|/* 	 * Create tag for status block. 	 * Because we only use single Tx/Rx/Rx return ring, use 	 * minimum status block size except BCM5700 AX/BX which 	 * seems to want to see full status block size regardless 	 * of configured number of ring. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5700
+operator|&&
+name|sc
+operator|->
+name|bge_chipid
+operator|!=
+name|BGE_CHIPID_BCM5700_C0
+condition|)
+name|sbsz
+operator|=
+name|BGE_STATUS_BLK_SZ
+expr_stmt|;
+else|else
+name|sbsz
+operator|=
+literal|32
+expr_stmt|;
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -12054,11 +12105,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|BGE_STATUS_BLK_SZ
+name|sbsz
 argument_list|,
 literal|1
 argument_list|,
-name|BGE_STATUS_BLK_SZ
+name|sbsz
 argument_list|,
 literal|0
 argument_list|,
@@ -12085,7 +12136,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"could not allocate dma tag\n"
+literal|"could not allocate status dma tag\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -12148,7 +12199,7 @@ name|bge_ldata
 operator|.
 name|bge_status_block
 argument_list|,
-name|BGE_STATUS_BLK_SZ
+name|sbsz
 argument_list|)
 expr_stmt|;
 comment|/* Load the address of the status block. */
@@ -12186,7 +12237,7 @@ name|bge_ldata
 operator|.
 name|bge_status_block
 argument_list|,
-name|BGE_STATUS_BLK_SZ
+name|sbsz
 argument_list|,
 name|bge_dma_map_addr
 argument_list|,
