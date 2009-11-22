@@ -4665,6 +4665,11 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+name|STACK_SAVE
+argument_list|(
+name|lk
+argument_list|)
+expr_stmt|;
 comment|/* 	 * In order to preserve waiters flags, just spin. 	 */
 for|for
 control|(
