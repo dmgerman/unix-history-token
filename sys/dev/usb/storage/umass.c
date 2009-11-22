@@ -442,6 +442,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.umass.debug"
+argument_list|,
+operator|&
+name|umass_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_else
 else|#
 directive|else
