@@ -8054,6 +8054,20 @@ name|BGE_RDMAMODE_FIFO_LONG_BURST
 value|0x00030000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_RDMAMODE_TSO4_ENABLE
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMAMODE_TSO6_ENABLE
+value|0x10000000
+end_define
+
 begin_comment
 comment|/* Read DMA status register */
 end_comment
@@ -11098,7 +11112,7 @@ name|uint16_t
 name|bge_vlan_tag
 decl_stmt|;
 name|uint16_t
-name|bge_rsvd
+name|bge_mss
 decl_stmt|;
 else|#
 directive|else
@@ -11109,7 +11123,7 @@ name|uint16_t
 name|bge_flags
 decl_stmt|;
 name|uint16_t
-name|bge_rsvd
+name|bge_mss
 decl_stmt|;
 name|uint16_t
 name|bge_vlan_tag
@@ -13201,6 +13215,13 @@ name|BGE_NSEG_NEW
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_TSOSEG_SZ
+value|4096
+end_define
+
 begin_comment
 comment|/* Maximum DMA address for controllers that have 40bit DMA address bug. */
 end_comment
@@ -13639,6 +13660,10 @@ define|#
 directive|define
 name|BGE_FLAG_PCIE
 value|0x00000400
+define|#
+directive|define
+name|BGE_FLAG_TSO
+value|0x00000800
 define|#
 directive|define
 name|BGE_FLAG_5700_FAMILY
