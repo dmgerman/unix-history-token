@@ -14739,7 +14739,7 @@ literal|29
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * Set GPHY Power Down Override to leave GPHY 	 * powered up in D0 uninitialized. 	 */
+comment|/* 	 * Set GPHY Power Down Override to leave GPHY 	 * powered up in D0 uninitialized. 	 */
 if|if
 condition|(
 name|BGE_IS_5705_PLUS
@@ -20559,7 +20559,7 @@ argument_list|,
 name|BGE_RESET_STOP
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Keep the ASF firmware running if up. 	 */
+comment|/* 	 * Keep the ASF firmware running if up. 	 */
 if|if
 condition|(
 name|sc
