@@ -3456,6 +3456,12 @@ expr_stmt|;
 comment|/* setup temp */
 name|temp
 operator|.
+name|pc
+operator|=
+name|NULL
+expr_stmt|;
+name|temp
+operator|.
 name|td
 operator|=
 name|NULL
