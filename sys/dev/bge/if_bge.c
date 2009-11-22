@@ -11435,7 +11435,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"can't create sapre DMA map for jumbo RX\n"
+literal|"can't create spare DMA map for jumbo RX\n"
 argument_list|)
 expr_stmt|;
 return|return
