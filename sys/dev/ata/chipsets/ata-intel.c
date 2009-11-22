@@ -2264,15 +2264,15 @@ literal|0x00
 block|,
 literal|0x01
 block|,
-literal|0x10
+literal|0x02
 block|,
 literal|0x01
 block|,
-literal|0x10
+literal|0x02
 block|,
 literal|0x01
 block|,
-literal|0x10
+literal|0x02
 block|}
 decl_stmt|;
 name|pci_write_config
@@ -2385,7 +2385,7 @@ if|if
 condition|(
 name|mode
 operator|>=
-name|ATA_UDMA2
+name|ATA_UDMA3
 condition|)
 name|reg54
 operator||=
