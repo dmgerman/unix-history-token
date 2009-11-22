@@ -13762,6 +13762,15 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
+name|struct
+name|task
+name|bge_intr_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|bge_tq
+decl_stmt|;
 block|}
 struct|;
 end_struct
