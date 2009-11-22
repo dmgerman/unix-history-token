@@ -6265,6 +6265,10 @@ name|bq_startlinno
 init|=
 name|plinno
 decl_stmt|;
+name|str
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -6316,10 +6320,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|INTOFF
-expr_stmt|;
-name|str
-operator|=
-name|NULL
 expr_stmt|;
 name|savelen
 operator|=

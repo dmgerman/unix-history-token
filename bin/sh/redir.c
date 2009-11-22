@@ -622,7 +622,7 @@ decl_stmt|;
 name|int
 name|f
 decl_stmt|;
-comment|/* 	 * We suppress interrupts so that we won't leave open file 	 * descriptors around.  This may not be such a good idea because 	 * an open of a device or a fifo can block indefinitely. 	 */
+comment|/* 	 * We suppress interrupts so that we won't leave open file 	 * descriptors around.  Because the signal handler remains 	 * installed and we do not use system call restart, interrupts 	 * will still abort blocking opens such as fifos (they will fail 	 * with EINTR). There is, however, a race condition if an interrupt 	 * arrives after INTOFF and before open blocks. 	 */
 name|INTOFF
 expr_stmt|;
 name|memory

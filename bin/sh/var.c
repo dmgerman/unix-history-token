@@ -834,6 +834,14 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|inton
+decl_stmt|;
+name|inton
+operator|=
+name|is_int_on
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -867,6 +875,11 @@ block|}
 name|handler
 operator|=
 name|savehandler
+expr_stmt|;
+name|SETINTON
+argument_list|(
+name|inton
+argument_list|)
 expr_stmt|;
 return|return
 name|err

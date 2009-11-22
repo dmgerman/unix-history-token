@@ -3782,8 +3782,6 @@ operator|.
 name|func
 argument_list|)
 expr_stmt|;
-name|INTON
-expr_stmt|;
 name|savehandler
 operator|=
 name|handler
@@ -3857,6 +3855,8 @@ name|handler
 operator|=
 operator|&
 name|jmploc
+expr_stmt|;
+name|INTON
 expr_stmt|;
 for|for
 control|(

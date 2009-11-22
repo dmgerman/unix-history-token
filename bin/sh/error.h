@@ -132,6 +132,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|is_int_on
+parameter_list|()
+value|suppressint
+end_define
+
+begin_define
+define|#
+directive|define
+name|SETINTON
+parameter_list|(
+name|s
+parameter_list|)
+value|suppressint = (s)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FORCEINTON
 value|{suppressint = 0; if (intpending) onint();}
 end_define
