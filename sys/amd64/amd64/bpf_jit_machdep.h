@@ -334,22 +334,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BPF_JIT_FLAG_RET
+name|BPF_JIT_FRET
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|BPF_JIT_FLAG_JMP
+name|BPF_JIT_FPKT
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|BPF_JIT_FLAG_MEM
+name|BPF_JIT_FMEM
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JIT_FJMP
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_JIT_FLEN
+value|0x10
 end_define
 
 begin_define
@@ -357,7 +371,7 @@ define|#
 directive|define
 name|BPF_JIT_FLAG_ALL
 define|\
-value|(BPF_JIT_FLAG_JMP | BPF_JIT_FLAG_MEM)
+value|(BPF_JIT_FPKT | BPF_JIT_FMEM | BPF_JIT_FJMP | BPF_JIT_FLEN)
 end_define
 
 begin_comment
