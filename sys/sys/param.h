@@ -518,6 +518,29 @@ begin_comment
 comment|/* size of an mbuf cluster */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|PAGE_SIZE
+operator|<
+literal|2048
+end_if
+
+begin_define
+define|#
+directive|define
+name|MJUMPAGESIZE
+value|MCLBYTES
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|PAGE_SIZE
+operator|<=
+literal|8192
+end_elif
+
 begin_define
 define|#
 directive|define
@@ -525,9 +548,22 @@ name|MJUMPAGESIZE
 value|PAGE_SIZE
 end_define
 
-begin_comment
-comment|/* jumbo cluster 4k */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MJUMPAGESIZE
+value|(8 * 1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
