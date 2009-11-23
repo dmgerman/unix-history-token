@@ -22,7 +22,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -44,7 +44,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -66,7 +66,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -88,7 +88,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -110,7 +110,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -132,7 +132,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -154,7 +154,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -176,7 +176,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -198,7 +198,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -220,7 +220,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -242,7 +242,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -264,7 +264,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -286,7 +286,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -308,7 +308,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -330,7 +330,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -352,7 +352,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -374,7 +374,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -396,7 +396,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -418,7 +418,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -440,7 +440,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -462,7 +462,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -484,7 +484,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -506,7 +506,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -528,7 +528,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -550,7 +550,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -572,7 +572,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -594,7 +594,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -616,7 +616,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -638,7 +638,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -660,7 +660,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -682,7 +682,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -704,7 +704,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -726,7 +726,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -748,7 +748,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -770,7 +770,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -792,7 +792,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -814,7 +814,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -836,7 +836,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -858,7 +858,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -880,7 +880,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -902,7 +902,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -924,7 +924,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -946,7 +946,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -968,7 +968,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -990,7 +990,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1012,7 +1012,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1034,7 +1034,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1056,7 +1056,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1078,7 +1078,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1100,7 +1100,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1122,7 +1122,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1144,7 +1144,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1166,7 +1166,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1188,7 +1188,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1210,7 +1210,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1232,7 +1232,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1254,7 +1254,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1276,7 +1276,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1298,7 +1298,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1320,7 +1320,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1342,7 +1342,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1364,7 +1364,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1386,7 +1386,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1408,7 +1408,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1430,7 +1430,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1452,7 +1452,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1474,7 +1474,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1496,7 +1496,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1518,7 +1518,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1540,7 +1540,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1562,7 +1562,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1584,7 +1584,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1606,7 +1606,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1628,7 +1628,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1650,7 +1650,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1672,7 +1672,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1694,7 +1694,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1716,7 +1716,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1738,7 +1738,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1760,7 +1760,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1782,7 +1782,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1804,7 +1804,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1826,7 +1826,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1848,7 +1848,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1870,7 +1870,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1892,7 +1892,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1914,7 +1914,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1936,7 +1936,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1958,7 +1958,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -1980,7 +1980,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2002,7 +2002,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2024,7 +2024,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2046,7 +2046,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2068,7 +2068,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2090,7 +2090,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2112,7 +2112,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2134,7 +2134,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2156,7 +2156,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2178,7 +2178,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2200,7 +2200,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2222,7 +2222,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2244,7 +2244,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2266,7 +2266,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2288,7 +2288,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2310,7 +2310,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2332,7 +2332,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2354,7 +2354,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2376,7 +2376,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2398,7 +2398,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2420,7 +2420,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2442,7 +2442,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2464,7 +2464,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2486,7 +2486,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2508,7 +2508,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2530,7 +2530,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2552,7 +2552,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2574,7 +2574,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2596,7 +2596,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2618,7 +2618,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2640,7 +2640,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2662,7 +2662,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2684,7 +2684,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2706,7 +2706,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2728,7 +2728,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2750,7 +2750,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2772,7 +2772,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2794,7 +2794,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2816,7 +2816,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2838,7 +2838,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2860,7 +2860,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2882,7 +2882,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2904,7 +2904,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2926,7 +2926,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2948,7 +2948,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2970,7 +2970,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -2992,7 +2992,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3014,7 +3014,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3036,7 +3036,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3058,7 +3058,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3080,7 +3080,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3102,7 +3102,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3124,7 +3124,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3146,7 +3146,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3168,7 +3168,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3190,7 +3190,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3212,7 +3212,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3234,7 +3234,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3256,7 +3256,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3278,7 +3278,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3300,7 +3300,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3322,7 +3322,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3344,7 +3344,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3366,7 +3366,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3388,7 +3388,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3410,7 +3410,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3432,7 +3432,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3454,7 +3454,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3476,7 +3476,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3498,7 +3498,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3520,7 +3520,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3542,7 +3542,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3564,7 +3564,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3586,7 +3586,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3608,7 +3608,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3630,7 +3630,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3652,7 +3652,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3674,7 +3674,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3696,7 +3696,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3718,7 +3718,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3740,7 +3740,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3762,7 +3762,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3784,7 +3784,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3806,7 +3806,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3828,7 +3828,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3850,7 +3850,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3872,7 +3872,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3894,7 +3894,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3916,7 +3916,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3938,7 +3938,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3960,7 +3960,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -3982,7 +3982,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4004,7 +4004,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4026,7 +4026,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4048,7 +4048,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4070,7 +4070,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4092,7 +4092,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4114,7 +4114,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4136,7 +4136,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4158,7 +4158,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4180,7 +4180,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4202,7 +4202,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4224,7 +4224,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4246,7 +4246,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4268,7 +4268,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4290,7 +4290,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4312,7 +4312,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4334,7 +4334,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4356,7 +4356,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4378,7 +4378,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4400,7 +4400,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4422,7 +4422,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4444,7 +4444,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4466,7 +4466,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4488,7 +4488,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4510,7 +4510,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4532,7 +4532,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4554,7 +4554,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4576,7 +4576,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4598,7 +4598,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4620,7 +4620,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4642,7 +4642,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4664,7 +4664,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4686,7 +4686,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4708,7 +4708,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4730,7 +4730,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4752,7 +4752,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4774,7 +4774,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4796,7 +4796,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4818,7 +4818,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4840,7 +4840,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4862,7 +4862,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4884,7 +4884,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4906,7 +4906,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4928,7 +4928,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4950,7 +4950,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4972,7 +4972,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -4994,7 +4994,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5016,7 +5016,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5038,7 +5038,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5060,7 +5060,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5082,7 +5082,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5104,7 +5104,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5126,7 +5126,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5148,7 +5148,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5170,7 +5170,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5192,7 +5192,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5214,7 +5214,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5236,7 +5236,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5258,7 +5258,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5280,7 +5280,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5302,7 +5302,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5324,7 +5324,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5346,7 +5346,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5368,7 +5368,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5390,7 +5390,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5412,7 +5412,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5434,7 +5434,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5456,7 +5456,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5478,7 +5478,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5500,7 +5500,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5522,7 +5522,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5544,7 +5544,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5566,7 +5566,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5588,7 +5588,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5610,7 +5610,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5632,7 +5632,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5654,7 +5654,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5676,7 +5676,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5698,7 +5698,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5720,7 +5720,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5742,7 +5742,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5764,7 +5764,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5786,7 +5786,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5808,7 +5808,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5830,7 +5830,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5852,7 +5852,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5874,7 +5874,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5896,7 +5896,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5918,7 +5918,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5940,7 +5940,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5962,7 +5962,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -5984,7 +5984,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6006,7 +6006,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6028,7 +6028,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6050,7 +6050,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6072,7 +6072,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6094,7 +6094,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6116,7 +6116,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6138,7 +6138,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6160,7 +6160,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6182,7 +6182,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6204,7 +6204,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6226,7 +6226,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6248,7 +6248,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6270,7 +6270,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6292,7 +6292,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6314,7 +6314,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6336,7 +6336,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6358,7 +6358,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6380,7 +6380,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6402,7 +6402,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6424,7 +6424,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6446,7 +6446,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6468,7 +6468,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6490,7 +6490,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6512,7 +6512,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6534,7 +6534,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6556,7 +6556,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6578,7 +6578,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6600,7 +6600,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6622,7 +6622,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6644,7 +6644,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6666,7 +6666,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6688,7 +6688,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6710,7 +6710,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6732,7 +6732,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6754,7 +6754,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6776,7 +6776,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6798,7 +6798,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6820,7 +6820,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6842,7 +6842,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6864,7 +6864,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6886,7 +6886,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6908,7 +6908,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6930,7 +6930,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6952,7 +6952,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6974,7 +6974,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -6996,7 +6996,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7018,7 +7018,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7040,7 +7040,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7062,7 +7062,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7084,7 +7084,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7106,7 +7106,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7128,7 +7128,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7150,7 +7150,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7172,7 +7172,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7194,7 +7194,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7216,7 +7216,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7238,7 +7238,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7260,7 +7260,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7282,7 +7282,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7304,7 +7304,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7326,7 +7326,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7348,7 +7348,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7370,7 +7370,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7392,7 +7392,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7414,7 +7414,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7436,7 +7436,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7458,7 +7458,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7480,7 +7480,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7502,7 +7502,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7524,7 +7524,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7546,7 +7546,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7568,7 +7568,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7590,7 +7590,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7612,7 +7612,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7634,7 +7634,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7656,7 +7656,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7678,7 +7678,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7700,7 +7700,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7722,7 +7722,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7744,7 +7744,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7766,7 +7766,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7788,7 +7788,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7810,7 +7810,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7832,7 +7832,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7854,7 +7854,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7876,7 +7876,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7898,7 +7898,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7920,7 +7920,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7942,7 +7942,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7964,7 +7964,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -7986,7 +7986,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8008,7 +8008,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8030,7 +8030,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8052,7 +8052,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8074,7 +8074,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8096,7 +8096,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8118,7 +8118,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8140,7 +8140,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8162,7 +8162,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8184,7 +8184,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8206,7 +8206,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8228,7 +8228,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8250,7 +8250,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8272,7 +8272,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8294,7 +8294,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8316,7 +8316,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8338,7 +8338,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8360,7 +8360,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8382,7 +8382,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8404,7 +8404,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8426,7 +8426,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8448,7 +8448,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8470,7 +8470,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8492,7 +8492,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8514,7 +8514,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8536,7 +8536,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8558,7 +8558,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8580,7 +8580,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8602,7 +8602,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8624,7 +8624,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8646,7 +8646,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8668,7 +8668,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8690,7 +8690,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8712,7 +8712,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8734,7 +8734,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8756,7 +8756,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8778,7 +8778,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8800,7 +8800,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8822,7 +8822,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8844,7 +8844,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8866,7 +8866,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8888,7 +8888,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8910,7 +8910,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8932,7 +8932,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8954,7 +8954,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8976,7 +8976,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -8998,7 +8998,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9020,7 +9020,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9042,7 +9042,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9064,7 +9064,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9086,7 +9086,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9108,7 +9108,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9130,7 +9130,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9152,7 +9152,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9174,7 +9174,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9196,7 +9196,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9218,7 +9218,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9240,7 +9240,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9262,7 +9262,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9284,7 +9284,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9306,7 +9306,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9328,7 +9328,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9350,7 +9350,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9372,7 +9372,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9394,7 +9394,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9416,7 +9416,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9438,7 +9438,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9460,7 +9460,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9482,7 +9482,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9504,7 +9504,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9526,7 +9526,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9548,7 +9548,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9570,7 +9570,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9592,7 +9592,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9614,7 +9614,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9636,7 +9636,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9658,7 +9658,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9680,7 +9680,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9702,7 +9702,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9724,7 +9724,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9746,7 +9746,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9768,7 +9768,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9790,7 +9790,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9812,7 +9812,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9834,7 +9834,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9856,7 +9856,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9878,7 +9878,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9900,7 +9900,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9922,7 +9922,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9944,7 +9944,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9966,7 +9966,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -9988,7 +9988,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10010,7 +10010,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10032,7 +10032,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10054,7 +10054,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10076,7 +10076,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10098,7 +10098,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10120,7 +10120,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10142,7 +10142,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10164,7 +10164,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10186,7 +10186,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10208,7 +10208,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10230,7 +10230,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10252,7 +10252,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10274,7 +10274,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10296,7 +10296,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10318,7 +10318,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10340,7 +10340,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10362,7 +10362,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10384,7 +10384,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10406,7 +10406,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10428,7 +10428,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10450,7 +10450,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10472,7 +10472,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10494,7 +10494,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10516,7 +10516,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10538,7 +10538,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10560,7 +10560,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10582,7 +10582,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10604,7 +10604,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10626,7 +10626,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10648,7 +10648,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10670,7 +10670,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10692,7 +10692,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10714,7 +10714,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10736,7 +10736,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10758,7 +10758,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10780,7 +10780,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10802,7 +10802,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10824,7 +10824,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10846,7 +10846,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10868,7 +10868,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10890,7 +10890,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10912,7 +10912,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10934,7 +10934,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10956,7 +10956,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -10978,7 +10978,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
@@ -11000,7 +11000,7 @@ name|BPF_W
 operator|+
 name|BPF_ABS
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 block|,
 name|BPF_STMT
