@@ -2280,9 +2280,7 @@ name|sc
 argument_list|,
 name|EHCI_USBINTR
 argument_list|,
-name|sc
-operator|->
-name|sc_eintrs
+literal|0
 argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
