@@ -383,7 +383,7 @@ begin_define
 define|#
 directive|define
 name|PATH_BOOT3
-value|"/boot/loader"
+value|"/boot/zfsloader"
 end_define
 
 begin_define
