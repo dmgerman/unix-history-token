@@ -451,6 +451,7 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
+name|unsigned
 name|int
 parameter_list|,
 name|caddr_t
@@ -1261,6 +1262,7 @@ decl_stmt|,
 modifier|*
 name|imgp
 decl_stmt|;
+name|unsigned
 name|int
 name|peofs
 decl_stmt|;
@@ -3008,6 +3010,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|unsigned
 name|int
 name|pos
 decl_stmt|;
