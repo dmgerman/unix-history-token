@@ -1996,11 +1996,11 @@ name|ctlr
 init|=
 name|device_get_softc
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -2053,6 +2053,26 @@ operator|.
 name|command
 operator|!=
 name|ATA_WRITE_DMA
+operator|&&
+name|request
+operator|->
+name|u
+operator|.
+name|ata
+operator|.
+name|command
+operator|!=
+name|ATA_READ_DMA48
+operator|&&
+name|request
+operator|->
+name|u
+operator|.
+name|ata
+operator|.
+name|command
+operator|!=
+name|ATA_WRITE_DMA48
 condition|)
 block|{
 comment|/* disable the EDMA machinery */
@@ -2097,12 +2117,6 @@ name|request
 argument_list|)
 return|;
 block|}
-comment|/* check for 48 bit access and convert if needed */
-name|ata_modify_if_48bit
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
 comment|/* check sanity, setup SG list and DMA engine */
 if|if
 condition|(
@@ -2128,7 +2142,7 @@ name|device_printf
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|,
 literal|"setting up DMA failed\n"
 argument_list|)
@@ -3053,11 +3067,11 @@ name|ctlr
 init|=
 name|device_get_softc
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|request
 operator|->
-name|dev
+name|parent
 argument_list|)
 argument_list|)
 decl_stmt|;
