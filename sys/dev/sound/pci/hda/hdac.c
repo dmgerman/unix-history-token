@@ -330,8 +330,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_INTEL_82801J
+name|HDA_INTEL_82801JI
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x3a3e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_82801JD
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x3a6e)
 end_define
 
 begin_define
@@ -2243,9 +2250,17 @@ literal|0
 block|}
 block|,
 block|{
-name|HDA_INTEL_82801J
+name|HDA_INTEL_82801JI
 block|,
-literal|"Intel 82801J"
+literal|"Intel 82801JI"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_82801JD
+block|,
+literal|"Intel 82801JD"
 block|,
 literal|0
 block|}
