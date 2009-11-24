@@ -49,6 +49,12 @@ directive|include
 file|<machine/cache.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_cputype.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|mips_cache_ops
