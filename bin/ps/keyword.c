@@ -3180,6 +3180,11 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|realfmt
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
