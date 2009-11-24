@@ -28,6 +28,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_cputype.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -1072,6 +1078,27 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|kstack0
+operator|&
+name|PAGE_MASK
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"kstack0 is not aligned on a page boundary: %#lx\n"
+operator|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|kstack0
+operator|)
+argument_list|)
+expr_stmt|;
 name|thread0
 operator|.
 name|td_kstack
@@ -1083,8 +1110,6 @@ operator|.
 name|td_kstack_pages
 operator|=
 name|KSTACK_PAGES
-operator|-
-literal|1
 expr_stmt|;
 name|thread0
 operator|.
