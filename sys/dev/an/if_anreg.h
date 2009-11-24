@@ -1700,16 +1700,29 @@ begin_define
 define|#
 directive|define
 name|AN_TXCTL_80211
-define|\
-value|(AN_TXCTL_TXOK_INTR|AN_TXCTL_TXERR_INTR|AN_HEADERTYPE_80211|	\ 	AN_PAYLOADTYPE_LLC|AN_TXCTL_NORELEASE)
+value|(AN_HEADERTYPE_80211|AN_PAYLOADTYPE_LLC)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_TXCTL_8023
+value|(AN_HEADERTYPE_8023|AN_PAYLOADTYPE_ETHER)
+end_define
+
+begin_comment
+comment|/*  * Additions to transmit control bits for MPI350  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_TXCTL_HW
+parameter_list|(
+name|x
+parameter_list|)
 define|\
-value|(AN_TXCTL_TXOK_INTR|AN_TXCTL_TXERR_INTR|AN_HEADERTYPE_8023|	\ 	AN_PAYLOADTYPE_ETHER|AN_TXCTL_NORELEASE)
+value|( x ? (AN_TXCTL_NORELEASE) \ 	  : \ 	      (AN_TXCTL_TXOK_INTR|AN_TXCTL_TXERR_INTR|AN_TXCTL_NORELEASE) \ 	      )
 end_define
 
 begin_define
