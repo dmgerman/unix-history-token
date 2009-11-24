@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_cputype.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1085,7 +1091,6 @@ argument_list|,
 name|vaddr
 argument_list|)
 expr_stmt|;
-comment|/* IBM-PC: the type of bus_space_handle_t is u_int */
 ifdef|#
 directive|ifdef
 name|TARGET_OCTEON
