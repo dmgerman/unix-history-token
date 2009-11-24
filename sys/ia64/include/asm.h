@@ -86,7 +86,7 @@ parameter_list|,
 name|_n_args_
 parameter_list|)
 define|\
-value|.global	_name_;				\ 	.align	16;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0;		\ 	MCOUNT
+value|.global	_name_;				\ 	.align	32;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0;		\ 	MCOUNT
 end_define
 
 begin_define
@@ -99,7 +99,7 @@ parameter_list|,
 name|_n_args_
 parameter_list|)
 define|\
-value|.global	_name_;				\ 	.align	16;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0
+value|.global	_name_;				\ 	.align	32;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0
 end_define
 
 begin_comment
@@ -116,7 +116,7 @@ parameter_list|,
 name|_n_args_
 parameter_list|)
 define|\
-value|.align	16;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
+value|.align	32;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
 end_define
 
 begin_comment
@@ -281,7 +281,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|{	.mmi ;							\ 	alloc		r9 = ar.pfs, 0, 0, 8, 0 ;		\ 	mov		r31 = ar.k5 ;				\ 	mov		r10 = b0 ;; }				\ {	.mib ;							\ 	mov		r8 = SYSCALLNUM(name) ;			\ 	mov		b7 = r31 ; 				\ 	br.call.sptk	b0 = b7 ;; }
+value|.prologue ;						\ 	.unwabi		@svr4, 'S' ;				\ 	.save		rp, r0 ;				\ 	.body ;							\ {	.mmi ;							\ 	alloc		r9 = ar.pfs, 0, 0, 8, 0 ;		\ 	mov		r31 = ar.k5 ;				\ 	mov		r10 = b0 ;; }				\ {	.mib ;							\ 	mov		r8 = SYSCALLNUM(name) ;			\ 	mov		b7 = r31 ; 				\ 	br.call.sptk	b0 = b7 ;; }
 end_define
 
 begin_comment
