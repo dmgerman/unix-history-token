@@ -551,7 +551,7 @@ block|}
 end_function
 
 begin_function
-name|u_int8_t
+name|uint8_t
 name|generic_bs_r_1
 parameter_list|(
 name|void
@@ -579,7 +579,7 @@ block|}
 end_function
 
 begin_function
-name|u_int16_t
+name|uint16_t
 name|generic_bs_r_2
 parameter_list|(
 name|void
@@ -607,7 +607,7 @@ block|}
 end_function
 
 begin_function
-name|u_int32_t
+name|uint32_t
 name|generic_bs_r_4
 parameter_list|(
 name|void
@@ -648,7 +648,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|addr
 parameter_list|,
@@ -689,7 +689,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|addr
 parameter_list|,
@@ -735,7 +735,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|addr
 parameter_list|,
@@ -785,7 +785,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|addr
 parameter_list|,
@@ -837,7 +837,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|addr
 parameter_list|,
@@ -889,7 +889,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|addr
 parameter_list|,
@@ -945,7 +945,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|value
 parameter_list|)
 block|{
@@ -975,7 +975,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|value
 parameter_list|)
 block|{
@@ -1005,7 +1005,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|value
 parameter_list|)
 block|{
@@ -1040,7 +1040,7 @@ name|bus_size_t
 name|offset
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|addr
 parameter_list|,
@@ -1087,7 +1087,7 @@ name|bus_size_t
 name|offset
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|addr
 parameter_list|,
@@ -1134,7 +1134,7 @@ name|bus_size_t
 name|offset
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|addr
 parameter_list|,
@@ -1185,7 +1185,7 @@ name|bus_size_t
 name|offset
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|addr
 parameter_list|,
@@ -1238,7 +1238,7 @@ name|bus_size_t
 name|offset
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|addr
 parameter_list|,
@@ -1291,7 +1291,7 @@ name|bus_size_t
 name|offset
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|addr
 parameter_list|,
@@ -1347,7 +1347,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|value
 parameter_list|,
 name|size_t
@@ -1390,7 +1390,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|value
 parameter_list|,
 name|size_t
@@ -1433,7 +1433,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|value
 parameter_list|,
 name|size_t
@@ -1480,7 +1480,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|value
 parameter_list|,
 name|size_t
@@ -1531,7 +1531,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|value
 parameter_list|,
 name|size_t
@@ -1583,7 +1583,7 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|value
 parameter_list|,
 name|size_t
