@@ -2751,7 +2751,7 @@ name|octeon_uart_write_string
 argument_list|(
 literal|0
 argument_list|,
-literal|"\nPlatform Starting"
+literal|"Platform Starting\n"
 argument_list|)
 expr_stmt|;
 comment|/* From here on down likely is bogus */
@@ -2911,18 +2911,18 @@ expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
-comment|/* Panic here, after cninit */
-if|if
-condition|(
-name|mem
-operator|==
-literal|0
-condition|)
-name|panic
+name|printf
 argument_list|(
-literal|"No mem=XX parameter in arguments"
+literal|"Now is the time to get happy!\n"
 argument_list|)
 expr_stmt|;
+comment|/* Panic here, after cninit */
+if|#
+directive|if
+literal|0
+block|if (mem == 0) 		panic("No mem=XX parameter in arguments");
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"cmd line: "
