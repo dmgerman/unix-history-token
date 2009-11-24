@@ -2911,11 +2911,6 @@ expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Now is the time to get happy!\n"
-argument_list|)
-expr_stmt|;
 comment|/* Panic here, after cninit */
 if|#
 directive|if
