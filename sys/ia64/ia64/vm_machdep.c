@@ -263,22 +263,6 @@ expr|struct
 name|trapframe
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_highfp_mtx
-argument_list|,
-literal|"High FP lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -291,18 +275,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{
-name|mtx_destroy
-argument_list|(
-operator|&
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_highfp_mtx
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -360,6 +333,11 @@ name|trapframe
 modifier|*
 name|tf
 decl_stmt|;
+name|ia64_highfp_save
+argument_list|(
+name|td0
+argument_list|)
+expr_stmt|;
 name|tf
 operator|=
 name|td
