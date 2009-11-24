@@ -684,12 +684,25 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|MIPS_PRID_CID_CAVIUM
+case|:
+name|printf
+argument_list|(
+literal|"Cavium"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|MIPS_PRID_CID_PREHISTORIC
 case|:
 default|default:
 name|printf
 argument_list|(
-literal|"Unknown"
+literal|"Unknown cid %#x"
+argument_list|,
+name|cpuinfo
+operator|.
+name|cpu_vendor
 argument_list|)
 expr_stmt|;
 break|break;
