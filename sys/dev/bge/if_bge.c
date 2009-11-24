@@ -13255,6 +13255,28 @@ operator||=
 name|BGE_FLAG_PCIX
 expr_stmt|;
 block|}
+comment|/* 	 * The 40bit DMA bug applies to the 5714/5715 controllers and is 	 * not actually a MAC controller bug but an issue with the embedded 	 * PCIe to PCI-X bridge in the device. Use 40bit DMA workaround. 	 */
+if|if
+condition|(
+name|BGE_IS_5714_FAMILY
+argument_list|(
+name|sc
+argument_list|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|bge_flags
+operator|&
+name|BGE_FLAG_PCIX
+operator|)
+condition|)
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_40BIT_BUG
+expr_stmt|;
 comment|/* 	 * Allocate the interrupt, using MSI if possible.  These devices 	 * support 8 MSI messages, but only the first one is used in 	 * normal operation. 	 */
 name|rid
 operator|=
@@ -13908,28 +13930,6 @@ name|IFCAP_POLLING
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * The 40bit DMA bug applies to the 5714/5715 controllers and is 	 * not actually a MAC controller bug but an issue with the embedded 	 * PCIe to PCI-X bridge in the device. Use 40bit DMA workaround. 	 */
-if|if
-condition|(
-name|BGE_IS_5714_FAMILY
-argument_list|(
-name|sc
-argument_list|)
-operator|&&
-operator|(
-name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_PCIX
-operator|)
-condition|)
-name|sc
-operator|->
-name|bge_flags
-operator||=
-name|BGE_FLAG_40BIT_BUG
-expr_stmt|;
 comment|/* 	 * 5700 B0 chips do not support checksumming correctly due 	 * to hardware bugs. 	 */
 if|if
 condition|(
