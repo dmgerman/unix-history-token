@@ -125,6 +125,12 @@ directive|include
 file|<machine/hwfunc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_cputype.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -454,10 +460,11 @@ operator|+
 literal|6
 operator|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|TARGET_OCTEON
-comment|/* 		 * Octeon does 128 byte line-size. But Config-Sel1 doesn't show 		 * 128 line-size, 1 Set, 64 ways. 		 */
+comment|/* 	 * Octeon does 128 byte line-size. But Config-Sel1 doesn't show 	 * 128 line-size, 1 Set, 64 ways. 	 */
 name|cpuinfo
 operator|->
 name|l1
@@ -508,7 +515,6 @@ name|l1
 operator|.
 name|dc_nways
 expr_stmt|;
-block|}
 block|}
 end_function
 
