@@ -495,6 +495,13 @@ index|[
 name|SW_DEVS
 index|]
 decl_stmt|;
+name|struct
+name|callout
+name|sc_watchdog
+decl_stmt|;
+name|int
+name|sc_timer
+decl_stmt|;
 comment|/* Ethernet common data */
 name|void
 modifier|*
