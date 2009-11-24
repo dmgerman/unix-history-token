@@ -691,6 +691,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OCTEON_UART_SIZE
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCTEON_MIO_BOOT_BIST_STAT
 value|0x80011800000000F8ull
 end_define
