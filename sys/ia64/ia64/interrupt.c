@@ -680,7 +680,7 @@ name|ifa
 expr_stmt|;
 name|next
 label|:
-comment|/* 	 * Handle ExtINT interrupts by generating an INTA cycle to 	 * read the vector. 	 * IPI_STOP_HARD is mapped to IPI_STOP so it is not necessary 	 * to add it to this switch-like construct. 	 */
+comment|/* 	 * Handle ExtINT interrupts by generating an INTA cycle to 	 * read the vector. 	 */
 if|if
 condition|(
 name|vector
@@ -1095,6 +1095,20 @@ argument_list|(
 name|cpumask
 argument_list|)
 decl_stmt|;
+comment|/* Make sure IPI_STOP_HARD is mapped to IPI_STOP. */
+name|KASSERT
+argument_list|(
+name|IPI_STOP
+operator|==
+name|IPI_STOP_HARD
+argument_list|,
+operator|(
+literal|"%s: IPI_STOP_HARD not handled."
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|savectx
 argument_list|(
 name|PCPU_PTR
