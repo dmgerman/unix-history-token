@@ -287,10 +287,12 @@ name|void
 parameter_list|)
 block|{
 asm|__asm __volatile (
+literal|".set push\n"
 literal|".set mips64\n"
 literal|".word 0x041f0000\n"
+comment|/* xxx ICACHE */
 literal|"nop\n"
-literal|".set mips0\n"
+literal|".set pop\n"
 operator|:
 operator|:
 block|)
