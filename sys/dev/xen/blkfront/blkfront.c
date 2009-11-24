@@ -1745,7 +1745,7 @@ name|blkif_queued_requests
 condition|)
 block|{
 comment|// Still pending requests, wait for the disk i/o to complete
-name|HYPERVISOR_block
+name|HYPERVISOR_yield
 argument_list|()
 expr_stmt|;
 block|}
