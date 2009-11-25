@@ -1598,7 +1598,7 @@ name|cts
 operator|.
 name|xport_specific
 operator|.
-name|ata
+name|sata
 operator|.
 name|valid
 operator|&
