@@ -14376,6 +14376,23 @@ name|BGE_FLAG_MSI
 condition|)
 block|{
 comment|/* Take advantage of single-shot MSI. */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MSI_MODE
+argument_list|,
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MSI_MODE
+argument_list|)
+operator|&
+operator|~
+name|BGE_MSIMODE_ONE_SHOT_DISABLE
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|bge_tq
