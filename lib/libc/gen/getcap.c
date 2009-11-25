@@ -2438,8 +2438,6 @@ name|done
 decl_stmt|,
 name|hadreaderr
 decl_stmt|,
-name|i
-decl_stmt|,
 name|savederrno
 decl_stmt|,
 name|status
@@ -2751,10 +2749,6 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 		 * Line points to a name line. 		 */
-name|i
-operator|=
-literal|0
-expr_stmt|;
 name|done
 operator|=
 literal|0

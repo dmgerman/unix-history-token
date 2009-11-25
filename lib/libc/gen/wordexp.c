@@ -1692,9 +1692,6 @@ operator|)
 return|;
 block|}
 else|else
-name|c
-operator|=
-operator|*
 operator|--
 name|words
 expr_stmt|;
