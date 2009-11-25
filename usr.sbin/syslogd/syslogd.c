@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -1858,6 +1864,29 @@ decl_stmt|;
 name|socklen_t
 name|len
 decl_stmt|;
+if|if
+condition|(
+name|madvise
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|MADV_PROTECT
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|dprintf
+argument_list|(
+literal|"madvise() failed: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bindhostname
 operator|=
 name|NULL
