@@ -284,7 +284,6 @@ operator|(
 name|EFTYPE
 operator|)
 return|;
-comment|/* XXX actually EFUCKUP */
 name|ehdr
 operator|=
 operator|(
