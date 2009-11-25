@@ -775,7 +775,6 @@ name|rc
 operator|)
 condition|)
 block|{
-comment|/* if (kdb_active) printf("%s:%d\n", __func__, __LINE__); */
 comment|/* we need to return only one char */
 name|ret
 operator|=
