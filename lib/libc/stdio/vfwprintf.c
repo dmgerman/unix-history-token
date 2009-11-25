@@ -1254,6 +1254,8 @@ name|insize
 operator|=
 name|nchars
 operator|=
+name|nconv
+operator|=
 literal|0
 expr_stmt|;
 name|mbs
