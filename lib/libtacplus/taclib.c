@@ -6555,16 +6555,12 @@ name|ch
 operator|++
 expr_stmt|;
 block|}
-comment|/* 			 * Note: 			 *     The case of 'attribute' == "foo" and 			 *     h->srvr_avs[0] = "foobie=var1" 			 *     h->srvr_avs[1] = "foo=var2" 			 * is handled. 			 */
+comment|/* 			 * Note: 			 *     The case of 'attribute' == "foo" and 			 *     h->srvr_avs[0] = "foobie=var1" 			 *     h->srvr_avs[1] = "foo=var2" 			 * is handled. 			 * 			 * Note that for empty string attribute values a 			 * 0-length string is returned in order to distinguish 			 * against unset values. 			 * dump_str() will handle srvr.len == 0 correctly. 			 */
 if|if
 condition|(
 name|found_seperator
 operator|==
 literal|1
-operator|&&
-name|ch
-operator|!=
-name|end
 condition|)
 block|{
 name|srvr
