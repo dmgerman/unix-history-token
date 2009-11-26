@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Landon Curt Noll.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Landon Curt Noll.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -9,54 +9,87 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1989, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__COPYRIGHT
+end_ifdef
+
+begin_expr_stmt
+name|__COPYRIGHT
+argument_list|(
+literal|"@(#) Copyright (c) 1989, 1993\ 	The Regents of the University of California.  All rights reserved."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SCCSID
+end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_expr_stmt
+name|__SCCSID
+argument_list|(
+literal|"@(#)factor.c	8.4 (Berkeley) 5/4/95"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
-unit|static char sccsid[] = "@(#)factor.c	8.4 (Berkeley) 5/4/95"; __RCSID("$NetBSD: factor.c,v 1.13 2002/06/18 23:07:36 simonb Exp $");
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__RCSID
+end_ifdef
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: factor.c,v 1.19 2009/08/12 05:54:31 dholland Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FBSDID
+end_ifdef
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -68,7 +101,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * factor - factor a number into primes  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	factor [-h] [number] ...  *  * The form of the output is:  *  *	number: factor1 factor1 factor2 factor3 factor3 factor3 ...  *  * where factor1< factor2< factor3< ...  *  * If no args are given, the list of numbers are read from stdin.  */
+comment|/*  * factor - factor a number into primes  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	factor [-h] [number] ...  *  * The form of the output is:  *  *	number: factor1 factor1 factor2 factor3 factor3 factor3 ...  *  * where factor1<= factor2<= factor3<= ...  *  * If no args are given, the list of numbers are read from stdin.  */
 end_comment
 
 begin_include
@@ -868,6 +901,21 @@ name|val
 argument_list|)
 operator|>
 literal|0
+operator|||
+name|BN_is_prime
+argument_list|(
+name|val
+argument_list|,
+name|PRIME_CHECKS
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|1
 condition|)
 name|pr_print
 argument_list|(
@@ -1027,7 +1075,7 @@ name|HAVE_OPENSSL
 end_ifdef
 
 begin_comment
-comment|/* pollard rho, algorithm from Jim Gillogly, May 2000 */
+comment|/* pollard p-1, algorithm from Jim Gillogly, May 2000 */
 end_comment
 
 begin_function
@@ -1045,6 +1093,9 @@ modifier|*
 name|base
 decl_stmt|,
 modifier|*
+name|rbase
+decl_stmt|,
+modifier|*
 name|num
 decl_stmt|,
 modifier|*
@@ -1058,6 +1109,11 @@ operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
+name|rbase
+operator|=
+name|BN_new
+argument_list|()
+expr_stmt|;
 name|num
 operator|=
 name|BN_new
@@ -1075,16 +1131,32 @@ argument_list|()
 expr_stmt|;
 name|BN_set_word
 argument_list|(
+name|rbase
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|newbase
+label|:
+name|BN_add_word
+argument_list|(
+name|rbase
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|BN_set_word
+argument_list|(
 name|i
 argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|BN_set_word
+name|BN_copy
 argument_list|(
 name|base
 argument_list|,
-literal|2
+name|rbase
 argument_list|)
 expr_stmt|;
 for|for
@@ -1106,6 +1178,16 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BN_is_one
+argument_list|(
+name|base
+argument_list|)
+condition|)
+goto|goto
+name|newbase
+goto|;
 name|BN_copy
 argument_list|(
 name|x
