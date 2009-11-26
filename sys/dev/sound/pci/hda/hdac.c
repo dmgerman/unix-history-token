@@ -1296,6 +1296,13 @@ name|APPLE_INTEL_MAC
 value|0x76808384
 end_define
 
+begin_define
+define|#
+directive|define
+name|APPLE_MACBOOKPRO55
+value|0xcb7910de
+end_define
+
 begin_comment
 comment|/* LG Electronics */
 end_comment
@@ -3240,6 +3247,31 @@ value|(((uint32_t)(vendor##_VENDORID)<< 16) | ((id)& 0xffff))
 end_define
 
 begin_comment
+comment|/* Cirrus Logic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CIRRUSLOGIC_VENDORID
+value|0x1013
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CS4206
+value|HDA_CODEC_CONSTRUCT(CIRRUSLOGIC, 0x4206)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CS4207
+value|HDA_CODEC_CONSTRUCT(CIRRUSLOGIC, 0x4207)
+end_define
+
+begin_comment
 comment|/* Realtek */
 end_comment
 
@@ -4498,6 +4530,18 @@ name|hdac_codecs
 index|[]
 init|=
 block|{
+block|{
+name|HDA_CODEC_CS4206
+block|,
+literal|"Cirrus Logic CS4206"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CS4207
+block|,
+literal|"Cirrus Logic CS4207"
+block|}
+block|,
 block|{
 name|HDA_CODEC_ALC260
 block|,
@@ -24111,6 +24155,18 @@ block|,
 name|HDA_QUIRK_GPIO0
 operator||
 name|HDA_QUIRK_GPIO1
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|APPLE_MACBOOKPRO55
+block|,
+name|HDA_CODEC_CS4206
+block|,
+name|HDA_QUIRK_GPIO1
+operator||
+name|HDA_QUIRK_GPIO3
 block|,
 literal|0
 block|}
