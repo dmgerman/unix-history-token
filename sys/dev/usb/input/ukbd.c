@@ -4669,7 +4669,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"cannot detach polled keyboard!\n"
+literal|"cannot detach polled keyboard\n"
 argument_list|)
 expr_stmt|;
 block|}

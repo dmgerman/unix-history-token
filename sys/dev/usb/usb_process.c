@@ -1463,7 +1463,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"WARNING: A USB process has "
-literal|"been left suspended!\n"
+literal|"been left suspended\n"
 argument_list|)
 expr_stmt|;
 break|break;

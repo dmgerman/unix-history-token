@@ -1772,7 +1772,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not find memory space addresses on FW!\n"
+literal|"could not find memory space addresses on FW\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4015,7 +4015,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"MAC filter does not know that state!\n"
+literal|"MAC filter does not know that state\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6146,7 +6146,7 @@ name|sc
 argument_list|,
 name|UPGT_DEBUG_FW
 argument_list|,
-literal|"%s: EEPROM off without end option!\n"
+literal|"%s: EEPROM off without end option\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -7123,7 +7123,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"timeout while waiting for EEPROM data!\n"
+literal|"timeout while waiting for EEPROM data\n"
 argument_list|)
 expr_stmt|;
 name|UPGT_UNLOCK
@@ -7783,7 +7783,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not create RX mbuf!\n"
+literal|"could not create RX mbuf\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8354,7 +8354,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not free memory address 0x%08x!\n"
+literal|"could not free memory address 0x%08x\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -8433,7 +8433,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not read microcode %s!\n"
+literal|"could not read microcode %s\n"
 argument_list|,
 name|upgt_fwname
 argument_list|)
@@ -8884,7 +8884,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"firmware load failed!\n"
+literal|"firmware load failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9344,7 +9344,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not read microcode %s!\n"
+literal|"could not read microcode %s\n"
 argument_list|,
 name|upgt_fwname
 argument_list|)
@@ -9466,7 +9466,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"firmware Boot Record Area not found!\n"
+literal|"firmware Boot Record Area not found\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9582,7 +9582,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"wrong UPGT_BRA_TYPE_FW len!\n"
+literal|"wrong UPGT_BRA_TYPE_FW len\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -9647,7 +9647,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"unsupported firmware type!\n"
+literal|"unsupported firmware type\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -10128,7 +10128,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not allocate TX buffer!\n"
+literal|"could not allocate TX buffer\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10252,7 +10252,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"could not allocate RX buffer!\n"
+literal|"could not allocate RX buffer\n"
 argument_list|)
 expr_stmt|;
 return|return

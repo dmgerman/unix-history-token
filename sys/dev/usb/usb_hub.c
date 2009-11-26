@@ -1493,7 +1493,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"giving up port reset "
-literal|"- device vanished!\n"
+literal|"- device vanished\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1669,7 +1669,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"could not allocate new device!\n"
+literal|"could not allocate new device\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2663,7 +2663,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"hub depth, %d, exceeded. HUB ignored!\n"
+literal|"hub depth, %d, exceeded. HUB ignored\n"
 argument_list|,
 name|USB_HUB_MAX_DEPTH
 argument_list|)
@@ -2698,7 +2698,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"bus powered HUB connected to "
-literal|"bus powered HUB. HUB ignored!\n"
+literal|"bus powered HUB. HUB ignored\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2797,7 +2797,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"number of ports changed!\n"
+literal|"number of ports changed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2815,7 +2815,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"portless HUB!\n"
+literal|"portless HUB\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2998,7 +2998,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"cannot setup interrupt transfer, "
-literal|"errstr=%s!\n"
+literal|"errstr=%s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -7064,7 +7064,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Resuming port failed!\n"
+literal|"Resuming port failed\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7289,7 +7289,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Clearing device "
-literal|"remote wakeup failed: %s!\n"
+literal|"remote wakeup failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -7499,7 +7499,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Setting device "
-literal|"remote wakeup failed!\n"
+literal|"remote wakeup failed\n"
 argument_list|)
 expr_stmt|;
 block|}

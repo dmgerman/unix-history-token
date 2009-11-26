@@ -2662,7 +2662,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no data interface found!\n"
+literal|"no data interface found\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2793,7 +2793,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"No valid alternate "
-literal|"setting found!\n"
+literal|"setting found\n"
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -11866,7 +11866,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"%s: CAM layer is busy!\n"
+literal|"%s: CAM layer is busy\n"
 argument_list|,
 name|sc
 operator|->

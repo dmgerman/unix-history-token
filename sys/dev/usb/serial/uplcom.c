@@ -1711,7 +1711,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no interface descriptor (2)!\n"
+literal|"no interface descriptor (2)\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1948,7 +1948,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"init failed!\n"
+literal|"init failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto

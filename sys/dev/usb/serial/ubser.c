@@ -1185,7 +1185,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"invalid tx_size!\n"
+literal|"invalid tx_size\n"
 argument_list|)
 expr_stmt|;
 goto|goto

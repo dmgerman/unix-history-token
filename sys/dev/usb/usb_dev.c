@@ -2642,7 +2642,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"USB FIFO %p has not been linked!\n"
+literal|"USB FIFO %p has not been linked\n"
 argument_list|,
 name|f
 argument_list|)
@@ -4193,7 +4193,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Could not create usb bus device!\n"
+literal|"Could not create usb bus device\n"
 argument_list|)
 expr_stmt|;
 block|}

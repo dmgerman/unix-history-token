@@ -1408,13 +1408,6 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|DPRINTFN
-argument_list|(
-literal|0
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -1496,13 +1489,6 @@ name|struct
 name|usb_device_request
 name|req
 decl_stmt|;
-name|DPRINTFN
-argument_list|(
-literal|0
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 name|req
 operator|.
 name|bmRequestType

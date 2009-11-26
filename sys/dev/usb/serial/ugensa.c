@@ -935,7 +935,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No interfaces!\n"
+literal|"No interfaces\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1046,7 +1046,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"allocating USB "
-literal|"transfers failed!\n"
+literal|"transfers failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto

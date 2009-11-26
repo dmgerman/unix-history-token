@@ -2270,7 +2270,7 @@ name|sc_ue
 operator|.
 name|ue_dev
 argument_list|,
-literal|"reset never completed!\n"
+literal|"reset never completed\n"
 argument_list|)
 expr_stmt|;
 name|uether_pause
@@ -2527,7 +2527,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"allocating USB transfers failed!\n"
+literal|"allocating USB transfers failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto

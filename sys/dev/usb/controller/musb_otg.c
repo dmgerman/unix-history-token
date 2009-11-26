@@ -7097,12 +7097,16 @@ condition|(
 name|dynfifo
 condition|)
 block|{
-name|DPRINTFN
+name|device_printf
 argument_list|(
-literal|0
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
 argument_list|,
-literal|"Dynamic FIFO sizing detected! "
-literal|"Assuming 16Kbytes of FIFO RAM\n"
+literal|"Dynamic FIFO sizing detected, "
+literal|"assuming 16Kbytes of FIFO RAM\n"
 argument_list|)
 expr_stmt|;
 block|}
