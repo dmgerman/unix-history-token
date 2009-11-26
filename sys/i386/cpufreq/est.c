@@ -355,6 +355,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|strict
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.est.strict"
+argument_list|,
+operator|&
+name|strict
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Default bus clock value for Centrino processors. */
 end_comment
@@ -7393,6 +7414,22 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+comment|/* On SMP system we can't guarantie independent freq setting. */
+if|if
+condition|(
+name|strict
+operator|==
+operator|-
+literal|1
+operator|&&
+name|mp_ncpus
+operator|>
+literal|1
+condition|)
+name|strict
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Check CPU for supported settings. */
 if|if
 condition|(
@@ -7836,6 +7873,8 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|strict
 condition|)
 block|{
 if|if
@@ -7857,9 +7896,34 @@ operator|.
 name|freq
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|bootverbose
+condition|)
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Can't check freq %u, "
+literal|"it may be invalid\n"
+argument_list|,
+name|sets
+index|[
+name|i
+index|]
+operator|.
+name|freq
+argument_list|)
+expr_stmt|;
+block|}
 name|table
 index|[
 name|j
@@ -7922,7 +7986,6 @@ expr_stmt|;
 operator|++
 name|j
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* restore saved setting */
