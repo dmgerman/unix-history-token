@@ -2272,6 +2272,8 @@ operator|->
 name|param
 operator|.
 name|sectors_intr
+operator|&
+literal|0xff
 argument_list|,
 literal|16
 argument_list|)
