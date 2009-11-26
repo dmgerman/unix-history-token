@@ -851,6 +851,12 @@ literal|1
 decl_stmt|;
 comment|/* Do not unload the object and dependencies */
 name|bool
+name|z_noopen
+range|:
+literal|1
+decl_stmt|;
+comment|/* Do not load on dlopen */
+name|bool
 name|ref_nodel
 range|:
 literal|1
@@ -944,6 +950,32 @@ end_define
 
 begin_comment
 comment|/* Return newes versioned symbol. Used by 				   dlsym. */
+end_comment
+
+begin_comment
+comment|/* Flags for load_object(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_LO_NOLOAD
+value|0x01
+end_define
+
+begin_comment
+comment|/* dlopen() specified RTLD_NOLOAD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_LO_DLOPEN
+value|0x02
+end_define
+
+begin_comment
+comment|/* load_object() called from dlopen(). */
 end_comment
 
 begin_comment
