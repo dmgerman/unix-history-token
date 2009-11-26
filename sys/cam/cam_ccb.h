@@ -2776,7 +2776,7 @@ name|u_int
 name|bytecount
 decl_stmt|;
 comment|/* Length of PIO transaction */
-name|u_int
+name|int
 name|revision
 decl_stmt|;
 comment|/* SATA revision */

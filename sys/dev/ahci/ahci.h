@@ -1917,7 +1917,7 @@ begin_struct
 struct|struct
 name|ahci_device
 block|{
-name|u_int
+name|int
 name|revision
 decl_stmt|;
 name|int
@@ -2000,10 +2000,6 @@ name|int
 name|pm_level
 decl_stmt|;
 comment|/* power management level */
-name|int
-name|sata_rev
-decl_stmt|;
-comment|/* Maximum allowed SATA generation */
 name|struct
 name|ahci_slot
 name|slot

@@ -444,7 +444,7 @@ name|char
 name|negotiate_opts
 index|[]
 init|=
-literal|"acD:O:qR:T:UW:"
+literal|"acD:M:O:qR:T:UW:"
 decl_stmt|;
 end_decl_stmt
 
@@ -15444,6 +15444,12 @@ operator|-
 literal|1
 decl_stmt|;
 name|int
+name|mode
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|int
 name|offset
 init|=
 operator|-
@@ -15587,6 +15593,43 @@ block|{
 name|warnx
 argument_list|(
 literal|"-D argument \"%s\" is unknown"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|ratecontrol_bailout
+goto|;
+block|}
+name|change_settings
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|mode
+operator|=
+name|ata_string2mode
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|<
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"unknown mode '%s'"
 argument_list|,
 name|optarg
 argument_list|)
@@ -15981,13 +16024,21 @@ name|quiet
 operator|==
 literal|0
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Current Parameters:\n"
+literal|"%s parameters:\n"
+argument_list|,
+name|user_settings
+condition|?
+literal|"User"
+else|:
+literal|"Current"
 argument_list|)
 expr_stmt|;
+block|}
 name|retval
 operator|=
 name|get_print_cts
@@ -16043,6 +16094,20 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
+name|ccb_trans_settings_ata
+modifier|*
+name|ata
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_sata
+modifier|*
+name|sata
+init|=
+name|NULL
+decl_stmt|;
+name|struct
 name|ccb_trans_settings_scsi
 modifier|*
 name|scsi
@@ -16059,7 +16124,6 @@ name|transport
 operator|==
 name|XPORT_SPI
 condition|)
-block|{
 name|spi
 operator|=
 operator|&
@@ -16071,13 +16135,48 @@ name|xport_specific
 operator|.
 name|spi
 expr_stmt|;
-name|spi
+if|if
+condition|(
+name|ccb
 operator|->
-name|valid
+name|cts
+operator|.
+name|transport
+operator|==
+name|XPORT_ATA
+condition|)
+name|ata
 operator|=
-literal|0
+operator|&
+name|ccb
+operator|->
+name|cts
+operator|.
+name|xport_specific
+operator|.
+name|ata
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|ccb
+operator|->
+name|cts
+operator|.
+name|transport
+operator|==
+name|XPORT_SATA
+condition|)
+name|sata
+operator|=
+operator|&
+name|ccb
+operator|->
+name|cts
+operator|.
+name|xport_specific
+operator|.
+name|sata
+expr_stmt|;
 if|if
 condition|(
 name|ccb
@@ -16088,7 +16187,6 @@ name|protocol
 operator|==
 name|PROTO_SCSI
 condition|)
-block|{
 name|scsi
 operator|=
 operator|&
@@ -16100,13 +16198,26 @@ name|proto_specific
 operator|.
 name|scsi
 expr_stmt|;
-name|scsi
+name|ccb
 operator|->
+name|cts
+operator|.
+name|xport_specific
+operator|.
 name|valid
 operator|=
 literal|0
 expr_stmt|;
-block|}
+name|ccb
+operator|->
+name|cts
+operator|.
+name|proto_specific
+operator|.
+name|valid
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|spi
@@ -16236,16 +16347,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"HBA at %s%d is not cable of changing "
-literal|"offset"
-argument_list|,
-name|cpi
-operator|.
-name|dev_name
-argument_list|,
-name|cpi
-operator|.
-name|unit_number
+literal|"HBA is not capable of changing offset"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -16303,16 +16405,8 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"HBA at %s%d is not cable of changing "
+literal|"HBA is not capable of changing "
 literal|"transfer rates"
-argument_list|,
-name|cpi
-operator|.
-name|dev_name
-argument_list|,
-name|cpi
-operator|.
-name|unit_number
 argument_list|)
 expr_stmt|;
 name|retval
@@ -16370,6 +16464,166 @@ operator|->
 name|sync_period
 argument_list|)
 expr_stmt|;
+name|didsettings
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sata
+operator|&&
+name|syncrate
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|cpi
+operator|.
+name|hba_inquiry
+operator|&
+name|PI_SDTR_ABLE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"HBA is not capable of changing "
+literal|"transfer rates"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|ratecontrol_bailout
+goto|;
+block|}
+name|sata
+operator|->
+name|revision
+operator|=
+name|ata_speed2revision
+argument_list|(
+name|syncrate
+operator|*
+literal|100
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sata
+operator|->
+name|revision
+operator|<
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Invalid rate %f"
+argument_list|,
+name|syncrate
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|ratecontrol_bailout
+goto|;
+block|}
+name|sata
+operator|->
+name|valid
+operator||=
+name|CTS_SATA_VALID_REVISION
+expr_stmt|;
+name|didsettings
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|ata
+operator|||
+name|sata
+operator|)
+operator|&&
+name|mode
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|cpi
+operator|.
+name|hba_inquiry
+operator|&
+name|PI_SDTR_ABLE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"HBA is not capable of changing "
+literal|"transfer rates"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|ratecontrol_bailout
+goto|;
+block|}
+if|if
+condition|(
+name|ata
+condition|)
+block|{
+name|ata
+operator|->
+name|mode
+operator|=
+name|mode
+expr_stmt|;
+name|ata
+operator|->
+name|valid
+operator||=
+name|CTS_ATA_VALID_MODE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sata
+operator|->
+name|mode
+operator|=
+name|mode
+expr_stmt|;
+name|sata
+operator|->
+name|valid
+operator||=
+name|CTS_SATA_VALID_MODE
+expr_stmt|;
+block|}
 name|didsettings
 operator|++
 expr_stmt|;
@@ -16517,6 +16771,31 @@ operator|==
 literal|0
 condition|)
 block|{
+goto|goto
+name|ratecontrol_bailout
+goto|;
+block|}
+if|if
+condition|(
+operator|!
+name|user_settings
+operator|&&
+operator|(
+name|ata
+operator|||
+name|sata
+operator|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"You can modify only user settings for ATA/SATA"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|ratecontrol_bailout
 goto|;
@@ -16690,7 +16969,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"New Parameters:\n"
+literal|"New parameters:\n"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -20493,8 +20772,8 @@ literal|"        camcontrol debug      [-I][-P][-T][-S][-X][-c]\n"
 literal|"<all|bus[:target[:lun]]|off>\n"
 literal|"        camcontrol tags       [dev_id][generic args] [-N tags] [-q] [-v]\n"
 literal|"        camcontrol negotiate  [dev_id][generic args] [-a][-c]\n"
-literal|"                              [-D<enable|disable>][-O offset][-q]\n"
-literal|"                              [-R syncrate][-v][-T<enable|disable>]\n"
+literal|"                              [-D<enable|disable>][-M mode][-O offset]\n"
+literal|"                              [-q][-R syncrate][-v][-T<enable|disable>]\n"
 literal|"                              [-U][-W bus_width]\n"
 literal|"        camcontrol format     [dev_id][generic args][-q][-r][-w][-y]\n"
 literal|"        camcontrol idle       [dev_id][generic args][-t time]\n"
@@ -20598,6 +20877,7 @@ literal|"negotiate arguments:\n"
 literal|"-a                send a test unit ready after negotiation\n"
 literal|"-c                report/set current negotiation settings\n"
 literal|"-D<arg>          \"enable\" or \"disable\" disconnection\n"
+literal|"-M mode           set ATA mode\n"
 literal|"-O offset         set command delay offset\n"
 literal|"-q                be quiet, don't report anything\n"
 literal|"-R syncrate       synchronization rate in MHz\n"

@@ -552,6 +552,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ata_string2mode
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|ata_mode2speed
 parameter_list|(
