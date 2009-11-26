@@ -14419,20 +14419,7 @@ goto|goto
 name|RetryLookup
 goto|;
 block|}
-comment|/* 	 * Check whether this task is allowed to have this page. 	 * Note the special case for MAP_ENTRY_COW 	 * pages with an override.  This is to implement a forced 	 * COW for debuggers. 	 */
-if|if
-condition|(
-name|fault_type
-operator|&
-name|VM_PROT_OVERRIDE_WRITE
-condition|)
-name|prot
-operator|=
-name|entry
-operator|->
-name|max_protection
-expr_stmt|;
-else|else
+comment|/* 	 * Check whether this task is allowed to have this page. 	 */
 name|prot
 operator|=
 name|entry
@@ -14498,14 +14485,6 @@ name|fault_type
 operator|&
 name|VM_PROT_WRITE
 operator|)
-operator|&&
-operator|(
-name|fault_typea
-operator|&
-name|VM_PROT_OVERRIDE_WRITE
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|vm_map_unlock_read
@@ -14536,8 +14515,6 @@ condition|(
 operator|*
 name|wired
 condition|)
-name|prot
-operator|=
 name|fault_type
 operator|=
 name|entry
@@ -14567,9 +14544,21 @@ block|{
 comment|/* 		 * If we want to write the page, we may as well handle that 		 * now since we've got the map locked. 		 * 		 * If we don't need to write the page, we just demote the 		 * permissions allowed. 		 */
 if|if
 condition|(
+operator|(
 name|fault_type
 operator|&
 name|VM_PROT_WRITE
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|fault_typea
+operator|&
+name|VM_PROT_COPY
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 			 * Make a new object, and place it in the object 			 * chain.  Note that no new references have appeared 			 * -- one just moved from the map to the new 			 * object. 			 */
@@ -15016,20 +15005,7 @@ operator|(
 name|KERN_FAILURE
 operator|)
 return|;
-comment|/* 	 * Check whether this task is allowed to have this page. 	 * Note the special case for MAP_ENTRY_COW 	 * pages with an override.  This is to implement a forced 	 * COW for debuggers. 	 */
-if|if
-condition|(
-name|fault_type
-operator|&
-name|VM_PROT_OVERRIDE_WRITE
-condition|)
-name|prot
-operator|=
-name|entry
-operator|->
-name|max_protection
-expr_stmt|;
-else|else
+comment|/* 	 * Check whether this task is allowed to have this page. 	 */
 name|prot
 operator|=
 name|entry
@@ -15082,14 +15058,6 @@ name|fault_type
 operator|&
 name|VM_PROT_WRITE
 operator|)
-operator|&&
-operator|(
-name|fault_typea
-operator|&
-name|VM_PROT_OVERRIDE_WRITE
-operator|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -15113,8 +15081,6 @@ condition|(
 operator|*
 name|wired
 condition|)
-name|prot
-operator|=
 name|fault_type
 operator|=
 name|entry

@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_pager.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_param.h>
 end_include
 
@@ -622,13 +628,9 @@ name|vm_object_t
 name|backing_object
 decl_stmt|,
 name|object
-init|=
-name|NULL
 decl_stmt|;
 name|vm_offset_t
 name|pageno
-init|=
-literal|0
 decl_stmt|;
 comment|/* page number */
 name|vm_prot_t
@@ -636,8 +638,6 @@ name|reqprot
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|fault_flags
 decl_stmt|,
 name|writing
 decl_stmt|;
@@ -685,21 +685,11 @@ name|reqprot
 operator|=
 name|writing
 condition|?
-operator|(
-name|VM_PROT_WRITE
+name|VM_PROT_COPY
 operator||
-name|VM_PROT_OVERRIDE_WRITE
-operator|)
+name|VM_PROT_READ
 else|:
 name|VM_PROT_READ
-expr_stmt|;
-name|fault_flags
-operator|=
-name|writing
-condition|?
-name|VM_FAULT_DIRTY
-else|:
-name|VM_FAULT_NORMAL
 expr_stmt|;
 comment|/* 	 * Only map in one page at a time.  We don't have to, but it 	 * makes things easier.  This way is trivial - right? 	 */
 do|do
@@ -784,7 +774,7 @@ name|pageno
 argument_list|,
 name|reqprot
 argument_list|,
-name|fault_flags
+name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 if|if
@@ -809,7 +799,7 @@ name|EFAULT
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Now we need to get the page.  out_entry, wired, 		 * and single_use aren't used.  One would think the vm code 		 * would be a *bit* nicer...  We use tmap because 		 * vm_map_lookup() can change the map argument. 		 */
+comment|/* 		 * Now we need to get the page.  out_entry and wired 		 * aren't used.  One would think the vm code 		 * would be a *bit* nicer...  We use tmap because 		 * vm_map_lookup() can change the map argument. 		 */
 name|tmap
 operator|=
 name|map
@@ -909,6 +899,26 @@ expr_stmt|;
 name|object
 operator|=
 name|backing_object
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|writing
+operator|&&
+name|m
+operator|!=
+name|NULL
+condition|)
+block|{
+name|vm_page_dirty
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|vm_pager_page_unswapped
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 name|VM_OBJECT_UNLOCK

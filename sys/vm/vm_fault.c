@@ -2413,9 +2413,17 @@ block|{
 comment|/* 		 * We only really need to copy if we want to write it. 		 */
 if|if
 condition|(
+operator|(
 name|fault_type
 operator|&
+operator|(
+name|VM_PROT_COPY
+operator||
 name|VM_PROT_WRITE
+operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 			 * This allows pages to be virtually copied from a  			 * backing_object into the first_object, where the  			 * backing object has no other refs to it, and cannot 			 * gain any more refs.  Instead of a bcopy, we just  			 * move the page from the backing object to the  			 * first object.  Note that we must mark the page  			 * dirty in the first object so that it will go out  			 * to swap when needed. 			 */
