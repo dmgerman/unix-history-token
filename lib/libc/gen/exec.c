@@ -1016,7 +1016,7 @@ name|bp
 argument_list|,
 name|argv
 argument_list|,
-name|environ
+name|envp
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1129,7 +1129,7 @@ name|_PATH_BSHELL
 argument_list|,
 name|memp
 argument_list|,
-name|environ
+name|envp
 argument_list|)
 expr_stmt|;
 goto|goto
