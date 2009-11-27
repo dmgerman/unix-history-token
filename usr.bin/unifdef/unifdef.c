@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002 - 2009 Tony Finch<dot@dotat.at>  *  * Redistrib
 end_comment
 
 begin_comment
-comment|/*  * This code is derived from software contributed to Berkeley by Dave Yost.  * It was rewritten to support ANSI C by Tony Finch. The original version  * of unifdef carried the 4-clause BSD copyright licence. None of its code  * remains in this version (though some of the names remain) so it now  * carries a more liberal licence.  */
+comment|/*  * This code was derived from software contributed to Berkeley by Dave Yost.  * It was rewritten to support ANSI C by Tony Finch. The original version  * of unifdef carried the 4-clause BSD copyright licence. None of its code  * remains in this version (though some of the names remain) so it now  * carries a more liberal licence.  *  * The latest version is available from http://dotat.at/prog/unifdef  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: unifdef/unifdef.c,v 1.188 2009/11/25 00:11:02 fanf2 Exp $"
+literal|"$dotat: unifdef/unifdef.c,v 1.190 2009/11/27 17:21:26 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2681,20 +2681,34 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|depth
-operator|+=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|depth
-operator|>=
+operator|>
 name|MAXDEPTH
+operator|-
+literal|1
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* bug */
+if|if
+condition|(
+name|depth
+operator|==
+name|MAXDEPTH
+operator|-
+literal|1
 condition|)
 name|error
 argument_list|(
 literal|"Too many levels of nesting"
 argument_list|)
+expr_stmt|;
+name|depth
+operator|+=
+literal|1
 expr_stmt|;
 name|stifline
 index|[
