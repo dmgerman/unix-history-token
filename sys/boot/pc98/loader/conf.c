@@ -235,6 +235,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|console
+name|spinconsole
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|console
 modifier|*
@@ -250,6 +258,9 @@ name|comconsole
 block|,
 operator|&
 name|nullconsole
+block|,
+operator|&
+name|spinconsole
 block|,
 name|NULL
 block|}
