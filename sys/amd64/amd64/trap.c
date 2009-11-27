@@ -2680,14 +2680,6 @@ name|va
 argument_list|,
 name|ftype
 argument_list|,
-operator|(
-name|ftype
-operator|&
-name|VM_PROT_WRITE
-operator|)
-condition|?
-name|VM_FAULT_DIRTY
-else|:
 name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;

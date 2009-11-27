@@ -1909,9 +1909,6 @@ name|u_long
 name|ctx
 decl_stmt|;
 name|int
-name|flags
-decl_stmt|;
-name|int
 name|rv
 decl_stmt|;
 if|if
@@ -2031,16 +2028,10 @@ name|type
 operator|==
 name|T_DATA_PROTECTION
 condition|)
-block|{
 name|prot
 operator|=
 name|VM_PROT_WRITE
 expr_stmt|;
-name|flags
-operator|=
-name|VM_FAULT_DIRTY
-expr_stmt|;
-block|}
 else|else
 block|{
 if|if
@@ -2059,10 +2050,6 @@ operator|=
 name|VM_PROT_READ
 operator||
 name|VM_PROT_EXECUTE
-expr_stmt|;
-name|flags
-operator|=
-name|VM_FAULT_NORMAL
 expr_stmt|;
 block|}
 if|if
@@ -2167,7 +2154,7 @@ name|va
 argument_list|,
 name|prot
 argument_list|,
-name|flags
+name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now the process can be swapped again. 		 */
