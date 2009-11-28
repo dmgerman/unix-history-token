@@ -2612,6 +2612,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|fs
@@ -2627,6 +2630,9 @@ name|m
 argument_list|,
 name|FALSE
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 				 * We no longer need the old page or object. 				 */
