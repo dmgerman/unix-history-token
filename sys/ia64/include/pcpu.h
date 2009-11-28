@@ -18,8 +18,67 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
+
+begin_struct
+struct|struct
+name|pcpu_stats
+block|{
+name|struct
+name|sysctl_ctx_list
+name|pcs_sysctl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|pcs_sysctl_tree
+decl_stmt|;
+name|u_long
+name|pcs_nasts
+decl_stmt|;
+comment|/* IPI_AST counter. */
+name|u_long
+name|pcs_nclks
+decl_stmt|;
+comment|/* Clock interrupt counter. */
+name|u_long
+name|pcs_nextints
+decl_stmt|;
+comment|/* ExtINT counter. */
+name|u_long
+name|pcs_nhighfps
+decl_stmt|;
+comment|/* IPI_HIGH_FP counter. */
+name|u_long
+name|pcs_nhwints
+decl_stmt|;
+comment|/* Hardware int. counter. */
+name|u_long
+name|pcs_npreempts
+decl_stmt|;
+comment|/* IPI_PREEMPT counter. */
+name|u_long
+name|pcs_nrdvs
+decl_stmt|;
+comment|/* IPI_RENDEZVOUS counter. */
+name|u_long
+name|pcs_nstops
+decl_stmt|;
+comment|/* IPI_STOP counter. */
+name|u_long
+name|pcs_nstrays
+decl_stmt|;
+comment|/* Stray interrupt counter. */
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -38,12 +97,10 @@ value|\ 	uint64_t	pc_clockadj;
 comment|/* Clock adjust. */
 value|\ 	uint32_t	pc_awake:1;
 comment|/* CPU is awake? */
-value|\ 	uint32_t	pc_acpi_id
-end_define
-
-begin_comment
+value|\ 	uint32_t	pc_acpi_id;
 comment|/* ACPI CPU id. */
-end_comment
+value|\ 	struct pcpu_stats pc_stats
+end_define
 
 begin_ifdef
 ifdef|#
