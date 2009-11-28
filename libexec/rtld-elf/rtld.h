@@ -964,7 +964,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* dlopen() specified RTLD_NOLOAD */
+comment|/* dlopen() specified RTLD_NOLOAD. */
 end_comment
 
 begin_define
@@ -975,7 +975,18 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* load_object() called from dlopen(). */
+comment|/* Load_object() called from dlopen(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_LO_TRACE
+value|0x04
+end_define
+
+begin_comment
+comment|/* Only tracing. */
 end_comment
 
 begin_comment

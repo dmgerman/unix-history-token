@@ -7935,8 +7935,14 @@ operator|&&
 operator|(
 name|flags
 operator|&
+operator|(
 name|RTLD_LO_DLOPEN
+operator||
+name|RTLD_LO_TRACE
 operator|)
+operator|)
+operator|==
+name|RTLD_LO_DLOPEN
 condition|)
 block|{
 name|dbg
@@ -7950,7 +7956,7 @@ argument_list|)
 expr_stmt|;
 name|_rtld_error
 argument_list|(
-literal|"Cannot dlopen non-loadable %s\n"
+literal|"Cannot dlopen non-loadable %s"
 argument_list|,
 name|obj
 operator|->
@@ -9900,6 +9906,16 @@ condition|)
 name|lo_flags
 operator||=
 name|RTLD_LO_NOLOAD
+expr_stmt|;
+if|if
+condition|(
+name|ld_tracing
+operator|!=
+name|NULL
+condition|)
+name|lo_flags
+operator||=
+name|RTLD_LO_TRACE
 expr_stmt|;
 name|objlist_init
 argument_list|(
