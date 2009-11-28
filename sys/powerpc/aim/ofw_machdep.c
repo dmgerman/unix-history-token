@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -1371,7 +1377,11 @@ comment|/* 		 * Clear battable[] translations 		 */
 if|if
 condition|(
 operator|!
-name|ppc64
+operator|(
+name|cpu_features
+operator|&
+name|PPC_FEATURE_64
+operator|)
 condition|)
 block|{
 asm|__asm __volatile("mtdbatu 2, %0\n"

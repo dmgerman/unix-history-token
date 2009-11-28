@@ -94,13 +94,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ppc64
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|hw_direct_map
 decl_stmt|;
 end_decl_stmt

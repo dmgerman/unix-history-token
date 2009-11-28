@@ -419,14 +419,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ppc64
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|hw_direct_map
 init|=
 literal|1
@@ -1058,6 +1050,9 @@ name|uint8_t
 modifier|*
 name|cache_check
 decl_stmt|;
+name|int
+name|ppc64
+decl_stmt|;
 name|end
 operator|=
 literal|0
@@ -1446,6 +1441,17 @@ block|)
 function|;
 end_function
 
+begin_if
+if|if
+condition|(
+name|ppc64
+condition|)
+name|cpu_features
+operator||=
+name|PPC_FEATURE_64
+expr_stmt|;
+end_if
+
 begin_comment
 comment|/* 	 * Now copy restorebridge into all the handlers, if necessary, 	 * and set up the trap tables. 	 */
 end_comment
@@ -1453,7 +1459,9 @@ end_comment
 begin_if
 if|if
 condition|(
-name|ppc64
+name|cpu_features
+operator|&
+name|PPC_FEATURE_64
 condition|)
 block|{
 comment|/* Patch the two instances of rfi -> rfid */
@@ -2143,7 +2151,9 @@ end_comment
 begin_if
 if|if
 condition|(
-name|ppc64
+name|cpu_features
+operator|&
+name|PPC_FEATURE_64
 condition|)
 name|pmap_mmu_install
 argument_list|(
