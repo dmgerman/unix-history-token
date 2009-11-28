@@ -4149,6 +4149,14 @@ block|{
 name|decr_tc_init
 argument_list|()
 expr_stmt|;
+name|stathz
+operator|=
+name|hz
+expr_stmt|;
+name|profhz
+operator|=
+name|hz
+expr_stmt|;
 block|}
 end_function
 

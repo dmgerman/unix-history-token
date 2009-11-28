@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/spr.h>
 end_include
 
@@ -372,22 +378,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|register_t
-name|l2cr_config
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|register_t
-name|l3cr_config
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -948,15 +938,6 @@ case|:
 case|case
 name|MPC7457
 case|:
-comment|/* Only MPC745x CPUs have an L3 cache. */
-name|l3cr_config
-operator|=
-name|mfspr
-argument_list|(
-name|SPR_L3CR
-argument_list|)
-expr_stmt|;
-comment|/* Fallthrough */
 case|case
 name|MPC750
 case|:
@@ -981,13 +962,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
-argument_list|)
-expr_stmt|;
-name|l2cr_config
-operator|=
-name|mfspr
-argument_list|(
-name|SPR_L2CR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1389,7 +1363,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|l2cr_config
+name|mfspr
+argument_list|(
+name|SPR_L2CR
+argument_list|)
 operator|&
 name|L2CR_L2E
 condition|)
@@ -1415,7 +1392,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|l3cr_config
+name|mfspr
+argument_list|(
+name|SPR_L3CR
+argument_list|)
 operator|&
 name|L3CR_L3E
 condition|)
@@ -1423,7 +1403,10 @@ name|printf
 argument_list|(
 literal|"%cMB L3 backside cache"
 argument_list|,
-name|l3cr_config
+name|mfspr
+argument_list|(
+name|SPR_L3CR
+argument_list|)
 operator|&
 name|L3CR_L3SIZ
 condition|?
@@ -1456,7 +1439,10 @@ break|break;
 default|default:
 switch|switch
 condition|(
-name|l2cr_config
+name|mfspr
+argument_list|(
+name|SPR_L2CR
+argument_list|)
 operator|&
 name|L2CR_L2SIZ
 condition|)
@@ -1494,7 +1480,10 @@ argument_list|(
 literal|"write-%s"
 argument_list|,
 operator|(
-name|l2cr_config
+name|mfspr
+argument_list|(
+name|SPR_L2CR
+argument_list|)
 operator|&
 name|L2CR_L2WT
 operator|)
@@ -1506,7 +1495,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|l2cr_config
+name|mfspr
+argument_list|(
+name|SPR_L2CR
+argument_list|)
 operator|&
 name|L2CR_L2PE
 condition|)

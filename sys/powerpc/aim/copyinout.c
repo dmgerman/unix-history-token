@@ -1392,28 +1392,64 @@ literal|1
 operator|)
 return|;
 block|}
+asm|__asm __volatile (
+literal|"1:\tlwarx %0, 0, %2\n\t"
+comment|/* load old value */
+literal|"cmplw %3, %0\n\t"
+comment|/* compare */
+literal|"bne 2f\n\t"
+comment|/* exit if not equal */
+literal|"stwcx. %4, 0, %2\n\t"
+comment|/* attempt to store */
+literal|"bne- 1b\n\t"
+comment|/* spin if failed */
+literal|"b 3f\n\t"
+comment|/* we've succeeded */
+literal|"2:\n\t"
+literal|"stwcx. %0, 0, %2\n\t"
+comment|/* clear reservation (74xx) */
+literal|"3:\n\t"
+operator|:
+literal|"=&r"
+operator|(
 name|val
-operator|=
+operator|)
+operator|,
+literal|"=m"
+operator|(
 operator|*
 name|p
-expr_stmt|;
-operator|(
-name|void
 operator|)
-name|atomic_cmpset_32
-argument_list|(
+operator|:
+literal|"r"
 operator|(
-specifier|volatile
-name|uint32_t
-operator|*
-operator|)
 name|p
-argument_list|,
+operator|)
+operator|,
+literal|"r"
+operator|(
 name|old
-argument_list|,
+operator|)
+operator|,
+literal|"r"
+operator|(
 name|new
-argument_list|)
-expr_stmt|;
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_expr_stmt
 name|td
 operator|->
 name|td_pcb
@@ -1422,13 +1458,16 @@ name|pcb_onfault
 operator|=
 name|NULL
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|val
 operator|)
 return|;
-block|}
-end_function
+end_return
 
+unit|}
 end_unit
 
