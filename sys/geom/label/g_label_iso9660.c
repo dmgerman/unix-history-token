@@ -288,7 +288,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_iso9660
@@ -303,9 +302,26 @@ operator|.
 name|ld_dir
 operator|=
 name|G_LABEL_ISO9660_DIR
+block|,
+operator|.
+name|ld_enabled
+operator|=
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|G_LABEL_INIT
+argument_list|(
+name|iso9660
+argument_list|,
+name|g_label_iso9660
+argument_list|,
+literal|"Create device nodes for ISO9660 volume names"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
