@@ -4341,9 +4341,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|clearredir
-argument_list|()
-expr_stmt|;
 name|redirect
 argument_list|(
 name|cmd
