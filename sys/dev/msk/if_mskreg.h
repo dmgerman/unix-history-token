@@ -16950,6 +16950,23 @@ name|MSK_PUT_WM
 value|10
 end_define
 
+begin_struct
+struct|struct
+name|msk_mii_data
+block|{
+name|int
+name|port
+decl_stmt|;
+name|uint32_t
+name|pmd
+decl_stmt|;
+name|int
+name|mii_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Forward decl. */
 end_comment
@@ -17160,9 +17177,6 @@ name|uint32_t
 name|msk_pmd
 decl_stmt|;
 comment|/* physical media type */
-name|uint32_t
-name|msk_coppertype
-decl_stmt|;
 name|uint32_t
 name|msk_intrmask
 decl_stmt|;
