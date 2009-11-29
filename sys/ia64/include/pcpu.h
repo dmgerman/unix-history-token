@@ -31,15 +31,6 @@ begin_struct
 struct|struct
 name|pcpu_stats
 block|{
-name|struct
-name|sysctl_ctx_list
-name|pcs_sysctl_ctx
-decl_stmt|;
-name|struct
-name|sysctl_oid
-modifier|*
-name|pcs_sysctl_tree
-decl_stmt|;
 name|u_long
 name|pcs_nasts
 decl_stmt|;
@@ -76,6 +67,20 @@ name|u_long
 name|pcs_nstrays
 decl_stmt|;
 comment|/* Stray interrupt counter. */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|struct
+name|sysctl_ctx_list
+name|pcs_sysctl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|pcs_sysctl_tree
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
