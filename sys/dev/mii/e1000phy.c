@@ -2011,12 +2011,7 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|ssr
-operator|&
-name|E1000_SSR_1000MBS
-condition|)
+comment|/* 		 * Some fiber PHY(88E1112) does not seem to set resolved 		 * speed so always assume we've got IFM_1000_SX. 		 */
 name|mii
 operator|->
 name|mii_media_active
