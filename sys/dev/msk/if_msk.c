@@ -622,6 +622,14 @@ block|,
 block|{
 name|VENDORID_DLINK
 block|,
+name|DEVICEID_DLINK_DGE560SX
+block|,
+literal|"D-Link 560SX Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|VENDORID_DLINK
+block|,
 name|DEVICEID_DLINK_DGE560T
 block|,
 literal|"D-Link 560T Gigabit Ethernet"
