@@ -5717,6 +5717,8 @@ operator||=
 name|RL_FLAG_NOJUMBO
 operator||
 name|RL_FLAG_FASTETHER
+operator||
+name|RL_FLAG_AUTOPAD
 expr_stmt|;
 break|break;
 case|case
@@ -5762,6 +5764,8 @@ operator||
 name|RL_FLAG_FASTETHER
 operator||
 name|RL_FLAG_CMDSTOP
+operator||
+name|RL_FLAG_AUTOPAD
 expr_stmt|;
 break|break;
 case|case
@@ -5841,6 +5845,8 @@ operator||
 name|RL_FLAG_MACSTAT
 operator||
 name|RL_FLAG_CMDSTOP
+operator||
+name|RL_FLAG_AUTOPAD
 expr_stmt|;
 comment|/* 		 * These controllers support jumbo frame but it seems 		 * that enabling it requires touching additional magic 		 * registers. Depending on MAC revisions some 		 * controllers need to disable checksum offload. So 		 * disable jumbo frame until I have better idea what 		 * it really requires to make it support. 		 * RTL8168C/CP : supports up to 6KB jumbo frame. 		 * RTL8111C/CP : supports up to 9KB jumbo frame. 		 */
 name|sc
@@ -10235,7 +10241,7 @@ name|sc
 operator|->
 name|rl_flags
 operator|&
-name|RL_FLAG_DESCV2
+name|RL_FLAG_AUTOPAD
 operator|)
 operator|==
 literal|0
