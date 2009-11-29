@@ -10258,7 +10258,7 @@ condition|)
 continue|continue;
 name|crc
 operator|=
-name|ether_crc32_le
+name|ether_crc32_be
 argument_list|(
 name|LLADDR
 argument_list|(
