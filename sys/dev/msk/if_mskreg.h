@@ -242,6 +242,13 @@ name|DEVICEID_MRVL_436C
 value|0x436C
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_MRVL_4380
+value|0x4380
+end_define
+
 begin_comment
 comment|/*  * D-Link gigabit ethernet device ID  */
 end_comment
@@ -6293,6 +6300,28 @@ end_define
 
 begin_comment
 comment|/* Chip ID for YUKON-2 FE+ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_ID_YUKON_SUPR
+value|0xb9
+end_define
+
+begin_comment
+comment|/* Chip ID for YUKON-2 Supreme */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_ID_YUKON_UL_2
+value|0xba
+end_define
+
+begin_comment
+comment|/* Chip ID for YUKON-2 Ultra 2 */
 end_comment
 
 begin_define
