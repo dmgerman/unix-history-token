@@ -21891,7 +21891,11 @@ operator|<=
 name|GM_TXE_FIFO_UR
 condition|;
 name|i
-operator|++
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
 control|)
 name|reg
 operator|=
