@@ -228,12 +228,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mii/brgphyreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
@@ -16476,7 +16470,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -16493,16 +16486,6 @@ argument_list|,
 name|GMF_CLI_RX_FO
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc_if
-operator|->
-name|msk_if_dev
-argument_list|,
-literal|"Rx FIFO overrun!\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* GMAC Tx FIFO underrun. */
 if|if
 condition|(
