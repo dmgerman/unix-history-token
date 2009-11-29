@@ -614,6 +614,14 @@ literal|"Marvell Yukon 88E8072 Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|VENDORID_MARVELL
+block|,
+name|DEVICEID_MRVL_4380
+block|,
+literal|"Marvell Yukon 88E8057 Gigabit Ethernet"
+block|}
+block|,
+block|{
 name|VENDORID_DLINK
 block|,
 name|DEVICEID_DLINK_DGE550SX
@@ -660,6 +668,10 @@ block|,
 literal|"Yukon FE"
 block|,
 literal|"Yukon FE+"
+block|,
+literal|"Yukon Supreme"
+block|,
+literal|"Yukon Ultra 2"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6030,6 +6042,9 @@ case|:
 case|case
 name|CHIP_ID_YUKON_FE_P
 case|:
+case|case
+name|CHIP_ID_YUKON_UL_2
+case|:
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -8527,7 +8542,13 @@ name|sc
 operator|->
 name|msk_hw_id
 operator|>
-name|CHIP_ID_YUKON_FE_P
+name|CHIP_ID_YUKON_UL_2
+operator|||
+name|sc
+operator|->
+name|msk_hw_id
+operator|==
+name|CHIP_ID_YUKON_SUPR
 condition|)
 block|{
 name|device_printf
@@ -8946,6 +8967,23 @@ block|}
 break|break;
 case|case
 name|CHIP_ID_YUKON_XL
+case|:
+name|sc
+operator|->
+name|msk_clock
+operator|=
+literal|156
+expr_stmt|;
+comment|/* 156 Mhz */
+name|sc
+operator|->
+name|msk_pflags
+operator||=
+name|MSK_FLAG_JUMBO
+expr_stmt|;
+break|break;
+case|case
+name|CHIP_ID_YUKON_UL_2
 case|:
 name|sc
 operator|->
