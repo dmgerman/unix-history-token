@@ -616,6 +616,14 @@ literal|"8102EL"
 block|}
 block|,
 block|{
+name|RL_HWREV_8102EL_SPIN1
+block|,
+name|RL_8169
+block|,
+literal|"8102EL"
+block|}
+block|,
+block|{
 name|RL_HWREV_8168_SPIN2
 block|,
 name|RL_8169
@@ -5733,6 +5741,9 @@ name|RL_HWREV_8102E
 case|:
 case|case
 name|RL_HWREV_8102EL
+case|:
+case|case
+name|RL_HWREV_8102EL_SPIN1
 case|:
 name|sc
 operator|->
