@@ -5699,7 +5699,7 @@ name|PMCDBG
 argument_list|(
 name|CSW
 argument_list|,
-name|SWI
+name|SWO
 argument_list|,
 literal|1
 argument_list|,
