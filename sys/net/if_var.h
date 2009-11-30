@@ -384,9 +384,9 @@ name|if_index
 decl_stmt|;
 comment|/* numeric abbreviation for this if  */
 name|short
-name|if_timer
+name|if_index_reserved
 decl_stmt|;
-comment|/* time 'til if_watchdog called */
+comment|/* spare space to grow if_index */
 name|struct
 name|ifvlantrunk
 modifier|*
@@ -494,18 +494,6 @@ parameter_list|,
 name|u_long
 parameter_list|,
 name|caddr_t
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|if_watchdog
-function_decl|)
-comment|/* timer routine */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
 parameter_list|)
 function_decl|;
 name|void
