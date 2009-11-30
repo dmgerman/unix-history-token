@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.c,v 1.384.14.14 2009/06/02 23:47:13 tbox Exp $ */
+comment|/* $Id: resolver.c,v 1.384.14.14.8.1 2009/11/18 23:58:04 marka Exp $ */
 end_comment
 
 begin_comment
@@ -18857,6 +18857,9 @@ operator|!=
 name|dns_trust_glue
 condition|)
 block|{
+name|dns_trust_t
+name|trust
+decl_stmt|;
 comment|/* 			 * RRSIGs are validated as part of validating the 			 * type they cover. 			 */
 if|if
 condition|(
@@ -18965,12 +18968,48 @@ operator|->
 name|ttl
 expr_stmt|;
 block|}
-comment|/* 			 * Cache this rdataset/sigrdataset pair as 			 * pending data. 			 */
+comment|/* 			 * Reject out of bailiwick additional records 			 * without RRSIGs as they can't possibly validate 			 * as "secure" and as we will never never want to 			 * store these as "answers" after validation. 			 */
+if|if
+condition|(
+name|rdataset
+operator|->
+name|trust
+operator|==
+name|dns_trust_additional
+operator|&&
+name|sigrdataset
+operator|==
+name|NULL
+operator|&&
+name|EXTERNAL
+argument_list|(
+name|rdataset
+argument_list|)
+condition|)
+continue|continue;
+comment|/*                          * XXXMPA: If we store as "answer" after validating                          * then we need to do bailiwick processing and                          * also need to track whether RRsets are in or                          * out of bailiwick.  This will require a another                           * pending trust level.                          * 			 * Cache this rdataset/sigrdataset pair as 			 * pending data.  Track whether it was additional 			 * or not. 			 */
+if|if
+condition|(
+name|rdataset
+operator|->
+name|trust
+operator|==
+name|dns_trust_additional
+condition|)
+name|trust
+operator|=
+name|dns_trust_pending_additional
+expr_stmt|;
+else|else
+name|trust
+operator|=
+name|dns_trust_pending_answer
+expr_stmt|;
 name|rdataset
 operator|->
 name|trust
 operator|=
-name|dns_trust_pending
+name|trust
 expr_stmt|;
 if|if
 condition|(
@@ -18982,7 +19021,7 @@ name|sigrdataset
 operator|->
 name|trust
 operator|=
-name|dns_trust_pending
+name|trust
 expr_stmt|;
 if|if
 condition|(
@@ -20250,7 +20289,7 @@ name|trdataset
 operator|->
 name|trust
 operator|=
-name|dns_trust_pending
+name|dns_trust_pending_answer
 expr_stmt|;
 name|result
 operator|=
