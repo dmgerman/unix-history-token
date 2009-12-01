@@ -3187,7 +3187,7 @@ operator|&&
 name|pp
 operator|->
 name|pp_refcnt
-operator|<
+operator|<=
 operator|(
 operator|(
 name|int
@@ -3457,7 +3457,7 @@ operator|&&
 name|pp
 operator|->
 name|pp_refcnt
-operator|<
+operator|<=
 operator|(
 name|int
 operator|)
@@ -4580,7 +4580,7 @@ operator|&&
 name|pp
 operator|->
 name|pp_refcnt
-operator|<
+operator|<=
 operator|(
 name|int
 operator|)
@@ -7263,7 +7263,7 @@ operator|&&
 name|pp
 operator|->
 name|pp_refcnt
-operator|<
+operator|<=
 operator|(
 name|int
 operator|)
