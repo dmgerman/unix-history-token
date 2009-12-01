@@ -657,11 +657,11 @@ decl_stmt|;
 name|unsigned
 name|part
 decl_stmt|;
-name|unsigned
-name|start
-decl_stmt|;
 name|int
 name|init
+decl_stmt|;
+name|daddr_t
+name|start
 decl_stmt|;
 block|}
 struct|;
@@ -844,7 +844,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|unsigned
+name|daddr_t
 parameter_list|,
 name|unsigned
 parameter_list|)
@@ -1588,10 +1588,11 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|daddr_t
+name|lba
+decl_stmt|;
 name|unsigned
 name|int
-name|lba
-decl_stmt|,
 name|nb
 decl_stmt|;
 name|struct
@@ -4846,7 +4847,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|unsigned
+name|daddr_t
 name|lba
 parameter_list|,
 name|unsigned
@@ -5091,7 +5092,7 @@ name|ecx
 operator|=
 name|lba
 operator|>>
-literal|16
+literal|32
 expr_stmt|;
 name|v86
 operator|.
