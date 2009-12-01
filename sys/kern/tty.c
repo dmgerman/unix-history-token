@@ -375,8 +375,20 @@ parameter_list|)
 block|{
 name|size_t
 name|bs
+init|=
+literal|0
 decl_stmt|;
 comment|/* Provide an input buffer for 0.2 seconds of data. */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_termios
+operator|.
+name|c_cflag
+operator|&
+name|CREAD
+condition|)
 name|bs
 operator|=
 name|MIN
@@ -3820,6 +3832,12 @@ operator|->
 name|c_ospeed
 operator|=
 name|B115200
+expr_stmt|;
+name|t
+operator|->
+name|c_cflag
+operator||=
+name|CREAD
 expr_stmt|;
 return|return
 operator|(
