@@ -68,6 +68,11 @@ directive|define
 name|CAM_ATAIO_NEEDRESULT
 value|0x08
 comment|/* Request requires result. */
+define|#
+directive|define
+name|CAM_ATAIO_DMA
+value|0x10
+comment|/* DMA command */
 name|u_int8_t
 name|command
 decl_stmt|;
