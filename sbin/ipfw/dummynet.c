@@ -3292,6 +3292,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|samples
