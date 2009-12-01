@@ -2147,7 +2147,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AaBbdf:ghI:iLlM:mN:np:rSstuWw:xz"
+literal|"AaBbdf:ghI:iLlM:mN:np:rSsuWw:xz"
 argument_list|)
 operator|)
 operator|!=
@@ -4080,7 +4080,7 @@ argument_list|,
 literal|"usage: netstat [-AaLnSWx] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -i | -I interface [-abdhntW] [-f address_family]\n"
+literal|"       netstat -i | -I interface [-abdhnW] [-f address_family]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -w wait [-I interface] [-d] [-M core] [-N system]"
