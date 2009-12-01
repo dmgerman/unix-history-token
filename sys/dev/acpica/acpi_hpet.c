@@ -184,16 +184,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|DEV_HPET
-parameter_list|(
-name|x
-parameter_list|)
-value|(acpi_get_magic(x) == (uintptr_t)&acpi_hpet_devclass)
-end_define
-
 begin_decl_stmt
 name|struct
 name|timecounter
@@ -476,18 +466,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Record a magic value so we can detect this device later. */
-name|acpi_set_magic
-argument_list|(
-name|child
-argument_list|,
-operator|(
-name|uintptr_t
-operator|)
-operator|&
-name|acpi_hpet_devclass
-argument_list|)
-expr_stmt|;
 name|bus_set_resource
 argument_list|(
 name|child
@@ -543,11 +521,12 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|DEV_HPET
+name|acpi_get_handle
 argument_list|(
 name|dev
 argument_list|)
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|ACPI_ID_PROBE
