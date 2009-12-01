@@ -100,34 +100,37 @@ name|namespace
 name|clang
 block|{
 name|class
-name|FileManager
+name|ASTContext
 decl_stmt|;
 name|class
-name|FileEntry
+name|CompilerInvocation
 decl_stmt|;
 name|class
-name|SourceManager
+name|Decl
 decl_stmt|;
 name|class
 name|Diagnostic
 decl_stmt|;
 name|class
-name|TextDiagnosticBuffer
+name|FileEntry
+decl_stmt|;
+name|class
+name|FileManager
 decl_stmt|;
 name|class
 name|HeaderSearch
 decl_stmt|;
 name|class
-name|TargetInfo
-decl_stmt|;
-name|class
 name|Preprocessor
 decl_stmt|;
 name|class
-name|ASTContext
+name|SourceManager
 decl_stmt|;
 name|class
-name|Decl
+name|TargetInfo
+decl_stmt|;
+name|class
+name|TextDiagnosticBuffer
 decl_stmt|;
 name|using
 name|namespace
@@ -401,11 +404,9 @@ comment|/// \brief Create a ASTUnit from a PCH file.
 comment|///
 comment|/// \param Filename - The PCH file to load.
 comment|///
-comment|/// \param diagClient - The diagnostics client to use.  Specify NULL
+comment|/// \param DiagClient - The diagnostics client to use.  Specify NULL
 comment|/// to use a default client that emits warnings/errors to standard error.
 comment|/// The ASTUnit objects takes ownership of this object.
-comment|///
-comment|/// \param FileMgr - The FileManager to use.
 comment|///
 comment|/// \param ErrMsg - Error message to report if the PCH file could not be
 comment|/// loaded.
@@ -433,7 +434,7 @@ literal|0
 argument_list|,
 name|DiagnosticClient
 operator|*
-name|diagClient
+name|DiagClient
 operator|=
 name|NULL
 argument_list|,
@@ -448,6 +449,41 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+comment|/// LoadFromCompilerInvocation - Create an ASTUnit from a source file, via a
+comment|/// CompilerInvocation object.
+comment|///
+comment|/// \param CI - The compiler invocation to use; it must have exactly one input
+comment|/// source file.
+comment|///
+comment|/// \param Diags - The diagnostics engine to use for reporting errors.
+comment|//
+comment|// FIXME: Move OnlyLocalDecls, UseBumpAllocator to setters on the ASTUnit, we
+comment|// shouldn't need to specify them at construction time.
+specifier|static
+name|ASTUnit
+modifier|*
+name|LoadFromCompilerInvocation
+parameter_list|(
+specifier|const
+name|CompilerInvocation
+modifier|&
+name|CI
+parameter_list|,
+name|Diagnostic
+modifier|&
+name|Diags
+parameter_list|,
+name|bool
+name|OnlyLocalDecls
+init|=
+name|false
+parameter_list|,
+name|bool
+name|UseBumpAllocator
+init|=
+name|false
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

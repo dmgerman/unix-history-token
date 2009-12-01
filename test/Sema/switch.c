@@ -254,5 +254,40 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|// PR5606
+end_comment
+
+begin_function
+name|int
+name|f0
+parameter_list|(
+name|int
+name|var
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|va
+condition|)
+block|{
+comment|// expected-error{{use of undeclared identifier 'va'}}
+case|case
+literal|1
+case|:
+break|break;
+case|case
+literal|2
+case|:
+return|return
+literal|1
+return|;
+block|}
+return|return
+literal|2
+return|;
+block|}
+end_function
+
 end_unit
 

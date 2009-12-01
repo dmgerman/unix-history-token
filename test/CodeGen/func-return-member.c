@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm< %s 2>&1 | not grep 'cannot codegen this l-value expression yet'
+comment|// RUN: clang-cc -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_struct
@@ -73,6 +73,10 @@ name|C
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// CHECK: define void @bar
+end_comment
+
 begin_function
 name|void
 name|bar
@@ -94,6 +98,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define void @bun
+end_comment
+
 begin_function
 name|void
 name|bun
@@ -112,6 +120,10 @@ name|f
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @ban
+end_comment
 
 begin_function
 name|void

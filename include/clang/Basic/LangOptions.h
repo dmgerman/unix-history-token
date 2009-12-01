@@ -59,6 +59,12 @@ directive|define
 name|LLVM_CLANG_LANGOPTIONS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -383,25 +389,17 @@ comment|// Whether stack protectors are on. We declare
 comment|// this enum as unsigned because MSVC insists
 comment|// on making enums signed.  Set/Query this
 comment|// value using accessors.
-comment|/// The user provided name for the "main file", if non-null. This is
-comment|/// useful in situations where the input file name does not match
-comment|/// the original input file, for example with -save-temps.
-specifier|const
-name|char
-modifier|*
-name|MainFileName
-decl_stmt|;
 name|public
 label|:
 name|unsigned
 name|InstantiationDepth
 decl_stmt|;
 comment|// Maximum template instantiation depth.
-specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
 name|ObjCConstantStringClass
-decl_stmt|;
+expr_stmt|;
 enum|enum
 name|GCMode
 block|{
@@ -466,10 +464,6 @@ operator|=
 name|ObjC2
 operator|=
 name|ObjCNonFragileABI
-operator|=
-literal|0
-expr_stmt|;
-name|ObjCConstantStringClass
 operator|=
 literal|0
 expr_stmt|;
@@ -608,10 +602,6 @@ name|ShortWChar
 operator|=
 literal|0
 expr_stmt|;
-name|MainFileName
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|GCMode
 name|getGCMode
@@ -671,31 +661,6 @@ operator|>
 operator|(
 name|m
 operator|)
-expr_stmt|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getMainFileName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MainFileName
-return|;
-block|}
-name|void
-name|setMainFileName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|)
-block|{
-name|MainFileName
-operator|=
-name|Name
 expr_stmt|;
 block|}
 name|VisibilityMode

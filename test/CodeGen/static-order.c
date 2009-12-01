@@ -1,6 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o - %s | not grep "zeroinitializer"
+comment|// RUN: clang-cc -emit-llvm -o - %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: ModuleID
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: zeroinitializer
+end_comment
+
+begin_comment
+comment|// CHECK: define i8* @f
 end_comment
 
 begin_struct

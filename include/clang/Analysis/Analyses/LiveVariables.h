@@ -90,6 +90,9 @@ decl_stmt|;
 name|class
 name|SourceManager
 decl_stmt|;
+name|class
+name|AnalysisContext
+decl_stmt|;
 struct|struct
 name|LiveVariables_ValueTypes
 block|{
@@ -122,10 +125,19 @@ block|;
 name|ValTy
 name|AlwaysLive
 block|;
+name|AnalysisContext
+operator|*
+name|AC
+block|;
 name|AnalysisDataTy
 argument_list|()
 operator|:
 name|Observer
+argument_list|(
+name|NULL
+argument_list|)
+block|,
+name|AC
 argument_list|(
 argument|NULL
 argument_list|)
@@ -190,13 +202,9 @@ name|ObserverTy
 expr_stmt|;
 name|LiveVariables
 argument_list|(
-name|ASTContext
+name|AnalysisContext
 operator|&
-name|Ctx
-argument_list|,
-name|CFG
-operator|&
-name|cfg
+name|AC
 argument_list|)
 expr_stmt|;
 comment|/// IsLive - Return true if a variable is live at beginning of a

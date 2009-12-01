@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -Eonly -fms-extensions=0 2>&1 | grep error
+comment|// RUN: clang-cc %s -Eonly 2>&1 | grep error
 end_comment
 
 begin_define

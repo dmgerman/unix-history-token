@@ -217,6 +217,17 @@ operator|&
 name|Info
 argument_list|)
 decl_stmt|;
+comment|/// FlushDiagnostics - Flush the buffered diagnostics to an given
+comment|/// diagnostic engine.
+name|void
+name|FlushDiagnostics
+argument_list|(
+name|Diagnostic
+operator|&
+name|Diags
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 

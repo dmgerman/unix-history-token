@@ -86,5 +86,27 @@ comment|// expected-error {{cannot be cast to a pointer type}}
 block|}
 end_function
 
+begin_function
+name|long
+name|bar1
+parameter_list|(
+name|long
+modifier|*
+name|next
+parameter_list|)
+block|{
+return|return
+call|(
+name|long
+call|)
+argument_list|(
+operator|*
+name|next
+argument_list|)
+operator|++
+return|;
+block|}
+end_function
+
 end_unit
 

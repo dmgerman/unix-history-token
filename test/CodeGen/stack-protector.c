@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o - %s -stack-protector=0 | FileCheck -check-prefix=NOSSP %s
+comment|// RUN: clang-cc -emit-llvm -o - %s -stack-protector 0 | FileCheck -check-prefix=NOSSP %s
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|// NOSSP: define void @test1(i8* %msg) nounwind {
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o - %s -stack-protector=1 | FileCheck -check-prefix=WITHSSP %s
+comment|// RUN: clang-cc -emit-llvm -o - %s -stack-protector 1 | FileCheck -check-prefix=WITHSSP %s
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// WITHSSP: define void @test1(i8* %msg) nounwind ssp {
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o - %s -stack-protector=2 | FileCheck -check-prefix=SSPREQ %s
+comment|// RUN: clang-cc -emit-llvm -o - %s -stack-protector 2 | FileCheck -check-prefix=SSPREQ %s
 end_comment
 
 begin_comment

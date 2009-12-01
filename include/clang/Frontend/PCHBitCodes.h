@@ -587,6 +587,11 @@ comment|/// \brief The ObjC 'Class' type.
 name|PREDEF_TYPE_OBJC_CLASS
 init|=
 literal|27
+block|,
+comment|/// \brief The ObjC 'SEL' type.
+name|PREDEF_TYPE_OBJC_SEL
+init|=
+literal|28
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -812,6 +817,11 @@ comment|/// \brief Block extedned descriptor type for Blocks CodeGen
 name|SPECIAL_TYPE_BLOCK_EXTENDED_DESCRIPTOR
 init|=
 literal|13
+block|,
+comment|/// \brief Objective-C "SEL" redefinition type
+name|SPECIAL_TYPE_OBJC_SEL_REDEFINITION
+init|=
+literal|14
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of declaration.

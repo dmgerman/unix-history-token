@@ -1620,11 +1620,11 @@ comment|// MSP430:SIG_ATOMIC_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// MSP430:WINT_MIN_ (-2147483647L -1)
+comment|// MSP430:WINT_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
-comment|// MSP430:WINT_MAX_ 2147483647L
+comment|// MSP430:WINT_MAX_ 32767
 end_comment
 
 begin_comment
@@ -2020,11 +2020,11 @@ comment|// PIC16:SIG_ATOMIC_MAX_ 2147483647L
 end_comment
 
 begin_comment
-comment|// PIC16:WINT_MIN_ (-2147483647L -1)
+comment|// PIC16:WINT_MIN_ (-32767 -1)
 end_comment
 
 begin_comment
-comment|// PIC16:WINT_MAX_ 2147483647L
+comment|// PIC16:WINT_MAX_ 32767
 end_comment
 
 begin_comment
@@ -4637,6 +4637,122 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// stdint.h forms several macro definitions by pasting together identifiers
+end_comment
+
+begin_comment
+comment|// to form names (eg. int32_t is formed from int ## 32 ## _t). The following
+end_comment
+
+begin_comment
+comment|// case tests that these joining operations are performed correctly even if
+end_comment
+
+begin_comment
+comment|// the identifiers used in the operations (int, uint, _t, INT, UINT, _MIN,
+end_comment
+
+begin_comment
+comment|// _MAX, and _C(v)) are themselves macros.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: clang-cc -E -ffreestanding -Dint=a -Duint=b -D_t=c -DINT=d -DUINT=e -D_MIN=f -D_MAX=g '-D_C(v)=h' -triple=i386-none-none %s | FileCheck -check-prefix JOIN %s
+end_comment
+
+begin_comment
+comment|// JOIN:typedef int32_t intptr_t;
+end_comment
+
+begin_comment
+comment|// JOIN:typedef uint32_t uintptr_t;
+end_comment
+
+begin_comment
+comment|// JOIN:typedef int64_t intmax_t;
+end_comment
+
+begin_comment
+comment|// JOIN:typedef uint64_t uintmax_t;
+end_comment
+
+begin_comment
+comment|// JOIN:INTPTR_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// JOIN:INTPTR_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// JOIN:UINTPTR_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// JOIN:PTRDIFF_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// JOIN:PTRDIFF_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// JOIN:SIZE_MAX_ 4294967295U
+end_comment
+
+begin_comment
+comment|// JOIN:INTMAX_MIN_ (-9223372036854775807LL -1)
+end_comment
+
+begin_comment
+comment|// JOIN:INTMAX_MAX_ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// JOIN:UINTMAX_MAX_ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// JOIN:SIG_ATOMIC_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// JOIN:SIG_ATOMIC_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// JOIN:WINT_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// JOIN:WINT_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// JOIN:WCHAR_MAX_ 2147483647
+end_comment
+
+begin_comment
+comment|// JOIN:WCHAR_MIN_ (-2147483647 -1)
+end_comment
+
+begin_comment
+comment|// JOIN:INTMAX_C_(0) 0LL
+end_comment
+
+begin_comment
+comment|// JOIN:UINTMAX_C_(0) 0ULL
 end_comment
 
 begin_include

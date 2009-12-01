@@ -1026,15 +1026,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|__stdint_exjoin3
+name|__intn_t
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
+name|n
 parameter_list|)
-value|__stdint_join3(a,b,c)
+value|__stdint_join3( int, n, _t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__uintn_t
+parameter_list|(
+name|n
+parameter_list|)
+value|__stdint_join3(uint, n, _t)
 end_define
 
 begin_ifndef
@@ -1045,13 +1051,9 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|__stdint_exjoin3
+name|__intn_t
 argument_list|(
-argument|int
-argument_list|,
 argument|__INTPTR_WIDTH__
-argument_list|,
-argument|_t
 argument_list|)
 name|intptr_t
 expr_stmt|;
@@ -1070,13 +1072,9 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|__stdint_exjoin3
+name|__uintn_t
 argument_list|(
-argument|uint
-argument_list|,
 argument|__INTPTR_WIDTH__
-argument_list|,
-argument|_t
 argument_list|)
 name|uintptr_t
 expr_stmt|;
@@ -1088,13 +1086,9 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__stdint_exjoin3
+name|__intn_t
 argument_list|(
-argument|int
-argument_list|,
 argument|__INTMAX_WIDTH__
-argument_list|,
-argument|_t
 argument_list|)
 name|intmax_t
 expr_stmt|;
@@ -1102,13 +1096,9 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__stdint_exjoin3
+name|__uintn_t
 argument_list|(
-argument|uint
-argument_list|,
 argument|__INTMAX_WIDTH__
-argument_list|,
-argument|_t
 argument_list|)
 name|uintmax_t
 expr_stmt|;
@@ -3307,126 +3297,74 @@ end_comment
 begin_define
 define|#
 directive|define
+name|__INTN_MIN
+parameter_list|(
+name|n
+parameter_list|)
+value|__stdint_join3( INT, n, _MIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__INTN_MAX
+parameter_list|(
+name|n
+parameter_list|)
+value|__stdint_join3( INT, n, _MAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINTN_MAX
+parameter_list|(
+name|n
+parameter_list|)
+value|__stdint_join3(UINT, n, _MAX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INTPTR_MIN
-value|__stdint_exjoin3( INT, __INTPTR_WIDTH__, _MIN)
+value|__INTN_MIN(__INTPTR_WIDTH__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTPTR_MAX
-value|__stdint_exjoin3( INT, __INTPTR_WIDTH__, _MAX)
+value|__INTN_MAX(__INTPTR_WIDTH__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UINTPTR_MAX
-value|__stdint_exjoin3(UINT, __INTPTR_WIDTH__, _MAX)
+value|__UINTN_MAX(__INTPTR_WIDTH__)
 end_define
-
-begin_if
-if|#
-directive|if
-name|__POINTER_WIDTH__
-operator|==
-literal|64
-end_if
 
 begin_define
 define|#
 directive|define
 name|PTRDIFF_MIN
-value|INT64_MIN
+value|__INTN_MIN(__PTRDIFF_WIDTH__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PTRDIFF_MAX
-value|INT64_MAX
+value|__INTN_MAX(__PTRDIFF_WIDTH__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZE_MAX
-value|UINT64_MAX
+value|__UINTN_MAX(__SIZE_WIDTH__)
 end_define
-
-begin_elif
-elif|#
-directive|elif
-name|__POINTER_WIDTH__
-operator|==
-literal|32
-end_elif
-
-begin_define
-define|#
-directive|define
-name|PTRDIFF_MIN
-value|INT32_MIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTRDIFF_MAX
-value|INT32_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZE_MAX
-value|UINT32_MAX
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|__POINTER_WIDTH__
-operator|==
-literal|16
-end_elif
-
-begin_define
-define|#
-directive|define
-name|PTRDIFF_MIN
-value|INT16_MIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTRDIFF_MAX
-value|INT16_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZE_MAX
-value|UINT16_MAX
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-literal|"unknown or unset pointer width!"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* C99 7.18.2.5 Limits of greatest-width integer types. */
@@ -3436,21 +3374,21 @@ begin_define
 define|#
 directive|define
 name|INTMAX_MIN
-value|__stdint_exjoin3( INT, __INTMAX_WIDTH__, _MIN)
+value|__INTN_MIN(__INTMAX_WIDTH__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTMAX_MAX
-value|__stdint_exjoin3( INT, __INTMAX_WIDTH__, _MAX)
+value|__INTN_MAX(__INTMAX_WIDTH__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UINTMAX_MAX
-value|__stdint_exjoin3(UINT, __INTMAX_WIDTH__, _MAX)
+value|__UINTN_MAX(__INTMAX_WIDTH__)
 end_define
 
 begin_comment
@@ -3461,28 +3399,28 @@ begin_define
 define|#
 directive|define
 name|SIG_ATOMIC_MIN
-value|INT32_MIN
+value|__INTN_MIN(__SIG_ATOMIC_WIDTH__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIG_ATOMIC_MAX
-value|INT32_MAX
+value|__INTN_MAX(__SIG_ATOMIC_WIDTH__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|WINT_MIN
-value|INT32_MIN
+value|__INTN_MIN(__WINT_WIDTH__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|WINT_MAX
-value|INT32_MAX
+value|__INTN_MAX(__WINT_WIDTH__)
 end_define
 
 begin_comment
@@ -3499,7 +3437,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_MAX
-value|__WCHAR_MAX__
+value|__INTN_MAX(__WCHAR_WIDTH__)
 end_define
 
 begin_endif
@@ -3517,7 +3455,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_MIN
-value|(-__WCHAR_MAX__-1)
+value|__INTN_MIN(__WCHAR_WIDTH__)
 end_define
 
 begin_endif
@@ -3532,11 +3470,35 @@ end_comment
 begin_define
 define|#
 directive|define
+name|__INTN_C
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|)
+value|__stdint_join3( INT, n, _C(v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINTN_C
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|)
+value|__stdint_join3(UINT, n, _C(v))
+end_define
+
+begin_define
+define|#
+directive|define
 name|INTMAX_C
 parameter_list|(
 name|v
 parameter_list|)
-value|__stdint_exjoin3( INT, __INTMAX_WIDTH__, _C(v))
+value|__INTN_C(__INTMAX_WIDTH__, v)
 end_define
 
 begin_define
@@ -3546,7 +3508,7 @@ name|UINTMAX_C
 parameter_list|(
 name|v
 parameter_list|)
-value|__stdint_exjoin3(UINT, __INTMAX_WIDTH__, _C(v))
+value|__UINTN_C(__INTMAX_WIDTH__, v)
 end_define
 
 begin_endif

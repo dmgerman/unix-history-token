@@ -307,6 +307,8 @@ decl_stmt|,
 name|Char32Type
 decl_stmt|,
 name|Int64Type
+decl_stmt|,
+name|SigAtomicType
 decl_stmt|;
 name|public
 label|:
@@ -410,6 +412,15 @@ specifier|const
 block|{
 return|return
 name|Int64Type
+return|;
+block|}
+name|IntType
+name|getSigAtomicType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SigAtomicType
 return|;
 block|}
 comment|/// getTypeWidth - Return the width (in bits) of the specified integer type

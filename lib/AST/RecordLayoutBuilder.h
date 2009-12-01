@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/RecordLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -99,9 +105,11 @@ name|ASTContext
 modifier|&
 name|Ctx
 decl_stmt|;
+comment|/// Size - The current size of the record layout.
 name|uint64_t
 name|Size
 decl_stmt|;
+comment|/// Alignment - The current alignment of the record layout.
 name|unsigned
 name|Alignment
 decl_stmt|;
@@ -118,6 +126,13 @@ expr_stmt|;
 comment|/// Packed - Whether the record is packed or not.
 name|bool
 name|Packed
+decl_stmt|;
+comment|/// UnfilledBitsInLastByte - If the last field laid out was a bitfield,
+comment|/// this contains the number of bits in the last byte that can be used for
+comment|/// an adjacent bitfield if necessary.
+name|unsigned
+name|char
+name|UnfilledBitsInLastByte
 decl_stmt|;
 comment|/// MaxFieldAlignment - The maximum allowed field alignment. This is set by
 comment|/// #pragma pack.
@@ -137,14 +152,11 @@ decl_stmt|;
 name|unsigned
 name|NonVirtualAlignment
 decl_stmt|;
-specifier|const
-name|CXXRecordDecl
-modifier|*
+name|ASTRecordLayout
+operator|::
+name|PrimaryBaseInfo
 name|PrimaryBase
-decl_stmt|;
-name|bool
-name|PrimaryBaseWasVirtual
-decl_stmt|;
+expr_stmt|;
 typedef|typedef
 name|llvm
 operator|::
@@ -262,6 +274,15 @@ name|D
 parameter_list|)
 function_decl|;
 name|void
+name|LayoutBitField
+parameter_list|(
+specifier|const
+name|FieldDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|void
 name|SelectPrimaryBase
 parameter_list|(
 specifier|const
@@ -303,19 +324,22 @@ parameter_list|(
 specifier|const
 name|CXXRecordDecl
 modifier|*
-name|PB
+name|Base
 parameter_list|,
 name|bool
-name|Virtual
+name|IsVirtual
 parameter_list|)
 block|{
 name|PrimaryBase
 operator|=
-name|PB
-expr_stmt|;
-name|PrimaryBaseWasVirtual
-operator|=
-name|Virtual
+name|ASTRecordLayout
+operator|::
+name|PrimaryBaseInfo
+argument_list|(
+name|Base
+argument_list|,
+name|IsVirtual
+argument_list|)
 expr_stmt|;
 block|}
 name|bool

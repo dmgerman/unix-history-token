@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -warn-dead-stores -verify %s
+comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=basic -warn-dead-stores -verify %s
+comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=basic -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=range -warn-dead-stores -verify %s
+comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=range -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=basic -warn-dead-stores -verify %s
+comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=basic -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=range -warn-dead-stores -verify %s
+comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=range -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_function
@@ -208,6 +208,81 @@ comment|// This is allowed for defensive programming.
 name|p
 operator|=
 literal|0
+expr_stmt|;
+comment|// no-warning
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|f7b
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// This is allowed for defensive programming.
+name|p
+operator|=
+operator|(
+literal|0
+operator|)
+expr_stmt|;
+comment|// no-warning
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|f7c
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// This is allowed for defensive programming.
+name|p
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|// no-warning
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|f7d
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// This is allowed for defensive programming.
+name|p
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+literal|0
+operator|)
 expr_stmt|;
 comment|// no-warning
 return|return
@@ -1633,6 +1708,100 @@ begin_break
 break|break;
 end_break
 
+begin_function_decl
 unit|} }
+name|void
+name|f23_aux
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f23
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|int
+name|shouldLog
+init|=
+operator|(
+name|argc
+operator|>
+literal|1
+operator|)
+decl_stmt|;
+comment|// no-warning
+lambda|^
+block|{
+if|if
+condition|(
+name|shouldLog
+condition|)
+name|f23_aux
+argument_list|(
+literal|"I did too use it!\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|f23_aux
+argument_list|(
+literal|"I shouldn't log.  Wait.. d'oh!\n"
+argument_list|)
+expr_stmt|;
+block|}
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|f23_pos
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|int
+name|shouldLog
+init|=
+operator|(
+name|argc
+operator|>
+literal|1
+operator|)
+decl_stmt|;
+comment|// expected-warning{{Value stored to 'shouldLog' during its initialization is never read}}
+lambda|^
+block|{
+name|f23_aux
+argument_list|(
+literal|"I did too use it!\n"
+argument_list|)
+expr_stmt|;
+block|}
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

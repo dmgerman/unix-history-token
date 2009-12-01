@@ -2218,6 +2218,8 @@ value|CXXOperator##Name,
 include|#
 directive|include
 file|"clang/Basic/OperatorKinds.def"
+name|CXXLiteralOperator
+block|,
 name|CXXUsingDirective
 block|,
 name|NUM_EXTRA_KINDS
@@ -2226,10 +2228,10 @@ enum|;
 comment|/// ExtraKindOrNumArgs - Either the kind of C++ special name or
 comment|/// operator-id (if the value is one of the CXX* enumerators of
 comment|/// ExtraKind), in which case the DeclarationNameExtra is also a
-comment|/// CXXSpecialName (for CXXConstructor, CXXDestructor, or
-comment|/// CXXConversionFunction) or CXXOperatorIdName, it may be also
-comment|/// name common to C++ using-directives (CXXUsingDirective), otherwise
-comment|/// it is NUM_EXTRA_KINDS+NumArgs, where NumArgs is the number of
+comment|/// CXXSpecialName, (for CXXConstructor, CXXDestructor, or
+comment|/// CXXConversionFunction) CXXOperatorIdName, or CXXLiteralOperatorName,
+comment|/// it may be also name common to C++ using-directives (CXXUsingDirective),
+comment|/// otherwise it is NUM_EXTRA_KINDS+NumArgs, where NumArgs is the number of
 comment|/// arguments in the Objective-C selector, in which case the
 comment|/// DeclarationNameExtra is also a MultiKeywordSelector.
 name|unsigned

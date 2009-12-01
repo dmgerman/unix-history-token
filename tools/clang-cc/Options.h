@@ -111,9 +111,6 @@ specifier|const
 name|LangOptions
 modifier|&
 name|Lang
-parameter_list|,
-name|bool
-name|TimePasses
 parameter_list|)
 function_decl|;
 name|void
@@ -164,10 +161,6 @@ name|FrontendOptions
 operator|::
 name|InputKind
 name|LK
-argument_list|,
-name|TargetInfo
-operator|&
-name|Target
 argument_list|)
 decl_stmt|;
 name|void

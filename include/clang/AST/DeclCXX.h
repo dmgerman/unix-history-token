@@ -1208,14 +1208,14 @@ comment|/// Conversions - Overload set containing the conversion functions
 comment|/// of this C++ class (but not its inherited conversion
 comment|/// functions). Each of the entries in this overload set is a
 comment|/// CXXConversionDecl.
-name|OverloadedFunctionDecl
+name|UnresolvedSet
 name|Conversions
 block|;
 comment|/// VisibleConversions - Overload set containing the conversion functions
 comment|/// of this C++ class and all those inherited conversion functions that
 comment|/// are visible in this class. Each of the entries in this overload set is
 comment|/// a CXXConversionDecl or a FunctionTemplateDecl.
-name|OverloadedFunctionDecl
+name|UnresolvedSet
 name|VisibleConversions
 block|;
 comment|/// \brief The template or declaration that this declaration
@@ -1274,17 +1274,12 @@ block|;
 name|void
 name|collectConversionFunctions
 argument_list|(
-name|llvm
-operator|::
-name|SmallPtrSet
-operator|<
-name|CanQualType
+argument|llvm::SmallPtrSet<CanQualType
 argument_list|,
 literal|8
-operator|>
-operator|&
-name|ConversionsTypeSet
+argument|>& ConversionsTypeSet
 argument_list|)
+specifier|const
 block|;
 name|protected
 operator|:
@@ -2174,7 +2169,7 @@ comment|/// conversion functions in this class.
 end_comment
 
 begin_function
-name|OverloadedFunctionDecl
+name|UnresolvedSet
 modifier|*
 name|getConversionFunctions
 parameter_list|()
@@ -2212,7 +2207,7 @@ end_function
 
 begin_expr_stmt
 specifier|const
-name|OverloadedFunctionDecl
+name|UnresolvedSet
 operator|*
 name|getConversionFunctions
 argument_list|()
@@ -2249,6 +2244,84 @@ return|;
 block|}
 end_expr_stmt
 
+begin_typedef
+typedef|typedef
+name|UnresolvedSet
+operator|::
+name|iterator
+name|conversion_iterator
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|conversion_iterator
+name|conversion_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Conversions
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|conversion_iterator
+name|conversion_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Conversions
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Replaces a conversion function with a new declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Returns true if the old conversion was found.
+end_comment
+
+begin_function
+name|bool
+name|replaceConversion
+parameter_list|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|Old
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|New
+parameter_list|)
+block|{
+return|return
+name|Conversions
+operator|.
+name|replace
+argument_list|(
+name|Old
+argument_list|,
+name|New
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/// getVisibleConversionFunctions - get all conversion functions visible
 end_comment
@@ -2258,7 +2331,8 @@ comment|/// in current class; including conversion function templates.
 end_comment
 
 begin_function_decl
-name|OverloadedFunctionDecl
+specifier|const
+name|UnresolvedSet
 modifier|*
 name|getVisibleConversionFunctions
 parameter_list|()
@@ -5918,11 +5992,11 @@ name|SourceLocation
 name|IdentLoc
 block|;
 comment|/// NominatedNamespace - Namespace nominated by using-directive.
-name|NamespaceDecl
+name|NamedDecl
 operator|*
 name|NominatedNamespace
 block|;
-comment|/// Enclosing context containing both using-directive and nomintated
+comment|/// Enclosing context containing both using-directive and nominated
 comment|/// namespace.
 name|DeclContext
 operator|*
@@ -5957,7 +6031,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceLocation IdentLoc
 argument_list|,
-argument|NamespaceDecl *Nominated
+argument|NamedDecl *Nominated
 argument_list|,
 argument|DeclContext *CommonAncestor
 argument_list|)
@@ -5999,13 +6073,6 @@ block|,
 name|NominatedNamespace
 argument_list|(
 name|Nominated
-condition|?
-name|Nominated
-operator|->
-name|getOriginalNamespace
-argument_list|()
-else|:
-literal|0
 argument_list|)
 block|,
 name|CommonAncestor
@@ -6038,16 +6105,32 @@ return|return
 name|Qualifier
 return|;
 block|}
-comment|/// getNominatedNamespace - Returns namespace nominated by using-directive.
-name|NamespaceDecl
+name|NamedDecl
 operator|*
-name|getNominatedNamespace
+name|getNominatedNamespaceAsWritten
 argument_list|()
 block|{
 return|return
 name|NominatedNamespace
 return|;
 block|}
+specifier|const
+name|NamedDecl
+operator|*
+name|getNominatedNamespaceAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NominatedNamespace
+return|;
+block|}
+comment|/// getNominatedNamespace - Returns namespace nominated by using-directive.
+name|NamespaceDecl
+operator|*
+name|getNominatedNamespace
+argument_list|()
+block|;
 specifier|const
 name|NamespaceDecl
 operator|*
@@ -6130,7 +6213,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceLocation IdentLoc
 argument_list|,
-argument|NamespaceDecl *Nominated
+argument|NamedDecl *Nominated
 argument_list|,
 argument|DeclContext *CommonAncestor
 argument_list|)

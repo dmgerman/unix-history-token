@@ -427,5 +427,31 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|d2
+argument_list|(
+name|void
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|noreturn
+operator|)
+argument_list|)
+decl_stmt|,
+name|d3
+argument_list|(
+name|void
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|noreturn
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

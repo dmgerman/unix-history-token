@@ -71,12 +71,20 @@ function_decl|;
 comment|// DO NOT IMPLEMENT
 name|public
 label|:
+name|OptSpecifier
+argument_list|()
+operator|:
+name|ID
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 comment|/*implicit*/
 name|OptSpecifier
 argument_list|(
 argument|unsigned _ID
 argument_list|)
-block|:
+operator|:
 name|ID
 argument_list|(
 argument|_ID
@@ -91,6 +99,17 @@ operator|*
 name|Opt
 argument_list|)
 expr_stmt|;
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|!=
+literal|0
+return|;
+block|}
 name|unsigned
 name|getID
 argument_list|()

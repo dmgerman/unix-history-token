@@ -65,13 +65,11 @@ directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|dyn_cast
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
 
 begin_include
 include|#
@@ -96,6 +94,14 @@ include|#
 directive|include
 file|<algorithm>
 end_include
+
+begin_expr_stmt
+name|using
+name|llvm
+operator|::
+name|dyn_cast
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|namespace
@@ -197,6 +203,8 @@ block|,
 name|AsmLabel
 block|,
 comment|// Represent GCC asm label extension.
+name|BaseCheck
+block|,
 name|Blocks
 block|,
 name|CDecl
@@ -217,11 +225,15 @@ name|Destructor
 block|,
 name|FastCall
 block|,
+name|Final
+block|,
 name|Format
 block|,
 name|FormatArg
 block|,
 name|GNUInline
+block|,
+name|Hiding
 block|,
 name|IBOutletKind
 block|,
@@ -241,6 +253,8 @@ block|,
 name|ObjCException
 block|,
 name|ObjCNSObject
+block|,
+name|Override
 block|,
 name|CFReturnsRetained
 block|,
@@ -725,6 +739,46 @@ return|return
 name|Alignment
 return|;
 block|}
+comment|/// getMaxAlignment - Get the maximum alignment of attributes on this list.
+name|unsigned
+name|getMaxAlignment
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|AlignedAttr
+operator|*
+name|Next
+operator|=
+name|getNext
+operator|<
+name|AlignedAttr
+operator|>
+operator|(
+operator|)
+block|;
+if|if
+condition|(
+name|Next
+condition|)
+return|return
+name|std
+operator|::
+name|max
+argument_list|(
+name|Next
+operator|->
+name|getMaxAlignment
+argument_list|()
+argument_list|,
+name|Alignment
+argument_list|)
+return|;
+else|else
+return|return
+name|Alignment
+return|;
+block|}
 name|virtual
 name|Attr
 operator|*
@@ -791,12 +845,7 @@ name|public
 operator|:
 name|AnnotateAttr
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|ann
+argument|llvm::StringRef ann
 argument_list|)
 operator|:
 name|Attr
@@ -888,12 +937,7 @@ name|public
 operator|:
 name|AsmLabelAttr
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|L
+argument|llvm::StringRef L
 argument_list|)
 operator|:
 name|Attr
@@ -990,12 +1034,7 @@ name|public
 operator|:
 name|AliasAttr
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|aliasee
+argument|llvm::StringRef aliasee
 argument_list|)
 operator|:
 name|Attr
@@ -1392,6 +1431,11 @@ argument_list|(
 name|Deprecated
 argument_list|)
 block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|Final
+argument_list|)
+block|;
 name|class
 name|SectionAttr
 operator|:
@@ -1407,12 +1451,7 @@ name|public
 operator|:
 name|SectionAttr
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|N
+argument|llvm::StringRef N
 argument_list|)
 operator|:
 name|Attr
@@ -1749,7 +1788,7 @@ name|public
 operator|:
 name|FormatAttr
 argument_list|(
-argument|const std::string&type
+argument|llvm::StringRef type
 argument_list|,
 argument|int idx
 argument_list|,
@@ -1792,7 +1831,7 @@ block|}
 name|void
 name|setType
 argument_list|(
-argument|const std::string&type
+argument|llvm::StringRef type
 argument_list|)
 block|{
 name|Type
@@ -2708,6 +2747,22 @@ block|;
 name|DEF_SIMPLE_ATTR
 argument_list|(
 name|NSReturnsRetained
+argument_list|)
+block|;
+comment|// C++0x member checking attributes.
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|BaseCheck
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|Hiding
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|Override
 argument_list|)
 block|;
 undef|#

@@ -63,16 +63,6 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|class
-name|Timer
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
@@ -106,12 +96,6 @@ name|CompilerInstance
 modifier|*
 name|Instance
 decl_stmt|;
-name|llvm
-operator|::
-name|Timer
-operator|*
-name|CurrentTimer
-expr_stmt|;
 name|protected
 label|:
 comment|/// @name Implementation Action Interface
@@ -317,36 +301,6 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// @}
-comment|/// @name Timing Utilities
-comment|/// @{
-name|llvm
-operator|::
-name|Timer
-operator|*
-name|getCurrentTimer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CurrentTimer
-return|;
-block|}
-name|void
-name|setCurrentTimer
-argument_list|(
-name|llvm
-operator|::
-name|Timer
-operator|*
-name|Value
-argument_list|)
-block|{
-name|CurrentTimer
-operator|=
-name|Value
-expr_stmt|;
-block|}
 comment|/// @}
 comment|/// @name Supported Modes
 comment|/// @{

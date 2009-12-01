@@ -289,7 +289,7 @@ literal|0
 expr_stmt|;
 name|PurgeDead
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|TrimGraph
 operator|=

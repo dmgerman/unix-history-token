@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -emit-llvm-bc -o - | opt -std-compile-opts -disable-output
+comment|// RUN: clang-cc -triple i386-unknown-unknown -O3 %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_function
@@ -178,6 +178,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|foo4
 parameter_list|(
@@ -244,6 +245,60 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define i32 @foo4t()
+end_comment
+
+begin_comment
+comment|// CHECK: ret i32 376
+end_comment
+
+begin_comment
+comment|// CHECK: }
+end_comment
+
+begin_function
+name|int
+name|foo4t
+parameter_list|()
+block|{
+comment|// 111 + 1 + 222 + 42 = 376
+return|return
+name|foo4
+argument_list|(
+literal|111
+argument_list|)
+operator|+
+name|foo4
+argument_list|(
+literal|99
+argument_list|)
+operator|+
+name|foo4
+argument_list|(
+literal|222
+argument_list|)
+operator|+
+name|foo4
+argument_list|(
+literal|601
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define void @foo5()
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: switch
+end_comment
+
+begin_comment
+comment|// CHECK: }
+end_comment
+
 begin_function
 name|void
 name|foo5
@@ -264,6 +319,18 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define void @foo6()
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: switch
+end_comment
+
+begin_comment
+comment|// CHECK: }
+end_comment
+
 begin_function
 name|void
 name|foo6
@@ -276,6 +343,18 @@ condition|)
 block|{     }
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @foo7()
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: switch
+end_comment
+
+begin_comment
+comment|// CHECK: }
+end_comment
 
 begin_function
 name|void

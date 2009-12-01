@@ -848,12 +848,12 @@ name|llvm
 operator|::
 name|Constant
 operator|*
-name|GenerateRttiNonClass
+name|GenerateRtti
 argument_list|(
 argument|QualType Ty
 argument_list|)
 expr_stmt|;
-comment|/// BuildThunk - Build a thunk for the given method
+comment|/// BuildThunk - Build a thunk for the given method.
 name|llvm
 operator|::
 name|Constant
@@ -864,9 +864,7 @@ argument|const CXXMethodDecl *MD
 argument_list|,
 argument|bool Extern
 argument_list|,
-argument|int64_t nv
-argument_list|,
-argument|int64_t v
+argument|const ThunkAdjustment&ThisAdjustment
 argument_list|)
 expr_stmt|;
 comment|/// BuildCoVariantThunk - Build a thunk for the given method
@@ -880,13 +878,7 @@ argument|const CXXMethodDecl *MD
 argument_list|,
 argument|bool Extern
 argument_list|,
-argument|int64_t nv_t
-argument_list|,
-argument|int64_t v_t
-argument_list|,
-argument|int64_t nv_r
-argument_list|,
-argument|int64_t v_r
+argument|const CovariantThunkAdjustment&Adjustment
 argument_list|)
 expr_stmt|;
 typedef|typedef
@@ -1566,27 +1558,6 @@ operator|*
 name|D
 argument_list|)
 expr_stmt|;
-name|void
-name|DeferredCopyConstructorToEmit
-parameter_list|(
-name|GlobalDecl
-name|D
-parameter_list|)
-function_decl|;
-name|void
-name|DeferredCopyAssignmentToEmit
-parameter_list|(
-name|GlobalDecl
-name|D
-parameter_list|)
-function_decl|;
-name|void
-name|DeferredDestructorToEmit
-parameter_list|(
-name|GlobalDecl
-name|D
-parameter_list|)
-function_decl|;
 comment|/// SetCommonAttributes - Set attributes which are common to any
 comment|/// form of a global definition (alias, Objective-C method,
 comment|/// function, global variable).

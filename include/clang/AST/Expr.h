@@ -144,6 +144,9 @@ decl_stmt|;
 name|class
 name|TemplateArgumentLoc
 decl_stmt|;
+name|class
+name|TemplateArgumentListInfo
+decl_stmt|;
 comment|/// Expr - This represents one expression.  Note that Expr's are subclasses of
 comment|/// Stmt.  This allows an expression to be transparently used any place a Stmt
 comment|/// is required.
@@ -981,7 +984,34 @@ literal|1
 operator|)
 return|;
 block|}
-expr|}
+name|void
+name|initializeFrom
+argument_list|(
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+name|List
+argument_list|)
+block|;
+name|void
+name|copyInto
+argument_list|(
+argument|TemplateArgumentListInfo&List
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|std
+operator|::
+name|size_t
+name|sizeFor
+argument_list|(
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+name|List
+argument_list|)
+block|; }
 block|;
 comment|/// DeclRefExpr - [C99 6.5.1p2] - A reference to a declared variable, function,
 comment|/// enum, etc.
@@ -1143,8 +1173,17 @@ literal|1
 operator|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the explicit template argument list that followed the
+end_comment
+
+begin_comment
 comment|/// member template name, if any.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|ExplicitTemplateArgumentList
 operator|*
@@ -1166,6 +1205,9 @@ name|getExplicitTemplateArgumentList
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_macro
 name|DeclRefExpr
 argument_list|(
 argument|NestedNameSpecifier *Qualifier
@@ -1176,27 +1218,37 @@ argument|NamedDecl *D
 argument_list|,
 argument|SourceLocation NameLoc
 argument_list|,
-argument|bool HasExplicitTemplateArgumentList
-argument_list|,
-argument|SourceLocation LAngleLoc
-argument_list|,
-argument|const TemplateArgumentLoc *ExplicitTemplateArgs
-argument_list|,
-argument|unsigned NumExplicitTemplateArgs
-argument_list|,
-argument|SourceLocation RAngleLoc
+argument|const TemplateArgumentListInfo *TemplateArgs
 argument_list|,
 argument|QualType T
-argument_list|,
-argument|bool TD
-argument_list|,
-argument|bool VD
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_label
 name|protected
 label|:
-comment|// FIXME: Eventually, this constructor will go away and all subclasses
-comment|// will have to provide the type- and value-dependent flags.
+end_label
+
+begin_comment
+comment|/// \brief Computes the type- and value-dependence flags for this
+end_comment
+
+begin_comment
+comment|/// declaration reference expression.
+end_comment
+
+begin_function_decl
+name|void
+name|computeDependence
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
 name|DeclRefExpr
 argument_list|(
 argument|StmtClass SC
@@ -1207,12 +1259,19 @@ argument|QualType t
 argument_list|,
 argument|SourceLocation l
 argument_list|)
-block|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|Expr
 argument_list|(
 name|SC
 argument_list|,
 name|t
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 operator|,
 name|DecoratedD
@@ -1226,49 +1285,12 @@ name|Loc
 argument_list|(
 argument|l
 argument_list|)
-block|{}
-name|DeclRefExpr
-argument_list|(
-argument|StmtClass SC
-argument_list|,
-argument|NamedDecl *d
-argument_list|,
-argument|QualType t
-argument_list|,
-argument|SourceLocation l
-argument_list|,
-argument|bool TD
-argument_list|,
-argument|bool VD
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|SC
-argument_list|,
-name|t
-argument_list|,
-name|TD
-argument_list|,
-name|VD
-argument_list|)
-operator|,
-name|DecoratedD
-argument_list|(
-name|d
-argument_list|,
-literal|0
-argument_list|)
-operator|,
-name|Loc
-argument_list|(
-argument|l
-argument_list|)
-block|{}
+block|{
+name|computeDependence
+argument_list|()
+block|;   }
 name|public
 operator|:
-comment|// FIXME: Eventually, this constructor will go away and all clients
-comment|// will have to provide the type- and value-dependent flags.
 name|DeclRefExpr
 argument_list|(
 argument|NamedDecl *d
@@ -1283,6 +1305,10 @@ argument_list|(
 name|DeclRefExprClass
 argument_list|,
 name|t
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 operator|,
 name|DecoratedD
@@ -1296,43 +1322,10 @@ name|Loc
 argument_list|(
 argument|l
 argument_list|)
-block|{}
-name|DeclRefExpr
-argument_list|(
-argument|NamedDecl *d
-argument_list|,
-argument|QualType t
-argument_list|,
-argument|SourceLocation l
-argument_list|,
-argument|bool TD
-argument_list|,
-argument|bool VD
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|DeclRefExprClass
-argument_list|,
-name|t
-argument_list|,
-name|TD
-argument_list|,
-name|VD
-argument_list|)
-operator|,
-name|DecoratedD
-argument_list|(
-name|d
-argument_list|,
-literal|0
-argument_list|)
-operator|,
-name|Loc
-argument_list|(
-argument|l
-argument_list|)
-block|{}
+block|{
+name|computeDependence
+argument_list|()
+block|;   }
 comment|/// \brief Construct an empty declaration reference expression.
 name|explicit
 name|DeclRefExpr
@@ -1364,61 +1357,13 @@ argument|SourceLocation NameLoc
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|bool TD
-argument_list|,
-argument|bool VD
+argument|const TemplateArgumentListInfo *TemplateArgs =
+literal|0
 argument_list|)
 expr_stmt|;
-specifier|static
-name|DeclRefExpr
-modifier|*
-name|Create
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Context
-parameter_list|,
-name|NestedNameSpecifier
-modifier|*
-name|Qualifier
-parameter_list|,
-name|SourceRange
-name|QualifierRange
-parameter_list|,
-name|NamedDecl
-modifier|*
-name|D
-parameter_list|,
-name|SourceLocation
-name|NameLoc
-parameter_list|,
-name|bool
-name|HasExplicitTemplateArgumentList
-parameter_list|,
-name|SourceLocation
-name|LAngleLoc
-parameter_list|,
-specifier|const
-name|TemplateArgumentLoc
-modifier|*
-name|ExplicitTemplateArgs
-parameter_list|,
-name|unsigned
-name|NumExplicitTemplateArgs
-parameter_list|,
-name|SourceLocation
-name|RAngleLoc
-parameter_list|,
-name|QualType
-name|T
-parameter_list|,
-name|bool
-name|TD
-parameter_list|,
-name|bool
-name|VD
-parameter_list|)
-function_decl|;
+end_expr_stmt
+
+begin_function
 name|NamedDecl
 modifier|*
 name|getDecl
@@ -1431,6 +1376,9 @@ name|getPointer
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|NamedDecl
 operator|*
@@ -1445,6 +1393,9 @@ name|getPointer
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setDecl
 parameter_list|(
@@ -1461,6 +1412,9 @@ name|NewD
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -1470,6 +1424,9 @@ return|return
 name|Loc
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setLocation
 parameter_list|(
@@ -1482,14 +1439,26 @@ operator|=
 name|L
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine whether this declaration reference was preceded by a
+end_comment
+
+begin_comment
 comment|/// C++ nested-name-specifier, e.g., \c N::foo.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasQualifier
 argument_list|()
@@ -1504,9 +1473,21 @@ operator|&
 name|HasQualifierFlag
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief If the name was qualified, retrieves the source range of
+end_comment
+
+begin_comment
 comment|/// the nested-name-specifier that precedes the name. Otherwise,
+end_comment
+
+begin_comment
 comment|/// returns an empty source range.
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getQualifierRange
 argument_list|()
@@ -1522,16 +1503,19 @@ return|return
 name|SourceRange
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|getNameQualifier
 argument_list|()
 operator|->
 name|Range
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief If the name was qualified, retrieves the nested-name-specifier
 end_comment
 
@@ -1540,7 +1524,7 @@ comment|/// that precedes the name. Otherwise, returns NULL.
 end_comment
 
 begin_expr_stmt
-name|NestedNameSpecifier
+unit|NestedNameSpecifier
 operator|*
 name|getQualifier
 argument_list|()
@@ -1594,6 +1578,40 @@ name|HasExplicitTemplateArgumentListFlag
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Copies the template arguments (if present) into the given
+end_comment
+
+begin_comment
+comment|/// structure.
+end_comment
+
+begin_decl_stmt
+name|void
+name|copyTemplateArgumentsInto
+argument_list|(
+name|TemplateArgumentListInfo
+operator|&
+name|List
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|hasExplicitTemplateArgumentList
+argument_list|()
+condition|)
+name|getExplicitTemplateArgumentList
+argument_list|()
+operator|->
+name|copyInto
+argument_list|(
+name|List
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Retrieve the location of the left angle bracket following the
@@ -1763,13 +1781,6 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|DeclRefExprClass
-operator|||
-name|T
-operator|->
-name|getStmtClass
-argument_list|()
-operator|==
-name|CXXConditionDeclExprClass
 return|;
 block|}
 end_function
@@ -5623,15 +5634,7 @@ argument|NamedDecl *memberdecl
 argument_list|,
 argument|SourceLocation l
 argument_list|,
-argument|bool has_explicit
-argument_list|,
-argument|SourceLocation langle
-argument_list|,
-argument|const TemplateArgumentLoc *targs
-argument_list|,
-argument|unsigned numtargs
-argument_list|,
-argument|SourceLocation rangle
+argument|const TemplateArgumentListInfo *targs
 argument_list|,
 argument|QualType ty
 argument_list|)
@@ -5753,15 +5756,7 @@ argument|NamedDecl *memberdecl
 argument_list|,
 argument|SourceLocation l
 argument_list|,
-argument|bool has_explicit
-argument_list|,
-argument|SourceLocation langle
-argument_list|,
-argument|const TemplateArgumentLoc *targs
-argument_list|,
-argument|unsigned numtargs
-argument_list|,
-argument|SourceLocation rangle
+argument|const TemplateArgumentListInfo *targs
 argument_list|,
 argument|QualType ty
 argument_list|)
@@ -5964,13 +5959,48 @@ name|hasExplicitTemplateArgumentList
 argument_list|()
 end_macro
 
-begin_block
+begin_expr_stmt
+specifier|const
 block|{
 return|return
 name|HasExplicitTemplateArgumentList
 return|;
 block|}
-end_block
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Copies the template arguments (if present) into the given
+end_comment
+
+begin_comment
+comment|/// structure.
+end_comment
+
+begin_decl_stmt
+name|void
+name|copyTemplateArgumentsInto
+argument_list|(
+name|TemplateArgumentListInfo
+operator|&
+name|List
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|hasExplicitTemplateArgumentList
+argument_list|()
+condition|)
+name|getExplicitTemplateArgumentList
+argument_list|()
+operator|->
+name|copyInto
+argument_list|(
+name|List
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Retrieve the location of the left angle bracket following the
@@ -6681,6 +6711,9 @@ name|CK_FloatingToIntegral
 block|,
 comment|/// CK_FloatingCast - Casting between floating types of different size.
 name|CK_FloatingCast
+block|,
+comment|/// CK_MemberPointerToBoolean - Member pointer to boolean
+name|CK_MemberPointerToBoolean
 block|}
 block|;
 name|private

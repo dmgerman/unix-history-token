@@ -132,7 +132,7 @@ operator|->
 name|x
 operator|++
 return|;
-comment|// expected-warning{{Dereference of null pointer.}}
+comment|// expected-warning{{Dereference of null pointer}}
 block|}
 end_function
 
@@ -170,7 +170,7 @@ operator|+
 literal|1
 index|]
 return|;
-comment|// expected-warning{{Dereference of null pointer.}}
+comment|// expected-warning{{Dereference of null pointer}}
 block|}
 end_function
 
@@ -209,7 +209,7 @@ literal|1
 index|]
 operator|++
 return|;
-comment|// expected-warning{{Dereference of null pointer.}}
+comment|// expected-warning{{Dereference of null pointer}}
 block|}
 end_function
 
@@ -251,7 +251,7 @@ return|return
 operator|*
 name|q
 return|;
-comment|// expected-warning{{Dereference of null pointer.}}
+comment|// expected-warning{{Dereference of null pointer loaded from variable 'q'}}
 block|}
 end_function
 

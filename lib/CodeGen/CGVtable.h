@@ -73,11 +73,18 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|clang
+name|llvm
 block|{
 name|class
-name|CXXMethodDecl
+name|Constant
 decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|clang
+block|{
 name|class
 name|CXXRecordDecl
 decl_stmt|;
@@ -87,6 +94,109 @@ block|{
 name|class
 name|CodeGenModule
 decl_stmt|;
+comment|/// ThunkAdjustment - Virtual and non-virtual adjustment for thunks.
+name|class
+name|ThunkAdjustment
+block|{
+name|public
+label|:
+name|ThunkAdjustment
+argument_list|(
+argument|int64_t NonVirtual
+argument_list|,
+argument|int64_t Virtual
+argument_list|)
+block|:
+name|NonVirtual
+argument_list|(
+name|NonVirtual
+argument_list|)
+operator|,
+name|Virtual
+argument_list|(
+argument|Virtual
+argument_list|)
+block|{ }
+name|ThunkAdjustment
+argument_list|()
+operator|:
+name|NonVirtual
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Virtual
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+comment|// isEmpty - Return whether this thunk adjustment is empty.
+name|bool
+name|isEmpty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NonVirtual
+operator|==
+literal|0
+operator|&&
+name|Virtual
+operator|==
+literal|0
+return|;
+block|}
+comment|/// NonVirtual - The non-virtual adjustment.
+name|int64_t
+name|NonVirtual
+decl_stmt|;
+comment|/// Virtual - The virtual adjustment.
+name|int64_t
+name|Virtual
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// CovariantThunkAdjustment - Adjustment of the 'this' pointer and the
+comment|/// return pointer for covariant thunks.
+name|class
+name|CovariantThunkAdjustment
+block|{
+name|public
+label|:
+name|CovariantThunkAdjustment
+argument_list|(
+specifier|const
+name|ThunkAdjustment
+operator|&
+name|ThisAdjustment
+argument_list|,
+specifier|const
+name|ThunkAdjustment
+operator|&
+name|ReturnAdjustment
+argument_list|)
+operator|:
+name|ThisAdjustment
+argument_list|(
+name|ThisAdjustment
+argument_list|)
+operator|,
+name|ReturnAdjustment
+argument_list|(
+argument|ReturnAdjustment
+argument_list|)
+block|{ }
+name|CovariantThunkAdjustment
+argument_list|()
+block|{ }
+name|ThunkAdjustment
+name|ThisAdjustment
+expr_stmt|;
+name|ThunkAdjustment
+name|ReturnAdjustment
+decl_stmt|;
+block|}
+empty_stmt|;
 name|class
 name|CGVtableInfo
 block|{
@@ -156,6 +266,52 @@ operator|*
 operator|>
 name|Vtables
 expr_stmt|;
+comment|/// NumVirtualFunctionPointers - Contains the number of virtual function
+comment|/// pointers in the vtable for a given record decl.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|NumVirtualFunctionPointers
+expr_stmt|;
+comment|/// getNumVirtualFunctionPointers - Return the number of virtual function
+comment|/// pointers in the vtable for a given record decl.
+name|uint64_t
+name|getNumVirtualFunctionPointers
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+name|void
+name|ComputeMethodVtableIndices
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+comment|/// GenerateClassData - Generate all the class data requires to be generated
+comment|/// upon definition of a KeyFunction.  This includes the vtable, the
+comment|/// rtti data structure and the VTT.
+name|void
+name|GenerateClassData
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|CGVtableInfo
@@ -173,7 +329,7 @@ block|{ }
 comment|/// getMethodVtableIndex - Return the index (relative to the vtable address
 comment|/// point) where the function pointer for the given virtual function is
 comment|/// stored.
-name|int64_t
+name|uint64_t
 name|getMethodVtableIndex
 argument_list|(
 argument|GlobalDecl GD
@@ -223,16 +379,11 @@ argument_list|,
 argument|uint64_t Offset
 argument_list|)
 expr_stmt|;
-comment|/// GenerateClassData - Generate all the class data requires to be generated
-comment|/// upon definition of a KeyFunction.  This includes the vtable, the
-comment|/// rtti data structure and the VTT.
 name|void
-name|GenerateClassData
+name|MaybeEmitVtable
 parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
+name|GlobalDecl
+name|GD
 parameter_list|)
 function_decl|;
 block|}

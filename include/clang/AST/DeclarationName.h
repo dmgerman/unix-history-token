@@ -109,6 +109,9 @@ name|class
 name|CXXOperatorIdName
 decl_stmt|;
 name|class
+name|CXXLiteralOperatorIdName
+decl_stmt|;
+name|class
 name|DeclarationNameExtra
 decl_stmt|;
 name|class
@@ -150,6 +153,8 @@ block|,
 name|CXXConversionFunctionName
 block|,
 name|CXXOperatorName
+block|,
+name|CXXLiteralOperatorName
 block|,
 name|CXXUsingDirective
 block|}
@@ -321,7 +326,43 @@ return|;
 block|}
 end_decl_stmt
 
+begin_expr_stmt
+name|CXXLiteralOperatorIdName
+operator|*
+name|getAsCXXLiteralOperatorIdName
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getNameKind
+argument_list|()
+operator|==
+name|CXXLiteralOperatorName
+condition|)
+return|return
+name|reinterpret_cast
+operator|<
+name|CXXLiteralOperatorIdName
+operator|*
+operator|>
+operator|(
+name|Ptr
+operator|&
+operator|~
+name|PtrMask
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+literal|0
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|// Construct a declaration name from the name of a C++ constructor,
 end_comment
 
@@ -330,12 +371,12 @@ comment|// destructor, or conversion function.
 end_comment
 
 begin_expr_stmt
-name|DeclarationName
-argument_list|(
+unit|DeclarationName
+operator|(
 name|CXXSpecialName
 operator|*
 name|Name
-argument_list|)
+operator|)
 operator|:
 name|Ptr
 argument_list|(
@@ -384,6 +425,35 @@ operator|==
 literal|0
 operator|&&
 literal|"Improperly aligned CXXOperatorId"
+argument_list|)
+block|;
+name|Ptr
+operator||=
+name|StoredDeclarationNameExtra
+block|;   }
+name|DeclarationName
+argument_list|(
+name|CXXLiteralOperatorIdName
+operator|*
+name|Name
+argument_list|)
+operator|:
+name|Ptr
+argument_list|(
+argument|reinterpret_cast<uintptr_t>(Name)
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Ptr
+operator|&
+name|PtrMask
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Improperly aligned CXXLiteralOperatorId"
 argument_list|)
 block|;
 name|Ptr
@@ -803,6 +873,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// getCXXLiteralIdentifier - If this name is the name of a literal
+end_comment
+
+begin_comment
+comment|/// operator, retrieve the identifier associated with it.
+end_comment
+
+begin_expr_stmt
+name|IdentifierInfo
+operator|*
+name|getCXXLiteralIdentifier
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getObjCSelector - Get the Objective-C selector stored in this
 end_comment
 
@@ -1162,6 +1249,7 @@ comment|/// identifier.
 name|DeclarationName
 name|getIdentifier
 parameter_list|(
+specifier|const
 name|IdentifierInfo
 modifier|*
 name|ID
@@ -1256,6 +1344,16 @@ name|getCXXOperatorName
 parameter_list|(
 name|OverloadedOperatorKind
 name|Op
+parameter_list|)
+function_decl|;
+comment|/// getCXXLiteralOperatorName - Get the name of the literal operator function
+comment|/// with II as the identifier.
+name|DeclarationName
+name|getCXXLiteralOperatorName
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
 parameter_list|)
 function_decl|;
 block|}

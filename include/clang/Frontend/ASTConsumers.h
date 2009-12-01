@@ -249,6 +249,9 @@ name|TargetOptions
 operator|&
 name|TargetOpts
 argument_list|,
+name|bool
+name|TimePasses
+argument_list|,
 specifier|const
 name|std
 operator|::

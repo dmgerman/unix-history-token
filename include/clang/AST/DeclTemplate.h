@@ -3052,9 +3052,7 @@ argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
 argument|TemplateArgumentListBuilder&Builder
 argument_list|,
-argument|TemplateArgumentLoc *ArgInfos
-argument_list|,
-argument|unsigned NumArgInfos
+argument|const TemplateArgumentListInfo&ArgInfos
 argument_list|,
 argument|ClassTemplatePartialSpecializationDecl *PrevDecl
 argument_list|)

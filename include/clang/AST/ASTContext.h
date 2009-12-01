@@ -561,12 +561,7 @@ name|ObjCIdTypedefType
 decl_stmt|;
 comment|/// ObjCSelType - another pseudo built-in typedef type (set by Sema).
 name|QualType
-name|ObjCSelType
-decl_stmt|;
-specifier|const
-name|RecordType
-modifier|*
-name|SelStructType
+name|ObjCSelTypedefType
 decl_stmt|;
 comment|/// ObjCProtoType - another pseudo built-in typedef type (set by Sema).
 name|QualType
@@ -809,6 +804,9 @@ name|ObjCIdRedefinitionType
 decl_stmt|;
 name|QualType
 name|ObjCClassRedefinitionType
+decl_stmt|;
+name|QualType
+name|ObjCSelRedefinitionType
 decl_stmt|;
 comment|/// \brief Source ranges for all of the comments in the source file,
 comment|/// sorted in order of appearance in the translation unit.
@@ -1138,6 +1136,8 @@ name|CanQualType
 name|ObjCBuiltinIdTy
 decl_stmt|,
 name|ObjCBuiltinClassTy
+decl_stmt|,
+name|ObjCBuiltinSelTy
 decl_stmt|;
 name|ASTContext
 argument_list|(
@@ -1832,12 +1832,9 @@ name|TemplateName
 name|T
 parameter_list|,
 specifier|const
-name|TemplateArgumentLoc
-modifier|*
+name|TemplateArgumentListInfo
+modifier|&
 name|Args
-parameter_list|,
-name|unsigned
-name|NumArgs
 parameter_list|,
 name|QualType
 name|Canon
@@ -2377,7 +2374,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ObjCSelType
+name|ObjCSelTypedefType
 return|;
 block|}
 name|void
@@ -2565,6 +2562,13 @@ name|Qs
 argument_list|)
 return|;
 block|}
+name|DeclarationName
+name|getNameForTemplate
+parameter_list|(
+name|TemplateName
+name|Name
+parameter_list|)
+function_decl|;
 name|TemplateName
 name|getQualifiedTemplateName
 parameter_list|(
@@ -2774,6 +2778,56 @@ operator|.
 name|first
 return|;
 block|}
+comment|/// getByteWidth - Return the size of a byte, in bits
+name|uint64_t
+name|getByteSize
+parameter_list|()
+block|{
+return|return
+name|getTypeSize
+argument_list|(
+name|CharTy
+argument_list|)
+return|;
+block|}
+comment|/// getTypeSizeInBytes - Return the size of the specified type, in bytes.
+comment|/// This method does not work on incomplete types.
+name|uint64_t
+name|getTypeSizeInBytes
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+return|return
+name|getTypeSize
+argument_list|(
+name|T
+argument_list|)
+operator|/
+name|getByteSize
+argument_list|()
+return|;
+block|}
+name|uint64_t
+name|getTypeSizeInBytes
+parameter_list|(
+specifier|const
+name|Type
+modifier|*
+name|T
+parameter_list|)
+block|{
+return|return
+name|getTypeSize
+argument_list|(
+name|T
+argument_list|)
+operator|/
+name|getByteSize
+argument_list|()
+return|;
+block|}
 comment|/// getTypeAlign - Return the ABI-specified alignment of a type, in bits.
 comment|/// This method does not work on incomplete types.
 name|unsigned
@@ -2823,9 +2877,6 @@ modifier|*
 name|T
 parameter_list|)
 function_decl|;
-comment|/// getDeclAlignInBytes - Return the alignment of the specified decl
-comment|/// that should be returned by __alignof().  Note that bitfields do
-comment|/// not have a valid alignment, so this method will assert on them.
 name|unsigned
 name|getDeclAlignInBytes
 parameter_list|(
@@ -2833,6 +2884,11 @@ specifier|const
 name|Decl
 modifier|*
 name|D
+parameter_list|,
+name|bool
+name|RefAsPointee
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// getASTRecordLayout - Get or compute information about the layout of the
@@ -3439,20 +3495,10 @@ name|T
 argument_list|)
 decl|const
 block|{
-name|assert
-argument_list|(
-name|SelStructType
-operator|&&
-literal|"isObjCSelType used before 'SEL' type is built"
-argument_list|)
-expr_stmt|;
 return|return
 name|T
-operator|->
-name|getAsStructureType
-argument_list|()
 operator|==
-name|SelStructType
+name|ObjCSelTypedefType
 return|;
 block|}
 name|bool

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E -dM -x=assembler-with-cpp< /dev/null | FileCheck -check-prefix ASM %s
+comment|// RUN: clang-cc -E -dM -x assembler-with-cpp< /dev/null | FileCheck -check-prefix ASM %s
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=c++ -std=c++0x -E -dM< /dev/null | FileCheck -check-prefix CXX0X %s
+comment|// RUN: clang-cc -x c++ -std=c++0x -E -dM< /dev/null | FileCheck -check-prefix CXX0X %s
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=c++ -std=c++98 -E -dM< /dev/null | FileCheck -check-prefix CXX98 %s
+comment|// RUN: clang-cc -x c++ -std=c++98 -E -dM< /dev/null | FileCheck -check-prefix CXX98 %s
 end_comment
 
 begin_comment
@@ -152,7 +152,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -fms-extensions=0< /dev/null | FileCheck -check-prefix COMMON %s
+comment|// RUN: clang-cc -E -dM< /dev/null | FileCheck -check-prefix COMMON %s
 end_comment
 
 begin_comment
@@ -232,7 +232,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=c++ -std=gnu++98 -E -dM< /dev/null | FileCheck -check-prefix GXX98 %s
+comment|// RUN: clang-cc -x c++ -std=gnu++98 -E -dM< /dev/null | FileCheck -check-prefix GXX98 %s
 end_comment
 
 begin_comment
@@ -328,7 +328,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=objective-c -E -dM< /dev/null | FileCheck -check-prefix OBJC %s
+comment|// RUN: clang-cc -x objective-c -E -dM< /dev/null | FileCheck -check-prefix OBJC %s
 end_comment
 
 begin_comment
@@ -356,7 +356,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=objective-c -fobjc-gc -E -dM< /dev/null | FileCheck -check-prefix OBJCGC %s
+comment|// RUN: clang-cc -x objective-c -fobjc-gc -E -dM< /dev/null | FileCheck -check-prefix OBJCGC %s
 end_comment
 
 begin_comment
@@ -376,7 +376,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x=objective-c -fobjc-nonfragile-abi -E -dM< /dev/null | FileCheck -check-prefix NONFRAGILE %s
+comment|// RUN: clang-cc -x objective-c -fobjc-nonfragile-abi -E -dM< /dev/null | FileCheck -check-prefix NONFRAGILE %s
 end_comment
 
 begin_comment
@@ -440,7 +440,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fsigned-char -E -dM -fms-extensions=0< /dev/null | FileCheck -check-prefix SCHAR %s
+comment|// RUN: clang-cc -E -dM< /dev/null | FileCheck -check-prefix SCHAR %s
 end_comment
 
 begin_comment
@@ -628,6 +628,10 @@ comment|// ARM:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
+comment|// ARM:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
 comment|// ARM:#define __INTMAX_WIDTH__ 64
 end_comment
 
@@ -720,6 +724,10 @@ comment|// ARM:#define __PTRDIFF_TYPE__ int
 end_comment
 
 begin_comment
+comment|// ARM:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// ARM:#define __SCHAR_MAX__ 127
 end_comment
 
@@ -728,11 +736,23 @@ comment|// ARM:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// ARM:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// ARM:#define __SIZE_TYPE__ unsigned int
 end_comment
 
 begin_comment
+comment|// ARM:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// ARM:#define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -752,7 +772,15 @@ comment|// ARM:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// ARM:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// ARM:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM:#define __WINT_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -940,6 +968,10 @@ comment|// BFIN:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
+comment|// BFIN:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
 comment|// BFIN:#define __INTMAX_WIDTH__ 64
 end_comment
 
@@ -1028,6 +1060,10 @@ comment|// BFIN:#define __PTRDIFF_TYPE__ long int
 end_comment
 
 begin_comment
+comment|// BFIN:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// BFIN:#define __SCHAR_MAX__ 127
 end_comment
 
@@ -1036,7 +1072,19 @@ comment|// BFIN:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// BFIN:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// BFIN:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// BFIN:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -1052,7 +1100,15 @@ comment|// BFIN:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// BFIN:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// BFIN:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// BFIN:#define __WINT_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -1224,6 +1280,10 @@ comment|// I386:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
+comment|// I386:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
 comment|// I386:#define __INTMAX_WIDTH__ 64
 end_comment
 
@@ -1320,6 +1380,10 @@ comment|// I386:#define __PTRDIFF_TYPE__ int
 end_comment
 
 begin_comment
+comment|// I386:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// I386:#define __REGISTER_PREFIX__
 end_comment
 
@@ -1332,7 +1396,19 @@ comment|// I386:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// I386:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// I386:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// I386:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -1348,7 +1424,15 @@ comment|// I386:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// I386:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// I386:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// I386:#define __WINT_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -1532,6 +1616,10 @@ comment|// MSP430:#define __INTMAX_MAX__ 2147483647L
 end_comment
 
 begin_comment
+comment|// MSP430:#define __INTMAX_TYPE__ long int
+end_comment
+
+begin_comment
 comment|// MSP430:#define __INTMAX_WIDTH__ 32
 end_comment
 
@@ -1624,6 +1712,10 @@ comment|// MSP430:#define __PTRDIFF_TYPE__ int
 end_comment
 
 begin_comment
+comment|// MSP430:#define __PTRDIFF_WIDTH__ 16
+end_comment
+
+begin_comment
 comment|// MSP430:#define __SCHAR_MAX__ 127
 end_comment
 
@@ -1632,7 +1724,19 @@ comment|// MSP430:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// MSP430:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// MSP430:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZE_WIDTH__ 16
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -1648,7 +1752,15 @@ comment|// MSP430:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// MSP430:#define __WCHAR_WIDTH__ 16
+end_comment
+
+begin_comment
 comment|// MSP430:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __WINT_WIDTH__ 16
 end_comment
 
 begin_comment
@@ -1812,6 +1924,10 @@ comment|// PIC16:#define __INTMAX_MAX__ 2147483647L
 end_comment
 
 begin_comment
+comment|// PIC16:#define __INTMAX_TYPE__ long int
+end_comment
+
+begin_comment
 comment|// PIC16:#define __INTMAX_WIDTH__ 32
 end_comment
 
@@ -1900,6 +2016,10 @@ comment|// PIC16:#define __PTRDIFF_TYPE__ int
 end_comment
 
 begin_comment
+comment|// PIC16:#define __PTRDIFF_WIDTH__ 16
+end_comment
+
+begin_comment
 comment|// PIC16:#define __SCHAR_MAX__ 127
 end_comment
 
@@ -1908,7 +2028,19 @@ comment|// PIC16:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PIC16:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// PIC16:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZE_WIDTH__ 16
+end_comment
+
+begin_comment
+comment|// PIC16:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -1924,7 +2056,15 @@ comment|// PIC16:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// PIC16:#define __WCHAR_WIDTH__ 16
+end_comment
+
+begin_comment
 comment|// PIC16:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PIC16:#define __WINT_WIDTH__ 16
 end_comment
 
 begin_comment
@@ -1964,7 +2104,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc64-none-none -fsigned-char=0< /dev/null | FileCheck -check-prefix PPC64 %s
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc64-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix PPC64 %s
 end_comment
 
 begin_comment
@@ -2140,6 +2280,10 @@ comment|// PPC64:#define __INTMAX_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
+comment|// PPC64:#define __INTMAX_TYPE__ long int
+end_comment
+
+begin_comment
 comment|// PPC64:#define __INTMAX_WIDTH__ 64
 end_comment
 
@@ -2244,6 +2388,10 @@ comment|// PPC64:#define __PTRDIFF_TYPE__ long int
 end_comment
 
 begin_comment
+comment|// PPC64:#define __PTRDIFF_WIDTH__ 64
+end_comment
+
+begin_comment
 comment|// PPC64:#define __REGISTER_PREFIX__
 end_comment
 
@@ -2256,7 +2404,19 @@ comment|// PPC64:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PPC64:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// PPC64:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -2272,7 +2432,15 @@ comment|// PPC64:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// PPC64:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// PPC64:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __WINT_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -2288,7 +2456,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc-none-none -fsigned-char=0< /dev/null | FileCheck -check-prefix PPC %s
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix PPC %s
 end_comment
 
 begin_comment
@@ -2456,6 +2624,10 @@ comment|// PPC:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
+comment|// PPC:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
 comment|// PPC:#define __INTMAX_WIDTH__ 64
 end_comment
 
@@ -2556,6 +2728,10 @@ comment|// PPC:#define __PTRDIFF_TYPE__ long int
 end_comment
 
 begin_comment
+comment|// PPC:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// PPC:#define __REGISTER_PREFIX__
 end_comment
 
@@ -2568,7 +2744,19 @@ comment|// PPC:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PPC:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// PPC:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -2584,7 +2772,15 @@ comment|// PPC:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// PPC:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// PPC:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC:#define __WINT_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -2596,7 +2792,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=s390x-none-none -fsigned-char=0< /dev/null | FileCheck -check-prefix S390X %s
+comment|// RUN: clang-cc -E -dM -ffreestanding -triple=s390x-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix S390X %s
 end_comment
 
 begin_comment
@@ -2752,6 +2948,10 @@ comment|// S390X:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
+comment|// S390X:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
 comment|// S390X:#define __INTMAX_WIDTH__ 64
 end_comment
 
@@ -2840,6 +3040,10 @@ comment|// S390X:#define __PTRDIFF_TYPE__ long int
 end_comment
 
 begin_comment
+comment|// S390X:#define __PTRDIFF_WIDTH__ 64
+end_comment
+
+begin_comment
 comment|// S390X:#define __SCHAR_MAX__ 127
 end_comment
 
@@ -2848,7 +3052,19 @@ comment|// S390X:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// S390X:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// S390X:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -2864,7 +3080,15 @@ comment|// S390X:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// S390X:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// S390X:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// S390X:#define __WINT_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -3032,6 +3256,10 @@ comment|// SPARC:#define __INTMAX_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
+comment|// SPARC:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
 comment|// SPARC:#define __INTMAX_WIDTH__ 64
 end_comment
 
@@ -3120,6 +3348,10 @@ comment|// SPARC:#define __PTRDIFF_TYPE__ long int
 end_comment
 
 begin_comment
+comment|// SPARC:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// SPARC:#define __REGISTER_PREFIX__
 end_comment
 
@@ -3132,7 +3364,19 @@ comment|// SPARC:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// SPARC:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// SPARC:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINTMAX_TYPE__ long long unsigned int
 end_comment
 
 begin_comment
@@ -3152,7 +3396,15 @@ comment|// SPARC:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// SPARC:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// SPARC:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __WINT_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -3320,6 +3572,10 @@ comment|// TCE:#define __INTMAX_MAX__ 2147483647L
 end_comment
 
 begin_comment
+comment|// TCE:#define __INTMAX_TYPE__ long int
+end_comment
+
+begin_comment
 comment|// TCE:#define __INTMAX_WIDTH__ 32
 end_comment
 
@@ -3408,6 +3664,10 @@ comment|// TCE:#define __PTRDIFF_TYPE__ int
 end_comment
 
 begin_comment
+comment|// TCE:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// TCE:#define __SCHAR_MAX__ 127
 end_comment
 
@@ -3416,7 +3676,15 @@ comment|// TCE:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// TCE:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// TCE:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -3425,6 +3693,10 @@ end_comment
 
 begin_comment
 comment|// TCE:#define __TCE__ 1
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINTMAX_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -3440,7 +3712,15 @@ comment|// TCE:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// TCE:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// TCE:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// TCE:#define __WINT_WIDTH__ 32
 end_comment
 
 begin_comment
@@ -3616,6 +3896,10 @@ comment|// X86_64:#define __INTMAX_MAX__ 9223372036854775807L
 end_comment
 
 begin_comment
+comment|// X86_64:#define __INTMAX_TYPE__ long int
+end_comment
+
+begin_comment
 comment|// X86_64:#define __INTMAX_WIDTH__ 64
 end_comment
 
@@ -3720,6 +4004,10 @@ comment|// X86_64:#define __PTRDIFF_TYPE__ long int
 end_comment
 
 begin_comment
+comment|// X86_64:#define __PTRDIFF_WIDTH__ 64
+end_comment
+
+begin_comment
 comment|// X86_64:#define __REGISTER_PREFIX__
 end_comment
 
@@ -3732,7 +4020,15 @@ comment|// X86_64:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// X86_64:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// X86_64:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
@@ -3752,6 +4048,10 @@ comment|// X86_64:#define __SSE__ 1
 end_comment
 
 begin_comment
+comment|// X86_64:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
 comment|// X86_64:#define __USER_LABEL_PREFIX__ _
 end_comment
 
@@ -3764,7 +4064,15 @@ comment|// X86_64:#define __WCHAR_TYPE__ int
 end_comment
 
 begin_comment
+comment|// X86_64:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
 comment|// X86_64:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __WINT_WIDTH__ 32
 end_comment
 
 begin_comment

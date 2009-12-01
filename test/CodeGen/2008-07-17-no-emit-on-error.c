@@ -4,6 +4,14 @@ comment|// RUN: rm -f %t1.bc
 end_comment
 
 begin_comment
+comment|// RUN: clang-cc -DPASS %s -emit-llvm-bc -o %t1.bc
+end_comment
+
+begin_comment
+comment|// RUN: test -f %t1.bc
+end_comment
+
+begin_comment
 comment|// RUN: not clang-cc %s -emit-llvm-bc -o %t1.bc
 end_comment
 
@@ -18,6 +26,12 @@ parameter_list|()
 block|{ }
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PASS
+end_ifndef
+
 begin_function
 name|void
 name|g
@@ -28,6 +42,11 @@ literal|10
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

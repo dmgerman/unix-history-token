@@ -62,19 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/SourceManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/Diagnostic.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -86,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<deque>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<deque>
+file|<iterator>
 end_include
 
 begin_include
@@ -104,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<algorithm>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -112,28 +100,19 @@ name|namespace
 name|clang
 block|{
 name|class
-name|Stmt
-decl_stmt|;
-name|class
 name|Decl
 decl_stmt|;
 name|class
-name|Preprocessor
+name|SourceManager
+decl_stmt|;
+name|class
+name|Stmt
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// High-level interface for handlers of path-sensitive diagnostics.
 comment|//===----------------------------------------------------------------------===//
 name|class
 name|PathDiagnostic
-decl_stmt|;
-name|class
-name|Stmt
-decl_stmt|;
-name|class
-name|Decl
-decl_stmt|;
-name|class
-name|Preprocessor
 decl_stmt|;
 name|class
 name|PathDiagnosticClient

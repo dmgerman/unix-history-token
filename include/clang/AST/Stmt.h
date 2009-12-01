@@ -978,12 +978,34 @@ operator|~
 name|Stmt
 argument_list|()
 block|{}
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|/// \brief True if this statement's refcount is in a valid state.
+comment|/// Should be used only in assertions.
+name|bool
+name|isRetained
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|RefCount
+operator|>=
+literal|1
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 comment|/// \brief Destroy the current statement and its children.
 name|void
 name|Destroy
-argument_list|(
-argument|ASTContext&Ctx
-argument_list|)
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Ctx
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -991,7 +1013,7 @@ name|RefCount
 operator|>=
 literal|1
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -1108,7 +1130,7 @@ name|bool
 name|CollectingStats
 parameter_list|(
 name|bool
-name|enable
+name|Enable
 init|=
 name|false
 parameter_list|)
@@ -3327,6 +3349,11 @@ index|[
 name|END_EXPR
 index|]
 block|;
+comment|/// \brief If non-NULL, the declaration in the "if" statement.
+name|VarDecl
+operator|*
+name|Var
+block|;
 name|SourceLocation
 name|IfLoc
 block|;
@@ -3338,6 +3365,8 @@ operator|:
 name|IfStmt
 argument_list|(
 argument|SourceLocation IL
+argument_list|,
+argument|VarDecl *Var
 argument_list|,
 argument|Expr *cond
 argument_list|,
@@ -3351,7 +3380,22 @@ argument_list|)
 operator|:
 name|Stmt
 argument_list|(
-argument|IfStmtClass
+name|IfStmtClass
+argument_list|)
+block|,
+name|Var
+argument_list|(
+name|Var
+argument_list|)
+block|,
+name|IfLoc
+argument_list|(
+name|IL
+argument_list|)
+block|,
+name|ElseLoc
+argument_list|(
+argument|EL
 argument_list|)
 block|{
 name|SubExprs
@@ -3381,14 +3425,6 @@ name|ELSE
 index|]
 operator|=
 name|elsev
-block|;
-name|IfLoc
-operator|=
-name|IL
-block|;
-name|ElseLoc
-operator|=
-name|EL
 block|;   }
 comment|/// \brief Build an empty if/then/else statement
 name|explicit
@@ -3404,6 +3440,34 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
+comment|/// \brief Retrieve the variable declared in this "if" statement, if any.
+comment|///
+comment|/// In the following example, "x" is the condition variable.
+comment|/// \code
+comment|/// if (int x = foo()) {
+comment|///   printf("x is %d", x);
+comment|/// }
+comment|/// \endcode
+name|VarDecl
+operator|*
+name|getConditionVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Var
+return|;
+block|}
+name|void
+name|setConditionVariable
+argument_list|(
+argument|VarDecl *V
+argument_list|)
+block|{
+name|Var
+operator|=
+name|V
+block|; }
 specifier|const
 name|Expr
 operator|*
@@ -3694,6 +3758,10 @@ index|[
 name|END_EXPR
 index|]
 block|;
+name|VarDecl
+operator|*
+name|Var
+block|;
 comment|// This points to a linked list of case and default statements.
 name|SwitchCase
 operator|*
@@ -3717,6 +3785,10 @@ name|public
 operator|:
 name|SwitchStmt
 argument_list|(
+name|VarDecl
+operator|*
+name|Var
+argument_list|,
 name|Expr
 operator|*
 name|cond
@@ -3725,6 +3797,11 @@ operator|:
 name|Stmt
 argument_list|(
 name|SwitchStmtClass
+argument_list|)
+block|,
+name|Var
+argument_list|(
+name|Var
 argument_list|)
 block|,
 name|FirstCase
@@ -3752,7 +3829,7 @@ name|BODY
 index|]
 operator|=
 name|NULL
-block|;     }
+block|;   }
 comment|/// \brief Build a empty switch statement.
 name|explicit
 name|SwitchStmt
@@ -3767,6 +3844,35 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
+comment|/// \brief Retrieve the variable declared in this "switch" statement, if any.
+comment|///
+comment|/// In the following example, "x" is the condition variable.
+comment|/// \code
+comment|/// switch (int x = foo()) {
+comment|///   case 0: break;
+comment|///   // ...
+comment|/// }
+comment|/// \endcode
+name|VarDecl
+operator|*
+name|getConditionVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Var
+return|;
+block|}
+name|void
+name|setConditionVariable
+argument_list|(
+argument|VarDecl *V
+argument_list|)
+block|{
+name|Var
+operator|=
+name|V
+block|; }
 specifier|const
 name|Expr
 operator|*
@@ -4056,6 +4162,10 @@ block|,
 name|END_EXPR
 block|}
 block|;
+name|VarDecl
+operator|*
+name|Var
+block|;
 name|Stmt
 operator|*
 name|SubExprs
@@ -4070,6 +4180,8 @@ name|public
 operator|:
 name|WhileStmt
 argument_list|(
+argument|VarDecl *Var
+argument_list|,
 argument|Expr *cond
 argument_list|,
 argument|Stmt *body
@@ -4079,7 +4191,12 @@ argument_list|)
 operator|:
 name|Stmt
 argument_list|(
-argument|WhileStmtClass
+name|WhileStmtClass
+argument_list|)
+block|,
+name|Var
+argument_list|(
+argument|Var
 argument_list|)
 block|{
 name|SubExprs
@@ -4121,6 +4238,34 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
+comment|/// \brief Retrieve the variable declared in this "while" statement, if any.
+comment|///
+comment|/// In the following example, "x" is the condition variable.
+comment|/// \code
+comment|/// while (int x = random()) {
+comment|///   // ...
+comment|/// }
+comment|/// \endcode
+name|VarDecl
+operator|*
+name|getConditionVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Var
+return|;
+block|}
+name|void
+name|setConditionVariable
+argument_list|(
+argument|VarDecl *V
+argument_list|)
+block|{
+name|Var
+operator|=
+name|V
+block|; }
 name|Expr
 operator|*
 name|getCond
@@ -4666,6 +4811,10 @@ name|END_EXPR
 index|]
 block|;
 comment|// SubExprs[INIT] is an expression or declstmt.
+name|VarDecl
+operator|*
+name|CondVar
+block|;
 name|SourceLocation
 name|ForLoc
 block|;
@@ -4682,6 +4831,8 @@ argument|Stmt *Init
 argument_list|,
 argument|Expr *Cond
 argument_list|,
+argument|VarDecl *CondVar
+argument_list|,
 argument|Expr *Inc
 argument_list|,
 argument|Stmt *Body
@@ -4695,7 +4846,27 @@ argument_list|)
 operator|:
 name|Stmt
 argument_list|(
-argument|ForStmtClass
+name|ForStmtClass
+argument_list|)
+block|,
+name|CondVar
+argument_list|(
+name|CondVar
+argument_list|)
+block|,
+name|ForLoc
+argument_list|(
+name|FL
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LP
+argument_list|)
+block|,
+name|RParenLoc
+argument_list|(
+argument|RP
 argument_list|)
 block|{
 name|SubExprs
@@ -4739,18 +4910,6 @@ name|BODY
 index|]
 operator|=
 name|Body
-block|;
-name|ForLoc
-operator|=
-name|FL
-block|;
-name|LParenLoc
-operator|=
-name|LP
-block|;
-name|RParenLoc
-operator|=
-name|RP
 block|;   }
 comment|/// \brief Build an empty for statement.
 name|explicit
@@ -4778,6 +4937,34 @@ name|INIT
 index|]
 return|;
 block|}
+comment|/// \brief Retrieve the variable declared in this "for" statement, if any.
+comment|///
+comment|/// In the following example, "y" is the condition variable.
+comment|/// \code
+comment|/// for (int x = random(); int y = mangle(x); ++x) {
+comment|///   // ...
+comment|/// }
+comment|/// \endcode
+name|VarDecl
+operator|*
+name|getConditionVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CondVar
+return|;
+block|}
+name|void
+name|setConditionVariable
+argument_list|(
+argument|VarDecl *V
+argument_list|)
+block|{
+name|CondVar
+operator|=
+name|V
+block|; }
 name|Expr
 operator|*
 name|getCond

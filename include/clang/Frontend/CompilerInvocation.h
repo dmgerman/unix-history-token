@@ -146,6 +146,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Diagnostic
+decl_stmt|;
 comment|/// CompilerInvocation - Helper class for holding the data necessary to invoke
 comment|/// the compiler.
 comment|///
@@ -205,31 +208,48 @@ comment|/// @{
 comment|/// CreateFromArgs - Create a compiler invocation from a list of input
 comment|/// options.
 comment|///
-comment|/// FIXME: Documenting error behavior.
-comment|///
 comment|/// \param Res [out] - The resulting invocation.
-comment|/// \param Args - The input argument strings.
+comment|/// \param ArgBegin - The first element in the argument vector.
+comment|/// \param ArgEnd - The last element in the argument vector.
+comment|/// \param Argv0 - The program path (from argv[0]), for finding the builtin
+comment|/// compiler path.
+comment|/// \param MainAddr - The address of main (or some other function in the main
+comment|/// executable), for finding the builtin compiler path.
+comment|/// \param Diags - The diagnostic engine to use for errors.
 specifier|static
 name|void
 name|CreateFromArgs
-argument_list|(
+parameter_list|(
 name|CompilerInvocation
-operator|&
+modifier|&
 name|Res
-argument_list|,
+parameter_list|,
 specifier|const
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|llvm
-operator|::
-name|StringRef
-operator|>
-operator|&
-name|Args
-argument_list|)
-decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|ArgBegin
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|ArgEnd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Argv0
+parameter_list|,
+name|void
+modifier|*
+name|MainAddr
+parameter_list|,
+name|Diagnostic
+modifier|&
+name|Diags
+parameter_list|)
+function_decl|;
 comment|/// toArgs - Convert the CompilerInvocation to a list of strings suitable for
 comment|/// passing to CreateFromArgs.
 name|void

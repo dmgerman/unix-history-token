@@ -2268,6 +2268,7 @@ name|llvm
 operator|::
 name|PrettyStackTraceEntry
 block|{
+specifier|const
 name|Decl
 operator|*
 name|TheDecl
@@ -2288,7 +2289,7 @@ name|public
 operator|:
 name|PrettyStackTraceDecl
 argument_list|(
-argument|Decl *theDecl
+argument|const Decl *theDecl
 argument_list|,
 argument|SourceLocation L
 argument_list|,

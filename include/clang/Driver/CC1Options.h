@@ -64,12 +64,6 @@ init|=
 literal|0
 block|,
 comment|// This is not an option ID.
-name|OPT_INPUT
-block|,
-comment|// Reserved ID for input option.
-name|OPT_UNKNOWN
-block|,
-comment|// Reserved ID for unknown option.
 define|#
 directive|define
 name|OPTION

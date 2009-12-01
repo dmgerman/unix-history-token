@@ -96,11 +96,23 @@ comment|// Only run the always inlining pass.
 block|}
 enum|;
 name|unsigned
+name|AsmVerbose
+range|:
+literal|1
+decl_stmt|;
+comment|/// -dA, -fverbose-asm.
+name|unsigned
 name|DebugInfo
 range|:
 literal|1
 decl_stmt|;
 comment|/// Should generate deubg info (-g).
+name|unsigned
+name|DisableFPElim
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -fomit-frame-pointer is enabled.
 name|unsigned
 name|DisableLLVMOpts
 range|:
@@ -135,6 +147,12 @@ literal|1
 decl_stmt|;
 comment|/// Set when -mno-implicit-float is enabled.
 name|unsigned
+name|NoZeroInitializedInBSS
+range|:
+literal|1
+decl_stmt|;
+comment|/// -fno-zero-initialized-in-bss
+name|unsigned
 name|OptimizationLevel
 range|:
 literal|3
@@ -147,12 +165,11 @@ literal|1
 decl_stmt|;
 comment|/// If -Os is specified.
 name|unsigned
-name|SimplifyLibCalls
+name|SoftFloat
 range|:
 literal|1
 decl_stmt|;
-comment|/// Should standard library calls be treated
-comment|/// specially.
+comment|/// -soft-float.
 name|unsigned
 name|TimePasses
 range|:
@@ -173,21 +190,101 @@ literal|1
 decl_stmt|;
 comment|/// Control whether loops are unrolled.
 name|unsigned
+name|UnwindTables
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit unwind tables.
+name|unsigned
 name|VerifyModule
 range|:
 literal|1
 decl_stmt|;
 comment|/// Control whether the module should be run
 comment|/// through the LLVM Verifier.
-comment|/// Inlining - The kind of inlining to perform.
+comment|/// The code model to use (-mcmodel).
+name|std
+operator|::
+name|string
+name|CodeModel
+expr_stmt|;
+comment|/// Enable additional debugging information.
+name|std
+operator|::
+name|string
+name|DebugPass
+expr_stmt|;
+comment|/// The ABI to use for passing floating point arguments.
+name|std
+operator|::
+name|string
+name|FloatABI
+expr_stmt|;
+comment|/// The float precision limit to use, if non-empty.
+name|std
+operator|::
+name|string
+name|LimitFloatPrecision
+expr_stmt|;
+comment|/// The kind of inlining to perform.
 name|InliningMethod
 name|Inlining
 decl_stmt|;
+comment|/// The user provided name for the "main file", if non-empty. This is useful
+comment|/// in situations where the input file name does not match the original input
+comment|/// file, for example with -save-temps.
+name|std
+operator|::
+name|string
+name|MainFileName
+expr_stmt|;
+comment|/// The name of the relocation model to use.
+name|std
+operator|::
+name|string
+name|RelocationModel
+expr_stmt|;
 name|public
 label|:
 name|CodeGenOptions
 argument_list|()
 block|{
+name|AsmVerbose
+operator|=
+literal|0
+expr_stmt|;
+name|DebugInfo
+operator|=
+literal|0
+expr_stmt|;
+name|DisableFPElim
+operator|=
+literal|0
+expr_stmt|;
+name|DisableLLVMOpts
+operator|=
+literal|0
+expr_stmt|;
+name|DisableRedZone
+operator|=
+literal|0
+expr_stmt|;
+name|MergeAllConstants
+operator|=
+literal|1
+expr_stmt|;
+name|NoCommon
+operator|=
+literal|0
+expr_stmt|;
+name|NoImplicitFloat
+operator|=
+literal|0
+expr_stmt|;
+name|NoZeroInitializedInBSS
+operator|=
+literal|0
+expr_stmt|;
 name|OptimizationLevel
 operator|=
 literal|0
@@ -196,7 +293,15 @@ name|OptimizeSize
 operator|=
 literal|0
 expr_stmt|;
-name|DebugInfo
+name|UnrollLoops
+operator|=
+literal|0
+expr_stmt|;
+name|SoftFloat
+operator|=
+literal|0
+expr_stmt|;
+name|TimePasses
 operator|=
 literal|0
 expr_stmt|;
@@ -204,9 +309,7 @@ name|UnitAtATime
 operator|=
 literal|1
 expr_stmt|;
-name|SimplifyLibCalls
-operator|=
-name|UnrollLoops
+name|UnwindTables
 operator|=
 literal|0
 expr_stmt|;
@@ -214,33 +317,13 @@ name|VerifyModule
 operator|=
 literal|1
 expr_stmt|;
-name|TimePasses
-operator|=
-literal|0
-expr_stmt|;
-name|NoCommon
-operator|=
-literal|0
-expr_stmt|;
 name|Inlining
 operator|=
 name|NoInlining
 expr_stmt|;
-name|DisableRedZone
+name|RelocationModel
 operator|=
-literal|0
-expr_stmt|;
-name|NoImplicitFloat
-operator|=
-literal|0
-expr_stmt|;
-name|MergeAllConstants
-operator|=
-literal|1
-expr_stmt|;
-name|DisableLLVMOpts
-operator|=
-literal|0
+literal|"pic"
 expr_stmt|;
 block|}
 block|}

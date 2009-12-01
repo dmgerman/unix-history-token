@@ -393,6 +393,9 @@ name|class
 name|TemplateArgumentLoc
 decl_stmt|;
 name|class
+name|TemplateArgumentListInfo
+decl_stmt|;
+name|class
 name|QualifiedNameType
 decl_stmt|;
 struct_decl|struct
@@ -3663,6 +3666,12 @@ specifier|const
 expr_stmt|;
 comment|// Class
 name|bool
+name|isObjCSelType
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Class
+name|bool
 name|isObjCBuiltinType
 argument_list|()
 specifier|const
@@ -4026,7 +4035,10 @@ name|ObjCId
 block|,
 comment|// This represents the ObjC 'id' type.
 name|ObjCClass
+block|,
 comment|// This represents the ObjC 'Class' type.
+name|ObjCSel
+comment|// This represents the ObjC 'SEL' type.
 block|}
 block|;
 name|private
@@ -6098,12 +6110,14 @@ block|}
 block|;
 comment|/// DependentSizedArrayType - This type represents an array type in
 comment|/// C++ whose size is a value-dependent expression. For example:
-comment|/// @code
+comment|///
+comment|/// \code
 comment|/// template<typename T, int Size>
 comment|/// class array {
 comment|///   T data[Size];
 comment|/// };
-comment|/// @endcode
+comment|/// \endcode
+comment|///
 comment|/// For these types, we won't actually know what the array bound is
 comment|/// until template instantiation occurs, at which point this will
 comment|/// become either a ConstantArrayType or a VariableArrayType.
@@ -6117,8 +6131,11 @@ name|ASTContext
 operator|&
 name|Context
 block|;
-comment|/// SizeExpr - An assignment expression that will instantiate to the
+comment|/// \brief An assignment expression that will instantiate to the
 comment|/// size of the array.
+comment|///
+comment|/// The expression itself might be NULL, in which case the array
+comment|/// type will have its size deduced from an initializer.
 name|Stmt
 operator|*
 name|SizeExpr
@@ -9771,6 +9788,15 @@ argument_list|,
 argument|unsigned NumArgs
 argument_list|)
 block|;
+specifier|static
+name|bool
+name|anyDependentTemplateArguments
+argument_list|(
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+argument_list|)
+block|;
 comment|/// \brief Print a template argument list, including the '<' and '>'
 comment|/// enclosing the template arguments.
 specifier|static
@@ -9797,6 +9823,22 @@ argument_list|,
 argument|unsigned NumArgs
 argument_list|,
 argument|const PrintingPolicy&Policy
+argument_list|)
+block|;
+specifier|static
+name|std
+operator|::
+name|string
+name|PrintTemplateArgumentList
+argument_list|(
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+argument_list|,
+specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
 argument_list|)
 block|;
 typedef|typedef
@@ -12659,6 +12701,45 @@ specifier|inline
 name|bool
 name|Type
 operator|::
+name|isObjCSelType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|PointerType
+modifier|*
+name|OPT
+init|=
+name|getAs
+operator|<
+name|PointerType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|OPT
+operator|->
+name|getPointeeType
+argument_list|()
+operator|->
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|ObjCSel
+argument_list|)
+return|;
+return|return
+name|false
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
 name|isObjCBuiltinType
 argument_list|()
 specifier|const
@@ -12668,6 +12749,9 @@ name|isObjCIdType
 argument_list|()
 operator|||
 name|isObjCClassType
+argument_list|()
+operator|||
+name|isObjCSelType
 argument_list|()
 return|;
 block|}
@@ -12734,8 +12818,17 @@ return|return
 name|false
 return|;
 block|}
+end_block
+
+begin_comment
 comment|/// \brief Determines whether this is a type for which one can define
+end_comment
+
+begin_comment
 comment|/// an overloaded operator.
+end_comment
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12755,6 +12848,9 @@ name|isEnumeralType
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12788,6 +12884,9 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12809,8 +12908,17 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Insertion operator for diagnostics.  This allows sending QualType's into a
+end_comment
+
+begin_comment
 comment|/// diagnostic with<<.
+end_comment
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -12851,8 +12959,17 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Helper class template that is used by Type::getAs to ensure that one does
+end_comment
+
+begin_comment
 comment|// not try to look through a qualified type to get to an array type.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -12889,6 +13006,9 @@ expr|struct
 name|ArrayType_cannot_be_used_with_getAs
 block|{ }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -12902,7 +13022,13 @@ operator|,
 name|true
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Member-template getAs<specific type>'.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -12947,7 +13073,13 @@ condition|)
 return|return
 name|Ty
 return|;
+end_expr_stmt
+
+begin_comment
 comment|// If the canonical form of this type isn't the right kind, reject it.
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -12962,8 +13094,17 @@ condition|)
 return|return
 literal|0
 return|;
+end_if
+
+begin_comment
 comment|// If this is a typedef for the type, strip the typedef off without
+end_comment
+
+begin_comment
 comment|// losing all typedef information.
+end_comment
+
+begin_return
 return|return
 name|cast
 operator|<
@@ -12974,11 +13115,10 @@ name|getUnqualifiedDesugaredType
 argument_list|()
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
-unit|}
+unit|}  }
 comment|// end namespace clang
 end_comment
 

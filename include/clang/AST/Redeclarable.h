@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<iterator>
 end_include
 
@@ -390,6 +396,28 @@ begin_comment
 comment|/// \brief Returns the most recent (re)declaration of this declaration.
 end_comment
 
+begin_function
+name|decl_type
+modifier|*
+name|getMostRecentDeclaration
+parameter_list|()
+block|{
+return|return
+name|getFirstDeclaration
+argument_list|()
+operator|->
+name|RedeclLink
+operator|.
+name|getNext
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns the most recent (re)declaration of this declaration.
+end_comment
+
 begin_expr_stmt
 specifier|const
 name|decl_type
@@ -436,12 +464,25 @@ condition|(
 name|PrevDecl
 condition|)
 block|{
-comment|// Point to previous.
+comment|// Point to previous. Make sure that this is actually the most recent
+comment|// redeclaration, or we can build invalid chains. If the most recent
+comment|// redeclaration is invalid, it won't be PrevDecl, but we want it anyway.
 name|RedeclLink
 operator|=
 name|PreviousDeclLink
 argument_list|(
+name|llvm
+operator|::
+name|cast
+operator|<
+name|decl_type
+operator|>
+operator|(
 name|PrevDecl
+operator|->
+name|getMostRecentDeclaration
+argument_list|()
+operator|)
 argument_list|)
 expr_stmt|;
 name|First

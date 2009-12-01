@@ -1148,9 +1148,9 @@ name|EnterMainSourceFile
 parameter_list|()
 function_decl|;
 comment|/// EnterSourceFile - Add a source file to the top of the include stack and
-comment|/// start lexing tokens from it instead of the current buffer.  If isMainFile
-comment|/// is true, this is the main file for the translation unit.
-name|void
+comment|/// start lexing tokens from it instead of the current buffer.  Return true
+comment|/// on failure.
+name|bool
 name|EnterSourceFile
 parameter_list|(
 name|FileID

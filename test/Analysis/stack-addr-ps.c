@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=basic -verify %s
+comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=basic -fblocks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region -verify %s
+comment|// RUN: clang-cc -analyze -checker-cfref -analyzer-store=region -fblocks -verify %s
 end_comment
 
 begin_function
@@ -278,6 +278,86 @@ index|]
 return|;
 comment|// no-warning
 block|}
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|^
+name|ComparatorBlock
+function_decl|)
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function
+name|ComparatorBlock
+name|test_return_block
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ComparatorBlock
+name|b
+init|=
+lambda|^
+name|int
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+block|{
+return|return
+name|a
+operator|>
+name|b
+return|;
+block|}
+decl_stmt|;
+return|return
+name|b
+return|;
+comment|// expected-warning{{Address of stack-allocated block declared on line 61 returned to caller}}
+block|}
+end_function
+
+begin_function_decl
+name|ComparatorBlock
+name|test_return_block_neg_aux
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|ComparatorBlock
+name|test_return_block_neg
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ComparatorBlock
+name|b
+init|=
+name|test_return_block_neg_aux
+argument_list|()
+decl_stmt|;
+return|return
+name|b
+return|;
+comment|// no-warning
 block|}
 end_function
 

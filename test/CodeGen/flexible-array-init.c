@@ -1,18 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 7 | count 1
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 11 | count 1
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 13 | count 1
-end_comment
-
-begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | grep 15 | count 1
+comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_struct
@@ -38,6 +26,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|// CHECK: @a = global %0 { i32 1, [2 x i32] [i32 7, i32 11] }
+end_comment
+
 begin_struct
 struct|struct
 block|{
@@ -62,6 +54,10 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|// CHECK: @b = global %0 { i32 1, [2 x i32] [i32 13, i32 15] }
+end_comment
 
 end_unit
 

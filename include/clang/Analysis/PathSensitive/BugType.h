@@ -129,17 +129,11 @@ name|public
 label|:
 name|BugType
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|cat
+argument|llvm::StringRef cat
 argument_list|)
-operator|:
+block|:
 name|Name
 argument_list|(
 name|name
@@ -161,11 +155,9 @@ name|BugType
 argument_list|()
 expr_stmt|;
 comment|// FIXME: Should these be made strings as well?
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -174,11 +166,9 @@ return|return
 name|Name
 return|;
 block|}
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|getCategory
 argument_list|()
 specifier|const
@@ -296,12 +286,6 @@ range|:
 name|public
 name|BugType
 block|{
-name|GRExprEngine
-operator|*
-name|Eng
-block|;
-name|protected
-operator|:
 specifier|const
 name|std
 operator|::
@@ -330,11 +314,6 @@ argument_list|,
 literal|"Logic error"
 argument_list|)
 block|,
-name|Eng
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|desc
 argument_list|(
 argument|description
@@ -355,84 +334,14 @@ argument_list|,
 literal|"Logic error"
 argument_list|)
 block|,
-name|Eng
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|desc
 argument_list|(
 argument|name
 argument_list|)
 block|{}
-name|BuiltinBug
-argument_list|(
-name|GRExprEngine
-operator|*
-name|eng
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|n
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|d
-argument_list|)
-operator|:
-name|BugType
-argument_list|(
-name|n
-argument_list|,
-literal|"Logic error"
-argument_list|)
-block|,
-name|Eng
-argument_list|(
-name|eng
-argument_list|)
-block|,
-name|desc
-argument_list|(
-argument|d
-argument_list|)
-block|{}
-name|BuiltinBug
-argument_list|(
-name|GRExprEngine
-operator|*
-name|eng
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|n
-argument_list|)
-operator|:
-name|BugType
-argument_list|(
-name|n
-argument_list|,
-literal|"Logic error"
-argument_list|)
-block|,
-name|Eng
-argument_list|(
-name|eng
-argument_list|)
-block|,
-name|desc
-argument_list|(
-argument|n
-argument_list|)
-block|{}
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|getDescription
 argument_list|()
 specifier|const
@@ -441,57 +350,8 @@ return|return
 name|desc
 return|;
 block|}
-name|virtual
-name|void
-name|FlushReportsImpl
-argument_list|(
-argument|BugReporter& BR
-argument_list|,
-argument|GRExprEngine& Eng
-argument_list|)
-block|{}
-name|void
-name|FlushReports
-argument_list|(
-argument|BugReporter& BR
-argument_list|)
-block|{
-name|FlushReportsImpl
-argument_list|(
-name|BR
-argument_list|,
-operator|*
-name|Eng
-argument_list|)
-block|; }
-name|virtual
-name|void
-name|registerInitialVisitors
-argument_list|(
-argument|BugReporterContext& BRC
-argument_list|,
-argument|const ExplodedNode* N
-argument_list|,
-argument|BuiltinBugReport *R
-argument_list|)
-block|{}
-name|template
-operator|<
-name|typename
-name|ITER
-operator|>
-name|void
-name|Emit
-argument_list|(
-argument|BugReporter& BR
-argument_list|,
-argument|ITER I
-argument_list|,
-argument|ITER E
-argument_list|)
-block|; }
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

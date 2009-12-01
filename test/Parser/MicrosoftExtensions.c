@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -verify -fms-extensions -x=objective-c++ %s
+comment|// RUN: clang-cc -fsyntax-only -verify -fms-extensions -x objective-c++ %s
 end_comment
 
 begin_function_decl

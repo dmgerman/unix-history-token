@@ -870,6 +870,18 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param ObjectType if we're checking whether an identifier is a type
+end_comment
+
+begin_comment
+comment|/// within a C++ member access expression, this will be the type of the
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \returns the type referred to by this identifier, or NULL if the type
 end_comment
 
@@ -905,6 +917,12 @@ name|bool
 name|isClassName
 init|=
 name|false
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
+init|=
+literal|0
 parameter_list|)
 init|=
 literal|0
@@ -2926,6 +2944,17 @@ end_function
 
 begin_function
 name|virtual
+name|void
+name|ActOnForEachDeclStmt
+parameter_list|(
+name|DeclGroupPtrTy
+name|Decl
+parameter_list|)
+block|{   }
+end_function
+
+begin_function
+name|virtual
 name|OwningStmtResult
 name|ActOnExprStmt
 parameter_list|(
@@ -3059,6 +3088,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Parsed an "if" statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IfLoc the location of the "if" keyword.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CondVal if the "if" condition was parsed as an expression,
+end_comment
+
+begin_comment
+comment|/// the expression itself.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CondVar if the "if" condition was parsed as a condition variable,
+end_comment
+
+begin_comment
+comment|/// the condition variable itself.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ThenVal the "then" statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ElseLoc the location of the "else" keyword.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ElseVal the "else" statement.
+end_comment
+
 begin_function
 name|virtual
 name|OwningStmtResult
@@ -3069,6 +3158,9 @@ name|IfLoc
 parameter_list|,
 name|FullExprArg
 name|CondVal
+parameter_list|,
+name|DeclPtrTy
+name|CondVar
 parameter_list|,
 name|StmtArg
 name|ThenVal
@@ -3087,13 +3179,44 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Parsed the start of a "switch" statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Cond if the "switch" condition was parsed as an expression,
+end_comment
+
+begin_comment
+comment|/// the expression itself.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CondVar if the "switch" condition was parsed as a condition
+end_comment
+
+begin_comment
+comment|/// variable, the condition variable itself.
+end_comment
+
 begin_function
 name|virtual
 name|OwningStmtResult
 name|ActOnStartOfSwitchStmt
 parameter_list|(
-name|ExprArg
+name|FullExprArg
 name|Cond
+parameter_list|,
+name|DeclPtrTy
+name|CondVar
 parameter_list|)
 block|{
 return|return
@@ -3125,6 +3248,42 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Parsed a "while" statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Cond if the "while" condition was parsed as an expression,
+end_comment
+
+begin_comment
+comment|/// the expression itself.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CondVar if the "while" condition was parsed as a condition
+end_comment
+
+begin_comment
+comment|/// variable, the condition variable itself.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Body the body of the "while" loop.
+end_comment
+
 begin_function
 name|virtual
 name|OwningStmtResult
@@ -3135,6 +3294,9 @@ name|WhileLoc
 parameter_list|,
 name|FullExprArg
 name|Cond
+parameter_list|,
+name|DeclPtrTy
+name|CondVar
 parameter_list|,
 name|StmtArg
 name|Body
@@ -3178,6 +3340,86 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Parsed a "for" statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ForLoc the location of the "for" keyword.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param LParenLoc the location of the left parentheses.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param First the statement used to initialize the for loop.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Second the condition to be checked during each iteration, if
+end_comment
+
+begin_comment
+comment|/// that condition was parsed as an expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SecondArg the condition variable to be checked during each
+end_comment
+
+begin_comment
+comment|/// iterator, if that condition was parsed as a variable declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Third the expression that will be evaluated to "increment" any
+end_comment
+
+begin_comment
+comment|/// values prior to the next iteration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param RParenLoc the location of the right parentheses.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Body the body of the "body" loop.
+end_comment
+
 begin_function
 name|virtual
 name|OwningStmtResult
@@ -3192,10 +3434,13 @@ parameter_list|,
 name|StmtArg
 name|First
 parameter_list|,
-name|ExprArg
+name|FullExprArg
 name|Second
 parameter_list|,
-name|ExprArg
+name|DeclPtrTy
+name|SecondVar
+parameter_list|,
+name|FullExprArg
 name|Third
 parameter_list|,
 name|SourceLocation
@@ -3644,68 +3889,26 @@ begin_comment
 comment|/// \param NewContext is the new expression evaluation context.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \returns the previous expression evaluation context.
-end_comment
-
 begin_function
 name|virtual
-name|ExpressionEvaluationContext
+name|void
 name|PushExpressionEvaluationContext
 parameter_list|(
 name|ExpressionEvaluationContext
 name|NewContext
 parameter_list|)
-block|{
-return|return
-name|PotentiallyEvaluated
-return|;
-block|}
+block|{ }
 end_function
 
 begin_comment
-comment|/// \brief The parser is existing an expression evaluation context.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param OldContext the expression evaluation context that the parser is
-end_comment
-
-begin_comment
-comment|/// leaving.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param NewContext the expression evaluation context that the parser is
-end_comment
-
-begin_comment
-comment|/// returning to.
+comment|/// \brief The parser is exiting an expression evaluation context.
 end_comment
 
 begin_function
 name|virtual
 name|void
 name|PopExpressionEvaluationContext
-parameter_list|(
-name|ExpressionEvaluationContext
-name|OldContext
-parameter_list|,
-name|ExpressionEvaluationContext
-name|NewContext
-parameter_list|)
+parameter_list|()
 block|{ }
 end_function
 
@@ -3955,7 +4158,7 @@ end_function
 begin_function
 name|virtual
 name|OwningExprResult
-name|ActOnParenListExpr
+name|ActOnParenOrParenListExpr
 parameter_list|(
 name|SourceLocation
 name|L
@@ -3965,6 +4168,12 @@ name|R
 parameter_list|,
 name|MultiExprArg
 name|Val
+parameter_list|,
+name|TypeTy
+modifier|*
+name|TypeOfCast
+init|=
+literal|0
 parameter_list|)
 block|{
 return|return
@@ -4442,6 +4651,22 @@ block|{
 return|return
 name|ExprEmpty
 argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|virtual
+name|bool
+name|TypeIsVectorType
+parameter_list|(
+name|TypeTy
+modifier|*
+name|Ty
+parameter_list|)
+block|{
+return|return
+name|false
 return|;
 block|}
 end_function
@@ -5790,42 +6015,77 @@ block|}
 end_function
 
 begin_comment
-comment|/// ActOnCXXConditionDeclarationExpr - Parsed a condition declaration of a
+comment|/// \brief Parsed a condition declaration in a C++ if, switch, or while
 end_comment
 
 begin_comment
-comment|/// C++ if/switch/while/for statement.
+comment|/// statement.
 end_comment
 
 begin_comment
-comment|/// e.g: "if (int x = f()) {...}"
+comment|///
+end_comment
+
+begin_comment
+comment|/// This callback will be invoked after parsing the declaration of "x" in
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// if (int x = f()) {
+end_comment
+
+begin_comment
+comment|///   // ...
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope of the if, switch, or while statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D the declarator that that describes the variable being declared.
 end_comment
 
 begin_function
 name|virtual
-name|OwningExprResult
-name|ActOnCXXConditionDeclarationExpr
+name|DeclResult
+name|ActOnCXXConditionDeclaration
 parameter_list|(
 name|Scope
 modifier|*
 name|S
 parameter_list|,
-name|SourceLocation
-name|StartLoc
-parameter_list|,
 name|Declarator
 modifier|&
 name|D
-parameter_list|,
-name|SourceLocation
-name|EqualLoc
-parameter_list|,
-name|ExprArg
-name|AssignExprVal
 parameter_list|)
 block|{
 return|return
-name|ExprEmpty
+name|DeclResult
 argument_list|()
 return|;
 block|}
@@ -6193,6 +6453,9 @@ parameter_list|,
 name|ExprTy
 modifier|*
 name|Init
+parameter_list|,
+name|bool
+name|IsDefinition
 parameter_list|,
 name|bool
 name|Deleted
@@ -7018,6 +7281,18 @@ begin_comment
 comment|/// accessed.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param EnteringContext whether we are entering the context of this
+end_comment
+
+begin_comment
+comment|/// template.
+end_comment
+
 begin_function
 name|virtual
 name|TemplateTy
@@ -7038,6 +7313,9 @@ parameter_list|,
 name|TypeTy
 modifier|*
 name|ObjectType
+parameter_list|,
+name|bool
+name|EnteringContext
 parameter_list|)
 block|{
 return|return
@@ -10357,6 +10635,9 @@ argument_list|,
 argument|const CXXScopeSpec *SS
 argument_list|,
 argument|bool isClassName = false
+argument_list|,
+argument|TypeTy *ObjectType =
+literal|0
 argument_list|)
 block|;
 comment|/// isCurrentClassName - Always returns false, because MinimalAction
@@ -10578,18 +10859,6 @@ name|Action
 modifier|&
 name|Actions
 decl_stmt|;
-comment|/// \brief The previous expression evaluation context.
-name|Action
-operator|::
-name|ExpressionEvaluationContext
-name|PrevContext
-expr_stmt|;
-comment|/// \brief The current expression evaluation context.
-name|Action
-operator|::
-name|ExpressionEvaluationContext
-name|CurContext
-expr_stmt|;
 name|public
 label|:
 name|EnterExpressionEvaluationContext
@@ -10601,23 +10870,17 @@ argument_list|)
 block|:
 name|Actions
 argument_list|(
-name|Actions
-argument_list|)
-operator|,
-name|CurContext
-argument_list|(
-argument|NewContext
+argument|Actions
 argument_list|)
 block|{
-name|PrevContext
-operator|=
 name|Actions
 operator|.
 name|PushExpressionEvaluationContext
 argument_list|(
 name|NewContext
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 operator|~
 name|EnterExpressionEvaluationContext
 argument_list|()
@@ -10625,11 +10888,7 @@ block|{
 name|Actions
 operator|.
 name|PopExpressionEvaluationContext
-argument_list|(
-name|CurContext
-argument_list|,
-name|PrevContext
-argument_list|)
+argument_list|()
 block|;   }
 block|}
 end_decl_stmt

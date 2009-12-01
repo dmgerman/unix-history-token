@@ -670,14 +670,19 @@ specifier|static
 name|CodeCompletionString
 modifier|*
 name|Deserialize
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
-operator|&
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|&
 name|Str
-argument_list|)
-decl_stmt|;
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|StrEnd
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|llvm
@@ -709,6 +714,11 @@ label|:
 comment|/// \brief Whether to include macros in the code-completion results.
 name|bool
 name|IncludeMacros
+decl_stmt|;
+comment|/// \brief Whether the output format for the code-completion consumer is
+comment|/// binary.
+name|bool
+name|OutputIsBinary
 decl_stmt|;
 name|public
 label|:
@@ -1258,18 +1268,29 @@ argument_list|()
 operator|:
 name|IncludeMacros
 argument_list|(
+name|false
+argument_list|)
+operator|,
+name|OutputIsBinary
+argument_list|(
 argument|false
 argument_list|)
 block|{ }
-name|explicit
 name|CodeCompleteConsumer
 argument_list|(
 argument|bool IncludeMacros
+argument_list|,
+argument|bool OutputIsBinary
 argument_list|)
 operator|:
 name|IncludeMacros
 argument_list|(
-argument|IncludeMacros
+name|IncludeMacros
+argument_list|)
+operator|,
+name|OutputIsBinary
+argument_list|(
+argument|OutputIsBinary
 argument_list|)
 block|{ }
 comment|/// \brief Whether the code-completion consumer wants to see macros.
@@ -1280,6 +1301,16 @@ specifier|const
 block|{
 return|return
 name|IncludeMacros
+return|;
+block|}
+comment|/// \brief Determine whether the output of this consumer is binary.
+name|bool
+name|isOutputBinary
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OutputIsBinary
 return|;
 block|}
 comment|/// \brief Deregisters and destroys this code-completion consumer.
@@ -1366,6 +1397,8 @@ operator|:
 name|CodeCompleteConsumer
 argument_list|(
 name|IncludeMacros
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|OS
@@ -1429,6 +1462,8 @@ operator|:
 name|CodeCompleteConsumer
 argument_list|(
 name|IncludeMacros
+argument_list|,
+name|true
 argument_list|)
 block|,
 name|OS

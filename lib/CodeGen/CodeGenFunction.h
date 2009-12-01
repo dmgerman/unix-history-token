@@ -480,11 +480,11 @@ name|CleanupBlockInfo
 name|PopCleanupBlock
 parameter_list|()
 function_decl|;
-comment|/// CleanupScope - RAII object that will create a cleanup block and set the
-comment|/// insert point to that block. When destructed, it sets the insert point to
-comment|/// the previous block and pushes a new cleanup entry on the stack.
+comment|/// DelayedCleanupBlock - RAII object that will create a cleanup block and set
+comment|/// the insert point to that block. When destructed, it sets the insert point
+comment|/// to the previous block and pushes a new cleanup entry on the stack.
 name|class
-name|CleanupScope
+name|DelayedCleanupBlock
 block|{
 name|CodeGenFunction
 modifier|&
@@ -510,7 +510,7 @@ name|CleanupExitBB
 expr_stmt|;
 name|public
 label|:
-name|CleanupScope
+name|DelayedCleanupBlock
 argument_list|(
 name|CodeGenFunction
 operator|&
@@ -582,7 +582,7 @@ name|CleanupExitBB
 return|;
 block|}
 operator|~
-name|CleanupScope
+name|DelayedCleanupBlock
 argument_list|()
 block|{
 name|CGF
@@ -619,6 +619,155 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|/// \brief Enters a new scope for capturing cleanups, all of which will be
+comment|/// executed once the scope is exited.
+name|class
+name|CleanupScope
+block|{
+name|CodeGenFunction
+modifier|&
+name|CGF
+decl_stmt|;
+name|size_t
+name|CleanupStackDepth
+decl_stmt|;
+name|bool
+name|OldDidCallStackSave
+decl_stmt|;
+name|bool
+name|PerformCleanup
+decl_stmt|;
+name|CleanupScope
+argument_list|(
+specifier|const
+name|CleanupScope
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
+name|CleanupScope
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|CleanupScope
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
+name|public
+label|:
+comment|/// \brief Enter a new cleanup scope.
+name|explicit
+name|CleanupScope
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|CGF
+argument_list|)
+operator|,
+name|PerformCleanup
+argument_list|(
+argument|true
+argument_list|)
+block|{
+name|CleanupStackDepth
+operator|=
+name|CGF
+operator|.
+name|CleanupEntries
+operator|.
+name|size
+argument_list|()
+block|;
+name|OldDidCallStackSave
+operator|=
+name|CGF
+operator|.
+name|DidCallStackSave
+block|;     }
+comment|/// \brief Exit this cleanup scope, emitting any accumulated
+comment|/// cleanups.
+operator|~
+name|CleanupScope
+argument_list|()
+block|{
+if|if
+condition|(
+name|PerformCleanup
+condition|)
+block|{
+name|CGF
+operator|.
+name|DidCallStackSave
+operator|=
+name|OldDidCallStackSave
+expr_stmt|;
+name|CGF
+operator|.
+name|EmitCleanupBlocks
+argument_list|(
+name|CleanupStackDepth
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/// \brief Determine whether this scope requires any cleanups.
+name|bool
+name|requiresCleanups
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CGF
+operator|.
+name|CleanupEntries
+operator|.
+name|size
+argument_list|()
+operator|>
+name|CleanupStackDepth
+return|;
+block|}
+comment|/// \brief Force the emission of cleanups now, instead of waiting
+comment|/// until this object is destroyed.
+name|void
+name|ForceCleanup
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|PerformCleanup
+operator|&&
+literal|"Already forced cleanup"
+argument_list|)
+expr_stmt|;
+name|CGF
+operator|.
+name|DidCallStackSave
+operator|=
+name|OldDidCallStackSave
+expr_stmt|;
+name|CGF
+operator|.
+name|EmitCleanupBlocks
+argument_list|(
+name|CleanupStackDepth
+argument_list|)
+expr_stmt|;
+name|PerformCleanup
+operator|=
+name|false
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 comment|/// EmitCleanupBlocks - Takes the old cleanup stack size and emits the cleanup
 comment|/// blocks that have been added.
 name|void
@@ -643,34 +792,42 @@ operator|*
 name|Dest
 argument_list|)
 decl_stmt|;
-comment|/// PushConditionalTempDestruction - Should be called before a conditional
-comment|/// part of an expression is emitted. For example, before the RHS of the
-comment|/// expression below is emitted:
+comment|/// StartConditionalBranch - Should be called before a conditional part of an
+comment|/// expression is emitted. For example, before the RHS of the expression below
+comment|/// is emitted:
 comment|///
 comment|/// b&& f(T());
 comment|///
-comment|/// This is used to make sure that any temporaryes created in the conditional
+comment|/// This is used to make sure that any temporaries created in the conditional
 comment|/// branch are only destroyed if the branch is taken.
 name|void
-name|PushConditionalTempDestruction
+name|StartConditionalBranch
 parameter_list|()
-function_decl|;
-comment|/// PopConditionalTempDestruction - Should be called after a conditional
-comment|/// part of an expression has been emitted.
+block|{
+operator|++
+name|ConditionalBranchLevel
+expr_stmt|;
+block|}
+comment|/// FinishConditionalBranch - Should be called after a conditional part of an
+comment|/// expression has been emitted.
 name|void
-name|PopConditionalTempDestruction
+name|FinishConditionalBranch
 parameter_list|()
-function_decl|;
+block|{
+operator|--
+name|ConditionalBranchLevel
+expr_stmt|;
+block|}
 name|private
 label|:
 name|CGDebugInfo
 modifier|*
 name|DebugInfo
 decl_stmt|;
-comment|/// IndirectBranch - The first time an indirect goto is seen we create a
-comment|/// block with an indirect branch.  Every time we see the address of a label
-comment|/// taken, we add the label to the indirect goto.  Every subsequent indirect
-comment|/// goto is codegen'd as a jump to the IndirectBranch's basic block.
+comment|/// IndirectBranch - The first time an indirect goto is seen we create a block
+comment|/// with an indirect branch.  Every time we see the address of a label taken,
+comment|/// we add the label to the indirect goto.  Every subsequent indirect goto is
+comment|/// codegen'd as a jump to the IndirectBranch's basic block.
 name|llvm
 operator|::
 name|IndirectBrInst
@@ -913,11 +1070,18 @@ comment|/// BlockScopes - Map of which "cleanup scope" scope basic blocks have.
 name|BlockScopeMap
 name|BlockScopes
 decl_stmt|;
-comment|/// CXXThisDecl - When parsing an C++ function, this will hold the implicit
-comment|/// 'this' declaration.
+comment|/// CXXThisDecl - When generating code for a C++ member function,
+comment|/// this will hold the implicit 'this' declaration.
 name|ImplicitParamDecl
 modifier|*
 name|CXXThisDecl
+decl_stmt|;
+comment|/// CXXVTTDecl - When generating code for a base object constructor or
+comment|/// base object destructor with virtual bases, this will hold the implicit
+comment|/// VTT parameter.
+name|ImplicitParamDecl
+modifier|*
+name|CXXVTTDecl
 decl_stmt|;
 comment|/// CXXLiveTemporaryInfo - Holds information about a live C++ temporary.
 struct|struct
@@ -943,9 +1107,9 @@ name|BasicBlock
 operator|*
 name|DtorBlock
 expr_stmt|;
-comment|/// CondPtr - If this is a conditional temporary, this is the pointer to
-comment|/// the condition variable that states whether the destructor should be
-comment|/// called or not.
+comment|/// CondPtr - If this is a conditional temporary, this is the pointer to the
+comment|/// condition variable that states whether the destructor should be called
+comment|/// or not.
 name|llvm
 operator|::
 name|Value
@@ -1010,19 +1174,12 @@ literal|4
 operator|>
 name|LiveTemporaries
 expr_stmt|;
-comment|/// ConditionalTempDestructionStack - Contains the number of live temporaries
-comment|/// when PushConditionalTempDestruction was called. This is used so that
-comment|/// we know how many temporaries were created by a certain expression.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|size_t
-operator|,
-literal|4
-operator|>
-name|ConditionalTempDestructionStack
-expr_stmt|;
+comment|/// ConditionalBranchLevel - Contains the nesting level of the current
+comment|/// conditional branch. This is used so that we know if a temporary should be
+comment|/// destroyed conditionally.
+name|unsigned
+name|ConditionalBranchLevel
+decl_stmt|;
 comment|/// ByrefValueInfoMap - For each __block variable, contains a pair of the LLVM
 comment|/// type as well as the field number that contains the actual data.
 name|llvm
@@ -1376,11 +1533,16 @@ name|Value
 operator|*
 name|DynamicTypeAdjust
 argument_list|(
-argument|llvm::Value *V
+name|llvm
+operator|::
+name|Value
+operator|*
+name|V
 argument_list|,
-argument|int64_t nv
-argument_list|,
-argument|int64_t v
+specifier|const
+name|ThunkAdjustment
+operator|&
+name|Adjustment
 argument_list|)
 expr_stmt|;
 comment|/// GenerateThunk - Generate a thunk for the given method
@@ -1396,9 +1558,7 @@ argument|const CXXMethodDecl *MD
 argument_list|,
 argument|bool Extern
 argument_list|,
-argument|int64_t nv
-argument_list|,
-argument|int64_t v
+argument|const ThunkAdjustment&ThisAdjustment
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -1413,13 +1573,7 @@ argument|const CXXMethodDecl *MD
 argument_list|,
 argument|bool Extern
 argument_list|,
-argument|int64_t nv_t
-argument_list|,
-argument|int64_t v_t
-argument_list|,
-argument|int64_t nv_r
-argument_list|,
-argument|int64_t v_r
+argument|const CovariantThunkAdjustment&Adjustment
 argument_list|)
 expr_stmt|;
 name|void
@@ -1524,8 +1678,8 @@ name|Args
 argument_list|)
 decl_stmt|;
 comment|/// EmitDtorEpilogue - Emit all code that comes at the end of class's
-comment|/// destructor. This is to call destructors on members and base classes
-comment|/// in reverse order of their construction.
+comment|/// destructor. This is to call destructors on members and base classes in
+comment|/// reverse order of their construction.
 name|void
 name|EmitDtorEpilogue
 parameter_list|(
@@ -1705,15 +1859,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// SimplifyForwardingBlocks - If the given basic block is only a
+comment|/// SimplifyForwardingBlocks - If the given basic block is only a branch to
 end_comment
 
 begin_comment
-comment|/// branch to another basic block, simplify it. This assumes that no
+comment|/// another basic block, simplify it. This assumes that no other code could
 end_comment
 
 begin_comment
-comment|/// other code could potentially reference the basic block.
+comment|/// potentially reference the basic block.
 end_comment
 
 begin_decl_stmt
@@ -2356,15 +2510,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// EmitVLASize - Generate code for any VLA size expressions that might occur
+comment|/// EmitVLASize - Generate code for any VLA size expressions that might occur
 end_comment
 
 begin_comment
-comment|// in a variably modified type. If Ty is a VLA, will return the value that
+comment|/// in a variably modified type. If Ty is a VLA, will return the value that
 end_comment
 
 begin_comment
-comment|// corresponds to the size in bytes of the VLA type. Will return 0 otherwise.
+comment|/// corresponds to the size in bytes of the VLA type. Will return 0 otherwise.
 end_comment
 
 begin_comment
@@ -2428,11 +2582,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// GetAddressCXXOfBaseClass - This function will add the necessary delta
+comment|/// GetAddressOfBaseClass - This function will add the necessary delta to the
 end_comment
 
 begin_comment
-comment|/// to the load of 'this' and returns address of the base class.
+comment|/// load of 'this' and returns address of the base class.
 end_comment
 
 begin_comment
@@ -2448,13 +2602,31 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|GetAddressCXXOfBaseClass
+name|GetAddressOfBaseClass
 argument_list|(
-argument|llvm::Value *BaseValue
+argument|llvm::Value *Value
 argument_list|,
 argument|const CXXRecordDecl *ClassDecl
 argument_list|,
 argument|const CXXRecordDecl *BaseClassDecl
+argument_list|,
+argument|bool NullCheckValue
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|GetAddressOfDerivedClass
+argument_list|(
+argument|llvm::Value *Value
+argument_list|,
+argument|const CXXRecordDecl *ClassDecl
+argument_list|,
+argument|const CXXRecordDecl *DerivedClassDecl
 argument_list|,
 argument|bool NullCheckValue
 argument_list|)
@@ -2665,6 +2837,16 @@ operator|::
 name|Value
 operator|*
 name|ArrayPtr
+argument_list|,
+name|CallExpr
+operator|::
+name|const_arg_iterator
+name|ArgBeg
+argument_list|,
+name|CallExpr
+operator|::
+name|const_arg_iterator
+name|ArgEnd
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2689,6 +2871,16 @@ operator|::
 name|Value
 operator|*
 name|ArrayPtr
+argument_list|,
+name|CallExpr
+operator|::
+name|const_arg_iterator
+name|ArgBeg
+argument_list|,
+name|CallExpr
+operator|::
+name|const_arg_iterator
+name|ArgEnd
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -4160,18 +4352,6 @@ end_function_decl
 
 begin_function_decl
 name|LValue
-name|EmitCXXConditionDeclLValue
-parameter_list|(
-specifier|const
-name|CXXConditionDeclExpr
-modifier|*
-name|E
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|LValue
 name|EmitCXXConstructLValue
 parameter_list|(
 specifier|const
@@ -4331,15 +4511,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param TargetDecl - If given, the decl of the function in a
+comment|/// \param TargetDecl - If given, the decl of the function in a direct call;
 end_comment
 
 begin_comment
-comment|/// direct call; used to set attributes on the call (noreturn,
-end_comment
-
-begin_comment
-comment|/// etc.).
+comment|/// used to set attributes on the call (noreturn, etc.).
 end_comment
 
 begin_decl_stmt
@@ -5090,11 +5266,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// CreateStaticBlockVarDecl - Create a zero-initialized LLVM global
+comment|/// CreateStaticBlockVarDecl - Create a zero-initialized LLVM global for a
 end_comment
 
 begin_comment
-comment|/// for a static block var decl.
+comment|/// static block var decl.
 end_comment
 
 begin_expr_stmt
@@ -5108,17 +5284,17 @@ argument|const VarDecl&D
 argument_list|,
 argument|const char *Separator
 argument_list|,
-argument|llvm::GlobalValue::LinkageTypes                                                   Linkage
+argument|llvm::GlobalValue::LinkageTypes Linkage
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitStaticCXXBlockVarDeclInit - Create the initializer for a C++
+comment|/// EmitStaticCXXBlockVarDeclInit - Create the initializer for a C++ runtime
 end_comment
 
 begin_comment
-comment|/// runtime initialized static block var decl.
+comment|/// initialized static block var decl.
 end_comment
 
 begin_decl_stmt

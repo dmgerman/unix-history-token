@@ -108,6 +108,9 @@ block|{
 name|class
 name|AttributeList
 decl_stmt|;
+struct_decl|struct
+name|CXX0XAttributeList
+struct_decl|;
 name|class
 name|PragmaHandler
 decl_stmt|;
@@ -2432,7 +2435,9 @@ comment|//===-------------------------------------------------------------------
 comment|// C99 6.9: External Definitions.
 name|DeclGroupPtrTy
 name|ParseExternalDeclaration
-argument_list|()
+argument_list|(
+argument|CXX0XAttributeList Attr
+argument_list|)
 block|;
 name|bool
 name|isDeclarationAfterDeclarator
@@ -2445,6 +2450,8 @@ block|;
 name|DeclGroupPtrTy
 name|ParseDeclarationOrFunctionDefinition
 argument_list|(
+argument|AttributeList *Attr
+argument_list|,
 argument|AccessSpecifier AS = AS_none
 argument_list|)
 block|;
@@ -2725,7 +2732,7 @@ argument|bool isAddressOfOperand
 argument_list|,
 argument|bool&NotCastExpr
 argument_list|,
-argument|bool parseParenAsExprList
+argument|TypeTy *TypeOfCast
 argument_list|)
 block|;
 name|OwningExprResult
@@ -2735,7 +2742,8 @@ argument|bool isUnaryExpression
 argument_list|,
 argument|bool isAddressOfOperand = false
 argument_list|,
-argument|bool parseParenAsExprList = false
+argument|TypeTy *TypeOfCast =
+literal|0
 argument_list|)
 block|;
 name|OwningExprResult
@@ -2874,8 +2882,9 @@ parameter_list|,
 name|bool
 name|stopIfCastExpr
 parameter_list|,
-name|bool
-name|parseAsExprList
+name|TypeTy
+modifier|*
+name|TypeOfCast
 parameter_list|,
 name|TypeTy
 modifier|*
@@ -3090,10 +3099,18 @@ name|Start
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
-comment|// C++ if/switch/while/for condition expression.
-name|OwningExprResult
+comment|// C++ if/switch/while condition expression.
+name|bool
 name|ParseCXXCondition
-parameter_list|()
+parameter_list|(
+name|OwningExprResult
+modifier|&
+name|ExprResult
+parameter_list|,
+name|DeclPtrTy
+modifier|&
+name|DeclResult
+parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C++ types
@@ -3296,19 +3313,35 @@ parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseLabeledStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseCaseStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseDefaultStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseCompoundStatement
 parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|,
 name|bool
 name|isStmtExpr
 init|=
@@ -3329,61 +3362,84 @@ name|ParseParenExprOrCondition
 parameter_list|(
 name|OwningExprResult
 modifier|&
-name|CondExp
+name|ExprResult
 parameter_list|,
-name|bool
-name|OnlyAllowCondition
-init|=
-name|false
-parameter_list|,
-name|SourceLocation
-modifier|*
-name|LParenLoc
-init|=
-literal|0
-parameter_list|,
-name|SourceLocation
-modifier|*
-name|RParenLoc
-init|=
-literal|0
+name|DeclPtrTy
+modifier|&
+name|DeclResult
 parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseIfStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseSwitchStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseWhileStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseDoStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseForStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseGotoStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseContinueStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseBreakStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseReturnStatement
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseAsmStatement
@@ -3436,7 +3492,11 @@ comment|//===-------------------------------------------------------------------
 comment|// C++ 6: Statements and Blocks
 name|OwningStmtResult
 name|ParseCXXTryBlock
-parameter_list|()
+parameter_list|(
+name|AttributeList
+modifier|*
+name|Attr
+parameter_list|)
 function_decl|;
 name|OwningStmtResult
 name|ParseCXXTryBlockCommon
@@ -3503,6 +3563,9 @@ parameter_list|,
 name|SourceLocation
 modifier|&
 name|DeclEnd
+parameter_list|,
+name|CXX0XAttributeList
+name|Attr
 parameter_list|)
 function_decl|;
 name|DeclGroupPtrTy
@@ -3514,6 +3577,10 @@ parameter_list|,
 name|SourceLocation
 modifier|&
 name|DeclEnd
+parameter_list|,
+name|AttributeList
+modifier|*
+name|Attr
 parameter_list|)
 function_decl|;
 name|DeclGroupPtrTy
@@ -4106,9 +4173,19 @@ parameter_list|()
 function_decl|;
 comment|// EndLoc, if non-NULL, is filled with the location of the last token of
 comment|// the attribute list.
+name|CXX0XAttributeList
+name|ParseCXX0XAttributes
+parameter_list|(
+name|SourceLocation
+modifier|*
+name|EndLoc
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 name|AttributeList
 modifier|*
-name|ParseAttributes
+name|ParseGNUAttributes
 parameter_list|(
 name|SourceLocation
 modifier|*
@@ -4153,6 +4230,13 @@ parameter_list|(
 name|DeclSpec
 modifier|&
 name|DS
+parameter_list|)
+function_decl|;
+name|OwningExprResult
+name|ParseCXX0XAlignArgument
+parameter_list|(
+name|SourceLocation
+name|Start
 parameter_list|)
 function_decl|;
 comment|/// DeclaratorScopeObj - RAII object used in Parser::ParseDirectDeclarator to
@@ -4385,7 +4469,12 @@ modifier|&
 name|DS
 parameter_list|,
 name|bool
-name|AttributesAllowed
+name|GNUAttributesAllowed
+init|=
+name|true
+parameter_list|,
+name|bool
+name|CXX0XAttributesAllowed
 init|=
 name|true
 parameter_list|)
@@ -4472,6 +4561,26 @@ begin_comment
 comment|// C++ 7: Declarations [dcl.dcl]
 end_comment
 
+begin_decl_stmt
+name|bool
+name|isCXX0XAttributeSpecifier
+argument_list|(
+name|bool
+name|FullLookahead
+operator|=
+name|false
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+operator|*
+name|After
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|DeclPtrTy
 name|ParseNamespace
@@ -4506,6 +4615,9 @@ parameter_list|,
 name|SourceLocation
 modifier|&
 name|DeclEnd
+parameter_list|,
+name|CXX0XAttributeList
+name|Attrs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4523,6 +4635,10 @@ parameter_list|,
 name|SourceLocation
 modifier|&
 name|DeclEnd
+parameter_list|,
+name|AttributeList
+modifier|*
+name|Attr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4946,6 +5062,13 @@ name|TemplateParameterList
 modifier|&
 name|TemplateParams
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|isStartOfTemplateTypeParameter
+parameter_list|()
 function_decl|;
 end_function_decl
 

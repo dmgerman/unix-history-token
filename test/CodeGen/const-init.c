@@ -1,14 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-pc-linux-gnu -verify -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: clang-cc -triple i386-pc-linux-gnu -ffreestanding -verify -emit-llvm -o - %s | FileCheck %s
 end_comment
 
-begin_typedef
-typedef|typedef
-name|__INTPTR_TYPE__
-name|intptr_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
 
 begin_comment
 comment|// Brace-enclosed string array initializers

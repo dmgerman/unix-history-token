@@ -92,6 +92,9 @@ decl_stmt|;
 name|class
 name|raw_fd_ostream
 decl_stmt|;
+name|class
+name|Timer
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -247,6 +250,17 @@ operator|<
 name|CodeCompleteConsumer
 operator|>
 name|CompletionConsumer
+expr_stmt|;
+comment|/// The frontend timer
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|llvm
+operator|::
+name|Timer
+operator|>
+name|FrontendTimer
 expr_stmt|;
 comment|/// The list of active output files.
 name|std
@@ -1135,6 +1149,40 @@ name|Value
 parameter_list|)
 function_decl|;
 comment|/// }
+comment|/// @name Frontend timer
+comment|/// {
+name|bool
+name|hasFrontendTimer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FrontendTimer
+operator|!=
+literal|0
+return|;
+block|}
+name|llvm
+operator|::
+name|Timer
+operator|&
+name|getFrontendTimer
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|FrontendTimer
+operator|&&
+literal|"Compiler instance has no frontend timer!"
+argument_list|)
+block|;
+return|return
+operator|*
+name|FrontendTimer
+return|;
+block|}
+comment|/// }
 comment|/// @name Output Files
 comment|/// {
 comment|/// getOutputFileList - Get the list of (path, output stream) pairs of output
@@ -1389,6 +1437,11 @@ operator|&
 name|OS
 argument_list|)
 decl_stmt|;
+comment|/// Create the frontend timer and replace any existing one with it.
+name|void
+name|createFrontendTimer
+parameter_list|()
+function_decl|;
 comment|/// Create the default output file (from the invocation's options) and add it
 comment|/// to the list of tracked output files.
 name|llvm

@@ -1983,6 +1983,9 @@ block|,
 comment|/// \brief A conversion function name, e.g., operator int.
 name|IK_ConversionFunctionId
 block|,
+comment|/// \brief A user-defined literal name, e.g., operator "" _i.
+name|IK_LiteralOperatorId
+block|,
 comment|/// \brief A constructor name.
 name|IK_ConstructorName
 block|,
@@ -1998,7 +2001,8 @@ comment|/// \brief Anonymous union that holds extra data associated with the
 comment|/// parsed unqualified-id.
 union|union
 block|{
-comment|/// \brief When Kind == IK_Identifier, the parsed identifier.
+comment|/// \brief When Kind == IK_Identifier, the parsed identifier, or when Kind
+comment|/// == IK_UserLiteralId, the identifier suffix.
 name|IdentifierInfo
 modifier|*
 name|Identifier
@@ -2281,6 +2285,53 @@ expr_stmt|;
 name|ConversionFunctionId
 operator|=
 name|Ty
+expr_stmt|;
+block|}
+comment|/// \brief Specific that this unqualified-id was parsed as a
+comment|/// literal-operator-id.
+comment|///
+comment|/// \param Id the parsed identifier.
+comment|///
+comment|/// \param OpLoc the location of the 'operator' keyword.
+comment|///
+comment|/// \param IdLoc the location of the identifier.
+name|void
+name|setLiteralOperatorId
+parameter_list|(
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|Id
+parameter_list|,
+name|SourceLocation
+name|OpLoc
+parameter_list|,
+name|SourceLocation
+name|IdLoc
+parameter_list|)
+block|{
+name|Kind
+operator|=
+name|IK_LiteralOperatorId
+expr_stmt|;
+name|Identifier
+operator|=
+name|const_cast
+operator|<
+name|IdentifierInfo
+operator|*
+operator|>
+operator|(
+name|Id
+operator|)
+expr_stmt|;
+name|StartLocation
+operator|=
+name|OpLoc
+expr_stmt|;
+name|EndLocation
+operator|=
+name|IdLoc
 expr_stmt|;
 block|}
 comment|/// \brief Specify that this unqualified-id was parsed as a constructor name.

@@ -262,88 +262,6 @@ name|BR
 decl_stmt|;
 name|public
 label|:
-typedef|typedef
-name|llvm
-operator|::
-name|SmallPtrSet
-operator|<
-name|ExplodedNode
-operator|*
-operator|,
-literal|2
-operator|>
-name|ErrorNodes
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|ExplodedNode
-operator|*
-operator|,
-name|Expr
-operator|*
-operator|>
-name|UndefArgsTy
-expr_stmt|;
-comment|/// NilReceiverStructRetExplicit - Nodes in the ExplodedGraph that resulted
-comment|///  from [x ...] with 'x' definitely being nil and the result was a 'struct'
-comment|//  (an undefined value).
-name|ErrorNodes
-name|NilReceiverStructRetExplicit
-decl_stmt|;
-comment|/// NilReceiverStructRetImplicit - Nodes in the ExplodedGraph that resulted
-comment|///  from [x ...] with 'x' possibly being nil and the result was a 'struct'
-comment|//  (an undefined value).
-name|ErrorNodes
-name|NilReceiverStructRetImplicit
-decl_stmt|;
-comment|/// NilReceiverLargerThanVoidPtrRetExplicit - Nodes in the ExplodedGraph that
-comment|/// resulted from [x ...] with 'x' definitely being nil and the result's size
-comment|// was larger than sizeof(void *) (an undefined value).
-name|ErrorNodes
-name|NilReceiverLargerThanVoidPtrRetExplicit
-decl_stmt|;
-comment|/// NilReceiverLargerThanVoidPtrRetImplicit - Nodes in the ExplodedGraph that
-comment|/// resulted from [x ...] with 'x' possibly being nil and the result's size
-comment|// was larger than sizeof(void *) (an undefined value).
-name|ErrorNodes
-name|NilReceiverLargerThanVoidPtrRetImplicit
-decl_stmt|;
-comment|/// UndefBranches - Nodes in the ExplodedGraph that result from
-comment|///  taking a branch based on an undefined value.
-name|ErrorNodes
-name|UndefBranches
-decl_stmt|;
-comment|/// UndefStores - Sinks in the ExplodedGraph that result from
-comment|///  making a store to an undefined lvalue.
-name|ErrorNodes
-name|UndefStores
-decl_stmt|;
-comment|/// NoReturnCalls - Sinks in the ExplodedGraph that result from
-comment|//  calling a function with the attribute "noreturn".
-name|ErrorNodes
-name|NoReturnCalls
-decl_stmt|;
-comment|/// UndefResults - Nodes in the ExplodedGraph where the operands are defined
-comment|///  by the result is not.  Excludes divide-by-zero errors.
-name|ErrorNodes
-name|UndefResults
-decl_stmt|;
-comment|/// UndefReceiver - Nodes in the ExplodedGraph resulting from message
-comment|///  ObjC message expressions where the receiver is undefined (uninitialized).
-name|ErrorNodes
-name|UndefReceivers
-decl_stmt|;
-comment|/// MsgExprUndefArgs - Nodes in the ExplodedGraph resulting from
-comment|///   message expressions where a pass-by-value argument has an undefined
-comment|///  value.
-name|UndefArgsTy
-name|MsgExprUndefArgs
-decl_stmt|;
-name|public
-label|:
 name|GRExprEngine
 argument_list|(
 name|AnalysisManager
@@ -530,10 +448,6 @@ return|return
 name|G
 return|;
 block|}
-name|void
-name|RegisterInternalChecks
-parameter_list|()
-function_decl|;
 name|template
 operator|<
 name|typename
@@ -617,207 +531,6 @@ name|getTag
 argument_list|()
 argument_list|)
 operator|)
-return|;
-block|}
-name|bool
-name|isNoReturnCall
-argument_list|(
-specifier|const
-name|ExplodedNode
-operator|*
-name|N
-argument_list|)
-decl|const
-block|{
-return|return
-name|N
-operator|->
-name|isSink
-argument_list|()
-operator|&&
-name|NoReturnCalls
-operator|.
-name|count
-argument_list|(
-name|const_cast
-operator|<
-name|ExplodedNode
-operator|*
-operator|>
-operator|(
-name|N
-operator|)
-argument_list|)
-operator|!=
-literal|0
-return|;
-block|}
-typedef|typedef
-name|ErrorNodes
-operator|::
-name|iterator
-name|undef_branch_iterator
-expr_stmt|;
-name|undef_branch_iterator
-name|undef_branches_begin
-parameter_list|()
-block|{
-return|return
-name|UndefBranches
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|undef_branch_iterator
-name|undef_branches_end
-parameter_list|()
-block|{
-return|return
-name|UndefBranches
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-typedef|typedef
-name|ErrorNodes
-operator|::
-name|iterator
-name|nil_receiver_struct_ret_iterator
-expr_stmt|;
-name|nil_receiver_struct_ret_iterator
-name|nil_receiver_struct_ret_begin
-parameter_list|()
-block|{
-return|return
-name|NilReceiverStructRetExplicit
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|nil_receiver_struct_ret_iterator
-name|nil_receiver_struct_ret_end
-parameter_list|()
-block|{
-return|return
-name|NilReceiverStructRetExplicit
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-typedef|typedef
-name|ErrorNodes
-operator|::
-name|iterator
-name|nil_receiver_larger_than_voidptr_ret_iterator
-expr_stmt|;
-name|nil_receiver_larger_than_voidptr_ret_iterator
-name|nil_receiver_larger_than_voidptr_ret_begin
-parameter_list|()
-block|{
-return|return
-name|NilReceiverLargerThanVoidPtrRetExplicit
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|nil_receiver_larger_than_voidptr_ret_iterator
-name|nil_receiver_larger_than_voidptr_ret_end
-parameter_list|()
-block|{
-return|return
-name|NilReceiverLargerThanVoidPtrRetExplicit
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-typedef|typedef
-name|ErrorNodes
-operator|::
-name|iterator
-name|undef_result_iterator
-expr_stmt|;
-name|undef_result_iterator
-name|undef_results_begin
-parameter_list|()
-block|{
-return|return
-name|UndefResults
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|undef_result_iterator
-name|undef_results_end
-parameter_list|()
-block|{
-return|return
-name|UndefResults
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-typedef|typedef
-name|UndefArgsTy
-operator|::
-name|iterator
-name|undef_arg_iterator
-expr_stmt|;
-name|undef_arg_iterator
-name|msg_expr_undef_arg_begin
-parameter_list|()
-block|{
-return|return
-name|MsgExprUndefArgs
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|undef_arg_iterator
-name|msg_expr_undef_arg_end
-parameter_list|()
-block|{
-return|return
-name|MsgExprUndefArgs
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-typedef|typedef
-name|ErrorNodes
-operator|::
-name|iterator
-name|undef_receivers_iterator
-expr_stmt|;
-name|undef_receivers_iterator
-name|undef_receivers_begin
-parameter_list|()
-block|{
-return|return
-name|UndefReceivers
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|undef_receivers_iterator
-name|undef_receivers_end
-parameter_list|()
-block|{
-return|return
-name|UndefReceivers
-operator|.
-name|end
-argument_list|()
 return|;
 block|}
 name|void
@@ -1103,7 +816,7 @@ name|protected
 label|:
 comment|/// CheckerVisit - Dispatcher for performing checker-specific logic
 comment|///  at specific statements.
-name|void
+name|bool
 name|CheckerVisit
 parameter_list|(
 name|Stmt
@@ -1279,6 +992,23 @@ operator|&
 name|Dst
 argument_list|)
 decl_stmt|;
+comment|/// VisitBlockExpr - Transfer function logic for BlockExprs.
+name|void
+name|VisitBlockExpr
+parameter_list|(
+name|BlockExpr
+modifier|*
+name|BE
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|,
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|)
+function_decl|;
 comment|/// VisitBinaryOperator - Transfer function logic for binary operators.
 name|void
 name|VisitBinaryOperator

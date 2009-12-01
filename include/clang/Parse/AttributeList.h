@@ -107,6 +107,13 @@ name|AttrLoc
 decl_stmt|;
 name|IdentifierInfo
 modifier|*
+name|ScopeName
+decl_stmt|;
+name|SourceLocation
+name|ScopeLoc
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
 name|ParmName
 decl_stmt|;
 name|SourceLocation
@@ -128,6 +135,8 @@ name|Next
 decl_stmt|;
 name|bool
 name|DeclspecAttribute
+decl_stmt|,
+name|CXX0XAttribute
 decl_stmt|;
 name|AttributeList
 argument_list|(
@@ -155,6 +164,10 @@ argument|IdentifierInfo *AttrName
 argument_list|,
 argument|SourceLocation AttrLoc
 argument_list|,
+argument|IdentifierInfo *ScopeName
+argument_list|,
+argument|SourceLocation ScopeLoc
+argument_list|,
 argument|IdentifierInfo *ParmName
 argument_list|,
 argument|SourceLocation ParmLoc
@@ -166,6 +179,8 @@ argument_list|,
 argument|AttributeList *Next
 argument_list|,
 argument|bool declspec = false
+argument_list|,
+argument|bool cxx0x = false
 argument_list|)
 empty_stmt|;
 operator|~
@@ -191,7 +206,11 @@ name|AT_analyzer_noreturn
 block|,
 name|AT_annotate
 block|,
+name|AT_base_check
+block|,
 name|AT_blocks
+block|,
+name|AT_carries_dependency
 block|,
 name|AT_cdecl
 block|,
@@ -213,11 +232,15 @@ name|AT_ext_vector_type
 block|,
 name|AT_fastcall
 block|,
+name|AT_final
+block|,
 name|AT_format
 block|,
 name|AT_format_arg
 block|,
 name|AT_gnu_inline
+block|,
+name|AT_hiding
 block|,
 name|AT_malloc
 block|,
@@ -238,6 +261,8 @@ block|,
 name|AT_nsobject
 block|,
 name|AT_objc_exception
+block|,
+name|AT_override
 block|,
 name|AT_cf_returns_retained
 block|,
@@ -306,6 +331,34 @@ return|return
 name|AttrLoc
 return|;
 block|}
+name|bool
+name|hasScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ScopeName
+return|;
+block|}
+name|IdentifierInfo
+operator|*
+name|getScopeName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ScopeName
+return|;
+block|}
+name|SourceLocation
+name|getScopeLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ScopeLoc
+return|;
+block|}
 name|IdentifierInfo
 operator|*
 name|getParameterName
@@ -323,6 +376,15 @@ specifier|const
 block|{
 return|return
 name|DeclspecAttribute
+return|;
+block|}
+name|bool
+name|isCXX0XAttribute
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CXX0XAttribute
 return|;
 block|}
 name|Kind
@@ -630,6 +692,65 @@ return|return
 name|Left
 return|;
 block|}
+comment|/// CXX0XAttributeList - A wrapper around a C++0x attribute list.
+comment|/// Stores, in addition to the list proper, whether or not an actual list was
+comment|/// (as opposed to an empty list, which may be ill-formed in some places) and
+comment|/// the source range of the list.
+struct|struct
+name|CXX0XAttributeList
+block|{
+name|AttributeList
+modifier|*
+name|AttrList
+decl_stmt|;
+name|SourceRange
+name|Range
+decl_stmt|;
+name|bool
+name|HasAttr
+decl_stmt|;
+name|CXX0XAttributeList
+argument_list|(
+argument|AttributeList *attrList
+argument_list|,
+argument|SourceRange range
+argument_list|,
+argument|bool hasAttr
+argument_list|)
+block|:
+name|AttrList
+argument_list|(
+name|attrList
+argument_list|)
+operator|,
+name|Range
+argument_list|(
+name|range
+argument_list|)
+operator|,
+name|HasAttr
+argument_list|(
+argument|hasAttr
+argument_list|)
+block|{   }
+name|CXX0XAttributeList
+argument_list|()
+operator|:
+name|AttrList
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Range
+argument_list|()
+operator|,
+name|HasAttr
+argument_list|(
+argument|false
+argument_list|)
+block|{   }
+block|}
+struct|;
 block|}
 end_decl_stmt
 

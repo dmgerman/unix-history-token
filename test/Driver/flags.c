@@ -4,7 +4,7 @@ comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -### -S -msoft-float %
 end_comment
 
 begin_comment
-comment|// RUN: grep '"--no-implicit-float"' %t.log
+comment|// RUN: grep '"-no-implicit-float"' %t.log
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -### -S -msoft-float -
 end_comment
 
 begin_comment
-comment|// RUN: grep '"--no-implicit-float"' %t.log | count 0
+comment|// RUN: grep '"-no-implicit-float"' %t.log | count 0
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN: clang -ccc-host-triple i386-apple-darwin9 -### -S -mno-soft-floa
 end_comment
 
 begin_comment
-comment|// RUN: grep '"--no-implicit-float"' %t.log
+comment|// RUN: grep '"-no-implicit-float"' %t.log
 end_comment
 
 end_unit

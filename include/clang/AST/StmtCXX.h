@@ -166,6 +166,7 @@ name|VarDecl
 operator|*
 name|getExceptionDecl
 argument_list|()
+specifier|const
 block|{
 return|return
 name|ExceptionDecl
@@ -174,11 +175,13 @@ block|}
 name|QualType
 name|getCaughtType
 argument_list|()
+specifier|const
 block|;
 name|Stmt
 operator|*
 name|getHandlerBlock
 argument_list|()
+specifier|const
 block|{
 return|return
 name|HandlerBlock

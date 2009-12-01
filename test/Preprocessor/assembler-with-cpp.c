@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -x assembler-with-cpp -fdollars-in-identifiers=0 -E %s -o - | FileCheck -strict-whitespace -check-prefix=CHECK-Identifiers-False %s
+comment|// RUN: clang-cc -x assembler-with-cpp -E %s -o - | FileCheck -strict-whitespace -check-prefix=CHECK-Identifiers-False %s
 end_comment
 
 begin_ifndef
@@ -94,7 +94,7 @@ argument_list|(
 name|blarg
 argument_list|)
 comment|// CHECK-Identifiers-False: 6: blarg $foo
-comment|// RUN: clang-cc -x assembler-with-cpp -fdollars-in-identifiers=1 -E %s -o - | FileCheck -check-prefix=CHECK-Identifiers-True -strict-whitespace %s
+comment|// RUN: clang-cc -x assembler-with-cpp -fdollars-in-identifiers -E %s -o - | FileCheck -check-prefix=CHECK-Identifiers-True -strict-whitespace %s
 define|#
 directive|define
 name|FOO

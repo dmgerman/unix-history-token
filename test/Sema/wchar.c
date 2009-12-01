@@ -51,10 +51,35 @@ name|WCHAR_T_TYPE
 value|unsigned short
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__sun
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__AuroraUX__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|WCHAR_T_TYPE
+value|long
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* Solaris or AuroraUX. */
+end_comment
 
 begin_define
 define|#

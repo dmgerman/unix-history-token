@@ -1,6 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm %s -o - | not grep opaque
+comment|// RUN: clang-cc -emit-llvm -o - %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: ModuleID
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: opaque
+end_comment
+
+begin_comment
+comment|// CHECK: define void @f0
 end_comment
 
 begin_decl_stmt
@@ -114,6 +126,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function
+name|void
+name|f0
+parameter_list|()
+block|{}
+end_function
 
 end_unit
 

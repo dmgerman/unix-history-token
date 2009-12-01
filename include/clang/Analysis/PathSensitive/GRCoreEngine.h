@@ -916,10 +916,6 @@ decl|const
 block|{
 if|if
 condition|(
-operator|(
-name|ExplodedNode
-operator|*
-operator|)
 name|Pred
 operator|==
 name|getBasePredecessor
@@ -1891,6 +1887,8 @@ name|ExplodedNode
 operator|*
 name|Pred
 block|;
+name|public
+operator|:
 name|bool
 name|HasGeneratedNode
 block|;

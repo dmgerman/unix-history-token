@@ -89,6 +89,12 @@ directive|include
 file|"CGCall.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"CGCXX.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -126,6 +132,12 @@ name|ABIInfo
 decl_stmt|;
 name|class
 name|ASTContext
+decl_stmt|;
+name|class
+name|CXXConstructorDecl
+decl_stmt|;
+name|class
+name|CXXDestructorDecl
 decl_stmt|;
 name|class
 name|CXXMethodDecl
@@ -188,15 +200,6 @@ comment|/// is a member pointer, or a struct that contains a member pointer.
 name|bool
 name|ContainsMemberPointer
 decl_stmt|;
-comment|/// KeyFunction - The key function of the record layout (if one exists),
-comment|/// which is the first non-pure virtual function that is not inline at the
-comment|/// point of class definition.
-comment|/// See http://www.codesourcery.com/public/cxx-abi/abi.html#vague-vtable.
-specifier|const
-name|CXXMethodDecl
-modifier|*
-name|KeyFunction
-decl_stmt|;
 name|public
 label|:
 name|CGRecordLayout
@@ -204,8 +207,6 @@ argument_list|(
 argument|const llvm::Type *T
 argument_list|,
 argument|bool ContainsMemberPointer
-argument_list|,
-argument|const CXXMethodDecl *KeyFunction
 argument_list|)
 block|:
 name|LLVMType
@@ -215,12 +216,7 @@ argument_list|)
 operator|,
 name|ContainsMemberPointer
 argument_list|(
-name|ContainsMemberPointer
-argument_list|)
-operator|,
-name|KeyFunction
-argument_list|(
-argument|KeyFunction
+argument|ContainsMemberPointer
 argument_list|)
 block|{ }
 comment|/// getLLVMType - Return llvm type associated with this record.
@@ -244,17 +240,6 @@ specifier|const
 block|{
 return|return
 name|ContainsMemberPointer
-return|;
-block|}
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|getKeyFunction
-argument_list|()
-specifier|const
-block|{
-return|return
-name|KeyFunction
 return|;
 block|}
 block|}
@@ -624,6 +609,22 @@ argument_list|,
 argument|bool IsVariadic
 argument_list|)
 expr_stmt|;
+comment|/// GetFunctionTypeForVtable - Get the LLVM function type for use in a vtable,
+comment|/// given a CXXMethodDecl. If the method to has an incomplete return type,
+comment|/// and/or incomplete argument types, this will return the opaque type.
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|GetFunctionTypeForVtable
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|MD
+argument_list|)
+expr_stmt|;
 specifier|const
 name|CGRecordLayout
 modifier|&
@@ -715,6 +716,34 @@ specifier|const
 name|ObjCMethodDecl
 modifier|*
 name|MD
+parameter_list|)
+function_decl|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getFunctionInfo
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|D
+parameter_list|,
+name|CXXCtorType
+name|Type
+parameter_list|)
+function_decl|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getFunctionInfo
+parameter_list|(
+specifier|const
+name|CXXDestructorDecl
+modifier|*
+name|D
+parameter_list|,
+name|CXXDtorType
+name|Type
 parameter_list|)
 function_decl|;
 comment|// getFunctionInfo - Get the function info for a member function.

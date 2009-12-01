@@ -232,6 +232,8 @@ name|Lexer
 argument_list|(
 argument|FileID FID
 argument_list|,
+argument|const llvm::MemoryBuffer *InputBuffer
+argument_list|,
 argument|Preprocessor&PP
 argument_list|)
 block|;
@@ -257,6 +259,8 @@ comment|/// range will outlive it, so it doesn't take ownership of it.
 name|Lexer
 argument_list|(
 argument|FileID FID
+argument_list|,
+argument|const llvm::MemoryBuffer *InputBuffer
 argument_list|,
 argument|const SourceManager&SM
 argument_list|,
