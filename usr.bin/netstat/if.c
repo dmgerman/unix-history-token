@@ -837,9 +837,6 @@ decl_stmt|;
 name|u_long
 name|collisions
 decl_stmt|;
-name|short
-name|timer
-decl_stmt|;
 name|int
 name|drops
 decl_stmt|;
@@ -1019,17 +1016,6 @@ argument_list|(
 literal|" %5s"
 argument_list|,
 literal|"Coll"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tflag
-condition|)
-name|printf
-argument_list|(
-literal|" %s"
-argument_list|,
-literal|"Time"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1291,12 +1277,6 @@ operator|=
 name|ifnet
 operator|.
 name|if_collisions
-expr_stmt|;
-name|timer
-operator|=
-name|ifnet
-operator|.
-name|if_timer
 expr_stmt|;
 name|drops
 operator|=
@@ -2119,21 +2099,6 @@ argument_list|,
 literal|5
 argument_list|,
 name|collisions
-argument_list|,
-name|link_layer
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tflag
-condition|)
-name|show_stat
-argument_list|(
-literal|"LSd"
-argument_list|,
-literal|4
-argument_list|,
-name|timer
 argument_list|,
 name|link_layer
 argument_list|)
