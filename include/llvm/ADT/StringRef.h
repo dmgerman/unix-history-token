@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<algorithm>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -124,6 +124,51 @@ comment|/// The length of the string.
 name|size_t
 name|Length
 decl_stmt|;
+comment|// Workaround PR5482: nearly all gcc 4.x miscompile StringRef and std::min()
+comment|// Changing the arg of min to be an integer, instead of a reference to an
+comment|// integer works around this bug.
+name|size_t
+name|min
+argument_list|(
+name|size_t
+name|a
+argument_list|,
+name|size_t
+name|b
+argument_list|)
+decl|const
+block|{
+return|return
+name|a
+operator|<
+name|b
+condition|?
+name|a
+else|:
+name|b
+return|;
+block|}
+name|size_t
+name|max
+argument_list|(
+name|size_t
+name|a
+argument_list|,
+name|size_t
+name|b
+argument_list|)
+decl|const
+block|{
+return|return
+name|a
+operator|>
+name|b
+condition|?
+name|a
+else|:
+name|b
+return|;
+block|}
 name|public
 label|:
 comment|/// @name Constructors
@@ -393,8 +438,6 @@ name|RHS
 operator|.
 name|Data
 argument_list|,
-name|std
-operator|::
 name|min
 argument_list|(
 name|Length
@@ -593,8 +636,6 @@ control|(
 name|size_t
 name|i
 init|=
-name|std
-operator|::
 name|min
 argument_list|(
 name|From
@@ -665,8 +706,6 @@ decl|const
 block|{
 name|From
 operator|=
-name|std
-operator|::
 name|min
 argument_list|(
 name|From
@@ -936,8 +975,6 @@ decl|const
 block|{
 name|Start
 operator|=
-name|std
-operator|::
 name|min
 argument_list|(
 name|Start
@@ -952,8 +989,6 @@ name|Data
 operator|+
 name|Start
 argument_list|,
-name|std
-operator|::
 name|min
 argument_list|(
 name|N
@@ -988,8 +1023,6 @@ decl|const
 block|{
 name|Start
 operator|=
-name|std
-operator|::
 name|min
 argument_list|(
 name|Start
@@ -999,12 +1032,8 @@ argument_list|)
 expr_stmt|;
 name|End
 operator|=
-name|std
-operator|::
 name|min
 argument_list|(
-name|std
-operator|::
 name|max
 argument_list|(
 name|Start

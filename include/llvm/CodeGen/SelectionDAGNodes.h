@@ -783,11 +783,9 @@ comment|//   Operand #2n+3: A TargetConstant, indicating if the reg is a use/def
 comment|//   Operand #last: Optional, an incoming flag.
 name|INLINEASM
 block|,
-comment|// DBG_LABEL, EH_LABEL - Represents a label in mid basic block used to track
+comment|// EH_LABEL - Represents a label in mid basic block used to track
 comment|// locations needed for debug and exception handling tables.  These nodes
 comment|// take a chain as input and return a chain.
-name|DBG_LABEL
-block|,
 name|EH_LABEL
 block|,
 comment|// STACKSAVE - STACKSAVE has one operand, an input chain.  It produces a
@@ -840,18 +838,6 @@ name|READCYCLECOUNTER
 block|,
 comment|// HANDLENODE node - Used as a handle for various purposes.
 name|HANDLENODE
-block|,
-comment|// DBG_STOPPOINT - This node is used to represent a source location for
-comment|// debug info.  It takes token chain as input, and carries a line number,
-comment|// column number, and a pointer to a CompileUnit object identifying
-comment|// the containing compilation unit.  It produces a token chain as output.
-name|DBG_STOPPOINT
-block|,
-comment|// DEBUG_LOC - This node is used to represent source line information
-comment|// embedded in the code.  It takes a token chain as input, then a line
-comment|// number, then a column then a file id (provided by MachineModuleInfo.) It
-comment|// produces a token chain as output.
-name|DEBUG_LOC
 block|,
 comment|// TRAMPOLINE - This corresponds to the init_trampoline intrinsic.
 comment|// It takes as input a token chain, the pointer to the trampoline,
@@ -960,17 +946,6 @@ comment|/// ISD::SCALAR_TO_VECTOR node or a BUILD_VECTOR node where only the low
 comment|/// element is not an undef.
 name|bool
 name|isScalarToVector
-parameter_list|(
-specifier|const
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isDebugLabel - Return true if the specified node represents a debug
-comment|/// label (i.e. ISD::DBG_LABEL or TargetInstrInfo::DBG_LABEL node).
-name|bool
-name|isDebugLabel
 parameter_list|(
 specifier|const
 name|SDNode
@@ -7112,143 +7087,6 @@ block|}
 expr|}
 block|;
 name|class
-name|DbgStopPointSDNode
-operator|:
-name|public
-name|SDNode
-block|{
-name|SDUse
-name|Chain
-block|;
-name|unsigned
-name|Line
-block|;
-name|unsigned
-name|Column
-block|;
-name|MDNode
-operator|*
-name|CU
-block|;
-name|friend
-name|class
-name|SelectionDAG
-block|;
-name|DbgStopPointSDNode
-argument_list|(
-argument|SDValue ch
-argument_list|,
-argument|unsigned l
-argument_list|,
-argument|unsigned c
-argument_list|,
-argument|MDNode *cu
-argument_list|)
-operator|:
-name|SDNode
-argument_list|(
-name|ISD
-operator|::
-name|DBG_STOPPOINT
-argument_list|,
-name|DebugLoc
-operator|::
-name|getUnknownLoc
-argument_list|()
-argument_list|,
-name|getSDVTList
-argument_list|(
-name|MVT
-operator|::
-name|Other
-argument_list|)
-argument_list|)
-block|,
-name|Line
-argument_list|(
-name|l
-argument_list|)
-block|,
-name|Column
-argument_list|(
-name|c
-argument_list|)
-block|,
-name|CU
-argument_list|(
-argument|cu
-argument_list|)
-block|{
-name|InitOperands
-argument_list|(
-operator|&
-name|Chain
-argument_list|,
-name|ch
-argument_list|)
-block|;   }
-name|public
-operator|:
-name|unsigned
-name|getLine
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Line
-return|;
-block|}
-name|unsigned
-name|getColumn
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Column
-return|;
-block|}
-name|MDNode
-operator|*
-name|getCompileUnit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CU
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DbgStopPointSDNode *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SDNode *N
-argument_list|)
-block|{
-return|return
-name|N
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|ISD
-operator|::
-name|DBG_STOPPOINT
-return|;
-block|}
-expr|}
-block|;
-name|class
 name|BlockAddressSDNode
 operator|:
 name|public
@@ -7258,6 +7096,10 @@ name|BlockAddress
 operator|*
 name|BA
 block|;
+name|unsigned
+name|char
+name|TargetFlags
+block|;
 name|friend
 name|class
 name|SelectionDAG
@@ -7266,18 +7108,21 @@ name|BlockAddressSDNode
 argument_list|(
 argument|unsigned NodeTy
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
 argument|EVT VT
 argument_list|,
 argument|BlockAddress *ba
+argument_list|,
+argument|unsigned char Flags
 argument_list|)
 operator|:
 name|SDNode
 argument_list|(
 name|NodeTy
 argument_list|,
-name|dl
+name|DebugLoc
+operator|::
+name|getUnknownLoc
+argument_list|()
 argument_list|,
 name|getSDVTList
 argument_list|(
@@ -7287,7 +7132,12 @@ argument_list|)
 block|,
 name|BA
 argument_list|(
-argument|ba
+name|ba
+argument_list|)
+block|,
+name|TargetFlags
+argument_list|(
+argument|Flags
 argument_list|)
 block|{   }
 name|public
@@ -7300,6 +7150,16 @@ specifier|const
 block|{
 return|return
 name|BA
+return|;
+block|}
+name|unsigned
+name|char
+name|getTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetFlags
 return|;
 block|}
 specifier|static
@@ -7426,15 +7286,6 @@ argument|const SDNode *N
 argument_list|)
 block|{
 return|return
-name|N
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|ISD
-operator|::
-name|DBG_LABEL
-operator|||
 name|N
 operator|->
 name|getOpcode

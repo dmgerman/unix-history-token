@@ -123,6 +123,9 @@ decl_stmt|;
 name|class
 name|PredIteratorCache
 decl_stmt|;
+name|class
+name|DominatorTree
+decl_stmt|;
 comment|/// MemDepResult - A memory dependence query can return one of three different
 comment|/// answers, described below.
 name|class
@@ -755,6 +758,101 @@ operator|>
 operator|&
 name|Result
 argument_list|)
+decl_stmt|;
+comment|/// GetPHITranslatedValue - Find an available version of the specified value
+comment|/// PHI translated across the specified edge.  If MemDep isn't able to
+comment|/// satisfy this request, it returns null.
+name|Value
+modifier|*
+name|GetPHITranslatedValue
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|BasicBlock
+operator|*
+name|CurBB
+argument_list|,
+name|BasicBlock
+operator|*
+name|PredBB
+argument_list|,
+specifier|const
+name|TargetData
+operator|*
+name|TD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// GetAvailablePHITranslatedValue - Return the value computed by
+comment|/// PHITranslatePointer if it dominates PredBB, otherwise return null.
+name|Value
+modifier|*
+name|GetAvailablePHITranslatedValue
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|BasicBlock
+operator|*
+name|CurBB
+argument_list|,
+name|BasicBlock
+operator|*
+name|PredBB
+argument_list|,
+specifier|const
+name|TargetData
+operator|*
+name|TD
+argument_list|,
+specifier|const
+name|DominatorTree
+operator|&
+name|DT
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// InsertPHITranslatedPointer - Insert a computation of the PHI translated
+comment|/// version of 'V' for the edge PredBB->CurBB into the end of the PredBB
+comment|/// block.  All newly created instructions are added to the NewInsts list.
+name|Value
+modifier|*
+name|InsertPHITranslatedPointer
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|BasicBlock
+operator|*
+name|CurBB
+argument_list|,
+name|BasicBlock
+operator|*
+name|PredBB
+argument_list|,
+specifier|const
+name|TargetData
+operator|*
+name|TD
+argument_list|,
+specifier|const
+name|DominatorTree
+operator|&
+name|DT
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|NewInsts
+argument_list|)
+decl|const
 decl_stmt|;
 comment|/// removeInstruction - Remove an instruction from the dependence analysis,
 comment|/// updating the dependence of instructions that previously depended on it.

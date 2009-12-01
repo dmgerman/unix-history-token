@@ -101,7 +101,7 @@ name|class
 name|FastISel
 decl_stmt|;
 name|class
-name|SelectionDAGLowering
+name|SelectionDAGBuilder
 decl_stmt|;
 name|class
 name|SDValue
@@ -177,9 +177,9 @@ name|SelectionDAG
 operator|*
 name|CurDAG
 block|;
-name|SelectionDAGLowering
+name|SelectionDAGBuilder
 operator|*
-name|SDL
+name|SDB
 block|;
 name|MachineBasicBlock
 operator|*
@@ -451,6 +451,8 @@ argument_list|,
 argument|BasicBlock::iterator Begin
 argument_list|,
 argument|BasicBlock::iterator End
+argument_list|,
+argument|bool&HadTailCall
 argument_list|)
 block|;
 name|void

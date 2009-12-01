@@ -111,6 +111,16 @@ operator|:
 name|public
 name|DefaultDOTGraphTraits
 block|{
+name|DOTGraphTraits
+argument_list|(
+argument|bool isSimple=false
+argument_list|)
+operator|:
+name|DefaultDOTGraphTraits
+argument_list|(
+argument|isSimple
+argument_list|)
+block|{}
 specifier|static
 name|std
 operator|::
@@ -135,19 +145,15 @@ specifier|static
 name|std
 operator|::
 name|string
-name|getNodeLabel
+name|getSimpleNodeLabel
 argument_list|(
 argument|const BasicBlock *Node
 argument_list|,
 argument|const Function *Graph
-argument_list|,
-argument|bool ShortNames
 argument_list|)
 block|{
 if|if
 condition|(
-name|ShortNames
-operator|&&
 operator|!
 name|Node
 operator|->
@@ -162,8 +168,6 @@ name|Node
 operator|->
 name|getNameStr
 argument_list|()
-operator|+
-literal|":"
 return|;
 name|std
 operator|::
@@ -176,11 +180,6 @@ argument_list|(
 name|Str
 argument_list|)
 block|;
-if|if
-condition|(
-name|ShortNames
-condition|)
-block|{
 name|WriteAsOperand
 argument_list|(
 name|OS
@@ -189,7 +188,7 @@ name|Node
 argument_list|,
 name|false
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|OS
 operator|.
@@ -197,6 +196,28 @@ name|str
 argument_list|()
 return|;
 block|}
+specifier|static
+name|std
+operator|::
+name|string
+name|getCompleteNodeLabel
+argument_list|(
+argument|const BasicBlock *Node
+argument_list|,
+argument|const Function *Graph
+argument_list|)
+block|{
+name|std
+operator|::
+name|string
+name|Str
+block|;
+name|raw_string_ostream
+name|OS
+argument_list|(
+name|Str
+argument_list|)
+block|;
 if|if
 condition|(
 name|Node
@@ -364,6 +385,42 @@ name|OutStr
 return|;
 block|}
 end_decl_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|getNodeLabel
+argument_list|(
+argument|const BasicBlock *Node
+argument_list|,
+argument|const Function *Graph
+argument_list|)
+block|{
+if|if
+condition|(
+name|isSimple
+argument_list|()
+condition|)
+return|return
+name|getSimpleNodeLabel
+argument_list|(
+name|Node
+argument_list|,
+name|Graph
+argument_list|)
+return|;
+else|else
+return|return
+name|getCompleteNodeLabel
+argument_list|(
+name|Node
+argument_list|,
+name|Graph
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 specifier|static

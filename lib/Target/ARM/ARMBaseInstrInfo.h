@@ -541,6 +541,23 @@ init|=
 literal|28
 block|}
 enum|;
+comment|/// Target Operand Flag enum.
+enum|enum
+name|TOF
+block|{
+comment|//===------------------------------------------------------------------===//
+comment|// ARM Specific MachineOperand flags.
+name|MO_NO_FLAG
+block|,
+comment|/// MO_LO16 - On a symbol operand, this represents a relocation containing
+comment|/// lower 16 bit of the address. Used only via movw instruction.
+name|MO_LO16
+block|,
+comment|/// MO_HI16 - On a symbol operand, this represents a relocation containing
+comment|/// higher 16 bit of the address. Used only via movt instruction.
+name|MO_HI16
+block|}
+enum|;
 block|}
 name|class
 name|ARMBaseInstrInfo
@@ -781,6 +798,14 @@ argument|std::vector<MachineOperand>&Pred
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|isPredicable
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
 comment|/// GetInstSize - Returns the size of the specified MachineInstr.
 comment|///
 name|virtual
@@ -948,16 +973,6 @@ argument_list|,
 argument|const MachineInstr *Other
 argument_list|,
 argument|const MachineRegisterInfo *MRI
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|TailDuplicationLimit
-argument_list|(
-argument|const MachineBasicBlock&MBB
-argument_list|,
-argument|unsigned DefaultLimit
 argument_list|)
 specifier|const
 block|; }

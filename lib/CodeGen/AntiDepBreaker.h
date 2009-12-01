@@ -102,19 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -129,59 +117,11 @@ name|AntiDepBreaker
 block|{
 name|public
 label|:
-typedef|typedef
-name|SmallSet
-operator|<
-name|unsigned
-operator|,
-literal|4
-operator|>
-name|AntiDepRegSet
-expr_stmt|;
-typedef|typedef
-name|SmallVector
-operator|<
-name|unsigned
-operator|,
-literal|4
-operator|>
-name|AntiDepRegVector
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|map
-operator|<
-name|SUnit
-operator|*
-operator|,
-name|AntiDepRegVector
-operator|>
-name|CandidateMap
-expr_stmt|;
 name|virtual
 operator|~
 name|AntiDepBreaker
 argument_list|()
 expr_stmt|;
-comment|/// GetMaxTrials - Return the maximum number of anti-dependence
-comment|/// breaking attempts that will be made for a block.
-name|virtual
-name|unsigned
-name|GetMaxTrials
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-comment|/// NeedCandidates - Return true if the schedule must provide
-comment|/// candidates with BreakAntiDependencies().
-name|virtual
-name|bool
-name|NeedCandidates
-parameter_list|()
-init|=
-literal|0
-function_decl|;
 comment|/// Start - Initialize anti-dep breaking for a new basic block.
 name|virtual
 name|void
@@ -210,10 +150,6 @@ name|SUnit
 operator|>
 operator|&
 name|SUnits
-argument_list|,
-name|CandidateMap
-operator|&
-name|Candidates
 argument_list|,
 name|MachineBasicBlock
 operator|::

@@ -89,6 +89,33 @@ comment|///
 struct|struct
 name|DefaultDOTGraphTraits
 block|{
+name|private
+label|:
+name|bool
+name|IsSimple
+decl_stmt|;
+name|protected
+label|:
+name|bool
+name|isSimple
+parameter_list|()
+block|{
+return|return
+name|IsSimple
+return|;
+block|}
+name|public
+label|:
+name|DefaultDOTGraphTraits
+argument_list|(
+argument|bool simple=false
+argument_list|)
+block|:
+name|IsSimple
+argument_list|(
+argument|simple
+argument_list|)
+block|{}
 comment|/// getGraphName - Return the label for the graph as a whole.  Printed at the
 comment|/// top of the graph.
 comment|///
@@ -150,7 +177,6 @@ operator|<
 name|typename
 name|GraphType
 operator|>
-specifier|static
 name|std
 operator|::
 name|string
@@ -159,8 +185,6 @@ argument_list|(
 argument|const void *Node
 argument_list|,
 argument|const GraphType& Graph
-argument_list|,
-argument|bool ShortNames
 argument_list|)
 block|{
 return|return
@@ -378,7 +402,18 @@ name|DOTGraphTraits
 operator|:
 name|public
 name|DefaultDOTGraphTraits
+block|{
+name|DOTGraphTraits
+argument_list|(
+argument|bool simple=false
+argument_list|)
+operator|:
+name|DefaultDOTGraphTraits
+argument_list|(
+argument|simple
+argument_list|)
 block|{}
+block|}
 expr_stmt|;
 block|}
 end_decl_stmt

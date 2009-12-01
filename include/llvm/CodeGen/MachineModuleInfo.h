@@ -424,15 +424,6 @@ literal|32
 operator|>
 name|UsedFunctions
 block|;
-comment|/// UsedDbgLabels - labels are used by debug info entries.
-name|SmallSet
-operator|<
-name|unsigned
-block|,
-literal|8
-operator|>
-name|UsedDbgLabels
-block|;
 name|bool
 name|CallsEHReturn
 block|;
@@ -892,63 +883,6 @@ literal|0
 return|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|/// isDbgLabelUsed - Return true if label with LabelID is used by
-end_comment
-
-begin_comment
-comment|/// DwarfWriter.
-end_comment
-
-begin_function
-name|bool
-name|isDbgLabelUsed
-parameter_list|(
-name|unsigned
-name|LabelID
-parameter_list|)
-block|{
-return|return
-name|UsedDbgLabels
-operator|.
-name|count
-argument_list|(
-name|LabelID
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// RecordUsedDbgLabel - Mark label with LabelID as used. This is used
-end_comment
-
-begin_comment
-comment|/// by DwarfWriter to inform DebugLabelFolder that certain labels are
-end_comment
-
-begin_comment
-comment|/// not to be deleted.
-end_comment
-
-begin_function
-name|void
-name|RecordUsedDbgLabel
-parameter_list|(
-name|unsigned
-name|LabelID
-parameter_list|)
-block|{
-name|UsedDbgLabels
-operator|.
-name|insert
-argument_list|(
-name|LabelID
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/// getFrameMoves - Returns a reference to a list of moves done in the current

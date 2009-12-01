@@ -131,14 +131,18 @@ directive|include
 file|"llvm/ADT/SmallSet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 comment|/// Class AggressiveAntiDepState
-comment|/// Contains all the state necessary for anti-dep breaking. We place
-comment|/// into a separate class so be can conveniently save/restore it to
-comment|/// enable multi-pass anti-dep breaking.
+comment|/// Contains all the state necessary for anti-dep breaking.
 name|class
 name|AggressiveAntiDepState
 block|{
@@ -378,13 +382,6 @@ name|AggressiveAntiDepState
 operator|*
 name|State
 block|;
-comment|/// SavedState - The state for the start of an anti-dep
-comment|/// region. Used to restore the state at the beginning of each
-comment|/// pass
-name|AggressiveAntiDepState
-operator|*
-name|SavedState
-block|;
 name|public
 operator|:
 name|AggressiveAntiDepBreaker
@@ -404,21 +401,6 @@ operator|~
 name|AggressiveAntiDepBreaker
 argument_list|()
 block|;
-comment|/// GetMaxTrials - As anti-dependencies are broken, additional
-comment|/// dependencies may be exposed, so multiple passes are required.
-name|unsigned
-name|GetMaxTrials
-argument_list|()
-block|;
-comment|/// NeedCandidates - Candidates required.
-name|bool
-name|NeedCandidates
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|/// Start - Initialize anti-dep breaking for a new basic block.
 name|void
 name|StartBlock
@@ -435,8 +417,6 @@ name|unsigned
 name|BreakAntiDependencies
 argument_list|(
 argument|std::vector<SUnit>& SUnits
-argument_list|,
-argument|CandidateMap& Candidates
 argument_list|,
 argument|MachineBasicBlock::iterator& Begin
 argument_list|,
@@ -526,6 +506,20 @@ specifier|const
 name|char
 modifier|*
 name|tag
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|header
+init|=
+name|NULL
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|footer
+init|=
+name|NULL
 parameter_list|)
 function_decl|;
 name|void

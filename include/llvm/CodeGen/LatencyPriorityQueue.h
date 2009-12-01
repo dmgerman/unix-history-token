@@ -167,10 +167,6 @@ name|unsigned
 operator|>
 name|NumNodesSolelyBlocking
 block|;
-comment|/// IgnoreAntiDep - Ignore anti-dependencies
-name|bool
-name|IgnoreAntiDep
-block|;
 comment|/// Queue - The queue.
 name|PriorityQueue
 operator|<
@@ -194,26 +190,11 @@ operator|:
 name|LatencyPriorityQueue
 argument_list|()
 operator|:
-name|IgnoreAntiDep
-argument_list|(
-name|false
-argument_list|)
-block|,
 name|Queue
 argument_list|(
 argument|latency_sort(this)
 argument_list|)
 block|{     }
-name|void
-name|setIgnoreAntiDep
-argument_list|(
-argument|bool ignore
-argument_list|)
-block|{
-name|IgnoreAntiDep
-operator|=
-name|ignore
-block|;     }
 name|void
 name|initNodes
 argument_list|(
@@ -299,9 +280,7 @@ name|NodeNum
 index|]
 operator|.
 name|getHeight
-argument_list|(
-name|IgnoreAntiDep
-argument_list|)
+argument_list|()
 return|;
 block|}
 name|unsigned

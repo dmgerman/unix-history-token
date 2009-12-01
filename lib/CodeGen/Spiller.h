@@ -141,10 +141,6 @@ name|LiveIntervals
 modifier|*
 name|li
 parameter_list|,
-name|LiveStacks
-modifier|*
-name|ls
-parameter_list|,
 specifier|const
 name|MachineLoopInfo
 modifier|*

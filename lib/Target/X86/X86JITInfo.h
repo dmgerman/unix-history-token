@@ -159,6 +159,13 @@ operator|&
 name|JCE
 argument_list|)
 block|;
+comment|// getStubLayout - Returns the size and alignment of the largest call stub
+comment|// on X86.
+name|virtual
+name|StubLayout
+name|getStubLayout
+argument_list|()
+block|;
 comment|/// emitFunctionStub - Use the specified JITCodeEmitter object to emit a
 comment|/// small native function that simply calls the function at the specified
 comment|/// address.
@@ -174,32 +181,7 @@ name|F
 argument_list|,
 name|void
 operator|*
-name|Fn
-argument_list|,
-name|JITCodeEmitter
-operator|&
-name|JCE
-argument_list|)
-block|;
-comment|/// emitFunctionStubAtAddr - Use the specified JITCodeEmitter object to
-comment|/// emit a small native function that simply calls Fn. Emit the stub into
-comment|/// the supplied buffer.
-name|virtual
-name|void
-name|emitFunctionStubAtAddr
-argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|,
-name|void
-operator|*
-name|Fn
-argument_list|,
-name|void
-operator|*
-name|Buffer
+name|Target
 argument_list|,
 name|JITCodeEmitter
 operator|&

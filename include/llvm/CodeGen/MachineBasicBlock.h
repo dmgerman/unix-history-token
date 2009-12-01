@@ -337,7 +337,8 @@ decl_stmt|;
 name|public
 label|:
 comment|/// getBasicBlock - Return the LLVM basic block that this instance
-comment|/// corresponded to originally.
+comment|/// corresponded to originally. Note that this may be NULL if this instance
+comment|/// does not correspond directly to an LLVM basic block.
 comment|///
 specifier|const
 name|BasicBlock
@@ -350,6 +351,13 @@ return|return
 name|BB
 return|;
 block|}
+comment|/// getName - Return the name of the corresponding LLVM basic block, or
+comment|/// "(null)".
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// hasAddressTaken - Test whether this block is potentially the target
 comment|/// of an indirect branch.
 name|bool
@@ -1196,6 +1204,14 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// canFallThrough - Return true if the block can implicitly transfer
+comment|/// control to the block after it by falling off the end of it.  This should
+comment|/// return false if it can reach the block after it, but it uses an explicit
+comment|/// branch to do so (e.g., a table jump).  True is a conservative answer.
+name|bool
+name|canFallThrough
+parameter_list|()
+function_decl|;
 comment|/// getFirstTerminator - returns an iterator to the first terminator
 comment|/// instruction of this basic block. If a terminator does not exist,
 comment|/// it returns end()

@@ -1925,7 +1925,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/// getSubRegIndex - For a given register pair, return the sub-register index
-comment|/// if they are second register is a sub-register of the second. Return zero
+comment|/// if the are second register is a sub-register of the first. Return zero
 comment|/// otherwise.
 name|virtual
 name|unsigned
@@ -2666,6 +2666,45 @@ name|FI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getFrameIndexReference - This method should return the base register
+comment|/// and offset used to reference a frame index location. The offset is
+comment|/// returned directly, and the base register is returned via FrameReg.
+name|virtual
+name|int
+name|getFrameIndexReference
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|int
+name|FI
+argument_list|,
+name|unsigned
+operator|&
+name|FrameReg
+argument_list|)
+decl|const
+block|{
+comment|// By default, assume all frame indices are referenced via whatever
+comment|// getFrameRegister() says. The target can override this if it's doing
+comment|// something different.
+name|FrameReg
+operator|=
+name|getFrameRegister
+argument_list|(
+name|MF
+argument_list|)
+expr_stmt|;
+return|return
+name|getFrameIndexOffset
+argument_list|(
+name|MF
+argument_list|,
+name|FI
+argument_list|)
+return|;
+block|}
 comment|/// getRARegister - This method should return the register where the return
 comment|/// address can be found.
 name|virtual

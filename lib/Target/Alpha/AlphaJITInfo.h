@@ -131,6 +131,11 @@ operator|=
 name|true
 block|; }
 name|virtual
+name|StubLayout
+name|getStubLayout
+argument_list|()
+block|;
+name|virtual
 name|void
 operator|*
 name|emitFunctionStub

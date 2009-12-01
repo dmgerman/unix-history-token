@@ -885,6 +885,16 @@ name|canWrite
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// This function checks that what we're trying to work only on a regular file.
+comment|/// Check for things like /dev/null, any block special file,
+comment|/// or other things that aren't "regular" regular files.
+comment|/// @returns true if the file is S_ISREG.
+comment|/// @brief Determines if the file is a regular file
+name|bool
+name|isRegularFile
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// This function determines if the path name references an executable
 comment|/// file in the file system. This function checks for the existence and
 comment|/// executability (by the current program) of the file.

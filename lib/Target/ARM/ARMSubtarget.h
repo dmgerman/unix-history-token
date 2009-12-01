@@ -153,10 +153,6 @@ comment|/// determine if NEON should actually be used.
 name|bool
 name|UseNEONForSinglePrecisionFP
 block|;
-comment|/// HasBranchTargetBuffer - True if processor can predict indirect branches.
-name|bool
-name|HasBranchTargetBuffer
-block|;
 comment|/// IsThumb - True if we are in thumb mode, false if in ARM mode.
 name|bool
 name|IsThumb
@@ -172,6 +168,11 @@ block|;
 comment|/// IsR9Reserved - True if R9 is a not available as general purpose register.
 name|bool
 name|IsR9Reserved
+block|;
+comment|/// UseMovt - True if MOVT / MOVW pairs are used for materialization of 32-bit
+comment|/// imms (including global addresses).
+name|bool
+name|UseMovt
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -464,21 +465,24 @@ name|Thumb2
 return|;
 block|}
 name|bool
-name|hasBranchTargetBuffer
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasBranchTargetBuffer
-return|;
-block|}
-name|bool
 name|isR9Reserved
 argument_list|()
 specifier|const
 block|{
 return|return
 name|IsR9Reserved
+return|;
+block|}
+name|bool
+name|useMovt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseMovt
+operator|&&
+name|hasV6T2Ops
+argument_list|()
 return|;
 block|}
 specifier|const

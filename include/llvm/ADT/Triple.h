@@ -152,7 +152,7 @@ block|,
 comment|// PPC: powerpc
 name|ppc64
 block|,
-comment|// PPC64: powerpc64
+comment|// PPC64: powerpc64, ppu
 name|sparc
 block|,
 comment|// Sparc: sparc
@@ -204,6 +204,9 @@ name|FreeBSD
 block|,
 name|Linux
 block|,
+name|Lv2
+block|,
+comment|// PS3
 name|MinGW32
 block|,
 name|MinGW64

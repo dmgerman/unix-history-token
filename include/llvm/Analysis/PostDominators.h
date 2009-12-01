@@ -340,8 +340,25 @@ argument_list|(
 argument|PostDominatorTree *N
 argument_list|)
 block|{
+if|if
+condition|(
+name|getEntryNode
+argument_list|(
+name|N
+argument_list|)
+condition|)
 return|return
 name|df_begin
+argument_list|(
+name|getEntryNode
+argument_list|(
+name|N
+argument_list|)
+argument_list|)
+return|;
+else|else
+return|return
+name|df_end
 argument_list|(
 name|getEntryNode
 argument_list|(

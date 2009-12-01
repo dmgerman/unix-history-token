@@ -1044,8 +1044,9 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|new
 name|ExtractElementInst
+operator|::
+name|Create
 argument_list|(
 name|Vec
 argument_list|,

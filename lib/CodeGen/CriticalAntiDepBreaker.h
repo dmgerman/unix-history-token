@@ -121,6 +121,12 @@ directive|include
 file|"llvm/ADT/SmallSet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -221,25 +227,6 @@ operator|~
 name|CriticalAntiDepBreaker
 argument_list|()
 block|;
-comment|/// GetMaxTrials - Critical path anti-dependence breaking requires
-comment|/// only a single pass
-name|unsigned
-name|GetMaxTrials
-argument_list|()
-block|{
-return|return
-literal|1
-return|;
-block|}
-comment|/// NeedCandidates - Candidates not needed.
-name|bool
-name|NeedCandidates
-argument_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// Start - Initialize anti-dep breaking for a new basic block.
 name|void
 name|StartBlock
@@ -256,8 +243,6 @@ name|unsigned
 name|BreakAntiDependencies
 argument_list|(
 argument|std::vector<SUnit>& SUnits
-argument_list|,
-argument|CandidateMap& Candidates
 argument_list|,
 argument|MachineBasicBlock::iterator& Begin
 argument_list|,

@@ -84,6 +84,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<cstdlib>
+end_include
+
+begin_comment
+comment|// for qsort
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 

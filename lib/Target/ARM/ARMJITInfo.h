@@ -214,6 +214,13 @@ operator|&
 name|JCE
 argument_list|)
 block|;
+comment|// getStubLayout - Returns the size and alignment of the largest call stub
+comment|// on ARM.
+name|virtual
+name|StubLayout
+name|getStubLayout
+argument_list|()
+block|;
 comment|/// emitFunctionStub - Use the specified JITCodeEmitter object to emit a
 comment|/// small native function that simply calls the function at the specified
 comment|/// address.

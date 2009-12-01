@@ -735,6 +735,15 @@ name|TM
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// ClassifyBlockAddressReference - Classify a blockaddress reference for the
+comment|/// current subtarget according to how we should reference it in a non-pcrel
+comment|/// context.
+name|unsigned
+name|char
+name|ClassifyBlockAddressReference
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// IsLegalToCallImmediateAddr - Return true if the subtarget allows calls
 comment|/// to immediate address.
 name|bool

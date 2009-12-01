@@ -407,27 +407,24 @@ name|DIEValue
 decl_stmt|;
 name|class
 name|DIE
-range|:
-name|public
-name|FoldingSetNode
 block|{
 name|protected
-operator|:
+label|:
 comment|/// Abbrev - Buffer for constructing abbreviation.
 comment|///
 name|DIEAbbrev
 name|Abbrev
-block|;
+decl_stmt|;
 comment|/// Offset - Offset in debug info section.
 comment|///
 name|unsigned
 name|Offset
-block|;
+decl_stmt|;
 comment|/// Size - Size of instance + children.
 comment|///
 name|unsigned
 name|Size
-block|;
+decl_stmt|;
 comment|/// Children DIEs.
 comment|///
 name|std
@@ -438,36 +435,36 @@ name|DIE
 operator|*
 operator|>
 name|Children
-block|;
+expr_stmt|;
 comment|/// Attributes values.
 comment|///
 name|SmallVector
 operator|<
 name|DIEValue
 operator|*
-block|,
+operator|,
 literal|32
 operator|>
 name|Values
-block|;
+expr_stmt|;
 comment|/// Abstract compile unit.
 name|CompileUnit
-operator|*
+modifier|*
 name|AbstractCU
-block|;
+decl_stmt|;
 comment|// Private data for print()
 name|mutable
 name|unsigned
 name|IndentCount
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|explicit
 name|DIE
 argument_list|(
 argument|unsigned Tag
 argument_list|)
-operator|:
+block|:
 name|Abbrev
 argument_list|(
 name|Tag
@@ -476,17 +473,17 @@ name|dwarf
 operator|::
 name|DW_CHILDREN_no
 argument_list|)
-block|,
+operator|,
 name|Offset
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|Size
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|IndentCount
 argument_list|(
 literal|0
@@ -496,12 +493,12 @@ name|virtual
 operator|~
 name|DIE
 argument_list|()
-block|;
+expr_stmt|;
 comment|// Accessors.
 name|DIEAbbrev
-operator|&
+modifier|&
 name|getAbbrev
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Abbrev
@@ -570,7 +567,7 @@ name|SmallVector
 operator|<
 name|DIEValue
 operator|*
-block|,
+operator|,
 literal|32
 operator|>
 operator|&
@@ -593,9 +590,10 @@ return|;
 block|}
 name|void
 name|setTag
-argument_list|(
-argument|unsigned Tag
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Tag
+parameter_list|)
 block|{
 name|Abbrev
 operator|.
@@ -603,48 +601,60 @@ name|setTag
 argument_list|(
 name|Tag
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setOffset
-argument_list|(
-argument|unsigned O
-argument_list|)
+parameter_list|(
+name|unsigned
+name|O
+parameter_list|)
 block|{
 name|Offset
 operator|=
 name|O
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setSize
-argument_list|(
-argument|unsigned S
-argument_list|)
+parameter_list|(
+name|unsigned
+name|S
+parameter_list|)
 block|{
 name|Size
 operator|=
 name|S
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setAbstractCompileUnit
-argument_list|(
-argument|CompileUnit *CU
-argument_list|)
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|CU
+parameter_list|)
 block|{
 name|AbstractCU
 operator|=
 name|CU
-block|; }
-comment|/// AddValue - Add a value and attributes to a DIE.
+expr_stmt|;
+block|}
+comment|/// addValue - Add a value and attributes to a DIE.
 comment|///
 name|void
-name|AddValue
-argument_list|(
-argument|unsigned Attribute
-argument_list|,
-argument|unsigned Form
-argument_list|,
-argument|DIEValue *Value
-argument_list|)
+name|addValue
+parameter_list|(
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+name|DIEValue
+modifier|*
+name|Value
+parameter_list|)
 block|{
 name|Abbrev
 operator|.
@@ -654,18 +664,19 @@ name|Attribute
 argument_list|,
 name|Form
 argument_list|)
-block|;
+expr_stmt|;
 name|Values
 operator|.
 name|push_back
 argument_list|(
 name|Value
 argument_list|)
-block|;     }
+expr_stmt|;
+block|}
 comment|/// SiblingOffset - Return the offset of the debug information entry's
 comment|/// sibling.
 name|unsigned
-name|SiblingOffset
+name|getSiblingOffset
 argument_list|()
 specifier|const
 block|{
@@ -675,19 +686,21 @@ operator|+
 name|Size
 return|;
 block|}
-comment|/// AddSiblingOffset - Add a sibling offset field to the front of the DIE.
+comment|/// addSiblingOffset - Add a sibling offset field to the front of the DIE.
 comment|///
 name|void
-name|AddSiblingOffset
-argument_list|()
-block|;
-comment|/// AddChild - Add a child to the DIE.
+name|addSiblingOffset
+parameter_list|()
+function_decl|;
+comment|/// addChild - Add a child to the DIE.
 comment|///
 name|void
-name|AddChild
-argument_list|(
-argument|DIE *Child
-argument_list|)
+name|addChild
+parameter_list|(
+name|DIE
+modifier|*
+name|Child
+parameter_list|)
 block|{
 name|Abbrev
 operator|.
@@ -697,67 +710,48 @@ name|dwarf
 operator|::
 name|DW_CHILDREN_yes
 argument_list|)
-block|;
+expr_stmt|;
 name|Children
 operator|.
 name|push_back
 argument_list|(
 name|Child
 argument_list|)
-block|;     }
-comment|/// Detach - Detaches objects connected to it after copying.
-comment|///
-name|void
-name|Detach
-argument_list|()
-block|{
-name|Children
-operator|.
-name|clear
-argument_list|()
-block|;     }
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-block|;
+expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
 name|print
-argument_list|(
-argument|raw_ostream&O
-argument_list|,
-argument|unsigned IncIndent =
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|O
+parameter_list|,
+name|unsigned
+name|IncIndent
+init|=
 literal|0
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|dump
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 endif|#
 directive|endif
 block|}
-decl_stmt|;
+empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// DIEValue - A debug information entry value.
 comment|///
 name|class
 name|DIEValue
-range|:
-name|public
-name|FoldingSetNode
 block|{
 name|public
-operator|:
-expr|enum
+label|:
+enum|enum
 block|{
 name|isInteger
 block|,
@@ -775,22 +769,22 @@ name|isEntry
 block|,
 name|isBlock
 block|}
-block|;
+enum|;
 name|protected
-operator|:
+label|:
 comment|/// Type - Type of data stored in the value.
 comment|///
 name|unsigned
 name|Type
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|explicit
 name|DIEValue
 argument_list|(
 argument|unsigned T
 argument_list|)
-operator|:
+block|:
 name|Type
 argument_list|(
 argument|T
@@ -817,48 +811,44 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|Dwarf *D
+name|Dwarf
+operator|*
+name|D
 argument_list|,
-argument|unsigned Form
+name|unsigned
+name|Form
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-block|;
+decl_stmt|;
 comment|/// SizeOf - Return the size of a value in bytes.
 comment|///
 name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
-argument|const TargetData *TD
-argument_list|,
-argument|unsigned Form
-argument_list|)
 specifier|const
-operator|=
-literal|0
-block|;
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-name|virtual
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
+name|TargetData
+operator|*
+name|TD
+argument_list|,
+name|unsigned
+name|Form
 argument_list|)
-operator|=
+decl|const
+init|=
 literal|0
-block|;
+decl_stmt|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const DIEValue *
-argument_list|)
+parameter_list|(
+specifier|const
+name|DIEValue
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
@@ -870,22 +860,22 @@ name|NDEBUG
 name|virtual
 name|void
 name|print
-argument_list|(
+parameter_list|(
 name|raw_ostream
-operator|&
+modifier|&
 name|O
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 name|void
 name|dump
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 endif|#
 directive|endif
 block|}
-decl_stmt|;
+empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// DIEInteger - An integer value DIE.
 comment|///
@@ -1062,26 +1052,6 @@ argument|unsigned Form
 argument_list|)
 specifier|const
 block|;
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-specifier|static
-name|void
-name|Profile
-argument_list|(
-argument|FoldingSetNodeID&ID
-argument_list|,
-argument|unsigned Int
-argument_list|)
-block|;
-name|virtual
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1136,9 +1106,7 @@ name|public
 name|DIEValue
 block|{
 specifier|const
-name|std
-operator|::
-name|string
+name|StringRef
 name|Str
 block|;
 name|public
@@ -1146,12 +1114,7 @@ operator|:
 name|explicit
 name|DIEString
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|S
+argument|const StringRef S
 argument_list|)
 operator|:
 name|DIEValue
@@ -1202,33 +1165,6 @@ argument_list|)
 return|;
 comment|// sizeof('\0');
 block|}
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-specifier|static
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Str
-argument_list|)
-block|;
-name|virtual
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1330,31 +1266,6 @@ argument_list|,
 argument|unsigned Form
 argument_list|)
 specifier|const
-block|;
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-specifier|static
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|,
-specifier|const
-name|DWLabel
-operator|&
-name|Label
-argument_list|)
-block|;
-name|virtual
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
 block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
@@ -1461,33 +1372,6 @@ argument_list|,
 argument|unsigned Form
 argument_list|)
 specifier|const
-block|;
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-specifier|static
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Label
-argument_list|)
-block|;
-name|virtual
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
 block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
@@ -1622,36 +1506,6 @@ argument|unsigned Form
 argument_list|)
 specifier|const
 block|;
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-specifier|static
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|,
-specifier|const
-name|DWLabel
-operator|&
-name|Label
-argument_list|,
-specifier|const
-name|DWLabel
-operator|&
-name|Section
-argument_list|)
-block|;
-name|virtual
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1766,36 +1620,6 @@ argument_list|,
 argument|unsigned Form
 argument_list|)
 specifier|const
-block|;
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-specifier|static
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|,
-specifier|const
-name|DWLabel
-operator|&
-name|LabelHi
-argument_list|,
-specifier|const
-name|DWLabel
-operator|&
-name|LabelLo
-argument_list|)
-block|;
-name|virtual
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
 block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
@@ -1926,30 +1750,6 @@ name|int32_t
 argument_list|)
 return|;
 block|}
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-specifier|static
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|,
-name|DIE
-operator|*
-name|Entry
-argument_list|)
-block|;
-name|virtual
-name|void
-name|Profile
-argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -2135,17 +1935,6 @@ name|Form
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Profile - Used to gather unique data for the value folding set.
-comment|///
-name|virtual
-name|void
-name|Profile
-parameter_list|(
-name|FoldingSetNodeID
-modifier|&
-name|ID
-parameter_list|)
-function_decl|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool

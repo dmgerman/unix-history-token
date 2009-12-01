@@ -80,6 +80,34 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
+comment|/// SimplifyAddInst - Given operands for an Add, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyAddInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+name|bool
+name|isNSW
+parameter_list|,
+name|bool
+name|isNUW
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// SimplifyAndInst - Given operands for an And, see if we can
 comment|/// fold the result.  If not, this returns null.
 name|Value
@@ -165,6 +193,29 @@ parameter_list|,
 name|Value
 modifier|*
 name|RHS
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyGEPInst - Given operands for an GetElementPtrInst, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyGEPInst
+parameter_list|(
+name|Value
+modifier|*
+specifier|const
+modifier|*
+name|Ops
+parameter_list|,
+name|unsigned
+name|NumOps
 parameter_list|,
 specifier|const
 name|TargetData

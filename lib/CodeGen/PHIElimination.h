@@ -412,25 +412,6 @@ modifier|&
 name|LV
 parameter_list|)
 function_decl|;
-comment|/// isLiveIn - Determine if Reg is live in to MBB, not considering PHI
-comment|/// source registers. This means that Reg is either killed by MBB or passes
-comment|/// through it.
-name|bool
-name|isLiveIn
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|,
-specifier|const
-name|MachineBasicBlock
-modifier|&
-name|MBB
-parameter_list|,
-name|LiveVariables
-modifier|&
-name|LV
-parameter_list|)
-function_decl|;
 comment|/// SplitCriticalEdge - Split a critical edge from A to B by
 comment|/// inserting a new MBB. Update branches in A and PHI instructions
 comment|/// in B. Return the new block.

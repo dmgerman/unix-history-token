@@ -330,6 +330,19 @@ argument|const MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 block|;
+comment|/// isLiveIn - Is Reg live in to MBB? This means that Reg is live through
+comment|/// MBB, or it is killed in MBB. If Reg is only used by PHI instructions in
+comment|/// MBB, it is not considered live in.
+name|bool
+name|isLiveIn
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|MachineRegisterInfo&MRI
+argument_list|)
+block|;
 name|void
 name|dump
 argument_list|()
@@ -471,8 +484,19 @@ operator|&
 name|Defs
 argument_list|)
 decl_stmt|;
-comment|/// FindLastPartialDef - Return the last partial def of the specified register.
-comment|/// Also returns the sub-registers that're defined by the instruction.
+comment|/// FindLastRefOrPartRef - Return the last reference or partial reference of
+comment|/// the specified register.
+name|MachineInstr
+modifier|*
+name|FindLastRefOrPartRef
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
+comment|/// FindLastPartialDef - Return the last partial def of the specified
+comment|/// register. Also returns the sub-registers that're defined by the
+comment|/// instruction.
 name|MachineInstr
 modifier|*
 name|FindLastPartialDef
@@ -974,10 +998,39 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// addNewBlock - Add a new basic block BB as an empty succcessor to
-comment|/// DomBB. All variables that are live out of DomBB will be marked as passing
-comment|/// live through BB. This method assumes that the machine code is still in SSA
-comment|/// form.
+name|bool
+name|isLiveIn
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+block|{
+return|return
+name|getVarInfo
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|isLiveIn
+argument_list|(
+name|MBB
+argument_list|,
+name|Reg
+argument_list|,
+operator|*
+name|MRI
+argument_list|)
+return|;
+block|}
+comment|/// addNewBlock - Add a new basic block BB between DomBB and SuccBB. All
+comment|/// variables that are live out of DomBB and live into SuccBB will be marked
+comment|/// as passing live through BB. This method assumes that the machine code is
+comment|/// still in SSA form.
 name|void
 name|addNewBlock
 parameter_list|(
@@ -988,6 +1041,10 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|DomBB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SuccBB
 parameter_list|)
 function_decl|;
 block|}

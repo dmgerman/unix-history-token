@@ -366,6 +366,26 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|int
+name|getFrameIndexReference
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getFrameIndexOffset
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|)
+specifier|const
+block|;
 comment|// Exception handling queries.
 name|unsigned
 name|getEHExceptionRegister

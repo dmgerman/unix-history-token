@@ -1759,8 +1759,6 @@ argument_list|(
 argument|NodeType* Node
 argument_list|,
 argument|const Trie<Payload>& T
-argument_list|,
-argument|bool ShortNames
 argument_list|)
 block|{
 if|if

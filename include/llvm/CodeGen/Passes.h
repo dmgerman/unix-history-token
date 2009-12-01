@@ -293,6 +293,13 @@ name|bool
 name|DefaultEnableTailMerge
 parameter_list|)
 function_decl|;
+comment|/// TailDuplicate Pass - Duplicate blocks with unconditional branches
+comment|/// into tails of their predecessors.
+name|FunctionPass
+modifier|*
+name|createTailDuplicatePass
+parameter_list|()
+function_decl|;
 comment|/// IfConverter Pass - This pass performs machine code if conversion.
 name|FunctionPass
 modifier|*
@@ -304,14 +311,6 @@ comment|/// headers to target specific alignment boundary.
 name|FunctionPass
 modifier|*
 name|createCodePlacementOptPass
-parameter_list|()
-function_decl|;
-comment|/// DebugLabelFoldingPass - This pass prunes out redundant debug labels.  This
-comment|/// allows a debug emitter to determine if the range of two labels is empty,
-comment|/// by seeing if the labels map to the same reduced label.
-name|FunctionPass
-modifier|*
-name|createDebugLabelFoldingPass
 parameter_list|()
 function_decl|;
 comment|/// getRegisterAllocator - This creates an instance of the register allocator

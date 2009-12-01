@@ -1560,6 +1560,29 @@ return|return
 name|false
 return|;
 block|}
+comment|/// isPredicable - Return true if the specified instruction can be predicated.
+comment|/// By default, this returns true for every instruction with a
+comment|/// PredicateOperand.
+name|virtual
+name|bool
+name|isPredicable
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+decl|const
+block|{
+return|return
+name|MI
+operator|->
+name|getDesc
+argument_list|()
+operator|.
+name|isPredicable
+argument_list|()
+return|;
+block|}
 comment|/// isSafeToMoveRegClassDefs - Return true if it's safe to move a machine
 comment|/// instruction that defines the specified register class.
 name|virtual
@@ -1635,26 +1658,6 @@ name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// TailDuplicationLimit - Returns the limit on the number of instructions
-comment|/// in basic block MBB beyond which it will not be tail-duplicated.
-name|virtual
-name|unsigned
-name|TailDuplicationLimit
-argument_list|(
-specifier|const
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|unsigned
-name|DefaultLimit
-argument_list|)
-decl|const
-block|{
-return|return
-name|DefaultLimit
-return|;
-block|}
 block|}
 empty_stmt|;
 comment|/// TargetInstrInfoImpl - This is the default implementation of

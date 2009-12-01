@@ -120,6 +120,17 @@ value|void LLVMInitialize##TargetName##AsmParser();
 include|#
 directive|include
 file|"llvm/Config/AsmParsers.def"
+comment|// Declare all of the available disassembler initialization functions.
+define|#
+directive|define
+name|LLVM_DISASSEMBLER
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|void LLVMInitialize##TargetName##Disassembler();
+include|#
+directive|include
+file|"llvm/Config/Disassemblers.def"
 block|}
 end_extern
 
@@ -214,6 +225,27 @@ value|LLVMInitialize##TargetName##AsmParser();
 include|#
 directive|include
 file|"llvm/Config/AsmParsers.def"
+block|}
+comment|/// InitializeAllDisassemblers - The main program should call this function if
+comment|/// it wants all disassemblers that LLVM is configured to support, to make
+comment|/// them available via the TargetRegistry.
+comment|///
+comment|/// It is legal for a client to make multiple calls to this function.
+specifier|inline
+name|void
+name|InitializeAllDisassemblers
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_DISASSEMBLER
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##Disassembler();
+include|#
+directive|include
+file|"llvm/Config/Disassemblers.def"
 block|}
 comment|/// InitializeNativeTarget - The main program should call this function to
 comment|/// initialize the native target corresponding to the host.  This is useful

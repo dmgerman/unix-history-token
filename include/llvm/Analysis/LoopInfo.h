@@ -1614,14 +1614,6 @@ begin_comment
 comment|/// A latch block is a block that contains a branch back to the header.
 end_comment
 
-begin_comment
-comment|/// A loop header in normal form has two edges into it: one from a preheader
-end_comment
-
-begin_comment
-comment|/// and one from a latch block.
-end_comment
-
 begin_expr_stmt
 unit|BlockT
 operator|*
@@ -1678,22 +1670,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|if
-condition|(
-name|PI
-operator|==
-name|PE
-condition|)
-return|return
-literal|0
-return|;
-end_if
-
-begin_comment
-comment|// no preds?
-end_comment
-
 begin_decl_stmt
 name|BlockT
 modifier|*
@@ -1703,45 +1679,17 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|if
-condition|(
-name|contains
-argument_list|(
-operator|*
+begin_for
+for|for
+control|(
+init|;
 name|PI
-argument_list|)
-condition|)
-name|Latch
-operator|=
-operator|*
-name|PI
-expr_stmt|;
-end_if
-
-begin_expr_stmt
+operator|!=
+name|PE
+condition|;
 operator|++
 name|PI
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|PI
-operator|==
-name|PE
-condition|)
-return|return
-literal|0
-return|;
-end_if
-
-begin_comment
-comment|// only one pred?
-end_comment
-
-begin_if
+control|)
 if|if
 condition|(
 name|contains
@@ -1758,36 +1706,13 @@ condition|)
 return|return
 literal|0
 return|;
-comment|// multiple backedges
 name|Latch
 operator|=
 operator|*
 name|PI
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
-operator|++
-name|PI
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|PI
-operator|!=
-name|PE
-condition|)
-return|return
-literal|0
-return|;
-end_if
-
-begin_comment
-comment|// more than two preds
-end_comment
+end_for
 
 begin_return
 return|return

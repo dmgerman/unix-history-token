@@ -213,18 +213,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// hasNoModRefInfoForCalls - We can provide mod/ref information against
-comment|/// non-escaping allocations.
-name|virtual
-name|bool
-name|hasNoModRefInfoForCalls
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 name|private
 label|:
 name|ModRefResult

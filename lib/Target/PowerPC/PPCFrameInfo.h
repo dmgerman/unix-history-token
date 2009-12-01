@@ -170,9 +170,10 @@ name|isDarwinABI
 parameter_list|)
 block|{
 comment|// For the Darwin ABI:
-comment|// Use the TOC save slot in the PowerPC linkage area for saving the frame
-comment|// pointer (if needed.)  LLVM does not generate code that uses the TOC (R2
-comment|// is treated as a caller saved register.)
+comment|// We cannot use the TOC save slot (offset +20) in the PowerPC linkage area
+comment|// for saving the frame pointer (if needed.)  While the published ABI has
+comment|// not used this slot since at least MacOSX 10.2, there is older code
+comment|// around that does use it, and that needs to continue to work.
 if|if
 condition|(
 name|isDarwinABI
@@ -180,9 +181,11 @@ condition|)
 return|return
 name|isPPC64
 condition|?
-literal|40
+operator|-
+literal|8U
 else|:
-literal|20
+operator|-
+literal|4U
 return|;
 comment|// SVR4 ABI: First slot in the general register save area.
 return|return
@@ -309,6 +312,81 @@ name|NumEntries
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|TM
+operator|.
+name|getSubtarget
+operator|<
+name|PPCSubtarget
+operator|>
+operator|(
+operator|)
+operator|.
+name|isDarwinABI
+argument_list|()
+condition|)
+block|{
+name|NumEntries
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|TM
+operator|.
+name|getSubtarget
+operator|<
+name|PPCSubtarget
+operator|>
+operator|(
+operator|)
+operator|.
+name|isPPC64
+argument_list|()
+condition|)
+block|{
+specifier|static
+specifier|const
+name|SpillSlot
+name|darwin64Offsets
+init|=
+block|{
+name|PPC
+operator|::
+name|X31
+block|,
+operator|-
+literal|8
+block|}
+decl_stmt|;
+return|return
+operator|&
+name|darwin64Offsets
+return|;
+block|}
+else|else
+block|{
+specifier|static
+specifier|const
+name|SpillSlot
+name|darwinOffsets
+init|=
+block|{
+name|PPC
+operator|::
+name|R31
+block|,
+operator|-
+literal|4
+block|}
+decl_stmt|;
+return|return
+operator|&
+name|darwinOffsets
+return|;
+block|}
+block|}
 comment|// Early exit if not using the SVR4 ABI.
 if|if
 condition|(

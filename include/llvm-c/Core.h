@@ -4026,6 +4026,7 @@ parameter_list|,
 name|LLVMValueRef
 name|Val
 parameter_list|,
+comment|/*Signed cast!*/
 name|LLVMTypeRef
 name|DestTy
 parameter_list|,

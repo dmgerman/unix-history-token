@@ -3692,7 +3692,7 @@ literal|0
 return|;
 block|}
 comment|/// resolveReferences - This method is used by classes that refer to other
-comment|/// variables which may not be defined at the time they expression is formed.
+comment|/// variables which may not be defined at the time the expression is formed.
 comment|/// If a value is set for the variable later, this method will be called on
 comment|/// users of the value to allow the value to propagate out.
 comment|///
@@ -4167,29 +4167,6 @@ name|RecordVal
 operator|*
 name|RV
 argument_list|)
-block|;
-comment|// printXX - Print this bitstream with the specified format, returning true if
-comment|// it is not possible.
-name|bool
-name|printInHex
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|printAsVariable
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|printAsUnset
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
 block|; }
 block|;
 comment|/// IntInit - 7 - Represent an initalization by a literal integer value.
@@ -6573,7 +6550,7 @@ name|ArgNames
 argument_list|(
 argument|argNames
 argument_list|)
-block|{   }
+block|{ }
 name|virtual
 name|Init
 operator|*
@@ -7512,16 +7489,6 @@ argument_list|(
 argument|StringRef Name
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|getValue
-argument_list|(
-name|Name
-argument_list|)
-operator|&&
-literal|"Cannot remove an entry that does not exist!"
-argument_list|)
-block|;
 for|for
 control|(
 name|unsigned
@@ -7574,7 +7541,7 @@ name|assert
 argument_list|(
 literal|0
 operator|&&
-literal|"Name does not exist in record!"
+literal|"Cannot remove an entry that does not exist!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8469,7 +8436,7 @@ argument|SMLoc ErrorLoc
 argument_list|,
 argument|const std::string&Msg
 argument_list|)
-block|;     }
+block|;  }
 end_decl_stmt
 
 begin_comment

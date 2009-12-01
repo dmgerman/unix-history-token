@@ -192,9 +192,7 @@ argument_list|,
 argument|unsigned RequiredTag
 argument_list|)
 empty_stmt|;
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getStringField
 argument_list|(
 name|unsigned
@@ -577,16 +575,12 @@ operator|~
 name|DIScope
 argument_list|()
 block|{}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getFilename
 argument_list|()
 specifier|const
 block|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDirectory
 argument_list|()
 specifier|const
@@ -641,9 +635,7 @@ literal|2
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getFilename
 argument_list|()
 specifier|const
@@ -655,9 +647,7 @@ literal|3
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDirectory
 argument_list|()
 specifier|const
@@ -669,9 +659,7 @@ literal|4
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getProducer
 argument_list|()
 specifier|const
@@ -715,9 +703,7 @@ literal|7
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getFlags
 argument_list|()
 specifier|const
@@ -782,9 +768,7 @@ argument_list|,
 argument|dwarf::DW_TAG_enumerator
 argument_list|)
 block|{}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -927,9 +911,7 @@ literal|1
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -1382,9 +1364,7 @@ literal|2
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -1396,9 +1376,7 @@ literal|3
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDisplayName
 argument_list|()
 specifier|const
@@ -1410,9 +1388,7 @@ literal|4
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getLinkageName
 argument_list|()
 specifier|const
@@ -1548,9 +1524,7 @@ literal|2
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -1562,9 +1536,7 @@ literal|3
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDisplayName
 argument_list|()
 specifier|const
@@ -1576,9 +1548,7 @@ literal|4
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getLinkageName
 argument_list|()
 specifier|const
@@ -1634,9 +1604,7 @@ return|;
 block|}
 comment|/// getReturnTypeName - Subprogram return types are encoded either as
 comment|/// DIType or as DICompositeType.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getReturnTypeName
 argument_list|()
 specifier|const
@@ -1736,9 +1704,7 @@ literal|10
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getFilename
 argument_list|()
 specifier|const
@@ -1751,9 +1717,7 @@ name|getFilename
 argument_list|()
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDirectory
 argument_list|()
 specifier|const
@@ -1892,9 +1856,7 @@ literal|1
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -2071,9 +2033,7 @@ literal|1
 operator|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDirectory
 argument_list|()
 specifier|const
@@ -2086,9 +2046,7 @@ name|getDirectory
 argument_list|()
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getFilename
 argument_list|()
 specifier|const
@@ -2180,9 +2138,7 @@ literal|3
 operator|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getFilename
 argument_list|()
 specifier|const
@@ -2195,9 +2151,7 @@ name|getFilename
 argument_list|()
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDirectory
 argument_list|()
 specifier|const
@@ -2301,17 +2255,17 @@ name|CreateCompileUnit
 argument_list|(
 argument|unsigned LangID
 argument_list|,
-argument|const char * Filename
+argument|StringRef Filename
 argument_list|,
-argument|const char * Directory
+argument|StringRef Directory
 argument_list|,
-argument|const char * Producer
+argument|StringRef Producer
 argument_list|,
 argument|bool isMain = false
 argument_list|,
 argument|bool isOptimized = false
 argument_list|,
-argument|const char *Flags =
+argument|StringRef Flags =
 literal|""
 argument_list|,
 argument|unsigned RunTimeVer =
@@ -2322,7 +2276,7 @@ comment|/// CreateEnumerator - Create a single enumerator value.
 name|DIEnumerator
 name|CreateEnumerator
 argument_list|(
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
 argument|uint64_t Val
 argument_list|)
@@ -2333,7 +2287,7 @@ name|CreateBasicType
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2356,7 +2310,7 @@ name|CreateBasicTypeEx
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2382,7 +2336,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2408,7 +2362,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2433,7 +2387,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2463,7 +2417,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2492,11 +2446,11 @@ name|CreateSubprogram
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
-argument|const char * DisplayName
+argument|StringRef DisplayName
 argument_list|,
-argument|const char * LinkageName
+argument|StringRef LinkageName
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2515,11 +2469,11 @@ name|CreateGlobalVariable
 argument_list|(
 argument|DIDescriptor Context
 argument_list|,
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
-argument|const char * DisplayName
+argument|StringRef DisplayName
 argument_list|,
-argument|const char * LinkageName
+argument|StringRef LinkageName
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2542,7 +2496,7 @@ argument|unsigned Tag
 argument_list|,
 argument|DIDescriptor Context
 argument_list|,
-argument|const char * Name
+argument|StringRef Name
 argument_list|,
 argument|DICompileUnit CompileUnit
 argument_list|,
@@ -2593,6 +2547,20 @@ argument_list|,
 argument|DIScope S
 argument_list|,
 argument|DILocation OrigLoc
+argument_list|)
+block|;
+comment|/// CreateLocation - Creates a debug info location.
+name|DILocation
+name|CreateLocation
+argument_list|(
+argument|unsigned LineNo
+argument_list|,
+argument|unsigned ColumnNo
+argument_list|,
+argument|DIScope S
+argument_list|,
+argument|MDNode *OrigLoc =
+literal|0
 argument_list|)
 block|;
 comment|/// InsertDeclare - Insert a new llvm.dbg.declare intrinsic call.
@@ -2804,6 +2772,22 @@ argument_list|,
 name|DebugLocTracker
 operator|&
 name|DebugLocInfo
+argument_list|)
+block|;
+comment|/// getDISubprogram - Find subprogram that is enclosing this scope.
+name|DISubprogram
+name|getDISubprogram
+argument_list|(
+name|MDNode
+operator|*
+name|Scope
+argument_list|)
+block|;
+comment|/// getDICompositeType - Find underlying composite type.
+name|DICompositeType
+name|getDICompositeType
+argument_list|(
+argument|DIType T
 argument_list|)
 block|;
 name|class

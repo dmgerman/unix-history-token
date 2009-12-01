@@ -1744,6 +1744,12 @@ parameter_list|(
 name|BlockAddress
 modifier|*
 name|BA
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
 parameter_list|)
 block|{
 name|MachineOperand
@@ -1774,6 +1780,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// Offset is always 0.
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
+argument_list|)
+expr_stmt|;
 return|return
 name|Op
 return|;

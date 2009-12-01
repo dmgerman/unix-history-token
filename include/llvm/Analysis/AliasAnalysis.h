@@ -306,31 +306,43 @@ name|unsigned
 name|V2Size
 parameter_list|)
 function_decl|;
-comment|/// getMustAliases - If there are any pointers known that must alias this
-comment|/// pointer, return them now.  This allows alias-set based alias analyses to
-comment|/// perform a form a value numbering (which is exposed by load-vn).  If an
-comment|/// alias analysis supports this, it should ADD any must aliased pointers to
-comment|/// the specified vector.
-comment|///
-name|virtual
-name|void
-name|getMustAliases
+comment|/// isNoAlias - A trivial helper function to check to see if the specified
+comment|/// pointers are no-alias.
+name|bool
+name|isNoAlias
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V1
+parameter_list|,
+name|unsigned
+name|V1Size
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|V2
+parameter_list|,
+name|unsigned
+name|V2Size
+parameter_list|)
+block|{
+return|return
+name|alias
 argument_list|(
-name|Value
-operator|*
-name|P
+name|V1
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|Value
-operator|*
-operator|>
-operator|&
-name|RetVals
+name|V1Size
+argument_list|,
+name|V2
+argument_list|,
+name|V2Size
 argument_list|)
-decl_stmt|;
+operator|==
+name|NoAlias
+return|;
+block|}
 comment|/// pointsToConstantMemory - If the specified pointer is known to point into
 comment|/// constant global memory, return true.  This allows disambiguation of store
 comment|/// instructions from constant pointers.
@@ -643,18 +655,6 @@ name|CallSite
 name|CS2
 parameter_list|)
 function_decl|;
-comment|/// hasNoModRefInfoForCalls - Return true if the analysis has no mod/ref
-comment|/// information for pairs of function calls (other than "pure" and "const"
-comment|/// functions).  This can be used by clients to avoid many pointless queries.
-comment|/// Remember that if you override this and chain to another analysis, you must
-comment|/// make sure that it doesn't have mod/ref info either.
-comment|///
-name|virtual
-name|bool
-name|hasNoModRefInfoForCalls
-argument_list|()
-specifier|const
-expr_stmt|;
 name|public
 label|:
 comment|/// Convenience functions...

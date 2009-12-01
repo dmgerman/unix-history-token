@@ -1550,26 +1550,6 @@ name|VT
 parameter_list|)
 function_decl|;
 name|SDValue
-name|getDbgStopPoint
-parameter_list|(
-name|DebugLoc
-name|DL
-parameter_list|,
-name|SDValue
-name|Root
-parameter_list|,
-name|unsigned
-name|Line
-parameter_list|,
-name|unsigned
-name|Col
-parameter_list|,
-name|MDNode
-modifier|*
-name|CU
-parameter_list|)
-function_decl|;
-name|SDValue
 name|getLabel
 parameter_list|(
 name|unsigned
@@ -1592,13 +1572,19 @@ name|BlockAddress
 modifier|*
 name|BA
 parameter_list|,
-name|DebugLoc
-name|dl
+name|EVT
+name|VT
 parameter_list|,
 name|bool
 name|isTarget
 init|=
 name|false
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -5227,6 +5213,25 @@ name|N
 parameter_list|,
 name|unsigned
 name|Idx
+parameter_list|)
+function_decl|;
+comment|/// UnrollVectorOp - Utility function used by legalize and lowering to
+comment|/// "unroll" a vector operation by splitting out the scalars and operating
+comment|/// on each element individually.  If the ResNE is 0, fully unroll the vector
+comment|/// op. If ResNE is less than the width of the vector op, unroll up to ResNE.
+comment|/// If the  ResNE is greater than the width of the vector op, unroll the
+comment|/// vector op and fill the end of the resulting vector with UNDEFS.
+name|SDValue
+name|UnrollVectorOp
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|ResNE
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|private

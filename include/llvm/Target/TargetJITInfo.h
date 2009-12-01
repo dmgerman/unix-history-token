@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
@@ -164,9 +170,47 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// Records the required size and alignment for a call stub in bytes.
+struct|struct
+name|StubLayout
+block|{
+name|size_t
+name|Size
+decl_stmt|;
+name|size_t
+name|Alignment
+decl_stmt|;
+block|}
+struct|;
+comment|/// Returns the maximum size and alignment for a call stub on this target.
+name|virtual
+name|StubLayout
+name|getStubLayout
+parameter_list|()
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"This target doesn't implement getStubLayout!"
+argument_list|)
+expr_stmt|;
+name|StubLayout
+name|Result
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+return|return
+name|Result
+return|;
+block|}
 comment|/// emitFunctionStub - Use the specified JITCodeEmitter object to emit a
 comment|/// small native function that simply calls the function at the specified
-comment|/// address.  Return the address of the resultant function.
+comment|/// address.  The JITCodeEmitter must already have storage allocated for the
+comment|/// stub.  Return the address of the resultant function, which may have been
+comment|/// aligned from the address the JCE was set up to emit at.
 name|virtual
 name|void
 modifier|*
@@ -179,7 +223,7 @@ name|F
 parameter_list|,
 name|void
 modifier|*
-name|Fn
+name|Target
 parameter_list|,
 name|JITCodeEmitter
 modifier|&
@@ -196,39 +240,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
-comment|/// emitFunctionStubAtAddr - Use the specified JITCodeEmitter object to
-comment|/// emit a small native function that simply calls Fn. Emit the stub into
-comment|/// the supplied buffer.
-name|virtual
-name|void
-name|emitFunctionStubAtAddr
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|F
-parameter_list|,
-name|void
-modifier|*
-name|Fn
-parameter_list|,
-name|void
-modifier|*
-name|Buffer
-parameter_list|,
-name|JITCodeEmitter
-modifier|&
-name|JCE
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"This target doesn't implement emitFunctionStubAtAddr!"
-argument_list|)
-expr_stmt|;
 block|}
 comment|/// getPICJumpTableEntry - Returns the value of the jumptable entry for the
 comment|/// specific basic block.

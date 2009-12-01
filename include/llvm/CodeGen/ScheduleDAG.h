@@ -1508,17 +1508,11 @@ name|D
 parameter_list|)
 function_decl|;
 comment|/// getDepth - Return the depth of this node, which is the length of the
-comment|/// maximum path up to any node with has no predecessors. If IgnoreAntiDep
-comment|/// is true, ignore anti-dependence edges.
+comment|/// maximum path up to any node with has no predecessors.
 name|unsigned
 name|getDepth
-argument_list|(
-name|bool
-name|IgnoreAntiDep
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 if|if
 condition|(
@@ -1535,26 +1529,27 @@ name|this
 operator|)
 operator|->
 name|ComputeDepth
-argument_list|(
-name|IgnoreAntiDep
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 name|Depth
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getHeight - Return the height of this node, which is the length of the
-comment|/// maximum path down to any node with has no successors. If IgnoreAntiDep
-comment|/// is true, ignore anti-dependence edges.
+end_comment
+
+begin_comment
+comment|/// maximum path down to any node with has no successors.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getHeight
-argument_list|(
-name|bool
-name|IgnoreAntiDep
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 if|if
 condition|(
@@ -1571,61 +1566,106 @@ name|this
 operator|)
 operator|->
 name|ComputeHeight
-argument_list|(
-name|IgnoreAntiDep
-argument_list|)
+argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|Height
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// setDepthToAtLeast - If NewDepth is greater than this node's
+end_comment
+
+begin_comment
 comment|/// depth value, set it to be the new depth value. This also
-comment|/// recursively marks successor nodes dirty.  If IgnoreAntiDep is
-comment|/// true, ignore anti-dependence edges.
-name|void
+end_comment
+
+begin_comment
+comment|/// recursively marks successor nodes dirty.
+end_comment
+
+begin_macro
+unit|void
 name|setDepthToAtLeast
-parameter_list|(
-name|unsigned
-name|NewDepth
-parameter_list|,
-name|bool
-name|IgnoreAntiDep
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned NewDepth
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// setDepthToAtLeast - If NewDepth is greater than this node's
+end_comment
+
+begin_comment
 comment|/// depth value, set it to be the new height value. This also
-comment|/// recursively marks predecessor nodes dirty. If IgnoreAntiDep is
-comment|/// true, ignore anti-dependence edges.
+end_comment
+
+begin_comment
+comment|/// recursively marks predecessor nodes dirty.
+end_comment
+
+begin_function_decl
 name|void
 name|setHeightToAtLeast
 parameter_list|(
 name|unsigned
 name|NewHeight
-parameter_list|,
-name|bool
-name|IgnoreAntiDep
-init|=
-name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// setDepthDirty - Set a flag in this node to indicate that its
+end_comment
+
+begin_comment
 comment|/// stored Depth value will require recomputation the next time
+end_comment
+
+begin_comment
 comment|/// getDepth() is called.
+end_comment
+
+begin_function_decl
 name|void
 name|setDepthDirty
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// setHeightDirty - Set a flag in this node to indicate that its
+end_comment
+
+begin_comment
 comment|/// stored Height value will require recomputation the next time
+end_comment
+
+begin_comment
 comment|/// getHeight() is called.
+end_comment
+
+begin_function_decl
 name|void
 name|setHeightDirty
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// isPred - Test if node N is a predecessor of this node.
+end_comment
+
+begin_function
 name|bool
 name|isPred
 parameter_list|(
@@ -1677,7 +1717,13 @@ return|return
 name|false
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// isSucc - Test if node N is a successor of this node.
+end_comment
+
+begin_function
 name|bool
 name|isSucc
 parameter_list|(
@@ -1729,6 +1775,9 @@ return|return
 name|false
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|void
 name|dump
 argument_list|(
@@ -1739,6 +1788,9 @@ name|G
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|dumpAll
 argument_list|(
@@ -1749,6 +1801,9 @@ name|G
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -1763,30 +1818,29 @@ name|G
 argument_list|)
 decl|const
 decl_stmt|;
-name|private
-label|:
-name|void
-name|ComputeDepth
-parameter_list|(
-name|bool
-name|IgnoreAntiDep
-parameter_list|)
-function_decl|;
-name|void
-name|ComputeHeight
-parameter_list|(
-name|bool
-name|IgnoreAntiDep
-parameter_list|)
-function_decl|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_label
+name|private
+label|:
+end_label
+
+begin_function_decl
+name|void
+name|ComputeDepth
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ComputeHeight
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
+unit|};
 comment|//===--------------------------------------------------------------------===//
 end_comment
 

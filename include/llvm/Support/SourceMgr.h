@@ -497,6 +497,7 @@ comment|/// specified string.
 comment|///
 comment|/// @param Type - If non-null, the kind of message (e.g., "error") which is
 comment|/// prefixed to the message.
+comment|/// @param ShowLine - Should the diagnostic show the source line.
 name|void
 name|PrintMessage
 argument_list|(
@@ -514,6 +515,11 @@ specifier|const
 name|char
 operator|*
 name|Type
+argument_list|,
+name|bool
+name|ShowLine
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -522,6 +528,7 @@ comment|/// specified string.
 comment|///
 comment|/// @param Type - If non-null, the kind of message (e.g., "error") which is
 comment|/// prefixed to the message.
+comment|/// @param ShowLine - Should the diagnostic show the source line.
 name|SMDiagnostic
 name|GetMessage
 argument_list|(
@@ -539,6 +546,11 @@ specifier|const
 name|char
 operator|*
 name|Type
+argument_list|,
+name|bool
+name|ShowLine
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -580,6 +592,11 @@ name|Message
 operator|,
 name|LineContents
 expr_stmt|;
+name|unsigned
+name|ShowLine
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 name|SMDiagnostic
@@ -606,6 +623,8 @@ argument_list|,
 argument|const std::string&Msg
 argument_list|,
 argument|const std::string&LineStr
+argument_list|,
+argument|bool showline = true
 argument_list|)
 operator|:
 name|Filename
@@ -630,7 +649,12 @@ argument_list|)
 operator|,
 name|LineContents
 argument_list|(
-argument|LineStr
+name|LineStr
+argument_list|)
+operator|,
+name|ShowLine
+argument_list|(
+argument|showline
 argument_list|)
 block|{}
 name|void

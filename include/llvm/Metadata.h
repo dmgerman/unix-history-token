@@ -381,7 +381,7 @@ name|friend
 name|class
 name|ElementVH
 block|;
-comment|// Use CallbackVH to hold MDNOde elements.
+comment|// Use CallbackVH to hold MDNode elements.
 block|struct
 name|ElementVH
 operator|:
@@ -1064,7 +1064,7 @@ operator|*
 name|In2
 argument_list|)
 block|;
-comment|/// getHandlerNames - Populate client supplied smallvector using custome
+comment|/// getHandlerNames - Populate client supplied smallvector using custom
 comment|/// metadata name and ID.
 name|void
 name|getHandlerNames

@@ -164,6 +164,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|// Implicit conversion to StringRef.
+name|operator
+name|StringRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|str
+argument_list|()
+return|;
+block|}
 specifier|const
 name|char
 operator|*

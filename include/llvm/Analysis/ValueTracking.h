@@ -79,6 +79,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 name|class
 name|Value
 decl_stmt|;
@@ -247,6 +255,56 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// DecomposeGEPExpression - If V is a symbolic pointer expression, decompose
+comment|/// it into a base pointer with a constant offset and a number of scaled
+comment|/// symbolic offsets.
+comment|///
+comment|/// The scaled symbolic offsets (represented by pairs of a Value* and a scale
+comment|/// in the VarIndices vector) are Value*'s that are known to be scaled by the
+comment|/// specified amount, but which may have other unrepresented high bits. As
+comment|/// such, the gep cannot necessarily be reconstructed from its decomposed
+comment|/// form.
+comment|///
+comment|/// When TargetData is around, this function is capable of analyzing
+comment|/// everything that Value::getUnderlyingObject() can look through.  When not,
+comment|/// it just looks through pointer casts.
+comment|///
+specifier|const
+name|Value
+modifier|*
+name|DecomposeGEPExpression
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|,
+name|int64_t
+operator|&
+name|BaseOffs
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|Value
+operator|*
+argument_list|,
+name|int64_t
+operator|>
+expr|>
+operator|&
+name|VarIndices
+argument_list|,
+specifier|const
+name|TargetData
+operator|*
+name|TD
+argument_list|)
+decl_stmt|;
 comment|/// FindScalarValue - Given an aggregrate and an sequence of indices, see if
 comment|/// the scalar value indexed is already around as a register, for example if
 comment|/// it were inserted directly into the aggregrate.
@@ -271,10 +329,6 @@ name|unsigned
 modifier|*
 name|idx_end
 parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|Instruction
 modifier|*
 name|InsertBefore
@@ -296,10 +350,6 @@ parameter_list|,
 specifier|const
 name|unsigned
 name|Idx
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
 parameter_list|,
 name|Instruction
 modifier|*
@@ -335,8 +385,6 @@ name|Idxs
 index|[
 literal|1
 index|]
-argument_list|,
-name|Context
 argument_list|,
 name|InsertBefore
 argument_list|)
