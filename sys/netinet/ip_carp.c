@@ -3156,7 +3156,7 @@ argument_list|(
 name|carps_badif
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"carp_input: packet received on non-carp "
 literal|"interface: %s\n"
@@ -3246,7 +3246,7 @@ argument_list|(
 name|carps_badlen
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"carp_input: received len %zd< "
 literal|"sizeof(struct carp_header) on %s\n"
@@ -3319,7 +3319,7 @@ argument_list|(
 name|carps_hdrops
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"carp_input: pullup failed\n"
 argument_list|)
@@ -3382,7 +3382,7 @@ argument_list|(
 name|carps_badlen
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"carp_input: packet too short %d on %s\n"
 argument_list|,
@@ -3483,7 +3483,7 @@ argument_list|(
 name|carps_badsum
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"carp_input: checksum failed on %s\n"
 argument_list|,
@@ -3619,7 +3619,7 @@ argument_list|(
 name|carps_badif
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"carp6_input: packet received on non-carp "
 literal|"interface: %s\n"
@@ -3659,7 +3659,7 @@ argument_list|(
 name|carps_badttl
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"carp6_input: received ttl %d != 255 on %s\n"
 argument_list|,
@@ -3726,7 +3726,7 @@ argument_list|(
 name|carps_badlen
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"carp6_input: packet size %u too small\n"
 argument_list|,
@@ -3766,7 +3766,7 @@ argument_list|(
 name|carps_badsum
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"carp6_input: checksum failed, on %s\n"
 argument_list|,
@@ -4090,7 +4090,7 @@ operator|->
 name|if_carp
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"%s; invalid version %d\n"
 argument_list|,
@@ -4321,7 +4321,7 @@ operator|->
 name|sc_ad_tmo
 argument_list|)
 expr_stmt|;
-name|CARP_DEBUG
+name|CARP_LOG
 argument_list|(
 literal|"%s: MASTER -> BACKUP "
 literal|"(more frequent advertisement received)\n"
@@ -4380,7 +4380,7 @@ operator|<
 argument_list|)
 condition|)
 block|{
-name|CARP_DEBUG
+name|CARP_LOG
 argument_list|(
 literal|"%s: BACKUP -> MASTER "
 literal|"(preempting a slower master)\n"
@@ -4425,7 +4425,7 @@ operator|<
 argument_list|)
 condition|)
 block|{
-name|CARP_DEBUG
+name|CARP_LOG
 argument_list|(
 literal|"%s: BACKUP -> MASTER "
 literal|"(master timed out)\n"
@@ -5687,7 +5687,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"%s: in6_setscope failed\n"
 argument_list|,
@@ -7514,7 +7514,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-name|CARP_DEBUG
+name|CARP_LOG
 argument_list|(
 literal|"%s: INIT -> MASTER (preempting)\n"
 argument_list|,
@@ -7543,7 +7543,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|CARP_DEBUG
+name|CARP_LOG
 argument_list|(
 literal|"%s: INIT -> BACKUP\n"
 argument_list|,
