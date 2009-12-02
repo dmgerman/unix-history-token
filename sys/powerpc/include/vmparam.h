@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|MAXTSIZ
-value|(16*1024*1024)
+value|(64*1024*1024)
 end_define
 
 begin_comment
@@ -54,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|DFLDSIZ
-value|(32*1024*1024)
+value|(128*1024*1024)
 end_define
 
 begin_comment
@@ -76,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|MAXDSIZ
-value|(512*1024*1024)
+value|(1*1024*1024*1024)
 end_define
 
 begin_comment
@@ -98,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|DFLSSIZ
-value|(1*1024*1024)
+value|(8*1024*1024)
 end_define
 
 begin_comment
@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|MAXSSIZ
-value|(32*1024*1024)
+value|(64*1024*1024)
 end_define
 
 begin_comment
