@@ -1048,10 +1048,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* INET6 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
 
 begin_comment
 comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is stored in dyn_count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. XXX we should make them survive.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
@@ -10410,6 +10418,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* make sure it is initialized */
+name|src_ip
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* make sure it is initialized */
 name|pktlen
 operator|=
 name|m
@@ -10447,14 +10462,14 @@ define|#
 directive|define
 name|PULLUP_TO
 parameter_list|(
-name|len
+name|_len
 parameter_list|,
 name|p
 parameter_list|,
 name|T
 parameter_list|)
 define|\
-value|do {									\ 	int x = (len) + sizeof(T);					\ 	if ((m)->m_len< x) {						\ 		args->m = m = m_pullup(m, x);				\ 		if (m == NULL)						\ 			goto pullup_failed;				\ 	}								\ 	p = (mtod(m, char *) + (len));					\ } while (0)
+value|do {									\ 	int x = (_len) + sizeof(T);					\ 	if ((m)->m_len< x) {						\ 		args->m = m = m_pullup(m, x);				\ 		if (m == NULL)						\ 			goto pullup_failed;				\ 	}								\ 	p = (mtod(m, char *) + (_len));					\ } while (0)
 comment|/* 	 * if we have an ether header, 	 */
 if|if
 condition|(
