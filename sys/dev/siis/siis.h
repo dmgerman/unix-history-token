@@ -2015,6 +2015,26 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|siis_device
+block|{
+name|int
+name|revision
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|u_int
+name|bytecount
+decl_stmt|;
+name|u_int
+name|tags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* structure describing an ATA channel */
 end_comment
@@ -2067,10 +2087,6 @@ name|int
 name|pm_level
 decl_stmt|;
 comment|/* power management level */
-name|int
-name|sata_rev
-decl_stmt|;
-comment|/* Maximum allowed SATA generation */
 name|struct
 name|siis_slot
 name|slot
@@ -2099,6 +2115,10 @@ name|int
 name|pm_present
 decl_stmt|;
 comment|/* PM presence reported */
+name|uint32_t
+name|oslots
+decl_stmt|;
+comment|/* Occupied slots */
 name|uint32_t
 name|rslots
 decl_stmt|;
@@ -2142,16 +2162,28 @@ name|int
 name|recovery
 decl_stmt|;
 comment|/* Some slots are in error */
-name|int
-name|lastslot
-decl_stmt|;
-comment|/* Last used slot */
 name|union
 name|ccb
 modifier|*
 name|frozen
 decl_stmt|;
 comment|/* Frozen command */
+name|struct
+name|siis_device
+name|user
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* User-specified settings */
+name|struct
+name|siis_device
+name|curr
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Current settings */
 block|}
 struct|;
 end_struct
