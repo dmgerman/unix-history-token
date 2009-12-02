@@ -1506,8 +1506,6 @@ block|}
 comment|/*      * Noone needs these entries anymore, then frees them.      * Make sure all info in netconfig_info structure has been reinitialized.      */
 name|q
 operator|=
-name|p
-operator|=
 name|ni
 operator|.
 name|head
@@ -1543,6 +1541,8 @@ expr_stmt|;
 while|while
 condition|(
 name|q
+operator|!=
+name|NULL
 condition|)
 block|{
 name|p
