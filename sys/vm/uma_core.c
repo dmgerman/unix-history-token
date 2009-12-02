@@ -4134,10 +4134,21 @@ name|map
 operator|=
 name|kmem_map
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|UMA_SLAB_KERNEL
+condition|)
+name|map
+operator|=
+name|kernel_map
+expr_stmt|;
 else|else
 name|panic
 argument_list|(
-literal|"UMA: page_free used with invalid flags %d\n"
+literal|"UMA: page_free used with invalid flags %d"
 argument_list|,
 name|flags
 argument_list|)
@@ -5128,7 +5139,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"UMA slab won't fit.\n"
+literal|"UMA slab won't fit."
 argument_list|)
 expr_stmt|;
 block|}
