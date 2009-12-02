@@ -431,8 +431,6 @@ condition|)
 return|return
 name|NS_UNAVAIL
 return|;
-name|sp
-operator|=
 name|cp
 operator|=
 name|line
