@@ -130,6 +130,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VENDORID_INTEL
+value|0x8086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_82801AA
 value|0x24138086
 end_define
@@ -603,6 +610,13 @@ break|break;
 default|default:
 if|if
 condition|(
+name|pci_get_vendor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|VENDORID_INTEL
+operator|&&
 name|pci_get_class
 argument_list|(
 name|dev
@@ -629,7 +643,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"SMBus controller"
+literal|"Intel SMBus controller"
 argument_list|)
 expr_stmt|;
 return|return
