@@ -10541,6 +10541,12 @@ name|is_ipv4
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|done
+init|=
+literal|0
+decl_stmt|;
+comment|/* flag to exit the outer loop */
 if|if
 condition|(
 name|m
@@ -11872,7 +11878,23 @@ operator|->
 name|rule
 condition|)
 block|{
-comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. Make sure that args->rule still 		 * exists and not changed. 		 */
+comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. Make sure that args->rule still 		 * exists and not changed. 		 * If fw_one_pass != 0 then just accept it. 		 * XXX should not happen here, but optimized out in 		 * the caller. 		 */
+if|if
+condition|(
+name|fw_one_pass
+condition|)
+block|{
+name|IPFW_RUNLOCK
+argument_list|(
+name|chain
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|IP_FW_PASS
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|chain
@@ -12081,7 +12103,7 @@ name|mtag
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now scan the rules, and parse microinstructions for each rule. 	 */
+comment|/* 	 * Now scan the rules, and parse microinstructions for each rule. 	 * We have two nested loops and an inner switch. Sometimes we 	 * need to break out of one or both loops, or re-enter one of 	 * the loops with updated variables. Loop variables are: 	 * 	 *	f (outer loop) points to the current rule. 	 *		On output it points to the matching rule. 	 *	done (outer loop) is used as a flag to break the loop. 	 *	l (inner loop)	residual length of current rule. 	 *		cmd points to the current microinstruction. 	 * 	 * We break the inner loop by setting l=0 and possibly 	 * cmdlen=0 if we don't want to advance cmd. 	 * We break the outer loop by setting done=1 	 * We can restart the inner loop by setting l>0 and f, cmd 	 * as needed. 	 */
 for|for
 control|(
 init|;
@@ -12111,8 +12133,7 @@ decl_stmt|,
 name|skip_or
 decl_stmt|;
 comment|/* skip rest of OR block */
-name|again
-label|:
+comment|/* again: */
 if|if
 condition|(
 name|V_set_disable
@@ -12161,8 +12182,7 @@ name|int
 name|match
 decl_stmt|;
 comment|/* 			 * check_body is a jump target used when we find a 			 * CHECK_STATE, and need to jump to the body of 			 * the target rule. 			 */
-name|check_body
-label|:
+comment|/* check_body: */
 name|cmdlen
 operator|=
 name|F_LEN
@@ -14669,7 +14689,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* 			 * The second set of opcodes represents 'actions', 			 * i.e. the terminal part of a rule once the packet 			 * matches all previous patterns. 			 * Typically there is only one action for each rule, 			 * and the opcode is stored at the end of the rule 			 * (but there are exceptions -- see below). 			 * 			 * In general, here we set retval and terminate the 			 * outer loop (would be a 'break 3' in some language, 			 * but we need to do a 'goto done'). 			 * 			 * Exceptions: 			 * O_COUNT and O_SKIPTO actions: 			 *   instead of terminating, we jump to the next rule 			 *   ('goto next_rule', equivalent to a 'break 2'), 			 *   or to the SKIPTO target ('goto again' after 			 *   having set f, cmd and l), respectively. 			 * 			 * O_TAG, O_LOG and O_ALTQ action parameters: 			 *   perform some action and set match = 1; 			 * 			 * O_LIMIT and O_KEEP_STATE: these opcodes are 			 *   not real 'actions', and are stored right 			 *   before the 'action' part of the rule. 			 *   These opcodes try to install an entry in the 			 *   state tables; if successful, we continue with 			 *   the next opcode (match=1; break;), otherwise 			 *   the packet *   must be dropped 			 *   ('goto done' after setting retval); 			 * 			 * O_PROBE_STATE and O_CHECK_STATE: these opcodes 			 *   cause a lookup of the state table, and a jump 			 *   to the 'action' part of the parent rule 			 *   ('goto check_body') if an entry is found, or 			 *   (CHECK_STATE only) a jump to the next rule if 			 *   the entry is not found ('goto next_rule'). 			 *   The result of the lookup is cached to make 			 *   further instances of these opcodes are 			 *   effectively NOPs. 			 */
+comment|/* 			 * The second set of opcodes represents 'actions', 			 * i.e. the terminal part of a rule once the packet 			 * matches all previous patterns. 			 * Typically there is only one action for each rule, 			 * and the opcode is stored at the end of the rule 			 * (but there are exceptions -- see below). 			 * 			 * In general, here we set retval and terminate the 			 * outer loop (would be a 'break 3' in some language, 			 * but we need to set l=0, done=1) 			 * 			 * Exceptions: 			 * O_COUNT and O_SKIPTO actions: 			 *   instead of terminating, we jump to the next rule 			 *   (setting l=0), or to the SKIPTO target (by 			 *   setting f, cmd and l as needed), respectively. 			 * 			 * O_TAG, O_LOG and O_ALTQ action parameters: 			 *   perform some action and set match = 1; 			 * 			 * O_LIMIT and O_KEEP_STATE: these opcodes are 			 *   not real 'actions', and are stored right 			 *   before the 'action' part of the rule. 			 *   These opcodes try to install an entry in the 			 *   state tables; if successful, we continue with 			 *   the next opcode (match=1; break;), otherwise 			 *   the packet must be dropped (set retval, 			 *   break loops with l=0, done=1) 			 * 			 * O_PROBE_STATE and O_CHECK_STATE: these opcodes 			 *   cause a lookup of the state table, and a jump 			 *   to the 'action' part of the parent rule 			 *   if an entry is found, or 			 *   (CHECK_STATE only) a jump to the next rule if 			 *   the entry is not found. 			 *   The result of the lookup is cached so that 			 *   further instances of these opcodes become NOPs. 			 *   The jump to the next rule is done by setting 			 *   l=0, cmdlen=0. 			 */
 case|case
 name|O_LIMIT
 case|:
@@ -14694,14 +14714,21 @@ name|tablearg
 argument_list|)
 condition|)
 block|{
+comment|/* error or limit violation */
 name|retval
 operator|=
 name|IP_FW_DENY
 expr_stmt|;
-goto|goto
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
 name|done
-goto|;
-comment|/* error/limit violation */
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
 block|}
 name|match
 operator|=
@@ -14750,7 +14777,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 					 * Found dynamic entry, update stats 					 * and jump to the 'action' part of 					 * the parent rule. 					 */
+comment|/* 					 * Found dynamic entry, update stats 					 * and jump to the 'action' part of 					 * the parent rule by setting 					 * f, cmd, l and clearing cmdlen. 					 */
 name|q
 operator|->
 name|pcnt
@@ -14788,9 +14815,15 @@ expr_stmt|;
 name|IPFW_DYN_UNLOCK
 argument_list|()
 expr_stmt|;
-goto|goto
-name|check_body
-goto|;
+name|cmdlen
+operator|=
+literal|0
+expr_stmt|;
+name|match
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 comment|/* 				 * Dynamic entry not found. If CHECK_STATE, 				 * skip to next rule, if PROBE_STATE just 				 * ignore and continue with next opcode. 				 */
 if|if
@@ -14801,9 +14834,11 @@ name|opcode
 operator|==
 name|O_CHECK_STATE
 condition|)
-goto|goto
-name|next_rule
-goto|;
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
 name|match
 operator|=
 literal|1
@@ -14817,9 +14852,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* accept */
-goto|goto
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
 name|done
-goto|;
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
+break|break;
 case|case
 name|O_PIPE
 case|:
@@ -14876,21 +14919,23 @@ name|retval
 operator|=
 name|IP_FW_DUMMYNET
 expr_stmt|;
-goto|goto
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
 name|done
-goto|;
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
+break|break;
 case|case
 name|O_DIVERT
 case|:
 case|case
 name|O_TEE
 case|:
-block|{
-name|struct
-name|divert_tag
-modifier|*
-name|dt
-decl_stmt|;
 if|if
 condition|(
 name|args
@@ -14899,6 +14944,17 @@ name|eh
 condition|)
 comment|/* not on layer 2 */
 break|break;
+comment|/* otherwise this is terminal */
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
+name|done
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
 name|mtag
 operator|=
 name|m_tag_get
@@ -14921,30 +14977,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX statistic */
-comment|/* drop packet */
-name|IPFW_RUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ucred_cache
-operator|!=
-name|NULL
-condition|)
-name|crfree
-argument_list|(
-name|ucred_cache
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|retval
+operator|=
 name|IP_FW_DENY
-operator|)
-return|;
+expr_stmt|;
 block|}
+else|else
+block|{
+name|struct
+name|divert_tag
+modifier|*
+name|dt
+decl_stmt|;
 name|dt
 operator|=
 operator|(
@@ -15010,10 +15054,8 @@ name|IP_FW_DIVERT
 else|:
 name|IP_FW_TEE
 expr_stmt|;
-goto|goto
-name|done
-goto|;
 block|}
+break|break;
 case|case
 name|O_COUNT
 case|:
@@ -15046,9 +15088,14 @@ name|opcode
 operator|==
 name|O_COUNT
 condition|)
-goto|goto
-name|next_rule
-goto|;
+block|{
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
+break|break;
+block|}
 comment|/* handle skipto */
 if|if
 condition|(
@@ -15093,9 +15140,69 @@ operator|->
 name|next_rule
 expr_stmt|;
 block|}
-goto|goto
-name|again
-goto|;
+comment|/* 				 * Skip disabled rules, and 				 * re-enter the inner loop 				 * with the correct f, l and cmd. 				 * Also clear cmdlen and skip_or 				 */
+while|while
+condition|(
+name|f
+operator|&&
+operator|(
+name|V_set_disable
+operator|&
+operator|(
+literal|1
+operator|<<
+name|f
+operator|->
+name|set
+operator|)
+operator|)
+condition|)
+name|f
+operator|=
+name|f
+operator|->
+name|next
+expr_stmt|;
+if|if
+condition|(
+name|f
+condition|)
+block|{
+comment|/* found a valid rule */
+name|l
+operator|=
+name|f
+operator|->
+name|cmd_len
+expr_stmt|;
+name|cmd
+operator|=
+name|f
+operator|->
+name|cmd
+expr_stmt|;
+block|}
+else|else
+block|{
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
+block|}
+name|match
+operator|=
+literal|1
+expr_stmt|;
+name|cmdlen
+operator|=
+literal|0
+expr_stmt|;
+name|skip_or
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 name|O_REJECT
 case|:
@@ -15275,12 +15382,37 @@ name|retval
 operator|=
 name|IP_FW_DENY
 expr_stmt|;
-goto|goto
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
 name|done
-goto|;
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
+break|break;
 case|case
 name|O_FORWARD_IP
 case|:
+if|if
+condition|(
+name|args
+operator|->
+name|eh
+condition|)
+comment|/* not valid on layer2 pkts */
+break|break;
+if|if
+condition|(
+operator|!
+name|q
+operator|||
+name|dyn_dir
+operator|==
+name|MATCH_FORWARD
+condition|)
 block|{
 name|struct
 name|sockaddr_in
@@ -15302,24 +15434,6 @@ operator|->
 name|sa
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|args
-operator|->
-name|eh
-condition|)
-comment|/* not valid on layer2 pkts */
-break|break;
-if|if
-condition|(
-operator|!
-name|q
-operator|||
-name|dyn_dir
-operator|==
-name|MATCH_FORWARD
-condition|)
-block|{
 if|if
 condition|(
 name|sa
@@ -15384,10 +15498,17 @@ name|retval
 operator|=
 name|IP_FW_PASS
 expr_stmt|;
-block|}
-goto|goto
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
 name|done
-goto|;
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
+break|break;
 case|case
 name|O_NETGRAPH
 case|:
@@ -15454,9 +15575,17 @@ name|IP_FW_NETGRAPH
 else|:
 name|IP_FW_NGTEE
 expr_stmt|;
-goto|goto
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
 name|done
-goto|;
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
+break|break;
 case|case
 name|O_SETFIB
 case|:
@@ -15497,12 +15626,27 @@ name|cmd
 operator|->
 name|arg1
 expr_stmt|;
-goto|goto
-name|next_rule
-goto|;
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
+break|break;
 case|case
 name|O_NAT
 case|:
+if|if
+condition|(
+operator|!
+name|IPFW_NAT_LOADED
+condition|)
+block|{
+name|retval
+operator|=
+name|IP_FW_DENY
+expr_stmt|;
+block|}
+else|else
 block|{
 name|struct
 name|cfg_nat
@@ -15512,11 +15656,6 @@ decl_stmt|;
 name|int
 name|nat_id
 decl_stmt|;
-if|if
-condition|(
-name|IPFW_NAT_LOADED
-condition|)
-block|{
 name|args
 operator|->
 name|rule
@@ -15595,9 +15734,17 @@ name|retval
 operator|=
 name|IP_FW_DENY
 expr_stmt|;
-goto|goto
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* exit inner loop */
 name|done
-goto|;
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
+break|break;
 block|}
 if|if
 condition|(
@@ -15632,15 +15779,17 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|retval
+name|l
 operator|=
-name|IP_FW_DENY
+literal|0
 expr_stmt|;
-goto|goto
+comment|/* exit inner loop */
 name|done
-goto|;
-block|}
+operator|=
+literal|1
+expr_stmt|;
+comment|/* exit outer loop */
+break|break;
 case|case
 name|O_REASS
 case|:
@@ -15659,6 +15808,11 @@ name|bcnt
 operator|+=
 name|pktlen
 expr_stmt|;
+name|l
+operator|=
+literal|0
+expr_stmt|;
+comment|/* in any case exit inner loop */
 name|ip_off
 operator|=
 operator|(
@@ -15680,8 +15834,10 @@ name|ip
 operator|->
 name|ip_off
 expr_stmt|;
+comment|/* if not fragmented, go to next rule */
 if|if
 condition|(
+operator|(
 name|ip_off
 operator|&
 operator|(
@@ -15689,9 +15845,12 @@ name|IP_MF
 operator||
 name|IP_OFFMASK
 operator|)
+operator|)
+operator|==
+literal|0
 condition|)
-block|{
-comment|/*  					 * ip_reass() expects len& off in host 					 * byte order: fix them in case we come 					 * from layer2. 					 */
+break|break;
+comment|/*  				 * ip_reass() expects len& off in host 				 * byte order: fix them in case we come 				 * from layer2. 				 */
 if|if
 condition|(
 name|args
@@ -15724,6 +15883,10 @@ name|ip_off
 argument_list|)
 expr_stmt|;
 block|}
+name|args
+operator|->
+name|m
+operator|=
 name|m
 operator|=
 name|ip_reass
@@ -15731,20 +15894,23 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|args
-operator|->
-name|m
-operator|=
-name|m
-expr_stmt|;
-comment|/* 					 * IP header checksum fixup after  					 * reassembly and leave header 					 * in network byte order. 					 */
+comment|/* 				 * IP header checksum fixup after  				 * reassembly and leave header 				 * in network byte order. 				 */
 if|if
 condition|(
 name|m
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
+comment|/* fragment got swallowed */
+name|retval
+operator|=
+name|IP_FW_DENY
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* good, packet complete */
 name|int
 name|hlen
 decl_stmt|;
@@ -15850,24 +16016,13 @@ name|chain
 operator|->
 name|id
 expr_stmt|;
-goto|goto
-name|done
-goto|;
 block|}
-else|else
-block|{
-name|retval
+name|done
 operator|=
-name|IP_FW_DENY
+literal|1
 expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
-block|}
-goto|goto
-name|next_rule
-goto|;
+comment|/* exit outer loop */
+break|break;
 block|}
 default|default:
 name|panic
@@ -15881,6 +16036,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* end of switch() on opcodes */
+comment|/* 			 * if we get here with l=0, then match is irrelevant. 			 */
 if|if
 condition|(
 name|cmd
@@ -15930,41 +16086,21 @@ break|break;
 comment|/* try next rule    */
 block|}
 block|}
-comment|/* end of inner for, scan opcodes */
-name|next_rule
-label|:
-empty_stmt|;
+comment|/* end of inner loop, scan opcodes */
+if|if
+condition|(
+name|done
+condition|)
+break|break;
+comment|/* next_rule:; */
 comment|/* try next rule		*/
 block|}
 comment|/* end of outer for, scan rules */
-name|printf
-argument_list|(
-literal|"ipfw: ouch!, skip past end of rules, denying packet\n"
-argument_list|)
-expr_stmt|;
-name|IPFW_RUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|ucred_cache
-operator|!=
-name|NULL
-condition|)
-name|crfree
-argument_list|(
-name|ucred_cache
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|IP_FW_DENY
-operator|)
-return|;
 name|done
-label|:
+condition|)
+block|{
 comment|/* Update statistics */
 name|f
 operator|->
@@ -15983,6 +16119,19 @@ name|timestamp
 operator|=
 name|time_uptime
 expr_stmt|;
+block|}
+else|else
+block|{
+name|retval
+operator|=
+name|IP_FW_DENY
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ipfw: ouch!, skip past end of rules, denying packet\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|IPFW_RUNLOCK
 argument_list|(
 name|chain
