@@ -12335,8 +12335,6 @@ decl_stmt|,
 name|prop
 decl_stmt|,
 name|newsig
-decl_stmt|,
-name|signo
 decl_stmt|;
 name|p
 operator|=
@@ -12615,8 +12613,6 @@ name|p
 operator|->
 name|p_sigqueue
 expr_stmt|;
-name|signo
-operator|=
 name|sigqueue_get
 argument_list|(
 name|queue
@@ -12625,17 +12621,6 @@ name|sig
 argument_list|,
 operator|&
 name|ksi
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|signo
-operator|==
-name|sig
-argument_list|,
-operator|(
-literal|"signo != sig"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
