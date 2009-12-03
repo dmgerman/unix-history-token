@@ -250,7 +250,7 @@ name|ut
 operator|->
 name|ut_type
 operator|!=
-name|LOGIN_PROCESS
+name|USER_PROCESS
 condition|)
 continue|continue;
 if|if

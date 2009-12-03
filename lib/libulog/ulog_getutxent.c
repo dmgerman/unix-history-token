@@ -322,7 +322,7 @@ name|utx
 operator|.
 name|ut_type
 operator|=
-name|LOGIN_PROCESS
+name|USER_PROCESS
 expr_stmt|;
 else|else
 name|utx
