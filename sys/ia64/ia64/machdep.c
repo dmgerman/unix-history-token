@@ -3849,7 +3849,6 @@ block|}
 end_function
 
 begin_function
-name|__volatile
 name|void
 modifier|*
 name|ia64_ioport_address
@@ -3898,7 +3897,6 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|__volatile
 name|void
 operator|*
 operator|)

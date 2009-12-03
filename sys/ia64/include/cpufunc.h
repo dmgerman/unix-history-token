@@ -111,12 +111,11 @@ name|__MEMIO_ADDR
 parameter_list|(
 name|x
 parameter_list|)
-value|(__volatile void*)(IA64_PHYS_TO_RR6(x))
+value|(void*)(IA64_PHYS_TO_RR6(x))
 end_define
 
 begin_function_decl
 specifier|extern
-name|__volatile
 name|void
 modifier|*
 name|ia64_ioport_address
