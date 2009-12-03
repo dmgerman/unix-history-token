@@ -13686,6 +13686,12 @@ literal|0x01
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Clear WOL matching such that normal Rx filtering 	 * wouldn't interfere with WOL patterns. 	 */
+name|re_clrwol
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* reinitialize interface if necessary */
 if|if
 condition|(
@@ -13696,12 +13702,6 @@ operator|&
 name|IFF_UP
 condition|)
 name|re_init_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Clear WOL matching such that normal Rx filtering 	 * wouldn't interfere with WOL patterns. 	 */
-name|re_clrwol
 argument_list|(
 name|sc
 argument_list|)
