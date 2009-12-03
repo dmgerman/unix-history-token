@@ -5739,6 +5739,15 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+literal|1
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|s
 operator|->
 name|s3
