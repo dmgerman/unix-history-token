@@ -731,7 +731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert "old" type - ACL_TYPE_{ACCESS,DEFAULT}_OLD - into its "new"  * counterpart.  It's required for old (pre-NFS4 ACLs) libc to work  * with new kernel.  Fixing 'type' for old binaries with new libc  * is being done in lib/libc/posix1e/acl_support.c:_acl_type_unold().  */
+comment|/*  * Convert "old" type - ACL_TYPE_{ACCESS,DEFAULT}_OLD - into its "new"  * counterpart.  It's required for old (pre-NFSv4 ACLs) libc to work  * with new kernel.  Fixing 'type' for old binaries with new libc  * is being done in lib/libc/posix1e/acl_support.c:_acl_type_unold().  */
 end_comment
 
 begin_function
@@ -1312,7 +1312,10 @@ name|VOP_ACLCHECK
 argument_list|(
 name|vp
 argument_list|,
+name|acl_type_unold
+argument_list|(
 name|type
+argument_list|)
 argument_list|,
 name|inkernelacl
 argument_list|,
