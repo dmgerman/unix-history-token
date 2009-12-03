@@ -3000,12 +3000,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_function_decl
 name|int
 name|nfsrv_buildacl
@@ -3077,11 +3071,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* nfs_clrpcops.c */

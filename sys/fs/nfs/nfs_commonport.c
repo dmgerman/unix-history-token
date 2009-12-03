@@ -1807,12 +1807,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_comment
 comment|/*  * Determine if the file system supports NFSv4 ACLs.  * Return 1 if it does, 0 otherwise.  */
 end_comment
@@ -1896,15 +1890,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NFS4_ACL_EXTATTR_NAME */
-end_comment
 
 begin_function_decl
 specifier|extern

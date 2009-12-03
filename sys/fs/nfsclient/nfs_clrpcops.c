@@ -408,12 +408,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -440,11 +434,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * nfs null call from vfs.  */
@@ -6045,9 +6034,6 @@ argument_list|,
 name|stuff
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 else|else
 name|error
 operator|=
@@ -6067,15 +6053,6 @@ argument_list|,
 name|stuff
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-else|else
-name|error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
@@ -26154,12 +26131,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_comment
 comment|/*  * nfs getacl call.  */
 end_comment
@@ -26635,15 +26606,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NFS4_ACL_EXTATTR_NAME */
-end_comment
 
 end_unit
 
