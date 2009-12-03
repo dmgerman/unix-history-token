@@ -700,6 +700,54 @@ literal|"Intel 82801I (ICH9) USB controller"
 operator|)
 return|;
 case|case
+literal|0x3a348086
+case|:
+return|return
+operator|(
+literal|"Intel 82801IJ (ICH10) USB controller USB-A"
+operator|)
+return|;
+case|case
+literal|0x3a358086
+case|:
+return|return
+operator|(
+literal|"Intel 82801IJ (ICH10) USB controller USB-B"
+operator|)
+return|;
+case|case
+literal|0x3a368086
+case|:
+return|return
+operator|(
+literal|"Intel 82801IJ (ICH10) USB controller USB-C"
+operator|)
+return|;
+case|case
+literal|0x3a378086
+case|:
+return|return
+operator|(
+literal|"Intel 82801IJ (ICH10) USB controller USB-D"
+operator|)
+return|;
+case|case
+literal|0x3a388086
+case|:
+return|return
+operator|(
+literal|"Intel 82801IJ (ICH10) USB controller USB-E"
+operator|)
+return|;
+case|case
+literal|0x3a398086
+case|:
+return|return
+operator|(
+literal|"Intel 82801IJ (ICH10) USB controller USB-F"
+operator|)
+return|;
+case|case
 literal|0x719a8086
 case|:
 return|return
