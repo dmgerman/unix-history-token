@@ -2483,11 +2483,20 @@ name|result
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Proper fix for PR #10970: exit here so that we don't risk 	 * having a child spawned from this sub-process. 	 */
+if|if
+condition|(
+operator|!
+name|debug
+condition|)
 name|_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|&
+name|result
+return|;
 block|}
 name|ypresp_master
 modifier|*
