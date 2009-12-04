@@ -1217,7 +1217,7 @@ name|pmap_unset
 argument_list|(
 name|YPPROG
 argument_list|,
-literal|1
+name|YPOLDVERS
 argument_list|)
 expr_stmt|;
 block|}
