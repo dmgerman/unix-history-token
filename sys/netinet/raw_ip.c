@@ -2450,6 +2450,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|IP_FW3
+case|:
+comment|/* generic ipfw v.3 functions */
+case|case
 name|IP_FW_ADD
 case|:
 comment|/* ADD actually returns the body... */
@@ -2487,6 +2491,10 @@ operator|=
 name|ENOPROTOOPT
 expr_stmt|;
 break|break;
+case|case
+name|IP_DUMMYNET3
+case|:
+comment|/* generic dummynet v.3 functions */
 case|case
 name|IP_DUMMYNET_GET
 case|:
@@ -2646,6 +2654,10 @@ name|INP_HDRINCL
 expr_stmt|;
 break|break;
 case|case
+name|IP_FW3
+case|:
+comment|/* generic ipfw v.3 functions */
+case|case
 name|IP_FW_ADD
 case|:
 case|case
@@ -2694,6 +2706,10 @@ operator|=
 name|ENOPROTOOPT
 expr_stmt|;
 break|break;
+case|case
+name|IP_DUMMYNET3
+case|:
+comment|/* generic dummynet v.3 functions */
 case|case
 name|IP_DUMMYNET_CONFIGURE
 case|:
