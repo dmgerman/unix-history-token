@@ -121,13 +121,11 @@ begin_function
 name|int
 name|__system
 parameter_list|(
-name|command
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|command
-decl_stmt|;
+parameter_list|)
 block|{
 name|pid_t
 name|pid

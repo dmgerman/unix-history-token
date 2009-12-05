@@ -79,11 +79,9 @@ begin_function
 name|int
 name|__usleep
 parameter_list|(
-name|useconds
-parameter_list|)
 name|useconds_t
 name|useconds
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timespec
