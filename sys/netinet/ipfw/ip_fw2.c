@@ -21271,34 +21271,7 @@ name|V_layer3_chain
 operator|.
 name|rules
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|IPFW_LOCK_DESTROY
-argument_list|(
-operator|&
-name|V_layer3_chain
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"leaving ipfw_iattach (2) with error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-ifdef|#
-directive|ifdef
-name|VIMAGE
-comment|/* want a better way to do this */
+comment|/* curvnet is NULL in the !VIMAGE case */
 name|callout_reset
 argument_list|(
 operator|&
@@ -21311,29 +21284,13 @@ argument_list|,
 name|curvnet
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|callout_reset
-argument_list|(
-operator|&
-name|V_ipfw_timeout
-argument_list|,
-name|hz
-argument_list|,
-name|ipfw_tick
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* First set up some values that are compile time options */
 name|V_ipfw_vnet_ready
 operator|=
 literal|1
 expr_stmt|;
 comment|/* Open for business */
-comment|/* Hook up the raw inputs */
+comment|/* 	 * Hook the sockopt handler, and the layer2 (V_ip_fw_chk_ptr) 	 * and pfil hooks for ipv4 and ipv6. Even if the latter two fail 	 * we still keep the module alive. ipfw[6]_hook return 	 * either 0 or ENOENT in case of failure, so we can ignore the 	 * exact return value and just set a flag. 	 * 	 * XXX 20091204 note that V_ether_ipfw is checked on each packet, 	 * whereas V_fw_enable is only checked at vnet load time. 	 * This must be fixed so that they act in the same way 	 * (probably hooking the pfil unconditionally, and bypassing 	 * the processing if V_fw_enable=0). Same for V_fw6_enable 	 */
 name|V_ip_fw_ctl_ptr
 operator|=
 name|ipfw_ctl
@@ -21342,35 +21299,26 @@ name|V_ip_fw_chk_ptr
 operator|=
 name|ipfw_chk
 expr_stmt|;
-comment|/* 	 * Hook us up to pfil. 	 */
 if|if
 condition|(
 name|V_fw_enable
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|error
-operator|=
+operator|&&
 name|ipfw_hook
 argument_list|()
-operator|)
 operator|!=
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+comment|/* see ip_fw_pfil.c::ipfw_hook() */
 name|printf
 argument_list|(
 literal|"ipfw_hook() error\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -21378,38 +21326,28 @@ name|INET6
 if|if
 condition|(
 name|V_fw6_enable
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|error
-operator|=
+operator|&&
 name|ipfw6_hook
 argument_list|()
-operator|)
 operator|!=
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ipfw6_hook() error\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX should we unhook everything else? */
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 block|}
 endif|#
 directive|endif
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -21440,6 +21378,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* tell new callers to go away */
+comment|/* 	 * disconnect from ipv4, ipv6, layer2 and sockopt. 	 * Then grab, release and grab again the WLOCK so we make 	 * sure the update is propagated and nobody will be in. 	 */
 name|ipfw_unhook
 argument_list|()
 expr_stmt|;
@@ -21451,7 +21390,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* layer2 and other entrypoints still come in this way. */
 name|V_ip_fw_chk_ptr
 operator|=
 name|NULL
