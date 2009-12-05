@@ -5238,7 +5238,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|pfr_tstats
+name|pft_entry
 argument_list|)
 argument_list|)
 expr_stmt|;
