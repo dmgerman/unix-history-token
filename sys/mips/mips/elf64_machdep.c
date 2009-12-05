@@ -419,7 +419,7 @@ name|elf64
 argument_list|,
 name|SI_SUB_EXEC
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_FIRST
 argument_list|,
 operator|(
 name|sysinit_cfunc_t
