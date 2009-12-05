@@ -7062,6 +7062,22 @@ operator|->
 name|idle_time
 operator|<
 name|curr_time
+operator|&&
+name|pipe
+operator|->
+name|scheduler_heap
+operator|.
+name|elements
+operator|==
+literal|0
+operator|&&
+name|pipe
+operator|->
+name|not_eligible_heap
+operator|.
+name|elements
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Calculate available burst size. */
