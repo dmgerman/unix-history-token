@@ -2501,6 +2501,10 @@ begin_comment
 comment|/* bool: send all-ones broadcast */
 end_comment
 
+begin_comment
+comment|/*  * Options for controlling the firewall and dummynet.  * Historical options (from 40 to 64) will eventually be  * replaced by only two options, IP_FW3 and IP_DUMMYNET3.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2554,6 +2558,28 @@ end_define
 
 begin_comment
 comment|/* list table contents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW3
+value|48
+end_define
+
+begin_comment
+comment|/* generic ipfw v.3 sockopts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DUMMYNET3
+value|49
+end_define
+
+begin_comment
+comment|/* generic dummynet v.3 sockopts */
 end_comment
 
 begin_define

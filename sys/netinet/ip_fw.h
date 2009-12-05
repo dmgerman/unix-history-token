@@ -357,11 +357,8 @@ struct|struct
 name|_ipfw_insn
 block|{
 comment|/* template for instructions */
-name|enum
-name|ipfw_opcodes
+name|u_int8_t
 name|opcode
-range|:
-literal|8
 decl_stmt|;
 name|u_int8_t
 name|len
