@@ -103,6 +103,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_ULOG_POSIX_NAMES
+end_define
+
 begin_include
 include|#
 directive|include
@@ -183,7 +189,7 @@ name|int
 name|cnt
 decl_stmt|;
 name|struct
-name|ulog_utmpx
+name|utmpx
 modifier|*
 name|ut
 decl_stmt|;
@@ -229,7 +235,7 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-name|ulog_setutxent
+name|setutxent
 argument_list|()
 expr_stmt|;
 while|while
@@ -237,7 +243,7 @@ condition|(
 operator|(
 name|ut
 operator|=
-name|ulog_getutxent
+name|getutxent
 argument_list|()
 operator|)
 operator|!=
@@ -320,7 +326,7 @@ operator|++
 name|ncnt
 expr_stmt|;
 block|}
-name|ulog_endutxent
+name|endutxent
 argument_list|()
 expr_stmt|;
 if|if
