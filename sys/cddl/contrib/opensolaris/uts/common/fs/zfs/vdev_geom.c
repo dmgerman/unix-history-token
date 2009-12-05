@@ -1428,8 +1428,6 @@ name|uint64_t
 name|guid
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|l
 decl_stmt|,
 name|len
@@ -1562,8 +1560,8 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|error
-operator|=
+if|if
+condition|(
 name|vdev_geom_io
 argument_list|(
 name|cp
@@ -1576,10 +1574,6 @@ name|offset
 argument_list|,
 name|size
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 operator|!=
 literal|0
 condition|)
