@@ -11948,7 +11948,7 @@ block|{
 comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. Make sure that args->rule still 		 * exists and not changed. 		 * If fw_one_pass != 0 then just accept it. 		 * XXX should not happen here, but optimized out in 		 * the caller. 		 */
 if|if
 condition|(
-name|fw_one_pass
+name|V_fw_one_pass
 condition|)
 block|{
 name|IPFW_RUNLOCK
