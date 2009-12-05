@@ -603,7 +603,7 @@ argument_list|(
 operator|&
 name|zbuf
 argument_list|,
-name|Z_PARTIAL_FLUSH
+name|Z_SYNC_FLUSH
 argument_list|)
 else|:
 name|deflate
@@ -611,7 +611,7 @@ argument_list|(
 operator|&
 name|zbuf
 argument_list|,
-name|Z_PARTIAL_FLUSH
+name|Z_FINISH
 argument_list|)
 expr_stmt|;
 if|if
@@ -682,24 +682,38 @@ goto|goto
 name|bad
 goto|;
 block|}
-elseif|else
 if|if
 condition|(
+name|decomp
+operator|&&
 name|zbuf
 operator|.
 name|avail_in
 operator|==
 literal|0
 operator|&&
-name|zbuf
-operator|.
-name|avail_out
-operator|!=
-literal|0
+name|error
+operator|==
+name|Z_STREAM_END
 condition|)
-goto|goto
-name|end
-goto|;
+block|{
+comment|/* Done. */
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|decomp
+operator|&&
+name|error
+operator|==
+name|Z_STREAM_END
+condition|)
+block|{
+comment|/* Done. */
+break|break;
+block|}
 elseif|else
 if|if
 condition|(
@@ -708,14 +722,6 @@ operator|.
 name|avail_out
 operator|==
 literal|0
-operator|&&
-name|i
-operator|<
-operator|(
-name|ZBUF
-operator|-
-literal|1
-operator|)
 condition|)
 block|{
 comment|/* we need more output space, allocate size */
@@ -817,6 +823,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Unexpect result. */
 comment|/* 			 * Unfortunately we are limited to 5 arguments, 			 * thus, again, use two probes. 			 */
 name|SDT_PROBE5
 argument_list|(
@@ -875,8 +882,6 @@ name|bad
 goto|;
 block|}
 block|}
-name|end
-label|:
 name|result
 operator|=
 name|count
