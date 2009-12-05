@@ -27,6 +27,18 @@ directive|include
 file|"ulog.h"
 end_include
 
+begin_function_decl
+name|unsigned
+name|int
+name|ulog_ttyslot
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * On-disk format.  */
 end_comment
