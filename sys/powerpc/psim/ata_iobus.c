@@ -775,14 +775,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ata_iobus_sub_setmode
 parameter_list|(
 name|device_t
-name|parent
-parameter_list|,
-name|device_t
 name|dev
+parameter_list|,
+name|int
+name|target
+parameter_list|,
+name|int
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -927,37 +930,33 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_function_decl
 specifier|static
-name|void
+name|int
 name|ata_iobus_sub_setmode
 parameter_list|(
 name|device_t
 name|parent
 parameter_list|,
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|ata_device
-modifier|*
-name|atadev
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-comment|/* Only ever PIO mode here... */
-name|atadev
-operator|->
+name|int
+name|target
+parameter_list|,
+name|int
 name|mode
-operator|=
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_block
+block|{
+comment|/* Only ever PIO mode here... */
+return|return
+operator|(
 name|ATA_PIO
-expr_stmt|;
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 end_unit
 

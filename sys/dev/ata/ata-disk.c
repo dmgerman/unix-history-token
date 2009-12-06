@@ -1908,13 +1908,8 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|ATA_SETMODE
+name|ata_setmode
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
@@ -2923,7 +2918,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%juMB<%s%s %.8s> at ata%d-%s %s%s\n"
+literal|"%juMB<%s%s %.8s> at ata%d-%s %s%s %s\n"
 argument_list|,
 name|adp
 operator|->
@@ -2974,6 +2969,21 @@ argument_list|(
 name|atadev
 operator|->
 name|mode
+argument_list|)
+argument_list|,
+name|ata_satarev2str
+argument_list|(
+name|ATA_GETREV
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|atadev
+operator|->
+name|unit
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
