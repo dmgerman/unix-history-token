@@ -2153,13 +2153,41 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
 comment|/* The PHY should start in really-low-power mode. */
-block|(void) mdio_read(phy, MDIO_DEV_PMA_PMD, MII_BMCR,&v); 	if ((v& BMCR_PDOWN) == 0) 		CH_WARN(adapter, "PHY%d does not start in low power mode.\n", 			phy_addr);
-endif|#
-directive|endif
+operator|(
+name|void
+operator|)
+name|mdio_read
+argument_list|(
+name|phy
+argument_list|,
+name|MDIO_DEV_PMA_PMD
+argument_list|,
+name|MII_BMCR
+argument_list|,
+operator|&
+name|v
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|v
+operator|&
+name|BMCR_PDOWN
+operator|)
+operator|==
+literal|0
+condition|)
+name|CH_WARN
+argument_list|(
+name|adapter
+argument_list|,
+literal|"PHY%d does not start in low power mode.\n"
+argument_list|,
+name|phy_addr
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Verify XAUI and 1000-X settings, but let prep succeed no matter what. 	 */
 name|v
 operator|=

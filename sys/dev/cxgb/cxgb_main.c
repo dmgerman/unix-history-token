@@ -9745,6 +9745,8 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|100
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* Wait for TXFIFO empty */
@@ -9772,6 +9774,8 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|100
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 name|t3_mac_disable
@@ -9781,8 +9785,6 @@ name|pi
 operator|->
 name|mac
 argument_list|,
-name|MAC_DIRECTION_TX
-operator||
 name|MAC_DIRECTION_RX
 argument_list|)
 expr_stmt|;
