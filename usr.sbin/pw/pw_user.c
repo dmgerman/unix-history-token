@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<login_cap.h>
 end_include
 
@@ -119,41 +113,12 @@ directive|include
 file|"bitmap.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|MAXLOGNAME
-operator|-
-literal|1
-operator|)
-operator|>
-name|UT_NAMESIZE
-end_if
-
-begin_define
-define|#
-directive|define
-name|LOGNAMESIZE
-value|UT_NAMESIZE
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|LOGNAMESIZE
 value|(MAXLOGNAME-1)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
