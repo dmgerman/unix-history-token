@@ -930,7 +930,7 @@ return|;
 block|}
 end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|int
 name|ata_iobus_sub_setmode
@@ -944,10 +944,6 @@ parameter_list|,
 name|int
 name|mode
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
 block|{
 comment|/* Only ever PIO mode here... */
 return|return
@@ -956,7 +952,7 @@ name|ATA_PIO
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
