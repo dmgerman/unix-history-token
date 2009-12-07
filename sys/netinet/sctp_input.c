@@ -28957,8 +28957,6 @@ condition|)
 block|{
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_IPSEC
-argument_list|,
 name|ipsec4stat
 argument_list|)
 operator|.

@@ -1131,8 +1131,6 @@ block|{
 comment|/* XXX */
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_IPSEC
-argument_list|,
 name|ipsec6stat
 argument_list|)
 operator|.
@@ -3316,8 +3314,6 @@ name|inp_ip_ttl
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET
-argument_list|,
 name|ip_defttl
 argument_list|)
 expr_stmt|;
@@ -4127,8 +4123,6 @@ condition|(
 operator|!
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_v6only
 argument_list|)
 condition|)
@@ -4786,8 +4780,6 @@ condition|(
 operator|!
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_v6only
 argument_list|)
 condition|)

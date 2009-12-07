@@ -18063,8 +18063,6 @@ name|sin6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -18467,8 +18465,6 @@ name|sin6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -18602,8 +18598,6 @@ name|sin6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -25406,8 +25400,6 @@ name|sin6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -25497,8 +25489,6 @@ name|sin6
 argument_list|,
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_use_defzone
 argument_list|)
 argument_list|)
@@ -52228,8 +52218,6 @@ name|ip6_hlim
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_defhlim
 argument_list|)
 expr_stmt|;
@@ -57840,8 +57828,6 @@ name|ip6_hlim
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_defhlim
 argument_list|)
 expr_stmt|;
@@ -59169,8 +59155,6 @@ name|ip6_hlim
 operator|=
 name|MODULE_GLOBAL
 argument_list|(
-name|MOD_INET6
-argument_list|,
 name|ip6_defhlim
 argument_list|)
 expr_stmt|;
@@ -68106,7 +68090,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|pfx
 argument_list|,
-argument|&MODULE_GLOBAL(MOD_INET6, nd_prefix)
+argument|&MODULE_GLOBAL(nd_prefix)
 argument_list|,
 argument|ndpr_entry
 argument_list|)
