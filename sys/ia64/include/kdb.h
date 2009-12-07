@@ -40,7 +40,7 @@ name|KDB_STOPPEDPCB
 parameter_list|(
 name|pc
 parameter_list|)
-value|(&(pc)->pc_pcb)
+value|(&(pc)->pc_md.pcb)
 end_define
 
 begin_function

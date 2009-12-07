@@ -502,6 +502,8 @@ condition|)
 block|{
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_nextints
@@ -522,6 +524,8 @@ condition|)
 block|{
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_nstrays
@@ -550,6 +554,8 @@ condition|)
 block|{
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_nstrays
@@ -575,6 +581,8 @@ argument_list|()
 expr_stmt|;
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_nclks
@@ -605,6 +613,8 @@ name|adj
 operator|=
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|clockadj
 argument_list|)
 expr_stmt|;
@@ -612,6 +622,8 @@ name|clk
 operator|=
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|clock
 argument_list|)
 expr_stmt|;
@@ -780,6 +792,8 @@ expr_stmt|;
 block|}
 name|PCPU_SET
 argument_list|(
+name|md
+operator|.
 name|clock
 argument_list|,
 name|clk
@@ -787,6 +801,8 @@ argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
+name|md
+operator|.
 name|clockadj
 argument_list|,
 name|adj
@@ -815,6 +831,8 @@ condition|)
 block|{
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_nasts
@@ -846,6 +864,8 @@ condition|)
 block|{
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_nhighfps
@@ -868,6 +888,8 @@ condition|)
 block|{
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_nrdvs
@@ -908,6 +930,8 @@ condition|)
 block|{
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_nstops
@@ -939,6 +963,8 @@ name|savectx
 argument_list|(
 name|PCPU_PTR
 argument_list|(
+name|md
+operator|.
 name|pcb
 argument_list|)
 argument_list|)
@@ -994,6 +1020,8 @@ condition|)
 block|{
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_npreempts
@@ -1033,6 +1061,8 @@ else|else
 block|{
 name|PCPU_INC
 argument_list|(
+name|md
+operator|.
 name|stats
 operator|.
 name|pcs_nhwints

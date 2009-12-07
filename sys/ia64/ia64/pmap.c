@@ -1775,6 +1775,8 @@ argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
+name|md
+operator|.
 name|vhpt
 argument_list|,
 name|base
@@ -1939,6 +1941,8 @@ argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
+name|md
+operator|.
 name|current_pmap
 argument_list|,
 name|kernel_pmap
@@ -2270,6 +2274,8 @@ name|pmap
 operator|==
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|current_pmap
 argument_list|)
 operator|)
@@ -2288,6 +2294,8 @@ argument_list|)
 operator|-
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|vhpt
 argument_list|)
 expr_stmt|;
@@ -2313,7 +2321,9 @@ operator|)
 operator|(
 name|pc
 operator|->
-name|pc_vhpt
+name|pc_md
+operator|.
+name|vhpt
 operator|+
 name|vhpt_ofs
 operator|)
@@ -2459,6 +2469,8 @@ name|pmap
 operator|==
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|current_pmap
 argument_list|)
 operator|)
@@ -4977,6 +4989,8 @@ name|pmap
 operator|==
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|current_pmap
 argument_list|)
 operator|)
@@ -5617,6 +5631,8 @@ name|pmap
 operator|==
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|current_pmap
 argument_list|)
 operator|)
@@ -8958,6 +8974,8 @@ name|prevpm
 operator|=
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|current_pmap
 argument_list|)
 expr_stmt|;
@@ -9094,6 +9112,8 @@ expr_stmt|;
 block|}
 name|PCPU_SET
 argument_list|(
+name|md
+operator|.
 name|current_pmap
 argument_list|,
 name|pm
