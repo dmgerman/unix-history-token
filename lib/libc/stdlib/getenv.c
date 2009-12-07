@@ -1384,7 +1384,13 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|errno
+operator|=
+name|EFAULT
+expr_stmt|;
+goto|goto
+name|Failure
+goto|;
 block|}
 comment|/* 		 * Find most current version of variable to make active.  This 		 * will prevent multiple active variables from being created 		 * during this initialization phase. 		 */
 name|nameLen
@@ -1456,7 +1462,13 @@ argument_list|,
 name|nameLen
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|errno
+operator|=
+name|EFAULT
+expr_stmt|;
+goto|goto
+name|Failure
+goto|;
 block|}
 name|envVars
 index|[
@@ -2115,7 +2127,16 @@ name|env
 argument_list|)
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|errno
+operator|=
+name|EFAULT
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
