@@ -1511,11 +1511,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<%s %s> ATA/ATAPI-%d"
+literal|"<%s %s> %s-%d"
 argument_list|,
 name|product
 argument_list|,
 name|revision
+argument_list|,
+operator|(
+name|ident_data
+operator|->
+name|config
+operator|&
+name|ATA_PROTO_ATAPI
+operator|)
+condition|?
+literal|"ATAPI"
+else|:
+literal|"ATA"
 argument_list|,
 name|ata_version
 argument_list|(

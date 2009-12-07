@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cam/cam_xpt_internal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam_sim.h>
 end_include
 
@@ -737,13 +743,6 @@ operator|==
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"PMP freeze: %d\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 name|softc
 operator|->
 name|frozen
@@ -753,6 +752,13 @@ literal|1
 operator|<<
 name|i
 operator|)
+expr_stmt|;
+name|xpt_acquire_device
+argument_list|(
+name|dpath
+operator|->
+name|device
+argument_list|)
 expr_stmt|;
 name|cam_freeze_devq
 argument_list|(
@@ -864,13 +870,6 @@ operator|==
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"PMP release: %d\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 name|softc
 operator|->
 name|frozen
@@ -893,6 +892,13 @@ argument_list|,
 literal|0
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|xpt_release_device
+argument_list|(
+name|dpath
+operator|->
+name|device
 argument_list|)
 expr_stmt|;
 name|xpt_free_path
@@ -1008,6 +1014,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|pmprelease
+argument_list|(
+name|periph
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|xpt_print
 argument_list|(
 name|periph
@@ -2041,33 +2055,6 @@ else|:
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"PM RESET %d%s\n"
-argument_list|,
-name|softc
-operator|->
-name|pm_step
-argument_list|,
-operator|(
-name|softc
-operator|->
-name|found
-operator|&
-operator|(
-literal|1
-operator|<<
-name|softc
-operator|->
-name|pm_step
-operator|)
-operator|)
-condition|?
-literal|" skipping"
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|PMP_STATE_CONNECT
@@ -2643,7 +2630,15 @@ operator|--
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PM ports: %d\n"
+literal|"%s%d: %d fan-out ports\n"
+argument_list|,
+name|periph
+operator|->
+name|periph_name
+argument_list|,
+name|periph
+operator|->
+name|unit_number
 argument_list|,
 name|softc
 operator|->
@@ -2756,11 +2751,6 @@ comment|/*getcount_only*/
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"PM reset done\n"
-argument_list|)
-expr_stmt|;
 name|softc
 operator|->
 name|state
@@ -2835,11 +2825,6 @@ literal|10
 argument_list|,
 comment|/*getcount_only*/
 literal|0
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"PM connect done\n"
 argument_list|)
 expr_stmt|;
 name|softc
@@ -2930,9 +2915,22 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"PM status: %d - %08x\n"
+literal|"%s%d: port %d status: %08x\n"
+argument_list|,
+name|periph
+operator|->
+name|periph_name
+argument_list|,
+name|periph
+operator|->
+name|unit_number
 argument_list|,
 name|softc
 operator|->
@@ -2941,6 +2939,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Report device speed. */
 if|if
 condition|(
@@ -3110,9 +3109,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"PM status: %d - %08x\n"
+literal|"%s%d: port %d status: %08x\n"
+argument_list|,
+name|periph
+operator|->
+name|periph_name
+argument_list|,
+name|periph
+operator|->
+name|unit_number
 argument_list|,
 name|softc
 operator|->
@@ -3121,6 +3133,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
+block|}
 name|softc
 operator|->
 name|found
