@@ -348,6 +348,7 @@ argument_list|(
 name|LOADER_FIREWIRE_SUPPORT
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|LOADER_GPT_SUPPORT
