@@ -94,6 +94,8 @@ value|struct pcb	pc_pcb;
 comment|/* Used by IPI_STOP */
 value|\ 	struct pmap	*pc_current_pmap;
 comment|/* active pmap */
+value|\ 	vm_offset_t	pc_vhpt;
+comment|/* Address of VHPT */
 value|\ 	uint64_t	pc_lid;
 comment|/* local CPU ID */
 value|\ 	uint64_t	pc_clock;
