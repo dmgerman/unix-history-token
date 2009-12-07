@@ -2357,7 +2357,7 @@ init|;
 operator|(
 name|bit
 operator|=
-name|ffs
+name|ffsl
 argument_list|(
 name|mask
 argument_list|)
@@ -2368,7 +2368,7 @@ condition|;
 name|mask
 operator|^=
 operator|(
-literal|1
+literal|1ul
 operator|<<
 operator|(
 name|bit
