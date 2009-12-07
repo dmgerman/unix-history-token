@@ -1267,6 +1267,16 @@ operator|->
 name|ntm_bps
 expr_stmt|;
 block|}
+name|ntmp
+operator|->
+name|ntm_multiplier
+operator|=
+name|ntmp
+operator|->
+name|ntm_bps
+operator|/
+name|DEV_BSIZE
+expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(

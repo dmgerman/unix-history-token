@@ -631,6 +631,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NTFS_BLOCK_SIZE
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
 name|NTFS_FRFLAG_DIR
 value|0x0002
 end_define
@@ -958,6 +965,10 @@ modifier|*
 name|ntm_ic_u2l
 decl_stmt|;
 comment|/* Unicode to Local (iconv) */
+name|u_int8_t
+name|ntm_multiplier
+decl_stmt|;
+comment|/* NTFS blockno to DEV_BSIZE sectorno */
 block|}
 struct|;
 end_struct
