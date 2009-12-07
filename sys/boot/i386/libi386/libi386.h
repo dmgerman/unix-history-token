@@ -455,6 +455,28 @@ begin_comment
 comment|/*  just the same as memtop            */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|high_heap_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* extended memory region available */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|high_heap_base
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for use as the heap */
+end_comment
+
 begin_function_decl
 name|int
 name|biospci_find_devclass
