@@ -5591,39 +5591,6 @@ modifier|*
 name|detail
 parameter_list|)
 block|{
-switch|switch
-condition|(
-name|detail
-operator|->
-name|class
-operator|.
-name|members
-operator|.
-name|class
-condition|)
-block|{
-case|case
-name|MFI_EVT_CLASS_DEBUG
-case|:
-case|case
-name|MFI_EVT_CLASS_PROGRESS
-case|:
-case|case
-name|MFI_EVT_CLASS_INFO
-case|:
-ifndef|#
-directive|ifndef
-name|MFI_DEBUG
-if|if
-condition|(
-operator|!
-name|bootverbose
-condition|)
-return|return;
-comment|/* FALLTHROUGH */
-endif|#
-directive|endif
-default|default:
 name|device_printf
 argument_list|(
 name|sc
@@ -5667,7 +5634,6 @@ operator|->
 name|description
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
