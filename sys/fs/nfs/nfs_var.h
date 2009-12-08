@@ -5585,7 +5585,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
-name|u_char
+name|int32_t
 modifier|*
 parameter_list|,
 name|NFSDEV_T
@@ -5882,7 +5882,7 @@ name|struct
 name|nfsvattr
 modifier|*
 parameter_list|,
-name|u_char
+name|int32_t
 modifier|*
 parameter_list|,
 name|int
