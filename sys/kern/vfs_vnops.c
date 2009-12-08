@@ -1013,9 +1013,17 @@ name|VEXEC
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|fmode
 operator|&
 name|O_APPEND
+operator|)
+operator|&&
+operator|(
+name|fmode
+operator|&
+name|FWRITE
+operator|)
 condition|)
 name|accmode
 operator||=
