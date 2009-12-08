@@ -186,6 +186,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_82801H
+value|0x283e8086
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_82801I
+value|0x29308086
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_82801JI
+value|0x3a308086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_6300ESB
 value|0x25a48086
 end_define
@@ -521,6 +542,39 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel 82801GB (ICH7) SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_82801H
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 82801H (ICH8) SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_82801I
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 82801I (ICH9) SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_82801JI
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 82801JI (ICH10) SMBus controller"
 argument_list|)
 expr_stmt|;
 break|break;
