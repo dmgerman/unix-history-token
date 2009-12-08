@@ -1264,11 +1264,14 @@ name|name
 operator|=
 name|commandtext
 argument_list|(
+name|getfuncnode
+argument_list|(
 name|cmdp
 operator|->
 name|param
 operator|.
 name|func
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|out1c
@@ -2613,7 +2616,7 @@ name|cmdp
 operator|->
 name|next
 expr_stmt|;
-name|freefunc
+name|unreffunc
 argument_list|(
 name|cmdp
 operator|->
@@ -2922,7 +2925,7 @@ operator|==
 name|CMDFUNCTION
 condition|)
 block|{
-name|freefunc
+name|unreffunc
 argument_list|(
 name|cmdp
 operator|->
@@ -3047,7 +3050,7 @@ operator|==
 name|CMDFUNCTION
 condition|)
 block|{
-name|freefunc
+name|unreffunc
 argument_list|(
 name|cmdp
 operator|->
