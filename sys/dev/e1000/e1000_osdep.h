@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -35,6 +35,18 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -131,10 +143,6 @@ parameter_list|)
 value|if(!(x)) panic("EM: x")
 end_define
 
-begin_comment
-comment|/* The happy-fun DELAY macro is defined in /usr/src/sys/i386/include/clock.h */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -154,10 +162,6 @@ name|x
 parameter_list|)
 value|DELAY(1000*(x))
 end_define
-
-begin_comment
-comment|/* TODO: Should we be paranoid about delaying in interrupt context? */
-end_comment
 
 begin_define
 define|#
@@ -285,10 +289,6 @@ name|false
 value|FALSE
 end_define
 
-begin_comment
-comment|/* shared code stupidity */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -322,8 +322,65 @@ value|PCIR_COMMAND
 end_define
 
 begin_comment
-comment|/* ** These typedefs are necessary due to the new ** shared code, they are native to Linux. */
+comment|/* Mutex used in the shared code */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MUTEX
+value|struct mtx
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MUTEX_INIT
+parameter_list|(
+name|mutex
+parameter_list|)
+value|mtx_init((mutex), #mutex, \                                         MTX_NETWORK_LOCK, \                                         MTX_DEF | MTX_SPIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MUTEX_DESTROY
+parameter_list|(
+name|mutex
+parameter_list|)
+value|mtx_destroy(mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MUTEX_LOCK
+parameter_list|(
+name|mutex
+parameter_list|)
+value|mtx_lock(mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MUTEX_TRYLOCK
+parameter_list|(
+name|mutex
+parameter_list|)
+value|mtx_trylock(mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MUTEX_UNLOCK
+parameter_list|(
+name|mutex
+parameter_list|)
+value|mtx_unlock(mutex)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -408,6 +465,144 @@ directive|define
 name|__le64
 value|u64
 end_define
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+end_if
+
+begin_comment
+comment|/* Now in HEAD */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+value|__asm volatile("mfence" ::: "memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|__asm volatile("sfence" ::: "memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|__asm volatile("lfence" ::: "memory")
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*__FreeBSD_version< 800000 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|prefetch
+parameter_list|(
+name|void
+modifier|*
+name|x
+parameter_list|)
+block|{
+asm|__asm volatile("prefetcht0 %0" :: "m" (*(unsigned long *)x));
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|prefetch
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct

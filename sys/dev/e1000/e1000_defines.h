@@ -887,12 +887,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_SDP7_DATA
+name|E1000_CTRL_EXT_SDP3_DATA
 value|0x00000080
 end_define
 
 begin_comment
-comment|/* Value of SW Definable Pin 7 */
+comment|/* Value of SW Definable Pin 3 */
 end_comment
 
 begin_comment
@@ -935,12 +935,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_SDP7_DIR
+name|E1000_CTRL_EXT_SDP3_DIR
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* Direction of SDP7 0=in 1=out */
+comment|/* Direction of SDP3 0=in 1=out */
 end_comment
 
 begin_define
@@ -1025,6 +1025,24 @@ define|#
 directive|define
 name|E1000_CTRL_EXT_LINK_MODE_MASK
 value|0x00C00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_LINK_MODE_82580_MASK
+value|0x01C00000
+end_define
+
+begin_comment
+comment|/*82580 bit 24:22*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_LINK_MODE_1000BASE_KX
+value|0x00400000
 end_define
 
 begin_define
@@ -2655,6 +2673,20 @@ define|#
 directive|define
 name|E1000_SWFW_CSR_SM
 value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SWFW_PHY2_SM
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SWFW_PHY3_SM
+value|0x40
 end_define
 
 begin_comment
@@ -4959,6 +4991,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_EXTCNF_CTRL_OEM_WRITE_ENABLE
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_EXTCNF_CTRL_SWFLAG
 value|0x00000020
 end_define
@@ -5518,6 +5557,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_ICR_DRSTA
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Device Reset Asserted */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_ICR_INT_ASSERTED
 value|0x80000000
 end_define
@@ -5700,6 +5750,17 @@ end_define
 
 begin_comment
 comment|/* Other Interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_FER
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Fatal Error */
 end_comment
 
 begin_comment
@@ -6153,6 +6214,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_IMS_DRSTA
+value|E1000_ICR_DRSTA
+end_define
+
+begin_comment
+comment|/* Device Reset Asserted */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_IMS_RXD_FIFO_PAR0
 value|E1000_ICR_RXD_FIFO_PAR0
 end_define
@@ -6301,6 +6373,17 @@ end_define
 
 begin_comment
 comment|/* Other Interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_FER
+value|E1000_ICR_FER
+end_define
+
+begin_comment
+comment|/* Fatal Error */
 end_comment
 
 begin_comment
@@ -6609,6 +6692,17 @@ end_define
 
 begin_comment
 comment|/* Dock/Undock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_DRSTA
+value|E1000_ICR_DRSTA
+end_define
+
+begin_comment
+comment|/* Device Reset Aserted */
 end_comment
 
 begin_define
@@ -7129,6 +7223,13 @@ name|E1000_ERR_MBX
 value|15
 end_define
 
+begin_define
+define|#
+directive|define
+name|E1000_ERFUSE_FAILURE
+value|16
+end_define
+
 begin_comment
 comment|/* Loop limit on how long we wait for auto-negotiation to complete */
 end_comment
@@ -7446,6 +7547,380 @@ end_define
 
 begin_comment
 comment|/* Auto-neg complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCTXCTL_VALID
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* tx timestamp valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCTXCTL_ENABLED
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* enable tx timestampping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL_VALID
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* rx timestamp valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL_TYPE_MASK
+value|0x0000000E
+end_define
+
+begin_comment
+comment|/* rx type mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL_TYPE_L2_V2
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL_TYPE_L4_V1
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL_TYPE_L2_L4_V2
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL_TYPE_ALL
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL_TYPE_EVENT_V2
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL_ENABLED
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* enable rx timestampping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V1_CTRLT_MASK
+value|0x000000FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V1_SYNC_MESSAGE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V1_DELAY_REQ_MESSAGE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V1_FOLLOWUP_MESSAGE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V1_DELAY_RESP_MESSAGE
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V1_MANAGEMENT_MESSAGE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_MSGID_MASK
+value|0x00000F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_SYNC_MESSAGE
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_DELAY_REQ_MESSAGE
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_PATH_DELAY_REQ_MESSAGE
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_PATH_DELAY_RESP_MESSAGE
+value|0x0300
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_FOLLOWUP_MESSAGE
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_DELAY_RESP_MESSAGE
+value|0x0900
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_PATH_DELAY_FOLLOWUP_MESSAGE
+value|0x0A00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_ANNOUNCE_MESSAGE
+value|0x0B00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_SIGNALLING_MESSAGE
+value|0x0C00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG_PTP_V2_MANAGEMENT_MESSAGE
+value|0x0D00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TIMINCA_16NS_SHIFT
+value|24
+end_define
+
+begin_comment
+comment|/* TUPLE Filtering Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_DISABLE_MASK
+value|0xF0008000
+end_define
+
+begin_comment
+comment|/* TTQF Disable Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_QUEUE_ENABLE
+value|0x100
+end_define
+
+begin_comment
+comment|/* TTQF Queue Enable Bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_PROTOCOL_MASK
+value|0xFF
+end_define
+
+begin_comment
+comment|/* TTQF Protocol Mask */
+end_comment
+
+begin_comment
+comment|/* TTQF TCP Bit, shift with E1000_TTQF_PROTOCOL SHIFT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_PROTOCOL_TCP
+value|0x0
+end_define
+
+begin_comment
+comment|/* TTQF UDP Bit, shift with E1000_TTQF_PROTOCOL_SHIFT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_PROTOCOL_UDP
+value|0x1
+end_define
+
+begin_comment
+comment|/* TTQF SCTP Bit, shift with E1000_TTQF_PROTOCOL_SHIFT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_PROTOCOL_SCTP
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_PROTOCOL_SHIFT
+value|5
+end_define
+
+begin_comment
+comment|/* TTQF Protocol Shift */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_QUEUE_SHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* TTQF Queue Shfit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_RX_QUEUE_MASK
+value|0x70000
+end_define
+
+begin_comment
+comment|/* TTQF Queue Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TTQF_MASK_ENABLE
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* TTQF Mask Enable Bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMIR_CLEAR_MASK
+value|0xF001FFFF
+end_define
+
+begin_comment
+comment|/* IMIR Reg Clear Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMIR_PORT_BYPASS
+value|0x20000
+end_define
+
+begin_comment
+comment|/* IMIR Port Bypass Bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMIR_PRIORITY_SHIFT
+value|29
+end_define
+
+begin_comment
+comment|/* IMIR Priority Shift */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMIREXT_CLEAR_MASK
+value|0x7FFFF
+end_define
+
+begin_comment
+comment|/* IMIREXT Reg Clear Mask */
 end_comment
 
 begin_comment
@@ -9047,6 +9522,38 @@ begin_comment
 comment|/* ...for second port */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_NVM_CFG_DONE_PORT_2
+value|0x100000
+end_define
+
+begin_comment
+comment|/* ...for third port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_NVM_CFG_DONE_PORT_3
+value|0x200000
+end_define
+
+begin_comment
+comment|/* ...for fourth port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NVM_82580_LAN_FUNC_OFFSET
+parameter_list|(
+name|a
+parameter_list|)
+value|(a ? (0x40 + (0x40 * a)) : 0)
+end_define
+
 begin_comment
 comment|/* Mask bits for fields in Word 0x0f of the NVM */
 end_comment
@@ -9761,6 +10268,13 @@ define|#
 directive|define
 name|I82578_E_PHY_ID
 value|0x004DD040
+end_define
+
+begin_define
+define|#
+directive|define
+name|I82580_I_PHY_ID
+value|0x015403A0
 end_define
 
 begin_define
@@ -11061,6 +11575,152 @@ directive|define
 name|E1000_LSECRXCTRL_RSV_MASK
 value|0xFFFFFF33
 end_define
+
+begin_comment
+comment|/* DMA Coalescing register fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMACR_DMACWT_MASK
+value|0x00003FFF
+end_define
+
+begin_comment
+comment|/* DMA Coalescing                                                     * Watchdog Timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMACR_DMACTHR_MASK
+value|0x00FF0000
+end_define
+
+begin_comment
+comment|/* DMA Coalescing Receive                                                     * Threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMACR_DMACTHR_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DMACR_DMAC_LX_MASK
+value|0x30000000
+end_define
+
+begin_comment
+comment|/* Lx when no PCIe                                                     * transactions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMACR_DMAC_LX_SHIFT
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DMACR_DMAC_EN
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Enable DMA Coalescing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMCTXTH_DMCTTHR_MASK
+value|0x00000FFF
+end_define
+
+begin_comment
+comment|/* DMA Coalescing Transmit                                                     * Threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMCTLX_TTLX_MASK
+value|0x00000FFF
+end_define
+
+begin_comment
+comment|/* Time to LX request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMCRTRH_UTRESH_MASK
+value|0x0007FFFF
+end_define
+
+begin_comment
+comment|/* Receive Traffic Rate                                                     * Threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMCRTRH_LRPRCW
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Rcv packet rate in                                                     * current window */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMCCNT_CCOUNT_MASK
+value|0x01FFFFFF
+end_define
+
+begin_comment
+comment|/* DMA Coal Rcv Traffic                                                     * Current Cnt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FCRTC_RTH_COAL_MASK
+value|0x0003FFF0
+end_define
+
+begin_comment
+comment|/* Flow ctrl Rcv Threshold                                                     * High val */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FCRTC_RTH_COAL_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PCIEMISC_LX_DECISION
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Lx power decision based                                                       on DMA coal */
+end_comment
 
 begin_endif
 endif|#

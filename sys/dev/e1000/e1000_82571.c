@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/*  * 82571EB Gigabit Ethernet Controller  * 82571EB Gigabit Ethernet Controller (Copper)  * 82571EB Gigabit Ethernet Controller (Fiber)  * 82571EB Dual Port Gigabit Mezzanine Adapter  * 82571EB Quad Port Gigabit Mezzanine Adapter  * 82571PT Gigabit PT Quad Port Server ExpressModule  * 82572EI Gigabit Ethernet Controller (Copper)  * 82572EI Gigabit Ethernet Controller (Fiber)  * 82572EI Gigabit Ethernet Controller  * 82573V Gigabit Ethernet Controller (Copper)  * 82573E Gigabit Ethernet Controller (Copper)  * 82573L Gigabit Ethernet Controller  * 82574L Gigabit Network Connection  * 82574L Gigabit Network Connection  * 82583V Gigabit Network Connection  */
+comment|/*  * 82571EB Gigabit Ethernet Controller  * 82571EB Gigabit Ethernet Controller (Copper)  * 82571EB Gigabit Ethernet Controller (Fiber)  * 82571EB Dual Port Gigabit Mezzanine Adapter  * 82571EB Quad Port Gigabit Mezzanine Adapter  * 82571PT Gigabit PT Quad Port Server ExpressModule  * 82572EI Gigabit Ethernet Controller (Copper)  * 82572EI Gigabit Ethernet Controller (Fiber)  * 82572EI Gigabit Ethernet Controller  * 82573V Gigabit Ethernet Controller (Copper)  * 82573E Gigabit Ethernet Controller (Copper)  * 82573L Gigabit Ethernet Controller  * 82574L Gigabit Network Connection  * 82583V Gigabit Network Connection  */
 end_comment
 
 begin_include
@@ -507,14 +507,6 @@ name|phy
 operator|->
 name|ops
 operator|.
-name|check_polarity
-operator|=
-name|e1000_check_polarity_igp
-expr_stmt|;
-name|phy
-operator|->
-name|ops
-operator|.
 name|check_reset_block
 operator|=
 name|e1000_check_reset_block_generic
@@ -608,6 +600,14 @@ name|phy
 operator|->
 name|ops
 operator|.
+name|check_polarity
+operator|=
+name|e1000_check_polarity_igp
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
 name|force_speed_duplex
 operator|=
 name|e1000_phy_force_speed_duplex_igp
@@ -659,6 +659,15 @@ operator|=
 operator|-
 name|E1000_ERR_PHY
 expr_stmt|;
+name|DEBUGOUT1
+argument_list|(
+literal|"PHY ID unknown: type = 0x%08x\n"
+argument_list|,
+name|phy
+operator|->
+name|id
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -688,6 +697,14 @@ operator|.
 name|get_info
 operator|=
 name|e1000_get_phy_info_m88
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|check_polarity
+operator|=
+name|e1000_check_polarity_m88
 expr_stmt|;
 name|phy
 operator|->
@@ -767,10 +784,10 @@ goto|;
 block|}
 break|break;
 case|case
-name|e1000_82583
+name|e1000_82574
 case|:
 case|case
-name|e1000_82574
+name|e1000_82583
 case|:
 name|phy
 operator|->
@@ -793,6 +810,14 @@ operator|.
 name|get_info
 operator|=
 name|e1000_get_phy_info_m88
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|check_polarity
+operator|=
+name|e1000_check_polarity_m88
 expr_stmt|;
 name|phy
 operator|->
@@ -1210,11 +1235,6 @@ name|hw
 operator|->
 name|mac
 decl_stmt|;
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
 name|u32
 name|swsm
 init|=
@@ -1235,7 +1255,7 @@ argument_list|(
 literal|"e1000_init_mac_params_82571"
 argument_list|)
 expr_stmt|;
-comment|/* Set media type */
+comment|/* Set media type and media-dependent function pointers */
 switch|switch
 condition|(
 name|hw
@@ -1260,6 +1280,30 @@ name|media_type
 operator|=
 name|e1000_media_type_fiber
 expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_physical_interface
+operator|=
+name|e1000_setup_fiber_serdes_link_82571
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_for_link
+operator|=
+name|e1000_check_for_fiber_link_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|get_link_up_info
+operator|=
+name|e1000_get_speed_and_duplex_fiber_serdes_generic
+expr_stmt|;
 break|break;
 case|case
 name|E1000_DEV_ID_82571EB_SERDES
@@ -1281,6 +1325,30 @@ name|media_type
 operator|=
 name|e1000_media_type_internal_serdes
 expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_physical_interface
+operator|=
+name|e1000_setup_fiber_serdes_link_82571
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_for_link
+operator|=
+name|e1000_check_for_serdes_link_82571
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|get_link_up_info
+operator|=
+name|e1000_get_speed_and_duplex_fiber_serdes_generic
+expr_stmt|;
 break|break;
 default|default:
 name|hw
@@ -1290,6 +1358,30 @@ operator|.
 name|media_type
 operator|=
 name|e1000_media_type_copper
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_physical_interface
+operator|=
+name|e1000_setup_copper_link_82571
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_for_link
+operator|=
+name|e1000_check_for_copper_link_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|get_link_up_info
+operator|=
+name|e1000_get_speed_and_duplex_copper_generic
 expr_stmt|;
 break|break;
 block|}
@@ -1334,6 +1426,13 @@ name|TRUE
 else|:
 name|FALSE
 expr_stmt|;
+comment|/* Adaptive IFS supported */
+name|mac
+operator|->
+name|adaptive_ifs
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* Function pointers */
 comment|/* bus type/speed/width */
 name|mac
@@ -1344,37 +1443,6 @@ name|get_bus_info
 operator|=
 name|e1000_get_bus_info_pcie_generic
 expr_stmt|;
-comment|/* function id */
-switch|switch
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-condition|)
-block|{
-case|case
-name|e1000_82573
-case|:
-case|case
-name|e1000_82574
-case|:
-case|case
-name|e1000_82583
-case|:
-name|mac
-operator|->
-name|ops
-operator|.
-name|set_lan_id
-operator|=
-name|e1000_set_lan_id_single_port
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
 comment|/* reset */
 name|mac
 operator|->
@@ -1402,120 +1470,6 @@ name|setup_link
 operator|=
 name|e1000_setup_link_82571
 expr_stmt|;
-comment|/* physical interface link setup */
-name|mac
-operator|->
-name|ops
-operator|.
-name|setup_physical_interface
-operator|=
-operator|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|media_type
-operator|==
-name|e1000_media_type_copper
-operator|)
-condition|?
-name|e1000_setup_copper_link_82571
-else|:
-name|e1000_setup_fiber_serdes_link_82571
-expr_stmt|;
-comment|/* check for link */
-switch|switch
-condition|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|media_type
-condition|)
-block|{
-case|case
-name|e1000_media_type_copper
-case|:
-name|mac
-operator|->
-name|ops
-operator|.
-name|check_for_link
-operator|=
-name|e1000_check_for_copper_link_generic
-expr_stmt|;
-break|break;
-case|case
-name|e1000_media_type_fiber
-case|:
-name|mac
-operator|->
-name|ops
-operator|.
-name|check_for_link
-operator|=
-name|e1000_check_for_fiber_link_generic
-expr_stmt|;
-break|break;
-case|case
-name|e1000_media_type_internal_serdes
-case|:
-name|mac
-operator|->
-name|ops
-operator|.
-name|check_for_link
-operator|=
-name|e1000_check_for_serdes_link_82571
-expr_stmt|;
-break|break;
-default|default:
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_CONFIG
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-break|break;
-block|}
-comment|/* check management mode */
-switch|switch
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-condition|)
-block|{
-case|case
-name|e1000_82574
-case|:
-case|case
-name|e1000_82583
-case|:
-name|mac
-operator|->
-name|ops
-operator|.
-name|check_mng_mode
-operator|=
-name|e1000_check_mng_mode_82574
-expr_stmt|;
-break|break;
-default|default:
-name|mac
-operator|->
-name|ops
-operator|.
-name|check_mng_mode
-operator|=
-name|e1000_check_mng_mode_generic
-expr_stmt|;
-break|break;
-block|}
 comment|/* multicast address update */
 name|mac
 operator|->
@@ -1597,42 +1551,7 @@ name|cleanup_led
 operator|=
 name|e1000_cleanup_led_generic
 expr_stmt|;
-comment|/* turn on/off LED */
-switch|switch
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-condition|)
-block|{
-case|case
-name|e1000_82574
-case|:
-case|case
-name|e1000_82583
-case|:
-name|mac
-operator|->
-name|ops
-operator|.
-name|led_on
-operator|=
-name|e1000_led_on_82574
-expr_stmt|;
-break|break;
-default|default:
-name|mac
-operator|->
-name|ops
-operator|.
-name|led_on
-operator|=
-name|e1000_led_on_generic
-expr_stmt|;
-break|break;
-block|}
+comment|/* turn off LED */
 name|mac
 operator|->
 name|ops
@@ -1650,27 +1569,94 @@ name|clear_hw_cntrs
 operator|=
 name|e1000_clear_hw_cntrs_82571
 expr_stmt|;
-comment|/* link info */
+comment|/* MAC-specific function pointers */
+switch|switch
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|e1000_82573
+case|:
 name|mac
 operator|->
 name|ops
 operator|.
-name|get_link_up_info
+name|set_lan_id
 operator|=
-operator|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|media_type
-operator|==
-name|e1000_media_type_copper
-operator|)
-condition|?
-name|e1000_get_speed_and_duplex_copper_generic
-else|:
-name|e1000_get_speed_and_duplex_fiber_serdes_generic
+name|e1000_set_lan_id_single_port
 expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_mng_mode
+operator|=
+name|e1000_check_mng_mode_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|led_on
+operator|=
+name|e1000_led_on_generic
+expr_stmt|;
+break|break;
+case|case
+name|e1000_82574
+case|:
+case|case
+name|e1000_82583
+case|:
+name|mac
+operator|->
+name|ops
+operator|.
+name|set_lan_id
+operator|=
+name|e1000_set_lan_id_single_port
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_mng_mode
+operator|=
+name|e1000_check_mng_mode_82574
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|led_on
+operator|=
+name|e1000_led_on_82574
+expr_stmt|;
+break|break;
+default|default:
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_mng_mode
+operator|=
+name|e1000_check_mng_mode_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|led_on
+operator|=
+name|e1000_led_on_generic
+expr_stmt|;
+break|break;
+block|}
 comment|/* 	 * Ensure that the inter-port SWSM.SMBI lock bit is clear before 	 * first NVM or PHY acess. This should be done for single-port 	 * devices, and for one port only on dual-port devices so that 	 * for those devices we can still use the SMBI lock to synchronize 	 * inter-port accesses to the PHY& NVM. 	 */
 switch|switch
 condition|(
@@ -1789,10 +1775,8 @@ name|smb_counter
 operator|=
 literal|0
 expr_stmt|;
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -2040,6 +2024,7 @@ comment|/**  *  e1000_get_hw_semaphore_82571 - Acquire hardware semaphore  *  @h
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_get_hw_semaphore_82571
 parameter_list|(
@@ -2258,6 +2243,7 @@ comment|/**  *  e1000_put_hw_semaphore_82571 - Release hardware semaphore  *  @h
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|e1000_put_hw_semaphore_82571
 parameter_list|(
@@ -2352,13 +2338,13 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
-case|:
-case|case
-name|e1000_82573
 case|:
 break|break;
 default|default:
@@ -3475,13 +3461,13 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
-case|:
-case|case
-name|e1000_82573
 case|:
 name|extcnf_ctrl
 operator|=
@@ -3642,13 +3628,13 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
-case|:
-case|case
-name|e1000_82573
 case|:
 name|msec_delay
 argument_list|(
@@ -3793,14 +3779,12 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
 comment|/* This is not fatal and we should not stop init due to this */
-block|}
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
 argument_list|(
@@ -3926,13 +3910,13 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
-case|:
-case|case
-name|e1000_82573
 case|:
 name|e1000_enable_tx_pkt_filtering_generic
 argument_list|(
@@ -4310,13 +4294,13 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
-case|:
-case|case
-name|e1000_82573
 case|:
 name|reg
 operator|=
@@ -4360,13 +4344,13 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
-case|:
-case|case
-name|e1000_82573
 case|:
 name|reg
 operator|=
@@ -4610,13 +4594,13 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
-case|:
-case|case
-name|e1000_82573
 case|:
 if|if
 condition|(
@@ -4629,7 +4613,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			*The VFTA is a 4096b bit-field, each identifying 			*a single VLAN ID.  The following operations 			*determine which 32b entry (i.e. offset) into the 			*array we want to set the VLAN ID (i.e. bit) of 			*the manageability unit. 			*/
+comment|/* 			 * The VFTA is a 4096b bit-field, each identifying 			 * a single VLAN ID.  The following operations 			 * determine which 32b entry (i.e. offset) into the 			 * array we want to set the VLAN ID (i.e. bit) of 			 * the manageability unit. 			 */
 name|vfta_offset
 operator|=
 operator|(
@@ -4659,6 +4643,10 @@ name|E1000_VFTA_ENTRY_BIT_SHIFT_MASK
 operator|)
 expr_stmt|;
 block|}
+break|break;
+default|default:
+break|break;
+block|}
 for|for
 control|(
 name|offset
@@ -4673,7 +4661,7 @@ name|offset
 operator|++
 control|)
 block|{
-comment|/* 			*If the offset we want to clear is the same offset of 			*the manageability VLAN ID, then clear all bits except 			*that of the manageability unit 			*/
+comment|/* 		 * If the offset we want to clear is the same offset of the 		 * manageability VLAN ID, then clear all bits except that of 		 * the manageability unit. 		 */
 name|vfta_value
 operator|=
 operator|(
@@ -4702,10 +4690,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-block|}
-break|break;
-default|default:
-break|break;
 block|}
 block|}
 end_function
@@ -4907,13 +4891,13 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
-case|:
-case|case
-name|e1000_82573
 case|:
 if|if
 condition|(
@@ -5126,10 +5110,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_serdes_link_82571 - Check for link (Serdes)  *  @hw: pointer to the HW structure  *  *  Reports the link state as up or down.  *  *  If autonegotiation is supported by the link partner, the link state is  *  determined by the result of autongotiation. This is the most likely case.  *  If autonegotiation is not supported by the link partner, and the link  *  has a valid signal, force the link up.  *  *  The link state is represented internally here by 4 states:  *  *  1) down  *  2) autoneg_progress  *  3) autoneg_complete (the link sucessfully autonegotiated)  *  4) forced_up (the link has been forced up, it did not autonegotiate)  *  **/
+comment|/**  *  e1000_check_for_serdes_link_82571 - Check for link (Serdes)  *  @hw: pointer to the HW structure  *  *  Reports the link state as up or down.  *  *  If autonegotiation is supported by the link partner, the link state is  *  determined by the result of autonegotiation. This is the most likely case.  *  If autonegotiation is not supported by the link partner, and the link  *  has a valid signal, force the link up.  *  *  The link state is represented internally here by 4 states:  *  *  1) down  *  2) autoneg_progress  *  3) autoneg_complete (the link sucessfully autonegotiated)  *  4) forced_up (the link has been forced up, it did not autonegotiate)  *  **/
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_check_for_serdes_link_82571
 parameter_list|(
@@ -5318,7 +5303,7 @@ operator|&
 name|E1000_RXCW_C
 condition|)
 block|{
-comment|/* We received /C/ ordered sets, meaning the 				 * link partner has autonegotiated, and we can 				 * trust the Link Up (LU) status bit 				 */
+comment|/* 				 * We received /C/ ordered sets, meaning the 				 * link partner has autonegotiated, and we can 				 * trust the Link Up (LU) status bit. 				 */
 if|if
 condition|(
 name|status
@@ -5346,7 +5331,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Autoneg completed, but failed */
+comment|/* Autoneg completed, but failed. */
 name|mac
 operator|->
 name|serdes_link_state
@@ -5362,7 +5347,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* The link partner did not autoneg. 				 * Force link up and full duplex, and change 				 * state to forced. 				 */
+comment|/* 				 * The link partner did not autoneg. 				 * Force link up and full duplex, and change 				 * state to forced. 				 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -5439,7 +5424,7 @@ case|case
 name|e1000_serdes_link_down
 case|:
 default|default:
-comment|/* The link was down but the receiver has now gained 			 * valid sync, so lets see if we can bring the link 			 * up. */
+comment|/* 			 * The link was down but the receiver has now gained 			 * valid sync, so lets see if we can bring the link 			 * up. 			 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -5511,7 +5496,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * We have sync, and can tolerate one 			 * invalid (IV) codeword before declaring 			 * link down, so reread to look again 			 */
+comment|/* 			 * We have sync, and can tolerate one invalid (IV) 			 * codeword before declaring link down, so reread 			 * to look again. 			 */
 name|usec_delay
 argument_list|(
 literal|10
@@ -5629,13 +5614,13 @@ name|type
 condition|)
 block|{
 case|case
+name|e1000_82573
+case|:
+case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
-case|:
-case|case
-name|e1000_82573
 case|:
 if|if
 condition|(
