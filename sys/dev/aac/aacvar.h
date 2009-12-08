@@ -94,24 +94,6 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * FIBs are allocated in page-size chunks and can grow up to the 512  * limit imposed by the hardware.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AAC_PREALLOCATE_FIBS
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|AAC_NUM_MGT_FIB
-value|8
-end_define
-
-begin_comment
 comment|/*  * The controller reports status events in AIFs.  We hang on to a number of  * these in order to pass them out to user-space management tools.  */
 end_comment
 
