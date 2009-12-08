@@ -318,9 +318,12 @@ comment|/*       * Initialise the heap as early as possible.  Once this is done,
 name|bios_getmem
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|LOADER_BZIP2_SUPPORT
+argument_list|)
 name|heap_top
 operator|=
 name|PTOV

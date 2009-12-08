@@ -48,7 +48,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
+name|uint32_t
 name|bios_basemem
 decl_stmt|,
 name|bios_extmem
