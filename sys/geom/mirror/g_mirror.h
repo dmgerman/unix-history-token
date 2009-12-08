@@ -364,16 +364,14 @@ name|u_int
 name|d_priority
 decl_stmt|;
 comment|/* Disk priority. */
-name|struct
-name|bintime
-name|d_delay
+name|u_int
+name|load
 decl_stmt|;
-comment|/* Disk delay. */
-name|struct
-name|bintime
-name|d_last_used
+comment|/* Averaged queue length */
+name|off_t
+name|d_last_offset
 decl_stmt|;
-comment|/* When disk was last used. */
+comment|/* Last read offset */
 name|uint64_t
 name|d_flags
 decl_stmt|;
