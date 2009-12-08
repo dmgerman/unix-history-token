@@ -663,6 +663,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_MOVBE
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_POPCNT
 value|0x00800000
 end_define
