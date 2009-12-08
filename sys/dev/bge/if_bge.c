@@ -8179,15 +8179,6 @@ name|bge_nicaddr
 argument_list|)
 expr_stmt|;
 comment|/* Set up dummy disabled mini ring RCB */
-if|if
-condition|(
-name|sc
-operator|->
-name|bge_asicrev
-operator|==
-name|BGE_ASICREV_BCM5700
-condition|)
-block|{
 name|rcb
 operator|=
 operator|&
@@ -8221,7 +8212,6 @@ operator|->
 name|bge_maxlen_flags
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Set the BD ring replentish thresholds. The recommended 	 * values are 1/8th the number of descriptors allocated to 	 * each ring. 	 * XXX The 5754 requires a lower threshold, so it might be a 	 * requirement of all 575x family chips.  The Linux driver sets 	 * the lower threshold for all 5705 family chips as well, but there 	 * are reports that it might not need to be so strict. 	 * 	 * XXX Linux does some extra fiddling here for the 5906 parts as 	 * well. 	 */
 if|if
