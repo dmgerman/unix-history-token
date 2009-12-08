@@ -19456,8 +19456,6 @@ operator|.
 name|rss
 argument_list|)
 expr_stmt|;
-name|curcpu
-expr_stmt|;
 name|sendmp
 operator|->
 name|m_flags
