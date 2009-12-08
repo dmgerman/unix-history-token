@@ -617,14 +617,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|ppc64
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
