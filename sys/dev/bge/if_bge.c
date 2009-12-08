@@ -2724,19 +2724,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * A common design characteristic for many Broadcom client controllers  * is that they only support a single outstanding DMA read operation  * on the PCIe bus. This means that it will take twice as long to fetch  * a TX frame that is split into header and payload buffers as it does  * to fetch a single, contiguous TX frame (2 reads vs. 1 read). For  * these controllers, coalescing buffers to reduce the number of memory  * reads is effective way to get maximum performance(about 940Mbps).  * Without collapsing TX buffers the maximum TCP bulk transfer  * performance is about 850Mbps. However forcing coalescing mbufs  * consumes a lot of CPU cycles, so leave it off by default.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bge_forced_collapse
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
@@ -2744,17 +2731,6 @@ literal|"hw.bge.allow_asf"
 argument_list|,
 operator|&
 name|bge_allow_asf
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bge.forced_collapse"
-argument_list|,
-operator|&
-name|bge_forced_collapse
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2794,28 +2770,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Allow ASF mode if available"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_hw_bge
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|forced_collapse
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|bge_forced_collapse
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of fragmented TX buffers of a frame allowed before "
-literal|"forced collapsing"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -19173,6 +19127,8 @@ operator|)
 operator|==
 literal|0
 operator|&&
+name|sc
+operator|->
 name|bge_forced_collapse
 operator|>
 literal|0
@@ -19197,6 +19153,8 @@ block|{
 comment|/* 		 * Forcedly collapse mbuf chains to overcome hardware 		 * limitation which only support a single outstanding 		 * DMA read operation. 		 */
 if|if
 condition|(
+name|sc
+operator|->
 name|bge_forced_collapse
 operator|==
 literal|1
@@ -19219,6 +19177,8 @@ name|m
 argument_list|,
 name|M_DONTWAIT
 argument_list|,
+name|sc
+operator|->
 name|bge_forced_collapse
 argument_list|)
 expr_stmt|;
@@ -23091,6 +23051,54 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * A common design characteristic for many Broadcom client controllers 	 * is that they only support a single outstanding DMA read operation 	 * on the PCIe bus. This means that it will take twice as long to fetch 	 * a TX frame that is split into header and payload buffers as it does 	 * to fetch a single, contiguous TX frame (2 reads vs. 1 read). For 	 * these controllers, coalescing buffers to reduce the number of memory 	 * reads is effective way to get maximum performance(about 940Mbps). 	 * Without collapsing TX buffers the maximum TCP bulk transfer 	 * performance is about 850Mbps. However forcing coalescing mbufs 	 * consumes a lot of CPU cycles, so leave it off by default. 	 */
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"forced_collapse"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|bge_forced_collapse
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of fragmented TX buffers of a frame allowed before "
+literal|"forced collapsing"
+argument_list|)
+expr_stmt|;
+name|resource_int_value
+argument_list|(
+name|device_get_name
+argument_list|(
+name|sc
+operator|->
+name|bge_dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|bge_dev
+argument_list|)
+argument_list|,
+literal|"forced_collapse"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|bge_forced_collapse
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|BGE_IS_5705_PLUS
