@@ -121,6 +121,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HID0_DEEPNAP
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Enable deep nap mode (970) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HID0_HBATEN
 value|0x00800000
 end_define
@@ -503,6 +514,14 @@ directive|define
 name|HID0_E500_BITMASK
 define|\
 value|"\20"								\     "\040EMCP\037b1\036b2\035b3\034b4\033b5\032b6\031b7"		\     "\030DOZE\027NAP\026SLEEP\025b11\024b12\023b13\022b14\021b15"	\     "\020b16\017TBEN\016SEL_TBCLK\015b19\014b20\013b21\012b22\011b23"	\     "\010EN_MAS7_UPDATE\007DCFA\006b26\005b27\004b28\003b29\002b30\001NOPTI"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HID0_970_BITMASK
+define|\
+value|"\20"								\     "\040ONEPPC\037SINGLE\036ISYNCSC\035SERGP\031DEEPNAP\030DOZE"	\     "\027NAP\025DPM\023TG\022HANGDETECT\021NHR\020INORDER"		\     "\016TBCTRL\015TBEN\012CIABREN\011HDICEEN\001ENATTN"
 end_define
 
 begin_comment
