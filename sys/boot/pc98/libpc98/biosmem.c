@@ -44,6 +44,8 @@ name|vm_offset_t
 name|memtop
 decl_stmt|,
 name|memtop_copyin
+decl_stmt|,
+name|high_heap_base
 decl_stmt|;
 end_decl_stmt
 
@@ -52,8 +54,21 @@ name|uint32_t
 name|bios_basemem
 decl_stmt|,
 name|bios_extmem
+decl_stmt|,
+name|high_heap_size
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * The minimum amount of memory to reserve in bios_extmem for the heap.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HEAP_MIN
+value|(3 * 1024 * 1024)
+end_define
 
 begin_function
 name|void
@@ -125,6 +140,25 @@ literal|0x100000
 operator|+
 name|bios_extmem
 expr_stmt|;
+comment|/*      * If we have extended memory, use the last 3MB of 'extended' memory      * as a high heap candidate.      */
+if|if
+condition|(
+name|bios_extmem
+operator|>=
+name|HEAP_MIN
+condition|)
+block|{
+name|high_heap_size
+operator|=
+name|HEAP_MIN
+expr_stmt|;
+name|high_heap_base
+operator|=
+name|memtop
+operator|-
+name|HEAP_MIN
+expr_stmt|;
+block|}
 block|}
 end_function
 
