@@ -652,15 +652,49 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/*  		 * If the ID byte is non zero we allow descriptors 		 * having multiple sizes: 		 */
 if|if
 condition|(
+operator|(
 name|actlen
 operator|>=
 name|sc
 operator|->
 name|sc_isize
+operator|)
+operator|||
+operator|(
+operator|(
+name|actlen
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_iid
+operator|!=
+literal|0
+operator|)
+operator|)
 condition|)
 block|{
+comment|/* limit report length to the maximum */
+if|if
+condition|(
+name|actlen
+operator|>
+name|sc
+operator|->
+name|sc_isize
+condition|)
+name|actlen
+operator|=
+name|sc
+operator|->
+name|sc_isize
+expr_stmt|;
 name|usb_fifo_put_data
 argument_list|(
 name|sc
@@ -676,9 +710,7 @@ name|pc
 argument_list|,
 literal|0
 argument_list|,
-name|sc
-operator|->
-name|sc_isize
+name|actlen
 argument_list|,
 literal|1
 argument_list|)
@@ -689,7 +721,7 @@ block|{
 comment|/* ignore it */
 name|DPRINTF
 argument_list|(
-literal|"ignored short transfer, %d bytes\n"
+literal|"ignored transfer, %d bytes\n"
 argument_list|,
 name|actlen
 argument_list|)
