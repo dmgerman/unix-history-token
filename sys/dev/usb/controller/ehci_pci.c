@@ -619,13 +619,13 @@ case|case
 literal|0x3a3a8086
 case|:
 return|return
-literal|"Intel 82801IJ (ICH10) USB 2.0 controller USB-A"
+literal|"Intel 82801JI (ICH10) USB 2.0 controller USB-A"
 return|;
 case|case
 literal|0x3a3c8086
 case|:
 return|return
-literal|"Intel 82801IJ (ICH10) USB 2.0 controller USB-B"
+literal|"Intel 82801JI (ICH10) USB 2.0 controller USB-B"
 return|;
 case|case
 literal|0x00e01033
