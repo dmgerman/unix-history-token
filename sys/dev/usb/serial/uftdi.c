@@ -671,11 +671,6 @@ operator|.
 name|pipe_bof
 operator|=
 literal|1
-block|,
-operator|.
-name|force_short_xfer
-operator|=
-literal|1
 block|,}
 block|,
 operator|.
