@@ -2084,6 +2084,9 @@ modifier|*
 name|path
 decl_stmt|;
 name|int
+name|quirks
+decl_stmt|;
+name|int
 name|pm_level
 decl_stmt|;
 comment|/* power management level */
@@ -2237,6 +2240,9 @@ decl_stmt|;
 block|}
 name|irq
 struct|;
+name|int
+name|quirks
+decl_stmt|;
 name|int
 name|channels
 decl_stmt|;
