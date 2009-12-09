@@ -529,6 +529,10 @@ decl_stmt|;
 name|uint8_t
 name|usb_state
 decl_stmt|;
+name|uint8_t
+name|fps_shift
+decl_stmt|;
+comment|/* down shift of FPS, 0..3 */
 name|usb_error_t
 name|error
 decl_stmt|;
