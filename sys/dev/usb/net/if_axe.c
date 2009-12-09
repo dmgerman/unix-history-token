@@ -350,6 +350,17 @@ block|,
 block|{
 name|USB_VPI
 argument_list|(
+argument|USB_VENDOR_ASIX
+argument_list|,
+argument|USB_PRODUCT_ASIX_AX88772A
+argument_list|,
+argument|AXE_FLAG_772
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
 argument|USB_VENDOR_ATEN
 argument_list|,
 argument|USB_PRODUCT_ATEN_UC210T
