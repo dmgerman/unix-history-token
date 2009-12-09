@@ -229,13 +229,6 @@ begin_comment
 comment|/* PIIX4E has no separate stepping */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PCI_UHCI_BASE_REG
-value|0x20
-end_define
-
 begin_decl_stmt
 specifier|static
 name|device_probe_t

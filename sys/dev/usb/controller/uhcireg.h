@@ -19,6 +19,13 @@ directive|define
 name|_UHCIREG_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCI_UHCI_BASE_REG
+value|0x20
+end_define
+
 begin_comment
 comment|/* PCI config registers  */
 end_comment
