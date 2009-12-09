@@ -2263,14 +2263,10 @@ condition|(
 operator|(
 name|bmstat
 operator|&
-operator|(
-name|ATA_BMSTAT_ACTIVE
-operator||
 name|ATA_BMSTAT_INTERRUPT
 operator|)
-operator|)
-operator|!=
-name|ATA_BMSTAT_INTERRUPT
+operator|==
+literal|0
 condition|)
 return|return
 literal|0
