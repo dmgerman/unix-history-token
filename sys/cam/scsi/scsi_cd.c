@@ -2870,6 +2870,17 @@ operator|=
 name|CD_Q_NONE
 expr_stmt|;
 comment|/* Check if the SIM does not want 6 byte commands */
+name|bzero
+argument_list|(
+operator|&
+name|cpi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cpi
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&
