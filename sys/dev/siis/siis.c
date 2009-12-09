@@ -890,6 +890,19 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|ctlr
+operator|->
+name|gctl
+operator|=
+name|ATA_INL
+argument_list|(
+name|ctlr
+operator|->
+name|r_gmem
+argument_list|,
+name|SIIS_GCTL
+argument_list|)
+expr_stmt|;
 comment|/* Channels memory */
 name|ctlr
 operator|->
@@ -1410,6 +1423,12 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* Put controller into reset state. */
+name|ctlr
+operator|->
+name|gctl
+operator||=
+name|SIIS_GCTL_GRESET
+expr_stmt|;
 name|ATA_OUTL
 argument_list|(
 name|ctlr
@@ -1418,7 +1437,9 @@ name|r_gmem
 argument_list|,
 name|SIIS_GCTL
 argument_list|,
-name|SIIS_GCTL_GRESET
+name|ctlr
+operator|->
+name|gctl
 argument_list|)
 expr_stmt|;
 return|return
@@ -1447,6 +1468,12 @@ name|dev
 argument_list|)
 decl_stmt|;
 comment|/* Put controller into reset state. */
+name|ctlr
+operator|->
+name|gctl
+operator||=
+name|SIIS_GCTL_GRESET
+expr_stmt|;
 name|ATA_OUTL
 argument_list|(
 name|ctlr
@@ -1455,7 +1482,9 @@ name|r_gmem
 argument_list|,
 name|SIIS_GCTL
 argument_list|,
-name|SIIS_GCTL_GRESET
+name|ctlr
+operator|->
+name|gctl
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -1464,6 +1493,23 @@ literal|10000
 argument_list|)
 expr_stmt|;
 comment|/* Get controller out of reset state and enable port interrupts. */
+name|ctlr
+operator|->
+name|gctl
+operator|&=
+operator|~
+operator|(
+name|SIIS_GCTL_GRESET
+operator||
+name|SIIS_GCTL_I2C_IE
+operator|)
+expr_stmt|;
+name|ctlr
+operator|->
+name|gctl
+operator||=
+literal|0x0000000f
+expr_stmt|;
 name|ATA_OUTL
 argument_list|(
 name|ctlr
@@ -1472,7 +1518,9 @@ name|r_gmem
 argument_list|,
 name|SIIS_GCTL
 argument_list|,
-literal|0x0000000f
+name|ctlr
+operator|->
+name|gctl
 argument_list|)
 expr_stmt|;
 return|return
@@ -1785,6 +1833,32 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* Acknowledge interrupt, if MSI enabled. */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|irq
+operator|.
+name|r_irq_rid
+condition|)
+block|{
+name|ATA_OUTL
+argument_list|(
+name|ctlr
+operator|->
+name|r_gmem
+argument_list|,
+name|SIIS_GCTL
+argument_list|,
+name|ctlr
+operator|->
+name|gctl
+operator||
+name|SIIS_GCTL_MSIACK
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

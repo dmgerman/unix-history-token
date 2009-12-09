@@ -2246,6 +2246,9 @@ decl_stmt|;
 name|int
 name|channels
 decl_stmt|;
+name|uint32_t
+name|gctl
+decl_stmt|;
 struct|struct
 block|{
 name|void
