@@ -1364,7 +1364,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no CM or union descriptor!\n"
+literal|"no CM or union descriptor\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1519,7 +1519,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no data interface!\n"
+literal|"no data interface\n"
 argument_list|)
 expr_stmt|;
 goto|goto

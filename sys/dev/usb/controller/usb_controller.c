@@ -577,9 +577,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DPRINTFN
+name|device_printf
 argument_list|(
-literal|0
+name|dev
 argument_list|,
 literal|"USB device has no ivars\n"
 argument_list|)
@@ -1300,7 +1300,7 @@ name|bus
 operator|->
 name|bdev
 argument_list|,
-literal|"Unsupported USB revision!\n"
+literal|"Unsupported USB revision\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2167,7 +2167,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Devices field has not been "
-literal|"initialised properly!\n"
+literal|"initialised properly\n"
 argument_list|)
 expr_stmt|;
 name|bus

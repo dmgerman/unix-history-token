@@ -3780,7 +3780,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Resume failed!\n"
+literal|"Resume failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3821,7 +3821,7 @@ label|:
 comment|/* Detach is not allowed to fail in the USB world */
 name|panic
 argument_list|(
-literal|"An USB driver would not detach!\n"
+literal|"A USB driver would not detach\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4064,7 +4064,7 @@ block|{
 comment|/* 			 * Panic here, else one can get a double call 			 * to device_detach().  USB devices should 			 * never fail on detach! 			 */
 name|panic
 argument_list|(
-literal|"device_delete_child() failed!\n"
+literal|"device_delete_child() failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4110,7 +4110,7 @@ name|udev
 operator|->
 name|parent_dev
 argument_list|,
-literal|"Device creation failed!\n"
+literal|"Device creation failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4801,7 +4801,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"device delete child failed!\n"
+literal|"device delete child failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4901,7 +4901,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s failed!\n"
+literal|"%s failed\n"
 argument_list|,
 name|do_suspend
 condition|?
@@ -5297,7 +5297,7 @@ name|bus
 operator|->
 name|bdev
 argument_list|,
-literal|"No free USB device index for new device!\n"
+literal|"No free USB device index for new device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5319,7 +5319,7 @@ name|bus
 operator|->
 name|bdev
 argument_list|,
-literal|"Invalid device depth!\n"
+literal|"Invalid device depth\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5959,7 +5959,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"getting device descriptor "
-literal|"at addr %d failed, %s!\n"
+literal|"at addr %d failed, %s\n"
 argument_list|,
 name|udev
 operator|->
@@ -6655,7 +6655,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Found no endpoints "
-literal|"(trying next config)!\n"
+literal|"(trying next config)\n"
 argument_list|)
 expr_stmt|;
 name|config_index
@@ -6722,7 +6722,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Found Huawei auto-install disk!\n"
+literal|"Found Huawei auto-install disk\n"
 argument_list|)
 expr_stmt|;
 comment|/* leave device unconfigured */
