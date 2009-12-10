@@ -34,7 +34,7 @@ name|defined
 argument_list|(
 name|TARGET_OCTEON
 argument_list|)
-operator|||
+operator|&&
 name|defined
 argument_list|(
 name|ISA_MIPS32
