@@ -9866,7 +9866,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|dn_free_pkt
+name|dn_free_pkts
 argument_list|(
 name|pipe
 operator|->
