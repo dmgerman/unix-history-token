@@ -1837,7 +1837,7 @@ argument_list|(
 expr|struct
 name|cpio_newc_header
 argument_list|)
-operator|<
+operator|<=
 name|q
 condition|)
 block|{
@@ -2608,7 +2608,7 @@ argument_list|(
 expr|struct
 name|cpio_odc_header
 argument_list|)
-operator|<
+operator|<=
 name|q
 condition|)
 block|{
@@ -4214,6 +4214,16 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
+if|if
+condition|(
+name|archive_entry_nlink
+argument_list|(
+name|entry
+argument_list|)
+operator|<=
+literal|1
+condition|)
+return|return;
 name|dev
 operator|=
 name|archive_entry_dev
