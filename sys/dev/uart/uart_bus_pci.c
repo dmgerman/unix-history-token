@@ -640,6 +640,20 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x9710
+block|,
+literal|0x9865
+block|,
+literal|0xa000
+block|,
+literal|0x1000
+block|,
+literal|"NetMos NM9865 Serial Port"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0xdeaf
 block|,
 literal|0x9051
