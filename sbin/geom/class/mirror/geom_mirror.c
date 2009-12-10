@@ -117,7 +117,7 @@ name|char
 name|label_balance
 index|[]
 init|=
-literal|"split"
+literal|"load"
 decl_stmt|,
 name|configure_balance
 index|[]
