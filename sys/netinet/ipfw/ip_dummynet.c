@@ -10752,10 +10752,17 @@ expr_stmt|;
 name|pipe_bp
 operator|->
 name|burst
-operator|/=
+operator|=
+name|div64
+argument_list|(
+name|pipe_bp
+operator|->
+name|burst
+argument_list|,
 literal|8
 operator|*
 name|hz
+argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX the following is a hack based on ->next being the 		 * first field in dn_pipe and dn_flow_set. The correct 		 * solution would be to move the dn_flow_set to the beginning 		 * of struct dn_pipe. 		 */
 name|pipe_bp
