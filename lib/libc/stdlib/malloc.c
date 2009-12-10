@@ -23347,6 +23347,11 @@ name|result
 operator|=
 name|NULL
 expr_stmt|;
+operator|*
+name|memptr
+operator|=
+name|NULL
+expr_stmt|;
 name|ret
 operator|=
 literal|0
