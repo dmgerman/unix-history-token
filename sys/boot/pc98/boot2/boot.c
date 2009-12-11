@@ -237,6 +237,9 @@ name|char
 name|disk_equips
 decl_stmt|;
 comment|/* Pick up the story from the Bios on geometry of disks */
+ifdef|#
+directive|ifdef
+name|GET_BIOSGEOM
 for|for
 control|(
 name|ret
@@ -287,6 +290,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|bootinfo
 operator|.
 name|bi_basemem
@@ -314,10 +319,15 @@ expr_stmt|;
 name|gateA20
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SET_MACHINE_TYPE
 comment|/* set machine type to PC98_SYSTEM_PARAMETER */
 name|machine_check
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * The default boot device is the first partition in the 	 * compatibility slice on the boot drive. 	 */
 name|dosdev
 operator|=

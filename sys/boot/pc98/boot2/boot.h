@@ -148,11 +148,11 @@ begin_comment
 comment|/* asm.S */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ASM_ONLY
-end_if
+end_ifdef
 
 begin_function_decl
 name|void
@@ -426,38 +426,6 @@ name|s2
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CDBOOT
-end_ifdef
-
-begin_function_decl
-name|int
-name|strcasecmp
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s1
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|s2
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !CDBOOT */
-end_comment
 
 begin_function_decl
 name|void
