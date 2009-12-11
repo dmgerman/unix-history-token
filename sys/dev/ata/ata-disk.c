@@ -677,7 +677,7 @@ operator|->
 name|disk
 operator|->
 name|d_flags
-operator|=
+operator||=
 name|DISKFLAG_CANFLUSHCACHE
 expr_stmt|;
 if|if
@@ -707,7 +707,7 @@ operator|->
 name|disk
 operator|->
 name|d_flags
-operator|=
+operator||=
 name|DISKFLAG_CANDELETE
 expr_stmt|;
 name|strlcpy
