@@ -313,8 +313,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_INTEL_82801J
+name|HDA_INTEL_82801JI
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x3a3e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_82801JD
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x3a6e)
 end_define
 
 begin_define
@@ -473,6 +480,34 @@ define|#
 directive|define
 name|HDA_NVIDIA_MCP79_4
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d94)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d95)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_3
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d96)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP89_4
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d97)
 end_define
 
 begin_define
@@ -2221,9 +2256,17 @@ literal|0
 block|}
 block|,
 block|{
-name|HDA_INTEL_82801J
+name|HDA_INTEL_82801JI
 block|,
-literal|"Intel 82801J"
+literal|"Intel 82801JI"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_82801JD
+block|,
+literal|"Intel 82801JD"
 block|,
 literal|0
 block|}
@@ -2384,6 +2427,38 @@ block|{
 name|HDA_NVIDIA_MCP79_4
 block|,
 literal|"NVidia MCP79"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_1
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_2
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_3
+block|,
+literal|"NVidia MCP89"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP89_4
+block|,
+literal|"NVidia MCP89"
 block|,
 literal|0
 block|}
