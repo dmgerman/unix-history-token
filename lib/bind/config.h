@@ -859,6 +859,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LT_OBJDIR
+value|".libs/"
+end_define
+
+begin_comment
 comment|/* Defined if extern char *optarg is not declared. */
 end_comment
 
