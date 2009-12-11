@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<termios.h>
 end_include
 
@@ -91,7 +97,9 @@ end_comment
 begin_function
 name|void
 name|reset_mode
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tcgetattr
 argument_list|(
@@ -656,7 +664,9 @@ end_comment
 begin_function
 name|void
 name|set_control_chars
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -886,11 +896,9 @@ begin_function
 name|void
 name|set_conversions
 parameter_list|(
-name|usingupper
-parameter_list|)
 name|int
 name|usingupper
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1117,7 +1125,9 @@ end_comment
 begin_function
 name|void
 name|set_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1334,7 +1344,9 @@ end_comment
 begin_function
 name|int
 name|set_tabs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|c
