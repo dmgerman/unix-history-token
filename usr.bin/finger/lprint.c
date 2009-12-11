@@ -1512,6 +1512,10 @@ name|sb
 operator|.
 name|st_size
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 name|LINE_LEN
 operator|-
 name|strlen
@@ -1520,6 +1524,7 @@ name|header
 argument_list|)
 operator|-
 literal|5
+argument_list|)
 condition|)
 block|{
 name|nr

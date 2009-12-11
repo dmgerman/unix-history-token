@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<wchar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<wctype.h>
 end_include
 

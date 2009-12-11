@@ -107,13 +107,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libutil.h>
+file|<login_cap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<login_cap.h>
+file|<paths.h>
 end_include
 
 begin_include

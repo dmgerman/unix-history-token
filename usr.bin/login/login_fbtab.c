@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"login.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pathnames.h"
 end_include
 

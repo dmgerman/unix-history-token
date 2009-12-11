@@ -137,12 +137,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<kvm.h>
 end_include
 
@@ -162,12 +156,6 @@ begin_include
 include|#
 directive|include
 file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
 end_include
 
 begin_include

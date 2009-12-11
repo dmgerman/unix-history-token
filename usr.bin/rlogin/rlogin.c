@@ -155,19 +155,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libutil.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
 end_include
 
 begin_include
