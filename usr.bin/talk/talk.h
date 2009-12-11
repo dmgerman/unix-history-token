@@ -51,12 +51,6 @@ directive|include
 file|<curses.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|int
