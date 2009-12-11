@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: masterdump.c,v 1.73.18.16 2008/08/13 23:46:04 tbox Exp $ */
+comment|/* $Id: masterdump.c,v 1.73.18.16.2.1 2009/11/19 00:25:17 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3004,7 +3004,9 @@ init|=
 block|{
 literal|"none"
 block|,
-literal|"pending"
+literal|"pending-additional"
+block|,
+literal|"pending-answer"
 block|,
 literal|"additional"
 block|,

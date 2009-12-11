@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.196.18.53 2008/01/31 23:46:05 tbox Exp $ */
+comment|/* $Id: rbtdb.c,v 1.196.18.53.4.1 2009/11/19 00:25:17 marka Exp $ */
 end_comment
 
 begin_comment
@@ -12489,11 +12489,13 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
+operator|!
+name|DNS_TRUST_PENDING
+argument_list|(
 name|dname_header
 operator|->
 name|trust
-operator|!=
-name|dns_trust_pending
+argument_list|)
 operator|||
 operator|(
 name|search
@@ -14569,11 +14571,12 @@ operator|)
 operator|)
 operator|||
 operator|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|found
 operator|->
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 operator|&&
 operator|(
 operator|(

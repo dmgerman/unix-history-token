@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.119.18.41.2.1 2009/03/17 02:23:49 marka Exp $ */
+comment|/* $Id: validator.c,v 1.119.18.41.2.2 2009/11/19 00:25:18 marka Exp $ */
 end_comment
 
 begin_comment
@@ -5488,13 +5488,14 @@ name|frdataset
 expr_stmt|;
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 operator|&&
 name|dns_rdataset_isassociated
 argument_list|(
@@ -5554,13 +5555,14 @@ block|}
 elseif|else
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Having a pending key with no signature means that 			 * something is broken. 			 */
@@ -8291,13 +8293,14 @@ name|frdataset
 expr_stmt|;
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 operator|&&
 name|dns_rdataset_isassociated
 argument_list|(
@@ -8357,13 +8360,14 @@ block|}
 elseif|else
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 condition|)
 block|{
 comment|/* 				 * There should never be an unsigned DS. 				 */
@@ -12430,13 +12434,14 @@ block|{
 comment|/* 			 * There is no DS.  If this is a delegation, 			 * we maybe done. 			 */
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 condition|)
 block|{
 name|result
