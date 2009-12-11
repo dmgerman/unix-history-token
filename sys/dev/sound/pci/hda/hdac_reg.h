@@ -1059,6 +1059,17 @@ define|\
 value|(((gcap)& HDAC_GCAP_OSS_MASK)>> HDAC_GCAP_OSS_SHIFT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|HDAC_GCAP_NSDO
+parameter_list|(
+name|gcap
+parameter_list|)
+define|\
+value|(((gcap)& HDAC_GCAP_NSDO_MASK)>> HDAC_GCAP_NSDO_SHIFT)
+end_define
+
 begin_comment
 comment|/* GCTL - Global Control */
 end_comment

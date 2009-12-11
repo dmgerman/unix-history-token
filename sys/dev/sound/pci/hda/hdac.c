@@ -8284,6 +8284,15 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|num_sdo
+operator|=
+name|HDAC_GCAP_NSDO
+argument_list|(
+name|gcap
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
 name|support_64bit
 operator|=
 name|HDA_FLAG_MATCH
@@ -8459,15 +8468,18 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|HDA_BOOTHVERBOSE
+name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"    CORB size: %d\n"
-argument|, sc->corb_size); 		device_printf(sc->dev,
-literal|"    RIRB size: %d\n"
-argument|, sc->rirb_size); 		device_printf(sc->dev,
-literal|"      Streams: ISS=%d OSS=%d BSS=%d\n"
-argument|, 		    sc->num_iss, sc->num_oss, sc->num_bss);
+literal|"Caps: OSS %d, ISS %d, BSS %d, "
+literal|"NSDO %d%s, CORB %d, RIRB %d\n"
+argument|, 		    sc->num_oss, sc->num_iss, sc->num_bss,
+literal|1
+argument|<< sc->num_sdo, 		    sc->support_64bit ?
+literal|", 64bit"
+argument|:
+literal|""
+argument|, 		    sc->corb_size, sc->rirb_size);
 argument_list|)
 empty_stmt|;
 return|return
