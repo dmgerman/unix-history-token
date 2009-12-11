@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -39,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"globals.h"
 end_include
 
 begin_include

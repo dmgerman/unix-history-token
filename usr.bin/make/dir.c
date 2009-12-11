@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"arch.h"
 end_include
 
@@ -103,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"lst.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"make.h"
 end_include
 
 begin_include

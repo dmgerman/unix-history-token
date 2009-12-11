@@ -22,18 +22,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lst.h"
 end_include
 

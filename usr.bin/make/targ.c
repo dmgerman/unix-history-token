@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"dir.h"
 end_include
 
@@ -55,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|"hash.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"make.h"
 end_include
 
 begin_include
