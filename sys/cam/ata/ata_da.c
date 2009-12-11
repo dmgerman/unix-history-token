@@ -4891,6 +4891,15 @@ name|union
 name|ccb
 name|ccb
 decl_stmt|;
+comment|/* If we paniced with lock held - not recurse here. */
+if|if
+condition|(
+name|cam_periph_owned
+argument_list|(
+name|periph
+argument_list|)
+condition|)
+continue|continue;
 name|cam_periph_lock
 argument_list|(
 name|periph
