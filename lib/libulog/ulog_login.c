@@ -135,6 +135,12 @@ operator|.
 name|ut_user
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|host
+operator|!=
+name|NULL
+condition|)
 name|strncpy
 argument_list|(
 name|utx
