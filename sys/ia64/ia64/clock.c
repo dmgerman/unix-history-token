@@ -160,6 +160,8 @@ parameter_list|)
 block|{
 name|PCPU_SET
 argument_list|(
+name|md
+operator|.
 name|clockadj
 argument_list|,
 literal|0
@@ -167,6 +169,8 @@ argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
+name|md
+operator|.
 name|clock
 argument_list|,
 name|ia64_get_itc
@@ -177,6 +181,8 @@ name|ia64_set_itm
 argument_list|(
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|clock
 argument_list|)
 operator|+

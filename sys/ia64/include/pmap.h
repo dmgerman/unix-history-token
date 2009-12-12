@@ -425,6 +425,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_offset_t
+name|pmap_alloc_vhpt
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pmap_bootstrap
 parameter_list|(
