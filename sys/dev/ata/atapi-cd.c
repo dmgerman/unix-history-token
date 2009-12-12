@@ -814,13 +814,8 @@ argument_list|,
 name|cdp
 argument_list|)
 expr_stmt|;
-name|ATA_SETMODE
+name|ata_setmode
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
@@ -994,13 +989,8 @@ condition|)
 return|return
 literal|1
 return|;
-name|ATA_SETMODE
+name|ata_setmode
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
@@ -10665,7 +10655,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%s %s\n"
+literal|"%s %s %s\n"
 argument_list|,
 name|comma
 condition|?
@@ -10678,6 +10668,21 @@ argument_list|(
 name|atadev
 operator|->
 name|mode
+argument_list|)
+argument_list|,
+name|ata_satarev2str
+argument_list|(
+name|ATA_GETREV
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|atadev
+operator|->
+name|unit
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11637,7 +11642,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<%.40s/%.8s> at ata%d-%s %s\n"
+literal|"<%.40s/%.8s> at ata%d-%s %s %s\n"
 argument_list|,
 name|atadev
 operator|->
@@ -11668,6 +11673,21 @@ argument_list|(
 name|atadev
 operator|->
 name|mode
+argument_list|)
+argument_list|,
+name|ata_satarev2str
+argument_list|(
+name|ATA_GETREV
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|atadev
+operator|->
+name|unit
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
