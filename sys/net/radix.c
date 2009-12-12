@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * Routines to build and maintain radix trees for routing lookups.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_RADIX_H_
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -61,22 +55,6 @@ directive|include
 file|<sys/domain.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -88,11 +66,6 @@ include|#
 directive|include
 file|<net/radix.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -116,6 +89,83 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|log
+parameter_list|(
+name|x
+parameter_list|,
+name|arg
+modifier|...
+parameter_list|)
+value|fprintf(stderr, ## arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|panic
+parameter_list|(
+name|x
+parameter_list|)
+value|fprintf(stderr, "PANIC: %s", x), exit(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|min
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)< (b) ? (a) : (b) )
+end_define
+
+begin_include
+include|#
+directive|include
+file|<net/radix.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -5678,6 +5728,53 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_comment
+comment|/*  * A simple function to make the code usable from userland.  * A proper fix (maybe later) would be to change rn_init() so that it  * takes maxkeylen as an argument, and move the scan of  * domains into net/route.c::route_init().  */
+end_comment
+
+begin_function_decl
+name|void
+name|rn_init2
+parameter_list|(
+name|int
+name|maxk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|rn_init2
+parameter_list|(
+name|int
+name|maxk
+parameter_list|)
+block|{
+name|max_keylen
+operator|=
+name|maxk
+expr_stmt|;
+name|rn_init
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 end_unit
 
