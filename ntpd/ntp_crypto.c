@@ -2571,9 +2571,11 @@ operator|)
 operator|&
 literal|0xffff
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"flags 0x%x host %s signature %s"
 argument_list|,
@@ -2770,9 +2772,11 @@ name|cinfo
 operator|->
 name|nid
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"cert %s 0x%x %s (%u) fs %u"
 argument_list|,
@@ -2901,9 +2905,11 @@ operator|&=
 operator|~
 name|TEST8
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"iff fs %u"
 argument_list|,
@@ -3017,9 +3023,11 @@ operator|&=
 operator|~
 name|TEST8
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"gq fs %u"
 argument_list|,
@@ -3133,9 +3141,11 @@ operator|&=
 operator|~
 name|TEST8
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"mv fs %u"
 argument_list|,
@@ -3329,9 +3339,11 @@ operator|&=
 operator|~
 name|TEST8
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"cook %x ts %u fs %u"
 argument_list|,
@@ -3576,9 +3588,11 @@ operator|&=
 operator|~
 name|TEST8
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"cook %x ts %u fs %u"
 argument_list|,
@@ -3787,9 +3801,11 @@ operator|&=
 operator|~
 name|TEST8
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"auto seq %d key %x ts %u fs %u"
 argument_list|,
@@ -3922,9 +3938,11 @@ name|cinfo
 operator|->
 name|nid
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"sign %s 0x%x %s (%u) fs %u"
 argument_list|,
@@ -4216,9 +4234,11 @@ operator|&=
 operator|~
 name|TEST8
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"leap %u ts %u fs %u"
 argument_list|,
@@ -4378,9 +4398,11 @@ operator|>
 name|XEVNT_TSP
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"error %x opcode %x ts %u fs %u"
 argument_list|,
@@ -5527,9 +5549,11 @@ name|opcode
 operator||=
 name|CRYPTO_ERROR
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"error %x opcode %x"
 argument_list|,
@@ -6091,7 +6115,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EVP_VerifyFinal
 argument_list|(
 operator|&
@@ -6113,6 +6136,8 @@ name|siglen
 argument_list|,
 name|pkey
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 operator|(
@@ -7636,9 +7661,11 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"update ts %u"
 argument_list|,
@@ -14265,9 +14292,11 @@ name|ptr
 operator|=
 literal|'\0'
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"%s mod %d"
 argument_list|,
@@ -14315,10 +14344,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|EVP_MD_type
-argument_list|(
 name|pkey
-argument_list|)
+operator|->
+name|type
 operator|==
 name|EVP_PKEY_DSA
 condition|)
@@ -14763,9 +14791,11 @@ name|ptr
 operator|=
 literal|'\0'
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"%s 0x%x len %lu"
 argument_list|,
@@ -15199,9 +15229,11 @@ name|crypto_flags
 operator||=
 name|CRYPTO_FLAG_TAI
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|statstr
+argument_list|,
+name|NTP_MAXSTRLEN
 argument_list|,
 literal|"%s fs %u leap %u len %u"
 argument_list|,
@@ -15664,10 +15696,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|EVP_MD_type
-argument_list|(
 name|host_pkey
-argument_list|)
+operator|->
+name|type
 operator|!=
 name|EVP_PKEY_RSA
 condition|)

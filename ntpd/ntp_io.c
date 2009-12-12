@@ -432,10 +432,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Windows C runtime ioctl() can't deal properly with sockets,   * map to ioctlsocket for this source file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ioctl
+parameter_list|(
+name|fd
+parameter_list|,
+name|opt
+parameter_list|,
+name|val
+parameter_list|)
+value|ioctlsocket((fd), (opt), (u_long *)(val))
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SYS_WINNT */
+end_comment
 
 begin_comment
 comment|/*  * We do asynchronous input using the SIGIO facility.  A number of  * recvbuf buffers are preallocated for input.	In the signal  * handler we poll to see which sockets are ready and read the  * packets from them into the recvbuf's along with a time stamp and  * an indication of the source host and the interface it was received  * through.  This allows us to get as accurate receive time stamps  * as possible independent of other processing going on.  *  * We watch the number of recvbufs available to the signal handler  * and allocate more when this number drops below the low water  * mark.  If the signal handler should run out of buffers in the  * interim it will drop incoming frames, the idea being that it is  * better to drop a packet than to be inaccurate.  */
@@ -886,6 +908,7 @@ name|_LVL_
 parameter_list|,
 name|_ARGS_
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_endif
@@ -1573,11 +1596,16 @@ comment|/*  * Windows 2000 systems incorrectly cause UDP sockets using WASRecvFr
 end_comment
 
 begin_function
-name|isc_result_t
+name|void
 name|connection_reset_fix
 parameter_list|(
 name|SOCKET
 name|fd
+parameter_list|,
+name|struct
+name|sockaddr_storage
+modifier|*
+name|addr
 parameter_list|)
 block|{
 name|DWORD
@@ -1593,20 +1621,15 @@ decl_stmt|;
 name|DWORD
 name|status
 decl_stmt|;
+comment|/* 	 * disable bad behavior using IOCTL: SIO_UDP_CONNRESET 	 * NT 4.0 has no problem 	 */
 if|if
 condition|(
 name|isc_win32os_majorversion
 argument_list|()
-operator|<
+operator|>=
 literal|5
 condition|)
-return|return
-operator|(
-name|ISC_R_SUCCESS
-operator|)
-return|;
-comment|/*  NT 4.0 has no problem */
-comment|/* disable bad behavior using IOCTL: SIO_UDP_CONNRESET */
+block|{
 name|status
 operator|=
 name|WSAIoctl
@@ -1637,21 +1660,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|status
-operator|!=
 name|SOCKET_ERROR
+operator|==
+name|status
 condition|)
-return|return
-operator|(
-name|ISC_R_SUCCESS
-operator|)
-return|;
-else|else
-return|return
-operator|(
-name|ISC_R_UNEXPECTED
-operator|)
-return|;
+name|netsyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"connection_reset_fix() "
+literal|"failed for address %s: %m"
+argument_list|,
+name|stoa
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2005,6 +2031,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|SYS_WINNT
+name|init_io_completion_port
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3236,6 +3265,55 @@ modifier|*
 name|interface
 parameter_list|)
 block|{
+specifier|static
+name|struct
+name|interface
+modifier|*
+name|listhead
+init|=
+name|NULL
+decl_stmt|;
+comment|/* 	 * For ntpd, the first few interfaces (wildcard, localhost) 	 * will never be removed.  This means inter_list.head is 	 * unchanging once initialized.  Take advantage of that to 	 * watch for changes and catch corruption earlier.  This 	 * helped track down corruption caused by using FD_SET with 	 * a descriptor numerically larger than FD_SETSIZE. 	 */
+if|if
+condition|(
+name|NULL
+operator|==
+name|listhead
+condition|)
+name|listhead
+operator|=
+name|inter_list
+operator|.
+name|head
+expr_stmt|;
+if|if
+condition|(
+name|listhead
+operator|!=
+name|inter_list
+operator|.
+name|head
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"add_interface inter_list.head corrupted: was %p now %p"
+argument_list|,
+name|listhead
+argument_list|,
+name|inter_list
+operator|.
+name|head
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Calculate the address hash 	 */
 name|interface
 operator|->
@@ -6398,6 +6476,77 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SO_EXCLUSIVEADDRUSE
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|set_excladdruse
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+block|{
+name|int
+name|one
+init|=
+literal|1
+decl_stmt|;
+name|int
+name|failed
+decl_stmt|;
+name|failed
+operator|=
+name|setsockopt
+argument_list|(
+name|fd
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_EXCLUSIVEADDRUSE
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|one
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|one
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|failed
+condition|)
+name|netsyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setsockopt(%d, SO_EXCLUSIVEADDRUSE, on): %m"
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SO_EXCLUSIVEADDRUSE */
+end_comment
+
 begin_comment
 comment|/*  * set_reuseaddr() - set/clear REUSEADDR on all sockets  *			NB possible hole - should we be doing this on broadcast  *			fd's also?  */
 end_comment
@@ -6416,6 +6565,9 @@ name|interface
 modifier|*
 name|interf
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|SO_EXCLUSIVEADDRUSE
 for|for
 control|(
 name|interf
@@ -6527,6 +6679,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* ! SO_EXCLUSIVEADDRUSE */
 block|}
 end_function
 
@@ -7169,6 +7324,10 @@ name|IPPROTO_IPV6
 argument_list|,
 name|IPV6_MULTICAST_IF
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|iface
 operator|->
@@ -7232,6 +7391,10 @@ name|IPPROTO_IPV6
 argument_list|,
 name|IPV6_MULTICAST_LOOP
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|off
 argument_list|,
@@ -8449,10 +8612,17 @@ name|struct
 name|interface
 modifier|*
 name|interface
-decl_stmt|,
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|MULTICAST_NONEWSOCKET
+name|struct
+name|interface
 modifier|*
 name|iface
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|lscope
 init|=
@@ -9538,32 +9708,6 @@ name|on
 init|=
 literal|1
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SYS_WINNT
-argument_list|)
-if|if
-condition|(
-name|ioctlsocket
-argument_list|(
-name|fd
-argument_list|,
-name|FIONBIO
-argument_list|,
-operator|(
-name|u_long
-operator|*
-operator|)
-operator|&
-name|on
-argument_list|)
-operator|==
-name|SOCKET_ERROR
-condition|)
-else|#
-directive|else
 if|if
 condition|(
 name|ioctl
@@ -9578,8 +9722,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-endif|#
-directive|endif
 block|{
 name|netsyslog
 argument_list|(
@@ -9677,17 +9819,17 @@ decl_stmt|;
 name|SOCKET
 name|fd
 decl_stmt|;
+comment|/* 	 * int is OK for REUSEADR per  	 * http://www.kohala.com/start/mcast.api.txt 	 */
 name|int
 name|on
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+name|int
 name|off
 init|=
 literal|0
 decl_stmt|;
-comment|/* int is OK for REUSEADR per */
-comment|/* http://www.kohala.com/start/mcast.api.txt */
 if|#
 directive|if
 name|defined
@@ -9733,12 +9875,6 @@ name|INVALID_SOCKET
 operator|)
 return|;
 comment|/* create a datagram (UDP) socket */
-ifndef|#
-directive|ifndef
-name|SYS_WINNT
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|socket
@@ -9751,37 +9887,23 @@ name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|INVALID_SOCKET
+operator|==
+name|fd
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|SYS_WINNT
 name|errval
 operator|=
 name|errno
 expr_stmt|;
 else|#
 directive|else
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|socket
-argument_list|(
-name|addr
-operator|->
-name|ss_family
-argument_list|,
-name|SOCK_DGRAM
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|==
-name|INVALID_SOCKET
-condition|)
-block|{
 name|errval
 operator|=
 name|WSAGetLastError
@@ -9789,40 +9911,23 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|addr
-operator|->
-name|ss_family
-operator|==
-name|AF_INET
-condition|)
 name|netsyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"socket(AF_INET, SOCK_DGRAM, 0) failed on address %s: %m"
+literal|"socket(AF_INET%s, SOCK_DGRAM, 0) failed on address %s: %m"
 argument_list|,
-name|stoa
-argument_list|(
-name|addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+operator|(
 name|addr
 operator|->
 name|ss_family
 operator|==
 name|AF_INET6
-condition|)
-name|netsyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"socket(AF_INET6, SOCK_DGRAM, 0) failed on address %s: %m"
+operator|)
+condition|?
+literal|"6"
+else|:
+literal|""
 argument_list|,
 name|stoa
 argument_list|(
@@ -9830,9 +9935,6 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SYS_WINNT
 if|if
 condition|(
 name|errval
@@ -9847,24 +9949,6 @@ name|errval
 operator|==
 name|EPFNOSUPPORT
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|errval
-operator|==
-name|WSAEPROTONOSUPPORT
-operator|||
-name|errval
-operator|==
-name|WSAEAFNOSUPPORT
-operator|||
-name|errval
-operator|==
-name|WSAEPFNOSUPPORT
-condition|)
-endif|#
-directive|endif
 return|return
 operator|(
 name|INVALID_SOCKET
@@ -9889,32 +9973,15 @@ block|}
 ifdef|#
 directive|ifdef
 name|SYS_WINNT
-if|if
-condition|(
 name|connection_reset_fix
 argument_list|(
 name|fd
-argument_list|)
-operator|!=
-name|ISC_R_SUCCESS
-condition|)
-block|{
-name|netsyslog
-argument_list|(
-name|LOG_ERR
 argument_list|,
-literal|"connection_reset_fix(fd) failed on address %s: %m"
-argument_list|,
-name|stoa
-argument_list|(
 name|addr
 argument_list|)
-argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
-comment|/* SYS_WINNT */
 comment|/* 	 * Fixup the file descriptor for some systems 	 * See bug #530 for details of the issue. 	 */
 name|fd
 operator|=
@@ -9923,7 +9990,28 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * set SO_REUSEADDR since we will be binding the same port 	 * number on each interface according to flag 	 */
+comment|/* 	 * set SO_REUSEADDR since we will be binding the same port 	 * number on each interface according to turn_off_reuse. 	 * This is undesirable on Windows versions starting with 	 * Windows XP (numeric version 5.1). 	 */
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+if|if
+condition|(
+name|isc_win32os_versioncheck
+argument_list|(
+literal|5
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+comment|/* before 5.1 */
+endif|#
+directive|endif
 if|if
 condition|(
 name|setsockopt
@@ -9934,21 +10022,19 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_REUSEADDR
 argument_list|,
-name|turn_off_reuse
-condition|?
 operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|turn_off_reuse
+condition|?
 operator|&
 name|off
 else|:
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|on
+operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -9961,7 +10047,8 @@ name|netsyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"setsockopt SO_REUSEADDR %s on fails on address %s: %m"
+literal|"setsockopt SO_REUSEADDR %s"
+literal|" fails for address %s: %m"
 argument_list|,
 name|turn_off_reuse
 condition|?
@@ -9984,6 +10071,28 @@ return|return
 name|INVALID_SOCKET
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SO_EXCLUSIVEADDRUSE
+comment|/* 	 * setting SO_EXCLUSIVEADDRUSE on the wildcard we open 	 * first will cause more specific binds to fail. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|interf
+operator|->
+name|flags
+operator|&
+name|INT_WILDCARD
+operator|)
+condition|)
+name|set_excladdruse
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * IPv4 specific options go here 	 */
 if|if
 condition|(
@@ -10267,13 +10376,9 @@ name|netsyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"bind() fd %d, family %d, port %d, addr %s, in_classd=%d flags=0x%x fails: %m"
+literal|"bind() fd %d, family AF_INET, port %d, addr %s, in_classd=%d flags=0x%x fails: %m"
 argument_list|,
 name|fd
-argument_list|,
-name|addr
-operator|->
-name|ss_family
 argument_list|,
 operator|(
 name|int
@@ -10335,13 +10440,9 @@ name|netsyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"bind() fd %d, family %d, port %d, scope %d, addr %s, in6_is_addr_multicast=%d flags=0x%x fails: %m"
+literal|"bind() fd %d, family AF_INET6, port %d, scope %d, addr %s, mcast=%d flags=0x%x fails: %m"
 argument_list|,
 name|fd
-argument_list|,
-name|addr
-operator|->
-name|ss_family
 argument_list|,
 operator|(
 name|int
@@ -10518,6 +10619,8 @@ argument_list|(
 name|addr
 argument_list|)
 operator|,
+name|interf
+operator|->
 name|flags
 operator|)
 argument_list|)
@@ -10617,8 +10720,17 @@ return|return
 name|fd
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* XXX ELIMINATE sendpkt similar in ntpq.c, ntpdc.c, ntp_io.c, ntptrace.c */
+end_comment
+
+begin_comment
 comment|/*  * sendpkt - send a packet to the specified destination. Maintain a  * send error cache so that only the first consecutive error for a  * destination is logged.  */
+end_comment
+
+begin_function
 name|void
 name|sendpkt
 parameter_list|(
@@ -10649,15 +10761,6 @@ name|cc
 decl_stmt|,
 name|slot
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SYS_WINNT
-name|DWORD
-name|err
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* SYS_WINNT */
 comment|/* 	 * Send error caches. Empty slots have port == 0 	 * Set ERRORCACHESIZE to 0 to disable 	 */
 struct|struct
 name|cache
@@ -11126,7 +11229,7 @@ name|defined
 argument_list|(
 name|HAVE_IO_COMPLETION_PORT
 argument_list|)
-name|err
+name|cc
 operator|=
 name|io_completion_port_sendto
 argument_list|(
@@ -11141,7 +11244,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|cc
 operator|!=
 name|ERROR_SUCCESS
 condition|)
@@ -11229,18 +11332,13 @@ name|defined
 argument_list|(
 name|HAVE_IO_COMPLETION_PORT
 argument_list|)
-name|err
-operator|=
-name|WSAGetLastError
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-name|err
+name|cc
 operator|!=
 name|WSAEWOULDBLOCK
 operator|&&
-name|err
+name|cc
 operator|!=
 name|WSAENOBUFS
 operator|&&
@@ -11499,6 +11597,9 @@ block|}
 block|}
 block|}
 block|}
+end_function
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -11506,7 +11607,13 @@ name|defined
 argument_list|(
 name|HAVE_IO_COMPLETION_PORT
 argument_list|)
+end_if
+
+begin_comment
 comment|/*  * fdbits - generate ascii representation of fd_set (FAU debug support)  * HFDF format - highest fd first.  */
+end_comment
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -11580,7 +11687,13 @@ return|return
 name|buffer
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Routine to read the refclock packets for a specific interface  * Return the number of bytes read. That way we know if we should  * read it again or go on to the next one if no bytes returned  */
+end_comment
+
+begin_function
 specifier|static
 specifier|inline
 name|int
@@ -11835,10 +11948,19 @@ name|buflen
 operator|)
 return|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAVE_TIMESTAMP
+end_ifdef
+
+begin_comment
 comment|/*  * extract timestamps from control message buffer  */
+end_comment
+
+begin_function
 specifier|static
 name|l_fp
 name|fetch_timestamp
@@ -12073,9 +12195,18 @@ return|return
 name|ts
 return|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Routine to read the network NTP packets for a specific interface  * Return the number of bytes read. That way we know if we should  * read it again or go on to the next one if no bytes returned  */
+end_comment
+
+begin_function
 specifier|static
 specifier|inline
 name|int
@@ -12645,7 +12776,13 @@ name|buflen
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * input_handler - receive packets asynchronously  */
+end_comment
+
+begin_function
 name|void
 name|input_handler
 parameter_list|(
@@ -13231,9 +13368,18 @@ directive|endif
 comment|/* just bail. */
 return|return;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  * findinterface - find local interface corresponding to address  */
+end_comment
+
+begin_function
 name|struct
 name|interface
 modifier|*
@@ -13320,7 +13466,13 @@ operator|)
 return|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * findlocalinterface - find local interface index corresponding to address  *  * This code attempts to find the local sending address for an outgoing  * address by connecting a new socket to destinationaddress:NTP_PORT  * and reading the sockname of the resulting connect.  * the complicated sequence simulates the routing table lookup  * for to first hop without duplicating any of the routing logic into  * ntpd. preferably we would have used an API call - but its not there -  * so this is the best we can do here short of duplicating to entire routing  * logic in ntpd which would be a silly and really unportable thing to do.  *  */
+end_comment
+
+begin_function
 specifier|static
 name|struct
 name|interface
@@ -13363,10 +13515,16 @@ name|DPRINTF
 argument_list|(
 literal|4
 argument_list|,
-argument|(
+operator|(
 literal|"Finding interface for addr %s in list of addresses\n"
-argument|, 		    stoa(addr));
+operator|,
+name|stoa
+argument_list|(
+name|addr
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -13716,7 +13874,13 @@ name|iface
 return|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * fetch an interface structure the matches the  * address is has the given flags not set  */
+end_comment
+
+begin_function
 specifier|static
 name|struct
 name|interface
@@ -13766,7 +13930,13 @@ name|interface
 return|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * findlocalcastinterface - find local *cast interface index corresponding to address  * depending on the flags passed  */
+end_comment
+
+begin_function
 specifier|static
 name|struct
 name|interface
@@ -14109,7 +14279,13 @@ name|nif
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * findbcastinter - find broadcast interface corresponding to address  */
+end_comment
+
+begin_function
 name|struct
 name|interface
 modifier|*
@@ -14509,7 +14685,13 @@ name|interface
 return|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * io_clr_stats - clear I/O module statistics  */
+end_comment
+
+begin_function
 name|void
 name|io_clr_stats
 parameter_list|(
@@ -14549,10 +14731,19 @@ operator|=
 name|current_time
 expr_stmt|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|REFCLOCK
+end_ifdef
+
+begin_comment
 comment|/*  * io_addclock - add a reference clock to the list and arrange that we  *				 get SIGIO interrupts from it.  */
+end_comment
+
+begin_function
 name|int
 name|io_addclock
 parameter_list|(
@@ -14635,7 +14826,13 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * io_closeclock - close the clock in the I/O structure given  */
+end_comment
+
+begin_function
 name|void
 name|io_closeclock
 parameter_list|(
@@ -14731,10 +14928,22 @@ name|UNBLOCKIO
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* REFCLOCK */
+end_comment
+
+begin_comment
 comment|/*  * On NT a SOCKET is an unsigned int so we cannot possibly keep it in  * an array. So we use one of the ISC_LIST functions to hold the  * socket value and use that when we want to enumerate it.  */
+end_comment
+
+begin_function
 name|void
 name|kill_asyncio
 parameter_list|(
@@ -14794,7 +15003,13 @@ name|UNBLOCKIO
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Add and delete functions for the list of open sockets  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|add_fd_to_list
@@ -14848,6 +15063,32 @@ comment|/* 	 * I/O Completion Ports don't care about the select and FD_SET 	 */
 ifndef|#
 directive|ifndef
 name|HAVE_IO_COMPLETION_PORT
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+operator|||
+name|fd
+operator|>=
+name|FD_SETSIZE
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Too many sockets in use, FD_SETSIZE %d exceeded"
+argument_list|,
+name|FD_SETSIZE
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * keep activefds in sync 	 */
 if|if
 condition|(
@@ -14873,6 +15114,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|close_and_delete_fd_from_list
@@ -15065,6 +15309,9 @@ name|next
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|add_addr_to_list
@@ -15181,6 +15428,9 @@ block|}
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|delete_addr_from_list
@@ -15271,6 +15521,9 @@ name|next
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|delete_interface_from_list
@@ -15367,6 +15620,9 @@ name|next
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|struct
 name|interface
@@ -15470,7 +15726,13 @@ name|NULL
 return|;
 comment|/* Not found */
 block|}
+end_function
+
+begin_comment
 comment|/*  * Find the given address with the associated flag in the list  */
+end_comment
+
+begin_function
 specifier|static
 name|struct
 name|interface
@@ -15570,22 +15832,43 @@ name|NULL
 return|;
 comment|/* Not found */
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAS_ROUTING_SOCKET
+end_ifdef
+
+begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|UPDATE_GRACE
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|UPDATE_GRACE
 value|2
+end_define
+
+begin_comment
 comment|/* wait UPDATE_GRACE seconds before scanning */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_function
 specifier|static
 name|void
 name|process_routing_msgs
@@ -15859,7 +16142,13 @@ name|rtm_msglen
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * set up routing notifications  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|init_async_notifications
@@ -15960,8 +16249,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_function
 specifier|static
 name|void
 name|init_async_notifications
