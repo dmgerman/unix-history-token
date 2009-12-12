@@ -98,9 +98,12 @@ name|uint64_t
 name|pcb_sp
 decl_stmt|;
 name|uint64_t
+name|pcb_tpc
+decl_stmt|;
+name|uint64_t
 name|pcb_pad
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}
