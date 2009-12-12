@@ -1622,11 +1622,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|VGE_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|vge_miipoll_stop
 argument_list|(
 name|sc
@@ -1790,11 +1785,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|VGE_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|vge_miipoll_stop
 argument_list|(
 name|sc
