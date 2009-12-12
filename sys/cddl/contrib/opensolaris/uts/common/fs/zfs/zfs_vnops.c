@@ -21206,7 +21206,7 @@ block|,
 operator|.
 name|vop_fsync
 operator|=
-name|VOP_PANIC
+name|zfs_freebsd_fsync
 block|,
 operator|.
 name|vop_access
