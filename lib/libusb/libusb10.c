@@ -1704,10 +1704,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|pdev
-operator|=
-name|NULL
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -1776,6 +1772,16 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|j
+operator|==
+name|i
+condition|)
+name|pdev
+operator|=
+name|NULL
+expr_stmt|;
 name|libusb_free_device_list
 argument_list|(
 name|devs
