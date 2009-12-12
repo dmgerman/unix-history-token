@@ -1347,7 +1347,7 @@ index|]
 operator|=
 literal|0xff
 expr_stmt|;
-asm|__asm __volatile("dcbz %0,0":: "r" (cache_check) : "memory");
+asm|__asm __volatile("dcbz 0,%0":: "r" (cache_check) : "memory");
 comment|/* Find the first byte dcbz did not zero to get the cache line size */
 for|for
 control|(
