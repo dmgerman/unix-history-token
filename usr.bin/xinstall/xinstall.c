@@ -322,6 +322,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|copy
 parameter_list|(
@@ -343,6 +344,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|compare
 parameter_list|(
@@ -366,6 +368,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|create_newfile
 parameter_list|(
@@ -383,6 +386,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|create_tempfile
 parameter_list|(
@@ -399,6 +403,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|install
 parameter_list|(
@@ -418,6 +423,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|install_dir
 parameter_list|(
@@ -428,6 +434,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_long
 name|numeric_id
 parameter_list|(
@@ -443,6 +450,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|strip
 parameter_list|(
@@ -454,6 +462,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|trymmap
 parameter_list|(
@@ -463,6 +472,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -3950,7 +3960,9 @@ end_comment
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
