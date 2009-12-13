@@ -3128,7 +3128,7 @@ operator|)
 operator|==
 literal|0
 condition|?
-name|jailed
+name|jailed_without_vnet
 argument_list|(
 name|curthread
 operator|->
@@ -6512,7 +6512,7 @@ operator|)
 operator|==
 literal|0
 condition|?
-name|jailed
+name|jailed_without_vnet
 argument_list|(
 name|w
 operator|->
