@@ -56,6 +56,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<jail.h>
 end_include
 

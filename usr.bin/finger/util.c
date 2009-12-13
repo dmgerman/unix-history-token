@@ -520,10 +520,9 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 operator|!=
-call|(
-name|off_t
-call|)
-argument_list|(
+operator|(
+name|long
+operator|)
 name|pn
 operator|->
 name|uid
@@ -531,7 +530,6 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|ll
-argument_list|)
 argument_list|)
 operator|||
 name|read

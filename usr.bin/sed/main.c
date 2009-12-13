@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libgen.h>
 end_include
 
@@ -119,6 +125,12 @@ begin_include
 include|#
 directive|include
 file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
 end_include
 
 begin_include

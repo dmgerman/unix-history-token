@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<login_cap.h>
 end_include
 

@@ -112,6 +112,12 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<wctype.h>
+end_include
+
 begin_comment
 comment|/*  * expand - expand tabs to equivalent spaces  */
 end_comment
