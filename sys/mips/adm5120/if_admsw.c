@@ -3679,6 +3679,11 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|int
 name|vlan
 decl_stmt|;
@@ -3687,7 +3692,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|watchdog
+name|sc_watchdog
 argument_list|,
 name|hz
 argument_list|,
@@ -3707,7 +3712,7 @@ operator|||
 operator|--
 name|sc
 operator|->
-name|timer
+name|sc_timer
 operator|>
 literal|0
 condition|)
@@ -3843,6 +3848,15 @@ name|admsw_init
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|=
+name|sc
+operator|->
+name|sc_ifnet
+index|[
+literal|0
+index|]
 expr_stmt|;
 comment|/* Try to get more packets going. */
 name|admsw_start
