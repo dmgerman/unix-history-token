@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -687,6 +693,14 @@ expr_stmt|;
 name|from
 operator|=
 name|NULL
+expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 if|if
@@ -1632,6 +1646,9 @@ name|soclose
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 name|error

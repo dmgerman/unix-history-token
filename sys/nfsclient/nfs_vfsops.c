@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -4557,6 +4563,16 @@ name|has_hostname_opt
 operator|=
 literal|0
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|CRED_TO_VNET
+argument_list|(
+name|curthread
+operator|->
+name|td_ucred
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vfs_filteropt
@@ -6488,6 +6504,9 @@ name|mp
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
