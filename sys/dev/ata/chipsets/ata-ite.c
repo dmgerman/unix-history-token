@@ -1236,6 +1236,8 @@ operator|(
 name|ata_atapi
 argument_list|(
 name|dev
+argument_list|,
+name|target
 argument_list|)
 condition|?
 literal|0x04
@@ -1268,6 +1270,8 @@ operator|(
 name|ata_atapi
 argument_list|(
 name|dev
+argument_list|,
+name|target
 argument_list|)
 condition|?
 literal|0x40
