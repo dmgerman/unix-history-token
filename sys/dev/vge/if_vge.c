@@ -3983,8 +3983,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -3994,13 +3992,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4085,11 +4076,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vge%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4139,11 +4130,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vge%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4476,11 +4467,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vge%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
