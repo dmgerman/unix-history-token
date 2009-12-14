@@ -1152,7 +1152,6 @@ name|dest
 operator|=
 name|word
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1367,7 +1366,6 @@ argument_list|,
 literal|"failed to idle MII autopoll\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1516,7 +1514,6 @@ argument_list|,
 literal|"failed to start MII autopoll\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1975,7 +1972,6 @@ name|vge_camidx
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2517,7 +2513,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2688,7 +2683,6 @@ argument_list|,
 name|VGE_CHIPCFG0_PACPI
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7422,7 +7416,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -7927,7 +7920,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9757,7 +9749,6 @@ name|mii
 operator|->
 name|mii_media_status
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9932,7 +9923,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -10570,7 +10560,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
