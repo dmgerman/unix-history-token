@@ -439,8 +439,12 @@ name|int
 name|vge_if_flags
 decl_stmt|;
 name|int
-name|vge_link
+name|vge_flags
 decl_stmt|;
+define|#
+directive|define
+name|VGE_FLAG_LINK
+value|0x8000
 name|int
 name|vge_camidx
 decl_stmt|;
