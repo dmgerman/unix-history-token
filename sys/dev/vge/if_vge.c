@@ -628,6 +628,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|vge_link_statchg
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|vge_miibus_readreg
 parameter_list|(
@@ -805,17 +816,6 @@ name|vge_stop
 parameter_list|(
 name|struct
 name|vge_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|vge_tick
-parameter_list|(
-name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -7457,7 +7457,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vge_tick
+name|vge_link_statchg
 parameter_list|(
 name|void
 modifier|*
@@ -7503,7 +7503,7 @@ operator|->
 name|vge_miibus
 argument_list|)
 expr_stmt|;
-name|mii_tick
+name|mii_pollstat
 argument_list|(
 name|mii
 argument_list|)
@@ -8071,7 +8071,7 @@ name|status
 operator|&
 name|VGE_ISR_LINKSTS
 condition|)
-name|vge_tick
+name|vge_link_statchg
 argument_list|(
 name|sc
 argument_list|)
