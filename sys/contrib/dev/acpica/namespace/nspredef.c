@@ -455,7 +455,7 @@ name|Pathname
 operator|=
 name|Pathname
 expr_stmt|;
-comment|/*      * Check that the type of the return object is what is expected for      * this predefined name      */
+comment|/*      * Check that the type of the main return object is what is expected      * for this predefined name      */
 name|Status
 operator|=
 name|AcpiNsCheckObjectType
@@ -482,13 +482,16 @@ argument_list|)
 condition|)
 block|{
 goto|goto
-name|CheckValidationStatus
+name|Exit
 goto|;
 block|}
-comment|/* For returned Package objects, check the type of all sub-objects */
+comment|/*      * For returned Package objects, check the type of all sub-objects.      * Note: Package may have been newly created by call above.      */
 if|if
 condition|(
-name|ReturnObject
+operator|(
+operator|*
+name|ReturnObjectPtr
+operator|)
 operator|->
 name|Common
 operator|.
@@ -506,8 +509,20 @@ argument_list|,
 name|ReturnObjectPtr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|Exit
+goto|;
 block|}
-comment|/*      * Perform additional, more complicated repairs on a per-name      * basis.      */
+block|}
+comment|/*      * The return object was OK, or it was successfully repaired above.      * Now make some additional checks such as verifying that package      * objects are sorted correctly (if required) or buffer objects have      * the correct data width (bytes vs. dwords). These repairs are      * performed on a per-name basis, i.e., the code is specific to      * particular predefined names.      */
 name|Status
 operator|=
 name|AcpiNsComplexRepairs
@@ -521,7 +536,7 @@ argument_list|,
 name|ReturnObjectPtr
 argument_list|)
 expr_stmt|;
-name|CheckValidationStatus
+name|Exit
 label|:
 comment|/*      * If the object validation failed or if we successfully repaired one      * or more objects, mark the parent node to suppress further warning      * messages during the next evaluation of the same method/object.      */
 if|if
@@ -988,6 +1003,20 @@ name|Count
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*      * For variable-length Packages, we can safely remove all embedded      * and trailing NULL package elements      */
+name|AcpiNsRemoveNullElements
+argument_list|(
+name|Data
+argument_list|,
+name|Package
+operator|->
+name|RetInfo
+operator|.
+name|Type
+argument_list|,
+name|ReturnObject
+argument_list|)
+expr_stmt|;
 comment|/* Extract package count and elements array */
 name|Elements
 operator|=
@@ -1082,21 +1111,17 @@ operator|>
 name|ExpectedCount
 condition|)
 block|{
-name|ACPI_WARN_PREDEFINED
+name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|AE_INFO
+name|ACPI_DB_REPAIR
+operator|,
+literal|"%s: Return Package is larger than needed - "
+literal|"found %u, expected %u\n"
 operator|,
 name|Data
 operator|->
 name|Pathname
-operator|,
-name|Data
-operator|->
-name|NodeFlags
-operator|,
-literal|"Return Package is larger than needed - "
-literal|"found %u, expected %u"
 operator|,
 name|Count
 operator|,
@@ -1649,11 +1674,6 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|BOOLEAN
-name|NonTrailingNull
-init|=
-name|FALSE
-decl_stmt|;
 name|UINT32
 name|ExpectedCount
 decl_stmt|;
@@ -1663,7 +1683,7 @@ decl_stmt|;
 name|UINT32
 name|j
 decl_stmt|;
-comment|/* Validate each sub-Package in the parent Package */
+comment|/*      * Validate each sub-Package in the parent Package      *      * NOTE: assumes list of sub-packages contains no NULL elements.      * Any NULL elements should have been removed by earlier call      * to AcpiNsRemoveNullElements.      */
 for|for
 control|(
 name|i
@@ -1678,96 +1698,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/*          * Handling for NULL package elements. For now, we will simply allow          * a parent package with trailing NULL elements. This can happen if          * the package was defined to be longer than the initializer list.          * This is legal as per the ACPI specification. It is often used          * to allow for dynamic initialization of a Package.          *          * A future enhancement may be to simply truncate the package to          * remove the trailing NULL elements.          */
-if|if
-condition|(
-operator|!
-operator|(
-operator|*
-name|Elements
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|NonTrailingNull
-condition|)
-block|{
-comment|/* Ensure the remaining elements are all NULL */
-for|for
-control|(
-name|j
-operator|=
-literal|1
-init|;
-name|j
-operator|<
-operator|(
-name|Count
-operator|-
-name|i
-operator|+
-literal|1
-operator|)
-condition|;
-name|j
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|Elements
-index|[
-name|j
-index|]
-condition|)
-block|{
-name|NonTrailingNull
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-operator|!
-name|NonTrailingNull
-condition|)
-block|{
-comment|/* Ignore the trailing NULL elements */
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-block|}
-block|}
-comment|/* There are trailing non-null elements, issue warning */
-name|ACPI_WARN_PREDEFINED
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-name|Data
-operator|->
-name|Pathname
-operator|,
-name|Data
-operator|->
-name|NodeFlags
-operator|,
-literal|"Found NULL element at package index %u"
-operator|,
-name|i
-operator|)
-argument_list|)
-expr_stmt|;
-name|Elements
-operator|++
-expr_stmt|;
-continue|continue;
-block|}
 name|SubPackage
 operator|=
 operator|*

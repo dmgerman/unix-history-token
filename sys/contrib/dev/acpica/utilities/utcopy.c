@@ -829,7 +829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIpackageToEpackage  *  * PARAMETERS:  InternalObject      - Pointer to the object we are returning  *              Buffer              - Where the object is returned  *              SpaceUsed           - Where the object length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to place a package object in a user  *              buffer.  A package object by definition contains other objects.  *  *              The buffer is assumed to have sufficient space for the object.  *              The caller must have verified the buffer length needed using the  *              AcpiUtGetObjectSize function before calling this function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIpackageToEpackage  *  * PARAMETERS:  InternalObject      - Pointer to the object we are returning  *              Buffer              - Where the object is returned  *              SpaceUsed           - Where the object length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to place a package object in a user  *              buffer. A package object by definition contains other objects.  *  *              The buffer is assumed to have sufficient space for the object.  *              The caller must have verified the buffer length needed using  *              the AcpiUtGetObjectSize function before calling this function.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1021,7 +1021,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIobjectToEobject  *  * PARAMETERS:  InternalObject      - The internal object to be converted  *              BufferPtr           - Where the object is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to build an API object to be returned to  *              the caller.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIobjectToEobject  *  * PARAMETERS:  InternalObject      - The internal object to be converted  *              RetBuffer           - Where the object is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to build an API object to be returned  *              to the caller.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1641,7 +1641,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyEobjectToIobject  *  * PARAMETERS:  ExternalObject      - The external object to be converted  *              InternalObject      - Where the internal object is returned  *  * RETURN:      Status              - the status of the call  *  * DESCRIPTION: Converts an external object to an internal object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyEobjectToIobject  *  * PARAMETERS:  ExternalObject      - The external object to be converted  *              InternalObject      - Where the internal object is returned  *  * RETURN:      Status  *  * DESCRIPTION: Converts an external object to an internal object.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1707,7 +1707,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopySimpleObject  *  * PARAMETERS:  SourceDesc          - The internal object to be copied  *              DestDesc            - New target object  *  * RETURN:      Status  *  * DESCRIPTION: Simple copy of one internal object to another.  Reference count  *              of the destination object is preserved.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopySimpleObject  *  * PARAMETERS:  SourceDesc          - The internal object to be copied  *              DestDesc            - New target object  *  * RETURN:      Status  *  * DESCRIPTION: Simple copy of one internal object to another. Reference count  *              of the destination object is preserved.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2325,7 +2325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIpackageToIpackage  *  * PARAMETERS:  *SourceObj      - Pointer to the source package object  *              *DestObj        - Where the internal object is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to copy an internal package object  *              into another internal package object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIpackageToIpackage  *  * PARAMETERS:  SourceObj       - Pointer to the source package object  *              DestObj         - Where the internal object is returned  *              WalkState       - Current Walk state descriptor  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to copy an internal package object  *              into another internal package object.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2484,7 +2484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIobjectToIobject  *  * PARAMETERS:  WalkState           - Current walk state  *              SourceDesc          - The internal object to be copied  *              DestDesc            - Where the copied object is returned  *  * RETURN:      Status  *  * DESCRIPTION: Copy an internal object to a new internal object  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIobjectToIobject  *  * PARAMETERS:  SourceDesc          - The internal object to be copied  *              DestDesc            - Where the copied object is returned  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Copy an internal object to a new internal object  *  ******************************************************************************/
 end_comment
 
 begin_function

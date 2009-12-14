@@ -401,7 +401,7 @@ return|;
 block|}
 name|ThisNode
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)
