@@ -2293,7 +2293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Program the multicast filter. We use the 64-entry CAM filter  * for perfect filtering. If there's more than 64 multicast addresses,  * we use the hash filter insted.  */
+comment|/*  * Program the multicast filter. We use the 64-entry CAM filter  * for perfect filtering. If there's more than 64 multicast addresses,  * we use the hash filter instead.  */
 end_comment
 
 begin_function
@@ -5131,7 +5131,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Note: the manual fails to document the fact that for 	 * proper opration, the driver needs to replentish the RX 	 * DMA ring 4 descriptors at a time (rather than one at a 	 * time, like most chips). We can allocate the new buffers 	 * but we should not set the OWN bits until we're ready 	 * to hand back 4 of them in one shot. 	 */
+comment|/* 	 * Note: the manual fails to document the fact that for 	 * proper operation, the driver needs to replenish the RX 	 * DMA ring 4 descriptors at a time (rather than one at a 	 * time, like most chips). We can allocate the new buffers 	 * but we should not set the OWN bits until we're ready 	 * to hand back 4 of them in one shot. 	 */
 define|#
 directive|define
 name|VGE_RXCHUNK
@@ -8322,7 +8322,7 @@ operator||
 name|VGE_CR0_START
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Configure one-shot timer for microsecond 	 * resulution and load it for 500 usecs. 	 */
+comment|/* 	 * Configure one-shot timer for microsecond 	 * resolution and load it for 500 usecs. 	 */
 name|CSR_SETBIT_1
 argument_list|(
 name|sc
