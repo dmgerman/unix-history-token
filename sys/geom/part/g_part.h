@@ -107,6 +107,36 @@ comment|/* A Linux RAID partition entry. */
 name|G_PART_ALIAS_LINUX_SWAP
 block|,
 comment|/* A Linux swap partition entry. */
+name|G_PART_ALIAS_MS_BASIC_DATA
+block|,
+comment|/* A Microsoft Data part. entry. */
+name|G_PART_ALIAS_MS_LDM_DATA
+block|,
+comment|/* A Microsoft LDM Data part. entry. */
+name|G_PART_ALIAS_MS_LDM_METADATA
+block|,
+comment|/* A Microsoft LDM Metadata entry. */
+name|G_PART_ALIAS_MS_RESERVED
+block|,
+comment|/* A Microsoft Reserved part. entry. */
+name|G_PART_ALIAS_NETBSD_CCD
+block|,
+comment|/* A NetBSD CCD partition entry. */
+name|G_PART_ALIAS_NETBSD_CGD
+block|,
+comment|/* A NetBSD CGD partition entry. */
+name|G_PART_ALIAS_NETBSD_FFS
+block|,
+comment|/* A NetBSD FFS partition entry. */
+name|G_PART_ALIAS_NETBSD_RAID
+block|,
+comment|/* A NetBSD RAID partition entry. */
+name|G_PART_ALIAS_NETBSD_SWAP
+block|,
+comment|/* A NetBSD swap partition entry. */
+name|G_PART_ALIAS_NETBSD_LFS
+block|,
+comment|/* A NetBSD LFS partition entry. */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}
