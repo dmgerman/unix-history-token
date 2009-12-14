@@ -339,7 +339,7 @@ name|E1000_MUTEX_INIT
 parameter_list|(
 name|mutex
 parameter_list|)
-value|mtx_init((mutex), #mutex, \                                         MTX_NETWORK_LOCK, \                                         MTX_DEF | MTX_SPIN)
+value|mtx_init((mutex), #mutex, \                                         "E1000 Shared Lock", MTX_DEF)
 end_define
 
 begin_define
