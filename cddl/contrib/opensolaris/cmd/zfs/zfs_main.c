@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -10714,7 +10714,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":dnvF"
+literal|":dnuvF"
 argument_list|)
 operator|)
 operator|!=
@@ -10743,6 +10743,16 @@ case|:
 name|flags
 operator|.
 name|dryrun
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|flags
+operator|.
+name|nomount
 operator|=
 name|B_TRUE
 expr_stmt|;
