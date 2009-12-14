@@ -686,7 +686,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1013,7 +1013,7 @@ parameter_list|,
 name|int
 name|addr
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|dest
 parameter_list|)
@@ -1021,7 +1021,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|word
 init|=
 literal|0
@@ -1193,7 +1193,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|VGE_EEPROM
-name|u_int16_t
+name|uint16_t
 name|word
 init|=
 literal|0
@@ -1230,7 +1230,7 @@ expr_stmt|;
 name|ptr
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|(
@@ -1540,7 +1540,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|rval
 init|=
 literal|0
@@ -2261,7 +2261,7 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|h
 decl_stmt|,
 name|hashes
@@ -7514,7 +7514,7 @@ name|POLL_AND_CHECK_STATUS
 condition|)
 block|{
 comment|/* also check status register */
-name|u_int32_t
+name|uint32_t
 name|status
 decl_stmt|;
 name|status
@@ -7660,7 +7660,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|status
 decl_stmt|;
 name|sc
