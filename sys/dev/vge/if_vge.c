@@ -832,20 +832,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|VGE_PCI_LOIO
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|VGE_PCI_LOMEM
-value|0x14
-end_define
-
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -4563,7 +4549,10 @@ argument_list|)
 expr_stmt|;
 name|rid
 operator|=
-name|VGE_PCI_LOMEM
+name|PCIR_BAR
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -5129,7 +5118,10 @@ name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|VGE_PCI_LOMEM
+name|PCIR_BAR
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|sc
 operator|->
