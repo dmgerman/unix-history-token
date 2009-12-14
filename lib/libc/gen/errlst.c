@@ -354,6 +354,9 @@ comment|/* 91 - ENOLINK */
 literal|"Protocol error"
 block|,
 comment|/* 92 - EPROTO */
+literal|"Capabilities insufficient"
+block|,
+comment|/* 93 - ENOTCAPABLE */
 block|}
 decl_stmt|;
 end_decl_stmt
