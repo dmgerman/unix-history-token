@@ -450,6 +450,10 @@ name|VGE_FLAG_PCIE
 value|0x0001
 define|#
 directive|define
+name|VGE_FLAG_MSI
+value|0x0002
+define|#
+directive|define
 name|VGE_FLAG_LINK
 value|0x8000
 name|int
