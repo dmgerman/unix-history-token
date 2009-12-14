@@ -4939,7 +4939,9 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|VGE_IFQ_MAXLEN
+name|VGE_TX_DESC_CNT
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -4948,7 +4950,9 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|VGE_IFQ_MAXLEN
+name|VGE_TX_DESC_CNT
+operator|-
+literal|1
 expr_stmt|;
 name|IFQ_SET_READY
 argument_list|(

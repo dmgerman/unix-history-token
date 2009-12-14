@@ -13,13 +13,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VGE_IFQ_MAXLEN
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
 name|VGE_TX_DESC_CNT
 value|256
 end_define
