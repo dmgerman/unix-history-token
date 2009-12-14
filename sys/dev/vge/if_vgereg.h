@@ -4048,11 +4048,8 @@ block|{
 name|uint32_t
 name|vge_addrlo
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|vge_addrhi
-decl_stmt|;
-name|uint16_t
-name|vge_buflen
 decl_stmt|;
 block|}
 struct|;
@@ -4066,7 +4063,7 @@ begin_define
 define|#
 directive|define
 name|VGE_TXDESC_Q
-value|0x8000
+value|0x80000000
 end_define
 
 begin_struct
@@ -4439,25 +4436,17 @@ begin_struct
 struct|struct
 name|vge_rx_desc
 block|{
-specifier|volatile
 name|uint32_t
 name|vge_sts
 decl_stmt|;
-specifier|volatile
 name|uint32_t
 name|vge_ctl
 decl_stmt|;
-specifier|volatile
 name|uint32_t
 name|vge_addrlo
 decl_stmt|;
-specifier|volatile
-name|uint16_t
+name|uint32_t
 name|vge_addrhi
-decl_stmt|;
-specifier|volatile
-name|uint16_t
-name|vge_buflen
 decl_stmt|;
 block|}
 struct|;
@@ -4471,7 +4460,7 @@ begin_define
 define|#
 directive|define
 name|VGE_RXDESC_I
-value|0x8000
+value|0x80000000
 end_define
 
 begin_define
