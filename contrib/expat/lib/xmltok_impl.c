@@ -8136,7 +8136,7 @@ block|{
 while|while
 condition|(
 name|ptr
-operator|!=
+operator|<
 name|end
 condition|)
 block|{
