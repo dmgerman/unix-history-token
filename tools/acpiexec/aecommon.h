@@ -142,6 +142,13 @@ name|AcpiGbl_IgnoreErrors
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_RegionFillValue
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 struct|struct

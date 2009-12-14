@@ -1986,13 +1986,14 @@ return|return
 name|AE_NO_MEMORY
 return|;
 block|}
+comment|/* Initialize the region with the default fill value */
 name|ACPI_MEMSET
 argument_list|(
 name|RegionElement
 operator|->
 name|Buffer
 argument_list|,
-literal|0
+name|AcpiGbl_RegionFillValue
 argument_list|,
 name|Length
 argument_list|)

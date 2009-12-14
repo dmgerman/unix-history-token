@@ -499,15 +499,19 @@ case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/*              * These types we will allow, but we will change the type. This              * enables some existing code of the form:              *              *  Name (DEB, 0)              *  Scope (DEB) { ... }              *              * Note: silently change the type here. On the second pass, we will report              * a warning              */
+comment|/*              * These types we will allow, but we will change the type.              * This enables some existing code of the form:              *              *  Name (DEB, 0)              *  Scope (DEB) { ... }              *              * Note: silently change the type here. On the second pass,              * we will report a warning              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Type override - [%4.4s] had invalid type (%s) for Scope operator, changed to (Scope)\n"
+literal|"Type override - [%4.4s] had invalid type (%s) "
+literal|"for Scope operator, changed to type ANY\n"
 operator|,
-name|Path
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -542,7 +546,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid type (%s) for target of Scope operator [%4.4s] (Cannot override)"
+literal|"Invalid type (%s) for target of "
+literal|"Scope operator [%4.4s] (Cannot override)"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -551,7 +556,10 @@ operator|->
 name|Type
 argument_list|)
 operator|,
-name|Path
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1910,15 +1918,19 @@ case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/*              * These types we will allow, but we will change the type. This              * enables some existing code of the form:              *              *  Name (DEB, 0)              *  Scope (DEB) { ... }              */
+comment|/*              * These types we will allow, but we will change the type.              * This enables some existing code of the form:              *              *  Name (DEB, 0)              *  Scope (DEB) { ... }              */
 name|ACPI_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Type override - [%4.4s] had invalid type (%s) for Scope operator, changed to (Scope)"
+literal|"Type override - [%4.4s] had invalid type (%s) "
+literal|"for Scope operator, changed to type ANY\n"
 operator|,
-name|BufferPtr
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -1953,7 +1965,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid type (%s) for target of Scope operator [%4.4s]"
+literal|"Invalid type (%s) for target of "
+literal|"Scope operator [%4.4s] (Cannot override)"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -1962,7 +1975,10 @@ operator|->
 name|Type
 argument_list|)
 operator|,
-name|BufferPtr
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2814,7 +2830,7 @@ operator|=
 name|REGION_DATA_TABLE
 expr_stmt|;
 block|}
-comment|/*              * If we are executing a method, initialize the region              */
+comment|/*              * The OpRegion is not fully parsed at this time. The only valid              * argument is the SpaceId. (We must save the address of the              * AML of the address and length operands)              *              * If we have a valid region, initialize it. The namespace is              * unlocked at this point.              *              * Need to unlock interpreter if it is locked (if we are running              * a control method), in order to allow _REG methods to be run              * during AcpiEvInitializeRegion.              */
 if|if
 condition|(
 name|WalkState
@@ -2822,6 +2838,7 @@ operator|->
 name|MethodNode
 condition|)
 block|{
+comment|/*                  * Executing a method: initialize the region and unlock                  * the interpreter                  */
 name|Status
 operator|=
 name|AcpiExCreateRegion
@@ -2857,9 +2874,10 @@ name|Status
 operator|)
 return|;
 block|}
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
 block|}
-comment|/*              * The OpRegion is not fully parsed at this time. Only valid              * argument is the SpaceId. (We must save the address of the              * AML of the address and length operands)              */
-comment|/*              * If we have a valid region, initialize it              * Namespace is NOT locked at this point.              *              * TBD: need to unlock interpreter if it is locked, in order              * to allow _REG methods to be run.              */
 name|Status
 operator|=
 name|AcpiEvInitializeRegion
@@ -2872,6 +2890,17 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|WalkState
+operator|->
+name|MethodNode
+condition|)
+block|{
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ACPI_FAILURE

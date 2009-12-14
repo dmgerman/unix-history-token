@@ -687,6 +687,8 @@ name|ObjDesc
 operator|->
 name|Method
 operator|.
+name|Extra
+operator|.
 name|Implementation
 argument_list|(
 name|WalkState

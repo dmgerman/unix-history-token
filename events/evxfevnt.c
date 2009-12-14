@@ -1428,7 +1428,7 @@ return|;
 block|}
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|GpeDevice
 argument_list|)
@@ -1663,7 +1663,7 @@ return|;
 block|}
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|GpeDevice
 argument_list|)

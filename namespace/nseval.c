@@ -775,6 +775,37 @@ argument_list|(
 name|ParentNode
 argument_list|)
 expr_stmt|;
+comment|/*      * Get the region handler and save it in the method object. We may need      * this if an operation region declaration causes a _REG method to be run.      *      * We can't do this in AcpiPsLinkModuleCode because      * AcpiGbl_RootNode->Object is NULL at PASS1.      */
+if|if
+condition|(
+operator|(
+name|Type
+operator|==
+name|ACPI_TYPE_DEVICE
+operator|)
+operator|&&
+name|ParentNode
+operator|->
+name|Object
+condition|)
+block|{
+name|MethodObj
+operator|->
+name|Method
+operator|.
+name|Extra
+operator|.
+name|Handler
+operator|=
+name|ParentNode
+operator|->
+name|Object
+operator|->
+name|Device
+operator|.
+name|Handler
+expr_stmt|;
+block|}
 comment|/* Must clear NextObject (AcpiNsAttachObject needs the field) */
 name|MethodObj
 operator|->
@@ -869,6 +900,22 @@ name|AmlStart
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Delete a possible implicit return value (in slack mode) */
+if|if
+condition|(
+name|Info
+operator|->
+name|ReturnObject
+condition|)
+block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|Info
+operator|->
+name|ReturnObject
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Detach the temporary method object */
 name|AcpiNsDetachObject
 argument_list|(

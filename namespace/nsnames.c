@@ -496,7 +496,7 @@ argument_list|)
 expr_stmt|;
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|TargetHandle
 argument_list|)

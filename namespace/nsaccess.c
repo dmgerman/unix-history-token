@@ -376,6 +376,8 @@ name|ObjDesc
 operator|->
 name|Method
 operator|.
+name|Extra
+operator|.
 name|Implementation
 operator|=
 name|AcpiUtOsiImplementation

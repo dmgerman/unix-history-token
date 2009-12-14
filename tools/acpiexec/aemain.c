@@ -53,6 +53,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|UINT8
+name|AcpiGbl_RegionFillValue
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|BOOLEAN
 name|AcpiGbl_IgnoreErrors
 init|=
@@ -121,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|AE_SUPPORTED_OPTIONS
-value|"?ab:de^ghimo:rstvx:z"
+value|"?ab:de^f:ghimo:rstvx:z"
 end_define
 
 begin_comment
@@ -164,6 +172,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"   -e [Method]         Batch mode method execution\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   -f<Value>          Specify OpRegion initialization fill value\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1046,6 +1059,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+break|break;
+case|case
+literal|'f'
+case|:
+name|AcpiGbl_RegionFillValue
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|strtoul
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'g'

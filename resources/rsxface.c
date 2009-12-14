@@ -171,7 +171,7 @@ expr_stmt|;
 block|}
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|DeviceHandle
 argument_list|)

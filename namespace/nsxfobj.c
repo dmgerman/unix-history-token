@@ -124,7 +124,7 @@ block|}
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Handle
 argument_list|)
@@ -255,7 +255,7 @@ block|}
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Handle
 argument_list|)
@@ -285,8 +285,10 @@ expr_stmt|;
 operator|*
 name|RetHandle
 operator|=
-name|AcpiNsConvertEntryToHandle
+name|ACPI_CAST_PTR
 argument_list|(
+name|ACPI_HANDLE
+argument_list|,
 name|ParentNode
 argument_list|)
 expr_stmt|;
@@ -413,7 +415,7 @@ block|{
 comment|/* Start search at the beginning of the specified scope */
 name|ParentNode
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Parent
 argument_list|)
@@ -439,7 +441,7 @@ comment|/* Non-null handle, ignore the parent */
 comment|/* Convert and validate the handle */
 name|ChildNode
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Child
 argument_list|)
@@ -493,8 +495,10 @@ block|{
 operator|*
 name|RetHandle
 operator|=
-name|AcpiNsConvertEntryToHandle
+name|ACPI_CAST_PTR
 argument_list|(
+name|ACPI_HANDLE
+argument_list|,
 name|Node
 argument_list|)
 expr_stmt|;

@@ -1329,6 +1329,33 @@ operator|.
 name|Handler
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_TYPE_METHOD
+case|:
+comment|/*                  * If we are executing module level code, the original                  * Node's object was replaced by this Method object and we                  * saved the handler in the method object.                  *                  * See AcpiNsExecModuleCode                  */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_MODULE_LEVEL
+condition|)
+block|{
+name|HandlerObj
+operator|=
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Extra
+operator|.
+name|Handler
+expr_stmt|;
+block|}
+break|break;
 default|default:
 comment|/* Ignore other objects */
 break|break;

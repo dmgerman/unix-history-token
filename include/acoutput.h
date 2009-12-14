@@ -196,8 +196,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_LV_REPAIR
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_LV_ALL_EXCEPTIONS
-value|0x00000007
+value|0x0000000F
 end_define
 
 begin_comment
@@ -468,6 +475,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_DB_REPAIR
+value|ACPI_DEBUG_LEVEL (ACPI_LV_REPAIR)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_DB_ALL_EXCEPTIONS
 value|ACPI_DEBUG_LEVEL (ACPI_LV_ALL_EXCEPTIONS)
 end_define
@@ -645,14 +659,14 @@ begin_define
 define|#
 directive|define
 name|ACPI_DEBUG_DEFAULT
-value|(ACPI_LV_INIT | ACPI_LV_DEBUG_OBJECT)
+value|(ACPI_LV_INIT | ACPI_LV_DEBUG_OBJECT | ACPI_LV_REPAIR)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NORMAL_DEFAULT
-value|(ACPI_LV_INIT | ACPI_LV_DEBUG_OBJECT)
+value|(ACPI_LV_INIT | ACPI_LV_DEBUG_OBJECT | ACPI_LV_REPAIR)
 end_define
 
 begin_define

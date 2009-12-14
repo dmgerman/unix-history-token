@@ -948,6 +948,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|AcpiNsRemoveNullElements
+parameter_list|(
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+parameter_list|,
+name|UINT8
+name|PackageType
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * nssearch - Namespace searching and entry  */
 end_comment
@@ -1200,21 +1218,10 @@ end_function_decl
 begin_function_decl
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 parameter_list|(
 name|ACPI_HANDLE
 name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_HANDLE
-name|AcpiNsConvertEntryToHandle
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -571,7 +571,7 @@ block|}
 comment|/* Convert and validate the device handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Device
 argument_list|)
@@ -1028,7 +1028,7 @@ block|}
 comment|/* Convert and validate the device handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Device
 argument_list|)

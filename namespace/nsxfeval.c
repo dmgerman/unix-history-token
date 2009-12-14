@@ -370,7 +370,7 @@ name|Info
 operator|->
 name|PrefixNode
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Handle
 argument_list|)
@@ -1179,7 +1179,7 @@ return|;
 block|}
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)
@@ -1675,7 +1675,7 @@ block|}
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)
@@ -1792,7 +1792,7 @@ block|}
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)
@@ -1915,7 +1915,7 @@ block|}
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)
