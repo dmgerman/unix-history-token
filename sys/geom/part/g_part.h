@@ -50,9 +50,27 @@ begin_enum
 enum|enum
 name|g_part_alias
 block|{
+name|G_PART_ALIAS_APPLE_BOOT
+block|,
+comment|/* An Apple boot partition entry. */
 name|G_PART_ALIAS_APPLE_HFS
 block|,
-comment|/* An HFS file system entry. */
+comment|/* An HFS+ file system entry. */
+name|G_PART_ALIAS_APPLE_LABEL
+block|,
+comment|/* An Apple label partition entry. */
+name|G_PART_ALIAS_APPLE_RAID
+block|,
+comment|/* An Apple RAID partition entry. */
+name|G_PART_ALIAS_APPLE_RAID_OFFLINE
+block|,
+comment|/* An Apple RAID (offline) part entry.*/
+name|G_PART_ALIAS_APPLE_TV_RECOVERY
+block|,
+comment|/* An Apple TV recovery part entry. */
+name|G_PART_ALIAS_APPLE_UFS
+block|,
+comment|/* An Apple UFS partition entry. */
 name|G_PART_ALIAS_EFI
 block|,
 comment|/* A EFI system partition entry. */
@@ -77,6 +95,18 @@ comment|/* A ZFS file system entry. */
 name|G_PART_ALIAS_MBR
 block|,
 comment|/* A MBR (extended) partition entry. */
+name|G_PART_ALIAS_LINUX_DATA
+block|,
+comment|/* A Linux data partition entry. */
+name|G_PART_ALIAS_LINUX_LVM
+block|,
+comment|/* A Linux LVM partition entry. */
+name|G_PART_ALIAS_LINUX_RAID
+block|,
+comment|/* A Linux RAID partition entry. */
+name|G_PART_ALIAS_LINUX_SWAP
+block|,
+comment|/* A Linux swap partition entry. */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}
