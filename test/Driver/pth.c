@@ -12,7 +12,7 @@ comment|// RUN: FileCheck -check-prefix CHECK1 -input-file %t.log %s
 end_comment
 
 begin_comment
-comment|// CHECK1: "{{.*}}/clang-cc{{.*}}" {{.*}} "-o" "{{.*}}.h.pth" "-x" "c-header" "{{.*}}pth.c"
+comment|// CHECK1: "{{.*}}/clang{{.*}}" "-cc1" {{.*}} "-o" "{{.*}}.h.pth" "-x" "c-header" "{{.*}}pth.c"
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// RUN: FileCheck -check-prefix CHECK2 -input-file %t.log %s
 end_comment
 
 begin_comment
-comment|// CHECK2: "{{.*}}/clang-cc{{.*}}" {{.*}}"-include-pth" "{{.*}}.h.pth" {{.*}}"-x" "c" "{{.*}}pth.c"
+comment|// CHECK2: "{{.*}}/clang{{.*}}" "-cc1" {{.*}}"-include-pth" "{{.*}}.h.pth" {{.*}}"-x" "c" "{{.*}}pth.c"
 end_comment
 
 end_unit

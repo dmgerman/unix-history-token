@@ -227,6 +227,12 @@ comment|///< When generating PCH files,
 comment|/// instruct the PCH writer to create
 comment|/// relocatable PCH files.
 name|unsigned
+name|ShowHelp
+range|:
+literal|1
+decl_stmt|;
+comment|///< Show the -help text.
+name|unsigned
 name|ShowMacrosInCodeCompletion
 range|:
 literal|1
@@ -247,6 +253,12 @@ literal|1
 decl_stmt|;
 comment|///< Show timers for individual
 comment|/// actions.
+name|unsigned
+name|ShowVersion
+range|:
+literal|1
+decl_stmt|;
+comment|///< Show the -version text.
 comment|/// The input files and their types.
 name|std
 operator|::
@@ -302,6 +314,17 @@ operator|::
 name|string
 name|ActionName
 expr_stmt|;
+comment|/// The list of plugins to load.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Plugins
+expr_stmt|;
 name|public
 label|:
 name|FrontendOptions
@@ -333,6 +356,10 @@ name|RelocatablePCH
 operator|=
 literal|0
 expr_stmt|;
+name|ShowHelp
+operator|=
+literal|0
+expr_stmt|;
 name|ShowMacrosInCodeCompletion
 operator|=
 literal|0
@@ -342,6 +369,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|ShowTimers
+operator|=
+literal|0
+expr_stmt|;
+name|ShowVersion
 operator|=
 literal|0
 expr_stmt|;

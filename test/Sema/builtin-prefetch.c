@@ -58,6 +58,17 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+comment|// expected-error{{argument to __builtin_prefetch must be of integer type}}
+name|__builtin_prefetch
+argument_list|(
+operator|&
+name|a
+argument_list|,
+name|a
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 comment|// expected-error{{argument to __builtin_prefetch must be a constant integer}}
 name|__builtin_prefetch
 argument_list|(

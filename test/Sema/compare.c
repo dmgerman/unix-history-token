@@ -2153,5 +2153,27 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|test1
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+enum|enum
+name|en
+block|{
+name|zero
+block|}
+enum|;
+return|return
+name|i
+operator|>
+name|zero
+return|;
+block|}
+end_function
+
 end_unit
 

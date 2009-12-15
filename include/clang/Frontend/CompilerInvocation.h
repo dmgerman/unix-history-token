@@ -211,10 +211,6 @@ comment|///
 comment|/// \param Res [out] - The resulting invocation.
 comment|/// \param ArgBegin - The first element in the argument vector.
 comment|/// \param ArgEnd - The last element in the argument vector.
-comment|/// \param Argv0 - The program path (from argv[0]), for finding the builtin
-comment|/// compiler path.
-comment|/// \param MainAddr - The address of main (or some other function in the main
-comment|/// executable), for finding the builtin compiler path.
 comment|/// \param Diags - The diagnostic engine to use for errors.
 specifier|static
 name|void
@@ -236,20 +232,35 @@ modifier|*
 modifier|*
 name|ArgEnd
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|Argv0
-parameter_list|,
-name|void
-modifier|*
-name|MainAddr
-parameter_list|,
 name|Diagnostic
 modifier|&
 name|Diags
 parameter_list|)
 function_decl|;
+comment|/// GetBuiltinIncludePath - Get the directory where the compiler headers
+comment|/// reside, relative to the compiler binary (found by the passed in
+comment|/// arguments).
+comment|///
+comment|/// \param Argv0 - The program path (from argv[0]), for finding the builtin
+comment|/// compiler path.
+comment|/// \param MainAddr - The address of main (or some other function in the main
+comment|/// executable), for finding the builtin compiler path.
+specifier|static
+name|std
+operator|::
+name|string
+name|GetResourcesPath
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Argv0
+argument_list|,
+name|void
+operator|*
+name|MainAddr
+argument_list|)
+expr_stmt|;
 comment|/// toArgs - Convert the CompilerInvocation to a list of strings suitable for
 comment|/// passing to CreateFromArgs.
 name|void

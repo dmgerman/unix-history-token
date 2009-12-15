@@ -8,7 +8,7 @@ comment|// RUN: FileCheck -input-file %t.log %s
 end_comment
 
 begin_comment
-comment|// CHECK: clang-cc{{.*}}" "-triple" "i686-pc-openbsd"
+comment|// CHECK: clang{{.*}}" "-cc1" "-triple" "i686-pc-openbsd"
 end_comment
 
 begin_comment

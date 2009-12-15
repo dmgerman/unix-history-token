@@ -394,16 +394,6 @@ name|uint64_t
 operator|>
 name|VBaseOffsets
 expr_stmt|;
-comment|/// KeyFunction - The key function, according to the Itanium C++ ABI,
-comment|/// section 5.2.3:
-comment|///
-comment|/// ...the first non-pure virtual function that is not inline at the point
-comment|/// of class definition.
-specifier|const
-name|CXXMethodDecl
-modifier|*
-name|KeyFunction
-decl_stmt|;
 block|}
 struct|;
 comment|/// CXXInfo - If the record layout is for a C++ record, this will have
@@ -534,8 +524,6 @@ argument_list|,
 argument|uint64_t> *vbases
 argument_list|,
 argument|unsigned numvbases
-argument_list|,
-argument|const CXXMethodDecl *KeyFunction
 argument_list|)
 operator|:
 name|Size
@@ -691,12 +679,6 @@ name|i
 index|]
 operator|.
 name|second
-expr_stmt|;
-name|CXXInfo
-operator|->
-name|KeyFunction
-operator|=
-name|KeyFunction
 expr_stmt|;
 block|}
 operator|~
@@ -968,27 +950,6 @@ name|VBaseOffsets
 index|[
 name|VBase
 index|]
-return|;
-block|}
-comment|/// getKeyFunction - Get the key function.
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|getKeyFunction
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|CXXInfo
-operator|&&
-literal|"Record layout does not have C++ specific info!"
-argument_list|)
-block|;
-return|return
-name|CXXInfo
-operator|->
-name|KeyFunction
 return|;
 block|}
 name|primary_base_info_iterator

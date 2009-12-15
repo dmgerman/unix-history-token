@@ -192,13 +192,19 @@ operator|::
 name|string
 name|ObjCXXEnvIncPath
 expr_stmt|;
-comment|/// If non-empty, the path to the compiler builtin include directory, which
-comment|/// will be searched following the user and environment includes.
+comment|/// The directory which holds the compiler resource files (builtin includes,
+comment|/// etc.).
 name|std
 operator|::
 name|string
-name|BuiltinIncludePath
+name|ResourceDir
 expr_stmt|;
+comment|/// Include the compiler builtin includes.
+name|unsigned
+name|UseBuiltinIncludes
+range|:
+literal|1
+decl_stmt|;
 comment|/// Include the system standard include search directories.
 name|unsigned
 name|UseStandardIncludes
@@ -222,6 +228,11 @@ block|:
 name|Sysroot
 argument_list|(
 name|_Sysroot
+argument_list|)
+operator|,
+name|UseBuiltinIncludes
+argument_list|(
+name|true
 argument_list|)
 operator|,
 name|UseStandardIncludes

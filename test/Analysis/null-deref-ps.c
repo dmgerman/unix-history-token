@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=basic -analyzer-store=basic
+comment|// RUN: clang -cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=basic -analyzer-store=basic
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=range -analyzer-store=basic
+comment|// RUN: clang -cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -verify %s -analyzer-constraints=range -analyzer-store=basic
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -analyzer-no-purge-dead -verify %s
+comment|// RUN: clang -cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -analyzer-no-purge-dead -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -verify %s
+comment|// RUN: clang -cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -checker-cfref -analyzer-store=region -analyzer-constraints=range -verify %s
 end_comment
 
 begin_typedef

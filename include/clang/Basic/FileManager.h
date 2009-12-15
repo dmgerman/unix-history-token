@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -672,6 +678,18 @@ comment|///
 name|unsigned
 name|NextFileUID
 decl_stmt|;
+comment|/// \brief The virtual files that we have allocated.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|FileEntry
+operator|*
+operator|,
+literal|4
+operator|>
+name|VirtualFileEntries
+expr_stmt|;
 comment|// Statistics.
 name|unsigned
 name|NumDirLookups
@@ -865,6 +883,28 @@ modifier|*
 name|FilenameEnd
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve a file entry for a "virtual" file that acts as
+comment|/// if there were a file with the given name on disk. The file
+comment|/// itself is not accessed.
+specifier|const
+name|FileEntry
+modifier|*
+name|getVirtualFile
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|StringRef
+operator|&
+name|Filename
+argument_list|,
+name|off_t
+name|Size
+argument_list|,
+name|time_t
+name|ModificationTime
+argument_list|)
+decl_stmt|;
 name|void
 name|PrintStats
 argument_list|()

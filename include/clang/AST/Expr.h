@@ -785,6 +785,18 @@ operator|&
 name|Ctx
 argument_list|)
 block|;
+comment|/// \brief Determine whether this expression is a default function argument.
+comment|///
+comment|/// Default arguments are implicitly generated in the abstract syntax tree
+comment|/// by semantic analysis for function calls, object constructions, etc. in
+comment|/// C++. Default arguments are represented by \c CXXDefaultArgExpr nodes;
+comment|/// this routine also looks through any implicit casts to determine whether
+comment|/// the expression is a default argument.
+name|bool
+name|isDefaultArgument
+argument_list|()
+specifier|const
+block|;
 specifier|const
 name|Expr
 operator|*
@@ -1043,7 +1055,7 @@ name|llvm
 operator|::
 name|PointerIntPair
 operator|<
-name|NamedDecl
+name|ValueDecl
 operator|*
 block|,
 literal|2
@@ -1214,7 +1226,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QualifierRange
 argument_list|,
-argument|NamedDecl *D
+argument|ValueDecl *D
 argument_list|,
 argument|SourceLocation NameLoc
 argument_list|,
@@ -1253,7 +1265,7 @@ name|DeclRefExpr
 argument_list|(
 argument|StmtClass SC
 argument_list|,
-argument|NamedDecl *d
+argument|ValueDecl *d
 argument_list|,
 argument|QualType t
 argument_list|,
@@ -1293,7 +1305,7 @@ name|public
 operator|:
 name|DeclRefExpr
 argument_list|(
-argument|NamedDecl *d
+argument|ValueDecl *d
 argument_list|,
 argument|QualType t
 argument_list|,
@@ -1351,7 +1363,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QualifierRange
 argument_list|,
-argument|NamedDecl *D
+argument|ValueDecl *D
 argument_list|,
 argument|SourceLocation NameLoc
 argument_list|,
@@ -1364,7 +1376,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|NamedDecl
+name|ValueDecl
 modifier|*
 name|getDecl
 parameter_list|()
@@ -1380,7 +1392,7 @@ end_function
 
 begin_expr_stmt
 specifier|const
-name|NamedDecl
+name|ValueDecl
 operator|*
 name|getDecl
 argument_list|()
@@ -1399,7 +1411,7 @@ begin_function
 name|void
 name|setDecl
 parameter_list|(
-name|NamedDecl
+name|ValueDecl
 modifier|*
 name|NewD
 parameter_list|)
@@ -2495,10 +2507,6 @@ name|Loc
 operator|=
 name|L
 block|; }
-comment|// FIXME: The logic for computing the value of a predefined expr should go
-comment|// into a method here that takes the inner-most code decl (a block, function
-comment|// or objc method) that the expr lives in.  This would allow sema and codegen
-comment|// to be consistent for things like sizeof(__func__) etc.
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -3976,7 +3984,7 @@ block|;
 comment|// true if operand is a type, false if an expression
 expr|union
 block|{
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
 name|Ty
 block|;
@@ -4008,7 +4016,7 @@ name|SizeOfAlignOfExpr
 argument_list|(
 argument|bool issizeof
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|QualType resultType
 argument_list|,
@@ -4027,7 +4035,7 @@ name|false
 argument_list|,
 comment|// Never type-dependent (C++ [temp.dep.expr]p3).
 comment|// Value-dependent if the argument is type-dependent.
-name|DInfo
+name|TInfo
 operator|->
 name|getType
 argument_list|()
@@ -4060,7 +4068,7 @@ name|Argument
 operator|.
 name|Ty
 operator|=
-name|DInfo
+name|TInfo
 block|;   }
 name|SizeOfAlignOfExpr
 argument_list|(
@@ -4172,7 +4180,7 @@ name|getType
 argument_list|()
 return|;
 block|}
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
 name|getArgumentTypeInfo
 argument_list|()
@@ -4259,14 +4267,14 @@ block|; }
 name|void
 name|setArgument
 argument_list|(
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|)
 block|{
 name|Argument
 operator|.
 name|Ty
 operator|=
-name|DInfo
+name|TInfo
 block|;
 name|isType
 operator|=
@@ -5443,7 +5451,7 @@ name|Base
 block|;
 comment|/// MemberDecl - This is the decl being referenced by the field/member name.
 comment|/// In X.F, this is the decl referenced by F.
-name|NamedDecl
+name|ValueDecl
 operator|*
 name|MemberDecl
 block|;
@@ -5630,7 +5638,7 @@ argument|NestedNameSpecifier *qual
 argument_list|,
 argument|SourceRange qualrange
 argument_list|,
-argument|NamedDecl *memberdecl
+argument|ValueDecl *memberdecl
 argument_list|,
 argument|SourceLocation l
 argument_list|,
@@ -5656,7 +5664,7 @@ argument|Expr *base
 argument_list|,
 argument|bool isarrow
 argument_list|,
-argument|NamedDecl *memberdecl
+argument|ValueDecl *memberdecl
 argument_list|,
 argument|SourceLocation l
 argument_list|,
@@ -5752,7 +5760,7 @@ argument|NestedNameSpecifier *qual
 argument_list|,
 argument|SourceRange qualrange
 argument_list|,
-argument|NamedDecl *memberdecl
+argument|ValueDecl *memberdecl
 argument_list|,
 argument|SourceLocation l
 argument_list|,
@@ -5815,7 +5823,7 @@ comment|/// a CXXMethodDecl.
 end_comment
 
 begin_expr_stmt
-name|NamedDecl
+name|ValueDecl
 operator|*
 name|getMemberDecl
 argument_list|()
@@ -5831,7 +5839,7 @@ begin_function
 name|void
 name|setMemberDecl
 parameter_list|(
-name|NamedDecl
+name|ValueDecl
 modifier|*
 name|D
 parameter_list|)
@@ -6714,6 +6722,14 @@ name|CK_FloatingCast
 block|,
 comment|/// CK_MemberPointerToBoolean - Member pointer to boolean
 name|CK_MemberPointerToBoolean
+block|,
+comment|/// CK_AnyPointerToObjCPointerCast - Casting any pointer to objective-c
+comment|/// pointer
+name|CK_AnyPointerToObjCPointerCast
+block|,
+comment|/// CK_AnyPointerToBlockPointerCast - Casting any pointer to block
+comment|/// pointer
+name|CK_AnyPointerToBlockPointerCast
 block|}
 block|;
 name|private
@@ -6863,6 +6879,35 @@ name|Op
 operator|=
 name|E
 block|; }
+comment|/// \brief Retrieve the cast subexpression as it was written in the source
+comment|/// code, looking through any implicit casts or other intermediate nodes
+comment|/// introduced by semantic analysis.
+name|Expr
+operator|*
+name|getSubExprAsWritten
+argument_list|()
+block|;
+specifier|const
+name|Expr
+operator|*
+name|getSubExprAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CastExpr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getSubExprAsWritten
+argument_list|()
+return|;
+block|}
 specifier|static
 name|bool
 name|classof

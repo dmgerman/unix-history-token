@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -323,13 +329,13 @@ name|public
 label|:
 name|Driver
 argument_list|(
-argument|const char *_Name
+argument|llvm::StringRef _Name
 argument_list|,
-argument|const char *_Dir
+argument|llvm::StringRef _Dir
 argument_list|,
-argument|const char *_DefaultHostTriple
+argument|llvm::StringRef _DefaultHostTriple
 argument_list|,
-argument|const char *_DefaultImageName
+argument|llvm::StringRef _DefaultImageName
 argument_list|,
 argument|bool IsProduction
 argument_list|,

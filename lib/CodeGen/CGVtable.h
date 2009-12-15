@@ -68,18 +68,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|"GlobalDecl.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|Constant
-decl_stmt|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"llvm/GlobalVariable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"GlobalDecl.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -200,6 +202,26 @@ empty_stmt|;
 name|class
 name|CGVtableInfo
 block|{
+name|public
+label|:
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|GlobalDecl
+operator|,
+name|ThunkAdjustment
+operator|>
+expr|>
+name|AdjustmentVectorTy
+expr_stmt|;
+name|private
+label|:
 name|CodeGenModule
 modifier|&
 name|CGM
@@ -251,6 +273,7 @@ expr_stmt|;
 name|VirtualBaseClassIndiciesTy
 name|VirtualBaseClassIndicies
 decl_stmt|;
+comment|/// Vtables - All the vtables which have been defined.
 name|llvm
 operator|::
 name|DenseMap
@@ -261,7 +284,7 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 operator|>
 name|Vtables
@@ -279,6 +302,30 @@ operator|,
 name|uint64_t
 operator|>
 name|NumVirtualFunctionPointers
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|GlobalDecl
+operator|,
+name|AdjustmentVectorTy
+operator|>
+name|SavedAdjustmentsTy
+expr_stmt|;
+name|SavedAdjustmentsTy
+name|SavedAdjustments
+decl_stmt|;
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|>
+name|SavedAdjustmentRecords
 expr_stmt|;
 comment|/// getNumVirtualFunctionPointers - Return the number of virtual function
 comment|/// pointers in the vtable for a given record decl.
@@ -303,15 +350,52 @@ function_decl|;
 comment|/// GenerateClassData - Generate all the class data requires to be generated
 comment|/// upon definition of a KeyFunction.  This includes the vtable, the
 comment|/// rtti data structure and the VTT.
+comment|///
+comment|/// \param Linkage - The desired linkage of the vtable, the RTTI and the VTT.
 name|void
 name|GenerateClassData
-parameter_list|(
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|::
+name|LinkageTypes
+name|Linkage
+argument_list|,
 specifier|const
 name|CXXRecordDecl
-modifier|*
+operator|*
 name|RD
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GenerateVtable
+argument_list|(
+argument|llvm::GlobalVariable::LinkageTypes Linkage
+argument_list|,
+argument|bool GenerateDefinition
+argument_list|,
+argument|const CXXRecordDecl *LayoutClass
+argument_list|,
+argument|const CXXRecordDecl *RD
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GenerateVTT
+argument_list|(
+argument|llvm::GlobalVariable::LinkageTypes Linkage
+argument_list|,
+argument|const CXXRecordDecl *RD
+argument_list|)
+expr_stmt|;
 name|public
 label|:
 name|CGVtableInfo
@@ -354,9 +438,29 @@ modifier|*
 name|VBase
 parameter_list|)
 function_decl|;
+name|AdjustmentVectorTy
+modifier|*
+name|getAdjustments
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+comment|/// getVtableAddressPoint - returns the address point of the vtable for the
+comment|/// given record decl.
+comment|/// FIXME: This should return a list of address points.
+name|uint64_t
+name|getVtableAddressPoint
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 name|getVtable
 argument_list|(
@@ -368,7 +472,7 @@ argument_list|)
 expr_stmt|;
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 name|getCtorVtable
 argument_list|(

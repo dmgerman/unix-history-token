@@ -554,17 +554,28 @@ operator|==
 name|RHS
 return|;
 block|}
-specifier|static
-specifier|inline
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|idx
+operator|::
+name|Entity
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
 block|;  }
 end_decl_stmt
 

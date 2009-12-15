@@ -89,6 +89,14 @@ operator|>
 expr|struct
 name|DenseMapInfo
 expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|isPodLike
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -1303,16 +1311,45 @@ operator|==
 name|RHS
 return|;
 block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|SourceLocation
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|FileID
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
 block|;  }
 end_decl_stmt
 

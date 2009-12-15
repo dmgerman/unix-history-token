@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E -dM %s -o %t
+comment|// RUN: clang-cc -E -dM %s -o - | FileCheck %s -strict-whitespace
 end_comment
 
 begin_comment
-comment|// Space even without expansion tokens
+comment|// Space at end even without expansion tokens
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define A(x) " %t
+comment|// CHECK: #define A(x)
 end_comment
 
 begin_define
@@ -25,7 +25,7 @@ comment|// Space before expansion list.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define B(x,y) x y" %t
+comment|// CHECK: #define B(x,y) x y
 end_comment
 
 begin_define
@@ -41,11 +41,11 @@ value|x y
 end_define
 
 begin_comment
-comment|// No space in expansion list.
+comment|// No space in argument list.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define C(x,y) x y" %t
+comment|// CHECK: #define C(x,y) x y
 end_comment
 
 begin_define
@@ -65,13 +65,13 @@ comment|// No paste avoidance.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define X() .." %t
+comment|// CHECK: #define D() ..
 end_comment
 
 begin_define
 define|#
 directive|define
-name|X
+name|D
 parameter_list|()
 value|..
 end_define
@@ -81,24 +81,24 @@ comment|// Simple test.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define Y ." %t
+comment|// CHECK: #define E .
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define Z X()Y" %t
+comment|// CHECK: #define F X()Y
 end_comment
 
 begin_define
 define|#
 directive|define
-name|Y
+name|E
 value|.
 end_define
 
 begin_define
 define|#
 directive|define
-name|Z
+name|F
 value|X()Y
 end_define
 
@@ -107,31 +107,76 @@ comment|// gcc prints macros at end of translation unit, so last one wins.
 end_comment
 
 begin_comment
-comment|// RUN: grep "#define foo 2" %t
-end_comment
-
-begin_comment
-comment|// RUN: not grep "#define foo 1" %t
+comment|// CHECK: #define G 2
 end_comment
 
 begin_define
 define|#
 directive|define
-name|foo
+name|G
 value|1
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|foo
+name|G
 end_undef
 
 begin_define
 define|#
 directive|define
-name|foo
+name|G
 value|2
+end_define
+
+begin_comment
+comment|// Variadic macros of various sorts. PR5699
+end_comment
+
+begin_comment
+comment|// CHECK: H(x,...) __VA_ARGS__
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H
+parameter_list|(
+name|x
+parameter_list|,
+modifier|...
+parameter_list|)
+value|__VA_ARGS__
+end_define
+
+begin_comment
+comment|// CHECK: I(...) __VA_ARGS__
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I
+parameter_list|(
+modifier|...
+parameter_list|)
+value|__VA_ARGS__
+end_define
+
+begin_comment
+comment|// CHECK: J(x...) __VA_ARGS__
+end_comment
+
+begin_define
+define|#
+directive|define
+name|J
+parameter_list|(
+name|x
+modifier|...
+parameter_list|)
+value|__VA_ARGS__
 end_define
 
 end_unit

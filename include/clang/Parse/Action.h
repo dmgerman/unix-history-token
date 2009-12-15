@@ -1443,6 +1443,62 @@ block|}
 end_function
 
 begin_comment
+comment|/// IsInvalidUnlessNestedName - This method is used for error recovery
+end_comment
+
+begin_comment
+comment|/// purposes to determine whether the specified identifier is only valid as
+end_comment
+
+begin_comment
+comment|/// a nested name specifier, for example a namespace name.  It is
+end_comment
+
+begin_comment
+comment|/// conservatively correct to always return false from this method.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The arguments are the same as those passed to ActOnCXXNestedNameSpecifier.
+end_comment
+
+begin_function
+name|virtual
+name|bool
+name|IsInvalidUnlessNestedName
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
+parameter_list|,
+name|bool
+name|EnteringContext
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// ActOnCXXNestedNameSpecifier - Called during parsing of a
 end_comment
 
@@ -1507,11 +1563,60 @@ block|}
 end_function
 
 begin_comment
+comment|/// ShouldEnterDeclaratorScope - Called when a C++ scope specifier
+end_comment
+
+begin_comment
+comment|/// is parsed as part of a declarator-id to determine whether a scope
+end_comment
+
+begin_comment
+comment|/// should be entered.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the current scope
+end_comment
+
+begin_comment
+comment|/// \param SS the scope being entered
+end_comment
+
+begin_comment
+comment|/// \param isFriendDeclaration whether this is a friend declaration
+end_comment
+
+begin_function
+name|virtual
+name|bool
+name|ShouldEnterDeclaratorScope
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// ActOnCXXEnterDeclaratorScope - Called when a C++ scope specifier (global
 end_comment
 
 begin_comment
-comment|/// scope or nested-name-specifier) is parsed, part of a declarator-id.
+comment|/// scope or nested-name-specifier) is parsed as part of a declarator-id.
 end_comment
 
 begin_comment
@@ -5299,6 +5404,22 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param HasUsingKeyword true if this was declared with an
+end_comment
+
+begin_comment
+comment|///   explicit 'using' keyword (i.e. if this is technically a using
+end_comment
+
+begin_comment
+comment|///   declaration, not an access declaration)
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \param UsingLoc the location of the 'using' keyword.
 end_comment
 
@@ -5369,6 +5490,9 @@ name|CurScope
 parameter_list|,
 name|AccessSpecifier
 name|AS
+parameter_list|,
+name|bool
+name|HasUsingKeyword
 parameter_list|,
 name|SourceLocation
 name|UsingLoc
@@ -9885,6 +10009,92 @@ begin_function
 name|virtual
 name|void
 name|CodeCompleteOperatorName
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion after the '@' at the top level.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which the '@' occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ObjCImpDecl the Objective-C implementation or category
+end_comment
+
+begin_comment
+comment|/// implementation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param InInterface whether we are in an Objective-C interface or
+end_comment
+
+begin_comment
+comment|/// protocol.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCAtDirective
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|ObjCImpDecl
+parameter_list|,
+name|bool
+name|InInterface
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion after the '@' in a statement.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCAtStatement
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion after the '@' in an expression.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCAtExpression
 parameter_list|(
 name|Scope
 modifier|*

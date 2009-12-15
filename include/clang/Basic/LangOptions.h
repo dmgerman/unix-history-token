@@ -208,11 +208,11 @@ literal|1
 decl_stmt|;
 comment|// Support exception handling.
 name|unsigned
-name|Rtti
+name|RTTI
 range|:
 literal|1
 decl_stmt|;
-comment|// Support rtti information.
+comment|// Support RTTI information.
 name|unsigned
 name|NeXTRuntime
 range|:
@@ -363,6 +363,12 @@ literal|1
 decl_stmt|;
 comment|// Whether C++ copy constructors should be
 comment|// elided if possible.
+name|unsigned
+name|CatchUndefined
+range|:
+literal|1
+decl_stmt|;
+comment|// Generate code to check for undefined ops.
 name|private
 label|:
 name|unsigned
@@ -497,7 +503,7 @@ name|NeXTRuntime
 operator|=
 literal|1
 expr_stmt|;
-name|Rtti
+name|RTTI
 operator|=
 literal|1
 expr_stmt|;
@@ -599,6 +605,10 @@ operator|=
 literal|1
 expr_stmt|;
 name|ShortWChar
+operator|=
+literal|0
+expr_stmt|;
+name|CatchUndefined
 operator|=
 literal|0
 expr_stmt|;

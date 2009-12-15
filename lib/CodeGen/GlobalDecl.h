@@ -476,21 +476,36 @@ operator|==
 name|RHS
 return|;
 block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-comment|// GlobalDecl isn't *technically* a POD type. However, we can get
-comment|// away with calling it a POD type since its copy constructor,
-comment|// copy assignment operator, and destructor are all trivial.
-return|return
-name|true
-return|;
-block|}
 expr|}
-block|;    }
+block|;
+comment|// GlobalDecl isn't *technically* a POD type. However, its copy constructor,
+comment|// copy assignment operator, and destructor are all trivial.
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|GlobalDecl
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|;   }
+block|; }
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

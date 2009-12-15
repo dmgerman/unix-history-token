@@ -112,6 +112,9 @@ name|class
 name|Command
 decl_stmt|;
 name|class
+name|Tool
+decl_stmt|;
+name|class
 name|Job
 block|{
 name|public
@@ -198,6 +201,12 @@ name|Action
 operator|&
 name|Source
 block|;
+comment|/// Tool - The tool which caused the creation of this job.
+specifier|const
+name|Tool
+operator|&
+name|Creator
+block|;
 comment|/// The executable to run.
 specifier|const
 name|char
@@ -217,6 +226,11 @@ specifier|const
 name|Action
 operator|&
 name|_Source
+argument_list|,
+specifier|const
+name|Tool
+operator|&
+name|_Creator
 argument_list|,
 specifier|const
 name|char
@@ -239,6 +253,18 @@ specifier|const
 block|{
 return|return
 name|Source
+return|;
+block|}
+comment|/// getCreator - Return the Tool which caused the creation of this job.
+specifier|const
+name|Tool
+operator|&
+name|getCreator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Creator
 return|;
 block|}
 specifier|const

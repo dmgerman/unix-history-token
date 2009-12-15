@@ -335,6 +335,17 @@ name|Function
 operator|*
 name|CurFn
 expr_stmt|;
+comment|/// CurGD - The GlobalDecl for the current function being compiled.
+name|GlobalDecl
+name|CurGD
+decl_stmt|;
+comment|/// OuterTryBlock - This is the address of the outter most try block, 0
+comment|/// otherwise.
+specifier|const
+name|Stmt
+modifier|*
+name|OuterTryBlock
+decl_stmt|;
 comment|/// ReturnBlock - Unified return block.
 name|llvm
 operator|::
@@ -346,7 +357,7 @@ comment|/// ReturnValue - The temporary alloca to hold the return value. This is
 comment|/// iff the function has no return value.
 name|llvm
 operator|::
-name|Instruction
+name|Value
 operator|*
 name|ReturnValue
 expr_stmt|;
@@ -371,6 +382,12 @@ name|LLVMIntTy
 expr_stmt|;
 name|uint32_t
 name|LLVMPointerWidth
+decl_stmt|;
+name|bool
+name|Exceptions
+decl_stmt|;
+name|bool
+name|CatchUndefined
 decl_stmt|;
 name|public
 label|:
@@ -405,10 +422,42 @@ operator|::
 name|BasicBlock
 operator|*
 name|CleanupExitBlock
+argument_list|,
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|PreviousInvokeDest
+argument_list|,
+name|bool
+name|EHOnly
 operator|=
-literal|0
+name|false
 argument_list|)
 decl_stmt|;
+name|void
+name|PushCleanupBlock
+argument_list|(
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|CleanupEntryBlock
+argument_list|)
+block|{
+name|PushCleanupBlock
+argument_list|(
+name|CleanupEntryBlock
+argument_list|,
+literal|0
+argument_list|,
+name|getInvokeDest
+argument_list|()
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// CleanupBlockInfo - A struct representing a popped cleanup block.
 struct|struct
 name|CleanupBlockInfo
@@ -435,27 +484,22 @@ name|BasicBlock
 operator|*
 name|EndBlock
 expr_stmt|;
+comment|/// EHOnly - True iff this cleanup should only be performed on the
+comment|/// exceptional edge.
+name|bool
+name|EHOnly
+decl_stmt|;
 name|CleanupBlockInfo
 argument_list|(
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|cb
+argument|llvm::BasicBlock *cb
 argument_list|,
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|sb
+argument|llvm::BasicBlock *sb
 argument_list|,
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|eb
+argument|llvm::BasicBlock *eb
+argument_list|,
+argument|bool ehonly = false
 argument_list|)
-operator|:
+block|:
 name|CleanupBlock
 argument_list|(
 name|cb
@@ -468,14 +512,144 @@ argument_list|)
 operator|,
 name|EndBlock
 argument_list|(
-argument|eb
+name|eb
+argument_list|)
+operator|,
+name|EHOnly
+argument_list|(
+argument|ehonly
 argument_list|)
 block|{}
 block|}
 struct|;
+comment|/// EHCleanupBlock - RAII object that will create a cleanup block for the
+comment|/// exceptional edge and set the insert point to that block.  When destroyed,
+comment|/// it creates the cleanup edge and sets the insert point to the previous
+comment|/// block.
+name|class
+name|EHCleanupBlock
+block|{
+name|CodeGenFunction
+modifier|&
+name|CGF
+decl_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|Cont
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|CleanupHandler
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|CleanupEntryBB
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|PreviousInvokeDest
+expr_stmt|;
+name|public
+label|:
+name|EHCleanupBlock
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|cgf
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|cgf
+argument_list|)
+operator|,
+name|Cont
+argument_list|(
+name|CGF
+operator|.
+name|createBasicBlock
+argument_list|(
+literal|"cont"
+argument_list|)
+argument_list|)
+operator|,
+name|CleanupHandler
+argument_list|(
+name|CGF
+operator|.
+name|createBasicBlock
+argument_list|(
+literal|"ehcleanup"
+argument_list|)
+argument_list|)
+operator|,
+name|CleanupEntryBB
+argument_list|(
+name|CGF
+operator|.
+name|createBasicBlock
+argument_list|(
+literal|"ehcleanup.rest"
+argument_list|)
+argument_list|)
+operator|,
+name|PreviousInvokeDest
+argument_list|(
+argument|CGF.getInvokeDest()
+argument_list|)
+block|{
+name|CGF
+operator|.
+name|EmitBranch
+argument_list|(
+name|Cont
+argument_list|)
+block|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|TerminateHandler
+operator|=
+name|CGF
+operator|.
+name|getTerminateHandler
+argument_list|()
+block|;
+name|CGF
+operator|.
+name|Builder
+operator|.
+name|SetInsertPoint
+argument_list|(
+name|CleanupEntryBB
+argument_list|)
+block|;
+name|CGF
+operator|.
+name|setInvokeDest
+argument_list|(
+name|TerminateHandler
+argument_list|)
+block|;     }
+operator|~
+name|EHCleanupBlock
+argument_list|()
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/// PopCleanupBlock - Will pop the cleanup entry on the stack, process all
 comment|/// branch fixups and return a block info struct with the switch block and end
-comment|/// block.
+comment|/// block.  This will also reset the invoke handler to the previous value
+comment|/// from when the cleanup block was created.
 name|CleanupBlockInfo
 name|PopCleanupBlock
 parameter_list|()
@@ -508,15 +682,24 @@ name|BasicBlock
 operator|*
 name|CleanupExitBB
 expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|CurInvokeDest
+expr_stmt|;
+name|bool
+name|EHOnly
+decl_stmt|;
 name|public
 label|:
 name|DelayedCleanupBlock
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|cgf
+argument|CodeGenFunction&cgf
+argument_list|,
+argument|bool ehonly = false
 argument_list|)
-operator|:
+block|:
 name|CGF
 argument_list|(
 name|cgf
@@ -545,6 +728,19 @@ operator|,
 name|CleanupExitBB
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|CurInvokeDest
+argument_list|(
+name|CGF
+operator|.
+name|getInvokeDest
+argument_list|()
+argument_list|)
+operator|,
+name|EHOnly
+argument_list|(
+argument|ehonly
 argument_list|)
 block|{
 name|CGF
@@ -592,6 +788,10 @@ argument_list|(
 name|CleanupEntryBB
 argument_list|,
 name|CleanupExitBB
+argument_list|,
+name|CurInvokeDest
+argument_list|,
+name|EHOnly
 argument_list|)
 block|;
 comment|// FIXME: This is silly, move this into the builder.
@@ -1013,6 +1213,18 @@ operator|*
 operator|>
 name|BranchFixups
 expr_stmt|;
+comment|/// PreviousInvokeDest - The invoke handler from the start of the cleanup
+comment|/// region.
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|PreviousInvokeDest
+expr_stmt|;
+comment|/// EHOnly - Perform this only on the exceptional edge, not the main edge.
+name|bool
+name|EHOnly
+decl_stmt|;
 name|explicit
 name|CleanupEntry
 argument_list|(
@@ -1027,6 +1239,15 @@ operator|::
 name|BasicBlock
 operator|*
 name|CleanupExitBlock
+argument_list|,
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|PreviousInvokeDest
+argument_list|,
+name|bool
+name|ehonly
 argument_list|)
 range|:
 name|CleanupEntryBlock
@@ -1037,6 +1258,16 @@ decl_stmt|,
 name|CleanupExitBlock
 argument_list|(
 name|CleanupExitBlock
+argument_list|)
+decl_stmt|,
+name|PreviousInvokeDest
+argument_list|(
+name|PreviousInvokeDest
+argument_list|)
+decl_stmt|,
+name|EHOnly
+argument_list|(
+name|ehonly
 argument_list|)
 block|{}
 block|}
@@ -1216,6 +1447,21 @@ operator|*
 name|VD
 argument_list|)
 decl|const
+decl_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|TerminateHandler
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|TrapBB
+expr_stmt|;
+name|int
+name|UniqueAggrDestructorCount
 decl_stmt|;
 name|public
 label|:
@@ -1554,7 +1800,7 @@ name|GenerateThunk
 argument_list|(
 argument|llvm::Function *Fn
 argument_list|,
-argument|const CXXMethodDecl *MD
+argument|GlobalDecl GD
 argument_list|,
 argument|bool Extern
 argument_list|,
@@ -1569,7 +1815,7 @@ name|GenerateCovariantThunk
 argument_list|(
 argument|llvm::Function *Fn
 argument_list|,
-argument|const CXXMethodDecl *MD
+argument|GlobalDecl GD
 argument_list|,
 argument|bool Extern
 argument_list|,
@@ -1586,6 +1832,15 @@ name|CD
 parameter_list|,
 name|CXXCtorType
 name|Type
+parameter_list|)
+function_decl|;
+name|void
+name|InitializeVtablePtrs
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|ClassDecl
 parameter_list|)
 function_decl|;
 name|void
@@ -1732,6 +1987,34 @@ operator|*
 name|ReturnValue
 argument_list|)
 decl_stmt|;
+comment|/// EmitStartEHSpec - Emit the start of the exception spec.
+name|void
+name|EmitStartEHSpec
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+comment|/// EmitEndEHSpec - Emit the end of the exception spec.
+name|void
+name|EmitEndEHSpec
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+comment|/// getTerminateHandler - Return a handler that just calls terminate.
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|getTerminateHandler
+argument_list|()
+expr_stmt|;
 specifier|const
 name|llvm
 operator|::
@@ -4191,6 +4474,18 @@ end_function_decl
 
 begin_function_decl
 name|LValue
+name|EmitObjCIsaExpr
+parameter_list|(
+specifier|const
+name|ObjCIsaExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LValue
 name|EmitCompoundLiteralLValue
 parameter_list|(
 specifier|const
@@ -5290,6 +5585,43 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// AddInitializerToGlobalBlockVarDecl - Add the initializer for 'D' to the
+end_comment
+
+begin_comment
+comment|/// global variable that has already been created for it.  If the initializer
+end_comment
+
+begin_comment
+comment|/// has a different type than GV does, this may free GV and return a different
+end_comment
+
+begin_comment
+comment|/// one.  Otherwise it just returns GV.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|AddInitializerToGlobalBlockVarDecl
+argument_list|(
+specifier|const
+name|VarDecl
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// EmitStaticCXXBlockVarDeclInit - Create the initializer for a C++ runtime
 end_comment
 
@@ -5563,6 +5895,24 @@ name|FalseBlock
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// getTrapBB - Create a basic block that will call the trap intrinsic.  We'll
+end_comment
+
+begin_comment
+comment|/// generate a branch around the created basic block as necessary.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|getTrapBB
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private

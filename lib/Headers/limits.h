@@ -128,12 +128,6 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|MB_LEN_MAX
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|CHAR_BIT
 end_undef
 

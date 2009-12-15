@@ -1412,6 +1412,10 @@ operator|::
 name|string
 operator|&
 name|PCHFileName
+argument_list|,
+name|Diagnostic
+operator|&
+name|Diags
 argument_list|)
 expr_stmt|;
 comment|/// \brief Returns the suggested contents of the predefines buffer,
@@ -1471,9 +1475,9 @@ argument_list|)
 decl_stmt|;
 comment|/// \brief Reads a declarator info from the given record.
 name|virtual
-name|DeclaratorInfo
+name|TypeSourceInfo
 modifier|*
-name|GetDeclaratorInfo
+name|GetTypeSourceInfo
 parameter_list|(
 specifier|const
 name|RecordData
@@ -1639,6 +1643,17 @@ modifier|&
 name|S
 parameter_list|)
 function_decl|;
+comment|/// \brief Inform the semantic consumer that Sema is no longer available.
+name|virtual
+name|void
+name|ForgetSema
+parameter_list|()
+block|{
+name|SemaObj
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the IdentifierInfo for the named identifier.
 comment|///
 comment|/// This routine builds a new IdentifierInfo for the given identifier. If any

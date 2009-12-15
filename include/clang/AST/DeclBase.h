@@ -324,7 +324,7 @@ name|IDNS_ObjCImplementation
 init|=
 literal|0x20
 block|,
-name|IDNS_ObjCCategoryImpl
+name|IDNS_ObjCCategoryName
 init|=
 literal|0x40
 block|,
@@ -3831,6 +3831,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// @brief Removes a declaration from this context.
+end_comment
+
+begin_function_decl
+name|void
+name|removeDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// lookup_iterator - An iterator that provides access to the results
 end_comment
 
@@ -4249,6 +4264,14 @@ include|#
 directive|include
 file|"clang/AST/DeclNodes.def"
 end_include
+
+begin_expr_stmt
+name|void
+name|dumpDeclContext
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private

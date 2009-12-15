@@ -1859,7 +1859,7 @@ operator|:
 literal|1
 block|;
 comment|/// \brief The default template argument, if any.
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
 name|DefaultArgument
 block|;
@@ -1977,7 +1977,7 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief Retrieves the default argument's source information, if any.
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
 name|getDefaultArgumentInfo
 argument_list|()
@@ -2010,7 +2010,7 @@ comment|/// declaration.
 name|void
 name|setDefaultArgument
 argument_list|(
-argument|DeclaratorInfo *DefArg
+argument|TypeSourceInfo *DefArg
 argument_list|,
 argument|bool Inherited
 argument_list|)
@@ -2121,7 +2121,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|)
 operator|:
 name|VarDecl
@@ -2136,7 +2136,7 @@ name|Id
 argument_list|,
 name|T
 argument_list|,
-name|DInfo
+name|TInfo
 argument_list|,
 name|VarDecl
 operator|::
@@ -2176,7 +2176,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|)
 block|;
 name|using

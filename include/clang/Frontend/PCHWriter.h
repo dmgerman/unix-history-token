@@ -178,16 +178,6 @@ return|;
 block|}
 specifier|static
 specifier|inline
-name|bool
-name|isPod
-parameter_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
 name|QualType
 name|getEmptyKey
 parameter_list|()
@@ -1004,11 +994,11 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Emits a reference to a declarator info.
 name|void
-name|AddDeclaratorInfo
+name|AddTypeSourceInfo
 parameter_list|(
-name|DeclaratorInfo
+name|TypeSourceInfo
 modifier|*
-name|DInfo
+name|TInfo
 parameter_list|,
 name|RecordData
 modifier|&

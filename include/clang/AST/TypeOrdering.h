@@ -262,18 +262,6 @@ operator|==
 name|RHS
 return|;
 block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-comment|// QualType isn't *technically* a POD type. However, we can get
-comment|// away with calling it a POD type since its copy constructor,
-comment|// copy assignment operator, and destructor are all trivial.
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|; }
 end_decl_stmt

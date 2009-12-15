@@ -8,7 +8,7 @@ comment|// RUN: FileCheck -input-file %t.log %s
 end_comment
 
 begin_comment
-comment|// CHECK: clang-cc{{.*}}" "-triple" "amd64-pc-dragonfly"
+comment|// CHECK: clang{{.*}}" "-cc1" "-triple" "amd64-pc-dragonfly"
 end_comment
 
 begin_comment

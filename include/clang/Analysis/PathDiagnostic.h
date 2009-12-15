@@ -905,16 +905,7 @@ name|protected
 label|:
 name|PathDiagnosticPiece
 argument_list|(
-argument|const std::string& s
-argument_list|,
-argument|Kind k
-argument_list|,
-argument|DisplayHint hint = Below
-argument_list|)
-empty_stmt|;
-name|PathDiagnosticPiece
-argument_list|(
-argument|const char* s
+argument|llvm::StringRef s
 argument_list|,
 argument|Kind k
 argument_list|,
@@ -1176,7 +1167,7 @@ name|PathDiagnosticSpotPiece
 argument_list|(
 argument|const PathDiagnosticLocation&pos
 argument_list|,
-argument|const std::string& s
+argument|llvm::StringRef s
 argument_list|,
 argument|PathDiagnosticPiece::Kind k
 argument_list|,
@@ -1266,27 +1257,7 @@ name|PathDiagnosticEventPiece
 argument_list|(
 argument|const PathDiagnosticLocation&pos
 argument_list|,
-argument|const std::string& s
-argument_list|,
-argument|bool addPosRange = true
-argument_list|)
-operator|:
-name|PathDiagnosticSpotPiece
-argument_list|(
-argument|pos
-argument_list|,
-argument|s
-argument_list|,
-argument|Event
-argument_list|,
-argument|addPosRange
-argument_list|)
-block|{}
-name|PathDiagnosticEventPiece
-argument_list|(
-argument|const PathDiagnosticLocation&pos
-argument_list|,
-argument|const char* s
+argument|llvm::StringRef s
 argument_list|,
 argument|bool addPosRange = true
 argument_list|)
@@ -1343,59 +1314,11 @@ name|public
 operator|:
 name|PathDiagnosticControlFlowPiece
 argument_list|(
-specifier|const
-name|PathDiagnosticLocation
-operator|&
-name|startPos
+argument|const PathDiagnosticLocation&startPos
 argument_list|,
-specifier|const
-name|PathDiagnosticLocation
-operator|&
-name|endPos
+argument|const PathDiagnosticLocation&endPos
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|s
-argument_list|)
-operator|:
-name|PathDiagnosticPiece
-argument_list|(
-argument|s
-argument_list|,
-argument|ControlFlow
-argument_list|)
-block|{
-name|LPairs
-operator|.
-name|push_back
-argument_list|(
-name|PathDiagnosticLocationPair
-argument_list|(
-name|startPos
-argument_list|,
-name|endPos
-argument_list|)
-argument_list|)
-block|;     }
-name|PathDiagnosticControlFlowPiece
-argument_list|(
-specifier|const
-name|PathDiagnosticLocation
-operator|&
-name|startPos
-argument_list|,
-specifier|const
-name|PathDiagnosticLocation
-operator|&
-name|endPos
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|s
+argument|llvm::StringRef s
 argument_list|)
 operator|:
 name|PathDiagnosticPiece
@@ -1939,55 +1862,20 @@ argument_list|()
 block|;
 name|PathDiagnostic
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|bugtype
+argument|llvm::StringRef bugtype
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|desc
+argument|llvm::StringRef desc
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|category
-argument_list|)
-block|;
-name|PathDiagnostic
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|bugtype
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|desc
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|category
+argument|llvm::StringRef category
 argument_list|)
 block|;
 operator|~
 name|PathDiagnostic
 argument_list|()
 block|;
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|getDescription
 argument_list|()
 specifier|const
@@ -1996,11 +1884,9 @@ return|return
 name|Desc
 return|;
 block|}
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|getBugType
 argument_list|()
 specifier|const
@@ -2009,11 +1895,9 @@ return|return
 name|BugType
 return|;
 block|}
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|getCategory
 argument_list|()
 specifier|const
@@ -2062,20 +1946,7 @@ block|}
 name|void
 name|addMeta
 argument_list|(
-argument|const std::string& s
-argument_list|)
-block|{
-name|OtherDesc
-operator|.
-name|push_back
-argument_list|(
-name|s
-argument_list|)
-block|; }
-name|void
-name|addMeta
-argument_list|(
-argument|const char* s
+argument|llvm::StringRef s
 argument_list|)
 block|{
 name|OtherDesc

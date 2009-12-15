@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -148,6 +154,75 @@ operator|::
 name|string
 name|TokenCache
 expr_stmt|;
+comment|/// \brief The set of file remappings, which take existing files on
+comment|/// the system (the first part of each pair) and gives them the
+comment|/// contents of other files on the system (the second part of each
+comment|/// pair).
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+expr|>
+name|RemappedFiles
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+expr|>
+operator|::
+name|const_iterator
+name|remapped_file_iterator
+expr_stmt|;
+name|remapped_file_iterator
+name|remapped_file_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RemappedFiles
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|remapped_file_iterator
+name|remapped_file_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RemappedFiles
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 name|public
 label|:
 name|PreprocessorOptions
@@ -195,6 +270,28 @@ argument_list|(
 name|Name
 argument_list|,
 name|true
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|addRemappedFile
+argument_list|(
+argument|llvm::StringRef From
+argument_list|,
+argument|llvm::StringRef To
+argument_list|)
+block|{
+name|RemappedFiles
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|From
+argument_list|,
+name|To
 argument_list|)
 argument_list|)
 block|;   }

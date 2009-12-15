@@ -2538,7 +2538,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|AccessControl ac
 argument_list|,
@@ -2557,7 +2557,7 @@ name|Id
 argument_list|,
 name|T
 argument_list|,
-name|DInfo
+name|TInfo
 argument_list|,
 name|BW
 argument_list|,
@@ -2587,7 +2587,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|AccessControl ac
 argument_list|,
@@ -2715,7 +2715,7 @@ argument|Id
 argument_list|,
 argument|T
 argument_list|,
-comment|/*DInfo=*/
+comment|/*TInfo=*/
 literal|0
 argument_list|,
 comment|// FIXME: Do ObjCAtDefs have declarators ?

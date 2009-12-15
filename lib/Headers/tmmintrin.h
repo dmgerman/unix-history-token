@@ -261,7 +261,7 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|(__builtin_ia32_palignr((a), (b), (n)))
+value|(__builtin_ia32_palignr((a), (b), (n*8)))
 end_define
 
 begin_decl_stmt

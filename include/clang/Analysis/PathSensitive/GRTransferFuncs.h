@@ -158,6 +158,8 @@ argument_list|,
 argument|ObjCMessageExpr* ME
 argument_list|,
 argument|ExplodedNode* Pred
+argument_list|,
+argument|const GRState *state
 argument_list|)
 block|{}
 comment|// Stores.

@@ -124,13 +124,13 @@ comment|/// \brief A container of type source information.
 comment|///
 comment|/// A client can read the relevant info using TypeLoc wrappers, e.g:
 comment|/// @code
-comment|/// TypeLoc TL = DeclaratorInfo->getTypeLoc();
+comment|/// TypeLoc TL = TypeSourceInfo->getTypeLoc();
 comment|/// if (PointerLoc *PL = dyn_cast<PointerLoc>(&TL))
 comment|///   PL->getStarLoc().print(OS, SrcMgr);
 comment|/// @endcode
 comment|///
 name|class
-name|DeclaratorInfo
+name|TypeSourceInfo
 block|{
 name|QualType
 name|Ty
@@ -141,7 +141,7 @@ name|friend
 name|class
 name|ASTContext
 decl_stmt|;
-name|DeclaratorInfo
+name|TypeSourceInfo
 argument_list|(
 argument|QualType ty
 argument_list|)
@@ -1234,14 +1234,14 @@ block|}
 expr|}
 block|;
 comment|/// \brief Represents a ValueDecl that came out of a declarator.
-comment|/// Contains type source information through DeclaratorInfo.
+comment|/// Contains type source information through TypeSourceInfo.
 name|class
 name|DeclaratorDecl
 operator|:
 name|public
 name|ValueDecl
 block|{
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
 name|DeclInfo
 block|;
@@ -1259,7 +1259,7 @@ argument|DeclarationName N
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|)
 operator|:
 name|ValueDecl
@@ -1277,14 +1277,14 @@ argument_list|)
 block|,
 name|DeclInfo
 argument_list|(
-argument|DInfo
+argument|TInfo
 argument_list|)
 block|{}
 name|public
 operator|:
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
-name|getDeclaratorInfo
+name|getTypeSourceInfo
 argument_list|()
 specifier|const
 block|{
@@ -1293,14 +1293,14 @@ name|DeclInfo
 return|;
 block|}
 name|void
-name|setDeclaratorInfo
+name|setTypeSourceInfo
 argument_list|(
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|)
 block|{
 name|DeclInfo
 operator|=
-name|DInfo
+name|TInfo
 block|; }
 name|SourceLocation
 name|getTypeSpecStartLoc
@@ -1358,7 +1358,17 @@ argument_list|(
 name|false
 argument_list|)
 block|,
+name|IsEvaluating
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|CheckedICE
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|CheckingICE
 argument_list|(
 name|false
 argument_list|)
@@ -1374,10 +1384,23 @@ name|WasEvaluated
 operator|:
 literal|1
 block|;
+comment|/// \brief Whether this statement is being evaluated.
+name|bool
+name|IsEvaluating
+operator|:
+literal|1
+block|;
 comment|/// \brief Whether we already checked whether this statement was an
 comment|/// integral constant expression.
 name|bool
 name|CheckedICE
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether we are checking whether this statement is an
+comment|/// integral constant expression.
+name|bool
+name|CheckingICE
 operator|:
 literal|1
 block|;
@@ -1552,7 +1575,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass SC
 argument_list|)
@@ -1569,7 +1592,7 @@ name|Id
 argument_list|,
 name|T
 argument_list|,
-name|DInfo
+name|TInfo
 argument_list|)
 block|,
 name|Init
@@ -1661,7 +1684,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|)
@@ -1908,26 +1931,16 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
-comment|/// \brief Note that constant evaluation has computed the given
-comment|/// value for this variable's initializer.
-name|void
-name|setEvaluatedValue
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|,
+name|EvaluatedStmt
+operator|*
+name|EnsureEvaluatedStmt
+argument_list|()
 specifier|const
-name|APValue
-operator|&
-name|Value
-argument_list|)
-decl|const
 block|{
 name|EvaluatedStmt
-modifier|*
+operator|*
 name|Eval
-init|=
+operator|=
 name|Init
 operator|.
 name|dyn_cast
@@ -1937,7 +1950,7 @@ operator|*
 operator|>
 operator|(
 operator|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -1962,7 +1975,7 @@ name|Eval
 operator|=
 name|new
 argument_list|(
-argument|C
+argument|getASTContext()
 argument_list|)
 name|EvaluatedStmt
 expr_stmt|;
@@ -1977,21 +1990,108 @@ operator|=
 name|Eval
 expr_stmt|;
 block|}
+return|return
+name|Eval
+return|;
+block|}
+comment|/// \brief Check whether we are in the process of checking whether the
+comment|/// initializer can be evaluated.
+name|bool
+name|isEvaluatingValue
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|EvaluatedStmt
+modifier|*
+name|Eval
+init|=
+name|Init
+operator|.
+name|dyn_cast
+operator|<
+name|EvaluatedStmt
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|Eval
+operator|->
+name|IsEvaluating
+return|;
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Note that we now are checking whether the initializer can be
+end_comment
+
+begin_comment
+comment|/// evaluated.
+end_comment
+
+begin_expr_stmt
+name|void
+name|setEvaluatingValue
+argument_list|()
+specifier|const
+block|{
+name|EvaluatedStmt
+operator|*
+name|Eval
+operator|=
+name|EnsureEvaluatedStmt
+argument_list|()
+block|;
+name|Eval
+operator|->
+name|IsEvaluating
+operator|=
+name|true
+block|;   }
+comment|/// \brief Note that constant evaluation has computed the given
+comment|/// value for this variable's initializer.
+name|void
+name|setEvaluatedValue
+argument_list|(
+argument|const APValue&Value
+argument_list|)
+specifier|const
+block|{
+name|EvaluatedStmt
+operator|*
+name|Eval
+operator|=
+name|EnsureEvaluatedStmt
+argument_list|()
+block|;
+name|Eval
+operator|->
+name|IsEvaluating
+operator|=
+name|false
+block|;
 name|Eval
 operator|->
 name|WasEvaluated
 operator|=
 name|true
-expr_stmt|;
+block|;
 name|Eval
 operator|->
 name|Evaluated
 operator|=
 name|Value
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Return the already-evaluated value of this variable's
-comment|/// initializer, or NULL if the value is not yet known.
+comment|/// initializer, or NULL if the value is not yet known. Returns pointer
+comment|/// to untyped APValue if the value could not be evaluated.
 name|APValue
 operator|*
 name|getEvaluatedValue
@@ -2026,13 +2126,16 @@ name|Eval
 operator|->
 name|Evaluated
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 literal|0
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Determines whether it is already known whether the
 end_comment
 
@@ -2040,10 +2143,13 @@ begin_comment
 comment|/// initializer is an integral constant expression or not.
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|bool
 name|isInitKnownICE
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -2126,26 +2232,21 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Note that we now know whether the initializer is an
+comment|/// \brief Check whether we are in the process of checking the initializer
 end_comment
 
 begin_comment
-comment|/// integral constant expression.
+comment|/// is an integral constant expression.
 end_comment
 
-begin_decl_stmt
-name|void
-name|setInitKnownICE
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|,
+begin_expr_stmt
 name|bool
-name|IsICE
-argument_list|)
-decl|const
+name|isCheckingICE
+argument_list|()
+specifier|const
 block|{
+if|if
+condition|(
 name|EvaluatedStmt
 modifier|*
 name|Eval
@@ -2159,92 +2260,99 @@ operator|*
 operator|>
 operator|(
 operator|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|Eval
 condition|)
-block|{
-name|Stmt
-modifier|*
-name|S
-init|=
-name|Init
-operator|.
-name|get
-operator|<
-name|Stmt
-operator|*
-operator|>
-operator|(
-operator|)
-decl_stmt|;
-name|Eval
-operator|=
-name|new
-argument_list|(
-argument|C
-argument_list|)
-name|EvaluatedStmt
-expr_stmt|;
+return|return
 name|Eval
 operator|->
-name|Value
-operator|=
-name|S
-expr_stmt|;
-name|Init
-operator|=
+name|CheckingICE
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|false
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Note that we now are checking whether the initializer is an
+end_comment
+
+begin_comment
+comment|/// integral constant expression.
+end_comment
+
+begin_macro
+unit|void
+name|setCheckingICE
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+name|EvaluatedStmt
+operator|*
 name|Eval
-expr_stmt|;
-block|}
+operator|=
+name|EnsureEvaluatedStmt
+argument_list|()
+block|;
+name|Eval
+operator|->
+name|CheckingICE
+operator|=
+name|true
+block|;   }
+comment|/// \brief Note that we now know whether the initializer is an
+comment|/// integral constant expression.
+name|void
+name|setInitKnownICE
+argument_list|(
+argument|bool IsICE
+argument_list|)
+specifier|const
+block|{
+name|EvaluatedStmt
+operator|*
+name|Eval
+operator|=
+name|EnsureEvaluatedStmt
+argument_list|()
+block|;
+name|Eval
+operator|->
+name|CheckingICE
+operator|=
+name|false
+block|;
 name|Eval
 operator|->
 name|CheckedICE
 operator|=
 name|true
-expr_stmt|;
+block|;
 name|Eval
 operator|->
 name|IsICE
 operator|=
 name|IsICE
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
+block|;   }
 comment|/// \brief Retrieve the definition of this variable, which may come
-end_comment
-
-begin_comment
 comment|/// from a previous declaration. Def will be set to the VarDecl that
-end_comment
-
-begin_comment
 comment|/// contains the initializer, and the result will be that
-end_comment
-
-begin_comment
 comment|/// initializer.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|Expr
-modifier|*
+operator|*
 name|getDefinition
 argument_list|(
-specifier|const
-name|VarDecl
-operator|*
-operator|&
-name|Def
+argument|const VarDecl *&Def
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -2948,7 +3056,7 @@ argument|Id
 argument_list|,
 argument|Tw
 argument_list|,
-comment|/*DInfo=*/
+comment|/*TInfo=*/
 literal|0
 argument_list|,
 argument|VarDecl::None
@@ -3067,7 +3175,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|,
@@ -3086,7 +3194,7 @@ name|Id
 argument_list|,
 name|T
 argument_list|,
-name|DInfo
+name|TInfo
 argument_list|,
 name|S
 argument_list|)
@@ -3118,7 +3226,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|,
@@ -3377,11 +3485,11 @@ specifier|const
 block|{
 if|if
 condition|(
-name|getDeclaratorInfo
+name|getTypeSourceInfo
 argument_list|()
 condition|)
 return|return
-name|getDeclaratorInfo
+name|getTypeSourceInfo
 argument_list|()
 operator|->
 name|getType
@@ -3597,7 +3705,7 @@ argument|DeclarationName N
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|,
@@ -3616,7 +3724,7 @@ name|N
 argument_list|,
 name|T
 argument_list|,
-name|DInfo
+name|TInfo
 argument_list|)
 block|,
 name|DeclContext
@@ -3771,7 +3879,7 @@ argument|DeclarationName N
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S = None
 argument_list|,
@@ -5497,7 +5605,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|Expr *BW
 argument_list|,
@@ -5516,7 +5624,7 @@ name|Id
 argument_list|,
 name|T
 argument_list|,
-name|DInfo
+name|TInfo
 argument_list|)
 block|,
 name|Mutable
@@ -5546,7 +5654,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|Expr *BW
 argument_list|,
@@ -6005,9 +6113,9 @@ name|public
 name|TypeDecl
 block|{
 comment|/// UnderlyingType - This is the type the typedef is set to.
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
-name|DInfo
+name|TInfo
 block|;
 name|TypedefDecl
 argument_list|(
@@ -6017,7 +6125,7 @@ argument|SourceLocation L
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|)
 operator|:
 name|TypeDecl
@@ -6031,9 +6139,9 @@ argument_list|,
 name|Id
 argument_list|)
 block|,
-name|DInfo
+name|TInfo
 argument_list|(
-argument|DInfo
+argument|TInfo
 argument_list|)
 block|{}
 name|virtual
@@ -6056,17 +6164,17 @@ argument|SourceLocation L
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
-argument|DeclaratorInfo *DInfo
+argument|TypeSourceInfo *TInfo
 argument_list|)
 block|;
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
-name|getTypeDeclaratorInfo
+name|getTypeSourceInfo
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DInfo
+name|TInfo
 return|;
 block|}
 name|QualType
@@ -6075,19 +6183,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|DInfo
+name|TInfo
 operator|->
 name|getType
 argument_list|()
 return|;
 block|}
 name|void
-name|setTypeDeclaratorInfo
+name|setTypeSourceInfo
 argument_list|(
-argument|DeclaratorInfo *newType
+argument|TypeSourceInfo *newType
 argument_list|)
 block|{
-name|DInfo
+name|TInfo
 operator|=
 name|newType
 block|;   }
@@ -6691,6 +6799,13 @@ comment|/// have a different type than this does.
 name|QualType
 name|IntegerType
 block|;
+comment|/// PromotionType - The integer type that values of this type should
+comment|/// promote to.  In C, enumerators are generally of an integer type
+comment|/// directly, but gcc-style large enumerators (and all enumerators
+comment|/// in C++) are of the enum type instead.
+name|QualType
+name|PromotionType
+block|;
 comment|/// \brief If the enumeration was instantiated from an enumeration
 comment|/// within a class or function template, this pointer refers to the
 comment|/// enumeration declared within the template.
@@ -6816,6 +6931,8 @@ argument_list|(
 argument|ASTContext&C
 argument_list|,
 argument|QualType NewType
+argument_list|,
+argument|QualType PromotionType
 argument_list|)
 block|;
 comment|// enumerator_iterator - Iterates through the enumerators of this
@@ -6857,6 +6974,28 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// getPromotionType - Return the integer type that enumerators
+comment|/// should promote to.
+name|QualType
+name|getPromotionType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PromotionType
+return|;
+block|}
+comment|/// \brief Set the promotion type.
+name|void
+name|setPromotionType
+argument_list|(
+argument|QualType T
+argument_list|)
+block|{
+name|PromotionType
+operator|=
+name|T
+block|; }
 comment|/// getIntegerType - Return the integer type this enum decl corresponds to.
 comment|/// This returns a null qualtype for an enum forward definition.
 name|QualType

@@ -765,5 +765,28 @@ literal|L"asdf"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// PR5447
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|double
+name|pr5447
+init|=
+operator|(
+literal|0.05
+operator|<
+operator|-
+literal|1.0
+operator|)
+condition|?
+operator|-
+literal|1.0
+else|:
+literal|0.0499878
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

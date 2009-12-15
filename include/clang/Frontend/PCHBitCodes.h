@@ -738,6 +738,11 @@ comment|/// \brief A SubstTemplateTypeParmType record.
 name|TYPE_SUBST_TEMPLATE_TYPE_PARM
 init|=
 literal|25
+block|,
+comment|/// \brief An UnresolvedUsingType record.
+name|TYPE_UNRESOLVED_USING
+init|=
+literal|26
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic

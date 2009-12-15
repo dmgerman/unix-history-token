@@ -143,8 +143,8 @@ name|class
 name|CGDebugInfo
 block|{
 name|CodeGenModule
-modifier|*
-name|M
+modifier|&
+name|CGM
 decl_stmt|;
 name|bool
 name|isMainCompileUnitCreated
@@ -354,6 +354,16 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
+name|CreateType
+argument_list|(
+argument|const MemberPointerType *Ty
+argument_list|,
+argument|llvm::DICompileUnit U
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
 name|CreatePointerLikeType
 argument_list|(
 argument|unsigned Tag
@@ -370,8 +380,8 @@ label|:
 name|CGDebugInfo
 argument_list|(
 name|CodeGenModule
-operator|*
-name|m
+operator|&
+name|CGM
 argument_list|)
 expr_stmt|;
 operator|~
@@ -408,9 +418,9 @@ comment|/// start of a new function.
 name|void
 name|EmitFunctionStart
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|Name
 argument_list|,
 name|QualType

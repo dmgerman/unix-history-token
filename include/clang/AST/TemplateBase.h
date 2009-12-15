@@ -114,7 +114,7 @@ name|class
 name|Expr
 decl_stmt|;
 name|class
-name|DeclaratorInfo
+name|TypeSourceInfo
 decl_stmt|;
 comment|/// \brief Represents a template argument within a class template
 comment|/// specialization.
@@ -1122,7 +1122,7 @@ name|Expr
 modifier|*
 name|Expression
 decl_stmt|;
-name|DeclaratorInfo
+name|TypeSourceInfo
 modifier|*
 name|Declarator
 decl_stmt|;
@@ -1150,7 +1150,7 @@ name|Kind
 block|{
 name|K_None
 block|,
-name|K_DeclaratorInfo
+name|K_TypeSourceInfo
 block|,
 name|K_Expression
 block|,
@@ -1182,14 +1182,14 @@ directive|endif
 block|{}
 name|TemplateArgumentLocInfo
 argument_list|(
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
-name|DInfo
+name|TInfo
 argument_list|)
 operator|:
 name|Declarator
 argument_list|(
-name|DInfo
+name|TInfo
 argument_list|)
 ifndef|#
 directive|ifndef
@@ -1197,7 +1197,7 @@ name|NDEBUG
 operator|,
 name|Kind
 argument_list|(
-argument|K_DeclaratorInfo
+argument|K_TypeSourceInfo
 argument_list|)
 endif|#
 directive|endif
@@ -1280,9 +1280,9 @@ operator|.
 name|getRawEncoding
 argument_list|()
 block|;   }
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
-name|getAsDeclaratorInfo
+name|getAsTypeSourceInfo
 argument_list|()
 specifier|const
 block|{
@@ -1290,7 +1290,7 @@ name|assert
 argument_list|(
 name|Kind
 operator|==
-name|K_DeclaratorInfo
+name|K_TypeSourceInfo
 argument_list|)
 block|;
 return|return
@@ -1407,7 +1407,7 @@ name|assert
 argument_list|(
 name|Kind
 operator|==
-name|K_DeclaratorInfo
+name|K_TypeSourceInfo
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1465,8 +1465,6 @@ name|TemplateArgument
 operator|::
 name|Null
 case|:
-name|llvm
-operator|::
 name|llvm_unreachable
 argument_list|(
 literal|"source info for null template argument?"
@@ -1527,9 +1525,9 @@ name|TemplateArgument
 operator|&
 name|Argument
 argument_list|,
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
-name|DInfo
+name|TInfo
 argument_list|)
 operator|:
 name|Argument
@@ -1539,7 +1537,7 @@ argument_list|)
 operator|,
 name|LocInfo
 argument_list|(
-argument|DInfo
+argument|TInfo
 argument_list|)
 block|{
 name|assert
@@ -1691,9 +1689,9 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
-name|getSourceDeclaratorInfo
+name|getTypeSourceInfo
 argument_list|()
 specifier|const
 block|{
@@ -1712,7 +1710,7 @@ block|;
 return|return
 name|LocInfo
 operator|.
-name|getAsDeclaratorInfo
+name|getAsTypeSourceInfo
 argument_list|()
 return|;
 block|}

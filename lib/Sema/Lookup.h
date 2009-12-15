@@ -80,13 +80,6 @@ comment|/// single name lookup, which can return no result (nothing found),
 comment|/// a single declaration, a set of overloaded functions, or an
 comment|/// ambiguity. Use the getKind() method to determine which of these
 comment|/// results occurred for a given lookup.
-comment|///
-comment|/// Any non-ambiguous lookup can be converted into a single
-comment|/// (possibly NULL) @c NamedDecl* via the getAsSingleDecl() method.
-comment|/// This permits the common-case usage in C and Objective-C where
-comment|/// name lookup will always return a single declaration.  Use of
-comment|/// this is largely deprecated; callers should handle the possibility
-comment|/// of multiple declarations.
 name|class
 name|LookupResult
 block|{
@@ -101,12 +94,11 @@ init|=
 literal|0
 block|,
 comment|/// @brief Name lookup found a single declaration that met the
-comment|/// criteria. getAsDecl will return this declaration.
+comment|/// criteria.  getFoundDecl() will return this declaration.
 name|Found
 block|,
 comment|/// @brief Name lookup found a set of overloaded functions that
-comment|/// met the criteria. getAsDecl will turn this set of overloaded
-comment|/// functions into an OverloadedFunctionDecl.
+comment|/// met the criteria.
 name|FoundOverloaded
 block|,
 comment|/// @brief Name lookup found an unresolvable value declaration
@@ -729,21 +721,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/// \brief Fetch this as an unambiguous single declaration
-comment|/// (possibly an overloaded one).
-comment|///
-comment|/// This is deprecated; users should be written to handle
-comment|/// ambiguous and overloaded lookups.
-name|NamedDecl
-modifier|*
-name|getAsSingleDecl
-argument_list|(
-name|ASTContext
-operator|&
-name|Context
-argument_list|)
-decl|const
-decl_stmt|;
 name|template
 operator|<
 name|class

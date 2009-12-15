@@ -269,6 +269,29 @@ init|=
 literal|72
 block|}
 enum|;
+comment|/**  * \brief Provides the contents of a file that has not yet been saved to disk.  *  * Each CXUnsavedFile instance provides the name of a file on the  * system along with the current contents of that file that have not  * yet been saved to disk.  */
+struct|struct
+name|CXUnsavedFile
+block|{
+comment|/**     * \brief The file whose contents have not yet been saved.     *    * This file must already exist in the file system.    */
+specifier|const
+name|char
+modifier|*
+name|Filename
+decl_stmt|;
+comment|/**     * \brief A null-terminated buffer containing the unsaved contents    * of this file.    */
+specifier|const
+name|char
+modifier|*
+name|Contents
+decl_stmt|;
+comment|/**    * \brief The length of the unsaved contents of this buffer, not    * counting the NULL at the end of the buffer.    */
+name|unsigned
+name|long
+name|Length
+decl_stmt|;
+block|}
+struct|;
 comment|/* A cursor into the CXTranslationUnit. */
 typedef|typedef
 struct|struct
@@ -346,6 +369,7 @@ name|void
 name|clang_disposeIndex
 parameter_list|(
 name|CXIndex
+name|index
 parameter_list|)
 function_decl|;
 name|CINDEX_LINKAGE
@@ -354,6 +378,18 @@ name|clang_getTranslationUnitSpelling
 parameter_list|(
 name|CXTranslationUnit
 name|CTUnit
+parameter_list|)
+function_decl|;
+comment|/*   * \brief Request that AST's be generated external for API calls which parse  * source code on the fly, e.g. \see createTranslationUnitFromSourceFile.  *  * Note: This is for debugging purposes only, and may be removed at a later  * date.  *  * \param index - The index to update.  * \param value - The new flag value.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_setUseExternalASTGeneration
+parameter_list|(
+name|CXIndex
+name|index
+parameter_list|,
+name|int
+name|value
 parameter_list|)
 function_decl|;
 comment|/*   * \brief Create a translation unit from an AST file (-emit-ast).  */
@@ -377,7 +413,7 @@ parameter_list|(
 name|CXTranslationUnit
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Return the CXTranslationUnit for a given source file and the provided  * command line arguments one would pass to the compiler.  *  * Note: The 'source_filename' argument is optional.  If the caller provides a NULL pointer,  *  the name of the source file is expected to reside in the specified command line arguments.  *  * Note: When encountered in 'clang_command_line_args', the following options are ignored:  *  *   '-c'  *   '-emit-ast'  *   '-fsyntax-only'  *   '-o<output file>'  (both '-o' and '<output file>' are ignored)  *  */
+comment|/**  * \brief Return the CXTranslationUnit for a given source file and the provided  * command line arguments one would pass to the compiler.  *  * Note: The 'source_filename' argument is optional.  If the caller provides a  * NULL pointer, the name of the source file is expected to reside in the  * specified command line arguments.  *  * Note: When encountered in 'clang_command_line_args', the following options  * are ignored:  *  *   '-c'  *   '-emit-ast'  *   '-fsyntax-only'  *   '-o<output file>'  (both '-o' and '<output file>' are ignored)  *  *  * \param source_filename - The name of the source file to load, or NULL if the  * source file is included in clang_command_line_args.  */
 name|CINDEX_LINKAGE
 name|CXTranslationUnit
 name|clang_createTranslationUnitFromSourceFile
@@ -389,7 +425,6 @@ specifier|const
 name|char
 modifier|*
 name|source_filename
-comment|/* specify NULL if the source file is in clang_command_line_args */
 parameter_list|,
 name|int
 name|num_clang_command_line_args
@@ -401,7 +436,7 @@ modifier|*
 name|clang_command_line_args
 parameter_list|)
 function_decl|;
-comment|/*    Usage: clang_loadTranslationUnit(). Will load the toplevel declarations    within a translation unit, issuing a 'callback' for each one.     void printObjCInterfaceNames(CXTranslationUnit X, CXCursor C) {      if (clang_getCursorKind(C) == Cursor_Declaration) {        CXDecl D = clang_getCursorDecl(C);        if (clang_getDeclKind(D) == CXDecl_ObjC_interface)          printf("@interface %s in file %s on line %d column %d\n",                 clang_getDeclSpelling(D), clang_getCursorSource(C),                 clang_getCursorLine(C), clang_getCursorColumn(C));      }    }    static void usage {      clang_loadTranslationUnit(CXTranslationUnit, printObjCInterfaceNames);    } */
+comment|/*    Usage: clang_loadTranslationUnit(). Will load the toplevel declarations    within a translation unit, issuing a 'callback' for each one.     void printObjCInterfaceNames(CXTranslationUnit X, CXCursor C) {      if (clang_getCursorKind(C) == Cursor_Declaration) {        CXDecl D = clang_getCursorDecl(C);        if (clang_getDeclKind(D) == CXDecl_ObjC_interface)          printf("@interface %s in file %s on line %d column %d\n",                 clang_getDeclSpelling(D), clang_getCursorSource(C),                 clang_getCursorLine(C), clang_getCursorColumn(C));      }    }    static void usage {      clang_loadTranslationUnit(CXTranslationUnit, printObjCInterfaceNames);   } */
 typedef|typedef
 name|void
 modifier|*
@@ -864,7 +899,7 @@ name|CXCompletionString
 name|completion_string
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Perform code completion at a given location in a source file.  *  * This function performs code completion at a particular file, line, and  * column within source code, providing results that suggest potential  * code snippets based on the context of the completion. The basic model  * for code completion is that Clang will parse a complete source file,  * performing syntax checking up to the location where code-completion has  * been requested. At that point, a special code-completion token is passed  * to the parser, which recognizes this token and determines, based on the  * current location in the C/Objective-C/C++ grammar and the state of   * semantic analysis, what completions to provide. These completions are  * enumerated through a callback interface to the client.  *  * Code completion itself is meant to be triggered by the client when the  * user types punctuation characters or whitespace, at which point the   * code-completion location will coincide with the cursor. For example, if \c p  * is a pointer, code-completion might be triggered after the "-" and then  * after the ">" in \c p->. When the code-completion location is afer the ">",  * the completion results will provide, e.g., the members of the struct that  * "p" points to. The client is responsible for placing the cursor at the  * beginning of the token currently being typed, then filtering the results  * based on the contents of the token. For example, when code-completing for  * the expression \c p->get, the client should provide the location just after  * the ">" (e.g., pointing at the "g") to this code-completion hook. Then, the  * client can filter the results based on the current token text ("get"), only  * showing those results that start with "get". The intent of this interface  * is to separate the relatively high-latency acquisition of code-competion  * results from the filtering of results on a per-character basis, which must  * have a lower latency.  *  * \param CIdx the \c CXIndex instance that will be used to perform code  * completion.  *  * \param source_filename the name of the source file that should be parsed  * to perform code-completion. This source file must be the same as or  * include the filename described by \p complete_filename, or no code-completion  * results will be produced.  NOTE: One can also specify NULL for this argument if  * the source file is included in command_line_args.  *  * \param num_command_line_args the number of command-line arguments stored in  * \p command_line_args.  *  * \param command_line_args the command-line arguments to pass to the Clang  * compiler to build the given source file. This should include all of the   * necessary include paths, language-dialect switches, precompiled header  * includes, etc., but should not include any information specific to   * code completion.  *  * \param complete_filename the name of the source file where code completion  * should be performed. In many cases, this name will be the same as the  * source filename. However, the completion filename may also be a file   * included by the source file, which is required when producing   * code-completion results for a header.  *  * \param complete_line the line at which code-completion should occur.  *  * \param complete_column the column at which code-completion should occur.   * Note that the column should point just after the syntactic construct that  * initiated code completion, and not in the middle of a lexical token.  *  * \param completion_iterator a callback function that will receive   * code-completion results.  *  * \param client_data client-specific data that will be passed back via the  * code-completion callback function.  */
+comment|/**  * \brief Perform code completion at a given location in a source file.  *  * This function performs code completion at a particular file, line, and  * column within source code, providing results that suggest potential  * code snippets based on the context of the completion. The basic model  * for code completion is that Clang will parse a complete source file,  * performing syntax checking up to the location where code-completion has  * been requested. At that point, a special code-completion token is passed  * to the parser, which recognizes this token and determines, based on the  * current location in the C/Objective-C/C++ grammar and the state of   * semantic analysis, what completions to provide. These completions are  * enumerated through a callback interface to the client.  *  * Code completion itself is meant to be triggered by the client when the  * user types punctuation characters or whitespace, at which point the   * code-completion location will coincide with the cursor. For example, if \c p  * is a pointer, code-completion might be triggered after the "-" and then  * after the ">" in \c p->. When the code-completion location is afer the ">",  * the completion results will provide, e.g., the members of the struct that  * "p" points to. The client is responsible for placing the cursor at the  * beginning of the token currently being typed, then filtering the results  * based on the contents of the token. For example, when code-completing for  * the expression \c p->get, the client should provide the location just after  * the ">" (e.g., pointing at the "g") to this code-completion hook. Then, the  * client can filter the results based on the current token text ("get"), only  * showing those results that start with "get". The intent of this interface  * is to separate the relatively high-latency acquisition of code-competion  * results from the filtering of results on a per-character basis, which must  * have a lower latency.  *  * \param CIdx the \c CXIndex instance that will be used to perform code  * completion.  *  * \param source_filename the name of the source file that should be parsed to  * perform code-completion. This source file must be the same as or include the  * filename described by \p complete_filename, or no code-completion results  * will be produced.  NOTE: One can also specify NULL for this argument if the  * source file is included in command_line_args.  *  * \param num_command_line_args the number of command-line arguments stored in  * \p command_line_args.  *  * \param command_line_args the command-line arguments to pass to the Clang  * compiler to build the given source file. This should include all of the   * necessary include paths, language-dialect switches, precompiled header  * includes, etc., but should not include any information specific to   * code completion.  *  * \param num_unsaved_files the number of unsaved file entries in \p  * unsaved_files.  *  * \param unsaved_files the files that have not yet been saved to disk  * but may be required for code completion, including the contents of  * those files.  *  * \param complete_filename the name of the source file where code completion  * should be performed. In many cases, this name will be the same as the  * source filename. However, the completion filename may also be a file   * included by the source file, which is required when producing   * code-completion results for a header.  *  * \param complete_line the line at which code-completion should occur.  *  * \param complete_column the column at which code-completion should occur.   * Note that the column should point just after the syntactic construct that  * initiated code completion, and not in the middle of a lexical token.  *  * \param completion_iterator a callback function that will receive   * code-completion results.  *  * \param client_data client-specific data that will be passed back via the  * code-completion callback function.  */
 name|CINDEX_LINKAGE
 name|void
 name|clang_codeComplete
@@ -885,6 +920,14 @@ name|char
 modifier|*
 modifier|*
 name|command_line_args
+parameter_list|,
+name|unsigned
+name|num_unsaved_files
+parameter_list|,
+name|struct
+name|CXUnsavedFile
+modifier|*
+name|unsaved_files
 parameter_list|,
 specifier|const
 name|char

@@ -224,6 +224,11 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|AnalyzeNestedBlocks
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
 name|EagerlyAssume
 range|:
 literal|1
@@ -280,6 +285,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|AnalyzerDisplayProgress
+operator|=
+literal|0
+expr_stmt|;
+name|AnalyzeNestedBlocks
 operator|=
 literal|0
 expr_stmt|;

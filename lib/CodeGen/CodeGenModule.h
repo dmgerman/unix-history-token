@@ -783,31 +783,23 @@ argument|const llvm::Type *Ty =
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/// GenerateVtable - Generate the vtable for the given type.  LayoutClass is
-comment|/// the class to use for the virtual base layout information.  For
-comment|/// non-construction vtables, this is always the same as RD.  Offset is the
-comment|/// offset in bits for the RD object in the LayoutClass, if we're generating a
-comment|/// construction vtable, otherwise 0.
+comment|/// GetAddrOfRTTI - Get the address of the RTTI structure for the given type.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GenerateVtable
+name|GetAddrOfRTTI
 argument_list|(
-argument|const CXXRecordDecl *LayoutClass
-argument_list|,
-argument|const CXXRecordDecl *RD
-argument_list|,
-argument|uint64_t Offset=
-literal|0
+argument|QualType Ty
 argument_list|)
 expr_stmt|;
-comment|/// GenerateVTT - Generate the VTT for the given type.
+comment|/// GetAddrOfRTTI - Get the address of the RTTI structure for the given record
+comment|/// decl.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GenerateVTT
+name|GetAddrOfRTTI
 argument_list|(
 specifier|const
 name|CXXRecordDecl
@@ -815,12 +807,12 @@ operator|*
 name|RD
 argument_list|)
 expr_stmt|;
-comment|/// GenerateRtti - Generate the rtti information for the given type.
+comment|/// GenerateRTTI - Generate the rtti information for the given type.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GenerateRtti
+name|GenerateRTTI
 argument_list|(
 specifier|const
 name|CXXRecordDecl
@@ -828,13 +820,13 @@ operator|*
 name|RD
 argument_list|)
 expr_stmt|;
-comment|/// GenerateRttiRef - Generate a reference to the rtti information for the
+comment|/// GenerateRTTIRef - Generate a reference to the rtti information for the
 comment|/// given type.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GenerateRttiRef
+name|GenerateRTTIRef
 argument_list|(
 specifier|const
 name|CXXRecordDecl
@@ -842,17 +834,56 @@ operator|*
 name|RD
 argument_list|)
 expr_stmt|;
-comment|/// GenerateRttiNonClass - Generate the rtti information for the given
+comment|/// GenerateRTTI - Generate the rtti information for the given
 comment|/// non-class type.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GenerateRtti
+name|GenerateRTTI
 argument_list|(
 argument|QualType Ty
 argument_list|)
 expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetAddrOfThunk
+argument_list|(
+argument|GlobalDecl GD
+argument_list|,
+argument|const ThunkAdjustment&ThisAdjustment
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetAddrOfCovariantThunk
+argument_list|(
+argument|GlobalDecl GD
+argument_list|,
+argument|const CovariantThunkAdjustment&ThisAdjustment
+argument_list|)
+expr_stmt|;
+name|void
+name|BuildThunksForVirtual
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+name|void
+name|BuildThunksForVirtualRecursive
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|,
+name|GlobalDecl
+name|BaseOGD
+parameter_list|)
+function_decl|;
 comment|/// BuildThunk - Build a thunk for the given method.
 name|llvm
 operator|::
@@ -860,7 +891,7 @@ name|Constant
 operator|*
 name|BuildThunk
 argument_list|(
-argument|const CXXMethodDecl *MD
+argument|GlobalDecl GD
 argument_list|,
 argument|bool Extern
 argument_list|,
@@ -874,7 +905,7 @@ name|Constant
 operator|*
 name|BuildCovariantThunk
 argument_list|(
-argument|const CXXMethodDecl *MD
+argument|const GlobalDecl&GD
 argument_list|,
 argument|bool Extern
 argument_list|,
@@ -947,6 +978,22 @@ operator|*
 name|BaseClassDecl
 argument_list|)
 expr_stmt|;
+comment|/// ComputeThunkAdjustment - Returns the two parts required to compute the
+comment|/// offset for an object.
+name|ThunkAdjustment
+name|ComputeThunkAdjustment
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|ClassDecl
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|BaseClassDecl
+parameter_list|)
+function_decl|;
 comment|/// GetStringForStringLiteral - Return the appropriate bytes for a string
 comment|/// literal, properly padded to match the literal type. If only the address of
 comment|/// a constant is needed consider using GetAddrOfConstantStringLiteral.

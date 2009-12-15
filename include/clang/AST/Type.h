@@ -182,6 +182,9 @@ decl_stmt|;
 name|class
 name|ExtQuals
 decl_stmt|;
+name|class
+name|QualType
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -325,6 +328,25 @@ name|TypeAlignmentInBits
 block|}
 block|;   }
 expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|QualType
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -373,6 +395,9 @@ name|ObjCProtocolDecl
 decl_stmt|;
 name|class
 name|ObjCMethodDecl
+decl_stmt|;
+name|class
+name|UnresolvedUsingTypenameDecl
 decl_stmt|;
 name|class
 name|Expr
@@ -3359,6 +3384,13 @@ name|isPODType
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// isLiteralType - Return true if this is a literal type
+comment|/// (C++0x [basic.types]p10)
+name|bool
+name|isLiteralType
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// isVariablyModifiedType (C99 6.7.5.2p2) - Return true for variable array
 comment|/// types that have a non-constant expression. This does not include "[]".
 name|bool
@@ -3402,6 +3434,11 @@ specifier|const
 expr_stmt|;
 name|bool
 name|isWideCharType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isAnyCharacterType
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -7941,6 +7978,142 @@ argument_list|,
 argument|bool NoReturn
 argument_list|)
 block|; }
+block|;
+comment|/// \brief Represents the dependent type named by a dependently-scoped
+comment|/// typename using declaration, e.g.
+comment|///   using typename Base<T>::foo;
+comment|/// Template instantiation turns these into the underlying type.
+name|class
+name|UnresolvedUsingType
+operator|:
+name|public
+name|Type
+block|{
+name|UnresolvedUsingTypenameDecl
+operator|*
+name|Decl
+block|;
+name|UnresolvedUsingType
+argument_list|(
+name|UnresolvedUsingTypenameDecl
+operator|*
+name|D
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|UnresolvedUsing
+argument_list|,
+name|QualType
+argument_list|()
+argument_list|,
+name|true
+argument_list|)
+block|,
+name|Decl
+argument_list|(
+argument|D
+argument_list|)
+block|{}
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these.
+name|public
+operator|:
+name|UnresolvedUsingTypenameDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Decl
+return|;
+block|}
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualType
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|UnresolvedUsing
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const UnresolvedUsingType *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+return|return
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|Decl
+argument_list|)
+return|;
+block|}
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|UnresolvedUsingTypenameDecl *D
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|D
+argument_list|)
+block|;   }
+expr|}
 block|;
 name|class
 name|TypedefType
@@ -12818,17 +12991,8 @@ return|return
 name|false
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/// \brief Determines whether this is a type for which one can define
-end_comment
-
-begin_comment
 comment|/// an overloaded operator.
-end_comment
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12848,9 +13012,6 @@ name|isEnumeralType
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12884,9 +13045,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12908,17 +13066,8 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Insertion operator for diagnostics.  This allows sending QualType's into a
-end_comment
-
-begin_comment
 comment|/// diagnostic with<<.
-end_comment
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -12959,17 +13108,8 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Helper class template that is used by Type::getAs to ensure that one does
-end_comment
-
-begin_comment
 comment|// not try to look through a qualified type to get to an array type.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -13006,9 +13146,6 @@ expr|struct
 name|ArrayType_cannot_be_used_with_getAs
 block|{ }
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -13022,13 +13159,7 @@ operator|,
 name|true
 operator|>
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Member-template getAs<specific type>'.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -13073,13 +13204,7 @@ condition|)
 return|return
 name|Ty
 return|;
-end_expr_stmt
-
-begin_comment
 comment|// If the canonical form of this type isn't the right kind, reject it.
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -13094,17 +13219,8 @@ condition|)
 return|return
 literal|0
 return|;
-end_if
-
-begin_comment
 comment|// If this is a typedef for the type, strip the typedef off without
-end_comment
-
-begin_comment
 comment|// losing all typedef information.
-end_comment
-
-begin_return
 return|return
 name|cast
 operator|<
@@ -13115,10 +13231,11 @@ name|getUnqualifiedDesugaredType
 argument_list|()
 operator|)
 return|;
-end_return
+block|}
+end_block
 
 begin_comment
-unit|}  }
+unit|}
 comment|// end namespace clang
 end_comment
 

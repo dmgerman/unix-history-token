@@ -110,6 +110,12 @@ argument_list|(
 argument|Sema&S
 argument_list|)
 block|{}
+comment|/// \brief Inform the semantic consumer that Sema is no longer available.
+name|virtual
+name|void
+name|ForgetSema
+argument_list|()
+block|{}
 comment|// isa/cast/dyn_cast support
 specifier|static
 name|bool

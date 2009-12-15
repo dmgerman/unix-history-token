@@ -1805,17 +1805,27 @@ operator|==
 name|R
 return|;
 block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|ProgramPoint
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
 block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment

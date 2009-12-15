@@ -79,7 +79,7 @@ name|class
 name|ParmVarDecl
 decl_stmt|;
 name|class
-name|DeclaratorInfo
+name|TypeSourceInfo
 decl_stmt|;
 name|class
 name|UnqualTypeLoc
@@ -1246,7 +1246,7 @@ operator|)
 return|;
 block|}
 expr|}
-block|;  struct
+block|;   struct
 name|TypeSpecLocInfo
 block|{
 name|SourceLocation
@@ -1255,19 +1255,6 @@ block|; }
 block|;
 comment|/// \brief A reasonable base class for TypeLocs that correspond to
 comment|/// types that are written as a type-specifier.
-name|template
-operator|<
-name|class
-name|Derived
-block|,
-name|class
-name|TypeClass
-block|,
-name|class
-name|LocalData
-operator|=
-name|TypeSpecLocInfo
-operator|>
 name|class
 name|TypeSpecTypeLoc
 operator|:
@@ -1276,15 +1263,25 @@ name|ConcreteTypeLoc
 operator|<
 name|UnqualTypeLoc
 block|,
-name|Derived
+name|TypeSpecTypeLoc
 block|,
-name|TypeClass
+name|Type
 block|,
-name|LocalData
+name|TypeSpecLocInfo
 operator|>
 block|{
 name|public
 operator|:
+expr|enum
+block|{
+name|LocalDataSize
+operator|=
+expr|sizeof
+operator|(
+name|TypeSpecLocInfo
+operator|)
+block|}
+block|;
 name|SourceLocation
 name|getNameLoc
 argument_list|()
@@ -1341,6 +1338,27 @@ argument_list|(
 name|Loc
 argument_list|)
 block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+specifier|const
+name|TypeLoc
+operator|*
+name|TL
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const TypeSpecTypeLoc *TL
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 expr|}
 block|;
 comment|/// \brief Wrapper for source info for typedefs.
@@ -1348,8 +1366,10 @@ name|class
 name|TypedefTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|TypedefTypeLoc
 block|,
 name|TypedefType
@@ -1373,13 +1393,147 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Wrapper for source info for unresolved typename using decls.
+name|class
+name|UnresolvedUsingTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|TypeSpecTypeLoc
+block|,
+name|UnresolvedUsingTypeLoc
+block|,
+name|UnresolvedUsingType
+operator|>
+block|{
+name|public
+operator|:
+name|UnresolvedUsingTypenameDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypePtr
+argument_list|()
+operator|->
+name|getDecl
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Wrapper for source info for tag types.  Note that this only
+comment|/// records source info for the name itself; a type written 'struct foo'
+comment|/// should be represented as an ElaboratedTypeLoc.  We currently
+comment|/// only do that when C++ is enabled because of the expense of
+comment|/// creating an ElaboratedType node for so many type references in C.
+name|class
+name|TagTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|TypeSpecTypeLoc
+block|,
+name|TagTypeLoc
+block|,
+name|TagType
+operator|>
+block|{
+name|public
+operator|:
+name|TagDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypePtr
+argument_list|()
+operator|->
+name|getDecl
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Wrapper for source info for record types.
+name|class
+name|RecordTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|TagTypeLoc
+block|,
+name|RecordTypeLoc
+block|,
+name|RecordType
+operator|>
+block|{
+name|public
+operator|:
+name|RecordDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypePtr
+argument_list|()
+operator|->
+name|getDecl
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Wrapper for source info for enum types.
+name|class
+name|EnumTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|TagTypeLoc
+block|,
+name|EnumTypeLoc
+block|,
+name|EnumType
+operator|>
+block|{
+name|public
+operator|:
+name|EnumDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypePtr
+argument_list|()
+operator|->
+name|getDecl
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Wrapper for source info for builtin types.
 name|class
 name|BuiltinTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|BuiltinTypeLoc
 block|,
 name|BuiltinType
@@ -1391,8 +1545,10 @@ name|class
 name|TemplateTypeParmTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|TemplateTypeParmTypeLoc
 block|,
 name|TemplateTypeParmType
@@ -1404,8 +1560,10 @@ name|class
 name|SubstTemplateTypeParmTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|SubstTemplateTypeParmTypeLoc
 block|,
 name|SubstTemplateTypeParmType
@@ -3121,7 +3279,7 @@ argument_list|()
 argument_list|)
 block|;
 comment|// We're potentially copying Expr references here.  We don't
-comment|// bother retaining them because DeclaratorInfos live forever, so
+comment|// bother retaining them because TypeSourceInfos live forever, so
 comment|// as long as the Expr was retained when originally written into
 comment|// the TypeLoc, we're okay.
 name|memcpy
@@ -3246,7 +3404,7 @@ operator|=
 name|TemplateArgumentLocInfo
 argument_list|(
 operator|(
-name|DeclaratorInfo
+name|TypeSourceInfo
 operator|*
 operator|)
 literal|0
@@ -3337,19 +3495,28 @@ return|;
 block|}
 expr|}
 block|;
-comment|// None of these types have proper implementations yet.
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|//  All of these need proper implementations.
+comment|//
+comment|//===----------------------------------------------------------------------===//
+comment|// FIXME: size expression and attribute locations (or keyword if we
+comment|// ever fully support altivec syntax).
 name|class
 name|VectorTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|VectorTypeLoc
 block|,
 name|VectorType
 operator|>
 block|{ }
 block|;
+comment|// FIXME: size expression and attribute locations.
 name|class
 name|ExtVectorTypeLoc
 operator|:
@@ -3364,149 +3531,139 @@ name|ExtVectorType
 operator|>
 block|{ }
 block|;
+comment|// FIXME: attribute locations.
 comment|// For some reason, this isn't a subtype of VectorType.
 name|class
 name|DependentSizedExtVectorTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|DependentSizedExtVectorTypeLoc
 block|,
 name|DependentSizedExtVectorType
 operator|>
 block|{ }
 block|;
+comment|// FIXME: I'm not sure how you actually specify these;  with attributes?
 name|class
 name|FixedWidthIntTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|FixedWidthIntTypeLoc
 block|,
 name|FixedWidthIntType
 operator|>
 block|{ }
 block|;
+comment|// FIXME: location of the '_Complex' keyword.
 name|class
 name|ComplexTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|ComplexTypeLoc
 block|,
 name|ComplexType
 operator|>
 block|{ }
 block|;
+comment|// FIXME: location of the 'typeof' and parens (the expression is
+comment|// carried by the type).
 name|class
 name|TypeOfExprTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|TypeOfExprTypeLoc
 block|,
 name|TypeOfExprType
 operator|>
 block|{ }
 block|;
+comment|// FIXME: location of the 'typeof' and parens; also the TypeSourceInfo
+comment|// for the inner type, or (maybe) just express that inline to the TypeLoc.
 name|class
 name|TypeOfTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|TypeOfTypeLoc
 block|,
 name|TypeOfType
 operator|>
 block|{ }
 block|;
+comment|// FIXME: location of the 'decltype' and parens.
 name|class
 name|DecltypeTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|DecltypeTypeLoc
 block|,
 name|DecltypeType
 operator|>
 block|{ }
 block|;
-name|class
-name|TagTypeLoc
-operator|:
-name|public
-name|TypeSpecTypeLoc
-operator|<
-name|TagTypeLoc
-block|,
-name|TagType
-operator|>
-block|{ }
-block|;
-name|class
-name|RecordTypeLoc
-operator|:
-name|public
-name|InheritingConcreteTypeLoc
-operator|<
-name|TagTypeLoc
-block|,
-name|RecordTypeLoc
-block|,
-name|RecordType
-operator|>
-block|{ }
-block|;
-name|class
-name|EnumTypeLoc
-operator|:
-name|public
-name|InheritingConcreteTypeLoc
-operator|<
-name|TagTypeLoc
-block|,
-name|EnumTypeLoc
-block|,
-name|EnumType
-operator|>
-block|{ }
-block|;
+comment|// FIXME: location of the tag keyword.
 name|class
 name|ElaboratedTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|ElaboratedTypeLoc
 block|,
 name|ElaboratedType
 operator|>
 block|{ }
 block|;
+comment|// FIXME: locations for the nested name specifier;  at the very least,
+comment|// a SourceRange.
 name|class
 name|QualifiedNameTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|QualifiedNameTypeLoc
 block|,
 name|QualifiedNameType
 operator|>
 block|{ }
 block|;
+comment|// FIXME: locations for the typename keyword and nested name specifier.
 name|class
 name|TypenameTypeLoc
 operator|:
 name|public
-name|TypeSpecTypeLoc
+name|InheritingConcreteTypeLoc
 operator|<
+name|TypeSpecTypeLoc
+block|,
 name|TypenameTypeLoc
 block|,
 name|TypenameType

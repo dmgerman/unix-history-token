@@ -181,7 +181,7 @@ comment|// expected-warning {{excess elements in array initializer}}
 end_comment
 
 begin_comment
-comment|// rdar://6881069
+comment|// PR5650
 end_comment
 
 begin_macro
@@ -193,18 +193,68 @@ argument|))
 argument_list|)
 end_macro
 
-begin_comment
-comment|// expected-error {{unsupported type 'float (void)' for vector_size attribute, please use on typedef}}
-end_comment
-
 begin_function
 name|float
 name|f1
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+name|__attribute__
+argument_list|(
+argument|(vector_size(
+literal|16
+argument|))
+argument_list|)
+name|float
+name|vec
+init|=
+block|{
+literal|0.0f
+block|,
+literal|0.0f
+block|,
+literal|0.0f
+block|}
+decl_stmt|;
+return|return
+operator|(
+name|vec
+operator|)
+return|;
+block|}
 end_function
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(vector_size(
+literal|16
+argument|))
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|float
+name|f2
+argument_list|(
+name|__attribute__
+argument_list|(
+argument|(vector_size(
+literal|16
+argument|))
+argument_list|)
+name|float
+name|a1
+argument_list|)
+block|{
+return|return
+operator|(
+name|a1
+operator|)
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|// PR5265

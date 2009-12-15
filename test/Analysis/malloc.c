@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-experimental-checks -analyzer-store=region -verify %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-experimental-checks -analyzer-store=region -verify %s
 end_comment
 
 begin_typedef
@@ -29,6 +29,35 @@ name|free
 parameter_list|(
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|realloc
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|calloc
+parameter_list|(
+name|size_t
+name|nmemb
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -174,6 +203,37 @@ argument_list|)
 expr_stmt|;
 return|return
 name|p_f4
+return|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|int
+modifier|*
+name|f5
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|q
+init|=
+name|malloc
+argument_list|(
+literal|10
+argument_list|)
+decl_stmt|;
+name|q
+operator|=
+name|realloc
+argument_list|(
+name|q
+argument_list|,
+literal|20
+argument_list|)
+expr_stmt|;
+return|return
+name|q
 return|;
 comment|// no-warning
 block|}

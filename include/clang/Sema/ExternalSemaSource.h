@@ -108,6 +108,12 @@ argument_list|(
 argument|Sema&S
 argument_list|)
 block|{}
+comment|/// \brief Inform the semantic consumer that Sema is no longer available.
+name|virtual
+name|void
+name|ForgetSema
+argument_list|()
+block|{}
 comment|/// \brief Load the contents of the global method pool for a given
 comment|/// selector.
 comment|///

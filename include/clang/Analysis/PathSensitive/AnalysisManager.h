@@ -171,8 +171,6 @@ argument|StoreManagerCreator storemgr
 argument_list|,
 argument|ConstraintManagerCreator constraintmgr
 argument_list|,
-argument|bool displayProgress
-argument_list|,
 argument|bool vizdot
 argument_list|,
 argument|bool vizubi
@@ -471,6 +469,7 @@ argument_list|()
 return|;
 block|}
 comment|// Get the top level stack frame.
+specifier|const
 name|StackFrameContext
 operator|*
 name|getStackFrame

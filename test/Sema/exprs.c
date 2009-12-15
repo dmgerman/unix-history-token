@@ -523,5 +523,34 @@ comment|// expected-error {{invalid operands to binary expression ('test15_t' (a
 block|}
 end_function
 
+begin_comment
+comment|// rdar://7446395
+end_comment
+
+begin_function
+name|void
+name|test16
+parameter_list|(
+name|float
+name|x
+parameter_list|)
+block|{
+name|x
+operator|==
+operator|(
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// expected-error {{invalid operands to binary expression}}
+end_comment
+
 end_unit
 

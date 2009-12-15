@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=basic -verify -triple x86_64-apple-darwin9 %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=basic -verify -triple x86_64-apple-darwin9 %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=range -verify -triple x86_64-apple-darwin9 %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=range -verify -triple x86_64-apple-darwin9 %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=basic -verify -triple x86_64-apple-darwin9 %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=basic -verify -triple x86_64-apple-darwin9 %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=range -verify -triple x86_64-apple-darwin9 %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=range -verify -triple x86_64-apple-darwin9 %s
 end_comment
 
 begin_typedef

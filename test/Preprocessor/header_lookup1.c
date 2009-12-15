@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -I /usr/include %s -E | grep 'stdio.h.*3.*4'
+comment|// RUN: clang -fno-ms-extensions -I /usr/include %s -E | grep 'stdio.h.*3.*4'
 end_comment
 
 begin_include

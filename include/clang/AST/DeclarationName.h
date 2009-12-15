@@ -1543,22 +1543,34 @@ operator|==
 name|RHS
 return|;
 block|}
-specifier|static
-specifier|inline
-name|bool
-name|isPod
-parameter_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
 block|}
 end_block
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|DeclarationName
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|}

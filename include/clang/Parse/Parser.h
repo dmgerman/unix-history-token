@@ -126,6 +126,9 @@ decl_stmt|;
 name|class
 name|PragmaUnusedHandler
 decl_stmt|;
+name|class
+name|ColonProtectionRAIIObject
+decl_stmt|;
 comment|/// PrettyStackTraceParserEntry - If a crash happens while the parser is active,
 comment|/// an entry is printed for it.
 name|class
@@ -175,6 +178,10 @@ block|{
 name|friend
 name|class
 name|PragmaUnusedHandler
+decl_stmt|;
+name|friend
+name|class
+name|ColonProtectionRAIIObject
 decl_stmt|;
 name|PrettyStackTraceParserEntry
 name|CrashInfo
@@ -283,53 +290,17 @@ comment|/// argument list.
 name|bool
 name|GreaterThanIsOperator
 decl_stmt|;
+comment|/// ColonIsSacred - When this is false, we aggressively try to recover from
+comment|/// code like "foo : bar" as if it were a typo for "foo :: bar".  This is not
+comment|/// safe in case statements and a few other things.  This is managed by the
+comment|/// ColonProtectionRAIIObject RAII object.
+name|bool
+name|ColonIsSacred
+decl_stmt|;
 comment|/// The "depth" of the template parameters currently being parsed.
 name|unsigned
 name|TemplateParameterDepth
 decl_stmt|;
-comment|/// \brief RAII object that makes '>' behave either as an operator
-comment|/// or as the closing angle bracket for a template argument list.
-struct|struct
-name|GreaterThanIsOperatorScope
-block|{
-name|bool
-modifier|&
-name|GreaterThanIsOperator
-decl_stmt|;
-name|bool
-name|OldGreaterThanIsOperator
-decl_stmt|;
-name|GreaterThanIsOperatorScope
-argument_list|(
-argument|bool&GTIO
-argument_list|,
-argument|bool Val
-argument_list|)
-block|:
-name|GreaterThanIsOperator
-argument_list|(
-name|GTIO
-argument_list|)
-operator|,
-name|OldGreaterThanIsOperator
-argument_list|(
-argument|GTIO
-argument_list|)
-block|{
-name|GreaterThanIsOperator
-operator|=
-name|Val
-block|;     }
-operator|~
-name|GreaterThanIsOperatorScope
-argument_list|()
-block|{
-name|GreaterThanIsOperator
-operator|=
-name|OldGreaterThanIsOperator
-block|;     }
-block|}
-struct|;
 name|public
 label|:
 name|Parser
@@ -2455,6 +2426,16 @@ argument_list|,
 argument|AccessSpecifier AS = AS_none
 argument_list|)
 block|;
+name|DeclGroupPtrTy
+name|ParseDeclarationOrFunctionDefinition
+argument_list|(
+argument|ParsingDeclSpec&DS
+argument_list|,
+argument|AttributeList *Attr
+argument_list|,
+argument|AccessSpecifier AS = AS_none
+argument_list|)
+block|;
 name|DeclPtrTy
 name|ParseFunctionDefinition
 argument_list|(
@@ -3792,6 +3773,9 @@ argument_list|()
 expr_stmt|;
 block|}
 struct|;
+struct_decl|struct
+name|ObjCPropertyCallback
+struct_decl|;
 name|void
 name|ParseStructDeclaration
 parameter_list|(
@@ -4599,6 +4583,10 @@ begin_function_decl
 name|DeclPtrTy
 name|ParseLinkage
 parameter_list|(
+name|ParsingDeclSpec
+modifier|&
+name|DS
+parameter_list|,
 name|unsigned
 name|Context
 parameter_list|)

@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -warn-dead-stores -fblocks -verify %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=basic -warn-dead-stores -fblocks -verify %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=basic -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=range -warn-dead-stores -fblocks -verify %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=basic -analyzer-constraints=range -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=basic -warn-dead-stores -fblocks -verify %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=basic -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=range -warn-dead-stores -fblocks -verify %s
+comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-store=region -analyzer-constraints=range -warn-dead-stores -fblocks -verify %s
 end_comment
 
 begin_function
@@ -1802,6 +1802,276 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_function
+name|void
+name|f24_A
+parameter_list|(
+name|int
+name|y
+parameter_list|)
+block|{
+comment|// FIXME: One day this should be reported as dead since 'z = x + y' is dead.
+name|int
+name|x
+init|=
+operator|(
+name|y
+operator|>
+literal|2
+operator|)
+decl_stmt|;
+comment|// no-warning
+lambda|^
+block|{
+name|int
+name|z
+init|=
+name|x
+operator|+
+name|y
+decl_stmt|;
+comment|// FIXME: Eventually this should be reported as a dead store.
+block|}
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|f24_B
+parameter_list|(
+name|int
+name|y
+parameter_list|)
+block|{
+comment|// FIXME: One day this should be reported as dead since 'x' is just overwritten.
+specifier|__block
+name|int
+name|x
+init|=
+operator|(
+name|y
+operator|>
+literal|2
+operator|)
+decl_stmt|;
+comment|// no-warning
+lambda|^
+block|{
+comment|// FIXME: This should eventually be a dead store since it is never read either.
+name|x
+operator|=
+literal|5
+expr_stmt|;
+comment|// no-warning
+block|}
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|f24_C
+parameter_list|(
+name|int
+name|y
+parameter_list|)
+block|{
+comment|// FIXME: One day this should be reported as dead since 'x' is just overwritten.
+specifier|__block
+name|int
+name|x
+init|=
+operator|(
+name|y
+operator|>
+literal|2
+operator|)
+decl_stmt|;
+comment|// no-warning
+lambda|^
+block|{
+name|x
+operator|=
+literal|5
+expr_stmt|;
+comment|// no-warning
+block|}
+argument_list|()
+expr_stmt|;
+return|return
+name|x
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|f24_D
+parameter_list|(
+name|int
+name|y
+parameter_list|)
+block|{
+specifier|__block
+name|int
+name|x
+init|=
+operator|(
+name|y
+operator|>
+literal|2
+operator|)
+decl_stmt|;
+comment|// no-warning
+lambda|^
+block|{
+if|if
+condition|(
+name|y
+operator|>
+literal|4
+condition|)
+name|x
+operator|=
+literal|5
+expr_stmt|;
+comment|// no-warning
+block|}
+argument_list|()
+expr_stmt|;
+return|return
+name|x
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This example shows that writing to a variable captured by a block means that it might
+end_comment
+
+begin_comment
+comment|// not be dead.
+end_comment
+
+begin_function
+name|int
+name|f25
+parameter_list|(
+name|int
+name|y
+parameter_list|)
+block|{
+specifier|__block
+name|int
+name|x
+init|=
+operator|(
+name|y
+operator|>
+literal|2
+operator|)
+decl_stmt|;
+specifier|__block
+name|int
+name|z
+init|=
+literal|0
+decl_stmt|;
+name|void
+function_decl|(
+modifier|^
+name|foo
+function_decl|)
+parameter_list|()
+init|=
+lambda|^
+block|{
+name|z
+operator|=
+name|x
+operator|+
+name|y
+function_decl|;
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|x
+operator|=
+literal|4
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// no-warning
+end_comment
+
+begin_expr_stmt
+name|foo
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|z
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|// This test is mostly the same as 'f25', but shows that the heuristic of pruning out dead
+end_comment
+
+begin_comment
+comment|// stores for variables that are just marked '__block' is overly conservative.
+end_comment
+
+begin_macro
+unit|int
+name|f25_b
+argument_list|(
+argument|int y
+argument_list|)
+end_macro
+
+begin_block
+block|{
+comment|// FIXME: we should eventually report a dead store here.
+specifier|__block
+name|int
+name|x
+init|=
+operator|(
+name|y
+operator|>
+literal|2
+operator|)
+decl_stmt|;
+specifier|__block
+name|int
+name|z
+init|=
+literal|0
+decl_stmt|;
+name|x
+operator|=
+literal|4
+expr_stmt|;
+comment|// no-warning
+return|return
+name|z
+return|;
+block|}
+end_block
 
 end_unit
 

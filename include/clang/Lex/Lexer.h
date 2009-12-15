@@ -145,12 +145,16 @@ block|;
 comment|// Features enabled by this language (cache).
 name|bool
 name|Is_PragmaLexer
+operator|:
+literal|1
 block|;
 comment|// True if lexer for _Pragma handling.
 name|bool
-name|IsEofCodeCompletion
+name|IsInConflictMarker
+operator|:
+literal|1
 block|;
-comment|// True if EOF is treated as a code-completion.
+comment|// True if in a VCS conflict marker '<<<<<<<'
 comment|//===--------------------------------------------------------------------===//
 comment|// Context-specific lexing flags set by the preprocessor.
 comment|//
@@ -490,21 +494,6 @@ condition|?
 literal|1
 else|:
 literal|0
-block|;   }
-comment|/// \brief Specify that end-of-file is to be considered a code-completion
-comment|/// token.
-comment|///
-comment|/// When in this mode, the end-of-file token will be immediately preceded
-comment|/// by a code-completion token.
-name|void
-name|SetEofIsCodeCompletion
-argument_list|(
-argument|bool Val = true
-argument_list|)
-block|{
-name|IsEofCodeCompletion
-operator|=
-name|Val
 block|;   }
 specifier|const
 name|char
@@ -1149,6 +1138,24 @@ name|Token
 modifier|&
 name|Result
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|CurPtr
+parameter_list|)
+function_decl|;
+name|bool
+name|IsStartOfConflictMarker
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|CurPtr
+parameter_list|)
+function_decl|;
+name|bool
+name|HandleEndOfConflictMarker
+parameter_list|(
 specifier|const
 name|char
 modifier|*

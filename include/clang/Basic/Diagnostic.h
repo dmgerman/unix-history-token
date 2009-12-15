@@ -994,16 +994,16 @@ comment|/// and level.  If this is the first request for this diagnosic, it is
 comment|/// registered and created, otherwise the existing ID is returned.
 name|unsigned
 name|getCustomDiagID
-parameter_list|(
+argument_list|(
 name|Level
 name|L
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|Message
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// ConvertArgToString - This method converts a diagnostic argument (as an
 comment|/// intptr_t) into the string that represents it.
 name|void

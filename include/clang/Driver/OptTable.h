@@ -57,6 +57,16 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|namespace
@@ -76,7 +86,7 @@ operator|<<
 literal|0
 operator|)
 block|,
-name|LinkerInput
+name|HelpHidden
 init|=
 operator|(
 literal|1
@@ -84,7 +94,7 @@ operator|<<
 literal|1
 operator|)
 block|,
-name|NoArgumentUnused
+name|LinkerInput
 init|=
 operator|(
 literal|1
@@ -92,7 +102,7 @@ operator|<<
 literal|2
 operator|)
 block|,
-name|RenderAsInput
+name|NoArgumentUnused
 init|=
 operator|(
 literal|1
@@ -100,7 +110,7 @@ operator|<<
 literal|3
 operator|)
 block|,
-name|RenderJoined
+name|RenderAsInput
 init|=
 operator|(
 literal|1
@@ -108,7 +118,7 @@ operator|<<
 literal|4
 operator|)
 block|,
-name|RenderSeparate
+name|RenderJoined
 init|=
 operator|(
 literal|1
@@ -116,12 +126,20 @@ operator|<<
 literal|5
 operator|)
 block|,
-name|Unsupported
+name|RenderSeparate
 init|=
 operator|(
 literal|1
 operator|<<
 literal|6
+operator|)
+block|,
+name|Unsupported
+init|=
+operator|(
+literal|1
+operator|<<
+literal|7
 operator|)
 block|}
 enum|;
@@ -416,6 +434,47 @@ operator|.
 name|Kind
 return|;
 block|}
+comment|/// getOptionGroupID - Get the group id for the given option.
+name|unsigned
+name|getOptionGroupID
+argument_list|(
+name|OptSpecifier
+name|id
+argument_list|)
+decl|const
+block|{
+return|return
+name|getInfo
+argument_list|(
+name|id
+argument_list|)
+operator|.
+name|GroupID
+return|;
+block|}
+comment|/// isOptionHelpHidden - Should the help for the given option be hidden by
+comment|/// default.
+name|bool
+name|isOptionHelpHidden
+argument_list|(
+name|OptSpecifier
+name|id
+argument_list|)
+decl|const
+block|{
+return|return
+name|getInfo
+argument_list|(
+name|id
+argument_list|)
+operator|.
+name|Flags
+operator|&
+name|options
+operator|::
+name|HelpHidden
+return|;
+block|}
 comment|/// getOptionHelpText - Get the help text to use to describe this option.
 specifier|const
 name|char
@@ -521,6 +580,38 @@ argument_list|,
 name|unsigned
 operator|&
 name|MissingArgCount
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// PrintHelp - Render the help text for an option table.
+comment|///
+comment|/// \param OS - The stream to write the help text to.
+comment|/// \param Name - The name to use in the usage line.
+comment|/// \param Title - The title to use in the usage line.
+comment|/// \param ShowHidden - Whether help-hidden arguments should be shown.
+name|void
+name|PrintHelp
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Name
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Title
+argument_list|,
+name|bool
+name|ShowHidden
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;

@@ -12,7 +12,7 @@ comment|// RUN: FileCheck -input-file %t.log %s
 end_comment
 
 begin_comment
-comment|// CHECK: clang-cc{{.*}}" "-triple" "powerpc64-pc-freebsd8"
+comment|// CHECK: clang{{.*}}" "-cc1" "-triple" "powerpc64-pc-freebsd8"
 end_comment
 
 begin_comment

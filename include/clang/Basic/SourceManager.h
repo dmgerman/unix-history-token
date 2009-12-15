@@ -161,12 +161,6 @@ name|MemoryBuffer
 operator|*
 name|Buffer
 expr_stmt|;
-comment|/// The line and column at which we should truncate the file.
-name|unsigned
-name|TruncateAtLine
-decl_stmt|,
-name|TruncateAtColumn
-decl_stmt|;
 name|public
 label|:
 comment|/// Reference to the file entry.  This reference does not own
@@ -189,21 +183,19 @@ comment|/// if SourceLineCache is non-null.
 name|unsigned
 name|NumLines
 decl_stmt|;
-comment|/// FirstFID - First FileID that was created for this ContentCache.
-comment|/// Represents the first source inclusion of the file associated with this
-comment|/// ContentCache.
-name|mutable
-name|FileID
-name|FirstFID
-decl_stmt|;
-comment|/// getBuffer - Returns the memory buffer for the associated content.
+comment|/// getBuffer - Returns the memory buffer for the associated content.  If
+comment|/// there is an error opening this buffer the first time, this manufactures
+comment|/// a temporary buffer and returns a non-empty error string.
 specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
 operator|*
 name|getBuffer
-argument_list|()
+argument_list|(
+argument|std::string *ErrorStr =
+literal|0
+argument_list|)
 specifier|const
 expr_stmt|;
 comment|/// getSize - Returns the size of the content encapsulated by this
@@ -247,34 +239,19 @@ operator|=
 name|B
 expr_stmt|;
 block|}
-comment|/// \brief Truncate this file at the given line and column.
-comment|///
-comment|/// \param Line the line on which to truncate the current file (1-based).
-comment|/// \param Column the column at which to truncate the current file.
-comment|/// (1-based).
+comment|/// \brief Replace the existing buffer (which will be deleted)
+comment|/// with the given buffer.
 name|void
-name|truncateAt
-parameter_list|(
-name|unsigned
-name|Line
-parameter_list|,
-name|unsigned
-name|Column
-parameter_list|)
-function_decl|;
-comment|/// \brief Determines whether the file was artificially truncated with
-comment|/// truncateAt().
-name|bool
-name|isTruncated
-argument_list|()
+name|replaceBuffer
+argument_list|(
 specifier|const
-block|{
-return|return
-name|TruncateAtLine
-operator|&&
-name|TruncateAtColumn
-return|;
-block|}
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|B
+argument_list|)
+decl_stmt|;
 name|ContentCache
 argument_list|(
 specifier|const
@@ -286,16 +263,6 @@ literal|0
 argument_list|)
 operator|:
 name|Buffer
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TruncateAtLine
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TruncateAtColumn
 argument_list|(
 literal|0
 argument_list|)
@@ -331,16 +298,6 @@ name|RHS
 argument_list|)
 operator|:
 name|Buffer
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TruncateAtLine
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TruncateAtColumn
 argument_list|(
 literal|0
 argument_list|)
@@ -1063,18 +1020,6 @@ name|mutable
 name|bool
 name|LastResForBeforeTUCheck
 decl_stmt|;
-comment|// Keep track of the file/line/column that we should truncate.
-specifier|const
-name|FileEntry
-modifier|*
-name|TruncateFile
-decl_stmt|;
-name|unsigned
-name|TruncateAtLine
-decl_stmt|;
-name|unsigned
-name|TruncateAtColumn
-decl_stmt|;
 comment|// SourceManager doesn't support copy construction.
 name|explicit
 name|SourceManager
@@ -1114,21 +1059,6 @@ literal|0
 argument_list|)
 operator|,
 name|NumBinaryProbes
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TruncateFile
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TruncateAtLine
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TruncateAtColumn
 argument_list|(
 literal|0
 argument_list|)
@@ -1379,11 +1309,51 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve the memory buffer associated with the given file.
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|getMemoryBufferForFile
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|)
+expr_stmt|;
+comment|/// \brief Override the contents of the given source file by providing an
+comment|/// already-allocated buffer.
+comment|///
+comment|/// \param SourceFile the source file whose contents will be override.
+comment|///
+comment|/// \param Buffer the memory buffer whose contents will be used as the
+comment|/// data in the given source file.
+comment|///
+comment|/// \returns true if an error occurred, false otherwise.
+name|bool
+name|overrideFileContents
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|SourceFile
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|Buffer
+argument_list|)
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// FileID manipulation methods.
 comment|//===--------------------------------------------------------------------===//
-comment|/// getBuffer - Return the buffer for the specified FileID.
-comment|///
+comment|/// getBuffer - Return the buffer for the specified FileID. If there is an
+comment|/// error opening this buffer the first time, this manufactures a temporary
+comment|/// buffer and returns a non-empty error string.
 specifier|const
 name|llvm
 operator|::
@@ -1392,6 +1362,9 @@ operator|*
 name|getBuffer
 argument_list|(
 argument|FileID FID
+argument_list|,
+argument|std::string *Error =
+literal|0
 argument_list|)
 specifier|const
 block|{
@@ -1408,7 +1381,9 @@ name|getContentCache
 argument_list|()
 operator|->
 name|getBuffer
-argument_list|()
+argument_list|(
+name|Error
+argument_list|)
 return|;
 block|}
 comment|/// getFileEntryForID - Returns the FileEntry record for the provided FileID.
@@ -2453,43 +2428,6 @@ name|LHS
 argument_list|,
 name|SourceLocation
 name|RHS
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Truncate the given file at the specified line/column.
-end_comment
-
-begin_function_decl
-name|void
-name|truncateFileAt
-parameter_list|(
-specifier|const
-name|FileEntry
-modifier|*
-name|Entry
-parameter_list|,
-name|unsigned
-name|Line
-parameter_list|,
-name|unsigned
-name|Column
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Determine whether this file was truncated.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isTruncatedFile
-argument_list|(
-name|FileID
-name|FID
 argument_list|)
 decl|const
 decl_stmt|;

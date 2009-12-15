@@ -763,6 +763,11 @@ name|CompoundLiteralExpr
 operator|*
 name|CL
 argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LC
+argument_list|,
 name|SVal
 name|V
 argument_list|)
@@ -885,6 +890,11 @@ specifier|const
 name|CompoundLiteralExpr
 operator|*
 name|literal
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LC
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2787,6 +2797,8 @@ name|bindCompoundLiteral
 argument_list|(
 argument|const CompoundLiteralExpr* CL
 argument_list|,
+argument|const LocationContext *LC
+argument_list|,
 argument|SVal V
 argument_list|)
 specifier|const
@@ -2802,6 +2814,8 @@ argument_list|(
 name|this
 argument_list|,
 name|CL
+argument_list|,
+name|LC
 argument_list|,
 name|V
 argument_list|)
@@ -3009,6 +3023,8 @@ operator|::
 name|getLValue
 argument_list|(
 argument|const CompoundLiteralExpr *literal
+argument_list|,
+argument|const LocationContext *LC
 argument_list|)
 specifier|const
 block|{
@@ -3021,6 +3037,8 @@ operator|->
 name|getLValueCompoundLiteral
 argument_list|(
 name|literal
+argument_list|,
+name|LC
 argument_list|)
 return|;
 block|}

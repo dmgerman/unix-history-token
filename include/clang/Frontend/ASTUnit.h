@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/TextDiagnosticBuffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/FileManager.h"
 end_include
 
@@ -93,6 +87,18 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -129,9 +135,6 @@ decl_stmt|;
 name|class
 name|TargetInfo
 decl_stmt|;
-name|class
-name|TextDiagnosticBuffer
-decl_stmt|;
 name|using
 name|namespace
 name|idx
@@ -141,9 +144,6 @@ comment|///
 name|class
 name|ASTUnit
 block|{
-name|Diagnostic
-name|Diags
-decl_stmt|;
 name|FileManager
 name|FileMgr
 decl_stmt|;
@@ -191,6 +191,32 @@ comment|// FIXME: This is temporary; eventually, CIndex will always do this.
 name|bool
 name|OnlyLocalDecls
 decl_stmt|;
+comment|/// Track whether the main file was loaded from an AST or not.
+name|bool
+name|MainFileIsAST
+decl_stmt|;
+comment|/// Track the top-level decls which appeared in an ASTUnit which was loaded
+comment|/// from a source file.
+comment|//
+comment|// FIXME: This is just an optimization hack to avoid deserializing large parts
+comment|// of a PCH file when using the Index library on an ASTUnit loaded from
+comment|// source. In the long term we should make the Index library use efficient and
+comment|// more scalable search mechanisms.
+name|std
+operator|::
+name|vector
+operator|<
+name|Decl
+operator|*
+operator|>
+name|TopLevelDecls
+expr_stmt|;
+comment|/// The name of the original source file used to generate this ASTUnit.
+name|std
+operator|::
+name|string
+name|OriginalSourceFile
+expr_stmt|;
 comment|// Critical optimization when using clang_getCursor().
 name|ASTLocation
 name|LastLoc
@@ -218,17 +244,22 @@ name|public
 label|:
 name|ASTUnit
 argument_list|(
-name|DiagnosticClient
-operator|*
-name|diagClient
-operator|=
-name|NULL
+argument|bool MainFileIsAST
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|ASTUnit
 argument_list|()
 expr_stmt|;
+name|bool
+name|isMainFileAST
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MainFileIsAST
+return|;
+block|}
 specifier|const
 name|SourceManager
 operator|&
@@ -303,26 +334,6 @@ name|Ctx
 operator|.
 name|get
 argument_list|()
-return|;
-block|}
-specifier|const
-name|Diagnostic
-operator|&
-name|getDiagnostic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Diags
-return|;
-block|}
-name|Diagnostic
-modifier|&
-name|getDiagnostic
-parameter_list|()
-block|{
-return|return
-name|Diags
 return|;
 block|}
 specifier|const
@@ -400,16 +411,62 @@ return|return
 name|LastLoc
 return|;
 block|}
+name|std
+operator|::
+name|vector
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|&
+name|getTopLevelDecls
+argument_list|()
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isMainFileAST
+argument_list|()
+operator|&&
+literal|"Invalid call for AST based ASTUnit!"
+argument_list|)
+block|;
+return|return
+name|TopLevelDecls
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|&
+name|getTopLevelDecls
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isMainFileAST
+argument_list|()
+operator|&&
+literal|"Invalid call for AST based ASTUnit!"
+argument_list|)
+block|;
+return|return
+name|TopLevelDecls
+return|;
+block|}
 comment|/// \brief Create a ASTUnit from a PCH file.
 comment|///
 comment|/// \param Filename - The PCH file to load.
 comment|///
-comment|/// \param DiagClient - The diagnostics client to use.  Specify NULL
-comment|/// to use a default client that emits warnings/errors to standard error.
-comment|/// The ASTUnit objects takes ownership of this object.
-comment|///
-comment|/// \param ErrMsg - Error message to report if the PCH file could not be
-comment|/// loaded.
+comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
+comment|/// lifetime is expected to extend past that of the returned ASTUnit.
 comment|///
 comment|/// \returns - The initialized ASTUnit or null if the PCH failed to load.
 specifier|static
@@ -424,19 +481,9 @@ name|string
 operator|&
 name|Filename
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
-operator|=
-literal|0
-argument_list|,
-name|DiagnosticClient
-operator|*
-name|DiagClient
-operator|=
-name|NULL
+name|Diagnostic
+operator|&
+name|Diags
 argument_list|,
 name|bool
 name|OnlyLocalDecls
@@ -455,7 +502,8 @@ comment|///
 comment|/// \param CI - The compiler invocation to use; it must have exactly one input
 comment|/// source file.
 comment|///
-comment|/// \param Diags - The diagnostics engine to use for reporting errors.
+comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
+comment|/// lifetime is expected to extend past that of the returned ASTUnit.
 comment|//
 comment|// FIXME: Move OnlyLocalDecls, UseBumpAllocator to setters on the ASTUnit, we
 comment|// shouldn't need to specify them at construction time.
@@ -477,13 +525,59 @@ name|bool
 name|OnlyLocalDecls
 init|=
 name|false
-parameter_list|,
-name|bool
-name|UseBumpAllocator
-init|=
-name|false
 parameter_list|)
 function_decl|;
+comment|/// LoadFromCommandLine - Create an ASTUnit from a vector of command line
+comment|/// arguments, which must specify exactly one source file.
+comment|///
+comment|/// \param ArgBegin - The beginning of the argument vector.
+comment|///
+comment|/// \param ArgEnd - The end of the argument vector.
+comment|///
+comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
+comment|/// lifetime is expected to extend past that of the returned ASTUnit.
+comment|///
+comment|/// \param ResourceFilesPath - The path to the compiler resource files.
+comment|//
+comment|// FIXME: Move OnlyLocalDecls, UseBumpAllocator to setters on the ASTUnit, we
+comment|// shouldn't need to specify them at construction time.
+specifier|static
+name|ASTUnit
+modifier|*
+name|LoadFromCommandLine
+argument_list|(
+specifier|const
+name|char
+operator|*
+operator|*
+name|ArgBegin
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|ArgEnd
+argument_list|,
+name|Diagnostic
+operator|&
+name|Diags
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|ResourceFilesPath
+argument_list|,
+name|bool
+name|OnlyLocalDecls
+operator|=
+name|false
+argument_list|,
+name|bool
+name|UseBumpAllocator
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

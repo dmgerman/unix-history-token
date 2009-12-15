@@ -299,9 +299,9 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
-comment|// PCH generator: generates a precompiled header file; this file can be
-comment|// used later with the PCHReader (clang-cc option -include-pch)
-comment|// to speed up compile times.
+comment|// PCH generator: generates a precompiled header file; this file can be used
+comment|// later with the PCHReader (clang -cc1 option -include-pch) to speed up compile
+comment|// times.
 name|ASTConsumer
 modifier|*
 name|CreatePCHGenerator

@@ -112,9 +112,112 @@ decl_stmt|;
 name|class
 name|TemplateDecl
 decl_stmt|;
+comment|/// \brief A structure for storing the information associated with an
+comment|/// overloaded template name.
 name|class
-name|OverloadedFunctionDecl
+name|OverloadedTemplateStorage
+block|{
+union|union
+block|{
+name|unsigned
+name|Size
 decl_stmt|;
+name|NamedDecl
+modifier|*
+name|Storage
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+union|;
+name|friend
+name|class
+name|ASTContext
+decl_stmt|;
+name|OverloadedTemplateStorage
+argument_list|(
+argument|unsigned Size
+argument_list|)
+block|:
+name|Size
+argument_list|(
+argument|Size
+argument_list|)
+block|{}
+name|NamedDecl
+modifier|*
+modifier|*
+name|getStorage
+parameter_list|()
+block|{
+return|return
+operator|&
+name|Storage
+index|[
+literal|1
+index|]
+return|;
+block|}
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+name|getStorage
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|Storage
+index|[
+literal|1
+index|]
+return|;
+block|}
+name|public
+label|:
+typedef|typedef
+name|NamedDecl
+modifier|*
+specifier|const
+modifier|*
+name|iterator
+typedef|;
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Size
+return|;
+block|}
+name|iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStorage
+argument_list|()
+return|;
+block|}
+name|iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStorage
+argument_list|()
+operator|+
+name|size
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief Represents a C++ template name within the type system.
 comment|///
 comment|/// A C++ template name refers to a template within the C++ type
@@ -153,7 +256,7 @@ operator|<
 name|TemplateDecl
 operator|*
 operator|,
-name|OverloadedFunctionDecl
+name|OverloadedTemplateStorage
 operator|*
 operator|,
 name|QualifiedTemplateName
@@ -209,14 +312,14 @@ block|{ }
 name|explicit
 name|TemplateName
 argument_list|(
-name|OverloadedFunctionDecl
+name|OverloadedTemplateStorage
 operator|*
-name|FunctionTemplates
+name|Storage
 argument_list|)
 operator|:
 name|Storage
 argument_list|(
-argument|FunctionTemplates
+argument|Storage
 argument_list|)
 block|{ }
 name|explicit
@@ -278,12 +381,24 @@ comment|/// \returns The set of overloaded function templates that this template
 comment|/// name refers to, if known. If the template name does not refer to a
 comment|/// specific set of function templates because it is a dependent name or
 comment|/// refers to a single template, returns NULL.
-name|OverloadedFunctionDecl
+name|OverloadedTemplateStorage
 operator|*
-name|getAsOverloadedFunctionDecl
+name|getAsOverloadedTemplate
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|Storage
+operator|.
+name|dyn_cast
+operator|<
+name|OverloadedTemplateStorage
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
 comment|/// \brief Retrieve the underlying qualified template name
 comment|/// structure, if any.
 name|QualifiedTemplateName
@@ -459,7 +574,7 @@ name|Qualifier
 block|;
 comment|/// \brief The template declaration or set of overloaded function templates
 comment|/// that this qualified name refers to.
-name|NamedDecl
+name|TemplateDecl
 operator|*
 name|Template
 block|;
@@ -489,32 +604,7 @@ argument_list|)
 block|,
 name|Template
 argument_list|(
-argument|reinterpret_cast<NamedDecl *>(Template)
-argument_list|)
-block|{ }
-name|QualifiedTemplateName
-argument_list|(
-argument|NestedNameSpecifier *NNS
-argument_list|,
-argument|bool TemplateKeyword
-argument_list|,
-argument|OverloadedFunctionDecl *Template
-argument_list|)
-operator|:
-name|Qualifier
-argument_list|(
-name|NNS
-argument_list|,
-name|TemplateKeyword
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|)
-block|,
-name|Template
-argument_list|(
-argument|reinterpret_cast<NamedDecl *>(Template)
+argument|Template
 argument_list|)
 block|{ }
 name|public
@@ -547,9 +637,9 @@ name|getInt
 argument_list|()
 return|;
 block|}
-comment|/// \brief The template declaration or set of overloaded functions that
-comment|/// that qualified name refers to.
-name|NamedDecl
+comment|/// \brief The template declaration that this qualified name refers
+comment|/// to.
+name|TemplateDecl
 operator|*
 name|getDecl
 argument_list|()
@@ -560,23 +650,17 @@ name|Template
 return|;
 block|}
 comment|/// \brief The template declaration to which this qualified name
-comment|/// refers, or NULL if this qualified name refers to a set of overloaded
-comment|/// function templates.
+comment|/// refers.
 name|TemplateDecl
 operator|*
 name|getTemplateDecl
 argument_list|()
 specifier|const
-block|;
-comment|/// \brief The set of overloaded function tempaltes to which this qualified
-comment|/// name refers, or NULL if this qualified name refers to a single
-comment|/// template declaration.
-name|OverloadedFunctionDecl
-operator|*
-name|getOverloadedFunctionDecl
-argument_list|()
-specifier|const
-block|;
+block|{
+return|return
+name|Template
+return|;
+block|}
 name|void
 name|Profile
 argument_list|(
@@ -593,7 +677,7 @@ argument_list|,
 name|hasTemplateKeyword
 argument_list|()
 argument_list|,
-name|getDecl
+name|getTemplateDecl
 argument_list|()
 argument_list|)
 block|;   }
@@ -607,7 +691,7 @@ argument|NestedNameSpecifier *NNS
 argument_list|,
 argument|bool TemplateKeyword
 argument_list|,
-argument|NamedDecl *Template
+argument|TemplateDecl *Template
 argument_list|)
 block|{
 name|ID
@@ -631,8 +715,8 @@ argument_list|(
 name|Template
 argument_list|)
 block|;   }
-block|}
-decl_stmt|;
+expr|}
+block|;
 comment|/// \brief Represents a dependent template name that cannot be
 comment|/// resolved prior to template instantiation.
 comment|///
@@ -643,7 +727,7 @@ comment|/// where "MetaFun::" is the nested name specifier and "apply" is the
 comment|/// template name referenced. The "template" keyword is implied.
 name|class
 name|DependentTemplateName
-range|:
+operator|:
 name|public
 name|llvm
 operator|::

@@ -192,6 +192,12 @@ name|TargetInfo
 decl_stmt|;
 comment|// Decls
 name|class
+name|CXXMethodDecl
+decl_stmt|;
+name|class
+name|CXXRecordDecl
+decl_stmt|;
+name|class
 name|Decl
 decl_stmt|;
 name|class
@@ -226,6 +232,9 @@ name|TypedefDecl
 decl_stmt|;
 name|class
 name|UsingDecl
+decl_stmt|;
+name|class
+name|UsingShadowDecl
 decl_stmt|;
 name|namespace
 name|Builtin
@@ -514,6 +523,21 @@ operator|*
 operator|>
 name|ObjCLayouts
 expr_stmt|;
+comment|/// KeyFunctions - A cache mapping from CXXRecordDecls to key functions.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+specifier|const
+name|CXXMethodDecl
+operator|*
+operator|>
+name|KeyFunctions
+expr_stmt|;
 comment|/// \brief Mapping from ObjCContainers to their ObjCImplementations.
 name|llvm
 operator|::
@@ -667,8 +691,10 @@ operator|*
 operator|>
 name|InstantiatedFromStaticDataMember
 expr_stmt|;
-comment|/// \brief Keeps track of the UnresolvedUsingDecls from which UsingDecls
-comment|/// where created during instantiation.
+comment|/// \brief Keeps track of the declaration from which a UsingDecl was
+comment|/// created during instantiation.  The source declaration is always
+comment|/// a UsingDecl, an UnresolvedUsingValueDecl, or an
+comment|/// UnresolvedUsingTypenameDecl.
 comment|///
 comment|/// For example:
 comment|/// \code
@@ -697,7 +723,19 @@ operator|,
 name|NamedDecl
 operator|*
 operator|>
-name|InstantiatedFromUnresolvedUsingDecl
+name|InstantiatedFromUsingDecl
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|UsingShadowDecl
+operator|*
+operator|,
+name|UsingShadowDecl
+operator|*
+operator|>
+name|InstantiatedFromUsingShadowDecl
 expr_stmt|;
 name|llvm
 operator|::
@@ -988,21 +1026,22 @@ name|TemplateSpecializationKind
 name|TSK
 parameter_list|)
 function_decl|;
-comment|/// \brief If this using decl is instantiated from an unresolved using decl,
+comment|/// \brief If the given using decl is an instantiation of a
+comment|/// (possibly unresolved) using decl from a template instantiation,
 comment|/// return it.
 name|NamedDecl
 modifier|*
-name|getInstantiatedFromUnresolvedUsingDecl
+name|getInstantiatedFromUsingDecl
 parameter_list|(
 name|UsingDecl
 modifier|*
-name|UUD
+name|Inst
 parameter_list|)
 function_decl|;
-comment|/// \brief Note that the using decl \p Inst is an instantiation of
-comment|/// the unresolved using decl \p Tmpl of a class template.
+comment|/// \brief Remember that the using decl \p Inst is an instantiation
+comment|/// of the using decl \p Pattern of a class template.
 name|void
-name|setInstantiatedFromUnresolvedUsingDecl
+name|setInstantiatedFromUsingDecl
 parameter_list|(
 name|UsingDecl
 modifier|*
@@ -1010,7 +1049,28 @@ name|Inst
 parameter_list|,
 name|NamedDecl
 modifier|*
-name|Tmpl
+name|Pattern
+parameter_list|)
+function_decl|;
+name|void
+name|setInstantiatedFromUsingShadowDecl
+parameter_list|(
+name|UsingShadowDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|UsingShadowDecl
+modifier|*
+name|Pattern
+parameter_list|)
+function_decl|;
+name|UsingShadowDecl
+modifier|*
+name|getInstantiatedFromUsingShadowDecl
+parameter_list|(
+name|UsingShadowDecl
+modifier|*
+name|Inst
 parameter_list|)
 function_decl|;
 name|FieldDecl
@@ -1319,13 +1379,19 @@ name|withConst
 argument_list|()
 return|;
 block|}
-comment|/// getNoReturnType - Add the noreturn attribute to the given type which must
-comment|/// be a FunctionType or a pointer to an allowable type or a BlockPointer.
+comment|/// getNoReturnType - Add or remove the noreturn attribute to the given type
+comment|/// which must be a FunctionType or a pointer to an allowable type or a
+comment|/// BlockPointer.
 name|QualType
 name|getNoReturnType
 parameter_list|(
 name|QualType
 name|T
+parameter_list|,
+name|bool
+name|AddNoReturn
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// getComplexType - Return the uniqued reference to the type for a complex
@@ -1984,7 +2050,7 @@ parameter_list|)
 function_decl|;
 comment|/// getSizeType - Return the unique type for "size_t" (C99 7.17), defined
 comment|/// in<stddef.h>. The sizeof operator requires this (C99 6.5.3.4p4).
-name|QualType
+name|CanQualType
 name|getSizeType
 argument_list|()
 specifier|const
@@ -2570,18 +2636,19 @@ name|Name
 parameter_list|)
 function_decl|;
 name|TemplateName
-name|getQualifiedTemplateName
+name|getOverloadedTemplateName
 parameter_list|(
-name|NestedNameSpecifier
+name|NamedDecl
 modifier|*
-name|NNS
-parameter_list|,
-name|bool
-name|TemplateKeyword
-parameter_list|,
-name|TemplateDecl
+specifier|const
 modifier|*
-name|Template
+name|Begin
+parameter_list|,
+name|NamedDecl
+modifier|*
+specifier|const
+modifier|*
+name|End
 parameter_list|)
 function_decl|;
 name|TemplateName
@@ -2594,7 +2661,7 @@ parameter_list|,
 name|bool
 name|TemplateKeyword
 parameter_list|,
-name|OverloadedFunctionDecl
+name|TemplateDecl
 modifier|*
 name|Template
 parameter_list|)
@@ -2930,6 +2997,22 @@ specifier|const
 name|ObjCImplementationDecl
 modifier|*
 name|D
+parameter_list|)
+function_decl|;
+comment|/// getKeyFunction - Get the key function for the given record decl.
+comment|/// The key function is, according to the Itanium C++ ABI section 5.2.3:
+comment|///
+comment|/// ...the first non-pure virtual function that is not inline at the point
+comment|/// of class definition.
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|getKeyFunction
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
 parameter_list|)
 function_decl|;
 name|void
@@ -3788,9 +3871,9 @@ modifier|*
 name|ImplD
 parameter_list|)
 function_decl|;
-comment|/// \brief Allocate an uninitialized DeclaratorInfo.
+comment|/// \brief Allocate an uninitialized TypeSourceInfo.
 comment|///
-comment|/// The caller should initialize the memory held by DeclaratorInfo using
+comment|/// The caller should initialize the memory held by TypeSourceInfo using
 comment|/// the TypeLoc wrappers.
 comment|///
 comment|/// \param T the type that will be the basis for type source info. This type
@@ -3799,9 +3882,9 @@ comment|/// what type semantic analysis resolved the declarator to.
 comment|///
 comment|/// \param Size the size of the type info to create, or 0 if the size
 comment|/// should be calculated based on the type.
-name|DeclaratorInfo
+name|TypeSourceInfo
 modifier|*
-name|CreateDeclaratorInfo
+name|CreateTypeSourceInfo
 parameter_list|(
 name|QualType
 name|T
@@ -3812,12 +3895,12 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// \brief Allocate a DeclaratorInfo where all locations have been
+comment|/// \brief Allocate a TypeSourceInfo where all locations have been
 comment|/// initialized to a given location, which defaults to the empty
 comment|/// location.
-name|DeclaratorInfo
+name|TypeSourceInfo
 modifier|*
-name|getTrivialDeclaratorInfo
+name|getTrivialTypeSourceInfo
 parameter_list|(
 name|QualType
 name|T

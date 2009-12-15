@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -rewrite-blocks %s -fblocks -o -
+comment|// RUN: clang -cc1 -rewrite-blocks %s -fblocks -o -
 end_comment
 
 begin_function_decl

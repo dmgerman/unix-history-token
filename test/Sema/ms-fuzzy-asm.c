@@ -50,5 +50,17 @@ asm|__asm M2 0x2c
 block|}
 end_function
 
+begin_function
+name|void
+modifier|*
+name|t4
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm mov eax, fs:[0x10]
+block|}
+end_function
+
 end_unit
 

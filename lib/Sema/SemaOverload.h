@@ -66,6 +66,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -74,11 +92,35 @@ name|namespace
 name|clang
 block|{
 name|class
+name|ASTContext
+decl_stmt|;
+name|class
 name|CXXConstructorDecl
+decl_stmt|;
+name|class
+name|CXXConversionDecl
 decl_stmt|;
 name|class
 name|FunctionDecl
 decl_stmt|;
+comment|/// OverloadingResult - Capture the result of performing overload
+comment|/// resolution.
+enum|enum
+name|OverloadingResult
+block|{
+name|OR_Success
+block|,
+comment|///< Overload resolution succeeded.
+name|OR_No_Viable_Function
+block|,
+comment|///< No viable function found.
+name|OR_Ambiguous
+block|,
+comment|///< Ambiguous candidates found.
+name|OR_Deleted
+comment|///< Overload resoltuion refers to a deleted function.
+block|}
+enum|;
 comment|/// ImplicitConversionKind - The kind of implicit conversion used to
 comment|/// convert an argument to a parameter's type. The enumerator values
 comment|/// match with Table 9 of (C++ 13.3.3.1.1) and are listed such that
@@ -100,6 +142,9 @@ comment|///< Array-to-pointer conversion (C++ 4.2)
 name|ICK_Function_To_Pointer
 block|,
 comment|///< Function-to-pointer (C++ 4.3)
+name|ICK_NoReturn_Adjustment
+block|,
+comment|///< Removal of noreturn from a type (Clang)
 name|ICK_Qualification
 block|,
 comment|///< Qualification conversions (C++ 4.4)
@@ -544,6 +589,17 @@ operator|<
 name|OverloadCandidate
 decl_stmt|, 16>
 block|{
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|OverloadCandidate
+operator|,
+literal|16
+operator|>
+name|inherited
+expr_stmt|;
 name|llvm
 operator|::
 name|SmallPtrSet
@@ -578,6 +634,22 @@ name|getCanonicalDecl
 argument_list|()
 argument_list|)
 return|;
+block|}
+comment|/// \brief Clear out all of the candidates.
+name|void
+name|clear
+parameter_list|()
+block|{
+name|inherited
+operator|::
+name|clear
+argument_list|()
+expr_stmt|;
+name|Functions
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 empty_stmt|;

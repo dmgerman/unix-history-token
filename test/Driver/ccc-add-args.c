@@ -4,11 +4,19 @@ comment|// RUN: env CCC_ADD_ARGS="-ccc-echo,-ccc-print-options,,-v" clang -### 2
 end_comment
 
 begin_comment
-comment|// CHECK: Option 0 - Name: "-v", Values: {}
+comment|// CHECK: Option 0 - Name: "-ccc-echo", Values: {}
 end_comment
 
 begin_comment
-comment|// CHECK: Option 1 - Name: "-###", Values: {}
+comment|// CHECK: Option 1 - Name: "-ccc-print-options", Values: {}
+end_comment
+
+begin_comment
+comment|// CHECK: Option 2 - Name: "-v", Values: {}
+end_comment
+
+begin_comment
+comment|// CHECK: Option 3 - Name: "-###", Values: {}
 end_comment
 
 end_unit

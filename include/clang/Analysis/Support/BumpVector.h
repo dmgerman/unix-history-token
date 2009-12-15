@@ -721,7 +721,7 @@ parameter_list|,
 name|size_type
 name|MinSize
 init|=
-literal|0
+literal|1
 parameter_list|)
 function_decl|;
 name|void

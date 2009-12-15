@@ -90,6 +90,14 @@ comment|/// concatenated together, with 'EOF' markers at the end of each argumen
 name|unsigned
 name|NumUnexpArgTokens
 decl_stmt|;
+comment|/// VarargsElided - True if this is a C99 style varargs macro invocation and
+comment|/// there was no argument specified for the "..." argument.  If the argument
+comment|/// was specified (even empty) or this isn't a C99 style varargs function, or
+comment|/// if in strict mode and the C99 varargs macro had only a ... argument, this
+comment|/// is false.
+name|bool
+name|VarargsElided
+decl_stmt|;
 comment|/// PreExpArgTokens - Pre-expanded tokens for arguments that need them.  Empty
 comment|/// if not yet computed.  This includes the EOF marker at the end of the
 comment|/// stream.
@@ -116,13 +124,11 @@ name|Token
 operator|>
 name|StringifiedArgs
 expr_stmt|;
-comment|/// VarargsElided - True if this is a C99 style varargs macro invocation and
-comment|/// there was no argument specified for the "..." argument.  If the argument
-comment|/// was specified (even empty) or this isn't a C99 style varargs function, or
-comment|/// if in strict mode and the C99 varargs macro had only a ... argument, this
-comment|/// is false.
-name|bool
-name|VarargsElided
+comment|/// ArgCache - This is a linked list of MacroArgs objects that the
+comment|/// Preprocessor owns which we use to avoid thrashing malloc/free.
+name|MacroArgs
+modifier|*
+name|ArgCache
 decl_stmt|;
 name|MacroArgs
 argument_list|(
@@ -138,7 +144,12 @@ argument_list|)
 operator|,
 name|VarargsElided
 argument_list|(
-argument|varargsElided
+name|varargsElided
+argument_list|)
+operator|,
+name|ArgCache
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 operator|~
@@ -161,13 +172,19 @@ argument_list|,
 argument|unsigned NumArgTokens
 argument_list|,
 argument|bool VarargsElided
+argument_list|,
+argument|Preprocessor&PP
 argument_list|)
 expr_stmt|;
 comment|/// destroy - Destroy and deallocate the memory for this object.
 comment|///
 name|void
 name|destroy
-parameter_list|()
+parameter_list|(
+name|Preprocessor
+modifier|&
+name|PP
+parameter_list|)
 function_decl|;
 comment|/// ArgNeedsPreexpansion - If we can prove that the argument won't be affected
 comment|/// by pre-expansion, return false.  Otherwise, conservatively return true.
@@ -291,6 +308,13 @@ name|Charify
 init|=
 name|false
 parameter_list|)
+function_decl|;
+comment|/// deallocate - This should only be called by the Preprocessor when managing
+comment|/// its freelist.
+name|MacroArgs
+modifier|*
+name|deallocate
+parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;

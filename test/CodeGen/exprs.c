@@ -677,5 +677,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|f10
+parameter_list|()
+block|{
+name|__builtin_sin
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

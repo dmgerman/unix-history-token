@@ -722,7 +722,7 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Target
+name|DiagClient
 operator|&&
 literal|"Compiler instance has no diagnostic client!"
 argument_list|)
@@ -1267,8 +1267,12 @@ comment|/// when the diagnostic options indicate that the compiler should output
 comment|/// logging information.
 comment|///
 comment|/// Note that this creates an unowned DiagnosticClient, if using directly the
-comment|/// caller is responsible for releaseing the returned Diagnostic's client
+comment|/// caller is responsible for releasing the returned Diagnostic's client
 comment|/// eventually.
+comment|///
+comment|/// \param Opts - The diagnostic options; note that the created text
+comment|/// diagnostic object contains a reference to these options and its lifetime
+comment|/// must extend past that of the diagnostic engine.
 comment|///
 comment|/// \return The new object on success, or null on failure.
 specifier|static
@@ -1444,6 +1448,8 @@ parameter_list|()
 function_decl|;
 comment|/// Create the default output file (from the invocation's options) and add it
 comment|/// to the list of tracked output files.
+comment|///
+comment|/// \return - Null on error.
 name|llvm
 operator|::
 name|raw_fd_ostream
@@ -1461,6 +1467,8 @@ argument_list|)
 expr_stmt|;
 comment|/// Create a new output file and add it to the list of tracked output files,
 comment|/// optionally deriving the output path name.
+comment|///
+comment|/// \return - Null on error.
 name|llvm
 operator|::
 name|raw_fd_ostream

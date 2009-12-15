@@ -328,12 +328,6 @@ literal|1
 decl_stmt|;
 comment|// State that changes while the preprocessor runs:
 name|bool
-name|DisableMacroExpansion
-range|:
-literal|1
-decl_stmt|;
-comment|// True if macro expansion is disabled.
-name|bool
 name|InMacroArgs
 range|:
 literal|1
@@ -342,6 +336,12 @@ comment|// True if parsing fn macro invocation args.
 comment|/// Whether the preprocessor owns the header search object.
 name|bool
 name|OwnsHeaderSearch
+range|:
+literal|1
+decl_stmt|;
+comment|/// DisableMacroExpansion - True if macro expansion is disabled.
+name|bool
+name|DisableMacroExpansion
 range|:
 literal|1
 decl_stmt|;
@@ -384,6 +384,12 @@ operator|*
 operator|>
 name|CommentHandlers
 expr_stmt|;
+comment|/// \brief The file that we're performing code-completion for, if any.
+specifier|const
+name|FileEntry
+modifier|*
+name|CodeCompletionFile
+decl_stmt|;
 comment|/// CurLexer - This is the current top of the stack that we're lexing from if
 comment|/// not expanding a macro and we are lexing directly from source code.
 comment|///  Only one of CurLexer, CurPTHLexer, or CurTokenLexer will be non-null.
@@ -538,7 +544,8 @@ operator|>
 name|Macros
 expr_stmt|;
 comment|/// MICache - A "freelist" of MacroInfo objects that can be reused for quick
-comment|///  allocation.
+comment|/// allocation.
+comment|/// FIXME: why not use a singly linked list?
 name|std
 operator|::
 name|vector
@@ -548,6 +555,16 @@ operator|*
 operator|>
 name|MICache
 expr_stmt|;
+comment|/// MacroArgCache - This is a "freelist" of MacroArg objects that can be
+comment|/// reused for quick allocation.
+name|MacroArgs
+modifier|*
+name|MacroArgCache
+decl_stmt|;
+name|friend
+name|class
+name|MacroArgs
+decl_stmt|;
 comment|// Various statistics we track for performance analysis.
 name|unsigned
 name|NumDirectives
@@ -1149,19 +1166,25 @@ parameter_list|()
 function_decl|;
 comment|/// EnterSourceFile - Add a source file to the top of the include stack and
 comment|/// start lexing tokens from it instead of the current buffer.  Return true
-comment|/// on failure.
+comment|/// and fill in ErrorStr with the error information on failure.
 name|bool
 name|EnterSourceFile
-parameter_list|(
+argument_list|(
 name|FileID
 name|CurFileID
-parameter_list|,
+argument_list|,
 specifier|const
 name|DirectoryLookup
-modifier|*
+operator|*
 name|Dir
-parameter_list|)
-function_decl|;
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|ErrorStr
+argument_list|)
+decl_stmt|;
 comment|/// EnterMacro - Add a Macro to the top of the include stack and start lexing
 comment|/// tokens from it instead of the current buffer.  Args specifies the
 comment|/// tokens input to a function-like macro.
@@ -1602,6 +1625,45 @@ operator|=
 name|Tok
 expr_stmt|;
 block|}
+comment|/// \brief Specify the point at which code-completion will be performed.
+comment|///
+comment|/// \param File the file in which code completion should occur. If
+comment|/// this file is included multiple times, code-completion will
+comment|/// perform completion the first time it is included. If NULL, this
+comment|/// function clears out the code-completion point.
+comment|///
+comment|/// \param Line the line at which code completion should occur
+comment|/// (1-based).
+comment|///
+comment|/// \param Column the column at which code completion should occur
+comment|/// (1-based).
+comment|///
+comment|/// \returns true if an error occurred, false otherwise.
+name|bool
+name|SetCodeCompletionPoint
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|Column
+parameter_list|)
+function_decl|;
+comment|/// \brief Determine if this source location refers into the file
+comment|/// for which we are performing code completion.
+name|bool
+name|isCodeCompletionFile
+argument_list|(
+name|SourceLocation
+name|FileLoc
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Diag - Forwarding function for diagnostics.  This emits a diagnostic at
 comment|/// the specified Token's location, translating the token's start
 comment|/// position in the current buffer into a SourcePosition object for rendering.

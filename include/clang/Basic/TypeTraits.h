@@ -96,6 +96,8 @@ block|,
 name|UTT_IsPolymorphic
 block|,
 name|UTT_IsUnion
+block|,
+name|UTT_IsLiteral
 block|}
 enum|;
 block|}

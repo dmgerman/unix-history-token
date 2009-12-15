@@ -8,7 +8,7 @@ comment|// Make sure we used clang.
 end_comment
 
 begin_comment
-comment|// RUN: grep 'clang-cc" .*hello.c' %t.log
+comment|// RUN: grep 'clang" -cc1 .*hello.c' %t.log
 end_comment
 
 begin_comment

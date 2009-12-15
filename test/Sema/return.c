@@ -973,5 +973,14 @@ block|{ }
 block|}
 end_function
 
+begin_function
+name|int
+name|test34
+parameter_list|()
+block|{
+asm|asm("nop");
+block|}
+end_function
+
 end_unit
 

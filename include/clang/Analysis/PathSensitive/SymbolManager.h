@@ -120,16 +120,22 @@ name|namespace
 name|clang
 block|{
 name|class
+name|ASTContext
+decl_stmt|;
+name|class
+name|BasicValueFactory
+decl_stmt|;
+name|class
 name|MemRegion
 decl_stmt|;
 name|class
 name|TypedRegion
 decl_stmt|;
 name|class
-name|ASTContext
+name|VarRegion
 decl_stmt|;
 name|class
-name|BasicValueFactory
+name|StackFrameContext
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -1502,6 +1508,11 @@ name|SymbolManager
 operator|&
 name|SymMgr
 block|;
+specifier|const
+name|StackFrameContext
+operator|*
+name|CurrentStackFrame
+block|;
 name|public
 operator|:
 name|SymbolReaper
@@ -1513,6 +1524,11 @@ argument_list|,
 name|SymbolManager
 operator|&
 name|symmgr
+argument_list|,
+specifier|const
+name|StackFrameContext
+operator|*
+name|currentStackFrame
 argument_list|)
 operator|:
 name|Liveness
@@ -1522,7 +1538,12 @@ argument_list|)
 block|,
 name|SymMgr
 argument_list|(
-argument|symmgr
+name|symmgr
+argument_list|)
+block|,
+name|CurrentStackFrame
+argument_list|(
+argument|currentStackFrame
 argument_list|)
 block|{}
 operator|~
@@ -1560,21 +1581,10 @@ name|isLive
 argument_list|(
 argument|const Stmt* Loc
 argument_list|,
-argument|const VarDecl* VD
+argument|const VarRegion *VR
 argument_list|)
 specifier|const
-block|{
-return|return
-name|Liveness
-operator|.
-name|isLive
-argument_list|(
-name|Loc
-argument_list|,
-name|VD
-argument_list|)
-return|;
-block|}
+block|;
 name|void
 name|markLive
 argument_list|(
