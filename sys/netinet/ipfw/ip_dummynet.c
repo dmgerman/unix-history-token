@@ -164,6 +164,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ipfw/ip_fw_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_dummynet.h>
 end_include
 

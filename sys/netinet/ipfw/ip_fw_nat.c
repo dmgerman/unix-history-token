@@ -125,6 +125,16 @@ directive|include
 file|<sys/ucred.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|IPFW_INTERNAL
+end_define
+
+begin_comment
+comment|/* Access to protected data structures in ip_fw.h. */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -136,16 +146,6 @@ include|#
 directive|include
 file|<netinet/libalias/alias_local.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|IPFW_INTERNAL
-end_define
-
-begin_comment
-comment|/* Access to protected data structures in ip_fw.h. */
-end_comment
 
 begin_include
 include|#
@@ -181,6 +181,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_fw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ipfw/ip_fw_private.h>
 end_include
 
 begin_include
@@ -228,14 +234,6 @@ end_include
 begin_comment
 comment|/* XXX for in_cksum */
 end_comment
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_IPFW
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 specifier|static
@@ -1781,6 +1779,56 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|LOOKUP_NAT
+parameter_list|(
+name|head
+parameter_list|,
+name|i
+parameter_list|,
+name|p
+parameter_list|)
+value|do {			\ 		LIST_FOREACH((p), head, _next) {	\ 			if ((p)->id == (i)) {		\ 				break;			\ 			}				\ 		}					\ 	} while (0)
+end_define
+
+begin_function
+specifier|static
+name|struct
+name|cfg_nat
+modifier|*
+name|lookup_nat
+parameter_list|(
+name|struct
+name|nat_list
+modifier|*
+name|l
+parameter_list|,
+name|int
+name|nat_id
+parameter_list|)
+block|{
+name|struct
+name|cfg_nat
+modifier|*
+name|res
+decl_stmt|;
+name|LOOKUP_NAT
+argument_list|(
+name|l
+argument_list|,
+name|nat_id
+argument_list|,
+name|res
+argument_list|)
+expr_stmt|;
+return|return
+name|res
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|int
@@ -1850,7 +1898,10 @@ argument_list|)
 expr_stmt|;
 name|LOOKUP_NAT
 argument_list|(
+operator|&
 name|V_layer3_chain
+operator|.
+name|nat
 argument_list|,
 name|ser_n
 operator|->
@@ -2166,7 +2217,10 @@ argument_list|)
 expr_stmt|;
 name|LOOKUP_NAT
 argument_list|(
+operator|&
 name|V_layer3_chain
+operator|.
+name|nat
 argument_list|,
 name|i
 argument_list|,
@@ -2721,6 +2775,10 @@ name|ipfw_nat_ptr
 operator|=
 name|ipfw_nat
 expr_stmt|;
+name|lookup_nat_ptr
+operator|=
+name|lookup_nat
+expr_stmt|;
 name|ipfw_nat_cfg_ptr
 operator|=
 name|ipfw_nat_cfg
@@ -2886,6 +2944,26 @@ expr_stmt|;
 block|}
 comment|/* deregister ipfw_nat */
 name|ipfw_nat_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|lookup_nat_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|ipfw_nat_cfg_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|ipfw_nat_del_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|ipfw_nat_get_cfg_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|ipfw_nat_get_log_ptr
 operator|=
 name|NULL
 expr_stmt|;
