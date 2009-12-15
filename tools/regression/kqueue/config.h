@@ -10,6 +10,12 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HAVE_ERR_H
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYS_EVENT_H
 end_define
 

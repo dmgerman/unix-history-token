@@ -1005,11 +1005,24 @@ name|test_timer
 init|=
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|int
 name|test_user
 init|=
 literal|1
 decl_stmt|;
+else|#
+directive|else
+comment|/* XXX-FIXME temporary */
+name|int
+name|test_user
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|argc
