@@ -101,11 +101,26 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* not used yet */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_fw.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
