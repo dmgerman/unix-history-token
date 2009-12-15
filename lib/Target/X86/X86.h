@@ -191,14 +191,6 @@ modifier|*
 name|createEmitX86CodeToMemory
 parameter_list|()
 function_decl|;
-comment|/// createX86MaxStackAlignmentCalculatorPass - This function returns a pass
-comment|/// which calculates maximal stack alignment required for function
-comment|///
-name|FunctionPass
-modifier|*
-name|createX86MaxStackAlignmentCalculatorPass
-parameter_list|()
-function_decl|;
 specifier|extern
 name|Target
 name|TheX86_32Target

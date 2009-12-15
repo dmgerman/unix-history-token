@@ -549,6 +549,7 @@ operator|)
 block|{
 comment|// Inline fast path, particulary for constant strings where a sufficiently
 comment|// smart compiler will simplify strlen.
+return|return
 name|this
 operator|->
 name|operator
@@ -559,10 +560,6 @@ argument_list|(
 name|Str
 argument_list|)
 operator|)
-block|;
-return|return
-operator|*
-name|this
 return|;
 block|}
 end_expr_stmt
@@ -582,6 +579,7 @@ name|Str
 operator|)
 block|{
 comment|// Avoid the fast path, it would only increase code size for a marginal win.
+return|return
 name|write
 argument_list|(
 name|Str
@@ -594,10 +592,6 @@ operator|.
 name|length
 argument_list|()
 argument_list|)
-block|;
-return|return
-operator|*
-name|this
 return|;
 block|}
 end_expr_stmt
@@ -679,6 +673,7 @@ name|int
 name|N
 operator|)
 block|{
+return|return
 name|this
 operator|->
 name|operator
@@ -693,10 +688,6 @@ operator|(
 name|N
 operator|)
 operator|)
-block|;
-return|return
-operator|*
-name|this
 return|;
 block|}
 end_expr_stmt
@@ -711,6 +702,7 @@ name|int
 name|N
 operator|)
 block|{
+return|return
 name|this
 operator|->
 name|operator
@@ -724,10 +716,6 @@ operator|(
 name|N
 operator|)
 operator|)
-block|;
-return|return
-operator|*
-name|this
 return|;
 block|}
 end_expr_stmt

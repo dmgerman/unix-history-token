@@ -119,14 +119,6 @@ argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;
-comment|// Return true if the block does not fall through.
-name|bool
-name|BlockHasNoFallThrough
-argument_list|(
-argument|const MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).

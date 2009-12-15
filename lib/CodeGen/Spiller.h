@@ -78,6 +78,9 @@ name|class
 name|MachineLoopInfo
 decl_stmt|;
 name|class
+name|SlotIndex
+decl_stmt|;
+name|class
 name|VirtRegMap
 decl_stmt|;
 name|class
@@ -122,6 +125,12 @@ operator|*
 operator|>
 operator|&
 name|spillIs
+argument_list|,
+name|SlotIndex
+operator|*
+name|earliestIndex
+operator|=
+literal|0
 argument_list|)
 operator|=
 literal|0

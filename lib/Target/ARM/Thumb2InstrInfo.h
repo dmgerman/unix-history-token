@@ -119,14 +119,6 @@ argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;
-comment|// Return true if the block does not fall through.
-name|bool
-name|BlockHasNoFallThrough
-argument_list|(
-argument|const MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|copyRegToReg
 argument_list|(

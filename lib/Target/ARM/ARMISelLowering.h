@@ -207,6 +207,12 @@ block|,
 name|DYN_ALLOC
 block|,
 comment|// Dynamic allocation on the stack.
+name|MEMBARRIER
+block|,
+comment|// Memory barrier
+name|SYNCBARRIER
+block|,
+comment|// Memory sync barrier
 name|VCEQ
 block|,
 comment|// Vector compare equal.
@@ -1243,6 +1249,43 @@ argument_list|,
 name|DebugLoc
 name|dl
 argument_list|)
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitAtomicCmpSwap
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|BB
+argument_list|,
+name|unsigned
+name|Size
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitAtomicBinary
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|BB
+argument_list|,
+name|unsigned
+name|Size
+argument_list|,
+name|unsigned
+name|BinOpcode
+argument_list|)
+decl|const
 decl_stmt|;
 block|}
 end_decl_stmt

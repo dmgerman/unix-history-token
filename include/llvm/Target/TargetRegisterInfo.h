@@ -1260,7 +1260,7 @@ block|,
 comment|/// FirstVirtualRegister - This is the first register number that is
 comment|/// considered to be a 'virtual' register, which is part of the SSA
 comment|/// namespace.  This must be the same for all targets, which means that each
-comment|/// target is limited to 1024 registers.
+comment|/// target is limited to this fixed number of registers.
 name|FirstVirtualRegister
 init|=
 literal|1024

@@ -3699,33 +3699,6 @@ name|Offset
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isConsecutiveLoad - Return true if LD is loading 'Bytes' bytes from a
-comment|/// location that is 'Dist' units away from the location that the 'Base' load
-comment|/// is loading from.
-name|bool
-name|isConsecutiveLoad
-argument_list|(
-name|LoadSDNode
-operator|*
-name|LD
-argument_list|,
-name|LoadSDNode
-operator|*
-name|Base
-argument_list|,
-name|unsigned
-name|Bytes
-argument_list|,
-name|int
-name|Dist
-argument_list|,
-specifier|const
-name|MachineFrameInfo
-operator|*
-name|MFI
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// PerformDAGCombine - This method will be invoked for all target nodes and
 comment|/// for any target-independent nodes that the target has registered with
 comment|/// invoke it for.
@@ -4102,10 +4075,10 @@ operator|)
 name|VT
 operator|.
 name|SimpleTy
+operator|*
+literal|2
 operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+literal|63
 operator|&&
 name|ExtType
 operator|<
@@ -4188,10 +4161,10 @@ operator|)
 name|MemVT
 operator|.
 name|SimpleTy
+operator|*
+literal|2
 operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
+literal|63
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)

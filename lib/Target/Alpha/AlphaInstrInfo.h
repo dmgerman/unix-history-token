@@ -276,13 +276,6 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|BlockHasNoFallThrough
-argument_list|(
-argument|const MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
-name|bool
 name|ReverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond

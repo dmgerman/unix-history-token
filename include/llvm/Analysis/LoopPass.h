@@ -188,7 +188,7 @@ operator|&
 name|PMS
 argument_list|)
 block|;
-comment|/// Assign pass manager to manager this pass
+comment|/// Assign pass manager to manage this pass
 name|virtual
 name|void
 name|assignPassManager
@@ -229,7 +229,7 @@ argument_list|,
 argument|Loop *L
 argument_list|)
 block|{}
-comment|/// deletekAnalysisValue - Delete analysis info associated with value V.
+comment|/// deleteAnalysisValue - Delete analysis info associated with value V.
 name|virtual
 name|void
 name|deleteAnalysisValue

@@ -99,6 +99,9 @@ block|,
 comment|/// Return with a flag operand. Operand 0 is the chain operand.
 name|RET_FLAG
 block|,
+comment|/// Same as RET_FLAG, but used for returning from ISRs.
+name|RETI_FLAG
+block|,
 comment|/// Y = R{R,L}A X, rotate right (left) arithmetically
 name|RRA
 block|,
@@ -118,7 +121,7 @@ block|,
 comment|/// CMP - Compare instruction.
 name|CMP
 block|,
-comment|/// SetCC. Operand 0 is condition code, and operand 1 is the flag
+comment|/// SetCC - Operand 0 is condition code, and operand 1 is the flag
 comment|/// operand produced by a CMP instruction.
 name|SETCC
 block|,
@@ -128,9 +131,16 @@ comment|/// condition code, and operand 3 is the flag operand produced by a CMP
 comment|/// instruction.
 name|BR_CC
 block|,
-comment|/// SELECT_CC. Operand 0 and operand 1 are selection variable, operand 3
+comment|/// SELECT_CC - Operand 0 and operand 1 are selection variable, operand 3
 comment|/// is condition code and operand 4 is flag operand.
 name|SELECT_CC
+block|,
+comment|/// SHL, SRA, SRL - Non-constant shifts.
+name|SHL
+block|,
+name|SRA
+block|,
+name|SRL
 block|}
 enum|;
 block|}
@@ -220,6 +230,14 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
+name|LowerSETCC
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
 name|LowerSELECT_CC
 argument_list|(
 argument|SDValue Op
@@ -233,6 +251,30 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
+name|LowerRETURNADDR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
+name|LowerFRAMEADDR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
+name|getReturnAddressFrameIndex
+argument_list|(
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 block|;
 name|TargetLowering
@@ -265,6 +307,20 @@ block|;
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitShiftInstr
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
@@ -428,6 +484,11 @@ specifier|const
 name|MSP430TargetMachine
 operator|&
 name|TM
+block|;
+specifier|const
+name|TargetData
+operator|*
+name|TD
 block|;   }
 decl_stmt|;
 block|}

@@ -1129,6 +1129,14 @@ name|AA
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// isConstantValuePHI - If the specified instruction is a PHI that always
+comment|/// merges together the same virtual register, return the register, otherwise
+comment|/// return 0.
+name|unsigned
+name|isConstantValuePHI
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//
 comment|// Debugging support
 comment|//

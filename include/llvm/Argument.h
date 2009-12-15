@@ -193,6 +193,13 @@ name|hasByValAttr
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// hasNestAttr - Return true if this argument has the nest attribute on
+comment|/// it in its containing function.
+name|bool
+name|hasNestAttr
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// hasNoAliasAttr - Return true if this argument has the noalias attribute on
 comment|/// it in its containing function.
 name|bool

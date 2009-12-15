@@ -87,6 +87,12 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdlib>
+end_include
+
 begin_macro
 name|namespace
 end_macro

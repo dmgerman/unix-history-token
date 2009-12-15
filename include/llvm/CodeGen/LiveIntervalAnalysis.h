@@ -525,10 +525,13 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// conflictsWithPhysRegDef - Returns true if the specified register
-comment|/// is defined during the duration of the specified interval.
+comment|/// conflictsWithPhysReg - Returns true if the specified register is used or
+comment|/// defined during the duration of the specified interval. Copies to and
+comment|/// from li.reg are allowed. This method is only able to analyze simple
+comment|/// ranges that stay within a single basic block. Anything else is
+comment|/// considered a conflict.
 name|bool
-name|conflictsWithPhysRegDef
+name|conflictsWithPhysReg
 parameter_list|(
 specifier|const
 name|LiveInterval
@@ -830,6 +833,24 @@ operator|->
 name|getMBBFromIndex
 argument_list|(
 name|index
+argument_list|)
+return|;
+block|}
+name|SlotIndex
+name|getMBBTerminatorGap
+parameter_list|(
+specifier|const
+name|MachineBasicBlock
+modifier|*
+name|mbb
+parameter_list|)
+block|{
+return|return
+name|indexes_
+operator|->
+name|getTerminatorGap
+argument_list|(
+name|mbb
 argument_list|)
 return|;
 block|}

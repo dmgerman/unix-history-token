@@ -1295,7 +1295,8 @@ specifier|const
 block|;
 comment|/// hasLoadFromStackSlot - If the specified machine instruction has
 comment|/// a load from a stack slot, return true along with the FrameIndex
-comment|/// of the loaded stack slot.  If not, return false.  Unlike
+comment|/// of the loaded stack slot and the machine mem operand containing
+comment|/// the reference.  If not, return false.  Unlike
 comment|/// isLoadFromStackSlot, this returns true for any instructions that
 comment|/// loads from the stack.  This is a hint only and may not catch all
 comment|/// cases.
@@ -1303,6 +1304,8 @@ name|bool
 name|hasLoadFromStackSlot
 argument_list|(
 argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineMemOperand *&MMO
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -1331,14 +1334,16 @@ specifier|const
 block|;
 comment|/// hasStoreToStackSlot - If the specified machine instruction has a
 comment|/// store to a stack slot, return true along with the FrameIndex of
-comment|/// the loaded stack slot.  If not, return false.  Unlike
-comment|/// isStoreToStackSlot, this returns true for any instructions that
-comment|/// loads from the stack.  This is a hint only and may not catch all
-comment|/// cases.
+comment|/// the loaded stack slot and the machine mem operand containing the
+comment|/// reference.  If not, return false.  Unlike isStoreToStackSlot,
+comment|/// this returns true for any instructions that loads from the
+comment|/// stack.  This is a hint only and may not catch all cases.
 name|bool
 name|hasStoreToStackSlot
 argument_list|(
 argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineMemOperand *&MMO
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -1679,14 +1684,6 @@ specifier|const
 block|;
 name|virtual
 name|bool
-name|BlockHasNoFallThrough
-argument_list|(
-argument|const MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
 name|ReverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
@@ -1830,6 +1827,20 @@ specifier|const
 block|;
 name|private
 operator|:
+name|MachineInstr
+operator|*
+name|convertToThreeAddressWithLEA
+argument_list|(
+argument|unsigned MIOpc
+argument_list|,
+argument|MachineFunction::iterator&MFI
+argument_list|,
+argument|MachineBasicBlock::iterator&MBBI
+argument_list|,
+argument|LiveVariables *LV
+argument_list|)
+specifier|const
+block|;
 name|MachineInstr
 operator|*
 name|foldMemoryOperandImpl

@@ -1097,7 +1097,7 @@ directive|endif
 block|}
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEString - A string value DIE.
+comment|/// DIEString - A string value DIE. This DIE keeps string reference only.
 comment|///
 name|class
 name|DIEString

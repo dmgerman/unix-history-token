@@ -36,7 +36,7 @@ comment|//  This file implements the StringSwitch template, which mimics a switc
 end_comment
 
 begin_comment
-comment|//  statements whose cases are string literals.
+comment|//  statement whose cases are string literals.
 end_comment
 
 begin_comment
@@ -97,12 +97,17 @@ comment|///   .Case("yellow", Yellow)
 comment|///   .Case("green", Green)
 comment|///   .Case("blue", Blue)
 comment|///   .Case("indigo", Indigo)
-comment|///   .Case("violet", Violet)
+comment|///   .Cases("violet", "purple", Violet)
 comment|///   .Default(UnknownColor);
 comment|/// \endcode
 name|template
 operator|<
 name|typename
+name|T
+operator|,
+name|typename
+name|R
+operator|=
 name|T
 operator|>
 name|class
@@ -112,14 +117,12 @@ comment|/// \brief The string we are matching.
 name|StringRef
 name|Str
 block|;
-comment|/// \brief The result of this switch statement, once known.
+comment|/// \brief The pointer to the result of this switch statement, once known,
+comment|/// null before that.
+specifier|const
 name|T
+operator|*
 name|Result
-block|;
-comment|/// \brief Set true when the result of this switch is already known; in this
-comment|/// case, Result is valid.
-name|bool
-name|ResultKnown
 block|;
 name|public
 operator|:
@@ -134,9 +137,9 @@ argument_list|(
 name|Str
 argument_list|)
 block|,
-name|ResultKnown
+name|Result
 argument_list|(
-argument|false
+literal|0
 argument_list|)
 block|{ }
 name|template
@@ -156,7 +159,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ResultKnown
+name|Result
 operator|&&
 name|N
 operator|-
@@ -190,11 +193,8 @@ condition|)
 block|{
 name|Result
 operator|=
+operator|&
 name|Value
-expr_stmt|;
-name|ResultKnown
-operator|=
-name|true
 expr_stmt|;
 block|}
 return|return
@@ -414,17 +414,19 @@ name|Value
 argument_list|)
 return|;
 block|}
-name|T
+name|R
 name|Default
 argument_list|(
 argument|const T& Value
 argument_list|)
+specifier|const
 block|{
 if|if
 condition|(
-name|ResultKnown
+name|Result
 condition|)
 return|return
+operator|*
 name|Result
 return|;
 return|return
@@ -432,17 +434,19 @@ name|Value
 return|;
 block|}
 name|operator
-name|T
-parameter_list|()
+name|R
+argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
-name|ResultKnown
+name|Result
 operator|&&
 literal|"Fell off the end of a string-switch"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
+operator|*
 name|Result
 return|;
 block|}

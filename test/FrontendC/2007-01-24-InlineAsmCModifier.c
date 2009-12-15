@@ -8,7 +8,7 @@ comment|// immediates.
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -S %s -o - | llvm-as | llc | grep {pickANumber: 789514}
+comment|// RUN: %llvmgcc -S %s -o - | llc | grep {pickANumber: 789514}
 end_comment
 
 begin_function

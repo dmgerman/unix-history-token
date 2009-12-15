@@ -3665,6 +3665,8 @@ name|insert
 argument_list|(
 name|where
 argument_list|,
+name|this
+operator|->
 name|createNode
 argument_list|(
 name|val

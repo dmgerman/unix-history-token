@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
+file|"llvm/Support/type_traits.h"
 end_include
 
 begin_decl_stmt
@@ -87,7 +87,6 @@ comment|//static inline T getEmptyKey();
 comment|//static inline T getTombstoneKey();
 comment|//static unsigned getHashValue(const T&Val);
 comment|//static bool isEqual(const T&LHS, const T&RHS);
-comment|//static bool isPod()
 block|}
 expr_stmt|;
 comment|// Provide DenseMapInfo for all pointers.
@@ -219,15 +218,6 @@ operator|==
 name|RHS
 return|;
 block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|// Provide DenseMapInfo for chars.
@@ -275,15 +265,6 @@ return|return
 name|Val
 operator|*
 literal|37
-return|;
-block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -348,15 +329,6 @@ return|return
 name|Val
 operator|*
 literal|37
-return|;
-block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -433,15 +405,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
 name|isEqual
 argument_list|(
 argument|const unsigned long& LHS
@@ -513,15 +476,6 @@ name|Val
 operator|*
 literal|37ULL
 argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
 return|;
 block|}
 specifier|static
@@ -757,23 +711,6 @@ return|return
 name|LHS
 operator|==
 name|RHS
-return|;
-block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|FirstInfo
-operator|::
-name|isPod
-argument_list|()
-operator|&&
-name|SecondInfo
-operator|::
-name|isPod
-argument_list|()
 return|;
 block|}
 expr|}

@@ -177,7 +177,7 @@ parameter_list|,
 name|X
 parameter_list|)
 define|\
-value|do { if (DebugFlag&& isCurrentDebugType(TYPE)) { X; } } while (0)
+value|do { if (::llvm::DebugFlag&& ::llvm::isCurrentDebugType(TYPE)) { X; } \   } while (0)
 else|#
 directive|else
 define|#

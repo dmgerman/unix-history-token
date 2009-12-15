@@ -191,6 +191,12 @@ modifier|*
 name|createProfileLoaderPass
 parameter_list|()
 function_decl|;
+specifier|extern
+specifier|const
+name|PassInfo
+modifier|*
+name|ProfileLoaderPassID
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
 comment|// createNoProfileInfoPass - This pass implements the default "no profile".

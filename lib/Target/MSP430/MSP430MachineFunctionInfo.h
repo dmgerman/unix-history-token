@@ -82,6 +82,10 @@ comment|/// stack frame in bytes.
 name|unsigned
 name|CalleeSavedFrameSize
 block|;
+comment|/// ReturnAddrIndex - FrameIndex for return slot.
+name|int
+name|ReturnAddrIndex
+block|;
 name|public
 operator|:
 name|MSP430MachineFunctionInfo
@@ -104,6 +108,11 @@ name|CalleeSavedFrameSize
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|ReturnAddrIndex
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|unsigned
 name|getCalleeSavedFrameSize
@@ -123,6 +132,25 @@ block|{
 name|CalleeSavedFrameSize
 operator|=
 name|bytes
+block|; }
+name|int
+name|getRAIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReturnAddrIndex
+return|;
+block|}
+name|void
+name|setRAIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|ReturnAddrIndex
+operator|=
+name|Index
 block|; }
 expr|}
 block|;  }

@@ -183,114 +183,104 @@ init|=
 literal|11
 block|,
 comment|// This is a PPC 128-bit floating point value
-name|Flag
-init|=
-literal|12
-block|,
-comment|// This is a condition code or machine flag.
-name|isVoid
-init|=
-literal|13
-block|,
-comment|// This has no value
 name|v2i8
 init|=
-literal|14
+literal|12
 block|,
 comment|//  2 x i8
 name|v4i8
 init|=
-literal|15
+literal|13
 block|,
 comment|//  4 x i8
 name|v8i8
 init|=
-literal|16
+literal|14
 block|,
 comment|//  8 x i8
 name|v16i8
 init|=
-literal|17
+literal|15
 block|,
 comment|// 16 x i8
 name|v32i8
 init|=
-literal|18
+literal|16
 block|,
 comment|// 32 x i8
 name|v2i16
 init|=
-literal|19
+literal|17
 block|,
 comment|//  2 x i16
 name|v4i16
 init|=
-literal|20
+literal|18
 block|,
 comment|//  4 x i16
 name|v8i16
 init|=
-literal|21
+literal|19
 block|,
 comment|//  8 x i16
 name|v16i16
 init|=
-literal|22
+literal|20
 block|,
 comment|// 16 x i16
 name|v2i32
 init|=
-literal|23
+literal|21
 block|,
 comment|//  2 x i32
 name|v4i32
 init|=
-literal|24
+literal|22
 block|,
 comment|//  4 x i32
 name|v8i32
 init|=
-literal|25
+literal|23
 block|,
 comment|//  8 x i32
 name|v1i64
 init|=
-literal|26
+literal|24
 block|,
 comment|//  1 x i64
 name|v2i64
 init|=
-literal|27
+literal|25
 block|,
 comment|//  2 x i64
 name|v4i64
 init|=
-literal|28
+literal|26
 block|,
 comment|//  4 x i64
 name|v2f32
 init|=
-literal|29
+literal|27
 block|,
 comment|//  2 x f32
 name|v4f32
 init|=
-literal|30
+literal|28
 block|,
 comment|//  4 x f32
 name|v8f32
 init|=
-literal|31
+literal|29
 block|,
 comment|//  8 x f32
 name|v2f64
 init|=
-literal|32
+literal|30
 block|,
 comment|//  2 x f64
 name|v4f64
 init|=
-literal|33
+literal|31
 block|,
 comment|//  4 x f64
 name|FIRST_VECTOR_VALUETYPE
@@ -301,6 +291,16 @@ name|LAST_VECTOR_VALUETYPE
 init|=
 name|v4f64
 block|,
+name|Flag
+init|=
+literal|32
+block|,
+comment|// This glues nodes together during pre-RA sched
+name|isVoid
+init|=
+literal|33
+block|,
+comment|// This has no value
 name|LAST_VALUETYPE
 init|=
 literal|34
@@ -654,6 +654,24 @@ operator|*
 name|this
 return|;
 block|}
+block|}
+comment|/// getScalarType - If this is a vector type, return the element type,
+comment|/// otherwise return this.
+name|MVT
+name|getScalarType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isVector
+argument_list|()
+operator|?
+name|getVectorElementType
+argument_list|()
+operator|:
+operator|*
+name|this
+return|;
 block|}
 name|MVT
 name|getVectorElementType
@@ -2329,6 +2347,24 @@ argument_list|)
 block|;
 return|return
 name|V
+return|;
+block|}
+comment|/// getScalarType - If this is a vector type, return the element type,
+comment|/// otherwise return this.
+name|EVT
+name|getScalarType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isVector
+argument_list|()
+operator|?
+name|getVectorElementType
+argument_list|()
+operator|:
+operator|*
+name|this
 return|;
 block|}
 comment|/// getVectorElementType - Given a vector type, return the type of

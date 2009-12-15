@@ -4,7 +4,7 @@ comment|// PR691
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -o - | llvm-as | opt -std-compile-opts | \
+comment|// RUN: %llvmgcc %s -S -o - | opt -std-compile-opts | \
 end_comment
 
 begin_comment

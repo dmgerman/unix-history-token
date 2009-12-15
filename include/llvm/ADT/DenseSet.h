@@ -285,7 +285,6 @@ operator|*
 name|this
 return|;
 block|}
-empty_stmt|;
 name|bool
 name|operator
 operator|==
@@ -400,10 +399,6 @@ name|this
 return|;
 block|}
 end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_expr_stmt
 name|bool

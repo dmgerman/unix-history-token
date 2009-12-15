@@ -169,6 +169,12 @@ name|RegisterReference
 typedef|;
 name|private
 label|:
+comment|/// NumTargetRegs - Number of non-virtual target registers
+comment|/// (i.e. TRI->getNumRegs()).
+specifier|const
+name|unsigned
+name|NumTargetRegs
+decl_stmt|;
 comment|/// GroupNodes - Implements a disjoint-union data structure to
 comment|/// form register groups. A node is represented by an index into
 comment|/// the vector. A node can "point to" itself to indicate that it
@@ -229,11 +235,11 @@ name|public
 label|:
 name|AggressiveAntiDepState
 argument_list|(
-name|MachineBasicBlock
-operator|*
-name|BB
+argument|const unsigned TargetRegs
+argument_list|,
+argument|MachineBasicBlock *BB
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|/// GetKillIndices - Return the kill indices.
 name|unsigned
 modifier|*

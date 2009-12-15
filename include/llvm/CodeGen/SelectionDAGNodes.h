@@ -1753,16 +1753,24 @@ operator|==
 name|RHS
 return|;
 block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|SDValue
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
 block|;
 comment|/// simplify_type specializations - Allow casting operators to work directly on
 comment|/// SDValues as if they were SDNode*'s.
@@ -2439,6 +2447,8 @@ operator|!
 name|use_empty
 argument_list|()
 operator|&&
+name|llvm
+operator|::
 name|next
 argument_list|(
 name|use_begin
@@ -9240,6 +9250,34 @@ name|this
 block|;
 return|return
 name|tmp
+return|;
+block|}
+name|size_t
+name|operator
+operator|-
+operator|(
+name|SDNodeIterator
+name|Other
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Node
+operator|==
+name|Other
+operator|.
+name|Node
+operator|&&
+literal|"Cannot compare iterators of two different nodes!"
+argument_list|)
+block|;
+return|return
+name|Operand
+operator|-
+name|Other
+operator|.
+name|Operand
 return|;
 block|}
 specifier|static

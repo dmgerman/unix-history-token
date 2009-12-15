@@ -393,25 +393,6 @@ modifier|&
 name|LV
 parameter_list|)
 function_decl|;
-comment|/// isLiveOut - Determine if Reg is live out from MBB, when not
-comment|/// considering PHI nodes. This means that Reg is either killed by
-comment|/// a successor block or passed through one.
-name|bool
-name|isLiveOut
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|,
-specifier|const
-name|MachineBasicBlock
-modifier|&
-name|MBB
-parameter_list|,
-name|LiveVariables
-modifier|&
-name|LV
-parameter_list|)
-function_decl|;
 comment|/// SplitCriticalEdge - Split a critical edge from A to B by
 comment|/// inserting a new MBB. Update branches in A and PHI instructions
 comment|/// in B. Return the new block.

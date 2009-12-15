@@ -96,6 +96,9 @@ decl_stmt|;
 name|class
 name|SelectionDAG
 decl_stmt|;
+name|class
+name|MachineMemOperand
+decl_stmt|;
 name|template
 operator|<
 name|class
@@ -577,7 +580,8 @@ return|;
 block|}
 comment|/// hasLoadFromStackSlot - If the specified machine instruction has
 comment|/// a load from a stack slot, return true along with the FrameIndex
-comment|/// of the loaded stack slot.  If not, return false.  Unlike
+comment|/// of the loaded stack slot and the machine mem operand containing
+comment|/// the reference.  If not, return false.  Unlike
 comment|/// isLoadFromStackSlot, this returns true for any instructions that
 comment|/// loads from the stack.  This is just a hint, as some cases may be
 comment|/// missed.
@@ -589,6 +593,12 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI
+argument_list|,
+specifier|const
+name|MachineMemOperand
+operator|*
+operator|&
+name|MMO
 argument_list|,
 name|int
 operator|&
@@ -648,10 +658,10 @@ return|;
 block|}
 comment|/// hasStoreToStackSlot - If the specified machine instruction has a
 comment|/// store to a stack slot, return true along with the FrameIndex of
-comment|/// the loaded stack slot.  If not, return false.  Unlike
-comment|/// isStoreToStackSlot, this returns true for any instructions that
-comment|/// loads from the stack.  This is just a hint, as some cases may be
-comment|/// missed.
+comment|/// the loaded stack slot and the machine mem operand containing the
+comment|/// reference.  If not, return false.  Unlike isStoreToStackSlot,
+comment|/// this returns true for any instructions that loads from the
+comment|/// stack.  This is just a hint, as some cases may be missed.
 name|virtual
 name|bool
 name|hasStoreToStackSlot
@@ -660,6 +670,12 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI
+argument_list|,
+specifier|const
+name|MachineMemOperand
+operator|*
+operator|&
+name|MMO
 argument_list|,
 name|int
 operator|&
@@ -832,11 +848,10 @@ comment|/// 1. If this block ends with no branches (it just falls through to its
 comment|///    just return false, leaving TBB/FBB null.
 comment|/// 2. If this block ends with only an unconditional branch, it sets TBB to be
 comment|///    the destination block.
-comment|/// 3. If this block ends with an conditional branch and it falls through to
-comment|///    a successor block, it sets TBB to be the branch destination block and
-comment|///    a list of operands that evaluate the condition. These
-comment|///    operands can be passed to other TargetInstrInfo methods to create new
-comment|///    branches.
+comment|/// 3. If this block ends with a conditional branch and it falls through to a
+comment|///    successor block, it sets TBB to be the branch destination block and a
+comment|///    list of operands that evaluate the condition. These operands can be
+comment|///    passed to other TargetInstrInfo methods to create new branches.
 comment|/// 4. If this block ends with a conditional branch followed by an
 comment|///    unconditional branch, it returns the 'true' destination in TBB, the
 comment|///    'false' destination in FBB, and a list of operands that evaluate the
@@ -1396,25 +1411,6 @@ decl|const
 block|{
 return|return
 literal|0
-return|;
-block|}
-comment|/// BlockHasNoFallThrough - Return true if the specified block does not
-comment|/// fall-through into its successor block.  This is primarily used when a
-comment|/// branch is unanalyzable.  It is useful for things like unconditional
-comment|/// indirect branches (jump tables).
-name|virtual
-name|bool
-name|BlockHasNoFallThrough
-argument_list|(
-specifier|const
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
 return|;
 block|}
 comment|/// ReverseBranchCondition - Reverses the branch condition of the specified

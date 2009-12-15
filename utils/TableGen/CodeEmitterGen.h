@@ -93,6 +93,9 @@ decl_stmt|;
 name|class
 name|BitsInit
 decl_stmt|;
+struct_decl|struct
+name|Init
+struct_decl|;
 name|class
 name|CodeEmitterGen
 range|:
@@ -175,7 +178,7 @@ block|;
 name|int
 name|getVariableBit
 argument_list|(
-argument|const std::string&VarName
+argument|const Init *VarVal
 argument_list|,
 argument|BitsInit *BI
 argument_list|,

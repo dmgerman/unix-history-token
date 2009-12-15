@@ -71,6 +71,12 @@ directive|include
 file|"llvm/ADT/StringSet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"X86MachineFunctionInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

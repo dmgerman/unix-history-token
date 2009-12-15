@@ -337,22 +337,6 @@ name|unsigned
 name|Opcode
 parameter_list|)
 function_decl|;
-comment|/// TargetSelectInstruction - This method is called by target-independent
-comment|/// code when the normal FastISel process fails to select an instruction.
-comment|/// This gives targets a chance to emit code for anything that doesn't
-comment|/// fit into FastISel's framework. It returns true if it was successful.
-comment|///
-name|virtual
-name|bool
-name|TargetSelectInstruction
-parameter_list|(
-name|Instruction
-modifier|*
-name|I
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 comment|/// getRegForValue - Create a virtual register and arrange for it to
 comment|/// be assigned the value for the given LLVM value.
 name|unsigned
@@ -456,6 +440,22 @@ endif|#
 directive|endif
 argument_list|)
 expr_stmt|;
+comment|/// TargetSelectInstruction - This method is called by target-independent
+comment|/// code when the normal FastISel process fails to select an instruction.
+comment|/// This gives targets a chance to emit code for anything that doesn't
+comment|/// fit into FastISel's framework. It returns true if it was successful.
+comment|///
+name|virtual
+name|bool
+name|TargetSelectInstruction
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// FastEmit_r - This method is called by target-independent code
 comment|/// to request that an instruction with the given type and opcode
 comment|/// be emitted.

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -std=c99 %s -S -emit-llvm -O0 -o - | grep define | \
+comment|// RUN: %llvmgcc -std=c99 %s -S -emit-llvm -O0 -o - | grep declare | \
 end_comment
 
 begin_comment
-comment|// RUN:   grep xglobWeak | grep weak | count 1
+comment|// RUN:   grep xglobWeak | grep extern_weak | count 1
 end_comment
 
 begin_comment
@@ -32,11 +32,15 @@ comment|// RUN:   grep xWeakextnoinline | grep weak | count 1
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -std=c99 %s -S -emit-llvm -O0 -o - | grep define | \
+comment|// RUN: %llvmgcc -std=c99 %s -S -emit-llvm -O0 -o - | grep declare | \
 end_comment
 
 begin_comment
-comment|// RUN:   grep xglobnoWeak | grep available_externally | count 1
+comment|// RUN:   grep xglobnoWeak | grep -v internal | grep -v weak | \
+end_comment
+
+begin_comment
+comment|// RUN:   grep -v linkonce | count 1
 end_comment
 
 begin_comment

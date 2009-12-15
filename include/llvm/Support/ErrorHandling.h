@@ -252,7 +252,8 @@ name|llvm_unreachable
 parameter_list|(
 name|msg
 parameter_list|)
-value|llvm_unreachable_internal(msg, __FILE__, __LINE__)
+define|\
+value|::llvm::llvm_unreachable_internal(msg, __FILE__, __LINE__)
 end_define
 
 begin_else
@@ -267,7 +268,7 @@ name|llvm_unreachable
 parameter_list|(
 name|msg
 parameter_list|)
-value|llvm_unreachable_internal()
+value|::llvm::llvm_unreachable_internal()
 end_define
 
 begin_endif

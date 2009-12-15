@@ -115,9 +115,6 @@ name|class
 name|StructLayout
 decl_stmt|;
 name|class
-name|StructLayoutMap
-decl_stmt|;
-name|class
 name|GlobalVariable
 decl_stmt|;
 name|class
@@ -215,17 +212,6 @@ name|rhs
 operator|)
 specifier|const
 expr_stmt|;
-comment|/// output stream operator
-name|std
-operator|::
-name|ostream
-operator|&
-name|dump
-argument_list|(
-argument|std::ostream&os
-argument_list|)
-specifier|const
-expr_stmt|;
 block|}
 struct|;
 name|class
@@ -288,7 +274,7 @@ name|InvalidAlignmentElem
 block|;
 comment|// The StructType -> StructLayout map.
 name|mutable
-name|StructLayoutMap
+name|void
 operator|*
 name|LayoutMap
 block|;
@@ -511,6 +497,9 @@ literal|0
 init|,
 name|e
 init|=
+operator|(
+name|unsigned
+operator|)
 name|LegalIntWidths
 operator|.
 name|size

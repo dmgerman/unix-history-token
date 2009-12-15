@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -S -o - | llvm-as | opt -std-compile-opts | llc | \
+comment|// RUN: %llvmgcc %s -S -o - | opt -std-compile-opts | llc | \
 end_comment
 
 begin_comment

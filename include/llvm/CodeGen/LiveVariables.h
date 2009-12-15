@@ -1027,6 +1027,21 @@ name|MRI
 argument_list|)
 return|;
 block|}
+comment|/// isLiveOut - Determine if Reg is live out from MBB, when not considering
+comment|/// PHI nodes. This means that Reg is either killed by a successor block or
+comment|/// passed through one.
+name|bool
+name|isLiveOut
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+function_decl|;
 comment|/// addNewBlock - Add a new basic block BB between DomBB and SuccBB. All
 comment|/// variables that are live out of DomBB and live into SuccBB will be marked
 comment|/// as passing live through BB. This method assumes that the machine code is

@@ -52,11 +52,15 @@ comment|// RUN:   grep xstatnoWeak | grep internal | count 1
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep define | \
+comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep declare | \
 end_comment
 
 begin_comment
-comment|// RUN:   grep xextnoWeak | grep available_externally | count 1
+comment|// RUN:   grep xextnoWeak | grep -v internal | grep -v weak | \
+end_comment
+
+begin_comment
+comment|// RUN:   grep -v linkonce | count 1
 end_comment
 
 begin_function_decl

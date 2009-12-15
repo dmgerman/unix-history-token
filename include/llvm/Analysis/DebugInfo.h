@@ -836,6 +836,12 @@ operator|=
 literal|1
 operator|<<
 literal|4
+block|,
+name|FlagVirtual
+operator|=
+literal|1
+operator|<<
+literal|5
 block|}
 block|;
 name|protected
@@ -1076,6 +1082,22 @@ name|getFlags
 argument_list|()
 operator|&
 name|FlagBlockByrefStruct
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|isVirtual
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getFlags
+argument_list|()
+operator|&
+name|FlagVirtual
 operator|)
 operator|!=
 literal|0
@@ -1704,6 +1726,81 @@ literal|10
 argument_list|)
 return|;
 block|}
+name|unsigned
+name|getVirtuality
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|DbgNode
+operator|->
+name|getNumElements
+argument_list|()
+operator|<
+literal|14
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|getUnsignedField
+argument_list|(
+literal|11
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getVirtualIndex
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|DbgNode
+operator|->
+name|getNumElements
+argument_list|()
+operator|<
+literal|14
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|getUnsignedField
+argument_list|(
+literal|12
+argument_list|)
+return|;
+block|}
+name|DICompositeType
+name|getContainingType
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|DbgNode
+operator|->
+name|getNumElements
+argument_list|()
+operator|>=
+literal|14
+operator|&&
+literal|"Invalid type!"
+argument_list|)
+block|;
+return|return
+name|getFieldAs
+operator|<
+name|DICompositeType
+operator|>
+operator|(
+literal|13
+operator|)
+return|;
+block|}
 name|StringRef
 name|getFilename
 argument_list|()
@@ -1753,11 +1850,11 @@ operator|*
 name|F
 argument_list|)
 block|;   }
-block|;
+decl_stmt|;
 comment|/// DIGlobalVariable - This is a wrapper for a global variable.
 name|class
 name|DIGlobalVariable
-operator|:
+range|:
 name|public
 name|DIGlobal
 block|{
@@ -1805,12 +1902,12 @@ name|dump
 argument_list|()
 specifier|const
 block|;   }
-block|;
+decl_stmt|;
 comment|/// DIVariable - This is a wrapper for a variable (e.g. parameter, local,
 comment|/// global etc).
 name|class
 name|DIVariable
-operator|:
+range|:
 name|public
 name|DIDescriptor
 block|{
@@ -1980,11 +2077,11 @@ name|dump
 argument_list|()
 specifier|const
 block|;   }
-block|;
+decl_stmt|;
 comment|/// DILexicalBlock - This is a wrapper for a lexical block.
 name|class
 name|DILexicalBlock
-operator|:
+range|:
 name|public
 name|DIScope
 block|{
@@ -2190,6 +2287,11 @@ operator|*
 name|DeclareFn
 block|;
 comment|// llvm.dbg.declare
+name|Function
+operator|*
+name|ValueFn
+block|;
+comment|// llvm.dbg.value
 name|DIFactory
 argument_list|(
 specifier|const
@@ -2461,6 +2563,24 @@ argument_list|,
 argument|bool isLocalToUnit
 argument_list|,
 argument|bool isDefinition
+argument_list|,
+argument|unsigned VK =
+literal|0
+argument_list|,
+argument|unsigned VIndex =
+literal|0
+argument_list|,
+argument|DIType = DIType()
+argument_list|)
+block|;
+comment|/// CreateSubprogramDefinition - Create new subprogram descriptor for the
+comment|/// given declaration.
+name|DISubprogram
+name|CreateSubprogramDefinition
+argument_list|(
+name|DISubprogram
+operator|&
+name|SPDeclaration
 argument_list|)
 block|;
 comment|/// CreateGlobalVariable - Create a new descriptor for the specified global.
@@ -2581,6 +2701,34 @@ operator|*
 name|InsertDeclare
 argument_list|(
 argument|llvm::Value *Storage
+argument_list|,
+argument|DIVariable D
+argument_list|,
+argument|Instruction *InsertBefore
+argument_list|)
+block|;
+comment|/// InsertDbgValueIntrinsic - Insert a new llvm.dbg.value intrinsic call.
+name|Instruction
+operator|*
+name|InsertDbgValueIntrinsic
+argument_list|(
+argument|llvm::Value *V
+argument_list|,
+argument|llvm::Value *Offset
+argument_list|,
+argument|DIVariable D
+argument_list|,
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|;
+comment|/// InsertDbgValueIntrinsic - Insert a new llvm.dbg.value intrinsic call.
+name|Instruction
+operator|*
+name|InsertDbgValueIntrinsic
+argument_list|(
+argument|llvm::Value *V
+argument_list|,
+argument|llvm::Value *Offset
 argument_list|,
 argument|DIVariable D
 argument_list|,

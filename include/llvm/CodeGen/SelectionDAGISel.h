@@ -382,16 +382,6 @@ argument_list|)
 block|;
 name|SDNode
 operator|*
-name|Select_DBG_LABEL
-argument_list|(
-specifier|const
-name|SDValue
-operator|&
-name|N
-argument_list|)
-block|;
-name|SDNode
-operator|*
 name|Select_EH_LABEL
 argument_list|(
 specifier|const

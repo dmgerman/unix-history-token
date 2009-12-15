@@ -2177,11 +2177,10 @@ argument_list|(
 argument|complexity
 argument_list|)
 block|{}
-expr_stmt|;
 name|ListInit
-modifier|*
+operator|*
 name|Predicates
-decl_stmt|;
+expr_stmt|;
 comment|// Top level predicate conditions to match.
 name|TreePatternNode
 modifier|*

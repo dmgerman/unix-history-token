@@ -4,7 +4,7 @@ comment|// Check bitfields.
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -S -O0 -g %s -o - | llvm-as | \
+comment|// RUN: %llvmgcc -S -O0 -g %s -o - | \
 end_comment
 
 begin_comment

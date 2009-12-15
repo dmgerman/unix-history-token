@@ -229,6 +229,8 @@ name|kw_arm_aapcscc
 block|,
 name|kw_arm_aapcs_vfpcc
 block|,
+name|kw_msp430_intrcc
+block|,
 name|kw_signext
 block|,
 name|kw_zeroext

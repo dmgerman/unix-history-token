@@ -71,6 +71,12 @@ directive|define
 name|LLVM_SUPPORT_TYPE_TRAITS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_comment
 comment|// This is actually the conforming implementation which works with abstract
 end_comment
@@ -167,6 +173,74 @@ literal|0
 operator|)
 operator|)
 block|}
+block|; }
+expr_stmt|;
+comment|/// isPodLike - This is a type trait that is used to determine whether a given
+comment|/// type can be copied around with memcpy instead of running ctors etc.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|isPodLike
+block|{
+comment|// If we don't know anything else, we can (at least) assume that all non-class
+comment|// types are PODs.
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+operator|!
+name|is_class
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+block|; }
+expr_stmt|;
+comment|// std::pair's are pod-like if their elements are.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|U
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|T
+operator|,
+name|U
+operator|>
+expr|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|isPodLike
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|&
+name|isPodLike
+operator|<
+name|U
+operator|>
+operator|::
+name|value
 block|; }
 expr_stmt|;
 comment|/// \brief Metafunction that determines whether the two given types are

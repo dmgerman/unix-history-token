@@ -137,6 +137,11 @@ comment|/// ARM_AAPCS_VFP - Same as ARM_AAPCS, but uses hard floating point ABI.
 name|ARM_AAPCS_VFP
 init|=
 literal|68
+block|,
+comment|/// MSP430_INTR - Calling convention used for MSP430 interrupt routines.
+name|MSP430_INTR
+init|=
+literal|69
 block|}
 enum|;
 block|}

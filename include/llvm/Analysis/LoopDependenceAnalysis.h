@@ -263,8 +263,8 @@ operator|*
 operator|&
 argument_list|)
 block|;
-comment|/// getLoops - Collect all loops of the loop-nest L a given SCEV is variant
-comment|/// in.
+comment|/// getLoops - Collect all loops of the loop nest L in which
+comment|/// a given SCEV is variant.
 name|void
 name|getLoops
 argument_list|(
@@ -275,7 +275,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// isLoopInvariant - True if a given SCEV is invariant in all loops of the
-comment|/// loop-nest starting at the innermost loop L.
+comment|/// loop nest starting at the innermost loop L.
 name|bool
 name|isLoopInvariant
 argument_list|(
@@ -283,9 +283,9 @@ argument|const SCEV*
 argument_list|)
 specifier|const
 block|;
-comment|/// isAffine - An SCEV is affine with respect to the loop-nest starting at
+comment|/// isAffine - An SCEV is affine with respect to the loop nest starting at
 comment|/// the innermost loop L if it is of the form A+B*X where A, B are invariant
-comment|/// in the loop-nest and X is a induction variable in the loop-nest.
+comment|/// in the loop nest and X is a induction variable in the loop nest.
 name|bool
 name|isAffine
 argument_list|(
@@ -378,8 +378,8 @@ argument_list|(
 argument|&ID
 argument_list|)
 block|{}
-comment|/// isDependencePair - Check wether two values can possibly give rise to a
-comment|/// data dependence: that is the case if both are instructions accessing
+comment|/// isDependencePair - Check whether two values can possibly give rise to
+comment|/// a data dependence: that is the case if both are instructions accessing
 comment|/// memory and at least one of those accesses is a write.
 name|bool
 name|isDependencePair

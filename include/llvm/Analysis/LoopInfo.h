@@ -3156,7 +3156,7 @@ specifier|const
 expr_stmt|;
 comment|/// getUniqueExitBlocks - Return all unique successor blocks of this loop.
 comment|/// These are the blocks _outside of the current loop_ which are branched to.
-comment|/// This assumes that loop is in canonical form.
+comment|/// This assumes that loop exits are in canonical form.
 comment|///
 name|void
 name|getUniqueExitBlocks
@@ -5543,40 +5543,6 @@ argument_list|(
 name|BB
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|isNotAlreadyContainedIn
-parameter_list|(
-specifier|const
-name|Loop
-modifier|*
-name|SubLoop
-parameter_list|,
-specifier|const
-name|Loop
-modifier|*
-name|ParentLoop
-parameter_list|)
-block|{
-return|return
-name|LoopInfoBase
-operator|<
-name|BasicBlock
-operator|,
-name|Loop
-operator|>
-operator|::
-name|isNotAlreadyContainedIn
-argument_list|(
-name|SubLoop
-argument_list|,
-name|ParentLoop
-argument_list|)
-return|;
 block|}
 end_function
 

@@ -560,8 +560,6 @@ literal|16
 operator|>
 name|Processed
 block|;
-name|public
-operator|:
 comment|/// IVUses - A list of all tracked IV uses of induction variable expressions
 comment|/// we are interested in.
 name|ilist
@@ -570,6 +568,8 @@ name|IVUsersOfOneStride
 operator|>
 name|IVUses
 block|;
+name|public
+operator|:
 comment|/// IVUsesByStride - A mapping from the strides in StrideOrder to the
 comment|/// uses in IVUses.
 name|std

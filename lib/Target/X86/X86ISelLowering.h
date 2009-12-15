@@ -220,6 +220,10 @@ comment|/// X86 SetCC. Operand 0 is condition code, and operand 1 is the flag
 comment|/// operand produced by a CMP instruction.
 name|SETCC
 block|,
+comment|// Same as SETCC except it's materialized with a sbb and the value is all
+comment|// one's or all zero's.
+name|SETCC_CARRY
+block|,
 comment|/// X86 conditional moves. Operand 0 and operand 1 are the two values
 comment|/// to select from. Operand 2 is the condition code, and operand 3 is the
 comment|/// flag operand produced by a CMP or TEST instruction. It also writes a
@@ -1469,6 +1473,18 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|bool isSigned
+argument_list|)
+block|;
+name|SDValue
+name|LowerAsSplatVectorLoad
+argument_list|(
+argument|SDValue SrcOp
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue

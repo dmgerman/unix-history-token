@@ -813,12 +813,6 @@ name|LastUseIdx
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// CalculateSpillWeights - Compute spill weights for all virtual register
-comment|/// live intervals.
-name|void
-name|CalculateSpillWeights
-parameter_list|()
-function_decl|;
 name|void
 name|printRegName
 argument_list|(

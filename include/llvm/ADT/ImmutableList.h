@@ -1037,20 +1037,45 @@ return|;
 block|}
 end_decl_stmt
 
-begin_function
-specifier|static
-name|bool
-name|isPod
-parameter_list|()
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|isPodLike
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|ImmutableList
+operator|<
+name|T
+operator|>
+expr|>
 block|{
-return|return
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
 name|true
-return|;
-block|}
-end_function
+block|; }
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-unit|};  }
+unit|}
 comment|// end llvm namespace
 end_comment
 

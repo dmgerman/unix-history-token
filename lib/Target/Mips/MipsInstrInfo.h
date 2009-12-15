@@ -633,14 +633,6 @@ return|;
 block|}
 name|virtual
 name|bool
-name|BlockHasNoFallThrough
-argument_list|(
-argument|const MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
 name|ReverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond

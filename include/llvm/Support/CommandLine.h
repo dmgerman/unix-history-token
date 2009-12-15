@@ -4477,6 +4477,13 @@ argument_list|(
 argument|const T&V
 argument_list|)
 block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|DataType
+operator|>
+operator|::
 name|push_back
 argument_list|(
 name|V
@@ -4621,6 +4628,13 @@ return|return
 name|true
 return|;
 comment|// Parse Error!
+name|list_storage
+operator|<
+name|DataType
+operator|,
+name|Storage
+operator|>
+operator|::
 name|addValue
 argument_list|(
 name|Val

@@ -4,7 +4,7 @@ comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | grep extern_weak
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | llvm-as | llc
+comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | llc
 end_comment
 
 begin_if

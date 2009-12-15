@@ -259,15 +259,6 @@ argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|)
 specifier|const
 block|;
-comment|//! Return true if the specified block does not fall through
-name|virtual
-name|bool
-name|BlockHasNoFallThrough
-argument_list|(
-argument|const MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 comment|//! Reverses a branch's condition, returning false on success.
 name|virtual
 name|bool

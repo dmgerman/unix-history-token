@@ -1238,8 +1238,8 @@ name|V
 operator|)
 block|;   }
 decl_stmt|;
-comment|/// ASTCallbackVHDenseMapInfo - Traits to tell DenseMap that ASTCallbackVH
-comment|/// is not a POD (it needs its destructor called).
+comment|/// ASTCallbackVHDenseMapInfo - Traits to tell DenseMap that tell us how to
+comment|/// compare and hash the value handle.
 name|struct
 name|ASTCallbackVHDenseMapInfo
 range|:
@@ -1249,28 +1249,18 @@ operator|<
 name|Value
 operator|*
 operator|>
-block|{
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
-expr|}
-block|;
+block|{}
+decl_stmt|;
 name|AliasAnalysis
-operator|&
+modifier|&
 name|AA
-block|;
+decl_stmt|;
 name|ilist
 operator|<
 name|AliasSet
 operator|>
 name|AliasSets
-block|;
+expr_stmt|;
 typedef|typedef
 name|DenseMap
 operator|<

@@ -379,18 +379,14 @@ parameter_list|(
 name|PMStack
 modifier|&
 parameter_list|)
-block|{}
+function_decl|;
 comment|///  Return what kind of Pass Manager can manage this pass.
 name|virtual
 name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
 specifier|const
-block|{
-return|return
-name|PMT_Unknown
-return|;
-block|}
+expr_stmt|;
 comment|// Access AnalysisResolver
 specifier|inline
 name|void
@@ -437,9 +433,7 @@ name|AnalysisUsage
 operator|&
 argument_list|)
 decl|const
-block|{
-comment|// By default, no analysis results are used, all are invalidated.
-block|}
+decl_stmt|;
 comment|/// releaseMemory() - This member can be implemented by a pass if it wants to
 comment|/// be able to release its memory when it is no longer needed.  The default
 comment|/// behavior of passes is to hold onto memory for the entire duration of their
@@ -455,7 +449,7 @@ name|virtual
 name|void
 name|releaseMemory
 parameter_list|()
-block|{}
+function_decl|;
 comment|/// verifyAnalysis() - This member can be implemented by a analysis pass to
 comment|/// check state of analysis information.
 name|virtual
@@ -463,16 +457,18 @@ name|void
 name|verifyAnalysis
 argument_list|()
 specifier|const
-block|{}
+expr_stmt|;
 comment|// dumpPassStructure - Implement the -debug-passes=PassStructure option
 name|virtual
 name|void
 name|dumpPassStructure
-argument_list|(
-argument|unsigned Offset =
+parameter_list|(
+name|unsigned
+name|Offset
+init|=
 literal|0
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|template
 operator|<
 name|typename
@@ -664,11 +660,7 @@ name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
 specifier|const
-block|{
-return|return
-name|PMT_ModulePassManager
-return|;
-block|}
+block|;
 name|explicit
 name|ModulePass
 argument_list|(
@@ -724,7 +716,7 @@ name|virtual
 name|void
 name|initializePass
 argument_list|()
-block|{}
+block|;
 comment|/// ImmutablePasses are never run.
 comment|///
 name|bool
@@ -818,13 +810,10 @@ name|virtual
 name|bool
 name|doInitialization
 argument_list|(
-argument|Module&
+name|Module
+operator|&
 argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
 comment|/// runOnFunction - Virtual method overriden by subclasses to do the
 comment|/// per-function processing of the pass.
 comment|///
@@ -846,13 +835,10 @@ name|virtual
 name|bool
 name|doFinalization
 argument_list|(
-argument|Module&
+name|Module
+operator|&
 argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
 comment|/// runOnModule - On a module, we run this pass by initializing,
 comment|/// ronOnFunction'ing once for every function in the module, then by
 comment|/// finalizing.
@@ -892,13 +878,8 @@ name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
 specifier|const
-block|{
-return|return
-name|PMT_FunctionPassManager
-return|;
-block|}
-expr|}
-block|;
+block|; }
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// BasicBlockPass class - This class is used to implement most local
 comment|/// optimizations.  Optimizations should subclass this class if they
@@ -911,7 +892,7 @@ comment|///   3. Optimizations conform to all of the constraints of FunctionPass
 comment|///
 name|class
 name|BasicBlockPass
-operator|:
+range|:
 name|public
 name|Pass
 block|{
@@ -949,13 +930,10 @@ name|virtual
 name|bool
 name|doInitialization
 argument_list|(
-argument|Module&
+name|Module
+operator|&
 argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
 comment|/// doInitialization - Virtual method overridden by BasicBlockPass subclasses
 comment|/// to do any necessary per-function initialization.
 comment|///
@@ -963,13 +941,10 @@ name|virtual
 name|bool
 name|doInitialization
 argument_list|(
-argument|Function&
+name|Function
+operator|&
 argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
 comment|/// runOnBasicBlock - Virtual method overriden by subclasses to do the
 comment|/// per-basicblock processing of the pass.
 comment|///
@@ -991,13 +966,10 @@ name|virtual
 name|bool
 name|doFinalization
 argument_list|(
-argument|Function&
+name|Function
+operator|&
 argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
 comment|/// doFinalization - Virtual method overriden by subclasses to do any post
 comment|/// processing needed after all passes have run.
 comment|///
@@ -1005,13 +977,10 @@ name|virtual
 name|bool
 name|doFinalization
 argument_list|(
-argument|Module&
+name|Module
+operator|&
 argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
 comment|// To run this pass on a function, we simply call runOnBasicBlock once for
 comment|// each function.
 comment|//
@@ -1038,20 +1007,16 @@ name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
 specifier|const
-block|{
-return|return
-name|PMT_BasicBlockPassManager
-return|;
-block|}
-expr|}
-block|;
+block|; }
+decl_stmt|;
 comment|/// If the user specifies the -time-passes argument on an LLVM tool command line
 comment|/// then the value of this boolean will be true, otherwise false.
 comment|/// @brief This is the storage for the -time-passes option.
 specifier|extern
 name|bool
 name|TimePassesIsEnabled
-block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

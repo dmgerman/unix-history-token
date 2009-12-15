@@ -408,6 +408,8 @@ argument_list|)
 block|;
 name|ISelPosition
 operator|=
+name|llvm
+operator|::
 name|next
 argument_list|(
 name|SelectionDAG
@@ -476,8 +478,7 @@ literal|0
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// If node should not be replaced,
-comment|// continue with the next one.
+comment|// If node should not be replaced, continue with the next one.
 if|if
 condition|(
 name|ResNode

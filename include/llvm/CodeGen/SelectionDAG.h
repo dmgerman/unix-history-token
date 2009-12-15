@@ -368,6 +368,181 @@ comment|/// SelectionDAG.
 name|BumpPtrAllocator
 name|Allocator
 decl_stmt|;
+comment|/// NodeOrdering - Assigns a "line number" value to each SDNode that
+comment|/// corresponds to the "line number" of the original LLVM instruction. This
+comment|/// used for turning off scheduling, because we'll forgo the normal scheduling
+comment|/// algorithm and output the instructions according to this ordering.
+name|class
+name|NodeOrdering
+block|{
+comment|/// LineNo - The line of the instruction the node corresponds to. A value of
+comment|/// `0' means it's not assigned.
+name|unsigned
+name|LineNo
+decl_stmt|;
+name|std
+operator|::
+name|map
+operator|<
+specifier|const
+name|SDNode
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|Order
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|NodeOrdering
+operator|&
+operator|)
+decl_stmt|;
+comment|// Do not implement.
+name|NodeOrdering
+argument_list|(
+specifier|const
+name|NodeOrdering
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// Do not implement.
+name|public
+label|:
+name|NodeOrdering
+argument_list|()
+operator|:
+name|LineNo
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|void
+name|add
+argument_list|(
+argument|const SDNode *Node
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|LineNo
+operator|&&
+literal|"Invalid line number!"
+argument_list|)
+block|;
+name|Order
+index|[
+name|Node
+index|]
+operator|=
+name|LineNo
+block|;     }
+name|void
+name|remove
+argument_list|(
+argument|const SDNode *Node
+argument_list|)
+block|{
+name|std
+operator|::
+name|map
+operator|<
+specifier|const
+name|SDNode
+operator|*
+block|,
+name|unsigned
+operator|>
+operator|::
+name|iterator
+name|Itr
+operator|=
+name|Order
+operator|.
+name|find
+argument_list|(
+name|Node
+argument_list|)
+block|;
+if|if
+condition|(
+name|Itr
+operator|!=
+name|Order
+operator|.
+name|end
+argument_list|()
+condition|)
+name|Order
+operator|.
+name|erase
+argument_list|(
+name|Itr
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|clear
+parameter_list|()
+block|{
+name|Order
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|LineNo
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|unsigned
+name|getLineNo
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|Node
+parameter_list|)
+block|{
+name|unsigned
+name|LN
+init|=
+name|Order
+index|[
+name|Node
+index|]
+decl_stmt|;
+name|assert
+argument_list|(
+name|LN
+operator|&&
+literal|"Node isn't in ordering map!"
+argument_list|)
+expr_stmt|;
+return|return
+name|LN
+return|;
+block|}
+name|void
+name|newInst
+parameter_list|()
+block|{
+operator|++
+name|LineNo
+expr_stmt|;
+block|}
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+block|}
+operator|*
+name|Ordering
+expr_stmt|;
 comment|/// VerifyNode - Sanity check the given node.  Aborts if it is invalid.
 name|void
 name|VerifyNode
@@ -408,6 +583,24 @@ operator|&
 name|printed
 argument_list|)
 decl_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|SelectionDAG
+operator|&
+operator|)
+decl_stmt|;
+comment|// Do not implement.
+name|SelectionDAG
+argument_list|(
+specifier|const
+name|SelectionDAG
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// Do not implement.
 name|public
 label|:
 name|SelectionDAG
@@ -777,6 +970,22 @@ operator|=
 name|N
 return|;
 block|}
+comment|/// NewInst - Tell the ordering object that we're processing a new
+comment|/// instruction.
+name|void
+name|NewInst
+parameter_list|()
+block|{
+if|if
+condition|(
+name|Ordering
+condition|)
+name|Ordering
+operator|->
+name|newInst
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// Combine - This iterates over the nodes in the SelectionDAG, folding
 comment|/// certain types of nodes together, or eliminating superfluous nodes.  The
 comment|/// Level argument controls whether Combine is allowed to produce nodes and
@@ -816,9 +1025,6 @@ comment|/// the graph.
 name|void
 name|Legalize
 argument_list|(
-name|bool
-name|TypesNeedLegalizing
-argument_list|,
 name|CodeGenOpt
 operator|::
 name|Level
@@ -5234,6 +5440,38 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// isConsecutiveLoad - Return true if LD is loading 'Bytes' bytes from a
+comment|/// location that is 'Dist' units away from the location that the 'Base' load
+comment|/// is loading from.
+name|bool
+name|isConsecutiveLoad
+argument_list|(
+name|LoadSDNode
+operator|*
+name|LD
+argument_list|,
+name|LoadSDNode
+operator|*
+name|Base
+argument_list|,
+name|unsigned
+name|Bytes
+argument_list|,
+name|int
+name|Dist
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// InferPtrAlignment - Infer alignment of a load / store address. Return 0 if
+comment|/// it cannot be inferred.
+name|unsigned
+name|InferPtrAlignment
+argument_list|(
+name|SDValue
+name|Ptr
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 name|bool

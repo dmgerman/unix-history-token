@@ -298,7 +298,12 @@ comment|/// into tails of their predecessors.
 name|FunctionPass
 modifier|*
 name|createTailDuplicatePass
-parameter_list|()
+parameter_list|(
+name|bool
+name|PreRegAlloc
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|/// IfConverter Pass - This pass performs machine code if conversion.
 name|FunctionPass
@@ -430,6 +435,13 @@ name|TargetLowering
 modifier|*
 name|tli
 parameter_list|)
+function_decl|;
+comment|/// createMaxStackAlignmentCalculatorPass() - Determine the maximum required
+comment|/// alignment for a function.
+name|FunctionPass
+modifier|*
+name|createMaxStackAlignmentCalculatorPass
+parameter_list|()
 function_decl|;
 block|}
 end_decl_stmt

@@ -379,15 +379,6 @@ operator|==
 name|RHS
 return|;
 block|}
-specifier|static
-name|bool
-name|isPod
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
 expr|}
 block|;
 comment|/// PadRange - Structure holding a try-range and the associated landing pad.

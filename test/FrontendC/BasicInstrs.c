@@ -12,7 +12,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -S %s -o - | llvm-as | llc
+comment|// RUN: %llvmgcc -S %s -o - | llc
 end_comment
 
 begin_function

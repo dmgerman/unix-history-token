@@ -302,6 +302,12 @@ literal|10
 operator|<<
 name|FormShift
 block|,
+name|LdStExFrm
+init|=
+literal|28
+operator|<<
+name|FormShift
+block|,
 comment|// Miscellaneous arithmetic instructions
 name|ArithMiscFrm
 init|=
@@ -591,17 +597,6 @@ name|unsigned
 name|getUnindexedOpcode
 argument_list|(
 argument|unsigned Opc
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-comment|// Return true if the block does not fall through.
-name|virtual
-name|bool
-name|BlockHasNoFallThrough
-argument_list|(
-argument|const MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 operator|=

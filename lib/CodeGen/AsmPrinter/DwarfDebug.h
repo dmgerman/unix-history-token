@@ -519,6 +519,15 @@ literal|4
 operator|>
 name|InlinedSubprogramDIEs
 block|;
+name|DenseMap
+operator|<
+name|DIE
+operator|*
+block|,
+name|WeakVH
+operator|>
+name|ContainingTypeMap
+block|;
 comment|/// AbstractSubprogramDIEs - Collection of abstruct subprogram DIEs.
 name|SmallPtrSet
 operator|<
@@ -529,15 +538,24 @@ literal|4
 operator|>
 name|AbstractSubprogramDIEs
 block|;
-comment|/// ScopedGVs - Tracks global variables that are not at file scope.
-comment|/// For example void f() { static int b = 42; }
-name|SmallVector
+comment|/// TopLevelDIEs - Collection of top level DIEs.
+name|SmallPtrSet
 operator|<
-name|WeakVH
+name|DIE
+operator|*
 block|,
 literal|4
 operator|>
-name|ScopedGVs
+name|TopLevelDIEs
+block|;
+name|SmallVector
+operator|<
+name|DIE
+operator|*
+block|,
+literal|4
+operator|>
+name|TopLevelDIEsVector
 block|;
 typedef|typedef
 name|SmallVector
@@ -1127,18 +1145,36 @@ modifier|&
 name|Location
 parameter_list|)
 function_decl|;
+comment|/// addToContextOwner - Add Die into the list of its context owner's children.
+name|void
+name|addToContextOwner
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|DIDescriptor
+name|Context
+parameter_list|)
+function_decl|;
 comment|/// addType - Add a new type attribute to the specified entity.
 name|void
 name|addType
 parameter_list|(
-name|CompileUnit
-modifier|*
-name|DW_Unit
-parameter_list|,
 name|DIE
 modifier|*
 name|Entity
 parameter_list|,
+name|DIType
+name|Ty
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateTypeDIE - Find existing DIE or create new DIE for the
+comment|/// given DIType.
+name|DIE
+modifier|*
+name|getOrCreateTypeDIE
+parameter_list|(
 name|DIType
 name|Ty
 parameter_list|)
@@ -1154,10 +1190,6 @@ comment|/// constructTypeDIE - Construct basic type die from DIBasicType.
 name|void
 name|constructTypeDIE
 parameter_list|(
-name|CompileUnit
-modifier|*
-name|DW_Unit
-parameter_list|,
 name|DIE
 modifier|&
 name|Buffer
@@ -1170,10 +1202,6 @@ comment|/// constructTypeDIE - Construct derived type die from DIDerivedType.
 name|void
 name|constructTypeDIE
 parameter_list|(
-name|CompileUnit
-modifier|*
-name|DW_Unit
-parameter_list|,
 name|DIE
 modifier|&
 name|Buffer
@@ -1186,10 +1214,6 @@ comment|/// constructTypeDIE - Construct type DIE from DICompositeType.
 name|void
 name|constructTypeDIE
 parameter_list|(
-name|CompileUnit
-modifier|*
-name|DW_Unit
-parameter_list|,
 name|DIE
 modifier|&
 name|Buffer
@@ -1218,10 +1242,6 @@ comment|/// constructArrayTypeDIE - Construct array type DIE from DICompositeTyp
 name|void
 name|constructArrayTypeDIE
 parameter_list|(
-name|CompileUnit
-modifier|*
-name|DW_Unit
-parameter_list|,
 name|DIE
 modifier|&
 name|Buffer
@@ -1236,10 +1256,6 @@ name|DIE
 modifier|*
 name|constructEnumTypeDIE
 parameter_list|(
-name|CompileUnit
-modifier|*
-name|DW_Unit
-parameter_list|,
 name|DIEnumerator
 modifier|*
 name|ETy
@@ -1250,10 +1266,6 @@ name|DIE
 modifier|*
 name|createGlobalVariableDIE
 parameter_list|(
-name|CompileUnit
-modifier|*
-name|DW_Unit
-parameter_list|,
 specifier|const
 name|DIGlobalVariable
 modifier|&
@@ -1265,10 +1277,6 @@ name|DIE
 modifier|*
 name|createMemberDIE
 parameter_list|(
-name|CompileUnit
-modifier|*
-name|DW_Unit
-parameter_list|,
 specifier|const
 name|DIDerivedType
 modifier|&
@@ -1280,22 +1288,13 @@ name|DIE
 modifier|*
 name|createSubprogramDIE
 parameter_list|(
-name|CompileUnit
-modifier|*
-name|DW_Unit
-parameter_list|,
 specifier|const
 name|DISubprogram
 modifier|&
 name|SP
 parameter_list|,
 name|bool
-name|IsConstructor
-init|=
-name|false
-parameter_list|,
-name|bool
-name|IsInlined
+name|MakeDecl
 init|=
 name|false
 parameter_list|)
@@ -1303,26 +1302,10 @@ function_decl|;
 comment|/// findCompileUnit - Get the compile unit for the given descriptor.
 comment|///
 name|CompileUnit
-modifier|&
+modifier|*
 name|findCompileUnit
-argument_list|(
-name|DICompileUnit
-name|Unit
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// createDbgScopeVariable - Create a new scope variable.
-comment|///
-name|DIE
-modifier|*
-name|createDbgScopeVariable
 parameter_list|(
-name|DbgVariable
-modifier|*
-name|DV
-parameter_list|,
-name|CompileUnit
-modifier|*
+name|DICompileUnit
 name|Unit
 parameter_list|)
 function_decl|;
@@ -1433,10 +1416,6 @@ parameter_list|,
 name|DbgScope
 modifier|*
 name|S
-parameter_list|,
-name|CompileUnit
-modifier|*
-name|Unit
 parameter_list|)
 function_decl|;
 comment|/// constructScopeDIE - Construct a DIE for this scope.
@@ -1487,16 +1466,8 @@ name|void
 name|computeSizeAndOffsets
 parameter_list|()
 function_decl|;
-comment|/// EmitDebugInfo / emitDebugInfoPerCU - Emit the debug info section.
+comment|/// EmitDebugInfo - Emit the debug info section.
 comment|///
-name|void
-name|emitDebugInfoPerCU
-parameter_list|(
-name|CompileUnit
-modifier|*
-name|Unit
-parameter_list|)
-function_decl|;
 name|void
 name|emitDebugInfo
 parameter_list|()
@@ -1539,14 +1510,6 @@ specifier|const
 name|FunctionDebugFrameInfo
 modifier|&
 name|DebugFrameInfo
-parameter_list|)
-function_decl|;
-name|void
-name|emitDebugPubNamesPerCU
-parameter_list|(
-name|CompileUnit
-modifier|*
-name|Unit
 parameter_list|)
 function_decl|;
 comment|/// emitDebugPubNames - Emit visible names into a debug pubnames section.
@@ -1627,7 +1590,8 @@ name|StringRef
 name|FileName
 parameter_list|)
 function_decl|;
-name|void
+name|CompileUnit
+modifier|*
 name|constructCompileUnit
 parameter_list|(
 name|MDNode

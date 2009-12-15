@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -126,6 +132,9 @@ decl_stmt|;
 name|class
 name|DominatorTree
 decl_stmt|;
+name|class
+name|PHITransAddr
+decl_stmt|;
 comment|/// MemDepResult - A memory dependence query can return one of three different
 comment|/// answers, described below.
 name|class
@@ -160,9 +169,9 @@ comment|///   2. For loads and stores, this could be an allocation instruction. 
 comment|///      this case, the load is loading an undef value or a store is the
 comment|///      first store to (that part of) the allocation.
 comment|///   3. Dependence queries on calls return Def only when they are
-comment|///      readonly calls with identical callees and no intervening
-comment|///      clobbers.  No validation is done that the operands to the calls
-comment|///      are the same.
+comment|///      readonly calls or memory use intrinsics with identical callees
+comment|///      and no intervening clobbers.  No validation is done that the
+comment|///      operands to the calls are the same.
 name|Def
 block|,
 comment|/// NonLocal - This marker indicates that the query has no dependency in
@@ -462,6 +471,144 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// NonLocalDepEntry - This is an entry in the NonLocalDepInfo cache, and an
+comment|/// entry in the results set for a non-local query.  For each BasicBlock (the
+comment|/// BB entry) it keeps a MemDepResult and the (potentially phi translated)
+comment|/// address that was live in the block.
+name|class
+name|NonLocalDepEntry
+block|{
+name|BasicBlock
+modifier|*
+name|BB
+decl_stmt|;
+name|MemDepResult
+name|Result
+decl_stmt|;
+name|WeakVH
+name|Address
+decl_stmt|;
+name|public
+label|:
+name|NonLocalDepEntry
+argument_list|(
+argument|BasicBlock *bb
+argument_list|,
+argument|MemDepResult result
+argument_list|,
+argument|Value *address
+argument_list|)
+block|:
+name|BB
+argument_list|(
+name|bb
+argument_list|)
+operator|,
+name|Result
+argument_list|(
+name|result
+argument_list|)
+operator|,
+name|Address
+argument_list|(
+argument|address
+argument_list|)
+block|{}
+comment|// This is used for searches.
+name|NonLocalDepEntry
+argument_list|(
+name|BasicBlock
+operator|*
+name|bb
+argument_list|)
+operator|:
+name|BB
+argument_list|(
+argument|bb
+argument_list|)
+block|{}
+comment|// BB is the sort key, it can't be changed.
+name|BasicBlock
+operator|*
+name|getBB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BB
+return|;
+block|}
+name|void
+name|setResult
+parameter_list|(
+specifier|const
+name|MemDepResult
+modifier|&
+name|R
+parameter_list|,
+name|Value
+modifier|*
+name|Addr
+parameter_list|)
+block|{
+name|Result
+operator|=
+name|R
+expr_stmt|;
+name|Address
+operator|=
+name|Addr
+expr_stmt|;
+block|}
+specifier|const
+name|MemDepResult
+operator|&
+name|getResult
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Result
+return|;
+block|}
+comment|/// getAddress - Return the address of this pointer in this block.  This can
+comment|/// be different than the address queried for the non-local result because
+comment|/// of phi translation.  This returns null if the address was not available
+comment|/// in a block (i.e. because phi translation failed) or if this is a cached
+comment|/// result and that address was deleted.
+comment|///
+comment|/// The address is always null for a non-local 'call' dependence.
+name|Value
+operator|*
+name|getAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Address
+return|;
+block|}
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|NonLocalDepEntry
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|BB
+operator|<
+name|RHS
+operator|.
+name|BB
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// MemoryDependenceAnalysis - This is an analysis that determines, for a
 comment|/// given memory operation, what preceding memory operations it depends on.
 comment|/// It builds on alias analysis information, and tries to provide a lazy,
@@ -499,18 +646,6 @@ name|LocalDeps
 decl_stmt|;
 name|public
 label|:
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|BasicBlock
-operator|*
-operator|,
-name|MemDepResult
-operator|>
-name|NonLocalDepEntry
-expr_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -759,101 +894,6 @@ operator|&
 name|Result
 argument_list|)
 decl_stmt|;
-comment|/// GetPHITranslatedValue - Find an available version of the specified value
-comment|/// PHI translated across the specified edge.  If MemDep isn't able to
-comment|/// satisfy this request, it returns null.
-name|Value
-modifier|*
-name|GetPHITranslatedValue
-argument_list|(
-name|Value
-operator|*
-name|V
-argument_list|,
-name|BasicBlock
-operator|*
-name|CurBB
-argument_list|,
-name|BasicBlock
-operator|*
-name|PredBB
-argument_list|,
-specifier|const
-name|TargetData
-operator|*
-name|TD
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// GetAvailablePHITranslatedValue - Return the value computed by
-comment|/// PHITranslatePointer if it dominates PredBB, otherwise return null.
-name|Value
-modifier|*
-name|GetAvailablePHITranslatedValue
-argument_list|(
-name|Value
-operator|*
-name|V
-argument_list|,
-name|BasicBlock
-operator|*
-name|CurBB
-argument_list|,
-name|BasicBlock
-operator|*
-name|PredBB
-argument_list|,
-specifier|const
-name|TargetData
-operator|*
-name|TD
-argument_list|,
-specifier|const
-name|DominatorTree
-operator|&
-name|DT
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// InsertPHITranslatedPointer - Insert a computation of the PHI translated
-comment|/// version of 'V' for the edge PredBB->CurBB into the end of the PredBB
-comment|/// block.  All newly created instructions are added to the NewInsts list.
-name|Value
-modifier|*
-name|InsertPHITranslatedPointer
-argument_list|(
-name|Value
-operator|*
-name|V
-argument_list|,
-name|BasicBlock
-operator|*
-name|CurBB
-argument_list|,
-name|BasicBlock
-operator|*
-name|PredBB
-argument_list|,
-specifier|const
-name|TargetData
-operator|*
-name|TD
-argument_list|,
-specifier|const
-name|DominatorTree
-operator|&
-name|DT
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|Instruction
-operator|*
-operator|>
-operator|&
-name|NewInsts
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// removeInstruction - Remove an instruction from the dependence analysis,
 comment|/// updating the dependence of instructions that previously depended on it.
 name|void
@@ -925,8 +965,9 @@ decl_stmt|;
 name|bool
 name|getNonLocalPointerDepFromBB
 argument_list|(
-name|Value
-operator|*
+specifier|const
+name|PHITransAddr
+operator|&
 name|Pointer
 argument_list|,
 name|uint64_t
