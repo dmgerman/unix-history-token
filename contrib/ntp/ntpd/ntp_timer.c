@@ -1679,20 +1679,15 @@ operator|+
 name|interface_interval
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
+name|DPRINTF
 argument_list|(
+literal|1
+argument_list|,
+operator|(
 literal|"timer: interface update\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|interface_update
 argument_list|(
 name|NULL
