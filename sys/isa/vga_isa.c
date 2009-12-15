@@ -1477,6 +1477,16 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|bus_generic_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|bus_generic_attach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
