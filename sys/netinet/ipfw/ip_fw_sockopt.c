@@ -290,6 +290,13 @@ begin_comment
 comment|/* # of static rules */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|V_static_count
+value|VNET(static_count)
+end_define
+
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -308,13 +315,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|V_static_count
-value|VNET(static_count)
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_static_len
 value|VNET(static_len)
 end_define
@@ -329,30 +329,6 @@ begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_net_inet_ip_fw
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_VNET_INT
-argument_list|(
-name|_net_inet_ip_fw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|autoinc_step
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|autoinc_step
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"Rule number auto-increment step"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
