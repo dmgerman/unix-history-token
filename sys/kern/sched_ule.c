@@ -336,6 +336,10 @@ name|ts_ltick
 decl_stmt|;
 comment|/* Last tick that we were running on */
 name|int
+name|ts_incrtick
+decl_stmt|;
+comment|/* Last tick that we incremented on */
+name|int
 name|ts_ftick
 decl_stmt|;
 comment|/* First tick that we were running on */
@@ -8553,6 +8557,14 @@ name|ts_ltick
 expr_stmt|;
 name|ts2
 operator|->
+name|ts_incrtick
+operator|=
+name|ts
+operator|->
+name|ts_incrtick
+expr_stmt|;
+name|ts2
+operator|->
 name|ts_ftick
 operator|=
 name|ts
@@ -9224,7 +9236,7 @@ if|if
 condition|(
 name|ts
 operator|->
-name|ts_ltick
+name|ts_incrtick
 operator|==
 name|ticks
 condition|)
@@ -9241,6 +9253,12 @@ expr_stmt|;
 name|ts
 operator|->
 name|ts_ltick
+operator|=
+name|ticks
+expr_stmt|;
+name|ts
+operator|->
+name|ts_incrtick
 operator|=
 name|ticks
 expr_stmt|;
