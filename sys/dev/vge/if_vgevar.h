@@ -551,6 +551,10 @@ name|VGE_FLAG_MSI
 value|0x0002
 define|#
 directive|define
+name|VGE_FLAG_SUSPENDED
+value|0x4000
+define|#
+directive|define
 name|VGE_FLAG_LINK
 value|0x8000
 name|int
@@ -582,10 +586,6 @@ name|struct
 name|vge_hw_stats
 name|vge_stats
 decl_stmt|;
-name|int
-name|suspended
-decl_stmt|;
-comment|/* 0 = normal  1 = suspended */
 block|}
 struct|;
 end_struct
