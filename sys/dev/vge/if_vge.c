@@ -326,7 +326,7 @@ name|VIA_VENDORID
 block|,
 name|VIA_DEVICEID_61XX
 block|,
-literal|"VIA Networking Gigabit Ethernet"
+literal|"VIA Networking Velocity Gigabit Ethernet"
 block|}
 block|,
 block|{
