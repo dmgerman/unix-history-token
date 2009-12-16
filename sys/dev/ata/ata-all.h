@@ -3422,6 +3422,9 @@ name|ata_atapi
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+name|target
 parameter_list|)
 function_decl|;
 end_function_decl
