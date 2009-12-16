@@ -234,17 +234,21 @@ directive|include
 file|<netinet/udp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip6.h>
 end_include
+
+begin_comment
+comment|/* IN6_ARE_ADDR_EQUAL */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_include
 include|#

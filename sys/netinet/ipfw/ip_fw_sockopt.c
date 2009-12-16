@@ -133,6 +133,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_comment
+comment|/* struct m_tag used by nested headers */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
