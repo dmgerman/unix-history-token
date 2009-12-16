@@ -6018,6 +6018,14 @@ name|setprd
 operator|=
 name|ata_promise_mio_setprd
 expr_stmt|;
+name|ch
+operator|->
+name|dma
+operator|.
+name|max_iosize
+operator|=
+literal|65536
+expr_stmt|;
 block|}
 end_function
 
