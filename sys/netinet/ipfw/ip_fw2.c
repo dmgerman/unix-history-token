@@ -17,27 +17,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|DEB
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DDB
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
 begin_comment
-comment|/*  * Implement IP packet firewall (new version)  */
+comment|/*  * The FreeBSD IP packet firewall, main file  */
 end_comment
 
 begin_if
@@ -418,6 +399,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * static variables followed by global ones.  * All ipfw global variables are here.  */
+end_comment
+
+begin_comment
+comment|/* ipfw_vnet_ready controls when we are open for business */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -438,26 +427,13 @@ name|V_ipfw_vnet_ready
 value|VNET(ipfw_vnet_ready)
 end_define
 
-begin_comment
-comment|/*  * set_disable contains one bit per set value (0..31).  * If the bit is set, all rules with the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted explicitly.  */
-end_comment
-
 begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|u_int32_t
-argument_list|,
-name|set_disable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
-name|fw_verbose
+name|fw_deny_unknown_exthdrs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -465,15 +441,8 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|V_set_disable
-value|VNET(set_disable)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_verbose_limit
-value|VNET(verbose_limit)
+name|V_fw_deny_unknown_exthdrs
+value|VNET(fw_deny_unknown_exthdrs)
 end_define
 
 begin_ifdef
@@ -508,16 +477,77 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|struct
-name|ip_fw
-modifier|*
-name|ip_fw_default_rule
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|autoinc_step
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/*  * list of rules for layer 3  */
+comment|/*  * Each rule belongs to one of 32 different sets (0..31).  * The variable set_disable contains one bit per set.  * If the bit is set, all rules in the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted individually.  */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|u_int32_t
+argument_list|,
+name|set_disable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_set_disable
+value|VNET(set_disable)
+end_define
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|fw_verbose
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|//#define	V_verbose_limit			VNET(verbose_limit)
+end_comment
+
+begin_comment
+comment|/* counter for ipfw_log(NULL...) */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|u_int64_t
+argument_list|,
+name|norule_counter
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|verbose_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* layer3_chain contains the list of rules for layer 3 */
 end_comment
 
 begin_expr_stmt
@@ -527,18 +557,6 @@ expr|struct
 name|ip_fw_chain
 argument_list|,
 name|layer3_chain
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_IPFW
-argument_list|,
-literal|"IpFw/IpAcct"
-argument_list|,
-literal|"IpFw/IpAcct chain's"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -598,66 +616,6 @@ name|ipfw_nat_get_log_ptr
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|table_entry
-block|{
-name|struct
-name|radix_node
-name|rn
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|struct
-name|sockaddr_in
-name|addr
-decl_stmt|,
-name|mask
-decl_stmt|;
-name|u_int32_t
-name|value
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|autoinc_step
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_autoinc_step
-value|VNET(autoinc_step)
-end_define
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|fw_deny_unknown_exthdrs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_fw_deny_unknown_exthdrs
-value|VNET(fw_deny_unknown_exthdrs)
-end_define
-
 begin_function_decl
 specifier|extern
 name|int
@@ -693,16 +651,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|enable
+name|one_pass
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
@@ -710,16 +666,12 @@ argument_list|,
 operator|&
 name|VNET_NAME
 argument_list|(
-name|fw_enable
+name|fw_one_pass
 argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|ipfw_chg_hook
-argument_list|,
-literal|"I"
-argument_list|,
-literal|"Enable ipfw"
+literal|"Only do a single pass through ipfw when using dummynet(4)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -744,32 +696,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Rule number auto-increment step"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_VNET_INT
-argument_list|(
-name|_net_inet_ip_fw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|one_pass
-argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_SECURE3
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|fw_one_pass
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"Only do a single pass through ipfw when using dummynet(4)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -929,38 +855,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
-argument_list|(
-name|_net_inet6_ip6_fw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|enable
-argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_SECURE3
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|fw6_enable
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-name|ipfw_chg_hook
-argument_list|,
-literal|"I"
-argument_list|,
-literal|"Enable ipfw+6"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet6_ip6_fw
@@ -1005,7 +899,7 @@ comment|/* SYSCTL_NODE */
 end_comment
 
 begin_comment
-comment|/*  * L3HDR maps an ipv4 pointer into a layer3 header pointer of type T  * Other macros just cast void * into the appropriate type  */
+comment|/*  * Some macros used in the various matching options.  * L3HDR maps an ipv4 pointer into a layer3 header pointer of type T  * Other macros just cast void * into the appropriate type  */
 end_comment
 
 begin_define
@@ -1773,7 +1667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The verify_path function checks if a route to the src exists and  * if it is reachable via ifp (when provided).  *   * The 'verrevpath' option checks that the interface that an IP packet  * arrives on is the same interface that traffic destined for the  * packet's source address would be routed out of.  The 'versrcreach'  * option just checks that the source address is reachable via any route  * (except default) in the routing table.  These two are a measure to block  * forged packets.  This is also commonly known as "anti-spoofing" or Unicast  * Reverse Path Forwarding (Unicast RFP) in Cisco-ese. The name of the knobs  * is purposely reminiscent of the Cisco IOS command,  *  *   ip verify unicast reverse-path  *   ip verify unicast source reachable-via any  *  * which implements the same functionality. But note that syntax is  * misleading. The check may be performed on all IP packets whether unicast,  * multicast, or broadcast.  */
+comment|/*  * The verify_path function checks if a route to the src exists and  * if it is reachable via ifp (when provided).  *   * The 'verrevpath' option checks that the interface that an IP packet  * arrives on is the same interface that traffic destined for the  * packet's source address would be routed out of.  * The 'versrcreach' option just checks that the source address is  * reachable via any route (except default) in the routing table.  * These two are a measure to block forged packets. This is also  * commonly known as "anti-spoofing" or Unicast Reverse Path  * Forwarding (Unicast RFP) in Cisco-ese. The name of the knobs  * is purposely reminiscent of the Cisco IOS command,  *  *   ip verify unicast reverse-path  *   ip verify unicast source reachable-via any  *  * which implements the same functionality. But note that the syntax  * is misleading, and the check may be performed on all IP packets  * whether unicast, multicast, or broadcast.  */
 end_comment
 
 begin_function
@@ -2563,7 +2457,7 @@ name|m0
 decl_stmt|;
 name|m0
 operator|=
-name|send_pkt
+name|ipfw_send_pkt
 argument_list|(
 name|args
 operator|->
@@ -2824,7 +2718,7 @@ name|m
 decl_stmt|;
 name|m
 operator|=
-name|send_pkt
+name|ipfw_send_pkt
 argument_list|(
 name|args
 operator|->
@@ -2906,7 +2800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  * Given an ip_fw *, lookup_next_rule will return a pointer  * to the next rule, which can be either the jump  * target (for skipto instructions) or the next one in the list (in  * all other cases including a missing jump target).  * The result is also written in the "next_rule" field of the rule.  * Backward jumps are not allowed, so start looking from the next  * rule...  *  * This never returns NULL -- in case we do not have an exact match,  * the next rule is returned. When the ruleset is changed,  * pointers are flushed so we are always correct.  */
+comment|/**  * Given an ip_fw *, lookup_next_rule will return a pointer  * to the next rule, which can be either the jump  * target (for skipto instructions) or the next one in the list (in  * all other cases including a missing jump target).  * The result is also written in the "next_rule" field of the rule.  * Backward jumps are not allowed, so we start the search from the  * rule following the current one.  *  * The function never returns NULL: if the requested rule is not  * present, it returns the next rule in the chain.  * As a side effect, the rule pointer is also set so next time  * the jump will not require a scan of the list.  */
 end_comment
 
 begin_function
@@ -3079,6 +2973,10 @@ name|rule
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Support for uid/gid/jail lookup. These tests are expensive  * (because we may need to look into the list of active sockets)  * so we cache the results. ugid_lookupp is 0 if we have not  * yet done a lookup, 1 if we succeeded, and -1 if we tried  * and failed. The function always returns the match value.  * We could actually spare the variable and use *uc, setting  * it to '(void *)check_uidgid if we have no info, NULL if  * we tried and failed, or any other value if successful.  */
+end_comment
 
 begin_function
 specifier|static
@@ -3350,7 +3248,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * If the lookup did not yield any results, there 			 * is no sense in coming back and trying again. So 			 * we can set lookup to -1 and ensure that we wont 			 * bother the pcb system again. 			 */
+comment|/* 			 * We tried and failed, set the variable to -1 			 * so we will not try again on this packet. 			 */
 operator|*
 name|ugid_lookupp
 operator|=
@@ -3465,7 +3363,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, or NULL for layer3 packet.  *	args->L3offset	Number of bytes bypassed if we came from L2.  *			e.g. often sizeof(eh)  ** NOTYET **  *	args->oif	Outgoing interface, or NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  * 	args->cookie	a cookie depending on rule action  *  * Return value:  *  *	IP_FW_PASS	the packet must be accepted  *	IP_FW_DENY	the packet must be dropped  *	IP_FW_DIVERT	divert packet, port in m_tag  *	IP_FW_TEE	tee packet, port in m_tag  *	IP_FW_DUMMYNET	to dummynet, pipe in args->cookie  *	IP_FW_NETGRAPH	into netgraph, cookie args->cookie  *  */
+comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, NULL for layer3 packet.  *	args->L3offset	Number of bytes bypassed if we came from L2.  *			e.g. often sizeof(eh)  ** NOTYET **  *	args->oif	Outgoing interface, NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  * 	args->cookie	a cookie depending on rule action  *  * Return value:  *  *	IP_FW_PASS	the packet must be accepted  *	IP_FW_DENY	the packet must be dropped  *	IP_FW_DIVERT	divert packet, port in m_tag  *	IP_FW_TEE	tee packet, port in m_tag  *	IP_FW_DUMMYNET	to dummynet, pipe in args->cookie  *	IP_FW_NETGRAPH	into netgraph, cookie args->cookie  *  */
 end_comment
 
 begin_function
@@ -3478,7 +3376,7 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-comment|/* 	 * Local variables holding state during the processing of a packet: 	 * 	 * IMPORTANT NOTE: to speed up the processing of rules, there 	 * are some assumption on the values of the variables, which 	 * are documented here. Should you change them, please check 	 * the implementation of the various instructions to make sure 	 * that they still work. 	 * 	 * args->eh	The MAC header. It is non-null for a layer2 	 *	packet, it is NULL for a layer-3 packet. 	 * **notyet** 	 * args->L3offset Offset in the packet to the L3 (IP or equiv.) header. 	 * 	 * m | args->m	Pointer to the mbuf, as received from the caller. 	 *	It may change if ipfw_chk() does an m_pullup, or if it 	 *	consumes the packet because it calls send_reject(). 	 *	XXX This has to change, so that ipfw_chk() never modifies 	 *	or consumes the buffer. 	 * ip	is the beginning of the ip(4 or 6) header. 	 *	Calculated by adding the L3offset to the start of data. 	 *	(Until we start using L3offset, the packet is 	 *	supposed to start with the ip header). 	 */
+comment|/* 	 * Local variables holding state while processing a packet: 	 * 	 * IMPORTANT NOTE: to speed up the processing of rules, there 	 * are some assumption on the values of the variables, which 	 * are documented here. Should you change them, please check 	 * the implementation of the various instructions to make sure 	 * that they still work. 	 * 	 * args->eh	The MAC header. It is non-null for a layer2 	 *	packet, it is NULL for a layer-3 packet. 	 * **notyet** 	 * args->L3offset Offset in the packet to the L3 (IP or equiv.) header. 	 * 	 * m | args->m	Pointer to the mbuf, as received from the caller. 	 *	It may change if ipfw_chk() does an m_pullup, or if it 	 *	consumes the packet because it calls send_reject(). 	 *	XXX This has to change, so that ipfw_chk() never modifies 	 *	or consumes the buffer. 	 * ip	is the beginning of the ip(4 or 6) header. 	 *	Calculated by adding the L3offset to the start of data. 	 *	(Until we start using L3offset, the packet is 	 *	supposed to start with the ip header). 	 */
 name|struct
 name|mbuf
 modifier|*
@@ -3726,7 +3624,7 @@ parameter_list|,
 name|T
 parameter_list|)
 define|\
-value|do {									\ 	int x = (_len) + sizeof(T);					\ 	if ((m)->m_len< x) {						\ 		args->m = m = m_pullup(m, x);				\ 		if (m == NULL)						\ 			goto pullup_failed;				\ 	}								\ 	p = (mtod(m, char *) + (_len));					\ } while (0)
+value|do {								\ 	int x = (_len) + sizeof(T);				\ 	if ((m)->m_len< x) {					\ 		args->m = m = m_pullup(m, x);			\ 		if (m == NULL)					\ 			goto pullup_failed;			\ 	}							\ 	p = (mtod(m, char *) + (_len));				\ } while (0)
 comment|/* 	 * if we have an ether header, 	 */
 if|if
 condition|(
@@ -5058,7 +4956,9 @@ expr_stmt|;
 else|else
 name|f
 operator|=
-name|ip_fw_default_rule
+name|V_layer3_chain
+operator|.
+name|default_rule
 expr_stmt|;
 block|}
 else|else
@@ -7969,7 +7869,7 @@ name|O_KEEP_STATE
 case|:
 if|if
 condition|(
-name|install_state
+name|ipfw_install_state
 argument_list|(
 name|f
 argument_list|,
@@ -8022,7 +7922,7 @@ operator|&&
 operator|(
 name|q
 operator|=
-name|lookup_dyn_rule
+name|ipfw_lookup_dyn_rule
 argument_list|(
 operator|&
 name|args
@@ -9450,7 +9350,11 @@ block|}
 end_function
 
 begin_comment
-comment|/****************  * Stuff that must be initialised only on boot or module load  */
+comment|/*  * Module and VNET glue  */
+end_comment
+
+begin_comment
+comment|/*  * Stuff that must be initialised only on boot or module load  */
 end_comment
 
 begin_function
@@ -9562,7 +9466,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**********************  * Called for the removal of the last instance only on module unload.  */
+comment|/*  * Called for the removal of the last instance only on module unload.  */
 end_comment
 
 begin_function
@@ -9585,7 +9489,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************  * Stuff that must be initialized for every instance  * (including the first of course).  */
+comment|/*  * Stuff that must be initialized for every instance  * (including the first of course).  */
 end_comment
 
 begin_function
@@ -9783,7 +9687,9 @@ name|error
 operator|)
 return|;
 block|}
-name|ip_fw_default_rule
+name|V_layer3_chain
+operator|.
+name|default_rule
 operator|=
 name|V_layer3_chain
 operator|.
@@ -9807,52 +9713,11 @@ name|V_ip_fw_chk_ptr
 operator|=
 name|ipfw_chk
 expr_stmt|;
-if|if
-condition|(
-name|V_fw_enable
-operator|&&
-name|ipfw_hook
-argument_list|()
-operator|!=
-literal|0
-condition|)
-block|{
 name|error
 operator|=
-name|ENOENT
-expr_stmt|;
-comment|/* see ip_fw_pfil.c::ipfw_hook() */
-name|printf
-argument_list|(
-literal|"ipfw_hook() error\n"
-argument_list|)
-expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|INET6
-if|if
-condition|(
-name|V_fw6_enable
-operator|&&
-name|ipfw6_hook
+name|ipfw_attach_hooks
 argument_list|()
-operator|!=
-literal|0
-condition|)
-block|{
-name|error
-operator|=
-name|ENOENT
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ipfw6_hook() error\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|error
@@ -9862,7 +9727,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***********************  * Called for the removal of each instance.  */
+comment|/*  * Called for the removal of each instance.  */
 end_comment
 
 begin_function
@@ -10220,6 +10085,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 

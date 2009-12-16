@@ -238,6 +238,7 @@ file|<machine/in_cksum.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -249,6 +250,13 @@ literal|1
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|V_fw_enable
+value|VNET(fw_enable)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -256,6 +264,7 @@ name|INET6
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -266,6 +275,13 @@ operator|=
 literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_fw6_enable
+value|VNET(fw6_enable)
+end_define
 
 begin_endif
 endif|#
@@ -341,6 +357,116 @@ directive|define
 name|DIV_DIR_OUT
 value|0
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_NODE
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet_ip_fw
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_PROC
+argument_list|(
+name|_net_inet_ip_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE3
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|fw_enable
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+name|ipfw_chg_hook
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Enable ipfw"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet6_ip6_fw
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_PROC
+argument_list|(
+name|_net_inet6_ip6_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE3
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|fw6_enable
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+name|ipfw_chg_hook
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Enable ipfw+6"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
 
 begin_function
 name|int
@@ -1965,6 +2091,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ipfw_hook
 parameter_list|(
@@ -2107,6 +2234,7 @@ name|INET6
 end_ifdef
 
 begin_function
+specifier|static
 name|int
 name|ipfw6_hook
 parameter_list|(
@@ -2250,6 +2378,70 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_function
+name|int
+name|ipfw_attach_hooks
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|V_fw_enable
+operator|&&
+name|ipfw_hook
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+comment|/* see ip_fw_pfil.c::ipfw_hook() */
+name|printf
+argument_list|(
+literal|"ipfw_hook() error\n"
+argument_list|)
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+name|V_fw6_enable
+operator|&&
+name|ipfw6_hook
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ipfw6_hook() error\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+return|return
+name|error
+return|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -2452,6 +2644,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 

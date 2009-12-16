@@ -294,6 +294,10 @@ begin_comment
 comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is stored in dyn_count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. XXX we should make them survive.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
 end_comment
 
+begin_comment
+comment|/*  * Static variables followed by global ones  */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -1545,7 +1549,7 @@ end_function
 
 begin_function
 name|void
-name|remove_dyn_children
+name|ipfw_remove_dyn_children
 parameter_list|(
 name|struct
 name|ip_fw
@@ -1571,10 +1575,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * lookup a dynamic rule.  */
+comment|/**  * lookup a dynamic rule, locked version  */
 end_comment
 
 begin_function
+specifier|static
 name|ipfw_dyn_rule
 modifier|*
 name|lookup_dyn_rule_locked
@@ -2328,7 +2333,7 @@ end_function
 begin_function
 name|ipfw_dyn_rule
 modifier|*
-name|lookup_dyn_rule
+name|ipfw_lookup_dyn_rule
 parameter_list|(
 name|struct
 name|ipfw_flow_id
@@ -2951,7 +2956,7 @@ end_comment
 
 begin_function
 name|int
-name|install_state
+name|ipfw_install_state
 parameter_list|(
 name|struct
 name|ip_fw
@@ -3706,7 +3711,7 @@ begin_function
 name|struct
 name|mbuf
 modifier|*
-name|send_pkt
+name|ipfw_send_pkt
 parameter_list|(
 name|struct
 name|mbuf
@@ -4639,7 +4644,7 @@ continue|continue;
 comment|/* too late, rule expired */
 name|m
 operator|=
-name|send_pkt
+name|ipfw_send_pkt
 argument_list|(
 name|NULL
 argument_list|,
@@ -4665,7 +4670,7 @@ argument_list|)
 expr_stmt|;
 name|mnext
 operator|=
-name|send_pkt
+name|ipfw_send_pkt
 argument_list|(
 name|NULL
 argument_list|,
@@ -5402,6 +5407,10 @@ name|bp
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 

@@ -37,7 +37,7 @@ value|x
 end_define
 
 begin_comment
-comment|/*  * Sockopt support for ipfw  */
+comment|/*  * Sockopt support for ipfw. The routines here implement  * the upper half of the ipfw code.  */
 end_comment
 
 begin_if
@@ -250,22 +250,20 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|MALLOC_DEFINE
 argument_list|(
-name|int
+name|M_IPFW
 argument_list|,
-name|autoinc_step
+literal|"IpFw/IpAcct"
+argument_list|,
+literal|"IpFw/IpAcct chain's"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_autoinc_step
-value|VNET(autoinc_step)
-end_define
+begin_comment
+comment|/*  * static variables followed by global ones  */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -853,7 +851,7 @@ name|rule
 operator|->
 name|next
 expr_stmt|;
-name|remove_dyn_children
+name|ipfw_remove_dyn_children
 argument_list|(
 name|rule
 argument_list|)
@@ -1916,7 +1914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check validity of the structure before insert.  * Fortunately rules are simple, so this mostly need to check rule sizes.  */
+comment|/*  * Check validity of the structure before insert.  * Rules are simple, so this mostly need to check rule sizes.  */
 end_comment
 
 begin_function
@@ -3204,6 +3202,7 @@ argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
+comment|/* protected by the dynamic lock */
 return|return
 operator|(
 name|bp
@@ -4247,6 +4246,10 @@ directive|undef
 name|RULE_MAXSIZE
 block|}
 end_function
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 

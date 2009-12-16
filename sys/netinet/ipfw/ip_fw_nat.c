@@ -3059,5 +3059,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* end of file */
+end_comment
+
 end_unit
 

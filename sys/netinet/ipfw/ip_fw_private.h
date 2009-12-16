@@ -278,16 +278,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ipfw_hook
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ipfw6_hook
+name|ipfw_attach_hooks
 parameter_list|(
 name|void
 parameter_list|)
@@ -461,7 +452,7 @@ begin_function_decl
 name|struct
 name|mbuf
 modifier|*
-name|send_pkt
+name|ipfw_send_pkt
 parameter_list|(
 name|struct
 name|mbuf
@@ -482,7 +473,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|install_state
+name|ipfw_install_state
 parameter_list|(
 name|struct
 name|ip_fw
@@ -507,29 +498,7 @@ end_function_decl
 begin_function_decl
 name|ipfw_dyn_rule
 modifier|*
-name|lookup_dyn_rule_locked
-parameter_list|(
-name|struct
-name|ipfw_flow_id
-modifier|*
-name|pkt
-parameter_list|,
-name|int
-modifier|*
-name|match_direction
-parameter_list|,
-name|struct
-name|tcphdr
-modifier|*
-name|tcp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ipfw_dyn_rule
-modifier|*
-name|lookup_dyn_rule
+name|ipfw_lookup_dyn_rule
 parameter_list|(
 name|struct
 name|ipfw_flow_id
@@ -550,7 +519,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|remove_dyn_children
+name|ipfw_remove_dyn_children
 parameter_list|(
 name|struct
 name|ip_fw
@@ -652,15 +621,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|fw_enable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_define
+define|#
+directive|define
+name|V_fw_one_pass
+value|VNET(fw_one_pass)
+end_define
 
 begin_expr_stmt
 name|VNET_DECLARE
@@ -672,6 +638,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|V_fw_verbose
+value|VNET(fw_verbose)
+end_define
+
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -682,6 +655,13 @@ name|layer3_chain
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_layer3_chain
+value|VNET(layer3_chain)
+end_define
 
 begin_expr_stmt
 name|VNET_DECLARE
@@ -696,50 +676,16 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|V_fw_one_pass
-value|VNET(fw_one_pass)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_fw_enable
-value|VNET(fw_enable)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_fw_verbose
-value|VNET(fw_enable)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_layer3_chain
-value|VNET(layer3_chain)
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_set_disable
 value|VNET(set_disable)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
 
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
-name|fw6_enable
+name|autoinc_step
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -747,14 +693,9 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|V_fw6_enable
-value|VNET(fw6_enable)
+name|V_autoinc_step
+value|VNET(autoinc_step)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -772,6 +713,11 @@ modifier|*
 name|reap
 decl_stmt|;
 comment|/* list of rules to reap */
+name|struct
+name|ip_fw
+modifier|*
+name|default_rule
+decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument|nat_list

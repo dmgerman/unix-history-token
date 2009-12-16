@@ -334,30 +334,6 @@ parameter_list|)
 value|((struct icmp6_hdr *)(p))
 end_define
 
-begin_comment
-comment|/* counter for ipfw_log(NULL...) */
-end_comment
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|u_int64_t
-argument_list|,
-name|norule_counter
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|verbose_limit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -1969,6 +1945,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 
