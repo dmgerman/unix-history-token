@@ -579,9 +579,6 @@ decl_stmt|;
 name|device_t
 name|vge_miibus
 decl_stmt|;
-name|uint8_t
-name|vge_type
-decl_stmt|;
 name|int
 name|vge_if_flags
 decl_stmt|;
