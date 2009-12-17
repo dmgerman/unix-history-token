@@ -335,6 +335,15 @@ end_struct_decl
 
 begin_function_decl
 name|void
+name|ipfw_log_bpf
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ipfw_log
 parameter_list|(
 name|struct

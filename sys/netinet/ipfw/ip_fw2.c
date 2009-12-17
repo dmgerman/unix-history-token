@@ -6904,10 +6904,6 @@ block|}
 case|case
 name|O_LOG
 case|:
-if|if
-condition|(
-name|V_fw_verbose
-condition|)
 name|ipfw_log
 argument_list|(
 name|f
@@ -9359,6 +9355,12 @@ argument_list|,
 name|V_verbose_limit
 argument_list|)
 expr_stmt|;
+name|ipfw_log_bpf
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* init */
 return|return
 operator|(
 name|error
@@ -9379,6 +9381,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ipfw_log_bpf
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* uninit */
 name|ipfw_dyn_detach
 argument_list|()
 expr_stmt|;
