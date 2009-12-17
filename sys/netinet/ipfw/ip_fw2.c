@@ -2800,7 +2800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Given an ip_fw *, lookup_next_rule will return a pointer  * to the next rule, which can be either the jump  * target (for skipto instructions) or the next one in the list (in  * all other cases including a missing jump target).  * The result is also written in the "next_rule" field of the rule.  * Backward jumps are not allowed, so we start the search from the  * rule following the current one.  *  * The function never returns NULL: if the requested rule is not  * present, it returns the next rule in the chain.  * As a side effect, the rule pointer is also set so next time  * the jump will not require a scan of the list.  */
+comment|/**  * Return the pointer to the skipto target.  *  * IMPORTANT: this should only be called on SKIPTO rules, and the  * jump target is taken from the 'rulenum' argument, which may come  * from the rule itself (direct skipto) or not (tablearg)  *  * The function never returns NULL: if the requested rule is not  * present, it returns the next rule in the chain.  * This also happens in case of a bogus argument> 65535  */
 end_comment
 
 begin_function
@@ -2815,110 +2815,15 @@ name|ip_fw
 modifier|*
 name|me
 parameter_list|,
-name|u_int32_t
-name|tablearg
+name|uint32_t
+name|rulenum
 parameter_list|)
 block|{
 name|struct
 name|ip_fw
 modifier|*
 name|rule
-init|=
-name|NULL
 decl_stmt|;
-name|ipfw_insn
-modifier|*
-name|cmd
-decl_stmt|;
-name|u_int16_t
-name|rulenum
-decl_stmt|;
-comment|/* look for action, in case it is a skipto */
-name|cmd
-operator|=
-name|ACTION_PTR
-argument_list|(
-name|me
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|->
-name|opcode
-operator|==
-name|O_LOG
-condition|)
-name|cmd
-operator|+=
-name|F_LEN
-argument_list|(
-name|cmd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|->
-name|opcode
-operator|==
-name|O_ALTQ
-condition|)
-name|cmd
-operator|+=
-name|F_LEN
-argument_list|(
-name|cmd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|->
-name|opcode
-operator|==
-name|O_TAG
-condition|)
-name|cmd
-operator|+=
-name|F_LEN
-argument_list|(
-name|cmd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|->
-name|opcode
-operator|==
-name|O_SKIPTO
-condition|)
-block|{
-if|if
-condition|(
-name|tablearg
-operator|!=
-literal|0
-condition|)
-block|{
-name|rulenum
-operator|=
-operator|(
-name|u_int16_t
-operator|)
-name|tablearg
-expr_stmt|;
-block|}
-else|else
-block|{
-name|rulenum
-operator|=
-name|cmd
-operator|->
-name|arg1
-expr_stmt|;
-block|}
 for|for
 control|(
 name|rule
@@ -2944,10 +2849,7 @@ name|rulenum
 operator|>=
 name|rulenum
 condition|)
-block|{
 break|break;
-block|}
-block|}
 block|}
 if|if
 condition|(
@@ -2961,12 +2863,12 @@ operator|=
 name|me
 operator|->
 name|next
-expr_stmt|;
+condition|?
 name|me
 operator|->
-name|next_rule
-operator|=
-name|rule
+name|next
+else|:
+name|me
 expr_stmt|;
 return|return
 name|rule
@@ -8258,7 +8160,7 @@ expr_stmt|;
 comment|/* exit inner loop */
 break|break;
 block|}
-comment|/* handle skipto */
+comment|/* skipto: */
 if|if
 condition|(
 name|cmd
@@ -8280,6 +8182,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* direct skipto */
+comment|/* update f->next_rule if not set */
 if|if
 condition|(
 name|f
@@ -8288,11 +8192,17 @@ name|next_rule
 operator|==
 name|NULL
 condition|)
+name|f
+operator|->
+name|next_rule
+operator|=
 name|lookup_next_rule
 argument_list|(
 name|f
 argument_list|,
-literal|0
+name|cmd
+operator|->
+name|arg1
 argument_list|)
 expr_stmt|;
 name|f
@@ -8346,6 +8256,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* should not happen */
 name|l
 operator|=
 literal|0
