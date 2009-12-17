@@ -9813,7 +9813,7 @@ name|sc
 argument_list|,
 name|VGE_ISR
 argument_list|,
-literal|0
+literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_1
