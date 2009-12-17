@@ -315,8 +315,8 @@ operator|(
 literal|0
 operator|)
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
