@@ -990,7 +990,7 @@ decl_stmt|;
 name|sigset_t
 name|oldsigset
 decl_stmt|,
-name|sigset
+name|nsigset
 decl_stmt|;
 name|struct
 name|stat
@@ -1087,13 +1087,13 @@ expr_stmt|;
 name|sigemptyset
 argument_list|(
 operator|&
-name|sigset
+name|nsigset
 argument_list|)
 expr_stmt|;
 name|sigaddset
 argument_list|(
 operator|&
-name|sigset
+name|nsigset
 argument_list|,
 name|SIGCHLD
 argument_list|)
@@ -1103,7 +1103,7 @@ argument_list|(
 name|SIG_BLOCK
 argument_list|,
 operator|&
-name|sigset
+name|nsigset
 argument_list|,
 operator|&
 name|oldsigset
