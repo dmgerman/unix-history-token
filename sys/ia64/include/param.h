@@ -16,7 +16,7 @@ comment|/*  * Machine dependent constants for the IA64.  */
 end_comment
 
 begin_comment
-comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).   The result is u_long and must be cast to  * any desired pointer type.  *  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).   *  */
+comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).   The result is u_long and must be cast to  * any desired pointer type.  */
 end_comment
 
 begin_ifndef
@@ -51,29 +51,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|(((u_long)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ALIGNED_POINTER
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_ALIGNED_POINTER
-parameter_list|(
-name|p
-parameter_list|,
-name|t
-parameter_list|)
-value|((((u_long)(p))& (sizeof(t)-1)) == 0)
 end_define
 
 begin_endif
@@ -185,10 +162,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).   The result is u_long and must be cast to  * any desired pointer type.  *  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).   *  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -206,6 +179,10 @@ parameter_list|)
 value|_ALIGN(p)
 end_define
 
+begin_comment
+comment|/*  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).   */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -215,7 +192,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|_ALIGNED_POINTER(p,t)
+value|((((u_long)(p))& (sizeof(t)-1)) == 0)
 end_define
 
 begin_ifndef
