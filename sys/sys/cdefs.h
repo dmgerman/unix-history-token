@@ -1065,6 +1065,13 @@ end_if
 begin_define
 define|#
 directive|define
+name|__malloc_like
+value|__attribute__((__malloc__))
+end_define
+
+begin_define
+define|#
+directive|define
 name|__pure
 value|__attribute__((__pure__))
 end_define
@@ -1073,6 +1080,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|__malloc_like
+end_define
 
 begin_define
 define|#
