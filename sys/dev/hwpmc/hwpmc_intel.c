@@ -446,6 +446,14 @@ break|break;
 case|case
 literal|0x1A
 case|:
+case|case
+literal|0x1E
+case|:
+comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
+case|case
+literal|0x1F
+case|:
+comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_COREI7
