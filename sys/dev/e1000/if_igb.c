@@ -9421,7 +9421,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Failed to register TX handler"
+literal|"Failed to register TX handler\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9430,6 +9430,23 @@ name|error
 operator|)
 return|;
 block|}
+name|bus_describe_intr
+argument_list|(
+name|dev
+argument_list|,
+name|txr
+operator|->
+name|res
+argument_list|,
+name|txr
+operator|->
+name|tag
+argument_list|,
+literal|"tx %d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|txr
 operator|->
 name|msix
@@ -9652,7 +9669,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Failed to register RX handler"
+literal|"Failed to register RX handler\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9661,6 +9678,23 @@ name|error
 operator|)
 return|;
 block|}
+name|bus_describe_intr
+argument_list|(
+name|dev
+argument_list|,
+name|rxr
+operator|->
+name|res
+argument_list|,
+name|rxr
+operator|->
+name|tag
+argument_list|,
+literal|"rx %d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|rxr
 operator|->
 name|msix
@@ -9865,7 +9899,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Failed to register Link handler"
+literal|"Failed to register Link handler\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9874,6 +9908,21 @@ name|error
 operator|)
 return|;
 block|}
+name|bus_describe_intr
+argument_list|(
+name|dev
+argument_list|,
+name|adapter
+operator|->
+name|res
+argument_list|,
+name|adapter
+operator|->
+name|tag
+argument_list|,
+literal|"link"
+argument_list|)
+expr_stmt|;
 name|adapter
 operator|->
 name|linkvec
