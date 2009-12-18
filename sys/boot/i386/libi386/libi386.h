@@ -251,7 +251,7 @@ comment|/* xlate bioscd unit -> BIOS device */
 end_comment
 
 begin_function_decl
-name|u_int32_t
+name|uint32_t
 name|bd_getbigeom
 parameter_list|(
 name|int
@@ -401,7 +401,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|u_int32_t
+name|uint32_t
 name|bios_basemem
 decl_stmt|;
 end_decl_stmt
@@ -412,7 +412,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_int32_t
+name|uint32_t
 name|bios_extmem
 decl_stmt|;
 end_decl_stmt
@@ -444,11 +444,37 @@ comment|/* memtop less heap size for the cases */
 end_comment
 
 begin_comment
-comment|/*  when heap is at the top of extended memory */
+comment|/*  when heap is at the top of         */
 end_comment
 
 begin_comment
-comment|/*  for other cases - just the same as memtop */
+comment|/*  extended memory; for other cases   */
+end_comment
+
+begin_comment
+comment|/*  just the same as memtop            */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|high_heap_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* extended memory region available */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|high_heap_base
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for use as the heap */
 end_comment
 
 begin_function_decl
