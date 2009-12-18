@@ -2484,14 +2484,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * It's OK to pass only the name piece as last (and not the whole 	 * 'name=val' string), since the API_ENUM_ENV call uses envmatch() 	 * internally, which handles such case 	 */
 name|env
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * It's OK to pass only the name piece as last (and not the whole 	 * 'name=val' string), since the API_ENUM_ENV call uses envmatch() 	 * internally, which handles such case 	 */
 if|if
 condition|(
-operator|!
 name|syscall
 argument_list|(
 name|API_ENV_ENUM
@@ -2509,6 +2508,8 @@ operator|)
 operator|&
 name|env
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2517,8 +2518,9 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 name|env
+operator|==
+name|NULL
 condition|)
 comment|/* no more env. variables to enumerate */
 return|return
