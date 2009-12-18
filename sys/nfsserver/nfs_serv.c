@@ -9413,7 +9413,6 @@ if|if
 condition|(
 name|v3
 condition|)
-block|{
 name|nfsm_srvwcc_data
 argument_list|(
 name|dirfor_ret
@@ -9431,7 +9430,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|nfsmout
 label|:
 name|NDFREE
@@ -11536,11 +11534,11 @@ operator|&
 name|diraft
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 literal|0
 expr_stmt|;
-block|}
 comment|/* fall through */
 name|nfsmout
 label|:
