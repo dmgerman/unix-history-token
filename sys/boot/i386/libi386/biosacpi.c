@@ -515,16 +515,7 @@ name|sum
 operator|!=
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"acpi: bad RSDP checksum (%d)\n"
-argument_list|,
-name|sum
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 return|return
 operator|(
 name|rsdp
