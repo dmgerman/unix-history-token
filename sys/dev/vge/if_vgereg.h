@@ -435,23 +435,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VGE_RXQTIMER
+name|VGE_TXQTIMER
 value|0x3E
 end_define
 
 begin_comment
-comment|/* RX queue timer pend register */
+comment|/* TX queue timer pend register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VGE_TXQTIMER
+name|VGE_RXQTIMER
 value|0x3F
 end_define
 
 begin_comment
-comment|/* TX queue timer pend register */
+comment|/* RX queue timer pend register */
 end_comment
 
 begin_define
