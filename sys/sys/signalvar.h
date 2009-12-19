@@ -911,7 +911,7 @@ parameter_list|(
 name|td
 parameter_list|)
 define|\
-value|(!SIGISEMPTY((td)->td_siglist)&&				\ 	    !sigsetmasked(&(td)->td_siglist,&(td)->td_sigmask))
+value|((!SIGISEMPTY((td)->td_siglist)&&				\ 	    !sigsetmasked(&(td)->td_siglist,&(td)->td_sigmask)) ||	\ 	 (!SIGISEMPTY((td)->td_proc->p_siglist)&&			\ 	    !sigsetmasked(&(td)->td_proc->p_siglist,&(td)->td_sigmask)))
 end_define
 
 begin_comment
@@ -1417,6 +1417,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|signotify
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tdsigcleanup
 parameter_list|(
 name|struct
 name|thread

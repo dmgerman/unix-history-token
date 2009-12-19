@@ -1312,12 +1312,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|sigqueue_flush
+name|tdsigcleanup
 argument_list|(
-operator|&
 name|td
-operator|->
-name|td_sigqueue
 argument_list|)
 expr_stmt|;
 name|PROC_SLOCK
