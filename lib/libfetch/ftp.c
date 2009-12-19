@@ -5908,11 +5908,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|errsock
+goto|;
 comment|/* stat file */
 if|if
 condition|(
@@ -5940,11 +5938,9 @@ name|fetchLastErrCode
 operator|!=
 name|FETCH_UNAVAIL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|errsock
+goto|;
 comment|/* just a stat */
 if|if
 condition|(
@@ -5957,6 +5953,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|ftp_disconnect
+argument_list|(
+name|conn
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FILE
@@ -5965,6 +5967,7 @@ operator|)
 literal|1
 return|;
 comment|/* bogus return value */
+block|}
 if|if
 condition|(
 name|strcmp
@@ -6015,6 +6018,18 @@ name|offset
 argument_list|,
 name|flags
 argument_list|)
+operator|)
+return|;
+name|errsock
+label|:
+name|ftp_disconnect
+argument_list|(
+name|conn
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
 block|}
