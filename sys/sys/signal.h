@@ -1817,6 +1817,13 @@ begin_comment
 comment|/* message on an empty message queue. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SI_KERNEL
+value|0x10006
+end_define
+
 begin_endif
 endif|#
 directive|endif
