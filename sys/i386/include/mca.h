@@ -34,6 +34,9 @@ decl_stmt|;
 name|int
 name|mr_apic_id
 decl_stmt|;
+name|int
+name|mr_bank
+decl_stmt|;
 block|}
 struct|;
 end_struct
