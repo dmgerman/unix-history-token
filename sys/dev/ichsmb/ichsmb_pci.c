@@ -207,6 +207,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_PCH
+value|0x3b308086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_6300ESB
 value|0x25a48086
 end_define
@@ -575,6 +582,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel 82801JI (ICH10) SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_PCH
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel PCH SMBus controller"
 argument_list|)
 expr_stmt|;
 break|break;
