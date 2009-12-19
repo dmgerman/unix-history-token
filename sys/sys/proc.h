@@ -213,6 +213,12 @@ name|s_ttyvp
 decl_stmt|;
 comment|/* (m) Vnode of controlling tty. */
 name|struct
+name|cdev_priv
+modifier|*
+name|s_ttydp
+decl_stmt|;
+comment|/* (m) Device of controlling tty.  */
+name|struct
 name|tty
 modifier|*
 name|s_ttyp

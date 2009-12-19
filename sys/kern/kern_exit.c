@@ -1015,6 +1015,12 @@ name|NULL
 expr_stmt|;
 name|sp
 operator|->
+name|s_ttydp
+operator|=
+name|NULL
+expr_stmt|;
+name|sp
+operator|->
 name|s_leader
 operator|=
 name|NULL

@@ -2201,6 +2201,12 @@ name|NULL
 expr_stmt|;
 name|sess
 operator|->
+name|s_ttydp
+operator|=
+name|NULL
+expr_stmt|;
+name|sess
+operator|->
 name|s_ttyp
 operator|=
 name|NULL
