@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|VGE_RX_BUF_ALIGN
-value|sizeof(uint32_t)
+value|sizeof(uint64_t)
 end_define
 
 begin_comment
