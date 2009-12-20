@@ -7377,7 +7377,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* enable cable detection and UDMA support on newer chips */
+comment|/* enable cable detection and UDMA support on revisions< 0xc7 */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|chiprev
+operator|<
+literal|0xc7
+condition|)
 name|pci_write_config
 argument_list|(
 name|dev
@@ -7398,7 +7408,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* enable ATAPI UDMA mode */
+comment|/* enable ATAPI UDMA mode (even if we are going to do PIO) */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -7414,7 +7424,19 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
+operator|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|chiprev
+operator|>=
+literal|0xc7
+condition|?
+literal|0x03
+else|:
 literal|0x01
+operator|)
 argument_list|,
 literal|1
 argument_list|)
@@ -8147,6 +8169,14 @@ operator|->
 name|cfg2
 operator|&
 name|ALINEW
+operator|&&
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|chiprev
+operator|<
+literal|0xc7
 condition|)
 block|{
 if|if
