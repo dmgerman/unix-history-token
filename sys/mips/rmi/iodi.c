@@ -480,7 +480,7 @@ name|cpu_establish_hardintr
 argument_list|(
 literal|"uart"
 argument_list|,
-name|NULL
+name|filt
 argument_list|,
 operator|(
 name|driver_intr_t
@@ -599,7 +599,7 @@ name|cpu_establish_hardintr
 argument_list|(
 literal|"rge"
 argument_list|,
-name|NULL
+name|filt
 argument_list|,
 operator|(
 name|driver_intr_t
@@ -705,7 +705,7 @@ name|cpu_establish_hardintr
 argument_list|(
 literal|"ehci"
 argument_list|,
-name|NULL
+name|filt
 argument_list|,
 operator|(
 name|driver_intr_t
