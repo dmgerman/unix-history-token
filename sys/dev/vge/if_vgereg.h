@@ -5187,7 +5187,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* first frag in frame */
+comment|/* last frag in frame */
 end_comment
 
 begin_define
@@ -5198,7 +5198,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* last frag in frame */
+comment|/* first frag in frame */
 end_comment
 
 begin_define
