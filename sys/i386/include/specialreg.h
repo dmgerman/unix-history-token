@@ -855,7 +855,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I386_CPU_MODEL
+name|CPUID_TO_MODEL
 parameter_list|(
 name|id
 parameter_list|)
@@ -866,7 +866,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I386_CPU_FAMILY
+name|CPUID_TO_FAMILY
 parameter_list|(
 name|id
 parameter_list|)
