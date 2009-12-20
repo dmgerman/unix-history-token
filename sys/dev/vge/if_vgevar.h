@@ -602,6 +602,10 @@ name|VGE_FLAG_PMCAP
 value|0x0004
 define|#
 directive|define
+name|VGE_FLAG_JUMBO
+value|0x0008
+define|#
+directive|define
 name|VGE_FLAG_SUSPENDED
 value|0x4000
 define|#
