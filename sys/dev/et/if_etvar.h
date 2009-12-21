@@ -347,29 +347,29 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|ET_TDCTRL1_LEN
-value|__BITS(15, 0)
+name|ET_TDCTRL1_LEN_MASK
+value|0x0000FFFF
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TDCTRL2_LAST_FRAG
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TDCTRL2_FIRST_FRAG
-value|__BIT(1)
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TDCTRL2_INTR
-value|__BIT(2)
+value|0x00000004
 end_define
 
 begin_struct
@@ -394,8 +394,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ET_RDCTRL_BUFIDX
-value|__BITS(9, 0)
+name|ET_RDCTRL_BUFIDX_MASK
+value|0x000003FF
 end_define
 
 begin_struct
@@ -417,22 +417,43 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ET_RXST_INFO2_LEN
-value|__BITS(15, 0)
+name|ET_RXST_INFO2_LEN_MASK
+value|0x0000FFFF
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_RXST_INFO2_BUFIDX
-value|__BITS(25, 16)
+name|ET_RXST_INFO2_LEN_SHIFT
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_RXST_INFO2_RINGIDX
-value|__BITS(27, 26)
+name|ET_RXST_INFO2_BUFIDX_MASK
+value|0x03FF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_RXST_INFO2_BUFIDX_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_RXST_INFO2_RINGIDX_MASK
+value|0x0C000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_RXST_INFO2_RINGIDX_SHIFT
+value|26
 end_define
 
 begin_struct
@@ -454,15 +475,22 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ET_RXS_STATRING_INDEX
-value|__BITS(27, 16)
+name|ET_RXS_STATRING_INDEX_MASK
+value|0x0FFF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_RXS_STATRING_INDEX_SHIFT
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXS_STATRING_WRAP
-value|__BIT(28)
+value|0x10000000
 end_define
 
 begin_struct
