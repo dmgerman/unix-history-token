@@ -6342,7 +6342,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Try really hard to stop the RX engine or under heavy RX  	 * data chip will write into de-allocated memory. 	 */
+comment|/* 	 * Try really hard to stop the RX engine or under heavy RX 	 * data chip will write into de-allocated memory. 	 */
 name|ste_reset
 argument_list|(
 name|sc
