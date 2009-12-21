@@ -1435,12 +1435,16 @@ name|desc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 end_function
@@ -1613,7 +1617,9 @@ literal|"can't allocate IO memory\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 name|sc
@@ -2098,7 +2104,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|fail
 label|:
@@ -2108,7 +2116,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2301,7 +2311,9 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2341,7 +2353,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2535,7 +2549,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -2717,7 +2733,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2808,7 +2826,9 @@ name|mii
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2854,7 +2874,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|res
+operator|)
 return|;
 block|}
 end_function
@@ -3079,7 +3101,9 @@ name|val
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 comment|/* TODO: LED */
@@ -3271,7 +3295,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3623,7 +3649,9 @@ literal|"can't create DMA tag\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 	 * Create TX ring DMA stuffs 	 */
@@ -3674,7 +3702,9 @@ literal|"can't create TX ring DMA stuffs\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 	 * Create TX status DMA stuffs 	 */
@@ -3728,7 +3758,9 @@ literal|"can't create TX status DMA stuffs\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 	 * Create DMA stuffs for RX rings 	 */
@@ -3823,7 +3855,9 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|rx_ring
@@ -3884,7 +3918,9 @@ literal|"can't create RX stat ring DMA stuffs\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 	 * Create RX status DMA stuffs 	 */
@@ -3939,7 +3975,9 @@ literal|"can't create RX status DMA stuffs\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 	 * Create mbuf DMA stuffs 	 */
@@ -3955,10 +3993,14 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4278,7 +4320,9 @@ literal|"can't create mbuf DMA tag\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 	 * Create spare DMA map for RX mbufs 	 */
@@ -4324,7 +4368,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 	 * Create DMA maps for RX mbufs 	 */
@@ -4437,7 +4483,9 @@ name|rx_done
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -4528,12 +4576,16 @@ name|rx_done
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4848,7 +4900,9 @@ literal|"can't create DMA tag\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|error
@@ -4891,7 +4945,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|error
@@ -4952,11 +5008,15 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5867,7 +5927,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -6189,11 +6251,15 @@ literal|"can't stop RX DMA engine\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6221,7 +6287,9 @@ name|ET_TXDMA_CTRL_SINGLE_EPKT
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7040,7 +7108,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 comment|/* Initialize TX DMA engine */
 name|error
@@ -7055,10 +7125,14 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7170,7 +7244,9 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7290,7 +7366,9 @@ name|error
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -7344,7 +7422,9 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7500,7 +7580,9 @@ literal|"can't init RX DMA engine\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 	 * Install RX status 	 */
@@ -7819,7 +7901,9 @@ name|sc_rx_intr_delay
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7880,7 +7964,9 @@ literal|"can't init TX DMA engine\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 	 * Install TX descriptor ring 	 */
@@ -7975,7 +8061,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8695,11 +8783,15 @@ literal|"can't start RX DMA engine\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8725,7 +8817,9 @@ name|ET_TXDMA_CTRL_SINGLE_EPKT
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8878,7 +8972,9 @@ literal|"can't enable RX/TX\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|sc
@@ -8903,7 +8999,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|error
 operator|=
@@ -8917,10 +9015,14 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -10174,7 +10276,9 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -10622,6 +10726,7 @@ name|init
 parameter_list|)
 block|{
 return|return
+operator|(
 name|et_newbuf
 argument_list|(
 name|rbd
@@ -10632,6 +10737,7 @@ name|init
 argument_list|,
 name|MCLBYTES
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10654,6 +10760,7 @@ name|init
 parameter_list|)
 block|{
 return|return
+operator|(
 name|et_newbuf
 argument_list|(
 name|rbd
@@ -10664,6 +10771,7 @@ name|init
 argument_list|,
 name|MHLEN
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10784,7 +10892,9 @@ name|len0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 else|else
@@ -10912,7 +11022,9 @@ literal|"can't load RX mbuf\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 else|else
@@ -11006,7 +11118,9 @@ name|rb_paddr
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -11269,7 +11383,9 @@ block|}
 name|back
 label|:
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -11389,7 +11505,9 @@ block|}
 name|back
 label|:
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
