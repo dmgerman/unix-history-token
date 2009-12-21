@@ -339,10 +339,9 @@ comment|/* ET_TDCTRL2_ */
 block|}
 end_block
 
-begin_expr_stmt
-name|__packed
-expr_stmt|;
-end_expr_stmt
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -372,6 +371,90 @@ name|ET_TDCTRL2_INTR
 value|0x00000004
 end_define
 
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_CTRL_WORD
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_HDX_BACKP
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_XMIT_PAUSE
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_FRAME_ERR
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_NO_CRC
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_MAC_OVRRD
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_PAD_PACKET
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_JUMBO_PACKET
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_INS_VLAN
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_CSUM_IP
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_CSUM_TCP
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_CSUM_UDP
+value|0x00004000
+end_define
+
 begin_struct
 struct|struct
 name|et_rxdesc
@@ -387,7 +470,6 @@ name|rd_ctrl
 decl_stmt|;
 comment|/* ET_RDCTRL_ */
 block|}
-name|__packed
 struct|;
 end_struct
 
@@ -410,7 +492,6 @@ name|rxst_info2
 decl_stmt|;
 comment|/* ET_RXST_INFO2_ */
 block|}
-name|__packed
 struct|;
 end_struct
 
@@ -468,7 +549,6 @@ name|rxs_stat_ring
 decl_stmt|;
 comment|/* ET_RXS_STATRING_ */
 block|}
-name|__packed
 struct|;
 end_struct
 
