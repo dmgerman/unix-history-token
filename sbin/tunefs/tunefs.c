@@ -236,6 +236,9 @@ modifier|*
 name|lvalue
 decl_stmt|,
 modifier|*
+name|Nvalue
+decl_stmt|,
+modifier|*
 name|nvalue
 decl_stmt|;
 specifier|const
@@ -277,6 +280,8 @@ name|int
 name|mflag
 decl_stmt|,
 name|mvalue
+decl_stmt|,
+name|Nflag
 decl_stmt|,
 name|nflag
 decl_stmt|,
@@ -340,6 +345,8 @@ name|mflag
 operator|=
 literal|0
 expr_stmt|;
+name|Nflag
+operator|=
 name|nflag
 operator|=
 name|oflag
@@ -357,6 +364,8 @@ operator|=
 name|Lvalue
 operator|=
 name|lvalue
+operator|=
+name|Nvalue
 operator|=
 name|nvalue
 operator|=
@@ -394,7 +403,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aa:e:f:J:L:l:m:n:o:ps:"
+literal|"Aa:e:f:J:L:l:m:N:n:o:ps:"
 argument_list|)
 operator|)
 operator|!=
@@ -426,7 +435,7 @@ literal|1
 expr_stmt|;
 name|name
 operator|=
-literal|"ACLs"
+literal|"POSIX.1e ACLs"
 expr_stmt|;
 name|avalue
 operator|=
@@ -770,6 +779,55 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'N'
+case|:
+name|found_arg
+operator|=
+literal|1
+expr_stmt|;
+name|name
+operator|=
+literal|"NFSv4 ACLs"
+expr_stmt|;
+name|Nvalue
+operator|=
+name|optarg
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|Nvalue
+argument_list|,
+literal|"enable"
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|Nvalue
+argument_list|,
+literal|"disable"
+argument_list|)
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|10
+argument_list|,
+literal|"bad %s (options are %s)"
+argument_list|,
+name|name
+argument_list|,
+literal|"`enable' or `disable'"
+argument_list|)
+expr_stmt|;
+block|}
+name|Nflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|found_arg
@@ -1067,7 +1125,7 @@ condition|)
 block|{
 name|name
 operator|=
-literal|"ACLs"
+literal|"POSIX.1e ACLs"
 expr_stmt|;
 if|if
 condition|(
@@ -1093,6 +1151,25 @@ block|{
 name|warnx
 argument_list|(
 literal|"%s remains unchanged as enabled"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_NFS4ACLS
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s and NFSv4 ACLs are mutually "
+literal|"exclusive"
 argument_list|,
 name|name
 argument_list|)
@@ -1584,6 +1661,134 @@ block|}
 block|}
 if|if
 condition|(
+name|Nflag
+condition|)
+block|{
+name|name
+operator|=
+literal|"NFSv4 ACLs"
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|Nvalue
+argument_list|,
+literal|"enable"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_NFS4ACLS
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s remains unchanged as enabled"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_ACLS
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s and POSIX.1e ACLs are mutually "
+literal|"exclusive"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sblock
+operator|.
+name|fs_flags
+operator||=
+name|FS_NFS4ACLS
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"%s set"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|Nvalue
+argument_list|,
+literal|"disable"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|~
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_NFS4ACLS
+operator|)
+operator|==
+name|FS_NFS4ACLS
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s remains unchanged as disabled"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sblock
+operator|.
+name|fs_flags
+operator|&=
+operator|~
+name|FS_NFS4ACLS
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"%s cleared"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
 name|nflag
 condition|)
 block|{
@@ -2007,9 +2212,9 @@ literal|"usage: tunefs [-A] [-a enable | disable] [-e maxbpg] [-f avgfilesize]"
 argument_list|,
 literal|"              [-J enable | disable ] [-L volname] [-l enable | disable]"
 argument_list|,
-literal|"              [-m minfree] [-n enable | disable] [-o space | time] [-p]"
+literal|"              [-m minfree] [-N enable | disable] [-n enable | disable]"
 argument_list|,
-literal|"              [-s avgfpdir] special | filesystem"
+literal|"              [-o space | time] [-p] [-s avgfpdir] special | filesystem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2029,7 +2234,7 @@ parameter_list|)
 block|{
 name|warnx
 argument_list|(
-literal|"ACLs: (-a)                                         %s"
+literal|"POSIX.1e ACLs: (-a)                                %s"
 argument_list|,
 operator|(
 name|sblock
@@ -2037,6 +2242,23 @@ operator|.
 name|fs_flags
 operator|&
 name|FS_ACLS
+operator|)
+condition|?
+literal|"enabled"
+else|:
+literal|"disabled"
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"NFSv4 ACLs: (-N)                                   %s"
+argument_list|,
+operator|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_NFS4ACLS
 operator|)
 condition|?
 literal|"enabled"
