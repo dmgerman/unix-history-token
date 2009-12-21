@@ -407,9 +407,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit
+name|err
 argument_list|(
-name|EX_SOFTWARE
+name|EX_OSERR
+argument_list|,
+literal|"patting the dog"
 argument_list|)
 expr_stmt|;
 name|pfh
