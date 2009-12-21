@@ -1149,7 +1149,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1195,7 +1194,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2014,7 +2012,6 @@ name|STE_MACCTL0_FULLDUPLEX
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2216,7 +2213,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2231,7 +2227,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2280,7 +2275,6 @@ argument_list|,
 literal|"command never completed!\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2805,7 +2799,6 @@ argument_list|,
 name|STE_RXMODE_MULTIHASH
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3310,7 +3303,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3889,7 +3881,6 @@ name|txstat
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4198,7 +4189,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5700,7 +5690,6 @@ name|ste_tx_cons
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6242,7 +6231,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6497,7 +6485,6 @@ name|ste_list_data
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6590,7 +6577,6 @@ argument_list|,
 literal|"global reset never completed\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7588,7 +7574,6 @@ name|ste_tx_prod
 operator|=
 name|idx
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7677,7 +7662,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
