@@ -631,7 +631,7 @@ name|struct
 name|ste_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -1211,7 +1211,7 @@ name|ste_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|bits
 parameter_list|,
 name|int
@@ -2398,7 +2398,7 @@ literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|word
 init|=
 literal|0
@@ -2471,7 +2471,7 @@ expr_stmt|;
 name|ptr
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|(
@@ -2536,7 +2536,7 @@ name|h
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hashes
 index|[
 literal|2
@@ -2973,7 +2973,7 @@ operator|==
 name|POLL_AND_CHECK_STATUS
 condition|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 name|status
@@ -3089,7 +3089,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 name|sc
@@ -3457,7 +3457,7 @@ name|rx_npkts
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rxstat
 decl_stmt|;
 name|STE_LOCK_ASSERT
@@ -3736,7 +3736,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|txstat
 decl_stmt|;
 name|struct
