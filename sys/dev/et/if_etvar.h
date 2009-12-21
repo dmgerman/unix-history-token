@@ -810,6 +810,9 @@ name|sc_flags
 decl_stmt|;
 comment|/* ET_FLAG_ */
 name|int
+name|sc_expcap
+decl_stmt|;
+name|int
 name|sc_mem_rid
 decl_stmt|;
 name|int
@@ -921,15 +924,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|ET_FLAG_PCIE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_FLAG_MSI
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
 name|ET_FLAG_TXRX_ENABLED
-value|0x1
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_FLAG_JUMBO
-value|0x2
+value|0x0200
 end_define
 
 begin_endif
