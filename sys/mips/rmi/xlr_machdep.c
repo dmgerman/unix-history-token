@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -140,6 +146,12 @@ end_include
 begin_comment
 comment|/* cinit() */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
+end_include
 
 begin_include
 include|#
@@ -1415,6 +1427,8 @@ block|{
 name|kdb_enter
 argument_list|(
 literal|"Boot flags requested debugger"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
