@@ -166,6 +166,18 @@ modifier|*
 name|sysent
 decl_stmt|;
 comment|/* system entry vector */
+name|char
+modifier|*
+name|execpath
+decl_stmt|;
+name|unsigned
+name|long
+name|execpathp
+decl_stmt|;
+name|char
+modifier|*
+name|freepath
+decl_stmt|;
 block|}
 struct|;
 end_struct
