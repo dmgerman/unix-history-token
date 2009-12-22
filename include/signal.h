@@ -496,7 +496,6 @@ name|int
 name|sighold
 parameter_list|(
 name|int
-name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -506,7 +505,6 @@ name|int
 name|sigignore
 parameter_list|(
 name|int
-name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -516,7 +514,6 @@ name|int
 name|sigpause
 parameter_list|(
 name|int
-name|sigmask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -526,7 +523,6 @@ name|int
 name|sigrelse
 parameter_list|(
 name|int
-name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -537,9 +533,15 @@ argument_list|(
 operator|*
 name|sigset
 argument_list|(
-argument|int sig
+name|int
 argument_list|,
-argument|void (*disp)(int)
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|int
+argument_list|)
 argument_list|)
 argument_list|)
 argument_list|(
@@ -553,7 +555,6 @@ name|int
 name|xsi_sigpause
 parameter_list|(
 name|int
-name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
