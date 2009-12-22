@@ -3249,6 +3249,13 @@ name|HDA_CODEC_CS4207
 value|HDA_CODEC_CONSTRUCT(CIRRUSLOGIC, 0x4207)
 end_define
 
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CSXXXX
+value|HDA_CODEC_CONSTRUCT(CIRRUSLOGIC, 0xffff)
+end_define
+
 begin_comment
 comment|/* Realtek */
 end_comment
@@ -3723,8 +3730,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_CXD9872RDK
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7661)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_STAC9872AK
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7662)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CXD9872AKD
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7664)
 end_define
 
 begin_define
@@ -4014,6 +4035,13 @@ define|#
 directive|define
 name|HDA_CODEC_CX20561
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5051)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20582
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5066)
 end_define
 
 begin_define
@@ -4725,6 +4753,18 @@ literal|"CMedia CMI9880"
 block|}
 block|,
 block|{
+name|HDA_CODEC_CXD9872RDK
+block|,
+literal|"Sigmatel CXD9872RD/K"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CXD9872AKD
+block|,
+literal|"Sigmatel CXD9872AKD"
+block|}
+block|,
+block|{
 name|HDA_CODEC_STAC9200D
 block|,
 literal|"Sigmatel STAC9200D"
@@ -5046,6 +5086,12 @@ block|{
 name|HDA_CODEC_CX20561
 block|,
 literal|"Conexant CX20561 (Hermosa)"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20582
+block|,
+literal|"Conexant CX20582 (Pebble)"
 block|}
 block|,
 block|{
@@ -5431,6 +5477,12 @@ block|{
 name|HDA_CODEC_ADXXXX
 block|,
 literal|"Analog Devices (Unknown)"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CSXXXX
+block|,
+literal|"Cirrus Logic (Unknown)"
 block|}
 block|,
 block|{
