@@ -1086,6 +1086,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|STE_ERR_BITS
+value|"\20"				\ 					"\2RECLAIM\3STSOFLOW"		\ 					"\4EXCESSCOLLS\5UNDERRUN"	\ 					"\6INTREQ\7DONE"
+end_define
+
+begin_define
+define|#
+directive|define
 name|STE_ISRACK_INTLATCH
 value|0x0001
 end_define
