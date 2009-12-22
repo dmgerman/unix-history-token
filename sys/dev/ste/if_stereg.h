@@ -2505,6 +2505,12 @@ name|resource
 modifier|*
 name|ste_res
 decl_stmt|;
+name|int
+name|ste_res_id
+decl_stmt|;
+name|int
+name|ste_res_type
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
