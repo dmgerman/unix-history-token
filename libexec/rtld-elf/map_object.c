@@ -251,7 +251,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/*      * Scan the program header entries, and save key information.      *      * We rely on there being exactly two load segments, text and data,      * in that order.      */
+comment|/*      * Scan the program header entries, and save key information.      *      * We expect that the loadable segments are ordered by load address.      */
 name|phdr
 operator|=
 operator|(
@@ -539,29 +539,18 @@ name|base_addr
 argument_list|,
 name|mapsize
 argument_list|,
-name|convert_prot
-argument_list|(
-name|segs
-index|[
+name|PROT_NONE
+argument_list|,
+name|MAP_ANON
+operator||
+name|MAP_PRIVATE
+operator||
+name|MAP_NOCORE
+argument_list|,
+operator|-
+literal|1
+argument_list|,
 literal|0
-index|]
-operator|->
-name|p_flags
-argument_list|)
-argument_list|,
-name|convert_flags
-argument_list|(
-name|segs
-index|[
-literal|0
-index|]
-operator|->
-name|p_flags
-argument_list|)
-argument_list|,
-name|fd
-argument_list|,
-name|base_offset
 argument_list|)
 expr_stmt|;
 if|if
@@ -718,11 +707,8 @@ argument_list|)
 operator||
 name|MAP_FIXED
 expr_stmt|;
-comment|/* Do not call mmap on the first segment - this is redundant */
 if|if
 condition|(
-name|i
-operator|&&
 name|mmap
 argument_list|(
 name|data_addr
@@ -763,6 +749,24 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* Do BSS setup */
+if|if
+condition|(
+name|segs
+index|[
+name|i
+index|]
+operator|->
+name|p_filesz
+operator|!=
+name|segs
+index|[
+name|i
+index|]
+operator|->
+name|p_memsz
+condition|)
+block|{
 comment|/* Clear any BSS in the last page of the segment. */
 name|clear_vaddr
 operator|=
@@ -932,7 +936,7 @@ block|{
 comment|/* There is something to do */
 if|if
 condition|(
-name|mmap
+name|mprotect
 argument_list|(
 name|bss_addr
 argument_list|,
@@ -941,29 +945,15 @@ operator|-
 name|bss_vaddr
 argument_list|,
 name|data_prot
-argument_list|,
-name|MAP_PRIVATE
-operator||
-name|MAP_FIXED
-operator||
-name|MAP_ANON
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|0
 argument_list|)
 operator|==
-operator|(
-name|caddr_t
-operator|)
 operator|-
 literal|1
 condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"%s: mmap of bss failed: %s"
+literal|"%s: mprotect of bss failed: %s"
 argument_list|,
 name|path
 argument_list|,
@@ -976,6 +966,7 @@ expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 block|}
 block|}
 if|if
