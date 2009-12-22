@@ -231,28 +231,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT_BRK
-value|10
-end_define
-
-begin_comment
-comment|/* Starting point for sbrk and brk. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_DEBUG
-value|11
-end_define
-
-begin_comment
-comment|/* Debugging level. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|AT_NOTELF
 value|10
 end_define
