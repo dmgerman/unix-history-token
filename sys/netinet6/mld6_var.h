@@ -108,6 +108,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MLIF_USEALLOW
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Use ALLOW/BLOCK for joins/leaves */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MLD_RANDOM_DELAY
 parameter_list|(
 name|X
