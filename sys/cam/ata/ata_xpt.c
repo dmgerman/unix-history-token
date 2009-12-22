@@ -3062,6 +3062,10 @@ name|res
 operator|.
 name|lba_mid
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|xpt_print
 argument_list|(
 name|path
@@ -4311,15 +4315,6 @@ name|softc
 operator|->
 name|pm_pid
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"PM Product ID: %08x\n"
-argument_list|,
-name|softc
-operator|->
-name|pm_pid
-argument_list|)
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|ident_buf
@@ -4425,15 +4420,6 @@ operator|=
 name|softc
 operator|->
 name|pm_prv
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"PM Revision: %08x\n"
-argument_list|,
-name|softc
-operator|->
-name|pm_prv
-argument_list|)
 expr_stmt|;
 name|snprintf
 argument_list|(
