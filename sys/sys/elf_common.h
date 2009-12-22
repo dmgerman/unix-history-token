@@ -2987,6 +2987,43 @@ comment|/* Indicates that the shared object or 				   executable contains code u
 end_comment
 
 begin_comment
+comment|/* Values for DT_FLAGS_1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_1_BIND_NOW
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Same as DF_BIND_NOW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_1_GLOBAL
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Set the RTLD_GLOBAL for object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DF_1_ORIGIN
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Process $ORIGIN */
+end_comment
+
+begin_comment
 comment|/* Values for n_type.  Used in core files. */
 end_comment
 
