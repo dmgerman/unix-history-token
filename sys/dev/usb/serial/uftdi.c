@@ -1339,6 +1339,17 @@ argument_list|,
 argument|UFTDI_TYPE_8U232AM
 argument_list|)
 block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_RATOC
+argument_list|,
+argument|USB_PRODUCT_RATOC_REXUSB60F
+argument_list|,
+argument|UFTDI_TYPE_8U232AM
+argument_list|)
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
