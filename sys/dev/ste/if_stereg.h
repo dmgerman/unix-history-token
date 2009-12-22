@@ -2130,7 +2130,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->ste_btag, sc->ste_bhandle, reg, val)
+value|bus_write_4((sc)->ste_res, reg, val)
 end_define
 
 begin_define
@@ -2145,7 +2145,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(sc->ste_btag, sc->ste_bhandle, reg, val)
+value|bus_write_2((sc)->ste_res, reg, val)
 end_define
 
 begin_define
@@ -2160,7 +2160,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->ste_btag, sc->ste_bhandle, reg, val)
+value|bus_write_1((sc)->ste_res, reg, val)
 end_define
 
 begin_define
@@ -2173,7 +2173,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->ste_btag, sc->ste_bhandle, reg)
+value|bus_read_4((sc)->ste_res, reg)
 end_define
 
 begin_define
@@ -2186,7 +2186,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2(sc->ste_btag, sc->ste_bhandle, reg)
+value|bus_read_2((sc)->ste_res, reg)
 end_define
 
 begin_define
@@ -2199,7 +2199,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1(sc->ste_btag, sc->ste_bhandle, reg)
+value|bus_read_1((sc)->ste_res, reg)
 end_define
 
 begin_define
@@ -2493,12 +2493,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ste_ifp
-decl_stmt|;
-name|bus_space_tag_t
-name|ste_btag
-decl_stmt|;
-name|bus_space_handle_t
-name|ste_bhandle
 decl_stmt|;
 name|struct
 name|resource
