@@ -1924,6 +1924,10 @@ name|STE_FRAG_LEN
 value|0x00001FFF
 end_define
 
+begin_comment
+comment|/*  * A TFD is 16 to 512 bytes in length which means it can have up to 126  * fragments for a single Tx frame. Since most frames used in stack have  * 3-4 fragments supporting 8 fragments would be enough for normal  * operation. If we encounter more than 8 fragments we'll collapse them  * into a frame that has less than or equal to 8 fragments. Each buffer  * address of a fragment has no alignment limitation.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1952,6 +1956,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * A RFD has the same structure of TFD which in turn means hardware  * supports scatter operation in Rx buffer. Since we just allocate Rx  * buffer with m_getcl(9) there is no fragmentation at all so use  * single fragment for RFD.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ste_desc_onefrag
@@ -1975,6 +1983,13 @@ define|#
 directive|define
 name|STE_TXCTL_WORDALIGN
 value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_TXCTL_ALIGN_DIS
+value|0x00000001
 end_define
 
 begin_define
@@ -2089,6 +2104,16 @@ name|STE_RXATAT_ONEBUF
 value|0x10000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|STE_RX_BYTES
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& STE_RXSTAT_FRAMELEN)
+end_define
+
 begin_comment
 comment|/*  * register space access macros  */
 end_comment
@@ -2180,6 +2205,70 @@ end_define
 begin_define
 define|#
 directive|define
+name|STE_DESC_ALIGN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_RX_LIST_CNT
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_TX_LIST_CNT
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_RX_LIST_SZ
+define|\
+value|(sizeof(struct ste_desc_onefrag) * STE_RX_LIST_CNT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_TX_LIST_SZ
+define|\
+value|(sizeof(struct ste_desc) * STE_TX_LIST_CNT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_ADDR_LO
+parameter_list|(
+name|x
+parameter_list|)
+value|((uint64_t)(x)& 0xFFFFFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_ADDR_HI
+parameter_list|(
+name|x
+parameter_list|)
+value|((uint64_t)(x)>> 32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_TX_TIMEOUT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|STE_TIMEOUT
 value|1000
 end_define
@@ -2201,27 +2290,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ETHER_ALIGN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|STE_RX_LIST_CNT
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|STE_TX_LIST_CNT
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
 name|STE_INC
 parameter_list|(
 name|x
@@ -2229,6 +2297,18 @@ parameter_list|,
 name|y
 parameter_list|)
 value|(x) = (x + 1) % y
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_DEC
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(x) = ((x) + ((y) - 1)) % (y)
 end_define
 
 begin_define
@@ -2267,17 +2347,19 @@ name|ste_list_data
 block|{
 name|struct
 name|ste_desc_onefrag
+modifier|*
 name|ste_rx_list
-index|[
-name|STE_RX_LIST_CNT
-index|]
+decl_stmt|;
+name|bus_addr_t
+name|ste_rx_list_paddr
 decl_stmt|;
 name|struct
 name|ste_desc
+modifier|*
 name|ste_tx_list
-index|[
-name|STE_TX_LIST_CNT
-index|]
+decl_stmt|;
+name|bus_addr_t
+name|ste_tx_list_paddr
 decl_stmt|;
 block|}
 struct|;
@@ -2305,6 +2387,9 @@ decl_stmt|;
 name|uint32_t
 name|ste_phys
 decl_stmt|;
+name|bus_dmamap_t
+name|ste_map
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2328,6 +2413,9 @@ name|ste_chain_onefrag
 modifier|*
 name|ste_next
 decl_stmt|;
+name|bus_dmamap_t
+name|ste_map
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2336,6 +2424,30 @@ begin_struct
 struct|struct
 name|ste_chain_data
 block|{
+name|bus_dma_tag_t
+name|ste_parent_tag
+decl_stmt|;
+name|bus_dma_tag_t
+name|ste_rx_tag
+decl_stmt|;
+name|bus_dma_tag_t
+name|ste_tx_tag
+decl_stmt|;
+name|bus_dma_tag_t
+name|ste_rx_list_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|ste_rx_list_map
+decl_stmt|;
+name|bus_dma_tag_t
+name|ste_tx_list_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|ste_tx_list_map
+decl_stmt|;
+name|bus_dmamap_t
+name|ste_rx_sparemap
+decl_stmt|;
 name|struct
 name|ste_chain_onefrag
 name|ste_rx_chain
@@ -2355,11 +2467,19 @@ name|ste_chain_onefrag
 modifier|*
 name|ste_rx_head
 decl_stmt|;
+name|struct
+name|ste_chain
+modifier|*
+name|ste_last_tx
+decl_stmt|;
 name|int
 name|ste_tx_prod
 decl_stmt|;
 name|int
 name|ste_tx_cons
+decl_stmt|;
+name|int
+name|ste_tx_cnt
 decl_stmt|;
 block|}
 struct|;
@@ -2418,13 +2538,7 @@ name|int
 name|ste_timer
 decl_stmt|;
 name|struct
-name|ste_chain
-modifier|*
-name|ste_tx_prev
-decl_stmt|;
-name|struct
 name|ste_list_data
-modifier|*
 name|ste_ldata
 decl_stmt|;
 name|struct
@@ -2442,14 +2556,6 @@ decl_stmt|;
 name|uint8_t
 name|ste_one_phy
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-name|int
-name|rxcycles
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
