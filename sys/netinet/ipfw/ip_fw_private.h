@@ -160,12 +160,15 @@ modifier|*
 name|next_hop
 decl_stmt|;
 comment|/* forward address		*/
-name|struct
-name|ip_fw
-modifier|*
-name|rule
+comment|/* chain_id validates 'slot', the location of the pointer to 	 * a matching rule. 	 * If invalid, we can lookup the rule using rule_id and rulenum 	 */
+name|uint32_t
+name|slot
 decl_stmt|;
-comment|/* matching rule		*/
+comment|/* slot for matching rule	*/
+name|uint32_t
+name|rulenum
+decl_stmt|;
+comment|/* matching rule number		*/
 name|uint32_t
 name|rule_id
 decl_stmt|;
@@ -735,6 +738,13 @@ name|int
 name|static_len
 decl_stmt|;
 comment|/* total len of static rules */
+name|struct
+name|ip_fw
+modifier|*
+modifier|*
+name|map
+decl_stmt|;
+comment|/* array of rule ptrs to ease lookup */
 name|LIST_HEAD
 argument_list|(
 argument|nat_list
@@ -756,6 +766,11 @@ name|struct
 name|rwlock
 name|rwmtx
 decl_stmt|;
+name|struct
+name|rwlock
+name|uh_lock
+decl_stmt|;
+comment|/* lock for upper half */
 name|uint32_t
 name|id
 decl_stmt|;
@@ -785,8 +800,7 @@ name|IPFW_LOCK_INIT
 parameter_list|(
 name|_chain
 parameter_list|)
-define|\
-value|rw_init(&(_chain)->rwmtx, "IPFW static rules")
+value|do {			\ 	rw_init(&(_chain)->rwmtx, "IPFW static rules");	\ 	rw_init(&(_chain)->uh_lock, "IPFW UH lock");	\ 	} while (0)
 end_define
 
 begin_define
@@ -796,7 +810,7 @@ name|IPFW_LOCK_DESTROY
 parameter_list|(
 name|_chain
 parameter_list|)
-value|rw_destroy(&(_chain)->rwmtx)
+value|do {			\ 	rw_destroy(&(_chain)->rwmtx);			\ 	rw_destroy(&(_chain)->uh_lock);			\ 	} while (0)
 end_define
 
 begin_define
@@ -849,9 +863,67 @@ parameter_list|)
 value|rw_wunlock(&(p)->rwmtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPFW_UH_RLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|rw_rlock(&(p)->uh_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_UH_RUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|rw_runlock(&(p)->uh_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_UH_WLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|rw_wlock(&(p)->uh_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_UH_WUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|rw_wunlock(&(p)->uh_lock)
+end_define
+
 begin_comment
 comment|/* In ip_fw_sockopt.c */
 end_comment
+
+begin_function_decl
+name|int
+name|ipfw_find_rule
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
+name|uint32_t
+name|key
+parameter_list|,
+name|uint32_t
+name|id
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -902,21 +974,6 @@ name|struct
 name|ip_fw
 modifier|*
 name|head
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipfw_free_chain
-parameter_list|(
-name|struct
-name|ip_fw_chain
-modifier|*
-name|chain
-parameter_list|,
-name|int
-name|kill_default
 parameter_list|)
 function_decl|;
 end_function_decl

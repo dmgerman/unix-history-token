@@ -17,25 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|DEB
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DDB
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
 begin_comment
 comment|/*  * Logging support for ipfw  */
 end_comment

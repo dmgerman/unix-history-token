@@ -68,12 +68,14 @@ name|m_tag
 name|mt
 decl_stmt|;
 comment|/* tag header */
-name|struct
-name|ip_fw
-modifier|*
-name|rule
+name|uint32_t
+name|slot
 decl_stmt|;
-comment|/* matching rule */
+comment|/* slot for next rule */
+name|uint32_t
+name|rulenum
+decl_stmt|;
+comment|/* matching rule number */
 name|uint32_t
 name|rule_id
 decl_stmt|;

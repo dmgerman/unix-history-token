@@ -1050,7 +1050,7 @@ block|{
 name|struct
 name|ip_fw
 modifier|*
-name|next
+name|x_next
 decl_stmt|;
 comment|/* linked list of rules		*/
 name|struct

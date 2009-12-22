@@ -179,12 +179,14 @@ begin_struct
 struct|struct
 name|dn_pkt_tag
 block|{
-name|struct
-name|ip_fw
-modifier|*
-name|rule
+name|uint32_t
+name|slot
 decl_stmt|;
-comment|/* matching rule */
+comment|/* slot of next rule to use */
+name|uint32_t
+name|rulenum
+decl_stmt|;
+comment|/* matching rule number */
 name|uint32_t
 name|rule_id
 decl_stmt|;
