@@ -2234,6 +2234,11 @@ name|STE_DMACTL_DMA_HALTINPROG
 operator|)
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
