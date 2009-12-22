@@ -272,98 +272,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * static variables followed by global ones  */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|u_int32_t
-argument_list|,
-name|static_count
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* # of static rules */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|V_static_count
-value|VNET(static_count)
-end_define
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|u_int32_t
-argument_list|,
-name|static_len
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* bytes of static rules */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|V_static_len
-value|VNET(static_len)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSCTL_NODE
-end_ifdef
-
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_net_inet_ip_fw
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_VNET_INT
-argument_list|(
-name|_net_inet_ip_fw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|static_count
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|static_count
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of static rules"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYSCTL_NODE */
+comment|/*  * static variables followed by global ones (none in this file)  */
 end_comment
 
 begin_comment
@@ -760,10 +669,14 @@ name|id
 expr_stmt|;
 name|done
 label|:
-name|V_static_count
+name|chain
+operator|->
+name|n_rules
 operator|++
 expr_stmt|;
-name|V_static_len
+name|chain
+operator|->
+name|static_len
 operator|+=
 name|l
 expr_stmt|;
@@ -772,12 +685,6 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-name|DEB
-argument_list|(
-argument|printf(
-literal|"ipfw: installed rule %d, static count now %d\n"
-argument|, 		rule->rulenum, V_static_count);
-argument_list|)
 return|return
 operator|(
 literal|0
@@ -861,10 +768,14 @@ name|next
 operator|=
 name|n
 expr_stmt|;
-name|V_static_count
+name|chain
+operator|->
+name|n_rules
 operator|--
 expr_stmt|;
-name|V_static_len
+name|chain
+operator|->
+name|static_len
 operator|-=
 name|l
 expr_stmt|;
@@ -3235,6 +3146,11 @@ decl_stmt|,
 modifier|*
 name|rule
 decl_stmt|;
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+decl_stmt|;
 name|u_int32_t
 name|rulenum
 index|[
@@ -3308,6 +3224,11 @@ name|error
 operator|)
 return|;
 block|}
+name|chain
+operator|=
+operator|&
+name|V_layer3_chain
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -3325,7 +3246,9 @@ case|:
 comment|/* 		 * pass up a copy of the current rules. Static rules 		 * come first (the last of which has number IPFW_DEFAULT_RULE), 		 * followed by a possibly empty list of dynamic rule. 		 * The last dynamic rule has NULL in the "next" field. 		 * 		 * Note that the calculated size is used to bound the 		 * amount of data returned to the user.  The rule set may 		 * change between calculating the size and returning the 		 * data in which case we'll just return what fits. 		 */
 name|size
 operator|=
-name|V_static_len
+name|chain
+operator|->
+name|static_len
 expr_stmt|;
 comment|/* size of static rules */
 name|size
@@ -3364,8 +3287,7 @@ name|buf
 argument_list|,
 name|ipfw_getrules
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 name|buf
 argument_list|,
@@ -3387,14 +3309,12 @@ case|:
 comment|/* 		 * Normally we cannot release the lock on each iteration. 		 * We could do it here only because we start from the head all 		 * the times so there is no risk of missing some entries. 		 * On the other hand, the risk is that we end up with 		 * a very inconsistent ruleset, so better keep the lock 		 * around the whole cycle. 		 * 		 * XXX this code can be improved by resetting the head of 		 * the list to point to the default rule, and then freeing 		 * the old list without the need for a lock. 		 */
 name|IPFW_WLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|)
 expr_stmt|;
 name|ipfw_free_chain
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 literal|0
 comment|/* keep default rule */
@@ -3402,14 +3322,13 @@ argument_list|)
 expr_stmt|;
 name|rule
 operator|=
-name|V_layer3_chain
-operator|.
+name|chain
+operator|->
 name|reap
 expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|)
 expr_stmt|;
 name|ipfw_reap_rules
@@ -3477,8 +3396,7 @@ name|error
 operator|=
 name|ipfw_add_rule
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 name|rule
 argument_list|)
@@ -3565,14 +3483,21 @@ sizeof|sizeof
 argument_list|(
 name|u_int32_t
 argument_list|)
+operator|&&
+name|rulenum
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
 condition|)
-comment|/* delete or reassign */
+block|{
+comment|/* delete or reassign, locking done in del_entry() */
 name|error
 operator|=
 name|del_entry
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 name|rulenum
 index|[
@@ -3580,6 +3505,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3592,6 +3518,7 @@ argument_list|(
 name|u_int32_t
 argument_list|)
 condition|)
+block|{
 comment|/* set enable/disable */
 name|V_set_disable
 operator|=
@@ -3618,6 +3545,7 @@ name|RESVD_SET
 operator|)
 expr_stmt|;
 comment|/* set RESVD_SET always enabled */
+block|}
 else|else
 name|error
 operator|=
@@ -3676,8 +3604,7 @@ name|error
 operator|=
 name|zero_entry
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 name|rulenum
 index|[
@@ -3692,6 +3619,7 @@ name|IP_FW_RESETLOG
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/*--- TABLE manipulations are protected by the IPFW_LOCK ---*/
 case|case
 name|IP_FW_TABLE_ADD
 case|:
@@ -3728,8 +3656,7 @@ name|error
 operator|=
 name|ipfw_add_table_entry
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 name|ent
 operator|.
@@ -3786,8 +3713,7 @@ name|error
 operator|=
 name|ipfw_del_table_entry
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 name|ent
 operator|.
@@ -3838,24 +3764,21 @@ condition|)
 break|break;
 name|IPFW_WLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|ipfw_flush_table
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 name|tbl
 argument_list|)
 expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|)
 expr_stmt|;
 block|}
@@ -3896,16 +3819,14 @@ condition|)
 break|break;
 name|IPFW_RLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|ipfw_count_table
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 name|tbl
 argument_list|,
@@ -3915,8 +3836,7 @@ argument_list|)
 expr_stmt|;
 name|IPFW_RUNLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|)
 expr_stmt|;
 if|if
@@ -4037,24 +3957,21 @@ argument_list|)
 expr_stmt|;
 name|IPFW_RLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|ipfw_dump_table
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|,
 name|tbl
 argument_list|)
 expr_stmt|;
 name|IPFW_RUNLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|chain
 argument_list|)
 expr_stmt|;
 if|if
@@ -4091,6 +4008,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+comment|/*--- NAT operations are protected by the IPFW_LOCK ---*/
 case|case
 name|IP_FW_NAT_CFG
 case|:

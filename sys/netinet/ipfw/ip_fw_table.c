@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Lookup table support for ipfw  *  * Lookup tables are implemented (at the moment) using the radix  * tree used for routing tables. Tables store key-value entries, where  * keys are network prefixes (addr/masklen), and values are integers.  * As a degenerate case we can interpret keys as 32-bit integers  * (with a /32 mask).  */
+comment|/*  * Lookup table support for ipfw  *  * Lookup tables are implemented (at the moment) using the radix  * tree used for routing tables. Tables store key-value entries, where  * keys are network prefixes (addr/masklen), and values are integers.  * As a degenerate case we can interpret keys as 32-bit integers  * (with a /32 mask).  *  * The table is protected by the IPFW lock even for manipulation coming  * from userland, because operations are typically fast.  */
 end_comment
 
 begin_if

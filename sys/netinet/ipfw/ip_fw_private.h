@@ -169,11 +169,11 @@ comment|/* matching rule		*/
 name|uint32_t
 name|rule_id
 decl_stmt|;
-comment|/* matching rule id */
+comment|/* matching rule id		*/
 name|uint32_t
 name|chain_id
 decl_stmt|;
-comment|/* ruleset id */
+comment|/* ruleset id			*/
 name|struct
 name|ether_header
 modifier|*
@@ -727,6 +727,14 @@ name|ip_fw
 modifier|*
 name|default_rule
 decl_stmt|;
+name|int
+name|n_rules
+decl_stmt|;
+comment|/* number of static rules */
+name|int
+name|static_len
+decl_stmt|;
+comment|/* total len of static rules */
 name|LIST_HEAD
 argument_list|(
 argument|nat_list
