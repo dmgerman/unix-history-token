@@ -697,6 +697,11 @@ name|devidx
 init|=
 literal|0
 decl_stmt|;
+name|device_set_usb_desc
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
 name|db
 operator|=
 name|uaa
