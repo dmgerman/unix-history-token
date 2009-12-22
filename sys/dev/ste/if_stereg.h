@@ -1235,7 +1235,7 @@ define|#
 directive|define
 name|STE_INTRS
 define|\
-value|(STE_IMR_RX_DMADONE|STE_IMR_TX_DMADONE|	\ 	STE_IMR_TX_DONE|STE_IMR_HOSTERR| \         STE_IMR_LINKEVENT)
+value|(STE_IMR_RX_DMADONE|STE_IMR_TX_DMADONE|	\ 	STE_IMR_TX_DONE|STE_IMR_HOSTERR)
 end_define
 
 begin_define
@@ -2555,7 +2555,7 @@ name|ste_cdata
 decl_stmt|;
 name|struct
 name|callout
-name|ste_stat_callout
+name|ste_callout
 decl_stmt|;
 name|struct
 name|mtx
