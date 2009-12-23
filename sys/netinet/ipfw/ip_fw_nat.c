@@ -247,10 +247,10 @@ name|if_xname
 argument_list|,
 name|IF_NAMESIZE
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
+continue|continue;
 name|if_addr_rlock
 argument_list|(
 name|ifp
@@ -322,7 +322,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|IPFW_WUNLOCK
 argument_list|(
 name|chain
@@ -353,6 +352,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|ipfw_insn_nat
+modifier|*
+name|cmd
+decl_stmt|;
 name|IPFW_WLOCK_ASSERT
 argument_list|(
 name|chain
@@ -374,10 +377,8 @@ name|i
 operator|++
 control|)
 block|{
-name|ipfw_insn_nat
-modifier|*
 name|cmd
-init|=
+operator|=
 operator|(
 name|ipfw_insn_nat
 operator|*
@@ -391,7 +392,8 @@ index|[
 name|i
 index|]
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+comment|/* XXX skip log and the like ? */
 if|if
 condition|(
 name|cmd
@@ -641,10 +643,6 @@ decl_stmt|,
 name|off
 decl_stmt|,
 name|i
-decl_stmt|;
-name|char
-modifier|*
-name|panic_err
 decl_stmt|;
 for|for
 control|(
@@ -941,6 +939,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* XXX perhaps return an error instead of panic ? */
 if|if
 condition|(
 name|r
@@ -952,16 +951,11 @@ index|]
 operator|==
 name|NULL
 condition|)
-block|{
-name|panic_err
-operator|=
+name|panic
+argument_list|(
 literal|"LibAliasRedirect* returned NULL"
+argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-else|else
 comment|/* LSNAT handling. */
 for|for
 control|(
@@ -1076,16 +1070,6 @@ operator|(
 literal|1
 operator|)
 return|;
-name|bad
-label|:
-comment|/* something really bad happened: panic! */
-name|panic
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|panic_err
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1138,9 +1122,6 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|mcl
 operator|=
 name|m_megapullup
@@ -1153,13 +1134,26 @@ name|m_pkthdr
 operator|.
 name|len
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|mcl
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|badnat
-goto|;
+block|{
+name|args
+operator|->
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|IP_FW_DENY
+operator|)
+return|;
+block|}
 name|ip
 operator|=
 name|mtod
@@ -1203,7 +1197,7 @@ name|ip_off
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * XXX - Libalias checksum offload 'duct tape': 	 *  	 * locally generated packets have only 	 * pseudo-header checksum calculated 	 * and libalias will screw it[1], so 	 * mark them for later fix.  Moreover 	 * there are cases when libalias 	 * modify tcp packet data[2], mark it 	 * for later fix too. 	 * 	 * [1] libalias was never meant to run 	 * in kernel, so it doesn't have any 	 * knowledge about checksum 	 * offloading, and it expects a packet 	 * with a full internet 	 * checksum. Unfortunately, packets 	 * generated locally will have just the 	 * pseudo header calculated, and when 	 * libalias tries to adjust the 	 * checksum it will actually screw it. 	 * 	 * [2] when libalias modify tcp's data 	 * content, full TCP checksum has to 	 * be recomputed: the problem is that 	 * libalias doesn't have any idea 	 * about checksum offloading To 	 * workaround this, we do not do 	 * checksumming in LibAlias, but only 	 * mark the packets in th_x2 field. If 	 * we receive a marked packet, we 	 * calculate correct checksum for it 	 * aware of offloading.  Why such a 	 * terrible hack instead of 	 * recalculating checksum for each 	 * packet?  Because the previous 	 * checksum was not checked! 	 * Recalculating checksums for EVERY 	 * packet will hide ALL transmission 	 * errors. Yes, marked packets still 	 * suffer from this problem. But, 	 * sigh, natd(8) has this problem, 	 * too. 	 * 	 * TODO: -make libalias mbuf aware (so 	 * it can handle delayed checksum and tso) 	 */
+comment|/* 	 * XXX - Libalias checksum offload 'duct tape': 	 * 	 * locally generated packets have only pseudo-header checksum 	 * calculated and libalias will break it[1], so mark them for 	 * later fix.  Moreover there are cases when libalias modifies 	 * tcp packet data[2], mark them for later fix too. 	 * 	 * [1] libalias was never meant to run in kernel, so it does 	 * not have any knowledge about checksum offloading, and 	 * expects a packet with a full internet checksum. 	 * Unfortunately, packets generated locally will have just the 	 * pseudo header calculated, and when libalias tries to adjust 	 * the checksum it will actually compute a wrong value. 	 * 	 * [2] when libalias modifies tcp's data content, full TCP 	 * checksum has to be recomputed: the problem is that 	 * libalias does not have any idea about checksum offloading. 	 * To work around this, we do not do checksumming in LibAlias, 	 * but only mark the packets in th_x2 field. If we receive a 	 * marked packet, we calculate correct checksum for it 	 * aware of offloading.  Why such a terrible hack instead of 	 * recalculating checksum for each packet? 	 * Because the previous checksum was not checked! 	 * Recalculating checksums for EVERY packet will hide ALL 	 * transmission errors. Yes, marked packets still suffer from 	 * this problem. But, sigh, natd(8) has this problem, too. 	 * 	 * TODO: -make libalias mbuf aware (so 	 * it can handle delayed checksum and tso) 	 */
 if|if
 condition|(
 name|mcl
@@ -1320,8 +1314,6 @@ argument_list|(
 name|mcl
 argument_list|)
 expr_stmt|;
-name|badnat
-label|:
 name|args
 operator|->
 name|m
@@ -1351,7 +1343,7 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
-comment|/*  	 * XXX - libalias checksum offload  	 * 'duct tape' (see above)  	 */
+comment|/* 	 * XXX - libalias checksum offload 	 * 'duct tape' (see above) 	 */
 if|if
 condition|(
 operator|(
@@ -1491,7 +1483,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/*  			 * Maybe it was set in  			 * libalias...  			 */
+comment|/* 			 * Maybe it was set in 			 * libalias... 			 */
 name|th
 operator|->
 name|th_x2
@@ -1557,7 +1549,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*  		 * No hw checksum offloading: do it  		 * by ourself.  		 */
+comment|/* No hw checksum offloading: do it ourselves */
 if|if
 condition|(
 operator|(
@@ -1646,20 +1638,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|LOOKUP_NAT
-parameter_list|(
-name|head
-parameter_list|,
-name|i
-parameter_list|,
-name|p
-parameter_list|)
-value|do {			\ 		LIST_FOREACH((p), head, _next) {	\ 			if ((p)->id == (i)) {		\ 				break;			\ 			}				\ 		}					\ 	} while (0)
-end_define
-
 begin_function
 specifier|static
 name|struct
@@ -1681,15 +1659,25 @@ name|cfg_nat
 modifier|*
 name|res
 decl_stmt|;
-name|LOOKUP_NAT
+name|LIST_FOREACH
 argument_list|(
-name|l
+argument|res
 argument_list|,
-name|nat_id
+argument|l
 argument_list|,
-name|res
+argument|_next
 argument_list|)
-expr_stmt|;
+block|{
+if|if
+condition|(
+name|res
+operator|->
+name|id
+operator|==
+name|nat_id
+condition|)
+break|break;
+block|}
 return|return
 name|res
 return|;
@@ -1765,13 +1753,15 @@ operator|)
 name|buf
 expr_stmt|;
 comment|/* check valid parameter ser_n->id> 0 ? */
-comment|/*  	 * Find/create nat rule. 	 */
+comment|/* 	 * Find/create nat rule. 	 */
 name|IPFW_WLOCK
 argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-name|LOOKUP_NAT
+name|ptr
+operator|=
+name|lookup_nat
 argument_list|(
 operator|&
 name|chain
@@ -1781,8 +1771,6 @@ argument_list|,
 name|ser_n
 operator|->
 name|id
-argument_list|,
-name|ptr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1912,7 +1900,7 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Basic nat configuration. 	 */
+comment|/* 	 * Basic nat configuration. 	 */
 name|ptr
 operator|->
 name|id
@@ -1921,7 +1909,7 @@ name|ser_n
 operator|->
 name|id
 expr_stmt|;
-comment|/*  	 * XXX - what if this rule doesn't nat any ip and just  	 * redirect?  	 * do we set aliasaddress to 0.0.0.0? 	 */
+comment|/* 	 * XXX - what if this rule doesn't nat any ip and just 	 * redirect? 	 * do we set aliasaddress to 0.0.0.0? 	 */
 name|ptr
 operator|->
 name|ip
@@ -1985,7 +1973,7 @@ argument_list|,
 name|IF_NAMESIZE
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Redir and LSNAT configuration. 	 */
+comment|/* 	 * Redir and LSNAT configuration. 	 */
 comment|/* Delete old cfgs. */
 name|del_redir_spool_cfg
 argument_list|(
@@ -2093,12 +2081,15 @@ sizeof|sizeof
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* XXX validate i */
 name|IPFW_WLOCK
 argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-name|LOOKUP_NAT
+name|ptr
+operator|=
+name|lookup_nat
 argument_list|(
 operator|&
 name|chain
@@ -2106,8 +2097,6 @@ operator|->
 name|nat
 argument_list|,
 name|i
-argument_list|,
-name|ptr
 argument_list|)
 expr_stmt|;
 if|if
@@ -2219,6 +2208,11 @@ name|ip_fw_chain
 modifier|*
 name|chain
 decl_stmt|;
+name|int
+name|err
+init|=
+name|ENOSPC
+decl_stmt|;
 name|chain
 operator|=
 operator|&
@@ -2271,10 +2265,12 @@ condition|(
 name|off
 operator|+
 name|SOF_NAT
-operator|<
+operator|>=
 name|NAT_BUF_LEN
 condition|)
-block|{
+goto|goto
+name|nospace
+goto|;
 name|bcopy
 argument_list|(
 name|n
@@ -2306,10 +2302,12 @@ condition|(
 name|off
 operator|+
 name|SOF_REDIR
-operator|<
+operator|>=
 name|NAT_BUF_LEN
 condition|)
-block|{
+goto|goto
+name|nospace
+goto|;
 name|bcopy
 argument_list|(
 name|r
@@ -2341,10 +2339,12 @@ condition|(
 name|off
 operator|+
 name|SOF_SPOOL
-operator|<
+operator|>=
 name|NAT_BUF_LEN
 condition|)
-block|{
+goto|goto
+name|nospace
+goto|;
 name|bcopy
 argument_list|(
 name|s
@@ -2363,23 +2363,27 @@ operator|+=
 name|SOF_SPOOL
 expr_stmt|;
 block|}
-else|else
-goto|goto
+block|}
+block|}
+name|err
+operator|=
+literal|0
+expr_stmt|;
+comment|/* all good */
 name|nospace
-goto|;
-block|}
-block|}
-else|else
-goto|goto
-name|nospace
-goto|;
-block|}
-block|}
-else|else
-goto|goto
-name|nospace
-goto|;
-block|}
+label|:
+name|IPFW_RUNLOCK
+argument_list|(
+name|chain
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+block|{
 name|bcopy
 argument_list|(
 operator|&
@@ -2393,11 +2397,6 @@ name|nat_cnt
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|IPFW_RUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 name|sooptcopyout
 argument_list|(
 name|sopt
@@ -2407,31 +2406,16 @@ argument_list|,
 name|NAT_BUF_LEN
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|data
-argument_list|,
-name|M_IPFW
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|nospace
-label|:
-name|IPFW_RUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"serialized data buffer not big enough:"
 literal|"please increase NAT_BUF_LEN\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|data
@@ -2441,7 +2425,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENOSPC
+name|err
 operator|)
 return|;
 block|}
@@ -2471,10 +2455,6 @@ name|int
 name|i
 decl_stmt|,
 name|size
-decl_stmt|,
-name|cnt
-decl_stmt|,
-name|sof
 decl_stmt|;
 name|struct
 name|ip_fw_chain
@@ -2486,25 +2466,12 @@ operator|=
 operator|&
 name|V_layer3_chain
 expr_stmt|;
-name|data
-operator|=
-name|NULL
-expr_stmt|;
-name|sof
-operator|=
-name|LIBALIAS_BUF_SIZE
-expr_stmt|;
-name|cnt
-operator|=
-literal|0
-expr_stmt|;
 name|IPFW_RLOCK
 argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-name|size
-operator|=
+comment|/* one pass to count, one to copy the data */
 name|i
 operator|=
 literal|0
@@ -2529,15 +2496,16 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|cnt
+name|i
 operator|++
 expr_stmt|;
+block|}
 name|size
 operator|=
-name|cnt
+name|i
 operator|*
 operator|(
-name|sof
+name|LIBALIAS_BUF_SIZE
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -2547,10 +2515,8 @@ operator|)
 expr_stmt|;
 name|data
 operator|=
-name|realloc
+name|malloc
 argument_list|(
-name|data
-argument_list|,
 name|size
 argument_list|,
 name|M_IPFW
@@ -2578,6 +2544,30 @@ name|ENOSPC
 operator|)
 return|;
 block|}
+name|i
+operator|=
+literal|0
+expr_stmt|;
+name|LIST_FOREACH
+argument_list|(
+argument|ptr
+argument_list|,
+argument|&chain->nat
+argument_list|,
+argument|_next
+argument_list|)
+block|{
+if|if
+condition|(
+name|ptr
+operator|->
+name|lib
+operator|->
+name|logDesc
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|bcopy
 argument_list|(
 operator|&
@@ -2618,12 +2608,12 @@ index|[
 name|i
 index|]
 argument_list|,
-name|sof
+name|LIBALIAS_BUF_SIZE
 argument_list|)
 expr_stmt|;
 name|i
 operator|+=
-name|sof
+name|LIBALIAS_BUF_SIZE
 expr_stmt|;
 block|}
 name|IPFW_RUNLOCK
