@@ -1104,7 +1104,7 @@ name|zf_rawfd
 operator|=
 name|rawfd
 expr_stmt|;
-comment|/* Verify that the file is gzipped (XXX why do this afterwards?) */
+comment|/* Verify that the file is gzipped */
 if|if
 condition|(
 name|check_header
@@ -1118,16 +1118,6 @@ argument_list|(
 name|zf
 operator|->
 name|zf_rawfd
-argument_list|)
-expr_stmt|;
-name|inflateEnd
-argument_list|(
-operator|&
-operator|(
-name|zf
-operator|->
-name|zf_zstream
-operator|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -1526,8 +1516,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|zf
 operator|->
@@ -1545,6 +1537,12 @@ name|next_in
 operator|=
 name|NULL
 expr_stmt|;
+name|zf
+operator|->
+name|zf_endseen
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1557,7 +1555,9 @@ name|zf_zstream
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1668,8 +1668,10 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* skip forwards if required */
 while|while
