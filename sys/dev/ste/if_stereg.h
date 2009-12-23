@@ -2287,6 +2287,17 @@ parameter_list|)
 value|((uint64_t)(x)>> 32)
 end_define
 
+begin_comment
+comment|/*  * Since Tx status can hold up to 31 status bytes we should  * check Tx status before controller fills it up. Otherwise  * Tx MAC stalls.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STE_TX_INTR_FRAMES
+value|16
+end_define
+
 begin_define
 define|#
 directive|define
