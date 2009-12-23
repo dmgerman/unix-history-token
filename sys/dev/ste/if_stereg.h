@@ -123,6 +123,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|STE_COUNTDOWN
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
 name|STE_DEBUGCTL
 value|0x1A
 end_define
@@ -202,13 +209,6 @@ define|#
 directive|define
 name|STE_TX_FRAMEID
 value|0x47
-end_define
-
-begin_define
-define|#
-directive|define
-name|STE_COUNTDOWN
-value|0x48
 end_define
 
 begin_define
