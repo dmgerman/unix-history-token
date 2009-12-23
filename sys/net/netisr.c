@@ -4280,7 +4280,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"netisr2: forcing maxthreads from %d to %d\n"
+literal|"netisr_init: forcing maxthreads from %d to %d\n"
 argument_list|,
 name|netisr_maxthreads
 argument_list|,
@@ -4301,7 +4301,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"netisr2: forcing defaultqlimit from %d to %d\n"
+literal|"netisr_init: forcing defaultqlimit from %d to %d\n"
 argument_list|,
 name|netisr_defaultqlimit
 argument_list|,
@@ -4330,8 +4330,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"netisr2: forcing maxthreads to 1 and bindthreads to "
-literal|"0 for device polling\n"
+literal|"netisr_init: forcing maxthreads to 1 and "
+literal|"bindthreads to 0 for device polling\n"
 argument_list|)
 expr_stmt|;
 name|netisr_maxthreads
