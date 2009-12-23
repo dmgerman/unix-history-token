@@ -8125,7 +8125,7 @@ operator|!=
 name|IP_FW_TABLEARG
 operator|&&
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|)
 name|f
 operator|->
@@ -8139,7 +8139,7 @@ block|{
 name|f_pos
 operator|=
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|)
 name|f
 operator|->
@@ -8233,7 +8233,7 @@ name|id
 expr_stmt|;
 block|}
 block|}
-comment|/* 			     * Skip disabled rules, and re-enter 			     * the inner loop with the correct 			     * f_pos, f, l and cmd. 				 * Also clear cmdlen and skip_or 				 */
+comment|/* 			     * Skip disabled rules, and re-enter 			     * the inner loop with the correct 			     * f_pos, f, l and cmd. 			     * Also clear cmdlen and skip_or 			     */
 for|for
 control|(
 init|;
