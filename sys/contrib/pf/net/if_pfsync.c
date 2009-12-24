@@ -2546,11 +2546,11 @@ name|timeout
 expr_stmt|;
 name|st
 operator|->
-name|allow_opts
+name|state_flags
 operator|=
 name|sp
 operator|->
-name|allow_opts
+name|state_flags
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -8373,11 +8373,11 @@ name|log
 expr_stmt|;
 name|sp
 operator|->
-name|allow_opts
+name|state_flags
 operator|=
 name|st
 operator|->
-name|allow_opts
+name|state_flags
 expr_stmt|;
 name|sp
 operator|->
