@@ -3151,6 +3151,23 @@ name|params
 operator|.
 name|secsize
 expr_stmt|;
+if|if
+condition|(
+name|ata_physical_sector_size
+argument_list|(
+operator|&
+name|cgd
+operator|->
+name|ident_data
+argument_list|)
+operator|!=
+name|softc
+operator|->
+name|params
+operator|.
+name|secsize
+condition|)
+block|{
 name|softc
 operator|->
 name|disk
@@ -3171,6 +3188,7 @@ name|disk
 operator|->
 name|d_stripeoffset
 operator|=
+operator|(
 name|softc
 operator|->
 name|disk
@@ -3184,7 +3202,15 @@ name|cgd
 operator|->
 name|ident_data
 argument_list|)
+operator|)
+operator|%
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_stripesize
 expr_stmt|;
+block|}
 comment|/* XXX: these are not actually "firmware" values, so they may be wrong */
 name|softc
 operator|->
