@@ -342,6 +342,7 @@ name|tblentry
 modifier|*
 name|cmdlookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -378,6 +379,7 @@ modifier|*
 modifier|*
 name|envp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -656,6 +658,7 @@ comment|/*  * Do a path search.  The variable path (passed by reference) should 
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|pathopt
@@ -667,26 +670,29 @@ name|char
 modifier|*
 name|padvance
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|path
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
-name|q
+name|start
 decl_stmt|;
 name|char
 modifier|*
-name|start
+name|q
 decl_stmt|;
 name|int
 name|len
@@ -1151,6 +1157,7 @@ block|{
 name|int
 name|index
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
@@ -1338,6 +1345,7 @@ begin_function
 name|void
 name|find_command
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1350,6 +1358,7 @@ parameter_list|,
 name|int
 name|printerr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -2029,6 +2038,7 @@ begin_function
 name|int
 name|find_builtin
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2678,6 +2688,7 @@ name|tblentry
 modifier|*
 name|cmdlookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2689,6 +2700,7 @@ block|{
 name|int
 name|hashval
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -2899,6 +2911,7 @@ begin_function
 name|void
 name|addcmdentry
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2973,6 +2986,7 @@ begin_function
 name|void
 name|defun
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3027,6 +3041,7 @@ begin_function
 name|int
 name|unsetfunc
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3378,13 +3393,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|path
 init|=
 name|pathval
 argument_list|()
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|name
 decl_stmt|;

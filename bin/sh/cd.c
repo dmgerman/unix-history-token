@@ -305,6 +305,7 @@ name|char
 modifier|*
 name|dest
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path

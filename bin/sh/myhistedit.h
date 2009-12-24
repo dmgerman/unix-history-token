@@ -69,6 +69,7 @@ begin_function_decl
 name|int
 name|not_fcnumber
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -79,6 +80,7 @@ begin_function_decl
 name|int
 name|str_to_event
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

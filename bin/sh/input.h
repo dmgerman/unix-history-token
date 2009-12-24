@@ -135,6 +135,7 @@ begin_function_decl
 name|void
 name|setinputfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

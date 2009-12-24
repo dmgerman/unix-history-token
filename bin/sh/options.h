@@ -538,6 +538,7 @@ begin_function_decl
 name|int
 name|nextopt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

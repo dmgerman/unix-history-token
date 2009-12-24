@@ -530,9 +530,11 @@ name|STATIC
 name|int
 name|pmatch
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -6140,10 +6142,12 @@ begin_function
 name|int
 name|patmatch
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pattern
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -6204,10 +6208,12 @@ name|STATIC
 name|int
 name|pmatch
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pattern
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -6216,6 +6222,7 @@ name|int
 name|squoted
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -6459,6 +6466,7 @@ case|case
 literal|'['
 case|:
 block|{
+specifier|const
 name|char
 modifier|*
 name|endp
@@ -6883,6 +6891,7 @@ name|node
 modifier|*
 name|pattern
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|val

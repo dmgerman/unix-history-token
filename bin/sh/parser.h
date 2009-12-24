@@ -305,6 +305,7 @@ begin_function_decl
 name|int
 name|goodname
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
