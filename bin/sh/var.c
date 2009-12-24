@@ -2720,11 +2720,6 @@ argument_list|(
 literal|"-p requires no arguments"
 argument_list|)
 expr_stmt|;
-name|listsetvar
-argument_list|(
-name|cmdenviron
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|argc
