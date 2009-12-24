@@ -217,6 +217,36 @@ begin_comment
 comment|/*- 	 * Store the provider name, given a device path, in a buffer. The buffer 	 * must be at least MAXPATHLEN bytes long. 	 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DIOCGSTRIPESIZE
+value|_IOR('d', 139, off_t)
+end_define
+
+begin_comment
+comment|/* Get stripe size in bytes */
+end_comment
+
+begin_comment
+comment|/*- 	 * Get the size of the device's optimal access block in bytes. 	 * This should be a multiple of the sectorsize. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCGSTRIPEOFFSET
+value|_IOR('d', 140, off_t)
+end_define
+
+begin_comment
+comment|/* Get stripe offset in bytes */
+end_comment
+
+begin_comment
+comment|/*- 	 * Get the offset of the first device's optimal access block in bytes. 	 * This should be a multiple of the sectorsize. 	 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
