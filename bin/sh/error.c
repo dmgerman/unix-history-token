@@ -164,30 +164,28 @@ name|commandname
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|exverror
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|va_list
-parameter_list|)
-function_decl|__printf0like
-parameter_list|(
-function_decl|2
-operator|,
-function_decl|0
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+argument_list|)
+name|__printf0like
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Called to raise an exception.  Since C doesn't include exceptions, we  * just do a longjmp to the exception handler.  The type of exception is  * stored in the global variable "exception".  *  * Interrupts are disabled; they should be reenabled when the exception is  * caught.  */
