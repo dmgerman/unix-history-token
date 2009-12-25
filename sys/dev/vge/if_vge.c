@@ -12339,11 +12339,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|VGE_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|CSR_WRITE_1
 argument_list|(
 name|sc
