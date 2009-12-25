@@ -244,6 +244,13 @@ name|rootshell
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|jmploc
+name|main_handler
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|STATIC
 name|void
@@ -285,10 +292,6 @@ index|[]
 parameter_list|)
 block|{
 name|struct
-name|jmploc
-name|jmploc
-decl_stmt|;
-name|struct
 name|stackmark
 name|smark
 decl_stmt|;
@@ -318,7 +321,7 @@ if|if
 condition|(
 name|setjmp
 argument_list|(
-name|jmploc
+name|main_handler
 operator|.
 name|loc
 argument_list|)
@@ -464,7 +467,7 @@ block|}
 name|handler
 operator|=
 operator|&
-name|jmploc
+name|main_handler
 expr_stmt|;
 ifdef|#
 directive|ifdef

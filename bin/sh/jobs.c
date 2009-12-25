@@ -3862,6 +3862,11 @@ name|rootshell
 operator|=
 literal|0
 expr_stmt|;
+name|handler
+operator|=
+operator|&
+name|main_handler
+expr_stmt|;
 name|closescript
 argument_list|()
 expr_stmt|;

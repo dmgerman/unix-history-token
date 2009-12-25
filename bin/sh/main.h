@@ -25,6 +25,18 @@ begin_comment
 comment|/* true if we aren't a child of the main shell */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|jmploc
+name|main_handler
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* top level exception handler */
+end_comment
+
 begin_function_decl
 name|void
 name|readcmdfile
