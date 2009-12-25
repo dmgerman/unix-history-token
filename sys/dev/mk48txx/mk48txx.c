@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/watchdog.h>
 end_include
 
@@ -799,20 +805,23 @@ name|MK48TXX_DAY_MASK
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* Map dow from 1 - 7 to 0 - 6; FROMBCD() isn't necessary here. */
+block|ct.dow = FROMREG(MK48TXX_IWDAY, MK48TXX_WDAY_MASK) - 1;
+else|#
+directive|else
+comment|/* 	 * Set dow = -1 because some drivers (for example the NetBSD and 	 * OpenBSD mk48txx(4)) don't set it correctly. 	 */
 name|ct
 operator|.
 name|dow
 operator|=
-name|FROMREG
-argument_list|(
-name|MK48TXX_IWDAY
-argument_list|,
-name|MK48TXX_WDAY_MASK
-argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 name|ct
 operator|.
 name|mon
@@ -1316,15 +1325,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|bus_space_read_1
+name|bus_read_1
 argument_list|(
 name|sc
 operator|->
-name|sc_bst
-argument_list|,
-name|sc
-operator|->
-name|sc_bsh
+name|sc_res
 argument_list|,
 name|off
 argument_list|)
@@ -1360,15 +1365,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bus_space_write_1
+name|bus_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_bst
-argument_list|,
-name|sc
-operator|->
-name|sc_bsh
+name|sc_res
 argument_list|,
 name|off
 argument_list|,
