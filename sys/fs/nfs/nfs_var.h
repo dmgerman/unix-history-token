@@ -3022,26 +3022,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nfsrv_aclaccess
-parameter_list|(
-name|vnode_t
-parameter_list|,
-name|accmode_t
-parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-parameter_list|,
-name|NFSPROC_T
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|nfsrv_setacl
 parameter_list|(
 name|vnode_t
@@ -5393,7 +5373,7 @@ name|nfsvno_accchk
 parameter_list|(
 name|vnode_t
 parameter_list|,
-name|u_int32_t
+name|accmode_t
 parameter_list|,
 name|struct
 name|ucred
@@ -5409,6 +5389,9 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|u_int32_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
