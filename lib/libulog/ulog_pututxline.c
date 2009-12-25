@@ -539,10 +539,10 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-operator|&
 name|ut
 argument_list|,
 sizeof|sizeof
+expr|*
 name|ut
 argument_list|)
 expr_stmt|;
