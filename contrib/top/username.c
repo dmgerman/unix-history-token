@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -23,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
 end_include
 
 begin_include
@@ -53,9 +53,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|UT_NAMESIZE
-operator|+
-literal|1
+name|MAXLOGNAME
 index|]
 decl_stmt|;
 block|}
@@ -357,7 +355,9 @@ name|name
 argument_list|,
 name|name
 argument_list|,
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
