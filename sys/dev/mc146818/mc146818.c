@@ -358,7 +358,7 @@ argument_list|,
 literal|1000000
 argument_list|)
 expr_stmt|;
-comment|/* 1 second resolution. */
+comment|/* 1 second resolution */
 return|return
 operator|(
 literal|0
@@ -412,7 +412,7 @@ operator|=
 literal|1000000
 expr_stmt|;
 comment|/* XXX how long should we wait? */
-comment|/* 	 * If MC_REGA_UIP is 0 we have at least 244us before the next 	 * update. If it's 1 an update is imminent. 	 */
+comment|/* 	 * If MC_REGA_UIP is 0 we have at least 244us before the next 	 * update.  If it's 1 an update is imminent. 	 */
 for|for
 control|(
 init|;
@@ -1318,6 +1318,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_undef
+undef|#
+directive|undef
+name|MC_ADDR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MC_DATA
+end_undef
+
 begin_comment
 comment|/*  * Looks like it's common even across platforms to store the century at  * 0x32 in the NVRAM of the mc146818.  */
 end_comment
@@ -1408,6 +1420,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|MC_CENT
+end_undef
 
 end_unit
 

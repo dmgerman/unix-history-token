@@ -59,8 +59,10 @@ name|sc_mcread
 function_decl|)
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|u_int
+name|reg
 parameter_list|)
 function_decl|;
 name|void
@@ -70,10 +72,13 @@ name|sc_mcwrite
 function_decl|)
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|u_int
+name|reg
 parameter_list|,
 name|u_int
+name|val
 parameter_list|)
 function_decl|;
 comment|/* MD century get/set functions */
@@ -84,6 +89,7 @@ name|sc_getcent
 function_decl|)
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 name|void
@@ -93,8 +99,10 @@ name|sc_setcent
 function_decl|)
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|u_int
+name|cent
 parameter_list|)
 function_decl|;
 block|}
@@ -110,8 +118,10 @@ name|u_int
 name|mc146818_def_read
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|u_int
+name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -121,10 +131,13 @@ name|void
 name|mc146818_def_write
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|u_int
+name|reg
 parameter_list|,
 name|u_int
+name|val
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -157,9 +170,11 @@ name|int
 name|mc146818_getsecs
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|int
 modifier|*
+name|secp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -174,10 +189,12 @@ name|int
 name|mc146818_gettime
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|struct
 name|timespec
 modifier|*
+name|ts
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -187,10 +204,12 @@ name|int
 name|mc146818_settime
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|struct
 name|timespec
 modifier|*
+name|ts
 parameter_list|)
 function_decl|;
 end_function_decl
