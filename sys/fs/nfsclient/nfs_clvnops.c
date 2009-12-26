@@ -14497,13 +14497,10 @@ name|NFSYNCWAIT
 expr_stmt|;
 name|error
 operator|=
-name|ncl_msleep
+name|newnfs_msleep
 argument_list|(
 name|td
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|np
 operator|->
