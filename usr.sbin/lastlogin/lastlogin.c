@@ -167,7 +167,7 @@ if|if
 condition|(
 name|ulog_setutxfile
 argument_list|(
-name|UTXF_LASTLOG
+name|UTXI_USER
 argument_list|,
 name|NULL
 argument_list|)

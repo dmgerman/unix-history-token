@@ -247,21 +247,21 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|UTXF_UTMP
+name|UTXI_TTY
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|UTXF_WTMP
+name|UTXI_TIME
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|UTXF_LASTLOG
+name|UTXI_USER
 value|2
 end_define
 

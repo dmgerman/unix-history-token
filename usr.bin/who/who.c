@@ -465,7 +465,7 @@ if|if
 condition|(
 name|ulog_setutxfile
 argument_list|(
-name|UTXF_UTMP
+name|UTXI_TTY
 argument_list|,
 operator|*
 name|argv
