@@ -153,6 +153,27 @@ literal|"invalid bit in accmode"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|accmode
+operator|&
+name|VAPPEND
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|accmode
+operator|&
+name|VWRITE
+operator|)
+argument_list|,
+operator|(
+literal|"VAPPEND without VWRITE"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Look for a normal, non-privileged way to access the file/directory 	 * as requested.  If it exists, go with that.  Otherwise, attempt to 	 * use privileges granted via priv_granted.  In some cases, which 	 * privileges to use may be ambiguous due to "best match", in which 	 * case fall back on first match for the time being. 	 */
 if|if
 condition|(
