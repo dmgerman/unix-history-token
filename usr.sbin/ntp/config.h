@@ -2982,12 +2982,9 @@ begin_comment
 comment|/* Define to 1 if you have the<utmp.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_UTMP_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_UTMP_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<values.h> header file. */
