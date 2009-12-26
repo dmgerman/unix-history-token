@@ -87,22 +87,6 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|open_mem
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|output
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|out1str
 parameter_list|(
 specifier|const
