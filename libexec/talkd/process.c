@@ -614,15 +614,11 @@ name|satosin
 parameter_list|(
 name|sa
 parameter_list|)
-value|((struct sockaddr_in *)(sa))
+value|((struct sockaddr_in *)(void *)(sa))
 name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|satosin
 argument_list|(
