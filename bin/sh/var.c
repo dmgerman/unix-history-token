@@ -200,6 +200,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|text
@@ -324,10 +325,6 @@ block|{
 operator|&
 name|vhistsize
 block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
-operator||
 name|VUNSET
 block|,
 literal|"HISTSIZE="
@@ -341,9 +338,7 @@ block|{
 operator|&
 name|vifs
 block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
+literal|0
 block|,
 literal|"IFS= \t\n"
 block|,
@@ -354,10 +349,6 @@ block|{
 operator|&
 name|vmail
 block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
-operator||
 name|VUNSET
 block|,
 literal|"MAIL="
@@ -369,10 +360,6 @@ block|{
 operator|&
 name|vmpath
 block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
-operator||
 name|VUNSET
 block|,
 literal|"MAILPATH="
@@ -384,9 +371,7 @@ block|{
 operator|&
 name|vpath
 block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
+literal|0
 block|,
 literal|"PATH="
 name|_PATH_DEFPATH
@@ -398,10 +383,6 @@ block|{
 operator|&
 name|vppid
 block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
-operator||
 name|VUNSET
 block|,
 literal|"PPID="
@@ -414,9 +395,7 @@ block|{
 operator|&
 name|vps2
 block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
+literal|0
 block|,
 literal|"PS2=> "
 block|,
@@ -427,9 +406,7 @@ block|{
 operator|&
 name|vps4
 block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
+literal|0
 block|,
 literal|"PS4=+ "
 block|,
@@ -440,9 +417,7 @@ block|{
 operator|&
 name|voptind
 block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
+literal|0
 block|,
 literal|"OPTIND=1"
 block|,
@@ -688,9 +663,15 @@ name|vp
 operator|->
 name|text
 operator|=
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 name|ip
 operator|->
 name|text
+argument_list|)
 expr_stmt|;
 name|vp
 operator|->
@@ -699,6 +680,10 @@ operator|=
 name|ip
 operator|->
 name|flags
+operator||
+name|VSTRFIXED
+operator||
+name|VTEXTFIXED
 expr_stmt|;
 name|vp
 operator|->
@@ -748,12 +733,18 @@ name|vps1
 operator|.
 name|text
 operator|=
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 name|geteuid
 argument_list|()
 condition|?
 literal|"PS1=$ "
 else|:
 literal|"PS1=# "
+argument_list|)
 expr_stmt|;
 name|vps1
 operator|.
