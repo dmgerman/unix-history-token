@@ -273,6 +273,17 @@ begin_comment
 comment|/* 1 == PS1, 2 == PS2 */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|parsekwd
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|union
 name|node

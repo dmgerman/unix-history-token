@@ -203,16 +203,19 @@ begin_struct
 struct|struct
 name|event
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 comment|/* name of event (e.g. INIT) */
+specifier|const
 name|char
 modifier|*
 name|routine
 decl_stmt|;
 comment|/* name of routine called on event */
+specifier|const
 name|char
 modifier|*
 name|comment
@@ -346,6 +349,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|curfile
@@ -416,6 +420,7 @@ begin_function_decl
 name|void
 name|readfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -426,9 +431,11 @@ begin_function_decl
 name|int
 name|match
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -439,6 +446,7 @@ begin_function_decl
 name|int
 name|gooddefine
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -456,6 +464,7 @@ parameter_list|,
 name|FILE
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -498,6 +507,7 @@ begin_function_decl
 name|void
 name|addstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -540,9 +550,11 @@ name|FILE
 modifier|*
 name|ckfopen
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -564,6 +576,7 @@ name|char
 modifier|*
 name|savestr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -574,6 +587,7 @@ begin_function_decl
 name|void
 name|error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -616,21 +630,30 @@ index|[
 literal|0
 index|]
 operator|=
+name|savestr
+argument_list|(
 literal|"\"shell.h\""
+argument_list|)
 expr_stmt|;
 name|header_files
 index|[
 literal|1
 index|]
 operator|=
+name|savestr
+argument_list|(
 literal|"\"mystring.h\""
+argument_list|)
 expr_stmt|;
 name|header_files
 index|[
 literal|2
 index|]
 operator|=
+name|savestr
+argument_list|(
 literal|"\"init.h\""
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -678,6 +701,7 @@ begin_function
 name|void
 name|readfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -980,15 +1004,18 @@ begin_function
 name|int
 name|match
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|line
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1059,11 +1086,13 @@ begin_function
 name|int
 name|gooddefine
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|line
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1179,6 +1208,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1193,6 +1223,7 @@ decl_stmt|;
 name|int
 name|indent
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1942,6 +1973,7 @@ begin_function
 name|void
 name|addstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2182,10 +2214,12 @@ name|FILE
 modifier|*
 name|ckfopen
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|mode
@@ -2279,6 +2313,7 @@ name|char
 modifier|*
 name|savestr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2317,6 +2352,7 @@ begin_function
 name|void
 name|error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|msg

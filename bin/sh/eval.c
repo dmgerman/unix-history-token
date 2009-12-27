@@ -226,7 +226,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|MKINIT
 name|int
 name|evalskip
 decl_stmt|;
@@ -1852,6 +1851,7 @@ argument_list|)
 expr_stmt|;
 comment|/* never returns */
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -4160,7 +4160,7 @@ name|argv
 operator|+
 literal|1
 expr_stmt|;
-name|optptr
+name|nextopt_optptr
 operator|=
 name|NULL
 expr_stmt|;

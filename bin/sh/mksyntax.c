@@ -92,10 +92,12 @@ begin_struct
 struct|struct
 name|synclass
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|comment
@@ -286,6 +288,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|syntax
@@ -340,6 +343,7 @@ specifier|static
 name|void
 name|filltable
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -361,9 +365,11 @@ specifier|static
 name|void
 name|add
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -375,6 +381,7 @@ specifier|static
 name|void
 name|print
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1280,6 +1287,7 @@ specifier|static
 name|void
 name|filltable
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|dftval
@@ -1421,10 +1429,12 @@ specifier|static
 name|void
 name|add
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|type
@@ -1458,6 +1468,7 @@ specifier|static
 name|void
 name|print
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1613,6 +1624,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|macro
@@ -1644,6 +1656,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 modifier|*

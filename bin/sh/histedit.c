@@ -619,6 +619,7 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|editor
@@ -650,6 +651,7 @@ name|i
 decl_stmt|,
 name|retval
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|firststr
@@ -672,6 +674,8 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|repl
+init|=
+name|NULL
 decl_stmt|;
 specifier|static
 name|int
@@ -702,6 +706,8 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|efp
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|oldhistnum

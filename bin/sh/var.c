@@ -530,22 +530,28 @@ end_ifdef
 begin_expr_stmt
 name|INCLUDE
 literal|"var.h"
-name|INIT
-block|{
-name|char
-operator|*
-operator|*
-name|envp
-block|;
-specifier|extern
+name|MKINIT
 name|char
 operator|*
 operator|*
 name|environ
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|INIT
+end_macro
+
+begin_block
+block|{
+name|char
+modifier|*
+modifier|*
+name|envp
+decl_stmt|;
 name|initvar
 argument_list|()
-block|;
+expr_stmt|;
 for|for
 control|(
 name|envp
@@ -581,10 +587,11 @@ name|VTEXTFIXED
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+block|}
+end_block
 
 begin_endif
-unit|} }
 endif|#
 directive|endif
 end_endif
@@ -1113,6 +1120,7 @@ name|s
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|lnames
@@ -1136,6 +1144,7 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -2082,12 +2091,6 @@ begin_comment
 comment|/*  * Called when a shell procedure is invoked to clear out nonexported  * variables.  It is also necessary to reallocate variables of with  * VSTACK set since these are currently allocated on the stack.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|mkinit
-end_ifdef
-
 begin_function_decl
 name|MKINIT
 name|void
@@ -2097,6 +2100,12 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|mkinit
+end_ifdef
 
 begin_macro
 name|SHELLPROC

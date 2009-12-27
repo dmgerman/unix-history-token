@@ -215,7 +215,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|optptr
+name|nextopt_optptr
 decl_stmt|;
 end_decl_stmt
 
@@ -2386,7 +2386,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|optptr
+name|nextopt_optptr
 operator|)
 operator|==
 name|NULL
@@ -2533,7 +2533,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|optptr
+name|nextopt_optptr
 operator|=
 name|p
 expr_stmt|;
