@@ -257,6 +257,14 @@ name|host
 argument_list|,
 literal|""
 argument_list|)
+operator|&&
+operator|!
+name|MATCH
+argument_list|(
+name|line
+argument_list|,
+literal|""
+argument_list|)
 condition|)
 block|{
 name|utx
