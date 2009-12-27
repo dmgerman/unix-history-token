@@ -4891,6 +4891,8 @@ argument_list|(
 name|chain
 argument_list|,
 name|skipto
+operator|+
+literal|1
 argument_list|,
 literal|0
 argument_list|)
