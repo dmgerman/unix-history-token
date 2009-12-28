@@ -1206,6 +1206,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|jailed_without_vnet
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|getcredhostname
 parameter_list|(
