@@ -280,6 +280,26 @@ end_function
 
 begin_function
 name|int
+name|archive_file_count
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|)
+block|{
+return|return
+operator|(
+name|a
+operator|->
+name|file_count
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|archive_format
 parameter_list|(
 name|struct
@@ -590,6 +610,11 @@ name|msg1
 init|=
 literal|"Fatal Internal Error in libarchive: "
 decl_stmt|;
+name|size_t
+name|s
+decl_stmt|;
+name|s
+operator|=
 name|write
 argument_list|(
 literal|2
@@ -602,6 +627,14 @@ name|msg1
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|s
+expr_stmt|;
+comment|/* UNUSED */
+name|s
+operator|=
 name|write
 argument_list|(
 literal|2
@@ -614,6 +647,14 @@ name|msg
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|s
+expr_stmt|;
+comment|/* UNUSED */
+name|s
+operator|=
 name|write
 argument_list|(
 literal|2
@@ -623,6 +664,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|s
+expr_stmt|;
+comment|/* UNUSED */
 name|exit
 argument_list|(
 name|retvalue

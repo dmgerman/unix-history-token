@@ -2538,6 +2538,15 @@ modifier|*
 name|src
 parameter_list|)
 function_decl|;
+name|__LA_DECL
+name|int
+name|archive_file_count
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus
