@@ -288,20 +288,6 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|print_ip
-parameter_list|(
-name|x
-parameter_list|,
-name|a
-parameter_list|,
-name|y
-parameter_list|)
-value|printf("%s %d.%d.%d.%d%s",\ 				x, (ntohl(a.s_addr)>>24)&0xFF,\ 				  (ntohl(a.s_addr)>>16)&0xFF,\ 				  (ntohl(a.s_addr)>>8)&0xFF,\ 				  (ntohl(a.s_addr))&0xFF, y);
-end_define
-
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -391,7 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (with len, off, ttl, proto, tos, src, dst).  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  * In the IP forwarding case, the packet will arrive with options already  * inserted, so must have a NULL opt pointer.  */
+comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (with len, off, ttl, proto, tos, src, dst).  * ip_len and ip_off are in host format.  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  * In the IP forwarding case, the packet will arrive with options already  * inserted, so must have a NULL opt pointer.  */
 end_comment
 
 begin_function
@@ -436,10 +422,7 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-name|NULL
 decl_stmt|;
-comment|/* keep compiler happy */
 name|struct
 name|mbuf
 modifier|*
@@ -458,8 +441,10 @@ name|int
 name|mtu
 decl_stmt|;
 name|int
-name|len
-decl_stmt|,
+name|n
+decl_stmt|;
+comment|/* scratchpad */
+name|int
 name|error
 init|=
 literal|0
@@ -473,10 +458,7 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|dst
-init|=
-name|NULL
 decl_stmt|;
-comment|/* keep compiler happy */
 name|struct
 name|in_ifaddr
 modifier|*
@@ -635,10 +617,11 @@ condition|(
 name|opt
 condition|)
 block|{
+name|int
 name|len
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|m
 operator|=
 name|ip_insertoptions
@@ -661,6 +644,7 @@ name|hlen
 operator|=
 name|len
 expr_stmt|;
+comment|/* ip->ip_hl is updated above */
 block|}
 name|ip
 operator|=
@@ -718,6 +702,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Header already set, fetch hlen from there */
 name|hlen
 operator|=
 name|ip
@@ -1687,11 +1672,22 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Verify that we have any chance at all of being able to queue the 	 * packet or packet fragments, unless ALTQ is enabled on the given 	 * interface in which case packetdrop should be done by queueing. 	 */
+name|n
+operator|=
+name|ip
+operator|->
+name|ip_len
+operator|/
+name|mtu
+operator|+
+literal|1
+expr_stmt|;
+comment|/* how many fragments ? */
+if|if
+condition|(
 ifdef|#
 directive|ifdef
 name|ALTQ
-if|if
-condition|(
 operator|(
 operator|!
 name|ALTQ_IS_ENABLED
@@ -1703,59 +1699,25 @@ name|if_snd
 argument_list|)
 operator|)
 operator|&&
-operator|(
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_len
-operator|+
-name|ip
-operator|->
-name|ip_len
-operator|/
-name|mtu
-operator|+
-literal|1
-operator|)
-operator|>=
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_maxlen
-operator|)
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_len
-operator|+
-name|ip
-operator|->
-name|ip_len
-operator|/
-name|mtu
-operator|+
-literal|1
-operator|)
-operator|>=
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_maxlen
-condition|)
 endif|#
 directive|endif
 comment|/* ALTQ */
+operator|(
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_len
+operator|+
+name|n
+operator|)
+operator|>=
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+condition|)
 block|{
 name|error
 operator|=
@@ -1772,17 +1734,7 @@ name|if_snd
 operator|.
 name|ifq_drops
 operator|+=
-operator|(
-name|ip
-operator|->
-name|ip_len
-operator|/
-name|ifp
-operator|->
-name|if_mtu
-operator|+
-literal|1
-operator|)
+name|n
 expr_stmt|;
 goto|goto
 name|bad
