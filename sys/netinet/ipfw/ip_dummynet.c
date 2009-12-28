@@ -2595,13 +2595,6 @@ parameter_list|)
 value|((int64_t)(a) / (int64_t)(b))
 end_define
 
-begin_define
-define|#
-directive|define
-name|DN_TO_DROP
-value|0xffff
-end_define
-
 begin_comment
 comment|/*  * Compute how many ticks we have to wait before being able to send  * a packet. This is computed as the "wire time" for the packet  * (length + extra bits), minus the credit available, scaled to ticks.  * Check that the result is not be negative (it could be if we have  * too much leftover credit in q->numbytes).  */
 end_comment
@@ -2781,7 +2774,7 @@ name|dt
 operator|->
 name|dn_dir
 operator|=
-name|DN_TO_DROP
+name|DIR_DROP
 expr_stmt|;
 block|}
 return|return
@@ -4468,22 +4461,9 @@ name|m
 parameter_list|)
 block|{
 name|struct
-name|dn_pkt_tag
-modifier|*
-name|pkt
-decl_stmt|;
-name|struct
 name|mbuf
 modifier|*
 name|n
-decl_stmt|;
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
-name|int
-name|dst
 decl_stmt|;
 for|for
 control|(
@@ -4497,6 +4477,14 @@ operator|=
 name|n
 control|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|int
+name|dst
+decl_stmt|;
 name|n
 operator|=
 name|m
@@ -4519,30 +4507,34 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pkt
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* probably unnecessary */
 name|dst
 operator|=
-name|DN_TO_DROP
+name|DIR_DROP
 expr_stmt|;
 block|}
 else|else
 block|{
+name|struct
+name|dn_pkt_tag
+modifier|*
 name|pkt
-operator|=
+init|=
 name|dn_tag_get
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|dst
 operator|=
 name|pkt
 operator|->
 name|dn_dir
+expr_stmt|;
+name|ifp
+operator|=
+name|pkt
+operator|->
+name|ifp
 expr_stmt|;
 block|}
 switch|switch
@@ -4551,7 +4543,7 @@ name|dst
 condition|)
 block|{
 case|case
-name|DN_TO_IP_OUT
+name|DIR_OUT
 case|:
 name|ip_output
 argument_list|(
@@ -4570,10 +4562,11 @@ argument_list|)
 expr_stmt|;
 break|break ;
 case|case
-name|DN_TO_IP_IN
+name|DIR_IN
 case|:
-name|ip
-operator|=
+comment|/* put header in network format for ip_input() */
+name|SET_NET_IPLEN
+argument_list|(
 name|mtod
 argument_list|(
 name|m
@@ -4582,27 +4575,6 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
 argument_list|)
 expr_stmt|;
 name|netisr_dispatch
@@ -4617,7 +4589,9 @@ ifdef|#
 directive|ifdef
 name|INET6
 case|case
-name|DN_TO_IP6_IN
+name|DIR_IN
+operator||
+name|PROTO_IPV6
 case|:
 name|netisr_dispatch
 argument_list|(
@@ -4628,7 +4602,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DN_TO_IP6_OUT
+name|DIR_OUT
+operator||
+name|PROTO_IPV6
 case|:
 name|ip6_output
 argument_list|(
@@ -4651,8 +4627,11 @@ break|break;
 endif|#
 directive|endif
 case|case
-name|DN_TO_IFB_FWD
+name|DIR_FWD
+operator||
+name|PROTO_IFB
 case|:
+comment|/* DN_TO_IFB_FWD: */
 if|if
 condition|(
 name|bridge_dn_p
@@ -4667,8 +4646,6 @@ call|)
 argument_list|(
 name|m
 argument_list|,
-name|pkt
-operator|->
 name|ifp
 argument_list|)
 operator|)
@@ -4681,8 +4658,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DN_TO_ETH_DEMUX
+name|DIR_IN
+operator||
+name|PROTO_LAYER2
 case|:
+comment|/* DN_TO_ETH_DEMUX: */
 comment|/* 			 * The Ethernet code assumes the Ethernet header is 			 * contiguous in the first mbuf header. 			 * Insure this is true. 			 */
 if|if
 condition|(
@@ -4727,12 +4707,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DN_TO_ETH_OUT
+name|DIR_OUT
+operator||
+name|PROTO_LAYER2
 case|:
+comment|/* N_TO_ETH_OUT: */
 name|ether_output_frame
 argument_list|(
-name|pkt
-operator|->
 name|ifp
 argument_list|,
 name|m
@@ -4740,7 +4721,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DN_TO_DROP
+name|DIR_DROP
 case|:
 comment|/* drop the packet after some time */
 name|dn_free_pkt
@@ -4754,9 +4735,7 @@ name|printf
 argument_list|(
 literal|"dummynet: bad switch %d!\n"
 argument_list|,
-name|pkt
-operator|->
-name|dn_dir
+name|dst
 argument_list|)
 expr_stmt|;
 name|dn_free_pkt
@@ -7529,17 +7508,13 @@ name|head
 operator|==
 name|m
 operator|&&
+operator|(
 name|dir
-operator|!=
-name|DN_TO_IFB_FWD
-operator|&&
-name|dir
-operator|!=
-name|DN_TO_ETH_DEMUX
-operator|&&
-name|dir
-operator|!=
-name|DN_TO_ETH_OUT
+operator|&
+name|PROTO_LAYER2
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Fast io. */
@@ -8885,6 +8860,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* Flush accumulated credit for all queues. */
 for|for
 control|(
@@ -8903,6 +8879,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 for|for
 control|(
 name|q
@@ -8943,6 +8920,8 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
+block|}
+block|}
 block|}
 name|pipe
 operator|->

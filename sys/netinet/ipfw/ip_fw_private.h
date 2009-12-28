@@ -220,88 +220,69 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Hooks sometime need to know the direction of the packet  * (divert, dummynet, netgraph, ...)  * We use a generic definition here, with bit0-1 indicating the  * direction, bit 2 indicating layer2 or 3, bit 3-4 indicating the  * specific protocol  * indicating the protocol (if necessary)  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|DIR_MASK
+init|=
+literal|0x3
+block|,
+name|DIR_OUT
+init|=
+literal|0
+block|,
+name|DIR_IN
+init|=
+literal|1
+block|,
+name|DIR_FWD
+init|=
+literal|2
+block|,
+name|DIR_DROP
+init|=
+literal|3
+block|,
+name|PROTO_LAYER2
+init|=
+literal|0x4
+block|,
+comment|/* set for layer 2 */
+comment|/* PROTO_DEFAULT = 0, */
+name|PROTO_IPV4
+init|=
+literal|0x08
+block|,
+name|PROTO_IPV6
+init|=
+literal|0x10
+block|,
+name|PROTO_IFB
+init|=
+literal|0x0c
+block|,
+comment|/* layer2 + ifbridge */
+comment|/*	PROTO_OLDBDG =	0x14, unused, old bridge */
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Function definitions.  */
 end_comment
 
 begin_comment
-comment|/* Firewall hooks */
+comment|/* attach (arg = 1) or detach (arg = 0) hooks */
 end_comment
-
-begin_function_decl
-name|int
-name|ipfw_check_in
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|inpcb
-modifier|*
-name|inp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ipfw_check_out
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|inpcb
-modifier|*
-name|inp
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
 name|ipfw_attach_hooks
 parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
-name|ipfw_unhook
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ipfw6_unhook
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1246,6 +1227,94 @@ modifier|*
 name|ipfw_nat_get_log_ptr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* netgraph prototypes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_IPFW_COOKIE
+value|1105988990
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|ng_ipfw_input_t
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|ng_ipfw_input_t
+modifier|*
+name|ng_ipfw_input_p
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NG_IPFW_LOADED
+value|(ng_ipfw_input_p != NULL)
+end_define
+
+begin_struct
+struct|struct
+name|ng_ipfw_tag
+block|{
+name|struct
+name|m_tag
+name|mt
+decl_stmt|;
+comment|/* tag header */
+comment|/* reinject info */
+name|uint32_t
+name|slot
+decl_stmt|;
+comment|/* slot for next rule */
+name|uint32_t
+name|rulenum
+decl_stmt|;
+comment|/* matching rule number */
+name|uint32_t
+name|rule_id
+decl_stmt|;
+comment|/* matching rule id */
+name|uint32_t
+name|chain_id
+decl_stmt|;
+comment|/* ruleset id */
+name|int
+name|dir
+decl_stmt|;
+comment|//        struct ifnet    *ifp;           /* interface, for ip_output */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TAGSIZ
+value|(sizeof(struct ng_ipfw_tag) - sizeof(struct m_tag))
+end_define
 
 begin_endif
 endif|#

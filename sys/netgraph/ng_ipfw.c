@@ -909,7 +909,7 @@ name|dir
 condition|)
 block|{
 case|case
-name|NG_IPFW_OUT
+name|DIR_OUT
 case|:
 block|{
 name|struct
@@ -1002,7 +1002,7 @@ argument_list|)
 return|;
 block|}
 case|case
-name|NG_IPFW_IN
+name|DIR_IN
 case|:
 name|ip_input
 argument_list|(
@@ -1217,14 +1217,7 @@ name|dir
 operator|=
 name|dir
 expr_stmt|;
-name|ngit
-operator|->
-name|ifp
-operator|=
-name|fwa
-operator|->
-name|oif
-expr_stmt|;
+comment|//		ngit->ifp = fwa->oif; /* XXX do we use it ? */
 name|m_tag_prepend
 argument_list|(
 name|m

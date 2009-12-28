@@ -292,12 +292,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip_dummynet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_carp.h>
 end_include
 
@@ -329,12 +323,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/sctp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netgraph/ng_ipfw.h>
 end_include
 
 begin_include
@@ -2603,7 +2591,7 @@ name|int
 name|code
 parameter_list|,
 name|int
-name|ip_len
+name|iplen
 parameter_list|,
 name|struct
 name|ip
@@ -2636,26 +2624,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|ntohs
+name|SET_HOST_IPLEN
 argument_list|(
 name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_off
 argument_list|)
 expr_stmt|;
 block|}
@@ -3361,10 +3332,10 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Local copies of addresses. They are only valid if we have 	 * an IP packet. 	 * 	 * proto	The protocol. Set to 0 for non-ip packets, 	 *	or to the protocol read from the packet otherwise. 	 *	proto != 0 means that we have an IPv4 packet. 	 * 	 * src_port, dst_port	port numbers, in HOST format. Only 	 *	valid for TCP and UDP packets. 	 * 	 * src_ip, dst_ip	ip addresses, in NETWORK format. 	 *	Only valid for IPv4 packets. 	 */
-name|u_int8_t
+name|uint8_t
 name|proto
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|src_port
 init|=
 literal|0
@@ -3381,15 +3352,15 @@ decl_stmt|,
 name|dst_ip
 decl_stmt|;
 comment|/* NOTE: network format	*/
-name|u_int16_t
-name|ip_len
+name|uint16_t
+name|iplen
 init|=
 literal|0
 decl_stmt|;
 name|int
 name|pktlen
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|etype
 init|=
 literal|0
@@ -4481,61 +4452,68 @@ name|ip
 operator|->
 name|ip_dst
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_NET_IPLEN
 if|if
 condition|(
 name|args
 operator|->
 name|eh
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
-comment|/* layer 2 packets are as on the wire */
+comment|/* on l3 these are in host format */
 name|offset
 operator|=
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_off
-argument_list|)
 operator|&
 name|IP_OFFMASK
 expr_stmt|;
-name|ip_len
+name|iplen
 operator|=
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_len
-argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
+comment|/* !HAVE_NET_IPLEN */
 block|{
+comment|/* otherwise they are in net format */
 name|offset
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_off
+argument_list|)
 operator|&
 name|IP_OFFMASK
 expr_stmt|;
-name|ip_len
+name|iplen
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 expr_stmt|;
 block|}
 name|pktlen
 operator|=
-name|ip_len
+name|iplen
 operator|<
 name|pktlen
 condition|?
-name|ip_len
+name|iplen
 else|:
 name|pktlen
 expr_stmt|;
@@ -4765,6 +4743,7 @@ operator|)
 return|;
 comment|/* accept */
 block|}
+comment|/* XXX divert should be handled same as other tags */
 name|mtag
 operator|=
 name|m_tag_find
@@ -5528,7 +5507,7 @@ name|is_ipv4
 condition|)
 block|{
 name|uint32_t
-name|a
+name|key
 init|=
 operator|(
 name|cmd
@@ -5561,7 +5540,7 @@ name|ipfw_insn_u32
 argument_list|)
 condition|)
 block|{
-comment|/* generic lookup */
+comment|/* generic lookup. The key must be 					 * in 32bit big-endian format. 					 */
 name|v
 operator|=
 operator|(
@@ -5583,7 +5562,7 @@ name|v
 operator|==
 literal|0
 condition|)
-name|a
+name|key
 operator|=
 name|dst_ip
 operator|.
@@ -5596,7 +5575,7 @@ name|v
 operator|==
 literal|1
 condition|)
-name|a
+name|key
 operator|=
 name|src_ip
 operator|.
@@ -5629,9 +5608,12 @@ name|v
 operator|==
 literal|2
 condition|)
-name|a
+name|key
 operator|=
+name|htonl
+argument_list|(
 name|dst_port
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -5640,9 +5622,12 @@ name|v
 operator|==
 literal|3
 condition|)
-name|a
+name|key
 operator|=
+name|htons
+argument_list|(
 name|src_port
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -5694,7 +5679,7 @@ operator|==
 literal|4
 comment|/* O_UID */
 condition|)
-name|a
+name|key
 operator|=
 name|ucred_cache
 operator|->
@@ -5708,13 +5693,20 @@ operator|==
 literal|5
 comment|/* O_JAIL */
 condition|)
-name|a
+name|key
 operator|=
 name|ucred_cache
 operator|->
 name|cr_prison
 operator|->
 name|pr_id
+expr_stmt|;
+name|key
+operator|=
+name|htonl
+argument_list|(
+name|key
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -5730,7 +5722,7 @@ name|cmd
 operator|->
 name|arg1
 argument_list|,
-name|a
+name|key
 argument_list|,
 operator|&
 name|v
@@ -6285,7 +6277,7 @@ name|O_IPLEN
 condition|)
 name|x
 operator|=
-name|ip_len
+name|iplen
 expr_stmt|;
 elseif|else
 if|if
@@ -6469,7 +6461,7 @@ argument_list|)
 expr_stmt|;
 name|x
 operator|=
-name|ip_len
+name|iplen
 operator|-
 operator|(
 operator|(
@@ -8366,7 +8358,7 @@ name|cmd
 operator|->
 name|arg1
 argument_list|,
-name|ip_len
+name|iplen
 argument_list|,
 name|ip
 argument_list|)
@@ -8886,26 +8878,35 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* in any case exit inner loop */
-name|ip_off
-operator|=
-operator|(
+ifndef|#
+directive|ifndef
+name|HAVE_NET_IPLEN
+if|if
+condition|(
 name|args
 operator|->
 name|eh
-operator|!=
+operator|==
 name|NULL
-operator|)
-condition|?
+condition|)
+name|ip_off
+operator|=
+name|ip
+operator|->
+name|ip_off
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+comment|/* !HAVE_NET_IPLEN */
+name|ip_off
+operator|=
 name|ntohs
 argument_list|(
 name|ip
 operator|->
 name|ip_off
 argument_list|)
-else|:
-name|ip
-operator|->
-name|ip_off
 expr_stmt|;
 comment|/* if not fragmented, go to next rule */
 if|if
@@ -8933,26 +8934,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|ntohs
+name|SET_HOST_IPLEN
 argument_list|(
 name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_off
 argument_list|)
 expr_stmt|;
 block|}
@@ -9006,7 +8990,7 @@ name|ip_hl
 operator|<<
 literal|2
 expr_stmt|;
-comment|/* revert len& off for layer2 pkts */
+comment|/* revert len.& off to net format if needed */
 if|if
 condition|(
 name|args
@@ -9015,17 +8999,13 @@ name|eh
 operator|!=
 name|NULL
 condition|)
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
+block|{
+name|SET_NET_IPLEN
 argument_list|(
 name|ip
-operator|->
-name|ip_len
 argument_list|)
 expr_stmt|;
+block|}
 name|ip
 operator|->
 name|ip_sum
@@ -9686,7 +9666,9 @@ expr_stmt|;
 name|error
 operator|=
 name|ipfw_attach_hooks
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -9736,17 +9718,15 @@ literal|0
 expr_stmt|;
 comment|/* tell new callers to go away */
 comment|/* 	 * disconnect from ipv4, ipv6, layer2 and sockopt. 	 * Then grab, release and grab again the WLOCK so we make 	 * sure the update is propagated and nobody will be in. 	 */
-name|ipfw_unhook
-argument_list|()
+operator|(
+name|void
+operator|)
+name|ipfw_attach_hooks
+argument_list|(
+literal|0
+comment|/* detach */
+argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
-name|ipfw6_unhook
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|V_ip_fw_chk_ptr
 operator|=
 name|NULL

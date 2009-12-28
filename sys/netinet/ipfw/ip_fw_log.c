@@ -357,6 +357,31 @@ parameter_list|)
 value|buf, sizeof(buf)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITHOUT_BPF
+end_ifdef
+
+begin_function
+name|void
+name|ipfw_log_bpf
+parameter_list|(
+name|int
+name|onoff
+parameter_list|)
+block|{ }
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !WITHOUT_BPF */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -561,6 +586,15 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !WITHOUT_BPF */
+end_comment
+
 begin_comment
 comment|/*  * We enter here when we have a rule with O_LOG.  * XXX this function alone takes about 2Kbytes of code!  */
 end_comment
@@ -604,15 +638,6 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
-name|struct
-name|ether_header
-modifier|*
-name|eh
-init|=
-name|args
-operator|->
-name|eh
-decl_stmt|;
 name|char
 modifier|*
 name|action
@@ -645,6 +670,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|WITHOUT_BPF
 name|struct
 name|m_hdr
 name|mh
@@ -717,26 +745,9 @@ literal|4
 condition|)
 block|{
 comment|/* restore wire format */
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|ntohs
+name|SET_NET_IPLEN
 argument_list|(
 name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
 argument_list|)
 expr_stmt|;
 block|}
@@ -772,29 +783,15 @@ literal|4
 condition|)
 block|{
 comment|/* restore host format */
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
+name|SET_HOST_IPLEN
 argument_list|(
 name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !WITHOUT_BPF */
 return|return;
 block|}
 comment|/* the old 'log' function */
@@ -2108,46 +2105,53 @@ name|ip_off
 decl_stmt|,
 name|ip_len
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_NET_IPLEN
 if|if
 condition|(
+name|args
+operator|->
 name|eh
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
-comment|/* layer 2 packets are as on the wire */
 name|ip_off
 operator|=
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_off
-argument_list|)
 expr_stmt|;
 name|ip_len
 operator|=
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_len
-argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
+comment|/* !HAVE_NET_IPLEN */
 block|{
 name|ip_off
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_off
+argument_list|)
 expr_stmt|;
 name|ip_len
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 expr_stmt|;
 block|}
 if|if
