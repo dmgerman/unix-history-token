@@ -96,10 +96,12 @@ specifier|static
 name|void
 name|badline
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|field
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|bad
@@ -190,7 +192,9 @@ end_comment
 begin_function
 name|int
 name|read_mtab
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|mtablist
@@ -225,7 +229,7 @@ modifier|*
 name|endp
 decl_stmt|;
 name|time_t
-name|time
+name|actiontime
 decl_stmt|;
 name|u_long
 name|ultmp
@@ -279,7 +283,7 @@ operator|)
 return|;
 block|}
 block|}
-name|time
+name|actiontime
 operator|=
 literal|0
 expr_stmt|;
@@ -454,7 +458,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|time
+name|actiontime
 operator|=
 name|ultmp
 expr_stmt|;
@@ -498,7 +502,7 @@ name|mtabp
 operator|->
 name|mtab_time
 operator|=
-name|time
+name|actiontime
 expr_stmt|;
 name|memmove
 argument_list|(
@@ -997,10 +1001,12 @@ specifier|static
 name|void
 name|badline
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|field
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|bad
