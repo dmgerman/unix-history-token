@@ -3265,7 +3265,7 @@ expr_stmt|;
 end_if
 
 begin_comment
-comment|/* 	 * According to the Schizo Errata I-13, consistent DMA flushing/ 	 * syncing is FUBAR in version< 5 (i.e. revision< 2.3) bridges, 	 * so we can't use it and need to live with the consequences. 	 * With Schizo version>= 5, CDMA flushing/syncing is usable 	 * but requires the the workaround described in Schizo Errata 	 * I-23.  With Tomatillo and XMITS, CDMA flushing/syncing works 	 * as expected, Tomatillo version<= 4 (i.e. revision<= 2.3) 	 * bridges additionally require a block store after a write to 	 * TOMXMS_PCI_DMA_SYNC_PEND though. 	 */
+comment|/* 	 * According to the Schizo Errata I-13, consistent DMA flushing/ 	 * syncing is FUBAR in version< 5 (i.e. revision< 2.3) bridges, 	 * so we can't use it and need to live with the consequences.  With 	 * Schizo version>= 5, CDMA flushing/syncing is usable but requires 	 * the workaround described in Schizo Errata I-23.  With Tomatillo 	 * and XMITS, CDMA flushing/syncing works as expected, Tomatillo 	 * version<= 4 (i.e. revision<= 2.3) bridges additionally require 	 * a block store after a write to TOMXMS_PCI_DMA_SYNC_PEND though. 	 */
 end_comment
 
 begin_if
@@ -3313,6 +3313,69 @@ operator|==
 name|SCHIZO_MODE_SCZ
 condition|)
 block|{
+name|sc
+operator|->
+name|sc_cdma_state
+operator|=
+name|SCHIZO_CDMA_STATE_DONE
+expr_stmt|;
+comment|/* 			 * Some firmware versions include the CDMA interrupt 			 * at RID 4 but most don't.  With the latter we add 			 * it ourselves at the spare RID 5. 			 */
+name|n
+operator|=
+name|INTINO
+argument_list|(
+name|bus_get_resource_start
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|4
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|STX_CDMA_A_INO
+operator|||
+name|n
+operator|==
+name|STX_CDMA_B_INO
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|schizo_get_intrmap
+argument_list|(
+name|sc
+argument_list|,
+name|n
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_cdma_clr
+argument_list|)
+expr_stmt|;
+name|schizo_set_intr
+argument_list|(
+name|sc
+argument_list|,
+literal|4
+argument_list|,
+name|n
+argument_list|,
+name|schizo_cdma
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|n
 operator|=
 name|STX_CDMA_A_INO
@@ -3347,7 +3410,8 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: failed to add CDMA interrupt"
+literal|"%s: failed to add CDMA "
+literal|"interrupt"
 argument_list|,
 name|__func__
 argument_list|)
@@ -3369,8 +3433,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: could not register interrupt "
-literal|"controller for CDMA (%d)"
+literal|"%s: could not register "
+literal|"interrupt controller for CDMA "
+literal|"(%d)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3394,12 +3459,6 @@ operator|->
 name|sc_cdma_clr
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_cdma_state
-operator|=
-name|SCHIZO_CDMA_STATE_DONE
-expr_stmt|;
 name|schizo_set_intr
 argument_list|(
 name|sc
@@ -3411,6 +3470,7 @@ argument_list|,
 name|schizo_cdma
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
