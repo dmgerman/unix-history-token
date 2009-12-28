@@ -505,12 +505,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uma_zone_t
-name|ithread_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|kstack_pages
 init|=
