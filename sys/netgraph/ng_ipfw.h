@@ -22,6 +22,13 @@ name|NG_IPFW_NODE_TYPE
 value|"ipfw"
 end_define
 
+begin_define
+define|#
+directive|define
+name|NGM_IPFW_COOKIE
+value|1105988990
+end_define
+
 begin_endif
 endif|#
 directive|endif

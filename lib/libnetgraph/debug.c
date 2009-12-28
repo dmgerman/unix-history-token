@@ -200,22 +200,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip_fw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_fw_private.h>
-end_include
-
-begin_comment
-comment|/* the NGM cookie is here */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<netgraph/ng_ipfw.h>
 end_include
 

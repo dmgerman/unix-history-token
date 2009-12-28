@@ -1232,13 +1232,6 @@ begin_comment
 comment|/* netgraph prototypes */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NGM_IPFW_COOKIE
-value|1105988990
-end_define
-
 begin_typedef
 typedef|typedef
 name|int
