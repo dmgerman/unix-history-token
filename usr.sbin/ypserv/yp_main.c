@@ -384,7 +384,6 @@ name|sle_head
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|sle_head
 argument_list|)
 expr_stmt|;
@@ -420,7 +419,6 @@ name|ble_head
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|ble_head
 argument_list|)
 expr_stmt|;

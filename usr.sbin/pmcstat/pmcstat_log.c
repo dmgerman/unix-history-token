@@ -274,7 +274,6 @@ name|pmcstat_pmcs
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|pmcstat_pmcs
 argument_list|)
 expr_stmt|;

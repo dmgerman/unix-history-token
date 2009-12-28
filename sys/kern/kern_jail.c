@@ -326,7 +326,6 @@ name|pr_children
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|prison0
 operator|.
 name|pr_children

@@ -6739,7 +6739,6 @@ name|root_holds
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|root_holds
 argument_list|)
 expr_stmt|;

@@ -268,7 +268,6 @@ name|datadirs
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|datadirs
 argument_list|)
 expr_stmt|;

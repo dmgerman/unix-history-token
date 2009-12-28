@@ -277,7 +277,6 @@ name|g_gate_list
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|g_gate_list
 argument_list|)
 expr_stmt|;

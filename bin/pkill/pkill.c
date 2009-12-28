@@ -408,7 +408,7 @@ name|euidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|euidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -421,7 +421,7 @@ name|ruidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|ruidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -434,7 +434,7 @@ name|rgidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|rgidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -447,7 +447,7 @@ name|pgrplist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|pgrplist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -460,7 +460,7 @@ name|ppidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|ppidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -473,7 +473,7 @@ name|tdevlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|tdevlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -486,7 +486,7 @@ name|sidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|sidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -499,7 +499,7 @@ name|jidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|jidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
