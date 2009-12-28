@@ -422,7 +422,10 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+init|=
+name|NULL
 decl_stmt|;
+comment|/* keep compiler happy */
 name|struct
 name|mbuf
 modifier|*
