@@ -140,6 +140,26 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|size_t
+name|s
+init|=
+name|strlen
+argument_list|(
+name|m
+argument_list|)
+decl_stmt|;
+name|ssize_t
+name|written
+decl_stmt|;
+while|while
+condition|(
+name|s
+operator|>
+literal|0
+condition|)
+block|{
+name|written
+operator|=
 name|write
 argument_list|(
 literal|2
@@ -152,6 +172,22 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|written
+operator|<=
+literal|0
+condition|)
+return|return;
+name|m
+operator|+=
+name|written
+expr_stmt|;
+name|s
+operator|-=
+name|written
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -186,22 +222,10 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-operator|=
-literal|1
+name|abort
+argument_list|()
 expr_stmt|;
-comment|/* Deliberately segfault and force a coredump. */
-name|_exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* If that didn't work, just exit with an error. */
+comment|/* Terminate the program abnormally. */
 block|}
 end_function
 
@@ -302,7 +326,9 @@ operator|=
 name|states
 operator|&
 operator|(
-operator|-
+literal|1
+operator|+
+operator|~
 name|states
 operator|)
 operator|)
