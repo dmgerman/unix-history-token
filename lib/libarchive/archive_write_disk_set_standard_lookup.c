@@ -514,6 +514,12 @@ init|;
 condition|;
 control|)
 block|{
+name|result
+operator|=
+operator|&
+name|grent
+expr_stmt|;
+comment|/* Old getgrnam_r ignores last arg. */
 name|r
 operator|=
 name|getgrnam_r
@@ -810,6 +816,12 @@ init|;
 condition|;
 control|)
 block|{
+name|result
+operator|=
+operator|&
+name|pwent
+expr_stmt|;
+comment|/* Old getpwnam_r ignores last arg. */
 name|r
 operator|=
 name|getpwnam_r
@@ -1034,6 +1046,8 @@ name|h
 operator|&
 literal|0xF0000000
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|h
