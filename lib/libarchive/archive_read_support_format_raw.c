@@ -301,16 +301,8 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|p
-decl_stmt|;
 if|if
 condition|(
-operator|(
-name|p
-operator|=
 name|__archive_read_ahead
 argument_list|(
 name|a
@@ -319,7 +311,6 @@ literal|1
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
@@ -588,11 +579,6 @@ name|avail
 operator|)
 return|;
 block|}
-return|return
-operator|(
-name|ARCHIVE_OK
-operator|)
-return|;
 block|}
 end_function
 
