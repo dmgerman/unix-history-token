@@ -2230,9 +2230,9 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-literal|4096
+literal|512
 argument_list|,
-literal|0
+literal|4096
 argument_list|,
 comment|/* algnmnt, boundary */
 name|BUS_SPACE_MAXADDR
@@ -3478,7 +3478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Handle the change of state of the backend to Closing.  We must delete our  * device-layer structures now, to ensure that writes are flushed through to  * the backend.  Once is this done, we can switch to Closed in  * acknowledgement.  */
+comment|/**  * Handle the change of state of the backend to Closing.  We must delete our  * device-layer structures now, to ensure that writes are flushed through to  * the backend.  Once this is done, we can switch to Closed in  * acknowledgement.  */
 end_comment
 
 begin_function
