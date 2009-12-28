@@ -19,25 +19,29 @@ begin_comment
 comment|/*  * Note: archive.h is for use outside of libarchive; the configuration  * headers (config.h, archive_platform.h, etc.) are purely internal.  * Do NOT use HAVE_XXX configuration macros to control the behavior of  * this header!  If you must conditionalize, use predefined compiler and/or  * platform macros.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_comment
-comment|/* Linux requires this for off_t */
-end_comment
-
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+operator|&&
+name|__BORLANDC__
+operator|>=
+literal|0x560
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_STDINT_H
+value|<stdint.h>
+end_define
+
+begin_elif
+elif|#
+directive|elif
 operator|!
 name|defined
 argument_list|(
@@ -55,16 +59,52 @@ name|defined
 argument_list|(
 name|__INTERIX
 argument_list|)
-end_if
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+end_elif
 
-begin_comment
-comment|/* Header unavailable on Watcom C or MS Visual C++ or SFU. */
-end_comment
+begin_define
+define|#
+directive|define
+name|__LA_STDINT_H
+value|<inttypes.h>
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* Linux requires this for off_t */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LA_STDINT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|__LA_STDINT_H
 end_include
 
 begin_comment
@@ -149,19 +189,52 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|__LA_UID_T
-value|unsigned int
+value|uid_t
 end_define
 
 begin_define
 define|#
 directive|define
 name|__LA_GID_T
-value|unsigned int
+value|gid_t
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__LA_UID_T
+value|short
+end_define
+
+begin_define
+define|#
+directive|define
+name|__LA_GID_T
+value|short
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
