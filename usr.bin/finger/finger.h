@@ -123,25 +123,59 @@ comment|/* how long idle (if logged in) */
 name|char
 name|tty
 index|[
-name|UT_LINESIZE
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* null terminated tty line */
+sizeof|sizeof
+argument_list|(
+operator|(
+expr|struct
+name|utmpx
+operator|*
+block|)
+literal|0
+typedef|)->
+name|ut_line
+typedef|];
+end_typedef
+
+begin_comment
+comment|/* tty line */
+end_comment
+
+begin_macro
 name|char
+end_macro
+
+begin_expr_stmt
 name|host
 index|[
-name|UT_HOSTSIZE
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* null terminated remote host name */
-block|}
-name|WHERE
-typedef|;
-end_typedef
+sizeof|sizeof
+argument_list|(
+operator|(
+expr|struct
+name|utmpx
+operator|*
+end_expr_stmt
+
+begin_expr_stmt
+unit|)
+literal|0
+end_expr_stmt
+
+begin_expr_stmt
+unit|)
+operator|->
+name|ut_host
+expr|]
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* host name */
+end_comment
+
+begin_empty_stmt
+unit|} WHERE
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#

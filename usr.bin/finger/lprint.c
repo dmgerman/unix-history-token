@@ -118,16 +118,22 @@ directive|include
 file|<string.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_ULOG_POSIX_NAMES
+end_define
+
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<ulog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|<unistd.h>
 end_include
 
 begin_include
