@@ -1458,7 +1458,7 @@ if|if
 condition|(
 name|chunk
 operator|>
-literal|1024
+literal|65536
 operator|*
 name|cp
 operator|->
@@ -1468,7 +1468,7 @@ name|sectorsize
 condition|)
 name|chunk
 operator|=
-literal|1024
+literal|65536
 operator|*
 name|cp
 operator|->

@@ -306,9 +306,18 @@ name|u_int16_t
 name|pioiordy
 decl_stmt|;
 comment|/* min. PIO cycle IORDY flow */
+comment|/*069*/
 name|u_int16_t
-name|reserved69
+name|support3
 decl_stmt|;
+define|#
+directive|define
+name|ATA_SUPPORT_RZAT
+value|0x0020
+define|#
+directive|define
+name|ATA_SUPPORT_DRAT
+value|0x4000
 name|u_int16_t
 name|reserved70
 decl_stmt|;
@@ -689,9 +698,10 @@ name|lba_size48_4
 decl_stmt|;
 name|u_int16_t
 name|reserved104
-index|[
-literal|2
-index|]
+decl_stmt|;
+comment|/*105*/
+name|u_int16_t
+name|max_dsm_blocks
 decl_stmt|;
 comment|/*106*/
 name|u_int16_t
@@ -804,7 +814,21 @@ decl_stmt|;
 name|u_int16_t
 name|reserved165
 index|[
-literal|11
+literal|4
+index|]
+decl_stmt|;
+comment|/*169*/
+name|u_int16_t
+name|support_dsm
+decl_stmt|;
+define|#
+directive|define
+name|ATA_SUPPORT_DSM_TRIM
+value|0x0001
+name|u_int16_t
+name|reserved170
+index|[
+literal|6
 index|]
 decl_stmt|;
 comment|/*176*/
@@ -1095,6 +1119,20 @@ end_define
 begin_comment
 comment|/* start autopoll function */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_DATA_SET_MANAGEMENT
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_DSM_TRIM
+value|0x01
+end_define
 
 begin_define
 define|#
