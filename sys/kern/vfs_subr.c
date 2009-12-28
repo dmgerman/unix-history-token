@@ -731,6 +731,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|vlru_allow_cache_src
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vlru_allow_cache_src
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vlru_allow_cache_src
+argument_list|,
+literal|0
+argument_list|,
+literal|"Allow vlru to reclaim source vnode"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Various variables used for debugging the new implementation of  * reassignbuf().  * XXX these are probably of (very) limited utility now.  */
 end_comment
@@ -2833,6 +2861,10 @@ name|vp
 operator|->
 name|v_usecount
 operator|||
+operator|(
+operator|!
+name|vlru_allow_cache_src
+operator|&&
 operator|!
 name|LIST_EMPTY
 argument_list|(
@@ -2843,6 +2875,7 @@ operator|)
 operator|->
 name|v_cache_src
 argument_list|)
+operator|)
 operator|||
 operator|(
 name|vp
@@ -2925,6 +2958,10 @@ name|vp
 operator|->
 name|v_usecount
 operator|||
+operator|(
+operator|!
+name|vlru_allow_cache_src
+operator|&&
 operator|!
 name|LIST_EMPTY
 argument_list|(
@@ -2935,6 +2972,7 @@ operator|)
 operator|->
 name|v_cache_src
 argument_list|)
+operator|)
 operator|||
 operator|(
 name|vp
