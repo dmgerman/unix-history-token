@@ -102,6 +102,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -148,17 +149,22 @@ name|main
 parameter_list|(
 name|int
 name|argc
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
+name|__unused
 parameter_list|)
 block|{
 name|SVCXPRT
 modifier|*
 name|transp
+init|=
+name|NULL
 decl_stmt|;
+comment|/* Keep compiler happy. */
 name|int
 name|ok
 decl_stmt|;
@@ -169,7 +175,7 @@ decl_stmt|;
 name|socklen_t
 name|fromlen
 decl_stmt|;
-comment|/*          * See if inetd started us          */
+comment|/* 	 * See if inetd started us 	 */
 name|fromlen
 operator|=
 sizeof|sizeof
