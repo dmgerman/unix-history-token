@@ -234,6 +234,27 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * The radix code expects addr and mask to be array of bytes,  * with the first byte being the length of the array. rn_inithead  * is called with the offset in bits of the lookup key within the  * array. If we use a sockaddr_in as the underlying type,  * sin_len is conveniently located at offset 0, sin_addr is at  * offset 4 and normally aligned.  * But for portability, let's avoid assumption and make the code explicit  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEY_LEN
+parameter_list|(
+name|v
+parameter_list|)
+value|*((uint8_t *)&(v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEY_OFS
+value|(8*offsetof(struct sockaddr_in, sin_addr))
+end_define
+
 begin_function
 name|int
 name|ipfw_add_table_entry
@@ -325,17 +346,19 @@ name|value
 operator|=
 name|value
 expr_stmt|;
+name|KEY_LEN
+argument_list|(
 name|ent
 operator|->
 name|addr
-operator|.
-name|sin_len
+argument_list|)
 operator|=
+name|KEY_LEN
+argument_list|(
 name|ent
 operator|->
 name|mask
-operator|.
-name|sin_len
+argument_list|)
 operator|=
 literal|8
 expr_stmt|;
@@ -510,13 +533,15 @@ index|[
 name|tbl
 index|]
 expr_stmt|;
+name|KEY_LEN
+argument_list|(
 name|sa
-operator|.
-name|sin_len
+argument_list|)
 operator|=
+name|KEY_LEN
+argument_list|(
 name|mask
-operator|.
-name|sin_len
+argument_list|)
 operator|=
 literal|8
 expr_stmt|;
@@ -858,7 +883,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|32
+name|KEY_OFS
 argument_list|)
 condition|)
 block|{
@@ -956,9 +981,10 @@ index|[
 name|tbl
 index|]
 expr_stmt|;
+name|KEY_LEN
+argument_list|(
 name|sa
-operator|.
-name|sin_len
+argument_list|)
 operator|=
 literal|8
 expr_stmt|;
