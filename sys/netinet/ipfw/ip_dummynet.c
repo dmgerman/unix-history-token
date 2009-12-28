@@ -2666,12 +2666,6 @@ operator|->
 name|bandwidth
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("%s %d extra_bits %d numb %d ret %d\n", 		__FUNCTION__, __LINE__, 		(int)(q->extra_bits& 0xffffffff), 		(int)(q->numbytes& 0xffffffff), 		(int)(ret& 0xffffffff));
-endif|#
-directive|endif
 if|if
 condition|(
 name|ret
@@ -4342,6 +4336,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|SLIST_FOREACH
 argument_list|(
 argument|pipe
@@ -4350,6 +4345,7 @@ argument|&pipehash[i]
 argument_list|,
 argument|next
 argument_list|)
+block|{
 if|if
 condition|(
 name|pipe
@@ -4428,6 +4424,8 @@ name|fs
 operator|->
 name|weight
 expr_stmt|;
+block|}
+block|}
 block|}
 name|DUMMYNET_UNLOCK
 argument_list|()
@@ -4836,6 +4834,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 comment|/* last one is overflow */
 for|for
 control|(
@@ -4857,6 +4856,7 @@ operator|!=
 name|NULL
 condition|;
 control|)
+block|{
 if|if
 condition|(
 operator|!
@@ -4929,6 +4929,8 @@ argument_list|,
 name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 return|return
 name|initial_elements
@@ -9540,15 +9542,16 @@ parameter_list|)
 block|{
 name|int
 name|i
-init|=
-literal|0
 decl_stmt|,
 name|found
-init|=
-literal|0
 decl_stmt|;
 for|for
 control|(
+name|i
+operator|=
+name|found
+operator|=
+literal|0
 init|;
 name|i
 operator|<
@@ -9557,6 +9560,7 @@ operator|->
 name|elements
 condition|;
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -9609,6 +9613,7 @@ else|else
 name|i
 operator|++
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|found
@@ -9641,19 +9646,8 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-if|if
-condition|(
-name|h
-operator|->
-name|elements
-operator|>
-literal|0
-condition|)
-block|{
 name|int
 name|i
-init|=
-literal|0
 decl_stmt|;
 for|for
 control|(
@@ -9713,7 +9707,6 @@ name|h
 argument_list|)
 expr_stmt|;
 break|break ;
-block|}
 block|}
 block|}
 block|}
@@ -9991,6 +9984,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|SLIST_FOREACH
 argument_list|(
 argument|fs
@@ -9999,6 +9993,7 @@ argument|&flowsethash[i]
 argument_list|,
 argument|next
 argument_list|)
+block|{
 if|if
 condition|(
 name|fs
@@ -10034,6 +10029,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 name|fs_remove_from_heap
 argument_list|(
@@ -10291,6 +10288,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 for|for
 control|(
 name|q
@@ -10396,6 +10394,7 @@ name|fs
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -10614,7 +10613,7 @@ expr_stmt|;
 if|if
 condition|(
 name|size
-operator|==
+operator|>=
 name|dn_calc_size
 argument_list|()
 condition|)
@@ -10662,6 +10661,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|SLIST_FOREACH
 argument_list|(
 argument|pipe
@@ -10806,6 +10806,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 for|for
 control|(
 name|i
@@ -10819,6 +10820,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|SLIST_FOREACH
 argument_list|(
 argument|fs
@@ -10896,6 +10898,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|DUMMYNET_UNLOCK
 argument_list|()
