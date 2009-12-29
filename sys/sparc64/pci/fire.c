@@ -1406,8 +1406,6 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|mode
-decl_stmt|,
-name|nrange
 decl_stmt|;
 name|u_int
 name|lw
@@ -4048,7 +4046,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|nrange
+name|i
 operator|=
 name|OF_getprop_alloc
 argument_list|(
@@ -4074,7 +4072,7 @@ expr_stmt|;
 comment|/* 	 * Make sure that the expected ranges are present.  The 	 * OFW_PCI_CS_MEM64 one is not currently used though. 	 */
 if|if
 condition|(
-name|nrange
+name|i
 operator|!=
 name|FIRE_NRANGE
 condition|)
@@ -11085,9 +11083,6 @@ name|bt
 decl_stmt|;
 name|bt
 operator|=
-operator|(
-name|bus_space_tag_t
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
