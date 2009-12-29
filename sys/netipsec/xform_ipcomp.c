@@ -1102,15 +1102,11 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
 name|crypto_dispatch
 argument_list|(
 name|crp
 argument_list|)
-expr_stmt|;
-return|return
-name|error
 return|;
 block|}
 name|ipcompstat
@@ -2253,7 +2249,7 @@ operator|->
 name|crp_etype
 condition|)
 block|{
-comment|/* Reset session ID */
+comment|/* Reset the session ID */
 if|if
 condition|(
 name|sav
