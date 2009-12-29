@@ -409,12 +409,10 @@ begin_function
 name|void
 name|order_unstr
 parameter_list|(
-name|tbl
-parameter_list|)
 name|STRFILE
 modifier|*
 name|tbl
-decl_stmt|;
+parameter_list|)
 block|{
 name|uint32_t
 name|i
