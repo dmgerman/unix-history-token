@@ -1670,6 +1670,9 @@ name|archive_read_filter
 modifier|*
 name|filter
 decl_stmt|;
+name|ssize_t
+name|avail
+decl_stmt|;
 name|int
 name|r
 decl_stmt|;
@@ -1884,6 +1887,36 @@ expr_stmt|;
 return|return
 operator|(
 name|r
+operator|)
+return|;
+block|}
+comment|/* Verify the filter by asking it for some data. */
+name|__archive_read_filter_ahead
+argument_list|(
+name|filter
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|avail
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|avail
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* If the read failed, bail out now. */
+name|free
+argument_list|(
+name|filter
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|avail
 operator|)
 return|;
 block|}
