@@ -59,24 +59,11 @@ directive|include
 file|<syslog.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|utmp
-value|rutmp
-end_define
-
 begin_include
 include|#
 directive|include
 file|<rpcsvc/rnusers.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|utmp
-end_undef
 
 begin_function_decl
 specifier|extern
