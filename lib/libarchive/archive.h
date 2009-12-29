@@ -1823,6 +1823,15 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|int
+name|archive_write_set_format_zip
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
 name|archive_write_open
 parameter_list|(
 name|struct
