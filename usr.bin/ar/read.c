@@ -263,7 +263,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|archive_read_support_format_all
+name|archive_read_support_format_ar
 argument_list|(
 name|a
 argument_list|)
