@@ -516,7 +516,7 @@ name|vga_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|vm_offset_t
@@ -525,6 +525,10 @@ name|paddr
 parameter_list|,
 name|int
 name|prot
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+name|memattr
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1880,7 +1880,7 @@ name|video_adapter_t
 modifier|*
 name|adp
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|vm_offset_t
@@ -1889,6 +1889,10 @@ name|paddr
 parameter_list|,
 name|int
 name|prot
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+name|memattr
 parameter_list|)
 block|{
 return|return
@@ -1901,6 +1905,8 @@ argument_list|,
 name|paddr
 argument_list|,
 name|prot
+argument_list|,
+name|memattr
 argument_list|)
 return|;
 block|}

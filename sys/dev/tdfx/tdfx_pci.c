@@ -1538,7 +1538,7 @@ name|cdev
 modifier|*
 name|dev
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|vm_paddr_t
@@ -1547,6 +1547,10 @@ name|paddr
 parameter_list|,
 name|int
 name|nprot
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+name|memattr
 parameter_list|)
 block|{
 comment|/*  	 * mmap(2) is called by a user process to request that an area of memory 	 * associated with this device be mapped for the process to work with. Nprot 	 * holds the protections requested, PROT_READ, PROT_WRITE, or both. 	 */
