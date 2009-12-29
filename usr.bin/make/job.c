@@ -1408,7 +1408,9 @@ end_comment
 begin_function
 name|void
 name|Proc_Init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * Catch SIGCHLD so that we get kicked out of select() when we 	 * need to look at a child.  This is only known to matter for the 	 * -j case (perhaps without -P). 	 * 	 * XXX this is intentionally misplaced. 	 */
 name|struct
