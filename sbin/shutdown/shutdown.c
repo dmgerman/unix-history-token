@@ -392,7 +392,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|die_you_gravy_sucking_pig_dog
+name|perform_shutdown
 parameter_list|(
 name|void
 parameter_list|)
@@ -1213,7 +1213,7 @@ name|timeleft
 condition|)
 break|break;
 block|}
-name|die_you_gravy_sucking_pig_dog
+name|perform_shutdown
 argument_list|()
 expr_stmt|;
 block|}
@@ -1556,8 +1556,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|die_you_gravy_sucking_pig_dog
-parameter_list|()
+name|perform_shutdown
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2514,7 +2516,9 @@ begin_function
 specifier|static
 name|void
 name|badtime
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|errx
 argument_list|(
