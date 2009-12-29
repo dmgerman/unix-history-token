@@ -371,7 +371,7 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
-name|ino_t
+name|int64_t
 name|ino
 decl_stmt|;
 name|char
@@ -4211,7 +4211,7 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
-name|ino_t
+name|int64_t
 name|ino
 decl_stmt|;
 if|if
@@ -4233,12 +4233,12 @@ argument_list|)
 expr_stmt|;
 name|ino
 operator|=
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|entry
 argument_list|)
 expr_stmt|;
-comment|/*          * First look in the list of multiply-linked files.  If we've          * already dumped it, convert this entry to a hard link entry.          */
+comment|/* 	 * First look in the list of multiply-linked files.  If we've 	 * already dumped it, convert this entry to a hard link entry. 	 */
 for|for
 control|(
 name|le
