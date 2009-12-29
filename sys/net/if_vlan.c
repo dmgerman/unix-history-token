@@ -2364,7 +2364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A handler for network interface departure events.  * Track departure of trunks here so that we don't access invalid  * pointers or whatever if a trunk is ripped from under us, e.g.,  * by ejecting its hot-plug card.  */
+comment|/*  * A handler for network interface departure events.  * Track departure of trunks here so that we don't access invalid  * pointers or whatever if a trunk is ripped from under us, e.g.,  * by ejecting its hot-plug card.  However, if an ifnet is simply  * being renamed, then there's no need to tear down the state.  */
 end_comment
 
 begin_function
@@ -2399,6 +2399,16 @@ operator|->
 name|if_vlantrunk
 operator|==
 name|NULL
+condition|)
+return|return;
+comment|/* If the ifnet is just being renamed, don't do anything. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RENAMING
 condition|)
 return|return;
 name|VLAN_LOCK
