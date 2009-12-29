@@ -1570,6 +1570,30 @@ literal|"null compression xform"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Do not touch the packet in case our payload to compress 	 * is lower than the minimal threshold of the compression 	 * alogrithm.  We will just send out the data uncompressed. 	 * See RFC 3173, 2.2. Non-Expansion Policy. 	 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<=
+name|ipcompx
+operator|->
+name|minlen
+condition|)
+block|{
+comment|/* XXX-BZ V_ipcompstat.threshold++; */
+return|return
+name|ipsec_process_done
+argument_list|(
+name|m
+argument_list|,
+name|isr
+argument_list|)
+return|;
+block|}
 name|ralen
 operator|=
 name|m
