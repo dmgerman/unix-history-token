@@ -184,19 +184,15 @@ begin_function
 name|void
 name|Hash_InitTable
 parameter_list|(
-name|t
-parameter_list|,
-name|numBuckets
-parameter_list|)
 specifier|register
 name|Hash_Table
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 comment|/* Structure to use to hold table. */
 name|int
 name|numBuckets
-decl_stmt|;
+parameter_list|)
 comment|/* How many buckets to create for starters. 				 * This number is rounded up to a power of 				 * two.   If<= 0, a reasonable default is 				 * chosen. The table will grow in size later 				 * as needed. */
 block|{
 specifier|register
@@ -306,12 +302,10 @@ begin_function
 name|void
 name|Hash_DeleteTable
 parameter_list|(
-name|t
-parameter_list|)
 name|Hash_Table
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -417,19 +411,15 @@ name|Hash_Entry
 modifier|*
 name|Hash_FindEntry
 parameter_list|(
-name|t
-parameter_list|,
-name|key
-parameter_list|)
 name|Hash_Table
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 comment|/* Hash table to search. */
 name|char
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|)
 comment|/* A hash key. */
 block|{
 specifier|register
@@ -544,27 +534,21 @@ name|Hash_Entry
 modifier|*
 name|Hash_CreateEntry
 parameter_list|(
-name|t
-parameter_list|,
-name|key
-parameter_list|,
-name|newPtr
-parameter_list|)
 specifier|register
 name|Hash_Table
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 comment|/* Hash table to search. */
 name|char
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 comment|/* A hash key. */
 name|Boolean
 modifier|*
 name|newPtr
-decl_stmt|;
+parameter_list|)
 comment|/* Filled in with TRUE if new entry created, 				 * FALSE otherwise. */
 block|{
 specifier|register
@@ -810,18 +794,14 @@ begin_function
 name|void
 name|Hash_DeleteEntry
 parameter_list|(
-name|t
-parameter_list|,
-name|e
-parameter_list|)
 name|Hash_Table
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 name|Hash_Entry
 modifier|*
 name|e
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|Hash_Entry
@@ -932,20 +912,16 @@ name|Hash_Entry
 modifier|*
 name|Hash_EnumFirst
 parameter_list|(
-name|t
-parameter_list|,
-name|searchPtr
-parameter_list|)
 name|Hash_Table
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
 comment|/* Table to be searched. */
 specifier|register
 name|Hash_Search
 modifier|*
 name|searchPtr
-decl_stmt|;
+parameter_list|)
 comment|/* Area in which to keep state 					 * about search.*/
 block|{
 name|searchPtr
@@ -984,13 +960,11 @@ name|Hash_Entry
 modifier|*
 name|Hash_EnumNext
 parameter_list|(
-name|searchPtr
-parameter_list|)
 specifier|register
 name|Hash_Search
 modifier|*
 name|searchPtr
-decl_stmt|;
+parameter_list|)
 comment|/* Area used to keep state about 					    search. */
 block|{
 specifier|register
@@ -1084,13 +1058,11 @@ specifier|static
 name|void
 name|RebuildTable
 parameter_list|(
-name|t
-parameter_list|)
 specifier|register
 name|Hash_Table
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|Hash_Entry

@@ -613,7 +613,9 @@ begin_function
 specifier|static
 name|int
 name|watchdog_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fd
 operator|=
@@ -832,7 +834,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

@@ -402,7 +402,9 @@ specifier|static
 name|void
 name|__dead2
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|char

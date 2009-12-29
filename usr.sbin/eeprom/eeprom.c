@@ -485,7 +485,9 @@ begin_function
 specifier|static
 name|void
 name|dump_config
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ofwo_dump
 argument_list|()

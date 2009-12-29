@@ -1326,7 +1326,9 @@ begin_function
 specifier|static
 name|void
 name|acline_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|acline_mib_len
 operator|=
