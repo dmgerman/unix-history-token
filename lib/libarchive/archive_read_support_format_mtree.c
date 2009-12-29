@@ -987,6 +987,9 @@ return|return
 operator|(
 literal|8
 operator|*
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|signature
@@ -2058,10 +2061,6 @@ expr_stmt|;
 name|last_entry
 operator|=
 name|NULL
-expr_stmt|;
-name|r
-operator|=
-name|ARCHIVE_OK
 expr_stmt|;
 for|for
 control|(
@@ -5339,9 +5338,12 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-comment|/* 	 * The current directory is somewhat special, it should be archived 	 * only once as it will confuse extraction otherwise. 	 */
 if|if
 condition|(
+name|mentry
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|src
@@ -5853,7 +5855,7 @@ condition|)
 block|{
 name|l
 operator|=
-name|UINT64_MAX
+name|INT64_MAX
 expr_stmt|;
 comment|/* Truncate on overflow. */
 break|break;
@@ -6078,7 +6080,7 @@ condition|)
 block|{
 name|l
 operator|=
-name|UINT64_MAX
+name|INT64_MAX
 expr_stmt|;
 comment|/* Truncate on overflow. */
 break|break;
