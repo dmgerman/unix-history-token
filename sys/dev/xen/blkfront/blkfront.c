@@ -4465,8 +4465,8 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|ref
-operator|!=
-name|ENOSPC
+operator|>=
+literal|0
 argument_list|,
 operator|(
 literal|"grant_reference failed"
