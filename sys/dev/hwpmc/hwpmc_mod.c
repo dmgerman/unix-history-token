@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -6635,6 +6641,9 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|int
+name|locked
+decl_stmt|;
 name|vm_map_t
 name|map
 decl_stmt|;
@@ -7044,9 +7053,23 @@ name|last_vp
 operator|=
 name|vp
 expr_stmt|;
+name|locked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|locked
 argument_list|)
 expr_stmt|;
 name|vp
