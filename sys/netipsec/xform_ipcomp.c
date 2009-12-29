@@ -1563,7 +1563,11 @@ operator|->
 name|minlen
 condition|)
 block|{
-comment|/* XXX-BZ V_ipcompstat.threshold++; */
+name|ipcompstat
+operator|.
+name|ipcomps_threshold
+operator|++
+expr_stmt|;
 return|return
 name|ipsec_process_done
 argument_list|(
@@ -2733,8 +2737,31 @@ block|}
 block|}
 else|else
 block|{
-comment|/* compression was useless, we have lost time */
-comment|/* XXX add statistic */
+comment|/* Compression was useless, we have lost time. */
+name|ipcompstat
+operator|.
+name|ipcomps_uncompr
+operator|++
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"%s: compressions was useless %d - %d<= %d\n"
+operator|,
+name|__func__
+operator|,
+name|crp
+operator|->
+name|crp_ilen
+operator|,
+name|skip
+operator|,
+name|crp
+operator|->
+name|crp_olen
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX remember state to not compress the next couple 		 *     of packets, RFC 3173, 2.2. Non-Expansion Policy */
 block|}
 comment|/* Release the crypto descriptor */
@@ -2850,6 +2877,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ipcompstat
+operator|.
+name|version
+operator|=
+name|IPCOMPSTAT_VERSION
+expr_stmt|;
 name|xform_register
 argument_list|(
 operator|&
