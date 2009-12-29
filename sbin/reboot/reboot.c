@@ -940,7 +940,9 @@ begin_function
 specifier|static
 name|u_int
 name|get_pageins
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int
 name|pageins
