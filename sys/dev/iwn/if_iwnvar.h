@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_iwnvar.h,v 1.12 2009/05/29 08:25:45 damien Exp $	*/
+comment|/*	$OpenBSD: if_iwnvar.h,v 1.16 2009/11/04 17:46:52 damien Exp $	*/
 end_comment
 
 begin_comment
@@ -168,6 +168,9 @@ index|[
 name|IWN_TX_RING_COUNT
 index|]
 decl_stmt|;
+name|bus_dma_tag_t
+name|data_dmat
+decl_stmt|;
 name|int
 name|qid
 decl_stmt|;
@@ -231,6 +234,9 @@ index|[
 name|IWN_RX_RING_COUNT
 index|]
 decl_stmt|;
+name|bus_dma_tag_t
+name|data_dmat
+decl_stmt|;
 name|int
 name|cur
 decl_stmt|;
@@ -247,13 +253,6 @@ name|ieee80211_node
 name|ni
 decl_stmt|;
 comment|/* must be the first */
-define|#
-directive|define
-name|IWN_NODE
-parameter_list|(
-name|_ni
-parameter_list|)
-value|((struct iwn_node *)(_ni))
 name|struct
 name|ieee80211_amrr_node
 name|amn
@@ -487,17 +486,6 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|apm_init
-function_decl|)
-parameter_list|(
-name|struct
-name|iwn_softc
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
 name|nic_config
 function_decl|)
 parameter_list|(
@@ -561,10 +549,6 @@ name|struct
 name|iwn_softc
 modifier|*
 parameter_list|,
-name|struct
-name|ieee80211_channel
-modifier|*
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -626,12 +610,13 @@ name|iwn_rx_data
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|const
-name|struct
-name|iwn_sensitivity_limits
-modifier|*
-name|limits
-decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* HT */
+block|void		(*ampdu_tx_start)(struct iwn_softc *, 			    struct ieee80211_node *, uint8_t, uint16_t); 	void		(*ampdu_tx_stop)(struct iwn_softc *, uint8_t, 			    uint16_t);
+endif|#
+directive|endif
 name|int
 name|ntxqs
 decl_stmt|;
@@ -724,7 +709,7 @@ decl_stmt|;
 name|int
 name|sc_debug
 decl_stmt|;
-comment|/* locks */
+comment|/* Locks */
 name|struct
 name|mtx
 name|sc_mtx
@@ -762,8 +747,16 @@ name|IWN_FLAG_HAS_OTPROM
 value|(1<< 1)
 define|#
 directive|define
-name|IWN_FLAG_FIRST_BOOT
+name|IWN_FLAG_CALIB_DONE
 value|(1<< 2)
+define|#
+directive|define
+name|IWN_FLAG_USE_ICT
+value|(1<< 3)
+define|#
+directive|define
+name|IWN_FLAG_INTERNAL_PA
+value|(1<< 4)
 name|uint8_t
 name|hw_type
 decl_stmt|;
@@ -777,6 +770,12 @@ specifier|const
 name|char
 modifier|*
 name|fwname
+decl_stmt|;
+specifier|const
+name|struct
+name|iwn_sensitivity_limits
+modifier|*
+name|limits
 decl_stmt|;
 comment|/* TX scheduler rings. */
 name|struct
@@ -806,6 +805,18 @@ comment|/* Firmware DMA transfer. */
 name|struct
 name|iwn_dma_info
 name|fw_dma
+decl_stmt|;
+comment|/* ICT table. */
+name|struct
+name|iwn_dma_info
+name|ict_dma
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|ict
+decl_stmt|;
+name|int
+name|ict_cur
 decl_stmt|;
 comment|/* TX/RX rings. */
 name|struct
@@ -897,11 +908,24 @@ decl_stmt|;
 name|uint32_t
 name|qfullmsk
 decl_stmt|;
+name|uint32_t
+name|prom_base
+decl_stmt|;
 name|struct
 name|iwn4965_eeprom_band
 name|bands
 index|[
 name|IWN_NBANDS
+index|]
+decl_stmt|;
+name|struct
+name|iwn_eeprom_chan
+name|eeprom_channels
+index|[
+name|IWN_NBANDS
+index|]
+index|[
+name|IWN_MAX_CHAN_PER_BAND
 index|]
 decl_stmt|;
 name|uint16_t
@@ -931,8 +955,17 @@ index|[
 name|IEEE80211_CHAN_MAX
 index|]
 decl_stmt|;
+name|int8_t
+name|enh_maxpwr
+index|[
+literal|35
+index|]
+decl_stmt|;
+name|int32_t
+name|temp_off
+decl_stmt|;
 name|uint32_t
-name|critical_temp
+name|int_mask
 decl_stmt|;
 name|uint8_t
 name|ntxchains
@@ -941,13 +974,13 @@ name|uint8_t
 name|nrxchains
 decl_stmt|;
 name|uint8_t
-name|txantmsk
+name|txchainmask
 decl_stmt|;
 name|uint8_t
-name|rxantmsk
+name|rxchainmask
 decl_stmt|;
 name|uint8_t
-name|antmsk
+name|chainmask
 decl_stmt|;
 name|struct
 name|callout
@@ -963,12 +996,6 @@ decl_stmt|;
 name|struct
 name|iwn_tx_radiotap_header
 name|sc_txtap
-decl_stmt|;
-specifier|const
-name|struct
-name|ieee80211_channel
-modifier|*
-name|sc_curchan
 decl_stmt|;
 block|}
 struct|;
