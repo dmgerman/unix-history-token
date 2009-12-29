@@ -806,15 +806,15 @@ comment|/* farest PCI-PCI bridge */
 name|uint8_t
 name|sds_bus
 decl_stmt|;
-comment|/* bus of farest PCI device */
+comment|/* bus of farest PCI dev. */
 name|uint8_t
 name|sds_slot
 decl_stmt|;
-comment|/* slot of farest PCI device */
+comment|/* slot of farest PCI dev. */
 name|uint8_t
 name|sds_func
 decl_stmt|;
-comment|/* func. of farest PCI device */
+comment|/* func. of farest PCI dev. */
 block|}
 struct|;
 end_struct
@@ -1230,11 +1230,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|j
+decl_stmt|,
 name|mode
-decl_stmt|,
-name|n
-decl_stmt|,
-name|nrange
 decl_stmt|,
 name|rid
 decl_stmt|,
@@ -1313,11 +1311,11 @@ literal|1
 expr_stmt|;
 for|for
 control|(
-name|n
+name|i
 operator|=
 literal|0
 init|;
-name|n
+name|i
 operator|<
 operator|(
 name|mode
@@ -1329,19 +1327,19 @@ else|:
 name|TOM_NREG
 operator|)
 condition|;
-name|n
+name|i
 operator|++
 control|)
 block|{
 name|rid
 operator|=
-name|n
+name|i
 expr_stmt|;
 name|sc
 operator|->
 name|sc_mem_res
 index|[
-name|n
+name|i
 index|]
 operator|=
 name|bus_alloc_resource_any
@@ -1368,12 +1366,12 @@ name|sc_half
 operator|==
 literal|1
 operator|&&
-name|n
+name|i
 operator|==
 name|STX_PCI
 operator|)
 operator|||
-name|n
+name|i
 operator|==
 name|STX_CTRL
 operator|)
@@ -1390,7 +1388,7 @@ name|sc_half
 operator|==
 literal|0
 operator|&&
-name|n
+name|i
 operator|==
 name|STX_CTRL
 operator|)
@@ -1410,7 +1408,7 @@ name|sc
 operator|->
 name|sc_mem_res
 index|[
-name|n
+name|i
 index|]
 operator|==
 name|NULL
@@ -1421,7 +1419,7 @@ literal|"%s: could not allocate register bank %d"
 argument_list|,
 name|__func__
 argument_list|,
-name|n
+name|i
 argument_list|)
 expr_stmt|;
 block|}
@@ -1930,7 +1928,7 @@ name|TOM_PCI_IOC_CPRL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Hunt through all the interrupt mapping regs and register 	 * the interrupt controller for our interrupt vectors.  We do 	 * this early in order to be able to catch stray interrupts. 	 * This is complicated by the fact that a pair of Schizo PBMs 	 * shares one IGN. 	 */
-name|n
+name|i
 operator|=
 name|OF_getprop
 argument_list|(
@@ -1952,7 +1950,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|i
 operator|==
 operator|-
 literal|1
@@ -1985,15 +1983,15 @@ index|]
 expr_stmt|;
 for|for
 control|(
-name|n
+name|i
 operator|=
 literal|0
 init|;
-name|n
+name|i
 operator|<=
 name|STX_MAX_INO
 condition|;
-name|n
+name|i
 operator|++
 control|)
 block|{
@@ -2005,7 +2003,7 @@ operator|&
 operator|(
 literal|1ULL
 operator|<<
-name|n
+name|i
 operator|)
 operator|)
 operator|==
@@ -2014,28 +2012,28 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|n
+name|i
 operator|==
 name|STX_FB0_INO
 operator|||
-name|n
+name|i
 operator|==
 name|STX_FB1_INO
 condition|)
 comment|/* Leave for upa(4). */
 continue|continue;
-name|i
+name|j
 operator|=
 name|schizo_intr_register
 argument_list|(
 name|sc
 argument_list|,
-name|n
+name|i
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|j
 operator|!=
 literal|0
 condition|)
@@ -2046,9 +2044,9 @@ argument_list|,
 literal|"could not register interrupt "
 literal|"controller for INO %d (%d)\n"
 argument_list|,
-name|n
-argument_list|,
 name|i
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 block|}
@@ -2287,7 +2285,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|case (IOTSB_BASESZ<< (x))<< (IO_PAGE_SHIFT - IOTTE_SHIFT):	\ 		tsbsize = (x);						\ 		break;							\  	n = OF_getprop(node, "virtual-dma", (void *)prop_array,
+value|case (IOTSB_BASESZ<< (x))<< (IO_PAGE_SHIFT - IOTTE_SHIFT):	\ 		tsbsize = (x);						\ 		break;							\  	i = OF_getprop(node, "virtual-dma", (void *)prop_array,
 sizeof|sizeof
 argument_list|(
 name|prop_array
@@ -2299,12 +2297,12 @@ end_function
 begin_if
 if|if
 condition|(
-name|n
+name|i
 operator|==
 operator|-
 literal|1
 operator|||
-name|n
+name|i
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -2528,7 +2526,7 @@ expr_stmt|;
 end_if
 
 begin_expr_stmt
-name|nrange
+name|i
 operator|=
 name|OF_getprop_alloc
 argument_list|(
@@ -2560,7 +2558,7 @@ end_comment
 begin_if
 if|if
 condition|(
-name|nrange
+name|i
 operator|!=
 name|STX_NRANGE
 condition|)
@@ -2580,26 +2578,26 @@ end_comment
 begin_for
 for|for
 control|(
-name|n
+name|i
 operator|=
 literal|0
 init|;
-name|n
+name|i
 operator|<
 name|STX_NRANGE
 condition|;
-name|n
+name|i
 operator|++
 control|)
 block|{
-name|i
+name|j
 operator|=
 name|OFW_PCI_RANGE_CS
 argument_list|(
 operator|&
 name|range
 index|[
-name|n
+name|i
 index|]
 argument_list|)
 expr_stmt|;
@@ -2609,7 +2607,7 @@ name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|i
+name|j
 index|]
 operator|!=
 literal|0
@@ -2620,14 +2618,14 @@ literal|"%s: duplicate range for space %d"
 argument_list|,
 name|__func__
 argument_list|,
-name|i
+name|j
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|i
+name|j
 index|]
 operator|=
 name|OFW_PCI_RANGE_PHYS
@@ -2635,7 +2633,7 @@ argument_list|(
 operator|&
 name|range
 index|[
-name|n
+name|i
 index|]
 argument_list|)
 expr_stmt|;
@@ -2810,7 +2808,7 @@ comment|/* 	 * Get the bus range from the firmware. 	 * NB: Tomatillos don't sup
 end_comment
 
 begin_expr_stmt
-name|n
+name|i
 operator|=
 name|OF_getprop
 argument_list|(
@@ -2835,7 +2833,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|n
+name|i
 operator|==
 operator|-
 literal|1
@@ -2852,7 +2850,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|n
+name|i
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -2865,7 +2863,7 @@ literal|"%s: broken bus-range (%d)"
 argument_list|,
 name|__func__
 argument_list|,
-name|n
+name|i
 argument_list|)
 expr_stmt|;
 end_if
@@ -3320,7 +3318,7 @@ operator|=
 name|SCHIZO_CDMA_STATE_DONE
 expr_stmt|;
 comment|/* 			 * Some firmware versions include the CDMA interrupt 			 * at RID 4 but most don't.  With the latter we add 			 * it ourselves at the spare RID 5. 			 */
-name|n
+name|i
 operator|=
 name|INTINO
 argument_list|(
@@ -3336,11 +3334,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|i
 operator|==
 name|STX_CDMA_A_INO
 operator|||
-name|n
+name|i
 operator|==
 name|STX_CDMA_B_INO
 condition|)
@@ -3352,7 +3350,7 @@ name|schizo_get_intrmap
 argument_list|(
 name|sc
 argument_list|,
-name|n
+name|i
 argument_list|,
 name|NULL
 argument_list|,
@@ -3368,7 +3366,7 @@ name|sc
 argument_list|,
 literal|4
 argument_list|,
-name|n
+name|i
 argument_list|,
 name|schizo_cdma
 argument_list|)
@@ -3376,7 +3374,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|n
+name|i
 operator|=
 name|STX_CDMA_A_INO
 operator|+
@@ -3400,7 +3398,7 @@ name|sc
 operator|->
 name|sc_ign
 argument_list|,
-name|n
+name|i
 argument_list|)
 argument_list|,
 literal|1
@@ -3416,18 +3414,18 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|i
+name|j
 operator|=
 name|schizo_intr_register
 argument_list|(
 name|sc
 argument_list|,
-name|n
+name|i
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|j
 operator|!=
 literal|0
 condition|)
@@ -3439,7 +3437,7 @@ literal|"(%d)"
 argument_list|,
 name|__func__
 argument_list|,
-name|i
+name|j
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3449,7 +3447,7 @@ name|schizo_get_intrmap
 argument_list|(
 name|sc
 argument_list|,
-name|n
+name|i
 argument_list|,
 name|NULL
 argument_list|,
@@ -3465,7 +3463,7 @@ name|sc
 argument_list|,
 literal|5
 argument_list|,
-name|n
+name|i
 argument_list|,
 name|schizo_cdma
 argument_list|)
@@ -3625,7 +3623,7 @@ index|]
 operator|==
 name|NULL
 operator|||
-name|INTIGN
+name|INTINO
 argument_list|(
 name|vec
 operator|=
@@ -3640,16 +3638,16 @@ index|]
 argument_list|)
 argument_list|)
 operator|!=
-name|sc
-operator|->
-name|sc_ign
+name|ino
 operator|||
-name|INTINO
+name|INTIGN
 argument_list|(
 name|vec
 argument_list|)
 operator|!=
-name|ino
+name|sc
+operator|->
+name|sc_ign
 operator|||
 name|intr_vectors
 index|[
@@ -7578,9 +7576,6 @@ name|bt
 decl_stmt|;
 name|bt
 operator|=
-operator|(
-name|bus_space_tag_t
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
