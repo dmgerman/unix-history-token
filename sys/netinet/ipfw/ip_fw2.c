@@ -5624,7 +5624,7 @@ literal|3
 condition|)
 name|key
 operator|=
-name|htons
+name|htonl
 argument_list|(
 name|src_port
 argument_list|)
