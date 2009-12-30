@@ -744,6 +744,10 @@ define|#
 directive|define
 name|ARCHIVE_COMPRESSION_UU
 value|7
+define|#
+directive|define
+name|ARCHIVE_COMPRESSION_RPM
+value|8
 comment|/*  * Codes returned by archive_format.  *  * Top 16 bits identifies the format family (e.g., "tar"); lower  * 16 bits indicate the variant.  This is updated by read_next_header.  * Note that the lower 16 bits will often vary from entry to entry.  * In some cases, this variation occurs as libarchive learns more about  * the archive (for example, later entries might utilize extensions that  * weren't necessary earlier in the archive; in this case, libarchive  * will change the format code to indicate the extended format that  * was used).  In other cases, it's because different tools have  * modified the archive and so different parts of the archive  * actually have slightly different formts.  (Both tar and cpio store  * format codes in each entry, so it is quite possible for each  * entry to be in a different format.)  */
 define|#
 directive|define
@@ -841,6 +845,10 @@ define|#
 directive|define
 name|ARCHIVE_FORMAT_RAW
 value|0x90000
+define|#
+directive|define
+name|ARCHIVE_FORMAT_XAR
+value|0xA0000
 comment|/*-  * Basic outline for reading an archive:  *   1) Ask archive_read_new for an archive reader object.  *   2) Update any global properties as appropriate.  *      In particular, you'll certainly want to call appropriate  *      archive_read_support_XXX functions.  *   3) Call archive_read_open_XXX to open the archive  *   4) Repeatedly call archive_read_next_header to get information about  *      successive archive entries.  Call archive_read_data to extract  *      data for entries of interest.  *   5) Call archive_read_finish to end processing.  */
 name|__LA_DECL
 name|struct
