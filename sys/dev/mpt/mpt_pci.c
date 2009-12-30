@@ -1893,7 +1893,7 @@ expr_stmt|;
 name|data
 operator|&=
 operator|~
-literal|1
+name|PCIM_BIOS_ENABLE
 expr_stmt|;
 name|pci_write_config
 argument_list|(
