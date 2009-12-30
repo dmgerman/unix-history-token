@@ -2632,6 +2632,17 @@ begin_comment
 comment|/* route installed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFA_RTSELF
+value|RTF_HOST
+end_define
+
+begin_comment
+comment|/* loopback route to self installed */
+end_comment
+
 begin_comment
 comment|/* for compatibility with other BSDs */
 end_comment
@@ -3401,6 +3412,14 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*void	ifinit(void);*/
+end_comment
+
+begin_comment
+comment|/* declared in systm.h for main() */
+end_comment
 
 begin_function_decl
 name|int

@@ -336,26 +336,6 @@ name|V_rtstat
 value|VNET(rtstat)
 end_define
 
-begin_function_decl
-specifier|static
-name|void
-name|rt_maskedcopy
-parameter_list|(
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* compare two sockaddr structures */
 end_comment
@@ -5358,7 +5338,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|rt_maskedcopy
 parameter_list|(
