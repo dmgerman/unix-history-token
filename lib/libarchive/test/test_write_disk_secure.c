@@ -47,8 +47,18 @@ argument_list|(
 literal|"archive_write_disk interface"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|struct
 name|archive
 modifier|*
@@ -64,7 +74,7 @@ name|stat
 name|st
 decl_stmt|;
 comment|/* Start with a known umask. */
-name|umask
+name|assertUmask
 argument_list|(
 name|UMASK
 argument_list|)
@@ -138,18 +148,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
 comment|/* Write a symlink to the dir above. */
 name|assert
 argument_list|(
@@ -748,8 +746,6 @@ argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * As above, but a link to a non-dir, so the link should get replaced. 	 */
 comment|/* Create a regular file and a symlink to it */
 name|assert
@@ -940,18 +936,6 @@ argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_write_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|assert
 argument_list|(
 literal|0
@@ -962,20 +946,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
 comment|/* Test the entries on disk. */
 name|assert
 argument_list|(
@@ -1220,8 +1190,6 @@ operator|==
 literal|0755
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
