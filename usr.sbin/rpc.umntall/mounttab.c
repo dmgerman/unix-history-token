@@ -959,7 +959,9 @@ end_comment
 begin_function
 name|void
 name|free_mtab
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|mtablist
