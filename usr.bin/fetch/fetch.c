@@ -1886,6 +1886,27 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* parse URL */
+name|url
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|URL
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"empty URL"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
 if|if
 condition|(
 operator|(
