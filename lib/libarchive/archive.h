@@ -740,6 +740,10 @@ define|#
 directive|define
 name|ARCHIVE_COMPRESSION_XZ
 value|6
+define|#
+directive|define
+name|ARCHIVE_COMPRESSION_UU
+value|7
 comment|/*  * Codes returned by archive_format.  *  * Top 16 bits identifies the format family (e.g., "tar"); lower  * 16 bits indicate the variant.  This is updated by read_next_header.  * Note that the lower 16 bits will often vary from entry to entry.  * In some cases, this variation occurs as libarchive learns more about  * the archive (for example, later entries might utilize extensions that  * weren't necessary earlier in the archive; in this case, libarchive  * will change the format code to indicate the extended format that  * was used).  In other cases, it's because different tools have  * modified the archive and so different parts of the archive  * actually have slightly different formts.  (Both tar and cpio store  * format codes in each entry, so it is quite possible for each  * entry to be in a different format.)  */
 define|#
 directive|define
@@ -934,6 +938,15 @@ modifier|*
 comment|/* match */
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_read_support_compression_uu
+parameter_list|(
+name|struct
+name|archive
+modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
