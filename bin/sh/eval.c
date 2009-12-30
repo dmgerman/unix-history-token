@@ -3837,6 +3837,9 @@ name|localvars
 operator|=
 name|savelocalvars
 expr_stmt|;
+name|funcnest
+operator|--
+expr_stmt|;
 name|handler
 operator|=
 name|savehandler
@@ -3855,6 +3858,9 @@ name|handler
 operator|=
 operator|&
 name|jmploc
+expr_stmt|;
+name|funcnest
+operator|++
 expr_stmt|;
 name|INTON
 expr_stmt|;
@@ -3880,9 +3886,6 @@ name|sp
 operator|->
 name|text
 argument_list|)
-expr_stmt|;
-name|funcnest
-operator|++
 expr_stmt|;
 name|exitstatus
 operator|=
@@ -3923,9 +3926,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|funcnest
-operator|--
-expr_stmt|;
 name|INTOFF
 expr_stmt|;
 name|unreffunc
@@ -3957,6 +3957,9 @@ expr_stmt|;
 name|handler
 operator|=
 name|savehandler
+expr_stmt|;
+name|funcnest
+operator|--
 expr_stmt|;
 name|popredir
 argument_list|()
