@@ -1379,7 +1379,11 @@ name|vector
 decl_stmt|;
 name|pipi
 operator|=
-name|__MEMIO_ADDR
+operator|(
+name|void
+operator|*
+operator|)
+name|IA64_PHYS_TO_RR6
 argument_list|(
 name|ia64_lapic_address
 operator||
