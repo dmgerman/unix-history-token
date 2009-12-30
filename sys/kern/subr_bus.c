@@ -10908,7 +10908,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-elseif|else
 if|if
 condition|(
 operator|(
@@ -10938,7 +10937,12 @@ operator|(
 name|NULL
 operator|)
 return|;
-else|else
+name|rle
+operator|->
+name|flags
+operator||=
+name|RLE_ALLOCATED
+expr_stmt|;
 return|return
 operator|(
 name|rle
