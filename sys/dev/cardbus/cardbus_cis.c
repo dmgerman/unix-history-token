@@ -2846,11 +2846,11 @@ literal|"Cannot find CIS in "
 literal|"Option ROM\n"
 argument_list|)
 expr_stmt|;
-name|bus_release_resource
+name|cardbus_read_tuple_finish
 argument_list|(
-name|child
+name|cbdev
 argument_list|,
-name|SYS_RES_MEMORY
+name|child
 argument_list|,
 operator|*
 name|rid
