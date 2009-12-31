@@ -616,6 +616,18 @@ return|return
 literal|"Intel 82801I (ICH9) USB 2.0 controller"
 return|;
 case|case
+literal|0x3a3a8086
+case|:
+return|return
+literal|"Intel 82801IJ (ICH10) USB 2.0 controller USB-A"
+return|;
+case|case
+literal|0x3a3c8086
+case|:
+return|return
+literal|"Intel 82801IJ (ICH10) USB 2.0 controller USB-B"
+return|;
+case|case
 literal|0x00e01033
 case|:
 return|return
