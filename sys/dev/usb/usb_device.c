@@ -4334,6 +4334,12 @@ name|port_no
 expr_stmt|;
 name|uaa
 operator|->
+name|dev_state
+operator|=
+name|UAA_DEV_READY
+expr_stmt|;
+name|uaa
+operator|->
 name|info
 operator|.
 name|idVendor
@@ -5228,6 +5234,15 @@ name|err
 decl_stmt|;
 name|uint8_t
 name|device_index
+decl_stmt|;
+name|uint8_t
+name|config_index
+decl_stmt|;
+name|uint8_t
+name|config_quirk
+decl_stmt|;
+name|uint8_t
+name|set_config_failed
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -6374,21 +6389,19 @@ name|flags
 operator|.
 name|usb_mode
 operator|==
-name|USB_MODE_HOST
+name|USB_MODE_DEVICE
 condition|)
 block|{
-name|uint8_t
-name|config_index
-decl_stmt|;
-name|uint8_t
-name|config_quirk
-decl_stmt|;
-name|uint8_t
-name|set_config_failed
-init|=
+comment|/* USB device mode setup is complete */
+name|err
+operator|=
 literal|0
-decl_stmt|;
-comment|/* 		 * Most USB devices should attach to config index 0 by 		 * default 		 */
+expr_stmt|;
+goto|goto
+name|config_done
+goto|;
+block|}
+comment|/* 	 * Most USB devices should attach to config index 0 by 	 * default 	 */
 if|if
 condition|(
 name|usb_test_quirk
@@ -6504,6 +6517,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|set_config_failed
+operator|=
+literal|0
+expr_stmt|;
 name|repeat_set_config
 label|:
 name|DPRINTF
@@ -6573,9 +6590,8 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Failure selecting "
-literal|"configuration index %u: %s, port %u, "
-literal|"addr %u (ignored)\n"
+literal|"Failure selecting configuration index %u:"
+literal|"%s, port %u, addr %u (ignored)\n"
 argument_list|,
 name|config_index
 argument_list|,
@@ -6594,28 +6610,23 @@ name|address
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Some USB devices do not have any 			 * configurations. Ignore any set config 			 * failures! 			 */
+comment|/* 		 * Some USB devices do not have any configurations. Ignore any 		 * set config failures! 		 */
 name|err
 operator|=
 literal|0
 expr_stmt|;
+goto|goto
+name|config_done
+goto|;
 block|}
-elseif|else
 if|if
 condition|(
+operator|!
 name|config_quirk
-condition|)
-block|{
-comment|/* user quirk selects configuration index */
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
+operator|&&
 name|config_index
 operator|+
 literal|1
-operator|)
 operator|<
 name|udev
 operator|->
@@ -6636,7 +6647,6 @@ operator|<
 literal|2
 operator|)
 operator|&&
-operator|(
 name|usbd_get_no_descriptors
 argument_list|(
 name|udev
@@ -6647,15 +6657,13 @@ name|UDESC_ENDPOINT
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Found no endpoints "
-literal|"(trying next config)\n"
+literal|"Found no endpoints, trying next config\n"
 argument_list|)
 expr_stmt|;
 name|config_index
@@ -6672,7 +6680,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Try to figure out if we have an 				 * auto-install disk there: 				 */
+comment|/* 			 * Try to figure out if we have an 			 * auto-install disk there: 			 */
 if|if
 condition|(
 name|usb_test_autoinstall
@@ -6704,27 +6712,25 @@ goto|;
 block|}
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|usb_test_huawei_autoinst_p
+name|EVENTHANDLER_INVOKE
 argument_list|(
+name|usb_dev_configured
+argument_list|,
 name|udev
 argument_list|,
 operator|&
 name|uaa
 argument_list|)
-operator|==
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|uaa
+operator|.
+name|dev_state
+operator|!=
+name|UAA_DEV_READY
 condition|)
 block|{
-name|DPRINTFN
-argument_list|(
-literal|0
-argument_list|,
-literal|"Found Huawei auto-install disk\n"
-argument_list|)
-expr_stmt|;
 comment|/* leave device unconfigured */
 name|usb_unconfigure
 argument_list|(
@@ -6734,15 +6740,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-name|err
-operator|=
-literal|0
-expr_stmt|;
-comment|/* set success */
-block|}
+name|config_done
+label|:
 name|DPRINTF
 argument_list|(
 literal|"new dev (addr %d), udev=%p, parent_hub=%p\n"
