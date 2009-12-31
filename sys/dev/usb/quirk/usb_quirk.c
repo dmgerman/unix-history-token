@@ -196,29 +196,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * The following macro adds one or more quirks for a USB device:  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_QUIRK_ENTRY
-parameter_list|(
-name|v
-parameter_list|,
-name|p
-parameter_list|,
-name|l
-parameter_list|,
-name|h
-parameter_list|,
-modifier|...
-parameter_list|)
-define|\
-value|.vid = (v), .pid = (p), .lo_rev = (l), .hi_rev = (h), .quirks = { __VA_ARGS__ }
-end_define
-
 begin_define
 define|#
 directive|define
@@ -267,6 +244,25 @@ name|usb_quirk_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|USB_QUIRK
+parameter_list|(
+name|v
+parameter_list|,
+name|p
+parameter_list|,
+name|l
+parameter_list|,
+name|h
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|.vid = (v), .pid = (p), .lo_rev = (l), .hi_rev = (h), .quirks = { __VA_ARGS__ }
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -278,7 +274,7 @@ index|]
 init|=
 block|{
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ASUS
 argument_list|,
@@ -289,13 +285,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_INSIDEOUT
 argument_list|,
@@ -306,13 +300,11 @@ argument_list|,
 literal|0x094
 argument_list|,
 argument|UQ_SWAP_UNICODE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_DALLAS
 argument_list|,
@@ -323,13 +315,11 @@ argument_list|,
 literal|0x0a2
 argument_list|,
 argument|UQ_BAD_ADC
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_DALLAS
 argument_list|,
@@ -340,13 +330,11 @@ argument_list|,
 literal|0x0a2
 argument_list|,
 argument|UQ_AU_NO_XU
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ALTEC
 argument_list|,
@@ -357,13 +345,11 @@ argument_list|,
 literal|0x103
 argument_list|,
 argument|UQ_BAD_ADC
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ALTEC
 argument_list|,
@@ -374,13 +360,11 @@ argument_list|,
 literal|0x000
 argument_list|,
 argument|UQ_BAD_AUDIO
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_QTRONIX
 argument_list|,
@@ -391,13 +375,11 @@ argument_list|,
 literal|0x110
 argument_list|,
 argument|UQ_SPUR_BUT_UP
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ALCOR2
 argument_list|,
@@ -408,13 +390,11 @@ argument_list|,
 literal|0x001
 argument_list|,
 argument|UQ_SPUR_BUT_UP
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MCT
 argument_list|,
@@ -425,13 +405,11 @@ argument_list|,
 literal|0x102
 argument_list|,
 argument|UQ_BUS_POWERED
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MCT
 argument_list|,
@@ -442,13 +420,11 @@ argument_list|,
 literal|0x102
 argument_list|,
 argument|UQ_BUS_POWERED
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TI
 argument_list|,
@@ -459,13 +435,11 @@ argument_list|,
 literal|0x110
 argument_list|,
 argument|UQ_POWER_CLAIM
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TELEX
 argument_list|,
@@ -476,13 +450,11 @@ argument_list|,
 literal|0x009
 argument_list|,
 argument|UQ_AU_NO_FRAC
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SILICONPORTALS
 argument_list|,
@@ -493,13 +465,11 @@ argument_list|,
 literal|0x100
 argument_list|,
 argument|UQ_AU_INP_ASYNC
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_LOGITECH
 argument_list|,
@@ -510,13 +480,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_NO_STRINGS
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ELSA
 argument_list|,
@@ -527,14 +495,12 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_CFG_INDEX_1
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 comment|/* 	 * XXX The following quirks should have a more specific revision 	 * number: 	 */
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
@@ -545,13 +511,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_BROKEN_BIDIR
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
@@ -562,13 +526,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_BROKEN_BIDIR
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
@@ -579,13 +541,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_BROKEN_BIDIR
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
@@ -596,13 +556,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_BROKEN_BIDIR
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
@@ -613,13 +571,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_BROKEN_BIDIR
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
@@ -630,13 +586,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_BROKEN_BIDIR
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_XEROX
 argument_list|,
@@ -647,14 +601,12 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_BROKEN_BIDIR
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 comment|/* Devices which should be ignored by uhid */
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_APC
 argument_list|,
@@ -665,13 +617,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_BELKIN
 argument_list|,
@@ -682,13 +632,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_CYBERPOWER
 argument_list|,
@@ -699,13 +647,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_DELORME
 argument_list|,
@@ -716,13 +662,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ITUNERNET
 argument_list|,
@@ -733,13 +677,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ITUNERNET
 argument_list|,
@@ -750,13 +692,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MGE
 argument_list|,
@@ -767,13 +707,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MGE
 argument_list|,
@@ -784,13 +722,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_APPLE
 argument_list|,
@@ -801,13 +737,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_APPLE
 argument_list|,
@@ -818,14 +752,12 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 comment|/* Devices which should be ignored by both ukbd and uhid */
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_CYPRESS
 argument_list|,
@@ -838,13 +770,11 @@ argument_list|,
 argument|UQ_KBD_IGNORE
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_METAGEEK
 argument_list|,
@@ -857,13 +787,11 @@ argument_list|,
 argument|UQ_KBD_IGNORE
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TENX
 argument_list|,
@@ -874,14 +802,12 @@ argument_list|,
 literal|0x0101
 argument_list|,
 argument|UQ_AUDIO_SWAP_LR
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 comment|/* MS keyboards do weird things */
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MICROSOFT
 argument_list|,
@@ -892,13 +818,11 @@ argument_list|,
 literal|0xFFFF
 argument_list|,
 argument|UQ_MS_LEADING_BYTE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_METAGEEK
 argument_list|,
@@ -911,14 +835,12 @@ argument_list|,
 argument|UQ_KBD_IGNORE
 argument_list|,
 argument|UQ_HID_IGNORE
-argument_list|,
-argument|UQ_NONE
 argument_list|)
 block|}
 block|,
 comment|/* umodem(4) device quirks */
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_METRICOM
 argument_list|,
@@ -933,7 +855,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SANYO
 argument_list|,
@@ -948,7 +870,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MOTOROLA2
 argument_list|,
@@ -963,7 +885,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_EICON
 argument_list|,
@@ -978,7 +900,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SIEMENS2
 argument_list|,
@@ -993,7 +915,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_QUALCOMM
 argument_list|,
@@ -1008,7 +930,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_QUALCOMM2
 argument_list|,
@@ -1023,7 +945,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_CURITEL
 argument_list|,
@@ -1039,7 +961,7 @@ block|}
 block|,
 comment|/* USB Mass Storage Class Quirks */
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ASAHIOPTICAL
 argument_list|,
@@ -1056,7 +978,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ADDON
 argument_list|,
@@ -1075,7 +997,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ADDON
 argument_list|,
@@ -1094,7 +1016,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ADDON
 argument_list|,
@@ -1113,7 +1035,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ADDONICS2
 argument_list|,
@@ -1130,7 +1052,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_AIPTEK
 argument_list|,
@@ -1147,7 +1069,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_AIPTEK2
 argument_list|,
@@ -1162,7 +1084,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ALCOR
 argument_list|,
@@ -1179,7 +1101,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ALCOR
 argument_list|,
@@ -1194,7 +1116,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ALCOR
 argument_list|,
@@ -1213,7 +1135,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ALCOR
 argument_list|,
@@ -1232,7 +1154,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ASAHIOPTICAL
 argument_list|,
@@ -1251,7 +1173,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ASAHIOPTICAL
 argument_list|,
@@ -1270,7 +1192,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_BELKIN
 argument_list|,
@@ -1287,7 +1209,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_CASIO
 argument_list|,
@@ -1306,7 +1228,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_CCYU
 argument_list|,
@@ -1323,7 +1245,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_CENTURY
 argument_list|,
@@ -1346,7 +1268,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_CYPRESS
 argument_list|,
@@ -1363,7 +1285,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_DESKNOTE
 argument_list|,
@@ -1380,7 +1302,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_DMI
 argument_list|,
@@ -1397,7 +1319,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_EPSON
 argument_list|,
@@ -1416,7 +1338,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_EPSON
 argument_list|,
@@ -1435,7 +1357,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_FEIYA
 argument_list|,
@@ -1452,7 +1374,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_FREECOM
 argument_list|,
@@ -1467,7 +1389,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_FUJIPHOTO
 argument_list|,
@@ -1486,7 +1408,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_GENESYS
 argument_list|,
@@ -1511,7 +1433,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_GENESYS
 argument_list|,
@@ -1534,7 +1456,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_GENESYS
 argument_list|,
@@ -1557,7 +1479,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_GENESYS
 argument_list|,
@@ -1576,7 +1498,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HAGIWARA
 argument_list|,
@@ -1593,7 +1515,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HAGIWARA
 argument_list|,
@@ -1610,7 +1532,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HITACHI
 argument_list|,
@@ -1629,7 +1551,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HITACHI
 argument_list|,
@@ -1648,7 +1570,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
@@ -1663,7 +1585,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
@@ -1684,7 +1606,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_IMAGINATION
 argument_list|,
@@ -1703,7 +1625,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_INSYSTEM
 argument_list|,
@@ -1726,7 +1648,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_INSYSTEM
 argument_list|,
@@ -1743,7 +1665,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_INSYSTEM
 argument_list|,
@@ -1760,7 +1682,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_IODATA
 argument_list|,
@@ -1777,7 +1699,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_IODATA
 argument_list|,
@@ -1794,7 +1716,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_IOMEGA
 argument_list|,
@@ -1814,7 +1736,7 @@ block|}
 block|,
 comment|/* XXX ZIP drives can also use ATAPI */
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_KYOCERA
 argument_list|,
@@ -1833,7 +1755,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_KYOCERA
 argument_list|,
@@ -1852,7 +1774,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_KYOCERA
 argument_list|,
@@ -1871,7 +1793,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_KYOCERA
 argument_list|,
@@ -1890,7 +1812,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_LACIE
 argument_list|,
@@ -1907,7 +1829,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_LEXAR
 argument_list|,
@@ -1926,7 +1848,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_LEXAR
 argument_list|,
@@ -1941,7 +1863,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_LOGITEC
 argument_list|,
@@ -1956,7 +1878,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_LOGITEC
 argument_list|,
@@ -1973,7 +1895,7 @@ argument_list|,)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MELCO
 argument_list|,
@@ -1996,7 +1918,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MICROTECH
 argument_list|,
@@ -2017,7 +1939,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MICROTECH
 argument_list|,
@@ -2034,7 +1956,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MICROTECH
 argument_list|,
@@ -2051,7 +1973,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MINOLTA
 argument_list|,
@@ -2066,7 +1988,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MINOLTA
 argument_list|,
@@ -2083,7 +2005,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MITSUMI
 argument_list|,
@@ -2098,7 +2020,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MITSUMI
 argument_list|,
@@ -2117,7 +2039,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MOTOROLA2
 argument_list|,
@@ -2140,7 +2062,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MPMAN
 argument_list|,
@@ -2157,7 +2079,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MSYSTEMS
 argument_list|,
@@ -2180,7 +2102,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MSYSTEMS
 argument_list|,
@@ -2197,7 +2119,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MYSON
 argument_list|,
@@ -2214,7 +2136,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MYSON
 argument_list|,
@@ -2229,7 +2151,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MYSON
 argument_list|,
@@ -2244,7 +2166,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_NEODIO
 argument_list|,
@@ -2263,7 +2185,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_NETAC
 argument_list|,
@@ -2282,7 +2204,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_NETAC
 argument_list|,
@@ -2301,7 +2223,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_NETCHIP
 argument_list|,
@@ -2318,7 +2240,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_NIKON
 argument_list|,
@@ -2335,7 +2257,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_OLYMPUS
 argument_list|,
@@ -2354,7 +2276,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_OLYMPUS
 argument_list|,
@@ -2369,7 +2291,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC
 argument_list|,
@@ -2390,7 +2312,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC
 argument_list|,
@@ -2405,7 +2327,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC
 argument_list|,
@@ -2420,7 +2342,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC
 argument_list|,
@@ -2435,7 +2357,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC
 argument_list|,
@@ -2450,7 +2372,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC
 argument_list|,
@@ -2465,7 +2387,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC
 argument_list|,
@@ -2482,7 +2404,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC
 argument_list|,
@@ -2497,7 +2419,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC
 argument_list|,
@@ -2516,7 +2438,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ONSPEC2
 argument_list|,
@@ -2533,7 +2455,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_PANASONIC
 argument_list|,
@@ -2552,7 +2474,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_PANASONIC
 argument_list|,
@@ -2569,7 +2491,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_PANASONIC
 argument_list|,
@@ -2586,7 +2508,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_PANASONIC
 argument_list|,
@@ -2601,7 +2523,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_PHILIPS
 argument_list|,
@@ -2616,7 +2538,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_PLEXTOR
 argument_list|,
@@ -2635,7 +2557,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_PNY
 argument_list|,
@@ -2656,7 +2578,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SAMSUNG_TECHWIN
 argument_list|,
@@ -2675,7 +2597,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SANDISK
 argument_list|,
@@ -2696,7 +2618,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SANDISK
 argument_list|,
@@ -2715,7 +2637,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SANDISK
 argument_list|,
@@ -2736,7 +2658,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SANDISK
 argument_list|,
@@ -2755,7 +2677,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SANDISK
 argument_list|,
@@ -2774,7 +2696,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SANDISK
 argument_list|,
@@ -2793,7 +2715,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SANDISK
 argument_list|,
@@ -2812,7 +2734,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SCANLOGIC
 argument_list|,
@@ -2831,7 +2753,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SHUTTLE
 argument_list|,
@@ -2854,7 +2776,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SHUTTLE
 argument_list|,
@@ -2871,7 +2793,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SHUTTLE
 argument_list|,
@@ -2888,7 +2810,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SHUTTLE
 argument_list|,
@@ -2905,7 +2827,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SHUTTLE
 argument_list|,
@@ -2920,7 +2842,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SHUTTLE
 argument_list|,
@@ -2937,7 +2859,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SHUTTLE
 argument_list|,
@@ -2956,7 +2878,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SHUTTLE
 argument_list|,
@@ -2973,7 +2895,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SHUTTLE
 argument_list|,
@@ -2992,7 +2914,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SIGMATEL
 argument_list|,
@@ -3011,7 +2933,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SIIG
 argument_list|,
@@ -3030,7 +2952,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SKANHEX
 argument_list|,
@@ -3049,7 +2971,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SKANHEX
 argument_list|,
@@ -3068,7 +2990,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3087,7 +3009,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3106,7 +3028,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3125,7 +3047,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3144,7 +3066,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3161,7 +3083,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3178,7 +3100,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3195,7 +3117,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3214,7 +3136,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3233,7 +3155,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3252,7 +3174,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3271,7 +3193,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SONY
 argument_list|,
@@ -3288,7 +3210,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_SUPERTOP
 argument_list|,
@@ -3305,7 +3227,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TAUGA
 argument_list|,
@@ -3320,7 +3242,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TEAC
 argument_list|,
@@ -3337,7 +3259,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TECLAST
 argument_list|,
@@ -3354,7 +3276,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TREK
 argument_list|,
@@ -3373,7 +3295,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TREK
 argument_list|,
@@ -3392,7 +3314,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TRUMPION
 argument_list|,
@@ -3409,7 +3331,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TRUMPION
 argument_list|,
@@ -3424,7 +3346,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TRUMPION
 argument_list|,
@@ -3439,7 +3361,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_TWINMOS
 argument_list|,
@@ -3456,7 +3378,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_VIA
 argument_list|,
@@ -3475,7 +3397,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_VIVITAR
 argument_list|,
@@ -3494,7 +3416,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_WESTERN
 argument_list|,
@@ -3517,7 +3439,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_WESTERN
 argument_list|,
@@ -3540,7 +3462,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_WESTERN
 argument_list|,
@@ -3559,7 +3481,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_WESTERN
 argument_list|,
@@ -3574,7 +3496,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_WINMAXGROUP
 argument_list|,
@@ -3593,7 +3515,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_YANO
 argument_list|,
@@ -3616,7 +3538,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_YANO
 argument_list|,
@@ -3635,7 +3557,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_YEDATA
 argument_list|,
@@ -3660,7 +3582,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_YEDATA
 argument_list|,
@@ -3685,7 +3607,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_YEDATA
 argument_list|,
@@ -3708,7 +3630,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ZORAN
 argument_list|,
@@ -3725,7 +3647,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_MEIZU
 argument_list|,
@@ -3746,7 +3668,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ACTIONS
 argument_list|,
@@ -3765,7 +3687,7 @@ argument_list|)
 block|}
 block|,
 block|{
-name|USB_QUIRK_ENTRY
+name|USB_QUIRK
 argument_list|(
 argument|USB_VENDOR_ASUS
 argument_list|,
@@ -3781,6 +3703,12 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|USB_QUIRK
+end_undef
 
 begin_decl_stmt
 specifier|static
