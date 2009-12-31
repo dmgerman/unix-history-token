@@ -3413,14 +3413,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*void	ifinit(void);*/
-end_comment
-
-begin_comment
-comment|/* declared in systm.h for main() */
-end_comment
-
 begin_function_decl
 name|int
 name|ifioctl
