@@ -2554,18 +2554,14 @@ name|quote
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Only use ^X notation when ECHOCTL is turned on and 		 * we've got an quoted control character. 		 */
+comment|/* 		 * Only use ^X notation when ECHOCTL is turned on and 		 * we've got an quoted control character. 		 * 		 * Print backspaces when echoing an end-of-file. 		 */
 name|char
 name|ob
 index|[
-literal|2
+literal|4
 index|]
 init|=
-block|{
-literal|'^'
-block|,
-literal|'?'
-block|}
+literal|"^?\b\b"
 decl_stmt|;
 comment|/* Print ^X notation. */
 if|if
@@ -2585,6 +2581,35 @@ literal|'A'
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quote
+operator|&&
+name|CMP_CC
+argument_list|(
+name|VEOF
+argument_list|,
+name|c
+argument_list|)
+condition|)
+block|{
+return|return
+name|ttyoutq_write_nofrag
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|,
+name|ob
+argument_list|,
+literal|4
+argument_list|)
+return|;
+block|}
+else|else
+block|{
 name|tp
 operator|->
 name|t_column
@@ -2604,6 +2629,7 @@ argument_list|,
 literal|2
 argument_list|)
 return|;
+block|}
 block|}
 else|else
 block|{
