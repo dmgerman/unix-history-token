@@ -933,9 +933,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-parameter_list|,
-name|int
-name|link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2593,8 +2590,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5390,9 +5385,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-parameter_list|,
-name|int
-name|link
 parameter_list|)
 block|{
 name|struct
