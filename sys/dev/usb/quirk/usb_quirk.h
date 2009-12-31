@@ -98,6 +98,9 @@ comment|/* select configuration index 4 by default */
 name|UQ_CFG_INDEX_0
 block|,
 comment|/* select configuration index 0 by default */
+name|UQ_ASSUME_CM_OVER_DATA
+block|,
+comment|/* modem device breaks on cm over data */
 name|USB_QUIRK_MAX
 block|}
 enum|;
