@@ -4889,6 +4889,8 @@ operator|-
 literal|1
 argument_list|,
 name|cmd
+argument_list|,
+name|path
 argument_list|)
 return|;
 block|}
