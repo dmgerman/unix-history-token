@@ -3719,8 +3719,12 @@ name|argv
 argument_list|,
 name|TYPECMD_TYPE
 argument_list|,
-name|pathval
-argument_list|()
+name|bltinlookup
+argument_list|(
+literal|"PATH"
+argument_list|,
+literal|1
+argument_list|)
 argument_list|)
 return|;
 block|}
