@@ -313,11 +313,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|resource
-modifier|*
-name|res
-decl_stmt|;
-name|struct
 name|timespec
 name|ts
 decl_stmt|;
@@ -351,7 +346,9 @@ name|rid
 operator|=
 literal|0
 expr_stmt|;
-name|res
+name|sc
+operator|->
+name|sc_res
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
@@ -367,7 +364,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|res
+name|sc
+operator|->
+name|sc_res
 operator|==
 name|NULL
 condition|)
@@ -560,7 +559,9 @@ name|SYS_RES_MEMORY
 argument_list|,
 name|rid
 argument_list|,
-name|res
+name|sc
+operator|->
+name|sc_res
 argument_list|)
 expr_stmt|;
 name|fail_mtx
