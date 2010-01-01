@@ -155,6 +155,19 @@ name|Model
 name|DefRelocModel
 block|;
 comment|// Reloc model before it's overridden.
+name|private
+operator|:
+comment|// We have specific defaults for X86.
+name|virtual
+name|void
+name|setCodeModelForJIT
+argument_list|()
+block|;
+name|virtual
+name|void
+name|setCodeModelForStatic
+argument_list|()
+block|;
 name|public
 operator|:
 name|X86TargetMachine

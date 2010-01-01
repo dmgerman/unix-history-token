@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/TimeValue.h"
 end_include
 
@@ -414,12 +420,10 @@ comment|/// between processes.
 comment|/// @returns The dynamic link library suffix for the current platform.
 comment|/// @brief Return the dynamic link library suffix.
 specifier|static
-name|std
-operator|::
-name|string
+name|StringRef
 name|GetDLLSuffix
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// GetMainExecutable - Return the path to the main executable, given the
 comment|/// value of argv[0] from program startup and the address of main itself.
 specifier|static
@@ -461,20 +465,15 @@ argument_list|(
 argument|that.path
 argument_list|)
 block|{}
-comment|/// This constructor will accept a std::string as a path. No checking is
-comment|/// done on this path to determine if it is valid. To determine validity
-comment|/// of the path, use the isValid method.
+comment|/// This constructor will accept a char* or std::string as a path. No
+comment|/// checking is done on this path to determine if it is valid. To
+comment|/// determine validity of the path, use the isValid method.
 comment|/// @param p The path to assign.
 comment|/// @brief Construct a Path from a string.
 name|explicit
 name|Path
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|p
+argument|StringRef p
 argument_list|)
 expr_stmt|;
 comment|/// This constructor will accept a character range as a path.  No checking
@@ -521,7 +520,7 @@ name|this
 return|;
 block|}
 comment|/// Makes a copy of \p that to \p this.
-comment|/// @param \p that A std::string denoting the path
+comment|/// @param \p that A StringRef denoting the path
 comment|/// @returns \p this
 comment|/// @brief Assignment Operator
 name|Path
@@ -529,11 +528,7 @@ modifier|&
 name|operator
 init|=
 operator|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|that
 operator|)
 decl_stmt|;
@@ -632,11 +627,9 @@ comment|/// This function returns the last component of the path name. The last
 comment|/// component is the file or directory name occuring after the last
 comment|/// directory separator. If no directory separator is present, the entire
 comment|/// path name is returned (i.e. same as toString).
-comment|/// @returns std::string containing the last component of the path name.
+comment|/// @returns StringRef containing the last component of the path name.
 comment|/// @brief Returns the last component of the path name.
-name|std
-operator|::
-name|string
+name|StringRef
 name|getLast
 argument_list|()
 specifier|const
@@ -644,20 +637,16 @@ expr_stmt|;
 comment|/// This function strips off the path and suffix of the file or directory
 comment|/// name and returns just the basename. For example /a/foo.bar would cause
 comment|/// this function to return "foo".
-comment|/// @returns std::string containing the basename of the path
+comment|/// @returns StringRef containing the basename of the path
 comment|/// @brief Get the base name of the path
-name|std
-operator|::
-name|string
+name|StringRef
 name|getBasename
 argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// This function strips off the suffix of the path beginning with the
 comment|/// path separator ('/' on Unix, '\' on Windows) and returns the result.
-name|std
-operator|::
-name|string
+name|StringRef
 name|getDirname
 argument_list|()
 specifier|const
@@ -666,11 +655,9 @@ comment|/// This function strips off the path and basename(up to and
 comment|/// including the last dot) of the file or directory name and
 comment|/// returns just the suffix. For example /a/foo.bar would cause
 comment|/// this function to return "bar".
-comment|/// @returns std::string containing the suffix of the path
+comment|/// @returns StringRef containing the suffix of the path
 comment|/// @brief Get the suffix of the path
-name|std
-operator|::
-name|string
+name|StringRef
 name|getSuffix
 argument_list|()
 specifier|const
@@ -780,11 +767,7 @@ comment|/// @brief Determine if file has a specific magic number
 name|bool
 name|hasMagicNumber
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|magic
 argument_list|)
 decl|const
@@ -959,18 +942,14 @@ comment|/// unchanged and false is returned. Otherwise true is returned and the
 comment|/// Path object takes on the path value of \p unverified_path
 comment|/// @returns true if the path was set, false otherwise.
 comment|/// @param unverified_path The path to be set in Path object.
-comment|/// @brief Set a full path from a std::string
+comment|/// @brief Set a full path from a StringRef
 name|bool
 name|set
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|unverified_path
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// One path component is removed from the Path. If only one component is
 comment|/// present in the path, the Path object becomes empty. If the Path object
 comment|/// is empty, no change is made.
@@ -987,15 +966,11 @@ comment|/// @returns false if the path component could not be added.
 comment|/// @brief Appends one path component to the Path.
 name|bool
 name|appendComponent
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|component
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// A period and the \p suffix are appended to the end of the pathname.
 comment|/// The precondition for this function is that the Path reference a file
 comment|/// name (i.e. isFile() returns true). If the Path is not a file, no
@@ -1005,15 +980,11 @@ comment|/// @returns false if the suffix could not be added, true if it was.
 comment|/// @brief Adds a period and the \p suffix to the end of the pathname.
 name|bool
 name|appendSuffix
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|suffix
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// The suffix of the filename is erased. The suffix begins with and
 comment|/// includes the last . character in the filename after the last directory
 comment|/// separator and extends until the end of the name. If no . character is
@@ -1404,19 +1375,14 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-comment|/// This constructor will accept a std::string as a path. No checking is
-comment|/// done on this path to determine if it is valid. To determine validity
-comment|/// of the path, use the isValid method.
+comment|/// This constructor will accept a char* or std::string as a path. No
+comment|/// checking is done on this path to determine if it is valid. To
+comment|/// determine validity of the path, use the isValid method.
 comment|/// @brief Construct a Path from a string.
 name|explicit
 name|PathWithStatus
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|p
+argument|StringRef p
 comment|///< The path to assign.
 argument_list|)
 operator|:

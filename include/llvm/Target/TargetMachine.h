@@ -809,6 +809,21 @@ operator|::
 name|Level
 argument_list|)
 block|;
+name|private
+operator|:
+comment|// These routines are used by addPassesToEmitFileFinish and
+comment|// addPassesToEmitMachineCode to set the CodeModel if it's still marked
+comment|// as default.
+name|virtual
+name|void
+name|setCodeModelForJIT
+argument_list|()
+block|;
+name|virtual
+name|void
+name|setCodeModelForStatic
+argument_list|()
+block|;
 name|public
 operator|:
 comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/SelectionDAGISel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
@@ -254,6 +260,14 @@ name|getSetCCResultType
 argument_list|(
 argument|EVT ValType
 argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MVT
+operator|::
+name|SimpleValueType
+name|getCmpLibcallReturnType
+argument_list|()
 specifier|const
 block|;
 name|SDValue
@@ -785,12 +799,16 @@ argument_list|)
 block|;
 comment|// This function checks if we need to put an operand of an operation on
 comment|// stack and generate a load or not.
+comment|// DAG parameter is required to access DAG information during
+comment|// analysis.
 name|bool
 name|NeedToConvertToMemOp
 argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|unsigned&MemOp
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 block|;
 comment|/// Subtarget - Keep a pointer to the PIC16Subtarget around so that we can
@@ -855,6 +873,14 @@ name|isDirectLoad
 argument_list|(
 argument|const SDValue Op
 argument_list|)
+block|;
+name|public
+operator|:
+comment|// Keep a pointer to SelectionDAGISel to access its public
+comment|// interface (It is required during legalization)
+name|SelectionDAGISel
+operator|*
+name|ISel
 block|;
 name|private
 operator|:

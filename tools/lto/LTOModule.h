@@ -139,12 +139,10 @@ begin_comment
 comment|//
 end_comment
 
-begin_decl_stmt
-name|class
+begin_struct
+struct|struct
 name|LTOModule
 block|{
-name|public
-label|:
 specifier|static
 name|bool
 name|isBitcodeFile
@@ -548,11 +546,8 @@ operator|>
 name|_undefines
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+struct|;
+end_struct
 
 begin_endif
 endif|#

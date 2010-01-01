@@ -216,7 +216,7 @@ name|value_type
 typedef|;
 name|DenseMap
 argument_list|(
-argument|const DenseMap& other
+argument|const DenseMap&other
 argument_list|)
 block|{
 name|NumBuckets
@@ -244,6 +244,30 @@ name|NumInitBuckets
 argument_list|)
 expr_stmt|;
 block|}
+name|template
+operator|<
+name|typename
+name|InputIt
+operator|>
+name|DenseMap
+argument_list|(
+argument|const InputIt&I
+argument_list|,
+argument|const InputIt&E
+argument_list|)
+block|{
+name|init
+argument_list|(
+literal|64
+argument_list|)
+block|;
+name|insert
+argument_list|(
+name|I
+argument_list|,
+name|E
+argument_list|)
+block|;   }
 operator|~
 name|DenseMap
 argument_list|()

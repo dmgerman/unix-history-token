@@ -99,9 +99,6 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
 comment|/// ComputeMaskedBits - Determine which of the bits specified in Mask are
 comment|/// known to be either zero or one and return them in the KnownZero/KnownOne
 comment|/// bit sets.  This code only analyzes bits in Mask, in order to short-circuit

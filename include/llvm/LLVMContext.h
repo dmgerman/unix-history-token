@@ -71,8 +71,16 @@ name|class
 name|LLVMContextImpl
 decl_stmt|;
 name|class
-name|MetadataContext
+name|StringRef
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 comment|/// This is an important class for using LLVM in a threaded context.  It
 comment|/// (opaquely) owns and manages the core "global" data of LLVM's core
 comment|/// infrastructure, including the type and constant uniquing tables.
@@ -103,11 +111,6 @@ modifier|*
 specifier|const
 name|pImpl
 decl_stmt|;
-name|MetadataContext
-modifier|&
-name|getMetadata
-parameter_list|()
-function_decl|;
 name|LLVMContext
 argument_list|()
 expr_stmt|;
@@ -115,9 +118,35 @@ operator|~
 name|LLVMContext
 argument_list|()
 expr_stmt|;
+comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
+comment|/// This ID is uniqued across modules in the current LLVMContext.
+name|unsigned
+name|getMDKindID
+argument_list|(
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getMDKindNames - Populate client supplied SmallVector with the name for
+comment|/// custom metadata IDs registered in this LLVMContext.   ID #0 is not used,
+comment|/// so it is filled in as an empty string.
+name|void
+name|getMDKindNames
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|StringRef
+operator|>
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// FOR BACKWARDS COMPATIBILITY - Returns a global context.
+comment|/// getGlobalContext - Returns a global context.  This is for LLVM clients that
+comment|/// only care about operating on a single thread.
 specifier|extern
 name|LLVMContext
 modifier|&

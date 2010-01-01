@@ -73,6 +73,10 @@ value|void LLVMInitialize##TargetName##TargetInfo();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
+undef|#
+directive|undef
+name|LLVM_TARGET
+comment|/* Explicit undef to make SWIG happier */
 define|#
 directive|define
 name|LLVM_TARGET
@@ -83,6 +87,10 @@ value|void LLVMInitialize##TargetName##Target();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
+undef|#
+directive|undef
+name|LLVM_TARGET
+comment|/* Explicit undef to make SWIG happier */
 comment|/** LLVMInitializeAllTargetInfos - The main program should call this function if     it wants access to all available targets that LLVM is configured to     support. */
 specifier|static
 specifier|inline
@@ -100,6 +108,10 @@ value|LLVMInitialize##TargetName##TargetInfo();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
+undef|#
+directive|undef
+name|LLVM_TARGET
+comment|/* Explicit undef to make SWIG happier */
 block|}
 comment|/** LLVMInitializeAllTargets - The main program should call this function if it     wants to link in all available targets that LLVM is configured to     support. */
 specifier|static
@@ -118,6 +130,10 @@ value|LLVMInitialize##TargetName##Target();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
+undef|#
+directive|undef
+name|LLVM_TARGET
+comment|/* Explicit undef to make SWIG happier */
 block|}
 comment|/** LLVMInitializeNativeTarget - The main program should call this function to     initialize the native target corresponding to the host.  This is useful      for JIT applications to ensure that the target gets linked in correctly. */
 specifier|static

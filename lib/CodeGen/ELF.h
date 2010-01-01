@@ -268,7 +268,6 @@ operator|.
 name|GV
 return|;
 block|}
-empty_stmt|;
 comment|// getExternalSym - If this is an external symbol which originated the
 comment|// elf symbol, return a reference to it.
 specifier|const
@@ -293,7 +292,6 @@ operator|.
 name|Ext
 return|;
 block|}
-empty_stmt|;
 comment|// getGV - From a global value return a elf symbol to represent it
 specifier|static
 name|ELFSym

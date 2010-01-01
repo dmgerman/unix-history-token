@@ -132,15 +132,8 @@ comment|///
 name|class
 name|MachineCodeEmitter
 block|{
-name|public
+name|protected
 label|:
-name|class
-name|BufferState
-block|{
-name|friend
-name|class
-name|MachineCodeEmitter
-decl_stmt|;
 comment|/// BufferBegin/BufferEnd - Pointers to the start and end of the memory
 comment|/// allocated for this code buffer.
 name|uint8_t
@@ -152,115 +145,13 @@ name|BufferEnd
 decl_stmt|;
 comment|/// CurBufferPtr - Pointer to the next byte of memory to fill when emitting
 comment|/// code.  This is guranteed to be in the range [BufferBegin,BufferEnd].  If
-comment|/// this pointer is at BufferEnd, it will never move due to code emission,
-comment|/// and all code emission requests will be ignored (this is the buffer
-comment|/// overflow condition).
+comment|/// this pointer is at BufferEnd, it will never move due to code emission, and
+comment|/// all code emission requests will be ignored (this is the buffer overflow
+comment|/// condition).
 name|uint8_t
 modifier|*
 name|CurBufferPtr
 decl_stmt|;
-name|public
-label|:
-name|BufferState
-argument_list|()
-operator|:
-name|BufferBegin
-argument_list|(
-name|NULL
-argument_list|)
-operator|,
-name|BufferEnd
-argument_list|(
-name|NULL
-argument_list|)
-operator|,
-name|CurBufferPtr
-argument_list|(
-argument|NULL
-argument_list|)
-block|{}
-block|}
-empty_stmt|;
-name|protected
-label|:
-comment|/// These have the same meanings as the fields in BufferState
-name|uint8_t
-modifier|*
-name|BufferBegin
-decl_stmt|,
-modifier|*
-name|BufferEnd
-decl_stmt|,
-modifier|*
-name|CurBufferPtr
-decl_stmt|;
-comment|/// Save or restore the current buffer state.  The BufferState objects must be
-comment|/// used as a stack.
-name|void
-name|SaveStateTo
-parameter_list|(
-name|BufferState
-modifier|&
-name|BS
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|BS
-operator|.
-name|BufferBegin
-operator|==
-name|NULL
-operator|&&
-literal|"Can't save state into the same BufferState twice."
-argument_list|)
-expr_stmt|;
-name|BS
-operator|.
-name|BufferBegin
-operator|=
-name|BufferBegin
-expr_stmt|;
-name|BS
-operator|.
-name|BufferEnd
-operator|=
-name|BufferEnd
-expr_stmt|;
-name|BS
-operator|.
-name|CurBufferPtr
-operator|=
-name|CurBufferPtr
-expr_stmt|;
-block|}
-name|void
-name|RestoreStateFrom
-parameter_list|(
-name|BufferState
-modifier|&
-name|BS
-parameter_list|)
-block|{
-name|BufferBegin
-operator|=
-name|BS
-operator|.
-name|BufferBegin
-expr_stmt|;
-name|BufferEnd
-operator|=
-name|BS
-operator|.
-name|BufferEnd
-expr_stmt|;
-name|CurBufferPtr
-operator|=
-name|BS
-operator|.
-name|CurBufferPtr
-expr_stmt|;
-block|}
 name|public
 label|:
 name|virtual
@@ -341,8 +232,41 @@ operator|-
 name|CurBufferPtr
 condition|)
 block|{
-operator|*
+name|emitWordLEInto
+argument_list|(
 name|CurBufferPtr
+argument_list|,
+name|W
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|CurBufferPtr
+operator|=
+name|BufferEnd
+expr_stmt|;
+block|}
+block|}
+comment|/// emitWordLEInto - This callback is invoked when a 32-bit word needs to be
+comment|/// written to an arbitrary buffer in little-endian format.  Buf must have at
+comment|/// least 4 bytes of available space.
+comment|///
+specifier|static
+name|void
+name|emitWordLEInto
+parameter_list|(
+name|uint8_t
+modifier|*
+modifier|&
+name|Buf
+parameter_list|,
+name|uint32_t
+name|W
+parameter_list|)
+block|{
+operator|*
+name|Buf
 operator|++
 operator|=
 call|(
@@ -355,7 +279,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 operator|*
-name|CurBufferPtr
+name|Buf
 operator|++
 operator|=
 call|(
@@ -368,7 +292,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 operator|*
-name|CurBufferPtr
+name|Buf
 operator|++
 operator|=
 call|(
@@ -381,7 +305,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 operator|*
-name|CurBufferPtr
+name|Buf
 operator|++
 operator|=
 call|(
@@ -393,14 +317,6 @@ operator|>>
 literal|24
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|CurBufferPtr
-operator|=
-name|BufferEnd
-expr_stmt|;
-block|}
 block|}
 comment|/// emitWordBE - This callback is invoked when a 32-bit word needs to be
 comment|/// written to the output stream in big-endian format.

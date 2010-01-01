@@ -436,6 +436,10 @@ operator|*
 operator|>
 name|Children
 expr_stmt|;
+name|DIE
+modifier|*
+name|Parent
+decl_stmt|;
 comment|/// Attributes values.
 comment|///
 name|SmallVector
@@ -447,11 +451,6 @@ literal|32
 operator|>
 name|Values
 expr_stmt|;
-comment|/// Abstract compile unit.
-name|CompileUnit
-modifier|*
-name|AbstractCU
-decl_stmt|;
 comment|// Private data for print()
 name|mutable
 name|unsigned
@@ -480,6 +479,11 @@ literal|0
 argument_list|)
 operator|,
 name|Size
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Parent
 argument_list|(
 literal|0
 argument_list|)
@@ -578,14 +582,14 @@ return|return
 name|Values
 return|;
 block|}
-name|CompileUnit
+name|DIE
 operator|*
-name|getAbstractCompileUnit
+name|getParent
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AbstractCU
+name|Parent
 return|;
 block|}
 name|void
@@ -628,16 +632,16 @@ name|S
 expr_stmt|;
 block|}
 name|void
-name|setAbstractCompileUnit
+name|setParent
 parameter_list|(
-name|CompileUnit
+name|DIE
 modifier|*
-name|CU
+name|P
 parameter_list|)
 block|{
-name|AbstractCU
+name|Parent
 operator|=
-name|CU
+name|P
 expr_stmt|;
 block|}
 comment|/// addValue - Add a value and attributes to a DIE.
@@ -702,6 +706,28 @@ modifier|*
 name|Child
 parameter_list|)
 block|{
+if|if
+condition|(
+name|Child
+operator|->
+name|getParent
+argument_list|()
+condition|)
+block|{
+name|assert
+argument_list|(
+name|Child
+operator|->
+name|getParent
+argument_list|()
+operator|==
+name|this
+operator|&&
+literal|"Unexpected DIE Parent!"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|Abbrev
 operator|.
 name|setChildrenFlag
@@ -716,6 +742,13 @@ operator|.
 name|push_back
 argument_list|(
 name|Child
+argument_list|)
+expr_stmt|;
+name|Child
+operator|->
+name|setParent
+argument_list|(
+name|this
 argument_list|)
 expr_stmt|;
 block|}

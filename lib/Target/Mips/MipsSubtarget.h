@@ -284,7 +284,6 @@ return|return
 name|IsFP64bit
 return|;
 block|}
-block|;
 name|bool
 name|isGP64bit
 argument_list|()
@@ -294,7 +293,6 @@ return|return
 name|IsGP64bit
 return|;
 block|}
-block|;
 name|bool
 name|isGP32bit
 argument_list|()
@@ -305,7 +303,6 @@ operator|!
 name|IsGP64bit
 return|;
 block|}
-block|;
 name|bool
 name|isSingleFloat
 argument_list|()
@@ -315,7 +312,6 @@ return|return
 name|IsSingleFloat
 return|;
 block|}
-block|;
 name|bool
 name|isNotSingleFloat
 argument_list|()
@@ -326,7 +322,6 @@ operator|!
 name|IsSingleFloat
 return|;
 block|}
-block|;
 name|bool
 name|hasVFPU
 argument_list|()
@@ -336,7 +331,6 @@ return|return
 name|HasVFPU
 return|;
 block|}
-block|;
 name|bool
 name|isLinux
 argument_list|()
@@ -346,7 +340,6 @@ return|return
 name|IsLinux
 return|;
 block|}
-block|;
 comment|/// Features related to the presence of specific instructions.
 name|bool
 name|hasSEInReg
@@ -357,7 +350,6 @@ return|return
 name|HasSEInReg
 return|;
 block|}
-block|;
 name|bool
 name|hasCondMov
 argument_list|()
@@ -367,7 +359,6 @@ return|return
 name|HasCondMov
 return|;
 block|}
-block|;
 name|bool
 name|hasMulDivAdd
 argument_list|()
@@ -377,7 +368,6 @@ return|return
 name|HasMulDivAdd
 return|;
 block|}
-block|;
 name|bool
 name|hasMinMax
 argument_list|()
@@ -387,7 +377,6 @@ return|return
 name|HasMinMax
 return|;
 block|}
-block|;
 name|bool
 name|hasSwap
 argument_list|()
@@ -397,7 +386,6 @@ return|return
 name|HasSwap
 return|;
 block|}
-block|;
 name|bool
 name|hasBitCount
 argument_list|()
@@ -407,9 +395,8 @@ return|return
 name|HasBitCount
 return|;
 block|}
+expr|}
 block|; }
-decl_stmt|;
-block|}
 end_decl_stmt
 
 begin_comment

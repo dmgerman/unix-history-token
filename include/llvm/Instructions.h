@@ -346,7 +346,8 @@ return|return
 operator|(
 literal|1u
 operator|<<
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|)
 operator|>>
 literal|1
@@ -429,6 +430,23 @@ operator|)
 argument_list|)
 return|;
 block|}
+name|private
+operator|:
+comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
+comment|// method so that subclasses cannot accidentally use it.
+name|void
+name|setInstructionSubclassData
+argument_list|(
+argument|unsigned short D
+argument_list|)
+block|{
+name|Instruction
+operator|::
+name|setInstructionSubclassData
+argument_list|(
+name|D
+argument_list|)
+block|;   }
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
@@ -606,7 +624,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|&
 literal|1
 return|;
@@ -619,10 +638,11 @@ argument_list|(
 argument|bool V
 argument_list|)
 block|{
-name|SubclassData
-operator|=
+name|setInstructionSubclassData
+argument_list|(
 operator|(
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|&
 operator|~
 literal|1
@@ -635,6 +655,7 @@ literal|1
 operator|:
 literal|0
 operator|)
+argument_list|)
 block|;   }
 comment|/// getAlignment - Return the alignment of the access that is being performed
 comment|///
@@ -648,7 +669,8 @@ operator|(
 literal|1
 operator|<<
 operator|(
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|>>
 literal|1
 operator|)
@@ -781,6 +803,23 @@ operator|)
 argument_list|)
 return|;
 block|}
+name|private
+operator|:
+comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
+comment|// method so that subclasses cannot accidentally use it.
+name|void
+name|setInstructionSubclassData
+argument_list|(
+argument|unsigned short D
+argument_list|)
+block|{
+name|Instruction
+operator|::
+name|setInstructionSubclassData
+argument_list|(
+name|D
+argument_list|)
+block|;   }
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
@@ -930,7 +969,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|&
 literal|1
 return|;
@@ -943,10 +983,11 @@ argument_list|(
 argument|bool V
 argument_list|)
 block|{
-name|SubclassData
-operator|=
+name|setInstructionSubclassData
+argument_list|(
 operator|(
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|&
 operator|~
 literal|1
@@ -959,6 +1000,7 @@ literal|1
 else|:
 literal|0
 operator|)
+argument_list|)
 block|;   }
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -978,7 +1020,8 @@ operator|(
 literal|1
 operator|<<
 operator|(
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|>>
 literal|1
 operator|)
@@ -1111,6 +1154,23 @@ operator|)
 argument_list|)
 return|;
 block|}
+name|private
+operator|:
+comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
+comment|// method so that subclasses cannot accidentally use it.
+name|void
+name|setInstructionSubclassData
+argument_list|(
+argument|unsigned short D
+argument_list|)
+block|{
+name|Instruction
+operator|::
+name|setInstructionSubclassData
+argument_list|(
+name|D
+argument_list|)
+block|;   }
 expr|}
 block|;
 name|template
@@ -2817,10 +2877,11 @@ name|void
 name|swapOperands
 argument_list|()
 block|{
-name|SubclassData
-operator|=
+name|setPredicate
+argument_list|(
 name|getSwappedPredicate
 argument_list|()
+argument_list|)
 block|;
 name|Op
 operator|<
@@ -3188,19 +3249,23 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
+name|getPredicate
+argument_list|()
 operator|==
 name|FCMP_OEQ
 operator|||
-name|SubclassData
+name|getPredicate
+argument_list|()
 operator|==
 name|FCMP_ONE
 operator|||
-name|SubclassData
+name|getPredicate
+argument_list|()
 operator|==
 name|FCMP_UEQ
 operator|||
-name|SubclassData
+name|getPredicate
+argument_list|()
 operator|==
 name|FCMP_UNE
 return|;
@@ -3216,19 +3281,23 @@ return|return
 name|isEquality
 argument_list|()
 operator|||
-name|SubclassData
+name|getPredicate
+argument_list|()
 operator|==
 name|FCMP_FALSE
 operator|||
-name|SubclassData
+name|getPredicate
+argument_list|()
 operator|==
 name|FCMP_TRUE
 operator|||
-name|SubclassData
+name|getPredicate
+argument_list|()
 operator|==
 name|FCMP_ORD
 operator|||
-name|SubclassData
+name|getPredicate
+argument_list|()
 operator|==
 name|FCMP_UNO
 return|;
@@ -3255,10 +3324,11 @@ name|void
 name|swapOperands
 argument_list|()
 block|{
-name|SubclassData
-operator|=
+name|setPredicate
+argument_list|(
 name|getSwappedPredicate
 argument_list|()
+argument_list|)
 block|;
 name|Op
 operator|<
@@ -3340,8 +3410,6 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===----------------------------------------------------------------------===//
-comment|//                                 CallInst Class
 comment|//===----------------------------------------------------------------------===//
 comment|/// CallInst - This class represents a function call, abstracting a target
 comment|/// machine's calling convention.  This class uses low bit of the SubClassData
@@ -3932,7 +4000,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|&
 literal|1
 return|;
@@ -3943,10 +4012,11 @@ argument_list|(
 argument|bool isTC = true
 argument_list|)
 block|{
-name|SubclassData
-operator|=
+name|setInstructionSubclassData
+argument_list|(
 operator|(
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|&
 operator|~
 literal|1
@@ -3955,6 +4025,7 @@ operator||
 name|unsigned
 argument_list|(
 name|isTC
+argument_list|)
 argument_list|)
 block|;   }
 comment|/// Provide fast operand accessors
@@ -3980,7 +4051,8 @@ operator|::
 name|ID
 operator|>
 operator|(
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|>>
 literal|1
 operator|)
@@ -3992,10 +4064,11 @@ argument_list|(
 argument|CallingConv::ID CC
 argument_list|)
 block|{
-name|SubclassData
-operator|=
+name|setInstructionSubclassData
+argument_list|(
 operator|(
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|&
 literal|1
 operator|)
@@ -4011,6 +4084,7 @@ operator|)
 operator|<<
 literal|1
 operator|)
+argument_list|)
 block|;   }
 comment|/// getAttributes - Return the parameter attributes for this call.
 comment|///
@@ -4458,6 +4532,23 @@ operator|)
 argument_list|)
 return|;
 block|}
+name|private
+operator|:
+comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
+comment|// method so that subclasses cannot accidentally use it.
+name|void
+name|setInstructionSubclassData
+argument_list|(
+argument|unsigned short D
+argument_list|)
+block|{
+name|Instruction
+operator|::
+name|setInstructionSubclassData
+argument_list|(
+name|D
+argument_list|)
+block|;   }
 expr|}
 block|;
 name|template
@@ -10678,7 +10769,8 @@ operator|::
 name|ID
 operator|>
 operator|(
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 operator|)
 return|;
 block|}
@@ -10688,8 +10780,8 @@ argument_list|(
 argument|CallingConv::ID CC
 argument_list|)
 block|{
-name|SubclassData
-operator|=
+name|setInstructionSubclassData
+argument_list|(
 name|static_cast
 operator|<
 name|unsigned
@@ -10697,6 +10789,7 @@ operator|>
 operator|(
 name|CC
 operator|)
+argument_list|)
 block|;   }
 comment|/// getAttributes - Return the parameter attributes for this invoke.
 comment|///
@@ -11290,7 +11383,23 @@ argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
-block|; }
+block|;
+comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
+comment|// method so that subclasses cannot accidentally use it.
+name|void
+name|setInstructionSubclassData
+argument_list|(
+argument|unsigned short D
+argument_list|)
+block|{
+name|Instruction
+operator|::
+name|setInstructionSubclassData
+argument_list|(
+name|D
+argument_list|)
+block|;   }
+block|}
 block|;
 name|template
 operator|<

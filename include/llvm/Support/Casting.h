@@ -1138,7 +1138,7 @@ operator|&
 name|Val
 operator|)
 block|{
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"Classof: "

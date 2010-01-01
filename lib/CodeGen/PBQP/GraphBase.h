@@ -1528,7 +1528,7 @@ argument_list|)
 init|;
 name|adjEdgeItr
 operator|!=
-name|adjEdgesEnd
+name|adjEdgeEnd
 condition|;
 operator|++
 name|adjEdgeItr

@@ -189,8 +189,7 @@ argument|unsigned NumOps
 argument_list|,
 argument|LinkageTypes linkage
 argument_list|,
-argument|const Twine&Name =
-literal|""
+argument|const Twine&Name
 argument_list|)
 operator|:
 name|Constant

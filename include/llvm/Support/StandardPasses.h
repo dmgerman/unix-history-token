@@ -588,6 +588,12 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Clean up after the unroller
+if|if
+condition|(
+name|OptimizationLevel
+operator|>
+literal|1
+condition|)
 name|PM
 operator|->
 name|add

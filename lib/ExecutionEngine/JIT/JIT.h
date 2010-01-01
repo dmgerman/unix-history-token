@@ -360,6 +360,26 @@ operator|=
 literal|0
 argument_list|)
 block|;
+comment|/// materializeFunction - make sure the given function is fully read.  If the
+comment|/// module is corrupt, this returns true and fills in the optional string with
+comment|/// information about the problem.  If successful, this returns false.
+comment|///
+name|bool
+name|materializeFunction
+argument_list|(
+name|Function
+operator|*
+name|F
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrInfo
+operator|=
+literal|0
+argument_list|)
+block|;
 comment|/// runFunction - Start execution with the specified function and arguments.
 comment|///
 name|virtual

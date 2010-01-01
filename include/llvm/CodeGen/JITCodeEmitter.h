@@ -192,59 +192,20 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|/// startGVStub - This callback is invoked when the JIT needs the address of a
-comment|/// GV (e.g. function) that has not been code generated yet.  The StubSize
-comment|/// specifies the total size required by the stub.  The BufferState must be
-comment|/// passed to finishGVStub, and start/finish pairs with the same BufferState
-comment|/// must be properly nested.
-comment|///
-name|virtual
-name|void
-name|startGVStub
-argument_list|(
-argument|BufferState&BS
-argument_list|,
-argument|const GlobalValue* GV
-argument_list|,
-argument|unsigned StubSize
-argument_list|,
-argument|unsigned Alignment =
-literal|1
-argument_list|)
-operator|=
-literal|0
-block|;
-comment|/// startGVStub - This callback is invoked when the JIT needs the address of a
-comment|/// GV (e.g. function) that has not been code generated yet.  Buffer points to
-comment|/// memory already allocated for this stub.  The BufferState must be passed to
-comment|/// finishGVStub, and start/finish pairs with the same BufferState must be
-comment|/// properly nested.
-comment|///
-name|virtual
-name|void
-name|startGVStub
-argument_list|(
-argument|BufferState&BS
-argument_list|,
-argument|void *Buffer
-argument_list|,
-argument|unsigned StubSize
-argument_list|)
-operator|=
-literal|0
-block|;
-comment|/// finishGVStub - This callback is invoked to terminate a GV stub and returns
-comment|/// the start address of the stub.  The BufferState must first have been
-comment|/// passed to startGVStub.
-comment|///
+comment|/// allocIndirectGV - Allocates and fills storage for an indirect
+comment|/// GlobalValue, and returns the address.
 name|virtual
 name|void
 operator|*
-name|finishGVStub
+name|allocIndirectGV
 argument_list|(
-name|BufferState
-operator|&
-name|BS
+argument|const GlobalValue *GV
+argument_list|,
+argument|const uint8_t *Buffer
+argument_list|,
+argument|size_t Size
+argument_list|,
+argument|unsigned Alignment
 argument_list|)
 operator|=
 literal|0

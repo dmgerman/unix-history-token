@@ -492,6 +492,32 @@ name|RHS
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Determine the edit distance between this string and another
+comment|/// string.
+comment|///
+comment|/// \param Other the string to compare this string against.
+comment|///
+comment|/// \param AllowReplacements whether to allow character
+comment|/// replacements (change one character into another) as a single
+comment|/// operation, rather than as two operations (an insertion and a
+comment|/// removal).
+comment|///
+comment|/// \returns the minimum number of character insertions, removals,
+comment|/// or (if \p AllowReplacements is \c true) replacements needed to
+comment|/// transform one of the given strings into the other. If zero,
+comment|/// the strings are identical.
+name|unsigned
+name|edit_distance
+parameter_list|(
+name|StringRef
+name|Other
+parameter_list|,
+name|bool
+name|AllowReplacements
+init|=
+name|true
+parameter_list|)
+function_decl|;
 comment|/// str - Get the contents as an std::string.
 name|std
 operator|::
@@ -567,19 +593,26 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|substr
+name|Length
+operator|>=
+name|Prefix
+operator|.
+name|Length
+operator|&&
+name|memcmp
 argument_list|(
-literal|0
+name|Data
+argument_list|,
+name|Prefix
+operator|.
+name|Data
 argument_list|,
 name|Prefix
 operator|.
 name|Length
 argument_list|)
-operator|.
-name|equals
-argument_list|(
-name|Prefix
-argument_list|)
+operator|==
+literal|0
 return|;
 block|}
 comment|/// endswith - Check if this string ends with the given \arg Suffix.
@@ -592,23 +625,31 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|slice
+name|Length
+operator|>=
+name|Suffix
+operator|.
+name|Length
+operator|&&
+name|memcmp
 argument_list|(
-name|size
+name|end
 argument_list|()
 operator|-
 name|Suffix
 operator|.
 name|Length
 argument_list|,
-name|size
-argument_list|()
-argument_list|)
-operator|.
-name|equals
-argument_list|(
 name|Suffix
+operator|.
+name|Data
+argument_list|,
+name|Suffix
+operator|.
+name|Length
 argument_list|)
+operator|==
+literal|0
 return|;
 block|}
 comment|/// @}

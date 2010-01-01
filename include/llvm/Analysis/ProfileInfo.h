@@ -151,7 +151,7 @@ decl_stmt|;
 name|class
 name|MachineFunction
 decl_stmt|;
-comment|// Helper for dumping edges to errs().
+comment|// Helper for dumping edges to dbgs().
 name|raw_ostream
 operator|&
 name|operator
@@ -642,7 +642,7 @@ name|DEBUG_WITH_TYPE
 argument_list|(
 literal|"profile-info"
 argument_list|,
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"Creating Edge "
@@ -901,7 +901,7 @@ init|=
 name|true
 parameter_list|)
 block|{
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"**** This is ProfileInfo "
@@ -927,7 +927,7 @@ operator|*
 operator|>
 name|Functions
 expr_stmt|;
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"Functions: \n"
@@ -937,7 +937,7 @@ condition|(
 name|F
 condition|)
 block|{
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 name|F
@@ -1012,7 +1012,7 @@ operator|++
 name|fi
 control|)
 block|{
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 name|fi
@@ -1119,7 +1119,7 @@ argument_list|(
 name|F
 argument_list|)
 expr_stmt|;
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"BasicBlocks for Function "
@@ -1160,7 +1160,7 @@ operator|++
 name|bi
 control|)
 block|{
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 name|bi
@@ -1251,7 +1251,7 @@ operator|*
 name|FI
 argument_list|)
 expr_stmt|;
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"Edges for Function "
@@ -1294,7 +1294,7 @@ operator|++
 name|ewi
 control|)
 block|{
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 name|ewi
@@ -1326,12 +1326,12 @@ operator|&&
 literal|"No function given, this is not supported!"
 argument_list|)
 expr_stmt|;
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"Functions: \n"
 expr_stmt|;
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 name|F
@@ -1359,7 +1359,7 @@ argument_list|)
 operator|<<
 literal|"\n"
 expr_stmt|;
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"BasicBlocks for Function "
@@ -1407,7 +1407,7 @@ operator|*
 name|BI
 operator|)
 decl_stmt|;
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 name|BB
@@ -1437,7 +1437,7 @@ literal|"\n"
 expr_stmt|;
 block|}
 block|}
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"**** ProfileInfo "

@@ -1073,6 +1073,19 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
+name|void
+name|addSourceLine
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|DINameSpace
+modifier|*
+name|NS
+parameter_list|)
+function_decl|;
 comment|/// addAddress - Add an address attribute to a die based on the location
 comment|/// provided.
 name|void
@@ -1167,6 +1180,15 @@ name|Entity
 parameter_list|,
 name|DIType
 name|Ty
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateNameSpace - Create a DIE for DINameSpace.
+name|DIE
+modifier|*
+name|getOrCreateNameSpace
+parameter_list|(
+name|DINameSpace
+name|NS
 parameter_list|)
 function_decl|;
 comment|/// getOrCreateTypeDIE - Find existing DIE or create new DIE for the

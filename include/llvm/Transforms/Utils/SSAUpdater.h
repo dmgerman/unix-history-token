@@ -92,8 +92,8 @@ name|SSAUpdater
 block|{
 comment|/// AvailableVals - This keeps track of which value to use on a per-block
 comment|/// basis.  When we insert PHI nodes, we keep track of them here.  We use
-comment|/// WeakVH's for the value of the map because we RAUW PHI nodes when we
-comment|/// eliminate them, and want the WeakVH to track this.
+comment|/// TrackingVH's for the value of the map because we RAUW PHI nodes when we
+comment|/// eliminate them, and want the TrackingVH's to track this.
 comment|//typedef DenseMap<BasicBlock*, TrackingVH<Value>> AvailableValsTy;
 name|void
 modifier|*

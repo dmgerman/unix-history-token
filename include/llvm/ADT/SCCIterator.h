@@ -324,7 +324,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|//errs()<< "TarjanSCC: Node "<< N<<
+comment|//dbgs()<< "TarjanSCC: Node "<< N<<
 comment|//      " : visitNum = "<< visitNum<< "\n";
 block|}
 comment|// The stack-based DFS traversal; defined below.
@@ -533,7 +533,7 @@ argument_list|()
 operator|=
 name|minVisitNum
 expr_stmt|;
-comment|//errs()<< "TarjanSCC: Popped node "<< visitingN<<
+comment|//dbgs()<< "TarjanSCC: Popped node "<< visitingN<<
 comment|//      " : minVisitNum = "<< minVisitNum<< "; Node visit num = "<<
 comment|//      nodeVisitNumbers[visitingN]<< "\n";
 if|if

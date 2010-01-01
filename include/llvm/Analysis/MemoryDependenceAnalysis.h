@@ -471,12 +471,11 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// NonLocalDepEntry - This is an entry in the NonLocalDepInfo cache, and an
-comment|/// entry in the results set for a non-local query.  For each BasicBlock (the
-comment|/// BB entry) it keeps a MemDepResult and the (potentially phi translated)
-comment|/// address that was live in the block.
+comment|/// NonLocalDepResult - This is a result from a NonLocal dependence query.
+comment|/// For each BasicBlock (the BB entry) it keeps a MemDepResult and the
+comment|/// (potentially phi translated) address that was live in the block.
 name|class
-name|NonLocalDepEntry
+name|NonLocalDepResult
 block|{
 name|BasicBlock
 modifier|*
@@ -485,12 +484,13 @@ decl_stmt|;
 name|MemDepResult
 name|Result
 decl_stmt|;
-name|WeakVH
+name|Value
+modifier|*
 name|Address
 decl_stmt|;
 name|public
 label|:
-name|NonLocalDepEntry
+name|NonLocalDepResult
 argument_list|(
 argument|BasicBlock *bb
 argument_list|,
@@ -512,19 +512,6 @@ operator|,
 name|Address
 argument_list|(
 argument|address
-argument_list|)
-block|{}
-comment|// This is used for searches.
-name|NonLocalDepEntry
-argument_list|(
-name|BasicBlock
-operator|*
-name|bb
-argument_list|)
-operator|:
-name|BB
-argument_list|(
-argument|bb
 argument_list|)
 block|{}
 comment|// BB is the sort key, it can't be changed.
@@ -586,6 +573,88 @@ specifier|const
 block|{
 return|return
 name|Address
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// NonLocalDepEntry - This is an entry in the NonLocalDepInfo cache.  For
+comment|/// each BasicBlock (the BB entry) it keeps a MemDepResult.
+name|class
+name|NonLocalDepEntry
+block|{
+name|BasicBlock
+modifier|*
+name|BB
+decl_stmt|;
+name|MemDepResult
+name|Result
+decl_stmt|;
+name|public
+label|:
+name|NonLocalDepEntry
+argument_list|(
+argument|BasicBlock *bb
+argument_list|,
+argument|MemDepResult result
+argument_list|)
+block|:
+name|BB
+argument_list|(
+name|bb
+argument_list|)
+operator|,
+name|Result
+argument_list|(
+argument|result
+argument_list|)
+block|{}
+comment|// This is used for searches.
+name|NonLocalDepEntry
+argument_list|(
+name|BasicBlock
+operator|*
+name|bb
+argument_list|)
+operator|:
+name|BB
+argument_list|(
+argument|bb
+argument_list|)
+block|{}
+comment|// BB is the sort key, it can't be changed.
+name|BasicBlock
+operator|*
+name|getBB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BB
+return|;
+block|}
+name|void
+name|setResult
+parameter_list|(
+specifier|const
+name|MemDepResult
+modifier|&
+name|R
+parameter_list|)
+block|{
+name|Result
+operator|=
+name|R
+expr_stmt|;
+block|}
+specifier|const
+name|MemDepResult
+operator|&
+name|getResult
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Result
 return|;
 block|}
 name|bool
@@ -888,7 +957,7 @@ name|BB
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|NonLocalDepEntry
+name|NonLocalDepResult
 operator|>
 operator|&
 name|Result
@@ -982,7 +1051,7 @@ name|BB
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|NonLocalDepEntry
+name|NonLocalDepResult
 operator|>
 operator|&
 name|Result

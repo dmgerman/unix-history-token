@@ -698,6 +698,8 @@ name|nodeItr
 parameter_list|)
 block|{
 return|return
+name|PGraph
+operator|::
 name|getNodeEntry
 argument_list|(
 name|nodeItr
@@ -720,6 +722,8 @@ argument_list|)
 decl|const
 block|{
 return|return
+name|PGraph
+operator|::
 name|getNodeEntry
 argument_list|(
 name|nodeItr
@@ -740,6 +744,8 @@ name|edgeItr
 parameter_list|)
 block|{
 return|return
+name|PGraph
+operator|::
 name|getEdgeEntry
 argument_list|(
 name|edgeItr
@@ -762,6 +768,8 @@ argument_list|)
 decl|const
 block|{
 return|return
+name|PGraph
+operator|::
 name|getEdgeEntry
 argument_list|(
 name|edgeItr

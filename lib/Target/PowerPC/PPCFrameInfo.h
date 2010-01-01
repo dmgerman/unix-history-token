@@ -189,6 +189,11 @@ literal|4U
 return|;
 comment|// SVR4 ABI: First slot in the general register save area.
 return|return
+name|isPPC64
+condition|?
+operator|-
+literal|8U
+else|:
 operator|-
 literal|4U
 return|;

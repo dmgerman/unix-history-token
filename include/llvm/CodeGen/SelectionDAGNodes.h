@@ -672,12 +672,13 @@ block|,
 comment|/// X = FP_EXTEND(Y) - Extend a smaller FP type into a larger FP type.
 name|FP_EXTEND
 block|,
-comment|// BIT_CONVERT - Theis operator converts between integer and FP values, as
-comment|// if one was stored to memory as integer and the other was loaded from the
-comment|// same address (or equivalently for vector format conversions, etc).  The
-comment|// source and result are required to have the same bit size (e.g.
-comment|// f32<-> i32).  This can also be used for int-to-int or fp-to-fp
-comment|// conversions, but that is a noop, deleted by getNode().
+comment|// BIT_CONVERT - This operator converts between integer, vector and FP
+comment|// values, as if the value was stored to memory with one type and loaded
+comment|// from the same address with the other type (or equivalently for vector
+comment|// format conversions, etc).  The source and result are required to have
+comment|// the same bit size (e.g.  f32<-> i32).  This can also be used for
+comment|// int-to-int or fp-to-fp conversions, but that is a noop, deleted by
+comment|// getNode().
 name|BIT_CONVERT
 block|,
 comment|// CONVERT_RNDSAT - This operator is used to support various conversions
@@ -2979,7 +2980,6 @@ return|return
 name|X
 return|;
 block|}
-empty_stmt|;
 comment|/// getFlaggedNode - If this node has a flag operand, return the node
 comment|/// to which the flag operand points. Otherwise return NULL.
 name|SDNode

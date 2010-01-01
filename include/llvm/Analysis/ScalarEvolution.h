@@ -801,7 +801,7 @@ name|SCEV
 operator|*
 name|createNodeForGEP
 argument_list|(
-name|Operator
+name|GEPOperator
 operator|*
 name|GEP
 argument_list|)

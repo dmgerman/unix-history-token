@@ -222,7 +222,8 @@ expr_stmt|;
 comment|/// tell - Return the current offset with the file.
 name|uint64_t
 name|tell
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|current_pos
@@ -289,7 +290,8 @@ empty_stmt|;
 block|}
 name|size_t
 name|GetBufferSize
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 comment|// If we're supposed to be buffered but haven't actually gotten around
 comment|// to allocating the buffer yet, return the value that would be used.
@@ -395,6 +397,9 @@ operator|*
 name|this
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|raw_ostream
 operator|&
 name|operator
@@ -423,15 +428,17 @@ operator|++
 operator|=
 name|C
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|*
 name|this
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_expr_stmt
-name|raw_ostream
+unit|}    raw_ostream
 operator|&
 name|operator
 operator|<<
@@ -1032,15 +1039,16 @@ begin_comment
 comment|/// counting the bytes currently in the buffer.
 end_comment
 
-begin_function_decl
+begin_expr_stmt
 name|virtual
 name|uint64_t
 name|current_pos
-parameter_list|()
-init|=
+argument_list|()
+specifier|const
+operator|=
 literal|0
-function_decl|;
-end_function_decl
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|protected
@@ -1095,13 +1103,14 @@ begin_comment
 comment|/// underlying output mechanism.
 end_comment
 
-begin_function_decl
+begin_expr_stmt
 name|virtual
 name|size_t
 name|preferred_buffer_size
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// error_detected - Set the flag indicating that an output error has
@@ -1278,6 +1287,7 @@ name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
+specifier|const
 block|{
 return|return
 name|pos
@@ -1288,6 +1298,7 @@ name|virtual
 name|size_t
 name|preferred_buffer_size
 argument_list|()
+specifier|const
 block|;
 name|public
 operator|:
@@ -1555,6 +1566,7 @@ name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
+specifier|const
 block|{
 return|return
 name|OS
@@ -1634,6 +1646,7 @@ name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
+specifier|const
 block|;
 name|public
 operator|:
@@ -1686,6 +1699,7 @@ name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
+specifier|const
 block|;
 name|public
 operator|:

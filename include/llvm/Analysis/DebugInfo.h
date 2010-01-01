@@ -74,30 +74,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Metadata.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -110,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_decl_stmt
@@ -169,10 +145,14 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|LLVMContext
 decl_stmt|;
-comment|/// DIDescriptor - A thin wraper around MDNode to access encoded debug info. This should not
-comment|/// be stored in a container, because underly MDNode may change in certain situations.
+comment|/// DIDescriptor - A thin wraper around MDNode to access encoded debug info.
+comment|/// This should not be stored in a container, because underly MDNode may
+comment|/// change in certain situations.
 name|class
 name|DIDescriptor
 block|{
@@ -346,17 +326,15 @@ comment|/// ValidDebugInfo - Return true if N represents valid debug info value.
 specifier|static
 name|bool
 name|ValidDebugInfo
-argument_list|(
+parameter_list|(
 name|MDNode
-operator|*
+modifier|*
 name|N
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
+parameter_list|,
+name|unsigned
 name|OptLevel
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// dump - print descriptor.
 name|void
 name|dump
@@ -400,6 +378,11 @@ specifier|const
 expr_stmt|;
 name|bool
 name|isCompileUnit
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isNameSpace
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1731,18 +1714,6 @@ name|getVirtuality
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|DbgNode
-operator|->
-name|getNumElements
-argument_list|()
-operator|<
-literal|14
-condition|)
-return|return
-literal|0
-return|;
 return|return
 name|getUnsignedField
 argument_list|(
@@ -1755,18 +1726,6 @@ name|getVirtualIndex
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|DbgNode
-operator|->
-name|getNumElements
-argument_list|()
-operator|<
-literal|14
-condition|)
-return|return
-literal|0
-return|;
 return|return
 name|getUnsignedField
 argument_list|(
@@ -1779,18 +1738,6 @@ name|getContainingType
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|DbgNode
-operator|->
-name|getNumElements
-argument_list|()
-operator|>=
-literal|14
-operator|&&
-literal|"Invalid type!"
-argument_list|)
-block|;
 return|return
 name|getFieldAs
 operator|<
@@ -1850,11 +1797,11 @@ operator|*
 name|F
 argument_list|)
 block|;   }
-decl_stmt|;
+block|;
 comment|/// DIGlobalVariable - This is a wrapper for a global variable.
 name|class
 name|DIGlobalVariable
-range|:
+operator|:
 name|public
 name|DIGlobal
 block|{
@@ -1902,12 +1849,12 @@ name|dump
 argument_list|()
 specifier|const
 block|;   }
-decl_stmt|;
+block|;
 comment|/// DIVariable - This is a wrapper for a variable (e.g. parameter, local,
 comment|/// global etc).
 name|class
 name|DIVariable
-range|:
+operator|:
 name|public
 name|DIDescriptor
 block|{
@@ -2030,16 +1977,7 @@ name|unsigned
 name|getNumAddrElements
 argument_list|()
 specifier|const
-block|{
-return|return
-name|DbgNode
-operator|->
-name|getNumElements
-argument_list|()
-operator|-
-literal|6
-return|;
-block|}
+block|;
 name|uint64_t
 name|getAddrElement
 argument_list|(
@@ -2077,11 +2015,11 @@ name|dump
 argument_list|()
 specifier|const
 block|;   }
-decl_stmt|;
+block|;
 comment|/// DILexicalBlock - This is a wrapper for a lexical block.
 name|class
 name|DILexicalBlock
-range|:
+operator|:
 name|public
 name|DIScope
 block|{
@@ -2154,6 +2092,125 @@ argument_list|()
 operator|.
 name|getFilename
 argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// DINameSpace - A wrapper for a C++ style name space.
+name|class
+name|DINameSpace
+operator|:
+name|public
+name|DIScope
+block|{
+name|public
+operator|:
+name|explicit
+name|DINameSpace
+argument_list|(
+name|MDNode
+operator|*
+name|N
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|DIScope
+argument_list|(
+argument|N
+argument_list|)
+block|{
+if|if
+condition|(
+name|DbgNode
+operator|&&
+operator|!
+name|isNameSpace
+argument_list|()
+condition|)
+name|DbgNode
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|DIScope
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DIScope
+operator|>
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringField
+argument_list|(
+literal|2
+argument_list|)
+return|;
+block|}
+name|StringRef
+name|getDirectory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getContext
+argument_list|()
+operator|.
+name|getDirectory
+argument_list|()
+return|;
+block|}
+name|StringRef
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getContext
+argument_list|()
+operator|.
+name|getFilename
+argument_list|()
+return|;
+block|}
+name|DICompileUnit
+name|getCompileUnit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DICompileUnit
+operator|>
+operator|(
+literal|3
+operator|)
+return|;
+block|}
+name|unsigned
+name|getLineNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
+argument_list|(
+literal|4
+argument_list|)
 return|;
 block|}
 expr|}
@@ -2656,6 +2713,20 @@ argument_list|(
 argument|DIDescriptor Context
 argument_list|)
 block|;
+comment|/// CreateNameSpace - This creates new descriptor for a namespace
+comment|/// with the specified parent context.
+name|DINameSpace
+name|CreateNameSpace
+argument_list|(
+argument|DIDescriptor Context
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|DICompileUnit CU
+argument_list|,
+argument|unsigned LineNo
+argument_list|)
+block|;
 comment|/// CreateLocation - Creates a debug info location.
 name|DILocation
 name|CreateLocation
@@ -2828,56 +2899,6 @@ operator|::
 name|string
 operator|&
 name|Dir
-argument_list|)
-block|;
-comment|/// isValidDebugInfoIntrinsic - Return true if SPI is a valid debug
-comment|/// info intrinsic.
-name|bool
-name|isValidDebugInfoIntrinsic
-argument_list|(
-argument|DbgStopPointInst&SPI
-argument_list|,
-argument|CodeGenOpt::Level OptLev
-argument_list|)
-block|;
-comment|/// isValidDebugInfoIntrinsic - Return true if FSI is a valid debug
-comment|/// info intrinsic.
-name|bool
-name|isValidDebugInfoIntrinsic
-argument_list|(
-argument|DbgFuncStartInst&FSI
-argument_list|,
-argument|CodeGenOpt::Level OptLev
-argument_list|)
-block|;
-comment|/// isValidDebugInfoIntrinsic - Return true if RSI is a valid debug
-comment|/// info intrinsic.
-name|bool
-name|isValidDebugInfoIntrinsic
-argument_list|(
-argument|DbgRegionStartInst&RSI
-argument_list|,
-argument|CodeGenOpt::Level OptLev
-argument_list|)
-block|;
-comment|/// isValidDebugInfoIntrinsic - Return true if REI is a valid debug
-comment|/// info intrinsic.
-name|bool
-name|isValidDebugInfoIntrinsic
-argument_list|(
-argument|DbgRegionEndInst&REI
-argument_list|,
-argument|CodeGenOpt::Level OptLev
-argument_list|)
-block|;
-comment|/// isValidDebugInfoIntrinsic - Return true if DI is a valid debug
-comment|/// info intrinsic.
-name|bool
-name|isValidDebugInfoIntrinsic
-argument_list|(
-argument|DbgDeclareInst&DI
-argument_list|,
-argument|CodeGenOpt::Level OptLev
 argument_list|)
 block|;
 comment|/// ExtractDebugLocation - Extract debug location information

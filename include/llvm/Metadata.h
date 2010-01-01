@@ -76,31 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -117,8 +99,27 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
-name|MetadataContextImpl
+name|Module
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|ValueSubClass
+operator|,
+name|typename
+name|ItemParentClass
+operator|>
+name|class
+name|SymbolTableListTraits
+expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// MetadataBase  - A base class for MDNode, MDString and NamedMDNode.
 name|class
@@ -220,26 +221,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|StringRef S
 argument_list|)
-operator|:
-name|MetadataBase
-argument_list|(
-name|Type
-operator|::
-name|getMetadataTy
-argument_list|(
-name|C
-argument_list|)
-argument_list|,
-name|Value
-operator|::
-name|MDStringVal
-argument_list|)
-block|,
-name|Str
-argument_list|(
-argument|S
-argument_list|)
-block|{}
+block|;
 name|public
 operator|:
 specifier|static
@@ -356,10 +338,11 @@ return|;
 block|}
 expr|}
 block|;
+name|class
+name|MDNodeOperand
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// MDNode - a tuple of other values.
-comment|/// These contain a list of the values that represent the metadata.
-comment|/// MDNode is always unnamed.
 name|class
 name|MDNode
 operator|:
@@ -377,100 +360,70 @@ operator|&
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|MDNode
+operator|&
+operator|)
+block|;
+comment|// DO NOT IMPLEMENT
 name|friend
 name|class
-name|ElementVH
+name|MDNodeOperand
 block|;
-comment|// Use CallbackVH to hold MDNode elements.
-block|struct
-name|ElementVH
-operator|:
-name|public
-name|CallbackVH
-block|{
-name|MDNode
-operator|*
-name|Parent
+comment|/// NumOperands - This many 'MDNodeOperand' items are co-allocated onto the
+comment|/// end of this MDNode.
+name|unsigned
+name|NumOperands
 block|;
-name|ElementVH
-argument_list|()
-block|{}
-name|ElementVH
-argument_list|(
-name|Value
-operator|*
-name|V
-argument_list|,
-name|MDNode
-operator|*
-name|P
-argument_list|)
-operator|:
-name|CallbackVH
-argument_list|(
-name|V
-argument_list|)
-block|,
-name|Parent
-argument_list|(
-argument|P
-argument_list|)
-block|{}
-operator|~
-name|ElementVH
-argument_list|()
-block|{}
-name|virtual
-name|void
-name|deleted
-argument_list|()
+comment|// Subclass data enums.
+block|enum
 block|{
-name|Parent
-operator|->
-name|replaceElement
-argument_list|(
-argument|this->operator Value*()
-argument_list|,
+comment|/// FunctionLocalBit - This bit is set if this MDNode is function local.
+comment|/// This is true when it (potentially transitively) contains a reference to
+comment|/// something in a function, like an argument, basicblock, or instruction.
+name|FunctionLocalBit
+operator|=
+literal|1
+operator|<<
 literal|0
-argument_list|)
-block|;     }
-name|virtual
-name|void
-name|allUsesReplacedWith
-argument_list|(
-argument|Value *NV
-argument_list|)
-block|{
-name|Parent
-operator|->
-name|replaceElement
-argument_list|(
-argument|this->operator Value*()
-argument_list|,
-argument|NV
-argument_list|)
-block|;     }
+block|,
+comment|/// NotUniquedBit - This is set on MDNodes that are not uniqued because they
+comment|/// have a null perand.
+name|NotUniquedBit
+operator|=
+literal|1
+operator|<<
+literal|1
+block|,
+comment|/// DestroyFlag - This bit is set by destroy() so the destructor can assert
+comment|/// that the node isn't being destroyed with a plain 'delete'.
+name|DestroyFlag
+operator|=
+literal|1
+operator|<<
+literal|2
 block|}
 block|;
-comment|// Replace each instance of F from the element list of this node with T.
+comment|// Replace each instance of F from the operand list of this node with T.
 name|void
-name|replaceElement
+name|replaceOperand
 argument_list|(
-name|Value
+name|MDNodeOperand
 operator|*
-name|F
+name|Op
 argument_list|,
 name|Value
 operator|*
-name|T
+name|NewVal
 argument_list|)
 block|;
-name|ElementVH
-operator|*
-name|Node
-block|;
-name|unsigned
-name|NodeSize
+operator|~
+name|MDNode
+argument_list|()
 block|;
 name|protected
 operator|:
@@ -482,6 +435,8 @@ argument_list|,
 argument|Value *const *Vals
 argument_list|,
 argument|unsigned NumVals
+argument_list|,
+argument|bool isFunctionLocal
 argument_list|)
 block|;
 name|public
@@ -497,49 +452,54 @@ argument_list|,
 argument|Value *const *Vals
 argument_list|,
 argument|unsigned NumVals
+argument_list|,
+argument|bool isFunctionLocal = false
 argument_list|)
 block|;
-comment|/// ~MDNode - Destroy MDNode.
-operator|~
-name|MDNode
-argument_list|()
-block|;
-comment|/// getElement - Return specified element.
+comment|/// getOperand - Return specified operand.
 name|Value
 operator|*
-name|getElement
+name|getOperand
 argument_list|(
 argument|unsigned i
 argument_list|)
 specifier|const
-block|{
-name|assert
-argument_list|(
-name|i
-operator|<
-name|getNumElements
-argument_list|()
-operator|&&
-literal|"Invalid element number!"
-argument_list|)
 block|;
-return|return
-name|Node
-index|[
-name|i
-index|]
-return|;
-block|}
-comment|/// getNumElements - Return number of MDNode elements.
+comment|/// getNumOperands - Return number of MDNode operands.
 name|unsigned
-name|getNumElements
+name|getNumOperands
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NodeSize
+name|NumOperands
 return|;
 block|}
+comment|/// isFunctionLocal - Return whether MDNode is local to a function.
+comment|/// Note: MDNodes are designated as function-local when created, and keep
+comment|///       that designation even if their operands are modified to no longer
+comment|///       refer to function-local IR.
+name|bool
+name|isFunctionLocal
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+name|FunctionLocalBit
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+comment|// destroy - Delete this node.  Only when there are no uses.
+name|void
+name|destroy
+argument_list|()
+block|;
 comment|/// Profile - calculate a unique identifier for this MDNode to collapse
 comment|/// duplicates
 name|void
@@ -578,22 +538,56 @@ operator|==
 name|MDNodeVal
 return|;
 block|}
+name|private
+operator|:
+name|bool
+name|isNotUniqued
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+name|NotUniquedBit
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|void
+name|setIsNotUniqued
+argument_list|()
+block|{
+name|setValueSubclassData
+argument_list|(
+name|getSubclassDataFromValue
+argument_list|()
+operator||
+name|NotUniquedBit
+argument_list|)
+block|;   }
+comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
+comment|// any future subclasses cannot accidentally use it.
+name|void
+name|setValueSubclassData
+argument_list|(
+argument|unsigned short D
+argument_list|)
+block|{
+name|Value
+operator|::
+name|setValueSubclassData
+argument_list|(
+name|D
+argument_list|)
+block|;   }
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// NamedMDNode - a tuple of other metadata.
-comment|/// NamedMDNode is always named. All NamedMDNode element has a type of metadata.
-name|template
-operator|<
-name|typename
-name|ValueSubClass
-block|,
-name|typename
-name|ItemParentClass
-operator|>
-name|class
-name|SymbolTableListTraits
-block|;
+comment|/// NamedMDNode is always named. All NamedMDNode operand has a type of metadata.
 name|class
 name|NamedMDNode
 operator|:
@@ -631,17 +625,11 @@ name|Module
 operator|*
 name|Parent
 block|;
-name|SmallVector
-operator|<
-name|TrackingVH
-operator|<
-name|MetadataBase
-operator|>
-block|,
-literal|4
-operator|>
-name|Node
+name|void
+operator|*
+name|Operands
 block|;
+comment|// SmallVector<TrackingVH<MetadataBase>, 4>
 name|void
 name|setParent
 argument_list|(
@@ -760,150 +748,30 @@ return|return
 name|Parent
 return|;
 block|}
-comment|/// getElement - Return specified element.
+comment|/// getOperand - Return specified operand.
 name|MetadataBase
 operator|*
-name|getElement
+name|getOperand
 argument_list|(
 argument|unsigned i
 argument_list|)
 specifier|const
-block|{
-name|assert
-argument_list|(
-name|i
-operator|<
-name|getNumElements
+block|;
+comment|/// getNumOperands - Return the number of NamedMDNode operands.
+name|unsigned
+name|getNumOperands
 argument_list|()
-operator|&&
-literal|"Invalid element number!"
+specifier|const
+block|;
+comment|/// addOperand - Add metadata operand.
+name|void
+name|addOperand
+argument_list|(
+name|MetadataBase
+operator|*
+name|M
 argument_list|)
 block|;
-return|return
-name|Node
-index|[
-name|i
-index|]
-return|;
-block|}
-comment|/// getNumElements - Return number of NamedMDNode elements.
-name|unsigned
-name|getNumElements
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|unsigned
-operator|)
-name|Node
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-comment|/// addElement - Add metadata element.
-name|void
-name|addElement
-argument_list|(
-argument|MetadataBase *M
-argument_list|)
-block|{
-name|Node
-operator|.
-name|push_back
-argument_list|(
-name|TrackingVH
-operator|<
-name|MetadataBase
-operator|>
-operator|(
-name|M
-operator|)
-argument_list|)
-block|;   }
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|TrackingVH
-operator|<
-name|MetadataBase
-operator|>
-expr|>
-operator|::
-name|iterator
-name|elem_iterator
-expr_stmt|;
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|TrackingVH
-operator|<
-name|MetadataBase
-operator|>
-expr|>
-operator|::
-name|const_iterator
-name|const_elem_iterator
-expr_stmt|;
-name|bool
-name|elem_empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Node
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-name|const_elem_iterator
-name|elem_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Node
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|const_elem_iterator
-name|elem_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Node
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|elem_iterator
-name|elem_begin
-argument_list|()
-block|{
-return|return
-name|Node
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|elem_iterator
-name|elem_end
-argument_list|()
-block|{
-return|return
-name|Node
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -934,190 +802,6 @@ name|NamedMDNodeVal
 return|;
 block|}
 expr|}
-block|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// MetadataContext -
-comment|/// MetadataContext handles uniquing and assignment of IDs for custom metadata
-comment|/// types. Custom metadata handler names do not contain spaces. And the name
-comment|/// must start with an alphabet. The regular expression used to check name
-comment|/// is [a-zA-Z$._][a-zA-Z$._0-9]*
-name|class
-name|MetadataContext
-block|{
-comment|// DO NOT IMPLEMENT
-name|MetadataContext
-argument_list|(
-name|MetadataContext
-operator|&
-argument_list|)
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-name|MetadataContext
-operator|&
-operator|)
-block|;
-name|MetadataContextImpl
-operator|*
-specifier|const
-name|pImpl
-block|;
-name|public
-operator|:
-name|MetadataContext
-argument_list|()
-block|;
-operator|~
-name|MetadataContext
-argument_list|()
-block|;
-comment|/// registerMDKind - Register a new metadata kind and return its ID.
-comment|/// A metadata kind can be registered only once.
-name|unsigned
-name|registerMDKind
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|;
-comment|/// getMDKind - Return metadata kind. If the requested metadata kind
-comment|/// is not registered then return 0.
-name|unsigned
-name|getMDKind
-argument_list|(
-argument|StringRef Name
-argument_list|)
-specifier|const
-block|;
-comment|/// isValidName - Return true if Name is a valid custom metadata handler name.
-specifier|static
-name|bool
-name|isValidName
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|;
-comment|/// getMD - Get the metadata of given kind attached to an Instruction.
-comment|/// If the metadata is not found then return 0.
-name|MDNode
-operator|*
-name|getMD
-argument_list|(
-argument|unsigned Kind
-argument_list|,
-argument|const Instruction *Inst
-argument_list|)
-block|;
-comment|/// getMDs - Get the metadata attached to an Instruction.
-name|void
-name|getMDs
-argument_list|(
-argument|const Instruction *Inst
-argument_list|,
-argument|SmallVectorImpl<std::pair<unsigned
-argument_list|,
-argument|TrackingVH<MDNode>>>&MDs
-argument_list|)
-specifier|const
-block|;
-comment|/// addMD - Attach the metadata of given kind to an Instruction.
-name|void
-name|addMD
-argument_list|(
-argument|unsigned Kind
-argument_list|,
-argument|MDNode *Node
-argument_list|,
-argument|Instruction *Inst
-argument_list|)
-block|;
-comment|/// removeMD - Remove metadata of given kind attached with an instuction.
-name|void
-name|removeMD
-argument_list|(
-argument|unsigned Kind
-argument_list|,
-argument|Instruction *Inst
-argument_list|)
-block|;
-comment|/// removeAllMetadata - Remove all metadata attached with an instruction.
-name|void
-name|removeAllMetadata
-argument_list|(
-name|Instruction
-operator|*
-name|Inst
-argument_list|)
-block|;
-comment|/// copyMD - If metadata is attached with Instruction In1 then attach
-comment|/// the same metadata to In2.
-name|void
-name|copyMD
-argument_list|(
-name|Instruction
-operator|*
-name|In1
-argument_list|,
-name|Instruction
-operator|*
-name|In2
-argument_list|)
-block|;
-comment|/// getHandlerNames - Populate client supplied smallvector using custom
-comment|/// metadata name and ID.
-name|void
-name|getHandlerNames
-argument_list|(
-argument|SmallVectorImpl<std::pair<unsigned
-argument_list|,
-argument|StringRef>>&
-argument_list|)
-specifier|const
-block|;
-comment|/// ValueIsDeleted - This handler is used to update metadata store
-comment|/// when a value is deleted.
-name|void
-name|ValueIsDeleted
-argument_list|(
-argument|const Value *
-argument_list|)
-block|{}
-name|void
-name|ValueIsDeleted
-argument_list|(
-name|Instruction
-operator|*
-name|Inst
-argument_list|)
-block|;
-name|void
-name|ValueIsRAUWd
-argument_list|(
-name|Value
-operator|*
-name|V1
-argument_list|,
-name|Value
-operator|*
-name|V2
-argument_list|)
-block|;
-comment|/// ValueIsCloned - This handler is used to update metadata store
-comment|/// when In1 is cloned to create In2.
-name|void
-name|ValueIsCloned
-argument_list|(
-specifier|const
-name|Instruction
-operator|*
-name|In1
-argument_list|,
-name|Instruction
-operator|*
-name|In2
-argument_list|)
-block|; }
 block|;  }
 end_decl_stmt
 

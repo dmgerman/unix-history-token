@@ -372,7 +372,7 @@ expr_stmt|;
 name|lltok
 operator|::
 name|Kind
-name|LexMetadata
+name|LexExclaim
 argument_list|()
 expr_stmt|;
 name|lltok

@@ -187,6 +187,20 @@ argument_list|(
 argument|const T* o
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|Ts
+operator|.
+name|count
+argument_list|(
+name|o
+argument_list|)
+operator|==
+literal|0
+operator|&&
+literal|"Object already in set!"
+argument_list|)
+block|;
 if|if
 condition|(
 name|Cache
@@ -194,14 +208,9 @@ condition|)
 block|{
 name|assert
 argument_list|(
-name|Ts
-operator|.
-name|count
-argument_list|(
 name|Cache
-argument_list|)
-operator|==
-literal|0
+operator|!=
+name|o
 operator|&&
 literal|"Object already in set!"
 argument_list|)

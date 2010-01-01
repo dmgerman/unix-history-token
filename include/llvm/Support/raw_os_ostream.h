@@ -106,6 +106,7 @@ name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
+specifier|const
 block|;
 name|public
 operator|:

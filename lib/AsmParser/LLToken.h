@@ -109,6 +109,9 @@ comment|// (  )
 name|backslash
 block|,
 comment|// \    (not /)
+name|exclaim
+block|,
+comment|// !
 name|kw_x
 block|,
 name|kw_begin
@@ -447,16 +450,12 @@ comment|// @foo @"foo"
 name|LocalVar
 block|,
 comment|// %foo %"foo"
+name|MetadataVar
+block|,
+comment|// !foo
 name|StringConstant
 block|,
 comment|// "foo"
-name|NamedOrCustomMD
-block|,
-comment|// !foo
-comment|// Metadata valued tokens.
-name|Metadata
-block|,
-comment|// !"foo" !{i8 42}
 comment|// Type valued tokens (TyVal).
 name|Type
 block|,

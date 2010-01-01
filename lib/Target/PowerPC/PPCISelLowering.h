@@ -145,6 +145,20 @@ name|Lo
 block|,
 name|TOC_ENTRY
 block|,
+comment|/// The following three target-specific nodes are used for calls through
+comment|/// function pointers in the 64-bit SVR4 ABI.
+comment|/// Restore the TOC from the TOC save area of the current stack frame.
+comment|/// This is basically a hard coded load instruction which additionally
+comment|/// takes/produces a flag.
+name|TOC_RESTORE
+block|,
+comment|/// Like a regular LOAD but additionally taking/producing a flag.
+name|LOAD
+block|,
+comment|/// LOAD into r2 (also taking/producing a flag). Like TOC_RESTORE, this is
+comment|/// a hard coded load instruction.
+name|LOAD_TOC
+block|,
 comment|/// OPRC, CHAIN = DYNALLOC(CHAIN, NEGSIZE, FRAME_INDEX)
 comment|/// This instruction is lowered in PPCRegisterInfo::eliminateFrameIndex to
 comment|/// compute an allocation on the stack.

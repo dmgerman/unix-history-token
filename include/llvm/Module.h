@@ -104,10 +104,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|GlobalValueRefMap
-decl_stmt|;
-comment|// Used by ConstantVals.cpp
-name|class
 name|FunctionType
 decl_stmt|;
 name|class
@@ -601,8 +597,6 @@ expr_stmt|;
 comment|/// @}
 comment|/// @name Module Level Accessors
 comment|/// @{
-name|public
-label|:
 comment|/// Get the module identifier which is, essentially, the name of the module.
 comment|/// @returns the module identifier as a string
 specifier|const
@@ -693,8 +687,6 @@ block|}
 comment|/// @}
 comment|/// @name Module Level Mutators
 comment|/// @{
-name|public
-label|:
 comment|/// Set the module identifier.
 name|void
 name|setModuleIdentifier
@@ -780,11 +772,34 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
+comment|/// This ID is uniqued across modules in the current LLVMContext.
+name|unsigned
+name|getMDKindID
+argument_list|(
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getMDKindNames - Populate client supplied SmallVector with the name for
+comment|/// custom metadata IDs registered in this LLVMContext.   ID #0 is not used,
+comment|/// so it is filled in as an empty string.
+name|void
+name|getMDKindNames
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|StringRef
+operator|>
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// @name Function Accessors
 comment|/// @{
-name|public
-label|:
 comment|/// getOrInsertFunction - Look up the specified function in the module symbol
 comment|/// table.  Four possibilities:
 comment|///   1. If it does not exist, add a prototype for the function and return it.
@@ -896,8 +911,6 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Global Variable Accessors
 comment|/// @{
-name|public
-label|:
 comment|/// getGlobalVariable - Look up the specified global variable in the module
 comment|/// symbol table.  If it does not exist, return null. If AllowInternal is set
 comment|/// to true, this function will return types that have InternalLinkage. By
@@ -960,8 +973,6 @@ function_decl|;
 comment|/// @}
 comment|/// @name Global Alias Accessors
 comment|/// @{
-name|public
-label|:
 comment|/// getNamedAlias - Return the first global alias in the module with the
 comment|/// specified name, of arbitrary type.  This method returns null if a global
 comment|/// with the specified name is not found.
@@ -977,8 +988,6 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Named Metadata Accessors
 comment|/// @{
-name|public
-label|:
 comment|/// getNamedMetadata - Return the first NamedMDNode in the module with the
 comment|/// specified name. This method returns null if a NamedMDNode with the
 comment|/// specified name is not found.
@@ -1005,8 +1014,6 @@ function_decl|;
 comment|/// @}
 comment|/// @name Type Accessors
 comment|/// @{
-name|public
-label|:
 comment|/// addTypeName - Insert an entry in the symbol table mapping Str to Type.  If
 comment|/// there is already an entry for this name, true is returned and the symbol
 comment|/// table is not modified.
@@ -1048,8 +1055,6 @@ decl_stmt|;
 comment|/// @}
 comment|/// @name Direct access to the globals list, functions list, and symbol table
 comment|/// @{
-name|public
-label|:
 comment|/// Get the Module's list of global variables (constant).
 specifier|const
 name|GlobalListType
@@ -1269,8 +1274,6 @@ block|}
 comment|/// @}
 comment|/// @name Global Variable Iteration
 comment|/// @{
-name|public
-label|:
 comment|/// Get an iterator to the first global variable
 name|global_iterator
 name|global_begin
@@ -1337,8 +1340,6 @@ block|}
 comment|/// @}
 comment|/// @name Function Iteration
 comment|/// @{
-name|public
-label|:
 comment|/// Get an iterator to the first function.
 name|iterator
 name|begin
@@ -1418,8 +1419,6 @@ block|}
 comment|/// @}
 comment|/// @name Dependent Library Iteration
 comment|/// @{
-name|public
-label|:
 comment|/// @brief Get a constant iterator to beginning of dependent library list.
 specifier|inline
 name|lib_iterator
@@ -1494,8 +1493,6 @@ block|}
 comment|/// @}
 comment|/// @name Alias Iteration
 comment|/// @{
-name|public
-label|:
 comment|/// Get an iterator to the first alias.
 name|alias_iterator
 name|alias_begin
@@ -1575,8 +1572,6 @@ block|}
 comment|/// @}
 comment|/// @name Named Metadata Iteration
 comment|/// @{
-name|public
-label|:
 comment|/// Get an iterator to the first named metadata.
 name|named_metadata_iterator
 name|named_metadata_begin
@@ -1656,8 +1651,6 @@ block|}
 comment|/// @}
 comment|/// @name Utility functions for printing and dumping Module objects
 comment|/// @{
-name|public
-label|:
 comment|/// Print the module to an output stream with AssemblyAnnotationWriter.
 name|void
 name|print

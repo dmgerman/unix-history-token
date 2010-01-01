@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Atomic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/GraphTraits.h"
 end_include
 
@@ -246,9 +240,7 @@ comment|/// has no AbstractTypeUsers, the type is deleted.  This is only sensica
 comment|/// derived types.
 comment|///
 name|mutable
-name|sys
-operator|::
-name|cas_flag
+name|unsigned
 name|RefCount
 block|;
 comment|/// Context - This refers to the LLVMContext in which this type was uniqued.
@@ -1590,13 +1582,8 @@ operator|&&
 literal|"Cannot add a reference to a non-abstract type!"
 argument_list|)
 block|;
-name|sys
-operator|::
-name|AtomicIncrement
-argument_list|(
-operator|&
+operator|++
 name|RefCount
-argument_list|)
 block|;   }
 name|void
 name|dropRef
@@ -1620,22 +1607,10 @@ argument_list|)
 block|;
 comment|// If this is the last PATypeHolder using this object, and there are no
 comment|// PATypeHandles using it, the type is dead, delete it now.
-name|sys
-operator|::
-name|cas_flag
-name|OldCount
-operator|=
-name|sys
-operator|::
-name|AtomicDecrement
-argument_list|(
-operator|&
-name|RefCount
-argument_list|)
-block|;
 if|if
 condition|(
-name|OldCount
+operator|--
+name|RefCount
 operator|==
 literal|0
 operator|&&

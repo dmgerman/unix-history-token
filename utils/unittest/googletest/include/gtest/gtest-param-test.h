@@ -518,12 +518,6 @@ directive|include
 file|<gtest/internal/gtest-param-util.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<gtest/internal/gtest-param-util-generated.h>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|testing
@@ -839,82 +833,42 @@ block|}
 end_expr_stmt
 
 begin_comment
+unit|}
+comment|// namespace testing
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<gtest/internal/gtest-param-util-generated.h>
+end_include
+
+begin_macro
+unit|namespace
+name|testing
+end_macro
+
+begin_block
+block|{
 comment|// Values() allows generating tests from explicitly specified list of
-end_comment
-
-begin_comment
 comment|// parameters.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Synopsis:
-end_comment
-
-begin_comment
 comment|// Values(T v1, T v2, ..., T vN)
-end_comment
-
-begin_comment
 comment|//   - returns a generator producing sequences with elements v1, v2, ..., vN.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// For example, this instantiates tests from test case BarTest each
-end_comment
-
-begin_comment
 comment|// with values "one", "two", and "three":
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// INSTANTIATE_TEST_CASE_P(NumSequence, BarTest, Values("one", "two", "three"));
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// This instantiates tests from test case BazTest each with values 1, 2, 3.5.
-end_comment
-
-begin_comment
 comment|// The exact type of values will depend on the type of parameter in BazTest.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// INSTANTIATE_TEST_CASE_P(FloatingNumbers, BazTest, Values(1, 2, 3.5));
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Currently, Values() supports from 1 to 50 parameters.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -943,9 +897,6 @@ name|v1
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -985,9 +936,6 @@ name|v2
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1038,9 +986,6 @@ name|v3
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1102,9 +1047,6 @@ name|v4
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1177,9 +1119,6 @@ name|v5
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1263,9 +1202,6 @@ name|v6
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1360,9 +1296,6 @@ name|v7
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1468,9 +1401,6 @@ name|v8
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1587,9 +1517,6 @@ name|v9
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1717,9 +1644,6 @@ name|v10
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1858,9 +1782,6 @@ name|v11
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2010,9 +1931,6 @@ name|v12
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2173,9 +2091,6 @@ name|v13
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2347,9 +2262,6 @@ name|v14
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2532,9 +2444,6 @@ name|v15
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2728,9 +2637,6 @@ name|v16
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2935,9 +2841,6 @@ name|v17
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3153,9 +3056,6 @@ name|v18
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3382,9 +3282,6 @@ name|v19
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3622,9 +3519,6 @@ name|v20
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3873,9 +3767,6 @@ name|v21
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4135,9 +4026,6 @@ name|v22
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4408,9 +4296,6 @@ name|v23
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4692,9 +4577,6 @@ name|v24
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4987,9 +4869,6 @@ name|v25
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -5293,9 +5172,6 @@ name|v26
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -5610,9 +5486,6 @@ name|v27
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -5938,9 +5811,6 @@ name|v28
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -6277,9 +6147,6 @@ name|v29
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -6627,9 +6494,6 @@ name|v30
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -6988,9 +6852,6 @@ name|v31
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -7360,9 +7221,6 @@ name|v32
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -7743,9 +7601,6 @@ name|v33
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -8137,9 +7992,6 @@ name|v34
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -8542,9 +8394,6 @@ name|v35
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -8958,9 +8807,6 @@ name|v36
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -9385,9 +9231,6 @@ name|v37
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -9823,9 +9666,6 @@ name|v38
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -10272,9 +10112,6 @@ name|v39
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -10732,9 +10569,6 @@ name|v40
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -11203,9 +11037,6 @@ name|v41
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -11685,9 +11516,6 @@ name|v42
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -12178,9 +12006,6 @@ name|v43
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -12682,9 +12507,6 @@ name|v44
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -13197,9 +13019,6 @@ name|v45
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -13723,9 +13542,6 @@ name|v46
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -14260,9 +14076,6 @@ name|v47
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -14808,9 +14621,6 @@ name|v48
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -15367,9 +15177,6 @@ name|v49
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -15937,89 +15744,26 @@ name|v50
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Bool() allows generating tests with parameters in a set of (false, true).
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Synopsis:
-end_comment
-
-begin_comment
 comment|// Bool()
-end_comment
-
-begin_comment
 comment|//   - returns a generator producing sequences with elements {false, true}.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// It is useful when testing code that depends on Boolean flags. Combinations
-end_comment
-
-begin_comment
 comment|// of multiple flags can be tested when several Bool()'s are combined using
-end_comment
-
-begin_comment
 comment|// Combine() function.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// In the following example all tests in the test case FlagDependentTest
-end_comment
-
-begin_comment
 comment|// will be instantiated twice with parameters false and true.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// class FlagDependentTest : public testing::TestWithParam<bool> {
-end_comment
-
-begin_comment
 comment|//   virtual void SetUp() {
-end_comment
-
-begin_comment
 comment|//     external_flag = GetParam();
-end_comment
-
-begin_comment
 comment|//   }
-end_comment
-
-begin_comment
 comment|// }
-end_comment
-
-begin_comment
 comment|// INSTANTIATE_TEST_CASE_P(BoolSequence, FlagDependentTest, Bool());
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_expr_stmt
 specifier|inline
 name|internal
 operator|::
@@ -16039,207 +15783,57 @@ name|true
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|GTEST_HAS_COMBINE
-end_ifdef
-
-begin_comment
 comment|// Combine() allows the user to combine two or more sequences to produce
-end_comment
-
-begin_comment
 comment|// values of a Cartesian product of those sequences' elements.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Synopsis:
-end_comment
-
-begin_comment
 comment|// Combine(gen1, gen2, ..., genN)
-end_comment
-
-begin_comment
 comment|//   - returns a generator producing sequences with elements coming from
-end_comment
-
-begin_comment
 comment|//     the Cartesian product of elements from the sequences generated by
-end_comment
-
-begin_comment
 comment|//     gen1, gen2, ..., genN. The sequence elements will have a type of
-end_comment
-
-begin_comment
 comment|//     tuple<T1, T2, ..., TN> where T1, T2, ..., TN are the types
-end_comment
-
-begin_comment
 comment|//     of elements from sequences produces by gen1, gen2, ..., genN.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Combine can have up to 10 arguments. This number is currently limited
-end_comment
-
-begin_comment
 comment|// by the maximum number of elements in the tuple implementation used by Google
-end_comment
-
-begin_comment
 comment|// Test.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Example:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// This will instantiate tests in test case AnimalTest each one with
-end_comment
-
-begin_comment
 comment|// the parameter values tuple("cat", BLACK), tuple("cat", WHITE),
-end_comment
-
-begin_comment
 comment|// tuple("dog", BLACK), and tuple("dog", WHITE):
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// enum Color { BLACK, GRAY, WHITE };
-end_comment
-
-begin_comment
 comment|// class AnimalTest
-end_comment
-
-begin_comment
 comment|//     : public testing::TestWithParam<tuple<const char*, Color>> {...};
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// TEST_P(AnimalTest, AnimalLooksNice) {...}
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// INSTANTIATE_TEST_CASE_P(AnimalVariations, AnimalTest,
-end_comment
-
-begin_comment
 comment|//                         Combine(Values("cat", "dog"),
-end_comment
-
-begin_comment
 comment|//                                 Values(BLACK, WHITE)));
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// This will instantiate tests in FlagDependentTest with all variations of two
-end_comment
-
-begin_comment
 comment|// Boolean flags:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// class FlagDependentTest
-end_comment
-
-begin_comment
 comment|//     : public testing::TestWithParam<tuple(bool, bool)>> {
-end_comment
-
-begin_comment
 comment|//   virtual void SetUp() {
-end_comment
-
-begin_comment
 comment|//     // Assigns external_flag_1 and external_flag_2 values from the tuple.
-end_comment
-
-begin_comment
 comment|//     tie(external_flag_1, external_flag_2) = GetParam();
-end_comment
-
-begin_comment
 comment|//   }
-end_comment
-
-begin_comment
 comment|// };
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// TEST_P(FlagDependentTest, TestFeature1) {
-end_comment
-
-begin_comment
 comment|//   // Test your code using external_flag_1 and external_flag_2 here.
-end_comment
-
-begin_comment
 comment|// }
-end_comment
-
-begin_comment
 comment|// INSTANTIATE_TEST_CASE_P(TwoBoolSequence, FlagDependentTest,
-end_comment
-
-begin_comment
 comment|//                         Combine(Bool(), Bool()));
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -16279,9 +15873,6 @@ name|g2
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -16332,9 +15923,6 @@ name|g3
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -16396,9 +15984,6 @@ name|g4
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -16471,9 +16056,6 @@ name|g5
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -16557,9 +16139,6 @@ name|g6
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -16654,9 +16233,6 @@ name|g7
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -16762,9 +16338,6 @@ name|g8
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -16881,9 +16454,6 @@ name|g9
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -17011,18 +16581,9 @@ name|g10
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// GTEST_HAS_COMBINE
-end_comment
-
-begin_define
 define|#
 directive|define
 name|TEST_P
@@ -17033,9 +16594,6 @@ name|test_name
 parameter_list|)
 define|\
 value|class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) \       : public test_case_name { \    public: \     GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {} \     virtual void TestBody(); \    private: \     static int AddToRegistry() { \       ::testing::UnitTest::GetInstance()->parameterized_test_registry(). \           GetTestCasePatternHolder<test_case_name>(\               #test_case_name, __FILE__, __LINE__)->AddTestPattern(\                   #test_case_name, \                   #test_name, \                   new ::testing::internal::TestMetaFactory< \                       GTEST_TEST_CLASS_NAME_(test_case_name, test_name)>()); \       return 0; \     } \     static int gtest_registering_dummy_; \     GTEST_DISALLOW_COPY_AND_ASSIGN_(\         GTEST_TEST_CLASS_NAME_(test_case_name, test_name)); \   }; \   int GTEST_TEST_CLASS_NAME_(test_case_name, \                              test_name)::gtest_registering_dummy_ = \       GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::AddToRegistry(); \   void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
-end_define
-
-begin_define
 define|#
 directive|define
 name|INSTANTIATE_TEST_CASE_P
@@ -17048,10 +16606,10 @@ name|generator
 parameter_list|)
 define|\
 value|::testing::internal::ParamGenerator<test_case_name::ParamType> \       gtest_##prefix##test_case_name##_EvalGenerator_() { return generator; } \   int gtest_##prefix##test_case_name##_dummy_ = \       ::testing::UnitTest::GetInstance()->parameterized_test_registry(). \           GetTestCasePatternHolder<test_case_name>(\               #test_case_name, __FILE__, __LINE__)->AddTestCaseInstantiation(\                   #prefix, \&gtest_##prefix##test_case_name##_EvalGenerator_, \                   __FILE__, __LINE__)
-end_define
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|// namespace testing
 end_comment
 

@@ -134,7 +134,6 @@ argument_list|(
 argument|depth
 argument_list|)
 block|{}
-expr_stmt|;
 block|}
 struct|;
 name|class
@@ -309,7 +308,6 @@ return|return
 name|false
 return|;
 block|}
-empty_stmt|;
 comment|/// print - Implement the dump method.
 name|virtual
 name|void

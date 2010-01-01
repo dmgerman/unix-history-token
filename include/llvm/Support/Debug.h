@@ -111,6 +111,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// DEBUG_TYPE macro - Files can specify a DEBUG_TYPE as a string, which causes
 comment|/// all of their DEBUG statements to be activatable with -debug-only=thatstring.
 ifndef|#
@@ -164,7 +167,7 @@ comment|/// information.  In the '-debug' option is specified on the commandline
 comment|/// this is a debug build, then the code specified as the option to the macro
 comment|/// will be executed.  Otherwise it will not be.  Example:
 comment|///
-comment|/// DEBUG_WITH_TYPE("bitset", errs()<< "Bitset contains: "<< Bitset<< "\n");
+comment|/// DEBUG_WITH_TYPE("bitset", dbgs()<< "Bitset contains: "<< Bitset<< "\n");
 comment|///
 comment|/// This will emit the debug information if -debug is present, and -debug-only
 comment|/// is not specified, or is specified as "bitset".
@@ -204,12 +207,30 @@ parameter_list|)
 value|do { } while (0)
 endif|#
 directive|endif
+comment|/// EnableDebugBuffering - This defaults to false.  If true, the debug
+comment|/// stream will install signal handlers to dump any buffered debug
+comment|/// output.  It allows clients to selectively allow the debug stream
+comment|/// to install signal handlers if they are certain there will be no
+comment|/// conflict.
+comment|///
+specifier|extern
+name|bool
+name|EnableDebugBuffering
+decl_stmt|;
+comment|/// dbgs() - This returns a reference to a raw_ostream for debugging
+comment|/// messages.  If debugging is disabled it returns errs().  Use it
+comment|/// like: dbgs()<< "foo"<< "bar";
+name|raw_ostream
+modifier|&
+name|dbgs
+parameter_list|()
+function_decl|;
 comment|// DEBUG macro - This macro should be used by passes to emit debug information.
 comment|// In the '-debug' option is specified on the commandline, and if this is a
 comment|// debug build, then the code specified as the option to the macro will be
 comment|// executed.  Otherwise it will not be.  Example:
 comment|//
-comment|// DEBUG(errs()<< "Bitset contains: "<< Bitset<< "\n");
+comment|// DEBUG(dbgs()<< "Bitset contains: "<< Bitset<< "\n");
 comment|//
 define|#
 directive|define

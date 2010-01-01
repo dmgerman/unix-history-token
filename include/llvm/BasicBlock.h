@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
@@ -872,7 +878,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
+name|getSubclassDataFromValue
+argument_list|()
 operator|!=
 literal|0
 return|;
@@ -889,9 +896,13 @@ name|int
 name|Amt
 parameter_list|)
 block|{
-name|SubclassData
-operator|+=
+name|setValueSubclassData
+argument_list|(
+name|getSubclassDataFromValue
+argument_list|()
+operator|+
 name|Amt
+argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
@@ -902,11 +913,30 @@ operator|(
 name|signed
 name|char
 operator|)
-name|SubclassData
+name|getSubclassDataFromValue
+argument_list|()
 operator|>=
 literal|0
 operator|&&
 literal|"Refcount wrap-around"
+argument_list|)
+expr_stmt|;
+block|}
+comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
+comment|// any future subclasses cannot accidentally use it.
+name|void
+name|setValueSubclassData
+parameter_list|(
+name|unsigned
+name|short
+name|D
+parameter_list|)
+block|{
+name|Value
+operator|::
+name|setValueSubclassData
+argument_list|(
+name|D
 argument_list|)
 expr_stmt|;
 block|}

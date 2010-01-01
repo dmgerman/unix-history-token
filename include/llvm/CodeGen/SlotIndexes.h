@@ -755,7 +755,7 @@ name|lie
 argument_list|(
 argument|&li.entry()
 argument_list|,
-argument|phi ? PHI_BIT& li.getSlot() : (unsigned)li.getSlot()
+argument|phi ? PHI_BIT | li.getSlot() : (unsigned)li.getSlot()
 argument_list|)
 block|{
 name|assert
@@ -785,7 +785,7 @@ name|lie
 argument_list|(
 argument|&li.entry()
 argument_list|,
-argument|phi ? PHI_BIT& s : (unsigned)s
+argument|phi ? PHI_BIT | s : (unsigned)s
 argument_list|)
 block|{
 name|assert
@@ -2413,7 +2413,7 @@ operator|<=
 name|index
 operator|&&
 name|index
-operator|<=
+operator|<
 name|getMBBEndIdx
 argument_list|(
 name|J

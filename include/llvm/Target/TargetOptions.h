@@ -252,6 +252,13 @@ specifier|extern
 name|bool
 name|StrongPHIElim
 decl_stmt|;
+comment|/// DisableScheduling - This flag disables instruction scheduling. In
+comment|/// particular, it assigns an ordering to the SDNodes, which the scheduler
+comment|/// uses instead of its normal heuristics to perform scheduling.
+specifier|extern
+name|bool
+name|DisableScheduling
+decl_stmt|;
 block|}
 end_decl_stmt
 

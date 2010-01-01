@@ -151,7 +151,14 @@ name|PIC16Lowering
 argument_list|(
 argument|*TM.getTargetLowering()
 argument_list|)
-block|{}
+block|{
+comment|// Keep PIC16 specific DAGISel to use during the lowering
+name|PIC16Lowering
+operator|.
+name|ISel
+operator|=
+name|this
+block|;   }
 comment|// Pass Name
 name|virtual
 specifier|const

@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Twine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
@@ -171,7 +165,10 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
-name|MetadataContextImpl
+name|Twine
+decl_stmt|;
+name|class
+name|MDNode
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                 Value Class
@@ -185,7 +182,7 @@ comment|/// automatically updates the module's symbol table.
 comment|///
 comment|/// Every value has a "use list" that keeps track of which other Values are
 comment|/// using this Value.  A Value can also have an arbitrary number of ValueHandle
-comment|/// objects that watch it and listen to RAUW and Destroy events see
+comment|/// objects that watch it and listen to RAUW and Destroy events.  See
 comment|/// llvm/Support/ValueHandle.h for details.
 comment|///
 comment|/// @brief LLVM Value Representation
@@ -205,13 +202,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Has a ValueHandle pointing to this?
-name|unsigned
-name|char
-name|HasMetadata
-range|:
-literal|1
-decl_stmt|;
-comment|// Has a metadata attached to this ?
 name|protected
 label|:
 comment|/// SubclassOptionalData - This member is similar to SubclassData, however it
@@ -224,6 +214,8 @@ name|SubclassOptionalData
 range|:
 literal|7
 decl_stmt|;
+name|private
+label|:
 comment|/// SubclassData - This member is defined by this class, but is not used for
 comment|/// anything.  Subclasses can use it to hold whatever state they find useful.
 comment|/// This field is initialized to zero by the ctor.
@@ -231,8 +223,6 @@ name|unsigned
 name|short
 name|SubclassData
 decl_stmt|;
-name|private
-label|:
 name|PATypeHolder
 name|VTy
 decl_stmt|;
@@ -247,16 +237,7 @@ decl_stmt|;
 comment|// Allow ValueSymbolTable to directly mod Name.
 name|friend
 name|class
-name|SymbolTable
-decl_stmt|;
-comment|// Allow SymbolTable to directly poke Name.
-name|friend
-name|class
 name|ValueHandleBase
-decl_stmt|;
-name|friend
-name|class
-name|MetadataContextImpl
 decl_stmt|;
 name|friend
 name|class
@@ -941,15 +922,30 @@ name|PredBB
 argument_list|)
 return|;
 block|}
-comment|/// hasMetadata - Return true if metadata is attached with this value.
-name|bool
-name|hasMetadata
+name|protected
+label|:
+name|unsigned
+name|short
+name|getSubclassDataFromValue
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasMetadata
+name|SubclassData
 return|;
+block|}
+name|void
+name|setValueSubclassData
+parameter_list|(
+name|unsigned
+name|short
+name|D
+parameter_list|)
+block|{
+name|SubclassData
+operator|=
+name|D
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt
@@ -1346,6 +1342,38 @@ operator|>
 operator|(
 name|Val
 operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+specifier|inline
+name|bool
+name|isa_impl
+operator|<
+name|MDNode
+operator|,
+name|Value
+operator|>
+operator|(
+specifier|const
+name|Value
+operator|&
+name|Val
+operator|)
+block|{
+return|return
+name|Val
+operator|.
+name|getValueID
+argument_list|()
+operator|==
+name|Value
+operator|::
+name|MDNodeVal
 return|;
 block|}
 end_expr_stmt

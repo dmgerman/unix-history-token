@@ -243,7 +243,6 @@ return|return
 literal|0
 return|;
 block|}
-block|;
 comment|/// @name Assembler Backend Support
 comment|/// @{
 comment|//

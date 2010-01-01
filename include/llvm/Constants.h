@@ -2332,9 +2332,10 @@ argument|NumOps
 argument_list|)
 block|{
 comment|// Operation type (an Instruction opcode) is stored as the SubclassData.
-name|SubclassData
-operator|=
+name|setValueSubclassData
+argument_list|(
 name|Opcode
+argument_list|)
 block|;   }
 comment|// These private methods are used by the type resolution code to create
 comment|// ConstantExprs in intermediate forms.
@@ -3027,6 +3028,16 @@ block|;
 specifier|static
 name|Constant
 operator|*
+name|getNSWNeg
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
 name|getNSWAdd
 argument_list|(
 name|Constant
@@ -3042,6 +3053,20 @@ specifier|static
 name|Constant
 operator|*
 name|getNSWSub
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getNSWMul
 argument_list|(
 name|Constant
 operator|*
@@ -3460,7 +3485,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
+name|getSubclassDataFromValue
+argument_list|()
 return|;
 block|}
 comment|/// getPredicate - Return the ICMP or FCMP predicate value. Assert if this is
@@ -3596,6 +3622,23 @@ operator|==
 name|ConstantExprVal
 return|;
 block|}
+name|private
+operator|:
+comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
+comment|// subclasses cannot accidentally use it.
+name|void
+name|setValueSubclassData
+argument_list|(
+argument|unsigned short D
+argument_list|)
+block|{
+name|Value
+operator|::
+name|setValueSubclassData
+argument_list|(
+name|D
+argument_list|)
+block|;   }
 expr|}
 block|;
 name|template

@@ -73,12 +73,6 @@ directive|include
 file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -480,9 +474,7 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
-name|MachineBasicBlock
-operator|*
+name|unsigned
 operator|,
 name|unsigned
 operator|>
@@ -492,9 +484,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|BBVRegPair
 operator|,
@@ -537,6 +527,78 @@ operator|>
 name|ImpDefs
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// Lowered PHI nodes may be reused. We provide special DenseMap traits to
+end_comment
+
+begin_comment
+comment|// match PHI nodes with identical arguments.
+end_comment
+
+begin_decl_stmt
+name|struct
+name|PHINodeTraits
+range|:
+name|public
+name|DenseMapInfo
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+block|{
+specifier|static
+name|unsigned
+name|getHashValue
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|PtrVal
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|isEqual
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|LHS
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|RHS
+argument_list|)
+block|;     }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Map reusable lowered PHI node -> incoming join register.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|DenseMap
+operator|<
+name|MachineInstr
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|PHINodeTraits
+operator|>
+name|LoweredPHIMap
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|LoweredPHIMap
+name|LoweredPHIs
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 unit|};  }

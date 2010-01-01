@@ -404,6 +404,64 @@ name|type
 argument_list|)
 return|;
 block|}
+comment|/// getLargest - Returns the largest finite number in the given
+comment|/// semantics.
+comment|///
+comment|/// \param Negative - True iff the number should be negative
+specifier|static
+name|APFloat
+name|getLargest
+parameter_list|(
+specifier|const
+name|fltSemantics
+modifier|&
+name|Sem
+parameter_list|,
+name|bool
+name|Negative
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// getSmallest - Returns the smallest (by magnitude) finite number
+comment|/// in the given semantics.  Might be denormalized, which implies a
+comment|/// relative loss of precision.
+comment|///
+comment|/// \param Negative - True iff the number should be negative
+specifier|static
+name|APFloat
+name|getSmallest
+parameter_list|(
+specifier|const
+name|fltSemantics
+modifier|&
+name|Sem
+parameter_list|,
+name|bool
+name|Negative
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// getSmallestNormalized - Returns the smallest (by magnitude)
+comment|/// normalized finite number in the given semantics.
+comment|///
+comment|/// \param Negative - True iff the number should be negative
+specifier|static
+name|APFloat
+name|getSmallestNormalized
+parameter_list|(
+specifier|const
+name|fltSemantics
+modifier|&
+name|Sem
+parameter_list|,
+name|bool
+name|Negative
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// Profile - Used to insert APFloat objects, or objects that contain
 comment|///  APFloat objects, into FoldingSets.
 name|void
@@ -786,6 +844,47 @@ name|getHashValue
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Converts this value into a decimal string.
+comment|///
+comment|/// \param FormatPrecision The maximum number of digits of
+comment|///   precision to output.  If there are fewer digits available,
+comment|///   zero padding will not be used unless the value is
+comment|///   integral and small enough to be expressed in
+comment|///   FormatPrecision digits.  0 means to use the natural
+comment|///   precision of the number.
+comment|/// \param FormatMaxPadding The maximum number of zeros to
+comment|///   consider inserting before falling back to scientific
+comment|///   notation.  0 means to always use scientific notation.
+comment|///
+comment|/// Number       Precision    MaxPadding      Result
+comment|/// ------       ---------    ----------      ------
+comment|/// 1.01E+4              5             2       10100
+comment|/// 1.01E+4              4             2       1.01E+4
+comment|/// 1.01E+4              5             1       1.01E+4
+comment|/// 1.01E-2              5             2       0.0101
+comment|/// 1.01E-2              4             2       0.0101
+comment|/// 1.01E-2              4             1       1.01E-2
+name|void
+name|toString
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Str
+argument_list|,
+name|unsigned
+name|FormatPrecision
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|FormatMaxPadding
+operator|=
+literal|3
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 comment|/* Trivial queries.  */

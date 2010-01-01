@@ -101,12 +101,10 @@ begin_comment
 comment|//
 end_comment
 
-begin_decl_stmt
-name|class
+begin_struct
+struct|struct
 name|LTOCodeGenerator
 block|{
-name|public
-label|:
 specifier|static
 specifier|const
 name|char
@@ -124,7 +122,7 @@ expr_stmt|;
 name|bool
 name|addModule
 argument_list|(
-name|class
+expr|struct
 name|LTOModule
 operator|*
 argument_list|,
@@ -336,11 +334,8 @@ operator|*
 name|_assemblerPath
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+struct|;
+end_struct
 
 begin_endif
 endif|#

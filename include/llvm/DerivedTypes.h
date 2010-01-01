@@ -2019,18 +2019,11 @@ name|OpaqueType
 operator|*
 name|get
 argument_list|(
-argument|LLVMContext&C
-argument_list|)
-block|{
-return|return
-name|new
-name|OpaqueType
-argument_list|(
+name|LLVMContext
+operator|&
 name|C
 argument_list|)
-return|;
-comment|// All opaque types are distinct
-block|}
+block|;
 comment|// Implement support for type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

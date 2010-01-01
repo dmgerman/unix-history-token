@@ -91,6 +91,12 @@ directive|include
 file|"llvm/DerivedTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -683,8 +689,7 @@ argument|Value *S1
 argument_list|,
 argument|Value *S2
 argument_list|,
-argument|const Twine&Name =
-literal|""
+argument|const Twine&Name = Twine()
 argument_list|,
 argument|Instruction *InsertBefore =
 literal|0
@@ -1234,6 +1239,125 @@ return|return
 name|BO
 return|;
 block|}
+comment|/// CreateNSWMul - Create a Mul operator with the NSW flag set.
+comment|///
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWMul
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name =
+literal|""
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateMul
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWMul
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|BasicBlock *BB
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateMul
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|BB
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWMul
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|Instruction *I
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateMul
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|I
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoSignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
 comment|/// CreateExactSDiv - Create an SDiv operator with the exact flag set.
 comment|///
 specifier|static
@@ -1386,6 +1510,48 @@ specifier|static
 name|BinaryOperator
 operator|*
 name|CreateNeg
+argument_list|(
+name|Value
+operator|*
+name|Op
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+argument_list|,
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+argument_list|)
+block|;
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWNeg
+argument_list|(
+name|Value
+operator|*
+name|Op
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|,
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+literal|0
+argument_list|)
+block|;
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNSWNeg
 argument_list|(
 name|Value
 operator|*
@@ -2821,7 +2987,8 @@ block|{
 return|return
 name|Predicate
 argument_list|(
-name|SubclassData
+name|getSubclassDataFromInstruction
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -2832,9 +2999,10 @@ argument_list|(
 argument|Predicate P
 argument_list|)
 block|{
-name|SubclassData
-operator|=
+name|setInstructionSubclassData
+argument_list|(
 name|P
+argument_list|)
 block|; }
 specifier|static
 name|bool
@@ -3219,6 +3387,23 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|private
+operator|:
+comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
+comment|// subclasses cannot accidentally use it.
+name|void
+name|setValueSubclassData
+argument_list|(
+argument|unsigned short D
+argument_list|)
+block|{
+name|Value
+operator|::
+name|setValueSubclassData
+argument_list|(
+name|D
+argument_list|)
+block|;   }
 expr|}
 block|;
 comment|// FIXME: these are redundant if CmpInst< BinaryOperator

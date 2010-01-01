@@ -79,14 +79,17 @@ comment|//===-------------------------------------------------------------------
 name|namespace
 name|TOI
 block|{
-comment|// Operand constraints: only "tied_to" for now.
+comment|// Operand constraints
 enum|enum
 name|OperandConstraint
 block|{
 name|TIED_TO
 init|=
 literal|0
+block|,
 comment|// Must be allocated the same register as.
+name|EARLY_CLOBBER
+comment|// Operand is an early clobber register operand
 block|}
 enum|;
 comment|/// OperandFlags - These are flags set on operands, but should be considered

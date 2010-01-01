@@ -97,9 +97,6 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
 struct_decl|struct
 name|DbgInfoIntrinsic
 struct_decl|;

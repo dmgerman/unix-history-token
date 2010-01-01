@@ -388,6 +388,8 @@ name|AttrListPtr
 name|AttributeList
 decl_stmt|;
 comment|///< Parameter attributes
+comment|// HasLazyArguments is stored in Value::SubclassData.
+comment|/*bool HasLazyArguments;*/
 comment|// The Calling Convention is stored in Value::SubclassData.
 comment|/*CallingConv::ID CallingConvention;*/
 name|friend
@@ -417,7 +419,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
+name|getSubclassDataFromValue
+argument_list|()
 operator|&
 literal|1
 return|;
@@ -616,7 +619,8 @@ operator|::
 name|ID
 operator|>
 operator|(
-name|SubclassData
+name|getSubclassDataFromValue
+argument_list|()
 operator|>>
 literal|1
 operator|)
@@ -631,10 +635,11 @@ name|ID
 name|CC
 argument_list|)
 block|{
-name|SubclassData
-operator|=
+name|setValueSubclassData
+argument_list|(
 operator|(
-name|SubclassData
+name|getSubclassDataFromValue
+argument_list|()
 operator|&
 literal|1
 operator|)
@@ -650,6 +655,7 @@ operator|)
 operator|<<
 literal|1
 operator|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// getAttributes - Return the attribute list for this Function.
@@ -1605,6 +1611,26 @@ name|hasAddressTaken
 argument_list|()
 specifier|const
 expr_stmt|;
+name|private
+label|:
+comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
+comment|// subclasses cannot accidentally use it.
+name|void
+name|setValueSubclassData
+parameter_list|(
+name|unsigned
+name|short
+name|D
+parameter_list|)
+block|{
+name|Value
+operator|::
+name|setValueSubclassData
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 specifier|inline

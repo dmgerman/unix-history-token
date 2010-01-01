@@ -481,6 +481,17 @@ argument|EVT VT
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// getCmpLibcallReturnType - Return the ValueType for comparison
+comment|/// libcalls. Comparions libcalls include floating point comparion calls,
+comment|/// and Ordered/Unordered check calls on floating point numbers.
+name|virtual
+name|MVT
+operator|::
+name|SimpleValueType
+name|getCmpLibcallReturnType
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getBooleanContents - For targets without i1 registers, this gives the
 comment|/// nature of the high-bits of boolean values held in types wider than i1.
 comment|/// "Boolean values" are special true/false values produced by nodes like
@@ -4882,6 +4893,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|DebugLoc dl
+argument_list|,
+argument|unsigned Order
 argument_list|)
 expr_stmt|;
 comment|/// LowerCall - This hook must be implemented to lower calls into the
@@ -5346,78 +5359,6 @@ block|{
 comment|// Conservative default: no calls are eligible.
 return|return
 name|false
-return|;
-block|}
-comment|/// GetPossiblePreceedingTailCall - Get preceeding TailCallNodeOpCode node if
-comment|/// it exists. Skip a possible ISD::TokenFactor.
-specifier|static
-name|SDValue
-name|GetPossiblePreceedingTailCall
-parameter_list|(
-name|SDValue
-name|Chain
-parameter_list|,
-name|unsigned
-name|TailCallNodeOpCode
-parameter_list|)
-block|{
-if|if
-condition|(
-name|Chain
-operator|.
-name|getOpcode
-argument_list|()
-operator|==
-name|TailCallNodeOpCode
-condition|)
-block|{
-return|return
-name|Chain
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Chain
-operator|.
-name|getOpcode
-argument_list|()
-operator|==
-name|ISD
-operator|::
-name|TokenFactor
-condition|)
-block|{
-if|if
-condition|(
-name|Chain
-operator|.
-name|getNumOperands
-argument_list|()
-operator|&&
-name|Chain
-operator|.
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|.
-name|getOpcode
-argument_list|()
-operator|==
-name|TailCallNodeOpCode
-condition|)
-return|return
-name|Chain
-operator|.
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-return|;
-block|}
-return|return
-name|Chain
 return|;
 block|}
 comment|/// getTargetNodeName() - This method returns the name of a target specific

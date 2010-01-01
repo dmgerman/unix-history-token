@@ -110,8 +110,28 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|_MSC_VER
 end_ifdef
+
+begin_comment
+comment|// FIXME: This define is wrong:
+end_comment
+
+begin_comment
+comment|//  - _snprintf does not guarantee that trailing null is always added - if
+end_comment
+
+begin_comment
+comment|//    there is no space for null, it does not report any error.
+end_comment
+
+begin_comment
+comment|//  - According to C++ standard, snprintf should be visible in the 'std'
+end_comment
+
+begin_comment
+comment|//    namespace - this define makes this impossible.
+end_comment
 
 begin_define
 define|#

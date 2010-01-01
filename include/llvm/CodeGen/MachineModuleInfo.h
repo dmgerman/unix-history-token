@@ -199,6 +199,12 @@ directive|include
 file|"llvm/Metadata.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ValueHandle.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

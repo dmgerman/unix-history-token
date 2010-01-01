@@ -449,7 +449,48 @@ return|return
 name|ParentLoop
 return|;
 block|}
-comment|/// contains - Return true if the specified basic block is in this loop
+comment|/// contains - Return true if the specified loop is contained within in
+comment|/// this loop.
+comment|///
+name|bool
+name|contains
+argument_list|(
+specifier|const
+name|LoopT
+operator|*
+name|L
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|L
+operator|==
+name|this
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|L
+operator|==
+literal|0
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|contains
+argument_list|(
+name|L
+operator|->
+name|getParentLoop
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// contains - Return true if the specified basic block is in this loop.
 comment|///
 name|bool
 name|contains
@@ -477,6 +518,30 @@ argument_list|)
 operator|!=
 name|block_end
 argument_list|()
+return|;
+block|}
+comment|/// contains - Return true if the specified instruction is in this loop.
+comment|///
+name|template
+operator|<
+name|class
+name|InstT
+operator|>
+name|bool
+name|contains
+argument_list|(
+argument|const InstT *Inst
+argument_list|)
+specifier|const
+block|{
+return|return
+name|contains
+argument_list|(
+name|Inst
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// iterator/begin/end - Return the loops contained entirely within this loop.
@@ -2924,20 +2989,12 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_expr_stmt
-name|void
-name|dump
-argument_list|()
-specifier|const
-block|{
-name|print
-argument_list|(
-name|errs
-argument_list|()
-argument_list|)
-block|;   }
+begin_label
 name|protected
-operator|:
+label|:
+end_label
+
+begin_expr_stmt
 name|friend
 name|class
 name|LoopInfoBase

@@ -82,6 +82,9 @@ block|{
 name|class
 name|LLVMContext
 decl_stmt|;
+name|class
+name|MDNode
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -127,61 +130,17 @@ name|BasicBlock
 modifier|*
 name|Parent
 decl_stmt|;
-name|friend
-name|class
-name|SymbolTableListTraits
-operator|<
-name|Instruction
-operator|,
-name|BasicBlock
-operator|>
-expr_stmt|;
-name|void
-name|setParent
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|P
-parameter_list|)
-function_decl|;
-name|protected
-label|:
-name|Instruction
-argument_list|(
-argument|const Type *Ty
-argument_list|,
-argument|unsigned iType
-argument_list|,
-argument|Use *Ops
-argument_list|,
-argument|unsigned NumOps
-argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
-argument_list|)
-empty_stmt|;
-name|Instruction
-argument_list|(
-argument|const Type *Ty
-argument_list|,
-argument|unsigned iType
-argument_list|,
-argument|Use *Ops
-argument_list|,
-argument|unsigned NumOps
-argument_list|,
-argument|BasicBlock *InsertAtEnd
-argument_list|)
-empty_stmt|;
-name|virtual
-name|Instruction
-operator|*
-name|clone_impl
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
+enum|enum
+block|{
+comment|/// HasMetadataBit - This is a bit stored in the SubClassData field which
+comment|/// indicates whether this instruction has metadata attached to it or not.
+name|HasMetadataBit
+init|=
+literal|1
+operator|<<
+literal|15
+block|}
+enum|;
 name|public
 label|:
 comment|// Out of line virtual method, so the vtable, etc has a home.
@@ -189,75 +148,6 @@ operator|~
 name|Instruction
 argument_list|()
 expr_stmt|;
-comment|/// clone() - Create a copy of 'this' instruction that is identical in all
-comment|/// ways except the following:
-comment|///   * The instruction has no parent
-comment|///   * The instruction has no name
-comment|///
-name|Instruction
-operator|*
-name|clone
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// isIdenticalTo - Return true if the specified instruction is exactly
-comment|/// identical to the current one.  This means that all operands match and any
-comment|/// extra information (e.g. load is volatile) agree.
-name|bool
-name|isIdenticalTo
-argument_list|(
-specifier|const
-name|Instruction
-operator|*
-name|I
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// isIdenticalToWhenDefined - This is like isIdenticalTo, except that it
-comment|/// ignores the SubclassOptionalData flags, which specify conditions
-comment|/// under which the instruction's result is undefined.
-name|bool
-name|isIdenticalToWhenDefined
-argument_list|(
-specifier|const
-name|Instruction
-operator|*
-name|I
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// This function determines if the specified instruction executes the same
-comment|/// operation as the current one. This means that the opcodes, type, operand
-comment|/// types and any other factors affecting the operation must be the same. This
-comment|/// is similar to isIdenticalTo except the operands themselves don't have to
-comment|/// be identical.
-comment|/// @returns true if the specified instruction is the same operation as
-comment|/// the current one.
-comment|/// @brief Determine if one instruction is the same operation as another.
-name|bool
-name|isSameOperationAs
-argument_list|(
-specifier|const
-name|Instruction
-operator|*
-name|I
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// isUsedOutsideOfBlock - Return true if there are any uses of this
-comment|/// instruction in blocks other than the specified block.  Note that PHI nodes
-comment|/// are considered to evaluate their operands in the corresponding predecessor
-comment|/// block.
-name|bool
-name|isUsedOutsideOfBlock
-argument_list|(
-specifier|const
-name|BasicBlock
-operator|*
-name|BB
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// use_back - Specialize the methods defined in Value, as we know that an
 comment|/// instruction can only be used by other instructions.
 name|Instruction
@@ -296,8 +186,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|// Accessor methods...
-comment|//
 specifier|inline
 specifier|const
 name|BasicBlock
@@ -365,10 +253,10 @@ modifier|*
 name|MovePos
 parameter_list|)
 function_decl|;
-comment|// ---------------------------------------------------------------------------
-comment|/// Subclass classification... getOpcode() returns a member of
-comment|/// one of the enums that is coming soon (down below)...
-comment|///
+comment|//===--------------------------------------------------------------------===//
+comment|// Subclass classification.
+comment|//===--------------------------------------------------------------------===//
+comment|/// getOpcode() returns a member of one of the enums like Instruction::Add.
 name|unsigned
 name|getOpcode
 argument_list|()
@@ -569,6 +457,195 @@ operator|<
 name|CastOpsEnd
 return|;
 block|}
+comment|//===--------------------------------------------------------------------===//
+comment|// Metadata manipulation.
+comment|//===--------------------------------------------------------------------===//
+comment|/// hasMetadata() - Return true if this instruction has any metadata attached
+comment|/// to it.
+name|bool
+name|hasMetadata
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+name|HasMetadataBit
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// getMetadata - Get the metadata of given kind attached to this Instruction.
+comment|/// If the metadata is not found then return null.
+name|MDNode
+modifier|*
+name|getMetadata
+argument_list|(
+name|unsigned
+name|KindID
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasMetadata
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|getMetadataImpl
+argument_list|(
+name|KindID
+argument_list|)
+return|;
+block|}
+comment|/// getMetadata - Get the metadata of given kind attached to this Instruction.
+comment|/// If the metadata is not found then return null.
+name|MDNode
+modifier|*
+name|getMetadata
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Kind
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasMetadata
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|getMetadataImpl
+argument_list|(
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// getAllMetadata - Get all metadata attached to this Instruction.  The first
+comment|/// element of each pair returned is the KindID, the second element is the
+comment|/// metadata value.  This list is returned sorted by the KindID.
+name|void
+name|getAllMetadata
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+name|MDNode
+operator|*
+operator|>
+expr|>
+operator|&
+name|MDs
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|hasMetadata
+argument_list|()
+condition|)
+name|getAllMetadataImpl
+argument_list|(
+name|MDs
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// setMetadata - Set the metadata of of the specified kind to the specified
+comment|/// node.  This updates/replaces metadata if already present, or removes it if
+comment|/// Node is null.
+name|void
+name|setMetadata
+parameter_list|(
+name|unsigned
+name|KindID
+parameter_list|,
+name|MDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
+name|void
+name|setMetadata
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Kind
+parameter_list|,
+name|MDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
+name|private
+label|:
+comment|// These are all implemented in Metadata.cpp.
+name|MDNode
+modifier|*
+name|getMetadataImpl
+argument_list|(
+name|unsigned
+name|KindID
+argument_list|)
+decl|const
+decl_stmt|;
+name|MDNode
+modifier|*
+name|getMetadataImpl
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|getAllMetadataImpl
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+name|MDNode
+operator|*
+operator|>
+expr|>
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|removeAllMetadata
+parameter_list|()
+function_decl|;
+name|public
+label|:
+comment|//===--------------------------------------------------------------------===//
+comment|// Predicates and helper methods.
+comment|//===--------------------------------------------------------------------===//
 comment|/// isAssociative - Return true if the instruction is associative:
 comment|///
 comment|///   Associative operators satisfy:  x op (y op z) === (x op y) op z
@@ -696,6 +773,75 @@ name|isSafeToSpeculativelyExecute
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// clone() - Create a copy of 'this' instruction that is identical in all
+comment|/// ways except the following:
+comment|///   * The instruction has no parent
+comment|///   * The instruction has no name
+comment|///
+name|Instruction
+operator|*
+name|clone
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// isIdenticalTo - Return true if the specified instruction is exactly
+comment|/// identical to the current one.  This means that all operands match and any
+comment|/// extra information (e.g. load is volatile) agree.
+name|bool
+name|isIdenticalTo
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isIdenticalToWhenDefined - This is like isIdenticalTo, except that it
+comment|/// ignores the SubclassOptionalData flags, which specify conditions
+comment|/// under which the instruction's result is undefined.
+name|bool
+name|isIdenticalToWhenDefined
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// This function determines if the specified instruction executes the same
+comment|/// operation as the current one. This means that the opcodes, type, operand
+comment|/// types and any other factors affecting the operation must be the same. This
+comment|/// is similar to isIdenticalTo except the operands themselves don't have to
+comment|/// be identical.
+comment|/// @returns true if the specified instruction is the same operation as
+comment|/// the current one.
+comment|/// @brief Determine if one instruction is the same operation as another.
+name|bool
+name|isSameOperationAs
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isUsedOutsideOfBlock - Return true if there are any uses of this
+comment|/// instruction in blocks other than the specified block.  Note that PHI nodes
+comment|/// are considered to evaluate their operands in the corresponding predecessor
+comment|/// block.
+name|bool
+name|isUsedOutsideOfBlock
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -734,7 +880,7 @@ name|InstructionVal
 return|;
 block|}
 comment|//----------------------------------------------------------------------
-comment|// Exported enumerations...
+comment|// Exported enumerations.
 comment|//
 enum|enum
 name|TermOps
@@ -902,6 +1048,171 @@ directive|include
 file|"llvm/Instruction.def"
 block|}
 enum|;
+name|private
+label|:
+comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
+comment|// subclasses cannot accidentally use it.
+name|void
+name|setValueSubclassData
+parameter_list|(
+name|unsigned
+name|short
+name|D
+parameter_list|)
+block|{
+name|Value
+operator|::
+name|setValueSubclassData
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+name|unsigned
+name|short
+name|getSubclassDataFromValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|::
+name|getSubclassDataFromValue
+argument_list|()
+return|;
+block|}
+name|void
+name|setHasMetadata
+parameter_list|(
+name|bool
+name|V
+parameter_list|)
+block|{
+name|setValueSubclassData
+argument_list|(
+operator|(
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+operator|~
+name|HasMetadataBit
+operator|)
+operator||
+operator|(
+name|V
+condition|?
+name|HasMetadataBit
+else|:
+literal|0
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|friend
+name|class
+name|SymbolTableListTraits
+operator|<
+name|Instruction
+operator|,
+name|BasicBlock
+operator|>
+expr_stmt|;
+name|void
+name|setParent
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|P
+parameter_list|)
+function_decl|;
+name|protected
+label|:
+comment|// Instruction subclasses can stick up to 15 bits of stuff into the
+comment|// SubclassData field of instruction with these members.
+comment|// Verify that only the low 15 bits are used.
+name|void
+name|setInstructionSubclassData
+parameter_list|(
+name|unsigned
+name|short
+name|D
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|D
+operator|&
+name|HasMetadataBit
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Out of range value put into field"
+argument_list|)
+expr_stmt|;
+name|setValueSubclassData
+argument_list|(
+operator|(
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+name|HasMetadataBit
+operator|)
+operator||
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+name|unsigned
+name|getSubclassDataFromInstruction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+operator|~
+name|HasMetadataBit
+return|;
+block|}
+name|Instruction
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|unsigned iType
+argument_list|,
+argument|Use *Ops
+argument_list|,
+argument|unsigned NumOps
+argument_list|,
+argument|Instruction *InsertBefore =
+literal|0
+argument_list|)
+empty_stmt|;
+name|Instruction
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|unsigned iType
+argument_list|,
+argument|Use *Ops
+argument_list|,
+argument|unsigned NumOps
+argument_list|,
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+empty_stmt|;
+name|virtual
+name|Instruction
+operator|*
+name|clone_impl
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|// Instruction* is only 4-byte aligned.

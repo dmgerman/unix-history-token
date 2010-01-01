@@ -456,6 +456,8 @@ name|getNext
 argument_list|()
 control|)
 block|{
+name|this
+operator|->
 name|addLiteralOption
 argument_list|(
 name|Node

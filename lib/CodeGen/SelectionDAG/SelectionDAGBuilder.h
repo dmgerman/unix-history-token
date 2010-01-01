@@ -307,6 +307,8 @@ name|SDValue
 operator|>
 name|NodeMap
 expr_stmt|;
+name|public
+label|:
 comment|/// PendingLoads - Loads are not emitted to the program immediately.  We bunch
 comment|/// them up and then emit token factor nodes when possible.  This allows us to
 comment|/// get simple disambiguation between loads without worrying about alias
@@ -319,6 +321,8 @@ literal|8
 operator|>
 name|PendingLoads
 expr_stmt|;
+name|private
+label|:
 comment|/// PendingExports - CopyToReg nodes that copy values to virtual registers
 comment|/// for export to other blocks need to be emitted before any terminator
 comment|/// instruction, but they have no other ordering requirements. We bunch them
@@ -332,6 +336,11 @@ literal|8
 operator|>
 name|PendingExports
 expr_stmt|;
+comment|/// SDNodeOrder - A unique monotonically increasing number used to order the
+comment|/// SDNodes we create.
+name|unsigned
+name|SDNodeOrder
+decl_stmt|;
 comment|/// Case - A struct to record the Value for a switch case, and the
 comment|/// case's target basic block.
 struct|struct
@@ -1222,6 +1231,11 @@ name|getUnknownLoc
 argument_list|()
 argument_list|)
 operator|,
+name|SDNodeOrder
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|TLI
 argument_list|(
 name|tli
@@ -1311,6 +1325,15 @@ name|CurDebugLoc
 operator|=
 name|dl
 expr_stmt|;
+block|}
+name|unsigned
+name|getSDNodeOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SDNodeOrder
+return|;
 block|}
 name|void
 name|CopyValueToVirtualRegister
@@ -2271,6 +2294,14 @@ block|{ }
 comment|// PHI nodes are handled specially.
 name|void
 name|visitCall
+parameter_list|(
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|bool
+name|visitMemCmpCall
 parameter_list|(
 name|CallInst
 modifier|&

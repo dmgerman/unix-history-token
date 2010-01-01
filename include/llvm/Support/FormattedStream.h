@@ -148,6 +148,7 @@ name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
+specifier|const
 block|{
 comment|// This has the same effect as calling TheStream.current_pos(),
 comment|// but that interface is private.
