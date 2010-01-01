@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -emit-llvm -o %t %s
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN: grep '_renamed' %t | count 2
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -DUSE_DEF -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -DUSE_DEF -emit-llvm -o %t %s
 end_comment
 
 begin_comment

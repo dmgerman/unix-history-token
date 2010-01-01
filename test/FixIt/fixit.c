@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -pedantic -fixit %s -o - | grep -v 'CHECK'> %t
+comment|// RUN: %clang_cc1 -pedantic -fixit %s -o - | grep -v 'CHECK'> %t
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -pedantic -Werror -x c -
+comment|// RUN: %clang_cc1 -pedantic -Werror -x c -
 end_comment
 
 begin_comment

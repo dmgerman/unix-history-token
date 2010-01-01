@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -verify -fsyntax-only
+comment|// RUN: %clang_cc1 %s -verify -fsyntax-only
 end_comment
 
 begin_typedef
@@ -159,6 +159,17 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-error {{pointer to function type 'f' (aka 'int (void)') may not be 'restrict' qualified}}
+end_comment
+
+begin_struct_decl
+specifier|restrict
+struct_decl|struct
+name|hallo
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|// expected-error {{restrict requires a pointer or reference}}
 end_comment
 
 end_unit

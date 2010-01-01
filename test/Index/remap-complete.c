@@ -8,7 +8,7 @@ comment|// XFAIL: win32
 end_comment
 
 begin_comment
-comment|// CHECK: FunctionDecl:{TypedText f0}{LeftParen (}{RightParen )}
+comment|// CHECK: FunctionDecl:{ResultType void}{TypedText f0}{LeftParen (}{RightParen )}
 end_comment
 
 begin_function

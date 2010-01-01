@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: clang-cc %s -Eonly -std=c89 -pedantic -verify */
+comment|/* RUN: %clang_cc1 %s -Eonly -std=c89 -pedantic -verify */
 end_comment
 
 begin_comment

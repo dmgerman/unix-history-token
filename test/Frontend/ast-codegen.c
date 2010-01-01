@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -emit-ast -o %t.ast %s
+comment|// RUN: %clang -emit-ast -o %t.ast %s
 end_comment
 
 begin_comment
-comment|// RUN: clang -emit-llvm -S -o - %t.ast | FileCheck %s
+comment|// RUN: %clang -emit-llvm -S -o - %t.ast | FileCheck %s
 end_comment
 
 begin_comment

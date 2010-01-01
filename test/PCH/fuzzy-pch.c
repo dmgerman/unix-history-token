@@ -4,19 +4,19 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -DFOO -o %t %S/variables.h
+comment|// RUN: %clang_cc1 -emit-pch -DFOO -o %t %S/variables.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -DBAR=int -include-pch %t -fsyntax-only -pedantic %s
+comment|// RUN: %clang_cc1 -DBAR=int -include-pch %t -fsyntax-only -pedantic %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -DFOO -DBAR=int -include-pch %t -Werror %s
+comment|// RUN: %clang_cc1 -DFOO -DBAR=int -include-pch %t -Werror %s
 end_comment
 
 begin_comment
-comment|// RUN: not clang-cc -DFOO -DBAR=int -DX=5 -include-pch %t -Werror %s
+comment|// RUN: not %clang_cc1 -DFOO -DBAR=int -DX=5 -include-pch %t -Werror %s
 end_comment
 
 begin_decl_stmt

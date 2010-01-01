@@ -92,6 +92,12 @@ name|namespace
 name|clang
 block|{
 name|class
+name|ASTRecordLayout
+decl_stmt|;
+name|class
+name|CXXRecordDecl
+decl_stmt|;
+name|class
 name|FieldDecl
 decl_stmt|;
 name|class
@@ -309,6 +315,21 @@ specifier|const
 name|RecordDecl
 modifier|*
 name|D
+parameter_list|)
+function_decl|;
+comment|/// LayoutBases - layout the bases and vtable pointer of a record decl.
+name|void
+name|LayoutBases
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+specifier|const
+name|ASTRecordLayout
+modifier|&
+name|Layout
 parameter_list|)
 function_decl|;
 comment|/// LayoutField - layout a single field. Returns false if the operation failed

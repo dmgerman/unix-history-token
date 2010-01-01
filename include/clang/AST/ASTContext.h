@@ -173,6 +173,9 @@ name|class
 name|BlockExpr
 decl_stmt|;
 name|class
+name|CharUnits
+decl_stmt|;
+name|class
 name|Expr
 decl_stmt|;
 name|class
@@ -550,28 +553,6 @@ name|ObjCImplDecl
 operator|*
 operator|>
 name|ObjCImpls
-expr_stmt|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|FixedWidthIntType
-operator|*
-operator|>
-name|SignedFixedWidthIntTypes
-expr_stmt|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|FixedWidthIntType
-operator|*
-operator|>
-name|UnsignedFixedWidthIntTypes
 expr_stmt|;
 comment|/// BuiltinVaListType - built-in va list type.
 comment|/// This is initially null and set by Sema::LazilyCreateBuiltin when
@@ -2494,16 +2475,6 @@ return|return
 name|BuiltinVaListType
 return|;
 block|}
-name|QualType
-name|getFixedWidthIntType
-parameter_list|(
-name|unsigned
-name|Width
-parameter_list|,
-name|bool
-name|Signed
-parameter_list|)
-function_decl|;
 comment|/// getCVRQualifiedType - Returns a type with additional const,
 comment|/// volatile, or restrict qualifiers.
 name|QualType
@@ -2845,9 +2816,9 @@ operator|.
 name|first
 return|;
 block|}
-comment|/// getByteWidth - Return the size of a byte, in bits
+comment|/// getCharWidth - Return the size of the character type, in bits
 name|uint64_t
-name|getByteSize
+name|getCharWidth
 parameter_list|()
 block|{
 return|return
@@ -2857,44 +2828,24 @@ name|CharTy
 argument_list|)
 return|;
 block|}
-comment|/// getTypeSizeInBytes - Return the size of the specified type, in bytes.
+comment|/// getTypeSizeInChars - Return the size of the specified type, in characters.
 comment|/// This method does not work on incomplete types.
-name|uint64_t
-name|getTypeSizeInBytes
+name|CharUnits
+name|getTypeSizeInChars
 parameter_list|(
 name|QualType
 name|T
 parameter_list|)
-block|{
-return|return
-name|getTypeSize
-argument_list|(
-name|T
-argument_list|)
-operator|/
-name|getByteSize
-argument_list|()
-return|;
-block|}
-name|uint64_t
-name|getTypeSizeInBytes
+function_decl|;
+name|CharUnits
+name|getTypeSizeInChars
 parameter_list|(
 specifier|const
 name|Type
 modifier|*
 name|T
 parameter_list|)
-block|{
-return|return
-name|getTypeSize
-argument_list|(
-name|T
-argument_list|)
-operator|/
-name|getByteSize
-argument_list|()
-return|;
-block|}
+function_decl|;
 comment|/// getTypeAlign - Return the ABI-specified alignment of a type, in bits.
 comment|/// This method does not work on incomplete types.
 name|unsigned
@@ -3204,6 +3155,28 @@ name|T2
 argument_list|)
 return|;
 block|}
+comment|/// \brief Returns this type as a completely-unqualified array type, capturing
+comment|/// the qualifiers in Quals. This only operates on canonical types in order
+comment|/// to ensure the ArrayType doesn't itself have qualifiers.
+comment|///
+comment|/// \param T is the canonicalized QualType, which may be an ArrayType
+comment|///
+comment|/// \param Quals will receive the full set of qualifiers that were
+comment|/// applied to the element type of the array.
+comment|///
+comment|/// \returns if this is an array type, the completely unqualified array type
+comment|/// that corresponds to it. Otherwise, returns this->getUnqualifiedType().
+name|QualType
+name|getUnqualifiedArrayType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|Qualifiers
+modifier|&
+name|Quals
+parameter_list|)
+function_decl|;
 comment|/// \brief Determine whether the given types are equivalent after
 comment|/// cvr-qualifiers have been removed.
 name|bool
@@ -3232,16 +3205,33 @@ argument_list|(
 name|T2
 argument_list|)
 decl_stmt|;
-return|return
+name|Qualifiers
+name|Quals
+decl_stmt|;
+name|QualType
+name|UnqualT1
+init|=
+name|getUnqualifiedArrayType
+argument_list|(
 name|CT1
-operator|.
-name|getUnqualifiedType
-argument_list|()
-operator|==
+argument_list|,
+name|Quals
+argument_list|)
+decl_stmt|;
+name|QualType
+name|UnqualT2
+init|=
+name|getUnqualifiedArrayType
+argument_list|(
 name|CT2
-operator|.
-name|getUnqualifiedType
-argument_list|()
+argument_list|,
+name|Quals
+argument_list|)
+decl_stmt|;
+return|return
+name|UnqualT1
+operator|==
+name|UnqualT2
 return|;
 block|}
 comment|/// \brief Retrieves the "canonical" declaration of
@@ -4437,6 +4427,8 @@ operator|::
 name|ASTContext
 operator|&
 name|C
+argument_list|,
+name|size_t
 argument_list|)
 name|throw
 argument_list|()

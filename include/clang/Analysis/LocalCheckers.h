@@ -266,6 +266,14 @@ modifier|&
 name|BR
 parameter_list|)
 function_decl|;
+name|void
+name|RegisterCallInliner
+parameter_list|(
+name|GRExprEngine
+modifier|&
+name|Eng
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

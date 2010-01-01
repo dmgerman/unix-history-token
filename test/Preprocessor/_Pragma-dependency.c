@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -E 2>&1 | grep 'DO_PRAGMA (STR'
+comment|// RUN: %clang_cc1 %s -E 2>&1 | grep 'DO_PRAGMA (STR'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E 2>&1 | grep '7:3'
+comment|// RUN: %clang_cc1 %s -E 2>&1 | grep '7:3'
 end_comment
 
 begin_define

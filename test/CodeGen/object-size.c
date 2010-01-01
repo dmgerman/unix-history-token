@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple x86_64-apple-darwin -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_define
@@ -165,7 +165,7 @@ name|test5
 parameter_list|()
 block|{
 comment|// CHECK:     %tmp = load i8** @gp
-comment|// CHECK-NEXT:%0 = call i64 @llvm.objectsize.i64(i8* %tmp, i32 0)
+comment|// CHECK-NEXT:%0 = call i64 @llvm.objectsize.i64(i8* %tmp, i1 false)
 comment|// CHECK-NEXT:%cmp = icmp ne i64 %0, -1
 name|strcpy
 argument_list|(

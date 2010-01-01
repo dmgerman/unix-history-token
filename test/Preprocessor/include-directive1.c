@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s -fno-caret-diagnostics 2>&1>/dev/null | grep 'file successfully included' | count 3
+comment|// RUN: %clang_cc1 -E %s -fno-caret-diagnostics 2>&1>/dev/null | grep 'file successfully included' | count 3
 end_comment
 
 begin_comment

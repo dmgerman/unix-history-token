@@ -815,6 +815,10 @@ argument_list|(
 name|CXXBoolLiteralExprClass
 argument_list|,
 name|Ty
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Value
@@ -912,6 +916,10 @@ argument_list|(
 name|CXXNullPtrLiteralExprClass
 argument_list|,
 name|Ty
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Loc
@@ -1503,15 +1511,35 @@ operator|:
 name|public
 name|Expr
 block|{
+comment|/// \brief The parameter whose default is being used.
+comment|///
+comment|/// When the bit is set, the subexpression is stored after the
+comment|/// CXXDefaultArgExpr itself. When the bit is clear, the parameter's
+comment|/// actual default expression is the subexpression.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|ParmVarDecl
 operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
 name|Param
+block|;
+comment|/// \brief The location where the default argument expression was used.
+name|SourceLocation
+name|Loc
 block|;
 name|protected
 operator|:
 name|CXXDefaultArgExpr
 argument_list|(
 argument|StmtClass SC
+argument_list|,
+argument|SourceLocation Loc
 argument_list|,
 argument|ParmVarDecl *param
 argument_list|)
@@ -1540,13 +1568,87 @@ argument_list|()
 operator|->
 name|getType
 argument_list|()
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Param
 argument_list|(
-argument|param
+name|param
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+argument|Loc
 argument_list|)
 block|{ }
+name|CXXDefaultArgExpr
+argument_list|(
+argument|StmtClass SC
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|ParmVarDecl *param
+argument_list|,
+argument|Expr *SubExpr
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|SC
+argument_list|,
+name|SubExpr
+operator|->
+name|getType
+argument_list|()
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|Param
+argument_list|(
+name|param
+argument_list|,
+name|true
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+argument|Loc
+argument_list|)
+block|{
+operator|*
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+operator|=
+name|SubExpr
+block|;   }
+name|protected
+operator|:
+name|virtual
+name|void
+name|DoDestroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
 name|public
 operator|:
 comment|// Param is the parameter whose default argument is used by this
@@ -1557,6 +1659,8 @@ operator|*
 name|Create
 argument_list|(
 argument|ASTContext&C
+argument_list|,
+argument|SourceLocation Loc
 argument_list|,
 argument|ParmVarDecl *Param
 argument_list|)
@@ -1570,10 +1674,28 @@ name|CXXDefaultArgExpr
 argument_list|(
 name|CXXDefaultArgExprClass
 argument_list|,
+name|Loc
+argument_list|,
 name|Param
 argument_list|)
 return|;
 block|}
+comment|// Param is the parameter whose default argument is used by this
+comment|// expression, and SubExpr is the expression that will actually be used.
+specifier|static
+name|CXXDefaultArgExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|ParmVarDecl *Param
+argument_list|,
+argument|Expr *SubExpr
+argument_list|)
+block|;
 comment|// Retrieve the parameter that the argument was created from.
 specifier|const
 name|ParmVarDecl
@@ -1584,6 +1706,9 @@ specifier|const
 block|{
 return|return
 name|Param
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 name|ParmVarDecl
@@ -1593,6 +1718,9 @@ argument_list|()
 block|{
 return|return
 name|Param
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 comment|// Retrieve the actual argument to the function call.
@@ -1603,8 +1731,32 @@ name|getExpr
 argument_list|()
 specifier|const
 block|{
-return|return
+if|if
+condition|(
 name|Param
+operator|.
+name|getInt
+argument_list|()
+condition|)
+return|return
+operator|*
+name|reinterpret_cast
+operator|<
+name|Expr
+specifier|const
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+return|return
+name|getParam
+argument_list|()
 operator|->
 name|getDefaultArg
 argument_list|()
@@ -1615,11 +1767,44 @@ operator|*
 name|getExpr
 argument_list|()
 block|{
-return|return
+if|if
+condition|(
 name|Param
+operator|.
+name|getInt
+argument_list|()
+condition|)
+return|return
+operator|*
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+return|return
+name|getParam
+argument_list|()
 operator|->
 name|getDefaultArg
 argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the location where this default argument was actually
+comment|/// used.
+name|SourceLocation
+name|getUsedLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
 return|;
 block|}
 name|virtual
@@ -1774,6 +1959,10 @@ name|subexpr
 operator|->
 name|getType
 argument_list|()
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Temp
@@ -1947,8 +2136,18 @@ name|CXXConstructorDecl
 operator|*
 name|Constructor
 block|;
+name|SourceLocation
+name|Loc
+block|;
 name|bool
 name|Elidable
+operator|:
+literal|1
+block|;
+name|bool
+name|ZeroInitialization
+operator|:
+literal|1
 block|;
 name|Stmt
 operator|*
@@ -1968,6 +2167,8 @@ argument|StmtClass SC
 argument_list|,
 argument|QualType T
 argument_list|,
+argument|SourceLocation Loc
+argument_list|,
 argument|CXXConstructorDecl *d
 argument_list|,
 argument|bool elidable
@@ -1975,6 +2176,8 @@ argument_list|,
 argument|Expr **args
 argument_list|,
 argument|unsigned numargs
+argument_list|,
+argument|bool ZeroInitialization = false
 argument_list|)
 block|;
 operator|~
@@ -2012,6 +2215,8 @@ argument|ASTContext&C
 argument_list|,
 argument|QualType T
 argument_list|,
+argument|SourceLocation Loc
+argument_list|,
 argument|CXXConstructorDecl *D
 argument_list|,
 argument|bool Elidable
@@ -2019,6 +2224,8 @@ argument_list|,
 argument|Expr **Args
 argument_list|,
 argument|unsigned NumArgs
+argument_list|,
+argument|bool ZeroInitialization = false
 argument_list|)
 block|;
 name|CXXConstructorDecl
@@ -2041,6 +2248,27 @@ name|Constructor
 operator|=
 name|C
 block|; }
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
+block|}
+name|void
+name|setLocation
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|this
+operator|->
+name|Loc
+operator|=
+name|Loc
+block|; }
 comment|/// \brief Whether this construction is elidable.
 name|bool
 name|isElidable
@@ -2061,6 +2289,27 @@ name|Elidable
 operator|=
 name|E
 block|; }
+comment|/// \brief Whether this construction first requires
+comment|/// zero-initialization before the initializer is called.
+name|bool
+name|requiresZeroInitialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ZeroInitialization
+return|;
+block|}
+name|void
+name|setRequiresZeroInitialization
+argument_list|(
+argument|bool ZeroInit
+argument_list|)
+block|{
+name|ZeroInitialization
+operator|=
+name|ZeroInit
+block|;   }
 typedef|typedef
 name|ExprIterator
 name|arg_iterator
@@ -2226,41 +2475,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-block|{
-comment|// FIXME: Should we know where the parentheses are, if there are any?
-if|if
-condition|(
-name|NumArgs
-operator|==
-literal|0
-condition|)
-return|return
-name|SourceRange
-argument_list|()
-return|;
-return|return
-name|SourceRange
-argument_list|(
-name|Args
-index|[
-literal|0
-index|]
-operator|->
-name|getLocStart
-argument_list|()
-argument_list|,
-name|Args
-index|[
-name|NumArgs
-operator|-
-literal|1
-index|]
-operator|->
-name|getLocEnd
-argument_list|()
-argument_list|)
-return|;
-block|}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -4807,10 +5022,10 @@ name|StmtIterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|CXXExprWithTemporaries
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -4826,9 +5041,6 @@ block|;
 name|unsigned
 name|NumTemps
 block|;
-name|bool
-name|ShouldDestroyTemps
-block|;
 name|CXXExprWithTemporaries
 argument_list|(
 argument|Expr *SubExpr
@@ -4836,8 +5048,6 @@ argument_list|,
 argument|CXXTemporary **Temps
 argument_list|,
 argument|unsigned NumTemps
-argument_list|,
-argument|bool ShouldDestroyTemps
 argument_list|)
 block|;
 operator|~
@@ -4869,8 +5079,6 @@ argument_list|,
 argument|CXXTemporary **Temps
 argument_list|,
 argument|unsigned NumTemps
-argument_list|,
-argument|bool ShouldDestroyTemporaries
 argument_list|)
 block|;
 name|unsigned
@@ -4914,38 +5122,22 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|{
-name|assert
+return|return
+name|const_cast
+operator|<
+name|CXXExprWithTemporaries
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getTemporary
 argument_list|(
 name|i
-operator|<
-name|NumTemps
-operator|&&
-literal|"Index out of range"
 argument_list|)
-block|;
-return|return
-name|Temps
-index|[
-name|i
-index|]
 return|;
 block|}
-name|bool
-name|shouldDestroyTemporaries
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ShouldDestroyTemps
-return|;
-block|}
-name|void
-name|removeLastTemporary
-argument_list|()
-block|{
-name|NumTemps
-operator|--
-block|; }
 name|Expr
 operator|*
 name|getSubExpr
@@ -5040,7 +5232,7 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
 comment|/// \brief Describes an explicit type conversion that uses functional
 comment|/// notion but could not be resolved because one or more arguments are
 comment|/// type-dependent.
@@ -5064,7 +5256,7 @@ comment|/// constructor call, conversion function call, or some kind of type
 comment|/// conversion.
 name|class
 name|CXXUnresolvedConstructExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -5326,20 +5518,48 @@ name|virtual
 name|child_iterator
 name|child_begin
 argument_list|()
-block|;
+decl_stmt|;
 name|virtual
 name|child_iterator
 name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
+parameter_list|()
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Represents a C++ member access expression where the actual
+end_comment
+
+begin_comment
 comment|/// member referenced could not be resolved because the base
+end_comment
+
+begin_comment
 comment|/// expression or the member name was dependent.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Like UnresolvedMemberExprs, these can be either implicit or
+end_comment
+
+begin_comment
 comment|/// explicit accesses.  It is only possible to get one of these with
+end_comment
+
+begin_comment
 comment|/// an implicit access if a qualifier is provided.
+end_comment
+
+begin_decl_stmt
 name|class
 name|CXXDependentScopeMemberExpr
 range|:
@@ -5965,14 +6185,16 @@ argument_list|(
 name|MemberLoc
 argument_list|)
 expr_stmt|;
+end_decl_stmt
+
+begin_return
 return|return
 name|Range
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_function
-specifier|static
+unit|}    static
 name|bool
 name|classof
 parameter_list|(

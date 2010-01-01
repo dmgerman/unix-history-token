@@ -89,6 +89,12 @@ directive|include
 file|"clang/AST/DeclObjC.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclCXX.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -283,6 +289,12 @@ argument|FunctionDecl
 argument_list|)
 name|DISPATCH_CASE
 argument_list|(
+argument|CXXMethod
+argument_list|,
+argument|CXXMethodDecl
+argument_list|)
+name|DISPATCH_CASE
+argument_list|(
 argument|Var
 argument_list|,
 argument|VarDecl
@@ -342,6 +354,10 @@ argument_list|)
 name|DEFAULT_DISPATCH
 argument_list|(
 argument|FunctionDecl
+argument_list|)
+name|DEFAULT_DISPATCH
+argument_list|(
+argument|CXXMethodDecl
 argument_list|)
 name|DEFAULT_DISPATCH_VARDECL
 argument_list|(

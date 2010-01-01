@@ -207,7 +207,7 @@ operator|&
 name|AC
 argument_list|)
 expr_stmt|;
-comment|/// IsLive - Return true if a variable is live at beginning of a
+comment|/// IsLive - Return true if a variable is live at the end of a
 comment|/// specified block.
 name|bool
 name|isLive

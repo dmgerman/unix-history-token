@@ -4,11 +4,11 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple x86_64-apple-darwin9 -emit-pch -o %t.pch %S/tentative-defs.h
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 -emit-pch -o %t.pch %S/tentative-defs.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple x86_64-apple-darwin9 -include-pch %t.pch -verify -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 -include-pch %t.pch -verify -emit-llvm -o %t %s
 end_comment
 
 begin_comment

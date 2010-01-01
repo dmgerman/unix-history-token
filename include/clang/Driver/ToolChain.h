@@ -81,6 +81,9 @@ name|class
 name|DerivedArgList
 decl_stmt|;
 name|class
+name|Driver
+decl_stmt|;
+name|class
 name|HostInfo
 decl_stmt|;
 name|class
@@ -160,16 +163,12 @@ argument_list|()
 expr_stmt|;
 comment|// Accessors
 specifier|const
-name|HostInfo
+name|Driver
 operator|&
-name|getHost
+name|getDriver
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Host
-return|;
-block|}
+expr_stmt|;
 specifier|const
 name|llvm
 operator|::
@@ -428,6 +427,18 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// UseDwarfDebugFlags - Embed the compile options to clang into the Dwarf
+comment|/// compile unit information.
+name|virtual
+name|bool
+name|UseDwarfDebugFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

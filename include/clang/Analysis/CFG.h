@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/GraphTraits.h"
 end_include
 
@@ -73,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -119,6 +131,85 @@ decl_stmt|;
 name|class
 name|ASTContext
 decl_stmt|;
+comment|/// CFGElement - Represents a top-level expression in a basic block.
+name|class
+name|CFGElement
+block|{
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|Stmt
+operator|*
+operator|,
+literal|1
+operator|>
+name|Data
+expr_stmt|;
+name|public
+label|:
+name|explicit
+name|CFGElement
+parameter_list|()
+block|{}
+name|CFGElement
+argument_list|(
+argument|Stmt *S
+argument_list|,
+argument|bool lvalue
+argument_list|)
+block|:
+name|Data
+argument_list|(
+argument|S
+argument_list|,
+argument|lvalue ?
+literal|1
+argument|:
+literal|0
+argument_list|)
+block|{}
+name|Stmt
+operator|*
+name|getStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|bool
+name|asLValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+operator|.
+name|getInt
+argument_list|()
+operator|==
+literal|1
+return|;
+block|}
+name|operator
+name|Stmt
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|getStmt
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// CFGBlock - Represents a single basic block in a source-level CFG.
 comment|///  It consists of:
 comment|///
@@ -152,8 +243,7 @@ block|{
 typedef|typedef
 name|BumpVector
 operator|<
-name|Stmt
-operator|*
+name|CFGElement
 operator|>
 name|ImplTy
 expr_stmt|;
@@ -213,9 +303,8 @@ expr_stmt|;
 name|void
 name|push_back
 parameter_list|(
-name|Stmt
-modifier|*
-name|s
+name|CFGElement
+name|e
 parameter_list|,
 name|BumpVectorContext
 modifier|&
@@ -226,14 +315,13 @@ name|Impl
 operator|.
 name|push_back
 argument_list|(
-name|s
+name|e
 argument_list|,
 name|C
 argument_list|)
 expr_stmt|;
 block|}
-name|Stmt
-operator|*
+name|CFGElement
 name|front
 argument_list|()
 specifier|const
@@ -245,8 +333,7 @@ name|back
 argument_list|()
 return|;
 block|}
-name|Stmt
-operator|*
+name|CFGElement
 name|back
 argument_list|()
 specifier|const
@@ -350,8 +437,7 @@ name|end
 argument_list|()
 return|;
 block|}
-name|Stmt
-modifier|*
+name|CFGElement
 name|operator
 index|[]
 argument_list|(
@@ -510,7 +596,6 @@ operator|~
 name|CFGBlock
 argument_list|()
 block|{}
-expr_stmt|;
 comment|// Statement iterators
 typedef|typedef
 name|StatementList
@@ -536,8 +621,7 @@ operator|::
 name|const_reverse_iterator
 name|const_reverse_iterator
 expr_stmt|;
-name|Stmt
-operator|*
+name|CFGElement
 name|front
 argument_list|()
 specifier|const
@@ -549,8 +633,7 @@ name|front
 argument_list|()
 return|;
 block|}
-name|Stmt
-operator|*
+name|CFGElement
 name|back
 argument_list|()
 specifier|const
@@ -678,8 +761,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-name|Stmt
-modifier|*
+name|CFGElement
 name|operator
 index|[]
 argument_list|(
@@ -1211,13 +1293,21 @@ parameter_list|,
 name|BumpVectorContext
 modifier|&
 name|C
+parameter_list|,
+name|bool
+name|asLValue
 parameter_list|)
 block|{
 name|Stmts
 operator|.
 name|push_back
 argument_list|(
+name|CFGElement
+argument_list|(
 name|Statement
+argument_list|,
+name|asLValue
+argument_list|)
 argument_list|,
 name|C
 argument_list|)
@@ -1768,7 +1858,6 @@ argument_list|,
 literal|10
 argument_list|)
 block|{}
-expr_stmt|;
 operator|~
 name|CFG
 argument_list|()
@@ -1853,6 +1942,68 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// Implement simplify_type for CFGElement, so that we can dyn_cast from
+comment|/// CFGElement to a specific Stmt class.
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+specifier|const
+operator|::
+name|clang
+operator|::
+name|CFGElement
+operator|>
+block|{
+typedef|typedef
+operator|::
+name|clang
+operator|::
+name|Stmt
+operator|*
+name|SimpleType
+expr_stmt|;
+specifier|static
+name|SimpleType
+name|getSimplifiedValue
+argument_list|(
+argument|const ::clang::CFGElement&Val
+argument_list|)
+block|{
+return|return
+name|Val
+operator|.
+name|getStmt
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+operator|::
+name|clang
+operator|::
+name|CFGElement
+operator|>
+operator|:
+name|public
+name|simplify_type
+operator|<
+specifier|const
+operator|::
+name|clang
+operator|::
+name|CFGElement
+operator|>
+block|{}
+expr_stmt|;
 comment|// Traits for: CFGBlock
 name|template
 operator|<
@@ -1860,6 +2011,7 @@ operator|>
 expr|struct
 name|GraphTraits
 operator|<
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -1867,12 +2019,14 @@ operator|*
 operator|>
 block|{
 typedef|typedef
+operator|::
 name|clang
 operator|::
 name|CFGBlock
 name|NodeType
 expr_stmt|;
 typedef|typedef
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -1885,6 +2039,7 @@ name|NodeType
 modifier|*
 name|getEntryNode
 argument_list|(
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -1945,6 +2100,7 @@ expr|struct
 name|GraphTraits
 operator|<
 specifier|const
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -1953,6 +2109,7 @@ operator|>
 block|{
 typedef|typedef
 specifier|const
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -1962,6 +2119,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -2042,6 +2200,7 @@ operator|<
 name|Inverse
 operator|<
 specifier|const
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -2051,6 +2210,7 @@ expr|>
 block|{
 typedef|typedef
 specifier|const
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -2060,6 +2220,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -2078,6 +2239,7 @@ argument_list|(
 name|Inverse
 operator|<
 specifier|const
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -2146,6 +2308,7 @@ operator|>
 expr|struct
 name|GraphTraits
 operator|<
+operator|::
 name|clang
 operator|::
 name|CFG
@@ -2155,6 +2318,7 @@ operator|:
 name|public
 name|GraphTraits
 operator|<
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -2162,6 +2326,7 @@ operator|*
 operator|>
 block|{
 typedef|typedef
+operator|::
 name|clang
 operator|::
 name|CFG
@@ -2174,7 +2339,7 @@ name|NodeType
 operator|*
 name|getEntryNode
 argument_list|(
-argument|clang::CFG* F
+argument|::clang::CFG* F
 argument_list|)
 block|{
 return|return
@@ -2189,7 +2354,7 @@ specifier|static
 name|nodes_iterator
 name|nodes_begin
 argument_list|(
-argument|clang::CFG* F
+argument|::clang::CFG* F
 argument_list|)
 block|{
 return|return
@@ -2203,7 +2368,7 @@ specifier|static
 name|nodes_iterator
 name|nodes_end
 argument_list|(
-argument|clang::CFG* F
+argument|::clang::CFG* F
 argument_list|)
 block|{
 return|return
@@ -2228,6 +2393,7 @@ expr|struct
 name|GraphTraits
 operator|<
 specifier|const
+operator|::
 name|clang
 operator|::
 name|CFG
@@ -2238,6 +2404,7 @@ name|public
 name|GraphTraits
 operator|<
 specifier|const
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -2245,6 +2412,7 @@ operator|*
 operator|>
 block|{
 typedef|typedef
+operator|::
 name|clang
 operator|::
 name|CFG
@@ -2257,7 +2425,7 @@ name|NodeType
 operator|*
 name|getEntryNode
 argument_list|(
-argument|const clang::CFG* F
+argument|const ::clang::CFG* F
 argument_list|)
 block|{
 return|return
@@ -2272,7 +2440,7 @@ specifier|static
 name|nodes_iterator
 name|nodes_begin
 argument_list|(
-argument|const clang::CFG* F
+argument|const ::clang::CFG* F
 argument_list|)
 block|{
 return|return
@@ -2286,7 +2454,7 @@ specifier|static
 name|nodes_iterator
 name|nodes_end
 argument_list|(
-argument|const clang::CFG* F
+argument|const ::clang::CFG* F
 argument_list|)
 block|{
 return|return
@@ -2313,6 +2481,7 @@ operator|<
 name|Inverse
 operator|<
 specifier|const
+operator|::
 name|clang
 operator|::
 name|CFG
@@ -2326,6 +2495,7 @@ operator|<
 name|Inverse
 operator|<
 specifier|const
+operator|::
 name|clang
 operator|::
 name|CFGBlock
@@ -2334,6 +2504,7 @@ operator|>
 expr|>
 block|{
 typedef|typedef
+operator|::
 name|clang
 operator|::
 name|CFG
@@ -2346,7 +2517,7 @@ name|NodeType
 operator|*
 name|getEntryNode
 argument_list|(
-argument|const clang::CFG* F
+argument|const ::clang::CFG* F
 argument_list|)
 block|{
 return|return
@@ -2361,7 +2532,7 @@ specifier|static
 name|nodes_iterator
 name|nodes_begin
 argument_list|(
-argument|const clang::CFG* F
+argument|const ::clang::CFG* F
 argument_list|)
 block|{
 return|return
@@ -2375,7 +2546,7 @@ specifier|static
 name|nodes_iterator
 name|nodes_end
 argument_list|(
-argument|const clang::CFG* F
+argument|const ::clang::CFG* F
 argument_list|)
 block|{
 return|return

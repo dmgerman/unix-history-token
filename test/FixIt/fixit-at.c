@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fixit-at=fixit-at.c:3:1 %s -o - | clang-cc -verify -x c -
+comment|// RUN: %clang_cc1 -fixit-at=fixit-at.c:3:1 %s -o - | %clang_cc1 -verify -x c -
 end_comment
 
 begin_expr_stmt

@@ -325,29 +325,6 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|// Block rewriter: rewrites code using the Apple blocks extension to pure
-comment|// C code.  Output is always sent to stdout.
-name|ASTConsumer
-modifier|*
-name|CreateBlockRewriter
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|InFile
-argument_list|,
-name|Diagnostic
-operator|&
-name|Diags
-argument_list|,
-specifier|const
-name|LangOptions
-operator|&
-name|LangOpts
-argument_list|)
-decl_stmt|;
 comment|// Inheritance viewer: for C++ code, creates a graph of the inheritance
 comment|// tree for the given class and displays it with "dotty".
 name|ASTConsumer

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -verify -Wformat-nonliteral %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wformat-nonliteral %s
 end_comment
 
 begin_include
@@ -484,6 +484,17 @@ literal|"dont know"
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{format string is not a string literal}}
+name|printf
+argument_list|(
+literal|"yes"
+condition|?
+else|:
+literal|"no %d"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more data arguments than '%' conversions}}
 block|}
 end_function
 

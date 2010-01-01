@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t -relocatable-pch -isysroot %S/libroot %S/libroot/usr/include/reloc.h
+comment|// RUN: %clang_cc1 -emit-pch -o %t -relocatable-pch -isysroot %S/libroot %S/libroot/usr/include/reloc.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include-pch %t -isysroot %S/libroot %s -verify
+comment|// RUN: %clang_cc1 -include-pch %t -isysroot %S/libroot %s -verify
 end_comment
 
 begin_comment
-comment|// RUN: not clang-cc -include-pch %t %s
+comment|// RUN: not %clang_cc1 -include-pch %t %s
 end_comment
 
 begin_include

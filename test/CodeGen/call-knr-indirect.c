@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang %s -O0 -emit-llvm -S -o - | grep 'call.*rb_define_global_function'
+comment|// RUN: %clang %s -O0 -emit-llvm -S -o - | grep 'call.*rb_define_global_function'
 end_comment
 
 begin_comment

@@ -130,7 +130,6 @@ operator|~
 name|PathDiagnosticClient
 argument_list|()
 block|{}
-block|;
 name|virtual
 name|void
 name|FlushDiagnostics

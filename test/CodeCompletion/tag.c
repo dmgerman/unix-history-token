@@ -46,7 +46,7 @@ enum_decl|enum
 end_function
 
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:9:7 %s -o - | FileCheck -check-prefix=CC1 %s
+comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:9:7 %s -o - | FileCheck -check-prefix=CC1 %s
 end_comment
 
 begin_comment

@@ -285,18 +285,14 @@ argument_list|(
 argument|const CFG& cfg
 argument_list|)
 block|{}
-expr_stmt|;
 comment|/// getEdgeData - Retrieves the dataflow values associated with a
 comment|///  CFG edge.
 name|ValTy
-modifier|&
+operator|&
 name|getEdgeData
-parameter_list|(
-specifier|const
-name|BlockEdge
-modifier|&
-name|E
-parameter_list|)
+argument_list|(
+argument|const BlockEdge& E
+argument_list|)
 block|{
 name|typename
 name|EdgeDataMapTy
@@ -310,7 +306,7 @@ name|find
 argument_list|(
 name|E
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|I
@@ -322,7 +318,7 @@ argument_list|()
 operator|&&
 literal|"No data associated with Edge."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|I
 operator|->

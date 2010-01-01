@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -ccc-no-clang -ccc-host-triple i386-apple-darwin10 -m32 -### -MD -g -fast -Q -dA -mkernel -ansi -aFOO -S -o /tmp/OUTPUTNAME -g0 -gfull -O2 -Werror -pedantic -Wmost -w -std=c99 -trigraphs -v -pg -fFOO -undef -Qn --param a=b -fmudflap -coverage -save-temps -nostdinc -I ARG0 -F ARG1 -I ARG2 -P -MF ARG3 -MG -MP -remap -g3 -H -D ARG4 -U ARG5 -A ARG6 -D ARG7 -U ARG8 -A ARG9 -include ARG10 -pthread %s 2> %t.log
+comment|// RUN: %clang -ccc-no-clang -ccc-host-triple i386-apple-darwin10 -m32 -### -MD -g -fast -Q -dA -mkernel -ansi -aFOO -S -o /tmp/OUTPUTNAME -g0 -gfull -O2 -Werror -pedantic -Wmost -w -std=c99 -trigraphs -v -pg -fFOO -undef -Qn --param a=b -fmudflap -coverage -save-temps -nostdinc -I ARG0 -F ARG1 -I ARG2 -P -MF ARG3 -MG -MP -remap -g3 -H -D ARG4 -U ARG5 -A ARG6 -D ARG7 -U ARG8 -A ARG9 -include ARG10 -pthread %s 2> %t.log
 end_comment
 
 begin_comment

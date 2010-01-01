@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -verify -fno-math-errno %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -fno-math-errno %s
 end_comment
 
 begin_function_decl
@@ -484,6 +484,12 @@ literal|42
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{ignoring return value of function declared with const attribute}}
+name|__builtin_fabsf
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{ignoring return value of function declared with const attribute}}
 return|return
 literal|0
 return|;
@@ -503,7 +509,60 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{warning: 'warn_unused_result' attribute only applies to function types}}
+comment|// expected-warning {{'warn_unused_result' attribute only applies to function types}}
+end_comment
+
+begin_comment
+comment|// PR4010
+end_comment
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|fn4
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(warn_unused_result
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|t8
+parameter_list|()
+block|{
+name|fn4
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{ignoring return value of function declared with warn_unused_result attribute}}
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|t9
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(warn_unused_result
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-warning {{attribute 'warn_unused_result' cannot be applied to functions without return value}}
 end_comment
 
 end_unit

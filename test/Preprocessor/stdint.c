@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=arm-none-none %s | FileCheck -check-prefix ARM %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=arm-none-none %s | FileCheck -check-prefix ARM %s
 end_comment
 
 begin_comment
@@ -432,7 +432,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=bfin-none-none %s | FileCheck -check-prefix BFIN %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=bfin-none-none %s | FileCheck -check-prefix BFIN %s
 end_comment
 
 begin_comment
@@ -864,7 +864,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=i386-none-none %s | FileCheck -check-prefix I386 %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=i386-none-none %s | FileCheck -check-prefix I386 %s
 end_comment
 
 begin_comment
@@ -1292,7 +1292,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=msp430-none-none %s | FileCheck -check-prefix MSP430 %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=msp430-none-none %s | FileCheck -check-prefix MSP430 %s
 end_comment
 
 begin_comment
@@ -1692,7 +1692,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=pic16-none-none %s | FileCheck -check-prefix PIC16 %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=pic16-none-none %s | FileCheck -check-prefix PIC16 %s
 end_comment
 
 begin_comment
@@ -2092,7 +2092,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=powerpc64-none-none %s | FileCheck -check-prefix PPC64 %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=powerpc64-none-none %s | FileCheck -check-prefix PPC64 %s
 end_comment
 
 begin_comment
@@ -2520,7 +2520,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=powerpc-none-none %s | FileCheck -check-prefix PPC %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=powerpc-none-none %s | FileCheck -check-prefix PPC %s
 end_comment
 
 begin_comment
@@ -2952,7 +2952,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=s390x-none-none %s | FileCheck -check-prefix S390X %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=s390x-none-none %s | FileCheck -check-prefix S390X %s
 end_comment
 
 begin_comment
@@ -3380,7 +3380,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=sparc-none-none %s | FileCheck -check-prefix SPARC %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=sparc-none-none %s | FileCheck -check-prefix SPARC %s
 end_comment
 
 begin_comment
@@ -3808,7 +3808,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=tce-none-none %s | FileCheck -check-prefix TCE %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=tce-none-none %s | FileCheck -check-prefix TCE %s
 end_comment
 
 begin_comment
@@ -4208,7 +4208,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -triple=x86_64-none-none %s | FileCheck -check-prefix X86_64 %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -triple=x86_64-none-none %s | FileCheck -check-prefix X86_64 %s
 end_comment
 
 begin_comment
@@ -4668,7 +4668,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -ffreestanding -Dint=a -Duint=b -D_t=c -DINT=d -DUINT=e -D_MIN=f -D_MAX=g '-D_C(v)=h' -triple=i386-none-none %s | FileCheck -check-prefix JOIN %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -Dint=a -Duint=b -D_t=c -DINT=d -DUINT=e -D_MIN=f -D_MAX=g '-D_C(v)=h' -triple=i386-none-none %s | FileCheck -check-prefix JOIN %s
 end_comment
 
 begin_comment

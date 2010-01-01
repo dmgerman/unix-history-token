@@ -520,7 +520,7 @@ name|typename
 name|T
 operator|>
 name|FullExprArg
-name|FullExpr
+name|MakeFullExpr
 argument_list|(
 argument|T&Arg
 argument_list|)
@@ -2870,6 +2870,36 @@ name|S
 parameter_list|,
 name|DeclPtrTy
 name|TagDecl
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// ActOnStartCXXMemberDeclarations - Invoked when we have parsed a
+end_comment
+
+begin_comment
+comment|/// C++ record definition's base-specifiers clause and are starting its
+end_comment
+
+begin_comment
+comment|/// member declarations.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnStartCXXMemberDeclarations
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|TagDecl
+parameter_list|,
+name|SourceLocation
+name|LBraceLoc
 parameter_list|)
 block|{ }
 end_function
@@ -5706,6 +5736,37 @@ block|{   }
 end_function
 
 begin_comment
+comment|/// ActOnStartDelayedMemberDeclarations - We have completed parsing
+end_comment
+
+begin_comment
+comment|/// a C++ class, and we are about to start parsing any parts of
+end_comment
+
+begin_comment
+comment|/// member declarations that could not be parsed earlier.  Enter
+end_comment
+
+begin_comment
+comment|/// the appropriate record scope.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnStartDelayedMemberDeclarations
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|Record
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
 comment|/// ActOnStartDelayedCXXMethodDeclaration - We have completed
 end_comment
 
@@ -5822,6 +5883,37 @@ name|S
 parameter_list|,
 name|DeclPtrTy
 name|Method
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
+comment|/// ActOnFinishDelayedMemberDeclarations - We have finished parsing
+end_comment
+
+begin_comment
+comment|/// a C++ class, and we are about to start parsing any parts of
+end_comment
+
+begin_comment
+comment|/// member declarations that could not be parsed earlier.  Enter the
+end_comment
+
+begin_comment
+comment|/// appropriate record scope.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnFinishDelayedMemberDeclarations
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|Record
 parameter_list|)
 block|{   }
 end_function
@@ -7245,10 +7337,6 @@ argument_list|()
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/// \brief Note that a template ID was used with a tag.

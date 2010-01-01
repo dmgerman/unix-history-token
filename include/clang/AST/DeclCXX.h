@@ -4021,10 +4021,6 @@ begin_decl_stmt
 name|bool
 name|isCopyConstructor
 argument_list|(
-name|ASTContext
-operator|&
-name|Context
-argument_list|,
 name|unsigned
 operator|&
 name|TypeQuals
@@ -4045,31 +4041,25 @@ begin_comment
 comment|/// class.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 name|bool
 name|isCopyConstructor
-argument_list|(
-name|ASTContext
-operator|&
-name|Context
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 name|unsigned
 name|TypeQuals
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 return|return
 name|isCopyConstructor
 argument_list|(
-name|Context
-argument_list|,
 name|TypeQuals
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
 comment|/// isConvertingConstructor - Whether this constructor is a
@@ -4578,6 +4568,11 @@ comment|// Location of the 'friend' specifier.
 name|SourceLocation
 name|FriendLoc
 block|;
+comment|// FIXME: Hack to keep track of whether this was a friend function
+comment|// template specialization.
+name|bool
+name|WasSpecialization
+block|;
 name|FriendDecl
 argument_list|(
 argument|DeclContext *DC
@@ -4607,7 +4602,12 @@ argument_list|)
 block|,
 name|FriendLoc
 argument_list|(
-argument|FriendL
+name|FriendL
+argument_list|)
+block|,
+name|WasSpecialization
+argument_list|(
+argument|false
 argument_list|)
 block|{   }
 name|public
@@ -4680,6 +4680,25 @@ return|return
 name|FriendLoc
 return|;
 block|}
+name|bool
+name|wasSpecialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WasSpecialization
+return|;
+block|}
+name|void
+name|setSpecialization
+argument_list|(
+argument|bool WS
+argument_list|)
+block|{
+name|WasSpecialization
+operator|=
+name|WS
+block|; }
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool

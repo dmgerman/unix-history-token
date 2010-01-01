@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fblocks -emit-pch %S/Inputs/t1.c -o %t1.ast
+comment|// RUN: %clang_cc1 -fblocks -emit-pch %S/Inputs/t1.c -o %t1.ast
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fblocks -emit-pch %S/Inputs/t2.c -o %t2.ast
+comment|// RUN: %clang_cc1 -fblocks -emit-pch %S/Inputs/t2.c -o %t2.ast
 end_comment
 
 begin_comment

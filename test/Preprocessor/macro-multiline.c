@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -E %s "-DX=A
+comment|// RUN: %clang -E %s "-DX=A
 end_comment
 
 begin_comment

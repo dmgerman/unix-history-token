@@ -4,7 +4,7 @@ comment|// FIXME: Use -triple, not -ccc-host-triple.
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -march=core2 -msse4 -x c -E -dM -o %t %s
+comment|// RUN: %clang -ccc-host-triple i386-unknown-unknown -march=core2 -msse4 -x c -E -dM -o %t %s
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|// RUN: grep '#define __SSSE3__ 1' %t
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -march=core2 -msse4 -mno-sse2 -x c -E -dM -o %t %s
+comment|// RUN: %clang -ccc-host-triple i386-unknown-unknown -march=core2 -msse4 -mno-sse2 -x c -E -dM -o %t %s
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ comment|// RUN: grep '#define __SSSE3__ 1' %t | count 0
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-host-triple i386-unknown-unknown -march=pentium-m -x c -E -dM -o %t %s
+comment|// RUN: %clang -ccc-host-triple i386-unknown-unknown -march=pentium-m -x c -E -dM -o %t %s
 end_comment
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang %s -fsyntax-only -Xclang -verify
+comment|// RUN: %clang %s -fsyntax-only -Xclang -verify
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -fsyntax-only -fshort-wchar -Xclang -verify -DSHORT_WCHAR
+comment|// RUN: %clang %s -fsyntax-only -fshort-wchar -Xclang -verify -DSHORT_WCHAR
 end_comment
 
 begin_typedef
@@ -139,14 +139,14 @@ index|[]
 init|=
 literal|"x"
 decl_stmt|;
-comment|// expected-error {{initialization}}
+comment|// expected-error {{initializer}}
 name|char
 name|t3
 index|[]
 init|=
 literal|L"x"
 decl_stmt|;
-comment|// expected-error {{initialization}}
+comment|// expected-error {{initializer}}
 block|}
 end_function
 

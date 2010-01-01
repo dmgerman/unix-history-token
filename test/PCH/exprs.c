@@ -4,7 +4,7 @@ comment|// Test this without pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fblocks -include %S/exprs.h -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fblocks -include %S/exprs.h -fsyntax-only -verify %s
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -fblocks -o %t %S/exprs.h
+comment|// RUN: %clang_cc1 -emit-pch -fblocks -o %t %S/exprs.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fblocks -include-pch %t -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fblocks -include-pch %t -fsyntax-only -verify %s
 end_comment
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s | grep '^"x ## y";$'
+comment|// RUN: %clang_cc1 -E %s | grep '^"x ## y";$'
 end_comment
 
 begin_define

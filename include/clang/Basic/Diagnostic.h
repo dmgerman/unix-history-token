@@ -183,7 +183,7 @@ name|DIAG_START_ANALYSIS
 init|=
 name|DIAG_START_SEMA
 operator|+
-literal|1100
+literal|1500
 block|,
 name|DIAG_UPPER_LIMIT
 init|=
@@ -263,6 +263,12 @@ comment|/// happens when you specify -Wno-error=foo.
 name|MAP_WARNING_NO_WERROR
 init|=
 literal|5
+block|,
+comment|/// Map this diagnostic to "error", but make it immune to -Wfatal-errors.
+comment|/// This happens for -Wno-fatal-errors=foo.
+name|MAP_ERROR_NO_WFATAL
+init|=
+literal|6
 block|}
 enum|;
 block|}
@@ -527,6 +533,10 @@ name|WarningsAsErrors
 decl_stmt|;
 comment|// Treat warnings like errors:
 name|bool
+name|ErrorsAsFatal
+decl_stmt|;
+comment|// Treat errors like fatal errors.
+name|bool
 name|SuppressSystemWarnings
 decl_stmt|;
 comment|// Suppress warnings in system headers.
@@ -774,6 +784,29 @@ specifier|const
 block|{
 return|return
 name|WarningsAsErrors
+return|;
+block|}
+comment|/// setErrorsAsFatal - When set to true, any error reported is made a
+comment|/// fatal error.
+name|void
+name|setErrorsAsFatal
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|ErrorsAsFatal
+operator|=
+name|Val
+expr_stmt|;
+block|}
+name|bool
+name|getErrorsAsFatal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ErrorsAsFatal
 return|;
 block|}
 comment|/// setSuppressSystemWarnings - When set to true mask warnings that

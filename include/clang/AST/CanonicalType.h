@@ -2453,11 +2453,10 @@ argument|getResultType
 argument_list|)
 name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
-name|unsigned
+argument|unsigned
 argument_list|,
-name|getNumArgs
+argument|getNumArgs
 argument_list|)
-block|;
 name|CanQualType
 name|getArgType
 argument_list|(

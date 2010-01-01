@@ -68,7 +68,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch %s -o %t.ast
+comment|// RUN: %clang_cc1 -emit-pch %s -o %t.ast
 end_comment
 
 begin_comment

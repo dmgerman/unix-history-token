@@ -240,6 +240,10 @@ expr_stmt|;
 name|public
 label|:
 comment|/// CreateTargetInfo - Construct a target for the given options.
+comment|///
+comment|/// \param Opts - The options to use to initialize the target. The target may
+comment|/// modify the options to canonicalize the target feature information to match
+comment|/// what the backend expects.
 specifier|static
 name|TargetInfo
 modifier|*
@@ -249,7 +253,6 @@ name|Diagnostic
 modifier|&
 name|Diags
 parameter_list|,
-specifier|const
 name|TargetOptions
 modifier|&
 name|Opts
@@ -1501,6 +1504,27 @@ return|return
 literal|""
 return|;
 block|}
+comment|/// setCPU - Target the specific CPU.
+comment|///
+comment|/// \return - False on error (invalid CPU name).
+comment|//
+comment|// FIXME: Remove this.
+name|virtual
+name|bool
+name|setCPU
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// setABI - Use the specific ABI.
 comment|///
 comment|/// \return - False on error (invalid ABI name).
@@ -1556,11 +1580,13 @@ block|}
 comment|/// HandleTargetOptions - Perform initialization based on the user configured
 comment|/// set of features (e.g., +sse4). The list is guaranteed to have at most one
 comment|/// entry per feature.
+comment|///
+comment|/// The target may modify the features list, to change which options are
+comment|/// passed onwards to the backend.
 name|virtual
 name|void
 name|HandleTargetFeatures
 argument_list|(
-specifier|const
 name|std
 operator|::
 name|vector

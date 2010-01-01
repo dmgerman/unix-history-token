@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -triple=i686-apple-darwin -target-feature +ssse3 -O1 -S -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=i686-apple-darwin -target-feature +ssse3 -O1 -S -o - | FileCheck %s
 end_comment
 
 begin_define

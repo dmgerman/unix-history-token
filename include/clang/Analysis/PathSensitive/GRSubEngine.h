@@ -70,6 +70,9 @@ name|class
 name|CFGBlock
 decl_stmt|;
 name|class
+name|CFGElement
+decl_stmt|;
+name|class
 name|GRState
 decl_stmt|;
 name|class
@@ -134,9 +137,8 @@ name|virtual
 name|void
 name|ProcessStmt
 parameter_list|(
-name|Stmt
-modifier|*
-name|S
+name|CFGElement
+name|E
 parameter_list|,
 name|GRStmtNodeBuilder
 modifier|&

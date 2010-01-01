@@ -4,7 +4,7 @@ comment|// RUN: echo "GNU89 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -S -o %t -std=gnu89
+comment|// RUN: %clang %s -emit-llvm -S -o %t -std=gnu89
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// RUN: echo "\nC99 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -S -o %t -std=c99
+comment|// RUN: %clang %s -emit-llvm -S -o %t -std=c99
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ comment|// RUN: echo "\nC++ tests:"
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -S -o %t -std=c++98
+comment|// RUN: %clang %s -emit-llvm -S -o %t -std=c++98
 end_comment
 
 begin_comment

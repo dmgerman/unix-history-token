@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -emit-llvm %s -o - -triple i686-pc-linux-gnu | grep "bitcast (%0\* @r to %union.x\*), \[4 x i8\] undef"
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple i686-pc-linux-gnu | grep "bitcast (%0\* @r to %union.x\*), \[4 x i8\] undef"
 end_comment
 
 begin_comment

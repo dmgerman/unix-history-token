@@ -4,15 +4,15 @@ comment|// The 1 and # should not go on the same line.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | not grep "1 #"
+comment|// RUN: %clang_cc1 %s -E | not grep "1 #"
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | grep '^1$'
+comment|// RUN: %clang_cc1 %s -E | grep '^1$'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc %s -E | grep '^      #$'
+comment|// RUN: %clang_cc1 %s -E | grep '^      #$'
 end_comment
 
 begin_expr_stmt

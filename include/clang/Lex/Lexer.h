@@ -680,8 +680,8 @@ comment|// that this character will be part of the result token. This occurs in 
 comment|// string processing, because we know we need to read until we find the
 comment|// closing '"' character.
 comment|//
-comment|// The second interface is the combination of PeekCharAndSize with
-comment|// ConsumeChar.  PeekCharAndSize reads a phase 1/2 translated character,
+comment|// The second interface is the combination of getCharAndSize with
+comment|// ConsumeChar.  getCharAndSize reads a phase 1/2 translated character,
 comment|// returning it and its size.  If the lexer decides that this character is
 comment|// part of the current token, it calls ConsumeChar on it.  This two stage
 comment|// approach allows us to emit diagnostics for characters (e.g. warnings about
@@ -766,7 +766,7 @@ return|;
 block|}
 name|private
 label|:
-comment|/// ConsumeChar - When a character (identified by PeekCharAndSize) is consumed
+comment|/// ConsumeChar - When a character (identified by getCharAndSize) is consumed
 comment|/// and added to a given token, check to see if there are diagnostics that
 comment|/// need to be emitted or flags that need to be set on the token.  If so, do
 comment|/// it.

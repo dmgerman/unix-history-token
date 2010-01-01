@@ -236,7 +236,6 @@ operator|~
 name|SVal
 argument_list|()
 block|{}
-expr_stmt|;
 comment|/// BufferTy - A temporary buffer to hold a set of SVals.
 typedef|typedef
 name|llvm
@@ -1033,6 +1032,11 @@ operator|||
 name|T
 operator|->
 name|isBlockPointerType
+argument_list|()
+operator|||
+name|T
+operator|->
+name|isReferenceType
 argument_list|()
 return|;
 block|}

@@ -4,7 +4,7 @@ comment|// Test this without pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include %S/builtins.h -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -include %S/builtins.h -fsyntax-only -verify %s
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t %S/builtins.h
+comment|// RUN: %clang_cc1 -emit-pch -o %t %S/builtins.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include-pch %t -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only -verify %s
 end_comment
 
 begin_function

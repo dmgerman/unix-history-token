@@ -113,6 +113,9 @@ name|class
 name|CFG
 decl_stmt|;
 name|class
+name|CFGBlock
+decl_stmt|;
+name|class
 name|LiveVariables
 decl_stmt|;
 name|class
@@ -563,10 +566,21 @@ range|:
 name|public
 name|LocationContext
 block|{
+comment|// The callsite where this stack frame is established.
 specifier|const
 name|Stmt
 operator|*
 name|CallSite
+block|;
+comment|// The parent block of the callsite.
+specifier|const
+name|CFGBlock
+operator|*
+name|Block
+block|;
+comment|// The index of the callsite in the CFGBlock.
+name|unsigned
+name|Index
 block|;
 name|friend
 name|class
@@ -574,19 +588,15 @@ name|LocationContextManager
 block|;
 name|StackFrameContext
 argument_list|(
-name|AnalysisContext
-operator|*
-name|ctx
+argument|AnalysisContext *ctx
 argument_list|,
-specifier|const
-name|LocationContext
-operator|*
-name|parent
+argument|const LocationContext *parent
 argument_list|,
-specifier|const
-name|Stmt
-operator|*
-name|s
+argument|const Stmt *s
+argument_list|,
+argument|const CFGBlock *blk
+argument_list|,
+argument|unsigned idx
 argument_list|)
 operator|:
 name|LocationContext
@@ -600,7 +610,17 @@ argument_list|)
 block|,
 name|CallSite
 argument_list|(
-argument|s
+name|s
+argument_list|)
+block|,
+name|Block
+argument_list|(
+name|blk
+argument_list|)
+block|,
+name|Index
+argument_list|(
+argument|idx
 argument_list|)
 block|{}
 name|public
@@ -618,6 +638,26 @@ specifier|const
 block|{
 return|return
 name|CallSite
+return|;
+block|}
+specifier|const
+name|CFGBlock
+operator|*
+name|getCallSiteBlock
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Block
+return|;
+block|}
+name|unsigned
+name|getIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Index
 return|;
 block|}
 name|void
@@ -641,6 +681,10 @@ argument_list|,
 argument|const LocationContext *parent
 argument_list|,
 argument|const Stmt *s
+argument_list|,
+argument|const CFGBlock *blk
+argument_list|,
+argument|unsigned idx
 argument_list|)
 block|{
 name|ProfileCommon
@@ -654,6 +698,20 @@ argument_list|,
 name|parent
 argument_list|,
 name|s
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|blk
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|idx
 argument_list|)
 block|;   }
 specifier|static
@@ -1014,19 +1072,15 @@ name|StackFrameContext
 operator|*
 name|getStackFrame
 argument_list|(
-name|AnalysisContext
-operator|*
-name|ctx
+argument|AnalysisContext *ctx
 argument_list|,
-specifier|const
-name|LocationContext
-operator|*
-name|parent
+argument|const LocationContext *parent
 argument_list|,
-specifier|const
-name|Stmt
-operator|*
-name|s
+argument|const Stmt *s
+argument_list|,
+argument|const CFGBlock *blk
+argument_list|,
+argument|unsigned idx
 argument_list|)
 block|;
 specifier|const

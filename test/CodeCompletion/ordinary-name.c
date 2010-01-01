@@ -29,7 +29,7 @@ decl_stmt|;
 end_function
 
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -code-completion-at=%s:6:9 %s -o - | FileCheck -check-prefix=CHECK-CC1 %s
+comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:6:9 %s -o - | FileCheck -check-prefix=CHECK-CC1 %s
 end_comment
 
 begin_comment

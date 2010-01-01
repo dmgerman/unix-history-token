@@ -176,36 +176,6 @@ name|ValueDependent
 operator|:
 literal|1
 block|;
-comment|// FIXME: Eventually, this constructor should go away and we should
-comment|// require every subclass to provide type/value-dependence
-comment|// information.
-name|Expr
-argument_list|(
-argument|StmtClass SC
-argument_list|,
-argument|QualType T
-argument_list|)
-operator|:
-name|Stmt
-argument_list|(
-name|SC
-argument_list|)
-block|,
-name|TypeDependent
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ValueDependent
-argument_list|(
-argument|false
-argument_list|)
-block|{
-name|setType
-argument_list|(
-name|T
-argument_list|)
-block|;   }
 name|Expr
 argument_list|(
 argument|StmtClass SC
@@ -440,6 +410,8 @@ block|,
 name|LV_InvalidExpression
 block|,
 name|LV_MemberFunction
+block|,
+name|LV_SubObjCPropertySetting
 block|}
 block|;
 name|isLvalueResult
@@ -495,6 +467,8 @@ block|,
 name|MLV_NoSetterProperty
 block|,
 name|MLV_MemberFunction
+block|,
+name|MLV_SubObjCPropertySetting
 block|}
 block|;
 name|isModifiableLvalueResult
@@ -2055,6 +2029,10 @@ argument_list|(
 name|IntegerLiteralClass
 argument_list|,
 name|type
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Value
@@ -2223,6 +2201,10 @@ argument_list|(
 name|CharacterLiteralClass
 argument_list|,
 name|type
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Value
@@ -2402,6 +2384,10 @@ argument_list|(
 name|FloatingLiteralClass
 argument_list|,
 name|Type
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Value
@@ -2606,6 +2592,10 @@ argument_list|(
 name|ImaginaryLiteralClass
 argument_list|,
 name|Ty
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Val
@@ -2824,6 +2814,10 @@ argument_list|(
 argument|StringLiteralClass
 argument_list|,
 argument|Ty
+argument_list|,
+argument|false
+argument_list|,
+argument|false
 argument_list|)
 block|{}
 name|protected
@@ -4994,6 +4988,32 @@ index|]
 operator|=
 name|F
 block|; }
+name|Decl
+operator|*
+name|getCalleeDecl
+argument_list|()
+block|;
+specifier|const
+name|Decl
+operator|*
+name|getCalleeDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CallExpr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getCalleeDecl
+argument_list|()
+return|;
+block|}
 comment|/// \brief If the callee is a FunctionDecl, return it. Otherwise return 0.
 name|FunctionDecl
 operator|*
@@ -6386,6 +6406,7 @@ name|FileScope
 block|;
 name|public
 operator|:
+comment|// FIXME: Can compound literals be value-dependent?
 name|CompoundLiteralExpr
 argument_list|(
 argument|SourceLocation lparenloc
@@ -6402,6 +6423,13 @@ argument_list|(
 name|CompoundLiteralExprClass
 argument_list|,
 name|ty
+argument_list|,
+name|ty
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|LParenLoc
@@ -8194,7 +8222,7 @@ argument|Opcode opc
 argument_list|,
 argument|QualType ResTy
 argument_list|,
-argument|SourceLocation oploc
+argument|SourceLocation opLoc
 argument_list|,
 argument|bool dead
 argument_list|)
@@ -8204,6 +8232,26 @@ argument_list|(
 name|CompoundAssignOperatorClass
 argument_list|,
 name|ResTy
+argument_list|,
+name|lhs
+operator|->
+name|isTypeDependent
+argument_list|()
+operator|||
+name|rhs
+operator|->
+name|isTypeDependent
+argument_list|()
+argument_list|,
+name|lhs
+operator|->
+name|isValueDependent
+argument_list|()
+operator|||
+name|rhs
+operator|->
+name|isValueDependent
+argument_list|()
 argument_list|)
 block|,
 name|Opc
@@ -8213,7 +8261,7 @@ argument_list|)
 block|,
 name|OpLoc
 argument_list|(
-argument|oploc
+argument|opLoc
 argument_list|)
 block|{
 name|SubExprs
@@ -8842,6 +8890,10 @@ argument_list|(
 name|AddrLabelExprClass
 argument_list|,
 name|t
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|AmpAmpLoc
@@ -9005,6 +9057,7 @@ name|RParenLoc
 block|;
 name|public
 operator|:
+comment|// FIXME: Does type-dependence need to be computed differently?
 name|StmtExpr
 argument_list|(
 argument|CompoundStmt *substmt
@@ -9021,6 +9074,13 @@ argument_list|(
 name|StmtExprClass
 argument_list|,
 name|T
+argument_list|,
+name|T
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|SubStmt
@@ -9227,6 +9287,10 @@ argument_list|(
 name|TypesCompatibleExprClass
 argument_list|,
 name|ReturnType
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Type1
@@ -9435,6 +9499,8 @@ argument_list|)
 block|;
 name|public
 operator|:
+comment|// FIXME: Can a shufflevector be value-dependent?  Does type-dependence need
+comment|// to be computed differently?
 name|ShuffleVectorExpr
 argument_list|(
 argument|ASTContext&C
@@ -9455,6 +9521,13 @@ argument_list|(
 name|ShuffleVectorExprClass
 argument_list|,
 name|Type
+argument_list|,
+name|Type
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|BuiltinLoc
@@ -10114,6 +10187,10 @@ argument_list|(
 name|GNUNullExprClass
 argument_list|,
 name|Ty
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|TokenLoc
@@ -10241,6 +10318,13 @@ argument_list|(
 name|VAArgExprClass
 argument_list|,
 name|t
+argument_list|,
+name|t
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|Val
@@ -11982,6 +12066,10 @@ argument_list|(
 argument|ImplicitValueInitExprClass
 argument_list|,
 argument|ty
+argument_list|,
+argument|false
+argument_list|,
+argument|false
 argument_list|)
 block|{ }
 comment|/// \brief Construct an empty implicit value initialization.
@@ -12305,6 +12393,16 @@ argument_list|(
 name|ExtVectorElementExprClass
 argument_list|,
 name|ty
+argument_list|,
+name|base
+operator|->
+name|isTypeDependent
+argument_list|()
+argument_list|,
+name|base
+operator|->
+name|isValueDependent
+argument_list|()
 argument_list|)
 block|,
 name|Base
@@ -12539,6 +12637,13 @@ argument_list|(
 name|BlockExprClass
 argument_list|,
 name|ty
+argument_list|,
+name|ty
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|TheBlock
@@ -12728,6 +12833,7 @@ literal|1
 block|;
 name|public
 operator|:
+comment|// FIXME: Fix type/value dependence!
 name|BlockDeclRefExpr
 argument_list|(
 argument|ValueDecl *d
@@ -12746,6 +12852,10 @@ argument_list|(
 name|BlockDeclRefExprClass
 argument_list|,
 name|t
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|D

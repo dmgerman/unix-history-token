@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -dump-tokens %s 2>&1 | grep "Spelling=.*dumptokens_phyloc.c:3:20"
+comment|// RUN: %clang_cc1 -dump-tokens %s 2>&1 | grep "Spelling=.*dumptokens_phyloc.c:3:20"
 end_comment
 
 begin_define

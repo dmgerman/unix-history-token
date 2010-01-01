@@ -157,6 +157,10 @@ comment|/// \brief A piece of text that describes something about the result but
 comment|/// should not be inserted into the buffer.
 name|CK_Informative
 block|,
+comment|/// \brief A piece of text that describes the type of an entity or, for
+comment|/// functions and methods, the return type.
+name|CK_ResultType
+block|,
 comment|/// \brief A piece of text that describes the parameter that corresponds
 comment|/// to the code-completion location within a function call, message send,
 comment|/// macro invocation, etc.
@@ -285,6 +289,17 @@ name|llvm
 operator|::
 name|StringRef
 name|Informative
+argument_list|)
+decl_stmt|;
+comment|/// \brief Create a new result type chunk.
+specifier|static
+name|Chunk
+name|CreateResultType
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|ResultType
 argument_list|)
 decl_stmt|;
 comment|/// \brief Create a new current-parameter chunk.
@@ -585,6 +600,30 @@ operator|::
 name|CreateInformative
 argument_list|(
 name|Text
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Add a new result-type chunk.
+comment|/// The text will be copied.
+name|void
+name|AddResultTypeChunk
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|ResultType
+argument_list|)
+block|{
+name|Chunks
+operator|.
+name|push_back
+argument_list|(
+name|Chunk
+operator|::
+name|CreateResultType
+argument_list|(
+name|ResultType
 argument_list|)
 argument_list|)
 expr_stmt|;

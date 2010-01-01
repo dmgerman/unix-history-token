@@ -387,6 +387,14 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|// T - the object type.
+name|Loc
+name|getThisObject
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
 comment|// FIXME: Make out-of-line.
 name|virtual
 name|DefinedOrUnknownSVal
@@ -867,7 +875,6 @@ operator|~
 name|Visitor
 argument_list|()
 block|{}
-block|;
 name|virtual
 name|bool
 name|Visit

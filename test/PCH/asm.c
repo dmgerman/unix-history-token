@@ -4,7 +4,7 @@ comment|// Test this without pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -include %S/asm.h -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -include %S/asm.h -fsyntax-only -verify %s
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -emit-pch -o %t %S/asm.h
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-pch -o %t %S/asm.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -include-pch %t -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -include-pch %t -fsyntax-only -verify %s
 end_comment
 
 begin_function

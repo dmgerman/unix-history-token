@@ -12,15 +12,15 @@ comment|// RUN: echo 'int x;'> %t.prefix.h
 end_comment
 
 begin_comment
-comment|// RUN: not clang-cc -fsyntax-only -include %t.prefix.h %s 2> %t.diags.no_pch.txt
+comment|// RUN: not %clang_cc1 -fsyntax-only -include %t.prefix.h %s 2> %t.diags.no_pch.txt
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t.prefix.pch %t.prefix.h
+comment|// RUN: %clang_cc1 -emit-pch -o %t.prefix.pch %t.prefix.h
 end_comment
 
 begin_comment
-comment|// RUN: not clang-cc -fsyntax-only -include-pch %t.prefix.pch %s 2> %t.diags.pch.txt
+comment|// RUN: not %clang_cc1 -fsyntax-only -include-pch %t.prefix.pch %s 2> %t.diags.pch.txt
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: env MACOSX_DEPLOYMENT_TARGET=10.1 clang -ccc-host-triple i386-apple-darwin9 -E %s
+comment|// RUN: env MACOSX_DEPLOYMENT_TARGET=10.1 %clang -ccc-host-triple i386-apple-darwin9 -E %s
 end_comment
 
 begin_if

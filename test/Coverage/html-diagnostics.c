@@ -4,7 +4,7 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -analyze -analyzer-output=html -checker-cfref -o %t %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-output=html -checker-cfref -o %t %s
 end_comment
 
 begin_comment

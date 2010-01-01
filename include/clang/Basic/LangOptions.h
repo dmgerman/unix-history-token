@@ -357,6 +357,14 @@ literal|1
 decl_stmt|;
 comment|// OpenCL C99 language extensions.
 name|unsigned
+name|AssumeSaneOperatorNew
+range|:
+literal|1
+decl_stmt|;
+comment|// Whether to add __attribute__((malloc))
+comment|// to the declaration of C++'s new
+comment|// operators
+name|unsigned
 name|ElideConstructors
 range|:
 literal|1
@@ -552,6 +560,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|MathErrno
+operator|=
+literal|1
+expr_stmt|;
+name|AssumeSaneOperatorNew
 operator|=
 literal|1
 expr_stmt|;

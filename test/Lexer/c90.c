@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: clang-cc -std=c90 -fsyntax-only %s -verify -pedantic-errors  */
+comment|/* RUN: %clang_cc1 -std=c90 -fsyntax-only %s -verify -pedantic-errors  */
 end_comment
 
 begin_enum

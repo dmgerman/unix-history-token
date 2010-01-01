@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/TypeLoc.h"
+file|"clang/AST/Type.h"
 end_include
 
 begin_include
@@ -155,6 +155,10 @@ comment|/// \brief The entity being initialized is an exception object that
 comment|/// is being thrown.
 name|EK_Exception
 block|,
+comment|/// \brief The entity being initialized is an object (or array of
+comment|/// objects) allocated via new.
+name|EK_New
+block|,
 comment|/// \brief The entity being initialized is a temporary object.
 name|EK_Temporary
 block|,
@@ -164,6 +168,10 @@ block|,
 comment|/// \brief The entity being initialized is a non-static data member
 comment|/// subobject.
 name|EK_Member
+block|,
+comment|/// \brief The entity being initialized is an element of an array
+comment|/// or vector.
+name|EK_ArrayOrVectorElement
 block|}
 enum|;
 name|private
@@ -172,10 +180,16 @@ comment|/// \brief The kind of entity being initialized.
 name|EntityKind
 name|Kind
 decl_stmt|;
-comment|/// \brief The type of the object or reference being initialized along with
-comment|/// its location information.
-name|TypeLoc
-name|TL
+comment|/// \brief If non-NULL, the parent entity in which this
+comment|/// initialization occurs.
+specifier|const
+name|InitializedEntity
+modifier|*
+name|Parent
+decl_stmt|;
+comment|/// \brief The type of the object or reference being initialized.
+name|QualType
+name|Type
 decl_stmt|;
 union|union
 block|{
@@ -185,9 +199,10 @@ name|DeclaratorDecl
 modifier|*
 name|VariableOrMember
 decl_stmt|;
-comment|/// \brief When Kind == EK_Result or EK_Exception, the location of the
-comment|/// 'return' or 'throw' keyword, respectively. When Kind == EK_Temporary,
-comment|/// the location where the temporary is being created.
+comment|/// \brief When Kind == EK_Result, EK_Exception, or EK_New, the
+comment|/// location of the 'return', 'throw', or 'new' keyword,
+comment|/// respectively. When Kind == EK_Temporary, the location where
+comment|/// the temporary is being created.
 name|unsigned
 name|Location
 decl_stmt|;
@@ -196,6 +211,11 @@ comment|/// base class.
 name|CXXBaseSpecifier
 modifier|*
 name|Base
+decl_stmt|;
+comment|/// \brief When Kind = EK_ArrayOrVectorElement, the index of the
+comment|/// array or vector element being initialized.
+name|unsigned
+name|Index
 decl_stmt|;
 block|}
 union|;
@@ -215,14 +235,24 @@ argument_list|(
 name|EK_Variable
 argument_list|)
 operator|,
+name|Parent
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+name|Var
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+operator|,
 name|VariableOrMember
 argument_list|(
 argument|reinterpret_cast<DeclaratorDecl*>(Var)
 argument_list|)
-block|{
-name|InitDeclLoc
-argument_list|()
-block|;   }
+block|{ }
 comment|/// \brief Create the initialization entity for a parameter.
 name|InitializedEntity
 argument_list|(
@@ -236,23 +266,37 @@ argument_list|(
 name|EK_Parameter
 argument_list|)
 operator|,
+name|Parent
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+name|Parm
+operator|->
+name|getType
+argument_list|()
+operator|.
+name|getUnqualifiedType
+argument_list|()
+argument_list|)
+operator|,
 name|VariableOrMember
 argument_list|(
 argument|reinterpret_cast<DeclaratorDecl*>(Parm)
 argument_list|)
-block|{
-name|InitDeclLoc
-argument_list|()
-block|;   }
-comment|/// \brief Create the initialization entity for the result of a function,
-comment|/// throwing an object, or performing an explicit cast.
+block|{ }
+comment|/// \brief Create the initialization entity for the result of a
+comment|/// function, throwing an object, performing an explicit cast, or
+comment|/// initializing a parameter for which there is no declaration.
 name|InitializedEntity
 argument_list|(
 argument|EntityKind Kind
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|TypeLoc TL
+argument|QualType Type
 argument_list|)
 operator|:
 name|Kind
@@ -260,9 +304,14 @@ argument_list|(
 name|Kind
 argument_list|)
 operator|,
-name|TL
+name|Parent
 argument_list|(
-name|TL
+literal|0
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+name|Type
 argument_list|)
 operator|,
 name|Location
@@ -276,6 +325,11 @@ argument_list|(
 name|FieldDecl
 operator|*
 name|Member
+argument_list|,
+specifier|const
+name|InitializedEntity
+operator|*
+name|Parent
 argument_list|)
 operator|:
 name|Kind
@@ -283,18 +337,33 @@ argument_list|(
 name|EK_Member
 argument_list|)
 operator|,
+name|Parent
+argument_list|(
+name|Parent
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+name|Member
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+operator|,
 name|VariableOrMember
 argument_list|(
 argument|reinterpret_cast<DeclaratorDecl*>(Member)
 argument_list|)
-block|{
-name|InitDeclLoc
-argument_list|()
-block|;   }
-comment|/// \brief Initialize type-location information from a declaration.
-name|void
-name|InitDeclLoc
-argument_list|()
+block|{ }
+comment|/// \brief Create the initialization entity for an array element.
+name|InitializedEntity
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|const InitializedEntity&Parent
+argument_list|)
 expr_stmt|;
 name|public
 label|:
@@ -332,6 +401,28 @@ name|Parm
 argument_list|)
 return|;
 block|}
+comment|/// \brief Create the initialization entity for a parameter that is
+comment|/// only known by its type.
+specifier|static
+name|InitializedEntity
+name|InitializeParameter
+parameter_list|(
+name|QualType
+name|Type
+parameter_list|)
+block|{
+return|return
+name|InitializedEntity
+argument_list|(
+name|EK_Parameter
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
 comment|/// \brief Create the initialization entity for the result of a function.
 specifier|static
 name|InitializedEntity
@@ -340,8 +431,8 @@ parameter_list|(
 name|SourceLocation
 name|ReturnLoc
 parameter_list|,
-name|TypeLoc
-name|TL
+name|QualType
+name|Type
 parameter_list|)
 block|{
 return|return
@@ -351,7 +442,7 @@ name|EK_Result
 argument_list|,
 name|ReturnLoc
 argument_list|,
-name|TL
+name|Type
 argument_list|)
 return|;
 block|}
@@ -363,8 +454,8 @@ parameter_list|(
 name|SourceLocation
 name|ThrowLoc
 parameter_list|,
-name|TypeLoc
-name|TL
+name|QualType
+name|Type
 parameter_list|)
 block|{
 return|return
@@ -374,7 +465,30 @@ name|EK_Exception
 argument_list|,
 name|ThrowLoc
 argument_list|,
-name|TL
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// \brief Create the initialization entity for an object allocated via new.
+specifier|static
+name|InitializedEntity
+name|InitializeNew
+parameter_list|(
+name|SourceLocation
+name|NewLoc
+parameter_list|,
+name|QualType
+name|Type
+parameter_list|)
+block|{
+return|return
+name|InitializedEntity
+argument_list|(
+name|EK_New
+argument_list|,
+name|NewLoc
+argument_list|,
+name|Type
 argument_list|)
 return|;
 block|}
@@ -383,22 +497,19 @@ specifier|static
 name|InitializedEntity
 name|InitializeTemporary
 parameter_list|(
-name|EntityKind
-name|Kind
-parameter_list|,
-name|TypeLoc
-name|TL
+name|QualType
+name|Type
 parameter_list|)
 block|{
 return|return
 name|InitializedEntity
 argument_list|(
-name|Kind
+name|EK_Temporary
 argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|,
-name|TL
+name|Type
 argument_list|)
 return|;
 block|}
@@ -416,7 +527,7 @@ modifier|*
 name|Base
 parameter_list|)
 function_decl|;
-comment|/// \brief Create the initialize entity for a member subobject.
+comment|/// \brief Create the initialization entity for a member subobject.
 specifier|static
 name|InitializedEntity
 name|InitializeMember
@@ -424,12 +535,50 @@ parameter_list|(
 name|FieldDecl
 modifier|*
 name|Member
+parameter_list|,
+specifier|const
+name|InitializedEntity
+modifier|*
+name|Parent
+init|=
+literal|0
 parameter_list|)
 block|{
 return|return
 name|InitializedEntity
 argument_list|(
 name|Member
+argument_list|,
+name|Parent
+argument_list|)
+return|;
+block|}
+comment|/// \brief Create the initialization entity for an array element.
+specifier|static
+name|InitializedEntity
+name|InitializeElement
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|unsigned
+name|Index
+parameter_list|,
+specifier|const
+name|InitializedEntity
+modifier|&
+name|Parent
+parameter_list|)
+block|{
+return|return
+name|InitializedEntity
+argument_list|(
+name|Context
+argument_list|,
+name|Index
+argument_list|,
+name|Parent
 argument_list|)
 return|;
 block|}
@@ -443,16 +592,44 @@ return|return
 name|Kind
 return|;
 block|}
+comment|/// \brief Retrieve the parent of the entity being initialized, when
+comment|/// the initialization itself is occuring within the context of a
+comment|/// larger initialization.
+specifier|const
+name|InitializedEntity
+operator|*
+name|getParent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Parent
+return|;
+block|}
 comment|/// \brief Retrieve type being initialized.
-name|TypeLoc
+name|QualType
 name|getType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TL
+name|Type
 return|;
 block|}
+comment|/// \brief Retrieve the name of the entity being initialized.
+name|DeclarationName
+name|getName
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Retrieve the variable, parameter, or field being
+comment|/// initialized.
+name|DeclaratorDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Determine the location of the 'return' keyword when initializing
 comment|/// the result of a function call.
 name|SourceLocation
@@ -504,6 +681,30 @@ argument_list|(
 name|Location
 argument_list|)
 return|;
+block|}
+comment|/// \brief If this is already the initializer for an array or vector
+comment|/// element, sets the element index.
+name|void
+name|setElementIndex
+parameter_list|(
+name|unsigned
+name|Index
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|EK_ArrayOrVectorElement
+argument_list|)
+expr_stmt|;
+name|this
+operator|->
+name|Index
+operator|=
+name|Index
+expr_stmt|;
 block|}
 block|}
 empty_stmt|;
@@ -558,6 +759,9 @@ init|=
 name|IK_Value
 block|,
 comment|///< Value initialization
+name|SIK_ImplicitValue
+block|,
+comment|///< Implicit value initialization
 name|SIK_DirectCast
 block|,
 comment|///< Direct initialization due to a cast
@@ -742,11 +946,20 @@ name|LParenLoc
 parameter_list|,
 name|SourceLocation
 name|RParenLoc
+parameter_list|,
+name|bool
+name|isImplicit
+init|=
+name|false
 parameter_list|)
 block|{
 return|return
 name|InitializationKind
 argument_list|(
+name|isImplicit
+condition|?
+name|SIK_ImplicitValue
+else|:
 name|SIK_Value
 argument_list|,
 name|InitLoc
@@ -767,10 +980,19 @@ if|if
 condition|(
 name|Kind
 operator|>
-name|SIK_Value
+name|SIK_ImplicitValue
 condition|)
 return|return
 name|IK_Direct
+return|;
+if|if
+condition|(
+name|Kind
+operator|==
+name|SIK_ImplicitValue
+condition|)
+return|return
+name|IK_Value
 return|;
 return|return
 operator|(
@@ -805,6 +1027,20 @@ return|return
 name|Kind
 operator|==
 name|SIK_DirectCStyleOrFunctionalCast
+return|;
+block|}
+comment|/// \brief Determine whether this initialization is an implicit
+comment|/// value-initialization, e.g., as occurs during aggregate
+comment|/// initialization.
+name|bool
+name|isImplicitValueInit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|SIK_ImplicitValue
 return|;
 block|}
 comment|/// \brief Retrieve the location at which initialization is occurring.
@@ -955,6 +1191,18 @@ name|ListInitialization
 block|,
 comment|/// \brief Zero-initialization.
 name|ZeroInitialization
+block|,
+comment|/// \brief No initialization required.
+name|NoInitialization
+block|,
+comment|/// \brief Standard conversion sequence.
+name|StandardConversion
+block|,
+comment|/// \brief C conversion sequence.
+name|CAssignment
+block|,
+comment|/// \brief String initialization
+name|StringInit
 block|}
 enum|;
 comment|/// \brief Describes the kind of a particular step in an initialization
@@ -999,6 +1247,12 @@ name|SK_ConstructorInitialization
 block|,
 comment|/// \brief Zero-initialize the object
 name|SK_ZeroInitialization
+block|,
+comment|/// \brief C assignment
+name|SK_CAssignment
+block|,
+comment|/// \brief Initialization by string
+name|SK_StringInit
 block|}
 enum|;
 comment|/// \brief A single step in the initialization sequence.
@@ -1112,6 +1366,9 @@ name|FK_UserConversionOverloadFailed
 block|,
 comment|/// \brief Overloaded for initialization by constructor failed.
 name|FK_ConstructorOverloadFailed
+block|,
+comment|/// \brief Default-initialization of a 'const' object.
+name|FK_DefaultInitOfConst
 block|}
 enum|;
 name|private
@@ -1410,6 +1667,26 @@ function_decl|;
 comment|/// \brief Add a zero-initialization step.
 name|void
 name|AddZeroInitializationStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a C assignment step.
+comment|//
+comment|// FIXME: It isn't clear whether this should ever be needed;
+comment|// ideally, we would handle everything needed in C in the common
+comment|// path. However, that isn't the case yet.
+name|void
+name|AddCAssignmentStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a string init step.
+name|void
+name|AddStringInitStep
 parameter_list|(
 name|QualType
 name|T

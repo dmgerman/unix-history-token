@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang %s -fsyntax-only -Xclang -verify -fblocks
+comment|// RUN: %clang %s -fsyntax-only -Xclang -verify -fblocks
 end_comment
 
 begin_comment
@@ -970,15 +970,6 @@ condition|(
 literal|1
 condition|)
 block|{ }
-block|}
-end_function
-
-begin_function
-name|int
-name|test34
-parameter_list|()
-block|{
-asm|asm("nop");
 block|}
 end_function
 

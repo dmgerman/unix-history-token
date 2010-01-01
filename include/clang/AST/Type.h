@@ -2242,6 +2242,26 @@ specifier|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Retrieve the set of CVR (const-volatile-restrict) qualifiers
+end_comment
+
+begin_comment
+comment|/// applied to this type, looking through any number of unqualified array
+end_comment
+
+begin_comment
+comment|/// types to their element types' qualifiers.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getCVRQualifiersThroughArrayTypes
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|bool
 name|isConstant
@@ -4232,129 +4252,6 @@ name|bool
 name|classof
 argument_list|(
 argument|const BuiltinType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
-comment|/// FixedWidthIntType - Used for arbitrary width types that we either don't
-comment|/// want to or can't map to named integer types.  These always have a lower
-comment|/// integer rank than builtin types of the same width.
-name|class
-name|FixedWidthIntType
-operator|:
-name|public
-name|Type
-block|{
-name|private
-operator|:
-name|unsigned
-name|Width
-block|;
-name|bool
-name|Signed
-block|;
-name|public
-operator|:
-name|FixedWidthIntType
-argument_list|(
-argument|unsigned W
-argument_list|,
-argument|bool S
-argument_list|)
-operator|:
-name|Type
-argument_list|(
-name|FixedWidthInt
-argument_list|,
-name|QualType
-argument_list|()
-argument_list|,
-name|false
-argument_list|)
-block|,
-name|Width
-argument_list|(
-name|W
-argument_list|)
-block|,
-name|Signed
-argument_list|(
-argument|S
-argument_list|)
-block|{}
-name|unsigned
-name|getWidth
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Width
-return|;
-block|}
-name|bool
-name|isSigned
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Signed
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getName
-argument_list|()
-specifier|const
-block|;
-name|bool
-name|isSugared
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|QualType
-name|desugar
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QualType
-argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Type *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
-name|FixedWidthInt
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const FixedWidthIntType *
 argument_list|)
 block|{
 return|return
@@ -11595,6 +11492,66 @@ name|getLocalCVRQualifiers
 argument_list|()
 return|;
 block|}
+comment|/// getCVRQualifiersThroughArrayTypes - If there are CVR qualifiers for this
+comment|/// type, returns them. Otherwise, if this is an array type, recurses
+comment|/// on the element type until some qualifiers have been found or a non-array
+comment|/// type reached.
+specifier|inline
+name|unsigned
+name|QualType
+operator|::
+name|getCVRQualifiersThroughArrayTypes
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|unsigned
+name|Quals
+init|=
+name|getCVRQualifiers
+argument_list|()
+condition|)
+return|return
+name|Quals
+return|;
+name|QualType
+name|CT
+operator|=
+name|getTypePtr
+argument_list|()
+operator|->
+name|getCanonicalTypeInternal
+argument_list|()
+block|;
+if|if
+condition|(
+specifier|const
+name|ArrayType
+modifier|*
+name|AT
+init|=
+name|dyn_cast
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|CT
+operator|)
+condition|)
+return|return
+name|AT
+operator|->
+name|getElementType
+argument_list|()
+operator|.
+name|getCVRQualifiersThroughArrayTypes
+argument_list|()
+return|;
+return|return
+literal|0
+return|;
+block|}
 specifier|inline
 name|void
 name|QualType
@@ -12149,7 +12106,7 @@ name|MyQuals
 operator|=
 name|this
 operator|->
-name|getCVRQualifiers
+name|getCVRQualifiersThroughArrayTypes
 argument_list|()
 block|;
 name|unsigned
@@ -12157,7 +12114,7 @@ name|OtherQuals
 operator|=
 name|Other
 operator|.
-name|getCVRQualifiers
+name|getCVRQualifiersThroughArrayTypes
 argument_list|()
 block|;
 if|if
@@ -12207,7 +12164,7 @@ name|MyQuals
 operator|=
 name|this
 operator|->
-name|getCVRQualifiers
+name|getCVRQualifiersThroughArrayTypes
 argument_list|()
 block|;
 name|unsigned
@@ -12215,7 +12172,7 @@ name|OtherQuals
 operator|=
 name|Other
 operator|.
-name|getCVRQualifiers
+name|getCVRQualifiersThroughArrayTypes
 argument_list|()
 block|;
 if|if
@@ -12870,6 +12827,9 @@ return|return
 name|false
 return|;
 block|}
+end_block
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12905,11 +12865,16 @@ operator|::
 name|ObjCSel
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-specifier|inline
+end_return
+
+begin_expr_stmt
+unit|} inline
 name|bool
 name|Type
 operator|::
@@ -12928,6 +12893,9 @@ name|isObjCSelType
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12946,6 +12914,9 @@ name|CanonicalType
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12987,13 +12958,25 @@ condition|)
 return|return
 name|true
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Determines whether this is a type for which one can define
+end_comment
+
+begin_comment
 comment|/// an overloaded operator.
-specifier|inline
+end_comment
+
+begin_expr_stmt
+unit|inline
 name|bool
 name|Type
 operator|::
@@ -13012,6 +12995,9 @@ name|isEnumeralType
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -13045,6 +13031,9 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -13066,8 +13055,17 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Insertion operator for diagnostics.  This allows sending QualType's into a
+end_comment
+
+begin_comment
 comment|/// diagnostic with<<.
+end_comment
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -13108,8 +13106,17 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Helper class template that is used by Type::getAs to ensure that one does
+end_comment
+
+begin_comment
 comment|// not try to look through a qualified type to get to an array type.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -13146,6 +13153,9 @@ expr|struct
 name|ArrayType_cannot_be_used_with_getAs
 block|{ }
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -13159,7 +13169,13 @@ operator|,
 name|true
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Member-template getAs<specific type>'.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -13204,7 +13220,13 @@ condition|)
 return|return
 name|Ty
 return|;
+end_expr_stmt
+
+begin_comment
 comment|// If the canonical form of this type isn't the right kind, reject it.
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -13219,8 +13241,17 @@ condition|)
 return|return
 literal|0
 return|;
+end_if
+
+begin_comment
 comment|// If this is a typedef for the type, strip the typedef off without
+end_comment
+
+begin_comment
 comment|// losing all typedef information.
+end_comment
+
+begin_return
 return|return
 name|cast
 operator|<
@@ -13231,11 +13262,10 @@ name|getUnqualifiedDesugaredType
 argument_list|()
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
-unit|}
+unit|}  }
 comment|// end namespace clang
 end_comment
 

@@ -918,10 +918,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/// \brief Retrieve the template argument as an expression.
 end_comment

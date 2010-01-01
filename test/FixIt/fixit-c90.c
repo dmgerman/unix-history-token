@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: clang-cc -std=c90 -pedantic -fixit %s -o - | clang-cc -pedantic -x c -std=c90 -Werror -  */
+comment|/* RUN: %clang_cc1 -std=c90 -pedantic -fixit %s -o - | %clang_cc1 -pedantic -x c -std=c90 -Werror -  */
 end_comment
 
 begin_comment

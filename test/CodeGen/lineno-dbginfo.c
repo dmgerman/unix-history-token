@@ -4,7 +4,7 @@ comment|// RUN: echo "#include<stdio.h>"> %t.h
 end_comment
 
 begin_comment
-comment|// RUN: clang -S -save-temps -g -include %t.h %s -emit-llvm -o %t.ll
+comment|// RUN: %clang -S -save-temps -g -include %t.h %s -emit-llvm -o %t.ll
 end_comment
 
 begin_comment

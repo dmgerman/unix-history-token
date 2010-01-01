@@ -654,12 +654,12 @@ argument_list|,
 argument|TC
 argument_list|)
 block|{}
-block|;   }
-decl_stmt|;
+expr|}
+block|;
 name|class
 name|VISIBILITY_HIDDEN
 name|CC1
-range|:
+operator|:
 name|public
 name|DarwinTool
 block|{

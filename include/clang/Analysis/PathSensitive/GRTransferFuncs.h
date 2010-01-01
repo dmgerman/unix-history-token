@@ -239,15 +239,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-name|GRTransferFuncs
-modifier|*
-name|CreateCallInliner
-parameter_list|(
-name|ASTContext
-modifier|&
-name|ctx
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

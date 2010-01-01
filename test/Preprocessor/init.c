@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E -dM -x assembler-with-cpp< /dev/null | FileCheck -check-prefix ASM %s
+comment|// RUN: %clang_cc1 -E -dM -x assembler-with-cpp< /dev/null | FileCheck -check-prefix ASM %s
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fblocks -E -dM< /dev/null | FileCheck -check-prefix BLOCKS %s
+comment|// RUN: %clang_cc1 -fblocks -E -dM< /dev/null | FileCheck -check-prefix BLOCKS %s
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x c++ -std=c++0x -E -dM< /dev/null | FileCheck -check-prefix CXX0X %s
+comment|// RUN: %clang_cc1 -x c++ -std=c++0x -E -dM< /dev/null | FileCheck -check-prefix CXX0X %s
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x c++ -std=c++98 -E -dM< /dev/null | FileCheck -check-prefix CXX98 %s
+comment|// RUN: %clang_cc1 -x c++ -std=c++98 -E -dM< /dev/null | FileCheck -check-prefix CXX98 %s
 end_comment
 
 begin_comment
@@ -128,7 +128,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -std=c99 -E -dM< /dev/null | FileCheck -check-prefix C99 %s
+comment|// RUN: %clang_cc1 -std=c99 -E -dM< /dev/null | FileCheck -check-prefix C99 %s
 end_comment
 
 begin_comment
@@ -152,7 +152,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM< /dev/null | FileCheck -check-prefix COMMON %s
+comment|// RUN: %clang_cc1 -E -dM< /dev/null | FileCheck -check-prefix COMMON %s
 end_comment
 
 begin_comment
@@ -220,7 +220,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -ffreestanding -E -dM< /dev/null | FileCheck -check-prefix FREESTANDING %s
+comment|// RUN: %clang_cc1 -ffreestanding -E -dM< /dev/null | FileCheck -check-prefix FREESTANDING %s
 end_comment
 
 begin_comment
@@ -232,7 +232,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x c++ -std=gnu++98 -E -dM< /dev/null | FileCheck -check-prefix GXX98 %s
+comment|// RUN: %clang_cc1 -x c++ -std=gnu++98 -E -dM< /dev/null | FileCheck -check-prefix GXX98 %s
 end_comment
 
 begin_comment
@@ -272,7 +272,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -std=iso9899:199409 -E -dM< /dev/null | FileCheck -check-prefix C94 %s
+comment|// RUN: %clang_cc1 -std=iso9899:199409 -E -dM< /dev/null | FileCheck -check-prefix C94 %s
 end_comment
 
 begin_comment
@@ -292,7 +292,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fms-extensions -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s
+comment|// RUN: %clang_cc1 -fms-extensions -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s
 end_comment
 
 begin_comment
@@ -328,7 +328,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x objective-c -E -dM< /dev/null | FileCheck -check-prefix OBJC %s
+comment|// RUN: %clang_cc1 -x objective-c -E -dM< /dev/null | FileCheck -check-prefix OBJC %s
 end_comment
 
 begin_comment
@@ -356,7 +356,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x objective-c -fobjc-gc -E -dM< /dev/null | FileCheck -check-prefix OBJCGC %s
+comment|// RUN: %clang_cc1 -x objective-c -fobjc-gc -E -dM< /dev/null | FileCheck -check-prefix OBJCGC %s
 end_comment
 
 begin_comment
@@ -376,7 +376,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -x objective-c -fobjc-nonfragile-abi -E -dM< /dev/null | FileCheck -check-prefix NONFRAGILE %s
+comment|// RUN: %clang_cc1 -x objective-c -fobjc-nonfragile-abi -E -dM< /dev/null | FileCheck -check-prefix NONFRAGILE %s
 end_comment
 
 begin_comment
@@ -400,7 +400,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -O1 -E -dM< /dev/null | FileCheck -check-prefix O1 %s
+comment|// RUN: %clang_cc1 -O1 -E -dM< /dev/null | FileCheck -check-prefix O1 %s
 end_comment
 
 begin_comment
@@ -420,7 +420,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fpascal-strings -E -dM< /dev/null | FileCheck -check-prefix PASCAL %s
+comment|// RUN: %clang_cc1 -fpascal-strings -E -dM< /dev/null | FileCheck -check-prefix PASCAL %s
 end_comment
 
 begin_comment
@@ -440,7 +440,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM< /dev/null | FileCheck -check-prefix SCHAR %s
+comment|// RUN: %clang_cc1 -E -dM< /dev/null | FileCheck -check-prefix SCHAR %s
 end_comment
 
 begin_comment
@@ -464,7 +464,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=arm-none-none< /dev/null | FileCheck -check-prefix ARM %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-none-none< /dev/null | FileCheck -check-prefix ARM %s
 end_comment
 
 begin_comment
@@ -480,7 +480,7 @@ comment|// ARM:#define __ARMEL__ 1
 end_comment
 
 begin_comment
-comment|// ARM:#define __ARM_ARCH_6K__ 1
+comment|// ARM:#define __ARM_ARCH_6J__ 1
 end_comment
 
 begin_comment
@@ -728,6 +728,10 @@ comment|// ARM:#define __PTRDIFF_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// ARM:#define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
 comment|// ARM:#define __SCHAR_MAX__ 127
 end_comment
 
@@ -757,10 +761,6 @@ end_comment
 
 begin_comment
 comment|// ARM:#define __USER_LABEL_PREFIX__ _
-end_comment
-
-begin_comment
-comment|// ARM:#define __VFP_FP__ 1
 end_comment
 
 begin_comment
@@ -796,7 +796,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=bfin-none-none< /dev/null | FileCheck -check-prefix BFIN %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=bfin-none-none< /dev/null | FileCheck -check-prefix BFIN %s
 end_comment
 
 begin_comment
@@ -1128,7 +1128,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=i386-none-none< /dev/null | FileCheck -check-prefix I386 %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=i386-none-none< /dev/null | FileCheck -check-prefix I386 %s
 end_comment
 
 begin_comment
@@ -1464,7 +1464,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=msp430-none-none< /dev/null | FileCheck -check-prefix MSP430 %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=msp430-none-none< /dev/null | FileCheck -check-prefix MSP430 %s
 end_comment
 
 begin_comment
@@ -1772,7 +1772,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=pic16-none-none< /dev/null | FileCheck -check-prefix PIC16 %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=pic16-none-none< /dev/null | FileCheck -check-prefix PIC16 %s
 end_comment
 
 begin_comment
@@ -2104,7 +2104,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc64-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix PPC64 %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix PPC64 %s
 end_comment
 
 begin_comment
@@ -2456,7 +2456,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=powerpc-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix PPC %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix PPC %s
 end_comment
 
 begin_comment
@@ -2792,7 +2792,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=s390x-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix S390X %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=s390x-none-none -fno-signed-char< /dev/null | FileCheck -check-prefix S390X %s
 end_comment
 
 begin_comment
@@ -3104,7 +3104,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=sparc-none-none< /dev/null | FileCheck -check-prefix SPARC %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=sparc-none-none< /dev/null | FileCheck -check-prefix SPARC %s
 end_comment
 
 begin_comment
@@ -3428,7 +3428,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=tce-none-none< /dev/null | FileCheck -check-prefix TCE %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=tce-none-none< /dev/null | FileCheck -check-prefix TCE %s
 end_comment
 
 begin_comment
@@ -3740,7 +3740,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -dM -ffreestanding -triple=x86_64-none-none< /dev/null | FileCheck -check-prefix X86_64 %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=x86_64-none-none< /dev/null | FileCheck -check-prefix X86_64 %s
 end_comment
 
 begin_comment

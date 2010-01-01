@@ -242,6 +242,8 @@ name|getPreExpArgument
 argument_list|(
 argument|unsigned Arg
 argument_list|,
+argument|const MacroInfo *MI
+argument_list|,
 argument|Preprocessor&PP
 argument_list|)
 expr_stmt|;

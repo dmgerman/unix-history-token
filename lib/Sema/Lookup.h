@@ -201,6 +201,20 @@ operator|::
 name|const_iterator
 name|iterator
 expr_stmt|;
+typedef|typedef
+name|bool
+function_decl|(
+modifier|*
+name|ResultFilter
+function_decl|)
+parameter_list|(
+name|NamedDecl
+modifier|*
+parameter_list|,
+name|unsigned
+name|IDNS
+parameter_list|)
+function_decl|;
 name|LookupResult
 argument_list|(
 argument|Sema&SemaRef
@@ -244,6 +258,11 @@ argument_list|(
 name|LookupKind
 argument_list|)
 operator|,
+name|IsAcceptableFn
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|IDNS
 argument_list|(
 literal|0
@@ -267,7 +286,10 @@ name|Diagnose
 argument_list|(
 argument|Redecl == Sema::NotForRedeclaration
 argument_list|)
-block|{}
+block|{
+name|configure
+argument_list|()
+block|;   }
 comment|/// Creates a temporary lookup result, initializing its core data
 comment|/// using the information from another result.  Diagnostics are always
 comment|/// disabled.
@@ -314,6 +336,13 @@ argument_list|(
 name|Other
 operator|.
 name|LookupKind
+argument_list|)
+operator|,
+name|IsAcceptableFn
+argument_list|(
+name|Other
+operator|.
+name|IsAcceptableFn
 argument_list|)
 operator|,
 name|IDNS
@@ -373,6 +402,21 @@ return|return
 name|Name
 return|;
 block|}
+comment|/// \brief Sets the name to look up.
+name|void
+name|setLookupName
+parameter_list|(
+name|DeclarationName
+name|Name
+parameter_list|)
+block|{
+name|this
+operator|->
+name|Name
+operator|=
+name|Name
+expr_stmt|;
+block|}
 comment|/// Gets the kind of lookup to perform.
 name|Sema
 operator|::
@@ -407,34 +451,6 @@ block|{
 name|HideTags
 operator|=
 name|Hide
-expr_stmt|;
-block|}
-comment|/// The identifier namespace of this lookup.  This information is
-comment|/// private to the lookup routines.
-name|unsigned
-name|getIdentifierNamespace
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|IDNS
-argument_list|)
-block|;
-return|return
-name|IDNS
-return|;
-block|}
-name|void
-name|setIdentifierNamespace
-parameter_list|(
-name|unsigned
-name|NS
-parameter_list|)
-block|{
-name|IDNS
-operator|=
-name|NS
 expr_stmt|;
 block|}
 name|bool
@@ -565,7 +581,42 @@ return|return
 name|Paths
 return|;
 block|}
-comment|/// \brief Add a declaration to these results.
+comment|/// \brief Tests whether the given declaration is acceptable.
+name|bool
+name|isAcceptableDecl
+argument_list|(
+name|NamedDecl
+operator|*
+name|D
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|IsAcceptableFn
+argument_list|)
+expr_stmt|;
+return|return
+name|IsAcceptableFn
+argument_list|(
+name|D
+argument_list|,
+name|IDNS
+argument_list|)
+return|;
+block|}
+comment|/// \brief Returns the identifier namespace mask for this lookup.
+name|unsigned
+name|getIdentifierNamespace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IDNS
+return|;
+block|}
+comment|/// \brief Add a declaration to these results.  Does not test the
+comment|/// acceptance criteria.
 name|void
 name|addDecl
 parameter_list|(
@@ -1001,6 +1052,9 @@ name|LookupKind
 operator|=
 name|Kind
 expr_stmt|;
+name|configure
+argument_list|()
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -1095,6 +1149,27 @@ specifier|const
 block|{
 return|return
 name|NameLoc
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Get the Sema object that this lookup result is searching
+end_comment
+
+begin_comment
+comment|/// with.
+end_comment
+
+begin_expr_stmt
+name|Sema
+operator|&
+name|getSema
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SemaRef
 return|;
 block|}
 end_expr_stmt
@@ -1402,6 +1477,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|configure
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// Sanity checks.
 end_comment
@@ -1674,13 +1756,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+name|ResultFilter
+name|IsAcceptableFn
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// set by configure()
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|IDNS
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// ill-defined until set by lookup
+comment|// set by configure()
 end_comment
 
 begin_decl_stmt
@@ -1709,8 +1801,74 @@ name|Diagnose
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+unit|};
+comment|/// \brief Consumes visible declarations found when searching for
+end_comment
+
+begin_comment
+comment|/// all visible names within a given scope or context.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This abstract class is meant to be subclassed by clients of \c
+end_comment
+
+begin_comment
+comment|/// Sema::LookupVisibleDecls(), each of which should override the \c
+end_comment
+
+begin_comment
+comment|/// FoundDecl() function to process declarations as they are found.
+end_comment
+
+begin_decl_stmt
+name|class
+name|VisibleDeclConsumer
+block|{
+name|public
+label|:
+comment|/// \brief Destroys the visible declaration consumer.
+name|virtual
+operator|~
+name|VisibleDeclConsumer
+argument_list|()
+expr_stmt|;
+comment|/// \brief Invoked each time \p Sema::LookupVisibleDecls() finds a
+comment|/// declaration visible from the current scope or context.
+comment|///
+comment|/// \param ND the declaration found.
+comment|///
+comment|/// \param Hiding a declaration that hides the declaration \p ND,
+comment|/// or NULL if no such declaration exists.
+name|virtual
+name|void
+name|FoundDecl
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|Hiding
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
-unit|};  }
+unit|}
 endif|#
 directive|endif
 end_endif

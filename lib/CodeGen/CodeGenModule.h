@@ -783,64 +783,13 @@ argument|const llvm::Type *Ty =
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/// GetAddrOfRTTI - Get the address of the RTTI structure for the given type.
+comment|/// GetAddrOfRTTIDescriptor - Get the address of the RTTI descriptor
+comment|/// for the given type.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GetAddrOfRTTI
-argument_list|(
-argument|QualType Ty
-argument_list|)
-expr_stmt|;
-comment|/// GetAddrOfRTTI - Get the address of the RTTI structure for the given record
-comment|/// decl.
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GetAddrOfRTTI
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|)
-expr_stmt|;
-comment|/// GenerateRTTI - Generate the rtti information for the given type.
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GenerateRTTI
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|)
-expr_stmt|;
-comment|/// GenerateRTTIRef - Generate a reference to the rtti information for the
-comment|/// given type.
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GenerateRTTIRef
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|)
-expr_stmt|;
-comment|/// GenerateRTTI - Generate the rtti information for the given
-comment|/// non-class type.
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GenerateRTTI
+name|GetAddrOfRTTIDescriptor
 argument_list|(
 argument|QualType Ty
 argument_list|)
@@ -930,18 +879,22 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
 name|CtorVtable_t
 operator|,
 name|int64_t
 operator|>
+name|AddrSubMap_t
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|AddrSubMap_t
 operator|*
 operator|>
 name|AddrMap_t

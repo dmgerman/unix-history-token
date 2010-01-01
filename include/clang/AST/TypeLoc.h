@@ -3547,21 +3547,6 @@ name|DependentSizedExtVectorType
 operator|>
 block|{ }
 block|;
-comment|// FIXME: I'm not sure how you actually specify these;  with attributes?
-name|class
-name|FixedWidthIntTypeLoc
-operator|:
-name|public
-name|InheritingConcreteTypeLoc
-operator|<
-name|TypeSpecTypeLoc
-block|,
-name|FixedWidthIntTypeLoc
-block|,
-name|FixedWidthIntType
-operator|>
-block|{ }
-block|;
 comment|// FIXME: location of the '_Complex' keyword.
 name|class
 name|ComplexTypeLoc

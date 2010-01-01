@@ -4,15 +4,15 @@ comment|// Check that -E mode is invariant when using an implicit PCH.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include %S/preprocess.h -E -o %t.orig %s
+comment|// RUN: %clang_cc1 -include %S/preprocess.h -E -o %t.orig %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t %S/preprocess.h
+comment|// RUN: %clang_cc1 -emit-pch -o %t %S/preprocess.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include-pch %t -E -o %t.from_pch %s
+comment|// RUN: %clang_cc1 -include-pch %t -E -o %t.from_pch %s
 end_comment
 
 begin_comment

@@ -128,7 +128,6 @@ operator|~
 name|AnalysisDataTy
 argument_list|()
 block|{}
-block|;
 name|ObserverTy
 operator|*
 name|Observer

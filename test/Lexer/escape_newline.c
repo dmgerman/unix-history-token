@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E -trigraphs %s | grep -- ' ->'
+comment|// RUN: %clang_cc1 -E -trigraphs %s | grep -- ' ->'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -trigraphs %s 2>&1 | grep 'backslash and newline separated by space'
+comment|// RUN: %clang_cc1 -E -trigraphs %s 2>&1 | grep 'backslash and newline separated by space'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E -trigraphs %s 2>&1 | grep 'trigraph converted'
+comment|// RUN: %clang_cc1 -E -trigraphs %s 2>&1 | grep 'trigraph converted'
 end_comment
 
 begin_comment

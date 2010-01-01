@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -verify -fsyntax-only %s
+comment|// RUN: %clang_cc1 -verify -fsyntax-only %s
 end_comment
 
 begin_function_decl
@@ -192,6 +192,41 @@ name|size
 parameter_list|)
 block|{    }
 end_function
+
+begin_comment
+comment|// PR2461
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(noreturn)
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|void
+name|f
+argument_list|(
+name|__attribute__
+argument_list|(
+argument|(noreturn)
+argument_list|)
+name|void
+argument_list|(
+operator|*
+name|x
+argument_list|)
+argument_list|(
+name|void
+argument_list|)
+argument_list|)
+block|{
+name|x
+argument_list|()
+expr_stmt|;
+block|}
+end_decl_stmt
 
 end_unit
 

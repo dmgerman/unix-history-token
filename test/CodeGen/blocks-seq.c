@@ -8,7 +8,7 @@ comment|// builds with and without asserts. We need a better solution for this.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -fblocks -triple x86_64-apple-darwin10 -emit-llvm-bc -o - %s | opt -strip | llvm-dis> %t
+comment|// RUN: %clang_cc1 -fblocks -triple x86_64-apple-darwin10 -emit-llvm-bc -o - %s | opt -strip | llvm-dis> %t
 end_comment
 
 begin_comment

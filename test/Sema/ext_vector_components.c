@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_typedef
@@ -157,13 +157,6 @@ operator|.
 name|x
 expr_stmt|;
 comment|// legal, shorten
-name|vec2
-operator|=
-name|vec3
-operator|.
-name|hi
-expr_stmt|;
-comment|// expected-error {{vector component access invalid for odd-sized type 'float3'}}
 name|vec4_2
 operator|.
 name|xyzx
@@ -265,6 +258,70 @@ name|vec4p
 operator|->
 name|xy
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|float2
+name|lo
+parameter_list|(
+name|float3
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+operator|.
+name|lo
+return|;
+block|}
+end_function
+
+begin_function
+name|float2
+name|hi
+parameter_list|(
+name|float3
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+operator|.
+name|hi
+return|;
+block|}
+end_function
+
+begin_function
+name|float2
+name|ev
+parameter_list|(
+name|float3
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+operator|.
+name|even
+return|;
+block|}
+end_function
+
+begin_function
+name|float2
+name|od
+parameter_list|(
+name|float3
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+operator|.
+name|odd
+return|;
 block|}
 end_function
 

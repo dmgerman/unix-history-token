@@ -4,7 +4,7 @@ comment|// Test transparent PTH support.
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-pch-is-pth -x c-header %s -o %t.h.pth -### 2> %t.log
+comment|// RUN: %clang -ccc-pch-is-pth -x c-header %s -o %t.h.pth -### 2> %t.log
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ comment|// RUN: touch %t.h.pth
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-pch-is-pth -E -include %t.h %s -### 2> %t.log
+comment|// RUN: %clang -ccc-pch-is-pth -E -include %t.h %s -### 2> %t.log
 end_comment
 
 begin_comment

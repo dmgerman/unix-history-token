@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_decl_stmt
@@ -273,7 +273,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{use of undeclared identifier 'g19'}}
+comment|// expected-error{{use of undeclared identifier 'g19'}} \
+end_comment
+
+begin_comment
+comment|// expected-warning{{incompatible pointer types}}
 end_comment
 
 begin_comment

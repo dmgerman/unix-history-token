@@ -4,7 +4,7 @@ comment|// Test this without pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include %S/line-directive.h -fsyntax-only %s 2>&1|grep "25:5"
+comment|// RUN: %clang_cc1 -include %S/line-directive.h -fsyntax-only %s 2>&1|grep "25:5"
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|// Test with pch.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t %S/line-directive.h
+comment|// RUN: %clang_cc1 -emit-pch -o %t %S/line-directive.h
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -include-pch %t -fsyntax-only %s 2>&1|grep "25:5"
+comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only %s 2>&1|grep "25:5"
 end_comment
 
 begin_decl_stmt

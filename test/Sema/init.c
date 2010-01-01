@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -verify -fsyntax-only
+comment|// RUN: %clang_cc1 %s -verify -fsyntax-only
 end_comment
 
 begin_include
@@ -149,7 +149,7 @@ index|]
 init|=
 name|a
 decl_stmt|;
-comment|// expected-error {{initialization with '{...}' expected}}
+comment|// expected-error {{array initializer must be an initializer list}}
 name|int
 operator|+
 expr_stmt|;

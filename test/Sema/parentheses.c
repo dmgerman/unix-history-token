@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -Wparentheses -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -Wparentheses -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -Wparentheses -fixit %s -o - | clang-cc -Wparentheses -Werror -
+comment|// RUN: %clang_cc1 -Wparentheses -fixit %s -o - | %clang_cc1 -Wparentheses -Werror -
 end_comment
 
 begin_comment

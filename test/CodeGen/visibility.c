@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility default -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -fvisibility default -emit-llvm -o %t %s
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|// RUN: grep 'define i32 @f_def()' %t
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility protected -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -fvisibility protected -emit-llvm -o %t %s
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// RUN: grep 'define protected i32 @f_def()' %t
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple i386-unknown-unknown -fvisibility hidden -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -fvisibility hidden -emit-llvm -o %t %s
 end_comment
 
 begin_comment

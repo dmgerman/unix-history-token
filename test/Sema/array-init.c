@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -pedantic -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -pedantic -verify %s
 end_comment
 
 begin_function_decl
@@ -1103,7 +1103,7 @@ index|]
 init|=
 literal|"foo"
 decl_stmt|;
-comment|//expected-error{{variable-sized object may not be initialized}}
+comment|//expected-error{{array initializer must be an initializer list or string literal}}
 name|int
 name|b
 index|[

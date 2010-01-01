@@ -2946,6 +2946,38 @@ operator|&&
 literal|"Can't have an unnamed field with a qualifier!"
 argument_list|)
 expr_stmt|;
+name|Expr
+modifier|*
+name|BaseExpr
+init|=
+name|Base
+operator|.
+name|takeAs
+operator|<
+name|Expr
+operator|>
+operator|(
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|getSema
+argument_list|()
+operator|.
+name|PerformObjectMemberConversion
+argument_list|(
+name|BaseExpr
+argument_list|,
+name|Member
+argument_list|)
+condition|)
+return|return
+name|getSema
+argument_list|()
+operator|.
+name|ExprError
+argument_list|()
+return|;
 name|MemberExpr
 modifier|*
 name|ME
@@ -2956,14 +2988,7 @@ argument|getSema().Context
 argument_list|)
 name|MemberExpr
 argument_list|(
-name|Base
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|BaseExpr
 argument_list|,
 name|isArrow
 argument_list|,
@@ -4456,6 +4481,9 @@ comment|/// provide different behavior.
 name|OwningExprResult
 name|RebuildCXXDefaultArgExpr
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 name|ParmVarDecl
 modifier|*
 name|Param
@@ -4475,6 +4503,8 @@ name|getSema
 argument_list|()
 operator|.
 name|Context
+argument_list|,
+name|Loc
 argument_list|,
 name|Param
 argument_list|)
@@ -5631,7 +5661,7 @@ argument_list|(
 name|getSema
 argument_list|()
 operator|.
-name|FullExpr
+name|MakeFullExpr
 argument_list|(
 name|E
 argument_list|)
@@ -7968,36 +7998,6 @@ argument_list|(
 argument|TypeLocBuilder&TLB
 argument_list|,
 argument|BuiltinTypeLoc T
-argument_list|)
-block|{
-return|return
-name|TransformTypeSpecType
-argument_list|(
-name|TLB
-argument_list|,
-name|T
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|Derived
-operator|>
-name|QualType
-name|TreeTransform
-operator|<
-name|Derived
-operator|>
-operator|::
-name|TransformFixedWidthIntType
-argument_list|(
-argument|TypeLocBuilder&TLB
-argument_list|,
-argument|FixedWidthIntTypeLoc T
 argument_list|)
 block|{
 return|return
@@ -13568,7 +13568,7 @@ argument_list|(
 name|getSema
 argument_list|()
 operator|.
-name|FullExpr
+name|MakeFullExpr
 argument_list|(
 name|Cond
 argument_list|)
@@ -13858,7 +13858,7 @@ argument_list|(
 name|getSema
 argument_list|()
 operator|.
-name|FullExpr
+name|MakeFullExpr
 argument_list|(
 name|Cond
 argument_list|)
@@ -14082,7 +14082,7 @@ argument_list|(
 name|getSema
 argument_list|()
 operator|.
-name|FullExpr
+name|MakeFullExpr
 argument_list|(
 name|Cond
 argument_list|)
@@ -14663,7 +14663,7 @@ argument_list|,
 name|getSema
 argument_list|()
 operator|.
-name|FullExpr
+name|MakeFullExpr
 argument_list|(
 name|Cond
 argument_list|)
@@ -14673,7 +14673,7 @@ argument_list|,
 name|getSema
 argument_list|()
 operator|.
-name|FullExpr
+name|MakeFullExpr
 argument_list|(
 name|Inc
 argument_list|)
@@ -17512,6 +17512,21 @@ operator|->
 name|hasExplicitTemplateArgumentList
 argument_list|()
 condition|)
+block|{
+comment|// Mark it referenced in the new context regardless.
+comment|// FIXME: this is a bit instantiation-specific.
+name|SemaRef
+operator|.
+name|MarkDeclarationReferenced
+argument_list|(
+name|E
+operator|->
+name|getMemberLoc
+argument_list|()
+argument_list|,
+name|Member
+argument_list|)
+expr_stmt|;
 return|return
 name|SemaRef
 operator|.
@@ -17523,6 +17538,7 @@ name|Retain
 argument_list|()
 argument_list|)
 return|;
+block|}
 end_if
 
 begin_decl_stmt
@@ -22099,6 +22115,11 @@ argument_list|()
 operator|.
 name|RebuildCXXDefaultArgExpr
 argument_list|(
+name|E
+operator|->
+name|getUsedLocation
+argument_list|()
+argument_list|,
 name|Param
 argument_list|)
 return|;
@@ -22569,6 +22590,152 @@ name|Retain
 argument_list|()
 argument_list|)
 return|;
+end_if
+
+begin_if
+if|if
+condition|(
+operator|!
+name|ArraySize
+operator|.
+name|get
+argument_list|()
+condition|)
+block|{
+comment|// If no array size was specified, but the new expression was
+comment|// instantiated with an array type (e.g., "new T" where T is
+comment|// instantiated with "int[4]"), extract the outer bound from the
+comment|// array type as our array size. We do this with constant and
+comment|// dependently-sized array types.
+specifier|const
+name|ArrayType
+modifier|*
+name|ArrayT
+init|=
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getAsArrayType
+argument_list|(
+name|AllocType
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ArrayT
+condition|)
+block|{
+comment|// Do nothing
+block|}
+elseif|else
+if|if
+condition|(
+specifier|const
+name|ConstantArrayType
+modifier|*
+name|ConsArrayT
+init|=
+name|dyn_cast
+operator|<
+name|ConstantArrayType
+operator|>
+operator|(
+name|ArrayT
+operator|)
+condition|)
+block|{
+name|ArraySize
+operator|=
+name|SemaRef
+operator|.
+name|Owned
+argument_list|(
+name|new
+argument_list|(
+argument|SemaRef.Context
+argument_list|)
+name|IntegerLiteral
+argument_list|(
+name|ConsArrayT
+operator|->
+name|getSize
+argument_list|()
+argument_list|,
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getSizeType
+argument_list|()
+argument_list|,
+comment|/*FIXME:*/
+name|E
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|AllocType
+operator|=
+name|ConsArrayT
+operator|->
+name|getElementType
+argument_list|()
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+specifier|const
+name|DependentSizedArrayType
+modifier|*
+name|DepArrayT
+init|=
+name|dyn_cast
+operator|<
+name|DependentSizedArrayType
+operator|>
+operator|(
+name|ArrayT
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|DepArrayT
+operator|->
+name|getSizeExpr
+argument_list|()
+condition|)
+block|{
+name|ArraySize
+operator|=
+name|SemaRef
+operator|.
+name|Owned
+argument_list|(
+name|DepArrayT
+operator|->
+name|getSizeExpr
+argument_list|()
+operator|->
+name|Retain
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|AllocType
+operator|=
+name|DepArrayT
+operator|->
+name|getElementType
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+block|}
 end_if
 
 begin_return
@@ -24129,19 +24296,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// The transformation of a temporary-binding expression always attempts to
+comment|/// Since CXXBindTemporaryExpr nodes are implicitly generated, we just
 end_comment
 
 begin_comment
-comment|/// bind a new temporary variable to its subexpression, even if the
-end_comment
-
-begin_comment
-comment|/// subexpression itself did not change, because the temporary variable itself
-end_comment
-
-begin_comment
-comment|/// must be unique.
+comment|/// transform the subexpression and return that.
 end_comment
 
 begin_expr_stmt
@@ -24163,9 +24322,7 @@ argument_list|(
 argument|CXXBindTemporaryExpr *E
 argument_list|)
 block|{
-name|OwningExprResult
-name|SubExpr
-operator|=
+return|return
 name|getDerived
 argument_list|()
 operator|.
@@ -24176,42 +24333,11 @@ operator|->
 name|getSubExpr
 argument_list|()
 argument_list|)
-block|;
-if|if
-condition|(
-name|SubExpr
-operator|.
-name|isInvalid
-argument_list|()
-condition|)
-return|return
-name|SemaRef
-operator|.
-name|ExprError
-argument_list|()
 return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|SemaRef
-operator|.
-name|MaybeBindToTemporary
-argument_list|(
-name|SubExpr
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
-argument_list|)
-return|;
-end_return
-
 begin_comment
-unit|}
 comment|/// \brief Transform a C++ expression that contains temporaries that should
 end_comment
 
@@ -24224,23 +24350,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// The transformation of a full expression always attempts to build a new
+comment|/// Since CXXExprWithTemporaries nodes are implicitly generated, we
 end_comment
 
 begin_comment
-comment|/// CXXExprWithTemporaries expression, even if the
-end_comment
-
-begin_comment
-comment|/// subexpression itself did not change, because it will need to capture the
-end_comment
-
-begin_comment
-comment|/// the new temporary variables introduced in the subexpression.
+comment|/// just transform the subexpression and return that.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|Derived
@@ -24258,9 +24376,7 @@ argument_list|(
 argument|CXXExprWithTemporaries *E
 argument_list|)
 block|{
-name|OwningExprResult
-name|SubExpr
-operator|=
+return|return
 name|getDerived
 argument_list|()
 operator|.
@@ -24271,52 +24387,12 @@ operator|->
 name|getSubExpr
 argument_list|()
 argument_list|)
-block|;
-if|if
-condition|(
-name|SubExpr
-operator|.
-name|isInvalid
-argument_list|()
-condition|)
-return|return
-name|SemaRef
-operator|.
-name|ExprError
-argument_list|()
 return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|SemaRef
-operator|.
-name|Owned
-argument_list|(
-name|SemaRef
-operator|.
-name|MaybeCreateCXXExprWithTemporaries
-argument_list|(
-name|SubExpr
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
-argument_list|,
-name|E
-operator|->
-name|shouldDestroyTemporaries
-argument_list|()
-argument_list|)
-argument_list|)
-return|;
-end_return
-
 begin_expr_stmt
-unit|}  template
+name|template
 operator|<
 name|typename
 name|Derived
@@ -27171,32 +27247,6 @@ expr_stmt|;
 break|break;
 block|}
 end_for
-
-begin_if
-if|if
-condition|(
-name|SizeType
-operator|.
-name|isNull
-argument_list|()
-condition|)
-name|SizeType
-operator|=
-name|SemaRef
-operator|.
-name|Context
-operator|.
-name|getFixedWidthIntType
-argument_list|(
-name|Size
-operator|->
-name|getBitWidth
-argument_list|()
-argument_list|,
-name|false
-argument_list|)
-expr_stmt|;
-end_if
 
 begin_decl_stmt
 name|IntegerLiteral

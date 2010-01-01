@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix LSB %s
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix LSB %s
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// CHECK-LSB: @.str2 = internal constant [36 x i8] c"h\00e\00l\00l\00o\0
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple powerpc-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix MSB %s
+comment|// RUN: %clang_cc1 -triple powerpc-apple-darwin9 -emit-llvm %s -o - | FileCheck -check-prefix MSB %s
 end_comment
 
 begin_comment

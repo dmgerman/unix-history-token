@@ -619,11 +619,6 @@ name|TYPE_EXT_QUAL
 init|=
 literal|1
 block|,
-comment|/// \brief A FixedWidthIntType record.
-name|TYPE_FIXED_WIDTH_INT
-init|=
-literal|2
-block|,
 comment|/// \brief A ComplexType record.
 name|TYPE_COMPLEX
 init|=

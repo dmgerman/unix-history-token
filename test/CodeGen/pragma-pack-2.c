@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -triple i386-apple-darwin9 %s -emit-llvm -o - | FileCheck -check-prefix X32 %s
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 %s -emit-llvm -o - | FileCheck -check-prefix X32 %s
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// CHECK-X32: %struct.s1 = type { [15 x i32], %struct.s0 }
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -triple x86_64-apple-darwin9 %s -emit-llvm -o - | FileCheck -check-prefix X64 %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 %s -emit-llvm -o - | FileCheck -check-prefix X64 %s
 end_comment
 
 begin_comment

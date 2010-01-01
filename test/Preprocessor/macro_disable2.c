@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s | grep 'A B C A B A C A B C A'
+comment|// RUN: %clang_cc1 -E %s | grep 'A B C A B A C A B C A'
 end_comment
 
 begin_define

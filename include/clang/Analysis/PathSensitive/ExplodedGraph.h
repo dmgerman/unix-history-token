@@ -928,7 +928,6 @@ function|const;
 name|InterExplodedGraphMap
 argument_list|()
 block|{}
-empty_stmt|;
 name|virtual
 operator|~
 name|InterExplodedGraphMap

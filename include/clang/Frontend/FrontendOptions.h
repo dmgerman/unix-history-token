@@ -143,9 +143,6 @@ comment|///< Print DeclContext and their Decls.
 name|PrintPreprocessedInput
 block|,
 comment|///< -E mode.
-name|RewriteBlocks
-block|,
-comment|///< ObjC->C Rewriter for Blocks.
 name|RewriteMacros
 block|,
 comment|///< Expand macros but not #includes.

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: not clang-cc -E %s 2>&1 | grep 'invalid token at start of a preprocessor expression'
+comment|// RUN: not %clang_cc1 -E %s 2>&1 | grep 'invalid token at start of a preprocessor expression'
 end_comment
 
 begin_comment
-comment|// RUN: not clang-cc -E %s 2>&1 | grep 'token is not a valid binary operator in a preprocessor subexpression'
+comment|// RUN: not %clang_cc1 -E %s 2>&1 | grep 'token is not a valid binary operator in a preprocessor subexpression'
 end_comment
 
 begin_comment
-comment|// RUN: not clang-cc -E %s 2>&1 | grep ':14: error: expected end of line in preprocessor expression'
+comment|// RUN: not %clang_cc1 -E %s 2>&1 | grep ':14: error: expected end of line in preprocessor expression'
 end_comment
 
 begin_comment

@@ -220,6 +220,8 @@ directive|define
 name|PREVISIT
 parameter_list|(
 name|NAME
+parameter_list|,
+name|FALLBACK
 parameter_list|)
 define|\
 value|case Stmt::NAME ## Class:\ static_cast<ImplClass*>(this)->PreVisit ## NAME(C,static_cast<const NAME*>(S));\ break;
@@ -258,6 +260,8 @@ directive|define
 name|POSTVISIT
 parameter_list|(
 name|NAME
+parameter_list|,
+name|FALLBACK
 parameter_list|)
 define|\
 value|case Stmt::NAME ## Class:\ static_cast<ImplClass*>(this)->\ PostVisit ## NAME(C,static_cast<const NAME*>(S));\ break;
@@ -266,14 +270,32 @@ directive|include
 file|"clang/Analysis/PathSensitive/CheckerVisitor.def"
 block|}
 block|}
+name|void
+name|PreVisitStmt
+argument_list|(
+argument|CheckerContext&C
+argument_list|,
+argument|const Stmt *S
+argument_list|)
+block|{}
+name|void
+name|PostVisitStmt
+argument_list|(
+argument|CheckerContext&C
+argument_list|,
+argument|const Stmt *S
+argument_list|)
+block|{}
 define|#
 directive|define
 name|PREVISIT
 parameter_list|(
 name|NAME
+parameter_list|,
+name|FALLBACK
 parameter_list|)
 define|\
-value|void PreVisit ## NAME(CheckerContext&C, const NAME* S) {}
+value|void PreVisit ## NAME(CheckerContext&C, const NAME* S) {\   PreVisit ## FALLBACK(C, S);\ }
 include|#
 directive|include
 file|"clang/Analysis/PathSensitive/CheckerVisitor.def"
@@ -282,9 +304,11 @@ directive|define
 name|POSTVISIT
 parameter_list|(
 name|NAME
+parameter_list|,
+name|FALLBACK
 parameter_list|)
 define|\
-value|void PostVisit ## NAME(CheckerContext&C, const NAME* S) {}
+value|void PostVisit ## NAME(CheckerContext&C, const NAME* S) {\   PostVisit ## FALLBACK(C, S);\ }
 include|#
 directive|include
 file|"clang/Analysis/PathSensitive/CheckerVisitor.def"

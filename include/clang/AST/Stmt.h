@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/FullExpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -1426,6 +1432,17 @@ name|SourceLocation
 name|StartLoc
 block|,
 name|EndLoc
+block|;
+name|protected
+operator|:
+name|virtual
+name|void
+name|DoDestroy
+argument_list|(
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|)
 block|;
 name|public
 operator|:
@@ -3366,7 +3383,7 @@ name|IfStmt
 argument_list|(
 argument|SourceLocation IL
 argument_list|,
-argument|VarDecl *Var
+argument|VarDecl *var
 argument_list|,
 argument|Expr *cond
 argument_list|,
@@ -3385,7 +3402,7 @@ argument_list|)
 block|,
 name|Var
 argument_list|(
-name|Var
+name|var
 argument_list|)
 block|,
 name|IfLoc
@@ -3714,7 +3731,8 @@ return|return
 name|true
 return|;
 block|}
-comment|// Iterators
+comment|// Iterators over subexpressions.  The iterators will include iterating
+comment|// over the initialization expression referenced by the condition variable.
 name|virtual
 name|child_iterator
 name|child_begin
@@ -3724,6 +3742,17 @@ name|virtual
 name|child_iterator
 name|child_end
 argument_list|()
+block|;
+name|protected
+operator|:
+name|virtual
+name|void
+name|DoDestroy
+argument_list|(
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -4442,6 +4471,17 @@ name|virtual
 name|child_iterator
 name|child_end
 argument_list|()
+block|;
+name|protected
+operator|:
+name|virtual
+name|void
+name|DoDestroy
+argument_list|(
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -4831,7 +4871,7 @@ argument|Stmt *Init
 argument_list|,
 argument|Expr *Cond
 argument_list|,
-argument|VarDecl *CondVar
+argument|VarDecl *condVar
 argument_list|,
 argument|Expr *Inc
 argument_list|,
@@ -4851,7 +4891,7 @@ argument_list|)
 block|,
 name|CondVar
 argument_list|(
-name|CondVar
+name|condVar
 argument_list|)
 block|,
 name|ForLoc
@@ -5266,6 +5306,17 @@ name|virtual
 name|child_iterator
 name|child_end
 argument_list|()
+block|;
+name|protected
+operator|:
+name|virtual
+name|void
+name|DoDestroy
+argument_list|(
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt

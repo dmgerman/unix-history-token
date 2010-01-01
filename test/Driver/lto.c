@@ -8,7 +8,7 @@ comment|// files.
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-print-phases -c %s -flto 2> %t.log
+comment|// RUN: %clang -ccc-print-phases -c %s -flto 2> %t.log
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: grep '2: compiler, {1}, llvm-bc' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-print-phases -c %s -O4 2> %t.log
+comment|// RUN: %clang -ccc-print-phases -c %s -O4 2> %t.log
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// and -emit-llvm doesn't alter pipeline (unfortunately?).
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-print-phases %s -emit-llvm 2> %t.log
+comment|// RUN: %clang -ccc-print-phases %s -emit-llvm 2> %t.log
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// (unfortunately).
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -save-temps -### 2> %t.log
+comment|// RUN: %clang %s -emit-llvm -save-temps -### 2> %t.log
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ comment|// RUN: grep '".*a.out" .*".*lto\.o"' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: clang %s -emit-llvm -S -### 2> %t.log
+comment|// RUN: %clang %s -emit-llvm -S -### 2> %t.log
 end_comment
 
 begin_comment

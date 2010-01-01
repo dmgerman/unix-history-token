@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -verify -fms-extensions -x objective-c++ %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -fms-extensions -x objective-c++ %s
 end_comment
 
 begin_function_decl
@@ -232,6 +232,31 @@ name|int
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|// Charify extension.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOO
+parameter_list|(
+name|x
+parameter_list|)
+value|#@x
+end_define
+
+begin_decl_stmt
+name|char
+name|x
+init|=
+name|FOO
+argument_list|(
+name|a
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

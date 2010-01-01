@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -E | grep "^  4"
+comment|// RUN: %clang_cc1 %s -E | grep "^  4"
 end_comment
 
 begin_define
@@ -13,7 +13,7 @@ end_define
 begin_expr_stmt
 name|FOO
 comment|// PR3579 - This should expand to the __LINE__ of the ')' not of the X.
-comment|// RUN: clang-cc %s -E | grep "^A 13"
+comment|// RUN: %clang_cc1 %s -E | grep "^A 13"
 define|#
 directive|define
 name|X

@@ -69,7 +69,7 @@ comment|///< This is a member comment.
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -emit-pch -o %t.ast %s
+comment|// RUN: %clang_cc1 -emit-pch -o %t.ast %s
 end_comment
 
 begin_comment

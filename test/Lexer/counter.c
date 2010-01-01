@@ -4,7 +4,7 @@ comment|// __COUNTER__ support: rdar://4329310
 end_comment
 
 begin_comment
-comment|// RUN: clang -E %s> %t
+comment|// RUN: %clang -E %s> %t
 end_comment
 
 begin_define

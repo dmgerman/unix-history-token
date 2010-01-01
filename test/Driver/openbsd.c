@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -ccc-clang-archs "" -ccc-host-triple i686-pc-openbsd %s -### 2> %t.log
+comment|// RUN: %clang -ccc-clang-archs "" -ccc-host-triple i686-pc-openbsd %s -### 2> %t.log
 end_comment
 
 begin_comment

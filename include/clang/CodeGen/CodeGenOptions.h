@@ -214,6 +214,13 @@ operator|::
 name|string
 name|DebugPass
 expr_stmt|;
+comment|/// The string to embed in the debug information for the compile unit, if
+comment|/// non-empty.
+name|std
+operator|::
+name|string
+name|DwarfDebugFlags
+expr_stmt|;
 comment|/// The ABI to use for passing floating point arguments.
 name|std
 operator|::

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -fsyntax-only -verify -pedantic -trigraphs %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -pedantic -trigraphs %s
 end_comment
 
 begin_decl_stmt
@@ -140,6 +140,76 @@ end_decl_stmt
 begin_comment
 comment|// ignored.
 end_comment
+
+begin_comment
+comment|// rdar://problem/6974641
+end_comment
+
+begin_decl_stmt
+name|float
+name|t0
+index|[]
+init|=
+block|{
+literal|1.9e20f
+block|,
+literal|1.9e-20f
+block|,
+literal|1.9e50f
+block|,
+comment|// expected-error {{too large}}
+literal|1.9e-50f
+block|,
+comment|// expected-error {{too small}}
+operator|-
+literal|1.9e20f
+block|,
+operator|-
+literal|1.9e-20f
+block|,
+operator|-
+literal|1.9e50f
+block|,
+comment|// expected-error {{too large}}
+operator|-
+literal|1.9e-50f
+comment|// expected-error {{too small}}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|double
+name|t1
+index|[]
+init|=
+block|{
+literal|1.9e50
+block|,
+literal|1.9e-50
+block|,
+literal|1.9e500
+block|,
+comment|// expected-error {{too large}}
+literal|1.9e-500
+block|,
+comment|// expected-error {{too small}}
+operator|-
+literal|1.9e50
+block|,
+operator|-
+literal|1.9e-50
+block|,
+operator|-
+literal|1.9e500
+block|,
+comment|// expected-error {{too large}}
+operator|-
+literal|1.9e-500
+comment|// expected-error {{too small}}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

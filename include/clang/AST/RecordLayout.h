@@ -144,7 +144,7 @@ name|Value
 argument_list|(
 argument|Base
 argument_list|,
-argument|IsVirtual
+argument|Base&& IsVirtual
 argument_list|)
 block|{}
 comment|/// Value - Points to the primary base. The single-bit value

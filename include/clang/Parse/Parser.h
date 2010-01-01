@@ -4312,6 +4312,7 @@ block|;
 comment|// Not a decl scope.
 if|if
 condition|(
+operator|!
 name|P
 operator|.
 name|Actions
@@ -4324,21 +4325,6 @@ name|CurScope
 argument_list|,
 name|SS
 argument_list|)
-condition|)
-name|SS
-operator|.
-name|setScopeRep
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|SS
-operator|.
-name|isInvalid
-argument_list|()
 condition|)
 name|EnteredScope
 operator|=
@@ -4389,17 +4375,8 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// ParseDeclarator - Parse and verify a newly-initialized declarator.
-end_comment
-
-begin_function_decl
 name|void
 name|ParseDeclarator
 parameter_list|(
@@ -4408,13 +4385,7 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// A function that parses a variant of direct-declarator.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|void
 argument_list|(
@@ -4428,9 +4399,6 @@ name|Declarator
 operator|&
 argument_list|)
 expr_stmt|;
-end_typedef
-
-begin_function_decl
 name|void
 name|ParseDeclaratorInternal
 parameter_list|(
@@ -4442,9 +4410,6 @@ name|DirectDeclParseFunction
 name|DirectDeclParser
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ParseTypeQualifierListOpt
 parameter_list|(
@@ -4463,9 +4428,6 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ParseDirectDeclarator
 parameter_list|(
@@ -4474,9 +4436,6 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ParseParenDeclarator
 parameter_list|(
@@ -4485,9 +4444,6 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ParseFunctionDeclarator
 parameter_list|(
@@ -4510,9 +4466,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ParseFunctionDeclaratorIdentifierList
 parameter_list|(
@@ -4524,9 +4477,6 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ParseBracketDeclarator
 parameter_list|(
@@ -4535,17 +4485,8 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// C++ 7: Declarations [dcl.dcl]
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isCXX0XAttributeSpecifier
 argument_list|(
@@ -4563,9 +4504,6 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseNamespace
 parameter_list|(
@@ -4577,9 +4515,6 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseLinkage
 parameter_list|(
@@ -4591,9 +4526,6 @@ name|unsigned
 name|Context
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseUsingDirectiveOrDeclaration
 parameter_list|(
@@ -4608,9 +4540,6 @@ name|CXX0XAttributeList
 name|Attrs
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseUsingDirective
 parameter_list|(
@@ -4629,9 +4558,6 @@ modifier|*
 name|Attr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseUsingDeclaration
 parameter_list|(
@@ -4651,9 +4577,6 @@ init|=
 name|AS_none
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseStaticAssertDeclaration
 parameter_list|(
@@ -4662,9 +4585,6 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseNamespaceAlias
 parameter_list|(
@@ -4683,17 +4603,8 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// C++ 9: classes [class] and C structs/unions.
-end_comment
-
-begin_function_decl
 name|TypeResult
 name|ParseClassName
 parameter_list|(
@@ -4714,9 +4625,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
 name|void
 name|ParseClassSpecifier
 argument_list|(
@@ -4746,9 +4654,6 @@ operator|=
 name|AS_none
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|void
 name|ParseCXXMemberSpecification
 parameter_list|(
@@ -4762,9 +4667,6 @@ name|DeclPtrTy
 name|TagDecl
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ParseCXXClassMemberDeclaration
 parameter_list|(
@@ -4780,9 +4682,6 @@ name|ParsedTemplateInfo
 argument_list|()
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ParseConstructorInitializer
 parameter_list|(
@@ -4790,9 +4689,6 @@ name|DeclPtrTy
 name|ConstructorDecl
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|MemInitResult
 name|ParseMemInitializer
 parameter_list|(
@@ -4800,9 +4696,6 @@ name|DeclPtrTy
 name|ConstructorDecl
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|HandleMemberFunctionDefaultArgs
 parameter_list|(
@@ -4814,17 +4707,8 @@ name|DeclPtrTy
 name|ThisDecl
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// C++ 10: Derived classes [class.derived]
-end_comment
-
-begin_function_decl
 name|void
 name|ParseBaseClause
 parameter_list|(
@@ -4832,9 +4716,6 @@ name|DeclPtrTy
 name|ClassDecl
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|BaseResult
 name|ParseBaseSpecifier
 parameter_list|(
@@ -4842,17 +4723,11 @@ name|DeclPtrTy
 name|ClassDecl
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|AccessSpecifier
 name|getAccessSpecifierIfPresent
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|bool
 name|ParseUnqualifiedIdTemplateId
 parameter_list|(
@@ -4879,9 +4754,6 @@ modifier|&
 name|Id
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|ParseUnqualifiedIdOperator
 parameter_list|(
@@ -4901,9 +4773,6 @@ modifier|&
 name|Result
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|ParseUnqualifiedId
 parameter_list|(
@@ -4929,17 +4798,8 @@ modifier|&
 name|Result
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// C++ 14: Templates [temp]
-end_comment
-
-begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -4951,13 +4811,7 @@ literal|4
 operator|>
 name|TemplateParameterList
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|// C++ 14.1: Template Parameters [temp.param]
-end_comment
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseDeclarationStartingWithTemplate
 parameter_list|(
@@ -4974,9 +4828,6 @@ init|=
 name|AS_none
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseTemplateDeclarationOrSpecialization
 parameter_list|(
@@ -4991,9 +4842,6 @@ name|AccessSpecifier
 name|AS
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseSingleDeclarationAfterTemplate
 parameter_list|(
@@ -5015,9 +4863,6 @@ init|=
 name|AS_none
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|ParseTemplateParameters
 parameter_list|(
@@ -5037,9 +4882,6 @@ modifier|&
 name|RAngleLoc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|ParseTemplateParameterList
 parameter_list|(
@@ -5051,16 +4893,10 @@ modifier|&
 name|TemplateParams
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|isStartOfTemplateTypeParameter
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseTemplateParameter
 parameter_list|(
@@ -5071,9 +4907,6 @@ name|unsigned
 name|Position
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseTypeParameter
 parameter_list|(
@@ -5084,9 +4917,6 @@ name|unsigned
 name|Position
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseTemplateTemplateParameter
 parameter_list|(
@@ -5097,9 +4927,6 @@ name|unsigned
 name|Position
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseNonTypeTemplateParameter
 parameter_list|(
@@ -5110,13 +4937,7 @@ name|unsigned
 name|Position
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|// C++ 14.3: Template arguments [temp.arg]
-end_comment
-
-begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -5128,9 +4949,6 @@ literal|16
 operator|>
 name|TemplateArgList
 expr_stmt|;
-end_typedef
-
-begin_function_decl
 name|bool
 name|ParseTemplateIdAfterTemplateName
 parameter_list|(
@@ -5161,9 +4979,6 @@ modifier|&
 name|RAngleLoc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|AnnotateTemplateIdToken
 parameter_list|(
@@ -5194,9 +5009,6 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|AnnotateTemplateIdTokenAsType
 parameter_list|(
@@ -5208,9 +5020,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|ParseTemplateArgumentList
 parameter_list|(
@@ -5219,23 +5028,14 @@ modifier|&
 name|TemplateArgs
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ParsedTemplateArgument
 name|ParseTemplateTemplateArgument
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ParsedTemplateArgument
 name|ParseTemplateArgument
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|DeclPtrTy
 name|ParseExplicitInstantiation
 parameter_list|(
@@ -5250,25 +5050,21 @@ modifier|&
 name|DeclEnd
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// GNU G++: Type Traits [Type-Traits.html in the GCC manual]
-end_comment
-
-begin_function_decl
 name|OwningExprResult
 name|ParseUnaryTypeTrait
 parameter_list|()
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};  }
+unit|}
 comment|// end namespace clang
 end_comment
 

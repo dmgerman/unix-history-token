@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-experimental-checks -analyzer-store=region -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-experimental-checks -analyzer-store=region -verify %s
 end_comment
 
 begin_typedef
@@ -236,6 +236,36 @@ return|return
 name|q
 return|;
 comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|f6
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|p
+init|=
+name|malloc
+argument_list|(
+literal|10
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|p
+condition|)
+return|return;
+comment|// no-warning
+else|else
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

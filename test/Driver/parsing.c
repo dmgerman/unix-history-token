@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang -ccc-print-options input -Yunknown -m32 -arch ppc -djoined -A separate -Ajoined -Wp,one,two -Xarch_joined AndSeparate -sectalign 1 2 3 2> %t
+comment|// RUN: %clang -ccc-print-options input -Yunknown -m32 -arch ppc -djoined -A separate -Ajoined -Wp,one,two -Xarch_joined AndSeparate -sectalign 1 2 3 2> %t
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// RUN: grep 'Option 10 - Name: "-sectalign", Values: {"1", "2", "3"}' %
 end_comment
 
 begin_comment
-comment|// RUN: not clang -V 2> %t
+comment|// RUN: not %clang -V 2> %t
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// RUN: grep "error: argument to '-V' is missing (expected 1 value)" %t
 end_comment
 
 begin_comment
-comment|// RUN: not clang -sectalign 1 2 2> %t
+comment|// RUN: not %clang -sectalign 1 2 2> %t
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// Verify that search continues after find the first option.
 end_comment
 
 begin_comment
-comment|// RUN: clang -ccc-print-options -Wally 2> %t
+comment|// RUN: %clang -ccc-print-options -Wally 2> %t
 end_comment
 
 begin_comment

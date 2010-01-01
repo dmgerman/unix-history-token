@@ -271,7 +271,6 @@ return|return
 name|CreateStoreMgr
 return|;
 block|}
-block|;
 name|ConstraintManagerCreator
 name|getConstraintManagerCreator
 argument_list|()
@@ -492,6 +491,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -506,6 +509,10 @@ argument_list|,
 argument|LocationContext const *Parent
 argument_list|,
 argument|Stmt const *S
+argument_list|,
+argument|const CFGBlock *Blk
+argument_list|,
+argument|unsigned Idx
 argument_list|)
 block|{
 return|return
@@ -523,6 +530,10 @@ argument_list|,
 name|Parent
 argument_list|,
 name|S
+argument_list|,
+name|Blk
+argument_list|,
+name|Idx
 argument_list|)
 return|;
 block|}

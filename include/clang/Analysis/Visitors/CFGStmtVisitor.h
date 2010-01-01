@@ -226,6 +226,20 @@ name|RetTy
 argument_list|()
 return|;
 block|}
+comment|/// VisitConditionVariableInit - Handle the initialization of condition
+comment|///  variables at branches.  Valid statements include IfStmt, ForStmt,
+comment|///  WhileStmt, and SwitchStmt.
+name|RetTy
+name|VisitConditionVariableInit
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+return|return
+name|RetTy
+argument_list|()
+return|;
+block|}
 comment|/// BlockVisit_XXX - Visitor methods for visiting the "root" statements in
 comment|/// CFGBlocks.  Root statements are the statements that appear explicitly in
 comment|/// the list of statements in a CFGBlock.  For substatements, or when there
@@ -255,6 +269,41 @@ name|getStmtClass
 argument_list|()
 condition|)
 block|{
+case|case
+name|Stmt
+operator|::
+name|IfStmtClass
+case|:
+case|case
+name|Stmt
+operator|::
+name|ForStmtClass
+case|:
+case|case
+name|Stmt
+operator|::
+name|WhileStmtClass
+case|:
+case|case
+name|Stmt
+operator|::
+name|SwitchStmtClass
+case|:
+return|return
+name|static_cast
+operator|<
+name|ImplClass
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|VisitConditionVariableInit
+argument_list|(
+name|S
+argument_list|)
+return|;
 name|DISPATCH_CASE
 argument_list|(
 argument|StmtExpr

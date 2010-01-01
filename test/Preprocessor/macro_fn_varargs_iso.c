@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc -E %s | grep 'foo{a, b, c, d, e}'
+comment|// RUN: %clang_cc1 -E %s | grep 'foo{a, b, c, d, e}'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E %s | grep 'foo2{d, C, B}'
+comment|// RUN: %clang_cc1 -E %s | grep 'foo2{d, C, B}'
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E %s | grep 'foo2{d,e, C, B}'
+comment|// RUN: %clang_cc1 -E %s | grep 'foo2{d,e, C, B}'
 end_comment
 
 begin_define

@@ -639,6 +639,12 @@ name|GetForcedPicModel
 argument_list|()
 specifier|const
 block|;
+name|virtual
+name|bool
+name|UseDwarfDebugFlags
+argument_list|()
+specifier|const
+block|;
 comment|/// }
 block|}
 decl_stmt|;

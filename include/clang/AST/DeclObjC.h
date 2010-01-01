@@ -2292,7 +2292,6 @@ operator|=
 name|LE
 expr_stmt|;
 block|}
-empty_stmt|;
 name|void
 name|setClassLoc
 parameter_list|(
@@ -3074,7 +3073,6 @@ name|EndLoc
 operator|=
 name|LE
 block|; }
-block|;
 specifier|static
 name|bool
 name|classof
@@ -3758,7 +3756,6 @@ name|EndLoc
 operator|=
 name|LE
 block|; }
-block|;
 specifier|static
 name|bool
 name|classof

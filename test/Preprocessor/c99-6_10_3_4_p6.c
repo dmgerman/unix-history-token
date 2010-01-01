@@ -4,7 +4,7 @@ comment|// Example from C99 6.10.3.4p6
 end_comment
 
 begin_comment
-comment|// RUN: clang-cc -E %s | FileCheck -strict-whitespace %s
+comment|// RUN: %clang_cc1 -E %s | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define

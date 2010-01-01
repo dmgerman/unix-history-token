@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: clang-cc %s -fsyntax-only -verify -pedantic -triple=i686-apple-darwin9
+comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -pedantic -triple=i686-apple-darwin9
 end_comment
 
 begin_comment
@@ -158,23 +158,36 @@ name|void
 name|test7
 parameter_list|()
 block|{
+specifier|const
+name|void
+modifier|*
+name|X
+decl_stmt|;
+name|X
+operator|=
 name|CFSTR
 argument_list|(
 literal|"\242"
 argument_list|)
 expr_stmt|;
+name|X
+operator|=
 name|CFSTR
 argument_list|(
 literal|"\0"
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{ CFString literal contains NUL character }}
+name|X
+operator|=
 name|CFSTR
 argument_list|(
 literal|242
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{ CFString literal is not a string constant }} expected-warning {{incompatible integer to pointer conversion}}
+name|X
+operator|=
 name|CFSTR
 argument_list|(
 literal|"foo"

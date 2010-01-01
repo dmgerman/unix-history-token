@@ -996,13 +996,21 @@ argument_list|(
 argument|SourceRange R
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|R
+operator|.
+name|isValid
+argument_list|()
+argument_list|)
+block|;
 name|Ranges
 operator|.
 name|push_back
 argument_list|(
 name|R
 argument_list|)
-block|; }
+block|;   }
 comment|// FIXME: Move this out of line.
 name|void
 name|getRanges
