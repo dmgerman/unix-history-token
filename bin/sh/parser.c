@@ -7138,8 +7138,7 @@ name|commandname
 condition|)
 name|outfmt
 argument_list|(
-operator|&
-name|errout
+name|out2
 argument_list|,
 literal|"%s: %d: "
 argument_list|,
@@ -7150,8 +7149,7 @@ argument_list|)
 expr_stmt|;
 name|outfmt
 argument_list|(
-operator|&
-name|errout
+name|out2
 argument_list|,
 literal|"Syntax error: %s\n"
 argument_list|,

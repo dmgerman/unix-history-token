@@ -384,8 +384,7 @@ name|commandname
 condition|)
 name|outfmt
 argument_list|(
-operator|&
-name|errout
+name|out2
 argument_list|,
 literal|"%s: "
 argument_list|,
@@ -394,8 +393,7 @@ argument_list|)
 expr_stmt|;
 name|doformat
 argument_list|(
-operator|&
-name|errout
+name|out2
 argument_list|,
 name|msg
 argument_list|,

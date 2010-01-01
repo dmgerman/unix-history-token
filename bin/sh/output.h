@@ -51,6 +51,10 @@ name|output
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* to fd 1 */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -58,6 +62,10 @@ name|output
 name|errout
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* to fd 2 */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -76,6 +84,10 @@ name|out1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*&memout if backquote, otherwise&output */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -84,6 +96,10 @@ modifier|*
 name|out2
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*&memout if backquote with 2>&1, otherwise&errout */
+end_comment
 
 begin_function_decl
 name|void

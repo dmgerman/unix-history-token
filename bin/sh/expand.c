@@ -2505,8 +2505,7 @@ condition|)
 block|{
 name|outfmt
 argument_list|(
-operator|&
-name|errout
+name|out2
 argument_list|,
 literal|"%s\n"
 argument_list|,

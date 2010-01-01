@@ -1117,8 +1117,7 @@ expr_stmt|;
 else|else
 name|outfmt
 argument_list|(
-operator|&
-name|errout
+name|out2
 argument_list|,
 literal|"%s: not found\n"
 argument_list|,
