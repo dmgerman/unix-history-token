@@ -1604,9 +1604,6 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|cp
-decl_stmt|,
-modifier|*
 name|p
 decl_stmt|;
 name|int
