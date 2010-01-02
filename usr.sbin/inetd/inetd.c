@@ -7358,13 +7358,11 @@ begin_function
 name|void
 name|ipsecsetup
 parameter_list|(
-name|sep
-parameter_list|)
 name|struct
 name|servtab
 modifier|*
 name|sep
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*

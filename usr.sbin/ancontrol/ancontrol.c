@@ -7266,13 +7266,11 @@ specifier|static
 name|void
 name|an_readkeyinfo
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_req
