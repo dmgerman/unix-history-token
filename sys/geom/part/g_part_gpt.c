@@ -2395,8 +2395,10 @@ name|alias
 argument_list|)
 condition|)
 block|{
+operator|*
 name|uuid
 operator|=
+operator|*
 name|uap
 operator|->
 name|uuid
