@@ -3161,7 +3161,9 @@ begin_function
 specifier|static
 name|void
 name|export_pam_environment
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3406,7 +3408,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -3435,7 +3439,9 @@ specifier|static
 name|char
 modifier|*
 name|getloginname
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4070,7 +4076,9 @@ begin_function
 specifier|static
 name|void
 name|pam_cleanup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
