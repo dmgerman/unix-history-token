@@ -5360,7 +5360,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Ethetnet address registers are invalid.\n"
+literal|"Ethernet address registers are invalid.\n"
 argument_list|)
 expr_stmt|;
 return|return
