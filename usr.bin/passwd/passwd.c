@@ -155,7 +155,10 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
+init|=
+name|NULL
 decl_stmt|;
+comment|/* Keep compiler happy. */
 name|int
 name|o
 decl_stmt|,
