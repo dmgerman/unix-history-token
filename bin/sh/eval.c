@@ -3428,19 +3428,21 @@ operator|<
 literal|0
 condition|)
 block|{
-name|out2fmt_flush
-argument_list|(
-literal|"%s: not found\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-name|exitstatus
+name|cmdentry
+operator|.
+name|u
+operator|.
+name|index
 operator|=
-literal|127
+name|BLTINCMD
 expr_stmt|;
-return|return;
+name|argv
+operator|--
+expr_stmt|;
+name|argc
+operator|++
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -4595,7 +4597,7 @@ comment|/*  * Builtin commands.  Builtin commands whose functions are closely  *
 end_comment
 
 begin_comment
-comment|/*  * No command given, or a bltin command with no arguments.  */
+comment|/*  * No command given, a bltin command with no arguments, or a bltin command  * with an invalid name.  */
 end_comment
 
 begin_function
@@ -4604,15 +4606,34 @@ name|bltincmd
 parameter_list|(
 name|int
 name|argc
-name|__unused
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-name|__unused
 parameter_list|)
 block|{
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+name|out2fmt_flush
+argument_list|(
+literal|"%s: not found\n"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+literal|127
+return|;
+block|}
 comment|/* 	 * Preserve exitstatus of a previous possible redirection 	 * as POSIX mandates 	 */
 return|return
 name|exitstatus
