@@ -13189,12 +13189,31 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
+block|{
+comment|/* 		 * BCM5754 and BCM5787 shares the same ASIC id so 		 * explicit device id check is required. 		 */
+if|if
+condition|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|BCOM_DEVICEID_BCM5754
+operator|&&
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|BCOM_DEVICEID_BCM5754M
+condition|)
 name|sc
 operator|->
 name|bge_flags
 operator||=
 name|BGE_FLAG_TSO
 expr_stmt|;
+block|}
 comment|/* 	 * Check if this is a PCI-X or PCI Express device.   	 */
 if|if
 condition|(
