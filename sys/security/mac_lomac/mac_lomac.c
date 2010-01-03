@@ -10681,13 +10681,7 @@ if|if
 condition|(
 name|accmode
 operator|&
-operator|(
-name|VWRITE
-operator||
-name|VAPPEND
-operator||
-name|VADMIN
-operator|)
+name|VMODIFY_PERMS
 condition|)
 block|{
 if|if
