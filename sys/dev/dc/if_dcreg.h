@@ -4701,7 +4701,7 @@ value|0x1414
 end_define
 
 begin_comment
-comment|/*  * Supported Microsoft PCI and cardbus NICs. These are really  * ADMtek parts in disguise.  */
+comment|/*  * Supported Microsoft PCI and CardBus NICs. These are really  * ADMtek parts in disguise.  */
 end_comment
 
 begin_define
