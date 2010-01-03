@@ -1835,6 +1835,10 @@ comment|/* First request. */
 else|else
 name|error
 operator|=
+name|rt0
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|rt0
 operator|->
