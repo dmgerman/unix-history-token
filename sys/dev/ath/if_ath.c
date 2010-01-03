@@ -5959,7 +5959,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NB: don't worry about putting the chip in low power 	 * mode; pci will power off our socket on suspend and 	 * cardbus detaches the device. 	 */
+comment|/* 	 * NB: don't worry about putting the chip in low power 	 * mode; pci will power off our socket on suspend and 	 * CardBus detaches the device. 	 */
 block|}
 end_function
 
