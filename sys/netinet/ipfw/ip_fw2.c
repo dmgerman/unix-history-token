@@ -4257,17 +4257,39 @@ block|{
 name|int
 name|len
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|char
 name|src
 index|[
-literal|48
+name|INET6_ADDRSTRLEN
+operator|+
+literal|2
 index|]
 decl_stmt|,
 name|dst
 index|[
-literal|48
+name|INET6_ADDRSTRLEN
+operator|+
+literal|2
 index|]
 decl_stmt|;
+else|#
+directive|else
+name|char
+name|src
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|dst
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|icmphdr
 modifier|*
@@ -5214,6 +5236,148 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|unlink_dyn_rule_print
+parameter_list|(
+name|struct
+name|ipfw_flow_id
+modifier|*
+name|id
+parameter_list|)
+block|{
+name|struct
+name|in_addr
+name|da
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|char
+name|src
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|dst
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+else|#
+directive|else
+name|char
+name|src
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|dst
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+name|IS_IP6_FLOW_ID
+argument_list|(
+name|id
+argument_list|)
+condition|)
+block|{
+name|ip6_sprintf
+argument_list|(
+name|src
+argument_list|,
+operator|&
+name|id
+operator|->
+name|src_ip6
+argument_list|)
+expr_stmt|;
+name|ip6_sprintf
+argument_list|(
+name|dst
+argument_list|,
+operator|&
+name|id
+operator|->
+name|dst_ip6
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+block|{
+name|da
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|id
+operator|->
+name|src_ip
+argument_list|)
+expr_stmt|;
+name|inet_ntoa_r
+argument_list|(
+name|da
+argument_list|,
+name|src
+argument_list|)
+expr_stmt|;
+name|da
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|id
+operator|->
+name|dst_ip
+argument_list|)
+expr_stmt|;
+name|inet_ntoa_r
+argument_list|(
+name|da
+argument_list|,
+name|dst
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"ipfw: unlink entry %s %d -> %s %d, %d left\n"
+argument_list|,
+name|src
+argument_list|,
+name|id
+operator|->
+name|src_port
+argument_list|,
+name|dst
+argument_list|,
+name|id
+operator|->
+name|dst_port
+argument_list|,
+name|V_dyn_count
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/**  * unlink a dynamic rule from a chain. prev is a pointer to  * the previous one, q is a pointer to the rule to delete,  * head is a pointer to the head of the queue.  * Modifies q and potentially also head.  */
 end_comment
@@ -5231,7 +5395,7 @@ name|q
 parameter_list|)
 value|{				\ 	ipfw_dyn_rule *old_q = q;					\ 									\
 comment|/* remove a refcount to the parent */
-value|\ 	if (q->dyn_type == O_LIMIT)					\ 		q->parent->count--;					\ 	DEB(printf("ipfw: unlink entry 0x%08x %d -> 0x%08x %d, %d left\n",\ 		(q->id.src_ip), (q->id.src_port),			\ 		(q->id.dst_ip), (q->id.dst_port), V_dyn_count-1 ); )	\ 	if (prev != NULL)						\ 		prev->next = q = q->next;				\ 	else								\ 		head = q = q->next;					\ 	V_dyn_count--;							\ 	uma_zfree(ipfw_dyn_rule_zone, old_q); }
+value|\ 	if (q->dyn_type == O_LIMIT)					\ 		q->parent->count--;					\ 	DEB(unlink_dyn_rule_print(&q->id);)				\ 	if (prev != NULL)						\ 		prev->next = q = q->next;				\ 	else								\ 		head = q = q->next;					\ 	V_dyn_count--;							\ 	uma_zfree(ipfw_dyn_rule_zone, old_q); }
 end_define
 
 begin_define
@@ -6640,9 +6804,25 @@ operator|++
 expr_stmt|;
 name|DEB
 argument_list|(
-argument|printf(
-literal|"ipfw: add dyn entry ty %d 0x%08x %d -> 0x%08x %d, total %d\n"
-argument|, 	   dyn_type, 	   (r->id.src_ip), (r->id.src_port), 	   (r->id.dst_ip), (r->id.dst_port), 	   V_dyn_count );
+argument|{ 		struct in_addr da;
+ifdef|#
+directive|ifdef
+name|INET6
+argument|char src[INET6_ADDRSTRLEN]; 		char dst[INET6_ADDRSTRLEN];
+else|#
+directive|else
+argument|char src[INET_ADDRSTRLEN]; 		char dst[INET_ADDRSTRLEN];
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+argument|if (IS_IP6_FLOW_ID(&(r->id))) { 			ip6_sprintf(src,&r->id.src_ip6); 			ip6_sprintf(dst,&r->id.dst_ip6); 		} else
+endif|#
+directive|endif
+argument|{ 			da.s_addr = htonl(r->id.src_ip); 			inet_ntoa_r(da, src); 			da.s_addr = htonl(r->id.dst_ip); 			inet_ntoa_r(da, dst); 		} 		printf(
+literal|"ipfw: add dyn entry ty %d %s %d -> %s %d, total %d\n"
+argument|, 		    dyn_type, src, r->id.src_port, dst, r->id.dst_port, 		    V_dyn_count); 	}
 argument_list|)
 return|return
 name|r
@@ -6905,17 +7085,39 @@ name|struct
 name|in_addr
 name|da
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|char
 name|src
 index|[
-literal|48
+name|INET6_ADDRSTRLEN
+operator|+
+literal|2
 index|]
 decl_stmt|,
 name|dst
 index|[
-literal|48
+name|INET6_ADDRSTRLEN
+operator|+
+literal|2
 index|]
 decl_stmt|;
+else|#
+directive|else
+name|char
+name|src
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|,
+name|dst
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|src
 index|[
 literal|0
@@ -6930,15 +7132,29 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|DEB
-argument_list|(
-argument|printf(
-literal|"ipfw: %s: type %d 0x%08x %u -> 0x%08x %u\n"
-argument|, 	    __func__, cmd->o.opcode, 	    (args->f_id.src_ip), (args->f_id.src_port), 	    (args->f_id.dst_ip), (args->f_id.dst_port));
-argument_list|)
 name|IPFW_DYN_LOCK
 argument_list|()
 expr_stmt|;
+name|DEB
+argument_list|(
+ifdef|#
+directive|ifdef
+name|INET6
+argument|if (IS_IP6_FLOW_ID(&(args->f_id))) { 		ip6_sprintf(src,&args->f_id.src_ip6); 		ip6_sprintf(dst,&args->f_id.dst_ip6); 	} else
+endif|#
+directive|endif
+argument|{ 		da.s_addr = htonl(args->f_id.src_ip); 		inet_ntoa_r(da, src); 		da.s_addr = htonl(args->f_id.dst_ip); 		inet_ntoa_r(da, dst); 	} 	printf(
+literal|"ipfw: %s: type %d %s %u -> %s %u\n"
+argument|, 	    __func__, cmd->o.opcode, src, args->f_id.src_port, 	    dst, args->f_id.dst_port); 	src[
+literal|0
+argument|] =
+literal|'\0'
+argument|; 	dst[
+literal|0
+argument|] =
+literal|'\0'
+argument|;
+argument_list|)
 name|q
 operator|=
 name|lookup_dyn_rule_locked
