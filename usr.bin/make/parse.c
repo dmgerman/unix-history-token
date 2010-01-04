@@ -2575,6 +2575,17 @@ name|strncmp
 argument_list|(
 name|line
 argument_list|,
+literal|"||||||"
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
 literal|"======"
 argument_list|,
 literal|6
