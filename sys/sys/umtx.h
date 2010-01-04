@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/_types.h>
+file|<sys/_umtx.h>
 end_include
 
 begin_include
@@ -26,10 +26,6 @@ include|#
 directive|include
 file|<sys/limits.h>
 end_include
-
-begin_comment
-comment|/*   * See pthread_*  */
-end_comment
 
 begin_define
 define|#
@@ -44,19 +40,6 @@ directive|define
 name|UMTX_CONTESTED
 value|LONG_MIN
 end_define
-
-begin_struct
-struct|struct
-name|umtx
-block|{
-specifier|volatile
-name|u_long
-name|u_owner
-decl_stmt|;
-comment|/* Owner of the mutex. */
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
@@ -116,87 +99,6 @@ begin_comment
 comment|/* Priority protect mutex */
 end_comment
 
-begin_struct
-struct|struct
-name|umutex
-block|{
-specifier|volatile
-name|__lwpid_t
-name|m_owner
-decl_stmt|;
-comment|/* Owner of the mutex */
-name|uint32_t
-name|m_flags
-decl_stmt|;
-comment|/* Flags of the mutex */
-name|uint32_t
-name|m_ceilings
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Priority protect ceiling */
-name|uint32_t
-name|m_spare
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ucond
-block|{
-specifier|volatile
-name|uint32_t
-name|c_has_waiters
-decl_stmt|;
-comment|/* Has waiters in kernel */
-name|uint32_t
-name|c_flags
-decl_stmt|;
-comment|/* Flags of the condition variable */
-name|uint32_t
-name|c_spare
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Spare space */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|urwlock
-block|{
-specifier|volatile
-name|int32_t
-name|rw_state
-decl_stmt|;
-name|uint32_t
-name|rw_flags
-decl_stmt|;
-name|uint32_t
-name|rw_blocked_readers
-decl_stmt|;
-name|uint32_t
-name|rw_blocked_writers
-decl_stmt|;
-name|uint32_t
-name|rw_spare
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* urwlock flags */
 end_comment
@@ -244,6 +146,17 @@ parameter_list|(
 name|c
 parameter_list|)
 value|((c)& URWLOCK_MAX_READERS)
+end_define
+
+begin_comment
+comment|/* _usem flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEM_NAMED
+value|0x0002
 end_define
 
 begin_comment
@@ -386,8 +299,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_MAX
+name|UMTX_OP_SEM_WAIT
 value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_SEM_WAKE
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|21
 end_define
 
 begin_comment
