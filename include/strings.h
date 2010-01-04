@@ -143,11 +143,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__BSD_VISIBLE
-end_ifdef
+end_if
 
 begin_decl_stmt
 name|int
