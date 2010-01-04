@@ -6556,9 +6556,14 @@ name|ndpr_mask
 expr_stmt|;
 name|rtflags
 operator|=
+operator|(
 name|ifa
 operator|->
 name|ifa_flags
+operator|&
+operator|~
+name|IFA_RTSELF
+operator|)
 operator||
 name|RTF_UP
 expr_stmt|;
