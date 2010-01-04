@@ -973,6 +973,9 @@ parameter_list|,
 name|caddr_t
 name|data
 parameter_list|,
+name|int
+name|fflag
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -1052,6 +1055,8 @@ name|com
 argument_list|,
 operator|&
 name|term
+argument_list|,
+name|fflag
 argument_list|,
 name|td
 argument_list|)
@@ -1430,6 +1435,8 @@ name|ldisczero
 else|:
 name|data
 argument_list|,
+name|fflag
+argument_list|,
 name|td
 argument_list|)
 operator|)
@@ -1456,6 +1463,8 @@ argument_list|,
 name|TIOCCONS
 argument_list|,
 name|data
+argument_list|,
+name|fflag
 argument_list|,
 name|td
 argument_list|)
