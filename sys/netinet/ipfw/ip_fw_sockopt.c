@@ -211,12 +211,6 @@ directive|include
 file|<netinet/ipfw/ip_fw_private.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/ip_divert.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1321,6 +1315,18 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+operator|&&
+name|arg
+operator|==
+literal|0
+condition|)
+break|break;
+comment|/* special case, flush on empty ruleset */
 comment|/* allocate the map, if needed */
 if|if
 condition|(

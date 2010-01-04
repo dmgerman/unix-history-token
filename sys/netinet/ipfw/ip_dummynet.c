@@ -2285,32 +2285,8 @@ comment|/*  * --- end of heap management functions ---  */
 end_comment
 
 begin_comment
-comment|/*  * Dispose a packet in dummynet. Use an inline functions so if we  * need to free extra state associated to a packet, this is a  * central point to do it.  */
+comment|/*  * Dispose a list of packet. Use an inline functions so if we  * need to free extra state associated to a packet, this is a  * central point to do it.  */
 end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-modifier|*
-name|dn_free_pkt
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -2346,7 +2322,7 @@ name|m
 operator|->
 name|m_nextpkt
 expr_stmt|;
-name|dn_free_pkt
+name|FREE_PKT
 argument_list|(
 name|m
 argument_list|)
@@ -4485,6 +4461,11 @@ decl_stmt|;
 name|int
 name|dst
 decl_stmt|;
+name|struct
+name|m_tag
+modifier|*
+name|tag
+decl_stmt|;
 name|n
 operator|=
 name|m
@@ -4497,12 +4478,16 @@ name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
+name|tag
+operator|=
 name|m_tag_first
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tag
 operator|==
 name|NULL
 condition|)
@@ -4524,6 +4509,7 @@ argument_list|(
 name|m
 argument_list|)
 decl_stmt|;
+comment|/* extract the dummynet info, rename the tag */
 name|dst
 operator|=
 name|pkt
@@ -4536,6 +4522,19 @@ name|pkt
 operator|->
 name|ifp
 expr_stmt|;
+comment|/* rename the tag so it carries reinject info */
+name|tag
+operator|->
+name|m_tag_cookie
+operator|=
+name|MTAG_IPFW_RULE
+expr_stmt|;
+name|tag
+operator|->
+name|m_tag_id
+operator|=
+literal|0
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -4545,6 +4544,18 @@ block|{
 case|case
 name|DIR_OUT
 case|:
+name|SET_HOST_IPLEN
+argument_list|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ip_output
 argument_list|(
 name|m
@@ -4565,18 +4576,7 @@ case|case
 name|DIR_IN
 case|:
 comment|/* put header in network format for ip_input() */
-name|SET_NET_IPLEN
-argument_list|(
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|//SET_NET_IPLEN(mtod(m, struct ip *));
 name|netisr_dispatch
 argument_list|(
 name|NETISR_IP
@@ -4606,6 +4606,18 @@ name|DIR_OUT
 operator||
 name|PROTO_IPV6
 case|:
+name|SET_HOST_IPLEN
+argument_list|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ip6_output
 argument_list|(
 name|m
@@ -4724,7 +4736,7 @@ case|case
 name|DIR_DROP
 case|:
 comment|/* drop the packet after some time */
-name|dn_free_pkt
+name|FREE_PKT
 argument_list|(
 name|m
 argument_list|)
@@ -4738,7 +4750,7 @@ argument_list|,
 name|dst
 argument_list|)
 expr_stmt|;
-name|dn_free_pkt
+name|FREE_PKT
 argument_list|(
 name|m
 argument_list|)
@@ -6601,13 +6613,11 @@ name|is_pipe
 init|=
 name|fwa
 operator|->
-name|cookie
+name|rule
+operator|.
+name|info
 operator|&
-literal|0x8000000
-condition|?
-literal|0
-else|:
-literal|1
+name|IPFW_IS_PIPE
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -6628,7 +6638,7 @@ expr_stmt|;
 name|io_pkt
 operator|++
 expr_stmt|;
-comment|/* 	 * This is a dummynet rule, so we expect an O_PIPE or O_QUEUE rule. 	 * 	 * XXXGL: probably the pipe->fs and fs->pipe logic here 	 * below can be simplified. 	 */
+comment|/* 	 * This is a dummynet rule, so we expect an O_PIPE or O_QUEUE rule. 	 */
 if|if
 condition|(
 name|is_pipe
@@ -6640,9 +6650,11 @@ name|locate_pipe
 argument_list|(
 name|fwa
 operator|->
-name|cookie
+name|rule
+operator|.
+name|info
 operator|&
-literal|0xffff
+name|IPFW_INFO_MASK
 argument_list|)
 expr_stmt|;
 if|if
@@ -6668,9 +6680,11 @@ name|locate_flowset
 argument_list|(
 name|fwa
 operator|->
-name|cookie
+name|rule
+operator|.
+name|info
 operator|&
-literal|0xffff
+name|IPFW_INFO_MASK
 argument_list|)
 expr_stmt|;
 if|if
@@ -6904,36 +6918,21 @@ expr_stmt|;
 comment|/* 	 * Ok, i can handle the pkt now... 	 * Build and enqueue packet + parameters. 	 */
 name|pkt
 operator|->
-name|slot
+name|rule
 operator|=
 name|fwa
 operator|->
-name|slot
+name|rule
 expr_stmt|;
 name|pkt
 operator|->
-name|rulenum
-operator|=
-name|fwa
-operator|->
-name|rulenum
+name|rule
+operator|.
+name|info
+operator|&=
+name|IPFW_ONEPASS
 expr_stmt|;
-name|pkt
-operator|->
-name|rule_id
-operator|=
-name|fwa
-operator|->
-name|rule_id
-expr_stmt|;
-name|pkt
-operator|->
-name|chain_id
-operator|=
-name|fwa
-operator|->
-name|chain_id
-expr_stmt|;
+comment|/* only keep this info */
 name|pkt
 operator|->
 name|dn_dir
@@ -7586,13 +7585,15 @@ expr_stmt|;
 name|DUMMYNET_UNLOCK
 argument_list|()
 expr_stmt|;
-operator|*
-name|m0
-operator|=
-name|dn_free_pkt
+name|FREE_PKT
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+operator|*
+name|m0
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(

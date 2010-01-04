@@ -179,23 +179,11 @@ begin_struct
 struct|struct
 name|dn_pkt_tag
 block|{
-comment|/* first part, reinject info */
-name|uint32_t
-name|slot
+name|struct
+name|ipfw_rule_ref
+name|rule
 decl_stmt|;
-comment|/* slot of next rule to use */
-name|uint32_t
-name|rulenum
-decl_stmt|;
-comment|/* matching rule number */
-name|uint32_t
-name|rule_id
-decl_stmt|;
-comment|/* matching rule id */
-name|uint32_t
-name|chain_id
-decl_stmt|;
-comment|/* ruleset id */
+comment|/* matching rule */
 comment|/* second part, dummynet specific */
 name|int
 name|dn_dir

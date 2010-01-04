@@ -13340,6 +13340,7 @@ name|bad
 goto|;
 block|}
 comment|/* XXX this section is also in if_ethersubr.c */
+comment|// XXX PFIL_OUT or DIR_OUT ?
 if|if
 condition|(
 name|V_ip_fw_chk_ptr
@@ -13367,14 +13368,17 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* fetch the start point from existing tags, if any */
 name|mtag
 operator|=
-name|m_tag_find
+name|m_tag_locate
 argument_list|(
 operator|*
 name|mp
 argument_list|,
-name|PACKET_TAG_DUMMYNET
+name|MTAG_IPFW_RULE
+argument_list|,
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -13388,6 +13392,8 @@ condition|)
 block|{
 name|args
 operator|.
+name|rule
+operator|.
 name|slot
 operator|=
 literal|0
@@ -13400,6 +13406,7 @@ name|dn_pkt_tag
 modifier|*
 name|dn_tag
 decl_stmt|;
+comment|/* XXX can we free the tag after use ? */
 name|mtag
 operator|->
 name|m_tag_id
@@ -13419,52 +13426,29 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+comment|/* packet already partially processed ? */
 if|if
 condition|(
 name|dn_tag
 operator|->
+name|rule
+operator|.
 name|slot
 operator|!=
 literal|0
 operator|&&
 name|V_fw_one_pass
 condition|)
-comment|/* packet already partially processed */
 goto|goto
 name|ipfwpass
 goto|;
 name|args
 operator|.
-name|slot
+name|rule
 operator|=
 name|dn_tag
 operator|->
-name|slot
-expr_stmt|;
-comment|/* next rule to use */
-name|args
-operator|.
-name|chain_id
-operator|=
-name|dn_tag
-operator|->
-name|chain_id
-expr_stmt|;
-name|args
-operator|.
-name|rulenum
-operator|=
-name|dn_tag
-operator|->
-name|rulenum
-expr_stmt|;
-name|args
-operator|.
-name|rule_id
-operator|=
-name|dn_tag
-operator|->
-name|rule_id
+name|rule
 expr_stmt|;
 block|}
 name|args

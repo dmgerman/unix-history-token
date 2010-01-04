@@ -36,6 +36,17 @@ begin_comment
 comment|/* IPFW-tagged cookie */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MTAG_IPFW_RULE
+value|1262273568
+end_define
+
+begin_comment
+comment|/* rule reference */
+end_comment
+
 begin_comment
 comment|/* Return values from ipfw_chk() */
 end_comment
@@ -65,24 +76,6 @@ name|IP_FW_REASS
 block|, }
 enum|;
 end_enum
-
-begin_comment
-comment|/* flags for divert mtag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_DIVERT_LOOPBACK_FLAG
-value|0x00080000
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_DIVERT_OUTPUT_FLAG
-value|0x00100000
-end_define
 
 begin_comment
 comment|/*  * Structure for collecting parameters to dummynet for ip6_output forwarding  */
@@ -135,6 +128,82 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Reference to an ipfw rule that can be carried outside critical sections.  * A rule is identified by rulenum:rule_id which is ordered.  * In version chain_id the rule can be found in slot 'slot', so  * we don't need a lookup if chain_id == chain->id.  *  * On exit from the firewall this structure refers to the rule after  * the matching one (slot points to the new rule; rulenum:rule_id-1  * is the matching rule), and additional info (e.g. info often contains  * the insn argument or tablearg in the low 16 bits, in host format).  * On entry, the structure is valid if slot>0, and refers to the starting  * rules. 'info' contains the reason for reinject, e.g. divert port,  * divert direction, and so on.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ipfw_rule_ref
+block|{
+name|uint32_t
+name|slot
+decl_stmt|;
+comment|/* slot for matching rule	*/
+name|uint32_t
+name|rulenum
+decl_stmt|;
+comment|/* matching rule number		*/
+name|uint32_t
+name|rule_id
+decl_stmt|;
+comment|/* matching rule id		*/
+name|uint32_t
+name|chain_id
+decl_stmt|;
+comment|/* ruleset id			*/
+name|uint32_t
+name|info
+decl_stmt|;
+comment|/* see below			*/
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+block|{
+name|IPFW_INFO_MASK
+init|=
+literal|0x0000ffff
+block|,
+name|IPFW_INFO_OUT
+init|=
+literal|0x00000000
+block|,
+comment|/* outgoing, just for convenience */
+name|IPFW_INFO_IN
+init|=
+literal|0x80000000
+block|,
+comment|/* incoming, overloads dir */
+name|IPFW_ONEPASS
+init|=
+literal|0x40000000
+block|,
+comment|/* One-pass, do not reinject */
+name|IPFW_IS_MASK
+init|=
+literal|0x30000000
+block|,
+comment|/* which source ? */
+name|IPFW_IS_DIVERT
+init|=
+literal|0x20000000
+block|,
+name|IPFW_IS_DUMMYNET
+init|=
+literal|0x10000000
+block|,
+name|IPFW_IS_PIPE
+init|=
+literal|0x08000000
+block|,
+comment|/* pip1=1, queue = 0 */
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Arguments for calling ipfw_chk() and dummynet_io(). We put them  * all into a structure because this way it is easier and more  * efficient to pass variables around and extend the interface.  */
 end_comment
 
@@ -160,23 +229,12 @@ modifier|*
 name|next_hop
 decl_stmt|;
 comment|/* forward address		*/
-comment|/* chain_id validates 'slot', the location of the pointer to 	 * a matching rule. 	 * If invalid, we can lookup the rule using rule_id and rulenum 	 */
-name|uint32_t
-name|slot
+comment|/* 	 * On return, it points to the matching rule. 	 * On entry, rule.slot> 0 means the info is valid and 	 * contains the the starting rule for an ipfw search. 	 * If chain_id == chain->id&& slot>0 then jump to that slot. 	 * Otherwise, we locate the first rule>= rulenum:rule_id 	 */
+name|struct
+name|ipfw_rule_ref
+name|rule
 decl_stmt|;
-comment|/* slot for matching rule	*/
-name|uint32_t
-name|rulenum
-decl_stmt|;
-comment|/* matching rule number		*/
-name|uint32_t
-name|rule_id
-decl_stmt|;
-comment|/* matching rule id		*/
-name|uint32_t
-name|chain_id
-decl_stmt|;
-comment|/* ruleset id			*/
+comment|/* match/restart info		*/
 name|struct
 name|ether_header
 modifier|*
@@ -188,10 +246,7 @@ name|ipfw_flow_id
 name|f_id
 decl_stmt|;
 comment|/* grabbed from IP header	*/
-name|uint32_t
-name|cookie
-decl_stmt|;
-comment|/* a cookie depending on rule action */
+comment|//uint32_t	cookie;		/* a cookie depending on rule action */
 name|struct
 name|inpcb
 modifier|*
@@ -269,6 +324,20 @@ comment|/*	PROTO_OLDBDG =	0x14, unused, old bridge */
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* wrapper for freeing a packet, in case we need to do more work */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FREE_PKT
+parameter_list|(
+name|m
+parameter_list|)
+value|m_freem(m)
+end_define
 
 begin_comment
 comment|/*  * Function definitions.  */
@@ -1127,6 +1196,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* hooks for divert */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|ip_divert_ptr
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|incoming
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* In ip_fw_nat.c */
 end_comment
 
@@ -1267,40 +1359,6 @@ directive|define
 name|NG_IPFW_LOADED
 value|(ng_ipfw_input_p != NULL)
 end_define
-
-begin_struct
-struct|struct
-name|ng_ipfw_tag
-block|{
-name|struct
-name|m_tag
-name|mt
-decl_stmt|;
-comment|/* tag header */
-comment|/* reinject info */
-name|uint32_t
-name|slot
-decl_stmt|;
-comment|/* slot for next rule */
-name|uint32_t
-name|rulenum
-decl_stmt|;
-comment|/* matching rule number */
-name|uint32_t
-name|rule_id
-decl_stmt|;
-comment|/* matching rule id */
-name|uint32_t
-name|chain_id
-decl_stmt|;
-comment|/* ruleset id */
-name|int
-name|dir
-decl_stmt|;
-comment|//        struct ifnet    *ifp;           /* interface, for ip_output */
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#

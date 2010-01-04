@@ -3885,7 +3885,7 @@ endif|#
 directive|endif
 default|default:
 comment|/* XXX: log me?!? */
-name|m_freem
+name|FREE_PKT
 argument_list|(
 name|m
 argument_list|)
@@ -4369,10 +4369,6 @@ name|ip_off
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_NET_IPLEN
-comment|/* XXX do we handle layer2 ? */
 name|h
 operator|->
 name|ip_len
@@ -4382,16 +4378,6 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|h
-operator|->
-name|ip_len
-operator|=
-name|len
-expr_stmt|;
-endif|#
-directive|endif
 name|h
 operator|->
 name|ip_ttl

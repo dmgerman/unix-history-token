@@ -2464,14 +2464,17 @@ name|m_tag
 modifier|*
 name|mtag
 decl_stmt|;
+comment|/* fetch start point from rule, if any */
 name|mtag
 operator|=
-name|m_tag_find
+name|m_tag_locate
 argument_list|(
 operator|*
 name|m0
 argument_list|,
-name|PACKET_TAG_DUMMYNET
+name|MTAG_IPFW_RULE
+argument_list|,
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -2485,6 +2488,8 @@ condition|)
 block|{
 name|args
 operator|.
+name|rule
+operator|.
 name|slot
 operator|=
 literal|0
@@ -2497,6 +2502,7 @@ name|dn_pkt_tag
 modifier|*
 name|dn_tag
 decl_stmt|;
+comment|/* XXX can we free it after use ? */
 name|mtag
 operator|->
 name|m_tag_id
@@ -2520,6 +2526,8 @@ if|if
 condition|(
 name|dn_tag
 operator|->
+name|rule
+operator|.
 name|slot
 operator|!=
 literal|0
@@ -2534,36 +2542,11 @@ operator|)
 return|;
 name|args
 operator|.
-name|slot
+name|rule
 operator|=
 name|dn_tag
 operator|->
-name|slot
-expr_stmt|;
-comment|/* matching rule to restart */
-name|args
-operator|.
-name|rulenum
-operator|=
-name|dn_tag
-operator|->
-name|rulenum
-expr_stmt|;
-name|args
-operator|.
-name|rule_id
-operator|=
-name|dn_tag
-operator|->
-name|rule_id
-expr_stmt|;
-name|args
-operator|.
-name|chain_id
-operator|=
-name|dn_tag
-operator|->
-name|chain_id
+name|rule
 expr_stmt|;
 block|}
 comment|/* 	 * I need some amt of data to be contiguous, and in case others need 	 * the packet (shared==1) also better be in the first mbuf. 	 */
