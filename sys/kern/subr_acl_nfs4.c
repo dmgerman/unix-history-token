@@ -3922,7 +3922,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is used to determine whether to remove entry_type attribute  * that stores ACL contents.  */
+comment|/*  * This routine is used to determine whether to remove extended attribute  * that stores ACL contents.  */
 end_comment
 
 begin_function
@@ -3965,7 +3965,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Compute the mode from the ACL, then compute new ACL from that mode. 	 * If the ACLs are identical, then the ACL is trivial. 	 * 	 * XXX: I guess there is a faster way to do this.  However, even 	 *      this slow implementation significantly speeds things up 	 *      for files that don't have any entry_type ACL entries - it's 	 *      critical for performance to not use EA when they are not 	 *      needed. 	 */
+comment|/* 	 * Compute the mode from the ACL, then compute new ACL from that mode. 	 * If the ACLs are identical, then the ACL is trivial. 	 * 	 * XXX: I guess there is a faster way to do this.  However, even 	 *      this slow implementation significantly speeds things up 	 *      for files that don't have non-trivial ACLs - it's critical 	 *      for performance to not use EA when they are not needed. 	 */
 name|tmpaclp
 operator|=
 name|acl_alloc
