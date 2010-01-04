@@ -1618,6 +1618,11 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|used
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|entries
