@@ -1274,6 +1274,7 @@ begin_function_decl
 name|int
 name|iscf
 parameter_list|(
+specifier|const
 name|struct
 name|dirent
 modifier|*
