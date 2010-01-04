@@ -2268,7 +2268,7 @@ operator|->
 name|crp_etype
 condition|)
 block|{
-comment|/* Reset session ID */
+comment|/* Reset the session ID */
 if|if
 condition|(
 name|sav
