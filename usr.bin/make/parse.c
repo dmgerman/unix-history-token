@@ -2291,6 +2291,13 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/* our current position */
+name|char
+modifier|*
+name|lstart
+init|=
+name|line
+decl_stmt|;
+comment|/* original input line */
 name|GNode
 modifier|*
 name|gn
@@ -2620,6 +2627,15 @@ name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
 argument_list|,
+name|lstart
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+condition|?
+literal|"Unknown directive"
+else|:
 literal|"Need an operator"
 argument_list|)
 expr_stmt|;
@@ -3277,6 +3293,15 @@ name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
 argument_list|,
+name|lstart
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+condition|?
+literal|"Unknown directive"
+else|:
 literal|"Missing dependency operator"
 argument_list|)
 expr_stmt|;
