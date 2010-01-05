@@ -501,6 +501,17 @@ begin_comment
 comment|/* (i) hold Giant over if_start calls */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_RENAMING
+value|0x400000
+end_define
+
+begin_comment
+comment|/* (n) interface is being renamed */
+end_comment
+
 begin_comment
 comment|/*  * Old names for driver flags so that user space tools can continue to use  * the old (portable) names.  */
 end_comment
