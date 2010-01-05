@@ -222,6 +222,10 @@ name|PJT_SIGMASK
 block|,
 name|PJT_TESTCANCEL
 block|,
+name|PJT_CLEANUP_POP_IMP
+block|,
+name|PJT_CLEANUP_PUSH_IMP
+block|,
 name|PJT_MAX
 block|}
 name|pjt_index_t

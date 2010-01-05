@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2005 David Xu<davidxu@freebsd.org>.  * Copyright (C) 2000 Jason Evans<jasone@freebsd.org>.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer as  *    the first lines of this file unmodified other than the possible  *    addition of one or more copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (C) 2010 David Xu<davidxu@freebsd.org>.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer as  *    the first lines of this file unmodified other than the possible  *    addition of one or more copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<_semaphore.h>
+file|<semaphore.h>
 end_include
 
 begin_include
@@ -70,9 +70,9 @@ file|"thr_private.h"
 end_include
 
 begin_expr_stmt
-name|FB10_COMPAT
+name|__weak_reference
 argument_list|(
-name|_sem_init_compat
+name|_sem_init
 argument_list|,
 name|sem_init
 argument_list|)
@@ -80,9 +80,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|FB10_COMPAT
+name|__weak_reference
 argument_list|(
-name|_sem_destroy_compat
+name|_sem_destroy
 argument_list|,
 name|sem_destroy
 argument_list|)
@@ -90,9 +90,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|FB10_COMPAT
+name|__weak_reference
 argument_list|(
-name|_sem_getvalue_compat
+name|_sem_getvalue
 argument_list|,
 name|sem_getvalue
 argument_list|)
@@ -100,9 +100,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|FB10_COMPAT
+name|__weak_reference
 argument_list|(
-name|_sem_trywait_compat
+name|_sem_trywait
 argument_list|,
 name|sem_trywait
 argument_list|)
@@ -110,9 +110,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|FB10_COMPAT
+name|__weak_reference
 argument_list|(
-name|_sem_wait_compat
+name|_sem_wait
 argument_list|,
 name|sem_wait
 argument_list|)
@@ -120,9 +120,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|FB10_COMPAT
+name|__weak_reference
 argument_list|(
-name|_sem_timedwait_compat
+name|_sem_timedwait
 argument_list|,
 name|sem_timedwait
 argument_list|)
@@ -130,28 +130,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|FB10_COMPAT
+name|__weak_reference
 argument_list|(
-name|_sem_post_compat
+name|_sem_post
 argument_list|,
 name|sem_post
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_typedef
-typedef|typedef
-name|struct
-name|sem
-modifier|*
-name|sem_t
-typedef|;
-end_typedef
-
 begin_function_decl
 specifier|extern
 name|int
-name|_libc_sem_init_compat
+name|_libc_sem_init
 parameter_list|(
 name|sem_t
 modifier|*
@@ -170,7 +161,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|_libc_sem_destroy_compat
+name|_libc_sem_destroy
 parameter_list|(
 name|sem_t
 modifier|*
@@ -182,7 +173,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|_libc_sem_getvalue_compat
+name|_libc_sem_getvalue
 parameter_list|(
 name|sem_t
 modifier|*
@@ -200,7 +191,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|_libc_sem_trywait_compat
+name|_libc_sem_trywait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -212,7 +203,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|_libc_sem_wait_compat
+name|_libc_sem_wait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -224,7 +215,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|_libc_sem_timedwait_compat
+name|_libc_sem_timedwait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -244,105 +235,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|_libc_sem_post_compat
-parameter_list|(
-name|sem_t
-modifier|*
-name|sem
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_sem_init_compat
-parameter_list|(
-name|sem_t
-modifier|*
-name|sem
-parameter_list|,
-name|int
-name|pshared
-parameter_list|,
-name|unsigned
-name|int
-name|value
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_sem_destroy_compat
-parameter_list|(
-name|sem_t
-modifier|*
-name|sem
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_sem_getvalue_compat
-parameter_list|(
-name|sem_t
-modifier|*
-name|__restrict
-name|sem
-parameter_list|,
-name|int
-modifier|*
-name|__restrict
-name|sval
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_sem_trywait_compat
-parameter_list|(
-name|sem_t
-modifier|*
-name|sem
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_sem_wait_compat
-parameter_list|(
-name|sem_t
-modifier|*
-name|sem
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_sem_timedwait_compat
-parameter_list|(
-name|sem_t
-modifier|*
-name|__restrict
-name|sem
-parameter_list|,
-specifier|const
-name|struct
-name|timespec
-modifier|*
-name|__restrict
-name|abstime
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_sem_post_compat
+name|_libc_sem_post
 parameter_list|(
 name|sem_t
 modifier|*
@@ -353,7 +246,7 @@ end_function_decl
 
 begin_function
 name|int
-name|_sem_init_compat
+name|_sem_init
 parameter_list|(
 name|sem_t
 modifier|*
@@ -368,7 +261,7 @@ name|value
 parameter_list|)
 block|{
 return|return
-name|_libc_sem_init_compat
+name|_libc_sem_init
 argument_list|(
 name|sem
 argument_list|,
@@ -382,7 +275,7 @@ end_function
 
 begin_function
 name|int
-name|_sem_destroy_compat
+name|_sem_destroy
 parameter_list|(
 name|sem_t
 modifier|*
@@ -390,7 +283,7 @@ name|sem
 parameter_list|)
 block|{
 return|return
-name|_libc_sem_destroy_compat
+name|_libc_sem_destroy
 argument_list|(
 name|sem
 argument_list|)
@@ -400,7 +293,7 @@ end_function
 
 begin_function
 name|int
-name|_sem_getvalue_compat
+name|_sem_getvalue
 parameter_list|(
 name|sem_t
 modifier|*
@@ -414,7 +307,7 @@ name|sval
 parameter_list|)
 block|{
 return|return
-name|_libc_sem_getvalue_compat
+name|_libc_sem_getvalue
 argument_list|(
 name|sem
 argument_list|,
@@ -426,7 +319,7 @@ end_function
 
 begin_function
 name|int
-name|_sem_trywait_compat
+name|_sem_trywait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -434,7 +327,7 @@ name|sem
 parameter_list|)
 block|{
 return|return
-name|_libc_sem_trywait_compat
+name|_libc_sem_trywait
 argument_list|(
 name|sem
 argument_list|)
@@ -444,7 +337,7 @@ end_function
 
 begin_function
 name|int
-name|_sem_wait_compat
+name|_sem_wait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -452,7 +345,7 @@ name|sem
 parameter_list|)
 block|{
 return|return
-name|_libc_sem_wait_compat
+name|_libc_sem_wait
 argument_list|(
 name|sem
 argument_list|)
@@ -462,7 +355,7 @@ end_function
 
 begin_function
 name|int
-name|_sem_timedwait_compat
+name|_sem_timedwait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -478,7 +371,7 @@ name|abstime
 parameter_list|)
 block|{
 return|return
-name|_libc_sem_timedwait_compat
+name|_libc_sem_timedwait
 argument_list|(
 name|sem
 argument_list|,
@@ -490,7 +383,7 @@ end_function
 
 begin_function
 name|int
-name|_sem_post_compat
+name|_sem_post
 parameter_list|(
 name|sem_t
 modifier|*
@@ -498,7 +391,7 @@ name|sem
 parameter_list|)
 block|{
 return|return
-name|_libc_sem_post_compat
+name|_libc_sem_post
 argument_list|(
 name|sem
 argument_list|)
