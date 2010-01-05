@@ -82,6 +82,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pci_delete_child
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pci_driver_added
 parameter_list|(
 name|device_t
