@@ -1156,7 +1156,7 @@ name|emss
 operator|=
 name|ti
 operator|.
-name|__tcpi_snd_mss
+name|tcpi_snd_mss
 operator|-
 sizeof|sizeof
 argument_list|(

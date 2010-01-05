@@ -638,17 +638,20 @@ literal|4
 decl_stmt|;
 comment|/* RFC1323 recv shift value. */
 name|u_int32_t
-name|__tcpi_rto
+name|tcpi_rto
 decl_stmt|;
+comment|/* Retransmission timeout (usec). */
 name|u_int32_t
 name|__tcpi_ato
 decl_stmt|;
 name|u_int32_t
-name|__tcpi_snd_mss
+name|tcpi_snd_mss
 decl_stmt|;
+comment|/* Max segment size for send. */
 name|u_int32_t
-name|__tcpi_rcv_mss
+name|tcpi_rcv_mss
 decl_stmt|;
+comment|/* Max segment size for receive. */
 name|u_int32_t
 name|__tcpi_unacked
 decl_stmt|;
@@ -673,8 +676,9 @@ name|__tcpi_last_ack_sent
 decl_stmt|;
 comment|/* Also unimpl. on Linux? */
 name|u_int32_t
-name|__tcpi_last_data_recv
+name|tcpi_last_data_recv
 decl_stmt|;
+comment|/* Time since last recv data. */
 name|u_int32_t
 name|__tcpi_last_ack_recv
 decl_stmt|;
