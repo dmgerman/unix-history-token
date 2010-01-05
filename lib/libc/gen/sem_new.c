@@ -1555,6 +1555,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|int
 name|usem_wake
 parameter_list|(
@@ -1595,6 +1596,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|int
 name|usem_wait
 parameter_list|(
@@ -1808,6 +1810,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline
 name|int
 name|enable_async_cancel
 parameter_list|(
@@ -1835,6 +1838,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|void
 name|restore_async_cancel
 parameter_list|(
@@ -1900,9 +1904,6 @@ return|;
 name|retval
 operator|=
 literal|0
-expr_stmt|;
-name|_pthread_testcancel
-argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -2116,14 +2117,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sem
-operator|->
-name|_kern
-operator|.
-name|_has_waiters
-condition|)
 return|return
 name|usem_wake
 argument_list|(
@@ -2132,11 +2125,6 @@ name|sem
 operator|->
 name|_kern
 argument_list|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
 return|;
 block|}
 end_function
