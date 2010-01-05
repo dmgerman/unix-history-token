@@ -941,7 +941,7 @@ name|param
 init|=
 name|NULL
 decl_stmt|;
-name|TWE_Unit_Descriptor
+name|TWE_Array_Descriptor
 modifier|*
 name|ud
 decl_stmt|;
@@ -1180,7 +1180,7 @@ block|}
 name|ud
 operator|=
 operator|(
-name|TWE_Unit_Descriptor
+name|TWE_Array_Descriptor
 operator|*
 operator|)
 name|param
@@ -1194,6 +1194,14 @@ operator|=
 name|ud
 operator|->
 name|configuration
+expr_stmt|;
+name|dr
+operator|->
+name|td_stripe
+operator|=
+name|ud
+operator|->
+name|stripe_size
 expr_stmt|;
 comment|/* build synthetic geometry as per controller internal rules */
 if|if
