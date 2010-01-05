@@ -188,16 +188,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYM_FBP10
-parameter_list|(
-name|sym
-parameter_list|)
-value|__CONCAT(sym, _fbp10)
-end_define
-
-begin_define
-define|#
-directive|define
 name|WEAK_REF
 parameter_list|(
 name|sym
