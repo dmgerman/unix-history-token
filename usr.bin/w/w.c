@@ -475,7 +475,7 @@ name|debugproc
 parameter_list|(
 name|p
 parameter_list|)
-value|*((struct kinfo_proc **)&(p)->ki_udata)
+value|*(&((struct kinfo_proc *)p)->ki_udata)
 end_define
 
 begin_define
