@@ -224,20 +224,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYM_DEFAULT
-parameter_list|(
-name|sym
-parameter_list|,
-name|impl
-parameter_list|,
-name|ver
-parameter_list|)
-value|__sym_default(sym, impl, ver)
-end_define
-
-begin_define
-define|#
-directive|define
 name|FB10_COMPAT
 parameter_list|(
 name|func
@@ -246,19 +232,6 @@ name|sym
 parameter_list|)
 define|\
 value|WEAK_REF(func, SYM_FB10(sym));                  \         SYM_COMPAT(sym, SYM_FB10(sym), FBSD_1.0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FB10_COMPAT_PRIVATE
-parameter_list|(
-name|func
-parameter_list|,
-name|sym
-parameter_list|)
-define|\
-value|WEAK_REF(func, SYM_FBP10(sym));                 \         SYM_DEFAULT(sym, SYM_FBP10(sym), FBSDprivate_1.0)
 end_define
 
 begin_function_decl
