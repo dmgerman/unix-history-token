@@ -556,6 +556,9 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+name|u_int
+name|flags
+parameter_list|,
 specifier|const
 name|struct
 name|sockaddr

@@ -2644,6 +2644,17 @@ begin_comment
 comment|/* route installed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFA_RTSELF
+value|RTF_HOST
+end_define
+
+begin_comment
+comment|/* loopback route to self installed */
+end_comment
+
 begin_comment
 comment|/* for compatibility with other BSDs */
 end_comment
