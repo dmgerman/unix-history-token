@@ -204,12 +204,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip_dummynet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netgraph/ng_ipfw.h>
 end_include
 
