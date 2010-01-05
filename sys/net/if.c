@@ -9360,6 +9360,13 @@ operator|(
 name|EEXIST
 operator|)
 return|;
+comment|/* 		 * XXX: Locking.  Nothing else seems to lock if_flags, 		 * and there are numerous other races with the 		 * ifunit() checks not being atomic with namespace 		 * changes (renames, vmoves, if_attach, etc). 		 */
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_RENAMING
+expr_stmt|;
 comment|/* Announce the departure of the interface. */
 name|rt_ifannouncemsg
 argument_list|(
@@ -9539,6 +9546,13 @@ name|ifp
 argument_list|,
 name|IFAN_ARRIVAL
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_RENAMING
 expr_stmt|;
 break|break;
 ifdef|#
