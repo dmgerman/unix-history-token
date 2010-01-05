@@ -746,7 +746,7 @@ literal|0x26528086
 block|,
 literal|"Intel ICH6"
 block|,
-literal|0
+name|AHCI_Q_NOFORCE
 block|}
 block|,
 block|{
@@ -754,7 +754,7 @@ literal|0x26538086
 block|,
 literal|"Intel ICH6M"
 block|,
-literal|0
+name|AHCI_Q_NOFORCE
 block|}
 block|,
 block|{
