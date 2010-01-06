@@ -1494,7 +1494,7 @@ name|mode
 decl_stmt|;
 name|mode
 operator|=
-name|archive_entry_filetype
+name|archive_entry_mode
 argument_list|(
 name|e
 argument_list|)
@@ -1657,7 +1657,7 @@ name|end
 decl_stmt|;
 name|mode
 operator|=
-name|archive_entry_filetype
+name|archive_entry_mode
 argument_list|(
 name|e
 argument_list|)
