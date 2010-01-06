@@ -6683,16 +6683,12 @@ block|{
 comment|/* 			 * Try to figure out if we have an 			 * auto-install disk there: 			 */
 if|if
 condition|(
-name|usb_test_autoinstall
+name|usb_iface_is_cdrom
 argument_list|(
 name|udev
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|DPRINTFN
