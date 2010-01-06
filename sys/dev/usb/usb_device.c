@@ -6209,7 +6209,7 @@ name|scratch_ptr
 argument_list|,
 literal|4
 argument_list|,
-name|scratch_size
+literal|0
 argument_list|,
 name|USB_LANGUAGE_TABLE
 argument_list|)
