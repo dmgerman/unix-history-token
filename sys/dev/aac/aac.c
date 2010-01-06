@@ -3346,7 +3346,9 @@ name|sc
 operator|->
 name|total_fibs
 operator|<
-name|AAC_PREALLOCATE_FIBS
+name|sc
+operator|->
+name|aac_max_fibs
 condition|)
 block|{
 if|if

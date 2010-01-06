@@ -1210,12 +1210,14 @@ name|target_sprt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Resetting via the passthrough causes problems. */
+comment|/* 		 * Resetting via the passthrough or parallel bus scan 		 * causes problems. 		 */
 name|cpi
 operator|->
 name|hba_misc
 operator|=
 name|PIM_NOBUSRESET
+operator||
+name|PIM_SEQSCAN
 expr_stmt|;
 name|cpi
 operator|->
