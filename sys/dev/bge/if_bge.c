@@ -5482,6 +5482,17 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+name|bzero
+argument_list|(
+name|sc
+operator|->
+name|bge_ldata
+operator|.
+name|bge_rx_std_ring
+argument_list|,
+name|BGE_STD_RX_RING_SZ
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|bge_std
@@ -5731,6 +5742,17 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+name|bzero
+argument_list|(
+name|sc
+operator|->
+name|bge_ldata
+operator|.
+name|bge_rx_jumbo_ring
+argument_list|,
+name|BGE_JUMBO_RX_RING_SZ
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|bge_jumbo
@@ -6156,6 +6178,34 @@ operator|->
 name|bge_tx_saved_considx
 operator|=
 literal|0
+expr_stmt|;
+name|bzero
+argument_list|(
+name|sc
+operator|->
+name|bge_ldata
+operator|.
+name|bge_tx_ring
+argument_list|,
+name|BGE_TX_RING_SZ
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_tx_ring_tag
+argument_list|,
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_tx_ring_map
+argument_list|,
+name|BUS_DMASYNC_PREWRITE
+argument_list|)
 expr_stmt|;
 comment|/* Initialize transmit producer index for host-memory send ring. */
 name|sc
@@ -11385,7 +11435,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"can't create sapre DMA map for jumbo RX\n"
+literal|"can't create spare DMA map for jumbo RX\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -13651,6 +13701,7 @@ name|ifp
 operator|->
 name|if_capenable
 operator|&=
+operator|~
 name|IFCAP_HWCSUM
 expr_stmt|;
 name|ifp
@@ -14690,7 +14741,7 @@ literal|29
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * Set GPHY Power Down Override to leave GPHY 	 * powered up in D0 uninitialized. 	 */
+comment|/* 	 * Set GPHY Power Down Override to leave GPHY 	 * powered up in D0 uninitialized. 	 */
 if|if
 condition|(
 name|BGE_IS_5705_PLUS
@@ -16164,8 +16215,6 @@ name|bge_cdata
 operator|.
 name|bge_tx_ring_map
 argument_list|,
-name|BUS_DMASYNC_POSTREAD
-operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
@@ -18294,6 +18343,23 @@ literal|0
 condition|)
 comment|/* No packets were dequeued. */
 return|return;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_tx_ring_tag
+argument_list|,
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_tx_ring_map
+argument_list|,
+name|BUS_DMASYNC_PREWRITE
+argument_list|)
+expr_stmt|;
 comment|/* Transmit. */
 name|bge_writembx
 argument_list|(
@@ -20453,7 +20519,7 @@ argument_list|,
 name|BGE_RESET_STOP
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Keep the ASF firmware running if up. 	 */
+comment|/* 	 * Keep the ASF firmware running if up. 	 */
 if|if
 condition|(
 name|sc
