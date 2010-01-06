@@ -1392,6 +1392,8 @@ literal|1
 argument_list|,
 name|acpi_pci_save_handle
 argument_list|,
+name|NULL
+argument_list|,
 name|dev
 argument_list|,
 name|NULL

@@ -533,7 +533,7 @@ name|cdev
 modifier|*
 name|dev
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|vm_paddr_t
@@ -542,6 +542,10 @@ name|paddr
 parameter_list|,
 name|int
 name|prot
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+name|memattr
 parameter_list|)
 block|{
 comment|/* 	 * /dev/mem is the only one that makes sense through this 	 * interface.  For /dev/kmem any physaddr we return here 	 * could be transient and hence incorrect or invalid at 	 * a later time. 	 */

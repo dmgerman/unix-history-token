@@ -273,7 +273,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* object might be dirty */
+comment|/* object might be dirty, only for vnode */
 end_comment
 
 begin_define

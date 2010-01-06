@@ -1803,16 +1803,6 @@ decl_stmt|;
 name|int
 name|nports
 decl_stmt|;
-name|struct
-name|adapter
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|ai
 operator|=
 name|cxgb_get_adapter_info
@@ -1865,26 +1855,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s %sNIC, rev: %d nports: %d %s"
+literal|"%s, %d %s"
 argument_list|,
 name|ai
 operator|->
 name|desc
-argument_list|,
-name|is_offload
-argument_list|(
-name|sc
-argument_list|)
-condition|?
-literal|"R"
-else|:
-literal|""
-argument_list|,
-name|sc
-operator|->
-name|params
-operator|.
-name|rev
 argument_list|,
 name|nports
 argument_list|,
@@ -3405,11 +3380,20 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s\t E/C: %s S/N: %s"
+literal|"%s %sNIC\t E/C: %s S/N: %s"
 argument_list|,
 name|ai
 operator|->
 name|desc
+argument_list|,
+name|is_offload
+argument_list|(
+name|sc
+argument_list|)
+condition|?
+literal|"R"
+else|:
+literal|""
 argument_list|,
 name|sc
 operator|->
@@ -9732,6 +9716,8 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|100
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* Wait for TXFIFO empty */
@@ -9759,6 +9745,8 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|100
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 name|t3_mac_disable
@@ -9768,8 +9756,6 @@ name|pi
 operator|->
 name|mac
 argument_list|,
-name|MAC_DIRECTION_TX
-operator||
 name|MAC_DIRECTION_RX
 argument_list|)
 expr_stmt|;

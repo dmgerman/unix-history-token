@@ -3074,6 +3074,10 @@ argument_list|(
 name|int
 argument_list|)
 operator|&&
+name|jp_jid
+operator|->
+name|jp_value
+operator|&&
 operator|*
 operator|(
 name|int

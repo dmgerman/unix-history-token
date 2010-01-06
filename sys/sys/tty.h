@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/termios.h>
+file|<sys/_termios.h>
 end_include
 
 begin_include
@@ -800,6 +800,9 @@ name|void
 modifier|*
 name|data
 parameter_list|,
+name|int
+name|fflag
+parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -822,6 +825,9 @@ name|cmd
 parameter_list|,
 name|caddr_t
 name|data
+parameter_list|,
+name|int
+name|fflag
 parameter_list|,
 name|struct
 name|thread

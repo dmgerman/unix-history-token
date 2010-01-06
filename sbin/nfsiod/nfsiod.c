@@ -279,7 +279,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"nfsiod count %d; reset to %d"
+literal|"nfsiod count %u; reset to %d"
 argument_list|,
 name|num_servers
 argument_list|,
@@ -300,7 +300,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"nfsiod count %d; reset to %d"
+literal|"nfsiod count %u; reset to %d"
 argument_list|,
 name|num_servers
 argument_list|,
@@ -338,18 +338,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|num_servers
-operator|==
-literal|0
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* no change */
 name|len
 operator|=
 sizeof|sizeof
@@ -420,6 +408,29 @@ argument_list|,
 literal|"sysctlbyname(\"vfs.nfs.iodmax\")"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|num_servers
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* no change */
+name|printf
+argument_list|(
+literal|"vfs.nfs.iodmin=%u\nvfs.nfs.iodmax=%u\n"
+argument_list|,
+name|iodmin
+argument_list|,
+name|iodmax
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Catch the case where we're lowering num_servers below iodmin */
 if|if
 condition|(

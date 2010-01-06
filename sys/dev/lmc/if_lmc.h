@@ -7714,11 +7714,6 @@ directive|endif
 if|#
 directive|if
 name|NETGRAPH
-name|struct
-name|callout
-name|ng_callout
-decl_stmt|;
-comment|/* ng_watchdog needs this                  */
 name|node_p
 name|ng_node
 decl_stmt|;
@@ -7759,6 +7754,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+name|struct
+name|callout
+name|callout
+decl_stmt|;
+comment|/* watchdog needs this                  */
 name|struct
 name|device
 modifier|*
@@ -11281,18 +11281,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|route
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|lmc_ifnet_watchdog
-parameter_list|(
-name|struct
-name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;

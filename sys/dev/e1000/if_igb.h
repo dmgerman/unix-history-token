@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|IGB_DEFAULT_TXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|IGB_DEFAULT_RXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -124,13 +124,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IGB_TX_TIMEOUT
-value|5
+name|IGB_WATCHDOG
+value|(10 * hz)
 end_define
-
-begin_comment
-comment|/* set to 5 seconds */
-end_comment
 
 begin_comment
 comment|/*  * This parameter controls when the driver calls the routine to reclaim  * transmit descriptors.  */
@@ -544,6 +540,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IGB_PKTTYPE_MASK
+value|0x0000FFF0
+end_define
+
+begin_define
+define|#
+directive|define
 name|ETH_ZLEN
 value|60
 end_define
@@ -590,31 +593,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Header split codes for get_buf */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGB_CLEAN_HEADER
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_CLEAN_PAYLOAD
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_CLEAN_BOTH
-value|3
-end_define
 
 begin_comment
 comment|/*  * Interrupt Moderation parameters  */
@@ -756,6 +734,11 @@ name|task
 name|tx_task
 decl_stmt|;
 comment|/* cleanup tasklet */
+name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
 name|u32
 name|next_avail_desc
 decl_stmt|;
@@ -796,8 +779,11 @@ name|void
 modifier|*
 name|tag
 decl_stmt|;
-name|u32
-name|watchdog_timer
+name|bool
+name|watchdog_check
+decl_stmt|;
+name|int
+name|watchdog_time
 decl_stmt|;
 name|u64
 name|no_desc_avail
@@ -862,6 +848,11 @@ name|rx_task
 decl_stmt|;
 comment|/* cleanup tasklet */
 name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+name|struct
 name|mtx
 name|rx_mtx
 decl_stmt|;
@@ -878,7 +869,7 @@ name|u32
 name|next_to_check
 decl_stmt|;
 name|struct
-name|igb_rx_buffer
+name|igb_rx_buf
 modifier|*
 name|rx_buffers
 decl_stmt|;
@@ -887,7 +878,7 @@ name|rxtag
 decl_stmt|;
 comment|/* dma tag for tx */
 name|bus_dmamap_t
-name|rx_spare_map
+name|spare_map
 decl_stmt|;
 comment|/* 	 * First/last mbuf pointers, for 	 * collecting multisegment RX packets. 	 */
 name|struct
@@ -1013,10 +1004,6 @@ name|core_mtx
 decl_stmt|;
 name|int
 name|igb_insert_vlan_header
-decl_stmt|;
-name|struct
-name|task
-name|link_task
 decl_stmt|;
 name|struct
 name|task
@@ -1216,7 +1203,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|igb_rx_buffer
+name|igb_rx_buf
 block|{
 name|struct
 name|mbuf

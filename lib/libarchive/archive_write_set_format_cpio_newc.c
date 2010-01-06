@@ -307,6 +307,20 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Logic trick: difference between 'n' and next multiple of 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAD4
+parameter_list|(
+name|n
+parameter_list|)
+value|(3& (1 + ~(n)))
+end_define
+
+begin_comment
 comment|/*  * Set output format to 'cpio' format.  */
 end_comment
 
@@ -497,6 +511,9 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+name|int64_t
+name|ino
+decl_stmt|;
 name|struct
 name|cpio
 modifier|*
@@ -514,6 +531,8 @@ name|int
 name|pathlength
 decl_stmt|,
 name|ret
+decl_stmt|,
+name|ret2
 decl_stmt|;
 name|struct
 name|cpio_header_newc
@@ -533,9 +552,9 @@ name|a
 operator|->
 name|format_data
 expr_stmt|;
-name|ret
+name|ret2
 operator|=
-literal|0
+name|ARCHIVE_OK
 expr_stmt|;
 name|path
 operator|=
@@ -546,6 +565,9 @@ argument_list|)
 expr_stmt|;
 name|pathlength
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|path
@@ -624,12 +646,16 @@ name|c_devminor
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|archive_entry_ino
+name|ino
+operator|=
+name|archive_entry_ino64
 argument_list|(
 name|entry
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ino
 operator|>
 literal|0xffffffff
 condition|)
@@ -646,17 +672,14 @@ argument_list|,
 literal|"large inode number truncated"
 argument_list|)
 expr_stmt|;
-name|ret
+name|ret2
 operator|=
 name|ARCHIVE_WARN
 expr_stmt|;
 block|}
 name|format_hex
 argument_list|(
-name|archive_entry_ino
-argument_list|(
-name|entry
-argument_list|)
+name|ino
 operator|&
 literal|0xffffffff
 argument_list|,
@@ -1042,10 +1065,8 @@ operator|)
 return|;
 name|pad
 operator|=
-literal|0x3
-operator|&
-operator|-
-operator|(
+name|PAD4
+argument_list|(
 name|pathlength
 operator|+
 sizeof|sizeof
@@ -1053,7 +1074,7 @@ argument_list|(
 expr|struct
 name|cpio_header_newc
 argument_list|)
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1100,14 +1121,12 @@ name|cpio
 operator|->
 name|padding
 operator|=
-literal|3
-operator|&
-operator|(
-operator|-
+name|PAD4
+argument_list|(
 name|cpio
 operator|->
 name|entry_bytes_remaining
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Write the symlink now. */
 if|if
@@ -1155,12 +1174,12 @@ operator|)
 return|;
 name|pad
 operator|=
-literal|0x3
-operator|&
-operator|-
+name|PAD4
+argument_list|(
 name|strlen
 argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1181,6 +1200,16 @@ name|pad
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ret
+operator|==
+name|ARCHIVE_OK
+condition|)
+name|ret
+operator|=
+name|ret2
+expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -1442,7 +1471,7 @@ expr_stmt|;
 return|return
 operator|(
 name|v
-operator|>>=
+operator|>>
 literal|4
 operator|)
 return|;
@@ -1460,11 +1489,6 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|struct
-name|cpio
-modifier|*
-name|cpio
-decl_stmt|;
 name|int
 name|er
 decl_stmt|;
@@ -1473,17 +1497,6 @@ name|archive_entry
 modifier|*
 name|trailer
 decl_stmt|;
-name|cpio
-operator|=
-operator|(
-expr|struct
-name|cpio
-operator|*
-operator|)
-name|a
-operator|->
-name|format_data
-expr_stmt|;
 name|trailer
 operator|=
 name|archive_entry_new
@@ -1587,9 +1600,10 @@ name|cpio
 modifier|*
 name|cpio
 decl_stmt|;
-name|int
+name|size_t
 name|to_write
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|cpio
@@ -1602,10 +1616,6 @@ operator|)
 name|a
 operator|->
 name|format_data
-expr_stmt|;
-name|ret
-operator|=
-name|ARCHIVE_OK
 expr_stmt|;
 while|while
 condition|(

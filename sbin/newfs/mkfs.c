@@ -3316,7 +3316,7 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Update information about this partion in pack 	 * label, to that it may be updated on disk. 	 */
+comment|/* 	 * Update information about this partition in pack 	 * label, to that it may be updated on disk. 	 */
 if|if
 condition|(
 name|pp

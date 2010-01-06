@@ -270,7 +270,6 @@ name|root
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|root
 argument_list|)
 expr_stmt|;

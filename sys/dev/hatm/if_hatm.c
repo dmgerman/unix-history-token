@@ -7765,6 +7765,11 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|freeenv
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose

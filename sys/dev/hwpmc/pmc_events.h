@@ -315,7 +315,7 @@ value|PMC_EV_TSC_TSC
 end_define
 
 begin_comment
-comment|/*  * Intel XScale events from "Intel XScale Core Developer's Manual",  * January 2004, #27347302  */
+comment|/*  * Intel XScale events from:  *  * Intel XScale Core Developer's Manual  * January, 2004, #27347302  *  * 3rd Generation Intel XScale Microarchitecture  * Developer's Manual  * May 2007, #31628302  *  * First 14 events are for 1st and 2nd Generation Intel XScale cores. The  * remaining are available only on 3rd Generation Intel XScale cores.  */
 end_comment
 
 begin_define
@@ -324,7 +324,7 @@ directive|define
 name|__PMC_EV_XSCALE
 parameter_list|()
 define|\
-value|__PMC_EV(XSCALE, IC_FETCH)		\ 	__PMC_EV(XSCALE, IC_MISS)		\ 	__PMC_EV(XSCALE, DATA_DEPENDENCY_STALL)	\ 	__PMC_EV(XSCALE, ITLB_MISS)		\ 	__PMC_EV(XSCALE, DTLB_MISS)		\ 	__PMC_EV(XSCALE, BRANCH_EXECUTED)	\ 	__PMC_EV(XSCALE, BRANCH_MISPRED)	\ 	__PMC_EV(XSCALE, INSTR_EXECUTED)	\ 	__PMC_EV(XSCALE, DC_FULL_CYCLE)		\ 	__PMC_EV(XSCALE, DC_FULL_CONTIG)	\ 	__PMC_EV(XSCALE, DC_ACCESS)		\ 	__PMC_EV(XSCALE, DC_MISS)		\ 	__PMC_EV(XSCALE, DC_WRITEBACK)		\ 	__PMC_EV(XSCALE, PC_CHANGE)
+value|__PMC_EV(XSCALE, IC_FETCH)			\ 	__PMC_EV(XSCALE, IC_MISS)			\ 	__PMC_EV(XSCALE, DATA_DEPENDENCY_STALLED)	\ 	__PMC_EV(XSCALE, ITLB_MISS)			\ 	__PMC_EV(XSCALE, DTLB_MISS)			\ 	__PMC_EV(XSCALE, BRANCH_RETIRED)		\ 	__PMC_EV(XSCALE, BRANCH_MISPRED)		\ 	__PMC_EV(XSCALE, INSTR_RETIRED)			\ 	__PMC_EV(XSCALE, DC_FULL_CYCLE)			\ 	__PMC_EV(XSCALE, DC_FULL_CONTIG)		\ 	__PMC_EV(XSCALE, DC_ACCESS)			\ 	__PMC_EV(XSCALE, DC_MISS)			\ 	__PMC_EV(XSCALE, DC_WRITEBACK)			\ 	__PMC_EV(XSCALE, PC_CHANGE)			\ 	__PMC_EV(XSCALE, BRANCH_RETIRED_ALL)		\ 	__PMC_EV(XSCALE, INSTR_CYCLE)			\ 	__PMC_EV(XSCALE, CP_STALL)			\ 	__PMC_EV(XSCALE, PC_CHANGE_ALL)			\ 	__PMC_EV(XSCALE, PIPELINE_FLUSH)		\ 	__PMC_EV(XSCALE, BACKEND_STALL)			\ 	__PMC_EV(XSCALE, MULTIPLIER_USE)		\ 	__PMC_EV(XSCALE, MULTIPLIER_STALLED)		\ 	__PMC_EV(XSCALE, DATA_CACHE_STALLED)		\ 	__PMC_EV(XSCALE, L2_CACHE_REQ)			\ 	__PMC_EV(XSCALE, L2_CACHE_MISS)			\ 	__PMC_EV(XSCALE, ADDRESS_BUS_TRANS)		\ 	__PMC_EV(XSCALE, SELF_ADDRESS_BUS_TRANS)	\ 	__PMC_EV(XSCALE, DATA_BUS_TRANS)
 end_define
 
 begin_define
@@ -338,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|PMC_EV_XSCALE_LAST
-value|PMC_EV_XSCALE_PC_CHANGE
+value|PMC_EV_XSCALE_DATA_BUS_TRANS
 end_define
 
 begin_comment

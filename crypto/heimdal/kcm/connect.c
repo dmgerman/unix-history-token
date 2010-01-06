@@ -513,7 +513,7 @@ name|CMSG_SPACE
 argument_list|(
 name|SOCKCREDSIZE
 argument_list|(
-name|NGROUPS
+name|CMGROUP_MAX
 argument_list|)
 argument_list|)
 expr_stmt|;

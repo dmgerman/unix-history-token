@@ -3267,14 +3267,30 @@ name|x
 operator|=
 name|SX_LOCK_UNLOCKED
 expr_stmt|;
-comment|/* 	 * The wake up algorithm here is quite simple and probably not 	 * ideal.  It gives precedence to shared waiters if they are 	 * present.  For this condition, we have to preserve the 	 * state of the exclusive waiters flag. 	 */
+comment|/* 	 * The wake up algorithm here is quite simple and probably not 	 * ideal.  It gives precedence to shared waiters if they are 	 * present.  For this condition, we have to preserve the 	 * state of the exclusive waiters flag. 	 * If interruptible sleeps left the shared queue empty avoid a 	 * starvation for the threads sleeping on the exclusive queue by giving 	 * them precedence and cleaning up the shared waiters bit anyway. 	 */
 if|if
 condition|(
+operator|(
 name|sx
 operator|->
 name|sx_lock
 operator|&
 name|SX_LOCK_SHARED_WAITERS
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|sleepq_sleepcnt
+argument_list|(
+operator|&
+name|sx
+operator|->
+name|lock_object
+argument_list|,
+name|SQ_SHARED_QUEUE
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|queue

@@ -1805,13 +1805,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsMapHandleToNode  *  * PARAMETERS:  Handle          - Handle to be converted to an Node  *  * RETURN:      A Name table entry pointer  *  * DESCRIPTION: Convert a namespace handle to a real Node  *  * Note: Real integer handles would allow for more verification  *       and keep all pointers within this subsystem - however this introduces  *       more (and perhaps unnecessary) overhead.  *  * The current implemenation is basically a placeholder until such time comes  * that it is needed.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsValidateHandle  *  * PARAMETERS:  Handle          - Handle to be validated and typecast to a  *                                namespace node.  *  * RETURN:      A pointer to a namespace node  *  * DESCRIPTION: Convert a namespace handle to a namespace node. Handles special  *              cases for the root node.  *  * NOTE: Real integer handles would allow for more verification  *       and keep all pointers within this subsystem - however this introduces  *       more overhead and has not been necessary to this point. Drivers  *       holding handles are typically notified before a node becomes invalid  *       due to a table unload.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 parameter_list|(
 name|ACPI_HANDLE
 name|Handle
@@ -1868,32 +1868,6 @@ name|Handle
 argument_list|)
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsConvertEntryToHandle  *  * PARAMETERS:  Node          - Node to be converted to a Handle  *  * RETURN:      A user handle  *  * DESCRIPTION: Convert a real Node to a namespace handle  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_HANDLE
-name|AcpiNsConvertEntryToHandle
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-parameter_list|)
-block|{
-comment|/*      * Simple implementation for now;      */
-return|return
-operator|(
-operator|(
-name|ACPI_HANDLE
-operator|)
-name|Node
-operator|)
-return|;
-comment|/* Example future implementation ---------------------      if (!Node)     {         return (NULL);     }      if (Node == AcpiGbl_RootNode)     {         return (ACPI_ROOT_OBJECT);     }       return ((ACPI_HANDLE) Node); ------------------------------------------------------*/
 block|}
 end_function
 

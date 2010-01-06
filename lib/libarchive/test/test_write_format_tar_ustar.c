@@ -657,9 +657,14 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFLNK
-operator||
 literal|0664
+argument_list|)
+expr_stmt|;
+name|archive_entry_set_filetype
+argument_list|(
+name|entry
+argument_list|,
+name|AE_IFLNK
 argument_list|)
 expr_stmt|;
 name|archive_entry_set_symlink

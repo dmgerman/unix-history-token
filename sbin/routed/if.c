@@ -91,7 +91,7 @@ name|remote_if
 init|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-name|ifnet
+name|remote_if
 argument_list|)
 decl_stmt|;
 end_decl_stmt

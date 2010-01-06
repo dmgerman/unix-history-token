@@ -42,7 +42,9 @@ begin_function
 name|int
 modifier|*
 name|__error_unthreaded
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(

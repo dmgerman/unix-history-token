@@ -154,19 +154,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|ifdead_watchdog
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
 name|int
 name|ifdead_resolvemulti
 parameter_list|(
@@ -275,12 +262,6 @@ operator|->
 name|if_ioctl
 operator|=
 name|ifdead_ioctl
-expr_stmt|;
-name|ifp
-operator|->
-name|if_watchdog
-operator|=
-name|ifdead_watchdog
 expr_stmt|;
 name|ifp
 operator|->

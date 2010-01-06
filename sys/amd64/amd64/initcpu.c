@@ -119,17 +119,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.clflush_disable"
-argument_list|,
-operator|&
-name|hw_clflush_disable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|int
 name|cpu
@@ -749,6 +738,14 @@ condition|)
 name|init_via
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|initializecpucache
+parameter_list|()
+block|{
 comment|/* 	 * CPUID with %eax = 1, %ebx returns 	 * Bits 15-8: CLFLUSH line size 	 * 	(Value * 8 = cache line size in bytes) 	 */
 if|if
 condition|(
@@ -813,13 +810,11 @@ name|hw_clflush_disable
 operator|==
 literal|1
 condition|)
-block|{
 name|cpu_feature
 operator|&=
 operator|~
 name|CPUID_CLFSH
 expr_stmt|;
-block|}
 block|}
 end_function
 

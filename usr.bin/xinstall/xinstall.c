@@ -109,12 +109,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -322,27 +316,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
-name|copy
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|off_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|int
 name|compare
 parameter_list|(
@@ -366,6 +340,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|void
+name|copy
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|off_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|create_newfile
 parameter_list|(
@@ -383,6 +380,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|create_tempfile
 parameter_list|(
@@ -399,6 +397,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|install
 parameter_list|(
@@ -418,6 +417,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|install_dir
 parameter_list|(
@@ -428,6 +428,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_long
 name|numeric_id
 parameter_list|(
@@ -443,6 +444,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|strip
 parameter_list|(
@@ -454,6 +456,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|trymmap
 parameter_list|(
@@ -463,6 +466,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -1143,6 +1147,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_long
 name|numeric_id
 parameter_list|(
@@ -1225,6 +1230,7 @@ comment|/*  * install --  *	build a path name and install the file  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|install
 parameter_list|(
@@ -2602,6 +2608,7 @@ comment|/*  * compare --  *	compare two files; non-zero means files differ  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|compare
 parameter_list|(
@@ -2948,6 +2955,7 @@ comment|/*  * create_tempfile --  *	create a temporary file based on path and op
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|create_tempfile
 parameter_list|(
@@ -3057,6 +3065,7 @@ comment|/*  * create_newfile --  *	create a new file, overwriting an existing on
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|create_newfile
 parameter_list|(
@@ -3271,6 +3280,7 @@ comment|/*  * copy --  *	copy from one file to another  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|copy
 parameter_list|(
@@ -3596,6 +3606,7 @@ comment|/*  * strip --  *	use strip(1) to strip the target file  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|strip
 parameter_list|(
@@ -3739,6 +3750,7 @@ comment|/*  * install_dir --  *	build directory heirarchy  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|install_dir
 parameter_list|(
@@ -3948,9 +3960,12 @@ comment|/*  * usage --  *	print a usage message and die  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -3980,6 +3995,7 @@ comment|/*  * trymmap --  *	return true (1) if mmap should be tried, false (0) i
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|trymmap
 parameter_list|(

@@ -18,31 +18,131 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
+
+begin_struct
+struct|struct
+name|pcpu_stats
+block|{
+name|u_long
+name|pcs_nasts
+decl_stmt|;
+comment|/* IPI_AST counter. */
+name|u_long
+name|pcs_nclks
+decl_stmt|;
+comment|/* Clock interrupt counter. */
+name|u_long
+name|pcs_nextints
+decl_stmt|;
+comment|/* ExtINT counter. */
+name|u_long
+name|pcs_nhighfps
+decl_stmt|;
+comment|/* IPI_HIGH_FP counter. */
+name|u_long
+name|pcs_nhwints
+decl_stmt|;
+comment|/* Hardware int. counter. */
+name|u_long
+name|pcs_npreempts
+decl_stmt|;
+comment|/* IPI_PREEMPT counter. */
+name|u_long
+name|pcs_nrdvs
+decl_stmt|;
+comment|/* IPI_RENDEZVOUS counter. */
+name|u_long
+name|pcs_nstops
+decl_stmt|;
+comment|/* IPI_STOP counter. */
+name|u_long
+name|pcs_nstrays
+decl_stmt|;
+comment|/* Stray interrupt counter. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pcpu_md
+block|{
+name|struct
+name|pcb
+name|pcb
+decl_stmt|;
+comment|/* Used by IPI_STOP */
+name|struct
+name|pmap
+modifier|*
+name|current_pmap
+decl_stmt|;
+comment|/* active pmap */
+name|vm_offset_t
+name|vhpt
+decl_stmt|;
+comment|/* Address of VHPT */
+name|uint64_t
+name|lid
+decl_stmt|;
+comment|/* local CPU ID */
+name|uint64_t
+name|clock
+decl_stmt|;
+comment|/* Clock counter. */
+name|uint64_t
+name|clockadj
+decl_stmt|;
+comment|/* Clock adjust. */
+name|uint32_t
+name|awake
+range|:
+literal|1
+decl_stmt|;
+comment|/* CPU is awake? */
+name|struct
+name|pcpu_stats
+name|stats
+decl_stmt|;
+comment|/* Interrupt stats. */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|struct
+name|sysctl_ctx_list
+name|sysctl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|sysctl_tree
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|struct pcb	pc_pcb;
-comment|/* Used by IPI_STOP */
-value|\ 	struct pmap	*pc_current_pmap;
-comment|/* active pmap */
-value|\ 	uint64_t	pc_lid;
-comment|/* local CPU ID */
-value|\ 	uint64_t	pc_clock;
-comment|/* Clock counter. */
-value|\ 	uint64_t	pc_clockadj;
-comment|/* Clock adjust. */
-value|\ 	uint32_t	pc_awake:1;
-comment|/* CPU is awake? */
-value|\ 	uint32_t	pc_acpi_id
+value|uint32_t	pc_acpi_id;
+comment|/* ACPI CPU id. */
+value|\ 	struct pcpu_md	pc_md
 end_define
 
 begin_comment
-comment|/* ACPI CPU id. */
+comment|/* MD fields. */
 end_comment
 
 begin_ifdef

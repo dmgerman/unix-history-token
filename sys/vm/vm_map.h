@@ -1152,35 +1152,6 @@ begin_comment
 comment|/* Change the wiring as appropriate */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VM_FAULT_USER_WIRE
-value|2
-end_define
-
-begin_comment
-comment|/* Likewise, but for user purposes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_FAULT_WIRE_MASK
-value|(VM_FAULT_CHANGE_WIRING|VM_FAULT_USER_WIRE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_FAULT_DIRTY
-value|8
-end_define
-
-begin_comment
-comment|/* Dirty the page */
-end_comment
-
 begin_comment
 comment|/*  * The following "find_space" options are supported by vm_map_find()  */
 end_comment

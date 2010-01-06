@@ -687,6 +687,8 @@ name|ObjDesc
 operator|->
 name|Method
 operator|.
+name|Extra
+operator|.
 name|Implementation
 argument_list|(
 name|WalkState
@@ -742,9 +744,12 @@ name|WalkState
 operator|->
 name|ImplicitReturnObj
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -768,16 +773,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|WalkState
-operator|->
-name|ImplicitReturnObj
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-literal|0
-expr_stmt|;
 block|}
 comment|/* Parse the AML */
 name|Status

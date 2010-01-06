@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * apm / zzz	APM BIOS utility for FreeBSD  *  * Copyright (C) 1994-1996 by Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>  *  * This software may be used, modified, copied, distributed, and sold,  * in both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  */
+comment|/*  * APM BIOS utility for FreeBSD  *  * Copyright (C) 1994-1996 by Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>  *  * This software may be used, modified, copied, distributed, and sold,  * in both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  */
 end_comment
 
 begin_include
@@ -151,12 +151,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
-argument_list|,
 literal|"usage: apm [-ablstzZ] [-d enable ] [ -e enable ] "
-literal|"[ -h enable ] [-r delta]"
-argument_list|,
-literal|"       zzz"
+literal|"[ -h enable ] [-r delta]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1990,30 +1986,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|cmdname
-argument_list|,
-literal|"zzz"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|dosleep
-operator|=
-literal|1
-expr_stmt|;
-name|all_info
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|finish_option
-goto|;
-block|}
 while|while
 condition|(
 operator|(
@@ -2204,8 +2176,6 @@ operator|+=
 name|optind
 expr_stmt|;
 block|}
-name|finish_option
-label|:
 if|if
 condition|(
 name|haltcpu

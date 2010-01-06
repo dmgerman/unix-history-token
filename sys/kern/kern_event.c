@@ -1447,10 +1447,10 @@ block|,
 comment|/* EVFILT_TIMER */
 block|{
 operator|&
-name|file_filtops
+name|null_filtops
 block|}
 block|,
-comment|/* EVFILT_NETDEV */
+comment|/* former EVFILT_NETDEV */
 block|{
 operator|&
 name|fs_filtops
@@ -4138,6 +4138,10 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|filt
@@ -4229,7 +4233,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

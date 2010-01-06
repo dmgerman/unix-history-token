@@ -841,6 +841,9 @@ operator|)
 return|;
 return|return
 operator|(
+operator|(
+name|int
+operator|)
 name|state
 operator|->
 name|signature_len
@@ -1028,6 +1031,18 @@ name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 if|if
 condition|(
 name|WIFSIGNALED
@@ -1088,6 +1103,9 @@ name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* !_WIN32 || __CYGWIN__ */
 if|if
 condition|(
 name|WIFEXITED

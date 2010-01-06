@@ -793,7 +793,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_gpt
@@ -808,12 +807,16 @@ operator|.
 name|ld_dir
 operator|=
 name|G_LABEL_GPT_VOLUME_DIR
+block|,
+operator|.
+name|ld_enabled
+operator|=
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_gpt_uuid
@@ -828,9 +831,38 @@ operator|.
 name|ld_dir
 operator|=
 name|G_LABEL_GPT_ID_DIR
+block|,
+operator|.
+name|ld_enabled
+operator|=
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|G_LABEL_INIT
+argument_list|(
+name|gpt
+argument_list|,
+name|g_label_gpt
+argument_list|,
+literal|"Create device nodes for GPT labels"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|G_LABEL_INIT
+argument_list|(
+name|gptid
+argument_list|,
+name|g_label_gpt_uuid
+argument_list|,
+literal|"Create device nodes for GPT UUIDs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

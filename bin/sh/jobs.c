@@ -445,6 +445,7 @@ name|STATIC
 name|void
 name|cmdputs
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -729,7 +730,7 @@ condition|)
 block|{
 name|out
 label|:
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: can't access tty; job control turned off\n"
 argument_list|)
@@ -3862,6 +3863,11 @@ name|rootshell
 operator|=
 literal|0
 expr_stmt|;
+name|handler
+operator|=
+operator|&
+name|main_handler
+expr_stmt|;
 name|closescript
 argument_list|()
 expr_stmt|;
@@ -5276,7 +5282,7 @@ operator|==
 name|JOBSTOPPED
 condition|)
 block|{
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"You have stopped jobs.\n"
 argument_list|)
@@ -5393,6 +5399,7 @@ name|nodelist
 modifier|*
 name|lp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -6068,15 +6075,18 @@ name|STATIC
 name|void
 name|cmdputs
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|q
 decl_stmt|;

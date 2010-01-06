@@ -149,8 +149,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|APM_ENT_TYPE_APPLE_BOOT
+value|"Apple_Bootstrap"
+end_define
+
+begin_define
+define|#
+directive|define
 name|APM_ENT_TYPE_APPLE_HFS
 value|"Apple_HFS"
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_ENT_TYPE_APPLE_UFS
+value|"Apple_UNIX_SVR2"
 end_define
 
 begin_endif

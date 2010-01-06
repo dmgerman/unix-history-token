@@ -244,11 +244,19 @@ name|rootshell
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|jmploc
+name|main_handler
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|STATIC
 name|void
 name|read_profile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -285,10 +293,6 @@ index|[]
 parameter_list|)
 block|{
 name|struct
-name|jmploc
-name|jmploc
-decl_stmt|;
-name|struct
 name|stackmark
 name|smark
 decl_stmt|;
@@ -318,7 +322,7 @@ if|if
 condition|(
 name|setjmp
 argument_list|(
-name|jmploc
+name|main_handler
 operator|.
 name|loc
 argument_list|)
@@ -464,7 +468,7 @@ block|}
 name|handler
 operator|=
 operator|&
-name|jmploc
+name|main_handler
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -518,7 +522,7 @@ name|NULL
 operator|&&
 name|iflag
 condition|)
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: cannot determine working directory\n"
 argument_list|)
@@ -816,7 +820,7 @@ operator|!
 name|Iflag
 condition|)
 break|break;
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"\nUse \"exit\" to leave shell.\n"
 argument_list|)
@@ -906,6 +910,7 @@ name|STATIC
 name|void
 name|read_profile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -966,6 +971,7 @@ begin_function
 name|void
 name|readcmdfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1052,6 +1058,7 @@ name|char
 modifier|*
 name|fullname
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
@@ -1149,11 +1156,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|strlist
-modifier|*
-name|sp
-decl_stmt|;
 name|char
 modifier|*
 name|fullname
@@ -1172,34 +1174,6 @@ expr_stmt|;
 name|exitstatus
 operator|=
 literal|0
-expr_stmt|;
-for|for
-control|(
-name|sp
-operator|=
-name|cmdenviron
-init|;
-name|sp
-condition|;
-name|sp
-operator|=
-name|sp
-operator|->
-name|next
-control|)
-name|setvareq
-argument_list|(
-name|savestr
-argument_list|(
-name|sp
-operator|->
-name|text
-argument_list|)
-argument_list|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
-argument_list|)
 expr_stmt|;
 name|fullname
 operator|=
@@ -1249,10 +1223,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|oexitstatus
-decl_stmt|;
 if|if
 condition|(
 name|stoppedjobs

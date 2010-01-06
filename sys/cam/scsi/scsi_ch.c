@@ -2291,6 +2291,20 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Don't wedge this device's queue */
+if|if
+condition|(
+operator|(
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_DEV_QFRZN
+operator|)
+operator|!=
+literal|0
+condition|)
 name|cam_release_devq
 argument_list|(
 name|done_ccb

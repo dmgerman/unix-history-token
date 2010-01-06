@@ -1800,12 +1800,6 @@ decl_stmt|;
 name|device_t
 name|wb_miibus
 decl_stmt|;
-name|bus_space_handle_t
-name|wb_bhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|wb_btag
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -1834,6 +1828,9 @@ name|wb_txthresh
 decl_stmt|;
 name|int
 name|wb_cachesize
+decl_stmt|;
+name|int
+name|wb_timer
 decl_stmt|;
 name|caddr_t
 name|wb_ldata_ptr
@@ -1904,8 +1901,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_4(sc->wb_btag, sc->wb_bhandle, reg, val)
+value|bus_write_4(sc->wb_res, reg, val)
 end_define
 
 begin_define
@@ -1919,8 +1915,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_2(sc->wb_btag, sc->wb_bhandle, reg, val)
+value|bus_write_2(sc->wb_res, reg, val)
 end_define
 
 begin_define
@@ -1934,8 +1929,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_1(sc->wb_btag, sc->wb_bhandle, reg, val)
+value|bus_write_1(sc->wb_res, reg, val)
 end_define
 
 begin_define
@@ -1947,8 +1941,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_4(sc->wb_btag, sc->wb_bhandle, reg)
+value|bus_read_4(sc->wb_res, reg)
 end_define
 
 begin_define
@@ -1960,8 +1953,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_2(sc->wb_btag, sc->wb_bhandle, reg)
+value|bus_read_2(sc->wb_res, reg)
 end_define
 
 begin_define
@@ -1973,8 +1965,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_1(sc->wb_btag, sc->wb_bhandle, reg)
+value|bus_read_1(sc->wb_res, reg)
 end_define
 
 begin_define

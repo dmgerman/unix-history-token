@@ -142,12 +142,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
-
 begin_comment
 comment|/* Let's be paranoid about block size */
 end_comment
@@ -1195,7 +1189,9 @@ literal|"%*s                 Block  limits                    File  limits\n"
 argument_list|,
 name|max
 argument_list|(
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 literal|10
 argument_list|)
@@ -1217,7 +1213,9 @@ literal|"Group"
 argument_list|,
 name|max
 argument_list|(
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 literal|10
 argument_list|)
@@ -1283,7 +1281,9 @@ literal|"%-*s "
 argument_list|,
 name|max
 argument_list|(
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 literal|10
 argument_list|)

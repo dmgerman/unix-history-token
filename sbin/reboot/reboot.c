@@ -69,6 +69,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -105,12 +111,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libutil.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -136,6 +136,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|_ULOG_POSIX_NAMES
+end_define
+
+begin_include
+include|#
+directive|include
+file|<ulog.h>
 end_include
 
 begin_include
@@ -183,6 +195,10 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|struct
+name|utmpx
+name|utx
+decl_stmt|;
 specifier|const
 name|struct
 name|passwd
@@ -597,13 +613,26 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|logwtmp
+name|utx
+operator|.
+name|ut_type
+operator|=
+name|SHUTDOWN_TIME
+expr_stmt|;
+name|gettimeofday
 argument_list|(
-literal|"~"
+operator|&
+name|utx
+operator|.
+name|ut_tv
 argument_list|,
-literal|"shutdown"
-argument_list|,
-literal|""
+name|NULL
+argument_list|)
+expr_stmt|;
+name|pututxline
+argument_list|(
+operator|&
+name|utx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do a sync early on, so disks start transfers while we're off 	 * killing processes.  Don't worry about writes done before the 	 * processes die, the reboot system call syncs the disks. 	 */
@@ -911,7 +940,9 @@ begin_function
 specifier|static
 name|u_int
 name|get_pageins
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int
 name|pageins

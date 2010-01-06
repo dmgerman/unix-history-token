@@ -4934,6 +4934,15 @@ name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback"  	 * is not needed. 	 */
+if|if
+condition|(
+name|ia
+operator|->
+name|ia_flags
+operator|&
+name|IFA_RTSELF
+condition|)
+block|{
 name|error
 operator|=
 name|ifa_del_loopback_route
@@ -4956,6 +4965,20 @@ operator|->
 name|ia_addr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|ia
+operator|->
+name|ia_flags
+operator|&=
+operator|~
+name|IFA_RTSELF
+expr_stmt|;
+block|}
 comment|/* stop DAD processing */
 name|nd6_dad_stop
 argument_list|(
@@ -7802,6 +7825,18 @@ operator|->
 name|ia_addr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|ia
+operator|->
+name|ia_flags
+operator||=
+name|IFA_RTSELF
+expr_stmt|;
 block|}
 comment|/* Add ownaddr as loopback rtentry, if necessary (ex. on p2p link). */
 if|if
@@ -10380,6 +10415,9 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
+name|u_int
+name|flags
+parameter_list|,
 specifier|const
 name|struct
 name|sockaddr
@@ -10754,6 +10792,8 @@ operator|&&
 name|in6_lltable_rtcheck
 argument_list|(
 name|ifp
+argument_list|,
+name|flags
 argument_list|,
 name|l3addr
 argument_list|)

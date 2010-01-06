@@ -1849,10 +1849,6 @@ name|hostlist
 modifier|*
 name|tmp
 decl_stmt|;
-name|struct
-name|sigaction
-name|sa
-decl_stmt|;
 while|while
 condition|(
 operator|(

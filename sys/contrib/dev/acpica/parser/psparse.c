@@ -1562,9 +1562,12 @@ name|PreviousWalkState
 operator|->
 name|ImplicitReturnObj
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+operator|(
+name|UINT64
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1581,16 +1584,6 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-name|PreviousWalkState
-operator|->
-name|ImplicitReturnObj
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-literal|0
-expr_stmt|;
 block|}
 comment|/* Restart the calling control method */
 name|Status

@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|TEMP_SIZE
-value|(1*SPA_MAXBLOCKSIZE)
+value|(1024 * 1024)
 end_define
 
 begin_function_decl

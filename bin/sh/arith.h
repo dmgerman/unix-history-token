@@ -21,6 +21,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|arith_buf
@@ -34,6 +35,7 @@ begin_function_decl
 name|arith_t
 name|arith
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

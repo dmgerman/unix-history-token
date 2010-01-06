@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20090929_0137"
+value|"20091113_0138"
 end_define
 
 begin_expr_stmt
@@ -1294,6 +1294,13 @@ define|#
 directive|define
 name|APPLE_INTEL_MAC
 value|0x76808384
+end_define
+
+begin_define
+define|#
+directive|define
+name|APPLE_MACBOOKPRO55
+value|0xcb7910de
 end_define
 
 begin_comment
@@ -3240,6 +3247,38 @@ value|(((uint32_t)(vendor##_VENDORID)<< 16) | ((id)& 0xffff))
 end_define
 
 begin_comment
+comment|/* Cirrus Logic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CIRRUSLOGIC_VENDORID
+value|0x1013
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CS4206
+value|HDA_CODEC_CONSTRUCT(CIRRUSLOGIC, 0x4206)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CS4207
+value|HDA_CODEC_CONSTRUCT(CIRRUSLOGIC, 0x4207)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CSXXXX
+value|HDA_CODEC_CONSTRUCT(CIRRUSLOGIC, 0xffff)
+end_define
+
+begin_comment
 comment|/* Realtek */
 end_comment
 
@@ -3713,8 +3752,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_CXD9872RDK
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7661)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_STAC9872AK
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7662)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CXD9872AKD
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7664)
 end_define
 
 begin_define
@@ -4009,6 +4062,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_CX20582
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5066)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_CXXXXX
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0xffff)
 end_define
@@ -4272,6 +4332,76 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_VT1716S_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0433)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1716S_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0xa721)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1718S_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0428)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1718S_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0x4428)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1812
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0448)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1818S
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0440)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1828S
+value|HDA_CODEC_CONSTRUCT(VIA, 0x4441)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT2002P_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0438)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT2002P_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0x4438)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT2020
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0441)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_VTXXXX
 value|HDA_CODEC_CONSTRUCT(VIA, 0xffff)
 end_define
@@ -4396,6 +4526,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_INTELQ57
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x0054)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_INTELXXXX
 value|HDA_CODEC_CONSTRUCT(INTEL, 0xffff)
 end_define
@@ -4421,6 +4558,18 @@ name|hdac_codecs
 index|[]
 init|=
 block|{
+block|{
+name|HDA_CODEC_CS4206
+block|,
+literal|"Cirrus Logic CS4206"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CS4207
+block|,
+literal|"Cirrus Logic CS4207"
+block|}
+block|,
 block|{
 name|HDA_CODEC_ALC260
 block|,
@@ -4623,6 +4772,18 @@ block|{
 name|HDA_CODEC_CMI9880
 block|,
 literal|"CMedia CMI9880"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CXD9872RDK
+block|,
+literal|"Sigmatel CXD9872RD/K"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CXD9872AKD
+block|,
+literal|"Sigmatel CXD9872AKD"
 block|}
 block|,
 block|{
@@ -4950,6 +5111,12 @@ literal|"Conexant CX20561 (Hermosa)"
 block|}
 block|,
 block|{
+name|HDA_CODEC_CX20582
+block|,
+literal|"Conexant CX20582 (Pebble)"
+block|}
+block|,
+block|{
 name|HDA_CODEC_VT1708_8
 block|,
 literal|"VIA VT1708_8"
@@ -5166,6 +5333,66 @@ literal|"VIA VT1702_7"
 block|}
 block|,
 block|{
+name|HDA_CODEC_VT1716S_0
+block|,
+literal|"VIA VT1716S_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1716S_1
+block|,
+literal|"VIA VT1716S_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1718S_0
+block|,
+literal|"VIA VT1718S_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1718S_1
+block|,
+literal|"VIA VT1718S_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1812
+block|,
+literal|"VIA VT1812"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1818S
+block|,
+literal|"VIA VT1818S"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1828S
+block|,
+literal|"VIA VT1828S"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT2002P_0
+block|,
+literal|"VIA VT2002P_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT2002P_1
+block|,
+literal|"VIA VT2002P_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT2020
+block|,
+literal|"VIA VT2020"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ATIRS600_1
 block|,
 literal|"ATI RS600 HDMI"
@@ -5244,6 +5471,12 @@ literal|"Intel G45 HDMI"
 block|}
 block|,
 block|{
+name|HDA_CODEC_INTELQ57
+block|,
+literal|"Intel Q57 HDMI"
+block|}
+block|,
+block|{
 name|HDA_CODEC_SII1390
 block|,
 literal|"Silicon Image SiI1390 HDMI"
@@ -5266,6 +5499,12 @@ block|{
 name|HDA_CODEC_ADXXXX
 block|,
 literal|"Analog Devices (Unknown)"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CSXXXX
+block|,
+literal|"Cirrus Logic (Unknown)"
 block|}
 block|,
 block|{
@@ -23968,6 +24207,18 @@ block|,
 name|HDA_QUIRK_GPIO0
 operator||
 name|HDA_QUIRK_GPIO1
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|APPLE_MACBOOKPRO55
+block|,
+name|HDA_CODEC_CS4206
+block|,
+name|HDA_QUIRK_GPIO1
+operator||
+name|HDA_QUIRK_GPIO3
 block|,
 literal|0
 block|}

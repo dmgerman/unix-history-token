@@ -29,6 +29,9 @@ block|{
 comment|/* keep in sync with usb_quirk_str table */
 name|UQ_NONE
 block|,
+name|UQ_MATCH_VENDOR_ONLY
+block|,
+comment|/* Various quirks */
 name|UQ_AUDIO_SWAP_LR
 block|,
 comment|/* left and right sound channels are swapped */
@@ -98,6 +101,54 @@ comment|/* select configuration index 4 by default */
 name|UQ_CFG_INDEX_0
 block|,
 comment|/* select configuration index 0 by default */
+name|UQ_ASSUME_CM_OVER_DATA
+block|,
+comment|/* modem device breaks on cm over data */
+comment|/* USB Mass Storage Quirks. See "storage/umass.c" for a detailed description. */
+name|UQ_MSC_NO_TEST_UNIT_READY
+block|,
+name|UQ_MSC_NO_RS_CLEAR_UA
+block|,
+name|UQ_MSC_NO_START_STOP
+block|,
+name|UQ_MSC_NO_GETMAXLUN
+block|,
+name|UQ_MSC_NO_INQUIRY
+block|,
+name|UQ_MSC_NO_INQUIRY_EVPD
+block|,
+name|UQ_MSC_NO_SYNC_CACHE
+block|,
+name|UQ_MSC_SHUTTLE_INIT
+block|,
+name|UQ_MSC_ALT_IFACE_1
+block|,
+name|UQ_MSC_FLOPPY_SPEED
+block|,
+name|UQ_MSC_IGNORE_RESIDUE
+block|,
+name|UQ_MSC_WRONG_CSWSIG
+block|,
+name|UQ_MSC_RBC_PAD_TO_12
+block|,
+name|UQ_MSC_READ_CAP_OFFBY1
+block|,
+name|UQ_MSC_FORCE_SHORT_INQ
+block|,
+name|UQ_MSC_FORCE_WIRE_BBB
+block|,
+name|UQ_MSC_FORCE_WIRE_CBI
+block|,
+name|UQ_MSC_FORCE_WIRE_CBI_I
+block|,
+name|UQ_MSC_FORCE_PROTO_SCSI
+block|,
+name|UQ_MSC_FORCE_PROTO_ATAPI
+block|,
+name|UQ_MSC_FORCE_PROTO_UFI
+block|,
+name|UQ_MSC_FORCE_PROTO_RBC
+block|,
 name|USB_QUIRK_MAX
 block|}
 enum|;

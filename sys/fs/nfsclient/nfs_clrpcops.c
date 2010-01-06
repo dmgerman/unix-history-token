@@ -408,12 +408,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -440,11 +434,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * nfs null call from vfs.  */
@@ -6045,9 +6034,6 @@ argument_list|,
 name|stuff
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
 else|else
 name|error
 operator|=
@@ -6067,15 +6053,6 @@ argument_list|,
 name|stuff
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-else|else
-name|error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
@@ -10093,6 +10070,17 @@ operator|&
 name|ND_NFSV4
 condition|)
 block|{
+if|if
+condition|(
+name|vtyp
+operator|==
+name|VBLK
+operator|||
+name|vtyp
+operator|==
+name|VCHR
+condition|)
+block|{
 name|NFSM_BUILD
 argument_list|(
 name|tl
@@ -10137,6 +10125,28 @@ name|rdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|NFSM_BUILD
+argument_list|(
+name|tl
+argument_list|,
+name|u_int32_t
+operator|*
+argument_list|,
+name|NFSX_UNSIGNED
+argument_list|)
+expr_stmt|;
+operator|*
+name|tl
+operator|=
+name|vtonfsv34_type
+argument_list|(
+name|vtyp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
@@ -26154,12 +26164,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_comment
 comment|/*  * nfs getacl call.  */
 end_comment
@@ -26635,15 +26639,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NFS4_ACL_EXTATTR_NAME */
-end_comment
 
 end_unit
 

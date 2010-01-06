@@ -933,9 +933,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-parameter_list|,
-name|int
-name|link
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2364,7 +2361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A handler for network interface departure events.  * Track departure of trunks here so that we don't access invalid  * pointers or whatever if a trunk is ripped from under us, e.g.,  * by ejecting its hot-plug card.  */
+comment|/*  * A handler for network interface departure events.  * Track departure of trunks here so that we don't access invalid  * pointers or whatever if a trunk is ripped from under us, e.g.,  * by ejecting its hot-plug card.  However, if an ifnet is simply  * being renamed, then there's no need to tear down the state.  */
 end_comment
 
 begin_function
@@ -2399,6 +2396,16 @@ operator|->
 name|if_vlantrunk
 operator|==
 name|NULL
+condition|)
+return|return;
+comment|/* If the ifnet is just being renamed, don't do anything. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RENAMING
 condition|)
 return|return;
 name|VLAN_LOCK
@@ -2583,8 +2590,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2807,8 +2812,6 @@ name|ifp
 decl_stmt|;
 name|int
 name|t
-init|=
-literal|0
 decl_stmt|;
 comment|/* Check for<etherif>.<vlan> style interface names. */
 name|IFNET_RLOCK_NOSLEEP
@@ -2868,35 +2871,39 @@ if|if
 condition|(
 operator|*
 name|cp
+operator|++
 operator|!=
 literal|'.'
 condition|)
 continue|continue;
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
+name|t
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
 operator|*
 name|cp
-operator|!=
-literal|'\0'
+operator|>=
+literal|'0'
+operator|&&
+operator|*
+name|cp
+operator|<=
+literal|'9'
 condition|;
 name|cp
 operator|++
 control|)
-block|{
-if|if
-condition|(
-operator|*
-name|cp
-operator|<
-literal|'0'
-operator|||
-operator|*
-name|cp
-operator|>
-literal|'9'
-condition|)
-continue|continue;
 name|t
 operator|=
 operator|(
@@ -2912,7 +2919,14 @@ operator|-
 literal|'0'
 operator|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+operator|*
+name|cp
+operator|!=
+literal|'\0'
+condition|)
+continue|continue;
 if|if
 condition|(
 name|tag
@@ -5380,9 +5394,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-parameter_list|,
-name|int
-name|link
 parameter_list|)
 block|{
 name|struct

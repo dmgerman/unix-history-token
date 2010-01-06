@@ -8165,9 +8165,7 @@ operator|->
 name|lo_stp
 operator|&&
 operator|(
-name|lckstp
-operator|->
-name|ls_clp
+name|clp
 operator|!=
 name|lop
 operator|->

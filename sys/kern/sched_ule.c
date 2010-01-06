@@ -336,6 +336,10 @@ name|ts_ltick
 decl_stmt|;
 comment|/* Last tick that we were running on */
 name|int
+name|ts_incrtick
+decl_stmt|;
+comment|/* Last tick that we incremented on */
+name|int
 name|ts_ftick
 decl_stmt|;
 comment|/* First tick that we were running on */
@@ -3715,7 +3719,9 @@ begin_function
 specifier|static
 name|void
 name|sched_balance
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|tdq
@@ -8225,7 +8231,7 @@ name|td
 argument_list|)
 operator|||
 name|prio
-operator|<=
+operator|>=
 name|PSOCK
 condition|)
 name|td
@@ -8546,6 +8552,14 @@ operator|=
 name|ts
 operator|->
 name|ts_ltick
+expr_stmt|;
+name|ts2
+operator|->
+name|ts_incrtick
+operator|=
+name|ts
+operator|->
+name|ts_incrtick
 expr_stmt|;
 name|ts2
 operator|->
@@ -9220,7 +9234,7 @@ if|if
 condition|(
 name|ts
 operator|->
-name|ts_ltick
+name|ts_incrtick
 operator|==
 name|ticks
 condition|)
@@ -9237,6 +9251,12 @@ expr_stmt|;
 name|ts
 operator|->
 name|ts_ltick
+operator|=
+name|ticks
+expr_stmt|;
+name|ts
+operator|->
+name|ts_incrtick
 operator|=
 name|ticks
 expr_stmt|;

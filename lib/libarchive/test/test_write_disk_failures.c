@@ -85,22 +85,17 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* Force the umask to something predictable. */
-name|umask
+name|assertUmask
 argument_list|(
 name|UMASK
 argument_list|)
 expr_stmt|;
 comment|/* A directory that we can't write to. */
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|mkdir
+name|assertMakeDir
 argument_list|(
 literal|"dir"
 argument_list|,
 literal|0555
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Can we? */
@@ -113,6 +108,8 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
+operator||
+name|O_BINARY
 argument_list|,
 literal|0777
 argument_list|)

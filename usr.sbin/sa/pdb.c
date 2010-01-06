@@ -410,7 +410,9 @@ end_comment
 begin_function
 name|int
 name|pacct_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -435,7 +437,9 @@ end_function
 begin_function
 name|void
 name|pacct_destroy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|db_destroy
 argument_list|(
@@ -699,7 +703,9 @@ end_comment
 begin_function
 name|int
 name|pacct_update
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -721,7 +727,9 @@ end_function
 begin_function
 name|void
 name|pacct_print
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|BTREEINFO
 name|bti

@@ -601,6 +601,30 @@ literal|"nVidia nForce MCP61 USB Controller"
 operator|)
 return|;
 case|case
+literal|0x0aa510de
+case|:
+return|return
+operator|(
+literal|"nVidia nForce MCP79 USB Controller"
+operator|)
+return|;
+case|case
+literal|0x0aa710de
+case|:
+return|return
+operator|(
+literal|"nVidia nForce MCP79 USB Controller"
+operator|)
+return|;
+case|case
+literal|0x0aa810de
+case|:
+return|return
+operator|(
+literal|"nVidia nForce MCP79 USB Controller"
+operator|)
+return|;
+case|case
 literal|0x70011039
 case|:
 return|return

@@ -667,6 +667,10 @@ argument_list|(
 literal|"sendto"
 argument_list|)
 expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -750,6 +754,10 @@ argument_list|(
 literal|"recvfrom"
 argument_list|)
 expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -793,6 +801,10 @@ name|warn
 argument_list|(
 literal|"server port mismatch"
 argument_list|)
+expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|abort
@@ -980,10 +992,6 @@ literal|"Sent"
 argument_list|,
 name|amount
 argument_list|)
-expr_stmt|;
-name|txrx_error
-operator|=
-literal|1
 expr_stmt|;
 block|}
 end_function
@@ -1271,6 +1279,10 @@ argument_list|(
 literal|"sendto"
 argument_list|)
 expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -1351,6 +1363,10 @@ argument_list|(
 literal|"recvfrom"
 argument_list|)
 expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -1394,6 +1410,10 @@ name|warn
 argument_list|(
 literal|"server port mismatch"
 argument_list|)
+expr_stmt|;
+name|txrx_error
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|abort
@@ -1671,10 +1691,6 @@ literal|"Received"
 argument_list|,
 name|amount
 argument_list|)
-expr_stmt|;
-name|txrx_error
-operator|=
-literal|1
 expr_stmt|;
 block|}
 end_function

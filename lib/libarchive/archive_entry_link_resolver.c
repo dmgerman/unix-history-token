@@ -923,7 +923,7 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
-name|ino_t
+name|int64_t
 name|ino
 decl_stmt|;
 comment|/* Free a held entry. */
@@ -991,16 +991,21 @@ argument_list|)
 expr_stmt|;
 name|ino
 operator|=
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|entry
 argument_list|)
 expr_stmt|;
 name|hash
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|dev
 operator|^
 name|ino
+argument_list|)
 expr_stmt|;
 comment|/* Try to locate this entry in the links cache. */
 name|bucket
@@ -1052,7 +1057,7 @@ argument_list|)
 operator|&&
 name|ino
 operator|==
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|le
 operator|->
@@ -1421,7 +1426,7 @@ argument_list|(
 name|entry
 argument_list|)
 operator|^
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|entry
 argument_list|)

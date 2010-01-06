@@ -6,6 +6,23 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__LIBARCHIVE_BUILD
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|This header is only to be used internally to libarchive.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ARCHIVE_WRITE_PRIVATE_H_INCLUDED
 end_ifndef
 
@@ -45,7 +62,7 @@ comment|/* Dev/ino of the archive being written. */
 name|dev_t
 name|skip_file_dev
 decl_stmt|;
-name|ino_t
+name|int64_t
 name|skip_file_ino
 decl_stmt|;
 comment|/* Utility:  Pointer to a block of nulls. */

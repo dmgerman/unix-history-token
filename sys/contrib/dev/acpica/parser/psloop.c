@@ -190,6 +190,10 @@ specifier|static
 name|void
 name|AcpiPsLinkModuleCode
 parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ParentOp
+parameter_list|,
 name|UINT8
 modifier|*
 name|AmlStart
@@ -1412,6 +1416,12 @@ condition|)
 block|{
 name|AcpiPsLinkModuleCode
 argument_list|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|Parent
+argument_list|,
 name|AmlOpStart
 argument_list|,
 call|(
@@ -1759,7 +1769,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsLinkModuleCode  *  * PARAMETERS:  AmlStart            - Pointer to the AML  *              AmlLength           - Length of executable AML  *              OwnerId             - OwnerId of module level code  *  * RETURN:      None.  *  * DESCRIPTION: Wrap the module-level code with a method object and link the  *              object to the global list. Note, the mutex field of the method  *              object is used to link multiple module-level code objects.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsLinkModuleCode  *  * PARAMETERS:  ParentOp            - Parent parser op  *              AmlStart            - Pointer to the AML  *              AmlLength           - Length of executable AML  *              OwnerId             - OwnerId of module level code  *  * RETURN:      None.  *  * DESCRIPTION: Wrap the module-level code with a method object and link the  *              object to the global list. Note, the mutex field of the method  *              object is used to link multiple module-level code objects.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1767,6 +1777,10 @@ specifier|static
 name|void
 name|AcpiPsLinkModuleCode
 parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ParentOp
+parameter_list|,
 name|UINT8
 modifier|*
 name|AmlStart
@@ -1789,6 +1803,10 @@ decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|MethodObj
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ParentNode
 decl_stmt|;
 comment|/* Get the tail of the list */
 name|Prev
@@ -1856,6 +1874,31 @@ condition|)
 block|{
 return|return;
 block|}
+if|if
+condition|(
+name|ParentOp
+operator|->
+name|Common
+operator|.
+name|Node
+condition|)
+block|{
+name|ParentNode
+operator|=
+name|ParentOp
+operator|->
+name|Common
+operator|.
+name|Node
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ParentNode
+operator|=
+name|AcpiGbl_RootNode
+expr_stmt|;
+block|}
 name|MethodObj
 operator|->
 name|Method
@@ -1887,6 +1930,20 @@ operator|.
 name|Flags
 operator||=
 name|AOPOBJ_MODULE_LEVEL
+expr_stmt|;
+comment|/*          * Save the parent node in NextObject. This is cheating, but we          * don't want to expand the method object.          */
+name|MethodObj
+operator|->
+name|Method
+operator|.
+name|NextObject
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_OPERAND_OBJECT
+argument_list|,
+name|ParentNode
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

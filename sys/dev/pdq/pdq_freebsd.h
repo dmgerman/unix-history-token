@@ -422,6 +422,13 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
+name|struct
+name|callout
+name|watchdog
+decl_stmt|;
+name|int
+name|timer
+decl_stmt|;
 block|}
 name|pdq_softc_t
 typedef|;
@@ -445,6 +452,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_unlock(&(_sc)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDQ_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -1195,7 +1212,7 @@ comment|/*  * OS dependent functions provided by  * pdq_ifsubr.c or pdq.c to the
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|pdq_ifattach
 parameter_list|(
 name|pdq_softc_t
@@ -1204,6 +1221,9 @@ parameter_list|,
 specifier|const
 name|pdq_uint8_t
 modifier|*
+parameter_list|,
+name|pdq_type_t
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl

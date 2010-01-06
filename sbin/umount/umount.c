@@ -311,12 +311,10 @@ begin_function_decl
 name|int
 name|sacmp
 parameter_list|(
-name|struct
-name|sockaddr
+name|void
 modifier|*
 parameter_list|,
-name|struct
-name|sockaddr
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1041,7 +1039,7 @@ name|checkname
 parameter_list|(
 name|char
 modifier|*
-name|name
+name|mntname
 parameter_list|,
 name|char
 modifier|*
@@ -1083,7 +1081,7 @@ name|sfs
 operator|=
 name|checkmntlist
 argument_list|(
-name|name
+name|mntname
 argument_list|)
 expr_stmt|;
 comment|/* 	 * 2. Remove trailing slashes if there are any. After that 	 * we look up the name in the mounttable again. 	 */
@@ -1098,7 +1096,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|name
+name|mntname
 argument_list|)
 expr_stmt|;
 while|while
@@ -1107,7 +1105,7 @@ name|len
 operator|>
 literal|1
 operator|&&
-name|name
+name|mntname
 index|[
 name|len
 operator|-
@@ -1116,7 +1114,7 @@ index|]
 operator|==
 literal|'/'
 condition|)
-name|name
+name|mntname
 index|[
 operator|--
 name|len
@@ -1128,7 +1126,7 @@ name|sfs
 operator|=
 name|checkmntlist
 argument_list|(
-name|name
+name|mntname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1144,7 +1142,7 @@ name|delimp
 operator|=
 name|strrchr
 argument_list|(
-name|name
+name|mntname
 argument_list|,
 literal|'@'
 argument_list|)
@@ -1168,11 +1166,16 @@ name|delimp
 operator|+
 literal|1
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|delimp
 operator|-
-name|name
+name|mntname
+argument_list|)
 argument_list|,
-name|name
+name|mntname
 argument_list|)
 expr_stmt|;
 name|len
@@ -1225,7 +1228,7 @@ name|getmntentry
 argument_list|(
 name|NULL
 argument_list|,
-name|name
+name|mntname
 argument_list|,
 name|NULL
 argument_list|,
@@ -1238,7 +1241,7 @@ name|getmntentry
 argument_list|(
 name|NULL
 argument_list|,
-name|name
+name|mntname
 argument_list|,
 name|NULL
 argument_list|,
@@ -1253,7 +1256,7 @@ if|if
 condition|(
 name|statfs
 argument_list|(
-name|name
+name|mntname
 argument_list|,
 operator|&
 name|sfsbuf
@@ -1266,7 +1269,7 @@ name|warn
 argument_list|(
 literal|"%s: statfs"
 argument_list|,
-name|name
+name|mntname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1275,7 +1278,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|name
+name|mntname
 argument_list|,
 operator|&
 name|sb
@@ -1288,7 +1291,7 @@ name|warn
 argument_list|(
 literal|"%s: stat"
 argument_list|,
-name|name
+name|mntname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1303,7 +1306,7 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-comment|/* Check that `name' is the root directory. */
+comment|/* Check that `mntname' is the root directory. */
 name|dev
 operator|=
 name|sb
@@ -1321,7 +1324,7 @@ argument_list|)
 argument_list|,
 literal|"%s/.."
 argument_list|,
-name|name
+name|mntname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1359,7 +1362,7 @@ name|warnx
 argument_list|(
 literal|"%s: not a file system root directory"
 argument_list|,
-name|name
+name|mntname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1387,7 +1390,7 @@ name|warnx
 argument_list|(
 literal|"%s: unknown file system"
 argument_list|,
-name|name
+name|mntname
 argument_list|)
 expr_stmt|;
 return|return
@@ -2308,13 +2311,11 @@ begin_function
 name|int
 name|sacmp
 parameter_list|(
-name|struct
-name|sockaddr
+name|void
 modifier|*
 name|sa1
 parameter_list|,
-name|struct
-name|sockaddr
+name|void
 modifier|*
 name|sa2
 parameter_list|)
@@ -2331,11 +2332,25 @@ name|len
 decl_stmt|;
 if|if
 condition|(
+operator|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sa1
+operator|)
 operator|->
 name|sa_family
 operator|!=
+operator|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sa2
+operator|)
 operator|->
 name|sa_family
 condition|)
@@ -2346,7 +2361,14 @@ operator|)
 return|;
 switch|switch
 condition|(
+operator|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sa1
+operator|)
 operator|->
 name|sa_family
 condition|)
@@ -2570,7 +2592,7 @@ name|checkmntlist
 parameter_list|(
 name|char
 modifier|*
-name|name
+name|mntname
 parameter_list|)
 block|{
 name|struct
@@ -2589,7 +2611,7 @@ if|if
 condition|(
 name|parsehexfsid
 argument_list|(
-name|name
+name|mntname
 argument_list|,
 operator|&
 name|fsid
@@ -2623,7 +2645,7 @@ name|getmntentry
 argument_list|(
 name|NULL
 argument_list|,
-name|name
+name|mntname
 argument_list|,
 name|NULL
 argument_list|,
@@ -2640,7 +2662,7 @@ name|sfs
 operator|=
 name|getmntentry
 argument_list|(
-name|name
+name|mntname
 argument_list|,
 name|NULL
 argument_list|,
@@ -2956,7 +2978,9 @@ end_function
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void

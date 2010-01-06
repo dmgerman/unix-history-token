@@ -54,8 +54,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_2(sc->an_btag, sc->an_bhandle, reg, val)
+value|bus_write_2(sc->port_res, reg, val)
 end_define
 
 begin_define
@@ -67,8 +66,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_2(sc->an_btag, sc->an_bhandle, reg)
+value|bus_read_2(sc->port_res, reg)
 end_define
 
 begin_define
@@ -82,8 +80,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_1(sc->an_btag, sc->an_bhandle, reg, val)
+value|bus_write_1(sc->port_res, reg, val)
 end_define
 
 begin_define
@@ -95,8 +92,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_1(sc->an_btag, sc->an_bhandle, reg)
+value|bus_read_1(sc->port_res, reg)
 end_define
 
 begin_comment
@@ -114,8 +110,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_2(sc->an_mem_btag, sc->an_mem_bhandle, reg, val)
+value|bus_write_2(sc->mem_res, reg, val)
 end_define
 
 begin_define
@@ -127,8 +122,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_2(sc->an_mem_btag, sc->an_mem_bhandle, reg)
+value|bus_read_2(sc->mem_res, reg)
 end_define
 
 begin_define
@@ -142,8 +136,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_1(sc->an_mem_btag, sc->an_mem_bhandle, reg, val)
+value|bus_write_1(sc->mem_res, reg, val)
 end_define
 
 begin_define
@@ -155,8 +148,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_1(sc->an_mem_btag, sc->an_mem_bhandle, reg)
+value|bus_read_1(sc->mem_res, reg)
 end_define
 
 begin_comment
@@ -175,7 +167,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->an_mem_aux_btag, sc->an_mem_aux_bhandle, reg, val)
+value|bus_write_4(sc->mem_aux_res, reg, val)
 end_define
 
 begin_define
@@ -188,7 +180,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->an_mem_aux_btag, sc->an_mem_aux_bhandle, reg)
+value|bus_read_4(sc->mem_aux_res, reg)
 end_define
 
 begin_define
@@ -203,7 +195,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->an_mem_aux_btag, sc->an_mem_aux_bhandle, reg, val)
+value|bus_write_1(sc->mem_aux_res, reg, val)
 end_define
 
 begin_define
@@ -216,7 +208,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1(sc->an_mem_aux_btag, sc->an_mem_aux_bhandle, reg)
+value|bus_read_1(sc->mem_aux_res, reg)
 end_define
 
 begin_comment
@@ -1708,16 +1700,29 @@ begin_define
 define|#
 directive|define
 name|AN_TXCTL_80211
-define|\
-value|(AN_TXCTL_TXOK_INTR|AN_TXCTL_TXERR_INTR|AN_HEADERTYPE_80211|	\ 	AN_PAYLOADTYPE_LLC|AN_TXCTL_NORELEASE)
+value|(AN_HEADERTYPE_80211|AN_PAYLOADTYPE_LLC)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_TXCTL_8023
+value|(AN_HEADERTYPE_8023|AN_PAYLOADTYPE_ETHER)
+end_define
+
+begin_comment
+comment|/*  * Additions to transmit control bits for MPI350  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_TXCTL_HW
+parameter_list|(
+name|x
+parameter_list|)
 define|\
-value|(AN_TXCTL_TXOK_INTR|AN_TXCTL_TXERR_INTR|AN_HEADERTYPE_8023|	\ 	AN_PAYLOADTYPE_ETHER|AN_TXCTL_NORELEASE)
+value|( x ? (AN_TXCTL_NORELEASE) \ 	  : \ 	      (AN_TXCTL_TXOK_INTR|AN_TXCTL_TXERR_INTR|AN_TXCTL_NORELEASE) \ 	      )
 end_define
 
 begin_define
@@ -1924,21 +1929,6 @@ modifier|*
 name|irq_res
 decl_stmt|;
 comment|/* resource for irq */
-name|bus_space_handle_t
-name|an_bhandle_p
-decl_stmt|;
-name|bus_space_handle_t
-name|an_bhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|an_btag
-decl_stmt|;
-name|bus_space_handle_t
-name|an_mem_bhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|an_mem_btag
-decl_stmt|;
 name|bus_space_handle_t
 name|an_mem_aux_bhandle
 decl_stmt|;

@@ -832,10 +832,10 @@ name|u_long
 name|ierrors
 decl_stmt|;
 name|u_long
-name|collisions
+name|idrops
 decl_stmt|;
-name|short
-name|timer
+name|u_long
+name|collisions
 decl_stmt|;
 name|int
 name|drops
@@ -965,7 +965,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %5.5s %-13.13s %-17.17s %8.8s %5.5s"
+literal|" %5.5s %-13.13s %-17.17s %8.8s %5.5s %5.5s"
 argument_list|,
 literal|"Mtu"
 argument_list|,
@@ -976,6 +976,8 @@ argument_list|,
 literal|"Ipkts"
 argument_list|,
 literal|"Ierrs"
+argument_list|,
+literal|"Idrop"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1014,17 +1016,6 @@ argument_list|(
 literal|" %5s"
 argument_list|,
 literal|"Coll"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tflag
-condition|)
-name|printf
-argument_list|(
-literal|" %s"
-argument_list|,
-literal|"Time"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1275,17 +1266,17 @@ name|ifnet
 operator|.
 name|if_ierrors
 expr_stmt|;
+name|idrops
+operator|=
+name|ifnet
+operator|.
+name|if_iqdrops
+expr_stmt|;
 name|collisions
 operator|=
 name|ifnet
 operator|.
 name|if_collisions
-expr_stmt|;
-name|timer
-operator|=
-name|ifnet
-operator|.
-name|if_timer
 expr_stmt|;
 name|drops
 operator|=
@@ -2032,6 +2023,17 @@ argument_list|,
 name|link_layer
 argument_list|)
 expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|5
+argument_list|,
+name|idrops
+argument_list|,
+name|link_layer
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bflag
@@ -2097,21 +2099,6 @@ argument_list|,
 literal|5
 argument_list|,
 name|collisions
-argument_list|,
-name|link_layer
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tflag
-condition|)
-name|show_stat
-argument_list|(
-literal|"LSd"
-argument_list|,
-literal|4
-argument_list|,
-name|timer
 argument_list|,
 name|link_layer
 argument_list|)
@@ -2472,6 +2459,10 @@ name|u_long
 name|ift_ie
 decl_stmt|;
 comment|/* input errors */
+name|u_long
+name|ift_id
+decl_stmt|;
+comment|/* input drops */
 name|u_long
 name|ift_op
 decl_stmt|;
@@ -2997,11 +2988,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%10s %5s %10s %10s %5s %10s %5s"
+literal|"%10s %5s %5s %10s %10s %5s %10s %5s"
 argument_list|,
 literal|"packets"
 argument_list|,
 literal|"errs"
+argument_list|,
+literal|"idrops"
 argument_list|,
 literal|"bytes"
 argument_list|,
@@ -3120,6 +3113,23 @@ operator|-
 name|ip
 operator|->
 name|ift_ie
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|5
+argument_list|,
+name|ifnet
+operator|.
+name|if_iqdrops
+operator|-
+name|ip
+operator|->
+name|ift_id
 argument_list|,
 literal|1
 argument_list|)
@@ -3316,6 +3326,12 @@ literal|0
 expr_stmt|;
 name|sum
 operator|->
+name|ift_id
+operator|=
+literal|0
+expr_stmt|;
+name|sum
+operator|->
 name|ift_ib
 operator|=
 literal|0
@@ -3425,6 +3441,14 @@ name|if_ierrors
 expr_stmt|;
 name|sum
 operator|->
+name|ift_id
+operator|+=
+name|ifnet
+operator|.
+name|if_iqdrops
+expr_stmt|;
+name|sum
+operator|->
 name|ift_ib
 operator|+=
 name|ifnet
@@ -3523,6 +3547,23 @@ operator|-
 name|total
 operator|->
 name|ift_ie
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|show_stat
+argument_list|(
+literal|"lu"
+argument_list|,
+literal|5
+argument_list|,
+name|sum
+operator|->
+name|ift_id
+operator|-
+name|total
+operator|->
+name|ift_id
 argument_list|,
 literal|1
 argument_list|)

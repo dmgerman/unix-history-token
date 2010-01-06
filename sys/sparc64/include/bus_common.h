@@ -18,8 +18,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|INTCLR_PENDING
+value|0x000000003ULL
+end_define
+
+begin_comment
+comment|/* Interrupt queued to CPU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTCLR_RECEIVED
+value|0x000000001ULL
+end_define
+
+begin_comment
+comment|/* Interrupt received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTCLR_IDLE
+value|0x000000000ULL
+end_define
+
+begin_comment
+comment|/* Interrupt idle */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INTMAP_V
-value|0x080000000LL
+value|0x080000000ULL
 end_define
 
 begin_comment
@@ -30,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_TID_MASK
-value|0x07c000000LL
+value|0x07c000000ULL
 end_define
 
 begin_comment
@@ -48,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_IGN_MASK
-value|0x0000007c0LL
+value|0x0000007c0ULL
 end_define
 
 begin_comment
@@ -66,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_INO_MASK
-value|0x00000003fLL
+value|0x00000003fULL
 end_define
 
 begin_comment
@@ -84,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_SBUSSLOT_MASK
-value|0x000000018LL
+value|0x000000018ULL
 end_define
 
 begin_comment
@@ -95,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_PCIBUS_MASK
-value|0x000000010LL
+value|0x000000010ULL
 end_define
 
 begin_comment
@@ -106,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_PCISLOT_MASK
-value|0x00000000cLL
+value|0x00000000cULL
 end_define
 
 begin_comment
@@ -117,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_PCIINT_MASK
-value|0x000000003LL
+value|0x000000003ULL
 end_define
 
 begin_comment
@@ -128,7 +161,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_OBIO_MASK
-value|0x000000020LL
+value|0x000000020ULL
 end_define
 
 begin_comment
@@ -218,10 +251,10 @@ name|INTMAP_VEC
 parameter_list|(
 name|ign
 parameter_list|,
-name|inr
+name|ino
 parameter_list|)
 define|\
-value|((((ign)<< INTMAP_IGN_SHIFT)& INTMAP_IGN_MASK) |		\ 	((inr)& INTMAP_INR_MASK))
+value|((((ign)<< INTMAP_IGN_SHIFT)& INTMAP_IGN_MASK) |		\ 	((ino)& INTMAP_INO_MASK))
 end_define
 
 begin_comment

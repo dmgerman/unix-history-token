@@ -3567,6 +3567,7 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|!
 name|atomic_cmpset_rel_int
 argument_list|(
 operator|&
@@ -3578,8 +3579,6 @@ name|old
 argument_list|,
 name|new
 argument_list|)
-operator|==
-literal|0
 condition|)
 do|;
 name|readahead_vnlock_fail
@@ -3588,6 +3587,10 @@ name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
 argument_list|)
+expr_stmt|;
+name|vfslocked
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -3610,6 +3613,7 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|!
 name|atomic_cmpset_rel_int
 argument_list|(
 operator|&
@@ -3621,8 +3625,6 @@ name|old
 argument_list|,
 name|new
 argument_list|)
-operator|==
-literal|0
 condition|)
 do|;
 block|}

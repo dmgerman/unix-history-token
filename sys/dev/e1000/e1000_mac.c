@@ -1276,6 +1276,34 @@ name|nvm_alt_mac_addr_offset
 operator|+=
 name|E1000_ALT_MAC_ADDRESS_OFFSET_LAN1
 expr_stmt|;
+if|if
+condition|(
+name|hw
+operator|->
+name|bus
+operator|.
+name|func
+operator|==
+name|E1000_FUNC_2
+condition|)
+name|nvm_alt_mac_addr_offset
+operator|+=
+name|E1000_ALT_MAC_ADDRESS_OFFSET_LAN2
+expr_stmt|;
+if|if
+condition|(
+name|hw
+operator|->
+name|bus
+operator|.
+name|func
+operator|==
+name|E1000_FUNC_3
+condition|)
+name|nvm_alt_mac_addr_offset
+operator|+=
+name|E1000_ALT_MAC_ADDRESS_OFFSET_LAN3
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2468,32 +2496,6 @@ name|get_link_status
 operator|=
 name|FALSE
 expr_stmt|;
-if|if
-condition|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|type
-operator|==
-name|e1000_phy_82578
-condition|)
-block|{
-name|ret_val
-operator|=
-name|e1000_link_stall_workaround_hv
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* 	 * Check if there was DownShift, must be checked 	 * immediately after link-up 	 */
 name|e1000_check_downshift_generic
 argument_list|(
@@ -3270,23 +3272,7 @@ expr_stmt|;
 comment|/* 	 * In the case of the phy reset being blocked, we already have a link. 	 * We do not need to set it up again. 	 */
 if|if
 condition|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|ops
-operator|.
-name|check_reset_block
-condition|)
-if|if
-condition|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|ops
-operator|.
-name|check_reset_block
+name|e1000_check_reset_block
 argument_list|(
 name|hw
 argument_list|)
@@ -4545,7 +4531,7 @@ name|NWAY_LPAR_PAUSE
 operator|)
 condition|)
 block|{
-comment|/* 			 * Now we need to check if the user selected Rx ONLY 			 * of pause frames.  In this case, we had to advertise 			 * FULL flow control because we could not advertise RX 			 * ONLY. Hence, we must now check to see if we need to 			 * turn OFF  the TRANSMISSION of PAUSE frames. 			 */
+comment|/* 			 * Now we need to check if the user selected Rx ONLY 			 * of pause frames.  In this case, we had to advertise 			 * FULL flow control because we could not advertise Rx 			 * ONLY. Hence, we must now check to see if we need to 			 * turn OFF  the TRANSMISSION of PAUSE frames. 			 */
 if|if
 condition|(
 name|hw
@@ -6254,7 +6240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_disable_pcie_master_generic - Disables PCI-express master access  *  @hw: pointer to the HW structure  *  *  Returns 0 (E1000_SUCCESS) if successful, else returns -10  *  (-E1000_ERR_MASTER_REQUESTS_PENDING) if master disable bit has not caused  *  the master requests to be disabled.  *  *  Disables PCI-Express master access and verifies there are no pending  *  requests.  **/
+comment|/**  *  e1000_disable_pcie_master_generic - Disables PCI-express master access  *  @hw: pointer to the HW structure  *  *  Returns E1000_SUCCESS if successful, else returns -10  *  (-E1000_ERR_MASTER_REQUESTS_PENDING) if master disable bit has not caused  *  the master requests to be disabled.  *  *  Disables PCI-Express master access and verifies there are no pending  *  requests.  **/
 end_comment
 
 begin_function
@@ -6652,6 +6638,7 @@ comment|/**  *  e1000_validate_mdi_setting_generic - Verify MDI/MDIx settings  *
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_validate_mdi_setting_generic
 parameter_list|(

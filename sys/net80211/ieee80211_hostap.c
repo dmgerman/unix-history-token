@@ -5157,7 +5157,7 @@ operator|-=
 literal|4
 expr_stmt|;
 comment|/* NB: len is payload only */
-comment|/* NB: iswapoui already validated the OUI and type */
+comment|/* NB: iswpaoui already validated the OUI and type */
 name|w
 operator|=
 name|LE_READ_2

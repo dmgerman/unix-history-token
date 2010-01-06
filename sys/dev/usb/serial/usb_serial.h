@@ -45,12 +45,6 @@ directive|include
 file|<sys/fcntl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/termios.h>
-end_include
-
 begin_comment
 comment|/* Module interface related macros */
 end_comment

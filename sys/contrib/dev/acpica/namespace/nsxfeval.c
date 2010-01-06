@@ -370,7 +370,7 @@ name|Info
 operator|->
 name|PrefixNode
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Handle
 argument_list|)
@@ -931,7 +931,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartObject         - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              UserFunction        - Called when an object of "Type" is found  *              Context             - Passed to user function  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The UserFunction is called whenever an object that matches  *              the type parameter is found.  If the user function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services;  the User Function can be tailored  *              to each task, whether it is a print function, a compare  *              function, etc.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartObject         - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              PreOrderVisit       - Called during tree pre-order visit  *                                    when an object of "Type" is found  *              PostOrderVisit      - Called during tree post-order visit  *                                    when an object of "Type" is found  *              Context             - Passed to user function(s) above  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The callback function is called whenever an object that matches  *              the type parameter is found. If the callback function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services; the callback function(s) can be  *              tailored to each task, whether it is a print function,  *              a compare function, etc.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -948,7 +948,10 @@ name|UINT32
 name|MaxDepth
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|UserFunction
+name|PreOrderVisit
+parameter_list|,
+name|ACPI_WALK_CALLBACK
+name|PostOrderVisit
 parameter_list|,
 name|void
 modifier|*
@@ -984,7 +987,10 @@ operator|)
 operator|||
 operator|(
 operator|!
-name|UserFunction
+name|PreOrderVisit
+operator|&&
+operator|!
+name|PostOrderVisit
 operator|)
 condition|)
 block|{
@@ -1049,7 +1055,9 @@ name|MaxDepth
 argument_list|,
 name|ACPI_NS_WALK_UNLOCK
 argument_list|,
-name|UserFunction
+name|PreOrderVisit
+argument_list|,
+name|PostOrderVisit
 argument_list|,
 name|Context
 argument_list|,
@@ -1171,7 +1179,7 @@ return|;
 block|}
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)
@@ -1567,6 +1575,8 @@ name|ACPI_NS_WALK_UNLOCK
 argument_list|,
 name|AcpiNsGetDeviceCallback
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|Info
 argument_list|,
@@ -1665,7 +1675,7 @@ block|}
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)
@@ -1782,7 +1792,7 @@ block|}
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)
@@ -1905,7 +1915,7 @@ block|}
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)

@@ -2133,6 +2133,11 @@ argument_list|,
 name|scbid
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Determine if this transaction is still active in 		 * any FIFO.  If it is, we must flush that FIFO to 		 * the host before completing the  command. 		 */
@@ -2609,6 +2614,11 @@ argument_list|,
 name|scbid
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|hscb_ptr
@@ -2743,6 +2753,11 @@ argument_list|,
 name|scbid
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|ahd_complete_scb
@@ -2826,6 +2841,11 @@ name|ahd
 argument_list|)
 argument_list|,
 name|scbid
+argument_list|)
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4053,6 +4073,11 @@ operator|->
 name|qoutfifonext
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_dump_card_state
 argument_list|(
 name|ahd
@@ -4193,6 +4218,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s: hwerrint, %s\n"
@@ -4210,6 +4236,12 @@ operator|.
 name|errmesg
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|ahd_dump_card_state
 argument_list|(
@@ -4564,6 +4596,11 @@ comment|/*Initiate Reset*/
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|STATUS_OVERRUN
@@ -4639,6 +4676,11 @@ comment|/*Initiate Reset*/
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 case|case
@@ -4686,6 +4728,11 @@ argument_list|(
 literal|"CFG4ISTAT: Free SCB %d referenced"
 argument_list|,
 name|scbid
+argument_list|)
+expr_stmt|;
+name|AHD_FATAL_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|panic
@@ -4825,6 +4872,11 @@ name|ahd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|P_COMMAND
@@ -4881,6 +4933,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Invalid phase with no valid SCB.  "
@@ -5247,6 +5304,11 @@ argument_list|,
 name|scb
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Unexpected command phase from "
@@ -5522,6 +5584,11 @@ literal|"ahd_intr: HOST_MSG_LOOP bad "
 literal|"phase 0x%x\n"
 argument_list|,
 name|bus_phase
+argument_list|)
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Probably transitioned to bus free before 				 * we got here.  Just punt the message. 				 */
@@ -5992,6 +6059,11 @@ name|SCSISIGI
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 case|case
@@ -6042,6 +6114,11 @@ name|ahd
 argument_list|,
 name|SCSISIGI
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ahd_restart
@@ -6260,6 +6337,11 @@ argument_list|(
 name|ahd
 argument_list|,
 name|scbid
+argument_list|)
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 if|if
@@ -7070,6 +7152,11 @@ name|ahd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_reset_channel
 argument_list|(
 name|ahd
@@ -7111,6 +7198,11 @@ literal|'A'
 argument_list|,
 comment|/*Initiate Reset*/
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 block|}
@@ -7293,6 +7385,11 @@ argument_list|(
 name|ahd
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -7439,6 +7536,11 @@ name|ahd
 argument_list|)
 argument_list|,
 name|status3
+argument_list|)
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ahd_outb
@@ -7660,6 +7762,11 @@ expr_stmt|;
 name|packetized
 operator|=
 literal|0
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -8328,6 +8435,11 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_dump_card_state
 argument_list|(
 name|ahd
@@ -8369,6 +8481,11 @@ argument_list|,
 name|lqistat1
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 block|}
 name|ahd_reset_channel
 argument_list|(
@@ -8407,6 +8524,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"LQIRetry for LQICRCI_LQ to release ACK\n"
+argument_list|)
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 block|}
@@ -8450,6 +8572,11 @@ name|ahd_name
 argument_list|(
 name|ahd
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ahd_reset_channel
@@ -8693,6 +8820,11 @@ argument_list|(
 literal|"LQIRETRY for LQIPHASE_LQ\n"
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_outb
 argument_list|(
 name|ahd
@@ -8718,6 +8850,11 @@ block|{
 name|printf
 argument_list|(
 literal|"LQIRETRY for LQIPHASE_NLQ\n"
+argument_list|)
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ahd_outb
@@ -8761,6 +8898,11 @@ block|{
 name|printf
 argument_list|(
 literal|"Reseting Channel for LQI Phase error\n"
+argument_list|)
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ahd_dump_card_state
@@ -9118,6 +9260,11 @@ literal|"Probable outgoing LQ CRC error.  "
 literal|"Retrying command\n"
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 block|}
 name|scb
 operator|->
@@ -9261,6 +9408,11 @@ argument_list|(
 literal|"Unexpected PKT busfree condition\n"
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_dump_card_state
 argument_list|(
 name|ahd
@@ -9309,6 +9461,11 @@ name|ahd_name
 argument_list|(
 name|ahd
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ahd_dump_card_state
@@ -10433,6 +10590,11 @@ name|PRGMCNT
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_dump_card_state
 argument_list|(
 name|ahd
@@ -10578,6 +10740,11 @@ argument_list|,
 name|lastphase
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|scb
 operator|=
 name|NULL
@@ -10603,6 +10770,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"No SCB found during protocol violation\n"
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10639,6 +10811,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"No or incomplete CDB sent to device.\n"
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 block|}
@@ -10685,6 +10862,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"Unknown protocol violation.\n"
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ahd_dump_card_state
@@ -10737,6 +10919,11 @@ argument_list|,
 literal|'A'
 argument_list|,
 name|found
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 block|}
@@ -10843,6 +11030,11 @@ name|curphase
 argument_list|)
 operator|->
 name|phasemsg
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 block|}
@@ -11162,6 +11354,11 @@ argument_list|,
 name|first_instr
 argument_list|,
 name|seqaddr
+argument_list|)
+expr_stmt|;
+name|AHD_FATAL_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ahd_dump_card_state
@@ -15672,6 +15869,11 @@ name|ahd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd
 operator|->
 name|msgout_buf
@@ -15874,6 +16076,11 @@ argument_list|(
 literal|"Bus Device Reset Message Sent\n"
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Clear our selection hardware in advance of 		 * the busfree.  We may have an entry in the waiting 		 * Q for this target, and we don't want to go about 		 * selecting while we handle the busfree and blow it 		 * away. 		 */
 name|ahd_outb
 argument_list|(
@@ -15975,6 +16182,11 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Clear our selection hardware in advance of 		 * the busfree.  We may have an entry in the waiting 		 * Q for this target, and we don't want to go about 		 * selecting while we handle the busfree and blow it 		 * away. 		 */
 name|ahd_outb
 argument_list|(
@@ -16043,6 +16255,11 @@ argument_list|,
 name|devinfo
 operator|->
 name|target_mask
+argument_list|)
+expr_stmt|;
+name|AHD_FATAL_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|panic
@@ -21893,6 +22110,12 @@ operator|<=
 name|bootverbose
 operator|)
 condition|)
+block|{
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: %s on %c:%d. %d SCBs aborted\n"
@@ -21915,6 +22138,7 @@ argument_list|,
 name|found
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -23467,6 +23691,11 @@ name|ahd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AHD_FATAL_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 block|}
 name|ahd_outb
 argument_list|(
@@ -23987,6 +24216,11 @@ name|ahd_name
 argument_list|(
 name|ahd
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|AHD_FATAL_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 return|return
@@ -27966,6 +28200,11 @@ name|ahd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 block|}
 name|init_done
 label|:
@@ -29822,6 +30061,11 @@ name|ahd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AHD_FATAL_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -30172,6 +30416,11 @@ name|ahd_name
 argument_list|(
 name|ahd
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|AHD_FATAL_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 return|return
@@ -31269,6 +31518,11 @@ name|ahd
 argument_list|,
 name|INTSTAT
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|AHD_FATAL_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 block|}
@@ -32712,6 +32966,11 @@ name|qinfifo
 index|[
 name|qinpos
 index|]
+argument_list|)
+expr_stmt|;
+name|AHD_FATAL_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|panic
@@ -36079,6 +36338,11 @@ argument_list|(
 literal|"No packet failure found\n"
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SIU_PFC_CIU_FIELDS_INVALID
@@ -36086,6 +36350,11 @@ case|:
 name|printf
 argument_list|(
 literal|"Invalid Command IU Field\n"
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 break|break;
@@ -36097,6 +36366,11 @@ argument_list|(
 literal|"TMF not supportd\n"
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SIU_PFC_TMF_FAILED
@@ -36104,6 +36378,11 @@ case|:
 name|printf
 argument_list|(
 literal|"TMF failed\n"
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 break|break;
@@ -36115,10 +36394,20 @@ argument_list|(
 literal|"Invalid L_Q Type code\n"
 argument_list|)
 expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SIU_PFC_ILLEGAL_REQUEST
 case|:
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Illegal request\n"
@@ -41517,6 +41806,11 @@ else|:
 literal|"not "
 argument_list|)
 expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_dump_card_state
 argument_list|(
 name|ahd
@@ -42188,6 +42482,11 @@ condition|?
 literal|" again\n"
 else|:
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|AHD_UNCORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|newtimeout
@@ -44025,6 +44324,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"Lun already enabled\n"
+argument_list|)
+expr_stmt|;
+name|AHD_CORRECTABLE_ERROR
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ccb

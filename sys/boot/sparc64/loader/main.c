@@ -1190,15 +1190,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|setenv
-argument_list|(
-literal|"hw.ata.atapi_dma"
-argument_list|,
-literal|"0"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1842,6 +1833,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|dev_cleanup
+argument_list|()
+expr_stmt|;
 name|entry
 operator|=
 name|e

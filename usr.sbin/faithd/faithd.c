@@ -4087,7 +4087,9 @@ begin_function
 specifier|static
 name|void
 name|grab_myaddrs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ifaddrs
@@ -4392,7 +4394,9 @@ begin_function
 specifier|static
 name|void
 name|free_myaddrs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|myaddrs
@@ -4438,7 +4442,9 @@ begin_function
 specifier|static
 name|void
 name|update_myaddrs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|msg
@@ -4592,7 +4598,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(

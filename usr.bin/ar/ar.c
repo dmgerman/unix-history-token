@@ -1404,7 +1404,9 @@ begin_function
 specifier|static
 name|void
 name|bsdar_usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -1528,7 +1530,9 @@ begin_function
 specifier|static
 name|void
 name|ranlib_usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -1562,7 +1566,9 @@ begin_function
 specifier|static
 name|void
 name|bsdar_version
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -1589,7 +1595,9 @@ begin_function
 specifier|static
 name|void
 name|ranlib_version
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void

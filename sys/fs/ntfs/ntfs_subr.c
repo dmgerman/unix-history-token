@@ -1326,6 +1326,12 @@ name|ip
 operator|->
 name|i_number
 expr_stmt|;
+name|bn
+operator|*=
+name|ntmp
+operator|->
+name|ntm_multiplier
+expr_stmt|;
 name|error
 operator|=
 name|bread
@@ -2862,7 +2868,7 @@ block|}
 name|ddprintf
 argument_list|(
 operator|(
-literal|", len: %d"
+literal|", len: %lld"
 operator|,
 name|vap
 operator|->
@@ -7274,6 +7280,10 @@ name|ntfs_cntobn
 argument_list|(
 name|cn
 argument_list|)
+operator|*
+name|ntmp
+operator|->
+name|ntm_multiplier
 argument_list|,
 name|ntfs_cntob
 argument_list|(
@@ -7307,6 +7317,10 @@ name|ntfs_cntobn
 argument_list|(
 name|cn
 argument_list|)
+operator|*
+name|ntmp
+operator|->
+name|ntm_multiplier
 argument_list|,
 name|ntfs_cntob
 argument_list|(
@@ -7762,6 +7776,10 @@ name|ntfs_cntobn
 argument_list|(
 name|cn
 argument_list|)
+operator|*
+name|ntmp
+operator|->
+name|ntm_multiplier
 argument_list|,
 name|ntfs_cntob
 argument_list|(
@@ -8912,9 +8930,7 @@ operator|-
 literal|1
 operator|)
 operator|*
-name|ntmp
-operator|->
-name|ntm_bps
+name|NTFS_BLOCK_SIZE
 operator|!=
 name|len
 condition|)
@@ -8999,9 +9015,7 @@ operator|)
 operator|(
 name|buf
 operator|+
-name|ntmp
-operator|->
-name|ntm_bps
+name|NTFS_BLOCK_SIZE
 operator|-
 literal|2
 operator|)
@@ -9070,9 +9084,7 @@ name|caddr_t
 operator|)
 name|cfxp
 operator|+
-name|ntmp
-operator|->
-name|ntm_bps
+name|NTFS_BLOCK_SIZE
 operator|)
 expr_stmt|;
 block|}

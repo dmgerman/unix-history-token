@@ -1753,7 +1753,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"allocating control USB "
-literal|"transfers failed!\n"
+literal|"transfers failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4883,7 +4883,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no data interface!\n"
+literal|"no data interface\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4932,7 +4932,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"allocating BULK USB "
-literal|"transfers failed!\n"
+literal|"transfers failed\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -119,8 +125,15 @@ end_include
 begin_define
 define|#
 directive|define
-name|MAXLINELEN
+name|INITLINELEN
 value|(LINE_MAX + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXLINELEN
+value|((SIZE_MAX / sizeof(wchar_t)) / 2)
 end_define
 
 begin_decl_stmt
@@ -299,11 +312,11 @@ literal|0
 expr_stmt|;
 name|line1len
 operator|=
-name|MAXLINELEN
+name|INITLINELEN
 expr_stmt|;
 name|line2len
 operator|=
-name|MAXLINELEN
+name|INITLINELEN
 expr_stmt|;
 name|line1
 operator|=
@@ -714,7 +727,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ls%ls"
+literal|"%ls%ls\n"
 argument_list|,
 name|col3
 argument_list|,
@@ -750,7 +763,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ls%ls"
+literal|"%ls%ls\n"
 argument_list|,
 name|col1
 argument_list|,
@@ -779,7 +792,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ls%ls"
+literal|"%ls%ls\n"
 argument_list|,
 name|col2
 argument_list|,
@@ -824,9 +837,7 @@ name|bufpos
 operator|=
 literal|0
 expr_stmt|;
-do|do
-block|{
-if|if
+while|while
 condition|(
 operator|(
 name|ch
@@ -838,13 +849,17 @@ argument_list|)
 operator|)
 operator|!=
 name|WEOF
+operator|&&
+name|ch
+operator|!=
+literal|'\n'
 condition|)
 block|{
 if|if
 condition|(
 name|bufpos
 operator|+
-literal|2
+literal|1
 operator|>=
 operator|*
 name|buflen
@@ -857,6 +872,22 @@ operator|*
 name|buflen
 operator|*
 literal|2
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|buflen
+operator|>
+name|MAXLINELEN
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Maximum line buffer length (%zu) exceeded"
+argument_list|,
+name|MAXLINELEN
+argument_list|)
 expr_stmt|;
 name|buf
 operator|=
@@ -880,11 +911,13 @@ name|buf
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"reallocf"
+argument_list|)
+expr_stmt|;
 block|}
 name|buf
 index|[
@@ -895,27 +928,6 @@ operator|=
 name|ch
 expr_stmt|;
 block|}
-block|}
-do|while
-condition|(
-name|ch
-operator|!=
-name|WEOF
-operator|&&
-name|ch
-operator|!=
-literal|'\n'
-condition|)
-do|;
-if|if
-condition|(
-name|bufpos
-operator|+
-literal|1
-operator|!=
-operator|*
-name|buflen
-condition|)
 name|buf
 index|[
 name|bufpos
@@ -975,7 +987,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ls%ls"
+literal|"%ls%ls\n"
 argument_list|,
 name|offset
 argument_list|,
@@ -1208,7 +1220,7 @@ literal|0
 condition|)
 name|new_l1_buflen
 operator|=
-name|MAXLINELEN
+name|INITLINELEN
 expr_stmt|;
 else|else
 name|new_l1_buflen
@@ -1231,7 +1243,7 @@ literal|0
 condition|)
 name|new_l2_buflen
 operator|=
-name|MAXLINELEN
+name|INITLINELEN
 expr_stmt|;
 else|else
 name|new_l2_buflen

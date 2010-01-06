@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20091013
+value|0x20091214
 end_define
 
 begin_include
@@ -422,7 +422,10 @@ name|UINT32
 name|MaxDepth
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|UserFunction
+name|PreOrderVisit
+parameter_list|,
+name|ACPI_WALK_CALLBACK
+name|PostOrderVisit
 parameter_list|,
 name|void
 modifier|*

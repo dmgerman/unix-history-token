@@ -155,17 +155,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|tflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show i/f watchdog timers */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|Wflag
 decl_stmt|;
 end_decl_stmt

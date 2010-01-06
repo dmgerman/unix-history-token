@@ -3455,7 +3455,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|SCTP_LIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 operator|&
 name|inp

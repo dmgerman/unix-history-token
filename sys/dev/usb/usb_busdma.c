@@ -1732,7 +1732,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Page offset was not preserved!\n"
+literal|"Page offset was not preserved\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2822,7 +2822,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"Invalid parameter align = 0!\n"
+literal|"Invalid parameter align = 0\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2833,7 +2833,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"Invalid parameter size = 0!\n"
+literal|"Invalid parameter size = 0\n"
 operator|)
 argument_list|)
 expr_stmt|;

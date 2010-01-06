@@ -6032,7 +6032,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|f_print
 argument_list|(
@@ -6066,7 +6068,9 @@ begin_function
 specifier|static
 name|void
 name|options_usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|f_print
 argument_list|(

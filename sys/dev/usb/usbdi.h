@@ -35,6 +35,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|usb_attach_arg
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|usb_interface
 struct_decl|;
 end_struct_decl
@@ -434,6 +440,48 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/* USB events */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|usb_dev_configured_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|usb_device
+modifier|*
+parameter_list|,
+name|struct
+name|usb_attach_arg
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|usb_dev_configured
+argument_list|,
+name|usb_dev_configured_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * The following macros are used used to convert milliseconds into  * HZ. We use 1024 instead of 1000 milliseconds per second to save a  * full division.  */
 end_comment
 
@@ -529,9 +577,6 @@ comment|/* set by HC driver */
 name|uint16_t
 name|isoc_next
 decl_stmt|;
-name|uint16_t
-name|refcount
-decl_stmt|;
 name|uint8_t
 name|toggle_next
 range|:
@@ -559,6 +604,31 @@ name|uint8_t
 name|iface_index
 decl_stmt|;
 comment|/* not used by "default endpoint" */
+name|uint8_t
+name|refcount_alloc
+decl_stmt|;
+comment|/* allocation refcount */
+name|uint8_t
+name|refcount_bw
+decl_stmt|;
+comment|/* bandwidth refcount */
+define|#
+directive|define
+name|USB_EP_REF_MAX
+value|0x3f
+comment|/* High-Speed resource allocation (valid if "refcount_bw"> 0) */
+name|uint8_t
+name|usb_smask
+decl_stmt|;
+comment|/* USB start mask */
+name|uint8_t
+name|usb_cmask
+decl_stmt|;
+comment|/* USB complete mask */
+name|uint8_t
+name|usb_uframe
+decl_stmt|;
+comment|/* USB microframe */
 block|}
 struct|;
 end_struct
@@ -1177,6 +1247,21 @@ name|uint8_t
 name|use_generic
 decl_stmt|;
 comment|/* hint for generic drivers */
+name|uint8_t
+name|dev_state
+decl_stmt|;
+define|#
+directive|define
+name|UAA_DEV_READY
+value|0
+define|#
+directive|define
+name|UAA_DEV_DISABLED
+value|1
+define|#
+directive|define
+name|UAA_DEV_EJECTING
+value|2
 block|}
 struct|;
 end_struct

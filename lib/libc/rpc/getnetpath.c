@@ -274,9 +274,11 @@ literal|"rpc: failed to open "
 name|NETCONFIG
 argument_list|)
 expr_stmt|;
-goto|goto
-name|failed
-goto|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 name|np_sessionp
 operator|->

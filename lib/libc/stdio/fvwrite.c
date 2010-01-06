@@ -131,13 +131,9 @@ name|nldist
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|len
-operator|=
 name|uio
 operator|->
 name|uio_resid
-operator|)
 operator|==
 literal|0
 condition|)

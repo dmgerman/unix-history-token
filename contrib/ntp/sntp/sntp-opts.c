@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    *  EDIT THIS FILE WITH CAUTION  (sntp-opts.c)  *    *  It has been AutoGen-ed  Sunday August 17, 2008 at 05:27:24 AM EDT  *  From the definitions    sntp-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
+comment|/*    *  EDIT THIS FILE WITH CAUTION  (sntp-opts.c)  *    *  It has been AutoGen-ed  Tuesday December  8, 2009 at 08:14:49 AM EST  *  From the definitions    sntp-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
 end_comment
 
 begin_comment
@@ -1232,7 +1232,7 @@ name|tSCC
 name|zUsageTitle
 index|[]
 init|=
-literal|"sntp - standard SNTP program - Ver. 4.2.4p5\n\ USAGE:  %s [ -<flag> | --<name> ]...\n"
+literal|"sntp - standard SNTP program - Ver. 4.2.4p8\n\ USAGE:  %s [ -<flag> | --<name> ]...\n"
 decl_stmt|;
 name|tSCC
 name|zRcName
@@ -1257,7 +1257,7 @@ name|tSCC
 name|zBugsAddr
 index|[]
 init|=
-literal|"http://bugs.ntp.isc.org, bugs@ntp.org"
+literal|"http://bugs.ntp.org, bugs@ntp.org"
 decl_stmt|;
 define|#
 directive|define
@@ -1275,7 +1275,7 @@ index|[]
 init|=
 name|SNTP_FULL_VERSION
 decl_stmt|;
-comment|/* extracted from /usr/local/gnu/share/autogen/optcode.tpl near line 408 */
+comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 408 */
 if|#
 directive|if
 name|defined
@@ -1415,7 +1415,7 @@ name|EXIT_SUCCESS
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* extracted from /usr/local/gnu/share/autogen/optmain.tpl near line 92 */
+comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optmain.tpl near line 92 */
 if|#
 directive|if
 name|defined
@@ -1475,7 +1475,7 @@ block|}
 endif|#
 directive|endif
 comment|/* defined TEST_SNTP_OPTS */
-comment|/* extracted from /usr/local/gnu/share/autogen/optcode.tpl near line 514 */
+comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 514 */
 if|#
 directive|if
 name|ENABLE_NLS

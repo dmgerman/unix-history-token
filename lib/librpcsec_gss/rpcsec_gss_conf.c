@@ -146,7 +146,6 @@ name|mechs
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|mechs
 argument_list|)
 decl_stmt|;
@@ -205,7 +204,6 @@ name|qops
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|qops
 argument_list|)
 decl_stmt|;

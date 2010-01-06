@@ -5979,7 +5979,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"getting device descriptor "
-literal|"at addr %d failed, %s!\n"
+literal|"at addr %d failed, %s\n"
 argument_list|,
 name|udev
 operator|->
@@ -6020,7 +6020,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"addr=%d, getting device "
-literal|"descriptor failed, %s!\n"
+literal|"descriptor failed, %s\n"
 argument_list|,
 name|old_addr
 argument_list|,

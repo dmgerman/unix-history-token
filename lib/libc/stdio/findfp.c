@@ -746,7 +746,9 @@ end_expr_stmt
 begin_function
 name|void
 name|f_prealloc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|glue

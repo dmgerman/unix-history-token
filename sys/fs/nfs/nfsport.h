@@ -493,35 +493,12 @@ name|NFSSVCARGS
 value|nfssvc_args
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|NFSACL_T
 value|struct acl
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NFSACL_T
-value|void
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * These should be defined as the types used for the corresponding VOP's  * argument type.  */

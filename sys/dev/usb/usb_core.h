@@ -518,15 +518,6 @@ name|uint8_t
 name|max_packet_count
 decl_stmt|;
 name|uint8_t
-name|usb_smask
-decl_stmt|;
-name|uint8_t
-name|usb_cmask
-decl_stmt|;
-name|uint8_t
-name|usb_uframe
-decl_stmt|;
-name|uint8_t
 name|usb_state
 decl_stmt|;
 name|uint8_t

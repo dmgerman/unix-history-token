@@ -396,6 +396,8 @@ name|ACPI_NS_WALK_UNLOCK
 argument_list|,
 name|AcpiDsInitOneObject
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|Info
 argument_list|,

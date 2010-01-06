@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 The DragonFly Project.  All rights reserved.  *   * This code is derived from software contributed to The DragonFly Project  * by Sepherosa Ziehau<sepherosa@gmail.com>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of The DragonFly Project nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific, prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * $DragonFly: src/sys/dev/netif/et/if_etvar.h,v 1.4 2007/10/23 14:28:42 sephe Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007 The DragonFly Project.  All rights reserved.  *  * This code is derived from software contributed to The DragonFly Project  * by Sepherosa Ziehau<sepherosa@gmail.com>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of The DragonFly Project nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific, prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $DragonFly: src/sys/dev/netif/et/if_etvar.h,v 1.4 2007/10/23 14:28:42 sephe Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -279,7 +279,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->sc_mem_bt, (sc)->sc_mem_bh, (reg), (val))
+value|bus_write_4((sc)->sc_mem_res, (reg), (val))
 end_define
 
 begin_define
@@ -292,7 +292,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->sc_mem_bt, (sc)->sc_mem_bh, (reg))
+value|bus_read_4((sc)->sc_mem_res, (reg))
 end_define
 
 begin_define
@@ -339,37 +339,120 @@ comment|/* ET_TDCTRL2_ */
 block|}
 end_block
 
-begin_expr_stmt
-name|__packed
-expr_stmt|;
-end_expr_stmt
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
 directive|define
-name|ET_TDCTRL1_LEN
-value|__BITS(15, 0)
+name|ET_TDCTRL1_LEN_MASK
+value|0x0000FFFF
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TDCTRL2_LAST_FRAG
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TDCTRL2_FIRST_FRAG
-value|__BIT(1)
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TDCTRL2_INTR
-value|__BIT(2)
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_CTRL_WORD
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_HDX_BACKP
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_XMIT_PAUSE
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_FRAME_ERR
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_NO_CRC
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_MAC_OVRRD
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_PAD_PACKET
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_JUMBO_PACKET
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_INS_VLAN
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_CSUM_IP
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_CSUM_TCP
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TDCTRL2_CSUM_UDP
+value|0x00004000
 end_define
 
 begin_struct
@@ -387,15 +470,14 @@ name|rd_ctrl
 decl_stmt|;
 comment|/* ET_RDCTRL_ */
 block|}
-name|__packed
 struct|;
 end_struct
 
 begin_define
 define|#
 directive|define
-name|ET_RDCTRL_BUFIDX
-value|__BITS(9, 0)
+name|ET_RDCTRL_BUFIDX_MASK
+value|0x000003FF
 end_define
 
 begin_struct
@@ -410,29 +492,49 @@ name|rxst_info2
 decl_stmt|;
 comment|/* ET_RXST_INFO2_ */
 block|}
-name|__packed
 struct|;
 end_struct
 
 begin_define
 define|#
 directive|define
-name|ET_RXST_INFO2_LEN
-value|__BITS(15, 0)
+name|ET_RXST_INFO2_LEN_MASK
+value|0x0000FFFF
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_RXST_INFO2_BUFIDX
-value|__BITS(25, 16)
+name|ET_RXST_INFO2_LEN_SHIFT
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_RXST_INFO2_RINGIDX
-value|__BITS(27, 26)
+name|ET_RXST_INFO2_BUFIDX_MASK
+value|0x03FF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_RXST_INFO2_BUFIDX_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_RXST_INFO2_RINGIDX_MASK
+value|0x0C000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_RXST_INFO2_RINGIDX_SHIFT
+value|26
 end_define
 
 begin_struct
@@ -447,22 +549,28 @@ name|rxs_stat_ring
 decl_stmt|;
 comment|/* ET_RXS_STATRING_ */
 block|}
-name|__packed
 struct|;
 end_struct
 
 begin_define
 define|#
 directive|define
-name|ET_RXS_STATRING_INDEX
-value|__BITS(27, 16)
+name|ET_RXS_STATRING_INDEX_MASK
+value|0x0FFF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_RXS_STATRING_INDEX_SHIFT
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXS_STATRING_WRAP
-value|__BIT(28)
+value|0x10000000
 end_define
 
 begin_struct
@@ -750,12 +858,6 @@ decl_stmt|;
 name|device_t
 name|sc_miibus
 decl_stmt|;
-name|bus_space_handle_t
-name|sc_mem_bh
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_mem_bt
-decl_stmt|;
 name|void
 modifier|*
 name|sc_irq_handle
@@ -781,6 +883,9 @@ name|uint32_t
 name|sc_flags
 decl_stmt|;
 comment|/* ET_FLAG_ */
+name|int
+name|sc_expcap
+decl_stmt|;
 name|int
 name|sc_mem_rid
 decl_stmt|;
@@ -893,15 +998,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|ET_FLAG_PCIE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_FLAG_MSI
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
 name|ET_FLAG_TXRX_ENABLED
-value|0x1
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_FLAG_JUMBO
-value|0x2
+value|0x0200
 end_define
 
 begin_endif

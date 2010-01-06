@@ -24507,14 +24507,6 @@ name|act_flags
 expr_stmt|;
 name|chk
 operator|->
-name|addr_over
-operator|=
-name|sp
-operator|->
-name|addr_over
-expr_stmt|;
-name|chk
-operator|->
 name|whoTo
 operator|=
 name|sp
@@ -30946,6 +30938,9 @@ argument_list|,
 name|sctp_nxt_addr
 argument_list|)
 expr_stmt|;
+name|SCTP_IPI_ITERATOR_WQ_UNLOCK
+argument_list|()
+expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ADDR_WQ
@@ -30971,9 +30966,6 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
-expr_stmt|;
-name|SCTP_IPI_ITERATOR_WQ_UNLOCK
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

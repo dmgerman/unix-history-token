@@ -52,7 +52,7 @@ name|fopen
 argument_list|(
 literal|"test.tar"
 argument_list|,
-literal|"w"
+literal|"wb"
 argument_list|)
 expr_stmt|;
 name|assert
@@ -290,7 +290,7 @@ name|fopen
 argument_list|(
 literal|"test.tar"
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 expr_stmt|;
 name|assert

@@ -346,7 +346,6 @@ name|ssc_softc_list
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|ssc_softc_list
 argument_list|)
 expr_stmt|;

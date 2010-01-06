@@ -207,6 +207,11 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+operator|++
+name|a
+operator|->
+name|file_count
+expr_stmt|;
 return|return
 operator|(
 call|(

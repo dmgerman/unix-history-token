@@ -15190,7 +15190,7 @@ name|cdev
 modifier|*
 name|dev
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|vm_paddr_t
@@ -15199,6 +15199,10 @@ name|paddr
 parameter_list|,
 name|int
 name|nprot
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+name|memattr
 parameter_list|)
 block|{
 name|struct
@@ -15240,7 +15244,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("vpk mmap: %p(%08x) offset=%d\n", b, pd, offset); 	hexdump(b, HIFN_1_PUB_MEMEND, "vpk", 0);
+block|printf("vpk mmap: %p(%016llx) offset=%lld\n", b, 	    (unsigned long long)pd, offset); 	hexdump(b, HIFN_1_PUB_MEMEND, "vpk", 0);
 endif|#
 directive|endif
 if|if

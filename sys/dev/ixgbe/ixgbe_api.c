@@ -62,6 +62,11 @@ block|{
 name|s32
 name|status
 decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"ixgbe_init_shared_code"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set the mac type 	 */
 name|ixgbe_set_mac_type
 argument_list|(
@@ -168,6 +173,9 @@ case|case
 name|IXGBE_DEV_ID_82598AT
 case|:
 case|case
+name|IXGBE_DEV_ID_82598AT2
+case|:
+case|case
 name|IXGBE_DEV_ID_82598EB_CX4
 case|:
 case|case
@@ -198,7 +206,13 @@ case|case
 name|IXGBE_DEV_ID_82599_KX4
 case|:
 case|case
+name|IXGBE_DEV_ID_82599_KX4_MEZZ
+case|:
+case|case
 name|IXGBE_DEV_ID_82599_XAUI_LOM
+case|:
+case|case
+name|IXGBE_DEV_ID_82599_COMBO_BACKPLANE
 case|:
 case|case
 name|IXGBE_DEV_ID_82599_SFP
@@ -599,6 +613,55 @@ operator|(
 name|hw
 operator|,
 name|device_caps
+operator|)
+argument_list|,
+name|IXGBE_NOT_IMPLEMENTED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_get_wwn_prefix - Get alternative WWNN/WWPN prefix from the EEPROM  *  @hw: pointer to hardware structure  *  @wwnn_prefix: the alternative WWNN prefix  *  @wwpn_prefix: the alternative WWPN prefix  *  *  This function will read the EEPROM from the alternative SAN MAC address  *  block to check the support for the alternative WWNN/WWPN prefix support.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_get_wwn_prefix
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u16
+modifier|*
+name|wwnn_prefix
+parameter_list|,
+name|u16
+modifier|*
+name|wwpn_prefix
+parameter_list|)
+block|{
+return|return
+name|ixgbe_call_func
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|get_wwn_prefix
+argument_list|,
+operator|(
+name|hw
+operator|,
+name|wwnn_prefix
+operator|,
+name|wwpn_prefix
 operator|)
 argument_list|,
 name|IXGBE_NOT_IMPLEMENTED
@@ -1221,43 +1284,6 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_setup_link - Configure link settings  *  @hw: pointer to hardware structure  *  *  Configures link settings based on values in the ixgbe_hw struct.  *  Restarts the link.  Performs autonegotiation if needed.  **/
-end_comment
-
-begin_function
-name|s32
-name|ixgbe_setup_link
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|)
-block|{
-return|return
-name|ixgbe_call_func
-argument_list|(
-name|hw
-argument_list|,
-name|hw
-operator|->
-name|mac
-operator|.
-name|ops
-operator|.
-name|setup_link
-argument_list|,
-operator|(
-name|hw
-operator|)
-argument_list|,
-name|IXGBE_NOT_IMPLEMENTED
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/**  *  ixgbe_check_link - Get link and speed status  *  @hw: pointer to hardware structure  *  *  Reads the links register to determine if link is up and the current speed  **/
 end_comment
 
@@ -1312,12 +1338,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_setup_link_speed - Set link speed  *  @hw: pointer to hardware structure  *  @speed: new link speed  *  @autoneg: TRUE if autonegotiation enabled  *  *  Set the link speed and restarts the link.  **/
+comment|/**  *  ixgbe_setup_link - Set link speed  *  @hw: pointer to hardware structure  *  @speed: new link speed  *  @autoneg: TRUE if autonegotiation enabled  *  *  Configures link settings.  Restarts the link.  *  Performs autonegotiation if needed.  **/
 end_comment
 
 begin_function
 name|s32
-name|ixgbe_setup_link_speed
+name|ixgbe_setup_link
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -1345,7 +1371,7 @@ name|mac
 operator|.
 name|ops
 operator|.
-name|setup_link_speed
+name|setup_link
 argument_list|,
 operator|(
 name|hw

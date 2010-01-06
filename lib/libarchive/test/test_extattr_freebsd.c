@@ -272,7 +272,7 @@ condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"Restoring xattr to an unwritable file (broken in some versions of FreeBSD"
+literal|"Restoring xattr to an unwritable file seems to be broken on this platform"
 argument_list|)
 expr_stmt|;
 name|extattr_privilege_bug
@@ -436,26 +436,6 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|extattr_privilege_bug
-condition|)
-comment|/* If the bug is here, write_header will return warning. */
-name|assertEqualIntA
-argument_list|(
-name|a
-argument_list|,
-name|ARCHIVE_WARN
-argument_list|,
-name|archive_write_header
-argument_list|(
-name|a
-argument_list|,
-name|ae
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
 name|assertEqualIntA
 argument_list|(
 name|a
@@ -476,6 +456,24 @@ name|ae
 argument_list|)
 expr_stmt|;
 comment|/* Close the archive. */
+if|if
+condition|(
+name|extattr_privilege_bug
+condition|)
+comment|/* If the bug is here, write_close will return warning. */
+name|assertEqualIntA
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_WARN
+argument_list|,
+name|archive_write_close
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|assertEqualIntA
 argument_list|(
 name|a

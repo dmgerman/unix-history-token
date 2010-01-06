@@ -384,9 +384,9 @@ name|if_index
 decl_stmt|;
 comment|/* numeric abbreviation for this if  */
 name|short
-name|if_timer
+name|if_index_reserved
 decl_stmt|;
-comment|/* time 'til if_watchdog called */
+comment|/* spare space to grow if_index */
 name|struct
 name|ifvlantrunk
 modifier|*
@@ -494,18 +494,6 @@ parameter_list|,
 name|u_long
 parameter_list|,
 name|caddr_t
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|if_watchdog
-function_decl|)
-comment|/* timer routine */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
 parameter_list|)
 function_decl|;
 name|void
@@ -689,12 +677,6 @@ name|u_char
 name|if_alloctype
 decl_stmt|;
 comment|/* if_type at time of allocation */
-name|struct
-name|sbuf
-modifier|*
-name|if_description
-decl_stmt|;
-comment|/* interface description */
 comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
 name|char
 name|if_cspare
@@ -706,7 +688,7 @@ name|void
 modifier|*
 name|if_pspare
 index|[
-literal|7
+literal|8
 index|]
 decl_stmt|;
 name|int
@@ -2650,6 +2632,17 @@ begin_comment
 comment|/* route installed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFA_RTSELF
+value|RTF_HOST
+end_define
+
+begin_comment
+comment|/* loopback route to self installed */
+end_comment
+
 begin_comment
 comment|/* for compatibility with other BSDs */
 end_comment
@@ -3419,14 +3412,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*void	ifinit(void);*/
-end_comment
-
-begin_comment
-comment|/* declared in systm.h for main() */
-end_comment
 
 begin_function_decl
 name|int

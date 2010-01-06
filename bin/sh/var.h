@@ -360,9 +360,11 @@ begin_function_decl
 name|void
 name|setvar
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -405,6 +407,7 @@ name|char
 modifier|*
 name|lookupvar
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -416,6 +419,7 @@ name|char
 modifier|*
 name|bltinlookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -429,15 +433,6 @@ name|char
 modifier|*
 modifier|*
 name|environment
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|shprocvar
 parameter_list|(
 name|void
 parameter_list|)
@@ -532,6 +527,7 @@ begin_function_decl
 name|int
 name|unsetvar
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -542,9 +538,11 @@ begin_function_decl
 name|int
 name|setvarsafe
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

@@ -11493,6 +11493,24 @@ name|nr_pages
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
+name|dump_avail
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|dump_avail
+index|[
+literal|1
+index|]
+operator|=
+name|xen_start_info
+operator|->
+name|nr_pages
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * XXX 	 * The last chunk must contain at least one page plus the message 	 * buffer to avoid complicating other code (message buffer address 	 * calculation, etc.). 	 */

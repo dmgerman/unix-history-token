@@ -172,10 +172,6 @@ name|prec
 decl_stmt|,
 name|nsec
 decl_stmt|;
-name|prec
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|pi
@@ -280,6 +276,14 @@ name|t
 operator|=
 operator|*
 name|tp
+expr_stmt|;
+name|nsec
+operator|=
+literal|0
+expr_stmt|;
+name|prec
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|p

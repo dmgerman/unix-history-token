@@ -1275,7 +1275,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"allocating USB "
-literal|"transfers failed!\n"
+literal|"transfers failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2552,7 +2552,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"unsupported model number!\n"
+literal|"unsupported model number\n"
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -2544,27 +2544,6 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* 	 * SLIP 	 */
-block|{
-literal|"slip_mtx"
-block|,
-operator|&
-name|lock_class_mtx_sleep
-block|}
-block|,
-block|{
-literal|"slip sc_mtx"
-block|,
-operator|&
-name|lock_class_mtx_sleep
-block|}
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|,
 comment|/* 	 * netatalk 	 */
 block|{
 literal|"ddp_list_mtx"

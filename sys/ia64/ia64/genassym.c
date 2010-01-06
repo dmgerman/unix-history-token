@@ -415,7 +415,9 @@ argument_list|(
 expr|struct
 name|pcpu
 argument_list|,
-name|pc_current_pmap
+name|pc_md
+operator|.
+name|current_pmap
 argument_list|)
 argument_list|)
 expr_stmt|;

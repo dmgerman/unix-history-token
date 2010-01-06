@@ -426,6 +426,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_NONBLOCK
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 if|if
@@ -482,6 +484,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* TODO: On Windows, use GetFileInfoByHandle() here. 		 * Using Windows stat() call is badly broken, but 		 * even the stat() wrapper has problems because 		 * 'struct stat' is broken on Windows. 		 */
 if|#
 directive|if
 name|HAVE_FSTAT

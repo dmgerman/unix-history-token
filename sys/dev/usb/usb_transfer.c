@@ -750,7 +750,7 @@ operator|>
 literal|1
 argument_list|,
 operator|(
-literal|"Invalid alignment, 0x%08x!\n"
+literal|"Invalid alignment, 0x%08x\n"
 operator|,
 name|align
 operator|)
@@ -763,7 +763,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"Invalid size = 0!\n"
+literal|"Invalid size = 0\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3699,13 +3699,58 @@ condition|(
 name|buf
 condition|)
 block|{
-comment|/* 				 * Increment the endpoint refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "endpoint->refcount" if you 				 * want more information. 				 */
+comment|/* 				 * Increment the endpoint refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "endpoint->refcount_alloc" if you 				 * want more information. 				 */
+name|USB_BUS_LOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|xfer
 operator|->
 name|endpoint
 operator|->
-name|refcount
+name|refcount_alloc
+operator|>=
+name|USB_EP_REF_MAX
+condition|)
+name|parm
+operator|.
+name|err
+operator|=
+name|USB_ERR_INVAL
+expr_stmt|;
+name|xfer
+operator|->
+name|endpoint
+operator|->
+name|refcount_alloc
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|endpoint
+operator|->
+name|refcount_alloc
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"usbd_transfer_setup(): Refcount wrapped to zero\n"
+argument_list|)
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 comment|/* 				 * Whenever we set ppxfer[] then we 				 * also need to increment the 				 * "setup_refcount": 				 */
 name|info
@@ -3722,6 +3767,16 @@ operator|=
 name|xfer
 expr_stmt|;
 block|}
+comment|/* check for error */
+if|if
+condition|(
+name|parm
+operator|.
+name|err
+condition|)
+goto|goto
+name|done
+goto|;
 block|}
 if|if
 condition|(
@@ -4619,12 +4674,26 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 		 * NOTE: default endpoint does not have an 		 * interface, even if endpoint->iface_index == 0 		 */
+name|USB_BUS_LOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
 name|xfer
 operator|->
 name|endpoint
 operator|->
-name|refcount
+name|refcount_alloc
 operator|--
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 name|usb_callout_drain
 argument_list|(
@@ -4651,7 +4720,7 @@ literal|0
 argument_list|,
 operator|(
 literal|"Invalid setup "
-literal|"reference count!\n"
+literal|"reference count\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5058,7 +5127,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Length (%d) greater than "
-literal|"remaining length (%d)!\n"
+literal|"remaining length (%d)\n"
 argument_list|,
 name|len
 argument_list|,
@@ -5128,7 +5197,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Short control transfer without "
-literal|"force_short_xfer set!\n"
+literal|"force_short_xfer set\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6937,7 +7006,7 @@ name|ext_buffer
 argument_list|,
 operator|(
 literal|"Cannot offset data frame "
-literal|"when the USB buffer is external!\n"
+literal|"when the USB buffer is external\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8573,7 +8642,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"No stall handler!\n"
+literal|"No stall handler\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9016,7 +9085,7 @@ block|{
 name|panic
 argument_list|(
 literal|"%s: actual number of frames, %d, is "
-literal|"greater than initial number of frames, %d!\n"
+literal|"greater than initial number of frames, %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -9126,7 +9195,7 @@ block|{
 name|panic
 argument_list|(
 literal|"%s: actual length, %d, is greater than "
-literal|"initial length, %d!\n"
+literal|"initial length, %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -9839,7 +9908,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"could not setup default "
-literal|"USB transfer!\n"
+literal|"USB transfer\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -498,9 +498,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !TEKEN_UTF8 */
-ifndef|#
-directive|ifndef
-name|TEKEN_XTERM
+ifdef|#
+directive|ifdef
+name|TEKEN_CONS25
 name|teken_set_cons25
 argument_list|(
 operator|&
@@ -511,7 +511,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !TEKEN_XTERM */
+comment|/* TEKEN_CONS25 */
 name|tp
 operator|.
 name|tp_row

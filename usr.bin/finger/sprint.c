@@ -43,6 +43,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -94,10 +100,16 @@ directive|include
 file|<time.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_ULOG_POSIX_NAMES
+end_define
+
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|<ulog.h>
 end_include
 
 begin_include
@@ -194,7 +206,7 @@ name|printf
 argument_list|(
 literal|"%-*s %-*s%s %s\n"
 argument_list|,
-name|UT_NAMESIZE
+name|MAXLOGNAME
 argument_list|,
 literal|"Login"
 argument_list|,
@@ -334,9 +346,9 @@ name|printf
 argument_list|(
 literal|"%-*.*s %-*.*s"
 argument_list|,
-name|UT_NAMESIZE
+name|MAXLOGNAME
 argument_list|,
-name|UT_NAMESIZE
+name|MAXLOGNAME
 argument_list|,
 name|pn
 operator|->

@@ -1392,6 +1392,10 @@ name|cmd
 argument_list|,
 name|data
 argument_list|,
+name|fp
+operator|->
+name|f_flag
+argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
@@ -2980,7 +2984,7 @@ name|psc
 operator|->
 name|pts_inwait
 argument_list|,
-literal|"pts inwait"
+literal|"ptsin"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -2990,7 +2994,7 @@ name|psc
 operator|->
 name|pts_outwait
 argument_list|,
-literal|"pts outwait"
+literal|"ptsout"
 argument_list|)
 expr_stmt|;
 name|psc
@@ -3215,7 +3219,7 @@ name|psc
 operator|->
 name|pts_inwait
 argument_list|,
-literal|"pts inwait"
+literal|"ptsin"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3225,7 +3229,7 @@ name|psc
 operator|->
 name|pts_outwait
 argument_list|,
-literal|"pts outwait"
+literal|"ptsout"
 argument_list|)
 expr_stmt|;
 name|psc

@@ -147,18 +147,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signalvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -171,25 +159,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/uma.h>
 end_include
 
 begin_include
@@ -202,12 +172,6 @@ begin_include
 include|#
 directive|include
 file|<net/netisr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
 end_include
 
 begin_include
@@ -249,12 +213,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip_divert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_var.h>
 end_include
 
@@ -262,6 +220,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_fw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ipfw/ip_fw_private.h>
 end_include
 
 begin_ifdef
@@ -649,6 +613,7 @@ comment|/*  * IPPROTO_DIVERT is not in the real IP protocol number space; this  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|div_input
 parameter_list|(
@@ -721,11 +686,13 @@ name|mtag
 decl_stmt|;
 name|mtag
 operator|=
-name|m_tag_find
+name|m_tag_locate
 argument_list|(
 name|m
 argument_list|,
-name|PACKET_TAG_DIVERT
+name|MTAG_IPFW_RULE
+argument_list|,
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -737,13 +704,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no divert tag\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -895,7 +855,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Record receive interface address, if any. 	 * But only for incoming packets. 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -922,16 +881,27 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+comment|/* record matching rule, in host format */
 name|divsrc
 operator|.
 name|sin_port
 operator|=
-name|divert_cookie
-argument_list|(
+operator|(
+operator|(
+expr|struct
+name|ipfw_rule_ref
+operator|*
+operator|)
+operator|(
 name|mtag
-argument_list|)
+operator|+
+literal|1
+operator|)
+operator|)
+operator|->
+name|rulenum
 expr_stmt|;
-comment|/* record matching rule */
+comment|/* 	 * Record receive interface address, if any. 	 * But only for incoming packets. 	 */
 if|if
 condition|(
 name|incoming
@@ -1055,12 +1025,24 @@ name|nport
 operator|=
 name|htons
 argument_list|(
-operator|(
+call|(
 name|u_int16_t
-operator|)
-name|divert_info
+call|)
 argument_list|(
+operator|(
+operator|(
+expr|struct
+name|ipfw_rule_ref
+operator|*
+operator|)
+operator|(
 name|mtag
+operator|+
+literal|1
+operator|)
+operator|)
+operator|->
+name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1234,7 +1216,7 @@ modifier|*
 name|mtag
 decl_stmt|;
 name|struct
-name|divert_tag
+name|ipfw_rule_ref
 modifier|*
 name|dt
 decl_stmt|;
@@ -1282,34 +1264,39 @@ name|control
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-if|if
-condition|(
-operator|(
 name|mtag
 operator|=
-name|m_tag_find
+name|m_tag_locate
 argument_list|(
 name|m
 argument_list|,
-name|PACKET_TAG_DIVERT
+name|MTAG_IPFW_RULE
+argument_list|,
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|mtag
 operator|==
 name|NULL
 condition|)
 block|{
+comment|/* this should be normal */
 name|mtag
 operator|=
-name|m_tag_get
+name|m_tag_alloc
 argument_list|(
-name|PACKET_TAG_DIVERT
+name|MTAG_IPFW_RULE
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|divert_tag
+name|ipfw_rule_ref
 argument_list|)
 argument_list|,
 name|M_NOWAIT
@@ -1332,19 +1319,6 @@ goto|goto
 name|cantsend
 goto|;
 block|}
-name|dt
-operator|=
-operator|(
-expr|struct
-name|divert_tag
-operator|*
-operator|)
-operator|(
-name|mtag
-operator|+
-literal|1
-operator|)
-expr_stmt|;
 name|m_tag_prepend
 argument_list|(
 name|m
@@ -1353,12 +1327,11 @@ name|mtag
 argument_list|)
 expr_stmt|;
 block|}
-else|else
 name|dt
 operator|=
 operator|(
 expr|struct
-name|divert_tag
+name|ipfw_rule_ref
 operator|*
 operator|)
 operator|(
@@ -1376,13 +1349,36 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* set the starting point. We provide a non-zero slot, 		 * but a non_matching chain_id to skip that info and use 		 * the rulenum/rule_id. 		 */
 name|dt
 operator|->
-name|cookie
+name|slot
+operator|=
+literal|1
+expr_stmt|;
+comment|/* dummy, chain_id is invalid */
+name|dt
+operator|->
+name|chain_id
+operator|=
+literal|0
+expr_stmt|;
+name|dt
+operator|->
+name|rulenum
 operator|=
 name|sin
 operator|->
 name|sin_port
+operator|+
+literal|1
+expr_stmt|;
+comment|/* host format ? */
+name|dt
+operator|->
+name|rule_id
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 		 * Find receive interface with the given name, stuffed 		 * (if it exists) in the sin_zero[] field. 		 * The name is user supplied data so don't trust its size 		 * or that it is zero terminated. 		 */
 for|for
@@ -1479,7 +1475,9 @@ name|dt
 operator|->
 name|info
 operator||=
-name|IP_FW_DIVERT_OUTPUT_FLAG
+name|IPFW_IS_DIVERT
+operator||
+name|IPFW_INFO_OUT
 expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
@@ -1739,7 +1737,9 @@ name|dt
 operator|->
 name|info
 operator||=
-name|IP_FW_DIVERT_LOOPBACK_FLAG
+name|IPFW_IS_DIVERT
+operator||
+name|IPFW_INFO_IN
 expr_stmt|;
 if|if
 condition|(
@@ -2364,6 +2364,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|div_ctlinput
 parameter_list|(
@@ -3292,7 +3293,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|dummynet
+name|ipdivert
 argument_list|,
 name|ipfw
 argument_list|,

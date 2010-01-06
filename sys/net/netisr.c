@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * netisr is a packet dispatch service, allowing synchronous (directly  * dispatched) and asynchronous (deferred dispatch) processing of packets by  * registered protocol handlers.  Callers pass a protocol identifier and  * packet to netisr, along with a direct dispatch hint, and work will either  * be immediately processed with the registered handler, or passed to a  * kernel software interrupt (SWI) thread for deferred dispatch.  Callers  * will generally select one or the other based on:  *  * - Might directly dispatching a netisr handler lead to code reentrance or  *   lock recursion, such as entering the socket code from the socket code.  * - Might directly dispatching a netisr handler lead to recursive  *   processing, such as when decapsulating several wrapped layers of tunnel  *   information (IPSEC within IPSEC within ...).  *  * Maintaining ordering for protocol streams is a critical design concern.  * Enforcing ordering limits the opportunity for concurrency, but maintains  * the strong ordering requirements found in some protocols, such as TCP.  Of  * related concern is CPU affinity--it is desirable to process all data  * associated with a particular stream on the same CPU over time in order to  * avoid acquiring locks associated with the connection on different CPUs,  * keep connection data in one cache, and to generally encourage associated  * user threads to live on the same CPU as the stream.  It's also desirable  * to avoid lock migration and contention where locks are associated with  * more than one flow.  *  * netisr supports several policy variations, represented by the  * NETISR_POLICY_* constants, allowing protocols to play a varying role in  * identifying flows, assigning work to CPUs, etc.  These are described in  * detail in netisr.h.  */
+comment|/*  * netisr is a packet dispatch service, allowing synchronous (directly  * dispatched) and asynchronous (deferred dispatch) processing of packets by  * registered protocol handlers.  Callers pass a protocol identifier and  * packet to netisr, along with a direct dispatch hint, and work will either  * be immediately processed by the registered handler, or passed to a  * software interrupt (SWI) thread for deferred dispatch.  Callers will  * generally select one or the other based on:  *  * - Whether directly dispatching a netisr handler lead to code reentrance or  *   lock recursion, such as entering the socket code from the socket code.  * - Whether directly dispatching a netisr handler lead to recursive  *   processing, such as when decapsulating several wrapped layers of tunnel  *   information (IPSEC within IPSEC within ...).  *  * Maintaining ordering for protocol streams is a critical design concern.  * Enforcing ordering limits the opportunity for concurrency, but maintains  * the strong ordering requirements found in some protocols, such as TCP.  Of  * related concern is CPU affinity--it is desirable to process all data  * associated with a particular stream on the same CPU over time in order to  * avoid acquiring locks associated with the connection on different CPUs,  * keep connection data in one cache, and to generally encourage associated  * user threads to live on the same CPU as the stream.  It's also desirable  * to avoid lock migration and contention where locks are associated with  * more than one flow.  *  * netisr supports several policy variations, represented by the  * NETISR_POLICY_* constants, allowing protocols to play various roles in  * identifying flows, assigning work to CPUs, etc.  These are described in  * netisr.h.  */
 end_comment
 
 begin_include
@@ -171,7 +171,7 @@ file|<net/vnet.h>
 end_include
 
 begin_comment
-comment|/*-  * Synchronize use and modification of the registered netisr data structures;  * acquire a read lock while modifying the set of registered protocols to  * prevent partially registered or unregistered protocols from being run.  *  * The following data structures and fields are protected by this lock:  *  * - The np array, including all fields of struct netisr_proto.  * - The nws array, including all fields of struct netisr_worker.  * - The nws_array array.  *  * Note: the NETISR_LOCKING define controls whether read locks are acquired  * in packet processing paths requiring netisr registration stability.  This  * is disabled by default as it can lead to a measurable performance  * degradation even with rmlocks (3%-6% for loopback ping-pong traffic), and  * because netisr registration and unregistration is extremely rare at  * runtime.  If it becomes more common, this decision should be revisited.  *  * XXXRW: rmlocks don't support assertions.  */
+comment|/*-  * Synchronize use and modification of the registered netisr data structures;  * acquire a read lock while modifying the set of registered protocols to  * prevent partially registered or unregistered protocols from being run.  *  * The following data structures and fields are protected by this lock:  *  * - The np array, including all fields of struct netisr_proto.  * - The nws array, including all fields of struct netisr_worker.  * - The nws_array array.  *  * Note: the NETISR_LOCKING define controls whether read locks are acquired  * in packet processing paths requiring netisr registration stability.  This  * is disabled by default as it can lead to measurable performance  * degradation even with rmlocks (3%-6% for loopback ping-pong traffic), and  * because netisr registration and unregistration is extremely rare at  * runtime.  If it becomes more common, this decision should be revisited.  *  * XXXRW: rmlocks don't support assertions.  */
 end_comment
 
 begin_decl_stmt
@@ -445,7 +445,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Limit per-workstream queues to at most net.isr.maxqlimit, both for initial  * configuration and later modification using netisr_setqlimit().  */
+comment|/*  * Limit per-workstream mbuf queue limits s to at most net.isr.maxqlimit,  * both for initial configuration and later modification using  * netisr_setqlimit().  */
 end_comment
 
 begin_define
@@ -497,7 +497,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The default per-workstream queue limit for protocols that don't initialize  * the nh_qlimit field of their struct netisr_handler.  If this is set above  * netisr_maxqlimit, we truncate it to the maximum during boot.  */
+comment|/*  * The default per-workstream mbuf queue limit for protocols that don't  * initialize the nh_qlimit field of their struct netisr_handler.  If this is  * set above netisr_maxqlimit, we truncate it to the maximum during boot.  */
 end_comment
 
 begin_define
@@ -674,7 +674,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Workstreams hold a set of ordered work across each protocol, and are  * described by netisr_workstream.  Each workstream is associated with a  * worker thread, which in turn is pinned to a CPU.  Work associated with a  * workstream can be processd in other threads during direct dispatch;  * concurrent processing is prevented by the NWS_RUNNING flag, which  * indicates that a thread is already processing the work queue.  */
+comment|/*  * Workstreams hold a queue of ordered work across each protocol, and are  * described by netisr_workstream.  Each workstream is associated with a  * worker thread, which in turn is pinned to a CPU.  Work associated with a  * workstream can be processd in other threads during direct dispatch;  * concurrent processing is prevented by the NWS_RUNNING flag, which  * indicates that a thread is already processing the work queue.  It is  * important to prevent a directly dispatched packet from "skipping ahead" of  * work already in the workstream queue.  */
 end_comment
 
 begin_struct
@@ -923,7 +923,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The default implementation of -> CPU ID mapping.  *  * Non-static so that protocols can use it to map their own work to specific  * CPUs in a manner consistent to netisr for affinity purposes.  */
+comment|/*  * The default implementation of flow -> CPU ID mapping.  *  * Non-static so that protocols can use it to map their own work to specific  * CPUs in a manner consistent to netisr for affinity purposes.  */
 end_comment
 
 begin_function
@@ -1535,7 +1535,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Query the current drop counters across all workstreams for a protocol.  */
+comment|/*  * Query current drop counters across all workstreams for a protocol.  */
 end_comment
 
 begin_function
@@ -1701,7 +1701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Query the current queue limit for per-workstream queues for a protocol.  */
+comment|/*  * Query current per-workstream queue limit for a protocol.  */
 end_comment
 
 begin_function
@@ -2822,7 +2822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWI handler for netisr -- processes prackets in a set of workstreams that  * it owns, woken up by calls to NWS_SIGNAL().  If this workstream is already  * being direct dispatched, go back to sleep and wait for the dispatching  * thread to wake us up again.  */
+comment|/*  * SWI handler for netisr -- processes packets in a set of workstreams that  * it owns, woken up by calls to NWS_SIGNAL().  If this workstream is already  * being direct dispatched, go back to sleep and wait for the dispatching  * thread to wake us up again.  */
 end_comment
 
 begin_function
@@ -3139,6 +3139,7 @@ name|npwp
 operator|->
 name|nw_len
 expr_stmt|;
+comment|/* 		 * We must set the bit regardless of NWS_RUNNING, so that 		 * swi_net() keeps calling netisr_process_workstream_proto(). 		 */
 name|nwsp
 operator|->
 name|nws_pendingbits
@@ -3540,7 +3541,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dispatch a packet for netisr processing, direct dispatch permitted by  * calling context.  */
+comment|/*  * Dispatch a packet for netisr processing; direct dispatch is permitted by  * calling context.  */
 end_comment
 
 begin_function
@@ -4279,7 +4280,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"netisr2: forcing maxthreads from %d to %d\n"
+literal|"netisr_init: forcing maxthreads from %d to %d\n"
 argument_list|,
 name|netisr_maxthreads
 argument_list|,
@@ -4300,7 +4301,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"netisr2: forcing defaultqlimit from %d to %d\n"
+literal|"netisr_init: forcing defaultqlimit from %d to %d\n"
 argument_list|,
 name|netisr_defaultqlimit
 argument_list|,
@@ -4329,8 +4330,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"netisr2: forcing maxthreads to 1 and bindthreads to "
-literal|"0 for device polling\n"
+literal|"netisr_init: forcing maxthreads to 1 and "
+literal|"bindthreads to 0 for device polling\n"
 argument_list|)
 expr_stmt|;
 name|netisr_maxthreads

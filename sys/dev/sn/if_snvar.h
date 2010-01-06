@@ -30,15 +30,16 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|bus_space_tag_t
-name|bst
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
+decl_stmt|;
+name|struct
+name|callout
+name|watchdog
+decl_stmt|;
+name|int
+name|timer
 decl_stmt|;
 name|int
 name|pages_wanted
@@ -148,7 +149,7 @@ name|sc
 parameter_list|,
 name|off
 parameter_list|)
-value|(bus_space_read_1((sc)->bst, (sc)->bsh, off))
+value|(bus_read_1((sc)->port_res, off))
 end_define
 
 begin_define
@@ -160,7 +161,7 @@ name|sc
 parameter_list|,
 name|off
 parameter_list|)
-value|(bus_space_read_2((sc)->bst, (sc)->bsh, off))
+value|(bus_read_2((sc)->port_res, off))
 end_define
 
 begin_define
@@ -175,7 +176,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->bst, sc->bsh, off, val)
+value|bus_write_1((sc)->port_res, off, val)
 end_define
 
 begin_define
@@ -190,7 +191,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(sc->bst, sc->bsh, off, val)
+value|bus_write_2((sc)->port_res, off, val)
 end_define
 
 begin_define
@@ -207,7 +208,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_1(sc->bst, sc->bsh, off, addr, count)
+value|bus_write_multi_1((sc)->port_res, off, addr, count)
 end_define
 
 begin_define
@@ -224,7 +225,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_2(sc->bst, sc->bsh, off, addr, count)
+value|bus_write_multi_2((sc)->port_res, off, addr, count)
 end_define
 
 begin_define
@@ -241,7 +242,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_1(sc->bst, sc->bsh, off, addr, count)
+value|bus_read_multi_1((sc)->port_res, off, addr, count)
 end_define
 
 begin_define
@@ -258,7 +259,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_2(sc->bst, sc->bsh, off, addr, count)
+value|bus_read_multi_2((sc)->port_res, off, addr, count)
 end_define
 
 begin_define

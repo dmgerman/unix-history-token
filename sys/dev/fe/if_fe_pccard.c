@@ -1352,7 +1352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe and initialization for TDK/CONTEC PCMCIA Ethernet interface.  * by MASUI Kenji<masui@cs.titech.ac.jp>  *  * (Contec uses TDK Ethenet chip -- hosokawa)  *  * This version of fe_probe_tdk has been rewrote to handle  * *generic* PC Card implementation of Fujitsu MB8696x family.  The  * name _tdk is just for a historical reason. :-)  */
+comment|/*  * Probe and initialization for TDK/CONTEC PCMCIA Ethernet interface.  * by MASUI Kenji<masui@cs.titech.ac.jp>  *  * (Contec uses TDK Ethernet chip -- hosokawa)  *  * This version of fe_probe_tdk has been rewrote to handle  * *generic* PC Card implementation of Fujitsu MB8696x family.  The  * name _tdk is just for a historical reason. :-)  */
 end_comment
 
 begin_function

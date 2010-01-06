@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -1926,6 +1926,12 @@ decl_stmt|;
 comment|/* byteswap flag is used internally; callers need not specify */
 name|int
 name|byteswap
+range|:
+literal|1
+decl_stmt|;
+comment|/* do not mount file systems as they are extracted (private) */
+name|int
+name|nomount
 range|:
 literal|1
 decl_stmt|;

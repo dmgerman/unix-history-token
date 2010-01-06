@@ -292,6 +292,18 @@ comment|/*                                                                    */
 end_comment
 
 begin_comment
+comment|/*  2009/04/05                                                        */
+end_comment
+
+begin_comment
+comment|/*    [Add]    Support the CITIZEN T.I.C JJY-200 receiver             */
+end_comment
+
+begin_comment
+comment|/*                                                                    */
+end_comment
+
+begin_comment
 comment|/**********************************************************************/
 end_comment
 
@@ -537,6 +549,46 @@ comment|/**********************************************************************/
 end_comment
 
 begin_comment
+comment|/*                                                                    */
+end_comment
+
+begin_comment
+comment|/*  The CITIZEN T.I.C CO., LTD. JJY receiver JJY200                   */
+end_comment
+
+begin_comment
+comment|/*                                                                    */
+end_comment
+
+begin_comment
+comment|/*  Command        Response                 Remarks                   */
+end_comment
+
+begin_comment
+comment|/*  ------------   ----------------------   ---------------------     */
+end_comment
+
+begin_comment
+comment|/*                 'XX YY/MM/DD W HH:MM:SS<CR>                        */
+end_comment
+
+begin_comment
+comment|/*                                          XX: OK|NG|ER              */
+end_comment
+
+begin_comment
+comment|/*                                          W:  0(Monday)-6(Sunday)   */
+end_comment
+
+begin_comment
+comment|/*                                                                    */
+end_comment
+
+begin_comment
+comment|/**********************************************************************/
+end_comment
+
+begin_comment
 comment|/*  * Interface definitions  */
 end_comment
 
@@ -560,6 +612,50 @@ end_define
 
 begin_comment
 comment|/* uart speed (9600 baud) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEED232_TRISTATE_JJY01
+value|B9600
+end_define
+
+begin_comment
+comment|/* UART speed (9600 baud) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEED232_CDEX_JST2000
+value|B9600
+end_define
+
+begin_comment
+comment|/* UART speed (9600 baud) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEED232_ECHOKEISOKUKI_LT2000
+value|B9600
+end_define
+
+begin_comment
+comment|/* UART speed (9600 baud) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEED232_CITIZENTIC_JJY200
+value|B4800
+end_define
+
+begin_comment
+comment|/* UART speed (4800 baud) */
 end_comment
 
 begin_define
@@ -614,6 +710,10 @@ name|short
 name|linediscipline
 decl_stmt|;
 comment|/* LDISC_CLK or LDISC_RAW */
+name|char
+name|bPollFlag
+decl_stmt|;
+comment|/* Set by jjy_pool and Reset by jjy_receive */
 name|int
 name|linecount
 decl_stmt|;
@@ -685,6 +785,13 @@ define|#
 directive|define
 name|UNITTYPE_ECHOKEISOKUKI_LT2000
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNITTYPE_CITIZENTIC_JJY200
+value|4
 end_define
 
 begin_comment
@@ -796,6 +903,23 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|jjy_poll_citizentic_jjy200
+name|P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|peer
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|jjy_receive
 name|P
 argument_list|(
@@ -842,6 +966,21 @@ begin_decl_stmt
 specifier|static
 name|int
 name|jjy_receive_echokeisokuki_lt2000
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|recvbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|jjy_receive_citizentic_jjy200
 name|P
 argument_list|(
 operator|(
@@ -962,6 +1101,9 @@ decl_stmt|;
 name|short
 name|iDiscipline
 decl_stmt|;
+name|int
+name|iSpeed232
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1056,6 +1198,10 @@ name|iDiscipline
 operator|=
 name|LDISC_CLK
 expr_stmt|;
+name|iSpeed232
+operator|=
+name|SPEED232_TRISTATE_JJY01
+expr_stmt|;
 break|break ;
 case|case
 literal|2
@@ -1064,6 +1210,10 @@ name|iDiscipline
 operator|=
 name|LDISC_RAW
 expr_stmt|;
+name|iSpeed232
+operator|=
+name|SPEED232_CDEX_JST2000
+expr_stmt|;
 break|break ;
 case|case
 literal|3
@@ -1071,6 +1221,22 @@ case|:
 name|iDiscipline
 operator|=
 name|LDISC_CLK
+expr_stmt|;
+name|iSpeed232
+operator|=
+name|SPEED232_ECHOKEISOKUKI_LT2000
+expr_stmt|;
+break|break ;
+case|case
+literal|4
+case|:
+name|iDiscipline
+operator|=
+name|LDISC_CLK
+expr_stmt|;
+name|iSpeed232
+operator|=
+name|SPEED232_CITIZENTIC_JJY200
 expr_stmt|;
 break|break ;
 default|default :
@@ -1116,7 +1282,7 @@ name|refclock_open
 argument_list|(
 name|pDeviceName
 argument_list|,
-name|SPEED232
+name|iSpeed232
 argument_list|,
 name|iDiscipline
 argument_list|)
@@ -1338,6 +1504,32 @@ expr_stmt|;
 comment|/* YYMMDDWHHMMSS<ST1><ST2><ST3><ST4><CR> */
 break|break ;
 block|}
+break|break ;
+case|case
+literal|4
+case|:
+name|up
+operator|->
+name|unittype
+operator|=
+name|UNITTYPE_CITIZENTIC_JJY200
+expr_stmt|;
+name|up
+operator|->
+name|lineexpect
+operator|=
+literal|1
+expr_stmt|;
+name|up
+operator|->
+name|charexpect
+index|[
+literal|0
+index|]
+operator|=
+literal|23
+expr_stmt|;
+comment|/* 'XX YY/MM/DD W HH:MM:SS<CR> */
 break|break ;
 default|default :
 name|msyslog
@@ -1970,6 +2162,17 @@ name|rbufp
 argument_list|)
 expr_stmt|;
 break|break ;
+case|case
+name|UNITTYPE_CITIZENTIC_JJY200
+case|:
+name|rc
+operator|=
+name|jjy_receive_citizentic_jjy200
+argument_list|(
+name|rbufp
+argument_list|)
+expr_stmt|;
+break|break ;
 default|default :
 name|rc
 operator|=
@@ -2098,6 +2301,12 @@ operator|==
 literal|0
 condition|)
 return|return ;
+name|up
+operator|->
+name|bPollFlag
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|up
@@ -4112,6 +4321,398 @@ begin_comment
 comment|/**************************************************************************************************/
 end_comment
 
+begin_function
+specifier|static
+name|int
+name|jjy_receive_citizentic_jjy200
+parameter_list|(
+name|struct
+name|recvbuf
+modifier|*
+name|rbufp
+parameter_list|)
+block|{
+specifier|static
+name|char
+modifier|*
+name|sFunctionName
+init|=
+literal|"jjy_receive_citizentic_jjy200"
+decl_stmt|;
+name|struct
+name|jjyunit
+modifier|*
+name|up
+decl_stmt|;
+name|struct
+name|refclockproc
+modifier|*
+name|pp
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|peer
+decl_stmt|;
+name|char
+modifier|*
+name|pBuf
+decl_stmt|;
+name|int
+name|iLen
+decl_stmt|;
+name|int
+name|rc
+decl_stmt|;
+name|char
+name|cApostrophe
+decl_stmt|,
+name|sStatus
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|int
+name|iWeekday
+decl_stmt|;
+comment|/*      * Initialize pointers and read the timecode and timestamp      */
+name|peer
+operator|=
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|)
+name|rbufp
+operator|->
+name|recv_srcclock
+expr_stmt|;
+name|pp
+operator|=
+name|peer
+operator|->
+name|procptr
+expr_stmt|;
+name|up
+operator|=
+operator|(
+expr|struct
+name|jjyunit
+operator|*
+operator|)
+name|pp
+operator|->
+name|unitptr
+expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|linediscipline
+operator|==
+name|LDISC_RAW
+condition|)
+block|{
+name|pBuf
+operator|=
+name|up
+operator|->
+name|rawbuf
+expr_stmt|;
+name|iLen
+operator|=
+name|up
+operator|->
+name|charcount
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pBuf
+operator|=
+name|pp
+operator|->
+name|a_lastcode
+expr_stmt|;
+name|iLen
+operator|=
+name|pp
+operator|->
+name|lencode
+expr_stmt|;
+block|}
+comment|/*      * JJY-200 sends a timestamp every second.      * So, a timestamp is ignored unless it is right after polled.      */
+if|if
+condition|(
+operator|!
+name|up
+operator|->
+name|bPollFlag
+condition|)
+return|return
+literal|0
+return|;
+switch|switch
+condition|(
+name|up
+operator|->
+name|linecount
+condition|)
+block|{
+case|case
+literal|1
+case|:
+comment|/* 'XX YY/MM/DD W HH:MM:SS<CR> */
+if|if
+condition|(
+name|iLen
+operator|!=
+literal|23
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|>=
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (refclock_jjy.c) : Reply length error ( iLen=%d )\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|iLen
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+name|rc
+operator|=
+name|sscanf
+argument_list|(
+name|pBuf
+argument_list|,
+literal|"%c%2s %2d/%2d/%2d %1d %2d:%2d:%2d"
+argument_list|,
+operator|&
+name|cApostrophe
+argument_list|,
+name|sStatus
+argument_list|,
+operator|&
+name|up
+operator|->
+name|year
+argument_list|,
+operator|&
+name|up
+operator|->
+name|month
+argument_list|,
+operator|&
+name|up
+operator|->
+name|day
+argument_list|,
+operator|&
+name|iWeekday
+argument_list|,
+operator|&
+name|up
+operator|->
+name|hour
+argument_list|,
+operator|&
+name|up
+operator|->
+name|minute
+argument_list|,
+operator|&
+name|up
+operator|->
+name|second
+argument_list|)
+expr_stmt|;
+name|sStatus
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|9
+operator|||
+name|cApostrophe
+operator|!=
+literal|'\''
+operator|||
+name|strcmp
+argument_list|(
+name|sStatus
+argument_list|,
+literal|"OK"
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|up
+operator|->
+name|month
+operator|<
+literal|1
+operator|||
+name|up
+operator|->
+name|month
+operator|>
+literal|12
+operator|||
+name|up
+operator|->
+name|day
+operator|<
+literal|1
+operator|||
+name|up
+operator|->
+name|day
+operator|>
+literal|31
+operator|||
+name|iWeekday
+operator|>
+literal|6
+operator|||
+name|up
+operator|->
+name|hour
+operator|>
+literal|23
+operator|||
+name|up
+operator|->
+name|minute
+operator|>
+literal|59
+operator|||
+name|up
+operator|->
+name|second
+operator|>
+literal|60
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|>=
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (refclock_jjy.c) : Time error (rc=%d) [ %c %2s %02d %02d %02d %d %02d %02d %02d ]\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|rc
+argument_list|,
+name|cApostrophe
+argument_list|,
+name|sStatus
+argument_list|,
+name|up
+operator|->
+name|year
+argument_list|,
+name|up
+operator|->
+name|month
+argument_list|,
+name|up
+operator|->
+name|day
+argument_list|,
+name|iWeekday
+argument_list|,
+name|up
+operator|->
+name|hour
+argument_list|,
+name|up
+operator|->
+name|minute
+argument_list|,
+name|up
+operator|->
+name|second
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+name|up
+operator|->
+name|year
+operator|+=
+literal|2000
+expr_stmt|;
+name|up
+operator|->
+name|msecond
+operator|=
+literal|0
+expr_stmt|;
+break|break ;
+default|default :
+comment|/* Unexpected reply */
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**************************************************************************************************/
+end_comment
+
 begin_comment
 comment|/*  jjy_poll - called by the transmit procedure                                                   */
 end_comment
@@ -4212,6 +4813,12 @@ operator|++
 expr_stmt|;
 name|up
 operator|->
+name|bPollFlag
+operator|=
+literal|1
+expr_stmt|;
+name|up
+operator|->
 name|linecount
 operator|=
 literal|0
@@ -4261,6 +4868,17 @@ case|case
 name|UNITTYPE_ECHOKEISOKUKI_LT2000
 case|:
 name|jjy_poll_echokeisokuki_lt2000
+argument_list|(
+name|unit
+argument_list|,
+name|peer
+argument_list|)
+expr_stmt|;
+break|break ;
+case|case
+name|UNITTYPE_CITIZENTIC_JJY200
+case|:
+name|jjy_poll_citizentic_jjy200
 argument_list|(
 name|unit
 argument_list|,
@@ -4557,6 +5175,28 @@ name|CEVNT_FAULT
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/**************************************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|jjy_poll_citizentic_jjy200
+parameter_list|(
+name|int
+name|unit
+parameter_list|,
+name|struct
+name|peer
+modifier|*
+name|peer
+parameter_list|)
+block|{
+comment|/* Do nothing ( up->bPollFlag is set by the jjy_poll ) */
 block|}
 end_function
 

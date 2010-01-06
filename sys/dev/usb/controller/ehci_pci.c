@@ -616,6 +616,34 @@ return|return
 literal|"Intel 82801I (ICH9) USB 2.0 controller"
 return|;
 case|case
+literal|0x3a3a8086
+case|:
+return|return
+literal|"Intel 82801JI (ICH10) USB 2.0 controller USB-A"
+return|;
+case|case
+literal|0x3a3c8086
+case|:
+return|return
+literal|"Intel 82801JI (ICH10) USB 2.0 controller USB-B"
+return|;
+case|case
+literal|0x3b348086
+case|:
+return|return
+operator|(
+literal|"Intel PCH USB 2.0 controller USB-A"
+operator|)
+return|;
+case|case
+literal|0x3b3c8086
+case|:
+return|return
+operator|(
+literal|"Intel PCH USB 2.0 controller USB-B"
+operator|)
+return|;
+case|case
 literal|0x00e01033
 case|:
 return|return
@@ -658,6 +686,24 @@ literal|0x03f210de
 case|:
 return|return
 literal|"NVIDIA nForce MCP61 USB 2.0 controller"
+return|;
+case|case
+literal|0x0aa610de
+case|:
+return|return
+literal|"NVIDIA nForce MCP79 USB 2.0 controller"
+return|;
+case|case
+literal|0x0aa910de
+case|:
+return|return
+literal|"NVIDIA nForce MCP79 USB 2.0 controller"
+return|;
+case|case
+literal|0x0aaa10de
+case|:
+return|return
+literal|"NVIDIA nForce MCP79 USB 2.0 controller"
 return|;
 case|case
 literal|0x15621131

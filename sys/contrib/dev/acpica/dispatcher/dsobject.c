@@ -1248,7 +1248,7 @@ condition|(
 name|Arg
 condition|)
 block|{
-comment|/*          * NumElements was exhausted, but there are remaining elements in the          * PackageList. Truncate the package to NumElements.          *          * Note: technically, this is an error, from ACPI spec: "It is an error          * for NumElements to be less than the number of elements in the          * PackageList". However, we just print an error message and          * no exception is returned. This provides Windows compatibility. Some          * BIOSs will alter the NumElements on the fly, creating this type          * of ill-formed package object.          */
+comment|/*          * NumElements was exhausted, but there are remaining elements in the          * PackageList. Truncate the package to NumElements.          *          * Note: technically, this is an error, from ACPI spec: "It is an error          * for NumElements to be less than the number of elements in the          * PackageList". However, we just print a message and          * no exception is returned. This provides Windows compatibility. Some          * BIOSs will alter the NumElements on the fly, creating this type          * of ill-formed package object.          */
 while|while
 condition|(
 name|Arg
@@ -1300,12 +1300,12 @@ operator|.
 name|Next
 expr_stmt|;
 block|}
-name|ACPI_ERROR
+name|ACPI_INFO
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Package List length (0x%X) larger than NumElements count (0x%X), truncated\n"
+literal|"Actual Package length (0x%X) is larger than NumElements field (0x%X), truncated\n"
 operator|,
 name|i
 operator|,

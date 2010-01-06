@@ -116,6 +116,13 @@ define|#
 directive|define
 name|ARC_EXCESSIVE_RECONS_REWARN
 value|400
+name|struct
+name|callout
+name|sc_watchdog_timer
+decl_stmt|;
+name|int
+name|sc_timer
+decl_stmt|;
 name|u_char
 name|sc_intmask
 decl_stmt|;

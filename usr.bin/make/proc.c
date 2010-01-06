@@ -396,9 +396,9 @@ name|write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
-literal|":"
+literal|": "
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|write

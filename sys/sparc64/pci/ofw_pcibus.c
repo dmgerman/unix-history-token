@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * Copyright (c) 2000, Michael Smith<msmith@freebsd.org>  * Copyright (c) 2000, BSDi  * Copyright (c) 2003, Thomas Moestl<tmm@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * Copyright (c) 2000, Michael Smith<msmith@freebsd.org>  * Copyright (c) 2000, BSDi  * Copyright (c) 2003, Thomas Moestl<tmm@FreeBSD.org>  * Copyright (c) 2005 - 2009 Marius Strobl<marius@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -181,8 +181,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|device_probe_t
-name|ofw_pcibus_probe
+name|bus_child_pnpinfo_str_t
+name|ofw_pcibus_pnpinfo_str
 decl_stmt|;
 end_decl_stmt
 
@@ -195,8 +195,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|pci_assign_interrupt_t
-name|ofw_pcibus_assign_interrupt
+name|device_probe_t
+name|ofw_pcibus_probe
 decl_stmt|;
 end_decl_stmt
 
@@ -209,8 +209,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bus_child_pnpinfo_str_t
-name|ofw_pcibus_pnpinfo_str
+name|pci_assign_interrupt_t
+name|ofw_pcibus_assign_interrupt
 decl_stmt|;
 end_decl_stmt
 
@@ -341,7 +341,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|ofw_pcibus
 argument_list|,
@@ -354,6 +354,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_BUS
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -447,6 +449,28 @@ name|u_int
 name|func
 parameter_list|)
 block|{
+define|#
+directive|define
+name|CS_READ
+parameter_list|(
+name|n
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|PCIB_READ_CONFIG(bridge, busno, slot, func, (n), (w))
+define|#
+directive|define
+name|CS_WRITE
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|PCIB_WRITE_CONFIG(bridge, busno, slot, func, (n), (v), (w))
 ifndef|#
 directive|ifndef
 name|SUN4V
@@ -457,16 +481,8 @@ comment|/* 	 * Initialize the latency timer register for busmaster devices to 	 
 if|if
 condition|(
 operator|(
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_HDRTYPE
 argument_list|,
 literal|1
@@ -480,16 +496,8 @@ condition|)
 block|{
 name|reg
 operator|=
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_BRIDGECTL_1
 argument_list|,
 literal|1
@@ -518,16 +526,8 @@ name|slot
 argument_list|,
 name|func
 argument_list|,
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_BRIDGECTL_1
 argument_list|,
 literal|1
@@ -539,16 +539,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* OFW_PCI_DEBUG */
-name|PCIB_WRITE_CONFIG
+name|CS_WRITE
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_BRIDGECTL_1
 argument_list|,
 name|reg
@@ -575,16 +567,8 @@ name|slot
 argument_list|,
 name|func
 argument_list|,
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_SECLAT_1
 argument_list|,
 literal|1
@@ -596,16 +580,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* OFW_PCI_DEBUG */
-name|PCIB_WRITE_CONFIG
+name|CS_WRITE
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_SECLAT_1
 argument_list|,
 name|reg
@@ -618,16 +594,8 @@ else|else
 block|{
 name|reg
 operator|=
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_MINGNT
 argument_list|,
 literal|1
@@ -693,16 +661,8 @@ name|slot
 argument_list|,
 name|func
 argument_list|,
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_LATTIMER
 argument_list|,
 literal|1
@@ -714,16 +674,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* OFW_PCI_DEBUG */
-name|PCIB_WRITE_CONFIG
+name|CS_WRITE
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_LATTIMER
 argument_list|,
 name|reg
@@ -732,16 +684,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute a value to write into the cache line size register. 	 * The role of the streaming cache is unclear in write invalidate 	 * transfers, so it is made sure that it's line size is always 	 * reached.  Generally, the cache line size is fixed at 64 bytes 	 * by Fireplane/Safari, JBus and UPA. 	 */
-name|PCIB_WRITE_CONFIG
+name|CS_WRITE
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_CACHELNSZ
 argument_list|,
 name|STRBUF_LINESZ
@@ -756,17 +700,48 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * The preset in the intline register is usually wrong.  Reset 	 * it to 255, so that the PCI code will reroute the interrupt if 	 * needed. 	 */
-name|PCIB_WRITE_CONFIG
+comment|/* 	 * Ensure that ALi M5229 report the actual content of PCIR_PROGIF 	 * and that IDE I/O is force enabled.  The former is done in order 	 * to have unique behavior across revisions as some default to 	 * hiding bits 4-6 for compliance with PCI 2.3.  The latter is done 	 * as at least revision 0xc8 requires the PCIM_CMD_PORTEN bypass 	 * to be always enabled as otherwise even enabling PCIM_CMD_PORTEN 	 * results in an instant data access trap on Fire-based machines. 	 * Thus these quirks have to be handled before pci(4) adds the maps. 	 * Note that for older revisions bit 0 of register 0x50 enables the 	 * internal IDE function instead of force enabling IDE I/O. 	 */
+if|if
+condition|(
+operator|(
+name|CS_READ
 argument_list|(
-name|bridge
+name|PCIR_VENDOR
 argument_list|,
-name|busno
+literal|2
+argument_list|)
+operator|==
+literal|0x10b9
+operator|&&
+name|CS_READ
+argument_list|(
+name|PCIR_DEVICE
 argument_list|,
-name|slot
+literal|2
+argument_list|)
+operator|==
+literal|0x5229
+operator|)
+condition|)
+name|CS_WRITE
+argument_list|(
+literal|0x50
 argument_list|,
-name|func
+name|CS_READ
+argument_list|(
+literal|0x50
 argument_list|,
+literal|1
+argument_list|)
+operator||
+literal|0x3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 	 * The preset in the intline register is usually wrong.  Reset 	 * it to 255, so that the PCI code will reroute the interrupt if 	 * needed. 	 */
+name|CS_WRITE
+argument_list|(
 name|PCIR_INTLINE
 argument_list|,
 name|PCI_INVALID_IRQ
@@ -774,6 +749,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|CS_READ
+undef|#
+directive|undef
+name|CS_WRITE
 block|}
 end_function
 
@@ -858,10 +839,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SUN4V
-comment|/* Add the PCI side of the HOST-PCI bridge itself to the bus. */
+comment|/* 	 * Add the PCI side of the host-PCI bridge itself to the bus. 	 * Note that we exclude the host-PCIe bridges here as these 	 * have no configuration space implemented themselves. 	 */
 if|if
 condition|(
 name|strcmp
@@ -877,6 +855,25 @@ argument_list|,
 literal|"nexus"
 argument_list|)
 operator|==
+literal|0
+operator|&&
+name|ofw_bus_get_type
+argument_list|(
+name|pcib
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|ofw_bus_get_type
+argument_list|(
+name|pcib
+argument_list|)
+argument_list|,
+name|OFW_TYPE_PCIE
+argument_list|)
+operator|!=
 literal|0
 operator|&&
 operator|(
@@ -948,8 +945,6 @@ name|dinfo
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|OF_getprop

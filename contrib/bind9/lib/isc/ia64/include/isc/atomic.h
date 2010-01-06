@@ -98,7 +98,7 @@ name|val
 expr_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 			"mov ar.ccv=%2;" 			"cmpxchg4.acq %0=%4,%3,ar.ccv" 			: "=r" (swapped), "=m" (*p) 			: "r" (prev), "r" (swapped), "m" (*p) 			: "memory");
+asm|( 			"mov ar.ccv=%2;;" 			"cmpxchg4.acq %0=%4,%3,ar.ccv" 			: "=r" (swapped), "=m" (*p) 			: "r" (prev), "r" (swapped), "m" (*p) 			: "memory");
 if|if
 condition|(
 name|swapped
@@ -187,7 +187,7 @@ name|ret
 decl_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 		"mov ar.ccv=%2;" 		"cmpxchg4.acq %0=%4,%3,ar.ccv" 		: "=r" (ret), "=m" (*p) 		: "r" (cmpval), "r" (val), "m" (*p) 		: "memory");
+asm|( 		"mov ar.ccv=%2;;" 		"cmpxchg4.acq %0=%4,%3,ar.ccv" 		: "=r" (ret), "=m" (*p) 		: "r" (cmpval), "r" (val), "m" (*p) 		: "memory");
 return|return
 operator|(
 name|ret

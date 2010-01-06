@@ -1010,7 +1010,7 @@ name|snd_pcm_syncgroups
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|head
+name|snd_pcm_syncgroups
 argument_list|)
 decl_stmt|;
 end_decl_stmt

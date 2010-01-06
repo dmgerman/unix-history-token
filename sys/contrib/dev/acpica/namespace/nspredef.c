@@ -455,7 +455,7 @@ name|Pathname
 operator|=
 name|Pathname
 expr_stmt|;
-comment|/*      * Check that the type of the return object is what is expected for      * this predefined name      */
+comment|/*      * Check that the type of the main return object is what is expected      * for this predefined name      */
 name|Status
 operator|=
 name|AcpiNsCheckObjectType
@@ -482,13 +482,16 @@ argument_list|)
 condition|)
 block|{
 goto|goto
-name|CheckValidationStatus
+name|Exit
 goto|;
 block|}
-comment|/* For returned Package objects, check the type of all sub-objects */
+comment|/*      * For returned Package objects, check the type of all sub-objects.      * Note: Package may have been newly created by call above.      */
 if|if
 condition|(
-name|ReturnObject
+operator|(
+operator|*
+name|ReturnObjectPtr
+operator|)
 operator|->
 name|Common
 operator|.
@@ -506,8 +509,34 @@ argument_list|,
 name|ReturnObjectPtr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|Exit
+goto|;
 block|}
-name|CheckValidationStatus
+block|}
+comment|/*      * The return object was OK, or it was successfully repaired above.      * Now make some additional checks such as verifying that package      * objects are sorted correctly (if required) or buffer objects have      * the correct data width (bytes vs. dwords). These repairs are      * performed on a per-name basis, i.e., the code is specific to      * particular predefined names.      */
+name|Status
+operator|=
+name|AcpiNsComplexRepairs
+argument_list|(
+name|Data
+argument_list|,
+name|Node
+argument_list|,
+name|Status
+argument_list|,
+name|ReturnObjectPtr
+argument_list|)
+expr_stmt|;
+name|Exit
 label|:
 comment|/*      * If the object validation failed or if we successfully repaired one      * or more objects, mark the parent node to suppress further warning      * messages during the next evaluation of the same method/object.      */
 if|if
@@ -974,6 +1003,20 @@ name|Count
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*      * For variable-length Packages, we can safely remove all embedded      * and trailing NULL package elements      */
+name|AcpiNsRemoveNullElements
+argument_list|(
+name|Data
+argument_list|,
+name|Package
+operator|->
+name|RetInfo
+operator|.
+name|Type
+argument_list|,
+name|ReturnObject
+argument_list|)
+expr_stmt|;
 comment|/* Extract package count and elements array */
 name|Elements
 operator|=
@@ -1068,21 +1111,17 @@ operator|>
 name|ExpectedCount
 condition|)
 block|{
-name|ACPI_WARN_PREDEFINED
+name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|AE_INFO
+name|ACPI_DB_REPAIR
+operator|,
+literal|"%s: Return Package is larger than needed - "
+literal|"found %u, expected %u\n"
 operator|,
 name|Data
 operator|->
 name|Pathname
-operator|,
-name|Data
-operator|->
-name|NodeFlags
-operator|,
-literal|"Return Package is larger than needed - "
-literal|"found %u, expected %u"
 operator|,
 name|Count
 operator|,
@@ -1453,6 +1492,10 @@ case|:
 comment|/*          * These types all return a single Package that consists of a          * variable number of sub-Packages.          *          * First, ensure that the first element is a sub-Package. If not,          * the BIOS may have incorrectly returned the object as a single          * package instead of a Package of Packages (a common error if          * there is only one entry). We may be able to repair this by          * wrapping the returned Package with a new outer Package.          */
 if|if
 condition|(
+operator|*
+name|Elements
+operator|&&
+operator|(
 operator|(
 operator|*
 name|Elements
@@ -1463,6 +1506,7 @@ operator|.
 name|Type
 operator|!=
 name|ACPI_TYPE_PACKAGE
+operator|)
 condition|)
 block|{
 comment|/* Create the new outer package and populate it */
@@ -1639,7 +1683,7 @@ decl_stmt|;
 name|UINT32
 name|j
 decl_stmt|;
-comment|/* Validate each sub-Package in the parent Package */
+comment|/*      * Validate each sub-Package in the parent Package      *      * NOTE: assumes list of sub-packages contains no NULL elements.      * Any NULL elements should have been removed by earlier call      * to AcpiNsRemoveNullElements.      */
 for|for
 control|(
 name|i

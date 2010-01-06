@@ -1018,10 +1018,6 @@ name|struct
 name|ypmatch_ent
 modifier|*
 name|c
-init|=
-name|ypdb
-operator|->
-name|cache
 decl_stmt|;
 name|ypmatch_cache_expire
 argument_list|(

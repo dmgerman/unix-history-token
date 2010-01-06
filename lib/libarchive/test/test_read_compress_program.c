@@ -236,11 +236,6 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|extprog
-decl_stmt|;
 comment|/* 	 * First, test handling when a non-existent compression 	 * program is requested. 	 */
 name|assert
 argument_list|(
@@ -303,7 +298,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-name|ARCHIVE_OK
+name|ARCHIVE_FATAL
 argument_list|,
 name|archive_read_open_memory
 argument_list|(
@@ -322,22 +317,7 @@ name|assertEqualIntA
 argument_list|(
 name|a
 argument_list|,
-name|ARCHIVE_FATAL
-argument_list|,
-name|archive_read_next_header
-argument_list|(
-name|a
-argument_list|,
-operator|&
-name|ae
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|assertEqualIntA
-argument_list|(
-name|a
-argument_list|,
-name|ARCHIVE_WARN
+name|ARCHIVE_OK
 argument_list|,
 name|archive_read_close
 argument_list|(
@@ -358,22 +338,14 @@ expr_stmt|;
 comment|/* 	 * If we have "gzip -d", try using that. 	 */
 if|if
 condition|(
-operator|(
-name|extprog
-operator|=
-name|external_gzip_program
-argument_list|(
-literal|1
-argument_list|)
-operator|)
-operator|==
-name|NULL
+operator|!
+name|canGunzip
+argument_list|()
 condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"There is no gzip uncompression "
-literal|"program in this platform"
+literal|"Can't run gunzip program on this platform"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -412,7 +384,7 @@ name|archive_read_support_compression_program
 argument_list|(
 name|a
 argument_list|,
-name|extprog
+literal|"gunzip"
 argument_list|)
 argument_list|)
 expr_stmt|;

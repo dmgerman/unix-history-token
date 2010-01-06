@@ -500,6 +500,10 @@ name|i
 operator|=
 literal|0
 init|;
+name|i
+operator|<
+name|DRLSTSIZ
+operator|&&
 name|dr
 operator|.
 name|defrouter
@@ -508,10 +512,6 @@ name|i
 index|]
 operator|.
 name|if_index
-operator|&&
-name|i
-operator|<
-name|PRLSTSIZ
 condition|;
 name|i
 operator|++

@@ -3361,6 +3361,14 @@ literal|8192
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p_opt
+operator|&&
+operator|!
+name|q_opt
+condition|)
 name|printf
 argument_list|(
 literal|"Archive:  %s\n"

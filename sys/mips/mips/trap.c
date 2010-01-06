@@ -2017,9 +2017,6 @@ name|rv
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|flag
-decl_stmt|;
 name|vm
 operator|=
 name|p
@@ -2053,27 +2050,9 @@ operator|)
 name|trapframe
 operator|->
 name|badvaddr
-operator|<
+operator|>=
 name|VM_MIN_KERNEL_ADDRESS
 condition|)
-block|{
-if|if
-condition|(
-name|ftype
-operator|&
-name|VM_PROT_WRITE
-condition|)
-name|flag
-operator|=
-name|VM_FAULT_DIRTY
-expr_stmt|;
-else|else
-name|flag
-operator|=
-name|VM_FAULT_NORMAL
-expr_stmt|;
-block|}
-else|else
 block|{
 comment|/* 				 * Don't allow user-mode faults in kernel 				 * address space. 				 */
 goto|goto
@@ -2106,7 +2085,7 @@ name|va
 argument_list|,
 name|ftype
 argument_list|,
-name|flag
+name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -2146,7 +2125,7 @@ name|badvaddr
 argument_list|,
 name|ftype
 argument_list|,
-name|flag
+name|VM_FAULT_NORMAL
 argument_list|,
 name|rv
 argument_list|,

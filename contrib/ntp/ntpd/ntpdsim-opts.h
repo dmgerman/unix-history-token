@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpdsim-opts.h)  *    *  It has been AutoGen-ed  Sunday August 17, 2008 at 05:20:13 AM EDT  *  From the definitions    ntpdsim-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
+comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpdsim-opts.h)  *    *  It has been AutoGen-ed  Tuesday December  8, 2009 at 08:13:12 AM EST  *  From the definitions    ntpdsim-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
 end_comment
 
 begin_comment
-comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This header file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntpdsim author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntpdsim copyright 1970-2008 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
+comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This header file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntpdsim author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntpdsim copyright 1970-2009 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
 end_comment
 
 begin_comment
@@ -265,14 +265,14 @@ begin_define
 define|#
 directive|define
 name|NTPDSIM_VERSION
-value|"4.2.4p5"
+value|"4.2.4p8"
 end_define
 
 begin_define
 define|#
 directive|define
 name|NTPDSIM_FULL_VERSION
-value|"ntpdsim - NTP daemon simulation program - Ver. 4.2.4p5"
+value|"ntpdsim - NTP daemon simulation program - Ver. 4.2.4p8"
 end_define
 
 begin_comment
@@ -1953,7 +1953,7 @@ value|(*ntpdsimOptions.pUsageProc)(&ntpdsimOptions, c )
 end_define
 
 begin_comment
-comment|/* extracted from /usr/local/gnu/share/autogen/opthead.tpl near line 360 */
+comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/opthead.tpl near line 360 */
 end_comment
 
 begin_comment

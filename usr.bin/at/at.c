@@ -766,7 +766,9 @@ begin_function
 specifier|static
 name|long
 name|nextjob
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|long
 name|jobno

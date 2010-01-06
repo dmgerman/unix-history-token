@@ -372,7 +372,7 @@ name|LIST_HEAD_INITIALIZER
 argument_list|(
 name|ng_deadnode
 operator|.
-name|hooks
+name|nd_hooks
 argument_list|)
 block|,
 block|{}

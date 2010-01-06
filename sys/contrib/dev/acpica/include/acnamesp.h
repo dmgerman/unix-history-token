@@ -240,7 +240,10 @@ name|UINT32
 name|Flags
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|UserFunction
+name|PreOrderVisit
+parameter_list|,
+name|ACPI_WALK_CALLBACK
+name|PostOrderVisit
 parameter_list|,
 name|void
 modifier|*
@@ -877,7 +880,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * nsrepair - return object repair for predefined methods/objects  */
+comment|/*  * nsrepair - General return object repair for all  * predefined methods/objects  */
 end_comment
 
 begin_function_decl
@@ -914,6 +917,51 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|ObjDescPtr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * nsrepair2 - Return object repair for specific  * predefined methods/objects  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsComplexRepairs
+parameter_list|(
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+parameter_list|,
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|,
+name|ACPI_STATUS
+name|ValidateStatus
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ReturnObjectPtr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiNsRemoveNullElements
+parameter_list|(
+name|ACPI_PREDEFINED_DATA
+modifier|*
+name|Data
+parameter_list|,
+name|UINT8
+name|PackageType
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1170,21 +1218,10 @@ end_function_decl
 begin_function_decl
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 parameter_list|(
 name|ACPI_HANDLE
 name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_HANDLE
-name|AcpiNsConvertEntryToHandle
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
 parameter_list|)
 function_decl|;
 end_function_decl

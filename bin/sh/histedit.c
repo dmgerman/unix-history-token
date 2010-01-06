@@ -288,7 +288,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 else|else
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: can't initialize history\n"
 argument_list|)
@@ -422,7 +422,7 @@ else|else
 block|{
 name|bad
 label|:
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: can't initialize editing\n"
 argument_list|)
@@ -619,6 +619,7 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|editor
@@ -650,6 +651,7 @@ name|i
 decl_stmt|,
 name|retval
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|firststr
@@ -672,6 +674,8 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|repl
+init|=
+name|NULL
 decl_stmt|;
 specifier|static
 name|int
@@ -702,6 +706,8 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|efp
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|oldhistnum
@@ -1363,6 +1369,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|flushout
+argument_list|(
+name|out2
+argument_list|)
+expr_stmt|;
 block|}
 name|evalstring
 argument_list|(
@@ -1648,6 +1659,7 @@ begin_function
 name|int
 name|not_fcnumber
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1690,6 +1702,7 @@ begin_function
 name|int
 name|str_to_event
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1701,6 +1714,7 @@ block|{
 name|HistEvent
 name|he
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s

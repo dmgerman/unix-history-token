@@ -1919,6 +1919,29 @@ name|Gbl_NsLookupCount
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Gbl_ExceptionCount
+index|[
+name|ASL_ERROR
+index|]
+operator|>
+name|ASL_MAX_ERROR_COUNT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nMaximum error count (%d) exceeded\n"
+argument_list|,
+name|ASL_MAX_ERROR_COUNT
+argument_list|)
+expr_stmt|;
+block|}
+name|UtDisplaySummary
+argument_list|(
+name|ASL_FILE_STDOUT
+argument_list|)
+expr_stmt|;
 comment|/* Close all open files */
 for|for
 control|(
@@ -1937,24 +1960,6 @@ block|{
 name|FlCloseFile
 argument_list|(
 name|i
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * TBD: SourceOutput should be .TMP, then rename if we want to keep it?      */
-if|if
-condition|(
-operator|!
-name|Gbl_SourceOutputFlag
-condition|)
-block|{
-name|remove
-argument_list|(
-name|Gbl_Files
-index|[
-name|ASL_FILE_SOURCE_OUTPUT
-index|]
-operator|.
-name|Filename
 argument_list|)
 expr_stmt|;
 block|}
@@ -1987,29 +1992,40 @@ name|Filename
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Delete intermediate ("combined") source file (if -ls flag not set)      *      * TBD: SourceOutput should be .TMP, then rename if we want to keep it?      */
 if|if
 condition|(
-name|Gbl_ExceptionCount
+operator|!
+name|Gbl_SourceOutputFlag
+condition|)
+block|{
+if|if
+condition|(
+name|remove
+argument_list|(
+name|Gbl_Files
 index|[
-name|ASL_ERROR
+name|ASL_FILE_SOURCE_OUTPUT
 index|]
-operator|>
-name|ASL_MAX_ERROR_COUNT
+operator|.
+name|Filename
+argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nMaximum error count (%d) exceeded\n"
+literal|"Could not remove SRC file, %s\n"
 argument_list|,
-name|ASL_MAX_ERROR_COUNT
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
+index|]
+operator|.
+name|Filename
 argument_list|)
 expr_stmt|;
 block|}
-name|UtDisplaySummary
-argument_list|(
-name|ASL_FILE_STDOUT
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 end_function
 

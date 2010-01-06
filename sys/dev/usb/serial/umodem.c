@@ -211,6 +211,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/quirk/usb_quirk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
@@ -1364,7 +1370,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no CM or union descriptor!\n"
+literal|"no CM or union descriptor\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1519,7 +1525,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no data interface!\n"
+literal|"no data interface\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1527,6 +1533,25 @@ name|detach
 goto|;
 block|}
 block|}
+if|if
+condition|(
+name|usb_test_quirk
+argument_list|(
+name|uaa
+argument_list|,
+name|UQ_ASSUME_CM_OVER_DATA
+argument_list|)
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_cm_over_data
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|sc
@@ -1570,6 +1595,7 @@ name|sc_cm_over_data
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 name|error
 operator|=

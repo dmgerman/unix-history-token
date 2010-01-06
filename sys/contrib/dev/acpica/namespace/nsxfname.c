@@ -143,7 +143,7 @@ condition|)
 block|{
 name|PrefixNode
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Parent
 argument_list|)
@@ -189,8 +189,10 @@ block|{
 operator|*
 name|RetHandle
 operator|=
-name|AcpiNsConvertEntryToHandle
+name|ACPI_CAST_PTR
 argument_list|(
+name|ACPI_HANDLE
+argument_list|,
 name|AcpiGbl_RootNode
 argument_list|)
 expr_stmt|;
@@ -241,8 +243,10 @@ block|{
 operator|*
 name|RetHandle
 operator|=
-name|AcpiNsConvertEntryToHandle
+name|ACPI_CAST_PTR
 argument_list|(
+name|ACPI_HANDLE
+argument_list|,
 name|Node
 argument_list|)
 expr_stmt|;
@@ -370,7 +374,7 @@ return|;
 block|}
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Handle
 argument_list|)
@@ -643,7 +647,7 @@ goto|;
 block|}
 name|Node
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|Handle
 argument_list|)

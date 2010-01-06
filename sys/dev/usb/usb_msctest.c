@@ -1187,7 +1187,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Truncating long command!\n"
+literal|"Truncating long command\n"
 argument_list|)
 expr_stmt|;
 block|}

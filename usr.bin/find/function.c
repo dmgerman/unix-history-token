@@ -3557,7 +3557,9 @@ end_comment
 begin_function
 name|void
 name|finish_execplus
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|PLAN
 modifier|*

@@ -51,6 +51,10 @@ name|output
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* to fd 1 */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -58,6 +62,10 @@ name|output
 name|errout
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* to fd 2 */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -76,6 +84,10 @@ name|out1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*&memout if backquote, otherwise&output */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -85,21 +97,9 @@ name|out2
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|open_mem
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|output
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*&memout if backquote with 2>&1, otherwise&errout */
+end_comment
 
 begin_function_decl
 name|void
@@ -265,7 +265,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|dprintf
+name|out2fmt_flush
 parameter_list|(
 specifier|const
 name|char
@@ -344,6 +344,7 @@ name|xwrite
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

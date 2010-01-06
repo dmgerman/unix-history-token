@@ -14344,10 +14344,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|EVP_MD_type
-argument_list|(
 name|pkey
-argument_list|)
+operator|->
+name|type
 operator|==
 name|EVP_PKEY_DSA
 condition|)
@@ -15697,10 +15696,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|EVP_MD_type
-argument_list|(
 name|host_pkey
-argument_list|)
+operator|->
+name|type
 operator|!=
 name|EVP_PKEY_RSA
 condition|)

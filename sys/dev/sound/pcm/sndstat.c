@@ -276,7 +276,7 @@ name|sndstat_devlist
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|none
+name|sndstat_devlist
 argument_list|)
 expr_stmt|;
 end_expr_stmt

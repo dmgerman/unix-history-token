@@ -1836,6 +1836,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|so
 operator|->
 name|so_proto
@@ -1845,6 +1846,17 @@ operator|->
 name|dom_family
 operator|!=
 name|AF_INET
+operator|&&
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_domain
+operator|->
+name|dom_family
+operator|!=
+name|AF_INET6
+operator|)
 operator|||
 name|so
 operator|->

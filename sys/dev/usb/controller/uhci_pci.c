@@ -229,13 +229,6 @@ begin_comment
 comment|/* PIIX4E has no separate stepping */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PCI_UHCI_BASE_REG
-value|0x20
-end_define
-
 begin_decl_stmt
 specifier|static
 name|device_probe_t
@@ -704,6 +697,54 @@ case|:
 return|return
 operator|(
 literal|"Intel 82801I (ICH9) USB controller"
+operator|)
+return|;
+case|case
+literal|0x3a348086
+case|:
+return|return
+operator|(
+literal|"Intel 82801JI (ICH10) USB controller USB-A"
+operator|)
+return|;
+case|case
+literal|0x3a358086
+case|:
+return|return
+operator|(
+literal|"Intel 82801JI (ICH10) USB controller USB-B"
+operator|)
+return|;
+case|case
+literal|0x3a368086
+case|:
+return|return
+operator|(
+literal|"Intel 82801JI (ICH10) USB controller USB-C"
+operator|)
+return|;
+case|case
+literal|0x3a378086
+case|:
+return|return
+operator|(
+literal|"Intel 82801JI (ICH10) USB controller USB-D"
+operator|)
+return|;
+case|case
+literal|0x3a388086
+case|:
+return|return
+operator|(
+literal|"Intel 82801JI (ICH10) USB controller USB-E"
+operator|)
+return|;
+case|case
+literal|0x3a398086
+case|:
+return|return
+operator|(
+literal|"Intel 82801JI (ICH10) USB controller USB-F"
 operator|)
 return|;
 case|case

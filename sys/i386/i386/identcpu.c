@@ -1163,7 +1163,7 @@ name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"/P54T Overdrive"
+literal|"/P24T"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2870,7 +2870,7 @@ literal|"\024SSE4.1"
 literal|"\025SSE4.2"
 literal|"\026x2APIC"
 comment|/* xAPIC Extensions */
-literal|"\027<b22>"
+literal|"\027MOVBE"
 literal|"\030POPCNT"
 literal|"\031<b24>"
 literal|"\032<b25>"

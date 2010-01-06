@@ -382,6 +382,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|intr_describe
+parameter_list|(
+name|int
+name|vec
+parameter_list|,
+name|void
+modifier|*
+name|ih
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|descr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|intr_setup
 parameter_list|(

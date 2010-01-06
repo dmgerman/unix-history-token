@@ -8240,6 +8240,31 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+block|{
+comment|/* 			 * Warn if the PID file doesn't exist, but do 			 * not consider it an error.  Most likely it 			 * means the process has been terminated, 			 * so it should be safe to rotate any log 			 * files that the process would have been using. 			 */
+name|swork
+operator|->
+name|sw_pidok
+operator|=
+literal|1
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"pid file doesn't exist: %s"
+argument_list|,
+name|ent
+operator|->
+name|pid_file
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|warn
 argument_list|(
 literal|"can't open pid file: %s"

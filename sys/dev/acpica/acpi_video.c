@@ -4192,6 +4192,8 @@ literal|1
 argument_list|,
 name|vid_enum_outputs_subr
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|argset
 argument_list|,

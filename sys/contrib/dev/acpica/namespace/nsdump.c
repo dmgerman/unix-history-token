@@ -401,7 +401,7 @@ return|;
 block|}
 name|ThisNode
 operator|=
-name|AcpiNsMapHandleToNode
+name|AcpiNsValidateHandle
 argument_list|(
 name|ObjHandle
 argument_list|)
@@ -1705,6 +1705,8 @@ operator||
 name|ACPI_NS_WALK_TEMP_NODES
 argument_list|,
 name|AcpiNsDumpOneObject
+argument_list|,
+name|NULL
 argument_list|,
 operator|(
 name|void

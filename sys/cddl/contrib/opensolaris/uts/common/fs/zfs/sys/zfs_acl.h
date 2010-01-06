@@ -19,13 +19,6 @@ directive|define
 name|_SYS_FS_ZFS_ACL_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -519,6 +512,10 @@ define|#
 directive|define
 name|ZFS_ACL_RESTRICTED
 value|4
+define|#
+directive|define
+name|ZFS_ACL_PASSTHROUGH_X
+value|5
 struct_decl|struct
 name|znode
 struct_decl|;

@@ -211,39 +211,40 @@ name|cue_devs
 index|[]
 init|=
 block|{
-block|{
-name|USB_VPI
+define|#
+directive|define
+name|CUE_DEV
+parameter_list|(
+name|v
+parameter_list|,
+name|p
+parameter_list|)
+value|{ USB_VP(USB_VENDOR_##v, USB_PRODUCT_##v##_##p) }
+name|CUE_DEV
 argument_list|(
-argument|USB_VENDOR_CATC
+name|CATC
 argument_list|,
-argument|USB_PRODUCT_CATC_NETMATE
-argument_list|,
-literal|0
+name|NETMATE
 argument_list|)
-block|}
 block|,
-block|{
-name|USB_VPI
+name|CUE_DEV
 argument_list|(
-argument|USB_VENDOR_CATC
+name|CATC
 argument_list|,
-argument|USB_PRODUCT_CATC_NETMATE2
-argument_list|,
-literal|0
+name|NETMATE2
 argument_list|)
-block|}
 block|,
-block|{
-name|USB_VPI
+name|CUE_DEV
 argument_list|(
-argument|USB_VENDOR_SMARTBRIDGES
+name|SMARTBRIDGES
 argument_list|,
-argument|USB_PRODUCT_SMARTBRIDGES_SMARTLINK
-argument_list|,
-literal|0
+name|SMARTLINK
 argument_list|)
+block|,
+undef|#
+directive|undef
+name|CUE_DEV
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1948,7 +1949,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"allocating USB transfers failed!\n"
+literal|"allocating USB transfers failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -3968,7 +3968,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_FindLib --  *	Search for a named library along the given search path.  *  * Results:  *	None.  *  * Side Effects:  *	The node's 'path' field is set to the found path (including the  *	actual file name, not -l...). If the system can handle the -L  *	flag when linking (or we cannot find the library), we assume that  *	the user has placed the .LIBRARIES variable in the final linking  *	command (or the linker will know where to find it) and set the  *	TARGET variable for this node to be the node's name. Otherwise,  *	we set the TARGET variable to be the full path of the library,  *	as returned by Dir_FindFile.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_FindLib --  *	Search for a named library along the given search path.  *  * Results:  *	None.  *  * Side Effects:  *	The node's 'path' field is set to the found path (including the  *	actual file name, not -l...). If the system can handle the -L  *	flag when linking (or we cannot find the library), we assume that  *	the user has placed the .LIBRARIES variable in the final linking  *	command (or the linker will know where to find it) and set the  *	TARGET variable for this node to be the node's name. Otherwise,  *	we set the TARGET variable to be the full path of the library,  *	as returned by Path_FindFile.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

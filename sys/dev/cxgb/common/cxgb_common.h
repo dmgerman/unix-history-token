@@ -295,7 +295,7 @@ literal|7
 block|,
 name|FW_VERSION_MINOR
 init|=
-literal|7
+literal|8
 block|,
 name|FW_VERSION_MICRO
 init|=

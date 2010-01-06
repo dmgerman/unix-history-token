@@ -1248,6 +1248,9 @@ name|char
 modifier|*
 name|where
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|YP
 specifier|static
 name|char
 modifier|*
@@ -1256,9 +1259,6 @@ decl_stmt|;
 name|int
 name|resultlen
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|YP
 specifier|static
 name|char
 modifier|*
@@ -1878,6 +1878,9 @@ name|res
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|YP
 specifier|static
 name|char
 modifier|*
@@ -1886,9 +1889,6 @@ decl_stmt|;
 name|int
 name|resultlen
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|YP
 specifier|static
 name|char
 modifier|*

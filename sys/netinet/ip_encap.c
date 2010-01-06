@@ -289,7 +289,6 @@ name|encaptab
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|encaptab
 argument_list|)
 expr_stmt|;

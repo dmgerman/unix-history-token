@@ -27,6 +27,12 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|__uintptr_t
@@ -41,39 +47,10 @@ name|DEVINFO_ROOT_DEVICE
 value|((devinfo_handle_t)0)
 end_define
 
-begin_comment
-comment|/*  * State of the device.  */
-end_comment
-
-begin_comment
-comment|/* XXX not sure if I want a copy here, or expose sys/bus.h */
-end_comment
-
 begin_typedef
 typedef|typedef
-enum|enum
-name|devinfo_state
-block|{
-name|DIS_NOTPRESENT
-init|=
-literal|10
-block|,
-comment|/* not probed or probe failed */
-name|DIS_ALIVE
-init|=
-literal|20
-block|,
-comment|/* probe succeeded */
-name|DIS_ATTACHED
-init|=
-literal|30
-block|,
-comment|/* attach method called */
-name|DIS_BUSY
-init|=
-literal|40
-comment|/* device is open */
-block|}
+name|enum
+name|device_state
 name|devinfo_state_t
 typedef|;
 end_typedef

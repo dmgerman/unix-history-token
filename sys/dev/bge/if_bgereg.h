@@ -8054,6 +8054,20 @@ name|BGE_RDMAMODE_FIFO_LONG_BURST
 value|0x00030000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_RDMAMODE_TSO4_ENABLE
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMAMODE_TSO6_ENABLE
+value|0x10000000
+end_define
+
 begin_comment
 comment|/* Read DMA status register */
 end_comment
@@ -10952,7 +10966,7 @@ value|do {								\ 		pci_write_config(sc->bge_dev, BGE_PCI_MEMWIN_BASEADDR,	\ 	
 end_define
 
 begin_comment
-comment|/*  * This magic number is written to the firmware mailbox at 0xb50  * before a software reset is issued.  After the internal firmware  * has completed its initialization it will write the opposite of   * this value, ~BGE_MAGIC_NUMBER, to the same location, allowing the  * driver to synchronize with the firmware.  */
+comment|/*  * This magic number is written to the firmware mailbox at 0xb50  * before a software reset is issued.  After the internal firmware  * has completed its initialization it will write the opposite of  * this value, ~BGE_MAGIC_NUMBER, to the same location, allowing the  * driver to synchronize with the firmware.  */
 end_comment
 
 begin_define
@@ -11098,7 +11112,7 @@ name|uint16_t
 name|bge_vlan_tag
 decl_stmt|;
 name|uint16_t
-name|bge_rsvd
+name|bge_mss
 decl_stmt|;
 else|#
 directive|else
@@ -11109,7 +11123,7 @@ name|uint16_t
 name|bge_flags
 decl_stmt|;
 name|uint16_t
-name|bge_rsvd
+name|bge_mss
 decl_stmt|;
 name|uint16_t
 name|bge_vlan_tag
@@ -13201,6 +13215,51 @@ name|BGE_NSEG_NEW
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_TSOSEG_SZ
+value|4096
+end_define
+
+begin_comment
+comment|/* Maximum DMA address for controllers that have 40bit DMA address bug. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BUS_SPACE_MAXADDR
+operator|<
+literal|0xFFFFFFFFFF
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BGE_DMA_MAXADDR
+value|BUS_SPACE_MAXADDR
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BGE_DMA_MAXADDR
+value|0xFFFFFFFFFF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Ring structures. Most of these reside in host memory and we tell  * the NIC where they are via the ring control blocks. The exceptions  * are the tx and command rings, which live in NIC memory and which  * we access via the shared memory window.  */
 end_comment
@@ -13561,6 +13620,15 @@ name|ifmedia
 name|bge_ifmedia
 decl_stmt|;
 comment|/* TBI media info */
+name|int
+name|bge_expcap
+decl_stmt|;
+name|int
+name|bge_msicap
+decl_stmt|;
+name|int
+name|bge_pcixcap
+decl_stmt|;
 name|uint32_t
 name|bge_flags
 decl_stmt|;
@@ -13594,6 +13662,10 @@ name|BGE_FLAG_PCIE
 value|0x00000400
 define|#
 directive|define
+name|BGE_FLAG_TSO
+value|0x00000800
+define|#
+directive|define
 name|BGE_FLAG_5700_FAMILY
 value|0x00001000
 define|#
@@ -13612,6 +13684,14 @@ define|#
 directive|define
 name|BGE_FLAG_5755_PLUS
 value|0x00010000
+define|#
+directive|define
+name|BGE_FLAG_40BIT_BUG
+value|0x00020000
+define|#
+directive|define
+name|BGE_FLAG_4G_BNDRY_BUG
+value|0x00040000
 define|#
 directive|define
 name|BGE_FLAG_RX_ALIGNBUG
@@ -13731,6 +13811,9 @@ comment|/* pending link event */
 name|int
 name|bge_timer
 decl_stmt|;
+name|int
+name|bge_forced_collapse
+decl_stmt|;
 name|struct
 name|callout
 name|bge_stat_ch
@@ -13753,6 +13836,15 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
+name|struct
+name|task
+name|bge_intr_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|bge_tq
+decl_stmt|;
 block|}
 struct|;
 end_struct

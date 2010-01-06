@@ -1415,7 +1415,23 @@ argument_list|(
 argument|_pthread_testcancel
 argument_list|)
 block|}
+block|,
 comment|/* PJT_TESTCANCEL */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|__pthread_cleanup_pop_imp
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CLEANUP_POP_IMP */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|__pthread_cleanup_push_imp
+argument_list|)
+block|}
+comment|/* PJT_CLEANUP_PUSH_IMP */
 block|}
 decl_stmt|;
 end_decl_stmt

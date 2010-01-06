@@ -17547,10 +17547,6 @@ operator|=
 operator|-
 name|tok
 expr_stmt|;
-name|next
-operator|=
-name|end
-expr_stmt|;
 break|break;
 block|}
 block|}

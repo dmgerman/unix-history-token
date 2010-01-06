@@ -132,14 +132,14 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * This parameter controls the duration of transmit watchdog timer.  */
+comment|/*  * This parameter controls the max duration of transmit watchdog.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_TX_TIMEOUT
-value|5
+name|EM_WATCHDOG
+value|(5 * hz)
 end_define
 
 begin_comment
@@ -297,6 +297,13 @@ define|#
 directive|define
 name|EM_EEPROM_APME
 value|0x400;
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_82544_APME
+value|0x0004;
 end_define
 
 begin_comment
@@ -861,8 +868,11 @@ name|struct
 name|callout
 name|tx_fifo_timer
 decl_stmt|;
+name|bool
+name|watchdog_check
+decl_stmt|;
 name|int
-name|watchdog_timer
+name|watchdog_time
 decl_stmt|;
 name|int
 name|msi
@@ -931,11 +941,14 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* Management and WOL features */
-name|int
+name|u32
 name|wol
 decl_stmt|;
-name|int
+name|bool
 name|has_manage
+decl_stmt|;
+name|bool
+name|has_amt
 decl_stmt|;
 comment|/* Info about the board itself */
 name|uint8_t

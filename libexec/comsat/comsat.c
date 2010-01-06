@@ -312,11 +312,13 @@ name|main
 parameter_list|(
 name|int
 name|argc
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -629,6 +631,7 @@ name|reapchildren
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 while|while
@@ -654,15 +657,16 @@ name|onalrm
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 specifier|static
-name|u_int
+name|off_t
 name|utmpsize
 decl_stmt|;
 comment|/* last malloced size for utmp */
 specifier|static
-name|u_int
+name|time_t
 name|utmpmtime
 decl_stmt|;
 comment|/* last modification time for utmp */
@@ -1073,6 +1077,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|cr
@@ -1135,7 +1140,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|cr
+name|line
 init|=
 name|utp
 operator|->
@@ -1145,7 +1150,7 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|cr
+name|line
 argument_list|,
 literal|"pts/"
 argument_list|,
@@ -1154,7 +1159,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|cr
+name|line
 operator|+=
 literal|4
 expr_stmt|;
@@ -1162,7 +1167,7 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-name|cr
+name|line
 argument_list|,
 literal|'/'
 argument_list|)

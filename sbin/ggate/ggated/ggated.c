@@ -384,7 +384,6 @@ name|exports
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|exports
 argument_list|)
 expr_stmt|;
@@ -401,8 +400,7 @@ name|connections
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
-name|connection
+name|connections
 argument_list|)
 expr_stmt|;
 end_expr_stmt

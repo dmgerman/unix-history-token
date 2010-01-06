@@ -288,20 +288,6 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|print_ip
-parameter_list|(
-name|x
-parameter_list|,
-name|a
-parameter_list|,
-name|y
-parameter_list|)
-value|printf("%s %d.%d.%d.%d%s",\ 				x, (ntohl(a.s_addr)>>24)&0xFF,\ 				  (ntohl(a.s_addr)>>16)&0xFF,\ 				  (ntohl(a.s_addr)>>8)&0xFF,\ 				  (ntohl(a.s_addr))&0xFF, y);
-end_define
-
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -391,7 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (with len, off, ttl, proto, tos, src, dst).  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  * In the IP forwarding case, the packet will arrive with options already  * inserted, so must have a NULL opt pointer.  */
+comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (with len, off, ttl, proto, tos, src, dst).  * ip_len and ip_off are in host format.  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  * In the IP forwarding case, the packet will arrive with options already  * inserted, so must have a NULL opt pointer.  */
 end_comment
 
 begin_function
@@ -458,8 +444,10 @@ name|int
 name|mtu
 decl_stmt|;
 name|int
-name|len
-decl_stmt|,
+name|n
+decl_stmt|;
+comment|/* scratchpad */
+name|int
 name|error
 init|=
 literal|0
@@ -473,10 +461,7 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|dst
-init|=
-name|NULL
 decl_stmt|;
-comment|/* keep compiler happy */
 name|struct
 name|in_ifaddr
 modifier|*
@@ -493,6 +478,12 @@ name|struct
 name|route
 name|iproute
 decl_stmt|;
+name|struct
+name|rtentry
+modifier|*
+name|rte
+decl_stmt|;
+comment|/* cache for ro->ro_rt */
 name|struct
 name|in_addr
 name|odst
@@ -635,10 +626,11 @@ condition|(
 name|opt
 condition|)
 block|{
+name|int
 name|len
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|m
 operator|=
 name|ip_insertoptions
@@ -661,6 +653,7 @@ name|hlen
 operator|=
 name|len
 expr_stmt|;
+comment|/* ip->ip_hl is updated above */
 block|}
 name|ip
 operator|=
@@ -718,6 +711,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Header already set, fetch hlen from there */
 name|hlen
 operator|=
 name|ip
@@ -742,17 +736,19 @@ expr_stmt|;
 name|again
 label|:
 comment|/* 	 * If there is a cached route, 	 * check that it is to the same destination 	 * and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing the 	 * cache with IPv6. 	 */
-if|if
-condition|(
+name|rte
+operator|=
 name|ro
 operator|->
 name|ro_rt
+expr_stmt|;
+if|if
+condition|(
+name|rte
 operator|&&
 operator|(
 operator|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_flags
 operator|&
@@ -788,11 +784,11 @@ name|nortfree
 condition|)
 name|RTFREE
 argument_list|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 argument_list|)
 expr_stmt|;
+name|rte
+operator|=
 name|ro
 operator|->
 name|ro_rt
@@ -821,9 +817,7 @@ directive|ifdef
 name|IPFIREWALL_FORWARD
 if|if
 condition|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|==
 name|NULL
 operator|&&
@@ -836,9 +830,7 @@ else|#
 directive|else
 if|if
 condition|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|==
 name|NULL
 condition|)
@@ -1105,12 +1097,11 @@ block|{
 comment|/* 		 * We want to do any cloning requested by the link layer, 		 * as this is probably required in all cases for correct 		 * operation (as it is for ARP). 		 */
 if|if
 condition|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|==
 name|NULL
 condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|RADIX_MPATH
@@ -1171,11 +1162,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
+name|rte
+operator|=
 name|ro
 operator|->
 name|ro_rt
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|rte
 operator|==
 name|NULL
 condition|)
@@ -1215,9 +1211,7 @@ name|ia
 operator|=
 name|ifatoia
 argument_list|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_ifa
 argument_list|)
@@ -1232,15 +1226,11 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_ifp
 expr_stmt|;
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_rmx
 operator|.
@@ -1249,9 +1239,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_flags
 operator|&
@@ -1264,17 +1252,13 @@ expr|struct
 name|sockaddr_in
 operator|*
 operator|)
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_gateway
 expr_stmt|;
 if|if
 condition|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_flags
 operator|&
@@ -1283,9 +1267,7 @@ condition|)
 name|isbroadcast
 operator|=
 operator|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_flags
 operator|&
@@ -1308,16 +1290,12 @@ block|}
 comment|/* 	 * Calculate MTU.  If we have a route that is up, use that, 	 * otherwise use the interface's MTU. 	 */
 if|if
 condition|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|!=
 name|NULL
 operator|&&
 operator|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_flags
 operator|&
@@ -1332,9 +1310,7 @@ block|{
 comment|/* 		 * This case can happen if the user changed the MTU 		 * of an interface after enabling IP on it.  Because 		 * most netifs don't keep track of routes pointing to 		 * them, there is no way for one to update all its 		 * routes when the MTU is changed. 		 */
 if|if
 condition|(
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_rmx
 operator|.
@@ -1344,9 +1320,7 @@ name|ifp
 operator|->
 name|if_mtu
 condition|)
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_rmx
 operator|.
@@ -1358,9 +1332,7 @@ name|if_mtu
 expr_stmt|;
 name|mtu
 operator|=
-name|ro
-operator|->
-name|ro_rt
+name|rte
 operator|->
 name|rt_rmx
 operator|.
@@ -1687,11 +1659,22 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Verify that we have any chance at all of being able to queue the 	 * packet or packet fragments, unless ALTQ is enabled on the given 	 * interface in which case packetdrop should be done by queueing. 	 */
+name|n
+operator|=
+name|ip
+operator|->
+name|ip_len
+operator|/
+name|mtu
+operator|+
+literal|1
+expr_stmt|;
+comment|/* how many fragments ? */
+if|if
+condition|(
 ifdef|#
 directive|ifdef
 name|ALTQ
-if|if
-condition|(
 operator|(
 operator|!
 name|ALTQ_IS_ENABLED
@@ -1703,59 +1686,25 @@ name|if_snd
 argument_list|)
 operator|)
 operator|&&
-operator|(
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_len
-operator|+
-name|ip
-operator|->
-name|ip_len
-operator|/
-name|mtu
-operator|+
-literal|1
-operator|)
-operator|>=
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_maxlen
-operator|)
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_len
-operator|+
-name|ip
-operator|->
-name|ip_len
-operator|/
-name|mtu
-operator|+
-literal|1
-operator|)
-operator|>=
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_maxlen
-condition|)
 endif|#
 directive|endif
 comment|/* ALTQ */
+operator|(
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_len
+operator|+
+name|n
+operator|)
+operator|>=
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+condition|)
 block|{
 name|error
 operator|=
@@ -1772,17 +1721,7 @@ name|if_snd
 operator|.
 name|ifq_drops
 operator|+=
-operator|(
-name|ip
-operator|->
-name|ip_len
-operator|/
-name|ifp
-operator|->
-name|if_mtu
-operator|+
-literal|1
-operator|)
+name|n
 expr_stmt|;
 goto|goto
 name|bad

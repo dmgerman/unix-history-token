@@ -491,11 +491,12 @@ name|Cleanup
 goto|;
 block|}
 comment|/* Create an integer for the return value */
+comment|/* Default return value is ACPI_INTEGER_MAX if no match found */
 name|ReturnDesc
 operator|=
-name|AcpiUtCreateInternalObject
+name|AcpiUtCreateIntegerObject
 argument_list|(
-name|ACPI_TYPE_INTEGER
+name|ACPI_INTEGER_MAX
 argument_list|)
 expr_stmt|;
 if|if
@@ -512,15 +513,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Default return value if no match found */
-name|ReturnDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|ACPI_INTEGER_MAX
-expr_stmt|;
 comment|/*          * Examine each element until a match is found. Both match conditions          * must be satisfied for a match to occur. Within the loop,          * "continue" signifies that the current element does not match          * and the next should be examined.          *          * Upon finding a match, the loop will terminate via "break" at          * the bottom.  If it terminates "normally", MatchValue will be          * ACPI_INTEGER_MAX (Ones) (its initial value) indicating that no          * match was found.          */
 for|for
 control|(

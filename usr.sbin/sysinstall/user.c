@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -67,6 +61,13 @@ define|#
 directive|define
 name|GMEMB_FIELD_LEN
 value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNAME_FIELD_LEN
+value|MAXLOGNAME
 end_define
 
 begin_define
@@ -142,9 +143,7 @@ index|]
 decl_stmt|,
 name|uname
 index|[
-name|UT_NAMESIZE
-operator|+
-literal|1
+name|UNAME_FIELD_LEN
 index|]
 decl_stmt|,
 name|passwd
@@ -404,10 +403,10 @@ literal|2
 block|,
 literal|6
 block|,
-name|UT_NAMESIZE
+literal|16
 block|,
-name|UT_NAMESIZE
-operator|+
+name|UNAME_FIELD_LEN
+operator|-
 literal|1
 block|,
 literal|"Login ID:"

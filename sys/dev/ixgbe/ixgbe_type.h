@@ -78,6 +78,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_DEV_ID_82598AT2
+value|0x150B
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_DEV_ID_82598EB_SFP_LOM
 value|0x10DB
 end_define
@@ -122,6 +129,20 @@ define|#
 directive|define
 name|IXGBE_DEV_ID_82599_KX4
 value|0x10F7
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DEV_ID_82599_KX4_MEZZ
+value|0x1514
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DEV_ID_82599_COMBO_BACKPLANE
+value|0x10F8
 end_define
 
 begin_define
@@ -242,6 +263,13 @@ define|#
 directive|define
 name|IXGBE_EERD
 value|0x10014
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EEWR
+value|0x10018
 end_define
 
 begin_define
@@ -2226,7 +2254,7 @@ value|0x003F00FF
 end_define
 
 begin_comment
-comment|/* Mask for all 6 wakeup filters*/
+comment|/* Mask for all wakeup filters */
 end_comment
 
 begin_define
@@ -5075,6 +5103,13 @@ name|IXGBE_DCA_CTRL
 value|0x11074
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_SWFW_SYNC
+value|IXGBE_GSSR
+end_define
+
 begin_comment
 comment|/* PCI-E registers 82599-Specific */
 end_comment
@@ -5210,6 +5245,38 @@ define|#
 directive|define
 name|IXGBE_BAR_CTRL_82599
 value|0x110F4
+end_define
+
+begin_comment
+comment|/* PCI Express Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_CMPL_TMOUT_MASK
+value|0x0000F000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_CMPL_TMOUT_10ms
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_CMPL_TMOUT_RESEND
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_CAP_VER2
+value|0x00040000
 end_define
 
 begin_comment
@@ -6238,6 +6305,17 @@ value|0x04314
 end_define
 
 begin_comment
+comment|/* Copper Pond 2 link timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VALIDATE_LINK_READY_TIMEOUT
+value|50
+end_define
+
+begin_comment
 comment|/* Omer CORECTL */
 end_comment
 
@@ -6264,6 +6342,13 @@ define|#
 directive|define
 name|IXGBE_BARCTRL_FLSIZE
 value|0x0700
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_BARCTRL_FLSIZE_SHIFT
+value|8
 end_define
 
 begin_define
@@ -7458,9 +7543,90 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_MII_SPEED_SELECTION_REG
+name|IXGBE_MII_10GBASE_T_AUTONEG_CTRL_REG
+value|0x20
+end_define
+
+begin_comment
+comment|/* 10G Control Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MII_AUTONEG_VENDOR_PROVISION_1_REG
+value|0xC400
+end_define
+
+begin_comment
+comment|/* 1G Provisioning 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MII_AUTONEG_XNP_TX_REG
+value|0x17
+end_define
+
+begin_comment
+comment|/* 1G XNP Transmit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MII_AUTONEG_ADVERTISE_REG
 value|0x10
 end_define
+
+begin_comment
+comment|/* 100M Advertisement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MII_10GBASE_T_ADVERTISE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* full duplex, bit:12*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MII_1GBASE_T_ADVERTISE_XNP_TX
+value|0x4000
+end_define
+
+begin_comment
+comment|/* full duplex, bit:14*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MII_1GBASE_T_ADVERTISE
+value|0x8000
+end_define
+
+begin_comment
+comment|/* full duplex, bit:15*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MII_100BASE_T_ADVERTISE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* full duplex, bit:8 */
+end_comment
 
 begin_define
 define|#
@@ -7474,6 +7640,13 @@ define|#
 directive|define
 name|IXGBE_MII_AUTONEG_COMPLETE
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MII_AUTONEG_LINK_UP
+value|0x04
 end_define
 
 begin_define
@@ -10386,6 +10559,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_AUTOC_ASM_PAUSE
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_AUTOC_SYM_PAUSE
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_AUTOC_RF
 value|0x08000000
 end_define
@@ -10829,6 +11016,13 @@ begin_comment
 comment|/* 4.5 Seconds */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IXGBE_LINKS2_AN_SUPPORTED
+value|0x00000040
+end_define
+
 begin_comment
 comment|/* PCS1GLSTA Bit Masks */
 end_comment
@@ -10947,6 +11141,31 @@ value|0x20000
 end_define
 
 begin_comment
+comment|/* ANLP1 Bit Masks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ANLP1_PAUSE
+value|0x0C00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ANLP1_SYM_PAUSE
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ANLP1_ASM_PAUSE
+value|0x0800
+end_define
+
+begin_comment
 comment|/* SW Semaphore Register bitmasks */
 end_comment
 
@@ -10983,8 +11202,19 @@ begin_comment
 comment|/* Wake MNG Clock */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IXGBE_SWFW_REGSMP
+value|0x80000000
+end_define
+
 begin_comment
-comment|/* GSSR definitions */
+comment|/* Register Semaphore bit 31 */
+end_comment
+
+begin_comment
+comment|/* SW_FW_SYNC/GSSR definitions */
 end_comment
 
 begin_define
@@ -11154,6 +11384,28 @@ begin_comment
 comment|/* EEPROM Auto Read Done */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IXGBE_EEC_FLUP
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Flash update command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EEC_FLUDONE
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Flash update done */
+end_comment
+
 begin_comment
 comment|/* EEPROM Addressing bits based on type (0-small, 1-large) */
 end_comment
@@ -11186,7 +11438,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_EEPROM_WORD_SIZE_SHIFT
+name|IXGBE_EEPROM_WORD_SIZE_BASE_SHIFT
 value|6
 end_define
 
@@ -11232,7 +11484,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_PHY_PTR
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_ATLAS1_CONFIG_PTR
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_OPTION_ROM_PTR
 value|0x05
 end_define
 
@@ -11530,7 +11796,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_EEPROM_READ_REG_DATA
+name|IXGBE_EEPROM_RW_REG_DATA
 value|16
 end_define
 
@@ -11541,7 +11807,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_EEPROM_READ_REG_DONE
+name|IXGBE_EEPROM_RW_REG_DONE
 value|2
 end_define
 
@@ -11552,7 +11818,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_EEPROM_READ_REG_START
+name|IXGBE_EEPROM_RW_REG_START
 value|1
 end_define
 
@@ -11563,12 +11829,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_EEPROM_READ_ADDR_SHIFT
+name|IXGBE_EEPROM_RW_ADDR_SHIFT
 value|2
 end_define
 
 begin_comment
 comment|/* Shift to the address bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_NVM_POLL_WRITE
+value|1
+end_define
+
+begin_comment
+comment|/* Flag for polling for write complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_NVM_POLL_READ
+value|0
+end_define
+
+begin_comment
+comment|/* Flag for polling for read complete */
 end_comment
 
 begin_define
@@ -11600,27 +11888,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IXGBE_EERD_ATTEMPTS
-end_ifndef
-
 begin_comment
-comment|/* Number of 5 microseconds we wait for EERD read to complete */
+comment|/* Number of 5 microseconds we wait for EERD read and  * EERW write to complete */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IXGBE_EERD_ATTEMPTS
+name|IXGBE_EERD_EEWR_ATTEMPTS
 value|100000
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* # attempts we wait for flush update to complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FLUDONE_ATTEMPTS
+value|20000
+end_define
 
 begin_define
 define|#
@@ -11708,6 +11996,94 @@ name|IXGBE_FW_PATCH_VERSION_4
 value|0x7
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_ALT_SAN_MAC_ADDR_BLK_PTR
+value|0x27
+end_define
+
+begin_comment
+comment|/* Alt. SAN MAC block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ALT_SAN_MAC_ADDR_CAPS_OFFSET
+value|0x0
+end_define
+
+begin_comment
+comment|/* Alt. SAN MAC capability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ALT_SAN_MAC_ADDR_PORT0_OFFSET
+value|0x1
+end_define
+
+begin_comment
+comment|/* Alt. SAN MAC 0 offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ALT_SAN_MAC_ADDR_PORT1_OFFSET
+value|0x4
+end_define
+
+begin_comment
+comment|/* Alt. SAN MAC 1 offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ALT_SAN_MAC_ADDR_WWNN_OFFSET
+value|0x7
+end_define
+
+begin_comment
+comment|/* Alt. WWNN prefix offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ALT_SAN_MAC_ADDR_WWPN_OFFSET
+value|0x8
+end_define
+
+begin_comment
+comment|/* Alt. WWPN prefix offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ALT_SAN_MAC_ADDR_CAPS_SANMAC
+value|0x0
+end_define
+
+begin_comment
+comment|/* Alt. SAN MAC exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ALT_SAN_MAC_ADDR_CAPS_ALTWWN
+value|0x1
+end_define
+
+begin_comment
+comment|/* Alt. WWN base exists */
+end_comment
+
 begin_comment
 comment|/* PCI Bus Info */
 end_comment
@@ -11717,6 +12093,13 @@ define|#
 directive|define
 name|IXGBE_PCI_LINK_STATUS
 value|0xB2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PCI_DEVICE_CONTROL2
+value|0xC8
 end_define
 
 begin_define
@@ -11787,6 +12170,13 @@ define|#
 directive|define
 name|IXGBE_PCI_HEADER_TYPE_MULTIFUNC
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PCI_DEVICE_CONTROL2_16ms
+value|0x0005
 end_define
 
 begin_comment
@@ -15644,6 +16034,8 @@ literal|0
 block|,
 name|ixgbe_eeprom_spi
 block|,
+name|ixgbe_flash
+block|,
 name|ixgbe_eeprom_none
 comment|/* No NVM support */
 block|}
@@ -15770,6 +16162,8 @@ name|ixgbe_media_type_copper
 block|,
 name|ixgbe_media_type_backplane
 block|,
+name|ixgbe_media_type_cx4
+block|,
 name|ixgbe_media_type_virtual
 block|}
 enum|;
@@ -15794,6 +16188,32 @@ block|,
 name|ixgbe_fc_full
 block|,
 name|ixgbe_fc_default
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Smart Speed Settings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SMARTSPEED_MAX_RETRIES
+value|3
+end_define
+
+begin_enum
+enum|enum
+name|ixgbe_smart_speed
+block|{
+name|ixgbe_smart_speed_auto
+init|=
+literal|0
+block|,
+name|ixgbe_smart_speed_on
+block|,
+name|ixgbe_smart_speed_off
 block|}
 enum|;
 end_enum
@@ -16367,6 +16787,17 @@ name|ixgbe_hw
 modifier|*
 parameter_list|)
 function_decl|;
+name|u16
+function_decl|(
+modifier|*
+name|calc_checksum
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -16501,6 +16932,23 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
+name|get_wwn_prefix
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u16
+modifier|*
+parameter_list|,
+name|u16
+modifier|*
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
 name|stop_adapter
 function_decl|)
 parameter_list|(
@@ -16617,17 +17065,6 @@ name|s32
 function_decl|(
 modifier|*
 name|setup_link
-function_decl|)
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|)
-function_decl|;
-name|s32
-function_decl|(
-modifier|*
-name|setup_link_speed
 function_decl|)
 parameter_list|(
 name|struct
@@ -17214,6 +17651,14 @@ index|[
 name|IXGBE_ETH_LENGTH_OF_ADDRESS
 index|]
 decl_stmt|;
+comment|/* prefix for World Wide Node Name (WWNN) */
+name|u16
+name|wwnn_prefix
+decl_stmt|;
+comment|/* prefix for World Wide Port Name (WWPN) */
+name|u16
+name|wwpn_prefix
+decl_stmt|;
 name|s32
 name|mc_filter_type
 decl_stmt|;
@@ -17249,12 +17694,6 @@ name|orig_autoc2
 decl_stmt|;
 name|bool
 name|orig_link_settings_stored
-decl_stmt|;
-name|bool
-name|autoneg
-decl_stmt|;
-name|bool
-name|autoneg_succeeded
 decl_stmt|;
 name|bool
 name|autotry_restart
@@ -17301,8 +17740,12 @@ decl_stmt|;
 name|ixgbe_autoneg_advertised
 name|autoneg_advertised
 decl_stmt|;
+name|enum
+name|ixgbe_smart_speed
+name|smart_speed
+decl_stmt|;
 name|bool
-name|autoneg_wait_to_complete
+name|smart_speed_active
 decl_stmt|;
 name|bool
 name|multispeed_fiber

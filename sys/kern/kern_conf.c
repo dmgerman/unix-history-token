@@ -264,7 +264,9 @@ argument_list|)
 name|cdevsw_gt_post_list
 operator|=
 name|SLIST_HEAD_INITIALIZER
-argument_list|()
+argument_list|(
+name|cdevsw_gt_post_list
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -1211,7 +1213,7 @@ begin_define
 define|#
 directive|define
 name|no_mmap
-value|(d_mmap2_t *)enodev
+value|(d_mmap_t *)enodev
 end_define
 
 begin_define
@@ -2083,7 +2085,7 @@ name|cdev
 modifier|*
 name|dev
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|vm_paddr_t
@@ -2130,36 +2132,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dsw
-operator|->
-name|d_gianttrick
-operator|->
-name|d_flags
-operator|&
-name|D_MMAP2
-condition|)
-name|retval
-operator|=
-name|dsw
-operator|->
-name|d_gianttrick
-operator|->
-name|d_mmap2
-argument_list|(
-name|dev
-argument_list|,
-name|offset
-argument_list|,
-name|paddr
-argument_list|,
-name|nprot
-argument_list|,
-name|memattr
-argument_list|)
-expr_stmt|;
-else|else
 name|retval
 operator|=
 name|dsw
@@ -2175,6 +2147,8 @@ argument_list|,
 name|paddr
 argument_list|,
 name|nprot
+argument_list|,
+name|memattr
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -2723,13 +2697,7 @@ name|devsw
 operator|->
 name|d_version
 operator|!=
-name|D_VERSION_01
-operator|&&
-name|devsw
-operator|->
-name|d_version
-operator|!=
-name|D_VERSION_02
+name|D_VERSION_03
 condition|)
 block|{
 name|printf
@@ -2795,6 +2763,12 @@ name|dead_mmap
 expr_stmt|;
 name|devsw
 operator|->
+name|d_mmap_single
+operator|=
+name|dead_mmap_single
+expr_stmt|;
+name|devsw
+operator|->
 name|d_strategy
 operator|=
 name|dead_strategy
@@ -2812,20 +2786,6 @@ operator|=
 name|dead_kqfilter
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|devsw
-operator|->
-name|d_version
-operator|==
-name|D_VERSION_01
-condition|)
-name|devsw
-operator|->
-name|d_mmap_single
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|devsw
@@ -2860,12 +2820,6 @@ operator|->
 name|d_gianttrick
 operator|=
 name|dsw2
-expr_stmt|;
-name|devsw
-operator|->
-name|d_flags
-operator||=
-name|D_MMAP2
 expr_stmt|;
 name|dsw2
 operator|=
@@ -2950,7 +2904,7 @@ argument_list|)
 expr_stmt|;
 name|FIXUP
 argument_list|(
-name|d_mmap2
+name|d_mmap
 argument_list|,
 name|no_mmap
 argument_list|,

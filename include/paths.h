@@ -40,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_STDPATH
-value|"/usr/bin:/bin:/usr/sbin:/sbin:"
+value|"/usr/bin:/bin:/usr/sbin:/sbin"
 end_define
 
 begin_comment

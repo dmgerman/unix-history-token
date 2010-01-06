@@ -232,6 +232,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.debug"
+argument_list|,
+operator|&
+name|usb_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb_dump_iface  *  * This function dumps information about an USB interface.  *------------------------------------------------------------------------*/
 end_comment

@@ -543,7 +543,7 @@ name|dev
 operator|->
 name|dd_state
 operator|>=
-name|DIS_ATTACHED
+name|DS_ATTACHED
 operator|)
 condition|)
 block|{

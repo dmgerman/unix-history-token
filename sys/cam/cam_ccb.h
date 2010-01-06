@@ -2727,10 +2727,11 @@ value|0x01
 define|#
 directive|define
 name|CTS_ATA_VALID_BYTECOUNT
-value|0x04
-name|u_int32_t
+value|0x02
+name|int
 name|mode
 decl_stmt|;
+comment|/* Mode */
 name|u_int
 name|bytecount
 decl_stmt|;
@@ -2749,28 +2750,44 @@ decl_stmt|;
 comment|/* Which fields to honor */
 define|#
 directive|define
-name|CTS_SATA_VALID_SPEED
+name|CTS_SATA_VALID_MODE
 value|0x01
 define|#
 directive|define
-name|CTS_SATA_VALID_PM
+name|CTS_SATA_VALID_BYTECOUNT
 value|0x02
 define|#
 directive|define
-name|CTS_SATA_VALID_BYTECOUNT
+name|CTS_SATA_VALID_REVISION
 value|0x04
-name|u_int32_t
-name|bitrate
+define|#
+directive|define
+name|CTS_SATA_VALID_PM
+value|0x08
+define|#
+directive|define
+name|CTS_SATA_VALID_TAGS
+value|0x10
+name|int
+name|mode
 decl_stmt|;
-comment|/* Mbps */
+comment|/* Legacy PATA mode */
+name|u_int
+name|bytecount
+decl_stmt|;
+comment|/* Length of PIO transaction */
+name|int
+name|revision
+decl_stmt|;
+comment|/* SATA revision */
 name|u_int
 name|pm_present
 decl_stmt|;
 comment|/* PM is present (XPT->SIM) */
 name|u_int
-name|bytecount
+name|tags
 decl_stmt|;
-comment|/* Length of PIO transaction */
+comment|/* Number of allowed tags */
 block|}
 struct|;
 end_struct
