@@ -1034,19 +1034,28 @@ define|#
 directive|define
 name|dns_trust_none
 value|((dns_trust_t)dns_trust_none)
-comment|/* Subject to DNSSEC validation but has not yet been validated */
-name|dns_trust_pending
+comment|/*% 	 * Subject to DNSSEC validation but has not yet been validated 	 * dns_trust_pending_additional (from the additional section). 	 */
+name|dns_trust_pending_additional
 init|=
 literal|1
 block|,
 define|#
 directive|define
-name|dns_trust_pending
-value|((dns_trust_t)dns_trust_pending)
-comment|/* Received in the additional section of a response. */
-name|dns_trust_additional
+name|dns_trust_pending_additional
+define|\
+value|((dns_trust_t)dns_trust_pending_additional)
+name|dns_trust_pending_answer
 init|=
 literal|2
+block|,
+define|#
+directive|define
+name|dns_trust_pending_answer
+value|((dns_trust_t)dns_trust_pending_answer)
+comment|/*% Received in the additional section of a response. */
+name|dns_trust_additional
+init|=
+literal|3
 block|,
 define|#
 directive|define
@@ -1055,16 +1064,16 @@ value|((dns_trust_t)dns_trust_additional)
 comment|/* Received in a referral response. */
 name|dns_trust_glue
 init|=
-literal|3
+literal|4
 block|,
 define|#
 directive|define
 name|dns_trust_glue
 value|((dns_trust_t)dns_trust_glue)
-comment|/* Answser from a non-authoritative server */
+comment|/* Answer from a non-authoritative server */
 name|dns_trust_answer
 init|=
-literal|4
+literal|5
 block|,
 define|#
 directive|define
@@ -1073,16 +1082,16 @@ value|((dns_trust_t)dns_trust_answer)
 comment|/*  Received in the authority section as part of an 	    authoritative response */
 name|dns_trust_authauthority
 init|=
-literal|5
+literal|6
 block|,
 define|#
 directive|define
 name|dns_trust_authauthority
 value|((dns_trust_t)dns_trust_authauthority)
-comment|/* Answser from an authoritative server */
+comment|/* Answer from an authoritative server */
 name|dns_trust_authanswer
 init|=
-literal|6
+literal|7
 block|,
 define|#
 directive|define
@@ -1091,7 +1100,7 @@ value|((dns_trust_t)dns_trust_authanswer)
 comment|/* Successfully DNSSEC validated */
 name|dns_trust_secure
 init|=
-literal|7
+literal|8
 block|,
 define|#
 directive|define
@@ -1100,7 +1109,7 @@ value|((dns_trust_t)dns_trust_secure)
 comment|/* This server is authoritative */
 name|dns_trust_ultimate
 init|=
-literal|8
+literal|9
 define|#
 directive|define
 name|dns_trust_ultimate
@@ -1108,6 +1117,26 @@ value|((dns_trust_t)dns_trust_ultimate)
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|DNS_TRUST_PENDING
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == dns_trust_pending_answer || \ 					 (x) == dns_trust_pending_additional)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_TRUST_GLUE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == dns_trust_glue)
+end_define
 
 begin_comment
 comment|/*  * Name checking severites.  */
