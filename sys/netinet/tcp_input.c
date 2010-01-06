@@ -10871,7 +10871,27 @@ name|maxmtu
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* 		 * In case we return early we need to intialize metrics 		 * to a defined state as tcp_hc_get() would do for us 		 * if there was no cache hit. 		 */
+if|if
+condition|(
+name|metricptr
+operator|!=
+name|NULL
+condition|)
+name|bzero
+argument_list|(
+name|metricptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hc_metrics_lite
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* Check the interface for TSO capabilities. */
 if|if
 condition|(
