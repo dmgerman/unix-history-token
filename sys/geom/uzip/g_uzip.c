@@ -2551,15 +2551,6 @@ name|flags
 operator|&
 name|G_PF_CANDELETE
 expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|->
-name|stripesize
-operator|>
-literal|0
-condition|)
-block|{
 name|pp2
 operator|->
 name|stripesize
@@ -2576,7 +2567,6 @@ name|pp
 operator|->
 name|stripeoffset
 expr_stmt|;
-block|}
 name|g_error_provider
 argument_list|(
 name|pp2

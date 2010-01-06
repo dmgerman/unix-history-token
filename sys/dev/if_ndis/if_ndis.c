@@ -10365,7 +10365,7 @@ decl_stmt|;
 name|uint32_t
 name|txrate
 decl_stmt|;
-name|size_t
+name|int
 name|len
 decl_stmt|;
 if|if
