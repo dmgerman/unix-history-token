@@ -13400,13 +13400,17 @@ name|bus_dma_tag_t
 name|bge_stats_tag
 decl_stmt|;
 name|bus_dma_tag_t
-name|bge_mtag
+name|bge_rx_mtag
 decl_stmt|;
-comment|/* mbuf mapping tag */
+comment|/* Rx mbuf mapping tag */
+name|bus_dma_tag_t
+name|bge_tx_mtag
+decl_stmt|;
+comment|/* Tx mbuf mapping tag */
 name|bus_dma_tag_t
 name|bge_mtag_jumbo
 decl_stmt|;
-comment|/* mbuf mapping tag */
+comment|/* Jumbo mbuf mapping tag */
 name|bus_dmamap_t
 name|bge_tx_dmamap
 index|[
