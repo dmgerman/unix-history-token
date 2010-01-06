@@ -2241,6 +2241,9 @@ parameter_list|,
 name|struct
 name|hc_metrics_lite
 modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
