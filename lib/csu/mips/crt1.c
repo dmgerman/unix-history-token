@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Christopher G. Demetriou  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Christopher G. Demetriou  *    for the NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  * Copyright (c) 1995 Christopher G. Demetriou  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Christopher G. Demetriou  *    for the NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -194,14 +194,6 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|ps_strings
-modifier|*
-name|__ps_strings
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|__gccmain
@@ -221,111 +213,17 @@ block|{}
 end_function
 
 begin_comment
-comment|/*  * Historically, mips has used __start for the beginning address of programs.  * However, the Cavium toolchain (and maybe others) use _start.  Define both  * here.  The assembler code here tries to juggle the arguments such that they  * are right for all ABIs and then calls __start_mips which is what used to  * be just plain __start, and still is on other BSD ports.  */
-end_comment
-
-begin_comment
 comment|/* The entry function. */
-end_comment
-
-begin_asm
-asm|__asm("	.text			\n"
-end_asm
-
-begin_expr_stmt
-literal|"	.align	8		\n"
-literal|"	.globl	_start		\n"
-literal|"	_start:			\n"
-literal|"	.globl	__start		\n"
-literal|"	__start:		\n"
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips_n32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__mips_n64
-argument_list|)
-literal|"	.cpsetup $25, $24, __start\n"
-else|#
-directive|else
-literal|"	.set noreorder		\n"
-literal|"	.cpload $25		\n"
-literal|"	.set reorder		\n"
-endif|#
-directive|endif
-literal|"	/* Get cleanup routine and main object set by rtld */\n"
-literal|"	/* Note that a2 is already set to ps_string by _rtld_start */\n"
-literal|"	/* move	a3, a0        */\n"
-literal|"	/* move	t0, a1        */\n"
-literal|"	/* Get argc, argv from stack */	\n"
-literal|"	/* lw	a0, 0(sp)     */\n"
-literal|"	/* move	a1, sp        */\n"
-literal|"	/* addu	a1, 4         */\n"
-literal|"				\n"
-literal|"	/* Stack should 8bytes aligned */\n"
-literal|"	/* required by ABI to pass     */\n"
-literal|"	/* 64-bits arguments           */\n"
-literal|"	/* and	sp, ~8        */\n"
-literal|"	/* subu	sp, sp, 20    */\n"
-literal|"	/* sw	t0, 16(sp)    */\n"
-literal|"				\n"
-literal|"	move	$7, $4		/* atexit */\n"
-literal|"	move	$8, $5		/* main_obj entry */\n"
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips_n64
-argument_list|)
-literal|"	ld	$4, 0($29)	\n"
-literal|"	move	$5, $29		\n"
-literal|"	addu	$5, 8		\n"
-else|#
-directive|else
-literal|"	lw	$4, 0($29)	\n"
-literal|"	move	$5, $29		\n"
-literal|"	addu	$5, 4		\n"
-endif|#
-directive|endif
-literal|"				\n"
-literal|"	and	$29, 0xfffffff8	\n"
-literal|"	subu	$29, $29, 24	/* args slot + cleanup + 4 bytes padding */ \n"
-literal|"	sw	$8, 16($29)	\n"
-literal|"\n"
-literal|"	la	 $25, __start_mips  \n"
-literal|"	nop	 \n"
-literal|"	j	 $25\n"
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
 name|void
-name|__start_mips
+name|__start
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
 name|char
 modifier|*
 modifier|*
-name|argv
-parameter_list|,
-name|struct
-name|ps_strings
-modifier|*
-name|ps_strings
+name|ap
 parameter_list|,
 name|void
 function_decl|(
@@ -336,30 +234,54 @@ parameter_list|(
 name|void
 parameter_list|)
 parameter_list|,
+comment|/* from shared loader */
 name|struct
 name|Struct_Obj_Entry
 modifier|*
 name|obj
-name|__unused
+parameter_list|,
+comment|/* from shared loader */
+name|struct
+name|ps_strings
+modifier|*
+name|ps_strings
 parameter_list|)
 block|{
-name|char
-modifier|*
-modifier|*
-name|env
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|env
-operator|=
-name|argv
-operator|+
+name|int
 name|argc
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|env
+decl_stmt|;
+name|argc
+operator|=
+operator|*
+operator|(
+name|long
+operator|*
+operator|)
+name|ap
+expr_stmt|;
+name|argv
+operator|=
+name|ap
 operator|+
 literal|1
+expr_stmt|;
+name|env
+operator|=
+name|ap
+operator|+
+literal|2
+operator|+
+name|argc
 expr_stmt|;
 name|environ
 operator|=
@@ -379,6 +301,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
 name|__progname
 operator|=
 name|argv
@@ -414,10 +341,9 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|__ps_strings
-operator|=
-name|ps_strings
-expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOSHARED
 if|if
 condition|(
 operator|&
@@ -430,10 +356,8 @@ argument_list|(
 name|cleanup
 argument_list|)
 expr_stmt|;
-else|else
-name|_init_tls
-argument_list|()
-expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|GCRT
