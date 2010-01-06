@@ -7467,7 +7467,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_once
+name|_pthread_once
 argument_list|(
 operator|&
 name|localtime_once
@@ -7878,7 +7878,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_once
+name|_pthread_once
 argument_list|(
 operator|&
 name|gmtime_once
