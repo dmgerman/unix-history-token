@@ -280,6 +280,8 @@ decl_stmt|,
 name|tomorrow
 decl_stmt|;
 name|int
+name|ch
+decl_stmt|,
 name|cnt
 decl_stmt|;
 name|char
@@ -292,8 +294,6 @@ modifier|*
 name|otime
 init|=
 name|NULL
-decl_stmt|,
-name|ch
 decl_stmt|;
 while|while
 condition|(
