@@ -2724,6 +2724,10 @@ name|int
 name|mod_okay
 parameter_list|)
 block|{
+specifier|static
+name|u_long
+name|quiet_until
+decl_stmt|;
 name|struct
 name|req_pkt
 modifier|*
@@ -2918,11 +2922,23 @@ name|REQ_LEN_HDR
 operator|)
 condition|)
 block|{
+name|NLOG
+argument_list|(
+argument|NLOG_SYSEVENT
+argument_list|)
+if|if
+condition|(
+name|current_time
+operator|>=
+name|quiet_until
+condition|)
+block|{
 name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"process_private: INFO_ERR_FMT: test %d failed, pkt from %s"
+literal|"process_private: drop test %d"
+literal|" failed, pkt from %s"
 argument_list|,
 name|ec
 argument_list|,
@@ -2932,17 +2948,13 @@ name|srcadr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|req_ack
-argument_list|(
-name|srcadr
-argument_list|,
-name|inter
-argument_list|,
-name|inpkt
-argument_list|,
-name|INFO_ERR_FMT
-argument_list|)
+name|quiet_until
+operator|=
+name|current_time
+operator|+
+literal|60
 expr_stmt|;
+block|}
 return|return;
 block|}
 name|reqver
