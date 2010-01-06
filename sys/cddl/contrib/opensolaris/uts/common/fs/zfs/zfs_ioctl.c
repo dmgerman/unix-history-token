@@ -13289,6 +13289,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|zfs_ioc_vec
 index|[
 name|vec
@@ -13303,6 +13310,7 @@ argument_list|(
 name|zc
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error

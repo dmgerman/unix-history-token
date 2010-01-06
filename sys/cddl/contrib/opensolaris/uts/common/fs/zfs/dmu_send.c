@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -4821,7 +4821,7 @@ operator|->
 name|drr_object
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We may change blocksize, so need to 		 * hold_write 		 */
+comment|/* 		 * We may change blocksize and delete old content, 		 * so need to hold_write and hold_free. 		 */
 name|dmu_tx_hold_write
 argument_list|(
 name|tx
@@ -4833,6 +4833,19 @@ argument_list|,
 literal|0
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|dmu_tx_hold_free
+argument_list|(
+name|tx
+argument_list|,
+name|drro
+operator|->
+name|drr_object
+argument_list|,
+literal|0
+argument_list|,
+name|DMU_OBJECT_END
 argument_list|)
 expr_stmt|;
 name|err

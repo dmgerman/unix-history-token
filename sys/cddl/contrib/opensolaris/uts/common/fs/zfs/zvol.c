@@ -536,7 +536,58 @@ parameter_list|,
 name|major_t
 name|maj
 parameter_list|)
-block|{  }
+block|{
+name|struct
+name|g_provider
+modifier|*
+name|pp
+decl_stmt|;
+name|g_topology_assert
+argument_list|()
+expr_stmt|;
+name|pp
+operator|=
+name|zv
+operator|->
+name|zv_provider
+expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|zv
+operator|->
+name|zv_volsize
+operator|==
+name|pp
+operator|->
+name|mediasize
+condition|)
+return|return;
+comment|/* 	 * Changing provider size is not really supported by GEOM, but it 	 * should be safe when provider is closed. 	 */
+if|if
+condition|(
+name|zv
+operator|->
+name|zv_total_opens
+operator|>
+literal|0
+condition|)
+return|return;
+name|pp
+operator|->
+name|mediasize
+operator|=
+name|zv
+operator|->
+name|zv_volsize
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -995,6 +1046,13 @@ operator|+
 name|acw
 operator|+
 name|ace
+expr_stmt|;
+name|zvol_size_changed
+argument_list|(
+name|zv
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|mutex_exit
 argument_list|(
@@ -4918,13 +4976,6 @@ argument_list|(
 name|tx
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Not supported. */
-if|#
-directive|if
-literal|0
-block|if (error == 0) 			zv->zv_provider->sectorsize = zc->zc_volblocksize;
-endif|#
-directive|endif
 block|}
 name|end
 label|:
