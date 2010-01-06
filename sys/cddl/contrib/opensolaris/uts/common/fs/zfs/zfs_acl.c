@@ -8702,6 +8702,8 @@ directive|ifdef
 name|__FreeBSD__
 name|gid
 operator|=
+name|fgid
+operator|=
 name|parent
 operator|->
 name|z_phys
