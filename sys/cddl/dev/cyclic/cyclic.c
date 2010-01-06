@@ -3218,11 +3218,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|pcpu
-modifier|*
-name|pc
-decl_stmt|;
 name|cpu_t
 modifier|*
 name|c
@@ -3246,14 +3241,10 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
-name|pc
-operator|=
 name|pcpu_find
 argument_list|(
 name|id
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)

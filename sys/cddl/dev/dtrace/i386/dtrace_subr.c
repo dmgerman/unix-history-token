@@ -1523,11 +1523,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|pcpu
-modifier|*
-name|cp
-decl_stmt|;
 comment|/* 	 * Get TSC frequency known at this moment. 	 * This should be constant if TSC is invariant. 	 * Otherwise tick->time conversion will be inaccurate, but 	 * will preserve monotonic property of TSC. 	 */
 name|tsc_f
 operator|=
@@ -1598,14 +1593,10 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|(
-name|cp
-operator|=
 name|pcpu_find
 argument_list|(
 name|i
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)

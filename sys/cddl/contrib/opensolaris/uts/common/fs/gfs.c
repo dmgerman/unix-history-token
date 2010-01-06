@@ -1781,6 +1781,10 @@ condition|)
 goto|goto
 name|found
 goto|;
+comment|/* 	 * XXX cope with a FreeBSD-specific race wherein the parent's 	 * snapshot data can be freed before the parent is 	 */
+if|if
+condition|(
+operator|(
 name|dp
 operator|=
 name|fp
@@ -1788,7 +1792,15 @@ operator|->
 name|gfs_parent
 operator|->
 name|v_data
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 comment|/* 	 * First, see if this vnode is cached in the parent. 	 */
 name|gfs_dir_lock
 argument_list|(

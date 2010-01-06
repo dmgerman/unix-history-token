@@ -314,18 +314,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VN_RELE_ASYNC
-parameter_list|(
-name|v
-parameter_list|,
-name|tq
-parameter_list|)
-value|vn_rele_async(v, tq);
-end_define
-
-begin_define
-define|#
-directive|define
 name|VOP_REALVP
 parameter_list|(
 name|vp

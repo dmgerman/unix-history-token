@@ -118,6 +118,11 @@ decl_stmt|;
 name|uint64_t
 name|dp_root_dir_obj
 decl_stmt|;
+name|struct
+name|taskq
+modifier|*
+name|dp_vnrele_taskq
+decl_stmt|;
 comment|/* No lock needed - sync context only */
 name|blkptr_t
 name|dp_meta_rootbp
@@ -446,6 +451,15 @@ parameter_list|)
 function_decl|;
 name|void
 name|dsl_pool_scrub_restart
+parameter_list|(
+name|dsl_pool_t
+modifier|*
+name|dp
+parameter_list|)
+function_decl|;
+name|taskq_t
+modifier|*
+name|dsl_pool_vnrele_taskq
 parameter_list|(
 name|dsl_pool_t
 modifier|*

@@ -604,6 +604,10 @@ decl_stmt|;
 block|}
 name|caller_context_t
 typedef|;
+comment|/*  * Structure tags for function prototypes, defined elsewhere.  */
+struct_decl|struct
+name|taskq
+struct_decl|;
 comment|/*  * Flags for VOP_LOOKUP  *  * Defined in file.h, but also possible, FIGNORECASE  *  */
 define|#
 directive|define
@@ -631,6 +635,24 @@ directive|define
 name|V_RDDIR_ENTFLAGS
 value|0x01
 comment|/* request dirent flags */
+comment|/*  * Public vnode manipulation functions.  */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|void
+name|vn_rele_async
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|taskq
+modifier|*
+name|taskq
+parameter_list|)
+function_decl|;
 comment|/*  * Extensible vnode attribute (xva) routines:  * xva_init() initializes an xvattr_t (zero struct, init mapsize, set AT_XATTR)  * xva_getxoptattr() returns a ponter to the xoptattr_t section of xvattr_t  */
 name|void
 name|xva_init
@@ -648,29 +670,18 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Get ptr to xoptattr_t */
-struct_decl|struct
-name|taskq
-struct_decl|;
-name|void
-name|vn_rele_async
+define|#
+directive|define
+name|VN_RELE_ASYNC
 parameter_list|(
-name|struct
-name|vnode
-modifier|*
 name|vp
 parameter_list|,
-name|struct
-name|taskq
-modifier|*
 name|taskq
 parameter_list|)
-function_decl|;
-name|void
-name|vn_rele_async_fini
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+value|{ \ 	vn_rele_async(vp, taskq); \ }
+endif|#
+directive|endif
+comment|/* _KERNEL */
 comment|/*  * Flags to VOP_SETATTR/VOP_GETATTR.  */
 define|#
 directive|define
