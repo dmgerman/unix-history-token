@@ -5326,13 +5326,14 @@ name|frdataset
 expr_stmt|;
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 operator|&&
 name|dns_rdataset_isassociated
 argument_list|(
@@ -5392,13 +5393,14 @@ block|}
 elseif|else
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Having a pending key with no signature means that 			 * something is broken. 			 */
@@ -8080,13 +8082,14 @@ name|frdataset
 expr_stmt|;
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 operator|&&
 name|dns_rdataset_isassociated
 argument_list|(
@@ -8146,13 +8149,14 @@ block|}
 elseif|else
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 condition|)
 block|{
 comment|/* 				 * There should never be an unsigned DS. 				 */
@@ -12037,13 +12041,14 @@ block|{
 comment|/* 			 * There is no DS.  If this is a delegation, 			 * we maybe done. 			 */
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 condition|)
 block|{
 name|result

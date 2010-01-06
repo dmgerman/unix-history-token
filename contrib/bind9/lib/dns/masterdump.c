@@ -3004,7 +3004,9 @@ init|=
 block|{
 literal|"none"
 block|,
-literal|"pending"
+literal|"pending-additional"
+block|,
+literal|"pending-answer"
 block|,
 literal|"additional"
 block|,
