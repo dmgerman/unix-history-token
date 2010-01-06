@@ -2230,6 +2230,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|tcp_mss_update
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|hc_metrics_lite
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|tcp_mss
 parameter_list|(
 name|struct
