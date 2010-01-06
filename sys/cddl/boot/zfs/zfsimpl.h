@@ -1885,13 +1885,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ZPOOL_CONFIG_OFFLINE
-value|"offline"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ZPOOL_CONFIG_ERRCOUNT
 value|"error_count"
 end_define
@@ -1948,6 +1941,38 @@ end_define
 begin_comment
 comment|/* not stored on disk */
 end_comment
+
+begin_comment
+comment|/*  * The persistent vdev state is stored as separate values rather than a single  * 'vdev_state' entry.  This is because a device can be in multiple states, such  * as offline and degraded.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_OFFLINE
+value|"offline"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_FAULTED
+value|"faulted"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_DEGRADED
+value|"degraded"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_REMOVED
+value|"removed"
+end_define
 
 begin_define
 define|#
@@ -2068,9 +2093,15 @@ comment|/* Not currently open			*/
 name|VDEV_STATE_OFFLINE
 block|,
 comment|/* Not allowed to open			*/
+name|VDEV_STATE_REMOVED
+block|,
+comment|/* Explicitly removed from system	*/
 name|VDEV_STATE_CANT_OPEN
 block|,
 comment|/* Tried to open, but failed		*/
+name|VDEV_STATE_FAULTED
+block|,
+comment|/* External request to fault device	*/
 name|VDEV_STATE_DEGRADED
 block|,
 comment|/* Replicated vdev with unhealthy kids	*/
