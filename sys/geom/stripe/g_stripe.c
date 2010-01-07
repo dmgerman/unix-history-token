@@ -89,13 +89,6 @@ directive|include
 file|<geom/stripe/g_stripe.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|MAX_IO_SIZE
-value|(DFLTPHYS * 2)
-end_define
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -407,7 +400,7 @@ specifier|static
 name|u_int
 name|g_stripe_maxmem
 init|=
-name|MAX_IO_SIZE
+name|MAXPHYS
 operator|*
 literal|100
 decl_stmt|;
@@ -579,7 +572,7 @@ name|uma_zcreate
 argument_list|(
 literal|"g_stripe_zone"
 argument_list|,
-name|MAX_IO_SIZE
+name|MAXPHYS
 argument_list|,
 name|NULL
 argument_list|,
@@ -598,7 +591,7 @@ name|g_stripe_maxmem
 operator|-=
 name|g_stripe_maxmem
 operator|%
-name|MAX_IO_SIZE
+name|MAXPHYS
 expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
@@ -606,7 +599,7 @@ name|g_stripe_zone
 argument_list|,
 name|g_stripe_maxmem
 operator|/
-name|MAX_IO_SIZE
+name|MAXPHYS
 argument_list|)
 expr_stmt|;
 block|}
@@ -3021,7 +3014,7 @@ operator|-
 name|start
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do use "fast" mode when: 	 * 1. "Fast" mode is ON. 	 * and 	 * 2. Request size is less than or equal to MAX_IO_SIZE (128kB), 	 *    which should always be true. 	 * and 	 * 3. Request size is bigger than stripesize * ndisks. If it isn't, 	 *    there will be no need to send more than one I/O request to 	 *    a provider, so there is nothing to optmize. 	 */
+comment|/* 	 * Do use "fast" mode when: 	 * 1. "Fast" mode is ON. 	 * and 	 * 2. Request size is less than or equal to MAXPHYS, 	 *    which should always be true. 	 * and 	 * 3. Request size is bigger than stripesize * ndisks. If it isn't, 	 *    there will be no need to send more than one I/O request to 	 *    a provider, so there is nothing to optmize. 	 */
 if|if
 condition|(
 name|g_stripe_fast
@@ -3030,7 +3023,7 @@ name|bp
 operator|->
 name|bio_length
 operator|<=
-name|MAX_IO_SIZE
+name|MAXPHYS
 operator|&&
 name|bp
 operator|->
