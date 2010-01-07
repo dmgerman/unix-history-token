@@ -1456,6 +1456,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|void
+name|pmap_set_pg
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -2190,6 +2200,7 @@ comment|/*  * Set PG_G on kernel pages.  Only the BSP calls this when SMP is tur
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pmap_set_pg
 parameter_list|(
