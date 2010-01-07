@@ -417,6 +417,28 @@ name|sblock
 operator|.
 name|fs_ipg
 condition|)
+block|{
+name|pfatal
+argument_list|(
+literal|"%s (%d> %d) %s %d\nReset to %d\n"
+argument_list|,
+literal|"Too many initialized inodes"
+argument_list|,
+name|inosused
+argument_list|,
+name|sblock
+operator|.
+name|fs_ipg
+argument_list|,
+literal|"in cylinder group"
+argument_list|,
+name|c
+argument_list|,
+name|sblock
+operator|.
+name|fs_ipg
+argument_list|)
+expr_stmt|;
 name|inosused
 operator|=
 name|sblock
@@ -424,13 +446,16 @@ operator|.
 name|fs_ipg
 expr_stmt|;
 block|}
+block|}
 else|else
+block|{
 name|inosused
 operator|=
 name|sblock
 operator|.
 name|fs_ipg
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|got_siginfo
