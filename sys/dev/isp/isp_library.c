@@ -3541,7 +3541,6 @@ name|CT_HBA_RESET
 operator|&
 literal|0xff
 expr_stmt|;
-empty_stmt|;
 name|ctio
 operator|->
 name|ct_header

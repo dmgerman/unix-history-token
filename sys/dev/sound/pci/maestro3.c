@@ -1858,7 +1858,6 @@ return|return
 operator|-
 literal|1
 return|;
-empty_stmt|;
 block|}
 name|m3_wr_2
 argument_list|(

@@ -22567,7 +22567,6 @@ name|tail_mbuf
 operator|=
 name|prev
 expr_stmt|;
-empty_stmt|;
 block|}
 continue|continue;
 block|}

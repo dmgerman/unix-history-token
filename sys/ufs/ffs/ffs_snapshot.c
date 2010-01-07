@@ -4168,7 +4168,6 @@ name|aiov
 operator|.
 name|iov_len
 expr_stmt|;
-empty_stmt|;
 name|auio
 operator|.
 name|uio_offset

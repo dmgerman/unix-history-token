@@ -7917,7 +7917,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-empty_stmt|;
 block|}
 block|}
 if|if

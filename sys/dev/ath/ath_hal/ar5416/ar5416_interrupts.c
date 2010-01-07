@@ -346,7 +346,6 @@ expr_stmt|;
 return|return
 name|AH_FALSE
 return|;
-empty_stmt|;
 block|}
 operator|*
 name|masked

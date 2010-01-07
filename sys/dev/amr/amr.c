@@ -925,7 +925,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 block|}
 ifdef|#
 directive|ifdef

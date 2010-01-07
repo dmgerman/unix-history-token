@@ -8551,7 +8551,6 @@ name|sbp_cmd_status
 operator|->
 name|status
 expr_stmt|;
-empty_stmt|;
 name|ocb
 operator|->
 name|ccb
@@ -11339,7 +11338,6 @@ name|num_lun
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
 name|target
 operator|->
 name|luns
@@ -12182,7 +12180,7 @@ directive|if
 literal|0
 block|default:
 comment|/* XXX give up */
-block|sbp_cam_detach_target(target); 		if (target->luns != NULL) 			free(target->luns, M_SBP); 		target->num_lun = 0;; 		target->luns = NULL; 		target->fwdev = NULL;
+block|sbp_cam_detach_target(target); 		if (target->luns != NULL) 			free(target->luns, M_SBP); 		target->num_lun = 0; 		target->luns = NULL; 		target->fwdev = NULL;
 endif|#
 directive|endif
 block|}

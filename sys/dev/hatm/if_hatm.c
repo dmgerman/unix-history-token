@@ -4726,7 +4726,6 @@ name|sc
 operator|->
 name|bytes_per_row
 expr_stmt|;
-empty_stmt|;
 name|row_addr
 operator|=
 name|start
@@ -4955,7 +4954,6 @@ name|sc
 operator|->
 name|bytes_per_row
 expr_stmt|;
-empty_stmt|;
 name|row_addr
 operator|=
 name|start

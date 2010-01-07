@@ -7182,7 +7182,6 @@ operator|)
 operator|/
 literal|16
 expr_stmt|;
-empty_stmt|;
 name|ftx
 operator|=
 operator|(

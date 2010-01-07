@@ -10044,7 +10044,6 @@ name|uint8_t
 operator|*
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|hdrlen
 operator|=
 name|ieee80211_anyhdrsize

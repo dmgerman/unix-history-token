@@ -34477,7 +34477,6 @@ operator|->
 name|isp_mbxwrk1
 operator|++
 expr_stmt|;
-empty_stmt|;
 name|mbs
 operator|.
 name|param
@@ -34489,7 +34488,6 @@ operator|*
 name|ptr
 operator|++
 expr_stmt|;
-empty_stmt|;
 break|break;
 case|case
 name|MBOX_READ_RAM_WORD
@@ -34546,7 +34544,6 @@ operator|*
 name|ptr
 operator|++
 expr_stmt|;
-empty_stmt|;
 name|mbs
 operator|.
 name|param

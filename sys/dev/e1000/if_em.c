@@ -13964,7 +13964,7 @@ argument|if (adapter->rx_buffer_area != NULL) { 		rx_buffer = adapter->rx_buffer
 literal|0
 argument|; i< adapter->num_rx_desc; i++, rx_buffer++) { 			if (rx_buffer->m_head != NULL) { 				bus_dmamap_sync(adapter->rxtag, rx_buffer->map, 				    BUS_DMASYNC_POSTREAD); 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 				m_freem(rx_buffer->m_head); 				rx_buffer->m_head = NULL; 			} else if (rx_buffer->map != NULL) 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 			if (rx_buffer->map != NULL) { 				bus_dmamap_destroy(adapter->rxtag, 				    rx_buffer->map); 				rx_buffer->map = NULL; 			} 		} 	}  	if (adapter->rx_buffer_area != NULL) { 		free(adapter->rx_buffer_area, M_DEVBUF); 		adapter->rx_buffer_area = NULL; 	}  	if (adapter->rxtag != NULL) { 		bus_dma_tag_destroy(adapter->rxtag); 		adapter->rxtag = NULL; 	} }
 comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *    *  For polling we also now return the number of cleaned packets  *********************************************************************/
-argument|static int em_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
+argument|static int em_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp = adapter->ifp; 	struct mbuf	*mp; 	u8		status, accept_frame =
 literal|0
 argument|, eop =
 literal|0

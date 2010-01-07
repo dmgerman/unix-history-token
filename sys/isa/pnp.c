@@ -2395,7 +2395,6 @@ argument_list|(
 name|tag
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 switch|switch
 condition|(
 name|PNP_SRES_NUM

@@ -4012,7 +4012,6 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-empty_stmt|;
 name|ctp
 operator|->
 name|cfis
@@ -4028,7 +4027,6 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-empty_stmt|;
 name|ctp
 operator|->
 name|cfis
@@ -4044,7 +4042,6 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-empty_stmt|;
 name|ctp
 operator|->
 name|cfis

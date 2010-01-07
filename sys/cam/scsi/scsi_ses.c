@@ -7282,10 +7282,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -11067,7 +11063,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
 name|ssc
 operator|->
 name|ses_objmap

@@ -13429,7 +13429,6 @@ literal|0xe5
 case|:
 comment|/* READ_TRACK_INFO_PHILIPS */
 break|break;
-empty_stmt|;
 case|case
 name|READ_12
 case|:
@@ -13453,7 +13452,6 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
-empty_stmt|;
 block|}
 name|bcopy
 argument_list|(

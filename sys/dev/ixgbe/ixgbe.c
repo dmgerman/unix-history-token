@@ -21702,7 +21702,6 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|adapter
@@ -21767,7 +21766,6 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|ixgbe_hw
 modifier|*

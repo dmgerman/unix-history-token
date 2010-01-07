@@ -6381,7 +6381,6 @@ name|vendp
 operator|+=
 name|vendor_client_len
 expr_stmt|;
-empty_stmt|;
 name|ifctx
 operator|->
 name|dhcpquerytype

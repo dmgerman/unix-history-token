@@ -1415,7 +1415,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|p
 operator|=
 name|strchr

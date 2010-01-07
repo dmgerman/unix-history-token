@@ -647,10 +647,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_struct
 struct|struct
 name|rsp_desc

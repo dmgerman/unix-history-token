@@ -7307,7 +7307,7 @@ comment|/* Fast SCSI */
 end_comment
 
 begin_comment
-unit|wval1--; 					bval = FAST_CLK; 					pDCB->CtrlR4 |= EATER_25NS; 				} 				pDCB->CtrlR3 = bval; 				pDCB->SyncPeriod = (u_int8_t) wval1;  				pDCB->tinfo.goal.period = 				    tinfo_sync_period[pDCB->SyncPeriod - 4]; 				pDCB->tinfo.goal.offset = pDCB->SyncOffset; 				pDCB->tinfo.current.period = 				    tinfo_sync_period[pDCB->SyncPeriod - 4];; 				pDCB->tinfo.current.offset = pDCB->SyncOffset;
+unit|wval1--; 					bval = FAST_CLK; 					pDCB->CtrlR4 |= EATER_25NS; 				} 				pDCB->CtrlR3 = bval; 				pDCB->SyncPeriod = (u_int8_t) wval1;  				pDCB->tinfo.goal.period = 				    tinfo_sync_period[pDCB->SyncPeriod - 4]; 				pDCB->tinfo.goal.offset = pDCB->SyncOffset; 				pDCB->tinfo.current.period = 				    tinfo_sync_period[pDCB->SyncPeriod - 4]; 				pDCB->tinfo.current.offset = pDCB->SyncOffset;
 comment|/* 				 * program SCSI control register 				 */
 end_comment
 

@@ -12135,7 +12135,6 @@ name|goal
 operator|.
 name|offset
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS

@@ -7946,7 +7946,6 @@ name|pflags
 operator|=
 name|pflags
 expr_stmt|;
-empty_stmt|;
 block|}
 end_function
 

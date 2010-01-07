@@ -5228,7 +5228,6 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-empty_stmt|;
 goto|goto
 name|fail
 goto|;

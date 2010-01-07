@@ -5839,7 +5839,6 @@ operator|)
 operator|%
 name|MGE_TX_DESC_NUM
 expr_stmt|;
-empty_stmt|;
 name|sc
 operator|->
 name|tx_desc_used_count

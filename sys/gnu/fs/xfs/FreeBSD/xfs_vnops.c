@@ -4558,7 +4558,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|bufobj
 modifier|*

@@ -410,7 +410,6 @@ operator|*
 operator|)
 name|NULL
 decl_stmt|;
-empty_stmt|;
 name|Elf_Addr
 name|addr
 decl_stmt|;

@@ -1441,7 +1441,6 @@ operator|)
 name|cmd
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|BTI2C_DEBUG
 argument_list|(
 name|printf
