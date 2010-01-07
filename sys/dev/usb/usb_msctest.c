@@ -2234,6 +2234,9 @@ literal|1
 argument_list|,
 literal|"SCSI cmd = %*D\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|cmd_len
 argument_list|,
 operator|&
