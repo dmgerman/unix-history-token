@@ -2730,6 +2730,17 @@ name|fail
 goto|;
 block|}
 block|}
+name|KASSERT
+argument_list|(
+name|bp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no buffer allocated"
+operator|)
+argument_list|)
+expr_stmt|;
 name|dp
 operator|=
 operator|(
