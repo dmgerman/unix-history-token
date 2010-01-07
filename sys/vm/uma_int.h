@@ -121,7 +121,7 @@ parameter_list|,
 name|mem
 parameter_list|)
 define|\
-value|SLIST_INSERT_HEAD(&(h)->uh_slab_hash[UMA_HASH((h),	\ 		    (mem))], (s), us_hlink);
+value|SLIST_INSERT_HEAD(&(h)->uh_slab_hash[UMA_HASH((h),	\ 		    (mem))], (s), us_hlink)
 end_define
 
 begin_define
@@ -136,7 +136,7 @@ parameter_list|,
 name|mem
 parameter_list|)
 define|\
-value|SLIST_REMOVE(&(h)->uh_slab_hash[UMA_HASH((h),		\ 		    (mem))], (s), uma_slab, us_hlink);
+value|SLIST_REMOVE(&(h)->uh_slab_hash[UMA_HASH((h),		\ 		    (mem))], (s), uma_slab, us_hlink)
 end_define
 
 begin_comment
