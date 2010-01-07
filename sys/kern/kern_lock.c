@@ -1372,14 +1372,12 @@ block|}
 block|}
 else|else
 block|{
-name|MPASS
-argument_list|(
+comment|/* 			 * Exclusive waiters sleeping with LK_SLEEPFAIL on 			 * and using interruptible sleeps/timeout may have 			 * left spourious lk_exslpfail counts on, so clean 			 * it up anyway. 			 */
 name|lk
 operator|->
 name|lk_exslpfail
-operator|==
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|queue
 operator|=
@@ -4193,14 +4191,12 @@ block|}
 block|}
 else|else
 block|{
-name|MPASS
-argument_list|(
+comment|/* 				 * Exclusive waiters sleeping with LK_SLEEPFAIL 				 * on and using interruptible sleeps/timeout 				 * may have left spourious lk_exslpfail counts 				 * on, so clean it up anyway.  				 */
 name|lk
 operator|->
 name|lk_exslpfail
-operator|==
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|queue
 operator|=
@@ -4479,6 +4475,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 					 * Exclusive waiters sleeping with 					 * LK_SLEEPFAIL on and using 					 * interruptible sleeps/timeout may 					 * have left spourious lk_exslpfail 					 * counts on, so clean it up anyway. 					 */
 name|MPASS
 argument_list|(
 name|v
@@ -4486,14 +4483,11 @@ operator|&
 name|LK_SHARED_WAITERS
 argument_list|)
 expr_stmt|;
-name|MPASS
-argument_list|(
 name|lk
 operator|->
 name|lk_exslpfail
-operator|==
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|queue
 operator|=
