@@ -5917,17 +5917,6 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|devstat_start_transaction_bio
-argument_list|(
-name|softc
-operator|->
-name|disk
-operator|->
-name|d_devstat
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
 name|scsi_read_write
 argument_list|(
 operator|&
