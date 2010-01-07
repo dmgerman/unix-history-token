@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipfw.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_sctp.h"
 end_include
 
@@ -55,23 +49,6 @@ begin_error
 error|#
 directive|error
 literal|"IPDIVERT requires INET."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPFIREWALL
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"IPDIVERT requires IPFIREWALL"
 end_error
 
 begin_endif
@@ -165,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -172,12 +155,6 @@ begin_include
 include|#
 directive|include
 file|<net/netisr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/vnet.h>
 end_include
 
 begin_include
@@ -214,18 +191,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_fw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ipfw/ip_fw_private.h>
 end_include
 
 begin_ifdef
@@ -274,7 +239,7 @@ value|(65536 + 100)
 end_define
 
 begin_comment
-comment|/*  * Divert sockets work in conjunction with ipfw, see the divert(4)  * manpage for features.  * Internally, packets selected by ipfw in ip_input() or ip_output(),  * and never diverted before, are passed to the input queue of the  * divert socket with a given 'divert_port' number (as specified in  * the matching ipfw rule), and they are tagged with a 16 bit cookie  * (representing the rule number of the matching ipfw rule), which  * is passed to process reading from the socket.  *  * Packets written to the divert socket are again tagged with a cookie  * (usually the same as above) and a destination address.  * If the destination address is INADDR_ANY then the packet is  * treated as outgoing and sent to ip_output(), otherwise it is  * treated as incoming and sent to ip_input().  * In both cases, the packet is tagged with the cookie.  *  * On reinjection, processing in ip_input() and ip_output()  * will be exactly the same as for the original packet, except that  * ipfw processing will start at the rule number after the one  * written in the cookie (so, tagging a packet with a cookie of 0  * will cause it to be effectively considered as a standard packet).  */
+comment|/*  * Divert sockets work in conjunction with ipfw or other packet filters,  * see the divert(4) manpage for features.  * Packets are selected by the packet filter and tagged with an  * MTAG_IPFW_RULE tag carrying the 'divert port' number (as set by  * the packet filter) and information on the matching filter rule for  * subsequent reinjection. The divert_port is used to put the packet  * on the corresponding divert socket, while the rule number is passed  * up (at least partially) as the sin_port in the struct sockaddr.  *  * Packets written to the divert socket carry in sin_addr a  * destination address, and in sin_port the number of the filter rule  * after which to continue processing.  * If the destination address is INADDR_ANY, the packet is treated as  * as outgoing and sent to ip_output(); otherwise it is treated as  * incoming and sent to ip_input().  * Further, sin_zero carries some information on the interface,  * which can be used in the reinject -- see comments in the code.  *  * On reinjection, processing in ip_input() and ip_output()  * will be exactly the same as for the original packet, except that  * packet filter processing will start at the rule number after the one  * written in the sin_port (ipfw does not allow a rule #0, so sin_port=0  * will apply the entire ruleset to the packet).  */
 end_comment
 
 begin_comment

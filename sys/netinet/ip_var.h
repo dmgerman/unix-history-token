@@ -1313,7 +1313,105 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ipfw and dummynet hooks. Most are declared in raw_ip.c */
+comment|/* Hooks for ipfw, dummynet, divert etc. Most are declared in raw_ip.c */
+end_comment
+
+begin_comment
+comment|/*  * Reference to an ipfw or packet filter rule that can be carried  * outside critical sections.  * A rule is identified by rulenum:rule_id which is ordered.  * In version chain_id the rule can be found in slot 'slot', so  * we don't need a lookup if chain_id == chain->id.  *  * On exit from the firewall this structure refers to the rule after  * the matching one (slot points to the new rule; rulenum:rule_id-1  * is the matching rule), and additional info (e.g. info often contains  * the insn argument or tablearg in the low 16 bits, in host format).  * On entry, the structure is valid if slot>0, and refers to the starting  * rules. 'info' contains the reason for reinject, e.g. divert port,  * divert direction, and so on.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ipfw_rule_ref
+block|{
+name|uint32_t
+name|slot
+decl_stmt|;
+comment|/* slot for matching rule	*/
+name|uint32_t
+name|rulenum
+decl_stmt|;
+comment|/* matching rule number		*/
+name|uint32_t
+name|rule_id
+decl_stmt|;
+comment|/* matching rule id		*/
+name|uint32_t
+name|chain_id
+decl_stmt|;
+comment|/* ruleset id			*/
+name|uint32_t
+name|info
+decl_stmt|;
+comment|/* see below			*/
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+block|{
+name|IPFW_INFO_MASK
+init|=
+literal|0x0000ffff
+block|,
+name|IPFW_INFO_OUT
+init|=
+literal|0x00000000
+block|,
+comment|/* outgoing, just for convenience */
+name|IPFW_INFO_IN
+init|=
+literal|0x80000000
+block|,
+comment|/* incoming, overloads dir */
+name|IPFW_ONEPASS
+init|=
+literal|0x40000000
+block|,
+comment|/* One-pass, do not reinject */
+name|IPFW_IS_MASK
+init|=
+literal|0x30000000
+block|,
+comment|/* which source ? */
+name|IPFW_IS_DIVERT
+init|=
+literal|0x20000000
+block|,
+name|IPFW_IS_DUMMYNET
+init|=
+literal|0x10000000
+block|,
+name|IPFW_IS_PIPE
+init|=
+literal|0x08000000
+block|,
+comment|/* pip1=1, queue = 0 */
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|MTAG_IPFW
+value|1148380143
+end_define
+
+begin_comment
+comment|/* IPFW-tagged cookie */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTAG_IPFW_RULE
+value|1262273568
+end_define
+
+begin_comment
+comment|/* rule reference */
 end_comment
 
 begin_struct_decl
@@ -1387,6 +1485,57 @@ name|V_ip_fw_ctl_ptr
 value|VNET(ip_fw_ctl_ptr)
 end_define
 
+begin_comment
+comment|/* Divert hooks. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|ip_divert_ptr
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|incoming
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* ng_ipfw hooks -- XXX make it the same as divert and dummynet */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|ng_ipfw_input_p
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|extern
 name|int
@@ -1414,36 +1563,15 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
-name|m
 parameter_list|,
 name|int
-name|dir
 parameter_list|,
 name|struct
 name|ip_fw_args
 modifier|*
-name|fwa
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|ip_dn_ruledel_ptr
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* in ip_fw2.c */
-end_comment
 
 begin_expr_stmt
 name|VNET_DECLARE
