@@ -202,6 +202,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip_var.h>
+end_include
+
+begin_comment
+comment|/* hooks */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_fw.h>
 end_include
 
@@ -2959,8 +2969,9 @@ name|O_NGTEE
 case|:
 if|if
 condition|(
-operator|!
-name|NG_IPFW_LOADED
+name|ng_ipfw_input_p
+operator|==
+name|NULL
 condition|)
 return|return
 name|EINVAL

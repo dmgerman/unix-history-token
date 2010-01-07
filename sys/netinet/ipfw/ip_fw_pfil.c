@@ -274,41 +274,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Divert hooks. */
-end_comment
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|ip_divert_ptr
-function_decl|)
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|incoming
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* ng_ipfw hooks. */
-end_comment
-
-begin_decl_stmt
-name|ng_ipfw_input_t
-modifier|*
-name|ng_ipfw_input_p
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Forward declarations. */
 end_comment
 
@@ -986,8 +951,9 @@ name|IP_FW_NETGRAPH
 case|:
 if|if
 condition|(
-operator|!
-name|NG_IPFW_LOADED
+name|ng_ipfw_input_p
+operator|==
+name|NULL
 condition|)
 block|{
 name|ret

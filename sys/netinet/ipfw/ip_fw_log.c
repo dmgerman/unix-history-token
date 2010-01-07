@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_fw.h>
 end_include
 

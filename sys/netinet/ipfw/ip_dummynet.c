@@ -30,7 +30,7 @@ file|"opt_inet6.h"
 end_include
 
 begin_comment
-comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by the "dummynet lock".  *  * Most important Changes:  *  * 011004: KLDable  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
+comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by the "dummynet lock".  *  * Most important Changes:  *  * 011004: KLDable  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  */
 end_comment
 
 begin_include
@@ -158,6 +158,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<netinet/ip_var.h>
+end_include
+
+begin_comment
+comment|/* ip_output(), IP_FORWARDING */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_fw.h>
 end_include
 
@@ -172,16 +182,6 @@ include|#
 directive|include
 file|<netinet/ip_dummynet.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_comment
-comment|/* ip_output(), IP_FORWARDING */
-end_comment
 
 begin_include
 include|#
