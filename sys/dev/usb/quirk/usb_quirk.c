@@ -1578,6 +1578,23 @@ block|,
 comment|/* XXX ZIP drives can also use ATAPI */
 name|USB_QUIRK
 argument_list|(
+name|JMICRON
+argument_list|,
+name|JM20337
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_MSC_FORCE_WIRE_BBB
+argument_list|,
+name|UQ_MSC_FORCE_PROTO_SCSI
+argument_list|,
+name|UQ_MSC_NO_SYNC_CACHE
+argument_list|)
+block|,
+name|USB_QUIRK
+argument_list|(
 name|KYOCERA
 argument_list|,
 name|FINECAM_L3
@@ -3121,6 +3138,8 @@ argument_list|,
 name|UQ_MSC_FORCE_PROTO_SCSI
 argument_list|,
 name|UQ_MSC_NO_INQUIRY_EVPD
+argument_list|,
+name|UQ_MSC_NO_SYNC_CACHE
 argument_list|)
 block|,
 name|USB_QUIRK
