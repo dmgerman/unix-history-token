@@ -8233,7 +8233,7 @@ name|td
 argument_list|)
 operator|||
 name|prio
-operator|<=
+operator|>=
 name|PSOCK
 condition|)
 name|td
