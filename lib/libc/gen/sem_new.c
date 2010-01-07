@@ -560,6 +560,11 @@ name|mode
 decl_stmt|,
 name|len
 decl_stmt|;
+name|int
+name|value
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|name
@@ -681,6 +686,15 @@ name|flags
 argument_list|)
 expr_stmt|;
 name|mode
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+name|value
 operator|=
 name|va_arg
 argument_list|(
@@ -890,7 +904,7 @@ name|_kern
 operator|.
 name|_count
 operator|=
-literal|0
+name|value
 expr_stmt|;
 name|tmp
 operator|.

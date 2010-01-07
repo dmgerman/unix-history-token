@@ -315,6 +315,8 @@ argument_list|,
 name|O_CREAT
 argument_list|,
 literal|0777
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -339,6 +341,8 @@ argument_list|,
 name|O_CREAT
 argument_list|,
 literal|0777
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
