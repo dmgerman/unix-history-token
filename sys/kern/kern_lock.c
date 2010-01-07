@@ -1262,7 +1262,7 @@ name|v
 operator|=
 name|LK_UNLOCKED
 expr_stmt|;
-comment|/* 		 * If the lock has exclusive waiters, give them preference in 		 * order to avoid deadlock with shared runners up. 		 * If interruptible sleeps left the exclusive queue empty 		 * avoid a starvation for the threads sleeping on the shared 		 * queue by giving them precedence and cleaning up the 		 * exclusive waiters bit anyway. 		 * Please note that lk_exslpfail count may be lying about 		 * the real number of waiters with the LK_SLEEPFAIL flag on 		 * because they may be used in conjuction with interruptible 		 * sleeps so lk_exslpfail is consider as a 'upper limit' 		 * bound, considering the edge cases. 		 */
+comment|/* 		 * If the lock has exclusive waiters, give them preference in 		 * order to avoid deadlock with shared runners up. 		 * If interruptible sleeps left the exclusive queue empty 		 * avoid a starvation for the threads sleeping on the shared 		 * queue by giving them precedence and cleaning up the 		 * exclusive waiters bit anyway. 		 * Please note that lk_exslpfail count may be lying about 		 * the real number of waiters with the LK_SLEEPFAIL flag on 		 * because they may be used in conjuction with interruptible 		 * sleeps so lk_exslpfail might be considered an 'upper limit' 		 * bound, including the edge cases. 		 */
 name|realexslp
 operator|=
 name|sleepq_sleepcnt
@@ -4070,7 +4070,7 @@ name|v
 operator|=
 name|LK_UNLOCKED
 expr_stmt|;
-comment|/* 		 	 * If the lock has exclusive waiters, give them 			 * preference in order to avoid deadlock with 			 * shared runners up. 			 * If interruptible sleeps left the exclusive queue 			 * empty avoid a starvation for the threads sleeping 			 * on the shared queue by giving them precedence 			 * and cleaning up the exclusive waiters bit anyway. 			 * Please note that lk_exslpfail count may be lying 			 * about the real number of waiters with the 			 * LK_SLEEPFAIL flag on because they may be used in 			 * conjuction with interruptible sleeps so 			 * lk_exslpfail is consider as a 'upper limit' bound, 			 * considering the edge cases. 			 */
+comment|/* 		 	 * If the lock has exclusive waiters, give them 			 * preference in order to avoid deadlock with 			 * shared runners up. 			 * If interruptible sleeps left the exclusive queue 			 * empty avoid a starvation for the threads sleeping 			 * on the shared queue by giving them precedence 			 * and cleaning up the exclusive waiters bit anyway. 			 * Please note that lk_exslpfail count may be lying 			 * about the real number of waiters with the 			 * LK_SLEEPFAIL flag on because they may be used in 			 * conjuction with interruptible sleeps so 			 * lk_exslpfail might be considered an 'upper limit' 			 * bound, including the edge cases. 			 */
 name|MPASS
 argument_list|(
 operator|(
@@ -4455,7 +4455,7 @@ operator|~
 name|LK_EXCLUSIVE_SPINNERS
 operator|)
 expr_stmt|;
-comment|/* 				 * If interruptible sleeps left the exclusive 				 * queue empty avoid a starvation for the 				 * threads sleeping on the shared queue by 				 * giving them precedence and cleaning up the 				 * exclusive waiters bit anyway. 				 * Please note that lk_exslpfail count may be 				 * lying about the real number of waiters with 				 * the LK_SLEEPFAIL flag on because they may 				 * be used in conjuction with interruptible 				 * sleeps so lk_exslpfail is consider as a 				 * 'upper limit' bound, considering the edge 				 * cases. 				 */
+comment|/* 				 * If interruptible sleeps left the exclusive 				 * queue empty avoid a starvation for the 				 * threads sleeping on the shared queue by 				 * giving them precedence and cleaning up the 				 * exclusive waiters bit anyway. 				 * Please note that lk_exslpfail count may be 				 * lying about the real number of waiters with 				 * the LK_SLEEPFAIL flag on because they may 				 * be used in conjuction with interruptible 				 * sleeps so lk_exslpfail might be considered 				 * an 'upper limit' bound, including the edge 				 * cases. 				 */
 if|if
 condition|(
 name|v
