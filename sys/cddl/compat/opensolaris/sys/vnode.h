@@ -160,6 +160,13 @@ name|v_count
 value|v_usecount
 end_define
 
+begin_define
+define|#
+directive|define
+name|V_APPEND
+value|VAPPEND
+end_define
+
 begin_function
 specifier|static
 name|__inline

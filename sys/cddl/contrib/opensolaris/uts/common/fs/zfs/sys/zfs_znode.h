@@ -627,7 +627,7 @@ parameter_list|)
 value|((znode_t *)(VP)->v_data)
 endif|#
 directive|endif
-comment|/*  * ZFS_ENTER() is called on entry to each ZFS vnode and vfs operation.  * ZFS_EXIT() must be called before exitting the vop.  * ZFS_VERIFY_ZP() verifies the znode is valid.  */
+comment|/*  * ZFS_ENTER() is called on entry to each ZFS vnode and vfs operation.  * ZFS_ENTER_NOERROR() is called when we can't return EIO.  * ZFS_EXIT() must be called before exitting the vop.  * ZFS_VERIFY_ZP() verifies the znode is valid.  */
 define|#
 directive|define
 name|ZFS_ENTER
@@ -636,6 +636,14 @@ name|zfsvfs
 parameter_list|)
 define|\
 value|{ \ 		rrw_enter(&(zfsvfs)->z_teardown_lock, RW_READER, FTAG); \ 		if ((zfsvfs)->z_unmounted) { \ 			ZFS_EXIT(zfsvfs); \ 			return (EIO); \ 		} \ 	}
+define|#
+directive|define
+name|ZFS_ENTER_NOERROR
+parameter_list|(
+name|zfsvfs
+parameter_list|)
+define|\
+value|rrw_enter(&(zfsvfs)->z_teardown_lock, RW_READER, FTAG)
 define|#
 directive|define
 name|ZFS_EXIT

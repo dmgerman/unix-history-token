@@ -4158,7 +4158,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ZFS_ENTER
+name|ZFS_ENTER_NOERROR
 argument_list|(
 name|zfsvfs
 argument_list|)
@@ -4809,6 +4809,43 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fflag
+operator|&
+name|MS_FORCE
+condition|)
+block|{
+comment|/* 		 * Mark file system as unmounted before calling 		 * vflush(FORCECLOSE). This way we ensure no future vnops 		 * will be called and risk operating on DOOMED vnodes. 		 */
+name|rrw_enter
+argument_list|(
+operator|&
+name|zfsvfs
+operator|->
+name|z_teardown_lock
+argument_list|,
+name|RW_WRITER
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
+name|zfsvfs
+operator|->
+name|z_unmounted
+operator|=
+name|B_TRUE
+expr_stmt|;
+name|rrw_exit
+argument_list|(
+operator|&
+name|zfsvfs
+operator|->
+name|z_teardown_lock
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Flush all the files. 	 */
 name|ret
 operator|=
@@ -5035,13 +5072,12 @@ name|vfsp
 operator|->
 name|mnt_vnodecovered
 decl_stmt|;
-comment|/* 		 * We don't need an extra vn_rele if this is a manual snapshot mount 		 */
 if|if
 condition|(
 name|svp
 operator|->
 name|v_count
-operator|==
+operator|>=
 literal|2
 condition|)
 name|VN_RELE
