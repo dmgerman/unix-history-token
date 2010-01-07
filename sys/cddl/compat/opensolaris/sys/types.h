@@ -192,15 +192,15 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
-name|major_t
+name|int64_t
+name|rlim64_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|int64_t
-name|rlim64_t
+name|int
+name|major_t
 typedef|;
 end_typedef
 

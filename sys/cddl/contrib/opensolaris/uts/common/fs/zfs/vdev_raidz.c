@@ -5177,7 +5177,6 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * If we read parity information (unnecessarily 				 * as it happens since no reconstruction was 				 * needed) regenerate and verify the parity. 				 * We also regenerate parity when resilvering 				 * so we can write it out to the failed device 				 * later. 				 */
-comment|/* 				 * If we read parity information (unnecessarily 				 * as it happens since no reconstruction was 				 * needed) regenerate and verify the parity. 				 * We also regenerate parity when resilvering 				 * so we can write it out to the failed device 				 * later. 				 */
 if|if
 condition|(
 name|parity_errors

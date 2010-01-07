@@ -75,13 +75,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KM_ZERO
-value|M_ZERO
-end_define
-
-begin_define
-define|#
-directive|define
 name|KMC_NODEBUG
 value|0
 end_define

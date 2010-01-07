@@ -2320,8 +2320,6 @@ name|slogging
 decl_stmt|;
 name|uintptr_t
 name|fsync_cnt
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(

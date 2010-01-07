@@ -3568,13 +3568,6 @@ decl_stmt|;
 name|int
 name|canwrite
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* TODO: For now deny user mounts. */
-block|if ((error = priv_check(td, PRIV_VFS_MOUNT)) != 0) 		return (error);
-endif|#
-directive|endif
 if|if
 condition|(
 name|vfs_getopt
