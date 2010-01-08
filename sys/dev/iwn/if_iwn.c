@@ -21126,14 +21126,14 @@ name|phy
 operator|->
 name|rssi
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 name|phy
 operator|->
 name|rssi
 index|[
-literal|4
+literal|2
 index|]
 argument_list|,
 name|rssi
