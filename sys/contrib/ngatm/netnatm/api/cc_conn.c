@@ -3611,7 +3611,7 @@ name|party
 argument_list|,
 literal|"no party for %s"
 argument_list|,
-name|ptab
+name|cc_conn_sigtab
 index|[
 name|CONN_SIG_DROP_PARTY_ACK_IND
 index|]
