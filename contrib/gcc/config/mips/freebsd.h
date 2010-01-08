@@ -175,6 +175,19 @@ begin_comment
 comment|/* Define the actual types of some ANSI-mandated types.    Needs to agree with<machine/ansi.h>.  GCC defaults come from c-decl.c,    c-common.c, and config/<arch>/<arch>.h.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+value|(MASK_ABICALLS | MASK_SOFT_FLOAT)
+end_define
+
 begin_if
 if|#
 directive|if
