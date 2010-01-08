@@ -797,7 +797,7 @@ comment|/* Size counters. */
 name|ino_t
 name|nodes_max
 decl_stmt|;
-name|size_t
+name|u_quad_t
 name|size_max
 decl_stmt|;
 comment|/* Root node attributes. */
@@ -1080,8 +1080,12 @@ operator|<
 name|PAGE_SIZE
 operator|||
 name|size_max
-operator|>=
+operator|>
+operator|(
 name|SIZE_MAX
+operator|-
+name|PAGE_SIZE
+operator|)
 condition|)
 name|pages
 operator|=
