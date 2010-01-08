@@ -557,6 +557,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LAGG_PORT_STACKING
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -568,6 +574,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2644,7 +2655,47 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* XXX disable stacking for the moment, its untested 			lp->lp_flags |= LAGG_PORT_STACK; 			if (lagg_port_checkstacking(sc_ptr)>= 			    LAGG_MAX_STACKING) { 				mtx_unlock(&lagg_list_mtx); 				free(lp, M_DEVBUF); 				return (E2BIG); 			} 			*/
+comment|/* XXX disable stacking for the moment, its untested */
+ifdef|#
+directive|ifdef
+name|LAGG_PORT_STACKING
+name|lp
+operator|->
+name|lp_flags
+operator||=
+name|LAGG_PORT_STACK
+expr_stmt|;
+if|if
+condition|(
+name|lagg_port_checkstacking
+argument_list|(
+name|sc_ptr
+argument_list|)
+operator|>=
+name|LAGG_MAX_STACKING
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|lagg_list_mtx
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|lp
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|E2BIG
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 block|}
 block|}
 name|mtx_unlock
@@ -2864,6 +2915,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LAGG_PORT_STACKING
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -2949,6 +3006,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
