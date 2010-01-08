@@ -3821,7 +3821,7 @@ name|td
 operator|->
 name|td_slptick
 operator|=
-name|ticks
+literal|0
 expr_stmt|;
 name|ts
 operator|->
