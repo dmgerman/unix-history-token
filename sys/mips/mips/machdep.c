@@ -1059,6 +1059,64 @@ comment|/* PORT_TO_JMIPS */
 end_comment
 
 begin_comment
+comment|/*  * Initialize per cpu data structures, include curthread.  */
+end_comment
+
+begin_function
+name|void
+name|mips_pcpu_init
+parameter_list|()
+block|{
+comment|/* Initialize pcpu info of cpu-zero */
+ifdef|#
+directive|ifdef
+name|SMP
+name|pcpu_init
+argument_list|(
+operator|&
+name|__pcpu
+index|[
+literal|0
+index|]
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|pcpu_init
+argument_list|(
+name|pcpup
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|PCPU_SET
+argument_list|(
+name|curthread
+argument_list|,
+operator|&
+name|thread0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize mips and configure to run kernel  */
 end_comment
 
@@ -1168,44 +1226,6 @@ name|td_pcb
 operator|->
 name|pcb_regs
 expr_stmt|;
-comment|/* Initialize pcpu info of cpu-zero */
-ifdef|#
-directive|ifdef
-name|SMP
-name|pcpu_init
-argument_list|(
-operator|&
-name|__pcpu
-index|[
-literal|0
-index|]
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pcpu
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|pcpu_init
-argument_list|(
-name|pcpup
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pcpu
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Steal memory for the dynamic per-cpu area. */
 name|dpcpu_init
 argument_list|(
@@ -1221,15 +1241,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * There is no need to initialize md_upte array for thread0 as it's 	 * located in .bss section and should be explicitly zeroed during  	 * kernel initialization. 	 */
-name|PCPU_SET
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
 name|PCPU_SET
 argument_list|(
 name|curpcb
@@ -1239,6 +1250,7 @@ operator|.
 name|td_pcb
 argument_list|)
 expr_stmt|;
+comment|/* 	 * There is no need to initialize md_upte array for thread0 as it's 	 * located in .bss section and should be explicitly zeroed during  	 * kernel initialization. 	 */
 block|}
 end_function
 

@@ -498,6 +498,10 @@ name|edata
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Initialize pcpu stuff */
+name|mips_pcpu_init
+argument_list|()
+expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
