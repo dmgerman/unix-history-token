@@ -1911,10 +1911,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|td
-condition|)
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -2138,10 +2134,6 @@ name|bootopt
 operator||=
 name|RB_NOSYNC
 expr_stmt|;
-if|if
-condition|(
-name|td
-condition|)
 name|critical_exit
 argument_list|()
 expr_stmt|;
