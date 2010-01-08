@@ -23,11 +23,14 @@ begin_comment
 comment|/* NB: portability glue must go first */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -38,7 +41,10 @@ end_include
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 end_elif
 
 begin_include
@@ -50,7 +56,10 @@ end_include
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__linux__
+argument_list|)
 end_elif
 
 begin_include
