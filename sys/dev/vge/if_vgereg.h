@@ -2613,7 +2613,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VGE_TXQCST_DEAD0
+name|VGE_TXQCSR_DEAD0
 value|0x0008
 end_define
 
@@ -2657,7 +2657,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VGE_TXQCST_DEAD1
+name|VGE_TXQCSR_DEAD1
 value|0x0080
 end_define
 
@@ -2701,7 +2701,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VGE_TXQCST_DEAD2
+name|VGE_TXQCSR_DEAD2
 value|0x0800
 end_define
 
@@ -2745,7 +2745,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VGE_TXQCST_DEAD3
+name|VGE_TXQCSR_DEAD3
 value|0x8000
 end_define
 
