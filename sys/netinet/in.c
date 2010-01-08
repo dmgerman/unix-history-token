@@ -2705,9 +2705,7 @@ literal|0
 operator|&&
 name|iaIsNew
 condition|)
-goto|goto
-name|out
-goto|;
+break|break;
 if|if
 condition|(
 operator|(
