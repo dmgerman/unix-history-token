@@ -3192,9 +3192,9 @@ argument_list|(
 name|carps_badttl
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
-literal|"carp_input: received ttl %d != 255i on %s\n"
+literal|"carp_input: received ttl %d != 255 on %s\n"
 argument_list|,
 name|ip
 operator|->
@@ -4150,7 +4150,7 @@ operator|->
 name|if_carp
 argument_list|)
 expr_stmt|;
-name|CARP_LOG
+name|CARP_DEBUG
 argument_list|(
 literal|"%s: incorrect hash\n"
 argument_list|,
