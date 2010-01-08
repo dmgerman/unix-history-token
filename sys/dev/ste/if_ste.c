@@ -7606,6 +7606,8 @@ index|]
 operator|.
 name|ste_next
 operator|=
+name|htole32
+argument_list|(
 name|ld
 operator|->
 name|ste_rx_list_paddr
@@ -7619,6 +7621,7 @@ argument_list|)
 operator|*
 literal|0
 operator|)
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -7651,6 +7654,8 @@ index|]
 operator|.
 name|ste_next
 operator|=
+name|htole32
+argument_list|(
 name|ld
 operator|->
 name|ste_rx_list_paddr
@@ -7668,6 +7673,7 @@ operator|+
 literal|1
 operator|)
 operator|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
