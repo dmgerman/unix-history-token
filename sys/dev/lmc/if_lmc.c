@@ -24509,7 +24509,10 @@ argument_list|)
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__OpenBSD__
+argument_list|)
 name|bcopy
 argument_list|(
 name|sc
