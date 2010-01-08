@@ -2874,6 +2874,17 @@ argument_list|(
 name|zfsvfs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+operator|*
+name|vpp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|err
