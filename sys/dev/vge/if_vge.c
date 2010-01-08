@@ -1045,7 +1045,6 @@ modifier|*
 name|dest
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2294,7 +2293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Program the multicast filter. We use the 64-entry CAM filter  * for perfect filtering. If there's more than 64 multicast addresses,  * we use the hash filter insted.  */
+comment|/*  * Program the multicast filter. We use the 64-entry CAM filter  * for perfect filtering. If there's more than 64 multicast addresses,  * we use the hash filter instead.  */
 end_comment
 
 begin_function
@@ -2590,7 +2589,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3985,8 +3983,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -3996,13 +3992,6 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4059,7 +4048,7 @@ name|sc
 operator|->
 name|vge_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -4067,13 +4056,6 @@ name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -4087,11 +4069,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vge%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4111,7 +4093,7 @@ name|sc
 operator|->
 name|vge_irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -4119,13 +4101,6 @@ name|SYS_RES_IRQ
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_SHAREABLE
 operator||
@@ -4141,11 +4116,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vge%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4478,11 +4453,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"vge%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -5142,7 +5117,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Note: the manual fails to document the fact that for 	 * proper opration, the driver needs to replentish the RX 	 * DMA ring 4 descriptors at a time (rather than one at a 	 * time, like most chips). We can allocate the new buffers 	 * but we should not set the OWN bits until we're ready 	 * to hand back 4 of them in one shot. 	 */
+comment|/* 	 * Note: the manual fails to document the fact that for 	 * proper operation, the driver needs to replenish the RX 	 * DMA ring 4 descriptors at a time (rather than one at a 	 * time, like most chips). We can allocate the new buffers 	 * but we should not set the OWN bits until we're ready 	 * to hand back 4 of them in one shot. 	 */
 define|#
 directive|define
 name|VGE_RXCHUNK
@@ -8333,7 +8308,7 @@ operator||
 name|VGE_CR0_START
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Configure one-shot timer for microsecond 	 * resulution and load it for 500 usecs. 	 */
+comment|/* 	 * Configure one-shot timer for microsecond 	 * resolution and load it for 500 usecs. 	 */
 name|CSR_SETBIT_1
 argument_list|(
 name|sc
@@ -9547,7 +9522,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
