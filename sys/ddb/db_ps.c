@@ -428,11 +428,13 @@ block|{
 if|if
 condition|(
 operator|!
+operator|(
 name|td
 operator|->
 name|td_flags
 operator|&
 name|TDF_SINTR
+operator|)
 condition|)
 name|dflag
 operator|++
@@ -565,11 +567,13 @@ comment|/* Additional process state flags. */
 if|if
 condition|(
 operator|!
+operator|(
 name|p
 operator|->
 name|p_flag
 operator|&
 name|P_INMEM
+operator|)
 condition|)
 name|strlcat
 argument_list|(

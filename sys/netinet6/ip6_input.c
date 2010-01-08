@@ -5566,11 +5566,13 @@ case|:
 if|if
 condition|(
 operator|!
+operator|(
 name|in6p
 operator|->
 name|inp_flags
 operator|&
 name|IN6P_RTHDR
+operator|)
 condition|)
 break|break;
 operator|*

@@ -3811,9 +3811,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|status
 operator|&
 name|ERR_RX_INCOMPLETE
+operator|)
 condition|)
 block|{
 comment|/* 			 * We see if by now, the packet has completly 			 * arrived 			 */
