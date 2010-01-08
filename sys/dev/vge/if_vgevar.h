@@ -432,7 +432,7 @@ decl_stmt|;
 name|device_t
 name|vge_miibus
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|vge_type
 decl_stmt|;
 name|int
