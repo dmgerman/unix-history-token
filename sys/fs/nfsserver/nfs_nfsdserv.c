@@ -310,6 +310,9 @@ name|supported
 init|=
 literal|0
 decl_stmt|;
+name|accmode_t
+name|deletebit
+decl_stmt|;
 if|if
 condition|(
 name|nd
@@ -417,7 +420,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_READDATA
+name|VREAD
 argument_list|,
 name|nd
 operator|->
@@ -430,6 +433,9 @@ argument_list|,
 name|NFSACCCHK_NOOVERRIDE
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+operator|&
+name|supported
 argument_list|)
 condition|)
 name|nfsmode
@@ -455,7 +461,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_WRITEDATA
+name|VWRITE
 argument_list|,
 name|nd
 operator|->
@@ -468,6 +474,9 @@ argument_list|,
 name|NFSACCCHK_NOOVERRIDE
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+operator|&
+name|supported
 argument_list|)
 condition|)
 name|nfsmode
@@ -493,7 +502,9 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_APPENDDATA
+name|VWRITE
+operator||
+name|VAPPEND
 argument_list|,
 name|nd
 operator|->
@@ -506,6 +517,9 @@ argument_list|,
 name|NFSACCCHK_NOOVERRIDE
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+operator|&
+name|supported
 argument_list|)
 condition|)
 name|nfsmode
@@ -527,11 +541,28 @@ name|NFSACCESS_DELETE
 expr_stmt|;
 if|if
 condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
+condition|)
+name|deletebit
+operator|=
+name|VDELETE_CHILD
+expr_stmt|;
+else|else
+name|deletebit
+operator|=
+name|VDELETE
+expr_stmt|;
+if|if
+condition|(
 name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_DELETE
+name|deletebit
 argument_list|,
 name|nd
 operator|->
@@ -544,6 +575,9 @@ argument_list|,
 name|NFSACCCHK_NOOVERRIDE
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+operator|&
+name|supported
 argument_list|)
 condition|)
 name|nfsmode
@@ -591,7 +625,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_EXECUTE
+name|VEXEC
 argument_list|,
 name|nd
 operator|->
@@ -604,6 +638,9 @@ argument_list|,
 name|NFSACCCHK_NOOVERRIDE
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+operator|&
+name|supported
 argument_list|)
 condition|)
 name|nfsmode
@@ -893,7 +930,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_READATTRIBUTES
+name|VREAD_ATTRIBUTES
 argument_list|,
 name|nd
 operator|->
@@ -906,6 +943,8 @@ argument_list|,
 name|NFSACCCHK_NOOVERRIDE
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1585,7 +1624,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_WRITEDATA
+name|VWRITE
 argument_list|,
 name|nd
 operator|->
@@ -1598,6 +1637,8 @@ argument_list|,
 name|NFSACCCHK_NOOVERRIDE
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3724,7 +3765,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_READDATA
+name|VREAD
 argument_list|,
 name|nd
 operator|->
@@ -3737,6 +3778,8 @@ argument_list|,
 name|NFSACCCHK_ALLOWOWNER
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3753,7 +3796,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_EXECUTE
+name|VEXEC
 argument_list|,
 name|nd
 operator|->
@@ -3766,6 +3809,8 @@ argument_list|,
 name|NFSACCCHK_ALLOWOWNER
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -4895,7 +4940,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_WRITEDATA
+name|VWRITE
 argument_list|,
 name|nd
 operator|->
@@ -4908,6 +4953,8 @@ argument_list|,
 name|NFSACCCHK_ALLOWOWNER
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -13661,7 +13708,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_WRITEDATA
+name|VWRITE
 argument_list|,
 name|nd
 operator|->
@@ -13674,6 +13721,8 @@ argument_list|,
 name|NFSACCCHK_ALLOWOWNER
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -13687,7 +13736,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_READDATA
+name|VREAD
 argument_list|,
 name|nd
 operator|->
@@ -13700,6 +13749,8 @@ argument_list|,
 name|NFSACCCHK_ALLOWOWNER
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -13716,7 +13767,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_EXECUTE
+name|VEXEC
 argument_list|,
 name|nd
 operator|->
@@ -13729,6 +13780,8 @@ argument_list|,
 name|NFSACCCHK_ALLOWOWNER
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -16782,7 +16835,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_WRITEDATA
+name|VWRITE
 argument_list|,
 name|nd
 operator|->
@@ -16795,6 +16848,8 @@ argument_list|,
 name|NFSACCCHK_ALLOWOWNER
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -16821,7 +16876,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_READDATA
+name|VREAD
 argument_list|,
 name|nd
 operator|->
@@ -16834,6 +16889,8 @@ argument_list|,
 name|NFSACCCHK_ALLOWOWNER
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -16850,7 +16907,7 @@ name|nfsvno_accchk
 argument_list|(
 name|vp
 argument_list|,
-name|NFSV4ACE_EXECUTE
+name|VEXEC
 argument_list|,
 name|nd
 operator|->
@@ -16863,6 +16920,8 @@ argument_list|,
 name|NFSACCCHK_ALLOWOWNER
 argument_list|,
 name|NFSACCCHK_VPISLOCKED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
