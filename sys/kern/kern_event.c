@@ -3715,6 +3715,10 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|filt
@@ -3806,7 +3810,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
