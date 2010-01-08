@@ -2602,8 +2602,9 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0x00
+literal|0x02
 expr_stmt|;
+comment|/* U/L bit set. */
 name|sc
 operator|->
 name|jme_eaddr
