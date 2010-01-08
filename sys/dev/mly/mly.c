@@ -922,6 +922,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|mly_timeout
+parameter_list|(
+name|struct
+name|mly_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -933,19 +946,6 @@ name|mly_print_controller
 parameter_list|(
 name|int
 name|controller
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|mly_timeout
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -14512,6 +14512,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MLY_DEBUG
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -14603,6 +14609,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
