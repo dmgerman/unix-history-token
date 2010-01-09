@@ -46,7 +46,7 @@ file|"traceroute.h"
 end_include
 
 begin_comment
-comment|/*  * Return the source address for the given destination address.  *  * This makes use of proper source address seclection in the FreeBSD kernel  * even taking jails into account (sys/netinet/in_pcb.c:in_pcbladdr()).  * We open a UDP socket, and connect to the destination, letting the kernel  * do the bind and then read the source IPv4 address using getsockname(2).  * This has multiple advantages: no need to do PF_ROUTE operations possibly  * needing special privileges, jails properly taken into account and most  * important - getting the result the kernel would give us rather than  * best-guessing ourselves.  */
+comment|/*  * Return the source address for the given destination address.  *  * This makes use of proper source address selection in the FreeBSD kernel  * even taking jails into account (sys/netinet/in_pcb.c:in_pcbladdr()).  * We open a UDP socket, and connect to the destination, letting the kernel  * do the bind and then read the source IPv4 address using getsockname(2).  * This has multiple advantages: no need to do PF_ROUTE operations possibly  * needing special privileges, jails properly taken into account and most  * important - getting the result the kernel would give us rather than  * best-guessing ourselves.  */
 end_comment
 
 begin_function
