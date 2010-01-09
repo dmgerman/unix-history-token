@@ -241,7 +241,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * These are the entries in the filehandle hash. They talk about a specific   * file, requests against which are being handled by one or more nfsds. We keep  * a chain of nfsds against the file. We only have more than one if reads are   * ongoing, and then only if the reads affect disparate regions of the file.  *  * In general, we want to assign a new request to an existing nfsd if it is   * going to contend with work happening already on that nfsd, or if the   * operation is a read and the nfsd is already handling a proximate read. We   * do this to avoid jumping around in the read stream unnecessarily, and to   * avoid contention between threads over single files.  */
+comment|/*  * These are the entries in the filehandle hash.  They talk about a specific  * file, requests against which are being handled by one or more nfsds.  We  * keep a chain of nfsds against the file. We only have more than one if reads  * are ongoing, and then only if the reads affect disparate regions of the  * file.  *  * In general, we want to assign a new request to an existing nfsd if it is  * going to contend with work happening already on that nfsd, or if the  * operation is a read and the nfsd is already handling a proximate read.  We  * do this to avoid jumping around in the read stream unnecessarily, and to  * avoid contention between threads over single files.  */
 end_comment
 
 begin_struct
@@ -539,7 +539,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*   * This just specifies that offsets should obey affinity when within  * the same 1Mbyte (1<<20) chunk for the file (reads only for now).  */
+comment|/*  * This just specifies that offsets should obey affinity when within  * the same 1Mbyte (1<<20) chunk for the file (reads only for now).  */
 end_comment
 
 begin_function
@@ -596,7 +596,7 @@ decl_stmt|;
 name|rpcproc_t
 name|procnum
 decl_stmt|;
-comment|/*  	 * We start off with a random fh. If we get a reasonable 	 * procnum, we set the fh. If there's a concept of offset  	 * that we're interested in, we set that. 	 */
+comment|/* 	 * We start off with a random fh.  If we get a reasonable 	 * procnum, we set the fh.  If there's a concept of offset 	 * that we're interested in, we set that. 	 */
 name|i
 operator|->
 name|fh
@@ -616,7 +616,7 @@ name|locktype
 operator|=
 name|LK_EXCLUSIVE
 expr_stmt|;
-comment|/* 	 * Extract the procnum and convert to v3 form if necessary, 	 * taking care to deal with out-of-range procnums. Caller will 	 * ensure that rq_vers is either 2 or 3. 	 */
+comment|/* 	 * Extract the procnum and convert to v3 form if necessary, 	 * taking care to deal with out-of-range procnums.  Caller will 	 * ensure that rq_vers is either 2 or 3. 	 */
 name|procnum
 operator|=
 name|req
@@ -646,7 +646,7 @@ name|procnum
 index|]
 expr_stmt|;
 block|}
-comment|/*  	 * We do affinity for most. However, we divide a realm of affinity  	 * by file offset so as to allow for concurrent random access. We  	 * only do this for reads today, but this may change when IFS supports  	 * efficient concurrent writes. 	 */
+comment|/* 	 * We do affinity for most.  However, we divide a realm of affinity 	 * by file offset so as to allow for concurrent random access.  We 	 * only do this for reads today, but this may change when IFS supports 	 * efficient concurrent writes. 	 */
 if|if
 condition|(
 name|procnum
@@ -988,7 +988,9 @@ name|threads
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|e
+operator|)
 return|;
 block|}
 end_function
@@ -1086,7 +1088,6 @@ argument|&g_fha.hashtable[fh % g_fha.hashmask]
 argument_list|,
 argument|link
 argument_list|)
-block|{
 if|if
 condition|(
 name|fhe
@@ -1096,7 +1097,6 @@ operator|==
 name|fh
 condition|)
 break|break;
-block|}
 if|if
 condition|(
 operator|!
@@ -1136,7 +1136,6 @@ argument|&g_fha.hashtable[fh % g_fha.hashmask]
 argument_list|,
 argument|link
 argument_list|)
-block|{
 if|if
 condition|(
 name|fhe
@@ -1146,7 +1145,6 @@ operator|==
 name|fh
 condition|)
 break|break;
-block|}
 if|if
 condition|(
 operator|!
@@ -1178,16 +1176,16 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|fha_hash_entry_destroy
 argument_list|(
 name|new_fhe
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 return|return
+operator|(
 name|fhe
+operator|)
 return|;
 block|}
 end_function
@@ -1258,7 +1256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Account for an ongoing operation associated with this file.  */
+comment|/*  * Account for an ongoing operation associated with this file.  */
 end_comment
 
 begin_function
@@ -1355,7 +1353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get the service thread currently associated with the fhe that is  * appropriate to handle this operation.  */
+comment|/*  * Get the service thread currently associated with the fhe that is  * appropriate to handle this operation.  */
 end_comment
 
 begin_function_decl
@@ -1455,7 +1453,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO,  			    "fha: %p(%d)w", thread, req_count);
+block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO, 			    "fha: %p(%d)w", thread, req_count);
 endif|#
 directive|endif
 return|return
@@ -1464,7 +1462,7 @@ name|thread
 operator|)
 return|;
 block|}
-comment|/*  		 * Check for read locality, making sure that we won't  		 * exceed our per-thread load limit in the process.  		 */
+comment|/* 		 * Check for read locality, making sure that we won't 		 * exceed our per-thread load limit in the process. 		 */
 name|offset1
 operator|=
 name|i
@@ -1520,7 +1518,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO,  				    "fha: %p(%d)r", thread, req_count);
+block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO, 				    "fha: %p(%d)r", thread, req_count);
 endif|#
 directive|endif
 return|return
@@ -1530,11 +1528,11 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*  		 * We don't have a locality match, so skip this thread, 		 * but keep track of the most attractive thread in case  		 * we need to come back to it later. 		 */
+comment|/* 		 * We don't have a locality match, so skip this thread, 		 * but keep track of the most attractive thread in case 		 * we need to come back to it later. 		 */
 if|#
 directive|if
 literal|0
-block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO,  		    "fha: %p(%d)s off1 %llu off2 %llu", thread,  		    req_count, offset1, offset2);
+block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO, 		    "fha: %p(%d)s off1 %llu off2 %llu", thread, 		    req_count, offset1, offset2);
 endif|#
 directive|endif
 if|if
@@ -1562,7 +1560,7 @@ name|thread
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * We didn't find a good match yet. See if we can add  	 * a new thread to this file handle entry's thread list. 	 */
+comment|/* 	 * We didn't find a good match yet.  See if we can add 	 * a new thread to this file handle entry's thread list. 	 */
 if|if
 condition|(
 operator|(
@@ -1584,7 +1582,7 @@ name|max_nfsds_per_fh
 operator|)
 condition|)
 block|{
-comment|/*  		 * We can add a new thread, so try for an idle thread  		 * first, and fall back to this_thread if none are idle.  		 */
+comment|/* 		 * We can add a new thread, so try for an idle thread 		 * first, and fall back to this_thread if none are idle. 		 */
 if|if
 condition|(
 name|STAILQ_EMPTY
@@ -1603,7 +1601,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO,  			    "fha: %p(%d)t", thread, thread->st_reqcount);
+block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO, 			    "fha: %p(%d)t", thread, thread->st_reqcount);
 endif|#
 directive|endif
 block|}
@@ -1623,7 +1621,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO,  			    "fha: %p(%d)i", thread, thread->st_reqcount);
+block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO, 			    "fha: %p(%d)i", thread, thread->st_reqcount);
 endif|#
 directive|endif
 block|}
@@ -1636,7 +1634,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO,  			    "fha: %p(%d)b", thread, thread->st_reqcount);
+block|ITRACE_CURPROC(ITRACE_NFS, ITRACE_INFO, 			    "fha: %p(%d)b", thread, thread->st_reqcount);
 endif|#
 directive|endif
 block|}
@@ -1650,7 +1648,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 * We don't want to use any more threads for this file, so  		 * go back to the most attractive nfsd we're already using. 		 */
+comment|/* 		 * We don't want to use any more threads for this file, so 		 * go back to the most attractive nfsd we're already using. 		 */
 name|thread
 operator|=
 name|min_thread
@@ -1665,7 +1663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * After getting a request, try to assign it to some thread. Usually we  * handle it ourselves.  */
+comment|/*  * After getting a request, try to assign it to some thread.  Usually we  * handle it ourselves.  */
 end_comment
 
 begin_function
@@ -1749,7 +1747,7 @@ operator|&
 name|i
 argument_list|)
 expr_stmt|;
-comment|/*  	 * We save the offset associated with this request for later  	 * nfsd matching. 	 */
+comment|/* 	 * We save the offset associated with this request for later 	 * nfsd matching. 	 */
 name|fhe
 operator|=
 name|fha_hash_entry_lookup
@@ -1783,7 +1781,7 @@ name|i
 operator|.
 name|offset
 expr_stmt|;
-comment|/*  	 * Choose a thread, taking into consideration locality, thread load, 	 * and the number of threads already working on this file. 	 */
+comment|/* 	 * Choose a thread, taking into consideration locality, thread load, 	 * and the number of threads already working on this file. 	 */
 name|thread
 operator|=
 name|fha_hash_entry_choose_thread
@@ -1827,7 +1825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Called when we're done with an operation. The request has already  * been de-queued.  */
+comment|/*  * Called when we're done with an operation.  The request has already  * been de-queued.  */
 end_comment
 
 begin_function
