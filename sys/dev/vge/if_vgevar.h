@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|VGE_RX_BUF_ALIGN
-value|sizeof(uint32_t)
+value|sizeof(uint64_t)
 end_define
 
 begin_comment
@@ -598,6 +598,14 @@ name|VGE_FLAG_MSI
 value|0x0002
 define|#
 directive|define
+name|VGE_FLAG_PMCAP
+value|0x0004
+define|#
+directive|define
+name|VGE_FLAG_JUMBO
+value|0x0008
+define|#
+directive|define
 name|VGE_FLAG_SUSPENDED
 value|0x4000
 define|#
@@ -606,6 +614,9 @@ name|VGE_FLAG_LINK
 value|0x8000
 name|int
 name|vge_expcap
+decl_stmt|;
+name|int
+name|vge_pmcap
 decl_stmt|;
 name|int
 name|vge_camidx

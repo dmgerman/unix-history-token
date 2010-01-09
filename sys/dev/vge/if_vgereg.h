@@ -435,23 +435,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VGE_RXQTIMER
+name|VGE_TXQTIMER
 value|0x3E
 end_define
 
 begin_comment
-comment|/* RX queue timer pend register */
+comment|/* TX queue timer pend register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VGE_TXQTIMER
+name|VGE_RXQTIMER
 value|0x3F
 end_define
 
 begin_comment
-comment|/* TX queue timer pend register */
+comment|/* RX queue timer pend register */
 end_comment
 
 begin_define
@@ -4096,6 +4096,201 @@ value|((x)>> 24)
 end_define
 
 begin_comment
+comment|/* Sticky bit shadow register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VGE_STICKHW_DS0
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_STICKHW_DS1
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_STICKHW_WOL_ENB
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_STICKHW_WOL_STS
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_STICKHW_SWPTAG
+value|0x10
+end_define
+
+begin_comment
+comment|/* WOL pattern control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR0_PATTERN0
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR0_PATTERN1
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR0_PATTERN2
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR0_PATTERN3
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR0_PATTERN4
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR0_PATTERN5
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR0_PATTERN6
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR0_PATTERN7
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR0_PATTERN_ALL
+value|0xFF
+end_define
+
+begin_comment
+comment|/* WOL event control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR1_UCAST
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR1_MAGIC
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR1_LINKON
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCR1_LINKOFF
+value|0x08
+end_define
+
+begin_comment
+comment|/* Poweer management config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VGE_PWRCFG_LEGACY_WOLEN
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_PWRCFG_WOL_PULSE
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_PWRCFG_WOL_BUTTON
+value|0x00
+end_define
+
+begin_comment
+comment|/* WOL config register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCFG_PHYINT_ENB
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCFG_SAB
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCFG_SAM
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGE_WOLCFG_PMEOVR
+value|0x80
+end_define
+
+begin_comment
 comment|/* EEPROM control/status register */
 end_comment
 
@@ -4992,7 +5187,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* first frag in frame */
+comment|/* last frag in frame */
 end_comment
 
 begin_define
@@ -5003,7 +5198,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* last frag in frame */
+comment|/* first frag in frame */
 end_comment
 
 begin_define
