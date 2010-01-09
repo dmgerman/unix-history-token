@@ -1422,7 +1422,7 @@ name|key
 operator|->
 name|type
 operator|<=
-name|TYPE_CV
+name|TYPE_SEM
 condition|)
 return|return
 operator|(
