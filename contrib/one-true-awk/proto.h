@@ -1608,7 +1608,7 @@ begin_function_decl
 specifier|extern
 name|Cell
 modifier|*
-name|getline
+name|awkgetline
 parameter_list|(
 name|Node
 modifier|*

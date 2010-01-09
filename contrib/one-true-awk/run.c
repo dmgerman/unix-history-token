@@ -2433,7 +2433,7 @@ end_function
 begin_function
 name|Cell
 modifier|*
-name|getline
+name|awkgetline
 parameter_list|(
 name|Node
 modifier|*
@@ -7525,6 +7525,11 @@ argument_list|)
 expr_stmt|;
 name|tempfree
 argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+name|tempfree
+argument_list|(
 name|y
 argument_list|)
 expr_stmt|;
@@ -7544,11 +7549,6 @@ operator|->
 name|tval
 operator|=
 name|STR
-expr_stmt|;
-name|tempfree
-argument_list|(
-name|x
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

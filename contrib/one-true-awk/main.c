@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"version 20070501"
+literal|"version 20091126"
 decl_stmt|;
 end_decl_stmt
 

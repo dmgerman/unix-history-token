@@ -4493,6 +4493,10 @@ begin_comment
 comment|/* Because isblank doesn't show up in any of the header files on any  * system i use, it's defined here.  if some other locale has a richer  * definition of "blank", define HAS_ISBLANK and provide your own  * version.  * the parentheses here are an attempt to find a path through the maze  * of macro definition and/or function and/or version provided.  thanks  * to nelson beebe for the suggestion; let's see if it works everywhere.  */
 end_comment
 
+begin_comment
+comment|/* #define HAS_ISBLANK */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -5598,7 +5602,7 @@ operator|*
 operator|)
 name|realloc
 argument_list|(
-name|setvec
+name|tmpset
 argument_list|,
 name|maxsetvec
 operator|*
