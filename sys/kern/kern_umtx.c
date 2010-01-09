@@ -183,42 +183,49 @@ begin_define
 define|#
 directive|define
 name|TYPE_CV
-value|1
+value|(TYPE_SIMPLE_WAIT+1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_SEM
+value|(TYPE_CV+1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TYPE_SIMPLE_LOCK
-value|2
+value|(TYPE_SEM+1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TYPE_NORMAL_UMUTEX
-value|3
+value|(TYPE_SIMPLE_LOCK+1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TYPE_PI_UMUTEX
-value|4
+value|(TYPE_NORMAL_UMUTEX+1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TYPE_PP_UMUTEX
-value|5
+value|(TYPE_PI_UMUTEX+1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TYPE_RWLOCK
-value|6
+value|(TYPE_PP_UMUTEX+1)
 end_define
 
 begin_define
@@ -13083,7 +13090,7 @@ name|umtx_key_get
 argument_list|(
 name|sem
 argument_list|,
-name|TYPE_CV
+name|TYPE_SEM
 argument_list|,
 name|GET_SHARE
 argument_list|(
@@ -13503,7 +13510,7 @@ name|umtx_key_get
 argument_list|(
 name|sem
 argument_list|,
-name|TYPE_CV
+name|TYPE_SEM
 argument_list|,
 name|GET_SHARE
 argument_list|(
