@@ -595,7 +595,7 @@ literal|0
 argument_list|,
 name|NGROUPS_MAX
 argument_list|,
-literal|"Maximum number of groups a user can belong to"
+literal|"Maximum number of supplemental groups a user can belong to"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
