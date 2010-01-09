@@ -1031,6 +1031,9 @@ name|edata
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mips_pcpu0_init
+argument_list|()
+expr_stmt|;
 name|platform_counter_freq
 operator|=
 name|malta_cpu_freq

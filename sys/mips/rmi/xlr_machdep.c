@@ -1499,7 +1499,7 @@ endif|#
 directive|endif
 comment|/* XXX no zeroing of BSS? */
 comment|/* Initialize pcpu stuff */
-name|mips_pcpu_init
+name|mips_pcpu0_init
 argument_list|()
 expr_stmt|;
 comment|/* XXX FIXME the code below is not 64 bit clean */

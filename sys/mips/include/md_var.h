@@ -227,6 +227,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|mips_pcpu0_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|mips_proc0_init
 parameter_list|(
 name|void

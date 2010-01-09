@@ -1064,7 +1064,7 @@ end_comment
 
 begin_function
 name|void
-name|mips_pcpu_init
+name|mips_pcpu0_init
 parameter_list|()
 block|{
 comment|/* Initialize pcpu info of cpu-zero */

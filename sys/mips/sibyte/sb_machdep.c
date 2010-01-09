@@ -837,7 +837,7 @@ name|end
 argument_list|)
 expr_stmt|;
 comment|/* Initialize pcpu stuff */
-name|mips_pcpu_init
+name|mips_pcpu0_init
 argument_list|()
 expr_stmt|;
 ifdef|#
