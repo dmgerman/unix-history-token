@@ -353,6 +353,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|sleepq_type
+parameter_list|(
+name|void
+modifier|*
+name|wchan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sleepq_wait
 parameter_list|(
