@@ -326,7 +326,7 @@ name|VIA_VENDORID
 block|,
 name|VIA_DEVICEID_61XX
 block|,
-literal|"VIA Networking Gigabit Ethernet"
+literal|"VIA Networking Velocity Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -8114,15 +8114,6 @@ name|sc
 operator|=
 name|arg
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|suspended
-condition|)
-block|{
-return|return;
-block|}
 name|VGE_LOCK
 argument_list|(
 name|sc
@@ -8136,7 +8127,16 @@ name|vge_ifp
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
+name|sc
+operator|->
+name|vge_flags
+operator|&
+name|VGE_FLAG_SUSPENDED
+operator|)
+operator|!=
+literal|0
+operator|||
 operator|(
 name|ifp
 operator|->
@@ -8144,6 +8144,8 @@ name|if_flags
 operator|&
 name|IFF_UP
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|VGE_UNLOCK
@@ -9944,7 +9946,7 @@ name|sc
 argument_list|,
 name|VGE_ISR
 argument_list|,
-literal|0
+literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_1
@@ -11179,9 +11181,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|suspended
-operator|=
-literal|1
+name|vge_flags
+operator||=
+name|VGE_FLAG_SUSPENDED
 expr_stmt|;
 name|VGE_UNLOCK
 argument_list|(
@@ -11275,9 +11277,10 @@ expr_stmt|;
 block|}
 name|sc
 operator|->
-name|suspended
-operator|=
-literal|0
+name|vge_flags
+operator|&=
+operator|~
+name|VGE_FLAG_SUSPENDED
 expr_stmt|;
 name|VGE_UNLOCK
 argument_list|(
