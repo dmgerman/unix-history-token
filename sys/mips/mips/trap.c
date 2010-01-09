@@ -4551,10 +4551,14 @@ literal|2
 operator|)
 operator||
 operator|(
-operator|(
+call|(
 name|unsigned
-operator|)
+call|)
+argument_list|(
 name|instPC
+operator|+
+literal|4
+argument_list|)
 operator|&
 literal|0xF0000000
 operator|)
