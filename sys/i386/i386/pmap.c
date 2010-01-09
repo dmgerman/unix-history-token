@@ -1579,17 +1579,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|vm_offset_t
-name|pmap_kmem_choose
-parameter_list|(
-name|vm_offset_t
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1684,52 +1673,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Move the kernel virtual free pointer to the next  * 4MB.  This is used to help improve performance  * by using a large (4MB) page for much of the kernel  * (.text, .data, .bss)  */
-end_comment
-
-begin_function
-specifier|static
-name|vm_offset_t
-name|pmap_kmem_choose
-parameter_list|(
-name|vm_offset_t
-name|addr
-parameter_list|)
-block|{
-name|vm_offset_t
-name|newaddr
-init|=
-name|addr
-decl_stmt|;
-ifndef|#
-directive|ifndef
-name|DISABLE_PSE
-if|if
-condition|(
-name|cpu_feature
-operator|&
-name|CPUID_PSE
-condition|)
-name|newaddr
-operator|=
-operator|(
-name|addr
-operator|+
-name|PDRMASK
-operator|)
-operator|&
-operator|~
-name|PDRMASK
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-name|newaddr
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	Bootstrap the system enough to run with virtual memory.  *  *	On the i386 this is called after mapping has already been enabled  *	and just syncs the pmap module with what has already been done.  *	[We can't call it easily with mapping off since the kernel is not  *	mapped with PA == VA, hence we would have to relocate every address  *	from the linked base (virtual) address "KERNBASE" to the actual  *	(physical) address starting relative to 0]  */
 end_comment
 
@@ -1768,13 +1711,6 @@ operator|)
 name|KERNBASE
 operator|+
 name|firstaddr
-expr_stmt|;
-name|virtual_avail
-operator|=
-name|pmap_kmem_choose
-argument_list|(
-name|virtual_avail
-argument_list|)
 expr_stmt|;
 name|virtual_end
 operator|=
