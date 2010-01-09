@@ -857,6 +857,18 @@ directive|endif
 end_endif
 
 begin_function_decl
+name|void
+name|nfs_realign
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|mbuf
 modifier|*
