@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_cputype.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -158,6 +164,15 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|platform_initclocks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 struct|struct
@@ -306,7 +321,7 @@ end_function
 
 begin_function
 name|void
-name|cpu_initclocks
+name|platform_initclocks
 parameter_list|(
 name|void
 parameter_list|)
@@ -406,19 +421,22 @@ name|counter_freq
 operator|=
 name|platform_counter_freq
 expr_stmt|;
+comment|/* 	 * XXX: Some MIPS32 cores update the Count register only every two 	 * pipeline cycles. 	 */
+if|if
+condition|(
+name|double_count
+operator|!=
+literal|0
+condition|)
+name|counter_freq
+operator|/=
+literal|2
+expr_stmt|;
 name|cycles_per_tick
 operator|=
 name|counter_freq
 operator|/
 literal|1000
-expr_stmt|;
-if|if
-condition|(
-name|double_count
-condition|)
-name|cycles_per_tick
-operator|*=
-literal|2
 expr_stmt|;
 name|cycles_per_hz
 operator|=
@@ -448,27 +466,6 @@ name|tc_frequency
 operator|=
 name|counter_freq
 expr_stmt|;
-comment|/* 	 * XXX: Some MIPS32 cores update the Count register only every two 	 * pipeline cycles. 	 * XXX2: We can read this from the hardware register on some 	 * systems.  Need to investigate. 	 */
-if|if
-condition|(
-name|double_count
-operator|!=
-literal|0
-condition|)
-block|{
-name|cycles_per_hz
-operator|/=
-literal|2
-expr_stmt|;
-name|cycles_per_usec
-operator|/=
-literal|2
-expr_stmt|;
-name|cycles_per_sec
-operator|/=
-literal|2
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"hz=%d cyl_per_hz:%jd cyl_per_usec:%jd freq:%jd cyl_per_hz:%jd cyl_per_sec:%jd\n"
@@ -703,24 +700,22 @@ name|last
 condition|)
 name|delta
 operator|+=
-operator|(
 name|cur
 operator|+
 operator|(
-name|cycles_per_hz
+literal|0xffffffff
 operator|-
 name|last
 operator|)
-operator|)
+operator|+
+literal|1
 expr_stmt|;
 else|else
 name|delta
 operator|+=
-operator|(
 name|cur
 operator|-
 name|last
-operator|)
 expr_stmt|;
 name|last
 operator|=
