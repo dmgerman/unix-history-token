@@ -286,31 +286,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CFE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|cfe_handle
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|cfe_vector
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -326,6 +301,15 @@ modifier|*
 name|end
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|void
+name|platform_cpu_init
+parameter_list|()
+block|{
+comment|/* Nothing special */
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -602,19 +586,15 @@ name|platform_start
 parameter_list|(
 name|__register_t
 name|a0
-name|__unused
 parameter_list|,
 name|__register_t
 name|a1
-name|__unused
 parameter_list|,
 name|__register_t
 name|a2
-name|__unused
 parameter_list|,
 name|__register_t
 name|a3
-name|__unused
 parameter_list|)
 block|{
 name|vm_offset_t
@@ -653,21 +633,25 @@ name|edata
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Initialize pcpu stuff */
+name|mips_pcpu0_init
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CFE
-comment|/* 	 * Initialize CFE firmware trampolines before 	 * we initialize the low-level console. 	 */
+comment|/* 	 * Initialize CFE firmware trampolines before 	 * we initialize the low-level console. 	 * 	 * CFE passes the following values in registers: 	 * a0: firmware handle 	 * a2: firmware entry point 	 * a3: entry point seal 	 */
 if|if
 condition|(
-name|cfe_handle
-operator|!=
-literal|0
+name|a3
+operator|==
+name|CFE_EPTSEAL
 condition|)
 name|cfe_init
 argument_list|(
-name|cfe_handle
+name|a0
 argument_list|,
-name|cfe_vector
+name|a2
 argument_list|)
 expr_stmt|;
 endif|#
@@ -675,22 +659,6 @@ directive|endif
 name|cninit
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CFE
-if|if
-condition|(
-name|cfe_handle
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"CFE was not detected by locore.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|mips_init
 argument_list|()
 expr_stmt|;
