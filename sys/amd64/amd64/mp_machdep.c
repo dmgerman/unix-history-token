@@ -392,30 +392,6 @@ name|dpcpu
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Hotwire a 0->4MB V==P mapping */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|pt_entry_t
-modifier|*
-name|KPTphys
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* SMP page table page */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|pt_entry_t
-modifier|*
-name|SMPpt
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|struct
 name|pcb
