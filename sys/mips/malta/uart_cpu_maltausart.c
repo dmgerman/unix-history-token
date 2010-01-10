@@ -7,10 +7,6 @@ begin_comment
 comment|/*  * Skeleton of this file was based on respective code for ARM  * code written by Olivier Houchard.  */
 end_comment
 
-begin_comment
-comment|/*  * XXXMIPS: This file is hacked from arm/... . XXXMIPS here means this file is  * experimental and was written for MIPS32 port.  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -187,7 +183,18 @@ name|bas
 operator|.
 name|bst
 operator|=
-literal|0
+name|mips_bus_space_generic
+expr_stmt|;
+name|di
+operator|->
+name|bas
+operator|.
+name|bsh
+operator|=
+name|MIPS_PHYS_TO_KSEG1
+argument_list|(
+name|MALTA_UART0ADR
+argument_list|)
 expr_stmt|;
 name|di
 operator|->
@@ -209,8 +216,9 @@ name|di
 operator|->
 name|baudrate
 operator|=
-literal|115200
+literal|0
 expr_stmt|;
+comment|/* retain the baudrate configured by YAMON */
 name|di
 operator|->
 name|databits
@@ -231,28 +239,11 @@ name|UART_PARITY_NONE
 expr_stmt|;
 name|uart_bus_space_io
 operator|=
-name|MIPS_PHYS_TO_KSEG1
-argument_list|(
-name|MALTA_UART0ADR
-argument_list|)
+name|NULL
 expr_stmt|;
 name|uart_bus_space_mem
 operator|=
-name|MIPS_PHYS_TO_KSEG1
-argument_list|(
-name|MALTA_UART0ADR
-argument_list|)
-expr_stmt|;
-name|di
-operator|->
-name|bas
-operator|.
-name|bsh
-operator|=
-name|MIPS_PHYS_TO_KSEG1
-argument_list|(
-name|MALTA_UART0ADR
-argument_list|)
+name|mips_bus_space_generic
 expr_stmt|;
 return|return
 operator|(

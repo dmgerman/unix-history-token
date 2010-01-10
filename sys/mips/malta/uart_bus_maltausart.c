@@ -7,10 +7,6 @@ begin_comment
 comment|/*  * Skeleton of this file was based on respective code for ARM  * code written by Olivier Houchard.  */
 end_comment
 
-begin_comment
-comment|/*  * XXXMIPS: This file is hacked from arm/... . XXXMIPS here means this file is  * experimental and was written for MIPS32 port.  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -108,10 +104,6 @@ include|#
 directive|include
 file|<dev/uart/uart_cpu.h>
 end_include
-
-begin_comment
-comment|/*  * XXXMIPS:  */
-end_comment
 
 begin_include
 include|#
@@ -281,7 +273,7 @@ name|bas
 operator|.
 name|bst
 operator|=
-literal|0
+name|mips_bus_space_generic
 expr_stmt|;
 name|sc
 operator|->
@@ -302,7 +294,7 @@ name|sc_bas
 operator|.
 name|bst
 operator|=
-literal|0
+name|mips_bus_space_generic
 expr_stmt|;
 name|sc
 operator|->
