@@ -85,7 +85,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips64
+name|__mips_n64
 end_ifdef
 
 begin_typedef
@@ -247,7 +247,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips64
+name|__mips_n64
 end_ifdef
 
 begin_typedef
@@ -291,7 +291,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips64
+name|__mips_n64
 end_ifdef
 
 begin_typedef
@@ -400,12 +400,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__mips64
+name|__mips_n64
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ISA_MIPS64
+name|__mips_n32
 argument_list|)
 end_if
 
@@ -450,7 +450,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips64
+name|__mips_n64
 end_ifdef
 
 begin_typedef
@@ -642,12 +642,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__mips64
+name|__mips_n64
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ISA_MIPS64
+name|__mips_n32
 argument_list|)
 end_if
 
@@ -657,6 +657,32 @@ name|__uint64_t
 name|__u_register_t
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|__uint32_t
+name|__u_register_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -683,13 +709,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
-name|__u_register_t
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -817,22 +836,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|label_t
-block|{
-name|__register_t
-name|val
-index|[
-literal|13
-index|]
-decl_stmt|;
-block|}
-name|label_t
-typedef|;
-end_typedef
 
 begin_endif
 endif|#

@@ -27,7 +27,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|Maxmem
 decl_stmt|;
 end_decl_stmt
@@ -88,18 +88,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|uintptr_t
 name|MipsEmulateBranch
 parameter_list|(
 name|struct
 name|trapframe
 modifier|*
 parameter_list|,
-name|int
+name|uintptr_t
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int
+name|uintptr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|MipsSwitchFPState
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -125,15 +140,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
+begin_define
+define|#
+directive|define
 name|is_cacheable_mem
 parameter_list|(
-name|vm_offset_t
 name|pa
 parameter_list|)
-function_decl|;
-end_function_decl
+value|is_physical_memory((pa))
+end_define
 
 begin_define
 define|#
@@ -212,6 +227,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|mips_pcpu0_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|mips_proc0_init
 parameter_list|(
 name|void
@@ -226,6 +250,22 @@ end_comment
 begin_function_decl
 name|void
 name|platform_identify
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|busdma_swi_pending
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|busdma_swi
 parameter_list|(
 name|void
 parameter_list|)

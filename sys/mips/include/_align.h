@@ -20,7 +20,7 @@ name|_MIPS_INCLUDE__ALIGN_H_
 end_define
 
 begin_comment
-comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).	  The result is u_int and must be cast to  * any desired pointer type.  */
+comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).	  The result is u_long and must be cast to  * any desired pointer type.  */
 end_comment
 
 begin_define
@@ -37,7 +37,7 @@ name|_ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((u_int)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
+value|(((u_long)(p) + _ALIGNBYTES)&~ _ALIGNBYTES)
 end_define
 
 begin_endif

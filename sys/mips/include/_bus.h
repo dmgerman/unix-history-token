@@ -15,26 +15,32 @@ directive|define
 name|MIPS_INCLUDE__BUS_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TARGET_OCTEON
-end_ifdef
+begin_comment
+comment|/*  * Bus address and size types  */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|"_bus_octeon.h"
+file|"opt_cputype.h"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*  * Bus address and size types  */
-end_comment
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|TARGET_OCTEON
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ISA_MIPS32
+argument_list|)
+operator|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -42,6 +48,23 @@ name|uintptr_t
 name|bus_addr_t
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|bus_addr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -56,22 +79,19 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
+name|struct
+name|bus_space
+modifier|*
 name|bus_space_tag_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|bus_addr_t
 name|bus_space_handle_t
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -59,7 +59,7 @@ name|icache_virtual
 decl_stmt|;
 struct|struct
 block|{
-name|u_int8_t
+name|u_int32_t
 name|ic_size
 decl_stmt|;
 name|u_int8_t
@@ -71,7 +71,7 @@ decl_stmt|;
 name|u_int16_t
 name|ic_nsets
 decl_stmt|;
-name|u_int8_t
+name|u_int32_t
 name|dc_size
 decl_stmt|;
 name|u_int8_t

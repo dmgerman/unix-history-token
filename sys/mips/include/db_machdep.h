@@ -75,7 +75,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|register_t
 name|db_expr_t
 typedef|;
 end_typedef
@@ -349,8 +349,14 @@ begin_function_decl
 name|void
 name|stacktrace_subr
 parameter_list|(
-name|db_regs_t
-modifier|*
+name|register_t
+name|pc
+parameter_list|,
+name|register_t
+name|sp
+parameter_list|,
+name|register_t
+name|ra
 parameter_list|,
 name|int
 function_decl|(
@@ -363,6 +369,16 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kdbpeek
+parameter_list|(
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

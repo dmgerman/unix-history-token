@@ -349,21 +349,21 @@ name|__bswap16
 parameter_list|(
 name|x
 parameter_list|)
-value|(__uint16_t)(__is_constant(x) ? __bswap16_const(x) : \ 	__bswap16_var(x))
+value|(__uint16_t)(__is_constant(x) ?		\ 	__bswap16_const((__uint16_t)x) :  __bswap16_var((__uint16_t)x))
 define|#
 directive|define
 name|__bswap32
 parameter_list|(
 name|x
 parameter_list|)
-value|(__uint32_t)(__is_constant(x) ? __bswap32_const(x) : \ 	__bswap32_var(x))
+value|(__uint32_t)(__is_constant(x) ?		\ 	__bswap32_const((__uint32_t)x) :  __bswap32_var((__uint32_t)x))
 define|#
 directive|define
 name|__bswap64
 parameter_list|(
 name|x
 parameter_list|)
-value|(__uint64_t)(__is_constant(x) ? __bswap64_const(x) : \ 	__bswap64_var(x))
+value|(__uint64_t)(__is_constant(x) ?		\ 	__bswap64_const((__uint64_t)x) :  __bswap64_var((__uint64_t)x))
 ifdef|#
 directive|ifdef
 name|__MIPSEB__

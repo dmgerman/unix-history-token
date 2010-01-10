@@ -32,6 +32,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Note: All the 64-bit atomic operations are only atomic when running  * in 64-bit mode.  It is assumed that code compiled for n32 and n64  * fits into this definition and no further safeties are needed.  *  * It is also assumed that the add, subtract and other arithmetic is  * done on numbers not pointers.  The special rules for n32 pointers  * do not have atomic operations defined for them, but generally shouldn't  * need atomic operations.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -546,8 +550,386 @@ name|result
 return|;
 end_return
 
-begin_define
+begin_if
 unit|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
+begin_function
+unit|static
+name|__inline
+name|void
+name|atomic_set_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+name|uint64_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\n\t"
+literal|"lld	%0, %3\n\t"
+comment|/* load old value */
+literal|"or	%0, %2, %0\n\t"
+comment|/* calculate new value */
+literal|"scd	%0, %1\n\t"
+comment|/* attempt to store */
+literal|"beqz	%0, 1b\n\t"
+comment|/* spin if failed */
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_clear_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+name|uint64_t
+name|temp
+decl_stmt|;
+name|v
+operator|=
+operator|~
+name|v
+expr_stmt|;
+asm|__asm __volatile (
+literal|"1:\n\t"
+literal|"lld	%0, %3\n\t"
+comment|/* load old value */
+literal|"and	%0, %2, %0\n\t"
+comment|/* calculate new value */
+literal|"scd	%0, %1\n\t"
+comment|/* attempt to store */
+literal|"beqz	%0, 1b\n\t"
+comment|/* spin if failed */
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_add_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+name|uint64_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\n\t"
+literal|"lld	%0, %3\n\t"
+comment|/* load old value */
+literal|"daddu	%0, %2, %0\n\t"
+comment|/* calculate new value */
+literal|"scd	%0, %1\n\t"
+comment|/* attempt to store */
+literal|"beqz	%0, 1b\n\t"
+comment|/* spin if failed */
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_subtract_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+name|uint64_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\n\t"
+literal|"lld	%0, %3\n\t"
+comment|/* load old value */
+literal|"dsubu	%0, %2\n\t"
+comment|/* calculate new value */
+literal|"scd	%0, %1\n\t"
+comment|/* attempt to store */
+literal|"beqz	%0, 1b\n\t"
+comment|/* spin if failed */
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_readandclear_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|uint64_t
+name|result
+decl_stmt|,
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\n\t"
+literal|"lld	 %0, %3\n\t"
+comment|/* load old value */
+literal|"li	 %1, 0\n\t"
+comment|/* value to store */
+literal|"scd	 %1, %2\n\t"
+comment|/* attempt to store */
+literal|"beqz	 %1, 1b\n\t"
+comment|/* if the store failed, spin */
+operator|:
+literal|"=&r"
+operator|(
+name|result
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+name|result
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_readandset_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|addr
+parameter_list|,
+name|uint64_t
+name|value
+parameter_list|)
+block|{
+name|uint64_t
+name|result
+decl_stmt|,
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\n\t"
+literal|"lld	 %0,%3\n\t"
+comment|/* Load old value*/
+literal|"or      %1,$0,%4\n\t"
+literal|"scd	 %1,%2\n\t"
+comment|/* attempt to store */
+literal|"beqz	 %1, 1b\n\t"
+comment|/* if the store failed, spin */
+operator|:
+literal|"=&r"
+operator|(
+name|result
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|value
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+name|result
+return|;
+end_return
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+begin_define
 define|#
 directive|define
 name|ATOMIC_ACQ_REL
@@ -639,8 +1021,39 @@ literal|32
 argument_list|)
 if|#
 directive|if
-literal|0
-expr|ATOMIC_ACQ_REL(set, 64) ATOMIC_ACQ_REL(clear, 64) ATOMIC_ACQ_REL(add, 64) ATOMIC_ACQ_REL(subtract, 64)
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+name|ATOMIC_ACQ_REL
+argument_list|(
+argument|set
+argument_list|,
+literal|64
+argument_list|)
+name|ATOMIC_ACQ_REL
+argument_list|(
+argument|clear
+argument_list|,
+literal|64
+argument_list|)
+name|ATOMIC_ACQ_REL
+argument_list|(
+argument|add
+argument_list|,
+literal|64
+argument_list|)
+name|ATOMIC_ACQ_REL
+argument_list|(
+argument|subtract
+argument_list|,
+literal|64
+argument_list|)
 endif|#
 directive|endif
 undef|#
@@ -662,6 +1075,19 @@ argument_list|)
 name|ATOMIC_STORE_LOAD
 argument_list|(
 literal|64
+argument_list|)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_n32
 argument_list|)
 name|void
 name|atomic_store_64
@@ -686,6 +1112,66 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_store_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+modifier|*
+name|v
+parameter_list|)
+block|{
+operator|*
+name|p
+operator|=
+operator|*
+name|v
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_load_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+modifier|*
+name|v
+parameter_list|)
+block|{
+operator|*
+name|v
+operator|=
+operator|*
+name|p
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -901,7 +1387,7 @@ operator|*
 name|p
 operator|)
 operator|,
-literal|"=r"
+literal|"=&r"
 operator|(
 name|temp
 operator|)
@@ -928,8 +1414,265 @@ operator|)
 return|;
 end_return
 
+begin_if
+unit|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|uint64_t
+name|atomic_cmpset_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|cmpval
+parameter_list|,
+name|uint64_t
+name|newval
+parameter_list|)
+block|{
+name|uint64_t
+name|ret
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\n\t"
+literal|"lld	%0, %4\n\t"
+comment|/* load old value */
+literal|"bne	%0, %2, 2f\n\t"
+comment|/* compare */
+literal|"move	%0, %3\n\t"
+comment|/* value to store */
+literal|"scd	%0, %1\n\t"
+comment|/* attempt to store */
+literal|"beqz	%0, 1b\n\t"
+comment|/* if it failed, spin */
+literal|"j	3f\n\t"
+literal|"2:\n\t"
+literal|"li	%0, 0\n\t"
+literal|"3:\n"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|cmpval
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|newval
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+name|ret
+return|;
+end_return
+
 begin_comment
 unit|}
+comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|uint64_t
+name|atomic_cmpset_acq_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|cmpval
+parameter_list|,
+name|uint64_t
+name|newval
+parameter_list|)
+block|{
+name|int
+name|retval
+decl_stmt|;
+name|retval
+operator|=
+name|atomic_cmpset_64
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+expr_stmt|;
+name|mips_sync
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
+name|atomic_cmpset_rel_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|cmpval
+parameter_list|,
+name|uint64_t
+name|newval
+parameter_list|)
+block|{
+name|mips_sync
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|atomic_cmpset_64
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Atomically add the value of v to the integer pointed to by p and return  * the previous value of *p.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
+name|atomic_fetchadd_64
+parameter_list|(
+name|__volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+name|uint64_t
+name|value
+decl_stmt|,
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\n\t"
+literal|"lld	%0, %1\n\t"
+comment|/* load old value */
+literal|"daddu	%2, %3, %0\n\t"
+comment|/* calculate new value */
+literal|"scd	%2, %1\n\t"
+comment|/* attempt to store */
+literal|"beqz	%2, 1b\n\t"
+comment|/* spin if failed */
+operator|:
+literal|"=&r"
+operator|(
+name|value
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|value
+operator|)
+return|;
+end_return
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Operations on chars. */
 end_comment
 
@@ -1249,10 +1992,14 @@ name|atomic_fetchadd_int
 value|atomic_fetchadd_32
 end_define
 
+begin_comment
+comment|/*  * I think the following is right, even for n32.  For n32 the pointers  * are still 32-bits, so we need to operate on them as 32-bit quantities,  * even though they are sign extended in operation.  For longs, there's  * no question because they are always 32-bits.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips64
+name|__mips_n64
 end_ifdef
 
 begin_comment
@@ -1392,143 +2139,13 @@ name|atomic_readandclear_long
 value|atomic_readandclear_64
 end_define
 
-begin_comment
-comment|/* Operations on pointers. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|atomic_set_ptr
-value|atomic_set_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_set_acq_ptr
-value|atomic_set_acq_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_set_rel_ptr
-value|atomic_set_rel_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_clear_ptr
-value|atomic_clear_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_clear_acq_ptr
-value|atomic_clear_acq_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_clear_rel_ptr
-value|atomic_clear_rel_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_add_ptr
-value|atomic_add_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_add_acq_ptr
-value|atomic_add_acq_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_add_rel_ptr
-value|atomic_add_rel_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_subtract_ptr
-value|atomic_subtract_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_subtract_acq_ptr
-value|atomic_subtract_acq_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_subtract_rel_ptr
-value|atomic_subtract_rel_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_ptr
-value|atomic_cmpset_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_acq_ptr
-value|atomic_cmpset_acq_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_rel_ptr
-value|atomic_cmpset_rel_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_load_acq_ptr
-value|atomic_load_acq_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_store_rel_ptr
-value|atomic_store_rel_64
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_readandclear_ptr
-value|atomic_readandclear_64
-end_define
-
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* __mips64 */
+comment|/* !__mips_n64 */
 end_comment
 
 begin_comment
@@ -1702,6 +2319,15 @@ name|atomic_readandclear_long
 value|atomic_readandclear_32
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __mips_n64 */
+end_comment
+
 begin_comment
 comment|/* Operations on pointers. */
 end_comment
@@ -1710,136 +2336,127 @@ begin_define
 define|#
 directive|define
 name|atomic_set_ptr
-value|atomic_set_32
+value|atomic_set_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_acq_ptr
-value|atomic_set_acq_32
+value|atomic_set_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_set_rel_ptr
-value|atomic_set_rel_32
+value|atomic_set_rel_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_ptr
-value|atomic_clear_32
+value|atomic_clear_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_acq_ptr
-value|atomic_clear_acq_32
+value|atomic_clear_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_clear_rel_ptr
-value|atomic_clear_rel_32
+value|atomic_clear_rel_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_ptr
-value|atomic_add_32
+value|atomic_add_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_acq_ptr
-value|atomic_add_acq_32
+value|atomic_add_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_add_rel_ptr
-value|atomic_add_rel_32
+value|atomic_add_rel_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_ptr
-value|atomic_subtract_32
+value|atomic_subtract_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_acq_ptr
-value|atomic_subtract_acq_32
+value|atomic_subtract_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_rel_ptr
-value|atomic_subtract_rel_32
+value|atomic_subtract_rel_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_ptr
-value|atomic_cmpset_32
+value|atomic_cmpset_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_ptr
-value|atomic_cmpset_acq_32
+value|atomic_cmpset_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_ptr
-value|atomic_cmpset_rel_32
+value|atomic_cmpset_rel_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_load_acq_ptr
-value|atomic_load_acq_32
+value|atomic_load_acq_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_store_rel_ptr
-value|atomic_store_rel_32
+value|atomic_store_rel_long
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_readandclear_ptr
-value|atomic_readandclear_32
+value|atomic_readandclear_long
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __mips64 */
-end_comment
 
 begin_endif
 endif|#

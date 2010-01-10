@@ -282,12 +282,39 @@ name|PTE_UNCACHED
 value|0x00000010
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_SB1
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PTE_CACHE
+value|0x00000028
+end_define
+
+begin_comment
+comment|/* cacheable coherent */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|PTE_CACHE
 value|0x00000018
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*#define	PG_CACHEMODE	0x00000038 Not Used*/

@@ -51,20 +51,8 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SOFTFLOAT
+name|CPU_HAVEFPU
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FLT_ROUNDS
-value|-1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -76,6 +64,18 @@ end_define
 begin_comment
 comment|/* FP addition rounds to nearest */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FLT_ROUNDS
+value|-1
+end_define
 
 begin_endif
 endif|#

@@ -67,6 +67,11 @@ name|register_t
 name|mc_fpc_eir
 decl_stmt|;
 comment|/* fp exception instruction reg */
+name|void
+modifier|*
+name|mc_tls
+decl_stmt|;
+comment|/* pointer to TLS area */
 name|int
 name|__spare__
 index|[
@@ -84,12 +89,43 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SZREG
+value|8
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|SZREG
 value|4
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* offsets into mcontext_t */
@@ -102,7 +138,7 @@ name|UCTX_REG
 parameter_list|(
 name|x
 parameter_list|)
-value|(8 + (x)*SZREG)
+value|(4 + SZREG + (x)*SZREG)
 end_define
 
 begin_define

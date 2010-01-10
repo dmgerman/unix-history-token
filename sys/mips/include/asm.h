@@ -46,6 +46,12 @@ directive|include
 file|<machine/endian.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cdefs.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -675,7 +681,7 @@ parameter_list|(
 name|msg
 parameter_list|)
 define|\
-value|la	a0, 9f;			\ 	jal	_C_LABEL(panic);	\ 	nop;				\ 	MSG(msg)
+value|PTR_LA	a0, 9f;			\ 	jal	_C_LABEL(panic);	\ 	nop;				\ 	MSG(msg)
 end_define
 
 begin_define
@@ -698,7 +704,7 @@ parameter_list|(
 name|msg
 parameter_list|)
 define|\
-value|la	a0, 9f;			\ 	jal	_C_LABEL(printf);	\ 	nop;				\ 	MSG(msg)
+value|PTR_LA	a0, 9f;			\ 	jal	_C_LABEL(printf);	\ 	nop;				\ 	MSG(msg)
 end_define
 
 begin_define
@@ -732,7 +738,7 @@ define|#
 directive|define
 name|DO_AST
 define|\
-value|44:				                     \ 	la	s0, _C_LABEL(disableintr)           ;\ 	jalr	s0                                  ;\ 	nop                                         ;\ 	GET_CPU_PCPU(s1)                            ;\ 	lw	s3, PC_CURPCB(s1)                   ;\ 	lw	s1, PC_CURTHREAD(s1)                ;\ 	lw	s2, TD_FLAGS(s1)                    ;\ 	li	s0, TDF_ASTPENDING | TDF_NEEDRESCHED;\ 	and	s2, s0                              ;\ 	la	s0, _C_LABEL(enableintr)            ;\ 	jalr	s0                                  ;\ 	nop                                         ;\ 	beq	s2, zero, 4f                        ;\ 	nop                                         ;\ 	la	s0, _C_LABEL(ast)                   ;\ 	jalr	s0                                  ;\ 	addu	a0, s3, U_PCB_REGS                  ;\ 	j 44b			                    ;\         nop                                         ;\ 4:
+value|44:				                     \ 	PTR_LA	s0, _C_LABEL(disableintr)           ;\ 	jalr	s0                                  ;\ 	nop                                         ;\ 	move	a0, v0                              ;\ 	GET_CPU_PCPU(s1)                            ;\ 	lw	s3, PC_CURPCB(s1)                   ;\ 	lw	s1, PC_CURTHREAD(s1)                ;\ 	lw	s2, TD_FLAGS(s1)                    ;\ 	li	s0, TDF_ASTPENDING | TDF_NEEDRESCHED;\ 	and	s2, s0                              ;\ 	PTR_LA	s0, _C_LABEL(restoreintr)           ;\ 	jalr	s0                                  ;\ 	nop                                         ;\ 	beq	s2, zero, 4f                        ;\ 	nop                                         ;\ 	PTR_LA	s0, _C_LABEL(ast)                   ;\ 	jalr	s0                                  ;\ 	PTR_ADDU a0, s3, U_PCB_REGS                 ;\ 	j 44b			                    ;\         nop                                         ;\ 4:
 end_define
 
 begin_comment
@@ -837,6 +843,10 @@ operator|==
 name|_MIPS_BSD_API_LP32
 end_if
 
+begin_comment
+comment|/* #if !defined(__mips_n64) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -877,6 +887,20 @@ define|#
 directive|define
 name|SZREG
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTR_LA
+value|la
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTR_ADDU
+value|addu
 end_define
 
 begin_else
@@ -924,6 +948,20 @@ define|#
 directive|define
 name|SZREG
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTR_LA
+value|dla
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTR_ADDU
+value|daddu
 end_define
 
 begin_endif

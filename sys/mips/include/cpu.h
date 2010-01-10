@@ -73,7 +73,7 @@ name|MIPS_CACHED_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& 0x1fffffff)
+value|((uintptr_t)(x)& 0x1fffffff)
 end_define
 
 begin_define
@@ -83,7 +83,7 @@ name|MIPS_PHYS_TO_CACHED
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x) | MIPS_CACHED_MEMORY_ADDR)
+value|((uintptr_t)(x) | MIPS_CACHED_MEMORY_ADDR)
 end_define
 
 begin_define
@@ -93,7 +93,7 @@ name|MIPS_UNCACHED_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& 0x1fffffff)
+value|((uintptr_t)(x)& 0x1fffffff)
 end_define
 
 begin_define
@@ -103,7 +103,7 @@ name|MIPS_PHYS_TO_UNCACHED
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x) | MIPS_UNCACHED_MEMORY_ADDR)
+value|((uintptr_t)(x) | MIPS_UNCACHED_MEMORY_ADDR)
 end_define
 
 begin_define
@@ -130,7 +130,7 @@ name|MIPS_VA_TO_CINDEX
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& 0xffffff | MIPS_CACHED_MEMORY_ADDR)
+value|((uintptr_t)(x)& 0xffffff | MIPS_CACHED_MEMORY_ADDR)
 end_define
 
 begin_define
@@ -150,7 +150,7 @@ name|MIPS_PHYS_TO_KSEG0
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x) | MIPS_KSEG0_START)
+value|((uintptr_t)(x) | MIPS_KSEG0_START)
 end_define
 
 begin_define
@@ -160,7 +160,7 @@ name|MIPS_PHYS_TO_KSEG1
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x) | MIPS_KSEG1_START)
+value|((uintptr_t)(x) | MIPS_KSEG1_START)
 end_define
 
 begin_define
@@ -170,7 +170,7 @@ name|MIPS_KSEG0_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& MIPS_PHYS_MASK)
+value|((uintptr_t)(x)& MIPS_PHYS_MASK)
 end_define
 
 begin_define
@@ -180,7 +180,39 @@ name|MIPS_KSEG1_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& MIPS_PHYS_MASK)
+value|((uintptr_t)(x)& MIPS_PHYS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_KSEG0_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((vm_offset_t)(x)>= MIPS_KSEG0_START)&&		\ 	    ((vm_offset_t)(x)<= MIPS_KSEG0_END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_KSEG1_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((vm_offset_t)(x)>= MIPS_KSEG1_START)&&		\ 	    ((vm_offset_t)(x)<= MIPS_KSEG1_END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_VALID_PTR
+parameter_list|(
+name|x
+parameter_list|)
+value|(MIPS_IS_KSEG0_ADDR(x) || \ 						MIPS_IS_KSEG1_ADDR(x))
 end_define
 
 begin_comment
@@ -570,12 +602,42 @@ name|CFG_K0_UNCACHED
 value|2
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_SB1
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CFG_K0_COHERENT
+value|5
+end_define
+
+begin_comment
+comment|/* cacheable coherent */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|CFG_K0_CACHED
 value|3
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The bits in the context register.  */
