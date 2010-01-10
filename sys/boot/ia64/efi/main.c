@@ -471,18 +471,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Image base: 0x%016lx\n"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|img
-operator|->
-name|ImageBase
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
