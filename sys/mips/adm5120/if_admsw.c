@@ -2704,6 +2704,7 @@ argument_list|(
 name|IFT_ETHER
 argument_list|)
 expr_stmt|;
+empty_stmt|;
 comment|/* Setup interface parameters */
 name|ifp
 operator|->
