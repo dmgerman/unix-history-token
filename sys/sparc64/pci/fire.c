@@ -9936,6 +9936,11 @@ name|fire_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|struct
+name|fire_msiqarg
+modifier|*
+name|fmqa
+decl_stmt|;
 name|u_long
 name|vec
 decl_stmt|;
@@ -10095,6 +10100,15 @@ operator|(
 name|error
 operator|)
 return|;
+name|fmqa
+operator|=
+name|intr_vectors
+index|[
+name|vec
+index|]
+operator|.
+name|iv_icarg
+expr_stmt|;
 comment|/* 		 * XXX inject our event queue handler. 		 */
 if|if
 condition|(
@@ -10122,6 +10136,20 @@ operator|=
 operator|&
 name|fire_msiqc_filter
 expr_stmt|;
+comment|/* 			 * Ensure the event queue interrupt is cleared, it 			 * might have triggered before.  Given we supply NULL 			 * as ic_clear, inthand_add() won't do this for us. 			 */
+name|FIRE_PCI_WRITE_8
+argument_list|(
+name|sc
+argument_list|,
+name|fmqa
+operator|->
+name|fmqa_fica
+operator|.
+name|fica_clr
+argument_list|,
+name|INTCLR_IDLE
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|intr_vectors
@@ -10134,19 +10162,7 @@ operator|=
 name|fire_msiq_handler
 expr_stmt|;
 comment|/* Record the MSI/MSI-X as long as we we use a 1:1 mapping. */
-operator|(
-operator|(
-expr|struct
-name|fire_msiqarg
-operator|*
-operator|)
-name|intr_vectors
-index|[
-name|vec
-index|]
-operator|.
-name|iv_icarg
-operator|)
+name|fmqa
 operator|->
 name|fmqa_msi
 operator|=
