@@ -3905,6 +3905,8 @@ argument_list|,
 name|IAP_M_MESI
 argument_list|,
 name|IAP_F_CC
+operator||
+name|IAP_F_CC2
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10927,7 +10929,7 @@ if|if
 condition|(
 name|ie
 operator|->
-name|iap_flags
+name|iap_umask
 operator|&
 name|IAP_M_CORE
 condition|)
@@ -10964,7 +10966,7 @@ if|if
 condition|(
 name|ie
 operator|->
-name|iap_flags
+name|iap_umask
 operator|&
 name|IAP_M_AGENT
 condition|)
@@ -10976,7 +10978,7 @@ if|if
 condition|(
 name|ie
 operator|->
-name|iap_flags
+name|iap_umask
 operator|&
 name|IAP_M_PREFETCH
 condition|)
@@ -11009,7 +11011,7 @@ if|if
 condition|(
 name|ie
 operator|->
-name|iap_flags
+name|iap_umask
 operator|&
 name|IAP_M_MESI
 condition|)
@@ -11021,7 +11023,7 @@ if|if
 condition|(
 name|ie
 operator|->
-name|iap_flags
+name|iap_umask
 operator|&
 name|IAP_M_SNOOPRESPONSE
 condition|)
@@ -11033,7 +11035,7 @@ if|if
 condition|(
 name|ie
 operator|->
-name|iap_flags
+name|iap_umask
 operator|&
 name|IAP_M_SNOOPTYPE
 condition|)
@@ -11045,7 +11047,7 @@ if|if
 condition|(
 name|ie
 operator|->
-name|iap_flags
+name|iap_umask
 operator|&
 name|IAP_M_TRANSITION
 condition|)
