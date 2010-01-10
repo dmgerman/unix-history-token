@@ -1629,10 +1629,14 @@ name|int
 name|po_error
 decl_stmt|;
 comment|/* recorded error */
-name|int
+name|short
 name|po_sscount
 decl_stmt|;
 comment|/* # SS PMCs owned */
+name|short
+name|po_logprocmaps
+decl_stmt|;
+comment|/* global mappings done */
 block|}
 struct|;
 end_struct
