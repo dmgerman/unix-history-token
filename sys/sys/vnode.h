@@ -637,17 +637,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VI_OBJDIRTY
-value|0x0400
-end_define
-
-begin_comment
-comment|/* object might be dirty */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VI_DOINGINACT
 value|0x0800
 end_define
