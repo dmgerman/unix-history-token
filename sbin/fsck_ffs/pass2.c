@@ -3191,7 +3191,7 @@ operator|.
 name|value
 operator|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|idesc
 operator|->
@@ -3397,7 +3397,7 @@ operator|.
 name|value
 operator|=
 call|(
-name|int
+name|intptr_t
 call|)
 argument_list|(
 name|cp
