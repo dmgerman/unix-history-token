@@ -14572,7 +14572,7 @@ name|char
 operator|*
 operator|)
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|cmd
 operator|.
@@ -14641,7 +14641,7 @@ name|char
 operator|*
 operator|)
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|cmd
 operator|.
