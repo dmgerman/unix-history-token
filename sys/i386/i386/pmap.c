@@ -630,6 +630,13 @@ name|KERNend
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|KPTphys
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2798,7 +2805,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nkpt
+name|NKPT
 condition|;
 name|i
 operator|++
@@ -2808,14 +2815,13 @@ name|mpte
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|PTD
-index|[
-name|i
+name|KPTphys
 operator|+
-name|KPTDI
-index|]
-operator|&
-name|PG_FRAME
+operator|(
+name|i
+operator|<<
+name|PAGE_SHIFT
+operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2849,14 +2855,13 @@ name|mpte
 operator|->
 name|phys_addr
 operator|=
-name|PTD
-index|[
-name|i
+name|KPTphys
 operator|+
-name|KPTDI
-index|]
-operator|&
-name|PG_FRAME
+operator|(
+name|i
+operator|<<
+name|PAGE_SHIFT
+operator|)
 expr_stmt|;
 block|}
 comment|/* 	 * Initialize the address space (zone) for the pv entries.  Set a 	 * high water mark so that the system can recover from excessive 	 * numbers of pv entries. 	 */
