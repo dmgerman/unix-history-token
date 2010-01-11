@@ -911,6 +911,9 @@ name|int
 name|max_mtu
 decl_stmt|;
 name|int
+name|throttle
+decl_stmt|;
+name|int
 name|tx_defrag
 decl_stmt|;
 name|int
@@ -934,6 +937,15 @@ decl_stmt|;
 name|struct
 name|callout
 name|co_hdl
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+name|struct
+name|task
+name|watchdog_task
 decl_stmt|;
 name|struct
 name|sysctl_oid
@@ -1034,6 +1046,20 @@ define|#
 directive|define
 name|MXGE_SFP_COMPLIANCE_BYTE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGE_MIN_THROTTLE
+value|416
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGE_MAX_THROTTLE
+value|4096
 end_define
 
 begin_define
