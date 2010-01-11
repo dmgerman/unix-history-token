@@ -823,6 +823,9 @@ decl_stmt|;
 name|u_char
 name|digital
 decl_stmt|;
+name|uint16_t
+name|pinset
+decl_stmt|;
 name|nid_t
 name|hpredir
 decl_stmt|;
@@ -1034,7 +1037,7 @@ name|fmt
 decl_stmt|,
 name|fmtlist
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|,
 name|pcmrates
