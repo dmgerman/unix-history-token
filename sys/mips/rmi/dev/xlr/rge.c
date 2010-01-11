@@ -381,7 +381,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/rmi/xlr/rge.h>
+file|<mips/rmi/dev/xlr/rge.h>
 end_include
 
 begin_comment
@@ -1152,18 +1152,6 @@ name|rge_stop
 parameter_list|(
 name|struct
 name|rge_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|rge_watchdog
-parameter_list|(
-name|struct
-name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;
@@ -9932,12 +9920,6 @@ name|rge_start
 expr_stmt|;
 name|ifp
 operator|->
-name|if_watchdog
-operator|=
-name|rge_watchdog
-expr_stmt|;
-name|ifp
-operator|->
 name|if_init
 operator|=
 name|rge_init
@@ -12224,19 +12206,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|rge_watchdog
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|sc
-parameter_list|)
-block|{ }
 end_function
 
 begin_function
