@@ -107,6 +107,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -235,13 +241,6 @@ define|#
 directive|define
 name|TMPPAT
 value|"makeXXXXXXXXXX"
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMPDIR
-value|"/tmp"
 end_define
 
 begin_ifndef
@@ -5301,7 +5300,7 @@ name|NULL
 condition|)
 name|tdir
 operator|=
-name|TMPDIR
+name|_PATH_TMP
 expr_stmt|;
 comment|/* 	 * If the -n flag wasn't given, we open up OUR (not the child's) 	 * temporary file to stuff commands in it. The thing is rd/wr so we 	 * don't need to reopen it to feed it to the shell. If the -n flag 	 * *was* given, we just set the file to be stdout. Cute, huh? 	 */
 if|if
@@ -5912,23 +5911,6 @@ name|fflush
 argument_list|(
 name|stdout
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tdir
-operator|=
-name|getenv
-argument_list|(
-literal|"TMPDIR"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|tdir
-operator|=
-name|TMPDIR
 expr_stmt|;
 name|snprintf
 argument_list|(
