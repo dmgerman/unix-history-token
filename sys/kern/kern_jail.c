@@ -20209,7 +20209,16 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|" childcount      = %d\n"
+literal|" children.max    = %d\n"
+argument_list|,
+name|pr
+operator|->
+name|pr_childmax
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" children.cur    = %d\n"
 argument_list|,
 name|pr
 operator|->
@@ -20243,7 +20252,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|" flags           = %x"
+literal|" flags           = 0x%x"
 argument_list|,
 name|pr
 operator|->
@@ -20402,7 +20411,7 @@ expr_stmt|;
 block|}
 name|db_printf
 argument_list|(
-literal|" allow           = %x"
+literal|" allow           = 0x%x"
 argument_list|,
 name|pr
 operator|->
@@ -20549,7 +20558,7 @@ name|ii
 operator|==
 literal|0
 condition|?
-literal|"ip4             ="
+literal|"ip4.addr        ="
 else|:
 literal|"                 "
 argument_list|,
@@ -20601,7 +20610,7 @@ name|ii
 operator|==
 literal|0
 condition|?
-literal|"ip6             ="
+literal|"ip6.addr        ="
 else|:
 literal|"                 "
 argument_list|,
