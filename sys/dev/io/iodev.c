@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/specialreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -143,6 +137,11 @@ operator|.
 name|d_close
 operator|=
 name|ioclose
+block|,
+operator|.
+name|d_ioctl
+operator|=
+name|ioioctl
 block|,
 operator|.
 name|d_name
