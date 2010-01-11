@@ -333,8 +333,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FFS_MAXID
+name|FFS_SET_CWD
 value|12
+end_define
+
+begin_comment
+comment|/* set current directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_SET_DOTDOT
+value|13
+end_define
+
+begin_comment
+comment|/* set inode number for ".." */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_UNLINK
+value|14
+end_define
+
+begin_comment
+comment|/* remove a name in the filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_MAXID
+value|15
 end_define
 
 begin_comment

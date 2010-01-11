@@ -2508,6 +2508,9 @@ parameter_list|,
 name|enum
 name|uio_seg
 name|pathseg
+parameter_list|,
+name|ino_t
+name|oldinum
 parameter_list|)
 function_decl|;
 end_function_decl
