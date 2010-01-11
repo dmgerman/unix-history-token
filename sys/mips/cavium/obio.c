@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/octeon1/octeonreg.h>
+file|<mips/cavium/octeonreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/octeon1/obiovar.h>
+file|<mips/cavium/obiovar.h>
 end_include
 
 begin_function_decl

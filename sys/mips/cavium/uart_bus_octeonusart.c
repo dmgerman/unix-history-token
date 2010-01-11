@@ -116,7 +116,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<mips/octeon1/octeonreg.h>
+file|<mips/cavium/octeonreg.h>
 end_include
 
 begin_include

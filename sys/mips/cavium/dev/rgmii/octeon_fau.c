@@ -6,6 +6,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -18,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/octeon1/octeon_pcmap_regs.h>
+file|<mips/cavium/octeon_pcmap_regs.h>
 end_include
 
 begin_include

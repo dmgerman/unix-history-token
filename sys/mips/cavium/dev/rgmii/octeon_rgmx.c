@@ -210,7 +210,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/octeon1/octeon_pcmap_regs.h>
+file|<mips/cavium/octeon_pcmap_regs.h>
 end_include
 
 begin_include
@@ -4636,14 +4636,6 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
@@ -6210,14 +6202,6 @@ name|IFF_DRV_OACTIVE
 operator||
 name|IFF_DRV_RUNNING
 operator|)
-expr_stmt|;
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
 expr_stmt|;
 name|sc
 operator|->
