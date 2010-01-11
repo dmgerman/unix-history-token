@@ -117,6 +117,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IIR_BUSY
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
 name|IIR_RLS
 value|0x6
 end_define
@@ -963,6 +970,35 @@ end_define
 
 begin_comment
 comment|/* XOFF 2 character (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_usr
+value|39
+end_define
+
+begin_comment
+comment|/* Octeon 16750/16550 Uart Status Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_USR
+value|com_usr
+end_define
+
+begin_define
+define|#
+directive|define
+name|USR_TXFIFO_NOTFULL
+value|2
+end_define
+
+begin_comment
+comment|/* Uart TX FIFO Not full */
 end_comment
 
 begin_comment
