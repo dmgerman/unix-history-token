@@ -1508,7 +1508,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|printf("%s: chiprev %s chipclk %d Mhz\n",  		slp->sl_dev.dv_xname, s, ct->sc_chipclk);
+block|printf("%s: chiprev %s chipclk %d MHz\n",  		slp->sl_dev.dv_xname, s, ct->sc_chipclk);
 endif|#
 directive|endif
 name|slp

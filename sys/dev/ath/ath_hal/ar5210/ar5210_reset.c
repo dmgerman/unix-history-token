@@ -311,7 +311,7 @@ name|ah
 argument_list|,
 name|HAL_DEBUG_ANY
 argument_list|,
-literal|"%s: channel not 5Ghz\n"
+literal|"%s: channel not 5GHz\n"
 argument_list|,
 name|__func__
 argument_list|)

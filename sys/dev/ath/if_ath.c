@@ -24965,7 +24965,7 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|"%s: unable to reset "
-literal|"channel %u (%u Mhz, flags 0x%x), hal status %u\n"
+literal|"channel %u (%u MHz, flags 0x%x), hal status %u\n"
 argument_list|,
 name|__func__
 argument_list|,
