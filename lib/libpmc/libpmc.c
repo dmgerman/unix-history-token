@@ -12471,6 +12471,14 @@ argument_list|(
 name|core
 argument_list|)
 expr_stmt|;
+name|pmc_class_table
+index|[
+name|n
+index|]
+operator|=
+operator|&
+name|core_class_table_descr
+expr_stmt|;
 break|break;
 case|case
 name|PMC_CPU_INTEL_CORE2
