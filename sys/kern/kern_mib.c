@@ -591,9 +591,10 @@ name|ngroups
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+operator|&
+name|ngroups_max
 argument_list|,
-name|NGROUPS_MAX
+literal|0
 argument_list|,
 literal|"Maximum number of supplemental groups a user can belong to"
 argument_list|)

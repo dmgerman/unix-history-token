@@ -5656,8 +5656,8 @@ operator|<
 literal|0
 operator|||
 name|ngrp
-operator|>=
-name|NGROUPS
+operator|>
+name|ngroups_max
 condition|)
 return|return
 operator|(

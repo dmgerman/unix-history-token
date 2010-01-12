@@ -1179,7 +1179,9 @@ name|uap
 operator|->
 name|gidsetsize
 argument_list|,
-name|NGROUPS
+name|ngroups_max
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|groups
@@ -3261,7 +3263,9 @@ name|uap
 operator|->
 name|gidsetsize
 operator|>
-name|NGROUPS
+name|ngroups_max
+operator|+
+literal|1
 condition|)
 return|return
 operator|(
@@ -3384,7 +3388,9 @@ if|if
 condition|(
 name|ngrp
 operator|>
-name|NGROUPS
+name|ngroups_max
+operator|+
+literal|1
 condition|)
 return|return
 operator|(
@@ -8700,7 +8706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy groups in to a credential after expanding it if required.  * Truncate the list to NGROUPS if it is too large.  */
+comment|/*  * Copy groups in to a credential after expanding it if required.  * Truncate the list to (ngroups_max + 1) if it is too large.  */
 end_comment
 
 begin_function
@@ -8724,11 +8730,15 @@ if|if
 condition|(
 name|ngrp
 operator|>
-name|NGROUPS
+name|ngroups_max
+operator|+
+literal|1
 condition|)
 name|ngrp
 operator|=
-name|NGROUPS
+name|ngroups_max
+operator|+
+literal|1
 expr_stmt|;
 name|crextend
 argument_list|(

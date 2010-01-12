@@ -3228,7 +3228,9 @@ name|uap
 operator|->
 name|gidsetsize
 argument_list|,
-name|NGROUPS
+name|ngroups_max
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|gp
@@ -3421,7 +3423,9 @@ name|uap
 operator|->
 name|gidsetsize
 operator|>
-name|NGROUPS
+name|ngroups_max
+operator|+
+literal|1
 condition|)
 return|return
 operator|(

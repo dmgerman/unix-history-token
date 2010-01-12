@@ -804,10 +804,12 @@ name|KASSERT
 argument_list|(
 name|gidset_size
 operator|<=
-name|NGROUPS
+name|ngroups_max
+operator|+
+literal|1
 argument_list|,
 operator|(
-literal|"audit_arg_groupset: gidset_size> NGROUPS"
+literal|"audit_arg_groupset: gidset_size> (kern.ngroups + 1)"
 operator|)
 argument_list|)
 expr_stmt|;
