@@ -69,7 +69,7 @@ name|uint8_t
 name|conf_form
 decl_stmt|;
 comment|/* Formation Information */
-name|uint8_t
+name|uint16_t
 name|conf_cap
 decl_stmt|;
 block|}
@@ -237,8 +237,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_CAP_PSL
+name|IEEE80211_MESHCONF_CAP_TBTT
 value|0x40
+end_define
+
+begin_comment
+comment|/* TBTT Adjusting  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHCONF_CAP_PSL
+value|0x80
 end_define
 
 begin_comment
