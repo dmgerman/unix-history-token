@@ -235,7 +235,7 @@ name|p_pid
 else|:
 literal|0
 expr_stmt|;
-comment|/* comm pid ppid pgid sid tty ctty,sldr start ut st wmsg 				euid ruid rgid,egid,groups[1 .. NGROUPS] */
+comment|/* comm pid ppid pgid sid tty ctty,sldr start ut st wmsg 				euid ruid rgid,egid,groups[1 .. ngroups] */
 name|pc
 operator|=
 name|p
