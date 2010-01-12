@@ -589,7 +589,7 @@ name|KERN_NGROUPS
 argument_list|,
 name|ngroups
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|ngroups_max
