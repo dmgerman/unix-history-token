@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ehcireg.h,v 1.18 2004/10/22 10:38:17 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD: src/sys/dev/usb/ehcireg.h,v 1.7.2.2.2.1 2008/10/02 02:57:24 kensmith Exp $	*/
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment

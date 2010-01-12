@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ehcivar.h,v 1.19 2005/04/29 15:04:29 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD: src/sys/dev/usb/ehcivar.h,v 1.9.2.1.8.1 2008/10/02 02:57:24 kensmith Exp $	*/
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
