@@ -12,7 +12,7 @@ comment|/*-  * Copyright (c) 2000, 2001 Matthew R. Green  * All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * AUXIO registers support on the sbus& ebus2, used for the floppy driver  * and to control the system LED, for the BLINK option.  */
+comment|/*  * AUXIO registers support on the SBus& EBus2, used for the floppy driver  * and to control the system LED, for the BLINK option.  */
 end_comment
 
 begin_include
@@ -132,7 +132,7 @@ file|<dev/auxio/auxioreg.h>
 end_include
 
 begin_comment
-comment|/*  * on sun4u, auxio exists with one register (LED) on the sbus, and 5  * registers on the ebus2 (pci) (LED, PCIMODE, FREQUENCY, SCSI  * OSCILLATOR, and TEMP SENSE.  */
+comment|/*  * On sun4u, auxio exists with one register (LED) on the SBus, and 5  * registers on the EBus2 (pci) (LED, PCIMODE, FREQUENCY, SCSI  * OSCILLATOR, and TEMP SENSE.  */
 end_comment
 
 begin_define
@@ -438,6 +438,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|auxio
+argument_list|,
+name|sbus
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* EBus */
 end_comment
@@ -512,6 +528,22 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|auxio
+argument_list|,
+name|ebus
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
