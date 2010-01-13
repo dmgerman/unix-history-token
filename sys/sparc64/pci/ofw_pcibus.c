@@ -181,8 +181,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|device_probe_t
-name|ofw_pcibus_probe
+name|bus_child_pnpinfo_str_t
+name|ofw_pcibus_pnpinfo_str
 decl_stmt|;
 end_decl_stmt
 
@@ -195,8 +195,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|pci_assign_interrupt_t
-name|ofw_pcibus_assign_interrupt
+name|device_probe_t
+name|ofw_pcibus_probe
 decl_stmt|;
 end_decl_stmt
 
@@ -209,8 +209,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bus_child_pnpinfo_str_t
-name|ofw_pcibus_pnpinfo_str
+name|pci_assign_interrupt_t
+name|ofw_pcibus_assign_interrupt
 decl_stmt|;
 end_decl_stmt
 
@@ -449,6 +449,28 @@ name|u_int
 name|func
 parameter_list|)
 block|{
+define|#
+directive|define
+name|CS_READ
+parameter_list|(
+name|n
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|PCIB_READ_CONFIG(bridge, busno, slot, func, (n), (w))
+define|#
+directive|define
+name|CS_WRITE
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|PCIB_WRITE_CONFIG(bridge, busno, slot, func, (n), (v), (w))
 ifndef|#
 directive|ifndef
 name|SUN4V
@@ -459,16 +481,8 @@ comment|/* 	 * Initialize the latency timer register for busmaster devices to 	 
 if|if
 condition|(
 operator|(
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_HDRTYPE
 argument_list|,
 literal|1
@@ -482,16 +496,8 @@ condition|)
 block|{
 name|reg
 operator|=
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_BRIDGECTL_1
 argument_list|,
 literal|1
@@ -520,16 +526,8 @@ name|slot
 argument_list|,
 name|func
 argument_list|,
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_BRIDGECTL_1
 argument_list|,
 literal|1
@@ -541,16 +539,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* OFW_PCI_DEBUG */
-name|PCIB_WRITE_CONFIG
+name|CS_WRITE
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_BRIDGECTL_1
 argument_list|,
 name|reg
@@ -577,16 +567,8 @@ name|slot
 argument_list|,
 name|func
 argument_list|,
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_SECLAT_1
 argument_list|,
 literal|1
@@ -598,16 +580,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* OFW_PCI_DEBUG */
-name|PCIB_WRITE_CONFIG
+name|CS_WRITE
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_SECLAT_1
 argument_list|,
 name|reg
@@ -620,16 +594,8 @@ else|else
 block|{
 name|reg
 operator|=
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_MINGNT
 argument_list|,
 literal|1
@@ -695,16 +661,8 @@ name|slot
 argument_list|,
 name|func
 argument_list|,
-name|PCIB_READ_CONFIG
+name|CS_READ
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_LATTIMER
 argument_list|,
 literal|1
@@ -716,16 +674,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* OFW_PCI_DEBUG */
-name|PCIB_WRITE_CONFIG
+name|CS_WRITE
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_LATTIMER
 argument_list|,
 name|reg
@@ -734,16 +684,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute a value to write into the cache line size register. 	 * The role of the streaming cache is unclear in write invalidate 	 * transfers, so it is made sure that it's line size is always 	 * reached.  Generally, the cache line size is fixed at 64 bytes 	 * by Fireplane/Safari, JBus and UPA. 	 */
-name|PCIB_WRITE_CONFIG
+name|CS_WRITE
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_CACHELNSZ
 argument_list|,
 name|STRBUF_LINESZ
@@ -759,16 +701,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * The preset in the intline register is usually wrong.  Reset 	 * it to 255, so that the PCI code will reroute the interrupt if 	 * needed. 	 */
-name|PCIB_WRITE_CONFIG
+name|CS_WRITE
 argument_list|(
-name|bridge
-argument_list|,
-name|busno
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
 name|PCIR_INTLINE
 argument_list|,
 name|PCI_INVALID_IRQ
@@ -776,6 +710,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|CS_READ
+undef|#
+directive|undef
+name|CS_WRITE
 block|}
 end_function
 
