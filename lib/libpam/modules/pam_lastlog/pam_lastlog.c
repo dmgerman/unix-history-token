@@ -41,6 +41,12 @@ directive|include
 file|<ulog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utmpx.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -95,7 +101,7 @@ modifier|*
 name|pwd
 decl_stmt|;
 name|struct
-name|ulog_utmpx
+name|utmpx
 modifier|*
 name|utx
 decl_stmt|;
@@ -259,9 +265,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|ulog_setutxfile
+name|setutxdb
 argument_list|(
-name|UTXI_USER
+name|UTXDB_LASTLOGIN
 argument_list|,
 name|NULL
 argument_list|)
@@ -271,7 +277,7 @@ condition|)
 block|{
 name|PAM_LOG
 argument_list|(
-literal|"Failed to open lastlog database"
+literal|"Failed to open lastlogin database"
 argument_list|)
 expr_stmt|;
 block|}
@@ -279,7 +285,7 @@ else|else
 block|{
 name|utx
 operator|=
-name|ulog_getutxuser
+name|getutxuser
 argument_list|(
 name|user
 argument_list|)
@@ -358,7 +364,7 @@ name|ut_line
 argument_list|)
 expr_stmt|;
 block|}
-name|ulog_endutxent
+name|endutxent
 argument_list|()
 expr_stmt|;
 block|}
