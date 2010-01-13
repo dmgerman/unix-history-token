@@ -183,12 +183,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/dh.h>
 end_include
 
@@ -931,7 +925,7 @@ begin_decl_stmt
 name|u_int
 name|utmp_len
 init|=
-name|UT_HOSTSIZE
+name|MAXHOSTNAMELEN
 decl_stmt|;
 end_decl_stmt
 
