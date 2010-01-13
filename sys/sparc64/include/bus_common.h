@@ -18,6 +18,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|INTCLR_PENDING
+value|0x000000003ULL
+end_define
+
+begin_comment
+comment|/* Interrupt queued to CPU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTCLR_RECEIVED
+value|0x000000001ULL
+end_define
+
+begin_comment
+comment|/* Interrupt received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTCLR_IDLE
+value|0x000000000ULL
+end_define
+
+begin_comment
+comment|/* Interrupt idle */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INTMAP_V
 value|0x080000000ULL
 end_define
@@ -218,10 +251,10 @@ name|INTMAP_VEC
 parameter_list|(
 name|ign
 parameter_list|,
-name|inr
+name|ino
 parameter_list|)
 define|\
-value|((((ign)<< INTMAP_IGN_SHIFT)& INTMAP_IGN_MASK) |		\ 	((inr)& INTMAP_INR_MASK))
+value|((((ign)<< INTMAP_IGN_SHIFT)& INTMAP_IGN_MASK) |		\ 	((ino)& INTMAP_INO_MASK))
 end_define
 
 begin_comment
