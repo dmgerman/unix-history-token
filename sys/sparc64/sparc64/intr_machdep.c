@@ -1152,12 +1152,8 @@ name|cookie
 expr_stmt|;
 if|if
 condition|(
-name|iv
-operator|->
-name|iv_ic
-operator|==
-name|NULL
-operator|||
+name|__predict_false
+argument_list|(
 name|intr_event_handle
 argument_list|(
 name|iv
@@ -1168,6 +1164,7 @@ name|NULL
 argument_list|)
 operator|!=
 literal|0
+argument_list|)
 condition|)
 name|intr_stray_vector
 argument_list|(
@@ -1714,6 +1711,14 @@ name|iv
 argument_list|)
 expr_stmt|;
 comment|/* Ensure the interrupt is cleared, it might have triggered before. */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_clear
+operator|!=
+name|NULL
+condition|)
 name|ic
 operator|->
 name|ic_clear
