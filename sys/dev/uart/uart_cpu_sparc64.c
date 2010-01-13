@@ -1308,6 +1308,14 @@ name|compat
 argument_list|,
 literal|"su16550"
 argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|compat
+argument_list|,
+literal|"su16552"
+argument_list|)
 condition|)
 block|{
 name|class
