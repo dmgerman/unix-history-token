@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_V
-value|0x080000000LL
+value|0x080000000ULL
 end_define
 
 begin_comment
@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_TID_MASK
-value|0x07c000000LL
+value|0x07c000000ULL
 end_define
 
 begin_comment
@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_IGN_MASK
-value|0x0000007c0LL
+value|0x0000007c0ULL
 end_define
 
 begin_comment
@@ -66,7 +66,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_INO_MASK
-value|0x00000003fLL
+value|0x00000003fULL
 end_define
 
 begin_comment
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_SBUSSLOT_MASK
-value|0x000000018LL
+value|0x000000018ULL
 end_define
 
 begin_comment
@@ -95,7 +95,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_PCIBUS_MASK
-value|0x000000010LL
+value|0x000000010ULL
 end_define
 
 begin_comment
@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_PCISLOT_MASK
-value|0x00000000cLL
+value|0x00000000cULL
 end_define
 
 begin_comment
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_PCIINT_MASK
-value|0x000000003LL
+value|0x000000003ULL
 end_define
 
 begin_comment
@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|INTMAP_OBIO_MASK
-value|0x000000020LL
+value|0x000000020ULL
 end_define
 
 begin_comment
