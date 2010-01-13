@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Fredrik Lindberg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2009 Fredrik Lindberg<fli@shapeshifter.se>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -225,6 +225,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usb_controller.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
@@ -254,6 +266,7 @@ decl_stmt|;
 name|int
 name|ht_muxport
 decl_stmt|;
+comment|/* Mux. port no */
 name|int
 name|ht_open
 decl_stmt|;
@@ -286,6 +299,7 @@ decl_stmt|;
 name|uint32_t
 name|sc_type
 decl_stmt|;
+comment|/* Interface definition */
 name|struct
 name|usb_xfer
 modifier|*
@@ -331,11 +345,11 @@ name|mbuf
 modifier|*
 name|sc_mwait
 decl_stmt|;
-comment|/* partial packet */
+comment|/* Partial packet */
 name|size_t
 name|sc_waitlen
 decl_stmt|;
-comment|/* no. of outstanding bytes */
+comment|/* No. of outstanding bytes */
 name|struct
 name|ifqueue
 name|sc_rxq
@@ -548,6 +562,10 @@ name|UHSO_MPORT_TYPE_APP2
 value|0x04
 end_define
 
+begin_comment
+comment|/* Secondary application */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -567,7 +585,7 @@ comment|/* Max number of mux ports */
 end_comment
 
 begin_comment
-comment|/*  * Port definitions  */
+comment|/*  * Port definitions  * Note that these definitions are arbitray and doesn't match  * values returned by the auto config descriptor.  */
 end_comment
 
 begin_define
@@ -692,11 +710,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Map between interface port type read from device and description type */
+comment|/*  * Map between interface port type read from device and description type.  * The position in this array is a direct map to the auto config  * descriptor values.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|char
 name|uhso_port_map
 index|[]
@@ -748,6 +767,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|char
 name|uhso_mux_port_map
 index|[]
@@ -776,6 +796,7 @@ init|=
 block|{
 literal|"Unknown"
 block|,
+comment|/* Not a valid port */
 literal|"Control"
 block|,
 literal|"Application"
@@ -1004,12 +1025,23 @@ block|,
 comment|/* Option iCON 322 */
 name|UHSO_DEV
 argument_list|(
-argument|OPTION
+name|OPTION
 argument_list|,
-argument|GTICON322
+name|GTICON322
 argument_list|,
-argument|UHSO_STATIC_IFACE
+name|UHSO_STATIC_IFACE
 argument_list|)
+block|,
+comment|/* Option iCON 505 */
+name|UHSO_DEV
+argument_list|(
+name|OPTION
+argument_list|,
+name|ICON505
+argument_list|,
+name|UHSO_AUTO_IFACE
+argument_list|)
+block|,
 undef|#
 directive|undef
 name|UHSO_DEV
@@ -1031,6 +1063,36 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"USB uhso"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|uhso_autoswitch
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_uhso
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|auto_switch
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|uhso_autoswitch
+argument_list|,
+literal|0
+argument_list|,
+literal|"Automatically switch to modem mode"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1285,6 +1347,10 @@ name|uhso_ifnet_write_callback
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Config used for the default control pipes */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1410,6 +1476,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Config for the multiplexed serial ports */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1465,6 +1535,10 @@ block|, 	}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Config for the raw IP-packet interface */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1580,6 +1654,10 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Config for interfaces with normal bulk serial ports */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2418,26 +2496,6 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
-name|device_set_usb_desc
-argument_list|(
-name|self
-argument_list|)
-expr_stmt|;
-name|UHSO_DPRINTF
-argument_list|(
-literal|0
-argument_list|,
-literal|"Device is in modem mode, devClass=%x\n"
-argument_list|,
-name|uaa
-operator|->
-name|device
-operator|->
-name|ddesc
-operator|.
-name|bDeviceClass
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_dev
@@ -2678,6 +2736,63 @@ argument_list|,
 literal|"Port available at this interface"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The default interface description on most Option devices aren't 	 * very helpful. So we skip device_set_usb_desc and set the 	 * device description manually. 	 */
+name|device_set_desc_copy
+argument_list|(
+name|self
+argument_list|,
+name|uhso_port_type
+index|[
+name|UHSO_IFACE_PORT_TYPE
+argument_list|(
+name|sc
+operator|->
+name|sc_type
+argument_list|)
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* Announce device */
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"<%s port> at<%s %s> on %s\n"
+argument_list|,
+name|uhso_port_type
+index|[
+name|UHSO_IFACE_PORT_TYPE
+argument_list|(
+name|sc
+operator|->
+name|sc_type
+argument_list|)
+index|]
+argument_list|,
+name|uaa
+operator|->
+name|device
+operator|->
+name|manufacturer
+argument_list|,
+name|uaa
+operator|->
+name|device
+operator|->
+name|product
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|uaa
+operator|->
+name|device
+operator|->
+name|bus
+operator|->
+name|bdev
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -2735,6 +2850,7 @@ literal|"Serial ports"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Loop through the number of found TTYs and create sysctl 	 * nodes for them. 	 */
 for|for
 control|(
 name|i
@@ -3236,6 +3352,9 @@ operator|->
 name|dev_state
 operator|!=
 name|UAA_DEV_READY
+operator|||
+operator|!
+name|uhso_autoswitch
 condition|)
 return|return;
 name|iface
@@ -3381,6 +3500,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Probe the interface type by querying the device. The elements  * of an array indicates the capabilities of a particular interface.  * Returns a bit mask with the interface capabilities.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3511,7 +3634,7 @@ return|;
 block|}
 name|UHSO_DPRINTF
 argument_list|(
-literal|3
+literal|1
 argument_list|,
 literal|"actlen=%d\n"
 argument_list|,
@@ -3553,15 +3676,32 @@ return|;
 block|}
 name|UHSO_DPRINTF
 argument_list|(
-literal|3
+literal|1
 argument_list|,
-literal|"index=%d, type=%x\n"
+literal|"index=%d, type=%x[%s]\n"
 argument_list|,
 name|index
 argument_list|,
 name|buf
 index|[
 name|index
+index|]
+argument_list|,
+name|uhso_port_type
+index|[
+operator|(
+name|int
+operator|)
+name|uhso_port_map
+index|[
+operator|(
+name|int
+operator|)
+name|buf
+index|[
+name|index
+index|]
+index|]
 index|]
 argument_list|)
 expr_stmt|;
@@ -3592,37 +3732,40 @@ name|index
 index|]
 index|]
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|port
-operator|==
-name|UHSO_PORT_TYPE_NETWORK
 condition|)
+block|{
+case|case
+name|UHSO_PORT_TYPE_NETWORK
+case|:
 return|return
 operator|(
 name|UHSO_IFACE_SPEC
 argument_list|(
-name|UHSO_IF_BULK
+name|UHSO_IF_NET
+operator||
+name|UHSO_IF_MUX
 argument_list|,
+name|UHSO_PORT_SERIAL
+operator||
 name|UHSO_PORT_NETWORK
 argument_list|,
 name|port
 argument_list|)
 operator|)
 return|;
-elseif|else
-if|if
-condition|(
-name|port
-operator|==
+case|case
 name|UHSO_PORT_TYPE_VOICE
-condition|)
+case|:
+comment|/* Don't claim 'voice' ports */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-else|else
+default|default:
 return|return
 operator|(
 name|UHSO_IFACE_SPEC
@@ -3635,6 +3778,7 @@ name|port
 argument_list|)
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3680,6 +3824,7 @@ operator|<=
 literal|3
 condition|)
 block|{
+comment|/* Cards with 3 or less interfaces */
 switch|switch
 condition|(
 name|index
@@ -3699,7 +3844,7 @@ name|UHSO_PORT_SERIAL
 operator||
 name|UHSO_PORT_NETWORK
 argument_list|,
-literal|0
+name|UHSO_PORT_TYPE_NETWORK
 argument_list|)
 return|;
 case|case
@@ -3732,6 +3877,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* Cards with 4 interfaces */
 switch|switch
 condition|(
 name|index
@@ -3751,7 +3897,7 @@ name|UHSO_PORT_SERIAL
 operator||
 name|UHSO_PORT_NETWORK
 argument_list|,
-literal|0
+name|UHSO_PORT_TYPE_NETWORK
 argument_list|)
 return|;
 case|case
@@ -3803,6 +3949,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Probes an interface for its particular capabilities and attaches if  * it's a supported interface.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3839,14 +3989,12 @@ name|int
 name|type
 decl_stmt|,
 name|error
-decl_stmt|,
-name|error0
 decl_stmt|;
 name|UHSO_DPRINTF
 argument_list|(
 literal|1
 argument_list|,
-literal|"Probing for interface %d, cb=%p\n"
+literal|"Probing for interface %d, probe_func=%p\n"
 argument_list|,
 name|index
 argument_list|,
@@ -3901,29 +4049,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|UHSO_IFACE_USB_TYPE
+name|UHSO_IFACE_PORT_TYPE
 argument_list|(
 name|type
 argument_list|)
-operator|&
-operator|(
-name|UHSO_IF_MUX
-operator||
-name|UHSO_IF_NET
-operator|)
+operator|==
+name|UHSO_PORT_TYPE_NETWORK
 condition|)
 block|{
-name|error0
-operator|=
-name|uhso_attach_muxserial
-argument_list|(
-name|sc
-argument_list|,
-name|iface
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|uhso_attach_ifnet
@@ -3937,17 +4070,92 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error0
-operator|&&
 name|error
 condition|)
+block|{
+name|UHSO_DPRINTF
+argument_list|(
+literal|1
+argument_list|,
+literal|"uhso_attach_ifnet failed"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
+comment|/* 		 * If there is an additional interrupt endpoint on this 		 * interface we most likley have a multiplexed serial port 		 * available. 		 */
 if|if
 condition|(
+name|iface
+operator|->
+name|idesc
+operator|->
+name|bNumEndpoints
+operator|<
+literal|3
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_type
+operator|=
+name|UHSO_IFACE_SPEC
+argument_list|(
+name|UHSO_IFACE_USB_TYPE
+argument_list|(
+name|type
+argument_list|)
+operator|&
+operator|~
+name|UHSO_IF_MUX
+argument_list|,
+name|UHSO_IFACE_PORT
+argument_list|(
+name|type
+argument_list|)
+operator|&
+operator|~
+name|UHSO_PORT_SERIAL
+argument_list|,
+name|UHSO_IFACE_PORT_TYPE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|UHSO_DPRINTF
+argument_list|(
+literal|1
+argument_list|,
+literal|"Trying to attach mux. serial\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|uhso_attach_muxserial
+argument_list|(
+name|sc
+argument_list|,
+name|iface
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
 name|sc
 operator|->
 name|sc_ttys
@@ -4003,7 +4211,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4030,6 +4237,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -4122,6 +4330,15 @@ block|}
 block|}
 else|else
 block|{
+name|UHSO_DPRINTF
+argument_list|(
+literal|0
+argument_list|,
+literal|"Unknown type %x\n"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -4135,6 +4352,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Expands allocated memory to fit an additional TTY.  * Two arrays are kept with matching indexes, one for ucom and one  * for our private data.  */
+end_comment
 
 begin_function
 specifier|static
@@ -4251,7 +4472,7 @@ name|sc
 expr_stmt|;
 name|UHSO_DPRINTF
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"Allocated TTY %d\n"
 argument_list|,
@@ -4273,6 +4494,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Attach a multiplexed serial port  * Data is read/written with requests on the default control pipe. An interrupt  * endpoint returns when there is new data to be read.  */
+end_comment
 
 begin_function
 specifier|static
@@ -4378,6 +4603,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 	 * The bitmask is one octet, loop through the number of 	 * bits that are set and create a TTY for each. 	 */
 for|for
 control|(
 name|i
@@ -4514,6 +4740,7 @@ return|;
 block|}
 block|}
 block|}
+comment|/* Setup the intr. endpoint */
 name|uerr
 operator|=
 name|usbd_transfer_setup
@@ -4561,6 +4788,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Interrupt callback for the multiplexed serial port. Indicates  * which serial port that has data waiting.  */
+end_comment
 
 begin_function
 specifier|static
@@ -4691,6 +4922,7 @@ operator|>
 name|UHSO_MPORT_TYPE_NOMAX
 condition|)
 break|break;
+comment|/* Issue a read for this serial port */
 name|usbd_xfer_set_priv
 argument_list|(
 name|sc
@@ -5447,7 +5679,7 @@ decl_stmt|;
 name|int
 name|tty
 decl_stmt|;
-comment|/* 	 * Try attaching RD/WR/INTR first 	 */
+comment|/* Try attaching RD/WR/INTR first */
 name|uerr
 operator|=
 name|usbd_transfer_setup
@@ -6193,7 +6425,7 @@ name|UHSO_DPRINTF
 argument_list|(
 literal|0
 argument_list|,
-literal|"Interface missmatch, got %d expected %d\n"
+literal|"Interface mismatch, got %d expected %d\n"
 argument_list|,
 name|UGETW
 argument_list|(
@@ -6228,7 +6460,7 @@ condition|)
 block|{
 name|UHSO_DPRINTF
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"notify = 0x%02x\n"
 argument_list|,
@@ -7065,7 +7297,7 @@ name|ifp
 operator|=
 name|if_alloc
 argument_list|(
-name|IFT_PPP
+name|IFT_OTHER
 argument_list|)
 expr_stmt|;
 if|if
@@ -7432,6 +7664,7 @@ name|m_len
 operator|=
 name|actlen
 expr_stmt|;
+comment|/* Enqueue frame for further processing */
 name|_IF_ENQUEUE
 argument_list|(
 operator|&
@@ -7532,7 +7765,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Defered RX processing, called with mutex locked.  */
+comment|/*  * Deferred RX processing, called with mutex locked.  *  * Each frame we receive might contain several small ip-packets aswell  * as partial ip-packets. We need to separate/assemble them into individual  * packets before sending them to the ip-layer.  */
 end_comment
 
 begin_function
@@ -7641,7 +7874,7 @@ condition|)
 break|break;
 name|UHSO_DPRINTF
 argument_list|(
-literal|2
+literal|3
 argument_list|,
 literal|"dequeue m=%p, len=%d\n"
 argument_list|,
@@ -7679,7 +7912,7 @@ name|NULL
 expr_stmt|;
 name|UHSO_DPRINTF
 argument_list|(
-literal|1
+literal|3
 argument_list|,
 literal|"partial m0=%p(%d), concat w/ m=%p(%d)\n"
 argument_list|,
@@ -7773,7 +8006,7 @@ continue|continue;
 block|}
 name|UHSO_DPRINTF
 argument_list|(
-literal|2
+literal|3
 argument_list|,
 literal|"Constructed mbuf=%p, len=%d\n"
 argument_list|,
@@ -7974,7 +8207,7 @@ continue|continue;
 block|}
 name|UHSO_DPRINTF
 argument_list|(
-literal|1
+literal|3
 argument_list|,
 literal|"m=%p, len=%d, cp=%p, iplen=%d\n"
 argument_list|,
@@ -8075,7 +8308,7 @@ argument_list|)
 expr_stmt|;
 name|UHSO_DPRINTF
 argument_list|(
-literal|1
+literal|3
 argument_list|,
 literal|"New mbuf=%p, len=%d/%d, m0=%p, "
 literal|"m0_len=%d/%d\n"
@@ -8120,9 +8353,9 @@ condition|)
 block|{
 name|UHSO_DPRINTF
 argument_list|(
-literal|1
+literal|3
 argument_list|,
-literal|"Defered mbuf=%p, len=%d\n"
+literal|"Deferred mbuf=%p, len=%d\n"
 argument_list|,
 name|m
 argument_list|,
@@ -8635,7 +8868,7 @@ argument_list|)
 expr_stmt|;
 name|UHSO_DPRINTF
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 literal|"ifnet initialized\n"
 argument_list|)
