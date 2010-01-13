@@ -245,22 +245,16 @@ directive|include
 file|<timeconv.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_ULOG_POSIX_NAMES
-end_define
-
 begin_include
 include|#
 directive|include
-file|<ulog.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<utmpx.h>
 end_include
 
 begin_include
@@ -1361,6 +1355,12 @@ operator|->
 name|ki_stat
 operator|==
 name|SZOMB
+operator|||
+name|kp
+operator|->
+name|ki_tdev
+operator|==
+name|NODEV
 condition|)
 continue|continue;
 for|for
@@ -2199,6 +2199,14 @@ name|W_DISPLINESIZE
 argument_list|,
 name|W_DISPLINESIZE
 argument_list|,
+operator|*
+name|ep
+operator|->
+name|utmp
+operator|.
+name|ut_line
+condition|?
+operator|(
 name|strncmp
 argument_list|(
 name|ep
@@ -2238,6 +2246,9 @@ operator|.
 name|ut_line
 operator|+
 literal|3
+operator|)
+else|:
+literal|"-"
 argument_list|,
 name|W_DISPHOSTSIZE
 argument_list|,
