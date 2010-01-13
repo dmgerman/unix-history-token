@@ -499,6 +499,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|fhc
+argument_list|,
+name|central
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|fhc
@@ -521,7 +537,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|fhc
 argument_list|,
-name|central
+name|nexus
 argument_list|,
 literal|1
 argument_list|,
