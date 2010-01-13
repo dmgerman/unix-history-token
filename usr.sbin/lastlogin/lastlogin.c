@@ -69,13 +69,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ulog.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<utmpx.h>
 end_include
 
 begin_function_decl
@@ -97,7 +97,7 @@ name|void
 name|output
 parameter_list|(
 name|struct
-name|ulog_utmpx
+name|utmpx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -132,7 +132,7 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
-name|ulog_utmpx
+name|utmpx
 modifier|*
 name|u
 decl_stmt|;
@@ -159,24 +159,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ulog_setutxfile
-argument_list|(
-name|UTXI_USER
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"failed to open lastlog database"
-argument_list|)
-expr_stmt|;
 name|setpassent
 argument_list|(
 literal|1
@@ -207,10 +189,28 @@ control|)
 block|{
 if|if
 condition|(
+name|setutxdb
+argument_list|(
+name|UTXDB_LASTLOGIN
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"failed to open lastlog database"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|u
 operator|=
-name|ulog_getutxuser
+name|getutxuser
 argument_list|(
 name|argv
 index|[
@@ -239,17 +239,38 @@ argument_list|(
 name|u
 argument_list|)
 expr_stmt|;
+name|endutxent
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 comment|/* Read all lastlog entries, looking for active ones */
 else|else
 block|{
+if|if
+condition|(
+name|setutxdb
+argument_list|(
+name|UTXDB_LASTLOGIN
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"failed to open lastlog database"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
 name|u
 operator|=
-name|ulog_getutxent
+name|getutxent
 argument_list|()
 operator|)
 operator|!=
@@ -271,6 +292,9 @@ name|u
 argument_list|)
 expr_stmt|;
 block|}
+name|endutxent
+argument_list|()
+expr_stmt|;
 block|}
 name|setpassent
 argument_list|(
@@ -278,9 +302,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Close passwd file pointers */
-name|ulog_endutxent
-argument_list|()
-expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -299,7 +320,7 @@ name|void
 name|output
 parameter_list|(
 name|struct
-name|ulog_utmpx
+name|utmpx
 modifier|*
 name|u
 parameter_list|)
@@ -315,7 +336,7 @@ name|tv_sec
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%-16s  %-8s %-16s   %s"
+literal|"%-10s %-8s %-22s %s"
 argument_list|,
 name|u
 operator|->
@@ -329,21 +350,11 @@ name|u
 operator|->
 name|ut_host
 argument_list|,
-operator|(
-name|u
-operator|->
-name|ut_type
-operator|==
-name|USER_PROCESS
-operator|)
-condition|?
 name|ctime
 argument_list|(
 operator|&
 name|t
 argument_list|)
-else|:
-literal|"Never logged in\n"
 argument_list|)
 expr_stmt|;
 block|}
