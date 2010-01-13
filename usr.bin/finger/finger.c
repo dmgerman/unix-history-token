@@ -128,22 +128,16 @@ directive|include
 file|<time.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_ULOG_POSIX_NAMES
-end_define
-
 begin_include
 include|#
 directive|include
-file|<ulog.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<utmpx.h>
 end_include
 
 begin_include
