@@ -2983,13 +2983,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|trimdomain
-argument_list|(
-name|remote_hostname
-argument_list|,
-name|UT_HOSTSIZE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
