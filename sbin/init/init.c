@@ -187,12 +187,6 @@ directive|include
 file|<ttyent.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_ULOG_POSIX_NAMES
-end_define
-
 begin_include
 include|#
 directive|include
@@ -203,6 +197,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmpx.h>
 end_include
 
 begin_include
@@ -2543,15 +2543,10 @@ parameter_list|(
 name|session_t
 modifier|*
 name|sp
+name|__unused
 parameter_list|)
 block|{
-name|ulog_logout
-argument_list|(
-name|sp
-operator|->
-name|se_device
-argument_list|)
-expr_stmt|;
+comment|/* 	 * XXX: Use getutxline() and call pututxline() for each entry. 	 * Is this safe to do this here?  Is it really required anyway? 	 */
 block|}
 end_function
 
