@@ -581,7 +581,7 @@ name|EINVAL
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|SEM_FAILED
 operator|)
 return|;
 block|}
@@ -606,7 +606,7 @@ name|EINVAL
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|SEM_FAILED
 operator|)
 return|;
 block|}
@@ -1262,6 +1262,10 @@ argument_list|(
 operator|&
 name|sem_llock
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
 expr_stmt|;
 return|return
 operator|(
