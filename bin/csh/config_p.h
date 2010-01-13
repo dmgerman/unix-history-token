@@ -157,6 +157,13 @@ name|BUFSIZE
 value|8192
 end_define
 
+begin_define
+define|#
+directive|define
+name|UTMPX_FILE
+value|"/var/run/utx.active"
+end_define
+
 begin_endif
 endif|#
 directive|endif
