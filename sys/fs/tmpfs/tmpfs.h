@@ -1252,7 +1252,7 @@ value|(4 * 1024 * 1024 / PAGE_SIZE)
 end_define
 
 begin_comment
-comment|/*  * Returns information about the number of available memory pages,  * including physical and virtual ones.  *  * If 'total' is TRUE, the value returned is the total amount of memory  * pages configured for the system (either in use or free).  * If it is FALSE, the value returned is the amount of free memory pages.  *  * Remember to remove TMPFS_PAGES_RESERVED from the returned value to avoid  * excessive memory usage.  *  */
+comment|/*  * Returns information about the number of available memory pages,  * including physical and virtual ones.  *  * Remember to remove TMPFS_PAGES_RESERVED from the returned value to avoid  * excessive memory usage.  *  */
 end_comment
 
 begin_function

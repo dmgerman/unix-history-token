@@ -1081,11 +1081,9 @@ name|PAGE_SIZE
 operator|||
 name|size_max
 operator|>
-operator|(
 name|SIZE_MAX
 operator|-
 name|PAGE_SIZE
-operator|)
 condition|)
 name|pages
 operator|=
