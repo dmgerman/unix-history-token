@@ -113,22 +113,16 @@ directive|include
 file|<timeconv.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_ULOG_POSIX_NAMES
-end_define
-
 begin_include
 include|#
 directive|include
-file|<ulog.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<utmpx.h>
 end_include
 
 begin_function_decl
@@ -463,9 +457,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|ulog_setutxfile
+name|setutxdb
 argument_list|(
-name|UTXI_TTY
+name|UTXDB_ACTIVE
 argument_list|,
 operator|*
 name|argv
