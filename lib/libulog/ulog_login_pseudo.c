@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ulog_internal.h"
+file|"ulog.h"
 end_include
 
 begin_define
