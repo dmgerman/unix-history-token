@@ -221,7 +221,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"Could not determine the machine ethernet address"
+literal|"Could not determine the machine Ethernet address"
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -254,13 +254,6 @@ name|uint32_t
 name|phys_hi
 parameter_list|)
 block|{
-name|uint32_t
-name|space
-decl_stmt|;
-name|space
-operator|=
-name|phys_hi
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -281,7 +274,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|space
+name|phys_hi
 operator|&=
 literal|0x1
 expr_stmt|;
@@ -297,21 +290,21 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|space
+name|phys_hi
 operator|&=
 name|OFW_PCI_PHYS_HI_SPACEMASK
 expr_stmt|;
 comment|/* The phys.hi cells of the other busses only contain space bits. */
 return|return
 operator|(
-name|space
+name|phys_hi
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Return the physical address and the bus space to use for a node  * referenced by its package handle and the index of the register bank  * to decode. Intended to be used to together with sparc64_fake_bustag()  * by console drivers in early boot only.  * Works by mapping the address of the node's bank given in the address  * space of its parent upward in the device tree at each bridge along the  * path.  * Currently only really deals with max. 64-bit addresses, i.e. addresses  * consisting of max. 2 phys cells (phys.hi and phys.lo). If we encounter  * a 3 phys cells address (as with PCI addresses) we assume phys.hi can  * be ignored except for the space bits (generally contained in phys.hi)  * and treat phys.mid as phys.hi.  */
+comment|/*  * Return the physical address and the bus space to use for a node  * referenced by its package handle and the index of the register bank  * to decode.  Intended to be used to together with sparc64_fake_bustag()  * by console drivers in early boot only.  * Works by mapping the address of the node's bank given in the address  * space of its parent upward in the device tree at each bridge along the  * path.  * Currently only really deals with max. 64-bit addresses, i.e. addresses  * consisting of max. 2 phys cells (phys.hi and phys.lo).  If we encounter  * a 3 phys cells address (as with PCI addresses) we assume phys.hi can  * be ignored except for the space bits (generally contained in phys.hi)  * and treat phys.mid as phys.hi.  */
 end_comment
 
 begin_function
@@ -387,7 +380,7 @@ name|j
 decl_stmt|,
 name|nbank
 decl_stmt|;
-comment|/* 	 * In general the addresses are contained in the "reg" property 	 * of a node. The first address in the "reg" property of a PCI 	 * node however is the address of its configuration registers in 	 * the configuration space of the host bridge. Additional entries 	 * denote the memory and I/O addresses. For relocatable addresses 	 * the "reg" property contains the BAR, for non-relocatable 	 * addresses it contains the absolute PCI address. The PCI-only 	 * "assigned-addresses" property however always contains the 	 * absolute PCI addresses. 	 * The "assigned-addresses" and "reg" properties are arrays of 	 * address structures consisting of #address-cells 32-bit phys 	 * cells and #size-cells 32-bit size cells. If a parent lacks 	 * the "#address-cells" or "#size-cells" property the default 	 * for #address-cells to use is 2 and for #size-cells 1. 	 */
+comment|/* 	 * In general the addresses are contained in the "reg" property 	 * of a node.  The first address in the "reg" property of a PCI 	 * node however is the address of its configuration registers in 	 * the configuration space of the host bridge.  Additional entries 	 * denote the memory and I/O addresses.  For relocatable addresses 	 * the "reg" property contains the BAR, for non-relocatable 	 * addresses it contains the absolute PCI address.  The PCI-only 	 * "assigned-addresses" property however always contains the 	 * absolute PCI addresses. 	 * The "assigned-addresses" and "reg" properties are arrays of 	 * address structures consisting of #address-cells 32-bit phys 	 * cells and #size-cells 32-bit size cells.  If a parent lacks 	 * the "#address-cells" or "#size-cells" property the default 	 * for #address-cells to use is 2 and for #size-cells 1. 	 */
 name|bus
 operator|=
 name|OF_parent
