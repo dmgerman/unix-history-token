@@ -83,8 +83,10 @@ end_include
 
 begin_function
 name|int
-name|ttyslot
-parameter_list|()
+name|__ttyslot
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ttyent
@@ -203,6 +205,19 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__sym_compat
+argument_list|(
+name|ttyslot
+argument_list|,
+name|__ttyslot
+argument_list|,
+name|FBSD_1
+literal|.0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

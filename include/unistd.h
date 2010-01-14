@@ -4429,15 +4429,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ttyslot
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|undelete
 parameter_list|(
 specifier|const
