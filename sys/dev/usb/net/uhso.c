@@ -585,7 +585,7 @@ comment|/* Max number of mux ports */
 end_comment
 
 begin_comment
-comment|/*  * Port definitions  * Note that these definitions are arbitray and doesn't match  * values returned by the auto config descriptor.  */
+comment|/*  * Port definitions  * Note that these definitions are arbitrary and do not match the values  * returned by the auto config descriptor.  */
 end_comment
 
 begin_define
@@ -2736,7 +2736,7 @@ argument_list|,
 literal|"Port available at this interface"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The default interface description on most Option devices aren't 	 * very helpful. So we skip device_set_usb_desc and set the 	 * device description manually. 	 */
+comment|/* 	 * The default interface description on most Option devices isn't 	 * very helpful. So we skip device_set_usb_desc and set the 	 * device description manually. 	 */
 name|device_set_desc_copy
 argument_list|(
 name|self
@@ -4086,7 +4086,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 		 * If there is an additional interrupt endpoint on this 		 * interface we most likley have a multiplexed serial port 		 * available. 		 */
+comment|/* 		 * If there is an additional interrupt endpoint on this 		 * interface then we most likely have a multiplexed serial port 		 * available. 		 */
 if|if
 condition|(
 name|iface
@@ -4790,7 +4790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Interrupt callback for the multiplexed serial port. Indicates  * which serial port that has data waiting.  */
+comment|/*  * Interrupt callback for the multiplexed serial port. Indicates  * which serial port has data waiting.  */
 end_comment
 
 begin_function
@@ -7765,7 +7765,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Deferred RX processing, called with mutex locked.  *  * Each frame we receive might contain several small ip-packets aswell  * as partial ip-packets. We need to separate/assemble them into individual  * packets before sending them to the ip-layer.  */
+comment|/*  * Deferred RX processing, called with mutex locked.  *  * Each frame we receive might contain several small ip-packets as well  * as partial ip-packets. We need to separate/assemble them into individual  * packets before sending them to the ip-layer.  */
 end_comment
 
 begin_function
