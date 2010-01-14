@@ -310,6 +310,9 @@ argument_list|(
 name|fp
 argument_list|,
 operator|-
+operator|(
+name|off_t
+operator|)
 sizeof|sizeof
 name|fe
 argument_list|,
@@ -346,6 +349,9 @@ argument_list|(
 name|fp
 argument_list|)
 operator|-
+operator|(
+name|off_t
+operator|)
 sizeof|sizeof
 name|fe
 expr_stmt|;
@@ -516,6 +522,9 @@ argument_list|(
 name|fp
 argument_list|,
 operator|-
+operator|(
+name|off_t
+operator|)
 sizeof|sizeof
 name|fe
 argument_list|,
@@ -678,6 +687,9 @@ argument_list|(
 name|fp
 argument_list|,
 operator|-
+operator|(
+name|off_t
+operator|)
 sizeof|sizeof
 name|fe
 argument_list|,
