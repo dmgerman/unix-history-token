@@ -890,11 +890,9 @@ modifier|*
 name|vendor
 parameter_list|,
 name|uint32_t
-modifier|*
 name|attrib
 parameter_list|,
 name|size_t
-modifier|*
 name|datasize
 parameter_list|,
 name|void
@@ -909,7 +907,7 @@ name|status
 operator|=
 name|efi_runtime
 operator|->
-name|rt_getvar
+name|rt_setvar
 argument_list|(
 name|name
 argument_list|,

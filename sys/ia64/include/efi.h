@@ -709,10 +709,8 @@ name|uuid
 modifier|*
 parameter_list|,
 name|uint32_t
-modifier|*
 parameter_list|,
 name|size_t
-modifier|*
 parameter_list|,
 name|void
 modifier|*
