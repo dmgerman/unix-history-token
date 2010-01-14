@@ -11095,6 +11095,9 @@ name|vap
 operator|->
 name|iv_mesh
 decl_stmt|;
+name|uint16_t
+name|cap
+decl_stmt|;
 if|if
 condition|(
 name|meshconf
@@ -11242,14 +11245,23 @@ return|return
 literal|1
 return|;
 block|}
+comment|/* NB: conf_cap is only read correctly here */
+name|cap
+operator|=
+name|LE_READ_2
+argument_list|(
+operator|&
+name|meshconf
+operator|->
+name|conf_cap
+argument_list|)
+expr_stmt|;
 comment|/* Not accepting peers */
 if|if
 condition|(
 operator|!
 operator|(
-name|meshconf
-operator|->
-name|conf_cap
+name|cap
 operator|&
 name|IEEE80211_MESHCONF_CAP_AP
 operator|)
@@ -11669,10 +11681,6 @@ name|frm
 argument_list|,
 name|caps
 argument_list|)
-expr_stmt|;
-name|frm
-operator|+=
-literal|1
 expr_stmt|;
 return|return
 name|frm
