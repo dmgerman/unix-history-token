@@ -341,13 +341,9 @@ literal|1
 condition|)
 name|partial
 operator|=
-name|fseeko
+name|ftello
 argument_list|(
 name|fp
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_CUR
 argument_list|)
 operator|-
 sizeof|sizeof
