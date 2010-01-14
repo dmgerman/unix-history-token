@@ -1263,7 +1263,7 @@ define|#
 directive|define
 name|STE_INTRS
 define|\
-value|(STE_IMR_RX_DMADONE|STE_IMR_TX_DMADONE|	\ 	STE_IMR_TX_DONE|STE_IMR_HOSTERR)
+value|(STE_IMR_RX_DMADONE|STE_IMR_TX_DMADONE|	\ 	STE_IMR_TX_DONE|STE_IMR_SOFTINTR|	\ 	STE_IMR_HOSTERR)
 end_define
 
 begin_define
@@ -1618,6 +1618,44 @@ define|#
 directive|define
 name|STE_PHYCTL_LINKSTAT
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_TIMER_TICKS
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_TIMER_USECS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x * 10) / STE_TIMER_TICKS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_IM_RX_TIMER_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_IM_RX_TIMER_MAX
+value|209712
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_IM_RX_TIMER_DEFAULT
+value|150
 end_define
 
 begin_comment
@@ -2583,6 +2621,12 @@ name|ste_if_flags
 decl_stmt|;
 name|int
 name|ste_timer
+decl_stmt|;
+name|int
+name|ste_int_rx_act
+decl_stmt|;
+name|int
+name|ste_int_rx_mod
 decl_stmt|;
 name|struct
 name|ste_list_data
