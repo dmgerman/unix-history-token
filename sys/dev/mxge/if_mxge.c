@@ -400,7 +400,7 @@ specifier|static
 name|int
 name|mxge_rss_hash_type
 init|=
-name|MXGEFW_RSS_HASH_TYPE_SRC_PORT
+name|MXGEFW_RSS_HASH_TYPE_SRC_DST_PORT
 decl_stmt|;
 end_decl_stmt
 
@@ -19314,7 +19314,7 @@ condition|)
 block|{
 name|mxge_rss_hash_type
 operator|=
-name|MXGEFW_RSS_HASH_TYPE_SRC_PORT
+name|MXGEFW_RSS_HASH_TYPE_SRC_DST_PORT
 expr_stmt|;
 block|}
 if|if
