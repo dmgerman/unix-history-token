@@ -40,19 +40,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/inode.h>
+file|<fs/ext2fs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_fs.h>
+file|<fs/ext2fs/ext2fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_dinode.h>
 end_include
 
 begin_function
@@ -239,7 +245,7 @@ parameter_list|,
 name|ip
 parameter_list|)
 name|struct
-name|ext2_inode
+name|ext2fs_dinode
 modifier|*
 name|ei
 decl_stmt|;
@@ -258,7 +264,7 @@ name|i_nlink
 operator|=
 name|ei
 operator|->
-name|i_links_count
+name|e2di_nlink
 expr_stmt|;
 comment|/* Godmar thinks - if the link count is zero, then the inode is 	   unused - according to ext2 standards. Ufs marks this fact 	   by setting i_mode to zero - why ? 	   I can see that this might lead to problems in an undelete. 	*/
 name|ip
@@ -267,11 +273,11 @@ name|i_mode
 operator|=
 name|ei
 operator|->
-name|i_links_count
+name|e2di_nlink
 condition|?
 name|ei
 operator|->
-name|i_mode
+name|e2di_mode
 else|:
 literal|0
 expr_stmt|;
@@ -281,7 +287,7 @@ name|i_size
 operator|=
 name|ei
 operator|->
-name|i_size
+name|e2di_size
 expr_stmt|;
 if|if
 condition|(
@@ -302,7 +308,7 @@ name|u_int64_t
 operator|)
 name|ei
 operator|->
-name|i_size_high
+name|e2di_size_high
 operator|)
 operator|<<
 literal|32
@@ -313,7 +319,7 @@ name|i_atime
 operator|=
 name|ei
 operator|->
-name|i_atime
+name|e2di_atime
 expr_stmt|;
 name|ip
 operator|->
@@ -321,7 +327,7 @@ name|i_mtime
 operator|=
 name|ei
 operator|->
-name|i_mtime
+name|e2di_mtime
 expr_stmt|;
 name|ip
 operator|->
@@ -329,7 +335,7 @@ name|i_ctime
 operator|=
 name|ei
 operator|->
-name|i_ctime
+name|e2di_ctime
 expr_stmt|;
 name|ip
 operator|->
@@ -344,9 +350,9 @@ operator||=
 operator|(
 name|ei
 operator|->
-name|i_flags
+name|e2di_flags
 operator|&
-name|EXT2_APPEND_FL
+name|EXT2_APPEND
 operator|)
 condition|?
 name|SF_APPEND
@@ -360,9 +366,9 @@ operator||=
 operator|(
 name|ei
 operator|->
-name|i_flags
+name|e2di_flags
 operator|&
-name|EXT2_IMMUTABLE_FL
+name|EXT2_IMMUTABLE
 operator|)
 condition|?
 name|SF_IMMUTABLE
@@ -376,9 +382,9 @@ operator||=
 operator|(
 name|ei
 operator|->
-name|i_flags
+name|e2di_flags
 operator|&
-name|EXT2_NODUMP_FL
+name|EXT2_NODUMP
 operator|)
 condition|?
 name|UF_NODUMP
@@ -391,7 +397,7 @@ name|i_blocks
 operator|=
 name|ei
 operator|->
-name|i_blocks
+name|e2di_nblock
 expr_stmt|;
 name|ip
 operator|->
@@ -399,7 +405,7 @@ name|i_gen
 operator|=
 name|ei
 operator|->
-name|i_generation
+name|e2di_gen
 expr_stmt|;
 name|ip
 operator|->
@@ -407,7 +413,7 @@ name|i_uid
 operator|=
 name|ei
 operator|->
-name|i_uid
+name|e2di_uid
 expr_stmt|;
 name|ip
 operator|->
@@ -415,7 +421,7 @@ name|i_gid
 operator|=
 name|ei
 operator|->
-name|i_gid
+name|e2di_gid
 expr_stmt|;
 comment|/* XXX use memcpy */
 for|for
@@ -440,7 +446,7 @@ index|]
 operator|=
 name|ei
 operator|->
-name|i_block
+name|e2di_blocks
 index|[
 name|i
 index|]
@@ -467,7 +473,7 @@ index|]
 operator|=
 name|ei
 operator|->
-name|i_block
+name|e2di_blocks
 index|[
 name|EXT2_NDIR_BLOCKS
 operator|+
@@ -495,7 +501,7 @@ modifier|*
 name|ip
 decl_stmt|;
 name|struct
-name|ext2_inode
+name|ext2fs_dinode
 modifier|*
 name|ei
 decl_stmt|;
@@ -505,7 +511,7 @@ name|i
 decl_stmt|;
 name|ei
 operator|->
-name|i_mode
+name|e2di_mode
 operator|=
 name|ip
 operator|->
@@ -513,7 +519,7 @@ name|i_mode
 expr_stmt|;
 name|ei
 operator|->
-name|i_links_count
+name|e2di_nlink
 operator|=
 name|ip
 operator|->
@@ -522,11 +528,11 @@ expr_stmt|;
 comment|/*  	   Godmar thinks: if dtime is nonzero, ext2 says this inode 	   has been deleted, this would correspond to a zero link count 	 */
 name|ei
 operator|->
-name|i_dtime
+name|e2di_dtime
 operator|=
 name|ei
 operator|->
-name|i_links_count
+name|e2di_nlink
 condition|?
 literal|0
 else|:
@@ -536,7 +542,7 @@ name|i_mtime
 expr_stmt|;
 name|ei
 operator|->
-name|i_size
+name|e2di_size
 operator|=
 name|ip
 operator|->
@@ -553,7 +559,7 @@ argument_list|)
 condition|)
 name|ei
 operator|->
-name|i_size_high
+name|e2di_size_high
 operator|=
 name|ip
 operator|->
@@ -563,7 +569,7 @@ literal|32
 expr_stmt|;
 name|ei
 operator|->
-name|i_atime
+name|e2di_atime
 operator|=
 name|ip
 operator|->
@@ -571,7 +577,7 @@ name|i_atime
 expr_stmt|;
 name|ei
 operator|->
-name|i_mtime
+name|e2di_mtime
 operator|=
 name|ip
 operator|->
@@ -579,7 +585,7 @@ name|i_mtime
 expr_stmt|;
 name|ei
 operator|->
-name|i_ctime
+name|e2di_ctime
 operator|=
 name|ip
 operator|->
@@ -587,7 +593,7 @@ name|i_ctime
 expr_stmt|;
 name|ei
 operator|->
-name|i_flags
+name|e2di_flags
 operator|=
 name|ip
 operator|->
@@ -595,13 +601,13 @@ name|i_flags
 expr_stmt|;
 name|ei
 operator|->
-name|i_flags
+name|e2di_flags
 operator|=
 literal|0
 expr_stmt|;
 name|ei
 operator|->
-name|i_flags
+name|e2di_flags
 operator||=
 operator|(
 name|ip
@@ -611,13 +617,13 @@ operator|&
 name|SF_APPEND
 operator|)
 condition|?
-name|EXT2_APPEND_FL
+name|EXT2_APPEND
 else|:
 literal|0
 expr_stmt|;
 name|ei
 operator|->
-name|i_flags
+name|e2di_flags
 operator||=
 operator|(
 name|ip
@@ -627,13 +633,13 @@ operator|&
 name|SF_IMMUTABLE
 operator|)
 condition|?
-name|EXT2_IMMUTABLE_FL
+name|EXT2_IMMUTABLE
 else|:
 literal|0
 expr_stmt|;
 name|ei
 operator|->
-name|i_flags
+name|e2di_flags
 operator||=
 operator|(
 name|ip
@@ -643,13 +649,13 @@ operator|&
 name|UF_NODUMP
 operator|)
 condition|?
-name|EXT2_NODUMP_FL
+name|EXT2_NODUMP
 else|:
 literal|0
 expr_stmt|;
 name|ei
 operator|->
-name|i_blocks
+name|e2di_nblock
 operator|=
 name|ip
 operator|->
@@ -657,7 +663,7 @@ name|i_blocks
 expr_stmt|;
 name|ei
 operator|->
-name|i_generation
+name|e2di_gen
 operator|=
 name|ip
 operator|->
@@ -665,7 +671,7 @@ name|i_gen
 expr_stmt|;
 name|ei
 operator|->
-name|i_uid
+name|e2di_uid
 operator|=
 name|ip
 operator|->
@@ -673,7 +679,7 @@ name|i_uid
 expr_stmt|;
 name|ei
 operator|->
-name|i_gid
+name|e2di_gid
 operator|=
 name|ip
 operator|->
@@ -695,7 +701,7 @@ operator|++
 control|)
 name|ei
 operator|->
-name|i_block
+name|e2di_blocks
 index|[
 name|i
 index|]
@@ -722,7 +728,7 @@ operator|++
 control|)
 name|ei
 operator|->
-name|i_block
+name|e2di_blocks
 index|[
 name|EXT2_NDIR_BLOCKS
 operator|+

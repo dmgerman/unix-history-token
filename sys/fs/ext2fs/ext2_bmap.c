@@ -60,35 +60,29 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/inode.h>
+file|<fs/ext2fs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_fs.h>
+file|<fs/ext2fs/ext2fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_fs_sb.h>
+file|<fs/ext2fs/ext2_mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<gnu/fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_comment
-comment|/*  * Bmap converts a the logical block number of a file to its physical block  * number on the disk. The conversion is done by using the logical block  * number to index into the array of block pointers described by the dinode.  */
+comment|/*  * Bmap converts the logical block number of a file to its physical block  * number on the disk. The conversion is done by using the logical block  * number to index into the array of block pointers described by the dinode.  */
 end_comment
 
 begin_function
@@ -189,7 +183,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Indirect blocks are now on the vnode for the file.  They are given negative  * logical block numbers.  Indirect blocks are addressed by the negative  * address of the first data block to which they point.  Double indirect blocks  * are addressed by one less than the address of the first indirect block to  * which they point.  Triple indirect blocks are addressed by one less than  * the address of the first double indirect block to which they point.  *  * ufs_bmaparray does the bmap conversion, and if requested returns the  * array of logical blocks which must be traversed to get to a block.  * Each entry contains the offset into that block that gets you to the  * next block and the disk address of the block (if it is assigned).  */
+comment|/*  * Indirect blocks are now on the vnode for the file.  They are given negative  * logical block numbers.  Indirect blocks are addressed by the negative  * address of the first data block to which they point.  Double indirect blocks  * are addressed by one less than the address of the first indirect block to  * which they point.  Triple indirect blocks are addressed by one less than  * the address of the first double indirect block to which they point.  *  * ext2_bmaparray does the bmap conversion, and if requested returns the  * array of logical blocks which must be traversed to get to a block.  * Each entry contains the offset into that block that gets you to the  * next block and the disk address of the block (if it is assigned).  */
 end_comment
 
 begin_function

@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SYS_GNU_EXT2FS_INODE_H_
+name|_FS_EXT2FS_INODE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SYS_GNU_EXT2FS_INODE_H_
+name|_FS_EXT2FS_INODE_H_
 end_define
 
 begin_include
@@ -87,6 +87,11 @@ modifier|*
 name|i_devvp
 decl_stmt|;
 comment|/* Vnode for block I/O. */
+name|struct
+name|ext2mount
+modifier|*
+name|i_ump
+decl_stmt|;
 name|u_int32_t
 name|i_flag
 decl_stmt|;
@@ -96,7 +101,7 @@ name|i_number
 decl_stmt|;
 comment|/* The identity of the inode. */
 name|struct
-name|ext2_sb_info
+name|m_ext2fs
 modifier|*
 name|i_e2fs
 decl_stmt|;
@@ -122,14 +127,6 @@ name|doff_t
 name|i_offset
 decl_stmt|;
 comment|/* Offset of free space in directory. */
-name|ino_t
-name|i_ino
-decl_stmt|;
-comment|/* Inode number of found directory. */
-name|u_int32_t
-name|i_reclen
-decl_stmt|;
-comment|/* Size of found directory entry. */
 name|u_int32_t
 name|i_block_group
 decl_stmt|;
@@ -510,6 +507,17 @@ begin_comment
 comment|/* Blocks to be freed in free count. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IN_LAZYACCESS
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Process IN_ACCESS after the 					    suspension finished */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -607,7 +615,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_SYS_GNU_EXT2FS_INODE_H_ */
+comment|/* !_FS_EXT2FS_INODE_H_ */
 end_comment
 
 end_unit

@@ -7,6 +7,10 @@ begin_comment
 comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_readwrite.c	8.7 (Berkeley) 1/21/94  * $FreeBSD$  */
 end_comment
 
+begin_comment
+comment|/* XXX TODO: remove these obfuscations (as in ffs_vnops.c). */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|FS
-value|struct ext2_sb_info
+value|struct m_ext2fs
 end_define
 
 begin_define
@@ -65,10 +69,6 @@ end_define
 
 begin_comment
 comment|/*  * Vnode op for reading.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -128,16 +128,17 @@ name|int
 name|error
 decl_stmt|,
 name|orig_resid
-decl_stmt|;
-name|int
+decl_stmt|,
 name|seqcount
-init|=
+decl_stmt|;
+name|seqcount
+operator|=
 name|ap
 operator|->
 name|a_ioflag
 operator|>>
 name|IO_SEQSHIFT
-decl_stmt|;
+expr_stmt|;
 name|u_short
 name|mode
 decl_stmt|;
@@ -244,6 +245,47 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|orig_resid
+operator|=
+name|uio
+operator|->
+name|uio_resid
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|orig_resid
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ext2_read: uio->uio_resid< 0"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|orig_resid
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_offset
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ext2_read: uio->uio_offset< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|fs
 operator|=
 name|ip
@@ -252,28 +294,27 @@ name|I_FS
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|uoff_t
-operator|)
 name|uio
 operator|->
 name|uio_offset
-operator|>
+operator|<
+name|ip
+operator|->
+name|i_size
+operator|&&
+name|uio
+operator|->
+name|uio_offset
+operator|>=
 name|fs
 operator|->
-name|fs_maxfilesize
+name|e2fs_maxfilesize
 condition|)
 return|return
 operator|(
-name|EFBIG
+name|EOVERFLOW
 operator|)
 return|;
-name|orig_resid
-operator|=
-name|uio
-operator|->
-name|uio_resid
-expr_stmt|;
 for|for
 control|(
 name|error
@@ -355,7 +396,7 @@ name|xfersize
 operator|=
 name|fs
 operator|->
-name|s_frag_size
+name|e2fs_fsize
 operator|-
 name|blkoffset
 expr_stmt|;
@@ -443,17 +484,13 @@ name|size
 argument_list|,
 name|NOCRED
 argument_list|,
+name|blkoffset
+operator|+
 name|uio
 operator|->
 name|uio_resid
 argument_list|,
-operator|(
-name|ap
-operator|->
-name|a_ioflag
-operator|>>
-name|IO_SEQSHIFT
-operator|)
+name|seqcount
 argument_list|,
 operator|&
 name|bp
@@ -609,10 +646,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|orig_resid
-operator|>
-literal|0
-operator|&&
 operator|(
 name|error
 operator|==
@@ -705,9 +738,6 @@ name|off_t
 name|osize
 decl_stmt|;
 name|int
-name|seqcount
-decl_stmt|;
-name|int
 name|blkoffset
 decl_stmt|,
 name|error
@@ -720,6 +750,8 @@ name|resid
 decl_stmt|,
 name|size
 decl_stmt|,
+name|seqcount
+decl_stmt|,
 name|xfersize
 decl_stmt|;
 name|ioflag
@@ -730,9 +762,7 @@ name|a_ioflag
 expr_stmt|;
 name|seqcount
 operator|=
-name|ap
-operator|->
-name|a_ioflag
+name|ioflag
 operator|>>
 name|IO_SEQSHIFT
 expr_stmt|;
@@ -830,6 +860,7 @@ break|break;
 case|case
 name|VDIR
 case|:
+comment|/* XXX differs from ffs -- this is called from ext2_mkdir(). */
 if|if
 condition|(
 operator|(
@@ -842,21 +873,67 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: nonsync dir write"
-argument_list|,
-name|WRITE_S
+literal|"ext2_write: nonsync dir write"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: type"
+literal|"ext2_write: type %p %d (%jd,%jd)"
 argument_list|,
-name|WRITE_S
+operator|(
+name|void
+operator|*
+operator|)
+name|vp
+argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|uio
+operator|->
+name|uio_offset
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|uio
+operator|->
+name|uio_resid
 argument_list|)
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_resid
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ext2_write: uio->uio_resid< 0"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_offset
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ext2_write: uio->uio_offset< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|fs
 operator|=
 name|ip
@@ -865,12 +942,6 @@ name|I_FS
 expr_stmt|;
 if|if
 condition|(
-name|uio
-operator|->
-name|uio_offset
-operator|<
-literal|0
-operator|||
 operator|(
 name|uoff_t
 operator|)
@@ -884,7 +955,7 @@ name|uio_resid
 operator|>
 name|fs
 operator|->
-name|fs_maxfilesize
+name|e2fs_maxfilesize
 condition|)
 return|return
 operator|(
@@ -1030,7 +1101,7 @@ name|xfersize
 operator|=
 name|fs
 operator|->
-name|s_frag_size
+name|e2fs_fsize
 operator|-
 name|blkoffset
 expr_stmt|;
@@ -1071,17 +1142,11 @@ operator|+
 name|xfersize
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Avoid a data-consistency race between write() and mmap() 		 * by ensuring that newly allocated blocks are zerod.  The 		 * race can occur even in the case where the write covers 		 * the entire block. 		 */
+comment|/* 		 * Avoid a data-consistency race between write() and mmap() 		 * by ensuring that newly allocated blocks are zeroed. The 		 * race can occur even in the case where the write covers 		 * the entire block. 		 */
 name|flags
 operator||=
 name|B_CLRBUF
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (fs->s_frag_size> xfersize) 			flags |= B_CLRBUF; 		else 			flags&= ~B_CLRBUF;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ext2_balloc
@@ -1107,6 +1172,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 break|break;
 if|if
@@ -1121,7 +1188,6 @@ name|ip
 operator|->
 name|i_size
 condition|)
-block|{
 name|ip
 operator|->
 name|i_size
@@ -1132,7 +1198,6 @@ name|uio_offset
 operator|+
 name|xfersize
 expr_stmt|;
-block|}
 name|size
 operator|=
 name|BLKSIZE
@@ -1188,7 +1253,6 @@ operator|&
 name|IO_VMIO
 operator|)
 operator|&&
-operator|(
 name|LIST_FIRST
 argument_list|(
 operator|&
@@ -1198,7 +1262,6 @@ name|b_dep
 argument_list|)
 operator|==
 name|NULL
-operator|)
 condition|)
 comment|/* in ext2fs? */
 name|bp
@@ -1232,7 +1295,7 @@ name|blkoffset
 operator|==
 name|fs
 operator|->
-name|s_frag_size
+name|e2fs_fsize
 condition|)
 block|{
 if|if
@@ -1302,16 +1365,8 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IN_CHANGE
-operator||
-name|IN_UPDATE
-expr_stmt|;
 block|}
-comment|/* 	 * If we successfully wrote any data, and we are not the superuser 	 * we clear the setuid and setgid bits as a precaution against 	 * tampering. 	 */
+comment|/* 	 * If we successfully wrote any data, and we are not the superuser 	 * we clear the setuid and setgid bits as a precaution against 	 * tampering. 	 * XXX too late, the tamperer may have opened the file while we 	 * were writing the data (or before). 	 * XXX too early, if (error&& ioflag& IO_UNIT) then we will 	 * unwrite the data. 	 */
 if|if
 condition|(
 name|resid
@@ -1348,6 +1403,7 @@ condition|(
 name|error
 condition|)
 block|{
+comment|/*                  * XXX should truncate to the last successfully written                  * data if the uiomove() failed.                  */
 if|if
 condition|(
 name|ioflag
@@ -1395,20 +1451,28 @@ name|resid
 expr_stmt|;
 block|}
 block|}
-elseif|else
 if|if
 condition|(
-name|resid
-operator|>
 name|uio
 operator|->
 name|uio_resid
-operator|&&
-operator|(
+operator|!=
+name|resid
+condition|)
+block|{
+name|ip
+operator|->
+name|i_flag
+operator||=
+name|IN_CHANGE
+operator||
+name|IN_UPDATE
+expr_stmt|;
+if|if
+condition|(
 name|ioflag
 operator|&
 name|IO_SYNC
-operator|)
 condition|)
 name|error
 operator|=
@@ -1419,6 +1483,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error

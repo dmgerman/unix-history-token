@@ -26,7 +26,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  */
+comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.   */
 end_comment
 
 begin_define
@@ -37,24 +37,26 @@ value|512
 end_define
 
 begin_comment
-comment|/*  * Macros for access to superblock array structures  */
-end_comment
-
-begin_comment
-comment|/*  * Convert cylinder group to base address of its global summary info.  */
+comment|/*  * Grigoriy Orlov<gluk@ptci.ru> has done some extensive work to fine  * tune the layout preferences for directories within a filesystem.  * His algorithm can be tuned by adjusting the following parameters  * which tell the system the average file size and the average number  * of files per directory. These defaults are well selected for typical  * filesystems, but may need to be tuned for odd cases like filesystems  * being used for squid caches or news spools.  * AVFPDIR is the expected number of files per directory. AVGDIRSIZE is   * obtained by multiplying AVFPDIR and AVFILESIZ which is assumed to be   * 16384.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|fs_cs
-parameter_list|(
-name|fs
-parameter_list|,
-name|cgindx
-parameter_list|)
-value|(((struct ext2_group_desc *) \         (fs->s_group_desc[cgindx / EXT2_DESC_PER_BLOCK(fs)]->b_data)) \ 		[cgindx % EXT2_DESC_PER_BLOCK(fs)])
+name|AFPDIR
+value|64
 end_define
+
+begin_define
+define|#
+directive|define
+name|AVGDIRSIZE
+value|1048576
+end_define
+
+begin_comment
+comment|/*  * Macros for access to superblock array structures  */
+end_comment
 
 begin_comment
 comment|/*  * Turn file system block numbers into disk block addresses.  * This maps file system blocks to device size blocks.  */
@@ -69,7 +71,7 @@ name|fs
 parameter_list|,
 name|b
 parameter_list|)
-value|((b)<< ((fs)->s_fsbtodb))
+value|((b)<< ((fs)->e2fs_fsbtodb))
 end_define
 
 begin_define
@@ -81,7 +83,7 @@ name|fs
 parameter_list|,
 name|b
 parameter_list|)
-value|((b)>> ((fs)->s_fsbtodb))
+value|((b)>> ((fs)->e2fs_fsbtodb))
 end_define
 
 begin_comment
@@ -97,7 +99,7 @@ name|fs
 parameter_list|,
 name|x
 parameter_list|)
-value|(((x) - 1) / EXT2_INODES_PER_GROUP(fs))
+value|(((x) - 1) / (fs->e2fs_ipg))
 end_define
 
 begin_comment
@@ -113,7 +115,8 @@ name|fs
 parameter_list|,
 name|x
 parameter_list|)
-value|fs_cs(fs, ino_to_cg(fs, x)).bg_inode_table + \ 	(((x)-1) % EXT2_INODES_PER_GROUP(fs))/EXT2_INODES_PER_BLOCK(fs)
+define|\
+value|((fs)->e2fs_gd[ino_to_cg((fs), (x))].ext2bgd_i_tables +         \         (((x) - 1) % (fs)->e2fs->e2fs_ipg) / (fs)->e2fs_ipb)
 end_define
 
 begin_comment
@@ -129,7 +132,7 @@ name|fs
 parameter_list|,
 name|x
 parameter_list|)
-value|((x-1) % EXT2_INODES_PER_BLOCK(fs))
+value|((x-1) % (fs->e2fs_ipb))
 end_define
 
 begin_comment
@@ -145,7 +148,7 @@ name|fs
 parameter_list|,
 name|d
 parameter_list|)
-value|(((d) - fs->s_es->s_first_data_block) / \ 			EXT2_BLOCKS_PER_GROUP(fs))
+value|(((d) - fs->e2fs->e2fs_first_dblock) / \ 			EXT2_BLOCKS_PER_GROUP(fs))
 end_define
 
 begin_define
@@ -157,7 +160,7 @@ name|fs
 parameter_list|,
 name|d
 parameter_list|)
-value|(((d) - fs->s_es->s_first_data_block) % \ 			EXT2_BLOCKS_PER_GROUP(fs))
+value|(((d) - fs->e2fs->e2fs_first_dblock) % \ 			EXT2_BLOCKS_PER_GROUP(fs))
 end_define
 
 begin_comment
@@ -175,7 +178,7 @@ name|loc
 parameter_list|)
 comment|/* calculates (loc % fs->fs_bsize) */
 define|\
-value|((loc)& (fs)->s_qbmask)
+value|((loc)& (fs)->e2fs_qbmask)
 end_define
 
 begin_define
@@ -189,7 +192,7 @@ name|blk
 parameter_list|)
 comment|/* calculates (blk * fs->fs_bsize) */
 define|\
-value|((blk)<< (fs->s_bshift))
+value|((blk)<< (fs->e2fs_bshift))
 end_define
 
 begin_define
@@ -203,7 +206,7 @@ name|loc
 parameter_list|)
 comment|/* calculates (loc / fs->fs_bsize) */
 define|\
-value|((loc)>> (fs->s_bshift))
+value|((loc)>> (fs->e2fs_bshift))
 end_define
 
 begin_comment
@@ -221,7 +224,7 @@ name|loc
 parameter_list|)
 comment|/* calculates (loc / fs->fs_fsize) */
 define|\
-value|((loc)>> (fs->s_bshift))
+value|((loc)>> (fs->e2fs_bshift))
 end_define
 
 begin_define
@@ -235,7 +238,7 @@ name|size
 parameter_list|)
 comment|/* calculates roundup(size, fs->fs_fsize) */
 define|\
-value|roundup(size, fs->s_frag_size)
+value|roundup(size, fs->e2fs_fsize)
 end_define
 
 begin_comment
@@ -257,7 +260,7 @@ name|ip
 parameter_list|,
 name|lbn
 parameter_list|)
-value|((fs)->s_frag_size)
+value|((fs)->e2fs_fsize)
 end_define
 
 begin_comment
@@ -271,7 +274,7 @@ name|INOPB
 parameter_list|(
 name|fs
 parameter_list|)
-value|EXT2_INODES_PER_BLOCK(fs)
+value|(fs->e2fs_ipb)
 end_define
 
 begin_comment
@@ -307,64 +310,6 @@ name|fragtbl
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* a few remarks about superblock locking/unlocking  * Linux provides special routines for doing so  * I haven't figured out yet what BSD does  * I think I'll try a VOP_LOCK/VOP_UNLOCK on the device vnode  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEVVP
-parameter_list|(
-name|inode
-parameter_list|)
-value|(VFSTOEXT2(ITOV(inode)->v_mount)->um_devvp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|lock_super
-parameter_list|(
-name|devvp
-parameter_list|)
-value|vn_lock(devvp, LK_EXCLUSIVE | LK_RETRY)
-end_define
-
-begin_define
-define|#
-directive|define
-name|unlock_super
-parameter_list|(
-name|devvp
-parameter_list|)
-value|VOP_UNLOCK(devvp, 0)
-end_define
-
-begin_comment
-comment|/*  * Historically, ext2fs kept it's metadata buffers on the LOCKED queue.  Now,  * we change the lock owner to kern so that we may use it from contexts other  * than the one that originally locked it.  When we are finished with the  * buffer, we release it, writing it first if it was dirty.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCK_BUF
-parameter_list|(
-name|bp
-parameter_list|)
-value|{ \ 	(bp)->b_flags |= B_PERSISTENT; \ 	BUF_KERNPROC(bp); \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ULCK_BUF
-parameter_list|(
-name|bp
-parameter_list|)
-value|{ \ 	long flags; \ 	flags = (bp)->b_flags; \ 	(bp)->b_flags&= ~(B_DIRTY | B_PERSISTENT); \ 	if (flags& B_DIRTY) \ 		bwrite(bp); \ 	else \ 		brelse(bp); \ }
-end_define
 
 end_unit
 

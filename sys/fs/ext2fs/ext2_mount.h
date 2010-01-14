@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SYS_GNU_EXT2FS_EXT2_MOUNT_H_
+name|_FS_EXT2FS_EXT2_MOUNT_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SYS_GNU_EXT2FS_EXT2_MOUNT_H_
+name|_FS_EXT2FS_EXT2_MOUNT_H_
 end_define
 
 begin_ifdef
@@ -73,7 +73,7 @@ name|um_devvp
 decl_stmt|;
 comment|/* block device mounted vnode */
 name|struct
-name|ext2_sb_info
+name|m_ext2fs
 modifier|*
 name|um_e2fs
 decl_stmt|;
@@ -81,7 +81,7 @@ comment|/* EXT2FS */
 define|#
 directive|define
 name|em_e2fsb
-value|um_e2fs->s_es
+value|um_e2fs->e2fs
 name|u_long
 name|um_nindir
 decl_stmt|;
@@ -95,6 +95,11 @@ name|um_seqinc
 decl_stmt|;
 comment|/* inc between seq blocks */
 name|struct
+name|mtx
+name|um_lock
+decl_stmt|;
+comment|/* Protects ext2mount& fs */
+name|struct
 name|g_consumer
 modifier|*
 name|um_cp
@@ -107,6 +112,36 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|EXT2_LOCK
+parameter_list|(
+name|aa
+parameter_list|)
+value|mtx_lock(&(aa)->um_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_UNLOCK
+parameter_list|(
+name|aa
+parameter_list|)
+value|mtx_unlock(&(aa)->um_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_MTX
+parameter_list|(
+name|aa
+parameter_list|)
+value|(&(aa)->um_lock)
+end_define
 
 begin_comment
 comment|/* Convert mount ptr to ext2fsmount ptr. */

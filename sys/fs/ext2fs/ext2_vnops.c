@@ -172,37 +172,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/inode.h>
+file|<fs/ext2fs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_mount.h>
+file|<fs/ext2fs/ext2_mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_fs_sb.h>
+file|<fs/ext2fs/fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/fs.h>
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_fs.h>
+file|<fs/ext2fs/ext2_dir.h>
 end_include
 
 begin_function_decl
@@ -224,6 +224,18 @@ modifier|*
 parameter_list|,
 name|struct
 name|componentname
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ext2_itimes_locked
+parameter_list|(
+name|struct
+name|vnode
 modifier|*
 parameter_list|)
 function_decl|;
@@ -678,7 +690,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_readwrite.c>
+file|<fs/ext2fs/ext2_readwrite.c>
 end_include
 
 begin_comment
@@ -750,16 +762,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
-name|ext2_itimes
+name|ext2_itimes_locked
 parameter_list|(
-name|vp
-parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|inode
@@ -770,6 +781,13 @@ name|struct
 name|timespec
 name|ts
 decl_stmt|;
+name|ASSERT_VI_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ip
 operator|=
 name|VTOI
@@ -942,6 +960,34 @@ name|IN_CHANGE
 operator||
 name|IN_UPDATE
 operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ext2_itimes
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+block|{
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|ext2_itimes_locked
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1156,7 +1202,7 @@ name|v_usecount
 operator|>
 literal|1
 condition|)
-name|ext2_itimes
+name|ext2_itimes_locked
 argument_list|(
 name|vp
 argument_list|)
@@ -1295,7 +1341,7 @@ operator|->
 name|i_flags
 operator|&
 operator|(
-name|IMMUTABLE
+name|SF_IMMUTABLE
 operator||
 name|SF_SNAPSHOT
 operator|)
@@ -1745,6 +1791,21 @@ operator|!=
 name|VNOVAL
 condition|)
 block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_RDONLY
+condition|)
+return|return
+operator|(
+name|EROFS
+operator|)
+return|;
 comment|/* Disallow flags not supported by ext2fs. */
 if|if
 condition|(
@@ -1764,21 +1825,6 @@ condition|)
 return|return
 operator|(
 name|EOPNOTSUPP
-operator|)
-return|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-condition|)
-return|return
-operator|(
-name|EROFS
 operator|)
 return|;
 comment|/* 		 * Callers may only modify the file flags on objects they 		 * have VADMIN rights for. 		 */
@@ -1876,18 +1922,6 @@ name|SF_IMMUTABLE
 operator||
 name|SF_APPEND
 operator|)
-operator|||
-operator|(
-name|vap
-operator|->
-name|va_flags
-operator|&
-name|UF_SETTABLE
-operator|)
-operator|!=
-name|vap
-operator|->
-name|va_flags
 condition|)
 return|return
 operator|(
@@ -1899,18 +1933,6 @@ operator|->
 name|i_flags
 operator|&=
 name|SF_SETTABLE
-expr_stmt|;
-name|ip
-operator|->
-name|i_flags
-operator||=
-operator|(
-name|vap
-operator|->
-name|va_flags
-operator|&
-name|UF_SETTABLE
-operator|)
 expr_stmt|;
 block|}
 name|ip
@@ -2818,16 +2840,6 @@ name|ap
 decl_stmt|;
 block|{
 comment|/* 	 * Flush all dirty buffers associated with a vnode. 	 */
-name|ext2_discard_prealloc
-argument_list|(
-name|VTOI
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|vop_stdfsync
 argument_list|(
 name|ap
@@ -3375,7 +3387,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Rename system call.  *   See comments in sys/ufs/ufs/ufs_vnops.c  */
+comment|/*  * Rename system call.  * 	rename("foo", "bar");  * is essentially  *	unlink("bar");  *	link("foo", "bar");  *	unlink("foo");  * but ``atomically''.  Can't do full commit without saving state in the  * inode on disk which isn't feasible at this time.  Best we can do is  * always guarantee the target exists.  *  * Basic algorithm is:  *  * 1) Bump link count on source while we're linking it to the  *    target.  This also ensure the inode won't be deleted out  *    from underneath us while we work (it may be truncated by  *    a concurrent `trunc' or `open' for creation).  * 2) Link source to destination.  If destination already exists,  *    delete it first.  * 3) Unlink source reference to inode if still around. If a  *    directory was moved and the parent of the destination  *    is different from the source, patch the ".." entry in the  *    directory.  */
 end_comment
 
 begin_function
@@ -5218,7 +5230,7 @@ name|ip
 operator|->
 name|i_e2fs
 argument_list|,
-name|EXT2_FEATURE_INCOMPAT_FILETYPE
+name|EXT2F_INCOMPAT_FTYPE
 argument_list|)
 condition|)
 name|dtp
@@ -5260,7 +5272,7 @@ name|DIRBLKSIZ
 define|#
 directive|define
 name|DIRBLKSIZ
-value|VTOI(dvp)->i_e2fs->s_blocksize
+value|VTOI(dvp)->i_e2fs->e2fs_bsize
 name|dirtemplate
 operator|.
 name|dotdot_reclen
@@ -6318,7 +6330,7 @@ name|v_usecount
 operator|>
 literal|1
 condition|)
-name|ext2_itimes
+name|ext2_itimes_locked
 argument_list|(
 name|vp
 argument_list|)

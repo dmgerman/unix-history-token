@@ -58,25 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/inode.h>
+file|<fs/ext2fs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_fs_sb.h>
+file|<fs/ext2fs/ext2fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/fs.h>
+file|<fs/ext2fs/fs.h>
 end_include
 
 begin_ifdef
@@ -147,7 +147,7 @@ modifier|*
 name|ip
 decl_stmt|;
 name|struct
-name|ext2_sb_info
+name|m_ext2fs
 modifier|*
 name|fs
 decl_stmt|;
