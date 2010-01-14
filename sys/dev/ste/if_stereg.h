@@ -1086,6 +1086,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|STE_ERR_BITS
+value|"\20"				\ 					"\2RECLAIM\3STSOFLOW"		\ 					"\4EXCESSCOLLS\5UNDERRUN"	\ 					"\6INTREQ\7DONE"
+end_define
+
+begin_define
+define|#
+directive|define
 name|STE_ISRACK_INTLATCH
 value|0x0001
 end_define
@@ -1235,7 +1242,7 @@ define|#
 directive|define
 name|STE_INTRS
 define|\
-value|(STE_IMR_RX_DMADONE|STE_IMR_TX_DMADONE|	\ 	STE_IMR_TX_DONE|STE_IMR_HOSTERR| \         STE_IMR_LINKEVENT)
+value|(STE_IMR_RX_DMADONE|STE_IMR_TX_DMADONE|	\ 	STE_IMR_TX_DONE|STE_IMR_HOSTERR)
 end_define
 
 begin_define
@@ -2130,7 +2137,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->ste_btag, sc->ste_bhandle, reg, val)
+value|bus_write_4((sc)->ste_res, reg, val)
 end_define
 
 begin_define
@@ -2145,7 +2152,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(sc->ste_btag, sc->ste_bhandle, reg, val)
+value|bus_write_2((sc)->ste_res, reg, val)
 end_define
 
 begin_define
@@ -2160,7 +2167,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->ste_btag, sc->ste_bhandle, reg, val)
+value|bus_write_1((sc)->ste_res, reg, val)
 end_define
 
 begin_define
@@ -2173,7 +2180,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->ste_btag, sc->ste_bhandle, reg)
+value|bus_read_4((sc)->ste_res, reg)
 end_define
 
 begin_define
@@ -2186,7 +2193,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2(sc->ste_btag, sc->ste_bhandle, reg)
+value|bus_read_2((sc)->ste_res, reg)
 end_define
 
 begin_define
@@ -2199,7 +2206,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1(sc->ste_btag, sc->ste_bhandle, reg)
+value|bus_read_1((sc)->ste_res, reg)
 end_define
 
 begin_define
@@ -2494,16 +2501,16 @@ name|ifnet
 modifier|*
 name|ste_ifp
 decl_stmt|;
-name|bus_space_tag_t
-name|ste_btag
-decl_stmt|;
-name|bus_space_handle_t
-name|ste_bhandle
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|ste_res
+decl_stmt|;
+name|int
+name|ste_res_id
+decl_stmt|;
+name|int
+name|ste_res_type
 decl_stmt|;
 name|struct
 name|resource
@@ -2528,9 +2535,17 @@ decl_stmt|;
 name|int
 name|ste_tx_thresh
 decl_stmt|;
-name|uint8_t
-name|ste_link
+name|int
+name|ste_flags
 decl_stmt|;
+define|#
+directive|define
+name|STE_FLAG_ONE_PHY
+value|0x0001
+define|#
+directive|define
+name|STE_FLAG_LINK
+value|0x8000
 name|int
 name|ste_if_flags
 decl_stmt|;
@@ -2547,14 +2562,11 @@ name|ste_cdata
 decl_stmt|;
 name|struct
 name|callout
-name|ste_stat_callout
+name|ste_callout
 decl_stmt|;
 name|struct
 name|mtx
 name|ste_mtx
-decl_stmt|;
-name|uint8_t
-name|ste_one_phy
 decl_stmt|;
 block|}
 struct|;
