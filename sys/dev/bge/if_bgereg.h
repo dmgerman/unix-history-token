@@ -13657,6 +13657,10 @@ name|BGE_FLAG_EADDR
 value|0x00000008
 define|#
 directive|define
+name|BGE_FLAG_MII_SERDES
+value|0x00000010
+define|#
+directive|define
 name|BGE_FLAG_MSI
 value|0x00000100
 define|#
