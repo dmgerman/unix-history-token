@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_IODEV_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/uuid.h>
+end_include
+
 begin_struct
 struct|struct
 name|iodev_pio_req
@@ -48,6 +54,62 @@ define|#
 directive|define
 name|IODEV_PIO
 value|_IOWR('I', 0, struct iodev_pio_req)
+end_define
+
+begin_struct
+struct|struct
+name|iodev_efivar_req
+block|{
+name|u_int
+name|access
+decl_stmt|;
+define|#
+directive|define
+name|IODEV_EFIVAR_GETVAR
+value|0
+define|#
+directive|define
+name|IODEV_EFIVAR_NEXTNAME
+value|1
+define|#
+directive|define
+name|IODEV_EFIVAR_SETVAR
+value|2
+name|u_int
+name|result
+decl_stmt|;
+comment|/* errno value */
+name|size_t
+name|namesize
+decl_stmt|;
+name|u_short
+modifier|*
+name|name
+decl_stmt|;
+comment|/* UCS-2 */
+name|struct
+name|uuid
+name|vendor
+decl_stmt|;
+name|uint32_t
+name|attrib
+decl_stmt|;
+name|size_t
+name|datasize
+decl_stmt|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IODEV_EFIVAR
+value|_IOWR('I', 1, struct iodev_efivar_req)
 end_define
 
 begin_ifdef
