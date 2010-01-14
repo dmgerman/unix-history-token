@@ -2414,6 +2414,9 @@ decl_stmt|;
 name|int
 name|ste_if_flags
 decl_stmt|;
+name|int
+name|ste_timer
+decl_stmt|;
 name|struct
 name|ste_chain
 modifier|*
