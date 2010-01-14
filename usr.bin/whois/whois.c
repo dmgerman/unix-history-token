@@ -172,13 +172,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DNICHOST
-value|"whois.nic.mil"
-end_define
-
-begin_define
-define|#
-directive|define
 name|GNICHOST
 value|"whois.nic.gov"
 end_define
@@ -502,7 +495,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aAbc:dfgh:iIklmp:QrR6"
+literal|"aAbc:fgh:iIklmp:QrR6"
 argument_list|)
 operator|)
 operator|!=
@@ -545,14 +538,6 @@ case|:
 name|country
 operator|=
 name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'d'
-case|:
-name|host
-operator|=
-name|DNICHOST
 expr_stmt|;
 break|break;
 case|case
@@ -1830,7 +1815,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-aAbdfgiIklmQrR6] [-c country-code | -h hostname] "
+literal|"usage: whois [-aAbfgiIklmQrR6] [-c country-code | -h hostname] "
 literal|"[-p port] name ...\n"
 argument_list|)
 expr_stmt|;
