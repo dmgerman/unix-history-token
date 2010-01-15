@@ -1167,6 +1167,14 @@ literal|1
 operator|)
 return|;
 block|}
+name|_pthread_once
+argument_list|(
+operator|&
+name|once
+argument_list|,
+name|sem_module_init
+argument_list|)
+expr_stmt|;
 name|_pthread_mutex_lock
 argument_list|(
 operator|&
