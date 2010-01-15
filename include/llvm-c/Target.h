@@ -40,16 +40,13 @@ block|{
 endif|#
 directive|endif
 enum|enum
+name|LLVMByteOrdering
 block|{
 name|LLVMBigEndian
 block|,
 name|LLVMLittleEndian
 block|}
 enum|;
-typedef|typedef
-name|int
-name|LLVMByteOrdering
-typedef|;
 typedef|typedef
 name|struct
 name|LLVMOpaqueTargetData
@@ -138,7 +135,7 @@ block|}
 comment|/** LLVMInitializeNativeTarget - The main program should call this function to     initialize the native target corresponding to the host.  This is useful      for JIT applications to ensure that the target gets linked in correctly. */
 specifier|static
 specifier|inline
-name|int
+name|LLVMBool
 name|LLVMInitializeNativeTarget
 parameter_list|()
 block|{
@@ -212,6 +209,7 @@ name|LLVMTargetDataRef
 parameter_list|)
 function_decl|;
 comment|/** Returns the byte order of a target, either LLVMBigEndian or     LLVMLittleEndian.     See the method llvm::TargetData::isLittleEndian. */
+name|enum
 name|LLVMByteOrdering
 name|LLVMByteOrder
 parameter_list|(

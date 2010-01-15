@@ -72,9 +72,11 @@ name|class
 name|Target
 decl_stmt|;
 comment|/// AsmToken - Target independent representation for an assembler token.
-struct|struct
+name|class
 name|AsmToken
 block|{
+name|public
+label|:
 enum|enum
 name|TokenKind
 block|{
@@ -306,7 +308,7 @@ comment|/// is safe to store across calls to Lex().
 name|StringRef
 name|getString
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|Str
@@ -318,7 +320,7 @@ comment|// as a single token, then diagnose as an invalid number).
 name|int64_t
 name|getIntVal
 argument_list|()
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -328,7 +330,7 @@ name|Integer
 operator|&&
 literal|"This token isn't an integer!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|IntVal
 return|;

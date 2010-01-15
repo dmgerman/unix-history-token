@@ -1272,6 +1272,26 @@ argument|unsigned&DstSubIdx
 argument_list|)
 specifier|const
 block|;
+comment|/// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
+comment|/// extension instruction. That is, it's like a copy where it's legal for the
+comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
+comment|/// true, then it's expected the pre-extension value is available as a subreg
+comment|/// of the result register. This also returns the sub-register index in
+comment|/// SubIdx.
+name|virtual
+name|bool
+name|isCoalescableExtInstr
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned&SrcReg
+argument_list|,
+argument|unsigned&DstReg
+argument_list|,
+argument|unsigned&SubIdx
+argument_list|)
+specifier|const
+block|;
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(

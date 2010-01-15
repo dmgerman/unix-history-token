@@ -5179,6 +5179,8 @@ block|,
 name|CONCAT
 block|,
 name|NAMECONCAT
+block|,
+name|EQ
 block|}
 block|;
 name|private

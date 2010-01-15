@@ -2551,7 +2551,7 @@ comment|/// eliminateFrameIndex - This method must be overriden to eliminate abs
 comment|/// frame indices from instructions which may use them.  The instruction
 comment|/// referenced by the iterator contains an MO_FrameIndex operand which must be
 comment|/// eliminated by this method.  This method may modify or replace the
-comment|/// specified instruction, as long as it keeps the iterator pointing the the
+comment|/// specified instruction, as long as it keeps the iterator pointing at the
 comment|/// finished product. SPAdj is the SP adjustment due to call frame setup
 comment|/// instruction.
 comment|///

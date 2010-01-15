@@ -227,6 +227,11 @@ comment|/// the copy are emitted with the TargetInstrInfo::copyRegToReg hook.
 name|COPY_TO_REGCLASS
 init|=
 literal|10
+block|,
+comment|// DEBUG_VALUE - a mapping of the llvm.dbg.value intrinsic
+name|DEBUG_VALUE
+init|=
+literal|11
 block|}
 enum|;
 name|unsigned
@@ -398,6 +403,39 @@ argument_list|,
 name|unsigned
 operator|&
 name|DstSubIdx
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
+comment|/// extension instruction. That is, it's like a copy where it's legal for the
+comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
+comment|/// true, then it's expected the pre-extension value is available as a subreg
+comment|/// of the result register. This also returns the sub-register index in
+comment|/// SubIdx.
+name|virtual
+name|bool
+name|isCoalescableExtInstr
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+operator|&
+name|SrcReg
+argument_list|,
+name|unsigned
+operator|&
+name|DstReg
+argument_list|,
+name|unsigned
+operator|&
+name|SubIdx
 argument_list|)
 decl|const
 block|{
@@ -717,6 +755,28 @@ specifier|const
 name|TargetRegisterInfo
 operator|*
 name|TRI
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// duplicate - Create a duplicate of the Orig instruction in MF. This is like
+comment|/// MachineFunction::CloneMachineInstr(), but the target may update operands
+comment|/// that are required to be unique.
+comment|///
+comment|/// The instruction must be duplicable as indicated by isNotDuplicable().
+name|virtual
+name|MachineInstr
+modifier|*
+name|duplicate
+argument_list|(
+name|MachineInstr
+operator|*
+name|Orig
+argument_list|,
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
 decl|const
 init|=
@@ -1732,6 +1792,17 @@ argument_list|,
 argument|const MachineInstr *Orig
 argument_list|,
 argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|duplicate
+argument_list|(
+argument|MachineInstr *Orig
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;

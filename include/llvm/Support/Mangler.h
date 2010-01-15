@@ -82,6 +82,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Twine
+decl_stmt|;
+name|class
 name|Type
 decl_stmt|;
 name|class
@@ -333,6 +336,9 @@ comment|/// in the current module.  If 'Suffix' is specified, the name ends with
 comment|/// specified suffix.  If 'ForcePrivate' is specified, the label is specified
 comment|/// to have a private label prefix.
 comment|///
+comment|/// FIXME: This is deprecated, new code should use getNameWithPrefix and use
+comment|/// MCSymbol printing to handle quotes or not etc.
+comment|///
 name|std
 operator|::
 name|string
@@ -344,23 +350,6 @@ argument|const char *Suffix =
 literal|""
 argument_list|,
 argument|bool ForcePrivate = false
-argument_list|)
-expr_stmt|;
-comment|/// makeNameProper - We don't want identifier names with ., space, or
-comment|/// - in them, so we mangle these characters into the strings "d_",
-comment|/// "s_", and "D_", respectively. This is a very simple mangling that
-comment|/// doesn't guarantee unique names for values. getValueName already
-comment|/// does this for you, so there's no point calling it on the result
-comment|/// from getValueName.
-comment|///
-name|std
-operator|::
-name|string
-name|makeNameProper
-argument_list|(
-argument|const std::string&x
-argument_list|,
-argument|ManglerPrefixTy PrefixTy = Mangler::Default
 argument_list|)
 expr_stmt|;
 comment|/// getNameWithPrefix - Fill OutName with the name of the appropriate prefix
@@ -383,6 +372,67 @@ name|GV
 argument_list|,
 name|bool
 name|isImplicitlyPrivate
+argument_list|)
+decl_stmt|;
+comment|/// getNameWithPrefix - Fill OutName with the name of the appropriate prefix
+comment|/// and the specified name as the global variable name.  GVName must not be
+comment|/// empty.
+name|void
+name|getNameWithPrefix
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|OutName
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|GVName
+argument_list|,
+name|ManglerPrefixTy
+name|PrefixTy
+operator|=
+name|Mangler
+operator|::
+name|Default
+argument_list|)
+decl_stmt|;
+name|private
+label|:
+comment|/// makeNameProper - We don't want identifier names with ., space, or
+comment|/// - in them, so we mangle these characters into the strings "d_",
+comment|/// "s_", and "D_", respectively. This is a very simple mangling that
+comment|/// doesn't guarantee unique names for values. getValueName already
+comment|/// does this for you, so there's no point calling it on the result
+comment|/// from getValueName.
+comment|///
+comment|/// FIXME: This is deprecated, new code should use getNameWithPrefix and use
+comment|/// MCSymbol printing to handle quotes or not etc.
+comment|///
+name|void
+name|makeNameProper
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|OutName
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+argument_list|,
+name|ManglerPrefixTy
+name|PrefixTy
+operator|=
+name|Mangler
+operator|::
+name|Default
 argument_list|)
 decl_stmt|;
 block|}

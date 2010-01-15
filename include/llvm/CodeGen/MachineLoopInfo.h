@@ -171,6 +171,11 @@ modifier|*
 name|getBottomBlock
 parameter_list|()
 function_decl|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|friend

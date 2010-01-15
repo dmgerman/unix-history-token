@@ -314,24 +314,29 @@ init|=
 literal|2
 block|,
 comment|// MDNODE:        [n x (type num, value num)]
-name|METADATA_NAME
+name|METADATA_FN_NODE
 init|=
 literal|3
+block|,
+comment|// FN_MDNODE:     [n x (type num, value num)]
+name|METADATA_NAME
+init|=
+literal|4
 block|,
 comment|// STRING:        [values]
 name|METADATA_NAMED_NODE
 init|=
-literal|4
+literal|5
 block|,
 comment|// NAMEDMDNODE:   [n x mdnodes]
 name|METADATA_KIND
 init|=
-literal|5
+literal|6
 block|,
 comment|// [n x [id, name]]
 name|METADATA_ATTACHMENT
 init|=
-literal|6
+literal|7
 comment|// [m x [value, [n x [id, mdnode]]]
 block|}
 enum|;

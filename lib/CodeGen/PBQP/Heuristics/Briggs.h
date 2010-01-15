@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Briggs.h --- Briggs Heuristic for PBQP -----------------*- C++ --*-===//
+comment|//===-- Briggs.h --- Briggs Heuristic for PBQP ------------------*- C++ -*-===//
 end_comment
 
 begin_comment

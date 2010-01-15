@@ -144,13 +144,6 @@ block|,
 name|SDNPMemOperand
 block|}
 enum|;
-comment|// ComplexPattern attributes.
-enum|enum
-name|CPAttr
-block|{
-name|CPAttrParentAsRoot
-block|}
-enum|;
 comment|/// getValueType - Return the MVT::SimpleValueType that the specified TableGen
 comment|/// record corresponds to.
 name|MVT
@@ -1141,10 +1134,6 @@ name|unsigned
 name|Properties
 decl_stmt|;
 comment|// Node properties
-name|unsigned
-name|Attributes
-decl_stmt|;
-comment|// Pattern attributes
 name|public
 label|:
 name|ComplexPattern
@@ -1228,25 +1217,6 @@ operator|(
 literal|1
 operator|<<
 name|Prop
-operator|)
-return|;
-block|}
-name|bool
-name|hasAttribute
-argument_list|(
-expr|enum
-name|CPAttr
-name|Attr
-argument_list|)
-decl|const
-block|{
-return|return
-name|Attributes
-operator|&
-operator|(
-literal|1
-operator|<<
-name|Attr
 operator|)
 return|;
 block|}

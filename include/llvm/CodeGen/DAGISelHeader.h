@@ -470,12 +470,7 @@ name|ResNode
 init|=
 name|Select
 argument_list|(
-name|SDValue
-argument_list|(
 name|Node
-argument_list|,
-literal|0
-argument_list|)
 argument_list|)
 decl_stmt|;
 comment|// If node should not be replaced, continue with the next one.

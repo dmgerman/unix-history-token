@@ -69,18 +69,6 @@ decl_stmt|;
 name|class
 name|FunctionPass
 decl_stmt|;
-comment|// Insert function profiling instrumentation
-name|ModulePass
-modifier|*
-name|createFunctionProfilerPass
-parameter_list|()
-function_decl|;
-comment|// Insert block profiling instrumentation
-name|ModulePass
-modifier|*
-name|createBlockProfilerPass
-parameter_list|()
-function_decl|;
 comment|// Insert edge profiling instrumentation
 name|ModulePass
 modifier|*
@@ -91,17 +79,6 @@ comment|// Insert optimal edge profiling instrumentation
 name|ModulePass
 modifier|*
 name|createOptimalEdgeProfilerPass
-parameter_list|()
-function_decl|;
-comment|// Random Sampling Profiling Framework
-name|ModulePass
-modifier|*
-name|createNullProfilerRSPass
-parameter_list|()
-function_decl|;
-name|FunctionPass
-modifier|*
-name|createRSProfilingPass
 parameter_list|()
 function_decl|;
 block|}

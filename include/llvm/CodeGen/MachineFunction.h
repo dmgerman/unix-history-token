@@ -1236,6 +1236,8 @@ comment|/// CloneMachineInstr - Create a new MachineInstr which is a copy of the
 comment|/// 'Orig' instruction, identical in all ways except the the instruction
 comment|/// has no parent, prev, or next.
 comment|///
+comment|/// See also TargetInstrInfo::duplicate() for target-specific fixes to cloned
+comment|/// instructions.
 name|MachineInstr
 modifier|*
 name|CloneMachineInstr

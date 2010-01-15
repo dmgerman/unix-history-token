@@ -505,6 +505,16 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// getModRefBehavior - Return the modref behavior of the intrinsic with the
+comment|/// given id.
+specifier|static
+name|ModRefBehavior
+name|getModRefBehavior
+parameter_list|(
+name|unsigned
+name|iid
+parameter_list|)
+function_decl|;
 comment|/// doesNotAccessMemory - If the specified call is known to never read or
 comment|/// write memory, return true.  If the call only reads from known-constant
 comment|/// memory, it is also legal to return true.  Calls that unwind the stack

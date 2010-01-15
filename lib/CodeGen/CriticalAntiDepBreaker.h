@@ -236,7 +236,8 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// BreakAntiDependencies - Identifiy anti-dependencies along the critical path
+comment|/// BreakAntiDependencies - Identifiy anti-dependencies along the critical
+comment|/// path
 comment|/// of the ScheduleDAG and break them by renaming registers.
 comment|///
 name|unsigned
@@ -290,6 +291,8 @@ block|;
 name|unsigned
 name|findSuitableFreeRegister
 argument_list|(
+argument|MachineInstr *MI
+argument_list|,
 argument|unsigned AntiDepReg
 argument_list|,
 argument|unsigned LastNewReg

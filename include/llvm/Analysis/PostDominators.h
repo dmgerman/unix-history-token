@@ -192,6 +192,24 @@ argument_list|)
 return|;
 block|}
 specifier|inline
+name|DomTreeNode
+operator|*
+name|getNode
+argument_list|(
+argument|BasicBlock *BB
+argument_list|)
+specifier|const
+block|{
+return|return
+name|DT
+operator|->
+name|getNode
+argument_list|(
+name|BB
+argument_list|)
+return|;
+block|}
+specifier|inline
 name|bool
 name|dominates
 argument_list|(

@@ -97,6 +97,12 @@ name|char
 modifier|*
 name|iterator
 typedef|;
+typedef|typedef
+specifier|const
+name|char
+modifier|*
+name|const_iterator
+typedef|;
 specifier|static
 specifier|const
 name|size_t
@@ -657,7 +663,7 @@ comment|/// @name String Searching
 comment|/// @{
 comment|/// find - Search for the first character \arg C in the string.
 comment|///
-comment|/// \return - The index of the first occurence of \arg C, or npos if not
+comment|/// \return - The index of the first occurrence of \arg C, or npos if not
 comment|/// found.
 name|size_t
 name|find
@@ -713,7 +719,7 @@ return|;
 block|}
 comment|/// find - Search for the first string \arg Str in the string.
 comment|///
-comment|/// \return - The index of the first occurence of \arg Str, or npos if not
+comment|/// \return - The index of the first occurrence of \arg Str, or npos if not
 comment|/// found.
 name|size_t
 name|find
@@ -730,7 +736,7 @@ decl|const
 decl_stmt|;
 comment|/// rfind - Search for the last character \arg C in the string.
 comment|///
-comment|/// \return - The index of the last occurence of \arg C, or npos if not
+comment|/// \return - The index of the last occurrence of \arg C, or npos if not
 comment|/// found.
 name|size_t
 name|rfind
@@ -788,7 +794,7 @@ return|;
 block|}
 comment|/// rfind - Search for the last string \arg Str in the string.
 comment|///
-comment|/// \return - The index of the last occurence of \arg Str, or npos if not
+comment|/// \return - The index of the last occurrence of \arg Str, or npos if not
 comment|/// found.
 name|size_t
 name|rfind
@@ -1098,7 +1104,7 @@ name|Start
 argument_list|)
 return|;
 block|}
-comment|/// split - Split into two substrings around the first occurence of a
+comment|/// split - Split into two substrings around the first occurrence of a
 comment|/// separator character.
 comment|///
 comment|/// If \arg Separator is in the string, then the result is a pair (LHS, RHS)
@@ -1171,7 +1177,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// split - Split into two substrings around the first occurence of a
+comment|/// split - Split into two substrings around the first occurrence of a
 comment|/// separator string.
 comment|///
 comment|/// If \arg Separator is in the string, then the result is a pair (LHS, RHS)
@@ -1250,7 +1256,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// split - Split into substrings around the occurences of a separator
+comment|/// split - Split into substrings around the occurrences of a separator
 end_comment
 
 begin_comment
@@ -1339,7 +1345,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// rsplit - Split into two substrings around the last occurence of a
+comment|/// rsplit - Split into two substrings around the last occurrence of a
 end_comment
 
 begin_comment

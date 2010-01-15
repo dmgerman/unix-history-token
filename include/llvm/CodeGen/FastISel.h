@@ -462,19 +462,17 @@ comment|/// be emitted.
 name|virtual
 name|unsigned
 name|FastEmit_
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
+parameter_list|,
 name|MVT
 name|RetVT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmit_r - This method is called by target-independent code
 comment|/// to request that an instruction with the given type, opcode, and
 comment|/// register operand be emitted.
@@ -482,22 +480,20 @@ comment|///
 name|virtual
 name|unsigned
 name|FastEmit_r
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
+parameter_list|,
 name|MVT
 name|RetVT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op0
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmit_rr - This method is called by target-independent code
 comment|/// to request that an instruction with the given type, opcode, and
 comment|/// register operands be emitted.
@@ -505,25 +501,23 @@ comment|///
 name|virtual
 name|unsigned
 name|FastEmit_rr
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
+parameter_list|,
 name|MVT
 name|RetVT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op0
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op1
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmit_ri - This method is called by target-independent code
 comment|/// to request that an instruction with the given type, opcode, and
 comment|/// register and immediate operands be emitted.
@@ -531,25 +525,23 @@ comment|///
 name|virtual
 name|unsigned
 name|FastEmit_ri
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
+parameter_list|,
 name|MVT
 name|RetVT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op0
-argument_list|,
+parameter_list|,
 name|uint64_t
 name|Imm
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmit_rf - This method is called by target-independent code
 comment|/// to request that an instruction with the given type, opcode, and
 comment|/// register and floating-point immediate operands be emitted.
@@ -557,26 +549,24 @@ comment|///
 name|virtual
 name|unsigned
 name|FastEmit_rf
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
+parameter_list|,
 name|MVT
 name|RetVT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op0
-argument_list|,
+parameter_list|,
 name|ConstantFP
-operator|*
+modifier|*
 name|FPImm
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmit_rri - This method is called by target-independent code
 comment|/// to request that an instruction with the given type, opcode, and
 comment|/// register and immediate operands be emitted.
@@ -584,124 +574,114 @@ comment|///
 name|virtual
 name|unsigned
 name|FastEmit_rri
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
+parameter_list|,
 name|MVT
 name|RetVT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op0
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op1
-argument_list|,
+parameter_list|,
 name|uint64_t
 name|Imm
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmit_ri_ - This method is a wrapper of FastEmit_ri. It first tries
 comment|/// to emit an instruction with an immediate operand using FastEmit_ri.
 comment|/// If that fails, it materializes the immediate into a register and try
 comment|/// FastEmit_rr instead.
 name|unsigned
 name|FastEmit_ri_
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op0
-argument_list|,
+parameter_list|,
 name|uint64_t
 name|Imm
-argument_list|,
+parameter_list|,
 name|MVT
 name|ImmType
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmit_rf_ - This method is a wrapper of FastEmit_rf. It first tries
 comment|/// to emit an instruction with an immediate operand using FastEmit_rf.
 comment|/// If that fails, it materializes the immediate into a register and try
 comment|/// FastEmit_rr instead.
 name|unsigned
 name|FastEmit_rf_
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Op0
-argument_list|,
+parameter_list|,
 name|ConstantFP
-operator|*
+modifier|*
 name|FPImm
-argument_list|,
+parameter_list|,
 name|MVT
 name|ImmType
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmit_i - This method is called by target-independent code
 comment|/// to request that an instruction with the given type, opcode, and
 comment|/// immediate operand be emitted.
 name|virtual
 name|unsigned
 name|FastEmit_i
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
+parameter_list|,
 name|MVT
 name|RetVT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|,
+parameter_list|,
 name|uint64_t
 name|Imm
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmit_f - This method is called by target-independent code
 comment|/// to request that an instruction with the given type, opcode, and
 comment|/// floating-point immediate operand be emitted.
 name|virtual
 name|unsigned
 name|FastEmit_f
-argument_list|(
+parameter_list|(
 name|MVT
 name|VT
-argument_list|,
+parameter_list|,
 name|MVT
 name|RetVT
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|,
+parameter_list|,
 name|ConstantFP
-operator|*
+modifier|*
 name|FPImm
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// FastEmitInst_ - Emit a MachineInstr with no operands and a
 comment|/// result register in the given register class.
 comment|///
@@ -932,17 +912,15 @@ name|private
 label|:
 name|bool
 name|SelectBinaryOp
-argument_list|(
+parameter_list|(
 name|User
-operator|*
+modifier|*
 name|I
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|ISDOpcode
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|bool
 name|SelectFNeg
 parameter_list|(
@@ -977,17 +955,15 @@ parameter_list|)
 function_decl|;
 name|bool
 name|SelectCast
-argument_list|(
+parameter_list|(
 name|User
-operator|*
+modifier|*
 name|I
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
+parameter_list|,
+name|unsigned
 name|Opcode
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

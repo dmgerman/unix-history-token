@@ -75,7 +75,7 @@ name|long
 name|long
 name|N
 parameter_list|,
-name|int
+name|LLVMBool
 name|IsSigned
 parameter_list|)
 function_decl|;
@@ -112,7 +112,7 @@ parameter_list|(
 name|LLVMGenericValueRef
 name|GenVal
 parameter_list|,
-name|int
+name|LLVMBool
 name|IsSigned
 parameter_list|)
 function_decl|;
@@ -142,7 +142,7 @@ name|GenVal
 parameter_list|)
 function_decl|;
 comment|/*===-- Operations on execution engines -----------------------------------===*/
-name|int
+name|LLVMBool
 name|LLVMCreateExecutionEngine
 parameter_list|(
 name|LLVMExecutionEngineRef
@@ -158,7 +158,7 @@ modifier|*
 name|OutError
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMCreateInterpreter
 parameter_list|(
 name|LLVMExecutionEngineRef
@@ -174,7 +174,7 @@ modifier|*
 name|OutError
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMCreateJITCompiler
 parameter_list|(
 name|LLVMExecutionEngineRef
@@ -278,7 +278,7 @@ name|LLVMModuleProviderRef
 name|MP
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMRemoveModuleProvider
 parameter_list|(
 name|LLVMExecutionEngineRef
@@ -297,7 +297,7 @@ modifier|*
 name|OutError
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMFindFunction
 parameter_list|(
 name|LLVMExecutionEngineRef

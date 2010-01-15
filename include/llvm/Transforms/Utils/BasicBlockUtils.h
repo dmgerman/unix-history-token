@@ -117,8 +117,9 @@ function_decl|;
 comment|/// DeleteDeadPHIs - Examine each PHI in the given block and delete it if it
 comment|/// is dead. Also recursively delete any operands that become dead as
 comment|/// a result. This includes tracing the def-use list from the PHI to see if
-comment|/// it is ultimately unused or if it reaches an unused cycle.
-name|void
+comment|/// it is ultimately unused or if it reaches an unused cycle. Return true
+comment|/// if any PHIs were deleted.
+name|bool
 name|DeleteDeadPHIs
 parameter_list|(
 name|BasicBlock
@@ -204,22 +205,6 @@ modifier|*
 name|To
 parameter_list|)
 function_decl|;
-comment|/// CopyPrecedingStopPoint - If I is immediately preceded by a StopPoint,
-comment|/// make a copy of the stoppoint before InsertPos (presumably before copying
-comment|/// or moving I).
-name|void
-name|CopyPrecedingStopPoint
-argument_list|(
-name|Instruction
-operator|*
-name|I
-argument_list|,
-name|BasicBlock
-operator|::
-name|iterator
-name|InsertPos
-argument_list|)
-decl_stmt|;
 comment|/// FindAvailableLoadedValue - Scan the ScanBB block backwards (starting at the
 comment|/// instruction before ScanFrom) checking to see if we have the value at the
 comment|/// memory address *Ptr locally available within a small number of instructions.

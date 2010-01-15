@@ -377,6 +377,13 @@ modifier|*
 name|createMachineSinkingPass
 parameter_list|()
 function_decl|;
+comment|/// createOptimizeExtsPass - This pass performs sign / zero extension
+comment|/// optimization by increasing uses of extended values.
+name|FunctionPass
+modifier|*
+name|createOptimizeExtsPass
+parameter_list|()
+function_decl|;
 comment|/// createStackSlotColoringPass - This pass performs stack slot coloring.
 name|FunctionPass
 modifier|*

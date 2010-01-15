@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Attributes.h - Container for Attributes ---*---------- C++ -*-===//
+comment|//===-- llvm/Attributes.h - Container for Attributes ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -308,7 +308,8 @@ literal|1
 operator|<<
 literal|25
 decl_stmt|;
-comment|///< source said inlining was desirable
+comment|///< source said inlining was
+comment|///desirable
 comment|/// @brief Attributes that only apply to function parameters.
 specifier|const
 name|Attributes

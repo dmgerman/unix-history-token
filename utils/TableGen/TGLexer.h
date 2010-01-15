@@ -204,6 +204,8 @@ name|XNull
 block|,
 name|XIf
 block|,
+name|XEq
+block|,
 comment|// Integer value.
 name|IntVal
 block|,

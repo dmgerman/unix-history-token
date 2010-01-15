@@ -1264,7 +1264,7 @@ name|MCSection
 operator|*
 name|getCOFFSection
 argument_list|(
-argument|const char *Name
+argument|StringRef Name
 argument_list|,
 argument|bool isDirective
 argument_list|,

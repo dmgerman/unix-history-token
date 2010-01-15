@@ -393,6 +393,25 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// printMangledName - Print the specified string in mangled form if it uses
+comment|/// any unusual characters.
+specifier|static
+name|void
+name|printMangledName
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|MCAsmInfo
+modifier|*
+name|MAI
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

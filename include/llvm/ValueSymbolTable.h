@@ -77,6 +77,12 @@ directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ilist_node.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -168,15 +174,6 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|GlobalAlias
-operator|,
-name|Module
-operator|>
-expr_stmt|;
-name|friend
-name|class
-name|SymbolTableListTraits
-operator|<
-name|NamedMDNode
 operator|,
 name|Module
 operator|>
@@ -413,6 +410,260 @@ name|uint32_t
 name|LastUnique
 decl_stmt|;
 comment|///< Counter for tracking unique names
+comment|/// @}
+block|}
+empty_stmt|;
+comment|/// This class provides a symbol table of name/NamedMDNode pairs. It is
+comment|/// essentially a StringMap wrapper.
+name|class
+name|MDSymbolTable
+block|{
+name|friend
+name|class
+name|SymbolTableListTraits
+operator|<
+name|NamedMDNode
+operator|,
+name|Module
+operator|>
+expr_stmt|;
+comment|/// @name Types
+comment|/// @{
+name|private
+label|:
+comment|/// @brief A mapping of names to metadata
+typedef|typedef
+name|StringMap
+operator|<
+name|NamedMDNode
+operator|*
+operator|>
+name|MDMap
+expr_stmt|;
+name|public
+label|:
+comment|/// @brief An iterator over a ValueMap.
+typedef|typedef
+name|MDMap
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+comment|/// @brief A const_iterator over a ValueMap.
+typedef|typedef
+name|MDMap
+operator|::
+name|const_iterator
+name|const_iterator
+expr_stmt|;
+comment|/// @}
+comment|/// @name Constructors
+comment|/// @{
+name|public
+label|:
+name|MDSymbolTable
+argument_list|(
+specifier|const
+name|MDNode
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|MDSymbolTable
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
+name|MDSymbolTable
+argument_list|()
+operator|:
+name|mmap
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+operator|~
+name|MDSymbolTable
+argument_list|()
+expr_stmt|;
+comment|/// @}
+comment|/// @name Accessors
+comment|/// @{
+name|public
+label|:
+comment|/// This method finds the value with the given \p Name in the
+comment|/// the symbol table.
+comment|/// @returns the NamedMDNode associated with the \p Name
+comment|/// @brief Lookup a named Value.
+name|NamedMDNode
+modifier|*
+name|lookup
+argument_list|(
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+block|{
+return|return
+name|mmap
+operator|.
+name|lookup
+argument_list|(
+name|Name
+argument_list|)
+return|;
+block|}
+comment|/// @returns true iff the symbol table is empty
+comment|/// @brief Determine if the symbol table is empty
+specifier|inline
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|mmap
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// @brief The number of name/type pairs is returned.
+specifier|inline
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|unsigned
+argument_list|(
+name|mmap
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// @}
+comment|/// @name Iteration
+comment|/// @{
+name|public
+label|:
+comment|/// @brief Get an iterator that from the beginning of the symbol table.
+specifier|inline
+name|iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|mmap
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+comment|/// @brief Get a const_iterator that from the beginning of the symbol table.
+specifier|inline
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|mmap
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+comment|/// @brief Get an iterator to the end of the symbol table.
+specifier|inline
+name|iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|mmap
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+comment|/// @brief Get a const_iterator to the end of the symbol table.
+specifier|inline
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|mmap
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+comment|/// @}
+comment|/// @name Mutators
+comment|/// @{
+name|public
+label|:
+comment|/// insert - The method inserts a new entry into the stringmap.
+name|void
+name|insert
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|NamedMDNode
+modifier|*
+name|Node
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|mmap
+operator|.
+name|GetOrCreateValue
+argument_list|(
+name|Name
+argument_list|,
+name|Node
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// This method removes a NamedMDNode from the symbol table.
+name|void
+name|remove
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+block|{
+name|mmap
+operator|.
+name|erase
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// @}
+comment|/// @name Internal Data
+comment|/// @{
+name|private
+label|:
+name|MDMap
+name|mmap
+decl_stmt|;
+comment|///< The map that holds the symbol table.
 comment|/// @}
 block|}
 empty_stmt|;

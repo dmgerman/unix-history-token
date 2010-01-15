@@ -120,21 +120,9 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-struct_decl|struct
-name|DbgStopPointInst
-struct_decl|;
-struct_decl|struct
+name|class
 name|DbgDeclareInst
-struct_decl|;
-struct_decl|struct
-name|DbgFuncStartInst
-struct_decl|;
-struct_decl|struct
-name|DbgRegionStartInst
-struct_decl|;
-struct_decl|struct
-name|DbgRegionEndInst
-struct_decl|;
+decl_stmt|;
 name|class
 name|DebugLoc
 decl_stmt|;
@@ -2333,12 +2321,6 @@ name|LLVMContext
 operator|&
 name|VMContext
 block|;
-specifier|const
-name|Type
-operator|*
-name|EmptyStructPtr
-block|;
-comment|// "{}*".
 name|Function
 operator|*
 name|DeclareFn
@@ -2785,7 +2767,7 @@ name|InsertDbgValueIntrinsic
 argument_list|(
 argument|llvm::Value *V
 argument_list|,
-argument|llvm::Value *Offset
+argument|uint64_t Offset
 argument_list|,
 argument|DIVariable D
 argument_list|,
@@ -2799,7 +2781,7 @@ name|InsertDbgValueIntrinsic
 argument_list|(
 argument|llvm::Value *V
 argument_list|,
-argument|llvm::Value *Offset
+argument|uint64_t Offset
 argument_list|,
 argument|DIVariable D
 argument_list|,
@@ -2816,32 +2798,6 @@ argument|unsigned TAG
 argument_list|)
 block|;   }
 block|;
-comment|/// Finds the stoppoint coressponding to this instruction, that is the
-comment|/// stoppoint that dominates this instruction
-specifier|const
-name|DbgStopPointInst
-operator|*
-name|findStopPoint
-argument_list|(
-specifier|const
-name|Instruction
-operator|*
-name|Inst
-argument_list|)
-block|;
-comment|/// Finds the stoppoint corresponding to first real (non-debug intrinsic)
-comment|/// instruction in this Basic Block, and returns the stoppoint for it.
-specifier|const
-name|DbgStopPointInst
-operator|*
-name|findBBStopPoint
-argument_list|(
-specifier|const
-name|BasicBlock
-operator|*
-name|BB
-argument_list|)
-block|;
 comment|/// Finds the dbg.declare intrinsic corresponding to this value if any.
 comment|/// It looks through pointer casts too.
 specifier|const
@@ -2849,9 +2805,10 @@ name|DbgDeclareInst
 operator|*
 name|findDbgDeclare
 argument_list|(
-argument|const Value *V
-argument_list|,
-argument|bool stripCasts = true
+specifier|const
+name|Value
+operator|*
+name|V
 argument_list|)
 block|;
 comment|/// Find the debug info descriptor corresponding to this global variable.
@@ -2902,20 +2859,6 @@ name|Dir
 argument_list|)
 block|;
 comment|/// ExtractDebugLocation - Extract debug location information
-comment|/// from llvm.dbg.stoppoint intrinsic.
-name|DebugLoc
-name|ExtractDebugLocation
-argument_list|(
-name|DbgStopPointInst
-operator|&
-name|SPI
-argument_list|,
-name|DebugLocTracker
-operator|&
-name|DebugLocInfo
-argument_list|)
-block|;
-comment|/// ExtractDebugLocation - Extract debug location information
 comment|/// from DILocation.
 name|DebugLoc
 name|ExtractDebugLocation
@@ -2923,20 +2866,6 @@ argument_list|(
 name|DILocation
 operator|&
 name|Loc
-argument_list|,
-name|DebugLocTracker
-operator|&
-name|DebugLocInfo
-argument_list|)
-block|;
-comment|/// ExtractDebugLocation - Extract debug location information
-comment|/// from llvm.dbg.func_start intrinsic.
-name|DebugLoc
-name|ExtractDebugLocation
-argument_list|(
-name|DbgFuncStartInst
-operator|&
-name|FSI
 argument_list|,
 name|DebugLocTracker
 operator|&

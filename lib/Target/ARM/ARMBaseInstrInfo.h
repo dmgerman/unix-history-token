@@ -959,6 +959,16 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
+name|MachineInstr
+operator|*
+name|duplicate
+argument_list|(
+argument|MachineInstr *Orig
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|bool
 name|isIdentical

@@ -367,16 +367,17 @@ name|SDNode
 operator|*
 name|Select_INLINEASM
 argument_list|(
-argument|SDValue N
+name|SDNode
+operator|*
+name|N
 argument_list|)
 block|;
 name|SDNode
 operator|*
 name|Select_UNDEF
 argument_list|(
-specifier|const
-name|SDValue
-operator|&
+name|SDNode
+operator|*
 name|N
 argument_list|)
 block|;
@@ -384,22 +385,25 @@ name|SDNode
 operator|*
 name|Select_EH_LABEL
 argument_list|(
-specifier|const
-name|SDValue
-operator|&
+name|SDNode
+operator|*
 name|N
 argument_list|)
 block|;
 name|void
 name|CannotYetSelect
 argument_list|(
-argument|SDValue N
+name|SDNode
+operator|*
+name|N
 argument_list|)
 block|;
 name|void
 name|CannotYetSelectIntrinsic
 argument_list|(
-argument|SDValue N
+name|SDNode
+operator|*
+name|N
 argument_list|)
 block|;
 name|private
@@ -456,6 +460,10 @@ name|BasicBlock
 operator|*
 name|BB
 argument_list|)
+block|;
+name|void
+name|ShrinkDemandedOps
+argument_list|()
 block|;
 name|void
 name|ComputeLiveOutVRegInfo

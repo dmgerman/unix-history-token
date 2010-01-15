@@ -4360,7 +4360,7 @@ specifier|const
 block|{
 name|DEBUG
 argument_list|(
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"Constant.cpp: ConstantUniqueMap\n"

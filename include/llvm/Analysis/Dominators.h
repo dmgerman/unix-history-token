@@ -2331,6 +2331,35 @@ condition|)
 return|return
 name|false
 return|;
+comment|// Compare the result of the tree walk and the dfs numbers, if expensive
+comment|// checks are enabled.
+ifdef|#
+directive|ifdef
+name|XDEBUG
+name|assert
+argument_list|(
+operator|!
+name|DFSInfoValid
+operator|||
+operator|(
+name|dominatedBySlowTreeWalk
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+operator|==
+name|B
+operator|->
+name|DominatedBy
+argument_list|(
+name|A
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|DFSInfoValid
@@ -3351,33 +3380,6 @@ literal|32
 operator|>
 name|WorkStack
 expr_stmt|;
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-operator|(
-name|unsigned
-operator|)
-name|this
-operator|->
-name|Roots
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-block|{
 name|DomTreeNodeBase
 operator|<
 name|NodeT
@@ -3385,16 +3387,19 @@ operator|>
 operator|*
 name|ThisRoot
 operator|=
-name|getNode
-argument_list|(
-name|this
-operator|->
-name|Roots
-index|[
-name|i
-index|]
-argument_list|)
+name|getRootNode
+argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ThisRoot
+condition|)
+return|return;
+comment|// Even in the case of multiple exits that form the post dominator root
+comment|// nodes, do not iterate over all exits, but start from the virtual root
+comment|// node. Otherwise bbs, that are not post dominated by any exit but by the
+comment|// virtual root node, will never be assigned a DFS number.
 name|WorkStack
 operator|.
 name|push_back
@@ -3528,7 +3533,6 @@ operator|=
 name|DFSNum
 operator|++
 expr_stmt|;
-block|}
 block|}
 block|}
 name|SlowQueries
@@ -3770,6 +3774,18 @@ argument_list|(
 argument|FT& F
 argument_list|)
 block|{
+name|reset
+argument_list|()
+block|;
+name|this
+operator|->
+name|Vertex
+operator|.
+name|push_back
+argument_list|(
+literal|0
+argument_list|)
+block|;
 if|if
 condition|(
 operator|!
@@ -3778,10 +3794,7 @@ operator|->
 name|IsPostDominators
 condition|)
 block|{
-name|reset
-argument_list|()
-expr_stmt|;
-comment|// Initialize roots
+comment|// Initialize root
 name|this
 operator|->
 name|Roots
@@ -3821,15 +3834,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|this
-operator|->
-name|Vertex
-operator|.
-name|push_back
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|Calculate
 operator|<
 name|FT
@@ -3844,19 +3848,12 @@ operator|,
 name|F
 operator|)
 expr_stmt|;
-name|updateDFSNumbers
-argument_list|()
-expr_stmt|;
 block|}
 end_expr_stmt
 
 begin_else
 else|else
 block|{
-name|reset
-argument_list|()
-expr_stmt|;
-comment|// Reset from the last time we were run...
 comment|// Initialize the roots list
 for|for
 control|(
@@ -3942,15 +3939,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|this
-operator|->
-name|Vertex
-operator|.
-name|push_back
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|Calculate
 operator|<
 name|FT

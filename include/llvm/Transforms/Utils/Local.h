@@ -97,9 +97,9 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
-struct_decl|struct
+name|class
 name|DbgInfoIntrinsic
-struct_decl|;
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -159,8 +159,9 @@ parameter_list|)
 function_decl|;
 comment|/// RecursivelyDeleteTriviallyDeadInstructions - If the specified value is a
 comment|/// trivially dead instruction, delete it.  If that makes any of its operands
-comment|/// trivially dead, delete them too, recursively.
-name|void
+comment|/// trivially dead, delete them too, recursively.  Return true if any
+comment|/// instructions were deleted.
+name|bool
 name|RecursivelyDeleteTriviallyDeadInstructions
 parameter_list|(
 name|Value
@@ -172,13 +173,33 @@ comment|/// RecursivelyDeleteDeadPHINode - If the specified value is an effectiv
 comment|/// dead PHI node, due to being a def-use chain of single-use nodes that
 comment|/// either forms a cycle or is terminated by a trivially dead instruction,
 comment|/// delete it.  If that makes any of its operands trivially dead, delete them
-comment|/// too, recursively.
-name|void
+comment|/// too, recursively.  Return true if the PHI node is actually deleted.
+name|bool
 name|RecursivelyDeleteDeadPHINode
 parameter_list|(
 name|PHINode
 modifier|*
 name|PN
+parameter_list|)
+function_decl|;
+comment|/// SimplifyInstructionsInBlock - Scan the specified basic block and try to
+comment|/// simplify any instructions in it and recursively delete dead instructions.
+comment|///
+comment|/// This returns true if it changed the code, note that it can delete
+comment|/// instructions in other blocks as well in this block.
+name|bool
+name|SimplifyInstructionsInBlock
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

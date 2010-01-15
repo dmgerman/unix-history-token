@@ -2109,36 +2109,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// FIXME: This does not work on PostDomTrees.  It seems likely that this is
-end_comment
-
-begin_comment
-comment|// due to an error in the algorithm for post-dominators.  This really should
-end_comment
-
-begin_comment
-comment|// be investigated and fixed at some point.
-end_comment
-
-begin_comment
-comment|// DT.updateDFSNumbers();
-end_comment
-
-begin_comment
-comment|// Start out with the DFS numbers being invalid.  Let them be computed if
-end_comment
-
-begin_comment
-comment|// demanded.
-end_comment
-
 begin_expr_stmt
 name|DT
 operator|.
-name|DFSInfoValid
-operator|=
-name|false
+name|updateDFSNumbers
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 

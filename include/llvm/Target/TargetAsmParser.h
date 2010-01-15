@@ -43,12 +43,6 @@ directive|define
 name|LLVM_TARGET_TARGETPARSER_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCAsmLexer.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -65,6 +59,23 @@ decl_stmt|;
 name|class
 name|Target
 decl_stmt|;
+name|class
+name|SMLoc
+decl_stmt|;
+name|class
+name|AsmToken
+decl_stmt|;
+name|class
+name|MCParsedAsmOperand
+decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 comment|/// TargetAsmParser - Generic interface to target specific assembly parsers.
 name|class
 name|TargetAsmParser
@@ -131,24 +142,32 @@ comment|/// failure, the parser is not required to read to the end of the line.
 comment|//
 comment|/// \param AP - The current parser object.
 comment|/// \param Name - The instruction name.
-comment|/// \param Inst [out] - On success, the parsed instruction.
+comment|/// \param Operands [out] - The list of parsed operands, this returns
+comment|///        ownership of them to the caller.
 comment|/// \return True on failure.
 name|virtual
 name|bool
 name|ParseInstruction
-parameter_list|(
+argument_list|(
 specifier|const
 name|StringRef
-modifier|&
+operator|&
 name|Name
-parameter_list|,
-name|MCInst
-modifier|&
-name|Inst
-parameter_list|)
+argument_list|,
+name|SMLoc
+name|NameLoc
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MCParsedAsmOperand
+operator|*
+operator|>
+operator|&
+name|Operands
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 comment|/// ParseDirective - Parse a target specific assembler directive
 comment|///
 comment|/// The parser is positioned following the directive name.  The target
@@ -169,6 +188,29 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// MatchInstruction - Recognize a series of operands of a parsed instruction
+comment|/// as an actual MCInst.  This returns false and fills in Inst on success and
+comment|/// returns true on failure to match.
+name|virtual
+name|bool
+name|MatchInstruction
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|MCParsedAsmOperand
+operator|*
+operator|>
+operator|&
+name|Operands
+argument_list|,
+name|MCInst
+operator|&
+name|Inst
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

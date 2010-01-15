@@ -190,6 +190,11 @@ comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
 name|bool
 name|IsBTMemSlow
 block|;
+comment|/// HasVectorUAMem - True if SIMD operations can have unaligned memory operands.
+comment|///                  This may require setting a feature bit in the processor.
+name|bool
+name|HasVectorUAMem
+block|;
 comment|/// DarwinVers - Nonzero if this is a darwin platform: the numeric
 comment|/// version of the platform, e.g. 8 = 10.4 (Tiger), 9 = 10.5 (Leopard), etc.
 name|unsigned
@@ -468,6 +473,15 @@ name|IsBTMemSlow
 return|;
 block|}
 name|bool
+name|hasVectorUAMem
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVectorUAMem
+return|;
+block|}
+name|bool
 name|isTargetDarwin
 argument_list|()
 specifier|const
@@ -610,7 +624,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|isTargetCygMing
+name|isTargetMingw
 argument_list|()
 operator|||
 name|isTargetWindows

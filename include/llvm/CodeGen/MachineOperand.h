@@ -97,6 +97,9 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// MachineOperand class - Representation of each machine instruction operand.
@@ -137,7 +140,10 @@ name|MO_GlobalAddress
 block|,
 comment|///< Address of a global value
 name|MO_BlockAddress
+block|,
 comment|///< Address of a basic block
+name|MO_Metadata
+comment|///< Metadata reference (for debug info)
 block|}
 enum|;
 name|private
@@ -229,6 +235,11 @@ name|int64_t
 name|ImmVal
 decl_stmt|;
 comment|// For MO_Immediate.
+name|MDNode
+modifier|*
+name|MD
+decl_stmt|;
+comment|// For MO_Metadata.
 struct|struct
 block|{
 comment|// For MO_Register.
@@ -518,6 +529,18 @@ return|return
 name|OpKind
 operator|==
 name|MO_BlockAddress
+return|;
+block|}
+comment|/// isMetadata - Tests if this is a MO_Metadata operand.
+name|bool
+name|isMetadata
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_Metadata
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1106,6 +1129,27 @@ operator|.
 name|Val
 operator|.
 name|SymbolName
+return|;
+block|}
+specifier|const
+name|MDNode
+operator|*
+name|getMetadata
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isMetadata
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|Contents
+operator|.
+name|MD
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1780,6 +1824,48 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// Offset is always 0.
+name|Op
+operator|.
+name|setTargetFlags
+argument_list|(
+name|TargetFlags
+argument_list|)
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
+name|CreateMetadata
+parameter_list|(
+name|MDNode
+modifier|*
+name|Meta
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
+parameter_list|)
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_Metadata
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|MD
+operator|=
+name|Meta
+expr_stmt|;
 name|Op
 operator|.
 name|setTargetFlags

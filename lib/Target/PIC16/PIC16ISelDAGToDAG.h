@@ -187,14 +187,16 @@ name|SDNode
 operator|*
 name|Select
 argument_list|(
-argument|SDValue N
+name|SDNode
+operator|*
+name|N
 argument_list|)
 block|;
 comment|// Match direct address complex pattern.
 name|bool
 name|SelectDirectAddr
 argument_list|(
-argument|SDValue Op
+argument|SDNode *Op
 argument_list|,
 argument|SDValue N
 argument_list|,

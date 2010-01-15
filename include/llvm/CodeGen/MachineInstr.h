@@ -1066,6 +1066,20 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// addRegisterDefined - We have determined MI defines a register. Make sure
+comment|/// there is an operand defining Reg.
+name|void
+name|addRegisterDefined
+parameter_list|(
+name|unsigned
+name|IncomingReg
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|*
+name|RegInfo
+parameter_list|)
+function_decl|;
 comment|/// isSafeToMove - Return true if it is safe to move this instruction. If
 comment|/// SawStore is set to true, it means that there is a store (or call) between
 comment|/// the instruction's location and its intended destination.

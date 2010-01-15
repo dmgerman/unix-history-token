@@ -34,7 +34,7 @@ block|{
 endif|#
 directive|endif
 comment|/* Builds a module from the bitcode in the specified memory buffer, returning a    reference to the module via the OutModule parameter. Returns 0 on success.    Optionally returns a human-readable error message via OutMessage. */
-name|int
+name|LLVMBool
 name|LLVMParseBitcode
 parameter_list|(
 name|LLVMMemoryBufferRef
@@ -50,7 +50,7 @@ modifier|*
 name|OutMessage
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMParseBitcodeInContext
 parameter_list|(
 name|LLVMContextRef
@@ -70,7 +70,7 @@ name|OutMessage
 parameter_list|)
 function_decl|;
 comment|/* Reads a module from the specified path, returning via the OutMP parameter    a module provider which performs lazy deserialization. Returns 0 on success.    Optionally returns a human-readable error message via OutMessage. */
-name|int
+name|LLVMBool
 name|LLVMGetBitcodeModuleProvider
 parameter_list|(
 name|LLVMMemoryBufferRef
@@ -86,7 +86,7 @@ modifier|*
 name|OutMessage
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMGetBitcodeModuleProviderInContext
 parameter_list|(
 name|LLVMContextRef

@@ -3323,6 +3323,9 @@ name|SelectionDAG
 modifier|&
 name|DAG
 decl_stmt|;
+name|bool
+name|ShrinkOps
+decl_stmt|;
 name|SDValue
 name|Old
 decl_stmt|;
@@ -3332,14 +3335,19 @@ decl_stmt|;
 name|explicit
 name|TargetLoweringOpt
 argument_list|(
-name|SelectionDAG
-operator|&
-name|InDAG
+argument|SelectionDAG&InDAG
+argument_list|,
+argument|bool Shrink = false
 argument_list|)
-operator|:
+block|:
 name|DAG
 argument_list|(
-argument|InDAG
+name|InDAG
+argument_list|)
+operator|,
+name|ShrinkOps
+argument_list|(
+argument|Shrink
 argument_list|)
 block|{}
 name|bool
@@ -5855,7 +5863,7 @@ name|false
 return|;
 block|}
 comment|/// isZExtFree - Return true if any actual instruction that defines a
-comment|/// value of type Ty1 implicit zero-extends the value to Ty2 in the result
+comment|/// value of type Ty1 implicitly zero-extends the value to Ty2 in the result
 comment|/// register. This does not necessarily include registers defined in
 comment|/// unknown ways, such as incoming arguments, or copies from unknown
 comment|/// virtual registers. Also, if isTruncateFree(Ty2, Ty1) is true, this

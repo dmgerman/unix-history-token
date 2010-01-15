@@ -49,6 +49,10 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+typedef|typedef
+name|int
+name|LLVMBool
+typedef|;
 comment|/* Opaque types. */
 comment|/**  * The top-level container for all LLVM global data.  See the LLVMContext class.  */
 typedef|typedef
@@ -806,7 +810,7 @@ name|Triple
 parameter_list|)
 function_decl|;
 comment|/** See Module::addTypeName. */
-name|int
+name|LLVMBool
 name|LLVMAddTypeName
 parameter_list|(
 name|LLVMModuleRef
@@ -1041,11 +1045,11 @@ parameter_list|,
 name|unsigned
 name|ParamCount
 parameter_list|,
-name|int
+name|LLVMBool
 name|IsVarArg
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMIsFunctionVarArg
 parameter_list|(
 name|LLVMTypeRef
@@ -1091,7 +1095,7 @@ parameter_list|,
 name|unsigned
 name|ElementCount
 parameter_list|,
-name|int
+name|LLVMBool
 name|Packed
 parameter_list|)
 function_decl|;
@@ -1105,7 +1109,7 @@ parameter_list|,
 name|unsigned
 name|ElementCount
 parameter_list|,
-name|int
+name|LLVMBool
 name|Packed
 parameter_list|)
 function_decl|;
@@ -1127,7 +1131,7 @@ modifier|*
 name|Dest
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMIsPackedStruct
 parameter_list|(
 name|LLVMTypeRef
@@ -1274,7 +1278,7 @@ parameter_list|(
 name|macro
 parameter_list|)
 define|\
-value|macro(Argument)                           \   macro(BasicBlock)                         \   macro(InlineAsm)                          \   macro(User)                               \     macro(Constant)                         \       macro(ConstantAggregateZero)          \       macro(ConstantArray)                  \       macro(ConstantExpr)                   \       macro(ConstantFP)                     \       macro(ConstantInt)                    \       macro(ConstantPointerNull)            \       macro(ConstantStruct)                 \       macro(ConstantVector)                 \       macro(GlobalValue)                    \         macro(Function)                     \         macro(GlobalAlias)                  \         macro(GlobalVariable)               \       macro(UndefValue)                     \     macro(Instruction)                      \       macro(BinaryOperator)                 \       macro(CallInst)                       \         macro(IntrinsicInst)                \           macro(DbgInfoIntrinsic)           \             macro(DbgDeclareInst)           \             macro(DbgFuncStartInst)         \             macro(DbgRegionEndInst)         \             macro(DbgRegionStartInst)       \             macro(DbgStopPointInst)         \           macro(EHSelectorInst)             \           macro(MemIntrinsic)               \             macro(MemCpyInst)               \             macro(MemMoveInst)              \             macro(MemSetInst)               \       macro(CmpInst)                        \       macro(FCmpInst)                       \       macro(ICmpInst)                       \       macro(ExtractElementInst)             \       macro(GetElementPtrInst)              \       macro(InsertElementInst)              \       macro(InsertValueInst)                \       macro(PHINode)                        \       macro(SelectInst)                     \       macro(ShuffleVectorInst)              \       macro(StoreInst)                      \       macro(TerminatorInst)                 \         macro(BranchInst)                   \         macro(InvokeInst)                   \         macro(ReturnInst)                   \         macro(SwitchInst)                   \         macro(UnreachableInst)              \         macro(UnwindInst)                   \     macro(UnaryInstruction)                 \       macro(AllocaInst)                     \       macro(CastInst)                       \         macro(BitCastInst)                  \         macro(FPExtInst)                    \         macro(FPToSIInst)                   \         macro(FPToUIInst)                   \         macro(FPTruncInst)                  \         macro(IntToPtrInst)                 \         macro(PtrToIntInst)                 \         macro(SExtInst)                     \         macro(SIToFPInst)                   \         macro(TruncInst)                    \         macro(UIToFPInst)                   \         macro(ZExtInst)                     \       macro(ExtractValueInst)               \       macro(LoadInst)                       \       macro(VAArgInst)
+value|macro(Argument)                           \   macro(BasicBlock)                         \   macro(InlineAsm)                          \   macro(User)                               \     macro(Constant)                         \       macro(ConstantAggregateZero)          \       macro(ConstantArray)                  \       macro(ConstantExpr)                   \       macro(ConstantFP)                     \       macro(ConstantInt)                    \       macro(ConstantPointerNull)            \       macro(ConstantStruct)                 \       macro(ConstantVector)                 \       macro(GlobalValue)                    \         macro(Function)                     \         macro(GlobalAlias)                  \         macro(GlobalVariable)               \       macro(UndefValue)                     \     macro(Instruction)                      \       macro(BinaryOperator)                 \       macro(CallInst)                       \         macro(IntrinsicInst)                \           macro(DbgInfoIntrinsic)           \             macro(DbgDeclareInst)           \           macro(EHSelectorInst)             \           macro(MemIntrinsic)               \             macro(MemCpyInst)               \             macro(MemMoveInst)              \             macro(MemSetInst)               \       macro(CmpInst)                        \       macro(FCmpInst)                       \       macro(ICmpInst)                       \       macro(ExtractElementInst)             \       macro(GetElementPtrInst)              \       macro(InsertElementInst)              \       macro(InsertValueInst)                \       macro(PHINode)                        \       macro(SelectInst)                     \       macro(ShuffleVectorInst)              \       macro(StoreInst)                      \       macro(TerminatorInst)                 \         macro(BranchInst)                   \         macro(InvokeInst)                   \         macro(ReturnInst)                   \         macro(SwitchInst)                   \         macro(UnreachableInst)              \         macro(UnwindInst)                   \     macro(UnaryInstruction)                 \       macro(AllocaInst)                     \       macro(CastInst)                       \         macro(BitCastInst)                  \         macro(FPExtInst)                    \         macro(FPToSIInst)                   \         macro(FPToUIInst)                   \         macro(FPTruncInst)                  \         macro(IntToPtrInst)                 \         macro(PtrToIntInst)                 \         macro(SExtInst)                     \         macro(SIToFPInst)                   \         macro(TruncInst)                    \         macro(UIToFPInst)                   \         macro(ZExtInst)                     \       macro(ExtractValueInst)               \       macro(LoadInst)                       \       macro(VAArgInst)
 comment|/* Operations on all values */
 name|LLVMTypeRef
 name|LLVMTypeOf
@@ -1398,21 +1402,21 @@ name|LLVMTypeRef
 name|Ty
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMIsConstant
 parameter_list|(
 name|LLVMValueRef
 name|Val
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMIsNull
 parameter_list|(
 name|LLVMValueRef
 name|Val
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMIsUndef
 parameter_list|(
 name|LLVMValueRef
@@ -1438,7 +1442,7 @@ name|long
 name|long
 name|N
 parameter_list|,
-name|int
+name|LLVMBool
 name|SignExtend
 parameter_list|)
 function_decl|;
@@ -1544,7 +1548,7 @@ parameter_list|,
 name|unsigned
 name|Length
 parameter_list|,
-name|int
+name|LLVMBool
 name|DontNullTerminate
 parameter_list|)
 function_decl|;
@@ -1561,7 +1565,7 @@ parameter_list|,
 name|unsigned
 name|Count
 parameter_list|,
-name|int
+name|LLVMBool
 name|Packed
 parameter_list|)
 function_decl|;
@@ -1576,7 +1580,7 @@ parameter_list|,
 name|unsigned
 name|Length
 parameter_list|,
-name|int
+name|LLVMBool
 name|DontNullTerminate
 parameter_list|)
 function_decl|;
@@ -1604,7 +1608,7 @@ parameter_list|,
 name|unsigned
 name|Count
 parameter_list|,
-name|int
+name|LLVMBool
 name|Packed
 parameter_list|)
 function_decl|;
@@ -2085,7 +2089,7 @@ parameter_list|,
 name|LLVMTypeRef
 name|ToType
 parameter_list|,
-name|unsigned
+name|LLVMBool
 name|isSigned
 parameter_list|)
 function_decl|;
@@ -2195,8 +2199,11 @@ name|char
 modifier|*
 name|Constraints
 parameter_list|,
-name|int
+name|LLVMBool
 name|HasSideEffects
+parameter_list|,
+name|LLVMBool
+name|IsAlignStack
 parameter_list|)
 function_decl|;
 comment|/* Operations on global variables, functions, and aliases (globals) */
@@ -2207,7 +2214,7 @@ name|LLVMValueRef
 name|Global
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMIsDeclaration
 parameter_list|(
 name|LLVMValueRef
@@ -2366,7 +2373,7 @@ name|LLVMValueRef
 name|ConstantVal
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMIsThreadLocal
 parameter_list|(
 name|LLVMValueRef
@@ -2379,11 +2386,11 @@ parameter_list|(
 name|LLVMValueRef
 name|GlobalVar
 parameter_list|,
-name|int
+name|LLVMBool
 name|IsThreadLocal
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMIsGlobalConstant
 parameter_list|(
 name|LLVMValueRef
@@ -2396,7 +2403,7 @@ parameter_list|(
 name|LLVMValueRef
 name|GlobalVar
 parameter_list|,
-name|int
+name|LLVMBool
 name|IsConstant
 parameter_list|)
 function_decl|;
@@ -2663,7 +2670,7 @@ name|LLVMBasicBlockRef
 name|BB
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMValueIsBasicBlock
 parameter_list|(
 name|LLVMValueRef
@@ -2890,7 +2897,7 @@ name|align
 parameter_list|)
 function_decl|;
 comment|/* Operations on call instructions (only) */
-name|int
+name|LLVMBool
 name|LLVMIsTailCall
 parameter_list|(
 name|LLVMValueRef
@@ -2903,7 +2910,7 @@ parameter_list|(
 name|LLVMValueRef
 name|CallInst
 parameter_list|,
-name|int
+name|LLVMBool
 name|IsTailCall
 parameter_list|)
 function_decl|;
@@ -4324,7 +4331,7 @@ name|MP
 parameter_list|)
 function_decl|;
 comment|/*===-- Memory buffers ----------------------------------------------------===*/
-name|int
+name|LLVMBool
 name|LLVMCreateMemoryBufferWithContentsOfFile
 parameter_list|(
 specifier|const
@@ -4342,7 +4349,7 @@ modifier|*
 name|OutMessage
 parameter_list|)
 function_decl|;
-name|int
+name|LLVMBool
 name|LLVMCreateMemoryBufferWithSTDIN
 parameter_list|(
 name|LLVMMemoryBufferRef
@@ -4379,7 +4386,7 @@ name|MP
 parameter_list|)
 function_decl|;
 comment|/** Initializes, executes on the provided module, and finalizes all of the     passes scheduled in the pass manager. Returns 1 if any of the passes     modified the module, 0 otherwise. See llvm::PassManager::run(Module&). */
-name|int
+name|LLVMBool
 name|LLVMRunPassManager
 parameter_list|(
 name|LLVMPassManagerRef
@@ -4390,7 +4397,7 @@ name|M
 parameter_list|)
 function_decl|;
 comment|/** Initializes all of the function passes scheduled in the function pass     manager. Returns 1 if any of the passes modified the module, 0 otherwise.     See llvm::FunctionPassManager::doInitialization. */
-name|int
+name|LLVMBool
 name|LLVMInitializeFunctionPassManager
 parameter_list|(
 name|LLVMPassManagerRef
@@ -4398,7 +4405,7 @@ name|FPM
 parameter_list|)
 function_decl|;
 comment|/** Executes all of the function passes scheduled in the function pass manager     on the provided function. Returns 1 if any of the passes modified the     function, false otherwise.     See llvm::FunctionPassManager::run(Function&). */
-name|int
+name|LLVMBool
 name|LLVMRunFunctionPassManager
 parameter_list|(
 name|LLVMPassManagerRef
@@ -4409,7 +4416,7 @@ name|F
 parameter_list|)
 function_decl|;
 comment|/** Finalizes all of the function passes scheduled in in the function pass     manager. Returns 1 if any of the passes modified the module, 0 otherwise.     See llvm::FunctionPassManager::doFinalization. */
-name|int
+name|LLVMBool
 name|LLVMFinalizeFunctionPassManager
 parameter_list|(
 name|LLVMPassManagerRef

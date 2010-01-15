@@ -797,7 +797,7 @@ name|Count
 operator|=
 literal|0
 expr_stmt|;
-comment|// bisecton method for count leading zeros
+comment|// bisection method for count leading zeros
 for|for
 control|(
 name|unsigned
@@ -944,7 +944,7 @@ name|Count
 operator|=
 literal|0
 expr_stmt|;
-comment|// bisecton method for count leading zeros
+comment|// bisection method for count leading zeros
 for|for
 control|(
 name|unsigned

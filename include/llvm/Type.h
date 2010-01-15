@@ -586,6 +586,14 @@ operator|==
 name|IntegerTyID
 return|;
 block|}
+comment|/// isInteger - Return true if this is an IntegerType of the specified width.
+name|bool
+name|isInteger
+argument_list|(
+argument|unsigned Bitwidth
+argument_list|)
+specifier|const
+block|;
 comment|/// isIntOrIntVector - Return true if this is an integer type or a vector of
 comment|/// integer types.
 comment|///

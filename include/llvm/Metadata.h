@@ -121,7 +121,7 @@ name|class
 name|SymbolTableListTraits
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|// MetadataBase  - A base class for MDNode, MDString and NamedMDNode.
+comment|// MetadataBase  - A base class for MDNode and MDString.
 name|class
 name|MetadataBase
 range|:
@@ -180,13 +180,6 @@ name|getValueID
 argument_list|()
 operator|==
 name|MDNodeVal
-operator|||
-name|V
-operator|->
-name|getValueID
-argument_list|()
-operator|==
-name|NamedMDNodeVal
 return|;
 block|}
 expr|}
@@ -408,6 +401,24 @@ operator|<<
 literal|2
 block|}
 block|;
+comment|// FunctionLocal enums.
+block|enum
+name|FunctionLocalness
+block|{
+name|FL_Unknown
+operator|=
+operator|-
+literal|1
+block|,
+name|FL_No
+operator|=
+literal|0
+block|,
+name|FL_Yes
+operator|=
+literal|1
+block|}
+block|;
 comment|// Replace each instance of F from the operand list of this node with T.
 name|void
 name|replaceOperand
@@ -439,6 +450,20 @@ argument_list|,
 argument|bool isFunctionLocal
 argument_list|)
 block|;
+specifier|static
+name|MDNode
+operator|*
+name|getMDNode
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|Value *const *Vals
+argument_list|,
+argument|unsigned NumVals
+argument_list|,
+argument|FunctionLocalness FL
+argument_list|)
+block|;
 name|public
 operator|:
 comment|// Constructors and destructors.
@@ -452,8 +477,22 @@ argument_list|,
 argument|Value *const *Vals
 argument_list|,
 argument|unsigned NumVals
+argument_list|)
+block|;
+comment|// getWhenValsUnresolved - Construct MDNode determining function-localness
+comment|// from isFunctionLocal argument, not by analyzing Vals.
+specifier|static
+name|MDNode
+operator|*
+name|getWhenValsUnresolved
+argument_list|(
+argument|LLVMContext&Context
 argument_list|,
-argument|bool isFunctionLocal = false
+argument|Value *const *Vals
+argument_list|,
+argument|unsigned NumVals
+argument_list|,
+argument|bool isFunctionLocal
 argument_list|)
 block|;
 comment|/// getOperand - Return specified operand.
@@ -495,6 +534,15 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|// getFunction - If this metadata is function-local and recursively has a
+comment|// function-local operand, return the first such operand's parent function.
+comment|// Otherwise, return null.
+name|Function
+operator|*
+name|getFunction
+argument_list|()
+specifier|const
+block|;
 comment|// destroy - Delete this node.  Only when there are no uses.
 name|void
 name|destroy
@@ -586,13 +634,13 @@ block|;   }
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// NamedMDNode - a tuple of other metadata.
+comment|/// NamedMDNode - a tuple of MDNodes.
 comment|/// NamedMDNode is always named. All NamedMDNode operand has a type of metadata.
 name|class
 name|NamedMDNode
 operator|:
 name|public
-name|MetadataBase
+name|Value
 block|,
 name|public
 name|ilist_node
@@ -610,6 +658,13 @@ name|Module
 operator|>
 block|;
 name|friend
+expr|struct
+name|ilist_traits
+operator|<
+name|NamedMDNode
+operator|>
+block|;
+name|friend
 name|class
 name|LLVMContextImpl
 block|;
@@ -621,6 +676,11 @@ operator|&
 argument_list|)
 block|;
 comment|// DO NOT IMPLEMENT
+name|std
+operator|::
+name|string
+name|Name
+block|;
 name|Module
 operator|*
 name|Parent
@@ -629,7 +689,7 @@ name|void
 operator|*
 name|Operands
 block|;
-comment|// SmallVector<TrackingVH<MetadataBase>, 4>
+comment|// SmallVector<WeakVH<MDNode>, 4>
 name|void
 name|setParent
 argument_list|(
@@ -649,7 +709,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|const Twine&N
 argument_list|,
-argument|MetadataBase*const *Vals
+argument|MDNode*const *Vals
 argument_list|,
 argument|unsigned NumVals
 argument_list|,
@@ -668,7 +728,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|const Twine&N
 argument_list|,
-argument|MetadataBase *const *MDs
+argument|MDNode *const *MDs
 argument_list|,
 argument|unsigned NumMDs
 argument_list|,
@@ -749,7 +809,7 @@ name|Parent
 return|;
 block|}
 comment|/// getOperand - Return specified operand.
-name|MetadataBase
+name|MDNode
 operator|*
 name|getOperand
 argument_list|(
@@ -767,10 +827,26 @@ comment|/// addOperand - Add metadata operand.
 name|void
 name|addOperand
 argument_list|(
-name|MetadataBase
+name|MDNode
 operator|*
 name|M
 argument_list|)
+block|;
+comment|/// setName - Set the name of this named metadata.
+name|void
+name|setName
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|NewName
+argument_list|)
+block|;
+comment|/// getName - Return a constant reference to this named metadata's name.
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static

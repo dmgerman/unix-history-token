@@ -888,9 +888,9 @@ argument|APInt F
 argument_list|,
 argument|APInt L
 argument_list|,
-argument|Value* SV
+argument|Value *SV
 argument_list|,
-argument|MachineBasicBlock* H
+argument|MachineBasicBlock *H
 argument_list|,
 argument|bool E = false
 argument_list|)

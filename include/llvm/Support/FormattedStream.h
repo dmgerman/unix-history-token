@@ -402,6 +402,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// fdbgs() - This returns a reference to a formatted_raw_ostream for
+end_comment
+
+begin_comment
+comment|/// debug output.  Use it like: fdbgs()<< "foo"<< "bar";
+end_comment
+
+begin_function_decl
+name|formatted_raw_ostream
+modifier|&
+name|fdbgs
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 unit|}
 comment|// end llvm namespace
 end_comment

@@ -48,7 +48,7 @@ block|}
 name|LLVMVerifierFailureAction
 typedef|;
 comment|/* Verifies that a module is valid, taking the specified action if not.    Optionally returns a human-readable description of any invalid constructs.    OutMessage must be disposed with LLVMDisposeMessage. */
-name|int
+name|LLVMBool
 name|LLVMVerifyModule
 parameter_list|(
 name|LLVMModuleRef
@@ -64,7 +64,7 @@ name|OutMessage
 parameter_list|)
 function_decl|;
 comment|/* Verifies that a single function is valid, taking the specified action. Useful    for debugging. */
-name|int
+name|LLVMBool
 name|LLVMVerifyFunction
 parameter_list|(
 name|LLVMValueRef

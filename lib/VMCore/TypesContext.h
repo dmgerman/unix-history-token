@@ -1641,7 +1641,7 @@ directive|ifdef
 name|DEBUG_MERGE_TYPES
 name|DEBUG
 argument_list|(
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"RefineAbstractType("
@@ -2157,7 +2157,7 @@ directive|ifdef
 name|DEBUG_MERGE_TYPES
 name|DEBUG
 argument_list|(
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|"TypeMap<>::"
@@ -2208,7 +2208,7 @@ name|I
 control|)
 name|DEBUG
 argument_list|(
-name|errs
+name|dbgs
 argument_list|()
 operator|<<
 literal|" "

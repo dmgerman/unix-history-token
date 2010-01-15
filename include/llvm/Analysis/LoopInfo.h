@@ -3236,6 +3236,11 @@ name|getUniqueExitBlock
 argument_list|()
 specifier|const
 expr_stmt|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|friend

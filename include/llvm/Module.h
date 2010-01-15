@@ -109,6 +109,9 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
+name|class
+name|MDSymbolTable
+decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -345,6 +348,22 @@ argument_list|,
 argument|NamedMDNode*
 argument_list|)
 block|{}
+name|void
+name|addNodeToList
+argument_list|(
+name|NamedMDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|void
+name|removeNodeFromList
+argument_list|(
+name|NamedMDNode
+operator|*
+name|N
+argument_list|)
+block|;
 name|private
 operator|:
 name|mutable
@@ -567,6 +586,11 @@ name|string
 name|DataLayout
 expr_stmt|;
 comment|///< Target data description
+name|MDSymbolTable
+modifier|*
+name|NamedMDSymTab
+decl_stmt|;
+comment|///< NamedMDNode names.
 name|friend
 name|class
 name|Constant
@@ -1269,6 +1293,30 @@ block|{
 return|return
 operator|*
 name|TypeSymTab
+return|;
+block|}
+comment|/// Get the symbol table of named metadata
+specifier|const
+name|MDSymbolTable
+operator|&
+name|getMDSymbolTable
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|NamedMDSymTab
+return|;
+block|}
+comment|/// Get the Module's symbol table of named metadata
+name|MDSymbolTable
+modifier|&
+name|getMDSymbolTable
+parameter_list|()
+block|{
+return|return
+operator|*
+name|NamedMDSymTab
 return|;
 block|}
 comment|/// @}

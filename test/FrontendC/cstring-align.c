@@ -7,6 +7,14 @@ begin_comment
 comment|// RUN: %llvmgcc %s -c -Os -m64 -emit-llvm -o - | llc -march=x86-64 -mtriple=x86_64-apple-darwin10 | FileCheck %s -check-prefix=DARWIN64
 end_comment
 
+begin_comment
+comment|// XFAIL: *
+end_comment
+
+begin_comment
+comment|// XTARGET: darwin
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
