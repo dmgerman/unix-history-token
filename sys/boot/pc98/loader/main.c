@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libpc98/libpc98.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"btxv86.h"
 end_include
 
@@ -253,6 +259,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* Set machine type to PC98_SYSTEM_PARAMETER. */
+name|set_machine_type
+argument_list|()
+expr_stmt|;
 comment|/* Pick up arguments */
 name|kargs
 operator|=
