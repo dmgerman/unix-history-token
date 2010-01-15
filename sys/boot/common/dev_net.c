@@ -109,6 +109,12 @@ directive|include
 file|"bootstrap.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|debug
@@ -116,6 +122,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -225,6 +236,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|net_init
 parameter_list|(
@@ -244,6 +256,7 @@ comment|/*  * Called by devopen after it sets f->f_dev to our devsw entry.  * Th
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|net_open
 parameter_list|(
@@ -331,6 +344,9 @@ name|ENXIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -340,6 +356,8 @@ argument_list|(
 literal|"net_open: netif_open() succeeded\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -404,6 +422,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|net_close
 parameter_list|(
@@ -476,6 +495,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -485,6 +507,8 @@ argument_list|(
 literal|"net_close: calling netif_close()\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|netif_close
 argument_list|(
 name|netdev_sock
@@ -505,6 +529,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|net_strategy
 parameter_list|()
@@ -616,6 +641,9 @@ condition|)
 goto|goto
 name|exit
 goto|;
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -625,6 +653,8 @@ argument_list|(
 literal|"net_open: BOOTP failed, trying RARP/RPC...\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* 	 * Use RARP to get our IP address.  This also sets our 	 * netmask to the "natural" default for our address. 	 */
@@ -677,6 +707,9 @@ name|EIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -688,6 +721,8 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Ignore the gateway from whoami (unreliable). 	 * Use the "gateway" parameter instead. 	 */
 name|smask
 operator|=
@@ -734,6 +769,9 @@ name|netmask
 operator|=
 name|smask
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -748,7 +786,12 @@ name|netmask
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|gateip
@@ -767,6 +810,8 @@ name|gateip
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Get the root server and pathname. */
 if|if
 condition|(
@@ -930,6 +975,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -953,6 +1001,8 @@ name|rootpath
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|d
 operator|=
 name|socktodesc
