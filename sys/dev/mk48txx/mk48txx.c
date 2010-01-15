@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Mostek MK48T02, MK48T08, MK48T18, MK48T59 time-of-day chip subroutines.  */
+comment|/*  * Mostek MK48T02, MK48T08, MK48T18, MK48T59 time-of-day chip subroutines  */
 end_comment
 
 begin_include
@@ -99,8 +99,10 @@ name|uint8_t
 name|mk48txx_def_nvrd
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|int
+name|off
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -111,10 +113,13 @@ name|void
 name|mk48txx_def_nvwr
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|int
+name|off
 parameter_list|,
 name|uint8_t
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -126,16 +131,21 @@ name|mk48txx_watchdog
 parameter_list|(
 name|void
 modifier|*
+name|arg
 parameter_list|,
 name|u_int
+name|cmd
 parameter_list|,
 name|int
 modifier|*
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 block|{
 specifier|const
@@ -149,15 +159,16 @@ decl_stmt|;
 name|bus_size_t
 name|clkoff
 decl_stmt|;
-name|int
+name|u_int
 name|flags
 decl_stmt|;
 define|#
 directive|define
 name|MK48TXX_EXT_REGISTERS
 value|1
-comment|/* Has extended register set */
+comment|/* Has extended register set. */
 block|}
+decl|const
 name|mk48txx_models
 index|[]
 init|=
@@ -570,7 +581,7 @@ argument_list|,
 literal|1000000
 argument_list|)
 expr_stmt|;
-comment|/* 1 second resolution. */
+comment|/* 1 second resolution */
 if|if
 condition|(
 operator|(
