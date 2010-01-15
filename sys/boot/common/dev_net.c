@@ -130,6 +130,14 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|netdev_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|netdev_sock
 init|=
@@ -177,6 +185,16 @@ parameter_list|(
 name|struct
 name|open_file
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|net_cleanup
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -231,6 +249,8 @@ block|,
 name|noioctl
 block|,
 name|net_print
+block|,
+name|net_cleanup
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -303,6 +323,30 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETIF_OPEN_CLOSE_ONCE
+comment|/* Before opening another interface, close the previous one first. */
+if|if
+condition|(
+name|netdev_sock
+operator|>=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|devname
+argument_list|,
+name|netdev_name
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|net_cleanup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* On first open, do netif open, mount, etc. */
 if|if
 condition|(
@@ -344,6 +388,13 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|netdev_name
+operator|=
+name|strdup
+argument_list|(
+name|devname
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NETIF_DEBUG
@@ -382,6 +433,11 @@ name|error
 condition|)
 block|{
 comment|/* getparams makes its own noise */
+name|free
+argument_list|(
+name|netdev_name
+argument_list|)
+expr_stmt|;
 name|netif_close
 argument_list|(
 name|netdev_sock
@@ -448,13 +504,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* On last close, do netif close, etc. */
 name|f
 operator|->
 name|f_devdata
 operator|=
 name|NULL
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NETIF_OPEN_CLOSE_ONCE
 comment|/* Extra close call? */
 if|if
 condition|(
@@ -482,12 +540,42 @@ operator|(
 literal|0
 operator|)
 return|;
-name|rootip
-operator|.
-name|s_addr
-operator|=
-literal|0
+comment|/* On last close, do netif close, etc. */
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"net_close: calling net_cleanup()\n"
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|net_cleanup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|net_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 if|if
 condition|(
 name|netdev_sock
@@ -504,11 +592,22 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"net_close: calling netif_close()\n"
+literal|"net_cleanup: calling netif_close()\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|rootip
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+name|free
+argument_list|(
+name|netdev_name
+argument_list|)
+expr_stmt|;
 name|netif_close
 argument_list|(
 name|netdev_sock
@@ -520,11 +619,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
