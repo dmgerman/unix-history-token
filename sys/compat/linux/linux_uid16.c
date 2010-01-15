@@ -459,8 +459,10 @@ operator|<
 literal|0
 operator|||
 name|ngrp
-operator|>
+operator|>=
 name|ngroups_max
+operator|+
+literal|1
 condition|)
 return|return
 operator|(
