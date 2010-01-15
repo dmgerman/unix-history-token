@@ -566,7 +566,7 @@ block|,
 block|{
 name|GETLINE
 block|,
-literal|"getline"
+literal|"awkgetline"
 block|,
 literal|"getline"
 block|}

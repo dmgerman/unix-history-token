@@ -941,7 +941,7 @@ comment|/* STRING */
 function_decl|nullproc
 operator|,
 comment|/* REGEXPR */
-function_decl|getline
+function_decl|awkgetline
 operator|,
 comment|/* GETLINE */
 function_decl|substr
