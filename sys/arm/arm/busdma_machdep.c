@@ -2439,11 +2439,6 @@ name|bus_dmamap_t
 name|map
 parameter_list|)
 block|{
-name|_busdma_free_dmamap
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|STAILQ_FIRST
@@ -2476,6 +2471,11 @@ name|EBUSY
 operator|)
 return|;
 block|}
+name|_busdma_free_dmamap
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dmat
