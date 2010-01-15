@@ -1647,9 +1647,14 @@ operator|-=
 name|PAGE_SIZE_4M
 control|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"demapping unused kernel TLB slot (va %#lx - %#lx)\n"
+literal|"demapping unused kernel TLB slot "
+literal|"(va %#lx - %#lx)\n"
 argument_list|,
 name|va
 argument_list|,
@@ -2930,48 +2935,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_FREEBSD4
-end_ifdef
-
-begin_function
-name|int
-name|freebsd4_sigreturn
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|freebsd4_sigreturn_args
-modifier|*
-name|uap
-parameter_list|)
-block|{
-return|return
-name|sigreturn
-argument_list|(
-name|td
-argument_list|,
-operator|(
-expr|struct
-name|sigreturn_args
-operator|*
-operator|)
-name|uap
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Construct a PCB from a trapframe. This is called from kdb_trap() where  * we want to start a backtrace from the function that caused us to enter  * the debugger. We have the context in the trapframe, but base the trace  * on the PCB. The PCB doesn't have to be perfect, as long as it contains  * enough for a backtrace.  */
