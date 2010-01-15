@@ -1842,6 +1842,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|dev_cleanup
+argument_list|()
+expr_stmt|;
 name|entry
 operator|=
 name|e
