@@ -135,6 +135,9 @@ decl_stmt|;
 name|uint8_t
 name|sc_pci_secbus
 decl_stmt|;
+name|uint8_t
+name|sc_pci_subbus
+decl_stmt|;
 name|struct
 name|ofw_bus_iinfo
 name|sc_pci_iinfo
