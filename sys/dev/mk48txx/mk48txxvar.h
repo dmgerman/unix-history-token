@@ -44,14 +44,12 @@ begin_struct
 struct|struct
 name|mk48txx_softc
 block|{
-name|bus_space_tag_t
-name|sc_bst
+name|struct
+name|resource
+modifier|*
+name|sc_res
 decl_stmt|;
-comment|/* bus space tag */
-name|bus_space_handle_t
-name|sc_bsh
-decl_stmt|;
-comment|/* bus space handle */
+comment|/* bus resource */
 name|struct
 name|mtx
 name|sc_mtx
