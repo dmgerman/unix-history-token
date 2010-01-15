@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	  * $NetBSD: dev_net.c,v 1.12 1997/12/10 20:38:37 gwr Exp $  */
+comment|/*  * $NetBSD: dev_net.c,v 1.12 1997/12/10 20:38:37 gwr Exp $  */
 end_comment
 
 begin_comment
@@ -232,7 +232,9 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -405,13 +407,11 @@ begin_function
 name|int
 name|net_close
 parameter_list|(
-name|f
-parameter_list|)
 name|struct
 name|open_file
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -510,7 +510,9 @@ name|net_strategy
 parameter_list|()
 block|{
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 end_function
@@ -561,11 +563,9 @@ specifier|static
 name|int
 name|net_getparams
 parameter_list|(
-name|sock
-parameter_list|)
 name|int
 name|sock
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -593,7 +593,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SUPPORT_BOOTP
-comment|/*      * Try to get boot info using BOOTP.  If we succeed, then      * the server IP address, gateway, and root path will all      * be initialized.  If any remain uninitialized, we will      * use RARP and RPC/bootparam (the Sun way) to get them.      */
+comment|/* 	 * Try to get boot info using BOOTP.  If we succeed, then 	 * the server IP address, gateway, and root path will all 	 * be initialized.  If any remain uninitialized, we will 	 * use RARP and RPC/bootparam (the Sun way) to get them. 	 */
 if|if
 condition|(
 name|try_bootp
@@ -627,7 +627,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * Use RARP to get our IP address.  This also sets our      * netmask to the "natural" default for our address.      */
+comment|/* 	 * Use RARP to get our IP address.  This also sets our 	 * netmask to the "natural" default for our address. 	 */
 if|if
 condition|(
 name|rarp_getipaddress
@@ -688,7 +688,7 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-comment|/*      * Ignore the gateway from whoami (unreliable).      * Use the "gateway" parameter instead.      */
+comment|/* 	 * Ignore the gateway from whoami (unreliable). 	 * Use the "gateway" parameter instead. 	 */
 name|smask
 operator|=
 literal|0
@@ -796,7 +796,7 @@ return|;
 block|}
 name|exit
 label|:
-comment|/*      * If present, strip the server's address off of the rootpath      * before passing it along.  This allows us to be compatible with      * the kernel's diskless (BOOTP_NFSROOT) booting conventions      */
+comment|/* 	 * If present, strip the server's address off of the rootpath 	 * before passing it along.  This allows us to be compatible with 	 * the kernel's diskless (BOOTP_NFSROOT) booting conventions 	 */
 for|for
 control|(
 name|i
@@ -1056,7 +1056,99 @@ name|int
 name|verbose
 parameter_list|)
 block|{
-return|return;
+name|struct
+name|netif_driver
+modifier|*
+name|drv
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|d
+decl_stmt|,
+name|cnt
+decl_stmt|;
+name|cnt
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|d
+operator|=
+literal|0
+init|;
+name|netif_drivers
+index|[
+name|d
+index|]
+condition|;
+name|d
+operator|++
+control|)
+block|{
+name|drv
+operator|=
+name|netif_drivers
+index|[
+name|d
+index|]
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|drv
+operator|->
+name|netif_nifs
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|"\t%s%d:"
+argument_list|,
+literal|"net"
+argument_list|,
+name|cnt
+operator|++
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|" (%s%d)"
+argument_list|,
+name|drv
+operator|->
+name|netif_bname
+argument_list|,
+name|drv
+operator|->
+name|netif_ifs
+index|[
+name|i
+index|]
+operator|.
+name|dif_unit
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
