@@ -677,6 +677,10 @@ name|EIO
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|debug
+condition|)
 name|printf
 argument_list|(
 literal|"net_open: client name: %s\n"
@@ -730,6 +734,10 @@ name|netmask
 operator|=
 name|smask
 expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
 name|printf
 argument_list|(
 literal|"net_open: subnet mask: %s\n"
@@ -746,6 +754,8 @@ condition|(
 name|gateip
 operator|.
 name|s_addr
+operator|&&
+name|debug
 condition|)
 name|printf
 argument_list|(
@@ -786,7 +796,7 @@ return|;
 block|}
 name|exit
 label|:
-comment|/*        * If present, strip the server's address off of the rootpath      * before passing it along.  This allows us to be compatible with      * the kernel's diskless (BOOTP_NFSROOT) booting conventions      */
+comment|/*      * If present, strip the server's address off of the rootpath      * before passing it along.  This allows us to be compatible with      * the kernel's diskless (BOOTP_NFSROOT) booting conventions      */
 for|for
 control|(
 name|i
@@ -920,6 +930,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|debug
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"net_open: server addr: %s\n"
@@ -937,6 +952,7 @@ argument_list|,
 name|rootpath
 argument_list|)
 expr_stmt|;
+block|}
 name|d
 operator|=
 name|socktodesc
