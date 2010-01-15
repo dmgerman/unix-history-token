@@ -564,7 +564,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|isch
 parameter_list|(
@@ -625,7 +624,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|unsigned
 name|pword
 parameter_list|(
@@ -873,74 +871,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CDBOOT
-end_ifdef
-
-begin_function
-name|int
-name|strcasecmp
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s1
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|s2
-parameter_list|)
-block|{
-comment|/* 	 * We only consider ASCII chars and don't anticipate 	 * control characters (they are invalid in filenames 	 * anyway). 	 */
-while|while
-condition|(
-operator|(
-operator|*
-name|s1
-operator|&
-literal|0x5f
-operator|)
-operator|==
-operator|(
-operator|*
-name|s2
-operator|&
-literal|0x5f
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|*
-name|s1
-operator|++
-condition|)
-return|return
-literal|0
-return|;
-name|s2
-operator|++
-expr_stmt|;
-block|}
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !CDBOOT */
-end_comment
 
 begin_function
 name|void
@@ -1399,6 +1329,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SET_MACHINE_TYPE
+end_ifdef
+
 begin_function
 name|void
 name|machine_check
@@ -1633,6 +1569,11 @@ name|ret
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

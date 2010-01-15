@@ -252,9 +252,6 @@ argument_list|(
 name|di
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RAWBOOT
 if|if
 condition|(
 operator|(
@@ -432,9 +429,6 @@ operator|+
 name|sector
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* RAWBOOT */
 return|return
 literal|0
 return|;
