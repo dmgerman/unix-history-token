@@ -333,8 +333,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|enum
+name|lapic_clock
 name|using_lapic_timer
+init|=
+name|LAPIC_CLOCK_NONE
 decl_stmt|;
 end_decl_stmt
 
@@ -631,8 +634,9 @@ expr_stmt|;
 block|}
 name|KASSERT
 argument_list|(
-operator|!
 name|using_lapic_timer
+operator|==
+name|LAPIC_CLOCK_NONE
 argument_list|,
 operator|(
 literal|"clk interrupt enabled with lapic timer"
@@ -1449,6 +1453,8 @@ expr_stmt|;
 if|if
 condition|(
 name|using_lapic_timer
+operator|!=
+name|LAPIC_CLOCK_NONE
 condition|)
 name|new_i8254_real_max_count
 operator|=
@@ -1658,8 +1664,9 @@ expr_stmt|;
 comment|/* 	 * If we aren't using the local APIC timer to drive the kernel 	 * clocks, setup the interrupt handler for the 8254 timer 0 so 	 * that it can drive hardclock().  Otherwise, change the 8254 	 * timecounter to user a simpler algorithm. 	 */
 if|if
 condition|(
-operator|!
 name|using_lapic_timer
+operator|==
+name|LAPIC_CLOCK_NONE
 condition|)
 block|{
 name|intr_add_handler
@@ -1734,8 +1741,9 @@ expr_stmt|;
 comment|/* 	 * If the separate statistics clock hasn't been explicility disabled 	 * and we aren't already using the local APIC timer to drive the 	 * kernel clocks, then setup the RTC to periodically interrupt to 	 * drive statclock() and profclock(). 	 */
 if|if
 condition|(
-operator|!
 name|using_lapic_timer
+operator|!=
+name|LAPIC_CLOCK_ALL
 condition|)
 block|{
 name|using_atrtc_timer
@@ -1819,6 +1827,8 @@ block|{
 if|if
 condition|(
 name|using_lapic_timer
+operator|==
+name|LAPIC_CLOCK_ALL
 operator|||
 operator|!
 name|using_atrtc_timer
@@ -1848,6 +1858,8 @@ block|{
 if|if
 condition|(
 name|using_lapic_timer
+operator|==
+name|LAPIC_CLOCK_ALL
 operator|||
 operator|!
 name|using_atrtc_timer

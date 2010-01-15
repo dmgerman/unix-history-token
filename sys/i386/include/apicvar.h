@@ -578,6 +578,19 @@ name|APIC_BUS_MAX
 value|APIC_BUS_PCI
 end_define
 
+begin_enum
+enum|enum
+name|lapic_clock
+block|{
+name|LAPIC_CLOCK_NONE
+block|,
+name|LAPIC_CLOCK_HARDCLOCK
+block|,
+name|LAPIC_CLOCK_ALL
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/*  * An APIC enumerator is a psuedo bus driver that enumerates APIC's including  * CPU's and I/O APIC's.  */
 end_comment
@@ -1253,7 +1266,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|enum
+name|lapic_clock
 name|lapic_setup_clock
 parameter_list|(
 name|void
