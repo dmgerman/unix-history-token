@@ -817,15 +817,15 @@ comment|/* farest PCI-PCI bridge */
 name|uint8_t
 name|pds_bus
 decl_stmt|;
-comment|/* bus of farest PCI device */
+comment|/* bus of farest PCI dev. */
 name|uint8_t
 name|pds_slot
 decl_stmt|;
-comment|/* slot of farest PCI device */
+comment|/* slot of farest PCI dev. */
 name|uint8_t
 name|pds_func
 decl_stmt|;
-comment|/* func. of farest PCI device */
+comment|/* func. of farest PCI dev. */
 block|}
 struct|;
 end_struct
@@ -887,7 +887,7 @@ value|PSYCHO_WRITE8((sc), (sc)->sc_pcictl + (off), (v))
 end_define
 
 begin_comment
-comment|/*  * "Sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "Simba"'s underneath the Sabre.  *  * "Hummingbird" is the UltraSPARC IIe onboard UPA to PCI bridge. It's  * basically the same as Sabre but without an APB underneath it.  *  * "Psycho" and "Psycho+" are dual UPA to PCI bridges.  They sit on the UPA bus  * and manage two PCI buses.  "Psycho" has two 64-bit 33MHz buses, while  * "Psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "Psycho+" since I don't think the original "Psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "Psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "Sabre" itself usually takes pci0, with "Simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "Psycho+" ICs, each  * providing two PCI buses.  */
+comment|/*  * "Sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "Simba"'s underneath the Sabre.  *  * "Hummingbird" is the UltraSPARC IIe onboard UPA to PCI bridge. It's  * basically the same as Sabre but without an APB underneath it.  *  * "Psycho" and "Psycho+" are dual UPA to PCI bridges.  They sit on the UPA  * bus and manage two PCI buses.  "Psycho" has two 64-bit 33MHz buses, while  * "Psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "Psycho+" since I don't think the original "Psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "Psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "Sabre" itself usually takes pci0, with "Simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "Psycho+" ICs, each  * providing two PCI buses.  */
 end_comment
 
 begin_struct
@@ -1273,7 +1273,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|n
+name|j
 decl_stmt|;
 name|node
 operator|=
@@ -2137,7 +2137,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|n
+name|i
 operator|=
 name|OF_getprop_alloc
 argument_list|(
@@ -2163,7 +2163,7 @@ expr_stmt|;
 comment|/* 	 * Make sure that the expected ranges are present.  The 	 * OFW_PCI_CS_MEM64 one is not currently used though. 	 */
 if|if
 condition|(
-name|n
+name|i
 operator|!=
 name|PSYCHO_NRANGE
 condition|)
@@ -2177,26 +2177,26 @@ expr_stmt|;
 comment|/* 	 * Find the addresses of the various bus spaces. 	 * There should not be multiple ones of one kind. 	 * The physical start addresses of the ranges are the configuration, 	 * memory and I/O handles. 	 */
 for|for
 control|(
-name|n
+name|i
 operator|=
 literal|0
 init|;
-name|n
+name|i
 operator|<
 name|PSYCHO_NRANGE
 condition|;
-name|n
+name|i
 operator|++
 control|)
 block|{
-name|i
+name|j
 operator|=
 name|OFW_PCI_RANGE_CS
 argument_list|(
 operator|&
 name|range
 index|[
-name|n
+name|i
 index|]
 argument_list|)
 expr_stmt|;
@@ -2206,7 +2206,7 @@ name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|i
+name|j
 index|]
 operator|!=
 literal|0
@@ -2217,14 +2217,14 @@ literal|"%s: duplicate range for space %d"
 argument_list|,
 name|__func__
 argument_list|,
-name|i
+name|j
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|sc_pci_bh
 index|[
-name|i
+name|j
 index|]
 operator|=
 name|OFW_PCI_RANGE_PHYS
@@ -2232,7 +2232,7 @@ argument_list|(
 operator|&
 name|range
 index|[
-name|n
+name|i
 index|]
 argument_list|)
 expr_stmt|;
@@ -2266,15 +2266,15 @@ block|{
 comment|/* 		 * Hunt through all the interrupt mapping regs and register 		 * our interrupt controller for the corresponding interrupt 		 * vectors.  We do this early in order to be able to catch 		 * stray interrupts. 		 */
 for|for
 control|(
-name|n
+name|i
 operator|=
 literal|0
 init|;
-name|n
+name|i
 operator|<=
 name|PSYCHO_MAX_INO
 condition|;
-name|n
+name|i
 operator|++
 control|)
 block|{
@@ -2284,7 +2284,7 @@ name|psycho_find_intrmap
 argument_list|(
 name|sc
 argument_list|,
-name|n
+name|i
 argument_list|,
 operator|&
 name|intrmap
@@ -2355,7 +2355,7 @@ name|dev
 argument_list|,
 literal|"intr map (INO %d, %s) %#lx: %#lx, clr: %#lx\n"
 argument_list|,
-name|n
+name|i
 argument_list|,
 name|intrmap
 operator|<=
@@ -2398,7 +2398,7 @@ name|sc
 operator|->
 name|sc_ign
 argument_list|,
-name|n
+name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2425,7 +2425,7 @@ name|sc
 operator|->
 name|sc_ign
 argument_list|,
-name|n
+name|i
 argument_list|)
 argument_list|,
 name|PCPU_GET
@@ -2437,7 +2437,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|i
+name|j
 operator|=
 name|intr_controller_register
 argument_list|(
@@ -2447,7 +2447,7 @@ name|sc
 operator|->
 name|sc_ign
 argument_list|,
-name|n
+name|i
 argument_list|)
 argument_list|,
 operator|&
@@ -2458,7 +2458,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|j
 operator|!=
 literal|0
 condition|)
@@ -2469,9 +2469,9 @@ argument_list|,
 literal|"could not register "
 literal|"interrupt controller for INO %d (%d)\n"
 argument_list|,
-name|n
-argument_list|,
 name|i
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 block|}
@@ -2801,7 +2801,7 @@ operator|=
 operator|&
 name|iommu_dma_methods
 expr_stmt|;
-name|n
+name|i
 operator|=
 name|OF_getprop
 argument_list|(
@@ -2823,7 +2823,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|i
 operator|==
 operator|-
 literal|1
@@ -2837,7 +2837,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|i
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -2850,7 +2850,7 @@ literal|"%s: broken bus-range (%d)"
 argument_list|,
 name|__func__
 argument_list|,
-name|n
+name|i
 argument_list|)
 expr_stmt|;
 if|if
@@ -3112,15 +3112,15 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|n
+name|i
 operator|=
 name|PCIR_VENDOR
 init|;
-name|n
+name|i
 operator|<
 name|PCIR_STATUS
 condition|;
-name|n
+name|i
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -3134,7 +3134,7 @@ name|sc
 operator|->
 name|sc_pci_hpbcfg
 index|[
-name|n
+name|i
 index|]
 argument_list|,
 name|bus_space_read_2
@@ -3160,22 +3160,22 @@ name|PCS_DEVICE
 argument_list|,
 name|PCS_FUNC
 argument_list|,
-name|n
+name|i
 argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|n
+name|i
 operator|=
 name|PCIR_REVID
 init|;
-name|n
+name|i
 operator|<=
 name|PCIR_BIST
 condition|;
-name|n
+name|i
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -3186,7 +3186,7 @@ name|sc
 operator|->
 name|sc_pci_hpbcfg
 index|[
-name|n
+name|i
 index|]
 operator|=
 name|bus_space_read_1
@@ -3212,7 +3212,7 @@ name|PCS_DEVICE
 argument_list|,
 name|PCS_FUNC
 argument_list|,
-name|n
+name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4172,7 +4172,7 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
-comment|/* Gee, we don't really have a framework to deal with this properly. */
+comment|/* We don't really have a framework to deal with this properly. */
 name|device_printf
 argument_list|(
 name|sc
