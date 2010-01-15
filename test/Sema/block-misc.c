@@ -279,6 +279,16 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|bar
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// rdar://6257721 - reference to static/global is byref by default.
 end_comment
@@ -693,6 +703,13 @@ comment|// expected-error {{__block attribute not allowed on declaration with a 
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|f
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|test17
@@ -950,6 +967,113 @@ expr_stmt|;
 return|return
 name|x
 return|;
+block|}
+end_function
+
+begin_comment
+comment|// radr://7438948
+end_comment
+
+begin_function
+name|void
+name|test20
+parameter_list|()
+block|{
+name|int
+name|n
+init|=
+literal|7
+decl_stmt|;
+name|int
+name|vla
+index|[
+name|n
+index|]
+decl_stmt|;
+comment|// expected-note {{declared at}}
+name|int
+argument_list|(
+operator|*
+name|vm
+argument_list|)
+index|[
+name|n
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|// expected-note {{declared at}}
+name|vla
+index|[
+literal|1
+index|]
+operator|=
+literal|4341
+expr_stmt|;
+lambda|^
+block|{
+operator|(
+name|void
+operator|)
+name|vla
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|// expected-error {{cannot refer to declaration with a variably modified type inside block}}
+call|(
+name|void
+call|)
+argument_list|(
+name|vm
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{cannot refer to declaration with a variably modified type inside block}}
+block|}
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// radr://7438948
+end_comment
+
+begin_function
+name|void
+name|test21
+parameter_list|()
+block|{
+name|int
+name|a
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|// expected-note {{declared at}}
+name|a
+index|[
+literal|1
+index|]
+operator|=
+literal|1
+expr_stmt|;
+lambda|^
+block|{
+operator|(
+name|void
+operator|)
+name|a
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|// expected-error {{cannot refer to declaration with an array type inside block}}
+block|}
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

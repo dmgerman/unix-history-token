@@ -50,11 +50,11 @@ comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:9:7 %s -o - | Fi
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: X : 0
+comment|// CHECK-CC1: X
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: Y : 2
+comment|// CHECK-CC1: Y
 end_comment
 
 end_unit

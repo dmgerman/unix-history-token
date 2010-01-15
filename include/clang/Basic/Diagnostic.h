@@ -2831,6 +2831,32 @@ name|OutStr
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// FormatDiagnostic - Format the given format-string into the
+comment|/// output buffer using the arguments stored in this diagnostic.
+name|void
+name|FormatDiagnostic
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|DiagStr
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|DiagEnd
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|OutStr
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 

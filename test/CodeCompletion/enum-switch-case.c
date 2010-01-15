@@ -53,23 +53,23 @@ comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:19:10 %s -o - | 
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: Blue : 0
+comment|// CHECK-CC1: Blue
 end_comment
 
 begin_comment
-comment|// CHECK-CC1-NEXT: Green : 0
+comment|// CHECK-CC1-NEXT: Green
 end_comment
 
 begin_comment
-comment|// CHECK-CC1-NEXT: Indigo : 0
+comment|// CHECK-CC1-NEXT: Indigo
 end_comment
 
 begin_comment
-comment|// CHECK-CC1-NEXT: Orange : 0
+comment|// CHECK-CC1-NEXT: Orange
 end_comment
 
 begin_comment
-comment|// CHECK-CC1-NEXT: Violet : 0
+comment|// CHECK-CC1-NEXT: Violet
 end_comment
 
 end_unit

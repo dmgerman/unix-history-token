@@ -430,6 +430,13 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|next
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|foo4

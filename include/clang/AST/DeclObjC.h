@@ -1242,10 +1242,11 @@ decl_stmt|,
 name|public
 name|DeclContext
 block|{
-name|SourceLocation
-name|AtEndLoc
+comment|// These two locations in the range mark the end of the method container.
+comment|// The first points to the '@' token, and the second to the 'end' token.
+name|SourceRange
+name|AtEnd
 decl_stmt|;
-comment|// marks the end of the method container.
 name|public
 label|:
 name|ObjCContainerDecl
@@ -1506,25 +1507,25 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|// Marks the end of the container.
-name|SourceLocation
-name|getAtEndLoc
+name|SourceRange
+name|getAtEndRange
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AtEndLoc
+name|AtEnd
 return|;
 block|}
 name|void
-name|setAtEndLoc
+name|setAtEndRange
 parameter_list|(
-name|SourceLocation
-name|L
+name|SourceRange
+name|atEnd
 parameter_list|)
 block|{
-name|AtEndLoc
+name|AtEnd
 operator|=
-name|L
+name|atEnd
 expr_stmt|;
 block|}
 name|virtual
@@ -1539,7 +1540,10 @@ argument_list|(
 name|getLocation
 argument_list|()
 argument_list|,
-name|getAtEndLoc
+name|getAtEndRange
+argument_list|()
+operator|.
+name|getEnd
 argument_list|()
 argument_list|)
 return|;

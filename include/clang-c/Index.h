@@ -313,13 +313,24 @@ name|CXStmt
 name|stmt
 decl_stmt|;
 comment|/* expression reference */
+name|CXDecl
+name|referringDecl
+decl_stmt|;
 block|}
 name|CXCursor
 typedef|;
 comment|/* A unique token for looking up "visible" CXDecls from a CXTranslationUnit. */
 typedef|typedef
+struct|struct
+block|{
+name|CXIndex
+name|index
+decl_stmt|;
 name|void
 modifier|*
+name|data
+decl_stmt|;
+block|}
 name|CXEntity
 typedef|;
 comment|/**  * For functions returning a string that might or might not need  * to be internally allocated and freed.  * Use clang_getCString to access the C string value.  * Use clang_disposeString to free the value.  * Treat it as an opaque type.  */
@@ -519,32 +530,14 @@ name|SFile
 parameter_list|)
 function_decl|;
 comment|/*  * CXEntity Operations.  */
+comment|/* clang_getDeclaration() maps from a CXEntity to the matching CXDecl (if any)  *  in a specified translation unit. */
 name|CINDEX_LINKAGE
-specifier|const
-name|char
-modifier|*
-name|clang_getDeclarationName
+name|CXDecl
+name|clang_getDeclaration
 parameter_list|(
 name|CXEntity
-parameter_list|)
-function_decl|;
-name|CINDEX_LINKAGE
-specifier|const
-name|char
-modifier|*
-name|clang_getURI
-parameter_list|(
-name|CXEntity
-parameter_list|)
-function_decl|;
-name|CINDEX_LINKAGE
-name|CXEntity
-name|clang_getEntity
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|URI
+parameter_list|,
+name|CXTranslationUnit
 parameter_list|)
 function_decl|;
 comment|/*  * CXDecl Operations.  */
@@ -559,6 +552,8 @@ name|CINDEX_LINKAGE
 name|CXEntity
 name|clang_getEntityFromDecl
 parameter_list|(
+name|CXIndex
+parameter_list|,
 name|CXDecl
 parameter_list|)
 function_decl|;
@@ -584,6 +579,13 @@ name|CXDecl
 parameter_list|)
 function_decl|;
 name|CINDEX_LINKAGE
+name|CXString
+name|clang_getDeclUSR
+parameter_list|(
+name|CXDecl
+parameter_list|)
+function_decl|;
+name|CINDEX_LINKAGE
 specifier|const
 name|char
 modifier|*
@@ -596,6 +598,40 @@ comment|/* deprecate */
 name|CINDEX_LINKAGE
 name|CXFile
 name|clang_getDeclSourceFile
+parameter_list|(
+name|CXDecl
+parameter_list|)
+function_decl|;
+typedef|typedef
+struct|struct
+name|CXSourceLineColumn
+block|{
+name|unsigned
+name|line
+decl_stmt|;
+name|unsigned
+name|column
+decl_stmt|;
+block|}
+name|CXSourceLineColumn
+typedef|;
+typedef|typedef
+struct|struct
+name|CXDeclExtent
+block|{
+name|CXSourceLineColumn
+name|begin
+decl_stmt|;
+name|CXSourceLineColumn
+name|end
+decl_stmt|;
+block|}
+name|CXSourceExtent
+typedef|;
+comment|/* clang_getDeclExtent() returns the physical extent of a declaration.  The  * beginning line/column pair points to the start of the first token in the  * declaration, and the ending line/column pair points to the last character in  * the last token of the declaration.  */
+name|CINDEX_LINKAGE
+name|CXSourceExtent
+name|clang_getDeclExtent
 parameter_list|(
 name|CXDecl
 parameter_list|)
@@ -842,6 +878,21 @@ name|CXCompletionChunk_Comma
 block|,
 comment|/**    * \brief Text that specifies the result type of a given result.     *    * This special kind of informative chunk is not meant to be inserted into    * the text buffer. Rather, it is meant to illustrate the type that an     * expression using the given completion string would have.    */
 name|CXCompletionChunk_ResultType
+block|,
+comment|/**    * \brief A colon (':').    */
+name|CXCompletionChunk_Colon
+block|,
+comment|/**    * \brief A semicolon (';').    */
+name|CXCompletionChunk_SemiColon
+block|,
+comment|/**    * \brief An '=' sign.    */
+name|CXCompletionChunk_Equal
+block|,
+comment|/**    * Horizontal space (' ').    */
+name|CXCompletionChunk_HorizontalSpace
+block|,
+comment|/**    * Vertical space ('\n'), after which it is generally a good idea to    * perform indentation.    */
+name|CXCompletionChunk_VerticalSpace
 block|}
 enum|;
 comment|/**  * \brief Determine the kind of a particular chunk within a completion string.  *  * \param completion_string the completion string to query.  *  * \param chunk_number the 0-based index of the chunk in the completion string.  *  * \returns the kind of the chunk at the index \c chunk_number.  */

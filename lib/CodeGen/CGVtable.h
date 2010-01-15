@@ -199,11 +199,290 @@ name|ReturnAdjustment
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|// BaseSubobject - Uniquely identifies a direct or indirect base class.
+comment|// Stores both the base class decl and the offset from the most derived class to
+comment|// the base class.
+name|class
+name|BaseSubobject
+block|{
+comment|/// Base - The base class declaration.
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Base
+decl_stmt|;
+comment|/// BaseOffset - The offset from the most derived class to the base class.
+name|uint64_t
+name|BaseOffset
+decl_stmt|;
+name|public
+label|:
+name|BaseSubobject
+argument_list|(
+argument|const CXXRecordDecl *Base
+argument_list|,
+argument|uint64_t BaseOffset
+argument_list|)
+block|:
+name|Base
+argument_list|(
+name|Base
+argument_list|)
+operator|,
+name|BaseOffset
+argument_list|(
+argument|BaseOffset
+argument_list|)
+block|{ }
+comment|/// getBase - Returns the base class declaration.
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|getBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Base
+return|;
+block|}
+comment|/// getBaseOffset - Returns the base class offset.
+name|uint64_t
+name|getBaseOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseOffset
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|BaseSubobject
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|BaseSubobject
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|LHS
+operator|.
+name|Base
+operator|==
+name|RHS
+operator|.
+name|Base
+operator|&&
+name|LHS
+operator|.
+name|BaseOffset
+operator|==
+name|RHS
+operator|.
+name|BaseOffset
+return|;
+block|}
+block|}
+empty_stmt|;
+block|}
+comment|// end namespace CodeGen
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace clang
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|BaseSubobject
+operator|>
+block|{
+specifier|static
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|BaseSubobject
+name|getEmptyKey
+argument_list|()
+block|{
+return|return
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|BaseSubobject
+argument_list|(
+name|DenseMapInfo
+operator|<
+specifier|const
+name|clang
+operator|::
+name|CXXRecordDecl
+operator|*
+operator|>
+operator|::
+name|getEmptyKey
+argument_list|()
+argument_list|,
+name|DenseMapInfo
+operator|<
+name|uint64_t
+operator|>
+operator|::
+name|getEmptyKey
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|BaseSubobject
+name|getTombstoneKey
+argument_list|()
+block|{
+return|return
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|BaseSubobject
+argument_list|(
+name|DenseMapInfo
+operator|<
+specifier|const
+name|clang
+operator|::
+name|CXXRecordDecl
+operator|*
+operator|>
+operator|::
+name|getTombstoneKey
+argument_list|()
+argument_list|,
+name|DenseMapInfo
+operator|<
+name|uint64_t
+operator|>
+operator|::
+name|getTombstoneKey
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getHashValue
+argument_list|(
+argument|const clang::CodeGen::BaseSubobject&Base
+argument_list|)
+block|{
+return|return
+name|DenseMapInfo
+operator|<
+specifier|const
+name|clang
+operator|::
+name|CXXRecordDecl
+operator|*
+operator|>
+operator|::
+name|getHashValue
+argument_list|(
+name|Base
+operator|.
+name|getBase
+argument_list|()
+argument_list|)
+operator|^
+name|DenseMapInfo
+operator|<
+name|uint64_t
+operator|>
+operator|::
+name|getHashValue
+argument_list|(
+name|Base
+operator|.
+name|getBaseOffset
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isEqual
+argument_list|(
+argument|const clang::CodeGen::BaseSubobject&LHS
+argument_list|,
+argument|const clang::CodeGen::BaseSubobject&RHS
+argument_list|)
+block|{
+return|return
+name|LHS
+operator|==
+name|RHS
+return|;
+block|}
+expr|}
+block|;
+comment|// It's OK to treat BaseSubobject as a POD type.
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|BaseSubobject
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+block|;  }
+name|namespace
+name|clang
+block|{
+name|namespace
+name|CodeGen
+block|{
 name|class
 name|CGVtableInfo
 block|{
 name|public
-label|:
+operator|:
 typedef|typedef
 name|std
 operator|::
@@ -219,6 +498,68 @@ name|ThunkAdjustment
 operator|>
 expr|>
 name|AdjustmentVectorTy
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|CtorVtable_t
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|CtorVtable_t
+operator|,
+name|int64_t
+operator|>
+name|AddrSubMap_t
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|AddrSubMap_t
+operator|*
+operator|>
+name|AddrMap_t
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|AddrMap_t
+operator|*
+operator|>
+name|AddressPoints
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|BaseSubobject
+operator|,
+name|uint64_t
+operator|>
+name|AddressPointsMapTy
 expr_stmt|;
 name|private
 label|:
@@ -327,6 +668,20 @@ operator|*
 operator|>
 name|SavedAdjustmentRecords
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|ClassPairTy
+operator|,
+name|uint64_t
+operator|>
+name|SubVTTIndiciesTy
+expr_stmt|;
+name|SubVTTIndiciesTy
+name|SubVTTIndicies
+decl_stmt|;
 comment|/// getNumVirtualFunctionPointers - Return the number of virtual function
 comment|/// pointers in the vtable for a given record decl.
 name|uint64_t
@@ -383,6 +738,8 @@ argument_list|,
 argument|const CXXRecordDecl *RD
 argument_list|,
 argument|uint64_t Offset
+argument_list|,
+argument|AddressPointsMapTy& AddressPoints
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -392,6 +749,8 @@ operator|*
 name|GenerateVTT
 argument_list|(
 argument|llvm::GlobalVariable::LinkageTypes Linkage
+argument_list|,
+argument|bool GenerateDefinition
 argument_list|,
 argument|const CXXRecordDecl *RD
 argument_list|)
@@ -410,15 +769,42 @@ argument_list|(
 argument|CGM
 argument_list|)
 block|{ }
+comment|/// needsVTTParameter - Return whether the given global decl needs a VTT
+comment|/// parameter, which it does if it's a base constructor or destructor with
+comment|/// virtual bases.
+specifier|static
+name|bool
+name|needsVTTParameter
+argument_list|(
+argument|GlobalDecl GD
+argument_list|)
+expr_stmt|;
+comment|/// getSubVTTIndex - Return the index of the sub-VTT for the base class of the
+comment|/// given record decl.
+name|uint64_t
+name|getSubVTTIndex
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Base
+parameter_list|)
+function_decl|;
 comment|/// getMethodVtableIndex - Return the index (relative to the vtable address
 comment|/// point) where the function pointer for the given virtual function is
 comment|/// stored.
 name|uint64_t
 name|getMethodVtableIndex
-argument_list|(
-argument|GlobalDecl GD
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
 comment|/// getVirtualBaseOffsetIndex - Return the index (relative to the vtable
 comment|/// address point) where the offset of the virtual base that contains the
 comment|/// given Base is stored, otherwise, if no virtual base contains the given
@@ -470,17 +856,55 @@ operator|*
 name|RD
 argument_list|)
 expr_stmt|;
+comment|/// CtorVtableInfo - Information about a constructor vtable.
+struct|struct
+name|CtorVtableInfo
+block|{
+comment|/// Vtable - The vtable itself.
 name|llvm
 operator|::
 name|GlobalVariable
 operator|*
-name|getCtorVtable
+name|Vtable
+expr_stmt|;
+comment|/// AddressPoints - The address points in this constructor vtable.
+name|AddressPointsMapTy
+name|AddressPoints
+decl_stmt|;
+name|CtorVtableInfo
+argument_list|()
+operator|:
+name|Vtable
 argument_list|(
-argument|const CXXRecordDecl *RD
-argument_list|,
-argument|const CXXRecordDecl *Class
-argument_list|,
-argument|uint64_t Offset
+literal|0
+argument_list|)
+block|{ }
+block|}
+struct|;
+name|CtorVtableInfo
+name|getCtorVtable
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+specifier|const
+name|BaseSubobject
+modifier|&
+name|Base
+parameter_list|)
+function_decl|;
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|getVTT
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
 argument_list|)
 expr_stmt|;
 name|void
@@ -491,10 +915,21 @@ name|GD
 parameter_list|)
 function_decl|;
 block|}
-empty_stmt|;
-block|}
-block|}
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+unit|}
+comment|// end namespace CodeGen
+end_comment
+
+begin_comment
+unit|}
+comment|// end namespace clang
+end_comment
 
 begin_endif
 endif|#

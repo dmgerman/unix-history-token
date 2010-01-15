@@ -3,10 +3,6 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -verify -fms-extensions
 end_comment
 
-begin_comment
-comment|// XFAIL: *
-end_comment
-
 begin_define
 define|#
 directive|define

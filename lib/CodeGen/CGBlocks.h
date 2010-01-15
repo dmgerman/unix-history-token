@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/CharUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Expr.h"
 end_include
 
@@ -796,7 +802,7 @@ argument_list|)
 block|;
 comment|/// BlockOffset - The offset in bytes for the next allocation of an
 comment|/// imported block variable.
-name|uint64_t
+name|CharUnits
 name|BlockOffset
 block|;
 comment|/// BlockAlign - Maximal alignment needed for the Block expressed in bytes.
@@ -805,7 +811,7 @@ name|BlockAlign
 block|;
 comment|/// getBlockOffset - Allocate an offset for the ValueDecl from a
 comment|/// BlockDeclRefExpr in a block literal (BlockExpr).
-name|uint64_t
+name|CharUnits
 name|getBlockOffset
 argument_list|(
 specifier|const
@@ -841,7 +847,7 @@ specifier|const
 name|Decl
 operator|*
 block|,
-name|uint64_t
+name|CharUnits
 operator|>
 name|BlockDecls
 block|;

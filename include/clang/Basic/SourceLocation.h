@@ -798,6 +798,17 @@ argument_list|()
 return|;
 block|}
 name|bool
+name|isInvalid
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isValid
+argument_list|()
+return|;
+block|}
+name|bool
 name|operator
 operator|==
 operator|(

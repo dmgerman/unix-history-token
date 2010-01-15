@@ -412,5 +412,41 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// Make sure we don't a.k.a. anonymous enums.
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|an_enumerator
+init|=
+literal|20
+block|}
+name|an_enum
+typedef|;
+end_typedef
+
+begin_comment
+comment|// FIXME: why is this only a warning?
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+init|=
+operator|(
+name|an_enum
+operator|)
+name|an_enumerator
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{incompatible integer to pointer conversion initializing 'an_enum', expected 'char *'}}
+end_comment
+
 end_unit
 

@@ -670,6 +670,38 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Determines whether the name itself is dependent, e.g., because it
+end_comment
+
+begin_comment
+comment|/// involves a C++ type that is itself dependent.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that this does not capture all of the notions of "dependent name",
+end_comment
+
+begin_comment
+comment|/// because an identifier can be a dependent name if it is used as the
+end_comment
+
+begin_comment
+comment|/// callee in a call expression with dependent arguments.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isDependentName
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getName - Retrieve the human-readable string for this name.
 end_comment
 
@@ -1216,6 +1248,11 @@ modifier|*
 name|CXXOperatorNames
 decl_stmt|;
 comment|// Operator names
+name|void
+modifier|*
+name|CXXLiteralOperatorNames
+decl_stmt|;
+comment|// Actually a FoldingSet<...> *
 name|DeclarationNameTable
 argument_list|(
 specifier|const

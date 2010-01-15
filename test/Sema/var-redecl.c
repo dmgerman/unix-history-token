@@ -255,6 +255,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// expected-note{{'g18' declared here}}
 specifier|extern
 name|int
 name|g19

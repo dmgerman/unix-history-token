@@ -204,6 +204,9 @@ name|namespace
 name|clang
 block|{
 name|class
+name|AnalysisContext
+decl_stmt|;
+name|class
 name|ASTContext
 decl_stmt|;
 name|class
@@ -379,6 +382,9 @@ name|InitializationSequence
 decl_stmt|;
 name|class
 name|VisibleDeclConsumer
+decl_stmt|;
+name|class
+name|TargetAttributesSema
 decl_stmt|;
 comment|/// BlockSemaInfo - When a block is being parsed, this contains information
 comment|/// about the block.  It is pointed to from Sema::CurBlock.
@@ -624,6 +630,12 @@ operator|&
 operator|)
 block|;
 comment|// DO NOT IMPLEMENT
+name|mutable
+specifier|const
+name|TargetAttributesSema
+operator|*
+name|TheTargetAttributesSema
+block|;
 name|public
 operator|:
 specifier|const
@@ -1426,15 +1438,7 @@ begin_expr_stmt
 operator|~
 name|Sema
 argument_list|()
-block|{
-if|if
-condition|(
-name|PackContext
-condition|)
-name|FreePackedContext
-argument_list|()
 expr_stmt|;
-block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -1475,6 +1479,16 @@ return|return
 name|SourceMgr
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|TargetAttributesSema
+operator|&
+name|getTargetAttributesSema
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -2369,16 +2383,6 @@ name|Source
 parameter_list|,
 name|SourceLocation
 name|SourceLoc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|QualType
-name|ObjCGetTypeForMethodDefinition
-parameter_list|(
-name|DeclPtrTy
-name|D
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5426,6 +5430,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_enum
+enum|enum
+name|OverloadCandidateDisplayKind
+block|{
+comment|/// Requests that all candidates be shown.  Viable candidates will
+comment|/// be printed first.
+name|OCD_AllCandidates
+block|,
+comment|/// Requests that only viable candidates be shown.
+name|OCD_ViableCandidates
+block|}
+enum|;
+end_enum
+
 begin_function_decl
 name|void
 name|PrintOverloadCandidates
@@ -5434,8 +5452,16 @@ name|OverloadCandidateSet
 modifier|&
 name|CandidateSet
 parameter_list|,
-name|bool
-name|OnlyViable
+name|OverloadCandidateDisplayKind
+name|OCD
+parameter_list|,
+name|Expr
+modifier|*
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
 parameter_list|,
 specifier|const
 name|char
@@ -5449,6 +5475,37 @@ name|Loc
 init|=
 name|SourceLocation
 argument_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|NoteOverloadCandidate
+parameter_list|(
+name|FunctionDecl
+modifier|*
+name|Fn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|DiagnoseAmbiguousConversion
+parameter_list|(
+specifier|const
+name|ImplicitConversionSequence
+modifier|&
+name|ICS
+parameter_list|,
+name|SourceLocation
+name|CaretLoc
+parameter_list|,
+specifier|const
+name|PartialDiagnostic
+modifier|&
+name|PDiag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5721,6 +5778,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// CheckUnreachable - Check for unreachable code.
+end_comment
+
+begin_function_decl
+name|void
+name|CheckUnreachable
+parameter_list|(
+name|AnalysisContext
+modifier|&
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// CheckCallReturnType - Checks that a call expression's return type is
 end_comment
 
@@ -5768,6 +5839,9 @@ parameter_list|,
 name|Stmt
 modifier|*
 name|Body
+parameter_list|,
+name|AnalysisContext
+modifier|&
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5781,7 +5855,9 @@ name|BlockTy
 parameter_list|,
 name|Stmt
 modifier|*
-name|Body
+parameter_list|,
+name|AnalysisContext
+modifier|&
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5846,8 +5922,8 @@ begin_function_decl
 name|ControlFlowKind
 name|CheckFallThrough
 parameter_list|(
-name|Stmt
-modifier|*
+name|AnalysisContext
+modifier|&
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6027,12 +6103,26 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/// \brief Specifies whether (or how) name lookup is being performed for a
+end_comment
+
+begin_comment
+comment|/// redeclaration (vs. a reference).
+end_comment
+
 begin_enum
 enum|enum
 name|RedeclarationKind
 block|{
+comment|/// \brief The lookup is a reference to this name that is not for the
+comment|/// purpose of redeclaring the name.
 name|NotForRedeclaration
+init|=
+literal|0
 block|,
+comment|/// \brief The lookup results will be used for redeclaration of a name,
+comment|/// if an entity by that name already exists.
 name|ForRedeclaration
 block|}
 enum|;
@@ -6137,6 +6227,11 @@ parameter_list|,
 name|DeclContext
 modifier|*
 name|LookupCtx
+parameter_list|,
+name|bool
+name|InUnqualifiedLookup
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6295,6 +6390,13 @@ name|bool
 name|EnteringContext
 init|=
 name|false
+parameter_list|,
+specifier|const
+name|ObjCObjectPointerType
+modifier|*
+name|OPT
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6344,7 +6446,14 @@ name|getObjCInterfaceDecl
 parameter_list|(
 name|IdentifierInfo
 modifier|*
+modifier|&
 name|Id
+parameter_list|,
+name|SourceLocation
+name|RecoverLoc
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7289,6 +7398,11 @@ name|Clobbers
 argument_list|,
 name|SourceLocation
 name|RParenLoc
+argument_list|,
+name|bool
+name|MSAsm
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -7592,34 +7706,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|CheckSignCompare
-parameter_list|(
-name|Expr
-modifier|*
-name|LHS
-parameter_list|,
-name|Expr
-modifier|*
-name|RHS
-parameter_list|,
-name|SourceLocation
-name|Loc
-parameter_list|,
-specifier|const
-name|PartialDiagnostic
-modifier|&
-name|PD
-parameter_list|,
-name|bool
-name|Equality
-init|=
-name|false
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|PushExpressionEvaluationContext
@@ -7746,6 +7832,11 @@ parameter_list|,
 name|IdentifierInfo
 modifier|*
 name|II
+parameter_list|,
+name|bool
+name|AllowBuiltinCreation
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8393,6 +8484,10 @@ name|CXXScopeSpec
 modifier|&
 name|SS
 parameter_list|,
+name|NamedDecl
+modifier|*
+name|FirstQualifierInScope
+parameter_list|,
 name|LookupResult
 modifier|&
 name|R
@@ -8429,10 +8524,6 @@ specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
-parameter_list|,
-name|NamedDecl
-modifier|*
-name|FirstQualifierInScope
 parameter_list|,
 name|DeclPtrTy
 name|ObjCImpDecl
@@ -10609,6 +10700,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bool
+name|isCurrentInstantiationWithDependentBases
+parameter_list|(
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// ActOnCXXGlobalScopeSpecifier - Return the object that represents the
 end_comment
@@ -11402,30 +11505,33 @@ comment|/// ClassesWithUnmarkedVirtualMembers - Contains record decls whose virt
 end_comment
 
 begin_comment
-comment|/// members might need to be marked as referenced. This is either done when
+comment|/// members need to be marked as referenced at the end of the translation
 end_comment
 
 begin_comment
-comment|/// the key function definition is emitted (this is handled by by
+comment|/// unit. It will contain polymorphic classes that do not have a key
 end_comment
 
 begin_comment
-comment|/// MaybeMarkVirtualMembersReferenced), or at the end of the translation unit
-end_comment
-
-begin_comment
-comment|/// (done by ProcessPendingClassesWithUnmarkedVirtualMembers).
+comment|/// function or have a key function that has been defined.
 end_comment
 
 begin_expr_stmt
+name|llvm
+operator|::
+name|SmallVector
+operator|<
 name|std
 operator|::
-name|map
+name|pair
 operator|<
 name|CXXRecordDecl
 operator|*
 operator|,
 name|SourceLocation
+operator|>
+operator|,
+literal|4
 operator|>
 name|ClassesWithUnmarkedVirtualMembers
 expr_stmt|;
@@ -11800,22 +11906,6 @@ parameter_list|(
 name|CXXConversionDecl
 modifier|*
 name|Conversion
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|isImplicitMemberReference
-parameter_list|(
-specifier|const
-name|LookupResult
-modifier|&
-name|R
-parameter_list|,
-name|QualType
-modifier|&
-name|ThisType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12319,6 +12409,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bool
+name|CheckLiteralOperatorDeclaration
+parameter_list|(
+name|FunctionDecl
+modifier|*
+name|FnDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
@@ -12385,6 +12486,39 @@ parameter_list|,
 name|TemplateTy
 modifier|&
 name|Template
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|bool
+name|DiagnoseUnknownTemplateName
+parameter_list|(
+specifier|const
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|,
+name|SourceLocation
+name|IILoc
+parameter_list|,
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|*
+name|SS
+parameter_list|,
+name|TemplateTy
+modifier|&
+name|SuggestedTemplate
+parameter_list|,
+name|TemplateNameKind
+modifier|&
+name|SuggestedKind
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -16076,8 +16210,8 @@ name|virtual
 name|void
 name|ActOnAtEnd
 parameter_list|(
-name|SourceLocation
-name|AtEndLoc
+name|SourceRange
+name|AtEnd
 parameter_list|,
 name|DeclPtrTy
 name|classDecl
@@ -17222,28 +17356,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|bool
-name|BuildCXXDerivedToBaseExpr
-argument_list|(
-name|Expr
-operator|*
-operator|&
-name|From
-argument_list|,
-name|CastExpr
-operator|::
-name|CastKind
-name|CastKind
-argument_list|,
-specifier|const
-name|ImplicitConversionSequence
-operator|&
-name|ICS
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/// the following "Check" methods will return a valid/converted QualType
 end_comment
@@ -17320,8 +17432,9 @@ name|OpLoc
 parameter_list|,
 name|bool
 name|isCompAssign
-init|=
-name|false
+parameter_list|,
+name|bool
+name|isDivide
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -18396,6 +18509,9 @@ parameter_list|(
 name|Scope
 modifier|*
 name|S
+parameter_list|,
+name|CodeCompletionContext
+name|CompletionContext
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -18567,6 +18683,18 @@ name|ObjCImpDecl
 parameter_list|,
 name|bool
 name|InInterface
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|CodeCompleteObjCAtVisibility
+parameter_list|(
+name|Scope
+modifier|*
+name|S
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -19194,6 +19322,48 @@ parameter_list|,
 name|Expr
 modifier|*
 name|rex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckSignCompare
+parameter_list|(
+name|Expr
+modifier|*
+name|LHS
+parameter_list|,
+name|Expr
+modifier|*
+name|RHS
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|PartialDiagnostic
+modifier|&
+name|PD
+parameter_list|,
+name|bool
+name|Equality
+init|=
+name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckImplicitConversion
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|,
+name|QualType
+name|Target
 parameter_list|)
 function_decl|;
 end_function_decl

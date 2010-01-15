@@ -798,7 +798,6 @@ name|__v4si
 operator|)
 name|a
 operator|^
-operator|~
 operator|(
 name|__v4si
 operator|)

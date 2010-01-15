@@ -92,17 +92,17 @@ name|public
 label|:
 typedef|typedef
 name|int64_t
-name|RawType
+name|QuantityType
 typedef|;
 name|private
 label|:
-name|RawType
+name|QuantityType
 name|Quantity
 decl_stmt|;
 name|explicit
 name|CharUnits
 argument_list|(
-argument|RawType C
+argument|QuantityType C
 argument_list|)
 block|:
 name|Quantity
@@ -147,12 +147,12 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// fromRaw - Construct a CharUnits quantity from a raw integer type.
+comment|/// fromQuantity - Construct a CharUnits quantity from a raw integer type.
 specifier|static
 name|CharUnits
-name|fromRaw
+name|fromQuantity
 parameter_list|(
-name|RawType
+name|QuantityType
 name|Quantity
 parameter_list|)
 block|{
@@ -349,7 +349,7 @@ operator|==
 literal|1
 return|;
 block|}
-comment|/// isPositive - Test whether the quanity is greater than zero.
+comment|/// isPositive - Test whether the quantity is greater than zero.
 name|bool
 name|isPositive
 argument_list|()
@@ -378,7 +378,7 @@ name|CharUnits
 name|operator
 modifier|*
 argument_list|(
-name|RawType
+name|QuantityType
 name|N
 argument_list|)
 decl|const
@@ -396,7 +396,7 @@ name|CharUnits
 name|operator
 operator|/
 operator|(
-name|RawType
+name|QuantityType
 name|N
 operator|)
 specifier|const
@@ -410,7 +410,7 @@ name|N
 argument_list|)
 return|;
 block|}
-name|RawType
+name|QuantityType
 name|operator
 operator|/
 operator|(
@@ -433,7 +433,7 @@ name|CharUnits
 name|operator
 operator|%
 operator|(
-name|RawType
+name|QuantityType
 name|N
 operator|)
 specifier|const
@@ -447,7 +447,7 @@ name|N
 argument_list|)
 return|;
 block|}
-name|RawType
+name|QuantityType
 name|operator
 operator|%
 operator|(
@@ -511,9 +511,9 @@ argument_list|)
 return|;
 block|}
 comment|// Conversions.
-comment|/// getRaw - Get the raw integer representation of this quantity.
-name|RawType
-name|getRaw
+comment|/// getQuantity - Get the raw integer representation of this quantity.
+name|QuantityType
+name|getQuantity
 argument_list|()
 specifier|const
 block|{
@@ -543,7 +543,7 @@ name|clang
 operator|::
 name|CharUnits
 operator|::
-name|RawType
+name|QuantityType
 name|Scale
 operator|,
 specifier|const

@@ -94,6 +94,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|test_unit_aux2
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|test_uninit_pos

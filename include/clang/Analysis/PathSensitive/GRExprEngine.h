@@ -266,6 +266,14 @@ comment|//   destructor is called before the rest of the GRExprEngine is destroy
 name|GRBugReporter
 name|BR
 decl_stmt|;
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|GRTransferFuncs
+operator|>
+name|TF
+expr_stmt|;
 name|public
 label|:
 name|GRExprEngine
@@ -273,6 +281,10 @@ argument_list|(
 name|AnalysisManager
 operator|&
 name|mgr
+argument_list|,
+name|GRTransferFuncs
+operator|*
+name|tf
 argument_list|)
 expr_stmt|;
 operator|~
@@ -343,8 +355,6 @@ parameter_list|()
 block|{
 return|return
 operator|*
-name|StateMgr
-operator|.
 name|TF
 return|;
 block|}
@@ -372,30 +382,15 @@ operator|*
 name|Builder
 return|;
 block|}
-comment|/// setTransferFunctions
+comment|// FIXME: Remove once GRTransferFuncs is no longer referenced.
 name|void
-name|setTransferFunctionsAndCheckers
+name|setTransferFunction
 parameter_list|(
 name|GRTransferFuncs
 modifier|*
 name|tf
 parameter_list|)
 function_decl|;
-name|void
-name|setTransferFunctions
-parameter_list|(
-name|GRTransferFuncs
-modifier|&
-name|tf
-parameter_list|)
-block|{
-name|setTransferFunctionsAndCheckers
-argument_list|(
-operator|&
-name|tf
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// ViewGraph - Visualize the ExplodedGraph created by executing the
 comment|///  simulation.
 name|void
@@ -638,6 +633,25 @@ parameter_list|(
 name|GREndPathNodeBuilder
 modifier|&
 name|builder
+parameter_list|)
+function_decl|;
+comment|/// EvalAssume - Callback function invoked by the ConstraintManager when
+comment|///  making assumptions about state values.
+specifier|const
+name|GRState
+modifier|*
+name|ProcessAssume
+parameter_list|(
+specifier|const
+name|GRState
+modifier|*
+name|state
+parameter_list|,
+name|SVal
+name|cond
+parameter_list|,
+name|bool
+name|assumption
 parameter_list|)
 function_decl|;
 name|GRStateManager
@@ -1513,6 +1527,23 @@ parameter_list|(
 name|CXXThisExpr
 modifier|*
 name|TE
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|,
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|)
+function_decl|;
+comment|/// Create a C++ temporary object for an rvalue.
+name|void
+name|CreateCXXTemporaryObject
+parameter_list|(
+name|Expr
+modifier|*
+name|Ex
 parameter_list|,
 name|ExplodedNode
 modifier|*

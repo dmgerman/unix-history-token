@@ -28,7 +28,8 @@ operator|=
 literal|4
 condition|)
 block|{}
-comment|// expected-warning {{assignment as a condition}}
+comment|// expected-warning {{assignment as a condition}} \
+comment|// expected-note{{use '==' to turn this assignment into an equality comparison}}
 if|if
 condition|(
 operator|(
@@ -60,7 +61,8 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{& has lower precedence than ==}}
+comment|// expected-warning {{& has lower precedence than ==}} \
+comment|// expected-note{{place parentheses around the& expression to evaluate it first}}
 call|(
 name|void
 call|)
@@ -72,7 +74,8 @@ operator|&
 literal|0x2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{& has lower precedence than ==}}
+comment|// expected-warning {{& has lower precedence than ==}} \
+comment|// expected-note{{place parentheses around the& expression to evaluate it first}}
 call|(
 name|void
 call|)
@@ -84,7 +87,8 @@ operator|<
 literal|30
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{& has lower precedence than<}}
+comment|// expected-warning {{& has lower precedence than<}} \
+comment|// expected-note{{place parentheses around the& expression to evaluate it first}}
 call|(
 name|void
 call|)

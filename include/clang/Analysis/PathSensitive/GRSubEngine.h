@@ -59,6 +59,12 @@ directive|define
 name|LLVM_CLANG_ANALYSIS_GRSUBENGINE_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/Analysis/PathSensitive/SVals.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -225,6 +231,28 @@ parameter_list|(
 name|GREndPathNodeBuilder
 modifier|&
 name|builder
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EvalAssume - Called by ConstraintManager. Used to call checker-specific
+comment|///  logic for handling assumptions on symbolic values.
+name|virtual
+specifier|const
+name|GRState
+modifier|*
+name|ProcessAssume
+parameter_list|(
+specifier|const
+name|GRState
+modifier|*
+name|state
+parameter_list|,
+name|SVal
+name|cond
+parameter_list|,
+name|bool
+name|assumption
 parameter_list|)
 init|=
 literal|0

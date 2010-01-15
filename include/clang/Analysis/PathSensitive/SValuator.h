@@ -98,6 +98,10 @@ name|ValueManager
 modifier|&
 name|ValMgr
 decl_stmt|;
+name|public
+label|:
+comment|// FIXME: Make these protected again one RegionStoreManager correctly
+comment|// handles loads from differening bound value types.
 name|virtual
 name|SVal
 name|EvalCastNL

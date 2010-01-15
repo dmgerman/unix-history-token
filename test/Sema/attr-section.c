@@ -45,5 +45,38 @@ begin_comment
 comment|// expected-error {{mach-o section specifier requires a segment and section separated by a comma}}
 end_comment
 
+begin_comment
+comment|// PR6007
+end_comment
+
+begin_function
+name|void
+name|test
+parameter_list|()
+block|{
+name|__attribute__
+argument_list|(
+argument|(section(
+literal|"NEAR,x"
+argument|))
+argument_list|)
+name|int
+name|n1
+decl_stmt|;
+comment|// expected-error {{'section' attribute is not valid on local variables}}
+name|__attribute__
+argument_list|(
+argument|(section(
+literal|"NEAR,x"
+argument|))
+argument_list|)
+specifier|static
+name|int
+name|n2
+decl_stmt|;
+comment|// ok.
+block|}
+end_function
+
 end_unit
 

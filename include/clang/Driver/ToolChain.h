@@ -347,16 +347,6 @@ argument_list|)
 specifier|const
 expr_stmt|;
 comment|// Platform defaults information
-comment|/// IsMathErrnoDefault - Does this tool chain set -fmath-errno by
-comment|/// default.
-name|virtual
-name|bool
-name|IsMathErrnoDefault
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
 comment|/// IsBlocksDefault - Does this tool chain enable -fblocks by default.
 name|virtual
 name|bool

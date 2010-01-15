@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_decl_stmt
@@ -83,12 +83,6 @@ name|llvm
 block|{
 name|class
 name|Triple
-decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
-name|raw_fd_ostream
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -145,6 +139,87 @@ decl_stmt|;
 name|class
 name|TargetInfo
 decl_stmt|;
+name|class
+name|FrontendOptions
+decl_stmt|;
+name|class
+name|MacroBuilder
+block|{
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|Out
+expr_stmt|;
+name|public
+label|:
+name|MacroBuilder
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|Output
+argument_list|)
+operator|:
+name|Out
+argument_list|(
+argument|Output
+argument_list|)
+block|{}
+comment|/// Append a #define line for macro of the form "#define Name Value\n".
+name|void
+name|defineMacro
+argument_list|(
+argument|const llvm::Twine&Name
+argument_list|,
+argument|const llvm::Twine&Value =
+literal|"1"
+argument_list|)
+block|{
+name|Out
+operator|<<
+literal|"#define "
+operator|<<
+name|Name
+operator|<<
+literal|' '
+operator|<<
+name|Value
+operator|<<
+literal|'\n'
+block|;   }
+comment|/// Append a #undef line for Name.  Name should be of the form XXX
+comment|/// and we emit "#undef XXX".
+name|void
+name|undefineMacro
+argument_list|(
+argument|const llvm::Twine&Name
+argument_list|)
+block|{
+name|Out
+operator|<<
+literal|"#undef "
+operator|<<
+name|Name
+operator|<<
+literal|'\n'
+block|;   }
+comment|/// Directly append Str and a newline to the underlying buffer.
+name|void
+name|append
+argument_list|(
+argument|const llvm::Twine&Str
+argument_list|)
+block|{
+name|Out
+operator|<<
+name|Str
+operator|<<
+literal|'\n'
+block|;   }
+block|}
+empty_stmt|;
 comment|/// Normalize \arg File for use in a user defined #include directive (in the
 comment|/// predefines buffer).
 name|std
@@ -199,6 +274,11 @@ specifier|const
 name|HeaderSearchOptions
 modifier|&
 name|HSOpts
+parameter_list|,
+specifier|const
+name|FrontendOptions
+modifier|&
+name|FEOpts
 parameter_list|)
 function_decl|;
 comment|/// ProcessWarningOptions - Initialize the diagnostic client and process the

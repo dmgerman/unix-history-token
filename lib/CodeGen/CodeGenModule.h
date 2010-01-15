@@ -194,6 +194,9 @@ name|namespace
 name|clang
 block|{
 name|class
+name|TargetCodeGenInfo
+decl_stmt|;
+name|class
 name|ASTContext
 decl_stmt|;
 name|class
@@ -340,6 +343,12 @@ name|TargetData
 operator|&
 name|TheTargetData
 expr_stmt|;
+name|mutable
+specifier|const
+name|TargetCodeGenInfo
+modifier|*
+name|TheTargetCodeGenInfo
+decl_stmt|;
 name|Diagnostic
 modifier|&
 name|Diags
@@ -510,8 +519,9 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|VarDecl
+name|llvm
+operator|::
+name|Constant
 operator|*
 operator|>
 name|CXXGlobalInits
@@ -715,6 +725,13 @@ return|return
 name|VMContext
 return|;
 block|}
+specifier|const
+name|TargetCodeGenInfo
+operator|&
+name|getTargetCodeGenInfo
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getDeclVisibilityMode - Compute the visibility of the decl \arg D.
 name|LangOptions
 operator|::
@@ -860,57 +877,6 @@ argument|bool Extern
 argument_list|,
 argument|const CovariantThunkAdjustment&Adjustment
 argument_list|)
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|uint64_t
-operator|>
-name|CtorVtable_t
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|CtorVtable_t
-operator|,
-name|int64_t
-operator|>
-name|AddrSubMap_t
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|AddrSubMap_t
-operator|*
-operator|>
-name|AddrMap_t
-expr_stmt|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|AddrMap_t
-operator|*
-operator|>
-name|AddressPoints
 expr_stmt|;
 comment|/// GetCXXBaseClassOffset - Returns the offset from a derived class to its
 comment|/// base class. Returns null if the offset is 0.
@@ -1501,6 +1467,22 @@ block|,
 name|GVA_TemplateInstantiation
 block|}
 enum|;
+comment|/// getVtableLinkage - Return the appropriate linkage for the vtable, VTT,
+comment|/// and type information of the given class.
+specifier|static
+name|llvm
+operator|::
+name|GlobalVariable
+operator|::
+name|LinkageTypes
+name|getVtableLinkage
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 comment|/// UniqueMangledName - Unique a name by (if necessary) inserting it into the
@@ -1737,6 +1719,15 @@ comment|/// EmitCXXGlobalInitFunc - Emit a function that initializes C++ globals
 name|void
 name|EmitCXXGlobalInitFunc
 parameter_list|()
+function_decl|;
+name|void
+name|EmitCXXGlobalVarDeclInitFunc
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|D
+parameter_list|)
 function_decl|;
 comment|// FIXME: Hardcoding priority here is gross.
 name|void

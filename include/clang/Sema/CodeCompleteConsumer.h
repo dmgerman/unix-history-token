@@ -192,6 +192,22 @@ name|CK_RightAngle
 block|,
 comment|/// \brief A comma separator (',').
 name|CK_Comma
+block|,
+comment|/// \brief A colon (':').
+name|CK_Colon
+block|,
+comment|/// \brief A semicolon (';').
+name|CK_SemiColon
+block|,
+comment|/// \brief An '=' sign.
+name|CK_Equal
+block|,
+comment|/// \brief Horizontal whitespace (' ').
+name|CK_HorizontalSpace
+block|,
+comment|/// \brief Verticle whitespace ('\n' or '\r\n', depending on the
+comment|/// platform).
+name|CK_VerticalSpace
 block|}
 enum|;
 comment|/// \brief One piece of the code completion string.
@@ -816,11 +832,6 @@ name|Macro
 decl_stmt|;
 block|}
 union|;
-comment|/// \brief Describes how good this result is, with zero being the best
-comment|/// result and progressively higher numbers representing poorer results.
-name|unsigned
-name|Rank
-decl_stmt|;
 comment|/// \brief Specifiers which parameter (of a function, Objective-C method,
 comment|/// macro, etc.) we should start with when formatting the result.
 name|unsigned
@@ -864,8 +875,6 @@ name|Result
 argument_list|(
 argument|NamedDecl *Declaration
 argument_list|,
-argument|unsigned Rank
-argument_list|,
 argument|NestedNameSpecifier *Qualifier =
 literal|0
 argument_list|,
@@ -880,11 +889,6 @@ operator|,
 name|Declaration
 argument_list|(
 name|Declaration
-argument_list|)
-operator|,
-name|Rank
-argument_list|(
-name|Rank
 argument_list|)
 operator|,
 name|StartParameter
@@ -920,9 +924,10 @@ block|{ }
 comment|/// \brief Build a result that refers to a keyword or symbol.
 name|Result
 argument_list|(
-argument|const char *Keyword
-argument_list|,
-argument|unsigned Rank
+specifier|const
+name|char
+operator|*
+name|Keyword
 argument_list|)
 operator|:
 name|Kind
@@ -933,11 +938,6 @@ operator|,
 name|Keyword
 argument_list|(
 name|Keyword
-argument_list|)
-operator|,
-name|Rank
-argument_list|(
-name|Rank
 argument_list|)
 operator|,
 name|StartParameter
@@ -973,9 +973,9 @@ block|{ }
 comment|/// \brief Build a result that refers to a macro.
 name|Result
 argument_list|(
-argument|IdentifierInfo *Macro
-argument_list|,
-argument|unsigned Rank
+name|IdentifierInfo
+operator|*
+name|Macro
 argument_list|)
 operator|:
 name|Kind
@@ -986,11 +986,6 @@ operator|,
 name|Macro
 argument_list|(
 name|Macro
-argument_list|)
-operator|,
-name|Rank
-argument_list|(
-name|Rank
 argument_list|)
 operator|,
 name|StartParameter
@@ -1026,9 +1021,9 @@ block|{ }
 comment|/// \brief Build a result that refers to a pattern.
 name|Result
 argument_list|(
-argument|CodeCompletionString *Pattern
-argument_list|,
-argument|unsigned Rank
+name|CodeCompletionString
+operator|*
+name|Pattern
 argument_list|)
 operator|:
 name|Kind
@@ -1039,11 +1034,6 @@ operator|,
 name|Pattern
 argument_list|(
 name|Pattern
-argument_list|)
-operator|,
-name|Rank
-argument_list|(
-name|Rank
 argument_list|)
 operator|,
 name|StartParameter

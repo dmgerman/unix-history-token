@@ -266,6 +266,7 @@ name|int
 name|var
 parameter_list|)
 block|{
+comment|// expected-note{{'var' declared here}}
 switch|switch
 condition|(
 name|va

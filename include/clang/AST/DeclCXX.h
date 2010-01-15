@@ -1151,6 +1151,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// \brief Determine whether this class has any dependent base classes.
+name|bool
+name|hasAnyDependentBases
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Iterator access to method members.  The method iterator visits
 comment|/// all method members of the class, including non-instance methods,
 comment|/// special methods, etc.

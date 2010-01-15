@@ -1268,6 +1268,151 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Action called as part of error recovery when the parser has
+end_comment
+
+begin_comment
+comment|/// determined that the given name must refer to a template, but
+end_comment
+
+begin_comment
+comment|/// \c isTemplateName() did not return a result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This callback permits the action to give a detailed diagnostic when an
+end_comment
+
+begin_comment
+comment|/// unknown template name is encountered and, potentially, to try to recover
+end_comment
+
+begin_comment
+comment|/// by producing a new template in \p SuggestedTemplate.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param II the name that should be a template.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IILoc the location of the name in the source.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S the scope in which name lookup was performed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS the C++ scope specifier that preceded the name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SuggestedTemplate if the action sets this template to a non-NULL,
+end_comment
+
+begin_comment
+comment|/// template, the parser will recover by consuming the template name token
+end_comment
+
+begin_comment
+comment|/// and the template argument list that follows.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SuggestedTemplateKind as input, the kind of template that we
+end_comment
+
+begin_comment
+comment|/// expect (e.g., \c TNK_Type_template or \c TNK_Function_template). If the
+end_comment
+
+begin_comment
+comment|/// action provides a suggested template, this should be set to the kind of
+end_comment
+
+begin_comment
+comment|/// template.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if a diagnostic was emitted, false otherwise. When false,
+end_comment
+
+begin_comment
+comment|/// the parser itself will emit a generic "unknown template name" diagnostic.
+end_comment
+
+begin_function
+name|virtual
+name|bool
+name|DiagnoseUnknownTemplateName
+parameter_list|(
+specifier|const
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|,
+name|SourceLocation
+name|IILoc
+parameter_list|,
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|*
+name|SS
+parameter_list|,
+name|TemplateTy
+modifier|&
+name|SuggestedTemplate
+parameter_list|,
+name|TemplateNameKind
+modifier|&
+name|SuggestedKind
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// ActOnCXXGlobalScopeSpecifier - Return the object that represents the
 end_comment
 
@@ -3767,6 +3912,11 @@ name|Clobbers
 argument_list|,
 name|SourceLocation
 name|RParenLoc
+argument_list|,
+name|bool
+name|MSAsm
+operator|=
+name|false
 argument_list|)
 block|{
 return|return
@@ -8980,8 +9130,8 @@ name|virtual
 name|void
 name|ActOnAtEnd
 parameter_list|(
-name|SourceLocation
-name|AtEndLoc
+name|SourceRange
+name|AtEnd
 parameter_list|,
 name|DeclPtrTy
 name|classDecl
@@ -9617,6 +9767,58 @@ comment|//@{
 end_comment
 
 begin_comment
+comment|/// \brief Describes the context in which code completion occurs.
+end_comment
+
+begin_enum
+enum|enum
+name|CodeCompletionContext
+block|{
+comment|/// \brief Code completion occurs at top-level or namespace context.
+name|CCC_Namespace
+block|,
+comment|/// \brief Code completion occurs within a class, struct, or union.
+name|CCC_Class
+block|,
+comment|/// \brief Code completion occurs within an Objective-C interface, protocol,
+comment|/// or category.
+name|CCC_ObjCInterface
+block|,
+comment|/// \brief Code completion occurs within an Objective-C implementation or
+comment|/// category implementation
+name|CCC_ObjCImplementation
+block|,
+comment|/// \brief Code completion occurs within the list of instance variables
+comment|/// in an Objective-C interface, protocol, category, or implementation.
+name|CCC_ObjCInstanceVariableList
+block|,
+comment|/// \brief Code completion occurs following one or more template
+comment|/// headers.
+name|CCC_Template
+block|,
+comment|/// \brief Code completion occurs following one or more template
+comment|/// headers within a class.
+name|CCC_MemberTemplate
+block|,
+comment|/// \brief Code completion occurs within an expression.
+name|CCC_Expression
+block|,
+comment|/// \brief Code completion occurs within a statement, which may
+comment|/// also be an expression or a declaration.
+name|CCC_Statement
+block|,
+comment|/// \brief Code completion occurs at the beginning of the
+comment|/// initialization statement (or expression) in a for loop.
+name|CCC_ForInit
+block|,
+comment|/// \brief Code completion ocurs within the condition of an if,
+comment|/// while, switch, or for statement.
+name|CCC_Condition
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/// \brief Code completion for an ordinary name that occurs within the given
 end_comment
 
@@ -9632,6 +9834,18 @@ begin_comment
 comment|/// \param S the scope in which the name occurs.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CompletionContext the context in which code completion
+end_comment
+
+begin_comment
+comment|/// occurs.
+end_comment
+
 begin_function
 name|virtual
 name|void
@@ -9640,6 +9854,9 @@ parameter_list|(
 name|Scope
 modifier|*
 name|S
+parameter_list|,
+name|CodeCompletionContext
+name|CompletionContext
 parameter_list|)
 block|{ }
 end_function
@@ -10155,6 +10372,22 @@ name|ObjCImpDecl
 parameter_list|,
 name|bool
 name|InInterface
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion after the '@' in the list of instance variables.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCAtVisibility
+parameter_list|(
+name|Scope
+modifier|*
+name|S
 parameter_list|)
 block|{ }
 end_function

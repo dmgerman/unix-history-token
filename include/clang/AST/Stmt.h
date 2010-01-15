@@ -6163,6 +6163,9 @@ block|;
 name|bool
 name|IsVolatile
 block|;
+name|bool
+name|MSAsm
+block|;
 name|unsigned
 name|NumOutputs
 block|;
@@ -6223,6 +6226,8 @@ argument_list|,
 argument|bool issimple
 argument_list|,
 argument|bool isvolatile
+argument_list|,
+argument|bool msasm
 argument_list|,
 argument|unsigned numoutputs
 argument_list|,
@@ -6331,7 +6336,26 @@ argument_list|)
 block|{
 name|IsSimple
 operator|=
-name|false
+name|V
+block|; }
+name|bool
+name|isMSAsm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MSAsm
+return|;
+block|}
+name|void
+name|setMSAsm
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|MSAsm
+operator|=
+name|V
 block|; }
 comment|//===--- Asm String Analysis ---===//
 specifier|const

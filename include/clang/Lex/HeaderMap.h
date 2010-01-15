@@ -66,6 +66,9 @@ block|{
 name|class
 name|MemoryBuffer
 decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -164,15 +167,10 @@ name|FileEntry
 modifier|*
 name|LookupFile
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|FilenameStart
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|FilenameEnd
+name|llvm
+operator|::
+name|StringRef
+name|Filename
 argument_list|,
 name|FileManager
 operator|&

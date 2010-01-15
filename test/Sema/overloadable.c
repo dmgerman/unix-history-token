@@ -381,6 +381,10 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-note {{candidate}}
+end_comment
+
 begin_function_decl
 name|double
 name|promote
@@ -396,6 +400,10 @@ begin_empty_stmt
 unit|))
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// expected-note {{candidate}}
+end_comment
 
 begin_function_decl
 name|long
@@ -414,6 +422,10 @@ begin_empty_stmt
 unit|))
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// expected-note {{candidate}}
+end_comment
 
 begin_function_decl
 name|void

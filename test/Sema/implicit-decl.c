@@ -56,7 +56,23 @@ name|compCount
 argument_list|)
 condition|)
 block|{
-comment|// expected-note {{previous implicit declaration is here}}
+comment|// expected-note {{previous implicit declaration is here}} \
+name|expected
+operator|-
+name|warning
+block|{
+block|{
+name|implicit
+name|declaration
+name|of
+name|function
+literal|'_CFCalendarDecomposeAbsoluteTimeV'
+name|is
+name|invalid
+name|in
+name|C99
+block|}
+block|}
 block|}
 return|return
 operator|(

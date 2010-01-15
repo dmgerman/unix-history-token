@@ -271,10 +271,9 @@ name|TargetData
 operator|&
 name|TheTargetData
 expr_stmt|;
-name|mutable
 specifier|const
 name|ABIInfo
-modifier|*
+modifier|&
 name|TheABIInfo
 decl_stmt|;
 name|llvm
@@ -490,6 +489,11 @@ operator|::
 name|TargetData
 operator|&
 name|TD
+argument_list|,
+specifier|const
+name|ABIInfo
+operator|&
+name|Info
 argument_list|)
 expr_stmt|;
 operator|~
@@ -536,7 +540,11 @@ operator|&
 name|getABIInfo
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|TheABIInfo
+return|;
+block|}
 name|llvm
 operator|::
 name|LLVMContext

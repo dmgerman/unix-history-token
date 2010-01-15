@@ -124,6 +124,9 @@ name|class
 name|FileManager
 decl_stmt|;
 name|class
+name|FrontendAction
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -299,6 +302,47 @@ operator|~
 name|CompilerInstance
 argument_list|()
 expr_stmt|;
+comment|/// @name High-Level Operations
+comment|/// {
+comment|/// ExecuteAction - Execute the provided action against the compiler's
+comment|/// CompilerInvocation object.
+comment|///
+comment|/// This function makes the following assumptions:
+comment|///
+comment|///  - The invocation options should be initialized. This function does not
+comment|///    handle the '-help' or '-version' options, clients should handle those
+comment|///    directly.
+comment|///
+comment|///  - The diagnostics engine should have already been created by the client.
+comment|///
+comment|///  - No other CompilerInstance state should have been initialized (this is
+comment|///    an unchecked error).
+comment|///
+comment|///  - Clients should have initialized any LLVM target features that may be
+comment|///    required.
+comment|///
+comment|///  - Clients should eventually call llvm_shutdown() upon the completion of
+comment|///    this routine to ensure that any managed objects are properly destroyed.
+comment|///
+comment|/// Note that this routine may write output to 'stderr'.
+comment|///
+comment|/// \param Act - The action to execute.
+comment|/// \return - True on success.
+comment|//
+comment|// FIXME: This function should take the stream to write any debugging /
+comment|// verbose output to as an argument.
+comment|//
+comment|// FIXME: Eliminate the llvm_shutdown requirement, that should either be part
+comment|// of the context or else not CompilerInstance specific.
+name|bool
+name|ExecuteAction
+parameter_list|(
+name|FrontendAction
+modifier|&
+name|Act
+parameter_list|)
+function_decl|;
+comment|/// }
 comment|/// @name LLVM Context
 comment|/// {
 name|bool
@@ -1342,6 +1386,10 @@ modifier|&
 parameter_list|,
 specifier|const
 name|TargetInfo
+modifier|&
+parameter_list|,
+specifier|const
+name|FrontendOptions
 modifier|&
 parameter_list|,
 name|SourceManager

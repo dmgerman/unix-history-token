@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ImmutableSet.h"
 end_include
 
@@ -415,10 +409,9 @@ argument_list|()
 specifier|const
 block|;
 specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|getDescription
 argument_list|()
 specifier|const
@@ -428,10 +421,9 @@ name|Description
 return|;
 block|}
 specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|getShortDescription
 argument_list|()
 specifier|const
@@ -2158,7 +2150,7 @@ block|}
 name|void
 name|addString
 argument_list|(
-argument|const std::string& s
+argument|llvm::StringRef s
 argument_list|)
 block|{
 name|Strs

@@ -36,7 +36,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|// expected-error {{function cannot return array or function type}} expected-warning {{type specifier missing, defaults to 'int'}} expected-warning {{type specifier missing, defaults to 'int'}}
+comment|// expected-error {{function cannot return function type}} expected-warning {{type specifier missing, defaults to 'int'}} expected-warning {{type specifier missing, defaults to 'int'}}
 end_comment
 
 begin_typedef

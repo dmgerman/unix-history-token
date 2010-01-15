@@ -15,6 +15,17 @@ parameter_list|)
 value|e##c (x, __LINE__)
 end_define
 
+begin_function_decl
+name|int
+name|ec
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|x

@@ -444,6 +444,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-warning {{division by zero is undefined}}
+end_comment
+
 begin_decl_stmt
 name|int
 name|illegaldiv2
@@ -456,7 +460,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{variable length array declaration not allowed at file scope}}
+comment|// expected-error {{variable length array declaration not allowed at file scope}} \
+end_comment
+
+begin_comment
+comment|// expected-warning {{division by zero is undefined}}
 end_comment
 
 begin_decl_stmt

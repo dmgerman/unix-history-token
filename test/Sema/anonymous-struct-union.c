@@ -341,5 +341,41 @@ begin_comment
 comment|// expected-error{{expected member name or ';' after declaration specifiers}}
 end_comment
 
+begin_comment
+comment|// Make sure we don't a.k.a. anonymous structs.
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|x
+decl_stmt|;
+block|}
+name|a_struct
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|int
+name|tmp
+init|=
+operator|(
+name|a_struct
+operator|)
+block|{
+operator|.
+name|x
+operator|=
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{incompatible type initializing 'a_struct', expected 'int'}}
+end_comment
+
 end_unit
 

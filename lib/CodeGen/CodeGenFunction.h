@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/CharUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/TargetInfo.h"
 end_include
 
@@ -1601,7 +1607,7 @@ name|BuildDescriptorBlockDecl
 argument_list|(
 argument|bool BlockHasCopyDispose
 argument_list|,
-argument|uint64_t Size
+argument|CharUnits Size
 argument_list|,
 argument|const llvm::StructType *
 argument_list|,
@@ -1644,7 +1650,7 @@ operator|*
 operator|>
 name|ldm
 argument_list|,
-name|uint64_t
+name|CharUnits
 operator|&
 name|Size
 argument_list|,
@@ -1681,7 +1687,7 @@ operator|*
 name|LoadBlockStruct
 argument_list|()
 expr_stmt|;
-name|uint64_t
+name|CharUnits
 name|AllocateBlockDecl
 parameter_list|(
 specifier|const
@@ -1857,7 +1863,7 @@ name|Constant
 operator|*
 name|Vtable
 argument_list|,
-name|CodeGenModule
+name|CGVtableInfo
 operator|::
 name|AddrSubMap_t
 operator|&
@@ -2895,6 +2901,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// LoadCXXVTT - Load the VTT parameter to base constructors/destructors have
+end_comment
+
+begin_comment
+comment|/// virtual bases.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|LoadCXXVTT
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// GetAddressOfBaseClass - This function will add the necessary delta to the
 end_comment
 
@@ -3415,6 +3439,45 @@ name|Size
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitScalarPrePostIncDec
+argument_list|(
+argument|const UnaryOperator *E
+argument_list|,
+argument|LValue LV
+argument_list|,
+argument|bool isInc
+argument_list|,
+argument|bool isPre
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|ComplexPairTy
+name|EmitComplexPrePostIncDec
+parameter_list|(
+specifier|const
+name|UnaryOperator
+modifier|*
+name|E
+parameter_list|,
+name|LValue
+name|LV
+parameter_list|,
+name|bool
+name|isInc
+parameter_list|,
+name|bool
+name|isPre
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -5043,6 +5106,12 @@ name|Value
 operator|*
 name|This
 argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|VTT
+argument_list|,
 name|CallExpr
 operator|::
 name|const_arg_iterator
@@ -5187,46 +5256,6 @@ argument_list|(
 argument|unsigned BuiltinID
 argument_list|,
 argument|const CallExpr *E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|EmitShuffleVector
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|V1
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|V2
-argument_list|,
-operator|...
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|EmitVector
-argument_list|(
-argument|llvm::Value * const *Vals
-argument_list|,
-argument|unsigned NumVals
-argument_list|,
-argument|bool isSplat = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5818,14 +5847,33 @@ name|Function
 operator|*
 name|Fn
 argument_list|,
-specifier|const
-name|VarDecl
+name|llvm
+operator|::
+name|Constant
 operator|*
 operator|*
 name|Decls
 argument_list|,
 name|unsigned
 name|NumDecls
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|GenerateCXXGlobalVarDeclInitFunc
+argument_list|(
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|,
+specifier|const
+name|VarDecl
+operator|*
+name|D
 argument_list|)
 decl_stmt|;
 end_decl_stmt

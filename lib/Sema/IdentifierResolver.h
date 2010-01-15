@@ -168,22 +168,6 @@ name|D
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// AddShadowed - Add a decl by putting it directly above the 'Shadow' decl.
-comment|/// Later lookups will find the 'Shadow' decl first. The 'Shadow' decl must
-comment|/// be already added to the scope chain and must be in the same context as
-comment|/// the decl that we want to add.
-name|void
-name|AddShadowed
-parameter_list|(
-name|NamedDecl
-modifier|*
-name|D
-parameter_list|,
-name|NamedDecl
-modifier|*
-name|Shadow
-parameter_list|)
-function_decl|;
 comment|/// RemoveDecl - Remove the decl from the scope chain.
 comment|/// The decl must already be part of the decl chain.
 name|void
@@ -630,21 +614,6 @@ parameter_list|(
 name|NamedDecl
 modifier|*
 name|D
-parameter_list|)
-function_decl|;
-comment|/// AddShadowedDecl - Link the decl to its shadowed decl chain putting it
-comment|/// after the decl that the iterator points to, thus the 'Shadow' decl will be
-comment|/// encountered before the 'D' decl.
-name|void
-name|AddShadowedDecl
-parameter_list|(
-name|NamedDecl
-modifier|*
-name|D
-parameter_list|,
-name|NamedDecl
-modifier|*
-name|Shadow
 parameter_list|)
 function_decl|;
 comment|/// RemoveDecl - Unlink the decl from its shadowed decl chain.

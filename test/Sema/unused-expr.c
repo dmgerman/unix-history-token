@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -fno-math-errno %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_function_decl
@@ -27,7 +27,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// implicitly const because of -fno-math-errno!
+comment|// implicitly const because of no -fmath-errno!
 end_comment
 
 begin_function
@@ -129,7 +129,7 @@ comment|// expected-warning {{expression result unused}}
 name|__real__
 name|VC
 decl_stmt|;
-comment|// We know this can't change errno because of -fno-math-errno.
+comment|// We know this can't change errno because of no -fmath-errno.
 name|sqrt
 argument_list|(
 name|A

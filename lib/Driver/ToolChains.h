@@ -152,12 +152,6 @@ specifier|const
 block|;
 name|virtual
 name|bool
-name|IsMathErrnoDefault
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|bool
 name|IsUnwindTablesDefault
 argument_list|()
 specifier|const
@@ -539,12 +533,6 @@ argument|const Compilation&C
 argument_list|,
 argument|const JobAction&JA
 argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|IsMathErrnoDefault
-argument_list|()
 specifier|const
 block|;
 name|virtual

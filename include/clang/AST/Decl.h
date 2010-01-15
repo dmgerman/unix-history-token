@@ -5111,6 +5111,16 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+specifier|const
+name|IdentifierInfo
+operator|*
+name|getLiteralIdentifier
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// \brief If this function is an instantiation of a member function
 end_comment

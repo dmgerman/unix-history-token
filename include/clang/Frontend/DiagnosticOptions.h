@@ -139,6 +139,21 @@ decl_stmt|;
 comment|/// Check that diagnostics match the expected
 comment|/// diagnostics, indicated by markers in the
 comment|/// input source file.
+comment|/// The distance between tab stops.
+name|unsigned
+name|TabStop
+decl_stmt|;
+enum|enum
+block|{
+name|DefaultTabStop
+init|=
+literal|8
+block|,
+name|MaxTabStop
+init|=
+literal|100
+block|}
+enum|;
 comment|/// Column limit for formatting message diagnostics, or 0 if unused.
 name|unsigned
 name|MessageLength
@@ -170,6 +185,10 @@ block|{
 name|IgnoreWarnings
 operator|=
 literal|0
+expr_stmt|;
+name|TabStop
+operator|=
+name|DefaultTabStop
 expr_stmt|;
 name|MessageLength
 operator|=

@@ -27,7 +27,7 @@ block|{  }
 end_function
 
 begin_comment
-comment|// expected-error {{cannot return array or function}}
+comment|// expected-error {{cannot return array type}}
 end_comment
 
 begin_decl_stmt

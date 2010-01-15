@@ -216,5 +216,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|test5
+parameter_list|(
+specifier|_Complex
+name|int
+modifier|*
+name|x
+parameter_list|)
+block|{
+operator|(
+operator|*
+name|x
+operator|)
+operator|++
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

@@ -413,6 +413,28 @@ comment|// expected-warning {{comparison against a string literal is unspecified
 block|}
 end_function
 
+begin_function
+name|int
+name|test12b
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|X
+parameter_list|)
+block|{
+return|return
+sizeof|sizeof
+argument_list|(
+name|X
+operator|==
+literal|"foo"
+argument_list|)
+return|;
+comment|// no-warning
+block|}
+end_function
+
 begin_comment
 comment|// rdar://6719156
 end_comment
@@ -551,6 +573,55 @@ end_function
 begin_comment
 comment|// expected-error {{invalid operands to binary expression}}
 end_comment
+
+begin_comment
+comment|// PR6004
+end_comment
+
+begin_function
+name|void
+name|test17
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|x
+operator|=
+name|x
+operator|/
+literal|0
+expr_stmt|;
+comment|// expected-warning {{division by zero is undefined}}
+name|x
+operator|=
+name|x
+operator|%
+literal|0
+expr_stmt|;
+comment|// expected-warning {{remainder by zero is undefined}}
+name|x
+operator|/=
+literal|0
+expr_stmt|;
+comment|// expected-warning {{division by zero is undefined}}
+name|x
+operator|%=
+literal|0
+expr_stmt|;
+comment|// expected-warning {{remainder by zero is undefined}}
+name|x
+operator|=
+sizeof|sizeof
+argument_list|(
+name|x
+operator|/
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no warning.
+block|}
+end_function
 
 end_unit
 

@@ -93,6 +93,11 @@ name|NotFound
 init|=
 literal|0
 block|,
+comment|/// @brief No entity found met the criteria within the current
+comment|/// instantiation,, but there were dependent base classes of the
+comment|/// current instantiation that could not be searched.
+name|NotFoundInCurrentInstantiation
+block|,
 comment|/// @brief Name lookup found a single declaration that met the
 comment|/// criteria.  getFoundDecl() will return this declaration.
 name|Found
@@ -735,6 +740,42 @@ name|N
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Determine whether no result was found because we could not
+comment|/// search into dependent base classes of the current instantiation.
+name|bool
+name|wasNotFoundInCurrentInstantiation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResultKind
+operator|==
+name|NotFoundInCurrentInstantiation
+return|;
+block|}
+comment|/// \brief Note that while no result was found in the current instantiation,
+comment|/// there were dependent base classes that could not be searched.
+name|void
+name|setNotFoundInCurrentInstantiation
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|ResultKind
+operator|==
+name|NotFound
+operator|&&
+name|Decls
+operator|.
+name|empty
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|ResultKind
+operator|=
+name|NotFoundInCurrentInstantiation
+expr_stmt|;
+block|}
 comment|/// \brief Resolves the result kind of the lookup, possibly hiding
 comment|/// decls.
 comment|///
@@ -757,10 +798,18 @@ operator|.
 name|empty
 argument_list|()
 condition|)
+block|{
+if|if
+condition|(
+name|ResultKind
+operator|!=
+name|NotFoundInCurrentInstantiation
+condition|)
 name|ResultKind
 operator|=
 name|NotFound
 expr_stmt|;
+block|}
 else|else
 block|{
 name|ResultKind
@@ -1845,6 +1894,9 @@ comment|/// \param ND the declaration found.
 comment|///
 comment|/// \param Hiding a declaration that hides the declaration \p ND,
 comment|/// or NULL if no such declaration exists.
+comment|///
+comment|/// \param InBaseClass whether this declaration was found in base
+comment|/// class of the context we searched.
 name|virtual
 name|void
 name|FoundDecl
@@ -1856,6 +1908,9 @@ parameter_list|,
 name|NamedDecl
 modifier|*
 name|Hiding
+parameter_list|,
+name|bool
+name|InBaseClass
 parameter_list|)
 init|=
 literal|0

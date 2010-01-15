@@ -638,6 +638,18 @@ argument|ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
+comment|/// EvaluateAsBooleanCondition - Return true if this is a constant
+comment|/// which we we can fold and convert to a boolean condition using
+comment|/// any crazy technique that we want to.
+name|bool
+name|EvaluateAsBooleanCondition
+argument_list|(
+argument|bool&Result
+argument_list|,
+argument|ASTContext&Ctx
+argument_list|)
+specifier|const
+block|;
 comment|/// isEvaluatable - Call Evaluate to see if this expression can be constant
 comment|/// folded, but discard the result.
 name|bool
@@ -11043,6 +11055,8 @@ literal|16
 block|;
 name|DesignatedInitExpr
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|QualType Ty
 argument_list|,
 argument|unsigned NumDesignators
@@ -11094,6 +11108,14 @@ operator|:
 name|virtual
 name|void
 name|DoDestroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
+name|void
+name|DestroyDesignators
 argument_list|(
 name|ASTContext
 operator|&
@@ -11719,6 +11741,8 @@ block|}
 name|void
 name|setDesignators
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|const Designator *Desigs
 argument_list|,
 argument|unsigned NumDesigs
@@ -11987,6 +12011,8 @@ comment|/// of designators in [First, Last).
 name|void
 name|ExpandDesignator
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|unsigned Idx
 argument_list|,
 argument|const Designator *First

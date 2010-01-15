@@ -1227,6 +1227,11 @@ block|{
 name|SourceLocation
 name|Loc
 block|;
+name|bool
+name|Implicit
+operator|:
+literal|1
+block|;
 name|public
 operator|:
 name|CXXThisExpr
@@ -1234,6 +1239,8 @@ argument_list|(
 argument|SourceLocation L
 argument_list|,
 argument|QualType Type
+argument_list|,
+argument|bool isImplicit
 argument_list|)
 operator|:
 name|Expr
@@ -1257,7 +1264,12 @@ argument_list|)
 block|,
 name|Loc
 argument_list|(
-argument|L
+name|L
+argument_list|)
+block|,
+name|Implicit
+argument_list|(
+argument|isImplicit
 argument_list|)
 block|{ }
 name|virtual
@@ -1273,6 +1285,25 @@ name|Loc
 argument_list|)
 return|;
 block|}
+name|bool
+name|isImplicit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Implicit
+return|;
+block|}
+name|void
+name|setImplicit
+argument_list|(
+argument|bool I
+argument_list|)
+block|{
+name|Implicit
+operator|=
+name|I
+block|; }
 specifier|static
 name|bool
 name|classof

@@ -2557,7 +2557,7 @@ block|;
 name|DeclPtrTy
 name|ParseObjCAtEndDeclaration
 argument_list|(
-argument|SourceLocation atLoc
+argument|SourceRange atEnd
 argument_list|)
 block|;
 name|DeclPtrTy
@@ -3532,7 +3532,10 @@ name|DSC_normal
 block|,
 comment|// normal context
 name|DSC_class
+block|,
 comment|// class context, enables 'friend'
+name|DSC_top_level
+comment|// top-level/namespace declaration context
 block|}
 enum|;
 name|DeclGroupPtrTy
@@ -3632,6 +3635,13 @@ name|TemplateInfo
 parameter_list|,
 name|AccessSpecifier
 name|AS
+parameter_list|)
+function_decl|;
+name|DeclSpecContext
+name|getDeclSpecContextFromDeclaratorContext
+parameter_list|(
+name|unsigned
+name|Context
 parameter_list|)
 function_decl|;
 name|void
@@ -3848,6 +3858,13 @@ name|isDeclarationSpecifier
 argument_list|()
 return|;
 block|}
+comment|/// \brief Starting with a scope specifier, identifier, or
+comment|/// template-id that refers to the current class, determine whether
+comment|/// this is a constructor declarator.
+name|bool
+name|isConstructorDeclarator
+parameter_list|()
+function_decl|;
 comment|/// \brief Specifies the context in which type-id/expression
 comment|/// disambiguation will occur.
 enum|enum

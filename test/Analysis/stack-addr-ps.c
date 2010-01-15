@@ -361,5 +361,32 @@ comment|// no-warning
 block|}
 end_function
 
+begin_comment
+comment|//<rdar://problem/7523821>
+end_comment
+
+begin_function
+name|int
+modifier|*
+name|rdar_7523821_f2
+parameter_list|()
+block|{
+name|int
+name|a
+index|[
+literal|3
+index|]
+decl_stmt|;
+return|return
+name|a
+return|;
+comment|// expected-warning 2 {{ddress of stack memory associated with local variable 'a' returned}}
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 end_unit
 

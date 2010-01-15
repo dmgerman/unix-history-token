@@ -151,6 +151,9 @@ name|class
 name|SourceManager
 decl_stmt|;
 name|class
+name|ExternalPreprocessorSource
+decl_stmt|;
+name|class
 name|FileManager
 decl_stmt|;
 name|class
@@ -215,6 +218,11 @@ decl_stmt|;
 name|HeaderSearch
 modifier|&
 name|HeaderInfo
+decl_stmt|;
+comment|/// \brief External source of macros.
+name|ExternalPreprocessorSource
+modifier|*
+name|ExternalSource
 decl_stmt|;
 comment|/// PTH - An optional PTHManager object used for getting tokens from
 comment|///  a token cache rather than lexing the original source file.
@@ -342,6 +350,13 @@ decl_stmt|;
 comment|/// DisableMacroExpansion - True if macro expansion is disabled.
 name|bool
 name|DisableMacroExpansion
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we have already loaded macros from the external source.
+name|mutable
+name|bool
+name|ReadMacrosFromExternalSource
 range|:
 literal|1
 decl_stmt|;
@@ -833,6 +848,29 @@ name|get
 argument_list|()
 return|;
 block|}
+name|void
+name|setExternalSource
+parameter_list|(
+name|ExternalPreprocessorSource
+modifier|*
+name|Source
+parameter_list|)
+block|{
+name|ExternalSource
+operator|=
+name|Source
+expr_stmt|;
+block|}
+name|ExternalPreprocessorSource
+operator|*
+name|getExternalSource
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExternalSource
+return|;
+block|}
 comment|/// SetCommentRetentionState - Control whether or not the preprocessor retains
 comment|/// comments in output.
 name|void
@@ -1012,28 +1050,24 @@ name|macro_iterator
 expr_stmt|;
 name|macro_iterator
 name|macro_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Macros
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
+argument_list|(
+name|bool
+name|IncludeExternalMacros
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
 name|macro_iterator
 name|macro_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Macros
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
+argument_list|(
+name|bool
+name|IncludeExternalMacros
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|const
 name|std
 operator|::
@@ -2150,23 +2184,17 @@ comment|/// spelling of the filename, but is also expected to handle the case wh
 comment|/// this method decides to use a different buffer.
 name|bool
 name|GetIncludeFilenameSpelling
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|Loc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|BufStart
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|BufEnd
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+operator|&
+name|Filename
+argument_list|)
+decl_stmt|;
 comment|/// LookupFile - Given a "foo" or<foo> reference, look up the indicated file,
 comment|/// return null on failure.  isAngled indicates whether the file reference is
 comment|/// for system #include's or not (i.e. using<> instead of "").
@@ -2174,32 +2202,30 @@ specifier|const
 name|FileEntry
 modifier|*
 name|LookupFile
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|FilenameStart
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|FilenameEnd
-parameter_list|,
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Filename
+argument_list|,
+name|SourceLocation
+name|FilenameTokLoc
+argument_list|,
 name|bool
 name|isAngled
-parameter_list|,
+argument_list|,
 specifier|const
 name|DirectoryLookup
-modifier|*
+operator|*
 name|FromDir
-parameter_list|,
+argument_list|,
 specifier|const
 name|DirectoryLookup
-modifier|*
-modifier|&
+operator|*
+operator|&
 name|CurDir
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// GetCurLookup - The DirectoryLookup structure used to find the current
 comment|/// FileEntry, if CurLexer is non-null and if applicable.  This allows us to
 comment|/// implement #include_next and find directory-specific properties.

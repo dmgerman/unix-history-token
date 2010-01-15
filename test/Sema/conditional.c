@@ -34,6 +34,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|free
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|_php_stream_free1

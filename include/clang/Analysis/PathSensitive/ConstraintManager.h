@@ -90,6 +90,9 @@ name|class
 name|GRStateManager
 decl_stmt|;
 name|class
+name|GRSubEngine
+decl_stmt|;
+name|class
 name|SVal
 decl_stmt|;
 name|class
@@ -309,6 +312,10 @@ parameter_list|(
 name|GRStateManager
 modifier|&
 name|statemgr
+parameter_list|,
+name|GRSubEngine
+modifier|&
+name|subengine
 parameter_list|)
 function_decl|;
 name|ConstraintManager
@@ -318,6 +325,10 @@ parameter_list|(
 name|GRStateManager
 modifier|&
 name|statemgr
+parameter_list|,
+name|GRSubEngine
+modifier|&
+name|subengine
 parameter_list|)
 function_decl|;
 block|}

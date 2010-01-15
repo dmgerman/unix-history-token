@@ -387,14 +387,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|// T - the object type.
-name|Loc
-name|getThisObject
-parameter_list|(
-name|QualType
-name|T
-parameter_list|)
-function_decl|;
 comment|// FIXME: Make out-of-line.
 name|virtual
 name|DefinedOrUnknownSVal
@@ -848,6 +840,11 @@ name|R
 parameter_list|,
 name|QualType
 name|castTy
+parameter_list|,
+name|bool
+name|performTestOnly
+init|=
+name|true
 parameter_list|)
 function_decl|;
 block|}

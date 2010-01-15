@@ -3,6 +3,13 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -verify -fblocks -fsyntax-only
 end_comment
 
+begin_function_decl
+name|void
+name|xx
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|a

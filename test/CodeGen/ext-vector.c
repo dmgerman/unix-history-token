@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o %t
+comment|// RUN: %clang_cc1 -emit-llvm-only %s
 end_comment
 
 begin_typedef
@@ -708,6 +708,45 @@ name|test11a
 argument_list|()
 operator|.
 name|x
+return|;
+block|}
+end_function
+
+begin_function
+name|int4
+name|test12
+parameter_list|(
+name|int4
+name|V
+parameter_list|)
+block|{
+name|V
+operator|.
+name|xyz
+operator|=
+name|V
+operator|.
+name|zyx
+expr_stmt|;
+return|return
+name|V
+return|;
+block|}
+end_function
+
+begin_function
+name|int4
+name|test13
+parameter_list|(
+name|int4
+modifier|*
+name|V
+parameter_list|)
+block|{
+return|return
+name|V
+operator|->
+name|zyxw
 return|;
 block|}
 end_function

@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/ExternalPreprocessorSource.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -478,6 +484,9 @@ name|class
 name|PCHReader
 range|:
 name|public
+name|ExternalPreprocessorSource
+decl_stmt|,
+name|public
 name|ExternalSemaSource
 decl_stmt|,
 name|public
@@ -562,6 +571,13 @@ name|llvm
 operator|::
 name|BitstreamCursor
 name|Stream
+expr_stmt|;
+comment|/// \brief The cursor to the start of the preprocessor block, which stores
+comment|/// all of the macro definitions.
+name|llvm
+operator|::
+name|BitstreamCursor
+name|MacroCursor
 expr_stmt|;
 comment|/// DeclsCursor - This is a cursor to the start of the DECLS_BLOCK block.  It
 comment|/// has read all the abbreviations at the start of the block and is ready to
@@ -1659,8 +1675,7 @@ comment|///
 comment|/// This routine builds a new IdentifierInfo for the given identifier. If any
 comment|/// declarations with this name are visible from translation unit scope, their
 comment|/// declarations will be deserialized and introduced into the declaration
-comment|/// chain of the identifier. FIXME: if this identifier names a macro,
-comment|/// deserialize the macro.
+comment|/// chain of the identifier.
 name|virtual
 name|IdentifierInfo
 modifier|*
@@ -1990,6 +2005,12 @@ parameter_list|(
 name|uint64_t
 name|Offset
 parameter_list|)
+function_decl|;
+comment|/// \brief Read the set of macros defined by this external macro source.
+name|virtual
+name|void
+name|ReadDefinedMacros
+parameter_list|()
 function_decl|;
 comment|/// \brief Retrieve the AST context that this PCH reader
 comment|/// supplements.

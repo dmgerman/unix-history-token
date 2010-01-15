@@ -1528,39 +1528,39 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:INT64_MAX_ INT64_MAX
+comment|// MSP430:INT64_MAX_ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// MSP430:INT64_MIN_ INT64_MIN
+comment|// MSP430:INT64_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
-comment|// MSP430:UINT64_MAX_ UINT64_MAX
+comment|// MSP430:UINT64_MAX_ 18446744073709551615ULL
 end_comment
 
 begin_comment
-comment|// MSP430:INT_LEAST64_MIN_ INT_LEAST64_MIN
+comment|// MSP430:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
-comment|// MSP430:INT_LEAST64_MAX_ INT_LEAST64_MAX
+comment|// MSP430:INT_LEAST64_MAX_ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// MSP430:UINT_LEAST64_MAX_ UINT_LEAST64_MAX
+comment|// MSP430:UINT_LEAST64_MAX_ 18446744073709551615ULL
 end_comment
 
 begin_comment
-comment|// MSP430:INT_FAST64_MIN_ INT_FAST64_MIN
+comment|// MSP430:INT_FAST64_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
-comment|// MSP430:INT_FAST64_MAX_ INT_FAST64_MAX
+comment|// MSP430:INT_FAST64_MAX_ 9223372036854775807LL
 end_comment
 
 begin_comment
-comment|// MSP430:UINT_FAST64_MAX_ UINT_FAST64_MAX
+comment|// MSP430:UINT_FAST64_MAX_ 18446744073709551615ULL
 end_comment
 
 begin_comment
@@ -1668,11 +1668,11 @@ comment|// MSP430:UINT32_C_(0) 0UL
 end_comment
 
 begin_comment
-comment|// MSP430:INT64_C_(0) INT64_C(0)
+comment|// MSP430:INT64_C_(0) 0LL
 end_comment
 
 begin_comment
-comment|// MSP430:UINT64_C_(0) UINT64_C(0)
+comment|// MSP430:UINT64_C_(0) 0ULL
 end_comment
 
 begin_comment

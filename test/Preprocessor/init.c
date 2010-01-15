@@ -1688,7 +1688,7 @@ comment|// MSP430:#define __LDBL_MIN__ 2.2250738585072014e-308
 end_comment
 
 begin_comment
-comment|// MSP430:#define __LONG_LONG_MAX__ 2147483647LL
+comment|// MSP430:#define __LONG_LONG_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment

@@ -14,11 +14,11 @@ comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s.h:4:8 -o - %s | 
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: X : 1
+comment|// CHECK-CC1: X
 end_comment
 
 begin_comment
-comment|// CHECK-CC1-NEXT: Y : 1
+comment|// CHECK-CC1-NEXT: Y
 end_comment
 
 begin_comment
@@ -26,15 +26,15 @@ comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:3:8 -o - %s | Fi
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: X : 1
+comment|// CHECK-CC2: X
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: Xa : 1
+comment|// CHECK-CC2: Xa
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: Y : 1
+comment|// CHECK-CC2: Y
 end_comment
 
 end_unit

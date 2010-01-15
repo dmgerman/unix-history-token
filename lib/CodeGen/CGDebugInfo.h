@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -135,6 +141,9 @@ name|CodeGenModule
 decl_stmt|;
 name|class
 name|CodeGenFunction
+decl_stmt|;
+name|class
+name|GlobalDecl
 decl_stmt|;
 comment|/// CGDebugInfo - This class gathers all debug information during compilation
 comment|/// and is responsible for emitting to llvm globals or pass directly to
@@ -209,6 +218,13 @@ name|MDNode
 operator|>
 expr|>
 name|RegionStack
+expr_stmt|;
+comment|/// FunctionNames - This is a storage for function names that are
+comment|/// constructed on demand. For example, C++ destructors, C++ operators etc..
+name|llvm
+operator|::
+name|BumpPtrAllocator
+name|FunctionNames
 expr_stmt|;
 comment|/// Helper functions for getOrCreateType.
 name|llvm
@@ -418,10 +434,8 @@ comment|/// start of a new function.
 name|void
 name|EmitFunctionStart
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Name
+name|GlobalDecl
+name|GD
 argument_list|,
 name|QualType
 name|FnType
@@ -668,6 +682,20 @@ argument_list|(
 argument|QualType Ty
 argument_list|,
 argument|llvm::DICompileUnit Unit
+argument_list|)
+expr_stmt|;
+comment|/// getFunctionName - Get function name for the given FunctionDecl. If the
+comment|/// name is constructred on demand (e.g. C++ destructor) then the name
+comment|/// is stored on the side.
+name|llvm
+operator|::
+name|StringRef
+name|getFunctionName
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
 argument_list|)
 expr_stmt|;
 block|}

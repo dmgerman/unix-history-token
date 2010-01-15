@@ -607,6 +607,9 @@ name|TSSLoc
 decl_stmt|,
 name|TSTLoc
 decl_stmt|;
+name|SourceRange
+name|TypeofParensRange
+decl_stmt|;
 name|SourceLocation
 name|TQ_constLoc
 decl_stmt|,
@@ -953,6 +956,27 @@ block|{
 return|return
 name|TSTLoc
 return|;
+block|}
+name|SourceRange
+name|getTypeofParensRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeofParensRange
+return|;
+block|}
+name|void
+name|setTypeofParensRange
+parameter_list|(
+name|SourceRange
+name|range
+parameter_list|)
+block|{
+name|TypeofParensRange
+operator|=
+name|range
+expr_stmt|;
 block|}
 comment|/// getSpecifierName - Turn a type-specifier-type into a string like "_Bool"
 comment|/// or "union".
@@ -2013,6 +2037,9 @@ block|,
 comment|/// \brief A constructor name.
 name|IK_ConstructorName
 block|,
+comment|/// \brief A constructor named via a template-id.
+name|IK_ConstructorTemplateId
+block|,
 comment|/// \brief A destructor name.
 name|IK_DestructorName
 block|,
@@ -2079,8 +2106,9 @@ name|TypeTy
 operator|*
 name|DestructorName
 expr_stmt|;
-comment|/// \brief When Kind == IK_TemplateId, the template-id annotation that
-comment|/// contains the template name and template arguments.
+comment|/// \brief When Kind == IK_TemplateId or IK_ConstructorTemplateId,
+comment|/// the template-id annotation that contains the template name and
+comment|/// template arguments.
 name|TemplateIdAnnotation
 modifier|*
 name|TemplateId
@@ -2398,6 +2426,20 @@ operator|=
 name|ClassType
 expr_stmt|;
 block|}
+comment|/// \brief Specify that this unqualified-id was parsed as a
+comment|/// template-id that names a constructor.
+comment|///
+comment|/// \param TemplateId the template-id annotation that describes the parsed
+comment|/// template-id. This UnqualifiedId instance will take ownership of the
+comment|/// \p TemplateId and will free it on destruction.
+name|void
+name|setConstructorTemplateId
+parameter_list|(
+name|TemplateIdAnnotation
+modifier|*
+name|TemplateId
+parameter_list|)
+function_decl|;
 comment|/// \brief Specify that this unqualified-id was parsed as a destructor name.
 comment|///
 comment|/// \param TildeLoc the location of the '~' that introduces the destructor

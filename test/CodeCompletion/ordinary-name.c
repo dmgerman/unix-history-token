@@ -33,19 +33,15 @@ comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:6:9 %s -o - | Fi
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: y : 0
+comment|// CHECK-CC1: foo
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: foo : 2
+comment|// CHECK-CC1: y
 end_comment
 
 begin_comment
-comment|// CHECK-NOT-CC1: y : 2
-end_comment
-
-begin_comment
-comment|// CHECK-CC1-NEXT: TYPEDEF : 2
+comment|// CHECK-CC1: TYPEDEF
 end_comment
 
 end_unit

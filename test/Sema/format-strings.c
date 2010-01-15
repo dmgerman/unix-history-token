@@ -115,6 +115,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|asprintf
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vfprintf
 parameter_list|(
 name|FILE

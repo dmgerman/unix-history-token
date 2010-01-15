@@ -553,7 +553,7 @@ name|Range
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getRewritenText - Return the rewritten form of the text in the specified
+comment|/// getRewrittenText - Return the rewritten form of the text in the specified
 comment|/// range.  If the start or end of the range was unrewritable or if they are
 comment|/// in different buffers, this returns an empty string.
 comment|///
@@ -562,7 +562,7 @@ comment|///
 name|std
 operator|::
 name|string
-name|getRewritenText
+name|getRewrittenText
 argument_list|(
 argument|SourceRange Range
 argument_list|)

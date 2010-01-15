@@ -144,5 +144,29 @@ comment|// no-warning
 block|}
 end_function
 
+begin_comment
+comment|// Don't complain in unevaluated contexts.
+end_comment
+
+begin_function
+name|int
+name|compare_sizeof
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+return|return
+sizeof|sizeof
+argument_list|(
+name|x
+operator|==
+name|x
+argument_list|)
+return|;
+comment|// no-warning
+block|}
+end_function
+
 end_unit
 

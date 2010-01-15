@@ -88,6 +88,13 @@ comment|// expected-note{{please include the header<stdio.h> or explicitly provi
 block|}
 end_function
 
+begin_function_decl
+name|int
+name|f
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|f3

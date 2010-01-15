@@ -23,6 +23,13 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_function_decl
+name|void
+name|fatal
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|void

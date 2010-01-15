@@ -123,6 +123,9 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
+name|MacroBuilder
+decl_stmt|;
+name|class
 name|SourceLocation
 decl_stmt|;
 name|class
@@ -877,14 +880,9 @@ name|LangOptions
 operator|&
 name|Opts
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|char
-operator|>
+name|MacroBuilder
 operator|&
-name|DefineBuffer
+name|Builder
 argument_list|)
 decl|const
 init|=

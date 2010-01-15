@@ -2382,8 +2382,8 @@ name|rProto
 parameter_list|)
 function_decl|;
 comment|/// getObjCEncodingTypeSize returns size of type for objective-c encoding
-comment|/// purpose.
-name|int
+comment|/// purpose in characters.
+name|CharUnits
 name|getObjCEncodingTypeSize
 parameter_list|(
 name|QualType
@@ -3155,17 +3155,18 @@ name|T2
 argument_list|)
 return|;
 block|}
-comment|/// \brief Returns this type as a completely-unqualified array type, capturing
-comment|/// the qualifiers in Quals. This only operates on canonical types in order
-comment|/// to ensure the ArrayType doesn't itself have qualifiers.
+comment|/// \brief Returns this type as a completely-unqualified array type,
+comment|/// capturing the qualifiers in Quals. This will remove the minimal amount of
+comment|/// sugaring from the types, similar to the behavior of
+comment|/// QualType::getUnqualifiedType().
 comment|///
-comment|/// \param T is the canonicalized QualType, which may be an ArrayType
+comment|/// \param T is the qualified type, which may be an ArrayType
 comment|///
 comment|/// \param Quals will receive the full set of qualifiers that were
-comment|/// applied to the element type of the array.
+comment|/// applied to the array.
 comment|///
 comment|/// \returns if this is an array type, the completely unqualified array type
-comment|/// that corresponds to it. Otherwise, returns this->getUnqualifiedType().
+comment|/// that corresponds to it. Otherwise, returns T.getUnqualifiedType().
 name|QualType
 name|getUnqualifiedArrayType
 parameter_list|(
@@ -3388,6 +3389,28 @@ return|return
 name|dyn_cast_or_null
 operator|<
 name|IncompleteArrayType
+operator|>
+operator|(
+name|getAsArrayType
+argument_list|(
+name|T
+argument_list|)
+operator|)
+return|;
+block|}
+specifier|const
+name|DependentSizedArrayType
+modifier|*
+name|getAsDependentSizedArrayType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+return|return
+name|dyn_cast_or_null
+operator|<
+name|DependentSizedArrayType
 operator|>
 operator|(
 name|getAsArrayType

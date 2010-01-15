@@ -114,7 +114,23 @@ argument_list|,
 literal|"foo"
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{implicit declaration of 'fprintf' requires inclusion of the header<stdio.h>}}
+comment|// expected-error{{implicit declaration of 'fprintf' requires inclusion of the header<stdio.h>}} \
+name|expected
+operator|-
+name|warning
+block|{
+block|{
+name|implicit
+name|declaration
+name|of
+name|function
+literal|'fprintf'
+name|is
+name|invalid
+name|in
+name|C99
+block|}
+block|}
 block|}
 end_function
 

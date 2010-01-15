@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -fixit -o - | %clang_cc1 -fsyntax-only -pedantic -Werror -x c -
+comment|// RUN: %clang_cc1 -fsyntax-only -fixit -o - %s | %clang_cc1 -fsyntax-only -pedantic -Werror -x c -
 end_comment
 
 begin_struct
@@ -28,6 +28,7 @@ name|struct
 name|Point
 name|top_left
 decl_stmt|,
+comment|// expected-note{{'top_left' declared here}}
 name|bottom_right
 decl_stmt|;
 block|}
@@ -55,6 +56,7 @@ name|struct
 name|Rectangle
 name|bounds
 decl_stmt|;
+comment|// expected-note{{'bounds' declared here}}
 name|enum
 name|Color
 name|color
