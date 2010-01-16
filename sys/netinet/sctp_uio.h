@@ -1814,17 +1814,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_AUTH_HMAC_ID_MD5
-value|0x0002
-end_define
-
-begin_comment
-comment|/* deprecated */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SCTP_AUTH_HMAC_ID_SHA256
 value|0x0003
 end_define
