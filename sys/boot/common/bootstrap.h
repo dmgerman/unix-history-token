@@ -60,6 +60,10 @@ value|4
 name|int
 name|d_unit
 decl_stmt|;
+name|void
+modifier|*
+name|d_opendata
+decl_stmt|;
 block|}
 struct|;
 end_struct

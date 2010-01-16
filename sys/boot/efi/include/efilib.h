@@ -44,15 +44,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|devsw
-name|efifs_dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|fs_ops
-name|efifs_fsops
+name|efipart_dev
 decl_stmt|;
 end_decl_stmt
 
