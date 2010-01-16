@@ -51,13 +51,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|uname
-value|wrapped_uname
-end_define
-
 begin_include
 include|#
 directive|include
@@ -82,15 +75,9 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|uname
-end_undef
-
 begin_function
 name|int
-name|uname
+name|__uname
 parameter_list|(
 name|struct
 name|utsname
@@ -108,6 +95,19 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__sym_compat
+argument_list|(
+name|uname
+argument_list|,
+name|__uname
+argument_list|,
+name|FBSD_1
+literal|.0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
