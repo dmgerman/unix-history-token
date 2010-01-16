@@ -762,7 +762,6 @@ name|flag
 operator|&
 name|NFSSVC_OLDNFSD
 condition|)
-block|{
 name|error
 operator|=
 name|nfssvc_nfsd
@@ -772,7 +771,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -836,12 +834,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -1862,13 +1858,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* 	 * Steal the socket from userland so that it doesn't close 	 * unexpectedly. 	 */
 if|if
 condition|(
@@ -1964,7 +1958,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called by nfssvc() for nfsds. Just loops around servicing rpc requests  * until it is killed by a signal.  */
+comment|/*  * Called by nfssvc() for nfsds.  Just loops around servicing rpc requests  * until it is killed by a signal.  */
 end_comment
 
 begin_function
@@ -2065,7 +2059,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Only the first nfsd actually does any work. The RPC code 	 * adds threads to it as needed. Any extra processes offered 	 * by nfsd just exit. If nfsd is new enough, it will call us 	 * once with a structure that specifies how many threads to 	 * use. 	 */
+comment|/* 	 * Only the first nfsd actually does any work.  The RPC code 	 * adds threads to it as needed.  Any extra processes offered 	 * by nfsd just exit.  If nfsd is new enough, it will call us 	 * once with a structure that specifies how many threads to 	 * use. 	 */
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -2198,7 +2192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Size the NFS server's duplicate request cache at 1/2 the  * nmbclusters, floating within a (64, 2048) range. This is to  * prevent all mbuf clusters being tied up in the NFS dupreq  * cache for small values of nmbclusters.  */
+comment|/*  * Size the NFS server's duplicate request cache at 1/2 the  * nmbclusters, floating within a (64, 2048) range.  This is to  * prevent all mbuf clusters being tied up in the NFS dupreq  * cache for small values of nmbclusters.  */
 end_comment
 
 begin_function
