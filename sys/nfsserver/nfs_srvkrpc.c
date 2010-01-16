@@ -1058,7 +1058,6 @@ comment|/*  *	nfs_realign:  *  *	Check for badly aligned mbuf data and realign b
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|nfs_realign
 parameter_list|(
