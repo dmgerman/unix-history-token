@@ -111,16 +111,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|utmpx
+modifier|*
 name|futx_to_utx
 parameter_list|(
 specifier|const
 name|struct
 name|futx
-modifier|*
-parameter_list|,
-name|struct
-name|utmpx
 modifier|*
 parameter_list|)
 function_decl|;
