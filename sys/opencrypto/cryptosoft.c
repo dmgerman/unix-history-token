@@ -1951,6 +1951,14 @@ case|:
 case|case
 name|CRYPTO_SHA1_KPDK
 case|:
+block|{
+comment|/* We need a buffer that can hold an md5 and a sha1 result. */
+name|u_char
+name|buf
+index|[
+name|SHA1_RESULTLEN
+index|]
+decl_stmt|;
 name|sw
 operator|->
 name|sw_klen
@@ -1994,7 +2002,7 @@ name|axf
 operator|->
 name|Final
 argument_list|(
-name|NULL
+name|buf
 argument_list|,
 name|sw
 operator|->
@@ -2002,6 +2010,7 @@ name|sw_ictx
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 default|default:
 name|printf
 argument_list|(
