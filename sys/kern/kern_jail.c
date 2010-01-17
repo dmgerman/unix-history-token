@@ -4036,7 +4036,7 @@ name|ip4
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * IP addresses are all sorted but ip[0] to preserve 			 * the primary IP address as given from userland. 			 * This special IP is used for unbound outgoing 			 * connections as well for "loopback" traffic. 			 */
+comment|/* 			 * IP addresses are all sorted but ip[0] to preserve 			 * the primary IP address as given from userland. 			 * This special IP is used for unbound outgoing 			 * connections as well for "loopback" traffic in case 			 * source address selection cannot find any more fitting 			 * address to connect from. 			 */
 if|if
 condition|(
 name|ip4s
