@@ -710,8 +710,10 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Removing quirk '%s' failed, continuing.\n"
 argument_list|,
 name|str
@@ -825,8 +827,10 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Adding quirk '%s' failed, continuing.\n"
 argument_list|,
 name|str
@@ -1101,8 +1105,10 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Syntax error: "
 literal|"Duplicate option: '%s'\n"
 argument_list|,
@@ -1125,8 +1131,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|""
 literal|"usbconfig - configure the USB subsystem"
 literal|"\n"
@@ -1453,8 +1461,10 @@ name|template
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Setting USB template %u failed, "
 literal|"continuing.\n"
 argument_list|,
