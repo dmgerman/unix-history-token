@@ -45793,6 +45793,16 @@ argument_list|)
 operator|)
 operator|&&
 operator|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|asoc
+operator|->
+name|asconf_send_queue
+argument_list|)
+operator|)
+operator|&&
+operator|(
 name|asoc
 operator|->
 name|sent_queue_retran_cnt
