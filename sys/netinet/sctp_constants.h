@@ -1286,44 +1286,12 @@ begin_comment
 comment|/* default AUTO_ASCONF mode enable(1)/disable(0) value (sysctl) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SCTP_APPLE_AUTO_ASCONF
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEFAULT_AUTO_ASCONF
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|SCTP_DEFAULT_AUTO_ASCONF
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* default MULTIPLE_ASCONF mode enable(1)/disable(0) value (sysctl) */
@@ -1340,87 +1308,23 @@ begin_comment
 comment|/* default MOBILITY_BASE mode enable(1)/disable(0) value (sysctl) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SCTP_APPLE_MOBILITY_BASE
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|SCTP_DEFAULT_MOBILITY_BASE
 value|0
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEFAULT_MOBILITY_BASE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* default MOBILITY_FASTHANDOFF mode enable(1)/disable(0) value (sysctl) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SCTP_APPLE_MOBILITY_FASTHANDOFF
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|SCTP_DEFAULT_MOBILITY_FASTHANDOFF
 value|0
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEFAULT_MOBILITY_FASTHANDOFF
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Theshold for rwnd updates, we have to read (sb_hiwat>>  * SCTP_RWND_HIWAT_SHIFT) before we will look to see if we need to send a  * window update sack. When we look, we compare the last rwnd we sent vs the  * current rwnd. It too must be greater than this value. Using 3 divdes the  * hiwat by 8, so for 200k rwnd we need to read 24k. For a 64k rwnd we need  * to read 8k. This seems about right.. I hope :-D.. we do set a  * min of a MTU on it so if the rwnd is real small we will insist  * on a full MTU of 1500 bytes.  */
