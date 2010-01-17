@@ -3968,6 +3968,38 @@ operator|->
 name|lg_sectorsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|lg_stripesize
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sStripesize: %ju\n"
+argument_list|,
+name|prefix
+argument_list|,
+name|pp
+operator|->
+name|lg_stripesize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%sStripeoffset: %ju\n"
+argument_list|,
+name|prefix
+argument_list|,
+name|pp
+operator|->
+name|lg_stripeoffset
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%sMode: %s\n"
@@ -4121,6 +4153,38 @@ operator|->
 name|lg_sectorsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|lg_stripesize
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sStripesize: %ju\n"
+argument_list|,
+name|prefix
+argument_list|,
+name|pp
+operator|->
+name|lg_stripesize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%sStripeoffset: %ju\n"
+argument_list|,
+name|prefix
+argument_list|,
+name|pp
+operator|->
+name|lg_stripeoffset
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%sMode: %s\n"
