@@ -327,45 +327,89 @@ end_define
 begin_define
 define|#
 directive|define
-name|U3GFL_HUAWEI_INIT
-value|0x0001
+name|U3GINIT_HUAWEI
+value|1
 end_define
 
 begin_comment
-comment|/* Init command required */
+comment|/* Requires Huawei init command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|U3GFL_SCSI_EJECT
-value|0x0002
+name|U3GINIT_SIERRA
+value|2
 end_define
 
 begin_comment
-comment|/* SCSI eject command required */
+comment|/* Requires Sierra init command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|U3GFL_SIERRA_INIT
-value|0x0004
+name|U3GINIT_SCSIEJECT
+value|3
 end_define
 
 begin_comment
-comment|/* Init command required */
+comment|/* Requires SCSI eject command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|U3GFL_SAEL_M460_INIT
-value|0x0008
+name|U3GINIT_REZERO
+value|4
 end_define
 
 begin_comment
-comment|/* Init device */
+comment|/* Requires SCSI rezero command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|U3GINIT_ZTESTOR
+value|5
+end_define
+
+begin_comment
+comment|/* Requires ZTE SCSI command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|U3GINIT_CMOTECH
+value|6
+end_define
+
+begin_comment
+comment|/* Requires CMOTECH SCSI command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|U3GINIT_WAIT
+value|7
+end_define
+
+begin_comment
+comment|/* Device reappears after a delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|U3GINIT_SAEL_M460
+value|8
+end_define
+
+begin_comment
+comment|/* Requires vendor init */
 end_comment
 
 begin_enum
@@ -978,6 +1022,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|CMOTECH
+argument_list|,
+name|CGU628
+argument_list|,
+name|U3GINIT_CMOTECH
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|DELL
 argument_list|,
 name|U5500
@@ -1153,7 +1206,7 @@ name|HUAWEI
 argument_list|,
 name|E1401
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1162,7 +1215,7 @@ name|HUAWEI
 argument_list|,
 name|E1402
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1171,7 +1224,7 @@ name|HUAWEI
 argument_list|,
 name|E1403
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1180,7 +1233,7 @@ name|HUAWEI
 argument_list|,
 name|E1404
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1189,7 +1242,7 @@ name|HUAWEI
 argument_list|,
 name|E1405
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1198,7 +1251,7 @@ name|HUAWEI
 argument_list|,
 name|E1406
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1207,7 +1260,7 @@ name|HUAWEI
 argument_list|,
 name|E1407
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1216,7 +1269,7 @@ name|HUAWEI
 argument_list|,
 name|E1408
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1225,7 +1278,7 @@ name|HUAWEI
 argument_list|,
 name|E1409
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1234,7 +1287,7 @@ name|HUAWEI
 argument_list|,
 name|E140A
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1243,7 +1296,7 @@ name|HUAWEI
 argument_list|,
 name|E140B
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1252,7 +1305,7 @@ name|HUAWEI
 argument_list|,
 name|E140D
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1261,7 +1314,7 @@ name|HUAWEI
 argument_list|,
 name|E140E
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1270,7 +1323,7 @@ name|HUAWEI
 argument_list|,
 name|E140F
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1279,7 +1332,7 @@ name|HUAWEI
 argument_list|,
 name|E1410
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1288,7 +1341,7 @@ name|HUAWEI
 argument_list|,
 name|E1411
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1297,7 +1350,7 @@ name|HUAWEI
 argument_list|,
 name|E1412
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1306,7 +1359,7 @@ name|HUAWEI
 argument_list|,
 name|E1413
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1315,7 +1368,7 @@ name|HUAWEI
 argument_list|,
 name|E1414
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1324,7 +1377,7 @@ name|HUAWEI
 argument_list|,
 name|E1415
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1333,7 +1386,7 @@ name|HUAWEI
 argument_list|,
 name|E1416
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1342,7 +1395,7 @@ name|HUAWEI
 argument_list|,
 name|E1417
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1351,7 +1404,7 @@ name|HUAWEI
 argument_list|,
 name|E1418
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1360,7 +1413,7 @@ name|HUAWEI
 argument_list|,
 name|E1419
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1369,7 +1422,7 @@ name|HUAWEI
 argument_list|,
 name|E141A
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1378,7 +1431,7 @@ name|HUAWEI
 argument_list|,
 name|E141B
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1387,7 +1440,7 @@ name|HUAWEI
 argument_list|,
 name|E141C
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1396,7 +1449,7 @@ name|HUAWEI
 argument_list|,
 name|E141D
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1405,7 +1458,7 @@ name|HUAWEI
 argument_list|,
 name|E141E
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1414,7 +1467,7 @@ name|HUAWEI
 argument_list|,
 name|E141F
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1423,7 +1476,7 @@ name|HUAWEI
 argument_list|,
 name|E1420
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1432,7 +1485,7 @@ name|HUAWEI
 argument_list|,
 name|E1421
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1441,7 +1494,7 @@ name|HUAWEI
 argument_list|,
 name|E1422
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1450,7 +1503,7 @@ name|HUAWEI
 argument_list|,
 name|E1423
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1459,7 +1512,7 @@ name|HUAWEI
 argument_list|,
 name|E1424
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1468,7 +1521,7 @@ name|HUAWEI
 argument_list|,
 name|E1425
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1477,7 +1530,7 @@ name|HUAWEI
 argument_list|,
 name|E1426
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1486,7 +1539,7 @@ name|HUAWEI
 argument_list|,
 name|E1427
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1495,7 +1548,7 @@ name|HUAWEI
 argument_list|,
 name|E1428
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1504,7 +1557,7 @@ name|HUAWEI
 argument_list|,
 name|E1429
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1513,7 +1566,7 @@ name|HUAWEI
 argument_list|,
 name|E142A
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1522,7 +1575,7 @@ name|HUAWEI
 argument_list|,
 name|E142B
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1531,7 +1584,7 @@ name|HUAWEI
 argument_list|,
 name|E142C
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1540,7 +1593,7 @@ name|HUAWEI
 argument_list|,
 name|E142D
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1549,7 +1602,7 @@ name|HUAWEI
 argument_list|,
 name|E142E
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1558,7 +1611,7 @@ name|HUAWEI
 argument_list|,
 name|E142F
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1567,7 +1620,7 @@ name|HUAWEI
 argument_list|,
 name|E1430
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1576,7 +1629,7 @@ name|HUAWEI
 argument_list|,
 name|E1431
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1585,7 +1638,7 @@ name|HUAWEI
 argument_list|,
 name|E1432
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1594,7 +1647,7 @@ name|HUAWEI
 argument_list|,
 name|E1433
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1603,7 +1656,7 @@ name|HUAWEI
 argument_list|,
 name|E1434
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1612,7 +1665,7 @@ name|HUAWEI
 argument_list|,
 name|E1435
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1621,7 +1674,7 @@ name|HUAWEI
 argument_list|,
 name|E1436
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1630,7 +1683,7 @@ name|HUAWEI
 argument_list|,
 name|E1437
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1639,7 +1692,7 @@ name|HUAWEI
 argument_list|,
 name|E1438
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1648,7 +1701,7 @@ name|HUAWEI
 argument_list|,
 name|E1439
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1657,7 +1710,7 @@ name|HUAWEI
 argument_list|,
 name|E143A
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1666,7 +1719,7 @@ name|HUAWEI
 argument_list|,
 name|E143B
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1675,7 +1728,7 @@ name|HUAWEI
 argument_list|,
 name|E143C
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1684,7 +1737,7 @@ name|HUAWEI
 argument_list|,
 name|E143D
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1693,7 +1746,7 @@ name|HUAWEI
 argument_list|,
 name|E143E
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1702,7 +1755,7 @@ name|HUAWEI
 argument_list|,
 name|E143F
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1711,7 +1764,7 @@ name|HUAWEI
 argument_list|,
 name|E14AC
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1720,7 +1773,7 @@ name|HUAWEI
 argument_list|,
 name|E180V
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1729,7 +1782,7 @@ name|HUAWEI
 argument_list|,
 name|E220
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1738,7 +1791,7 @@ name|HUAWEI
 argument_list|,
 name|E220BIS
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1747,7 +1800,7 @@ name|HUAWEI
 argument_list|,
 name|MOBILE
 argument_list|,
-name|U3GFL_HUAWEI_INIT
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1900,7 +1953,7 @@ name|NOVATEL
 argument_list|,
 name|U760
 argument_list|,
-name|U3GFL_SCSI_EJECT
+name|U3GINIT_SCSIEJECT
 argument_list|)
 block|,
 name|U3G_DEV
@@ -2296,7 +2349,7 @@ name|QUALCOMMINC
 argument_list|,
 name|CDMA_MSM
 argument_list|,
-name|U3GFL_SCSI_EJECT
+name|U3GINIT_SCSIEJECT
 argument_list|)
 block|,
 name|U3G_DEV
@@ -2895,15 +2948,6 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
-name|QUALCOMMINC
-argument_list|,
-name|ZTE_STOR
-argument_list|,
-name|U3GFL_SCSI_EJECT
-argument_list|)
-block|,
-name|U3G_DEV
-argument_list|(
 name|QUANTA
 argument_list|,
 name|GKE
@@ -3448,7 +3492,7 @@ name|SILABS
 argument_list|,
 name|SAEL
 argument_list|,
-name|U3GFL_SAEL_M460_INIT
+name|U3GINIT_SAEL_M460
 argument_list|)
 block|,
 name|U3G_DEV
@@ -3674,7 +3718,25 @@ name|NOVATEL
 argument_list|,
 name|ZEROCD
 argument_list|,
-name|U3GFL_SCSI_EJECT
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|OPTION
+argument_list|,
+name|GTICON322
+argument_list|,
+name|U3GINIT_REZERO
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|QUALCOMMINC
+argument_list|,
+name|ZTE_STOR
+argument_list|,
+name|U3GINIT_ZTESTOR
 argument_list|)
 block|,
 name|U3G_DEV
@@ -3683,7 +3745,7 @@ name|SIERRA
 argument_list|,
 name|TRUINSTALL
 argument_list|,
-name|U3GFL_SIERRA_INIT
+name|U3GINIT_SIERRA
 argument_list|)
 block|,
 undef|#
@@ -3695,7 +3757,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|u3g_sierra_init
 parameter_list|(
 name|struct
@@ -3770,13 +3832,17 @@ condition|)
 block|{
 comment|/* ignore any errors */
 block|}
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|u3g_huawei_init
 parameter_list|(
 name|struct
@@ -3851,7 +3917,11 @@ condition|)
 block|{
 comment|/* ignore any errors */
 block|}
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -4604,8 +4674,8 @@ name|usb_interface_descriptor
 modifier|*
 name|id
 decl_stmt|;
-name|uint32_t
-name|flags
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -4665,80 +4735,130 @@ argument_list|,
 name|uaa
 argument_list|)
 condition|)
-block|{
-comment|/* no device match */
 return|return;
-block|}
-name|flags
-operator|=
+comment|/* no device match */
+switch|switch
+condition|(
 name|USB_GET_DRIVER_INFO
 argument_list|(
 name|uaa
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|U3GFL_HUAWEI_INIT
 condition|)
 block|{
+case|case
+name|U3GINIT_HUAWEI
+case|:
+name|error
+operator|=
 name|u3g_huawei_init
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|flags
-operator|&
-name|U3GFL_SCSI_EJECT
-condition|)
-block|{
-if|if
-condition|(
-name|usb_test_autoinstall
+break|break;
+case|case
+name|U3GINIT_SCSIEJECT
+case|:
+name|error
+operator|=
+name|usb_msc_eject
 argument_list|(
 name|udev
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+name|MSC_EJECT_STOPUNIT
 argument_list|)
-operator|!=
+expr_stmt|;
+break|break;
+case|case
+name|U3GINIT_REZERO
+case|:
+name|error
+operator|=
+name|usb_msc_eject
+argument_list|(
+name|udev
+argument_list|,
 literal|0
-condition|)
-return|return;
-block|}
-elseif|else
-if|if
-condition|(
-name|flags
-operator|&
-name|U3GFL_SIERRA_INIT
-condition|)
-block|{
+argument_list|,
+name|MSC_EJECT_REZERO
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|U3GINIT_ZTESTOR
+case|:
+name|error
+operator|=
+name|usb_msc_eject
+argument_list|(
+name|udev
+argument_list|,
+literal|0
+argument_list|,
+name|MSC_EJECT_ZTESTOR
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|U3GINIT_CMOTECH
+case|:
+name|error
+operator|=
+name|usb_msc_eject
+argument_list|(
+name|udev
+argument_list|,
+literal|0
+argument_list|,
+name|MSC_EJECT_CMOTECH
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|U3GINIT_SIERRA
+case|:
+name|error
+operator|=
 name|u3g_sierra_init
 argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|U3GINIT_WAIT
+case|:
+comment|/* Just pretend we ejected, the card will timeout */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+comment|/* no 3G eject quirks */
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
 block|}
-else|else
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 block|{
-comment|/* no quirks */
-return|return;
-block|}
+comment|/* success, mark the udev as disappearing */
 name|uaa
 operator|->
 name|dev_state
 operator|=
 name|UAA_DEV_EJECTING
 expr_stmt|;
-return|return;
-comment|/* success */
+block|}
 block|}
 end_function
 
@@ -4947,7 +5067,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|flags
+name|type
 decl_stmt|,
 name|nports
 decl_stmt|;
@@ -4966,7 +5086,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|flags
+name|type
 operator|=
 name|USB_GET_DRIVER_INFO
 argument_list|(
@@ -4975,9 +5095,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
-operator|&
-name|U3GFL_SAEL_M460_INIT
+name|type
+operator|==
+name|U3GINIT_SAEL_M460
 condition|)
 name|u3g_sael_m460_init
 argument_list|(
@@ -5363,23 +5483,25 @@ goto|goto
 name|detach
 goto|;
 block|}
-if|if
-condition|(
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Found %u port%s.\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_numports
+argument_list|,
 name|sc
 operator|->
 name|sc_numports
 operator|>
 literal|1
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Found %u ports.\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_numports
+condition|?
+literal|"s"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
