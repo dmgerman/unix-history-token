@@ -694,16 +694,6 @@ begin_comment
 comment|/* FIX ME: temp */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SCTP_LIST_EMPTY
-parameter_list|(
-name|list
-parameter_list|)
-value|LIST_EMPTY(list)
-end_define
-
 begin_if
 if|#
 directive|if
