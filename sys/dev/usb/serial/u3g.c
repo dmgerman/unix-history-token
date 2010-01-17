@@ -167,19 +167,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_dynamic.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb_msctest.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_device.h>
 end_include
 
 begin_include
