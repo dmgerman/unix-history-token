@@ -2600,9 +2600,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: cp [-R [-H | -L | -P]] [-f | -i | -n] [-alpv] source_file target_file"
+literal|"usage: cp [-R [-H | -L | -P]] [-f | -i | -n] [-alpvx] source_file target_file"
 argument_list|,
-literal|"       cp [-R [-H | -L | -P]] [-f | -i | -n] [-alpv] source_file ... "
+literal|"       cp [-R [-H | -L | -P]] [-f | -i | -n] [-alpvx] source_file ... "
 literal|"target_directory"
 argument_list|)
 expr_stmt|;
