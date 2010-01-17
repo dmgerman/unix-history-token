@@ -3360,6 +3360,19 @@ goto|goto
 name|unlock_and_continue
 goto|;
 block|}
+name|KASSERT
+argument_list|(
+name|mp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"vp %p with NULL v_mount"
+operator|,
+name|vp
+operator|)
+argument_list|)
+expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
