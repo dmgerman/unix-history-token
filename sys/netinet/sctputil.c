@@ -24507,14 +24507,6 @@ name|act_flags
 expr_stmt|;
 name|chk
 operator|->
-name|addr_over
-operator|=
-name|sp
-operator|->
-name|addr_over
-expr_stmt|;
-name|chk
-operator|->
 name|whoTo
 operator|=
 name|sp
