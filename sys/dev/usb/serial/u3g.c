@@ -2110,6 +2110,15 @@ name|U3G_DEV
 argument_list|(
 name|OPTION
 argument_list|,
+name|GE40X
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|OPTION
+argument_list|,
 name|GT3G
 argument_list|,
 literal|0
