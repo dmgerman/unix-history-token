@@ -25293,10 +25293,10 @@ operator|&
 name|SCTP_BASE_INFO
 argument_list|(
 name|vtag_timewait
+argument_list|)
 index|[
 name|i
 index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -29644,14 +29644,14 @@ operator|&
 name|SCTP_BASE_INFO
 argument_list|(
 name|vtag_timewait
+argument_list|)
 index|[
 operator|(
 name|tag
 operator|%
 name|SCTP_STACK_VTAG_HASH_SIZE
 operator|)
-argument_list|)
-expr|]
+index|]
 expr_stmt|;
 comment|/* Now what about timed wait ? */
 if|if
