@@ -751,6 +751,36 @@ begin_comment
 comment|/* Disable IPv6 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PR_IP4_SADDRSEL
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Do IPv4 src addr sel. or use the */
+end_comment
+
+begin_comment
+comment|/* primary jail address. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_IP6_SADDRSEL
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Do IPv6 src addr sel. or use the */
+end_comment
+
+begin_comment
+comment|/* primary jail address. */
+end_comment
+
 begin_comment
 comment|/* Internal flag bits */
 end_comment
@@ -1584,6 +1614,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|prison_saddrsel_ip4
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1655,6 +1700,21 @@ end_function_decl
 begin_function_decl
 name|int
 name|prison_check_ip6
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+parameter_list|,
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|prison_saddrsel_ip6
 parameter_list|(
 name|struct
 name|ucred

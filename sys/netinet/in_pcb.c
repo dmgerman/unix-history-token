@@ -2730,6 +2730,26 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Bypass source address selection and use the primary jail IP 	 * if requested. 	 */
+if|if
+condition|(
+name|cred
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|prison_saddrsel_ip4
+argument_list|(
+name|cred
+argument_list|,
+name|laddr
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|error
 operator|=
 literal|0
