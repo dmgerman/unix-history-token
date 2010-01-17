@@ -3396,7 +3396,7 @@ literal|"=ftp://ftp3.ie.freebsd.org"
 block|}
 block|,
 block|{
-literal|"Isreal"
+literal|"Israel"
 block|,
 literal|"ftp.il.freebsd.org"
 block|,
