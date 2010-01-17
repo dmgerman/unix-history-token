@@ -35454,10 +35454,6 @@ condition|)
 block|{
 name|strq
 operator|=
-name|asoc
-operator|->
-name|last_out_stream
-operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
@@ -35466,26 +35462,9 @@ operator|->
 name|out_wheel
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|asoc
-operator|->
-name|last_out_stream
-operator|==
-name|NULL
-condition|)
+block|}
+else|else
 block|{
-comment|/* huh nothing on the wheel, TSNH */
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-goto|goto
-name|done_it
-goto|;
-block|}
 name|strq
 operator|=
 name|TAILQ_NEXT
@@ -35497,8 +35476,6 @@ argument_list|,
 name|next_spoke
 argument_list|)
 expr_stmt|;
-name|done_it
-label|:
 if|if
 condition|(
 name|strq
@@ -35508,10 +35485,6 @@ condition|)
 block|{
 name|strq
 operator|=
-name|asoc
-operator|->
-name|last_out_stream
-operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
@@ -35520,6 +35493,7 @@ operator|->
 name|out_wheel
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Save off the last stream */
 name|asoc
