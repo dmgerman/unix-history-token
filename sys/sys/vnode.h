@@ -3078,6 +3078,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vunref
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vn_printf
 parameter_list|(
 name|struct
