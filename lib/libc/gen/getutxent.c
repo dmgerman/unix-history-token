@@ -628,6 +628,7 @@ condition|)
 goto|goto
 name|found
 goto|;
+break|break;
 case|case
 name|USER_PROCESS
 case|:
@@ -691,6 +692,7 @@ goto|goto
 name|found
 goto|;
 block|}
+break|break;
 block|}
 block|}
 name|found
