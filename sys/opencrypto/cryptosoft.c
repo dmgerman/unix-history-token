@@ -1960,7 +1960,7 @@ case|case
 name|CRYPTO_SHA1_KPDK
 case|:
 block|{
-comment|/* We need a buffer that can hold an md5 and a sha1 result. */
+comment|/*  		 * We need a buffer that can hold an md5 and a sha1 result 		 * just to throw it away. 		 * What we do here is the initial part of: 		 *   ALGO( key, keyfill, .. ) 		 * adding the key to sw_ictx and abusing Final() to get the 		 * "keyfill" padding. 		 * In addition we abuse the sw_octx to save the key to have 		 * it to be able to append it at the end in swcr_authcompute(). 		 */
 name|u_char
 name|buf
 index|[
@@ -2276,6 +2276,7 @@ case|:
 case|case
 name|CRYPTO_SHA1_KPDK
 case|:
+comment|/* If we have no key saved, return error. */
 if|if
 condition|(
 name|sw
@@ -2287,6 +2288,7 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* 		 * Add the trailing copy of the key (see comment in 		 * swcr_authprepare()) after the data: 		 *   ALGO( .., key, algofill ) 		 * and let Final() do the proper, natural "algofill" 		 * padding. 		 */
 name|axf
 operator|->
 name|Update
