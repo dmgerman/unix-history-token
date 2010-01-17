@@ -121,42 +121,6 @@ name|NUMBER_OF_MTU_SIZES
 value|18
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__Windows__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SCTP_LOCAL_TRACE_BUF
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"eventrace_netinet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sctputil.tmh"
-end_include
-
-begin_comment
-comment|/* this is the file that will be auto 				 * generated */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -169,11 +133,6 @@ directive|define
 name|KTR_SCTP
 value|KTR_SUBSYS
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
