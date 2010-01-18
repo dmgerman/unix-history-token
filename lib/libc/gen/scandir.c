@@ -517,7 +517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Alphabetic order comparison routine for those who want it.  *  * XXXKIB POSIX 2008 requires the alphasort() to use strcoll().  Keep  * strcmp() for now, since environment locale settings could have no  * relevance for the byte sequence of the file name. Moreover, it  * might be even invalid sequence in current locale, and then  * behaviour of alphasort would be undefined.  */
+comment|/*  * Alphabetic order comparison routine for those who want it.  *  * POSIX 2008 requires the alphasort() to use strcoll().  */
 end_comment
 
 begin_function
@@ -541,7 +541,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|strcmp
+name|strcoll
 argument_list|(
 operator|(
 operator|*

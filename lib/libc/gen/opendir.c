@@ -297,7 +297,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * POSIX 2008 and XSI 7 require alphasort() to call strcoll() for  * directory entries ordering.  Use local copy that uses strcmp().  */
+comment|/*  * POSIX 2008 and XSI 7 require alphasort() to call strcoll() for  * directory entries ordering.  */
 end_comment
 
 begin_function
@@ -318,7 +318,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|strcmp
+name|strcoll
 argument_list|(
 operator|(
 operator|*
