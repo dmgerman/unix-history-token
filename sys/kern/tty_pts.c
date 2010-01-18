@@ -1454,6 +1454,10 @@ name|cmd
 argument_list|,
 name|data
 argument_list|,
+name|fp
+operator|->
+name|f_flag
+argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
