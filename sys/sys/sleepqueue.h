@@ -311,6 +311,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int
+name|sleepq_sleepcnt
+parameter_list|(
+name|void
+modifier|*
+name|wchan
+parameter_list|,
+name|int
+name|queue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|sleepq_timedwait
 parameter_list|(

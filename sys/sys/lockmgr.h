@@ -747,6 +747,17 @@ value|0x000040
 end_define
 
 begin_comment
+comment|/* LK_EXSLPFAIL to follow, even if not used in lockinit() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_EXSLPFAIL
+value|0x000080
+end_define
+
+begin_comment
 comment|/*  * Additional attributes to be used in lockmgr().  */
 end_comment
 
