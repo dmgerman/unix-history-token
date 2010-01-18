@@ -1477,12 +1477,6 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|acpi_disabled
-argument_list|(
-literal|"ec"
-argument_list|)
-operator|&&
 name|ACPI_ID_PROBE
 argument_list|(
 name|device_get_parent
