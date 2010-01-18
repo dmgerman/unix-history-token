@@ -22742,6 +22742,11 @@ block|}
 else|else
 block|{
 comment|/* Everything got collapsed out?? */
+name|SCTP_INP_READ_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
