@@ -296,14 +296,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * POSIX 2008 and XSI 7 require alphasort() to call strcoll() for  * directory entries ordering.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|opendir_alphasort
+name|opendir_sort
 parameter_list|(
 specifier|const
 name|void
@@ -318,7 +314,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|strcoll
+name|strcmp
 argument_list|(
 operator|(
 operator|*
@@ -910,7 +906,7 @@ operator|*
 name|dpv
 argument_list|)
 argument_list|,
-name|opendir_alphasort
+name|opendir_sort
 argument_list|)
 expr_stmt|;
 name|dpv
