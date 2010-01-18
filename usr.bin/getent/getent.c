@@ -2617,7 +2617,11 @@ name|UTMPXPRINTID
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\" user=\"%s\" line=\"%s\" host=\"%s\"\n"
+literal|"\" pid=\"%d\" user=\"%s\" line=\"%s\" host=\"%s\"\n"
+argument_list|,
+name|ut
+operator|->
+name|ut_pid
 argument_list|,
 name|ut
 operator|->
@@ -2645,7 +2649,11 @@ name|UTMPXPRINTID
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\"\n"
+literal|"\" pid=\"%d\"\n"
+argument_list|,
+name|ut
+operator|->
+name|ut_pid
 argument_list|)
 expr_stmt|;
 break|break;
