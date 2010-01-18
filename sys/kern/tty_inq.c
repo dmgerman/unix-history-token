@@ -1334,10 +1334,6 @@ name|struct
 name|ttyinq_block
 modifier|*
 name|tib
-init|=
-name|ti
-operator|->
-name|ti_lastblock
 decl_stmt|;
 name|ti
 operator|->
