@@ -147,10 +147,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|user
 operator|!=
-literal|'\0'
+name|NULL
 condition|)
 block|{
 comment|/* Log in. */
