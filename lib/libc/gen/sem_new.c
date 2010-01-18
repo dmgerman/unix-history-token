@@ -559,6 +559,8 @@ decl_stmt|,
 name|mode
 decl_stmt|,
 name|len
+decl_stmt|,
+name|errsave
 decl_stmt|;
 name|int
 name|value
@@ -1066,6 +1068,10 @@ operator|)
 return|;
 name|error
 label|:
+name|errsave
+operator|=
+name|errno
+expr_stmt|;
 name|_pthread_mutex_unlock
 argument_list|(
 operator|&
@@ -1104,6 +1110,10 @@ name|free
 argument_list|(
 name|ni
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|errsave
 expr_stmt|;
 return|return
 operator|(
