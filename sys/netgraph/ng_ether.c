@@ -1876,6 +1876,15 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|iflladdr_event
+argument_list|,
+name|priv
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 case|case

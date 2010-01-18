@@ -9914,6 +9914,13 @@ operator|.
 name|sa_len
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|iflladdr_event
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SIOCAIFGROUP

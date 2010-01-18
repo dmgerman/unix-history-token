@@ -1190,6 +1190,38 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/* interface link layer address change event */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|iflladdr_event_handler_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|iflladdr_event
+argument_list|,
+name|iflladdr_event_handler_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* interface address change event */
 end_comment
 
