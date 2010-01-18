@@ -4166,6 +4166,12 @@ operator|->
 name|lg_stripesize
 operator|>
 literal|0
+operator|||
+name|pp
+operator|->
+name|lg_stripeoffset
+operator|>
+literal|0
 condition|)
 block|{
 name|printf
