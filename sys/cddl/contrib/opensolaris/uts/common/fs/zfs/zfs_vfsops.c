@@ -6374,7 +6374,7 @@ block|{
 name|printf
 argument_list|(
 literal|"ZFS filesystem version "
-name|SPA_VERSION_STRING
+name|ZPL_VERSION_STRING
 literal|"\n"
 argument_list|)
 expr_stmt|;
