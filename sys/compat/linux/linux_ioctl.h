@@ -3402,6 +3402,24 @@ name|LINUX_IOCTL_VIDEO_MAX
 value|LINUX_VIDIOCSVBIFMT
 end_define
 
+begin_comment
+comment|/*  * Keep in sync with our include/dev/usb/usb_ioctl.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_FBSD_USB_MIN
+value|0x5100
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_FBSD_USB_MAX
+value|0x55c7
+end_define
+
 begin_endif
 endif|#
 directive|endif
