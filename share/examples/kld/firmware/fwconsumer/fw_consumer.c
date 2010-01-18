@@ -67,6 +67,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|firmware
 modifier|*
