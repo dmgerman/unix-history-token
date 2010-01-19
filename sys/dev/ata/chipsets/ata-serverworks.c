@@ -345,7 +345,7 @@ name|SWKS_33
 block|,
 literal|0
 block|,
-name|ATA_UDMA2
+name|ATA_WDMA2
 block|,
 literal|"ROSB4"
 block|}
@@ -2522,6 +2522,17 @@ name|mode
 expr_stmt|;
 block|}
 comment|/* Set PIO mode and timings, calculated above. */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|cfg1
+operator|!=
+name|SWKS_33
+condition|)
+block|{
 name|pci_write_config
 argument_list|(
 name|parent
@@ -2567,6 +2578,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 name|pci_write_config
 argument_list|(
 name|parent
