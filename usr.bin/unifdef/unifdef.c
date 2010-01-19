@@ -1622,9 +1622,14 @@ argument_list|,
 literal|"%.*s/"
 name|TEMPLATE
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|dirsep
 operator|-
 name|ofilename
+argument_list|)
 argument_list|,
 name|ofilename
 argument_list|)
