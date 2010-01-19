@@ -1091,6 +1091,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_ISCH
+value|0x811a8086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ITE_ID
 value|0x1283
 end_define
