@@ -217,7 +217,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/*  * American Micro Devices (AMD) chipset support functions  */
+comment|/*  * Advanced Micro Devices (AMD) chipset support functions  */
 end_comment
 
 begin_function
