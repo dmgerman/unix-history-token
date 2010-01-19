@@ -2781,9 +2781,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FEXT_UNIQMAC
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* CONF: user or computed mac */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FEXT_BITS
 define|\
-value|"\20\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN"
+value|"\20\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN\23UNIQMAC"
 end_define
 
 begin_comment

@@ -2179,6 +2179,23 @@ name|iv_flags_ext
 operator||=
 name|IEEE80211_FEXT_SWBMISS
 expr_stmt|;
+comment|/* auto-generated or user supplied MAC address */
+if|if
+condition|(
+name|flags
+operator|&
+operator|(
+name|IEEE80211_CLONE_BSSID
+operator||
+name|IEEE80211_CLONE_MACADDR
+operator|)
+condition|)
+name|vap
+operator|->
+name|iv_flags_ext
+operator||=
+name|IEEE80211_FEXT_UNIQMAC
+expr_stmt|;
 comment|/* 	 * Enable various functionality by default if we're 	 * capable; the driver can override us if it knows better. 	 */
 if|if
 condition|(
