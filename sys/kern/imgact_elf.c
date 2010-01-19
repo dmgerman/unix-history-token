@@ -3434,6 +3434,8 @@ decl_stmt|;
 name|u_long
 name|addr
 decl_stmt|,
+name|et_dyn_addr
+decl_stmt|,
 name|entry
 init|=
 literal|0
@@ -3710,7 +3712,10 @@ operator|->
 name|e_type
 operator|==
 name|ET_DYN
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|brand_info
 operator|->
@@ -3726,6 +3731,16 @@ operator|(
 name|ENOEXEC
 operator|)
 return|;
+name|et_dyn_addr
+operator|=
+name|ET_DYN_LOAD_ADDR
+expr_stmt|;
+block|}
+else|else
+name|et_dyn_addr
+operator|=
+literal|0
+expr_stmt|;
 name|sv
 operator|=
 name|brand_info
@@ -3963,6 +3978,8 @@ name|i
 index|]
 operator|.
 name|p_vaddr
+operator|+
+name|et_dyn_addr
 argument_list|,
 name|phdr
 index|[
@@ -4036,6 +4053,8 @@ operator|+
 name|hdr
 operator|->
 name|e_phoff
+operator|+
+name|et_dyn_addr
 expr_stmt|;
 name|seg_addr
 operator|=
@@ -4047,6 +4066,8 @@ name|i
 index|]
 operator|.
 name|p_vaddr
+operator|+
+name|et_dyn_addr
 argument_list|)
 expr_stmt|;
 name|seg_size
@@ -4066,6 +4087,8 @@ name|i
 index|]
 operator|.
 name|p_vaddr
+operator|+
+name|et_dyn_addr
 operator|-
 name|seg_addr
 argument_list|)
@@ -4121,6 +4144,8 @@ operator|)
 name|hdr
 operator|->
 name|e_entry
+operator|+
+name|et_dyn_addr
 expr_stmt|;
 block|}
 else|else
@@ -4151,6 +4176,8 @@ name|i
 index|]
 operator|.
 name|p_vaddr
+operator|+
+name|et_dyn_addr
 expr_stmt|;
 break|break;
 default|default:
