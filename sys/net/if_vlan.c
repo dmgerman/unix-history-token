@@ -2409,6 +2409,16 @@ name|ifvlan
 modifier|*
 name|ifv
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|VLAN_ARRAY
+name|struct
+name|ifvlan
+modifier|*
+name|next
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 decl_stmt|;
@@ -2457,20 +2467,7 @@ name|i
 index|]
 operator|)
 condition|)
-name|if_setlladdr
-argument_list|(
-name|ifv
-operator|->
-name|ifv_ifp
-argument_list|,
-name|IF_LLADDR
-argument_list|(
-name|ifp
-argument_list|)
-argument_list|,
-name|ETHER_ADDR_LEN
-argument_list|)
-expr_stmt|;
+block|{
 else|#
 directive|else
 comment|/* VLAN_ARRAY */
@@ -2495,14 +2492,23 @@ condition|;
 name|i
 operator|++
 control|)
-name|LIST_FOREACH
+name|LIST_FOREACH_SAFE
 argument_list|(
 argument|ifv
 argument_list|,
 argument|&ifp->if_vlantrunk->hash[i]
 argument_list|,
 argument|ifv_list
+argument_list|,
+argument|next
 argument_list|)
+block|{
+endif|#
+directive|endif
+comment|/* VLAN_ARRAY */
+name|VLAN_UNLOCK
+argument_list|()
+expr_stmt|;
 name|if_setlladdr
 argument_list|(
 name|ifv
@@ -2517,20 +2523,15 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* VLAN_ARRAY */
+name|VLAN_LOCK
+argument_list|()
+expr_stmt|;
+block|}
 name|VLAN_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * A handler for network interface departure events.  * Track departure of trunks here so that we don't access invalid  * pointers or whatever if a trunk is ripped from under us, e.g.,  * by ejecting its hot-plug card.  However, if an ifnet is simply  * being renamed, then there's no need to tear down the state.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|vlan_ifdetach
@@ -2716,13 +2717,7 @@ name|VLAN_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * VLAN support can be loaded as a module.  The only place in the  * system that's intimately aware of this is ether_input.  We hook  * into this code through vlan_input_p which is defined there and  * set here.  Noone else in the system should be aware of this so  * we use an explicit reference here.  */
-end_comment
-
-begin_function_decl
 specifier|extern
 name|void
 function_decl|(
@@ -2739,13 +2734,7 @@ name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* For if_link_state_change() eyes only... */
-end_comment
-
-begin_function_decl
 specifier|extern
 name|void
 function_decl|(
@@ -2758,9 +2747,6 @@ name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
 specifier|static
 name|int
 name|vlan_modevent
@@ -2934,9 +2920,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|moduledata_t
 name|vlan_mod
@@ -2949,9 +2932,6 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
 name|if_vlan
@@ -2963,9 +2943,6 @@ argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|if_vlan
@@ -2973,9 +2950,6 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 specifier|static
 name|struct
 name|ifnet
@@ -3146,9 +3120,6 @@ name|ifp
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|vlan_clone_match
@@ -3249,9 +3220,6 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|vlan_clone_create
@@ -3835,9 +3803,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|vlan_clone_destroy
@@ -3908,13 +3873,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * The ifp->if_init entry point for vlan(4) is a no-op.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|vlan_init
@@ -3925,13 +3884,7 @@ name|foo
 name|__unused
 parameter_list|)
 block|{ }
-end_function
-
-begin_comment
 comment|/*  * The if_start method for vlan(4) interface. It doesn't  * raises the IFF_DRV_OACTIVE flag, since it is called  * only from IFQ_HANDOFF() macro in ether_output_frame().  * If the interface queue is full, and vlan_start() is  * not called, the queue would never get emptied and  * interface would stall forever.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|vlan_start
@@ -4209,9 +4162,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|vlan_input
@@ -4530,9 +4480,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|vlan_config
@@ -4989,9 +4936,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|vlan_unconfig
@@ -5024,9 +4968,6 @@ name|ret
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|vlan_unconfig_locked
@@ -5371,13 +5312,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Handle a reference counted flag that should be set on the parent as well */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|vlan_setflag
@@ -5495,13 +5430,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Handle IFF_* flags that require certain changes on the parent:  * if "status" is true, update parent's flags respective to our if_flags;  * if "status" is false, forcedly clear the flags set on parent.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|vlan_setflags
@@ -5576,13 +5505,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Inform all vlans that their parent has changed link state */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|vlan_link_state
