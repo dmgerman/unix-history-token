@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_STARTFILE_SPEC
-value|"\   %{!shared: \     %{pg:gcrt1.o%s} \     %{!pg: \       %{p:gcrt1.o%s} \       %{!p: \ 	%{profile:gcrt1.o%s} \ 	%{!profile:crt1.o%s}}}} \   crti.o%s \   %{static:crtbeginT.o%s;shared:crtbeginS.o%s;:crtbegin.o%s}"
+value|"\   %{!shared: \     %{pg:gcrt1.o%s} \     %{!pg: \       %{p:gcrt1.o%s} \       %{!p: \ 	%{profile:gcrt1.o%s} \ 	%{!profile: \           %{pie: Scrt1.o%s;:crt1.o%s}}}}} \   crti.o%s \   %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
 end_define
 
 begin_comment
@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_ENDFILE_SPEC
-value|"\   %{!shared:crtend.o%s} \   %{shared:crtendS.o%s} \   crtn.o%s "
+value|"\   %{shared|pie:crtendS.o%s;:crtend.o%s} \   crtn.o%s "
 end_define
 
 begin_comment

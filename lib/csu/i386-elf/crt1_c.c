@@ -4,7 +4,7 @@ comment|/* LINTLIBRARY */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -202,68 +202,42 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|__inline
-name|fptr
-name|get_rtld_cleanup
-parameter_list|(
+begin_decl_stmt
 name|void
-parameter_list|)
-block|{
+name|_start1
+argument_list|(
 name|fptr
-name|retval
+argument_list|,
+name|int
+argument_list|,
+name|char
+operator|*
+index|[]
+argument_list|)
+name|__dead2
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUC__
-asm|__asm__("movl %%edx,%0" : "=rm"(retval));
-else|#
-directive|else
-name|retval
-operator|=
-operator|(
-name|fptr
-operator|)
-literal|0
-expr_stmt|;
-comment|/* XXXX Fix this for other compilers */
-endif|#
-directive|endif
-return|return
-operator|(
-name|retval
-operator|)
-return|;
-block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* The entry function. */
+comment|/* The entry function, C part. */
 end_comment
 
 begin_function
 name|void
-name|_start
+name|_start1
 parameter_list|(
-name|char
-modifier|*
-name|ap
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
 name|fptr
 name|cleanup
-decl_stmt|;
+parameter_list|,
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
-decl_stmt|;
+index|[]
+parameter_list|)
+block|{
 name|char
 modifier|*
 modifier|*
@@ -274,39 +248,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUC__
-asm|__asm__("and $0xfffffff0,%esp");
-endif|#
-directive|endif
-name|cleanup
-operator|=
-name|get_rtld_cleanup
-argument_list|()
-expr_stmt|;
-name|argv
-operator|=
-operator|&
-name|ap
-expr_stmt|;
-name|argc
-operator|=
-operator|*
-operator|(
-name|long
-operator|*
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|argv
-operator|-
-literal|1
-operator|)
-expr_stmt|;
 name|env
 operator|=
 name|argv
@@ -433,7 +374,7 @@ block|}
 end_function
 
 begin_asm
-asm|__asm__(".ident\t\"$FreeBSD$\"");
+asm|__asm(".hidden	_start1");
 end_asm
 
 end_unit
