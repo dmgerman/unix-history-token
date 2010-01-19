@@ -420,6 +420,13 @@ name|ELF_TARG_VER
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ET_DYN_LOAD_ADDR
+value|0x01001000
+end_define
+
 begin_endif
 endif|#
 directive|endif
