@@ -1394,6 +1394,9 @@ argument_list|(
 name|ALL_INT_MASK
 argument_list|)
 expr_stmt|;
+name|enableintr
+argument_list|()
+expr_stmt|;
 comment|/* Clear BEV in SR so we start handling our own exceptions */
 name|mips_cp0_status_write
 argument_list|(
