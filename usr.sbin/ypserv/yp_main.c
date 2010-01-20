@@ -1988,6 +1988,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|int
+name|ntrans
+decl_stmt|;
 name|void
 modifier|*
 name|nc_handle
@@ -2325,6 +2328,10 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * Create RPC service for each transport. 	 */
+name|ntrans
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2363,18 +2370,15 @@ condition|)
 block|{
 name|_msgout
 argument_list|(
-literal|"cannot get information for %s"
+literal|"cannot get information for %s.  "
+literal|"Ignored."
 argument_list|,
 name|nconf
 operator|->
 name|nc_netid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -2435,6 +2439,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|ntrans
+operator|++
+expr_stmt|;
 block|}
 block|}
 name|endnetconfig
@@ -2461,6 +2468,24 @@ argument_list|,
 name|ble_next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ntrans
+operator|==
+literal|0
+condition|)
+block|{
+name|_msgout
+argument_list|(
+literal|"no transport is available.  Aborted."
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|_rpcpmstart
