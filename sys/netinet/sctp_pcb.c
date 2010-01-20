@@ -1795,7 +1795,7 @@ name|ifn_index
 expr_stmt|;
 if|if
 condition|(
-name|SCTP_LIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 operator|&
 name|sctp_ifap
@@ -19643,7 +19643,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SCTP_LIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 name|chain
 argument_list|)
@@ -19828,7 +19828,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SCTP_LIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 name|chain
 argument_list|)
@@ -19991,7 +19991,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SCTP_LIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 name|chain
 argument_list|)
@@ -23048,7 +23048,7 @@ block|}
 while|while
 condition|(
 operator|!
-name|SCTP_LIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 operator|&
 name|asoc
@@ -25575,7 +25575,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SCTP_LIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 name|chain
 argument_list|)
@@ -29462,7 +29462,7 @@ comment|/* Now what about timed wait ? */
 if|if
 condition|(
 operator|!
-name|SCTP_LIST_EMPTY
+name|LIST_EMPTY
 argument_list|(
 name|chain
 argument_list|)
