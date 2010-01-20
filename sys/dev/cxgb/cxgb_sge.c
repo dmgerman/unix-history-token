@@ -2616,6 +2616,33 @@ condition|)
 name|jumbo_q_size
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|fl_q_size
+operator|<
+operator|(
+name|FL_Q_SIZE
+operator|/
+literal|4
+operator|)
+operator|||
+name|jumbo_q_size
+operator|<
+operator|(
+name|JUMBO_Q_SIZE
+operator|/
+literal|2
+operator|)
+condition|)
+name|device_printf
+argument_list|(
+name|adap
+operator|->
+name|dev
+argument_list|,
+literal|"Insufficient clusters and/or jumbo buffers.\n"
+argument_list|)
+expr_stmt|;
 comment|/* XXX Does ETHER_ALIGN need to be accounted for here? */
 name|p
 operator|->
