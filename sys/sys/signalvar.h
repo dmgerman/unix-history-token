@@ -842,6 +842,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KSI_HEAD
+value|0x10
+end_define
+
+begin_comment
+comment|/* Insert into head, not tail. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KSI_COPYMASK
 value|(KSI_TRAP|KSI_SIGQ)
 end_define
