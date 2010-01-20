@@ -1240,6 +1240,28 @@ return|;
 block|}
 if|if
 condition|(
+name|bindresvport_sa
+argument_list|(
+name|s
+argument_list|,
+name|res
+operator|->
+name|ai_addr
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|errno
+operator|!=
+name|EPERM
+operator|)
+operator|||
+operator|(
 name|bind
 argument_list|(
 name|s
@@ -1255,11 +1277,13 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|)
 condition|)
 block|{
 name|_msgout
 argument_list|(
-literal|"cannot bind %s socket: %s"
+literal|"cannot bind "
+literal|"%s socket: %s"
 argument_list|,
 name|nconf
 operator|->
@@ -1285,6 +1309,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 if|if
 condition|(
