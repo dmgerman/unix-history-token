@@ -670,6 +670,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|enforcepid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If PID file does not exist or empty, do nothing */
+end_comment
+
+begin_decl_stmt
+name|int
 name|force
 init|=
 literal|0
@@ -3019,7 +3031,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:d:f:nrsvCD:FNR:"
+literal|"a:d:f:nrsvCD:FNPR:"
 argument_list|)
 operator|)
 operator|!=
@@ -3123,6 +3135,13 @@ case|case
 literal|'N'
 case|:
 name|norotate
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|enforcepid
 operator|++
 expr_stmt|;
 break|break;
@@ -8245,6 +8264,10 @@ condition|(
 name|errno
 operator|==
 name|ENOENT
+operator|&&
+name|enforcepid
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 			 * Warn if the PID file doesn't exist, but do 			 * not consider it an error.  Most likely it 			 * means the process has been terminated, 			 * so it should be safe to rotate any log 			 * files that the process would have been using. 			 */
@@ -8297,6 +8320,10 @@ name|feof
 argument_list|(
 name|f
 argument_list|)
+operator|&&
+name|enforcepid
+operator|==
+literal|0
 condition|)
 block|{
 name|swork
