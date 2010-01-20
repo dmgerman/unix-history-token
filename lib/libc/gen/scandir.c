@@ -517,7 +517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Alphabetic order comparison routine for those who want it.  *  * POSIX 2008 requires the alphasort() to use strcoll().  */
+comment|/*  * Alphabetic order comparison routine for those who want it.  * POSIX 2008 requires the alphasort() to use strcoll().  */
 end_comment
 
 begin_function
