@@ -4,19 +4,12 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_iwnreg.h,v 1.9 2007/11/27 20:59:40 damien Exp $	*/
+comment|/*	$OpenBSD: if_iwnreg.h,v 1.34 2009/11/08 11:54:48 damien Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2007  *	Damien Bergamini<damien.bergamini@free.fr>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*-  * Copyright (c) 2007, 2008  *	Damien Bergamini<damien.bergamini@free.fr>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|EDCA_NUM_AC
-value|4
-end_define
 
 begin_define
 define|#
@@ -28,37 +21,82 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_RX_RING_COUNT
-value|64
+name|IWN_TX_RING_LOMARK
+value|192
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_NTXQUEUES
+name|IWN_TX_RING_HIMARK
+value|224
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RX_RING_COUNT_LOG
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RX_RING_COUNT
+value|(1<< IWN_RX_RING_COUNT_LOG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_NTXQUEUES
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_NTXCHAINS
-value|2
+name|IWN5000_NTXQUEUES
+value|20
 end_define
-
-begin_comment
-comment|/*  * Rings must be aligned on a 256-byte boundary.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_RING_DMA_ALIGN
-value|256
+name|IWN4965_NDMACHNLS
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_NDMACHNLS
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_SRVC_DMACHNL
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_ICT_SIZE
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_ICT_COUNT
+value|(IWN_ICT_SIZE / sizeof (uint32_t))
 end_define
 
 begin_comment
-comment|/* maximum scatter/gather */
+comment|/* Maximum number of DMA segments for TX. */
 end_comment
 
 begin_define
@@ -69,7 +107,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* Rx buffers must be large enough to hold a full 4K A-MPDU */
+comment|/* RX buffers must be large enough to hold a full 4K A-MPDU. */
 end_comment
 
 begin_define
@@ -79,6 +117,80 @@ name|IWN_RBUF_SIZE
 value|(4 * 1024)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* HW supports 36-bit DMA addresses. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_LOADDR
+parameter_list|(
+name|paddr
+parameter_list|)
+value|((uint32_t)(paddr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HIADDR
+parameter_list|(
+name|paddr
+parameter_list|)
+value|(((paddr)>> 32)& 0xf)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IWN_LOADDR
+parameter_list|(
+name|paddr
+parameter_list|)
+value|(paddr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HIADDR
+parameter_list|(
+name|paddr
+parameter_list|)
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Base Address Register. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_PCI_BAR0
+value|PCI_MAPREG_START
+end_define
+
 begin_comment
 comment|/*  * Control and status registers.  */
 end_comment
@@ -86,35 +198,46 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IWN_HWCONFIG
+name|IWN_HW_IF_CONFIG
 value|0x000
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_INTR_MIT
+name|IWN_INT_COALESCING
 value|0x004
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_INTR
+name|IWN_INT_PERIODIC
+value|0x005
+end_define
+
+begin_comment
+comment|/* use IWN_WRITE_1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_INT
 value|0x008
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MASK
+name|IWN_INT_MASK
 value|0x00c
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_INTR_STATUS
+name|IWN_FH_INT
 value|0x010
 end_define
 
@@ -128,39 +251,113 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_GPIO_CTL
+name|IWN_GP_CNTRL
 value|0x024
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_CTL
+name|IWN_HW_REV
+value|0x028
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_EEPROM
 value|0x02c
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_UCODE_CLR
+name|IWN_EEPROM_GP
+value|0x030
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_OTP_GP
+value|0x034
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GIO
+value|0x03c
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_DRIVER
+value|0x050
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_UCODE_GP1_CLR
 value|0x05c
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_CHICKEN
+name|IWN_LED
+value|0x094
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_DRAM_INT_TBL
+value|0x0a0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GIO_CHICKEN
 value|0x100
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_QUEUE_OFFSET
-parameter_list|(
-name|qid
-parameter_list|)
-value|(0x380 + (qid) * 8)
+name|IWN_ANA_PLL
+value|0x20c
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_WA
+value|0x22c
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_DBG_HPET_MEM
+value|0x240
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_DBG_LINK_PWR_MGMT
+value|0x250
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_MEM_RADDR
+value|0x40c
 end_define
 
 begin_define
@@ -180,49 +377,90 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_WRITE_MEM_ADDR
+name|IWN_MEM_RDATA
+value|0x41c
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_PRPH_WADDR
 value|0x444
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_READ_MEM_ADDR
+name|IWN_PRPH_RADDR
 value|0x448
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_WRITE_MEM_DATA
+name|IWN_PRPH_WDATA
 value|0x44c
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_READ_MEM_DATA
+name|IWN_PRPH_RDATA
 value|0x450
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_TX_WIDX
+name|IWN_HBUS_TARG_WRPTR
 value|0x460
+end_define
+
+begin_comment
+comment|/*  * Flow-Handler registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TFBD_CTRL0
+parameter_list|(
+name|qid
+parameter_list|)
+value|(0x1900 + (qid) * 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_KW_BASE
+name|IWN_FH_TFBD_CTRL1
+parameter_list|(
+name|qid
+parameter_list|)
+value|(0x1904 + (qid) * 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_KW_ADDR
 value|0x197c
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_TX_BASE
+name|IWN_FH_SRAM_ADDR
+parameter_list|(
+name|qid
+parameter_list|)
+value|(0x19a4 + (qid) * 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_CBBC_QUEUE
 parameter_list|(
 name|qid
 parameter_list|)
@@ -232,42 +470,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_RW_WIDX_PTR
+name|IWN_FH_STATUS_WPTR
 value|0x1bc0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_RX_BASE
+name|IWN_FH_RX_BASE
 value|0x1bc4
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_RX_WIDX
+name|IWN_FH_RX_WPTR
 value|0x1bc8
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_RX_CONFIG
+name|IWN_FH_RX_CONFIG
 value|0x1c00
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_RX_STATUS
+name|IWN_FH_RX_STATUS
 value|0x1c44
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_TX_CONFIG
+name|IWN_FH_TX_CONFIG
 parameter_list|(
 name|qid
 parameter_list|)
@@ -277,56 +515,218 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_TX_STATUS
-value|0x1eb0
+name|IWN_FH_TXBUF_STATUS
+parameter_list|(
+name|qid
+parameter_list|)
+value|(0x1d08 + (qid) * 32)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_SRAM_BASE
+name|IWN_FH_TX_CHICKEN
+value|0x1e98
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TX_STATUS
+value|0x1eb0
+end_define
+
+begin_comment
+comment|/*  * TX scheduler registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_SCHED_BASE
 value|0xa02c00
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_TX_ACTIVE
-value|(IWN_SRAM_BASE + 0x01c)
+name|IWN_SCHED_SRAM_ADDR
+value|(IWN_SCHED_BASE + 0x000)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_QUEUE_RIDX
+name|IWN5000_SCHED_DRAM_ADDR
+value|(IWN_SCHED_BASE + 0x008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_DRAM_ADDR
+value|(IWN_SCHED_BASE + 0x010)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_TXFACT
+value|(IWN_SCHED_BASE + 0x010)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_TXFACT
+value|(IWN_SCHED_BASE + 0x01c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_QUEUE_RDPTR
 parameter_list|(
 name|qid
 parameter_list|)
-value|(IWN_SRAM_BASE + 0x064 + (qid) * 4)
+value|(IWN_SCHED_BASE + 0x064 + (qid) * 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_SELECT_QCHAIN
-value|(IWN_SRAM_BASE + 0x0d0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_QUEUE_INTR_MASK
-value|(IWN_SRAM_BASE + 0x0e4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_TXQ_STATUS
+name|IWN5000_SCHED_QUEUE_RDPTR
 parameter_list|(
 name|qid
 parameter_list|)
-value|(IWN_SRAM_BASE + 0x104 + (qid) * 4)
+value|(IWN_SCHED_BASE + 0x068 + (qid) * 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_QCHAIN_SEL
+value|(IWN_SCHED_BASE + 0x0d0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_INTR_MASK
+value|(IWN_SCHED_BASE + 0x0e4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_QCHAIN_SEL
+value|(IWN_SCHED_BASE + 0x0e8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_QUEUE_STATUS
+parameter_list|(
+name|qid
+parameter_list|)
+value|(IWN_SCHED_BASE + 0x104 + (qid) * 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_INTR_MASK
+value|(IWN_SCHED_BASE + 0x108)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_QUEUE_STATUS
+parameter_list|(
+name|qid
+parameter_list|)
+value|(IWN_SCHED_BASE + 0x10c + (qid) * 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_AGGR_SEL
+value|(IWN_SCHED_BASE + 0x248)
+end_define
+
+begin_comment
+comment|/*  * Offsets in TX scheduler's SRAM.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_CTX_OFF
+value|0x380
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_CTX_LEN
+value|416
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_QUEUE_OFFSET
+parameter_list|(
+name|qid
+parameter_list|)
+value|(0x380 + (qid) * 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_TRANS_TBL
+parameter_list|(
+name|qid
+parameter_list|)
+value|(0x500 + (qid) * 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_CTX_OFF
+value|0x600
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_CTX_LEN
+value|520
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_QUEUE_OFFSET
+parameter_list|(
+name|qid
+parameter_list|)
+value|(0x600 + (qid) * 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_TRANS_TBL
+parameter_list|(
+name|qid
+parameter_list|)
+value|(0x7e0 + (qid) * 2)
 end_define
 
 begin_comment
@@ -336,367 +736,644 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IWN_CLOCK_CTL
+name|IWN_APMG_CLK_CTRL
 value|0x3000
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_CLOCK2
+name|IWN_APMG_CLK_EN
+value|0x3004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_CLK_DIS
 value|0x3008
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_POWER
+name|IWN_APMG_PS
 value|0x300c
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_PCIDEV
+name|IWN_APMG_DIGITAL_SVR
+value|0x3058
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_ANALOG_SVR
+value|0x306c
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_PCI_STT
 value|0x3010
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_UCODE_CTL
+name|IWN_BSM_WR_CTRL
 value|0x3400
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_UCODE_SRC
+name|IWN_BSM_WR_MEM_SRC
 value|0x3404
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_UCODE_DST
+name|IWN_BSM_WR_MEM_DST
 value|0x3408
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_UCODE_SIZE
+name|IWN_BSM_WR_DWCOUNT
 value|0x340c
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_TEXT_BASE
+name|IWN_BSM_DRAM_TEXT_ADDR
 value|0x3490
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_TEXT_SIZE
+name|IWN_BSM_DRAM_TEXT_SIZE
 value|0x3494
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_DATA_BASE
+name|IWN_BSM_DRAM_DATA_ADDR
 value|0x3498
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_DATA_SIZE
+name|IWN_BSM_DRAM_DATA_SIZE
 value|0x349c
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MEM_UCODE_BASE
+name|IWN_BSM_SRAM_BASE
 value|0x3800
 end_define
 
 begin_comment
-comment|/* possible flags for register IWN_HWCONFIG */
+comment|/* Possible flags for register IWN_HW_IF_CONFIG. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_HW_EEPROM_LOCKED
+name|IWN_HW_IF_CONFIG_4965_R
+value|(1<<  4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_IF_CONFIG_MAC_SI
+value|(1<<  8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_IF_CONFIG_RADIO_SI
+value|(1<<  9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_IF_CONFIG_EEPROM_LOCKED
 value|(1<< 21)
 end_define
 
-begin_comment
-comment|/* possible flags for registers IWN_READ_MEM_ADDR/IWN_WRITE_MEM_ADDR */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|IWN_MEM_4
-value|((sizeof (uint32_t) - 1)<< 24)
-end_define
-
-begin_comment
-comment|/* possible values for IWN_MEM_UCODE_DST */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_FW_TEXT
-value|0x00000000
-end_define
-
-begin_comment
-comment|/* possible flags for register IWN_RESET */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_NEVO_RESET
-value|(1<< 0)
+name|IWN_HW_IF_CONFIG_NIC_READY
+value|(1<< 22)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_SW_RESET
-value|(1<< 7)
+name|IWN_HW_IF_CONFIG_HAP_WAKE_L1A
+value|(1<< 23)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_MASTER_DISABLED
-value|(1<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_STOP_MASTER
-value|(1<< 9)
-end_define
-
-begin_comment
-comment|/* possible flags for register IWN_GPIO_CTL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_GPIO_CLOCK
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_GPIO_INIT
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_GPIO_MAC
-value|(1<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_GPIO_SLEEP
-value|(1<< 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_GPIO_PWR_STATUS
-value|0x07000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_GPIO_PWR_SLEEP
-value|(4<< 24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_GPIO_RF_ENABLED
-value|(1<< 27)
-end_define
-
-begin_comment
-comment|/* possible flags for register IWN_CHICKEN */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_CHICKEN_DISLOS
-value|(1<< 29)
-end_define
-
-begin_comment
-comment|/* possible flags for register IWN_UCODE_CLR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_RADIO_OFF
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_DISABLE_CMD
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_CTEMP_STOP_RF
-value|(1<< 3)
-end_define
-
-begin_comment
-comment|/* possible flags for IWN_RX_STATUS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_RX_IDLE
-value|(1<< 24)
-end_define
-
-begin_comment
-comment|/* possible flags for register IWN_UC_CTL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_UC_ENABLE
-value|(1<< 30)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_UC_RUN
-value|(1<< 31)
-end_define
-
-begin_comment
-comment|/* possible flags for register IWN_INTR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_ALIVE_INTR
-value|(1<<  0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_WAKEUP_INTR
-value|(1<<  1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_SW_RX_INTR
-value|(1<<  3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_CT_REACHED
-value|(1<<  6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_RF_TOGGLED
-value|(1<<  7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_SW_ERROR
+name|IWN_HW_IF_CONFIG_PREPARE_DONE
 value|(1<< 25)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_TX_INTR
+name|IWN_HW_IF_CONFIG_PREPARE
+value|(1<< 27)
+end_define
+
+begin_comment
+comment|/* Possible values for register IWN_INT_PERIODIC. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_PERIODIC_DIS
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_PERIODIC_ENA
+value|0xff
+end_define
+
+begin_comment
+comment|/* Possible flags for registers IWN_PRPH_RADDR/IWN_PRPH_WADDR. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_PRPH_DWORD
+value|((sizeof (uint32_t) - 1)<< 24)
+end_define
+
+begin_comment
+comment|/* Possible values for IWN_BSM_WR_MEM_DST. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_FW_TEXT_BASE
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FW_DATA_BASE
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_RESET. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_RESET_NEVO
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RESET_SW
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RESET_MASTER_DISABLED
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RESET_STOP_MASTER
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RESET_LINK_PWR_MGMT_DIS
+value|(1<< 31)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_GP_CNTRL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_CNTRL_MAC_ACCESS_ENA
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_CNTRL_MAC_CLOCK_READY
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_CNTRL_INIT_DONE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_CNTRL_MAC_ACCESS_REQ
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_CNTRL_SLEEP
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_CNTRL_RFKILL
+value|(1<< 27)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_HW_REV. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_MASK
+value|0x000000f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_4965
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_5300
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_5350
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_5150
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_5100
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_1000
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_6000
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_6050
+value|8
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_GIO_CHICKEN. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_GIO_CHICKEN_L1A_NO_L0S_RX
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GIO_CHICKEN_DIS_L0S_TIMER
+value|(1<< 29)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_GIO. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_GIO_L0S_ENA
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_GP_DRIVER. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_DRIVER_RADIO_3X3_HYB
+value|(0<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_DRIVER_RADIO_2X2_HYB
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_DRIVER_RADIO_2X2_IPA
+value|(2<< 0)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_UCODE_GP1_CLR. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_UCODE_GP1_RFKILL
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_UCODE_GP1_CMD_BLOCKED
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_UCODE_GP1_CTEMP_STOP_RF
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Possible flags/values for register IWN_LED. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_LED_BSM_CTRL
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_LED_OFF
+value|0x00000038
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_LED_ON
+value|0x00000078
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_DRAM_INT_TBL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_DRAM_INT_TBL_WRAP_CHECK
 value|(1<< 27)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_HW_ERROR
+name|IWN_DRAM_INT_TBL_ENABLE
+value|(1<< 31)
+end_define
+
+begin_comment
+comment|/* Possible values for register IWN_ANA_PLL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_ANA_PLL_INIT
+value|0x00880300
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_FH_RX_STATUS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_RX_STATUS_IDLE
+value|(1<< 24)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_BSM_WR_CTRL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_BSM_WR_CTRL_START_EN
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_BSM_WR_CTRL_START
+value|(1<< 31)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_INT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_ALIVE
+value|(1<<  0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_WAKEUP
+value|(1<<  1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_SW_RX
+value|(1<<  3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_CT_REACHED
+value|(1<<  6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_RF_TOGGLED
+value|(1<<  7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_SW_ERR
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_SCHED
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_FH_TX
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_RX_PERIODIC
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_INT_HW_ERR
 value|(1<< 29)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_RX_INTR
+name|IWN_INT_FH_RX
 value|(1<< 31)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IWN_INTR_BITS
-value|"\20\1ALIVE\2WAKEUP\3SW_RX\6CT_REACHED\7RF_TOGGLED" \ 	"\32SW_ERROR\34TX_INTR\36HW_ERROR\40RX_INTR"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_INTR_MASK
-define|\
-value|(IWN_SW_ERROR | IWN_HW_ERROR | IWN_TX_INTR | IWN_RX_INTR |	\ 	 IWN_ALIVE_INTR | IWN_WAKEUP_INTR | IWN_SW_RX_INTR |		\ 	 IWN_CT_REACHED | IWN_RF_TOGGLED)
-end_define
-
 begin_comment
-comment|/* possible flags for register IWN_INTR_STATUS */
+comment|/* Shortcut. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_STATUS_TXQ
+name|IWN_INT_MASK_DEF
+define|\
+value|(IWN_INT_SW_ERR | IWN_INT_HW_ERR | IWN_INT_FH_TX |		\ 	 IWN_INT_FH_RX | IWN_INT_ALIVE | IWN_INT_WAKEUP |		\ 	 IWN_INT_SW_RX | IWN_INT_CT_REACHED | IWN_INT_RF_TOGGLED)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_FH_INT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_INT_TX_CHNL
 parameter_list|(
 name|x
 parameter_list|)
@@ -706,7 +1383,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_STATUS_RXQ
+name|IWN_FH_INT_RX_CHNL
 parameter_list|(
 name|x
 parameter_list|)
@@ -716,86 +1393,413 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_STATUS_PRI
+name|IWN_FH_INT_HI_PRIOR
 value|(1<< 30)
 end_define
 
 begin_comment
-comment|/* shortcuts for the above */
+comment|/* Shortcuts for the above. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_TX_STATUS_INTR
+name|IWN_FH_INT_TX
 define|\
-value|(IWN_STATUS_TXQ(0) | IWN_STATUS_TXQ(1) | IWN_STATUS_TXQ(6))
+value|(IWN_FH_INT_TX_CHNL(0) | IWN_FH_INT_TX_CHNL(1))
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_RX_STATUS_INTR
+name|IWN_FH_INT_RX
 define|\
-value|(IWN_STATUS_RXQ(0) | IWN_STATUS_RXQ(1) | IWN_STATUS_RXQ(2) |	\ 	 IWN_STATUS_PRI)
+value|(IWN_FH_INT_RX_CHNL(0) | IWN_FH_INT_RX_CHNL(1) | IWN_FH_INT_HI_PRIOR)
 end_define
 
 begin_comment
-comment|/* possible flags for register IWN_TX_STATUS */
+comment|/* Possible flags/values for register IWN_FH_TX_CONFIG. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_TX_IDLE
+name|IWN_FH_TX_CONFIG_DMA_PAUSE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TX_CONFIG_DMA_ENA
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TX_CONFIG_CIRQ_HOST_ENDTFD
+value|(1<< 20)
+end_define
+
+begin_comment
+comment|/* Possible flags/values for register IWN_FH_TXBUF_STATUS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TXBUF_STATUS_TBNUM
 parameter_list|(
-name|qid
+name|x
 parameter_list|)
-value|(1<< ((qid) + 24) | 1<< ((qid) + 16))
+value|((x)<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TXBUF_STATUS_TBIDX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TXBUF_STATUS_TFBD_VALID
+value|3
 end_define
 
 begin_comment
-comment|/* possible flags/masks for register IWN_EEPROM_CTL */
+comment|/* Possible flags for register IWN_FH_TX_CHICKEN. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_READY
+name|IWN_FH_TX_CHICKEN_SCHED_RETRY
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_FH_TX_STATUS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TX_STATUS_IDLE
+parameter_list|(
+name|chnl
+parameter_list|)
+define|\
+value|(1<< ((chnl) + 24) | 1<< ((chnl) + 16))
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_FH_RX_CONFIG. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_RX_CONFIG_ENA
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_RX_CONFIG_NRBD
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_RX_CONFIG_RB_SIZE_8K
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_RX_CONFIG_SINGLE_FRAME
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_RX_CONFIG_IRQ_DST_HOST
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_RX_CONFIG_RB_TIMEOUT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_RX_CONFIG_IGN_RXF_EMPTY
+value|(1<<  2)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_FH_TX_CONFIG. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TX_CONFIG_DMA_ENA
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FH_TX_CONFIG_DMA_CREDIT_ENA
+value|(1<<  3)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_EEPROM. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_EEPROM_READ_VALID
 value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_MSK
+name|IWN_EEPROM_CMD
 value|(1<< 1)
 end_define
 
 begin_comment
-comment|/* possible flags for register IWN_TXQ_STATUS */
+comment|/* Possible flags for register IWN_EEPROM_GP. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_TXQ_STATUS_ACTIVE
-value|0x0007fc01
+name|IWN_EEPROM_GP_IF_OWNER
+value|0x00000180
 end_define
 
 begin_comment
-comment|/* possible flags for register IWN_MEM_POWER */
+comment|/* Possible flags for register IWN_OTP_GP. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_POWER_RESET
+name|IWN_OTP_GP_DEV_SEL_OTP
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_OTP_GP_RELATIVE_ACCESS
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_OTP_GP_ECC_CORR_STTS
+value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_OTP_GP_ECC_UNCORR_STTS
+value|(1<< 21)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_SCHED_QUEUE_STATUS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN4965_TXQ_STATUS_ACTIVE
+value|0x0007fc01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_TXQ_STATUS_INACTIVE
+value|0x0007fc00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_TXQ_STATUS_AGGR_ENA
+value|(1<< 5 | 1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_TXQ_STATUS_CHGACT
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_TXQ_STATUS_ACTIVE
+value|0x00ff0018
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_TXQ_STATUS_INACTIVE
+value|0x00ff0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_TXQ_STATUS_CHGACT
+value|(1<< 19)
+end_define
+
+begin_comment
+comment|/* Possible flags for registers IWN_APMG_CLK_*. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_CLK_CTRL_DMA_CLK_RQT
+value|(1<<  9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_CLK_CTRL_BSM_CLK_RQT
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_APMG_PS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_PS_EARLY_PWROFF_DIS
+value|(1<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_PS_PWR_SRC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_PS_PWR_SRC_VMAIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_PS_PWR_SRC_VAUX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_PS_PWR_SRC_MASK
+value|IWN_APMG_PS_PWR_SRC(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_PS_RESET_REQ
 value|(1<< 26)
 end_define
 
 begin_comment
-comment|/* possible flags for register IWN_MEM_TEXT_SIZE */
+comment|/* Possible flags for register IWN_APMG_DIGITAL_SVR. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_DIGITAL_SVR_VOLTAGE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xf)<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_DIGITAL_SVR_VOLTAGE_MASK
+define|\
+value|IWN_APMG_DIGITAL_SVR_VOLTAGE(0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_DIGITAL_SVR_VOLTAGE_1_32
+define|\
+value|IWN_APMG_DIGITAL_SVR_VOLTAGE(3)
+end_define
+
+begin_comment
+comment|/* Possible flags for IWN_APMG_PCI_STT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_APMG_PCI_STT_L1A_DIS
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* Possible flags for register IWN_BSM_DRAM_TEXT_SIZE. */
 end_comment
 
 begin_define
@@ -805,49 +1809,89 @@ name|IWN_FW_UPDATED
 value|(1<< 31)
 end_define
 
-begin_comment
-comment|/* possible flags for device-specific PCI register 0xe8 */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|IWN_DIS_NOSNOOP
-value|(1<< 11)
-end_define
-
-begin_comment
-comment|/* possible flags for device-specific PCI register 0xf0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_ENA_L1
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_TX_WINDOW
+name|IWN_SCHED_WINSZ
 value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_SCHED_LIMIT
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHED_COUNT
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHED_COUNT
+value|(IWN_TX_RING_COUNT + IWN_SCHED_WINSZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_SCHEDSZ
+value|(IWN4965_NTXQUEUES * IWN4965_SCHED_COUNT * 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_SCHEDSZ
+value|(IWN5000_NTXQUEUES * IWN5000_SCHED_COUNT * 2)
 end_define
 
 begin_struct
 struct|struct
-name|iwn_shared
+name|iwn_tx_desc
 block|{
-name|uint16_t
-name|len
+name|uint8_t
+name|reserved1
 index|[
-name|IWN_NTXQUEUES
-index|]
-index|[
-literal|512
+literal|3
 index|]
 decl_stmt|;
-comment|/* 16KB total */
+name|uint8_t
+name|nsegs
+decl_stmt|;
+struct|struct
+block|{
+name|uint32_t
+name|addr
+decl_stmt|;
+name|uint16_t
+name|len
+decl_stmt|;
+block|}
+name|__packed
+name|segs
+index|[
+name|IWN_MAX_SCATTER
+index|]
+struct|;
+comment|/* Pad to 128 bytes. */
+name|uint32_t
+name|reserved2
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn_rx_status
+block|{
 name|uint16_t
 name|closed_count
 decl_stmt|;
@@ -873,75 +1917,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|iwn_tx_desc
-block|{
-name|uint32_t
-name|flags
-decl_stmt|;
-struct|struct
-block|{
-name|uint32_t
-name|w1
-decl_stmt|;
-name|uint32_t
-name|w2
-decl_stmt|;
-name|uint32_t
-name|w3
-decl_stmt|;
-block|}
-name|__packed
-name|segs
-index|[
-name|IWN_MAX_SCATTER
-operator|/
-literal|2
-index|]
-struct|;
-comment|/* pad to 128 bytes */
-name|uint32_t
-name|reserved
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|IWN_SET_DESC_NSEGS
-parameter_list|(
-name|d
-parameter_list|,
-name|x
-parameter_list|)
-define|\
-value|(d)->flags = htole32(((x)& 0x1f)<< 24)
-end_define
-
-begin_comment
-comment|/* set a segment physical address and length in a Tx descriptor */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWN_SET_DESC_SEG
-parameter_list|(
-name|d
-parameter_list|,
-name|n
-parameter_list|,
-name|addr
-parameter_list|,
-name|size
-parameter_list|)
-value|do {				\ 	if ((n)& 1) {							\ 		(d)->segs[(n) / 2].w2 |=				\ 		    htole32(((addr)& 0xffff)<< 16);			\ 		(d)->segs[(n) / 2].w3 =					\ 		    htole32((((addr)>> 16)& 0xffff) | (size)<< 20);	\ 	} else {							\ 		(d)->segs[(n) / 2].w1 = htole32(addr);			\ 		(d)->segs[(n) / 2].w2 = htole32((size)<< 4);		\ 	}								\ } while (0)
-end_define
-
-begin_struct
-struct|struct
 name|iwn_rx_desc
 block|{
 name|uint32_t
@@ -962,6 +1937,14 @@ define|#
 directive|define
 name|IWN_TX_DONE
 value|28
+define|#
+directive|define
+name|IWN5000_CALIBRATION_RESULT
+value|102
+define|#
+directive|define
+name|IWN5000_CALIBRATION_DONE
+value|103
 define|#
 directive|define
 name|IWN_START_SCAN
@@ -988,16 +1971,20 @@ name|IWN_BEACON_MISSED
 value|162
 define|#
 directive|define
-name|IWN_AMPDU_RX_START
+name|IWN_RX_PHY
 value|192
 define|#
 directive|define
-name|IWN_AMPDU_RX_DONE
+name|IWN_MPDU_RX_DONE
 value|193
 define|#
 directive|define
 name|IWN_RX_DONE
 value|195
+define|#
+directive|define
+name|IWN_RX_COMPRESSED_BA
+value|197
 name|uint8_t
 name|flags
 decl_stmt|;
@@ -1013,25 +2000,25 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* possible Rx status flags */
+comment|/* Possible RX status flags. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IWN_RX_NO_CRC_ERR
-value|(1<< 0)
+value|(1<<  0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IWN_RX_NO_OVFL_ERR
-value|(1<< 1)
+value|(1<<  1)
 end_define
 
 begin_comment
-comment|/* shortcut for the above */
+comment|/* Shortcut for the above. */
 end_comment
 
 begin_define
@@ -1039,6 +2026,48 @@ define|#
 directive|define
 name|IWN_RX_NOERROR
 value|(IWN_RX_NO_CRC_ERR | IWN_RX_NO_OVFL_ERR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RX_MPDU_MIC_OK
+value|(1<<  6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RX_CIPHER_MASK
+value|(7<<  8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RX_CIPHER_CCMP
+value|(2<<  8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RX_MPDU_DEC
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RX_DECRYPT_MASK
+value|(3<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RX_DECRYPT_OK
+value|(3<< 11)
 end_define
 
 begin_struct
@@ -1050,84 +2079,84 @@ name|code
 decl_stmt|;
 define|#
 directive|define
-name|IWN_CMD_CONFIGURE
-value|0x10
-comment|/* REPLY_RXON */
+name|IWN_CMD_RXON
+value|16
 define|#
 directive|define
-name|IWN_CMD_ASSOCIATE
-value|0x11
-comment|/* REPLY_RXON_ASSOC */
+name|IWN_CMD_RXON_ASSOC
+value|17
 define|#
 directive|define
 name|IWN_CMD_EDCA_PARAMS
-value|0x13
-comment|/* REPLY_QOS_PARAM */
+value|19
 define|#
 directive|define
-name|IWN_CMD_TSF
-value|0x14
-comment|/* REPLY_RXON_TIMING */
+name|IWN_CMD_TIMING
+value|20
 define|#
 directive|define
 name|IWN_CMD_ADD_NODE
-value|0x18
-comment|/* REPLY_ADD_STA */
+value|24
 define|#
 directive|define
 name|IWN_CMD_TX_DATA
-value|0x1c
-comment|/* REPLY_TX */
+value|28
 define|#
 directive|define
-name|IWN_CMD_TX_LINK_QUALITY
-value|0x4e
-comment|/* REPLY_TX_LINK_QUALITY_CMD */
+name|IWN_CMD_LINK_QUALITY
+value|78
 define|#
 directive|define
 name|IWN_CMD_SET_LED
-value|0x48
-comment|/* REPLY_LEDS_CMD */
+value|72
+define|#
+directive|define
+name|IWN5000_CMD_WIMAX_COEX
+value|90
+define|#
+directive|define
+name|IWN5000_CMD_CALIB_CONFIG
+value|101
 define|#
 directive|define
 name|IWN_CMD_SET_POWER_MODE
-value|0x77
-comment|/* POWER_TABLE_CMD */
+value|119
 define|#
 directive|define
 name|IWN_CMD_SCAN
-value|0x80
-comment|/* REPLY_SCAN_CMD */
+value|128
+define|#
+directive|define
+name|IWN_CMD_TXPOWER_DBM
+value|149
 define|#
 directive|define
 name|IWN_CMD_TXPOWER
-value|0x97
-comment|/* REPLY_TX_PWR_TABLE_CMD */
+value|151
 define|#
 directive|define
-name|IWN_CMD_BLUETOOTH
-value|0x9b
-comment|/* REPLY_BT_CONFIG */
+name|IWN5000_CMD_TX_ANT_CONFIG
+value|152
+define|#
+directive|define
+name|IWN_CMD_BT_COEX
+value|155
 define|#
 directive|define
 name|IWN_CMD_GET_STATISTICS
-value|0x9c
-comment|/* REPLY_STATISTICS_CMD */
+value|156
 define|#
 directive|define
 name|IWN_CMD_SET_CRITICAL_TEMP
-value|0xa4
-comment|/* REPLY_CT_KILL_CONFIG_CMD */
+value|164
 define|#
 directive|define
-name|IWN_SENSITIVITY
-value|0xa8
-comment|/* SENSITIVITY_CMD */
+name|IWN_CMD_SET_SENSITIVITY
+value|168
 define|#
 directive|define
-name|IWN_PHY_CALIB
-value|0xb0
-comment|/* REPLY_PHY_CALIBRATION_CMD */
+name|IWN_CMD_PHY_CALIB
+value|176
 name|uint8_t
 name|flags
 decl_stmt|;
@@ -1149,12 +2178,62 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_CONFIGURE (aka RXON) */
+comment|/* Antenna flags, used in various commands. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_ANT_A
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_ANT_B
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_ANT_C
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Shortcuts. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_ANT_AB
+value|(IWN_ANT_A | IWN_ANT_B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_ANT_BC
+value|(IWN_ANT_B | IWN_ANT_C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_ANT_ABC
+value|(IWN_ANT_A | IWN_ANT_B | IWN_ANT_C)
+end_define
+
+begin_comment
+comment|/* Structure for command IWN_CMD_RXON. */
 end_comment
 
 begin_struct
 struct|struct
-name|iwn_config
+name|iwn_rxon
 block|{
 name|uint8_t
 name|myaddr
@@ -1203,69 +2282,60 @@ directive|define
 name|IWN_MODE_MONITOR
 value|6
 name|uint8_t
-name|unused4
+name|air
 decl_stmt|;
-comment|/* air propagation */
 name|uint16_t
 name|rxchain
 decl_stmt|;
 define|#
 directive|define
+name|IWN_RXCHAIN_DRIVER_FORCE
+value|(1<< 0)
+define|#
+directive|define
 name|IWN_RXCHAIN_VALID
-value|0x000e
-comment|/* which antennae are valid */
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& IWN_ANT_ABC)<< 1)
 define|#
 directive|define
-name|IWN_RXCHAIN_VALID_S
-value|1
+name|IWN_RXCHAIN_FORCE_SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& IWN_ANT_ABC)<< 4)
 define|#
 directive|define
-name|IWN_RXCHAIN_FORCE
-value|0x0070
+name|IWN_RXCHAIN_FORCE_MIMO_SEL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& IWN_ANT_ABC)<< 7)
 define|#
 directive|define
-name|IWN_RXCHAIN_FORCE_S
-value|4
+name|IWN_RXCHAIN_IDLE_COUNT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 10)
 define|#
 directive|define
-name|IWN_RXCHAIN_FORCE_MIMO
-value|0x0380
-define|#
-directive|define
-name|IWN_RXCHAIN_FORCE_MIMO_S
-value|7
-define|#
-directive|define
-name|IWN_RXCHAIN_CNT
-value|0x0c00
-define|#
-directive|define
-name|IWN_RXCHAIN_CNT_S
-value|10
-define|#
-directive|define
-name|IWN_RXCHAIN_MIMO_CNT
-value|0x3000
-define|#
-directive|define
-name|IWN_RXCHAIN_MIMO_CNT_S
-value|12
+name|IWN_RXCHAIN_MIMO_COUNT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 12)
 define|#
 directive|define
 name|IWN_RXCHAIN_MIMO_FORCE
-value|0x4000
-define|#
-directive|define
-name|IWN_RXCHAIN_MIMO_FORCE_S
-value|14
+value|(1<< 14)
 name|uint8_t
 name|ofdm_mask
 decl_stmt|;
-comment|/* basic rates */
 name|uint8_t
 name|cck_mask
 decl_stmt|;
-comment|/* basic rates */
 name|uint16_t
 name|associd
 decl_stmt|;
@@ -1274,77 +2344,44 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|IWN_CONFIG_24GHZ
-value|0x00000001
-comment|/* band */
+name|IWN_RXON_24GHZ
+value|(1<<  0)
 define|#
 directive|define
-name|IWN_CONFIG_CCK
-value|0x00000002
-comment|/* modulation */
+name|IWN_RXON_CCK
+value|(1<<  1)
 define|#
 directive|define
-name|IWN_CONFIG_AUTO
-value|0x00000004
-comment|/* 2.4-only auto-detect */
+name|IWN_RXON_AUTO
+value|(1<<  2)
 define|#
 directive|define
-name|IWN_CONFIG_HTPROT
-value|0x00000008
-comment|/* xmit with HT protection */
+name|IWN_RXON_SHSLOT
+value|(1<<  4)
 define|#
 directive|define
-name|IWN_CONFIG_SHSLOT
-value|0x00000010
-comment|/* short slot time */
+name|IWN_RXON_SHPREAMBLE
+value|(1<<  5)
 define|#
 directive|define
-name|IWN_CONFIG_SHPREAMBLE
-value|0x00000020
-comment|/* short premable */
+name|IWN_RXON_NODIVERSITY
+value|(1<<  7)
 define|#
 directive|define
-name|IWN_CONFIG_NODIVERSITY
-value|0x00000080
-comment|/* disable antenna diversity */
+name|IWN_RXON_ANTENNA_A
+value|(1<<  8)
 define|#
 directive|define
-name|IWN_CONFIG_ANTENNA_A
-value|0x00000100
+name|IWN_RXON_ANTENNA_B
+value|(1<<  9)
 define|#
 directive|define
-name|IWN_CONFIG_ANTENNA_B
-value|0x00000200
+name|IWN_RXON_TSF
+value|(1<< 15)
 define|#
 directive|define
-name|IWN_CONFIG_RADAR
-value|0x00001000
-comment|/* enable radar detect */
-define|#
-directive|define
-name|IWN_CONFIG_NARROW
-value|0x00002000
-comment|/* MKK narrow band select */
-define|#
-directive|define
-name|IWN_CONFIG_TSF
-value|0x00008000
-define|#
-directive|define
-name|IWN_CONFIG_HT
-value|0x06400000
-define|#
-directive|define
-name|IWN_CONFIG_HT20
-value|0x02000000
-define|#
-directive|define
-name|IWN_CONFIG_HT40U
-value|0x04000000
-define|#
-directive|define
-name|IWN_CONFIG_HT40D
-value|0x04400000
+name|IWN_RXON_CTS_TO_SELF
+value|(1<< 30)
 name|uint32_t
 name|filter
 decl_stmt|;
@@ -1352,51 +2389,72 @@ define|#
 directive|define
 name|IWN_FILTER_PROMISC
 value|(1<< 0)
-comment|/* pass all data frames */
 define|#
 directive|define
 name|IWN_FILTER_CTL
 value|(1<< 1)
-comment|/* pass ctl+mgt frames */
 define|#
 directive|define
 name|IWN_FILTER_MULTICAST
 value|(1<< 2)
-comment|/* pass multi-cast frames */
 define|#
 directive|define
 name|IWN_FILTER_NODECRYPT
 value|(1<< 3)
-comment|/* pass unicast undecrypted */
 define|#
 directive|define
 name|IWN_FILTER_BSS
 value|(1<< 5)
-comment|/* station is associated */
 define|#
 directive|define
-name|IWN_FILTER_ALLBEACONS
+name|IWN_FILTER_BEACON
 value|(1<< 6)
-comment|/* pass overlapping bss beacons 						   (must be associated) */
-name|uint16_t
+name|uint8_t
 name|chan
 decl_stmt|;
-comment|/* IEEE channel # of control/primary */
+name|uint8_t
+name|reserved4
+decl_stmt|;
 name|uint8_t
 name|ht_single_mask
 decl_stmt|;
-comment|/* single-stream basic rates */
 name|uint8_t
 name|ht_dual_mask
 decl_stmt|;
-comment|/* dual-stream basic rates */
+comment|/* The following fields are for>=5000 Series only. */
+name|uint8_t
+name|ht_triple_mask
+decl_stmt|;
+name|uint8_t
+name|reserved5
+decl_stmt|;
+name|uint16_t
+name|acquisition
+decl_stmt|;
+name|uint16_t
+name|reserved6
+decl_stmt|;
 block|}
 name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IWN4965_RXONSZ
+value|(sizeof (struct iwn_rxon) - 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_RXONSZ
+value|(sizeof (struct iwn_rxon))
+end_define
+
 begin_comment
-comment|/* structure for command IWN_CMD_ASSOCIATE */
+comment|/* Structure for command IWN_CMD_ASSOCIATE. */
 end_comment
 
 begin_struct
@@ -1424,7 +2482,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_EDCA_PARAMS */
+comment|/* Structure for command IWN_CMD_EDCA_PARAMS. */
 end_comment
 
 begin_struct
@@ -1463,7 +2521,7 @@ block|}
 name|__packed
 name|ac
 index|[
-name|EDCA_NUM_AC
+name|WME_NUM_AC
 index|]
 struct|;
 block|}
@@ -1472,12 +2530,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_TSF */
+comment|/* Structure for command IWN_CMD_TIMING. */
 end_comment
 
 begin_struct
 struct|struct
-name|iwn_cmd_tsf
+name|iwn_cmd_timing
 block|{
 name|uint64_t
 name|tstamp
@@ -1503,7 +2561,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_ADD_NODE */
+comment|/* Structure for command IWN_CMD_ADD_NODE. */
 end_comment
 
 begin_struct
@@ -1541,7 +2599,11 @@ name|IWN_ID_BSS
 value|0
 define|#
 directive|define
-name|IWN_ID_BROADCAST
+name|IWN5000_ID_BROADCAST
+value|15
+define|#
+directive|define
+name|IWN4965_ID_BROADCAST
 value|31
 name|uint8_t
 name|flags
@@ -1550,11 +2612,168 @@ define|#
 directive|define
 name|IWN_FLAG_SET_KEY
 value|(1<< 0)
+define|#
+directive|define
+name|IWN_FLAG_SET_DISABLE_TID
+value|(1<< 1)
+define|#
+directive|define
+name|IWN_FLAG_SET_TXRATE
+value|(1<< 2)
+define|#
+directive|define
+name|IWN_FLAG_SET_ADDBA
+value|(1<< 3)
+define|#
+directive|define
+name|IWN_FLAG_SET_DELBA
+value|(1<< 4)
 name|uint16_t
 name|reserved3
 decl_stmt|;
 name|uint16_t
-name|security
+name|kflags
+decl_stmt|;
+define|#
+directive|define
+name|IWN_KFLAG_CCMP
+value|(1<<  1)
+define|#
+directive|define
+name|IWN_KFLAG_MAP
+value|(1<<  3)
+define|#
+directive|define
+name|IWN_KFLAG_KID
+parameter_list|(
+name|kid
+parameter_list|)
+value|((kid)<< 8)
+define|#
+directive|define
+name|IWN_KFLAG_INVALID
+value|(1<< 11)
+define|#
+directive|define
+name|IWN_KFLAG_GROUP
+value|(1<< 14)
+name|uint8_t
+name|tsc2
+decl_stmt|;
+comment|/* TKIP TSC2 */
+name|uint8_t
+name|reserved4
+decl_stmt|;
+name|uint16_t
+name|ttak
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|uint8_t
+name|kid
+decl_stmt|;
+name|uint8_t
+name|reserved5
+decl_stmt|;
+name|uint8_t
+name|key
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* The following 3 fields are for 5000 Series only. */
+name|uint64_t
+name|tsc
+decl_stmt|;
+name|uint8_t
+name|rxmic
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint8_t
+name|txmic
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint32_t
+name|htflags
+decl_stmt|;
+define|#
+directive|define
+name|IWN_AMDPU_SIZE_FACTOR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 19)
+define|#
+directive|define
+name|IWN_AMDPU_DENSITY
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 23)
+name|uint32_t
+name|mask
+decl_stmt|;
+name|uint16_t
+name|disable_tid
+decl_stmt|;
+name|uint16_t
+name|reserved6
+decl_stmt|;
+name|uint8_t
+name|addba_tid
+decl_stmt|;
+name|uint8_t
+name|delba_tid
+decl_stmt|;
+name|uint16_t
+name|addba_ssn
+decl_stmt|;
+name|uint32_t
+name|reserved7
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn4965_node_info
+block|{
+name|uint8_t
+name|control
+decl_stmt|;
+name|uint8_t
+name|reserved1
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|reserved2
+decl_stmt|;
+name|uint8_t
+name|id
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+name|uint16_t
+name|reserved3
+decl_stmt|;
+name|uint16_t
+name|kflags
 decl_stmt|;
 name|uint8_t
 name|tsc2
@@ -1569,93 +2788,66 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-name|uint16_t
+name|uint8_t
+name|kid
+decl_stmt|;
+name|uint8_t
 name|reserved5
 decl_stmt|;
 name|uint8_t
 name|key
 index|[
-name|IEEE80211_KEYBUF_SIZE
+literal|16
 index|]
 decl_stmt|;
 name|uint32_t
 name|htflags
 decl_stmt|;
-define|#
-directive|define
-name|IWN_MAXRXAMPDU_S
-value|19
-define|#
-directive|define
-name|IWN_MPDUDENSITY_S
-value|23
 name|uint32_t
 name|mask
 decl_stmt|;
 name|uint16_t
-name|tid
-decl_stmt|;
-name|uint8_t
-name|rate
-decl_stmt|;
-comment|/* legacy rate/MCS */
-define|#
-directive|define
-name|IWN_RATE_MCS
-value|0x08
-comment|/* or'd to indicate MCS */
-name|uint8_t
-name|rflags
-decl_stmt|;
-define|#
-directive|define
-name|IWN_RFLAG_HT
-value|(1<< 0)
-comment|/* use HT modulation */
-define|#
-directive|define
-name|IWN_RFLAG_CCK
-value|(1<< 1)
-comment|/* use CCK modulation */
-define|#
-directive|define
-name|IWN_RFLAG_HT40
-value|(1<< 3)
-comment|/* use dual-stream */
-define|#
-directive|define
-name|IWN_RFLAG_SGI
-value|(1<< 5)
-comment|/* use short GI */
-define|#
-directive|define
-name|IWN_RFLAG_ANT_A
-value|(1<< 6)
-comment|/* start on antenna port A */
-define|#
-directive|define
-name|IWN_RFLAG_ANT_B
-value|(1<< 7)
-comment|/* start on antenna port B */
-name|uint8_t
-name|add_imm
-decl_stmt|;
-name|uint8_t
-name|del_imm
+name|disable_tid
 decl_stmt|;
 name|uint16_t
-name|add_imm_start
+name|reserved6
+decl_stmt|;
+name|uint8_t
+name|addba_tid
+decl_stmt|;
+name|uint8_t
+name|delba_tid
+decl_stmt|;
+name|uint16_t
+name|addba_ssn
 decl_stmt|;
 name|uint32_t
-name|reserved6
+name|reserved7
 decl_stmt|;
 block|}
 name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IWN_RFLAG_CCK
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFLAG_ANT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 6)
+end_define
+
 begin_comment
-comment|/* structure for command IWN_CMD_TX_DATA */
+comment|/* Structure for command IWN_CMD_TX_DATA. */
 end_comment
 
 begin_struct
@@ -1673,6 +2865,11 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
+name|IWN_TX_NEED_PROTECTION
+value|(1<<  0)
+comment|/* 5000 only */
+define|#
+directive|define
 name|IWN_TX_NEED_RTS
 value|(1<<  1)
 define|#
@@ -1685,8 +2882,12 @@ name|IWN_TX_NEED_ACK
 value|(1<<  3)
 define|#
 directive|define
-name|IWN_TX_USE_NODE_RATE
+name|IWN_TX_LINKQ
 value|(1<<  4)
+define|#
+directive|define
+name|IWN_TX_IMM_BA
+value|(1<<  6)
 define|#
 directive|define
 name|IWN_TX_FULL_TXOP
@@ -1702,23 +2903,21 @@ name|IWN_TX_AUTO_SEQ
 value|(1<< 13)
 define|#
 directive|define
+name|IWN_TX_MORE_FRAG
+value|(1<< 14)
+define|#
+directive|define
 name|IWN_TX_INSERT_TSTAMP
 value|(1<< 16)
 define|#
 directive|define
 name|IWN_TX_NEED_PADDING
 value|(1<< 20)
-name|uint8_t
-name|ntries
+name|uint32_t
+name|scratch
 decl_stmt|;
 name|uint8_t
-name|bluetooth
-decl_stmt|;
-name|uint16_t
-name|reserved1
-decl_stmt|;
-name|uint8_t
-name|rate
+name|plcp
 decl_stmt|;
 name|uint8_t
 name|rflags
@@ -1749,7 +2948,7 @@ directive|define
 name|IWN_CIPHER_WEP104
 value|9
 name|uint8_t
-name|ridx
+name|linkq
 decl_stmt|;
 name|uint8_t
 name|reserved2
@@ -1757,7 +2956,7 @@ decl_stmt|;
 name|uint8_t
 name|key
 index|[
-name|IEEE80211_KEYBUF_SIZE
+literal|16
 index|]
 decl_stmt|;
 name|uint16_t
@@ -1800,7 +2999,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_TX_LINK_QUALITY */
+comment|/* Structure for command IWN_CMD_LINK_QUALITY. */
 end_comment
 
 begin_define
@@ -1829,57 +3028,35 @@ decl_stmt|;
 name|uint8_t
 name|mimo
 decl_stmt|;
-comment|/* MIMO delimiter */
 name|uint8_t
-name|ssmask
+name|antmsk_1stream
 decl_stmt|;
-comment|/* single stream antenna mask */
 name|uint8_t
-name|dsmask
+name|antmsk_2stream
 decl_stmt|;
-comment|/* dual stream antenna mask */
 name|uint8_t
 name|ridx
 index|[
-name|EDCA_NUM_AC
+name|WME_NUM_AC
 index|]
 decl_stmt|;
-comment|/* starting rate index */
 name|uint16_t
 name|ampdu_limit
 decl_stmt|;
-comment|/* tx aggregation time limit */
 name|uint8_t
-name|ampdu_disable
+name|ampdu_threshold
 decl_stmt|;
 name|uint8_t
 name|ampdu_max
 decl_stmt|;
-comment|/* frame count limit */
 name|uint32_t
 name|reserved2
 decl_stmt|;
 struct|struct
 block|{
 name|uint8_t
-name|rate
+name|plcp
 decl_stmt|;
-define|#
-directive|define
-name|IWN_RATE_CCK1
-value|0
-define|#
-directive|define
-name|IWN_RATE_CCK11
-value|3
-define|#
-directive|define
-name|IWN_RATE_OFDM6
-value|4
-define|#
-directive|define
-name|IWN_RATE_OFDM54
-value|11
 name|uint8_t
 name|rflags
 decl_stmt|;
@@ -1887,7 +3064,8 @@ name|uint16_t
 name|xrflags
 decl_stmt|;
 block|}
-name|table
+name|__packed
+name|retry
 index|[
 name|IWN_MAX_TX_RETRIES
 index|]
@@ -1901,7 +3079,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_SET_LED */
+comment|/* Structure for command IWN_CMD_SET_LED. */
 end_comment
 
 begin_struct
@@ -1938,35 +3116,172 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_SET_POWER_MODE */
+comment|/* Structure for command IWN5000_CMD_WIMAX_COEX. */
 end_comment
 
 begin_struct
 struct|struct
-name|iwn_power
+name|iwn5000_wimax_coex
+block|{
+name|uint32_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|IWN_WIMAX_COEX_STA_TABLE_VALID
+value|(1<< 0)
+define|#
+directive|define
+name|IWN_WIMAX_COEX_UNASSOC_WA_UNMASK
+value|(1<< 2)
+define|#
+directive|define
+name|IWN_WIMAX_COEX_ASSOC_WA_UNMASK
+value|(1<< 3)
+define|#
+directive|define
+name|IWN_WIMAX_COEX_ENABLE
+value|(1<< 7)
+struct|struct
+name|iwn5000_wimax_event
+block|{
+name|uint8_t
+name|request
+decl_stmt|;
+name|uint8_t
+name|window
+decl_stmt|;
+name|uint8_t
+name|reserved
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+block|}
+name|__packed
+name|events
+index|[
+literal|16
+index|]
+struct|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* Structures for command IWN5000_CMD_CALIB_CONFIG. */
+end_comment
+
+begin_struct
+struct|struct
+name|iwn5000_calib_elem
+block|{
+name|uint32_t
+name|enable
+decl_stmt|;
+name|uint32_t
+name|start
+decl_stmt|;
+name|uint32_t
+name|send
+decl_stmt|;
+name|uint32_t
+name|apply
+decl_stmt|;
+name|uint32_t
+name|reserved
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn5000_calib_status
+block|{
+name|struct
+name|iwn5000_calib_elem
+name|once
+decl_stmt|;
+name|struct
+name|iwn5000_calib_elem
+name|perd
+decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn5000_calib_config
+block|{
+name|struct
+name|iwn5000_calib_status
+name|ucode
+decl_stmt|;
+name|struct
+name|iwn5000_calib_status
+name|driver
+decl_stmt|;
+name|uint32_t
+name|reserved
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* Structure for command IWN_CMD_SET_POWER_MODE. */
+end_comment
+
+begin_struct
+struct|struct
+name|iwn_pmgt_cmd
 block|{
 name|uint16_t
 name|flags
 decl_stmt|;
 define|#
 directive|define
-name|IWN_POWER_CAM
-value|0
-comment|/* constantly awake mode */
+name|IWN_PS_ALLOW_SLEEP
+value|(1<< 0)
+define|#
+directive|define
+name|IWN_PS_NOTIFY
+value|(1<< 1)
+define|#
+directive|define
+name|IWN_PS_SLEEP_OVER_DTIM
+value|(1<< 2)
+define|#
+directive|define
+name|IWN_PS_PCI_PMGT
+value|(1<< 3)
+define|#
+directive|define
+name|IWN_PS_FAST_PD
+value|(1<< 4)
 name|uint8_t
-name|alive
+name|keepalive
 decl_stmt|;
 name|uint8_t
 name|debug
 decl_stmt|;
 name|uint32_t
-name|rx_timeout
+name|rxtimeout
 decl_stmt|;
 name|uint32_t
-name|tx_timeout
+name|txtimeout
 decl_stmt|;
 name|uint32_t
-name|sleep
+name|intval
 index|[
 literal|5
 index|]
@@ -1980,7 +3295,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structures for command IWN_CMD_SCAN */
+comment|/* Structures for command IWN_CMD_SCAN. */
 end_comment
 
 begin_struct
@@ -2018,10 +3333,10 @@ name|uint8_t
 name|nchan
 decl_stmt|;
 name|uint16_t
-name|quiet
+name|quiet_time
 decl_stmt|;
 name|uint16_t
-name|plcp_threshold
+name|quiet_threshold
 decl_stmt|;
 name|uint16_t
 name|crc_threshold
@@ -2043,10 +3358,10 @@ decl_stmt|;
 name|uint32_t
 name|filter
 decl_stmt|;
-comment|/* followed by a struct iwn_cmd_data */
-comment|/* followed by an array of 4x struct iwn_scan_essid */
-comment|/* followed by probe request body */
-comment|/* followed by nchan x struct iwn_scan_chan */
+comment|/* Followed by a struct iwn_cmd_data. */
+comment|/* Followed by an array of 20 structs iwn_scan_essid. */
+comment|/* Followed by probe request body. */
+comment|/* Followed by an array of ``nchan'' structs iwn_scan_chan. */
 block|}
 name|__packed
 struct|;
@@ -2056,7 +3371,7 @@ begin_struct
 struct|struct
 name|iwn_scan_chan
 block|{
-name|uint8_t
+name|uint32_t
 name|flags
 decl_stmt|;
 define|#
@@ -2065,9 +3380,12 @@ name|IWN_CHAN_ACTIVE
 value|(1<< 0)
 define|#
 directive|define
-name|IWN_CHAN_DIRECT
-value|(1<< 1)
-name|uint8_t
+name|IWN_CHAN_NPBREQS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((1<< (x)) - 1)<< 1)
+name|uint16_t
 name|chan
 decl_stmt|;
 name|uint8_t
@@ -2090,7 +3408,18 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_TXPOWER */
+comment|/* Maximum size of a scan command. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_SCAN_MAXSZ
+value|(MCLBYTES - 4)
+end_define
+
+begin_comment
+comment|/* Structure for command IWN_CMD_TXPOWER (4965AGN only.) */
 end_comment
 
 begin_define
@@ -2102,7 +3431,7 @@ end_define
 
 begin_struct
 struct|struct
-name|iwn_cmd_txpower
+name|iwn4965_cmd_txpower
 block|{
 name|uint8_t
 name|band
@@ -2121,16 +3450,17 @@ block|{
 name|uint8_t
 name|rf_gain
 index|[
-name|IWN_NTXCHAINS
+literal|2
 index|]
 decl_stmt|;
 name|uint8_t
 name|dsp_gain
 index|[
-name|IWN_NTXCHAINS
+literal|2
 index|]
 decl_stmt|;
 block|}
+name|__packed
 name|power
 index|[
 name|IWN_RIDX_MAX
@@ -2144,7 +3474,46 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_BLUETOOTH */
+comment|/* Structure for command IWN_CMD_TXPOWER_DBM (5000 Series only.) */
+end_comment
+
+begin_struct
+struct|struct
+name|iwn5000_cmd_txpower
+block|{
+name|int8_t
+name|global_limit
+decl_stmt|;
+comment|/* in half-dBm */
+define|#
+directive|define
+name|IWN5000_TXPOWER_AUTO
+value|0x7f
+define|#
+directive|define
+name|IWN5000_TXPOWER_MAX_DBM
+value|16
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|IWN5000_TXPOWER_NO_CLOSED
+value|(1<< 6)
+name|int8_t
+name|srv_limit
+decl_stmt|;
+comment|/* in half-dBm */
+name|uint8_t
+name|reserved
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* Structure for command IWN_CMD_BLUETOOTH. */
 end_comment
 
 begin_struct
@@ -2154,20 +3523,44 @@ block|{
 name|uint8_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|IWN_BT_COEX_DISABLE
+value|0
+define|#
+directive|define
+name|IWN_BT_COEX_MODE_2WIRE
+value|1
+define|#
+directive|define
+name|IWN_BT_COEX_MODE_3WIRE
+value|2
+define|#
+directive|define
+name|IWN_BT_COEX_MODE_4WIRE
+value|3
 name|uint8_t
-name|lead
+name|lead_time
 decl_stmt|;
+define|#
+directive|define
+name|IWN_BT_LEAD_TIME_DEF
+value|30
 name|uint8_t
-name|kill
+name|max_kill
 decl_stmt|;
+define|#
+directive|define
+name|IWN_BT_MAX_KILL_DEF
+value|5
 name|uint8_t
 name|reserved
 decl_stmt|;
 name|uint32_t
-name|ack
+name|kill_ack
 decl_stmt|;
 name|uint32_t
-name|cts
+name|kill_cts
 decl_stmt|;
 block|}
 name|__packed
@@ -2175,7 +3568,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_CMD_SET_CRITICAL_TEMP */
+comment|/* Structure for command IWN_CMD_SET_CRITICAL_TEMP. */
 end_comment
 
 begin_struct
@@ -2191,7 +3584,7 @@ decl_stmt|;
 name|uint32_t
 name|tempR
 decl_stmt|;
-comment|/* degK<-> degC conversion macros */
+comment|/* degK<-> degC conversion macros. */
 define|#
 directive|define
 name|IWN_CTOK
@@ -2219,7 +3612,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_SENSITIVITY */
+comment|/* Structure for command IWN_CMD_SET_SENSITIVITY. */
 end_comment
 
 begin_struct
@@ -2276,25 +3669,114 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for command IWN_PHY_CALIB */
+comment|/* Structures for command IWN_CMD_PHY_CALIB. */
 end_comment
 
 begin_struct
 struct|struct
-name|iwn_phy_calib_cmd
+name|iwn_phy_calib
 block|{
 name|uint8_t
 name|code
 decl_stmt|;
 define|#
 directive|define
-name|IWN_SET_DIFF_GAIN
+name|IWN4965_PHY_CALIB_DIFF_GAIN
 value|7
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_DC
+value|8
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_LO
+value|9
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_TX_IQ
+value|11
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_CRYSTAL
+value|15
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_BASE_BAND
+value|16
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_TX_IQ_PERIODIC
+value|17
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_RESET_NOISE_GAIN
+value|18
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_NOISE_GAIN
+value|19
 name|uint8_t
-name|flags
+name|group
 decl_stmt|;
-name|uint16_t
-name|reserved1
+name|uint8_t
+name|ngroups
+decl_stmt|;
+name|uint8_t
+name|isvalid
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn5000_phy_calib_crystal
+block|{
+name|uint8_t
+name|code
+decl_stmt|;
+name|uint8_t
+name|group
+decl_stmt|;
+name|uint8_t
+name|ngroups
+decl_stmt|;
+name|uint8_t
+name|isvalid
+decl_stmt|;
+name|uint8_t
+name|cap_pin
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn_phy_calib_gain
+block|{
+name|uint8_t
+name|code
+decl_stmt|;
+name|uint8_t
+name|group
+decl_stmt|;
+name|uint8_t
+name|ngroups
+decl_stmt|;
+name|uint8_t
+name|isvalid
 decl_stmt|;
 name|int8_t
 name|gain
@@ -2302,12 +3784,8 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-define|#
-directive|define
-name|IWN_GAIN_SET
-value|(1<< 2)
 name|uint8_t
-name|reserved2
+name|reserved
 decl_stmt|;
 block|}
 name|__packed
@@ -2315,7 +3793,101 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for IWN_UC_READY notification */
+comment|/* Structure for command IWN_CMD_SPECTRUM_MEASUREMENT. */
+end_comment
+
+begin_struct
+struct|struct
+name|iwn_spectrum_cmd
+block|{
+name|uint16_t
+name|len
+decl_stmt|;
+name|uint8_t
+name|token
+decl_stmt|;
+name|uint8_t
+name|id
+decl_stmt|;
+name|uint8_t
+name|origin
+decl_stmt|;
+name|uint8_t
+name|periodic
+decl_stmt|;
+name|uint16_t
+name|timeout
+decl_stmt|;
+name|uint32_t
+name|start
+decl_stmt|;
+name|uint32_t
+name|reserved1
+decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+name|uint32_t
+name|filter
+decl_stmt|;
+name|uint16_t
+name|nchan
+decl_stmt|;
+name|uint16_t
+name|reserved2
+decl_stmt|;
+struct|struct
+block|{
+name|uint32_t
+name|duration
+decl_stmt|;
+name|uint8_t
+name|chan
+decl_stmt|;
+name|uint8_t
+name|type
+decl_stmt|;
+define|#
+directive|define
+name|IWN_MEASUREMENT_BASIC
+value|(1<< 0)
+define|#
+directive|define
+name|IWN_MEASUREMENT_CCA
+value|(1<< 1)
+define|#
+directive|define
+name|IWN_MEASUREMENT_RPI_HISTOGRAM
+value|(1<< 2)
+define|#
+directive|define
+name|IWN_MEASUREMENT_NOISE_HISTOGRAM
+value|(1<< 3)
+define|#
+directive|define
+name|IWN_MEASUREMENT_FRAME
+value|(1<< 4)
+define|#
+directive|define
+name|IWN_MEASUREMENT_IDLE
+value|(1<< 7)
+name|uint16_t
+name|reserved
+decl_stmt|;
+block|}
+name|__packed
+name|chan
+index|[
+literal|10
+index|]
+struct|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* Structure for IWN_UC_READY notification. */
 end_comment
 
 begin_define
@@ -2365,7 +3937,7 @@ name|uint32_t
 name|logptr
 decl_stmt|;
 name|uint32_t
-name|errorptr
+name|errptr
 decl_stmt|;
 name|uint32_t
 name|tstamp
@@ -2373,7 +3945,7 @@ decl_stmt|;
 name|uint32_t
 name|valid
 decl_stmt|;
-comment|/* the following fields are for UCODE_INIT only */
+comment|/* The following fields are for UCODE_INIT only. */
 name|int32_t
 name|volt
 decl_stmt|;
@@ -2398,7 +3970,7 @@ index|[
 name|IWN_NATTEN_GROUPS
 index|]
 index|[
-name|IWN_NTXCHAINS
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -2407,24 +3979,97 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for IWN_TX_DONE notification */
+comment|/* Structures for IWN_TX_DONE notification. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_TX_SUCCESS
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_TX_FAIL
+value|0x80
+end_define
+
+begin_comment
+comment|/* all failures have 0x80 set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_TX_FAIL_SHORT_LIMIT
+value|0x82
+end_define
+
+begin_comment
+comment|/* too many RTS retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_TX_FAIL_LONG_LIMIT
+value|0x83
+end_define
+
+begin_comment
+comment|/* too many retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_TX_FAIL_FIFO_UNDERRRUN
+value|0x84
+end_define
+
+begin_comment
+comment|/* tx fifo not kept running */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_TX_FAIL_DEST_IN_PS
+value|0x88
+end_define
+
+begin_comment
+comment|/* sta found in power save */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_TX_FAIL_TX_LOCKED
+value|0x90
+end_define
+
+begin_comment
+comment|/* waiting to see traffic */
 end_comment
 
 begin_struct
 struct|struct
-name|iwn_tx_stat
+name|iwn4965_tx_stat
 block|{
 name|uint8_t
 name|nframes
 decl_stmt|;
 name|uint8_t
-name|nkill
+name|btkillcnt
 decl_stmt|;
 name|uint8_t
-name|nrts
+name|rtsfailcnt
 decl_stmt|;
 name|uint8_t
-name|ntries
+name|ackfailcnt
 decl_stmt|;
 name|uint8_t
 name|rate
@@ -2450,47 +4095,82 @@ decl_stmt|;
 name|uint32_t
 name|status
 decl_stmt|;
-define|#
-directive|define
-name|IWN_TX_SUCCESS
-value|0x00
-define|#
-directive|define
-name|IWN_TX_FAIL
-value|0x80
-comment|/* all failures have 0x80 set */
-define|#
-directive|define
-name|IWN_TX_FAIL_SHORT_LIMIT
-value|0x82
-comment|/* too many RTS retries */
-define|#
-directive|define
-name|IWN_TX_FAIL_LONG_LIMIT
-value|0x83
-comment|/* too many retries */
-define|#
-directive|define
-name|IWN_TX_FAIL_FIFO_UNDERRRUN
-value|0x84
-comment|/* tx fifo not kept running */
-define|#
-directive|define
-name|IWN_TX_FAIL_DEST_IN_PS
-value|0x88
-comment|/* sta found in power save */
-define|#
-directive|define
-name|IWN_TX_FAIL_TX_LOCKED
-value|0x90
-comment|/* waiting to see traffic */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn5000_tx_stat
+block|{
+name|uint8_t
+name|nframes
+decl_stmt|;
+name|uint8_t
+name|btkillcnt
+decl_stmt|;
+name|uint8_t
+name|rtsfailcnt
+decl_stmt|;
+name|uint8_t
+name|ackfailcnt
+decl_stmt|;
+name|uint8_t
+name|rate
+decl_stmt|;
+name|uint8_t
+name|rflags
+decl_stmt|;
+name|uint16_t
+name|xrflags
+decl_stmt|;
+name|uint16_t
+name|duration
+decl_stmt|;
+name|uint16_t
+name|reserved
+decl_stmt|;
+name|uint32_t
+name|power
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint32_t
+name|info
+decl_stmt|;
+name|uint16_t
+name|seq
+decl_stmt|;
+name|uint16_t
+name|len
+decl_stmt|;
+name|uint8_t
+name|tlc
+decl_stmt|;
+name|uint8_t
+name|ratid
+decl_stmt|;
+name|uint8_t
+name|fc
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint16_t
+name|status
+decl_stmt|;
+name|uint16_t
+name|sequence
+decl_stmt|;
 block|}
 name|__packed
 struct|;
 end_struct
 
 begin_comment
-comment|/* structure for IWN_BEACON_MISSED notification */
+comment|/* Structure for IWN_BEACON_MISSED notification. */
 end_comment
 
 begin_struct
@@ -2515,12 +4195,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for IWN_AMPDU_RX_DONE notification */
+comment|/* Structure for IWN_MPDU_RX_DONE notification. */
 end_comment
 
 begin_struct
 struct|struct
-name|iwn_rx_ampdu
+name|iwn_rx_mpdu
 block|{
 name|uint16_t
 name|len
@@ -2534,8 +4214,50 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for IWN_RX_DONE and IWN_AMPDU_RX_START notifications */
+comment|/* Structures for IWN_RX_DONE and IWN_MPDU_RX_DONE notifications. */
 end_comment
+
+begin_struct
+struct|struct
+name|iwn4965_rx_phystat
+block|{
+name|uint16_t
+name|antenna
+decl_stmt|;
+name|uint16_t
+name|agc
+decl_stmt|;
+name|uint8_t
+name|rssi
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn5000_rx_phystat
+block|{
+name|uint32_t
+name|reserved1
+decl_stmt|;
+name|uint32_t
+name|agc
+decl_stmt|;
+name|uint16_t
+name|rssi
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -2566,29 +4288,17 @@ decl_stmt|;
 name|uint16_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|IWN_STAT_FLAG_SHPREAMBLE
+value|(1<< 2)
 name|uint16_t
 name|chan
 decl_stmt|;
-name|uint16_t
-name|antenna
-decl_stmt|;
-name|uint16_t
-name|agc
-decl_stmt|;
 name|uint8_t
-name|rssi
+name|phybuf
 index|[
-literal|6
-index|]
-decl_stmt|;
-define|#
-directive|define
-name|IWN_RSSI_TO_DBM
-value|44
-name|uint8_t
-name|reserved2
-index|[
-literal|22
+literal|32
 index|]
 decl_stmt|;
 name|uint8_t
@@ -2611,8 +4321,55 @@ name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IWN_RSSI_TO_DBM
+value|44
+end_define
+
 begin_comment
-comment|/* structure for IWN_START_SCAN notification */
+comment|/* Structure for IWN_RX_COMPRESSED_BA notification. */
+end_comment
+
+begin_struct
+struct|struct
+name|iwn_compressed_ba
+block|{
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|reserved
+decl_stmt|;
+name|uint8_t
+name|id
+decl_stmt|;
+name|uint8_t
+name|tid
+decl_stmt|;
+name|uint16_t
+name|seq
+decl_stmt|;
+name|uint64_t
+name|bitmap
+decl_stmt|;
+name|uint16_t
+name|qid
+decl_stmt|;
+name|uint16_t
+name|ssn
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* Structure for IWN_START_SCAN notification. */
 end_comment
 
 begin_struct
@@ -2643,7 +4400,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for IWN_STOP_SCAN notification */
+comment|/* Structure for IWN_STOP_SCAN notification. */
 end_comment
 
 begin_struct
@@ -2671,7 +4428,119 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* structure for IWN_{RX,BEACON}_STATISTICS notification */
+comment|/* Structure for IWN_SPECTRUM_MEASUREMENT notification. */
+end_comment
+
+begin_struct
+struct|struct
+name|iwn_spectrum_notif
+block|{
+name|uint8_t
+name|id
+decl_stmt|;
+name|uint8_t
+name|token
+decl_stmt|;
+name|uint8_t
+name|idx
+decl_stmt|;
+name|uint8_t
+name|state
+decl_stmt|;
+define|#
+directive|define
+name|IWN_MEASUREMENT_START
+value|0
+define|#
+directive|define
+name|IWN_MEASUREMENT_STOP
+value|1
+name|uint32_t
+name|start
+decl_stmt|;
+name|uint8_t
+name|band
+decl_stmt|;
+name|uint8_t
+name|chan
+decl_stmt|;
+name|uint8_t
+name|type
+decl_stmt|;
+name|uint8_t
+name|reserved1
+decl_stmt|;
+name|uint32_t
+name|cca_ofdm
+decl_stmt|;
+name|uint32_t
+name|cca_cck
+decl_stmt|;
+name|uint32_t
+name|cca_time
+decl_stmt|;
+name|uint8_t
+name|basic
+decl_stmt|;
+name|uint8_t
+name|reserved2
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint32_t
+name|ofdm
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint32_t
+name|cck
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint32_t
+name|stop
+decl_stmt|;
+name|uint32_t
+name|status
+decl_stmt|;
+define|#
+directive|define
+name|IWN_MEASUREMENT_OK
+value|0
+define|#
+directive|define
+name|IWN_MEASUREMENT_CONCURRENT
+value|1
+define|#
+directive|define
+name|IWN_MEASUREMENT_CSA_CONFLICT
+value|2
+define|#
+directive|define
+name|IWN_MEASUREMENT_TGH_CONFLICT
+value|3
+define|#
+directive|define
+name|IWN_MEASUREMENT_STOPPED
+value|6
+define|#
+directive|define
+name|IWN_MEASUREMENT_TIMEOUT
+value|7
+define|#
+directive|define
+name|IWN_MEASUREMENT_FAILED
+value|8
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* Structures for IWN_{RX,BEACON}_STATISTICS notification. */
 end_comment
 
 begin_struct
@@ -3050,30 +4919,51 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* firmware image header */
+comment|/* Firmware error dump. */
 end_comment
 
 begin_struct
 struct|struct
-name|iwn_firmware_hdr
+name|iwn_fw_dump
 block|{
 name|uint32_t
-name|version
+name|valid
 decl_stmt|;
 name|uint32_t
-name|main_textsz
+name|id
 decl_stmt|;
 name|uint32_t
-name|main_datasz
+name|pc
 decl_stmt|;
 name|uint32_t
-name|init_textsz
+name|branch_link
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|uint32_t
-name|init_datasz
+name|interrupt_link
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|uint32_t
-name|boot_textsz
+name|error_data
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint32_t
+name|src_line
+decl_stmt|;
+name|uint32_t
+name|tsf
+decl_stmt|;
+name|uint32_t
+name|time
+index|[
+literal|2
+index|]
 decl_stmt|;
 block|}
 name|__packed
@@ -3083,29 +4973,29 @@ end_struct
 begin_define
 define|#
 directive|define
-name|IWN_FW_MAIN_TEXT_MAXSZ
-value|(96 * 1024)
+name|IWN4965_FW_TEXT_MAXSZ
+value|( 96 * 1024)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_FW_MAIN_DATA_MAXSZ
-value|(40 * 1024)
+name|IWN4965_FW_DATA_MAXSZ
+value|( 40 * 1024)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_FW_INIT_TEXT_MAXSZ
-value|(96 * 1024)
+name|IWN5000_FW_TEXT_MAXSZ
+value|(256 * 1024)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_FW_INIT_DATA_MAXSZ
-value|(40 * 1024)
+name|IWN5000_FW_DATA_MAXSZ
+value|( 80 * 1024)
 end_define
 
 begin_define
@@ -3113,6 +5003,30 @@ define|#
 directive|define
 name|IWN_FW_BOOT_TEXT_MAXSZ
 value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_FWSZ
+value|(IWN4965_FW_TEXT_MAXSZ + IWN4965_FW_DATA_MAXSZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_FWSZ
+value|IWN5000_FW_TEXT_MAXSZ
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_FW_API
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 8)& 0xff)
 end_define
 
 begin_comment
@@ -3129,78 +5043,241 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_DOMAIN
+name|IWN_EEPROM_RFCFG
+value|0x048
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_EEPROM_DOMAIN
 value|0x060
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_BAND1
+name|IWN4965_EEPROM_BAND1
 value|0x063
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_BAND2
+name|IWN5000_EEPROM_REG
+value|0x066
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_CAL
+value|0x067
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN4965_EEPROM_BAND2
 value|0x072
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_BAND3
+name|IWN4965_EEPROM_BAND3
 value|0x080
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_BAND4
+name|IWN4965_EEPROM_BAND4
 value|0x08d
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_BAND5
+name|IWN4965_EEPROM_BAND5
 value|0x099
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_BAND6
+name|IWN4965_EEPROM_BAND6
 value|0x0a0
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_BAND7
+name|IWN4965_EEPROM_BAND7
 value|0x0a8
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_MAXPOW
+name|IWN4965_EEPROM_MAXPOW
 value|0x0e8
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_VOLTAGE
+name|IWN4965_EEPROM_VOLTAGE
 value|0x0e9
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_EEPROM_BANDS
+name|IWN4965_EEPROM_BANDS
 value|0x0ea
+end_define
+
+begin_comment
+comment|/* Indirect offsets. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_DOMAIN
+value|0x001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_BAND1
+value|0x004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_BAND2
+value|0x013
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_BAND3
+value|0x021
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_BAND4
+value|0x02e
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_BAND5
+value|0x03a
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_BAND6
+value|0x041
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_BAND7
+value|0x049
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN6000_EEPROM_ENHINFO
+value|0x054
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_CRYSTAL
+value|0x128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_TEMP
+value|0x12a
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN5000_EEPROM_VOLT
+value|0x12b
+end_define
+
+begin_comment
+comment|/* Possible flags for IWN_EEPROM_RFCFG. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_RFCFG_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>>  0)& 0x3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFCFG_STEP
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>>  2)& 0x3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFCFG_DASH
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>>  4)& 0x3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFCFG_TXANTMSK
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>>  8)& 0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFCFG_RXANTMSK
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 12)& 0xf)
 end_define
 
 begin_struct
@@ -3218,31 +5295,47 @@ define|#
 directive|define
 name|IWN_EEPROM_CHAN_IBSS
 value|(1<< 1)
-comment|/* adhoc permitted */
-comment|/* NB: bit 2 is reserved */
 define|#
 directive|define
 name|IWN_EEPROM_CHAN_ACTIVE
 value|(1<< 3)
-comment|/* active/passive scan */
 define|#
 directive|define
 name|IWN_EEPROM_CHAN_RADAR
 value|(1<< 4)
-comment|/* DFS required */
-define|#
-directive|define
-name|IWN_EEPROM_CHAN_WIDE
-value|(1<< 5)
-comment|/* HT40 */
-define|#
-directive|define
-name|IWN_EEPROM_CHAN_NARROW
-value|(1<< 6)
-comment|/* HT20 */
 name|int8_t
 name|maxpwr
 decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn_eeprom_enhinfo
+block|{
+name|uint16_t
+name|chan
+decl_stmt|;
+name|int8_t
+name|chain
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* max power in half-dBm */
+name|uint8_t
+name|reserved
+decl_stmt|;
+name|int8_t
+name|mimo2
+decl_stmt|;
+comment|/* max power in half-dBm */
+name|int8_t
+name|mimo3
+decl_stmt|;
+comment|/* max power in half-dBm */
 block|}
 name|__packed
 struct|;
@@ -3257,7 +5350,7 @@ end_define
 
 begin_struct
 struct|struct
-name|iwn_eeprom_chan_samples
+name|iwn4965_eeprom_chan_samples
 block|{
 name|uint8_t
 name|num
@@ -3279,7 +5372,7 @@ decl_stmt|;
 block|}
 name|samples
 index|[
-name|IWN_NTXCHAINS
+literal|2
 index|]
 index|[
 name|IWN_NSAMPLES
@@ -3299,7 +5392,7 @@ end_define
 
 begin_struct
 struct|struct
-name|iwn_eeprom_band
+name|iwn4965_eeprom_band
 block|{
 name|uint8_t
 name|lo
@@ -3310,7 +5403,7 @@ name|hi
 decl_stmt|;
 comment|/* high channel number */
 name|struct
-name|iwn_eeprom_chan_samples
+name|iwn4965_eeprom_chan_samples
 name|chans
 index|[
 literal|2
@@ -3321,10 +5414,483 @@ name|__packed
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Offsets of channels descriptions in EEPROM.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint32_t
+name|iwn4965_regulatory_bands
+index|[
+name|IWN_NBANDS
+index|]
+init|=
+block|{
+name|IWN4965_EEPROM_BAND1
+block|,
+name|IWN4965_EEPROM_BAND2
+block|,
+name|IWN4965_EEPROM_BAND3
+block|,
+name|IWN4965_EEPROM_BAND4
+block|,
+name|IWN4965_EEPROM_BAND5
+block|,
+name|IWN4965_EEPROM_BAND6
+block|,
+name|IWN4965_EEPROM_BAND7
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint32_t
+name|iwn5000_regulatory_bands
+index|[
+name|IWN_NBANDS
+index|]
+init|=
+block|{
+name|IWN5000_EEPROM_BAND1
+block|,
+name|IWN5000_EEPROM_BAND2
+block|,
+name|IWN5000_EEPROM_BAND3
+block|,
+name|IWN5000_EEPROM_BAND4
+block|,
+name|IWN5000_EEPROM_BAND5
+block|,
+name|IWN5000_EEPROM_BAND6
+block|,
+name|IWN5000_EEPROM_BAND7
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
-name|IWN_MAX_PWR_INDEX
+name|IWN_CHAN_BANDS_COUNT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_MAX_CHAN_PER_BAND
+value|14
+end_define
+
+begin_struct
+specifier|static
+specifier|const
+struct|struct
+name|iwn_chan_band
+block|{
+name|uint8_t
+name|nchan
+decl_stmt|;
+name|uint8_t
+name|chan
+index|[
+name|IWN_MAX_CHAN_PER_BAND
+index|]
+decl_stmt|;
+block|}
+name|iwn_bands
+index|[]
+init|=
+block|{
+comment|/* 20MHz channels, 2GHz band. */
+block|{
+literal|14
+block|,
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|,
+literal|8
+block|,
+literal|9
+block|,
+literal|10
+block|,
+literal|11
+block|,
+literal|12
+block|,
+literal|13
+block|,
+literal|14
+block|}
+block|}
+block|,
+comment|/* 20MHz channels, 5GHz band. */
+block|{
+literal|13
+block|,
+block|{
+literal|183
+block|,
+literal|184
+block|,
+literal|185
+block|,
+literal|187
+block|,
+literal|188
+block|,
+literal|189
+block|,
+literal|192
+block|,
+literal|196
+block|,
+literal|7
+block|,
+literal|8
+block|,
+literal|11
+block|,
+literal|12
+block|,
+literal|16
+block|}
+block|}
+block|,
+block|{
+literal|12
+block|,
+block|{
+literal|34
+block|,
+literal|36
+block|,
+literal|38
+block|,
+literal|40
+block|,
+literal|42
+block|,
+literal|44
+block|,
+literal|46
+block|,
+literal|48
+block|,
+literal|52
+block|,
+literal|56
+block|,
+literal|60
+block|,
+literal|64
+block|}
+block|}
+block|,
+block|{
+literal|11
+block|,
+block|{
+literal|100
+block|,
+literal|104
+block|,
+literal|108
+block|,
+literal|112
+block|,
+literal|116
+block|,
+literal|120
+block|,
+literal|124
+block|,
+literal|128
+block|,
+literal|132
+block|,
+literal|136
+block|,
+literal|140
+block|}
+block|}
+block|,
+block|{
+literal|6
+block|,
+block|{
+literal|145
+block|,
+literal|149
+block|,
+literal|153
+block|,
+literal|157
+block|,
+literal|161
+block|,
+literal|165
+block|}
+block|}
+block|,
+comment|/* 40MHz channels (primary channels), 2GHz band. */
+block|{
+literal|7
+block|,
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|}
+block|}
+block|,
+comment|/* 40MHz channels (primary channels), 5GHz band. */
+block|{
+literal|11
+block|,
+block|{
+literal|36
+block|,
+literal|44
+block|,
+literal|52
+block|,
+literal|60
+block|,
+literal|100
+block|,
+literal|108
+block|,
+literal|116
+block|,
+literal|124
+block|,
+literal|132
+block|,
+literal|149
+block|,
+literal|157
+block|}
+block|}
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IWN1000_OTP_NBLOCKS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN6000_OTP_NBLOCKS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN6050_OTP_NBLOCKS
+value|7
+end_define
+
+begin_comment
+comment|/* HW rate indices. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_RIDX_CCK1
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RIDX_CCK11
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RIDX_OFDM6
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RIDX_OFDM54
+value|11
+end_define
+
+begin_struct
+specifier|static
+specifier|const
+struct|struct
+name|iwn_rate
+block|{
+name|uint8_t
+name|rate
+decl_stmt|;
+name|uint8_t
+name|plcp
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+block|}
+name|iwn_rates
+index|[
+name|IWN_RIDX_MAX
+operator|+
+literal|1
+index|]
+init|=
+block|{
+block|{
+literal|2
+block|,
+literal|10
+block|,
+name|IWN_RFLAG_CCK
+block|}
+block|,
+block|{
+literal|4
+block|,
+literal|20
+block|,
+name|IWN_RFLAG_CCK
+block|}
+block|,
+block|{
+literal|11
+block|,
+literal|55
+block|,
+name|IWN_RFLAG_CCK
+block|}
+block|,
+block|{
+literal|22
+block|,
+literal|110
+block|,
+name|IWN_RFLAG_CCK
+block|}
+block|,
+block|{
+literal|12
+block|,
+literal|0xd
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|18
+block|,
+literal|0xf
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|24
+block|,
+literal|0x5
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|36
+block|,
+literal|0x7
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|48
+block|,
+literal|0x9
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|72
+block|,
+literal|0xb
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|96
+block|,
+literal|0x1
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|108
+block|,
+literal|0x3
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|120
+block|,
+literal|0x3
+block|,
+literal|0
+block|}
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IWN4965_MAX_PWR_INDEX
 value|107
 end_define
 
@@ -3336,9 +5902,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint8_t
-name|iwn_rf_gain_2ghz
+name|iwn4965_rf_gain_2ghz
 index|[
-name|IWN_MAX_PWR_INDEX
+name|IWN4965_MAX_PWR_INDEX
 operator|+
 literal|1
 index|]
@@ -3567,9 +6133,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint8_t
-name|iwn_rf_gain_5ghz
+name|iwn4965_rf_gain_5ghz
 index|[
-name|IWN_MAX_PWR_INDEX
+name|IWN4965_MAX_PWR_INDEX
 operator|+
 literal|1
 index|]
@@ -3802,9 +6368,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint8_t
-name|iwn_dsp_gain_2ghz
+name|iwn4965_dsp_gain_2ghz
 index|[
-name|IWN_MAX_PWR_INDEX
+name|IWN4965_MAX_PWR_INDEX
 operator|+
 literal|1
 index|]
@@ -4033,9 +6599,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint8_t
-name|iwn_dsp_gain_5ghz
+name|iwn4965_dsp_gain_5ghz
 index|[
-name|IWN_MAX_PWR_INDEX
+name|IWN4965_MAX_PWR_INDEX
 operator|+
 literal|1
 index|]
@@ -4260,6 +6826,991 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Power saving settings (values obtained from the reference driver.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_NDTIMRANGES
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_NPOWERLEVELS
+value|6
+end_define
+
+begin_struct
+specifier|static
+specifier|const
+struct|struct
+name|iwn_pmgt
+block|{
+name|uint32_t
+name|rxtimeout
+decl_stmt|;
+name|uint32_t
+name|txtimeout
+decl_stmt|;
+name|uint32_t
+name|intval
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|int
+name|skip_dtim
+decl_stmt|;
+block|}
+name|iwn_pmgt
+index|[
+name|IWN_NDTIMRANGES
+index|]
+index|[
+name|IWN_NPOWERLEVELS
+index|]
+init|=
+block|{
+comment|/* DTIM<= 2 */
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* CAM */
+block|{
+literal|200
+block|,
+literal|500
+block|,
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|2
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 1 */
+block|{
+literal|200
+block|,
+literal|300
+block|,
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|2
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 2 */
+block|{
+literal|50
+block|,
+literal|100
+block|,
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|2
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 3 */
+block|{
+literal|50
+block|,
+literal|25
+block|,
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|4
+block|,
+literal|4
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|1
+block|}
+block|,
+comment|/* PS level 4 */
+block|{
+literal|25
+block|,
+literal|25
+block|,
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|4
+block|,
+literal|6
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|2
+block|}
+comment|/* PS level 5 */
+block|}
+block|,
+comment|/* 3<= DTIM<= 10 */
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* CAM */
+block|{
+literal|200
+block|,
+literal|500
+block|,
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|4
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 1 */
+block|{
+literal|200
+block|,
+literal|300
+block|,
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|7
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 2 */
+block|{
+literal|50
+block|,
+literal|100
+block|,
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|6
+block|,
+literal|7
+block|,
+literal|9
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 3 */
+block|{
+literal|50
+block|,
+literal|25
+block|,
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|6
+block|,
+literal|9
+block|,
+literal|10
+block|}
+block|,
+literal|1
+block|}
+block|,
+comment|/* PS level 4 */
+block|{
+literal|25
+block|,
+literal|25
+block|,
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|7
+block|,
+literal|10
+block|,
+literal|10
+block|}
+block|,
+literal|2
+block|}
+comment|/* PS level 5 */
+block|}
+block|,
+comment|/* DTIM>= 11 */
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* CAM */
+block|{
+literal|200
+block|,
+literal|500
+block|,
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 1 */
+block|{
+literal|200
+block|,
+literal|300
+block|,
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|6
+block|,
+literal|7
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 2 */
+block|{
+literal|50
+block|,
+literal|100
+block|,
+block|{
+literal|2
+block|,
+literal|7
+block|,
+literal|9
+block|,
+literal|9
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 3 */
+block|{
+literal|50
+block|,
+literal|25
+block|,
+block|{
+literal|2
+block|,
+literal|7
+block|,
+literal|9
+block|,
+literal|9
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+block|,
+comment|/* PS level 4 */
+block|{
+literal|25
+block|,
+literal|25
+block|,
+block|{
+literal|4
+block|,
+literal|7
+block|,
+literal|10
+block|,
+literal|10
+block|,
+operator|-
+literal|1
+block|}
+block|,
+literal|0
+block|}
+comment|/* PS level 5 */
+block|}
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn_sensitivity_limits
+block|{
+name|uint32_t
+name|min_ofdm_x1
+decl_stmt|;
+name|uint32_t
+name|max_ofdm_x1
+decl_stmt|;
+name|uint32_t
+name|min_ofdm_mrc_x1
+decl_stmt|;
+name|uint32_t
+name|max_ofdm_mrc_x1
+decl_stmt|;
+name|uint32_t
+name|min_ofdm_x4
+decl_stmt|;
+name|uint32_t
+name|max_ofdm_x4
+decl_stmt|;
+name|uint32_t
+name|min_ofdm_mrc_x4
+decl_stmt|;
+name|uint32_t
+name|max_ofdm_mrc_x4
+decl_stmt|;
+name|uint32_t
+name|min_cck_x4
+decl_stmt|;
+name|uint32_t
+name|max_cck_x4
+decl_stmt|;
+name|uint32_t
+name|min_cck_mrc_x4
+decl_stmt|;
+name|uint32_t
+name|max_cck_mrc_x4
+decl_stmt|;
+name|uint32_t
+name|min_energy_cck
+decl_stmt|;
+name|uint32_t
+name|energy_cck
+decl_stmt|;
+name|uint32_t
+name|energy_ofdm
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * RX sensitivity limits (values obtained from the reference driver.)  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|iwn_sensitivity_limits
+name|iwn4965_sensitivity_limits
+init|=
+block|{
+literal|105
+block|,
+literal|140
+block|,
+literal|220
+block|,
+literal|270
+block|,
+literal|85
+block|,
+literal|120
+block|,
+literal|170
+block|,
+literal|210
+block|,
+literal|125
+block|,
+literal|200
+block|,
+literal|200
+block|,
+literal|400
+block|,
+literal|97
+block|,
+literal|100
+block|,
+literal|100
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|iwn_sensitivity_limits
+name|iwn5000_sensitivity_limits
+init|=
+block|{
+literal|120
+block|,
+literal|155
+block|,
+literal|240
+block|,
+literal|290
+block|,
+literal|90
+block|,
+literal|120
+block|,
+literal|170
+block|,
+literal|210
+block|,
+literal|125
+block|,
+literal|200
+block|,
+literal|170
+block|,
+literal|400
+block|,
+literal|95
+block|,
+literal|95
+block|,
+literal|95
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|iwn_sensitivity_limits
+name|iwn5150_sensitivity_limits
+init|=
+block|{
+literal|105
+block|,
+literal|105
+block|,
+comment|/* min = max for performance bug in DSP. */
+literal|220
+block|,
+literal|220
+block|,
+comment|/* min = max for performance bug in DSP. */
+literal|90
+block|,
+literal|120
+block|,
+literal|170
+block|,
+literal|210
+block|,
+literal|125
+block|,
+literal|200
+block|,
+literal|170
+block|,
+literal|400
+block|,
+literal|95
+block|,
+literal|95
+block|,
+literal|95
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|iwn_sensitivity_limits
+name|iwn6000_sensitivity_limits
+init|=
+block|{
+literal|105
+block|,
+literal|145
+block|,
+literal|192
+block|,
+literal|232
+block|,
+literal|80
+block|,
+literal|145
+block|,
+literal|128
+block|,
+literal|232
+block|,
+literal|125
+block|,
+literal|175
+block|,
+literal|160
+block|,
+literal|310
+block|,
+literal|97
+block|,
+literal|97
+block|,
+literal|100
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Map TID to TX scheduler's FIFO. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint8_t
+name|iwn_tid2fifo
+index|[]
+init|=
+block|{
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|3
+block|,
+literal|7
+block|,
+literal|7
+block|,
+literal|7
+block|,
+literal|7
+block|,
+literal|7
+block|,
+literal|7
+block|,
+literal|7
+block|,
+literal|7
+block|,
+literal|3
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* WiFi/WiMAX coexist event priority table for 6050. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|iwn5000_wimax_event
+name|iwn6050_wimax_events
+index|[]
+init|=
+block|{
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x03
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x03
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x03
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x07
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x03
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x03
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x06
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x07
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x06
+block|,
+literal|0x06
+block|,
+literal|0x00
+block|,
+literal|0x03
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x07
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Firmware errors. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|iwn_fw_errmsg
+index|[]
+init|=
+block|{
+literal|"OK"
+block|,
+literal|"FAIL"
+block|,
+literal|"BAD_PARAM"
+block|,
+literal|"BAD_CHECKSUM"
+block|,
+literal|"NMI_INTERRUPT_WDG"
+block|,
+literal|"SYSASSERT"
+block|,
+literal|"FATAL_ERROR"
+block|,
+literal|"BAD_COMMAND"
+block|,
+literal|"HW_ERROR_TUNE_LOCK"
+block|,
+literal|"HW_ERROR_TEMPERATURE"
+block|,
+literal|"ILLEGAL_CHAN_FREQ"
+block|,
+literal|"VCC_NOT_STABLE"
+block|,
+literal|"FH_ERROR"
+block|,
+literal|"NMI_INTERRUPT_HOST"
+block|,
+literal|"NMI_INTERRUPT_ACTION_PT"
+block|,
+literal|"NMI_INTERRUPT_UNKNOWN"
+block|,
+literal|"UCODE_VERSION_MISMATCH"
+block|,
+literal|"HW_ERROR_ABS_LOCK"
+block|,
+literal|"HW_ERROR_CAL_LOCK_FAIL"
+block|,
+literal|"NMI_INTERRUPT_INST_ACTION_PT"
+block|,
+literal|"NMI_INTERRUPT_DATA_ACTION_PT"
+block|,
+literal|"NMI_TRM_HW_ER"
+block|,
+literal|"NMI_INTERRUPT_TRM"
+block|,
+literal|"NMI_INTERRUPT_BREAKPOINT"
+literal|"DEBUG_0"
+block|,
+literal|"DEBUG_1"
+block|,
+literal|"DEBUG_2"
+block|,
+literal|"DEBUG_3"
+block|,
+literal|"UNKNOWN"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Find least significant bit that is set. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_LSB
+parameter_list|(
+name|x
+parameter_list|)
+value|((((x) - 1)& (x)) ^ (x))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -4291,18 +7842,68 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWN_WRITE_REGION_4
+name|IWN_WRITE_1
 parameter_list|(
 name|sc
 parameter_list|,
-name|offset
+name|reg
 parameter_list|,
-name|datap
-parameter_list|,
-name|count
+name|val
 parameter_list|)
 define|\
-value|bus_space_write_region_4((sc)->sc_st, (sc)->sc_sh, (offset),	\ 	    (datap), (count))
+value|bus_space_write_1((sc)->sc_st, (sc)->sc_sh, (reg), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_SETBITS
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|IWN_WRITE(sc, reg, IWN_READ(sc, reg) | (mask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_CLRBITS
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|IWN_WRITE(sc, reg, IWN_READ(sc, reg)& ~(mask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_BARRIER_WRITE
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|bus_space_barrier((sc)->sc_st, (sc)->sc_sh, 0, (sc)->sc_sz,	\ 	    BUS_SPACE_BARRIER_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_BARRIER_READ_WRITE
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|bus_space_barrier((sc)->sc_st, (sc)->sc_sh, 0, (sc)->sc_sz,	\ 	    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE)
 end_define
 
 end_unit
