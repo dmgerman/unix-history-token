@@ -149,7 +149,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_KTHREAD_PAGES
-value|2
+value|0
 end_define
 
 begin_comment
