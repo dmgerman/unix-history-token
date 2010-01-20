@@ -299,7 +299,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|opendir_sort
+name|opendir_compar
 parameter_list|(
 specifier|const
 name|void
@@ -906,7 +906,7 @@ operator|*
 name|dpv
 argument_list|)
 argument_list|,
-name|opendir_sort
+name|opendir_compar
 argument_list|)
 expr_stmt|;
 name|dpv
