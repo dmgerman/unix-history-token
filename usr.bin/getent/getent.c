@@ -118,13 +118,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -2549,7 +2555,26 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"[%.24s] "
+literal|"[%jd.%06u -- %.24s] "
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|ut
+operator|->
+name|ut_tv
+operator|.
+name|tv_sec
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|ut
+operator|->
+name|ut_tv
+operator|.
+name|tv_usec
 argument_list|,
 name|ctime
 argument_list|(
