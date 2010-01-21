@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acpredef.h"
+file|<contrib/dev/acpica/include/acpredef.h>
 end_include
 
 begin_define
