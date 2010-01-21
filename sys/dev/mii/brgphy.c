@@ -947,6 +947,9 @@ block|{
 case|case
 name|MII_MODEL_xxBROADCOM_BCM5706
 case|:
+case|case
+name|MII_MODEL_xxBROADCOM_BCM5714
+case|:
 comment|/* 				 * The 5464 PHY used in the 5706 supports both copper 				 * and fiber interfaces over GMII.  Need to check the 				 * shadow registers to see which mode is actually 				 * in effect, and therefore whether we have 5706C or 				 * 5706S. 				 */
 name|PHY_WRITE
 argument_list|(
