@@ -6964,6 +6964,11 @@ operator|=
 operator|&
 name|vnode
 expr_stmt|;
+name|VN_LOCK_ASHARE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&

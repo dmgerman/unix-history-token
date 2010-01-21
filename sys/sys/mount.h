@@ -1297,6 +1297,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_EXTENDED_SHARED
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Allow shared locking for more ops */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_SHARED_WRITES
 value|0x00000080
 end_define
@@ -1374,23 +1385,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNTK_NOKNOTE
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Don't send KNOTEs from VOP hooks */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MNTK_LOOKUP_SHARED
 value|0x40000000
 end_define
 
 begin_comment
 comment|/* FS supports shared lock lookups */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_NOKNOTE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Don't send KNOTEs from VOP hooks */
 end_comment
 
 begin_comment
