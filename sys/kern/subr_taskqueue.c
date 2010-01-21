@@ -1530,6 +1530,8 @@ name|char
 name|ktname
 index|[
 name|MAXCOMLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -1564,7 +1566,10 @@ name|vsnprintf
 argument_list|(
 name|ktname
 argument_list|,
-name|MAXCOMLEN
+sizeof|sizeof
+argument_list|(
+name|ktname
+argument_list|)
 argument_list|,
 name|name
 argument_list|,

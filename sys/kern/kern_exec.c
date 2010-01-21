@@ -2416,6 +2416,20 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* name this process - nameiexec(p, ndp) */
+name|bzero
+argument_list|(
+name|p
+operator|->
+name|p_comm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|p_comm
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|min
@@ -2443,15 +2457,6 @@ name|p_comm
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_comm
-index|[
-name|len
-index|]
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * mark as execed, wakeup the process that vforked (if any) and tell 	 * it that it now has its own resources back 	 */
 name|p

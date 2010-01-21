@@ -75,6 +75,8 @@ name|char
 name|ih_name
 index|[
 name|MAXCOMLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* Name of handler. */
@@ -183,6 +185,8 @@ name|char
 name|ie_name
 index|[
 name|MAXCOMLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* Individual event name. */
@@ -190,6 +194,8 @@ name|char
 name|ie_fullname
 index|[
 name|MAXCOMLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
