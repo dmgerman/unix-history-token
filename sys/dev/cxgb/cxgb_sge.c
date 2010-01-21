@@ -1708,6 +1708,33 @@ condition|)
 name|jumbo_q_size
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|fl_q_size
+operator|<
+operator|(
+name|FL_Q_SIZE
+operator|/
+literal|4
+operator|)
+operator|||
+name|jumbo_q_size
+operator|<
+operator|(
+name|JUMBO_Q_SIZE
+operator|/
+literal|2
+operator|)
+condition|)
+name|device_printf
+argument_list|(
+name|adap
+operator|->
+name|dev
+argument_list|,
+literal|"Insufficient clusters and/or jumbo buffers.\n"
+argument_list|)
+expr_stmt|;
 comment|/* XXX Does ETHER_ALIGN need to be accounted for here? */
 name|p
 operator|->
@@ -8180,13 +8207,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"no desc available\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOSPC
@@ -8257,6 +8277,9 @@ name|q
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+name|wmb
+argument_list|()
 expr_stmt|;
 name|wmb
 argument_list|()
@@ -8342,17 +8365,6 @@ name|port
 operator|->
 name|adapter
 decl_stmt|;
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"Restart_ctrlq in_use=%d\n"
-argument_list|,
-name|q
-operator|->
-name|in_use
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -15789,20 +15801,11 @@ operator|>
 literal|1
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"restarting tx on %p\n"
-argument_list|,
-name|qs
-argument_list|)
-expr_stmt|;
 name|restart_tx
 argument_list|(
 name|qs
 argument_list|)
 expr_stmt|;
-block|}
 name|__refill_fl_lt
 argument_list|(
 name|adap
