@@ -469,16 +469,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DOOMED
-parameter_list|(
-name|p
-parameter_list|)
-value|(p->flags& DOOMED)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IS_BUSY
 parameter_list|(
 name|sc
