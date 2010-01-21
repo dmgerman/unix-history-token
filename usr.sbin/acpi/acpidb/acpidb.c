@@ -255,14 +255,14 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|ACPI_INTEGER
+name|UINT64
 name|aml_simulate_prompt
 parameter_list|(
 name|char
 modifier|*
 name|msg
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|def_val
 parameter_list|)
 function_decl|;
@@ -616,14 +616,14 @@ end_function
 
 begin_function
 specifier|static
-name|ACPI_INTEGER
+name|UINT64
 name|aml_simulate_prompt
 parameter_list|(
 name|char
 modifier|*
 name|msg
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|def_val
 parameter_list|)
 block|{
@@ -636,7 +636,7 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-name|ACPI_INTEGER
+name|UINT64
 name|val
 decl_stmt|;
 name|val
@@ -1105,7 +1105,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -1119,7 +1119,7 @@ decl_stmt|;
 name|UINT8
 name|val
 decl_stmt|;
-name|ACPI_INTEGER
+name|UINT64
 name|value
 decl_stmt|,
 name|i
@@ -1415,7 +1415,7 @@ name|name
 parameter_list|,
 name|id
 parameter_list|)
-value|;			\ static ACPI_STATUS						\ aml_vm_space_handler_##name (					\ 	UINT32			Function,			\ 	ACPI_PHYSICAL_ADDRESS	Address,			\ 	UINT32			BitWidth,			\ 	ACPI_INTEGER		*Value)				\ {								\ 	return (aml_vm_space_handler(id, Function, Address,	\ 		BitWidth, Value, aml_debug_prompt));		\ }
+value|;			\ static ACPI_STATUS						\ aml_vm_space_handler_##name (					\ 	UINT32			Function,			\ 	ACPI_PHYSICAL_ADDRESS	Address,			\ 	UINT32			BitWidth,			\ 	UINT64			*Value)				\ {								\ 	return (aml_vm_space_handler(id, Function, Address,	\ 		BitWidth, Value, aml_debug_prompt));		\ }
 end_define
 
 begin_expr_stmt

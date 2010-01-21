@@ -216,10 +216,10 @@ expr_stmt|;
 name|ACPI_HANDLE
 name|ap_resource
 decl_stmt|;
-name|ACPI_INTEGER
+name|UINT64
 name|ap_systemlevel
 decl_stmt|;
-name|ACPI_INTEGER
+name|UINT64
 name|ap_order
 decl_stmt|;
 name|int

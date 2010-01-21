@@ -86,7 +86,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|dst
 parameter_list|)
@@ -157,7 +157,7 @@ modifier|*
 name|dst
 parameter_list|)
 block|{
-name|ACPI_INTEGER
+name|UINT64
 name|tmp
 decl_stmt|;
 name|int

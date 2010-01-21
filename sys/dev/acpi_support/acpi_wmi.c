@@ -569,7 +569,7 @@ parameter_list|,
 name|UINT32
 name|width
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|value
 parameter_list|,
@@ -3118,7 +3118,7 @@ parameter_list|,
 name|UINT32
 name|width
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|value
 parameter_list|,
@@ -3139,7 +3139,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|ACPI_INTEGER
+name|UINT64
 name|ec_data
 decl_stmt|;
 name|UINT8
@@ -3287,7 +3287,7 @@ name|value
 operator||=
 operator|(
 operator|(
-name|ACPI_INTEGER
+name|UINT64
 operator|)
 name|ec_data
 operator|)

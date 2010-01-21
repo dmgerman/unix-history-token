@@ -442,7 +442,7 @@ parameter_list|,
 name|UINT32
 name|Register
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|Value
 parameter_list|,
 name|UINT32
