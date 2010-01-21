@@ -1229,7 +1229,7 @@ name|fwrite
 argument_list|(
 name|buf
 argument_list|,
-name|buflen
+name|error
 argument_list|,
 literal|1
 argument_list|,
