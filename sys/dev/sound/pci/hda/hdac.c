@@ -31966,6 +31966,63 @@ if|if
 condition|(
 name|w
 operator|->
+name|ossdev
+operator|==
+name|SOUND_MIXER_IMIX
+condition|)
+block|{
+if|if
+condition|(
+name|hdac_audio_ctl_source_amp
+argument_list|(
+name|devinfo
+argument_list|,
+name|w
+operator|->
+name|nid
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|w
+operator|->
+name|ossdev
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+comment|/* If we are unable to control input monitor 				   as source - try to control it as destination. */
+name|hdac_audio_ctl_dest_amp
+argument_list|(
+name|devinfo
+argument_list|,
+name|w
+operator|->
+name|nid
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|w
+operator|->
+name|ossdev
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|w
+operator|->
 name|pflags
 operator|&
 name|HDA_ADC_MONITOR
@@ -32065,7 +32122,7 @@ name|nid
 argument_list|,
 name|j
 argument_list|,
-name|SOUND_MIXER_IMIX
+name|SOUND_MIXER_IGAIN
 argument_list|,
 literal|0
 argument_list|,
@@ -35028,6 +35085,8 @@ operator||
 name|SOUND_MASK_MIC
 operator||
 name|SOUND_MASK_SPEAKER
+operator||
+name|SOUND_MASK_IGAIN
 operator||
 name|SOUND_MASK_OGAIN
 operator||
@@ -42652,8 +42711,10 @@ literal|"Speaker/Beep Volume"
 argument|, SOUND_MASK_SPEAKER); 		hdac_dump_ctls(pdevinfo,
 literal|"Recording Level"
 argument|, SOUND_MASK_RECLEV); 		hdac_dump_ctls(pdevinfo,
+literal|"Input Mix Level"
+argument|, SOUND_MASK_IMIX); 		hdac_dump_ctls(pdevinfo,
 literal|"Input Monitoring Level"
-argument|, SOUND_MASK_IMIX); 		hdac_dump_ctls(pdevinfo, NULL,
+argument|, SOUND_MASK_IGAIN); 		hdac_dump_ctls(pdevinfo, NULL,
 literal|0
 argument|); 		device_printf(dev,
 literal|"\n"
