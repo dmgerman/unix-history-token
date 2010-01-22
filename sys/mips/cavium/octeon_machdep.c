@@ -419,12 +419,15 @@ argument_list|(
 name|void
 argument_list|)
 operator|)
-literal|0x1fc00000
+operator|(
+name|long
+operator|)
+literal|0x9fc00000
 operator|)
 operator|(
 operator|)
 expr_stmt|;
-comment|/* Jump to this hex address */
+comment|/* Jump to MIPS reset vector */
 block|}
 end_function
 
