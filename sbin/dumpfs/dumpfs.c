@@ -617,7 +617,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"id\t[ %x %x ]\n"
+literal|"id\t[ %08x %08x ]\n"
 argument_list|,
 name|afs
 operator|.
