@@ -285,7 +285,7 @@ begin_decl_stmt
 name|int
 name|snd_verbose
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1730,27 +1730,21 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|snd_verbose
+operator|>
+literal|0
+condition|)
 name|sbuf_printf
 argument_list|(
 name|s
 argument_list|,
-literal|" %s [%s]"
+literal|" %s"
 argument_list|,
 name|ent
 operator|->
 name|str
-argument_list|,
-operator|(
-name|d
-operator|->
-name|flags
-operator|&
-name|SD_F_MPSAFE
-operator|)
-condition|?
-literal|"MPSAFE"
-else|:
-literal|"GIANT"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1770,14 +1764,6 @@ operator|->
 name|dev
 argument_list|,
 name|snd_verbose
-argument_list|)
-expr_stmt|;
-else|else
-name|sbuf_printf
-argument_list|(
-name|s
-argument_list|,
-literal|" [no handler]"
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
