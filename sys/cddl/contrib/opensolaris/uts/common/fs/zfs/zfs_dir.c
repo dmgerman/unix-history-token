@@ -3593,6 +3593,10 @@ name|xvpp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * In FreeBSD, access checking for creating an EA is being done 	 * in zfs_setextattr(), 	 */
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 if|if
 condition|(
 name|error
@@ -3615,6 +3619,8 @@ operator|(
 name|error
 operator|)
 return|;
+endif|#
+directive|endif
 name|tx
 operator|=
 name|dmu_tx_create
@@ -4005,9 +4011,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TODO
 if|if
 condition|(
 operator|!
@@ -4023,14 +4026,24 @@ argument_list|(
 name|dl
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+return|return
+operator|(
+name|ENOATTR
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
-block|}
 endif|#
 directive|endif
+block|}
 if|if
 condition|(
 name|zfsvfs
