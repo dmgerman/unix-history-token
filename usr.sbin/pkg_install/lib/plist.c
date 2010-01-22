@@ -1269,6 +1269,23 @@ name|cp
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|==
+name|PLIST_PKGDEP
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"corrupted record (pkgdep line without argument), ignoring"
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|FAIL
+expr_stmt|;
+block|}
 goto|goto
 name|bottom
 goto|;
