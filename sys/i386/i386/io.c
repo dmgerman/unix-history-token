@@ -253,5 +253,46 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|int
+name|ioioctl
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|dev
+name|__unused
+parameter_list|,
+name|u_long
+name|cmd
+name|__unused
+parameter_list|,
+name|caddr_t
+name|data
+name|__unused
+parameter_list|,
+name|int
+name|fflag
+name|__unused
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
