@@ -382,6 +382,14 @@ literal|10
 block|}
 block|,
 block|{
+name|DEVICEID_H55
+block|,
+literal|"Intel H55 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
