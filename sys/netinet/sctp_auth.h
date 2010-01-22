@@ -141,9 +141,7 @@ name|keylen
 decl_stmt|;
 name|uint8_t
 name|key
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|sctp_key_t
@@ -235,9 +233,7 @@ decl_stmt|;
 comment|/* num algorithms used */
 name|uint16_t
 name|hmac
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|sctp_hmaclist_t

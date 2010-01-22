@@ -955,9 +955,7 @@ name|ssf_assoc_id
 decl_stmt|;
 name|uint8_t
 name|ssf_data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1233,9 +1231,7 @@ name|strreset_assoc_id
 decl_stmt|;
 name|uint16_t
 name|strreset_list
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1782,9 +1778,7 @@ name|sca_keynumber
 decl_stmt|;
 name|uint8_t
 name|sca_key
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1803,9 +1797,7 @@ name|shmac_number_of_idents
 decl_stmt|;
 name|uint16_t
 name|shmac_idents
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1892,9 +1884,7 @@ name|gauth_assoc_id
 decl_stmt|;
 name|uint8_t
 name|gauth_chunks
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1923,9 +1913,7 @@ name|gaids_number_of_ids
 decl_stmt|;
 name|sctp_assoc_t
 name|gaids_assoc_id
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -2088,9 +2076,7 @@ decl_stmt|;
 comment|/* 0 == ALL */
 name|uint16_t
 name|strrst_list
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* list if strrst_num_streams is not 0 */
 block|}
@@ -2578,9 +2564,7 @@ comment|/* end at this one */
 name|struct
 name|sctp_cwnd_log
 name|log
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
