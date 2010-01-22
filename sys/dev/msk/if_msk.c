@@ -8815,7 +8815,7 @@ name|msk_clock
 operator|=
 literal|125
 expr_stmt|;
-comment|/* 125 Mhz */
+comment|/* 125 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8832,7 +8832,7 @@ name|msk_clock
 operator|=
 literal|125
 expr_stmt|;
-comment|/* 125 Mhz */
+comment|/* 125 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8851,7 +8851,7 @@ name|msk_clock
 operator|=
 literal|125
 expr_stmt|;
-comment|/* 125 Mhz */
+comment|/* 125 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8903,7 +8903,7 @@ name|msk_clock
 operator|=
 literal|100
 expr_stmt|;
-comment|/* 100 Mhz */
+comment|/* 100 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8920,7 +8920,7 @@ name|msk_clock
 operator|=
 literal|50
 expr_stmt|;
-comment|/* 50 Mhz */
+comment|/* 50 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8962,7 +8962,7 @@ name|msk_clock
 operator|=
 literal|156
 expr_stmt|;
-comment|/* 156 Mhz */
+comment|/* 156 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8979,7 +8979,7 @@ name|msk_clock
 operator|=
 literal|156
 expr_stmt|;
-comment|/* 156 Mhz */
+comment|/* 156 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8994,7 +8994,7 @@ name|msk_clock
 operator|=
 literal|156
 expr_stmt|;
-comment|/* 156 Mhz */
+comment|/* 156 MHz */
 break|break;
 block|}
 comment|/* Allocate IRQ resources. */
