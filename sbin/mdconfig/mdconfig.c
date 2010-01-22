@@ -225,6 +225,7 @@ name|gconf
 modifier|*
 name|g
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -283,7 +284,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -373,6 +376,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|mdunit
+init|=
+name|NULL
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -2195,16 +2200,6 @@ argument_list|,
 literal|"length"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|length
-operator|==
-name|NULL
-condition|)
-name|length
-operator|=
-literal|"<a>"
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"\t%s\t"
@@ -2212,6 +2207,12 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|length
+operator|!=
+name|NULL
+condition|)
 name|md_prthumanval
 argument_list|(
 name|length
@@ -2341,6 +2342,7 @@ name|gconf
 modifier|*
 name|g
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
