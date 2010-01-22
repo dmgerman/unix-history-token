@@ -706,9 +706,6 @@ condition|)
 name|bootverbose
 operator|++
 expr_stmt|;
-name|bootverbose
-operator|++
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"real memory  = %lu (%luK bytes)\n"
