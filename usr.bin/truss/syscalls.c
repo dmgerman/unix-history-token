@@ -3323,10 +3323,6 @@ argument|EVFILT_TIMER
 argument_list|)
 name|X
 argument_list|(
-argument|EVFILT_NETDEV
-argument_list|)
-name|X
-argument_list|(
 argument|EVFILT_FS
 argument_list|)
 name|X

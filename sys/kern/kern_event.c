@@ -1412,10 +1412,10 @@ block|,
 comment|/* EVFILT_TIMER */
 block|{
 operator|&
-name|file_filtops
+name|null_filtops
 block|}
 block|,
-comment|/* EVFILT_NETDEV */
+comment|/* former EVFILT_NETDEV */
 block|{
 operator|&
 name|fs_filtops
