@@ -1968,6 +1968,13 @@ name|ec_suspending
 operator|=
 name|FALSE
 expr_stmt|;
+name|acpi_set_private
+argument_list|(
+name|dev
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|params
