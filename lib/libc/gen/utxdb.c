@@ -258,7 +258,6 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-comment|/* XXX: bug in the specification? Needed for getutxline(). */
 name|UTOF_STRING
 argument_list|(
 name|ut
@@ -549,7 +548,6 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-comment|/* XXX: bug in the specification? Needed for getutxline(). */
 name|FTOU_STRING
 argument_list|(
 name|fu
