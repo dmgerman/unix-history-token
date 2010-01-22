@@ -331,14 +331,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|Home
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -381,6 +373,7 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -593,8 +586,6 @@ goto|goto
 name|bail
 goto|;
 block|}
-name|Home
-operator|=
 name|make_playpen
 argument_list|(
 name|PlayPen
