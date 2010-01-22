@@ -1306,7 +1306,7 @@ name|bz_file
 modifier|*
 name|bzf_tmp
 decl_stmt|;
-comment|/*      * Since bzip2 does not have an equivalent inflateReset function a crude      * one needs to be provided.  The functions all called in such a way that      * at any time an error occurs a role back can be done (effectively making      * this rewind 'atomic', either the reset occurs successfully or not at all,      * with no 'undefined' state happening).      */
+comment|/*      * Since bzip2 does not have an equivalent inflateReset function a crude      * one needs to be provided.  The functions all called in such a way that      * at any time an error occurs a roll back can be done (effectively making      * this rewind 'atomic', either the reset occurs successfully or not at all,      * with no 'undefined' state happening).      */
 comment|/* Allocate a bz_file structure, populate it */
 name|bzf_tmp
 operator|=
