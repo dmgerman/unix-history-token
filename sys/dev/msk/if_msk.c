@@ -8977,9 +8977,9 @@ name|sc
 operator|->
 name|msk_clock
 operator|=
-literal|156
+literal|125
 expr_stmt|;
-comment|/* 156 MHz */
+comment|/* 125 MHz */
 name|sc
 operator|->
 name|msk_pflags
