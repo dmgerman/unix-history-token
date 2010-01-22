@@ -1716,20 +1716,17 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-comment|/* 			 * XXX This should be LK_SHARED but the VFS in releng7 			 * needs some patches before this can be done. 			 * The same applies to the lock_flags above and to a 			 * similar place below. 			 */
 name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|ASSERT_VOP_LOCKED
 argument_list|(
