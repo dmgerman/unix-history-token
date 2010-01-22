@@ -17876,7 +17876,7 @@ name|sc
 operator|->
 name|bge_asf_count
 operator|=
-literal|5
+literal|2
 expr_stmt|;
 name|bge_writemem_ind
 argument_list|(
