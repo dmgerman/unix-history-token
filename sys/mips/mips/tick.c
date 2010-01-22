@@ -421,7 +421,7 @@ name|counter_freq
 operator|=
 name|platform_counter_freq
 expr_stmt|;
-comment|/* 	 * XXX: Some MIPS32 cores update the Count register only every two 	 * pipeline cycles. 	 */
+comment|/* 	 * XXX: Some MIPS32 cores update the Count register only every two 	 * pipeline cycles. 	 * We know this because of status registers in CP0, make it automatic. 	 */
 if|if
 condition|(
 name|double_count
