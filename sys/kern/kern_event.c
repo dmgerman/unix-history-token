@@ -1083,7 +1083,7 @@ name|KNL_ASSERT_LOCKED
 parameter_list|(
 name|knl
 parameter_list|)
-value|do {					\ 	if (!knl->kl_locked((knl)->kl_lockarg))				\ 			panic("knlist not locked, but should be");	\ } while (0)
+value|do {					\ 	if (knl->kl_locked != NULL&&					\ 	    !knl->kl_locked((knl)->kl_lockarg))				\ 			panic("knlist not locked, but should be");	\ } while (0)
 end_define
 
 begin_define
@@ -1093,7 +1093,7 @@ name|KNL_ASSERT_UNLOCKED
 parameter_list|(
 name|knl
 parameter_list|)
-value|do {				\ 	if (knl->kl_locked((knl)->kl_lockarg))				\ 		panic("knlist locked, but should not be");		\ } while (0)
+value|do {				\ 	if (knl->kl_locked != NULL&&					\ 	    knl->kl_locked((knl)->kl_lockarg))				\ 		panic("knlist locked, but should not be");		\ } while (0)
 end_define
 
 begin_else
@@ -2706,7 +2706,7 @@ name|kq_fdp
 operator|=
 name|fdp
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|kq
@@ -2719,12 +2719,6 @@ operator|&
 name|kq
 operator|->
 name|kq_lock
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|TASK_INIT
@@ -8640,6 +8634,14 @@ condition|(
 name|kl_locked
 operator|==
 name|NULL
+operator|&&
+name|kl_lock
+operator|==
+name|NULL
+operator|&&
+name|kl_unlock
+operator|==
+name|NULL
 condition|)
 name|knl
 operator|->
@@ -8660,6 +8662,37 @@ operator|&
 name|knl
 operator|->
 name|kl_list
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|knlist_init_mtx
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|lock
+parameter_list|)
+block|{
+name|knlist_init
+argument_list|(
+name|knl
+argument_list|,
+name|lock
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

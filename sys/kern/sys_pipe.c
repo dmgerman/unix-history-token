@@ -1345,7 +1345,7 @@ name|pp
 operator|->
 name|pp_wpipe
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|rpipe
@@ -1358,15 +1358,9 @@ name|PIPE_MTX
 argument_list|(
 name|rpipe
 argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|wpipe
@@ -1379,12 +1373,6 @@ name|PIPE_MTX
 argument_list|(
 name|wpipe
 argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Only the forward direction pipe is backed by default */

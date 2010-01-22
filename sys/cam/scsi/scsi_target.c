@@ -951,7 +951,7 @@ operator|->
 name|user_ccb_queue
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|softc
@@ -959,12 +959,6 @@ operator|->
 name|read_select
 operator|.
 name|si_note
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|)

@@ -6993,7 +6993,7 @@ name|outputcharge
 operator|=
 literal|0
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|aiocbe
@@ -7004,12 +7004,6 @@ name|AIO_MTX
 argument_list|(
 name|ki
 argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|error
@@ -10220,7 +10214,7 @@ name|lioj_finished_count
 operator|=
 literal|0
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|lj
@@ -10231,12 +10225,6 @@ name|AIO_MTX
 argument_list|(
 name|ki
 argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|ksiginfo_init

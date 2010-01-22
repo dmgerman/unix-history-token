@@ -1204,7 +1204,7 @@ name|sel_read
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|clone
@@ -1215,12 +1215,6 @@ name|si_note
 argument_list|,
 operator|&
 name|acpi_mutex
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The acpi device is always managed by devd(8) and is considered 	 * writable (i.e., ack is required to allow suspend to proceed.) 	 */

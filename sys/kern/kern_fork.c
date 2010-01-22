@@ -1294,7 +1294,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|knlist_init
+name|knlist_init_mtx
 argument_list|(
 operator|&
 name|newproc
@@ -1305,12 +1305,6 @@ operator|&
 name|newproc
 operator|->
 name|p_mtx
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
