@@ -7930,11 +7930,6 @@ argument_list|,
 name|qid
 argument_list|)
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"stopping q\n"
-argument_list|)
-expr_stmt|;
 name|setbit
 argument_list|(
 operator|&
