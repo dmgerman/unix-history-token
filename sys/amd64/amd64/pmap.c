@@ -28,12 +28,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_pmap.h"
 end_include
 
@@ -83,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/msgbuf.h>
 end_include
 
 begin_include
@@ -605,16 +593,6 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|CADDR1
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|msgbuf
-modifier|*
-name|msgbufp
 init|=
 literal|0
 decl_stmt|;
@@ -2798,17 +2776,6 @@ argument_list|,
 argument|crashdumpmap
 argument_list|,
 argument|MAXDUMPPGS
-argument_list|)
-comment|/* 	 * msgbufp is used to map the system message buffer. 	 */
-name|SYSMAP
-argument_list|(
-argument|struct msgbuf *
-argument_list|,
-argument|unused
-argument_list|,
-argument|msgbufp
-argument_list|,
-argument|atop(round_page(MSGBUF_SIZE))
 argument_list|)
 name|virtual_avail
 operator|=
