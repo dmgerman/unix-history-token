@@ -264,7 +264,6 @@ name|named_sems
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|named_sems
 argument_list|)
 expr_stmt|;
