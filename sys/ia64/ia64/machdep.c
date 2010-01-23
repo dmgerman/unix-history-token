@@ -1758,20 +1758,6 @@ end_expr_stmt
 
 begin_function
 name|void
-name|cpu_boot
-parameter_list|(
-name|int
-name|howto
-parameter_list|)
-block|{
-name|efi_reset_system
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|cpu_flush_dcache
 parameter_list|(
 name|void
@@ -1954,10 +1940,8 @@ name|void
 name|cpu_reset
 parameter_list|()
 block|{
-name|cpu_boot
-argument_list|(
-literal|0
-argument_list|)
+name|efi_reset_system
+argument_list|()
 expr_stmt|;
 block|}
 end_function
