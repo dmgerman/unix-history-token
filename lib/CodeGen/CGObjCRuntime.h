@@ -359,7 +359,7 @@ operator|*
 name|GenerateConstantString
 argument_list|(
 specifier|const
-name|ObjCStringLiteral
+name|StringLiteral
 operator|*
 argument_list|)
 operator|=

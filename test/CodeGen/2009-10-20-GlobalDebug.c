@@ -10,7 +10,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: asciz  "global"                                    ## DW_AT_name
+comment|// CHECK: asciz "global" ## External Name
 end_comment
 
 begin_function

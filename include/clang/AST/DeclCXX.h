@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/UnresolvedSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -697,6 +703,9 @@ comment|/// of this C++ class (but not its inherited conversion
 comment|/// functions). Each of the entries in this overload set is a
 comment|/// CXXConversionDecl.
 name|UnresolvedSet
+operator|<
+literal|4
+operator|>
 name|Conversions
 block|;
 comment|/// VisibleConversions - Overload set containing the conversion functions
@@ -704,6 +713,9 @@ comment|/// of this C++ class and all those inherited conversion functions that
 comment|/// are visible in this class. Each of the entries in this overload set is
 comment|/// a CXXConversionDecl or a FunctionTemplateDecl.
 name|UnresolvedSet
+operator|<
+literal|4
+operator|>
 name|VisibleConversions
 block|;
 comment|/// \brief The template or declaration that this declaration
@@ -1390,7 +1402,7 @@ expr_stmt|;
 block|}
 comment|/// getConversions - Retrieve the overload set containing all of the
 comment|/// conversion functions in this class.
-name|UnresolvedSet
+name|UnresolvedSetImpl
 modifier|*
 name|getConversionFunctions
 parameter_list|()
@@ -1425,7 +1437,7 @@ name|Conversions
 return|;
 block|}
 specifier|const
-name|UnresolvedSet
+name|UnresolvedSetImpl
 operator|*
 name|getConversionFunctions
 argument_list|()
@@ -1461,7 +1473,7 @@ name|Conversions
 return|;
 block|}
 typedef|typedef
-name|UnresolvedSet
+name|UnresolvedSetImpl
 operator|::
 name|iterator
 name|conversion_iterator
@@ -1520,7 +1532,7 @@ block|}
 comment|/// getVisibleConversionFunctions - get all conversion functions visible
 comment|/// in current class; including conversion function templates.
 specifier|const
-name|UnresolvedSet
+name|UnresolvedSetImpl
 modifier|*
 name|getVisibleConversionFunctions
 parameter_list|()
@@ -2599,6 +2611,56 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// MergeAccess - Calculates the access of a decl that is reached
+end_comment
+
+begin_comment
+comment|/// along a path.
+end_comment
+
+begin_function
+specifier|static
+name|AccessSpecifier
+name|MergeAccess
+parameter_list|(
+name|AccessSpecifier
+name|PathAccess
+parameter_list|,
+name|AccessSpecifier
+name|DeclAccess
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|DeclAccess
+operator|!=
+name|AS_none
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DeclAccess
+operator|==
+name|AS_private
+condition|)
+return|return
+name|AS_none
+return|;
+return|return
+operator|(
+name|PathAccess
+operator|>
+name|DeclAccess
+condition|?
+name|PathAccess
+else|:
+name|DeclAccess
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static

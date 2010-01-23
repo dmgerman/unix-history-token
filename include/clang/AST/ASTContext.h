@@ -239,6 +239,9 @@ decl_stmt|;
 name|class
 name|UsingShadowDecl
 decl_stmt|;
+name|class
+name|UnresolvedSetIterator
+decl_stmt|;
 name|namespace
 name|Builtin
 block|{
@@ -1375,6 +1378,19 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+comment|/// getCallConvType - Adds the specified calling convention attribute to
+comment|/// the given type, which must be a FunctionType or a pointer to an
+comment|/// allowable type.
+name|QualType
+name|getCallConvType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|CallingConv
+name|CallConv
+parameter_list|)
+function_decl|;
 comment|/// getComplexType - Return the uniqued reference to the type for a complex
 comment|/// number with the specified element type.
 name|QualType
@@ -1742,6 +1758,11 @@ name|bool
 name|NoReturn
 init|=
 name|false
+parameter_list|,
+name|CallingConv
+name|CallConv
+init|=
+name|CC_Default
 parameter_list|)
 function_decl|;
 comment|/// getFunctionType - Return a normal function type with a typed argument
@@ -1792,6 +1813,11 @@ name|bool
 name|NoReturn
 init|=
 name|false
+parameter_list|,
+name|CallingConv
+name|CallConv
+init|=
+name|CC_Default
 parameter_list|)
 function_decl|;
 comment|/// getTypeDeclType - Return the unique reference to the type for
@@ -2609,16 +2635,10 @@ function_decl|;
 name|TemplateName
 name|getOverloadedTemplateName
 parameter_list|(
-name|NamedDecl
-modifier|*
-specifier|const
-modifier|*
+name|UnresolvedSetIterator
 name|Begin
 parameter_list|,
-name|NamedDecl
-modifier|*
-specifier|const
-modifier|*
+name|UnresolvedSetIterator
 name|End
 parameter_list|)
 function_decl|;

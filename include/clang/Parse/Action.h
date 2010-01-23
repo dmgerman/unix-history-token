@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Specifiers.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/TemplateKinds.h"
 end_include
 
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/TypeTraits.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Parse/AccessSpecifier.h"
 end_include
 
 begin_include
@@ -8728,6 +8728,11 @@ parameter_list|,
 name|unsigned
 name|NumProtoRefs
 parameter_list|,
+specifier|const
+name|SourceLocation
+modifier|*
+name|ProtoLocs
+parameter_list|,
 name|SourceLocation
 name|EndProtoLoc
 parameter_list|,
@@ -8812,6 +8817,11 @@ parameter_list|,
 name|unsigned
 name|NumProtoRefs
 parameter_list|,
+specifier|const
+name|SourceLocation
+modifier|*
+name|ProtoLocs
+parameter_list|,
 name|SourceLocation
 name|EndProtoLoc
 parameter_list|,
@@ -8864,6 +8874,11 @@ name|ProtoRefs
 parameter_list|,
 name|unsigned
 name|NumProtoRefs
+parameter_list|,
+specifier|const
+name|SourceLocation
+modifier|*
+name|ProtoLocs
 parameter_list|,
 name|SourceLocation
 name|EndProtoLoc
@@ -11275,6 +11290,8 @@ argument_list|,
 argument|const DeclPtrTy *ProtoRefs
 argument_list|,
 argument|unsigned NumProtoRefs
+argument_list|,
+argument|const SourceLocation *ProtoLocs
 argument_list|,
 argument|SourceLocation EndProtoLoc
 argument_list|,

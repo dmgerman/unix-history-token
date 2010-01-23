@@ -534,6 +534,11 @@ name|Constant
 operator|*
 name|CFConstantStringClassRef
 expr_stmt|;
+comment|/// Lazily create the Objective-C runtime
+name|void
+name|createObjCRuntime
+parameter_list|()
+function_decl|;
 name|llvm
 operator|::
 name|LLVMContext
@@ -587,12 +592,13 @@ modifier|&
 name|getObjCRuntime
 parameter_list|()
 block|{
-name|assert
-argument_list|(
+if|if
+condition|(
+operator|!
 name|Runtime
-operator|&&
-literal|"No Objective-C runtime has been configured."
-argument_list|)
+condition|)
+name|createObjCRuntime
+argument_list|()
 expr_stmt|;
 return|return
 operator|*

@@ -179,6 +179,20 @@ decl_stmt|, 4>
 block|{
 name|public
 label|:
+name|CXXBasePath
+argument_list|()
+operator|:
+name|Access
+argument_list|(
+argument|AS_public
+argument_list|)
+block|{}
+comment|/// \brief The access along this inheritance path.  This is only
+comment|/// calculated when recording paths.  AS_none is a special value
+comment|/// used to indicate a path which permits no legal access.
+name|AccessSpecifier
+name|Access
+expr_stmt|;
 comment|/// \brief The set of declarations found inside this base class
 comment|/// subobject.
 name|DeclContext
@@ -186,6 +200,25 @@ operator|::
 name|lookup_result
 name|Decls
 expr_stmt|;
+name|void
+name|clear
+parameter_list|()
+block|{
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|CXXBasePathElement
+operator|>
+operator|::
+name|clear
+argument_list|()
+expr_stmt|;
+name|Access
+operator|=
+name|AS_public
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 comment|/// BasePaths - Represents the set of paths from a derived class to
@@ -278,7 +311,7 @@ comment|/// is also recorded.
 name|bool
 name|DetectVirtual
 decl_stmt|;
-comment|/// ScratchPath - A BasePath that is used by Sema::IsDerivedFrom
+comment|/// ScratchPath - A BasePath that is used by Sema::lookupInBases
 comment|/// to help build the set of paths.
 name|CXXBasePath
 name|ScratchPath

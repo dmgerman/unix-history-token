@@ -1725,6 +1725,22 @@ argument_list|)
 block|;   }
 expr|}
 block|;
+comment|/// CallingConv - Specifies the calling convention that a function uses.
+block|enum
+name|CallingConv
+block|{
+name|CC_Default
+block|,
+name|CC_C
+block|,
+comment|// __attribute__((cdecl))
+name|CC_X86StdCall
+block|,
+comment|// __attribute__((stdcall))
+name|CC_X86FastCall
+comment|// __attribute__((fastcall))
+block|}
+block|;
 comment|/// QualType - For efficiency, we don't store CV-qualified types as nodes on
 comment|/// their own: instead each reference to a type stores the qualifiers.  This
 comment|/// greatly reduces the number of nodes we need to allocate for types (for
@@ -2957,6 +2973,22 @@ end_comment
 begin_expr_stmt
 name|bool
 name|getNoReturnAttr
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// getCallConv - Returns the calling convention of the type if the type
+end_comment
+
+begin_comment
+comment|/// is a function type, CC_Default otherwise.
+end_comment
+
+begin_expr_stmt
+name|CallingConv
+name|getCallConv
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -7085,6 +7117,12 @@ name|NoReturn
 operator|:
 literal|1
 block|;
+comment|/// CallConv - The calling convention used by the function.
+name|unsigned
+name|CallConv
+operator|:
+literal|2
+block|;
 comment|// The type returned by the function.
 name|QualType
 name|ResultType
@@ -7106,6 +7144,8 @@ argument_list|,
 argument|bool Dependent
 argument_list|,
 argument|bool noReturn = false
+argument_list|,
+argument|CallingConv callConv = CC_Default
 argument_list|)
 operator|:
 name|Type
@@ -7130,6 +7170,11 @@ block|,
 name|NoReturn
 argument_list|(
 name|noReturn
+argument_list|)
+block|,
+name|CallConv
+argument_list|(
+name|callConv
 argument_list|)
 block|,
 name|ResultType
@@ -7173,6 +7218,18 @@ specifier|const
 block|{
 return|return
 name|NoReturn
+return|;
+block|}
+name|CallingConv
+name|getCallConv
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|CallingConv
+operator|)
+name|CallConv
 return|;
 block|}
 specifier|static
@@ -7231,6 +7288,8 @@ argument_list|,
 argument|QualType Canonical
 argument_list|,
 argument|bool NoReturn = false
+argument_list|,
+argument|CallingConv CallConv = CC_Default
 argument_list|)
 operator|:
 name|FunctionType
@@ -7249,6 +7308,8 @@ comment|/*Dependent=*/
 argument|false
 argument_list|,
 argument|NoReturn
+argument_list|,
+argument|CallConv
 argument_list|)
 block|{}
 name|friend
@@ -7437,6 +7498,8 @@ argument_list|,
 argument|QualType Canonical
 argument_list|,
 argument|bool NoReturn
+argument_list|,
+argument|CallingConv CallConv
 argument_list|)
 operator|:
 name|FunctionType
@@ -7466,6 +7529,8 @@ argument_list|)
 operator|)
 argument_list|,
 name|NoReturn
+argument_list|,
+name|CallConv
 argument_list|)
 block|,
 name|NumArgs
@@ -10552,19 +10617,18 @@ name|Decl
 block|;
 comment|// List of protocols for this protocol conforming object type
 comment|// List is sorted on protocol name. No protocol is enterred more than once.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
 name|ObjCProtocolDecl
 operator|*
-block|,
-literal|4
-operator|>
+operator|*
 name|Protocols
+block|;
+name|unsigned
+name|NumProtocols
 block|;
 name|ObjCInterfaceType
 argument_list|(
+argument|ASTContext&Ctx
+argument_list|,
 argument|QualType Canonical
 argument_list|,
 argument|ObjCInterfaceDecl *D
@@ -10573,29 +10637,7 @@ argument|ObjCProtocolDecl **Protos
 argument_list|,
 argument|unsigned NumP
 argument_list|)
-operator|:
-name|Type
-argument_list|(
-name|ObjCInterface
-argument_list|,
-name|Canonical
-argument_list|,
-comment|/*Dependent=*/
-name|false
-argument_list|)
-block|,
-name|Decl
-argument_list|(
-name|D
-argument_list|)
-block|,
-name|Protocols
-argument_list|(
-argument|Protos
-argument_list|,
-argument|Protos+NumP
-argument_list|)
-block|{ }
+block|;
 name|friend
 name|class
 name|ASTContext
@@ -10603,6 +10645,14 @@ block|;
 comment|// ASTContext creates these.
 name|public
 operator|:
+name|void
+name|Destroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
 name|ObjCInterfaceDecl
 operator|*
 name|getDecl
@@ -10621,28 +10671,18 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Protocols
-operator|.
-name|size
-argument_list|()
+name|NumProtocols
 return|;
 block|}
 comment|/// qual_iterator and friends: this provides access to the (potentially empty)
 comment|/// list of protocols qualifying this interface.
 typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
 name|ObjCProtocolDecl
-operator|*
-operator|,
-literal|8
-operator|>
-operator|::
-name|const_iterator
+modifier|*
+specifier|const
+modifier|*
 name|qual_iterator
-expr_stmt|;
+typedef|;
 name|qual_iterator
 name|qual_begin
 argument_list|()
@@ -10650,9 +10690,6 @@ specifier|const
 block|{
 return|return
 name|Protocols
-operator|.
-name|begin
-argument_list|()
 return|;
 block|}
 name|qual_iterator
@@ -10662,9 +10699,12 @@ specifier|const
 block|{
 return|return
 name|Protocols
-operator|.
-name|end
-argument_list|()
+operator|?
+name|Protocols
+operator|+
+name|NumProtocols
+operator|:
+literal|0
 return|;
 block|}
 name|bool
@@ -10673,10 +10713,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Protocols
-operator|.
-name|size
-argument_list|()
+name|NumProtocols
 operator|==
 literal|0
 return|;
@@ -10778,19 +10815,18 @@ block|;
 comment|// A builtin or interface type.
 comment|// List of protocols for this protocol conforming object type
 comment|// List is sorted on protocol name. No protocol is entered more than once.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
 name|ObjCProtocolDecl
 operator|*
-block|,
-literal|8
-operator|>
+operator|*
 name|Protocols
+block|;
+name|unsigned
+name|NumProtocols
 block|;
 name|ObjCObjectPointerType
 argument_list|(
+argument|ASTContext&Ctx
+argument_list|,
 argument|QualType Canonical
 argument_list|,
 argument|QualType T
@@ -10799,29 +10835,7 @@ argument|ObjCProtocolDecl **Protos
 argument_list|,
 argument|unsigned NumP
 argument_list|)
-operator|:
-name|Type
-argument_list|(
-name|ObjCObjectPointer
-argument_list|,
-name|Canonical
-argument_list|,
-comment|/*Dependent=*/
-name|false
-argument_list|)
-block|,
-name|PointeeType
-argument_list|(
-name|T
-argument_list|)
-block|,
-name|Protocols
-argument_list|(
-argument|Protos
-argument_list|,
-argument|Protos+NumP
-argument_list|)
-block|{ }
+block|;
 name|friend
 name|class
 name|ASTContext
@@ -10829,6 +10843,14 @@ block|;
 comment|// ASTContext creates these.
 name|public
 operator|:
+name|void
+name|Destroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
 comment|// Get the pointee type. Pointee will either be:
 comment|// - a built-in type (for 'id' and 'Class').
 comment|// - an interface type (for user-defined types).
@@ -10871,13 +10893,13 @@ block|{
 return|return
 name|getInterfaceType
 argument_list|()
-operator|?
+condition|?
 name|getInterfaceType
 argument_list|()
 operator|->
 name|getDecl
 argument_list|()
-operator|:
+else|:
 literal|0
 return|;
 block|}
@@ -10899,10 +10921,7 @@ name|ObjCId
 argument_list|)
 operator|&&
 operator|!
-name|Protocols
-operator|.
-name|size
-argument_list|()
+name|NumProtocols
 return|;
 block|}
 comment|/// isObjCClassType - true for "Class".
@@ -10923,10 +10942,7 @@ name|ObjCClass
 argument_list|)
 operator|&&
 operator|!
-name|Protocols
-operator|.
-name|size
-argument_list|()
+name|NumProtocols
 return|;
 block|}
 comment|/// isObjCQualifiedIdType - true for "id<p>".
@@ -10946,10 +10962,7 @@ operator|::
 name|ObjCId
 argument_list|)
 operator|&&
-name|Protocols
-operator|.
-name|size
-argument_list|()
+name|NumProtocols
 return|;
 block|}
 comment|/// isObjCQualifiedClassType - true for "Class<p>".
@@ -10969,28 +10982,18 @@ operator|::
 name|ObjCClass
 argument_list|)
 operator|&&
-name|Protocols
-operator|.
-name|size
-argument_list|()
+name|NumProtocols
 return|;
 block|}
 comment|/// qual_iterator and friends: this provides access to the (potentially empty)
 comment|/// list of protocols qualifying this interface.
 typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
 name|ObjCProtocolDecl
-operator|*
-operator|,
-literal|8
-operator|>
-operator|::
-name|const_iterator
+modifier|*
+specifier|const
+modifier|*
 name|qual_iterator
-expr_stmt|;
+typedef|;
 name|qual_iterator
 name|qual_begin
 argument_list|()
@@ -10998,9 +11001,6 @@ specifier|const
 block|{
 return|return
 name|Protocols
-operator|.
-name|begin
-argument_list|()
 return|;
 block|}
 name|qual_iterator
@@ -11010,9 +11010,12 @@ specifier|const
 block|{
 return|return
 name|Protocols
-operator|.
-name|end
-argument_list|()
+operator|?
+name|Protocols
+operator|+
+name|NumProtocols
+operator|:
+name|NULL
 return|;
 block|}
 name|bool
@@ -11021,10 +11024,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Protocols
-operator|.
-name|size
-argument_list|()
+name|NumProtocols
 operator|==
 literal|0
 return|;
@@ -11037,10 +11037,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Protocols
-operator|.
-name|size
-argument_list|()
+name|NumProtocols
 return|;
 block|}
 name|bool
@@ -12085,6 +12082,169 @@ return|return
 name|false
 return|;
 block|}
+comment|/// getCallConv - Returns the calling convention of the type if the type
+comment|/// is a function type, CC_Default otherwise.
+specifier|inline
+name|CallingConv
+name|QualType
+operator|::
+name|getCallConv
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|PointerType
+modifier|*
+name|PT
+init|=
+name|getTypePtr
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|PointerType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|PT
+operator|->
+name|getPointeeType
+argument_list|()
+operator|.
+name|getCallConv
+argument_list|()
+return|;
+elseif|else
+if|if
+condition|(
+specifier|const
+name|ReferenceType
+modifier|*
+name|RT
+init|=
+name|getTypePtr
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|ReferenceType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|RT
+operator|->
+name|getPointeeType
+argument_list|()
+operator|.
+name|getCallConv
+argument_list|()
+return|;
+elseif|else
+if|if
+condition|(
+specifier|const
+name|MemberPointerType
+modifier|*
+name|MPT
+init|=
+name|getTypePtr
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|MemberPointerType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|MPT
+operator|->
+name|getPointeeType
+argument_list|()
+operator|.
+name|getCallConv
+argument_list|()
+return|;
+elseif|else
+if|if
+condition|(
+specifier|const
+name|BlockPointerType
+modifier|*
+name|BPT
+init|=
+name|getTypePtr
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|BlockPointerType
+operator|>
+operator|(
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+specifier|const
+name|FunctionType
+modifier|*
+name|FT
+init|=
+name|BPT
+operator|->
+name|getPointeeType
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|FunctionType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|FT
+operator|->
+name|getCallConv
+argument_list|()
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+specifier|const
+name|FunctionType
+modifier|*
+name|FT
+init|=
+name|getTypePtr
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|FunctionType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|FT
+operator|->
+name|getCallConv
+argument_list|()
+return|;
+return|return
+name|CC_Default
+return|;
+block|}
 comment|/// isMoreQualifiedThan - Determine whether this type is more
 comment|/// qualified than the Other type. For example, "const volatile int"
 comment|/// is more qualified than "const int", "volatile int", and
@@ -12795,6 +12955,9 @@ return|return
 name|false
 return|;
 block|}
+end_block
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -12823,14 +12986,16 @@ operator|->
 name|isObjCClassType
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_block
+end_return
 
 begin_expr_stmt
-specifier|inline
+unit|} inline
 name|bool
 name|Type
 operator|::

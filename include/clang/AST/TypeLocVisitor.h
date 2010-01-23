@@ -182,6 +182,11 @@ include|#
 directive|include
 file|"clang/AST/TypeLocNodes.def"
 block|}
+name|llvm_unreachable
+argument_list|(
+literal|"unexpected type loc class!"
+argument_list|)
+expr_stmt|;
 block|}
 define|#
 directive|define

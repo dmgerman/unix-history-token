@@ -1263,6 +1263,15 @@ block|,
 name|ovl_fail_bad_conversion
 block|,
 name|ovl_fail_bad_deduction
+block|,
+comment|/// This conversion candidate was not considered because it
+comment|/// duplicates the work of a trivial or derived-to-base
+comment|/// conversion.
+name|ovl_fail_trivial_conversion
+block|,
+comment|/// This conversion candidate is not viable because its result
+comment|/// type is not implicitly convertible to the desired type.
+name|ovl_fail_bad_final_conversion
 block|}
 enum|;
 end_enum

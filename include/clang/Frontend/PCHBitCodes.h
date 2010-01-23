@@ -102,7 +102,7 @@ comment|/// incompatible with previous versions (such that a reader
 comment|/// designed for the previous version could not support reading
 comment|/// the new version), this number should be increased.
 comment|///
-comment|/// Version 3 of PCH files also requires that the Subversion branch and
+comment|/// Version 3 of PCH files also requires that the version control branch and
 comment|/// revision match exactly, since there is no backward compatibility of
 comment|/// PCH files at this time.
 specifier|const
@@ -357,9 +357,9 @@ name|COMMENT_RANGES
 init|=
 literal|20
 block|,
-comment|/// \brief Record code for the Subversion branch and revision information
-comment|/// of the compiler used to build this PCH file.
-name|SVN_BRANCH_REVISION
+comment|/// \brief Record code for the version control branch and revision
+comment|/// information of the compiler used to build this PCH file.
+name|VERSION_CONTROL_BRANCH_REVISION
 init|=
 literal|21
 block|}
@@ -1154,6 +1154,21 @@ name|EXPR_CXX_OPERATOR_CALL
 block|,
 comment|/// \brief A CXXConstructExpr record.
 name|EXPR_CXX_CONSTRUCT
+block|,
+comment|// \brief A CXXStaticCastExpr record.
+name|EXPR_CXX_STATIC_CAST
+block|,
+comment|// \brief A CXXDynamicCastExpr record.
+name|EXPR_CXX_DYNAMIC_CAST
+block|,
+comment|// \brief A CXXReinterpretCastExpr record.
+name|EXPR_CXX_REINTERPRET_CAST
+block|,
+comment|// \brief A CXXConstCastExpr record.
+name|EXPR_CXX_CONST_CAST
+block|,
+comment|// \brief A CXXFunctionalCastExpr record.
+name|EXPR_CXX_FUNCTIONAL_CAST
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a

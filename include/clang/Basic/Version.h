@@ -63,6 +63,12 @@ directive|define
 name|LLVM_CLANG_BASIC_VERSION_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_comment
 comment|/// \brief Clang major version
 end_comment
@@ -197,18 +203,38 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// \brief Retrieves the Subversion path that identifies the particular
-comment|/// Clang branch, tag, or trunk from which this Clang was built.
+comment|/// \brief Retrieves the repository path (e.g., Subversion path) that
+comment|/// identifies the particular Clang branch, tag, or trunk from which this
+comment|/// Clang was built.
+name|llvm
+operator|::
+name|StringRef
+name|getClangRepositoryPath
+argument_list|()
+expr_stmt|;
+comment|/// \brief Retrieves the repository revision number (or identifer) from which
+comment|///  this Clang was built.
+name|llvm
+operator|::
+name|StringRef
+name|getClangRevision
+argument_list|()
+expr_stmt|;
+comment|/// \brief Retrieves the full repository version that is an amalgamation of
+comment|///  the information in getClangRepositoryPath() and getClangRevision().
+name|llvm
+operator|::
+name|StringRef
+name|getClangFullRepositoryVersion
+argument_list|()
+expr_stmt|;
+comment|/// \brief Retrieves a string representing the complete clang version,
+comment|///   which includes the clang version number, the repository version,
+comment|///   and the vendor tag.
 specifier|const
 name|char
 modifier|*
-name|getClangSubversionPath
-parameter_list|()
-function_decl|;
-comment|/// \brief Retrieves the Subversion revision number from which this Clang
-comment|/// was built.
-name|unsigned
-name|getClangSubversionRevision
+name|getClangFullVersion
 parameter_list|()
 function_decl|;
 block|}

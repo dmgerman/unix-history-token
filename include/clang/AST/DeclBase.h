@@ -71,14 +71,10 @@ directive|include
 file|"clang/AST/Type.h"
 end_include
 
-begin_comment
-comment|// FIXME: Layering violation
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"clang/Parse/AccessSpecifier.h"
+file|"clang/Basic/Specifiers.h"
 end_include
 
 begin_include
@@ -4336,51 +4332,26 @@ name|getKind
 argument_list|()
 operator|==
 name|NonTypeTemplateParm
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|TemplateTemplateParm
 return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
-specifier|inline
-name|bool
-name|Decl
-operator|::
-name|isDefinedOutsideFunctionOrMethod
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|getDeclContext
-argument_list|()
-condition|)
-return|return
-operator|!
-name|getDeclContext
-argument_list|()
-operator|->
-name|getLookupContext
-argument_list|()
-operator|->
-name|isFunctionOrMethod
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|true
-return|;
-end_return
-
 begin_comment
-unit|}  }
+unit|}
 comment|// end clang.
 end_comment
 
-begin_decl_stmt
-name|namespace
+begin_macro
+unit|namespace
 name|llvm
+end_macro
+
+begin_block
 block|{
 comment|/// Implement a isa_impl_wrap specialization to check whether a DeclContext is
 comment|/// a specific Decl.
@@ -4432,8 +4403,14 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -4443,12 +4420,12 @@ expr|struct
 name|isa_impl_wrap
 operator|<
 name|ToTy
-block|,
+operator|,
 operator|::
 name|clang
 operator|::
 name|DeclContext
-block|,
+operator|,
 operator|::
 name|clang
 operator|::
@@ -4459,13 +4436,13 @@ name|public
 name|isa_impl_wrap
 operator|<
 name|ToTy
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
 operator|::
 name|DeclContext
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
@@ -4473,8 +4450,14 @@ operator|::
 name|DeclContext
 operator|>
 block|{}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Implement cast_convert_val for Decl -> DeclContext conversions.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -4487,9 +4470,9 @@ operator|::
 name|clang
 operator|::
 name|DeclContext
-block|,
+operator|,
 name|FromTy
-block|,
+operator|,
 name|FromTy
 operator|>
 block|{
@@ -4515,8 +4498,10 @@ name|Val
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -4529,10 +4514,10 @@ operator|::
 name|clang
 operator|::
 name|DeclContext
-block|,
+operator|,
 name|FromTy
 operator|*
-block|,
+operator|,
 name|FromTy
 operator|*
 operator|>
@@ -4557,8 +4542,10 @@ name|Val
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -4572,9 +4559,9 @@ operator|::
 name|clang
 operator|::
 name|DeclContext
-block|,
+operator|,
 name|FromTy
-block|,
+operator|,
 name|FromTy
 operator|>
 block|{
@@ -4601,8 +4588,10 @@ name|Val
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -4616,10 +4605,10 @@ operator|::
 name|clang
 operator|::
 name|DeclContext
-block|,
+operator|,
 name|FromTy
 operator|*
-block|,
+operator|,
 name|FromTy
 operator|*
 operator|>
@@ -4645,9 +4634,14 @@ name|Val
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_comment
+unit|};
 comment|/// Implement cast_convert_val for DeclContext -> Decl conversions.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -4657,13 +4651,13 @@ expr|struct
 name|cast_convert_val
 operator|<
 name|ToTy
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
 operator|::
 name|DeclContext
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
@@ -4697,8 +4691,10 @@ argument_list|)
 operator|)
 return|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -4708,12 +4704,12 @@ expr|struct
 name|cast_convert_val
 operator|<
 name|ToTy
-block|,
+operator|,
 operator|::
 name|clang
 operator|::
 name|DeclContext
-block|,
+operator|,
 operator|::
 name|clang
 operator|::
@@ -4724,13 +4720,13 @@ name|public
 name|cast_convert_val
 operator|<
 name|ToTy
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
 operator|::
 name|DeclContext
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
@@ -4738,7 +4734,10 @@ operator|::
 name|DeclContext
 operator|>
 block|{}
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -4748,14 +4747,14 @@ expr|struct
 name|cast_convert_val
 operator|<
 name|ToTy
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
 operator|::
 name|DeclContext
 operator|*
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
@@ -4788,8 +4787,10 @@ argument_list|)
 operator|)
 return|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -4799,13 +4800,13 @@ expr|struct
 name|cast_convert_val
 operator|<
 name|ToTy
-block|,
+operator|,
 operator|::
 name|clang
 operator|::
 name|DeclContext
 operator|*
-block|,
+operator|,
 operator|::
 name|clang
 operator|::
@@ -4817,14 +4818,14 @@ name|public
 name|cast_convert_val
 operator|<
 name|ToTy
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
 operator|::
 name|DeclContext
 operator|*
-block|,
+operator|,
 specifier|const
 operator|::
 name|clang
@@ -4833,10 +4834,11 @@ name|DeclContext
 operator|*
 operator|>
 block|{}
-block|;  }
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

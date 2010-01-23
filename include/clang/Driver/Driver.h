@@ -201,6 +201,12 @@ operator|::
 name|string
 name|Dir
 expr_stmt|;
+comment|/// The path to the compiler resource directory.
+name|std
+operator|::
+name|string
+name|ResourceDir
+expr_stmt|;
 comment|/// Default host triple.
 name|std
 operator|::

@@ -269,5 +269,33 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+name|char
+modifier|*
+name|doit2
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|pr6069
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|buf
+init|=
+name|doit2
+argument_list|()
+decl_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

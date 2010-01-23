@@ -6409,6 +6409,12 @@ comment|/// synthesized compound expression.
 name|SourceLocation
 name|LParenLoc
 block|;
+comment|/// The type as written.  This can be an incomplete array type, in
+comment|/// which case the actual expression type will be different.
+name|TypeSourceInfo
+operator|*
+name|TInfo
+block|;
 name|Stmt
 operator|*
 name|Init
@@ -6423,7 +6429,9 @@ name|CompoundLiteralExpr
 argument_list|(
 argument|SourceLocation lparenloc
 argument_list|,
-argument|QualType ty
+argument|TypeSourceInfo *tinfo
+argument_list|,
+argument|QualType T
 argument_list|,
 argument|Expr *init
 argument_list|,
@@ -6434,9 +6442,12 @@ name|Expr
 argument_list|(
 name|CompoundLiteralExprClass
 argument_list|,
-name|ty
+name|T
 argument_list|,
-name|ty
+name|tinfo
+operator|->
+name|getType
+argument_list|()
 operator|->
 name|isDependentType
 argument_list|()
@@ -6447,6 +6458,11 @@ block|,
 name|LParenLoc
 argument_list|(
 name|lparenloc
+argument_list|)
+block|,
+name|TInfo
+argument_list|(
+name|tinfo
 argument_list|)
 block|,
 name|Init
@@ -6552,6 +6568,26 @@ block|{
 name|LParenLoc
 operator|=
 name|L
+block|; }
+name|TypeSourceInfo
+operator|*
+name|getTypeSourceInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TInfo
+return|;
+block|}
+name|void
+name|setTypeSourceInfo
+argument_list|(
+argument|TypeSourceInfo* tinfo
+argument_list|)
+block|{
+name|TInfo
+operator|=
+name|tinfo
 block|; }
 name|virtual
 name|SourceRange
@@ -7238,10 +7274,11 @@ operator|:
 name|public
 name|CastExpr
 block|{
-comment|/// TypeAsWritten - The type that this expression is casting to, as
-comment|/// written in the source code.
-name|QualType
-name|TypeAsWritten
+comment|/// TInfo - Source type info for the (written) type
+comment|/// this expression is casting to.
+name|TypeSourceInfo
+operator|*
+name|TInfo
 block|;
 name|protected
 operator|:
@@ -7255,7 +7292,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|QualType writtenTy
+argument|TypeSourceInfo *writtenTy
 argument_list|)
 operator|:
 name|CastExpr
@@ -7269,7 +7306,7 @@ argument_list|,
 name|op
 argument_list|)
 block|,
-name|TypeAsWritten
+name|TInfo
 argument_list|(
 argument|writtenTy
 argument_list|)
@@ -7291,6 +7328,28 @@ argument_list|)
 block|{ }
 name|public
 operator|:
+comment|/// getTypeInfoAsWritten - Returns the type source info for the type
+comment|/// that this expression is casting to.
+name|TypeSourceInfo
+operator|*
+name|getTypeInfoAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TInfo
+return|;
+block|}
+name|void
+name|setTypeInfoAsWritten
+argument_list|(
+argument|TypeSourceInfo *writtenTy
+argument_list|)
+block|{
+name|TInfo
+operator|=
+name|writtenTy
+block|; }
 comment|/// getTypeAsWritten - Returns the type that this expression is
 comment|/// casting to, as written in the source code.
 name|QualType
@@ -7299,19 +7358,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TypeAsWritten
+name|TInfo
+operator|->
+name|getType
+argument_list|()
 return|;
 block|}
-name|void
-name|setTypeAsWritten
-argument_list|(
-argument|QualType T
-argument_list|)
-block|{
-name|TypeAsWritten
-operator|=
-name|T
-block|; }
 specifier|static
 name|bool
 name|classof
@@ -7413,7 +7465,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|QualType writtenTy
+argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
 argument_list|,

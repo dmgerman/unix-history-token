@@ -189,7 +189,13 @@ comment|// ok
 goto|goto
 name|foo
 goto|;
-comment|// expected-error {{goto not allowed}}
+comment|// expected-error {{use of undeclared label 'foo'}}
+name|a
+label|:
+goto|goto
+name|a
+goto|;
+comment|// ok
 block|}
 argument_list|)
 expr_stmt|;

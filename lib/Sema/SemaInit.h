@@ -155,6 +155,13 @@ comment|/// \brief The entity being initialized is an exception object that
 comment|/// is being thrown.
 name|EK_Exception
 block|,
+comment|/// \brief The entity being initialized is a non-static data member
+comment|/// subobject.
+name|EK_Member
+block|,
+comment|/// \brief The entity being initialized is an element of an array.
+name|EK_ArrayElement
+block|,
 comment|/// \brief The entity being initialized is an object (or array of
 comment|/// objects) allocated via new.
 name|EK_New
@@ -165,13 +172,9 @@ block|,
 comment|/// \brief The entity being initialized is a base member subobject.
 name|EK_Base
 block|,
-comment|/// \brief The entity being initialized is a non-static data member
-comment|/// subobject.
-name|EK_Member
-block|,
-comment|/// \brief The entity being initialized is an element of an array
+comment|/// \brief The entity being initialized is an element of a vector.
 comment|/// or vector.
-name|EK_ArrayOrVectorElement
+name|EK_VectorElement
 block|}
 enum|;
 name|private
@@ -696,7 +699,12 @@ argument_list|(
 name|getKind
 argument_list|()
 operator|==
-name|EK_ArrayOrVectorElement
+name|EK_ArrayElement
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|EK_VectorElement
 argument_list|)
 expr_stmt|;
 name|this

@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Lex/Preprocessor.h"
+file|"clang/Basic/Specifiers.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Parse/AccessSpecifier.h"
+file|"clang/Lex/Preprocessor.h"
 end_include
 
 begin_include

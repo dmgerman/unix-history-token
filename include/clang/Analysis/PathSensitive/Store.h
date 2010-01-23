@@ -401,6 +401,9 @@ specifier|const
 name|MemRegion
 modifier|*
 name|region
+parameter_list|,
+name|QualType
+name|EleTy
 parameter_list|)
 block|{
 return|return

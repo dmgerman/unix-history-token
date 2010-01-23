@@ -383,7 +383,6 @@ parameter_list|()
 block|{
 name|somelabel
 label|:
-comment|// FIXME: This should say "jump out of block not legal" when gotos are allowed.
 lambda|^
 block|{
 goto|goto
@@ -392,7 +391,7 @@ goto|;
 block|}
 argument_list|()
 expr_stmt|;
-comment|// expected-error {{goto not allowed in block literal}}
+comment|// expected-error {{use of undeclared label 'somelabel'}}
 block|}
 end_function
 

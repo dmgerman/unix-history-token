@@ -189,21 +189,9 @@ name|Temporary
 block|}
 enum|;
 typedef|typedef
-name|llvm
+name|UnresolvedSetImpl
 operator|::
-name|SmallVector
-operator|<
-name|NamedDecl
-operator|*
-operator|,
-literal|4
-operator|>
-name|DeclsTy
-expr_stmt|;
-typedef|typedef
-name|DeclsTy
-operator|::
-name|const_iterator
+name|iterator
 name|iterator
 expr_stmt|;
 typedef|typedef
@@ -239,6 +227,11 @@ name|NotFound
 argument_list|)
 operator|,
 name|Paths
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NamingClass
 argument_list|(
 literal|0
 argument_list|)
@@ -311,6 +304,11 @@ name|NotFound
 argument_list|)
 operator|,
 name|Paths
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NamingClass
 argument_list|(
 literal|0
 argument_list|)
@@ -543,10 +541,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|iterator
+argument_list|(
 name|Decls
 operator|.
 name|begin
 argument_list|()
+argument_list|)
 return|;
 block|}
 name|iterator
@@ -555,10 +556,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|iterator
+argument_list|(
 name|Decls
 operator|.
 name|end
 argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// \brief Return true if no decls were found
@@ -620,8 +624,61 @@ return|return
 name|IDNS
 return|;
 block|}
-comment|/// \brief Add a declaration to these results.  Does not test the
-comment|/// acceptance criteria.
+comment|/// \brief Returns whether these results arose from performing a
+comment|/// lookup into a class.
+name|bool
+name|isClassLookup
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NamingClass
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// \brief Returns the 'naming class' for this lookup, i.e. the
+comment|/// class which was looked into to find these results.
+comment|///
+comment|/// C++0x [class.access.base]p5:
+comment|///   The access to a member is affected by the class in which the
+comment|///   member is named. This naming class is the class in which the
+comment|///   member name was looked up and found. [Note: this class can be
+comment|///   explicit, e.g., when a qualified-id is used, or implicit,
+comment|///   e.g., when a class member access operator (5.2.5) is used
+comment|///   (including cases where an implicit "this->" is added). If both
+comment|///   a class member access operator and a qualified-id are used to
+comment|///   name the member (as in p->T::m), the class naming the member
+comment|///   is the class named by the nested-name-specifier of the
+comment|///   qualified-id (that is, T). -- end note ]
+comment|///
+comment|/// This is set by the lookup routines when they find results in a class.
+name|CXXRecordDecl
+operator|*
+name|getNamingClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NamingClass
+return|;
+block|}
+comment|/// \brief Sets the 'naming class' for this lookup.
+name|void
+name|setNamingClass
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|Record
+parameter_list|)
+block|{
+name|NamingClass
+operator|=
+name|Record
+expr_stmt|;
+block|}
+comment|/// \brief Add a declaration to these results with its natural access.
+comment|/// Does not test the acceptance criteria.
 name|void
 name|addDecl
 parameter_list|(
@@ -630,11 +687,37 @@ modifier|*
 name|D
 parameter_list|)
 block|{
-name|Decls
-operator|.
-name|push_back
+name|addDecl
 argument_list|(
 name|D
+argument_list|,
+name|D
+operator|->
+name|getAccess
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Add a declaration to these results with the given access.
+comment|/// Does not test the acceptance criteria.
+name|void
+name|addDecl
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|,
+name|AccessSpecifier
+name|AS
+parameter_list|)
+block|{
+name|Decls
+operator|.
+name|addDecl
+argument_list|(
+name|D
+argument_list|,
+name|AS
 argument_list|)
 expr_stmt|;
 name|ResultKind
@@ -659,10 +742,14 @@ name|append
 argument_list|(
 name|Other
 operator|.
+name|Decls
+operator|.
 name|begin
 argument_list|()
 argument_list|,
 name|Other
+operator|.
+name|Decls
 operator|.
 name|end
 argument_list|()
@@ -671,73 +758,6 @@ expr_stmt|;
 name|ResultKind
 operator|=
 name|Found
-expr_stmt|;
-block|}
-comment|/// \brief Hides a set of declarations.
-name|template
-operator|<
-name|class
-name|NamedDeclSet
-operator|>
-name|void
-name|hideDecls
-argument_list|(
-argument|const NamedDeclSet&Set
-argument_list|)
-block|{
-name|unsigned
-name|I
-operator|=
-literal|0
-block|,
-name|N
-operator|=
-name|Decls
-operator|.
-name|size
-argument_list|()
-block|;
-while|while
-condition|(
-name|I
-operator|<
-name|N
-condition|)
-block|{
-if|if
-condition|(
-name|Set
-operator|.
-name|count
-argument_list|(
-name|Decls
-index|[
-name|I
-index|]
-argument_list|)
-condition|)
-name|Decls
-index|[
-name|I
-index|]
-operator|=
-name|Decls
-index|[
-operator|--
-name|N
-index|]
-expr_stmt|;
-else|else
-name|I
-operator|++
-expr_stmt|;
-block|}
-name|Decls
-operator|.
-name|set_size
-argument_list|(
-name|N
-argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Determine whether no result was found because we could not
@@ -893,10 +913,11 @@ literal|"getFoundDecl called on non-unique result"
 argument_list|)
 block|;
 return|return
-name|Decls
-index|[
-literal|0
-index|]
+operator|(
+operator|*
+name|begin
+argument_list|()
+operator|)
 operator|->
 name|getUnderlyingDecl
 argument_list|()
@@ -927,10 +948,9 @@ literal|"cannot get representative of empty set"
 argument_list|)
 block|;
 return|return
-name|Decls
-index|[
-literal|0
-index|]
+operator|*
+name|begin
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -1243,9 +1263,11 @@ name|LookupResult
 modifier|&
 name|Results
 decl_stmt|;
-name|unsigned
+name|LookupResult
+operator|::
+name|iterator
 name|I
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Changed
 decl_stmt|;
@@ -1275,7 +1297,10 @@ argument_list|)
 operator|,
 name|I
 argument_list|(
-literal|0
+name|Results
+operator|.
+name|begin
+argument_list|()
 argument_list|)
 operator|,
 name|Changed
@@ -1321,9 +1346,7 @@ name|I
 operator|!=
 name|Results
 operator|.
-name|Decls
-operator|.
-name|size
+name|end
 argument_list|()
 return|;
 block|}
@@ -1335,25 +1358,19 @@ block|{
 name|assert
 argument_list|(
 name|I
-operator|<
+operator|!=
 name|Results
 operator|.
-name|Decls
-operator|.
-name|size
+name|end
 argument_list|()
 operator|&&
 literal|"next() called on empty filter"
 argument_list|)
 expr_stmt|;
 return|return
-name|Results
-operator|.
-name|Decls
-index|[
+operator|*
 name|I
 operator|++
-index|]
 return|;
 block|}
 comment|/// Erase the last element returned from this iterator.
@@ -1364,30 +1381,20 @@ block|{
 name|Results
 operator|.
 name|Decls
-index|[
+operator|.
+name|erase
+argument_list|(
 operator|--
 name|I
-index|]
-operator|=
-name|Results
-operator|.
-name|Decls
-operator|.
-name|back
-argument_list|()
-expr_stmt|;
-name|Results
-operator|.
-name|Decls
-operator|.
-name|pop_back
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|Changed
 operator|=
 name|true
 expr_stmt|;
 block|}
+comment|/// Replaces the current entry with the given one, preserving the
+comment|/// access bits.
 name|void
 name|replace
 parameter_list|(
@@ -1399,13 +1406,47 @@ block|{
 name|Results
 operator|.
 name|Decls
-index|[
+operator|.
+name|replace
+argument_list|(
 name|I
 operator|-
 literal|1
-index|]
-operator|=
+argument_list|,
 name|D
+argument_list|)
+expr_stmt|;
+name|Changed
+operator|=
+name|true
+expr_stmt|;
+block|}
+comment|/// Replaces the current entry with the given one.
+name|void
+name|replace
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|,
+name|AccessSpecifier
+name|AS
+parameter_list|)
+block|{
+name|Results
+operator|.
+name|Decls
+operator|.
+name|replace
+argument_list|(
+name|I
+operator|-
+literal|1
+argument_list|,
+name|D
+argument_list|,
+name|AS
+argument_list|)
 expr_stmt|;
 name|Changed
 operator|=
@@ -1487,6 +1528,27 @@ condition|)
 name|SemaRef
 operator|.
 name|DiagnoseAmbiguousLookup
+argument_list|(
+operator|*
+name|this
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|isClassLookup
+argument_list|()
+operator|&&
+name|SemaRef
+operator|.
+name|getLangOptions
+argument_list|()
+operator|.
+name|AccessControl
+condition|)
+name|SemaRef
+operator|.
+name|CheckAccess
 argument_list|(
 operator|*
 name|this
@@ -1597,10 +1659,11 @@ operator|<
 name|FunctionTemplateDecl
 operator|>
 operator|(
-name|Decls
-index|[
-literal|0
-index|]
+operator|(
+operator|*
+name|begin
+argument_list|()
+operator|)
 operator|->
 name|getUnderlyingDecl
 argument_list|()
@@ -1677,20 +1740,14 @@ specifier|const
 block|{
 for|for
 control|(
-name|DeclsTy
-operator|::
-name|const_iterator
+name|iterator
 name|I
-operator|=
-name|Decls
-operator|.
+init|=
 name|begin
 argument_list|()
-operator|,
+init|,
 name|E
-operator|=
-name|Decls
-operator|.
+init|=
 name|end
 argument_list|()
 init|;
@@ -1754,16 +1811,26 @@ begin_comment
 comment|// ill-defined unless ambiguous
 end_comment
 
-begin_decl_stmt
-name|DeclsTy
+begin_expr_stmt
+name|UnresolvedSet
+operator|<
+literal|8
+operator|>
 name|Decls
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|CXXBasePaths
 modifier|*
 name|Paths
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CXXRecordDecl
+modifier|*
+name|NamingClass
 decl_stmt|;
 end_decl_stmt
 

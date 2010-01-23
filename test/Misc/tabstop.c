@@ -111,5 +111,64 @@ begin_comment
 comment|//CHECK-5: {{^void\* d = 1;}}
 end_comment
 
+begin_comment
+comment|// Test code modification hints
+end_comment
+
+begin_function
+name|void
+name|f
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+literal|0
+operator|&
+literal|1
+operator|==
+literal|1
+condition|)
+block|{}
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-3: {{^   }}if (0& 1   == 1)
+end_comment
+
+begin_comment
+comment|// CHECK-3: {{^   }}        (       )
+end_comment
+
+begin_comment
+comment|// CHECK-3: {{^   }}    (    )
+end_comment
+
+begin_comment
+comment|// CHECK-4: {{^    }}if (0& 1 == 1)
+end_comment
+
+begin_comment
+comment|// CHECK-4: {{^    }}          (     )
+end_comment
+
+begin_comment
+comment|// CHECK-4: {{^    }}    (      )
+end_comment
+
+begin_comment
+comment|// CHECK-5: {{^     }}if (0& 1  == 1)
+end_comment
+
+begin_comment
+comment|// CHECK-5: {{^     }}            (      )
+end_comment
+
+begin_comment
+comment|// CHECK-5: {{^     }}    (        )
+end_comment
+
 end_unit
 

@@ -1938,11 +1938,21 @@ comment|/// token where it expected something different that it received. If
 comment|/// the returned source location would not be meaningful (e.g., if
 comment|/// it points into a macro), this routine returns an invalid
 comment|/// source location.
+comment|///
+comment|/// \param Offset an offset from the end of the token, where the source
+comment|/// location should refer to. The default offset (0) produces a source
+comment|/// location pointing just past the end of the token; an offset of 1 produces
+comment|/// a source location pointing to the last character in the token, etc.
 name|SourceLocation
 name|getLocForEndOfToken
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|unsigned
+name|Offset
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// DumpToken - Print the token to stderr, used for debugging.
@@ -2207,9 +2217,6 @@ name|llvm
 operator|::
 name|StringRef
 name|Filename
-argument_list|,
-name|SourceLocation
-name|FilenameTokLoc
 argument_list|,
 name|bool
 name|isAngled
@@ -2890,9 +2897,15 @@ modifier|&
 name|CommentTok
 parameter_list|)
 function_decl|;
-name|void
+comment|// Return true and store the first token only if any CommentHandler
+comment|// has inserted some tokens and getCommentRetentionState() is false.
+name|bool
 name|HandleComment
 parameter_list|(
+name|Token
+modifier|&
+name|Token
+parameter_list|,
 name|SourceRange
 name|Comment
 parameter_list|)
@@ -2911,8 +2924,10 @@ operator|~
 name|CommentHandler
 argument_list|()
 expr_stmt|;
+comment|// The handler shall return true if it has pushed any tokens
+comment|// to be read using e.g. EnterToken or EnterTokenStream.
 name|virtual
-name|void
+name|bool
 name|HandleComment
 parameter_list|(
 name|Preprocessor

@@ -64,7 +64,7 @@ name|namespace
 name|clang
 block|{
 comment|/// DeltaTree - a multiway search tree (BTree) structure with some fancy
-comment|/// features.  B-Trees are are generally more memory and cache efficient than
+comment|/// features.  B-Trees are generally more memory and cache efficient than
 comment|/// binary trees, because they store multiple keys/values in each node.  This
 comment|/// implements a key/value mapping from index to delta, and allows fast lookup
 comment|/// on index.  However, an added (important) bonus is that it can also

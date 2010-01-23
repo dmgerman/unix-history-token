@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/Decl.h"
+file|"clang/AST/UnresolvedSet.h"
 end_include
 
 begin_include
@@ -379,7 +379,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|QualType writtenTy
+argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
 argument_list|)
@@ -402,6 +402,21 @@ argument_list|(
 argument|l
 argument_list|)
 block|{}
+name|explicit
+name|CXXNamedCastExpr
+argument_list|(
+argument|StmtClass SC
+argument_list|,
+argument|EmptyShell Shell
+argument_list|)
+operator|:
+name|ExplicitCastExpr
+argument_list|(
+argument|SC
+argument_list|,
+argument|Shell
+argument_list|)
+block|{ }
 name|public
 operator|:
 specifier|const
@@ -526,7 +541,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|QualType writtenTy
+argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
 argument_list|)
@@ -546,6 +561,19 @@ argument_list|,
 argument|l
 argument_list|)
 block|{}
+name|explicit
+name|CXXStaticCastExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|CXXNamedCastExpr
+argument_list|(
+argument|CXXStaticCastExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
 specifier|static
 name|bool
 name|classof
@@ -597,7 +625,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|QualType writtenTy
+argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
 argument_list|)
@@ -617,6 +645,19 @@ argument_list|,
 argument|l
 argument_list|)
 block|{}
+name|explicit
+name|CXXDynamicCastExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|CXXNamedCastExpr
+argument_list|(
+argument|CXXDynamicCastExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
 specifier|static
 name|bool
 name|classof
@@ -668,7 +709,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|QualType writtenTy
+argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
 argument_list|)
@@ -688,6 +729,19 @@ argument_list|,
 argument|l
 argument_list|)
 block|{}
+name|explicit
+name|CXXReinterpretCastExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|CXXNamedCastExpr
+argument_list|(
+argument|CXXReinterpretCastExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
 specifier|static
 name|bool
 name|classof
@@ -736,7 +790,7 @@ argument|QualType ty
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|QualType writtenTy
+argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
 argument_list|)
@@ -756,6 +810,19 @@ argument_list|,
 argument|l
 argument_list|)
 block|{}
+name|explicit
+name|CXXConstCastExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|CXXNamedCastExpr
+argument_list|(
+argument|CXXConstCastExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
 specifier|static
 name|bool
 name|classof
@@ -2574,7 +2641,7 @@ name|CXXFunctionalCastExpr
 argument_list|(
 argument|QualType ty
 argument_list|,
-argument|QualType writtenTy
+argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation tyBeginLoc
 argument_list|,
@@ -2608,6 +2675,19 @@ argument_list|(
 argument|rParenLoc
 argument_list|)
 block|{}
+name|explicit
+name|CXXFunctionalCastExpr
+argument_list|(
+argument|EmptyShell Shell
+argument_list|)
+operator|:
+name|ExplicitCastExpr
+argument_list|(
+argument|CXXFunctionalCastExprClass
+argument_list|,
+argument|Shell
+argument_list|)
+block|{ }
 name|SourceLocation
 name|getTypeBeginLoc
 argument_list|()
@@ -2617,6 +2697,16 @@ return|return
 name|TyBeginLoc
 return|;
 block|}
+name|void
+name|setTypeBeginLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|TyBeginLoc
+operator|=
+name|L
+block|; }
 name|SourceLocation
 name|getRParenLoc
 argument_list|()
@@ -2626,6 +2716,16 @@ return|return
 name|RParenLoc
 return|;
 block|}
+name|void
+name|setRParenLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|RParenLoc
+operator|=
+name|L
+block|; }
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -4210,6 +4310,9 @@ block|{
 comment|/// The results.  These are undesugared, which is to say, they may
 comment|/// include UsingShadowDecls.
 name|UnresolvedSet
+operator|<
+literal|4
+operator|>
 name|Results
 block|;
 comment|/// The name declared.
@@ -4399,22 +4502,11 @@ specifier|static
 name|bool
 name|ComputeDependence
 argument_list|(
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-name|Begin
+argument|UnresolvedSetImpl::const_iterator Begin
 argument_list|,
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-name|End
+argument|UnresolvedSetImpl::const_iterator End
 argument_list|,
-specifier|const
-name|TemplateArgumentListInfo
-operator|*
-name|Args
+argument|const TemplateArgumentListInfo *Args
 argument_list|)
 block|;
 name|void
@@ -4431,7 +4523,7 @@ name|Decl
 argument_list|)
 block|;   }
 typedef|typedef
-name|UnresolvedSet
+name|UnresolvedSetImpl
 operator|::
 name|iterator
 name|decls_iterator
@@ -6345,6 +6437,9 @@ block|{
 comment|/// The results.  These are undesugared, which is to say, they may
 comment|/// include UsingShadowDecls.
 name|UnresolvedSet
+operator|<
+literal|4
+operator|>
 name|Results
 block|;
 comment|/// \brief The expression for the base pointer or class reference,
@@ -6525,7 +6620,7 @@ name|Decl
 argument_list|)
 block|;   }
 typedef|typedef
-name|UnresolvedSet
+name|UnresolvedSetImpl
 operator|::
 name|iterator
 name|decls_iterator

@@ -101,6 +101,22 @@ directive|include
 file|<cassert>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|MemoryBuffer
+decl_stmt|;
+block|}
+end_decl_stmt
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -461,6 +477,25 @@ return|return
 name|TopLevelDecls
 return|;
 block|}
+comment|/// \brief A mapping from a file name to the memory buffer that stores the
+comment|/// remapped contents of that file.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+operator|>
+name|RemappedFile
+expr_stmt|;
 comment|/// \brief Create a ASTUnit from a PCH file.
 comment|///
 comment|/// \param Filename - The PCH file to load.
@@ -494,6 +529,17 @@ name|bool
 name|UseBumpAllocator
 operator|=
 name|false
+argument_list|,
+name|RemappedFile
+operator|*
+name|RemappedFiles
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|NumRemappedFiles
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// LoadFromCompilerInvocation - Create an ASTUnit from a source file, via a
@@ -576,6 +622,17 @@ name|bool
 name|UseBumpAllocator
 operator|=
 name|false
+argument_list|,
+name|RemappedFile
+operator|*
+name|RemappedFiles
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|NumRemappedFiles
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 block|}

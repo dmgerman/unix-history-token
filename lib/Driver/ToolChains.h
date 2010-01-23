@@ -326,6 +326,18 @@ index|[
 literal|1
 index|]
 block|;   }
+comment|/// getDarwinArchName - Get the "Darwin" arch name for a particular compiler
+comment|/// invocation. For example, Darwin treats different ARM variations as
+comment|/// distinct architectures.
+name|llvm
+operator|::
+name|StringRef
+name|getDarwinArchName
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
+block|;
 comment|/// getMacosxVersionMin - Get the effective -mmacosx-version-min, which is
 comment|/// either the -mmacosx-version-min, or the current version if unspecified.
 name|void

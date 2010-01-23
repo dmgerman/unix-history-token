@@ -1121,7 +1121,7 @@ comment|/// VisitCast - Transfer function logic for all casts (implicit and expl
 name|void
 name|VisitCast
 parameter_list|(
-name|Expr
+name|CastExpr
 modifier|*
 name|CastE
 parameter_list|,

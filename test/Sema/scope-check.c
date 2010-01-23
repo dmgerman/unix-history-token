@@ -775,33 +775,29 @@ block|{
 goto|goto
 name|L1
 goto|;
-comment|// expected-error {{goto not allowed in block literal}}
 name|L1
 label|:
 goto|goto
 name|L2
 goto|;
-comment|// expected-error {{goto not allowed in block literal}}
 name|L2
 label|:
 goto|goto
 name|L3
 goto|;
-comment|// expected-error {{goto not allowed in block literal}}
-comment|// todo-error {{illegal goto into protected scope}}
+comment|// expected-error {{illegal goto into protected scope}}
 name|int
 name|Arr
 index|[
 name|n
 index|]
 decl_stmt|;
-comment|// todo-note {{jump bypasses initialization of variable length array}}
+comment|// expected-note {{jump bypasses initialization of variable length array}}
 name|L3
 label|:
 goto|goto
 name|L4
 goto|;
-comment|// expected-error {{goto not allowed in block literal}}
 name|L4
 label|:
 return|return;

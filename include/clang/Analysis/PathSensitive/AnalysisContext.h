@@ -175,16 +175,18 @@ operator|::
 name|BumpPtrAllocator
 name|A
 expr_stmt|;
+name|bool
+name|AddEHEdges
+decl_stmt|;
 name|public
 label|:
 name|AnalysisContext
 argument_list|(
-specifier|const
-name|Decl
-operator|*
-name|d
+argument|const Decl *d
+argument_list|,
+argument|bool addehedges = false
 argument_list|)
-operator|:
+block|:
 name|D
 argument_list|(
 name|d
@@ -208,6 +210,11 @@ operator|,
 name|ReferencedBlockVars
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|AddEHEdges
+argument_list|(
+argument|addehedges
 argument_list|)
 block|{}
 operator|~
@@ -234,6 +241,19 @@ parameter_list|()
 block|{
 return|return
 name|D
+return|;
+block|}
+comment|/// getAddEHEdges - Return true iff we are adding exceptional edges from
+comment|/// callExprs.  If this is false, then try/catch statements and blocks
+comment|/// reachable from them can appear to be dead in the CFG, analysis passes must
+comment|/// cope with that.
+name|bool
+name|getAddEHEdges
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AddEHEdges
 return|;
 block|}
 name|Stmt

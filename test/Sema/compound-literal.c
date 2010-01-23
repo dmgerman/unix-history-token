@@ -353,5 +353,46 @@ comment|// -expected-error{{illegal initializer type 'void (void)'}}
 block|}
 end_function
 
+begin_comment
+comment|// PR6080
+end_comment
+
+begin_expr_stmt
+name|int
+name|array
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+name|int
+index|[
+literal|3
+index|]
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+operator|(
+name|int
+index|[]
+operator|)
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|}
+argument_list|)
+operator|)
+operator|?
+literal|1
+operator|:
+operator|-
+literal|1
+index|]
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

@@ -117,7 +117,6 @@ argument_list|(
 argument|info
 argument_list|)
 block|{ }
-expr_stmt|;
 name|virtual
 operator|~
 name|TargetCodeGenInfo
@@ -161,7 +160,6 @@ name|M
 argument_list|)
 decl|const
 block|{ }
-empty_stmt|;
 block|}
 empty_stmt|;
 block|}
