@@ -10359,6 +10359,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+else|else
+name|ADAPTER_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ADAPTER_LOCK_ASSERT_NOTOWNED
 argument_list|(
 name|sc
