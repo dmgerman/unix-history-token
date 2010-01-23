@@ -1531,6 +1531,7 @@ comment|/*  * Get a signal's ksiginfo.  * Return:  * 	0	-	signal not found  *	ot
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sigqueue_get
 parameter_list|(
@@ -1886,6 +1887,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sigqueue_add
 parameter_list|(
@@ -2341,6 +2343,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sigqueue_collect_set
 parameter_list|(
@@ -2402,6 +2405,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sigqueue_move_set
 parameter_list|(
@@ -2638,6 +2642,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sigqueue_move
 parameter_list|(
@@ -2682,6 +2687,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sigqueue_delete_set
 parameter_list|(
@@ -2861,6 +2867,7 @@ comment|/* Remove a set of signals for a process */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sigqueue_delete_set_proc
 parameter_list|(
@@ -2978,6 +2985,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sigqueue_delete_stopmask_proc
 parameter_list|(
