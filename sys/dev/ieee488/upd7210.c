@@ -215,7 +215,12 @@ index|[
 name|reg
 index|]
 argument_list|,
-literal|0
+name|u
+operator|->
+name|reg_offset
+index|[
+name|reg
+index|]
 argument_list|)
 expr_stmt|;
 name|u
@@ -261,7 +266,12 @@ index|[
 name|reg
 index|]
 argument_list|,
-literal|0
+name|u
+operator|->
+name|reg_offset
+index|[
+name|reg
+index|]
 argument_list|,
 name|val
 argument_list|)
@@ -394,6 +404,14 @@ endif|#
 directive|endif
 block|}
 comment|/* 		 * "special interrupt handling" 		 * 		 * In order to implement shared IRQs, the original 		 * PCIIa uses IO locations 0x2f0 + (IRQ#) as an output 		 * location.  If an ISR for a particular card has 		 * detected this card triggered the IRQ, it must reset 		 * the card's IRQ by writing (anything) to that IO 		 * location. 		 * 		 * Some clones apparently don't implement this 		 * feature, but National Instrument cards do. 		 */
+if|if
+condition|(
+name|u
+operator|->
+name|irq_clear_res
+operator|!=
+name|NULL
+condition|)
 name|bus_write_1
 argument_list|(
 name|u

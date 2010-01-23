@@ -68,6 +68,12 @@ name|resource
 modifier|*
 name|irq_clear_res
 decl_stmt|;
+name|u_int
+name|reg_offset
+index|[
+literal|8
+index|]
+decl_stmt|;
 name|int
 name|dmachan
 decl_stmt|;

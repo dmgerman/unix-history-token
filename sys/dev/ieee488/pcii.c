@@ -415,6 +415,10 @@ operator|!=
 literal|0x2e1
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"pcii_probe: PCIIA base address 0x%lx not "
@@ -961,6 +965,17 @@ literal|2
 operator|+
 name|rid
 index|]
+expr_stmt|;
+name|sc
+operator|->
+name|upd7210
+operator|.
+name|reg_offset
+index|[
+name|rid
+index|]
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|sc
