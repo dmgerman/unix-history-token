@@ -1336,6 +1336,17 @@ begin_comment
 comment|/* Thread is exchanging signal under trace */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDB_USERWR
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Debugger modified memory or registers */
+end_comment
+
 begin_comment
 comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
