@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/cavium/octeonreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<mips/cavium/octeon_pcmap_regs.h>
 end_include
 
@@ -659,9 +653,9 @@ name|bas
 operator|.
 name|bst
 argument_list|,
-name|OCTEON_UART0ADR
+name|OCTEON_MIO_UART0
 argument_list|,
-name|OCTEON_UART_SIZE
+name|OCTEON_MIO_UART_SIZE
 argument_list|,
 literal|0
 argument_list|,

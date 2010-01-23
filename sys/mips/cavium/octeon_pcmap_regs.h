@@ -207,16 +207,17 @@ name|OCTEON_SYNCWS
 value|__asm __volatile (".word  0x14f" : : )
 end_define
 
-begin_comment
-comment|//#if defined(__mips_n32) || defined(__mips_n64)
-end_comment
-
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|__not_used
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
 argument_list|)
 end_if
 
@@ -3365,6 +3366,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OCTEON_MIO_UART0
+value|0x8001180000000800ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCTEON_MIO_UART1
+value|0x8001180000000C00ull
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCTEON_MIO_UART0_THR
 value|0x8001180000000840ull
 end_define
@@ -3423,6 +3438,13 @@ define|#
 directive|define
 name|OCTEON_MIO_ADDR_HI24
 value|0x800118
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCTEON_MIO_UART_SIZE
+value|0x400ull
 end_define
 
 begin_comment

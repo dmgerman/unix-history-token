@@ -109,14 +109,10 @@ directive|include
 file|<dev/uart/uart_cpu.h>
 end_include
 
-begin_comment
-comment|/*  * XXXMIPS:  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<mips/cavium/octeonreg.h>
+file|<mips/cavium/octeon_pcmap_regs.h>
 end_include
 
 begin_include
@@ -281,9 +277,6 @@ operator|=
 operator|&
 name|uart_oct16550_class
 expr_stmt|;
-if|#
-directive|if
-literal|1
 comment|/* 	 * We inherit the settings from the systme console.  Note, the bst 	 * bad bus_space_map are bogus here, but obio doesn't yet support 	 * them, it seems. 	 */
 name|sc
 operator|->
@@ -335,9 +328,9 @@ name|sc_bas
 operator|.
 name|bst
 argument_list|,
-name|OCTEON_UART0ADR
+name|OCTEON_MIO_UART0
 argument_list|,
-name|OCTEON_UART_SIZE
+name|OCTEON_MIO_UART_SIZE
 argument_list|,
 literal|0
 argument_list|,
@@ -356,8 +349,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|uart_bus_probe

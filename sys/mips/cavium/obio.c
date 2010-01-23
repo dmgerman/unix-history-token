@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/cavium/octeonreg.h>
+file|<mips/cavium/octeon_pcmap_regs.h>
 end_include
 
 begin_include
@@ -174,7 +174,7 @@ name|sc
 operator|->
 name|oba_addr
 operator|=
-name|OCTEON_UART0ADR
+name|OCTEON_MIO_UART0
 expr_stmt|;
 name|sc
 operator|->
@@ -433,9 +433,9 @@ argument_list|(
 name|child
 argument_list|)
 condition|?
-name|OCTEON_UART1ADR
+name|OCTEON_MIO_UART1
 else|:
-name|OCTEON_UART0ADR
+name|OCTEON_MIO_UART0
 expr_stmt|;
 name|start
 operator|=

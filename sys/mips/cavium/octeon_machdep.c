@@ -206,12 +206,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/cavium/octeonreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/hwfunc.h>
 end_include
 
