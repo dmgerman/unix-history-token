@@ -376,11 +376,24 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DDB
 name|kdb_init
 argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_KDB
+condition|)
+name|kdb_enter
+argument_list|(
+name|KDB_WHY_BOOTFLAGS
+argument_list|,
+literal|"Boot flags requested debugger"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
