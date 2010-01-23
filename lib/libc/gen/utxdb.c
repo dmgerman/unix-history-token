@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -120,11 +126,9 @@ define|#
 directive|define
 name|UTOF_TV
 parameter_list|(
-name|ut
-parameter_list|,
 name|fu
 parameter_list|)
-value|do { \ 	(fu)->fu_tv = htobe64((uint64_t)(ut)->ut_tv.tv_sec * 1000000 +	\ 	    (uint64_t)(ut)->ut_tv.tv_usec);				\ } while (0)
+value|do { \ 	struct timeval tv;						\ 	gettimeofday(&tv, NULL);					\ 	(fu)->fu_tv = htobe64((uint64_t)tv.tv_sec * 1000000 +		\ 	    (uint64_t)tv.tv_usec);					\ } while (0)
 end_define
 
 begin_function
@@ -311,8 +315,6 @@ argument_list|)
 expr_stmt|;
 name|UTOF_TV
 argument_list|(
-name|ut
-argument_list|,
 name|fu
 argument_list|)
 expr_stmt|;

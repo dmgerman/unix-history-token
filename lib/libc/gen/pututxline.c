@@ -491,31 +491,6 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/* 			 * Prevent login sessions from having a negative 			 * timespan. 			 */
-if|if
-condition|(
-name|be64toh
-argument_list|(
-name|fu
-operator|->
-name|fu_tv
-argument_list|)
-operator|<
-name|be64toh
-argument_list|(
-name|fe
-operator|.
-name|fu_tv
-argument_list|)
-condition|)
-name|fu
-operator|->
-name|fu_tv
-operator|=
-name|fe
-operator|.
-name|fu_tv
-expr_stmt|;
 comment|/* Terminate session. */
 name|fseeko
 argument_list|(
@@ -661,26 +636,6 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/* Prevent lowering the time value. */
-if|if
-condition|(
-name|be64toh
-argument_list|(
-name|fu
-operator|->
-name|fu_tv
-argument_list|)
-operator|<=
-name|be64toh
-argument_list|(
-name|fe
-operator|.
-name|fu_tv
-argument_list|)
-condition|)
-goto|goto
-name|done
-goto|;
 comment|/* Found a previous lastlogin entry for this user. */
 name|fseeko
 argument_list|(
@@ -711,8 +666,6 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|done
-label|:
 name|fclose
 argument_list|(
 name|fp
