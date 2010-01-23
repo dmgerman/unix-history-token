@@ -1682,6 +1682,19 @@ if|if
 condition|(
 name|s
 operator|->
+name|state_flags
+operator|&
+name|PFSTATE_SLOPPY
+condition|)
+name|printf
+argument_list|(
+literal|", sloppy"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
 name|src_node
 operator|!=
 name|NULL

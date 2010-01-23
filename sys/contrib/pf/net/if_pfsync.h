@@ -216,7 +216,7 @@ name|u_int8_t
 name|log
 decl_stmt|;
 name|u_int8_t
-name|allow_opts
+name|state_flags
 decl_stmt|;
 name|u_int8_t
 name|timeout
