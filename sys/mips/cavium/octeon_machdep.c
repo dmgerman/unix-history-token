@@ -449,25 +449,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-argument_list|)
-operator|)
-operator|(
-name|long
-operator|)
-literal|0x9fc00000
-operator|)
-operator|(
-operator|)
+name|mips_generic_reset
+argument_list|()
 expr_stmt|;
-comment|/* Jump to MIPS reset vector */
 block|}
 end_function
 
@@ -2907,11 +2891,24 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DDB
 name|kdb_init
 argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_KDB
+condition|)
+name|kdb_enter
+argument_list|(
+name|KDB_WHY_BOOTFLAGS
+argument_list|,
+literal|"Boot flags requested debugger"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
