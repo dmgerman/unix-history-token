@@ -1467,11 +1467,6 @@ name|W
 index|]
 expr_stmt|;
 comment|// Step #2: Calculate the semidominators of all vertices
-name|bool
-name|HasChildOutsideDFS
-init|=
-name|false
-decl_stmt|;
 comment|// initialize the semi dominator to point to the parent node
 name|WInfo
 operator|.
@@ -1530,7 +1525,6 @@ condition|;
 operator|++
 name|CI
 control|)
-block|{
 if|if
 condition|(
 name|DT
@@ -1581,33 +1575,6 @@ operator|=
 name|SemiU
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|// if the child has no DFS number it is not post-dominated by any exit,
-comment|// and so is the current block.
-name|HasChildOutsideDFS
-operator|=
-name|true
-expr_stmt|;
-block|}
-block|}
-comment|// if some child has no DFS number it is not post-dominated by any exit,
-comment|// and so is the current block.
-if|if
-condition|(
-name|DT
-operator|.
-name|isPostDominator
-argument_list|()
-operator|&&
-name|HasChildOutsideDFS
-condition|)
-name|WInfo
-operator|.
-name|Semi
-operator|=
-literal|0
-expr_stmt|;
 name|DT
 operator|.
 name|Info

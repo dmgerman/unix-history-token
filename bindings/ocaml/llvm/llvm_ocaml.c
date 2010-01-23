@@ -300,7 +300,7 @@ comment|/*===-- Modules --------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* string -> llmodule */
+comment|/* llcontext -> string -> llmodule */
 end_comment
 
 begin_function
@@ -308,17 +308,22 @@ name|CAMLprim
 name|LLVMModuleRef
 name|llvm_create_module
 parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
 name|value
 name|ModuleID
 parameter_list|)
 block|{
 return|return
-name|LLVMModuleCreateWithName
+name|LLVMModuleCreateWithNameInContext
 argument_list|(
 name|String_val
 argument_list|(
 name|ModuleID
 argument_list|)
+argument_list|,
+name|C
 argument_list|)
 return|;
 block|}

@@ -2225,7 +2225,7 @@ name|DIDescriptor
 argument_list|(
 argument|N
 argument_list|)
-block|{ ; }
+block|{ }
 name|unsigned
 name|getLineNumber
 argument_list|()
@@ -2597,7 +2597,7 @@ argument|DICompileUnit CompileUnit
 argument_list|,
 argument|unsigned LineNo
 argument_list|,
-argument|DIType Type
+argument|DIType Ty
 argument_list|,
 argument|bool isLocalToUnit
 argument_list|,
@@ -2638,7 +2638,7 @@ argument|DICompileUnit CompileUnit
 argument_list|,
 argument|unsigned LineNo
 argument_list|,
-argument|DIType Type
+argument|DIType Ty
 argument_list|,
 argument|bool isLocalToUnit
 argument_list|,
@@ -2661,7 +2661,7 @@ argument|DICompileUnit CompileUnit
 argument_list|,
 argument|unsigned LineNo
 argument_list|,
-argument|DIType Type
+argument|DIType Ty
 argument_list|)
 block|;
 comment|/// CreateComplexVariable - Create a new descriptor for the specified
@@ -2679,7 +2679,7 @@ argument|DICompileUnit CompileUnit
 argument_list|,
 argument|unsigned LineNo
 argument_list|,
-argument|DIType Type
+argument|DIType Ty
 argument_list|,
 argument|SmallVector<Value *
 argument_list|,
@@ -2797,29 +2797,6 @@ argument_list|(
 argument|unsigned TAG
 argument_list|)
 block|;   }
-block|;
-comment|/// Finds the dbg.declare intrinsic corresponding to this value if any.
-comment|/// It looks through pointer casts too.
-specifier|const
-name|DbgDeclareInst
-operator|*
-name|findDbgDeclare
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|V
-argument_list|)
-block|;
-comment|/// Find the debug info descriptor corresponding to this global variable.
-name|Value
-operator|*
-name|findDbgGlobalDeclare
-argument_list|(
-name|GlobalVariable
-operator|*
-name|V
-argument_list|)
 block|;
 name|bool
 name|getLocationInfo

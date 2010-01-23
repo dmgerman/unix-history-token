@@ -560,6 +560,21 @@ label|:
 end_label
 
 begin_comment
+comment|/// ClusterNeighboringLoads - Cluster loads from "near" addresses into
+end_comment
+
+begin_comment
+comment|/// combined SUnits.
+end_comment
+
+begin_function_decl
+name|void
+name|ClusterNeighboringLoads
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// BuildSchedUnits, AddSchedEdges - Helper functions for BuildSchedGraph.
 end_comment
 

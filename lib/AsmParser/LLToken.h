@@ -258,8 +258,6 @@ name|kw_readnone
 block|,
 name|kw_readonly
 block|,
-name|kw_inlinehint
-block|,
 name|kw_noinline
 block|,
 name|kw_alwaysinline

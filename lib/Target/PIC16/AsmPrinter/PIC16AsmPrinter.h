@@ -394,11 +394,11 @@ operator|&
 name|M
 argument_list|)
 block|;
-comment|/// PrintGlobalVariable - Emit the specified global variable and its
+comment|/// EmitGlobalVariable - Emit the specified global variable and its
 comment|/// initializer to the output stream.
 name|virtual
 name|void
-name|PrintGlobalVariable
+name|EmitGlobalVariable
 argument_list|(
 argument|const GlobalVariable *GV
 argument_list|)

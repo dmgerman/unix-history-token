@@ -118,9 +118,6 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
-name|MetadataBase
-decl_stmt|;
-name|class
 name|MDString
 decl_stmt|;
 name|class

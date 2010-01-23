@@ -97,9 +97,6 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
-name|class
-name|DbgInfoIntrinsic
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -351,27 +348,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// OnlyUsedByDbgIntrinsics - Return true if the instruction I is only used
-comment|/// by DbgIntrinsics. If DbgInUses is specified then the vector is filled
-comment|/// with DbgInfoIntrinsic that use the instruction I.
-name|bool
-name|OnlyUsedByDbgInfoIntrinsics
-argument_list|(
-name|Instruction
-operator|*
-name|I
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|DbgInfoIntrinsic
-operator|*
-operator|>
-operator|*
-name|DbgInUses
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
 block|}
 end_decl_stmt
 

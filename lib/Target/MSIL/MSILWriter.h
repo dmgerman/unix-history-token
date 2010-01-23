@@ -143,12 +143,6 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Mangler.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -351,10 +345,6 @@ specifier|const
 name|TargetData
 operator|*
 name|TD
-block|;
-name|Mangler
-operator|*
-name|Mang
 block|;
 name|LoopInfo
 operator|*

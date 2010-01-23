@@ -85,6 +85,9 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// MCValue - This represents an "assembler immediate".  In its most general

@@ -969,6 +969,14 @@ operator|~
 name|PMDataManager
 argument_list|()
 expr_stmt|;
+name|virtual
+name|Pass
+modifier|*
+name|getAsPass
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 comment|/// Augment AvailableAnalysis by adding analysis made available by pass P.
 name|void
 name|recordAvailableAnalysis
@@ -1556,6 +1564,26 @@ modifier|&
 name|M
 parameter_list|)
 function_decl|;
+name|virtual
+name|PMDataManager
+modifier|*
+name|getAsPMDataManager
+parameter_list|()
+block|{
+return|return
+name|this
+return|;
+block|}
+name|virtual
+name|Pass
+modifier|*
+name|getAsPass
+parameter_list|()
+block|{
+return|return
+name|this
+return|;
+block|}
 comment|/// Pass Manager itself does not invalidate any analysis info.
 name|void
 name|getAnalysisUsage

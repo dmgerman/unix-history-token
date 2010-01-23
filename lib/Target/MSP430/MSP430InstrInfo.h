@@ -78,6 +78,56 @@ block|{
 name|class
 name|MSP430TargetMachine
 decl_stmt|;
+comment|/// MSP430II - This namespace holds all of the target specific flags that
+comment|/// instruction info tracks.
+comment|///
+name|namespace
+name|MSP430II
+block|{
+enum|enum
+block|{
+name|SizeShift
+init|=
+literal|2
+block|,
+name|SizeMask
+init|=
+literal|7
+operator|<<
+name|SizeShift
+block|,
+name|SizeUnknown
+init|=
+literal|0
+operator|<<
+name|SizeShift
+block|,
+name|SizeSpecial
+init|=
+literal|1
+operator|<<
+name|SizeShift
+block|,
+name|Size2Bytes
+init|=
+literal|2
+operator|<<
+name|SizeShift
+block|,
+name|Size4Bytes
+init|=
+literal|3
+operator|<<
+name|SizeShift
+block|,
+name|Size6Bytes
+init|=
+literal|4
+operator|<<
+name|SizeShift
+block|}
+enum|;
+block|}
 name|class
 name|MSP430InstrInfo
 range|:
@@ -205,6 +255,13 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|const std::vector<CalleeSavedInfo>&CSI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|GetInstSizeInBytes
+argument_list|(
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;

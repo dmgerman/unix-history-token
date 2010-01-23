@@ -250,12 +250,6 @@ init|=
 literal|1
 operator|<<
 literal|24
-block|,
-name|LLVMInlineHintAttribute
-init|=
-literal|1
-operator|<<
-literal|25
 block|}
 name|LLVMAttribute
 typedef|;
@@ -4479,7 +4473,7 @@ parameter_list|,
 name|ref
 parameter_list|)
 define|\
-value|DEFINE_SIMPLE_CONVERSION_FUNCTIONS(ty, ref)         \                                                         \     template<typename T>                                \     inline T *unwrap(ref P) {                           \       T *Q = dynamic_cast<T*>(unwrap(P));               \       assert(Q&& "Invalid cast!");                     \       return Q;                                         \     }
+value|DEFINE_SIMPLE_CONVERSION_FUNCTIONS(ty, ref)         \                                                         \     template<typename T>                                \     inline T *unwrap(ref P) {                           \       T *Q = (T*)unwrap(P);                             \       assert(Q&& "Invalid cast!");                     \       return Q;                                         \     }
 name|DEFINE_ISA_CONVERSION_FUNCTIONS
 argument_list|(
 argument|Type

@@ -93,7 +93,7 @@ comment|///
 comment|/// Clients should create an instance of this class when rewriting is needed,
 comment|/// and destroy it when finished to allow the release of the associated
 comment|/// memory.
-name|struct
+name|class
 name|SCEVExpander
 range|:
 name|public
@@ -105,10 +105,14 @@ name|Value
 modifier|*
 decl|>
 block|{
+name|public
+label|:
 name|ScalarEvolution
 modifier|&
 name|SE
 decl_stmt|;
+name|private
+label|:
 name|std
 operator|::
 name|map
@@ -141,6 +145,39 @@ operator|*
 operator|>
 name|InsertedValues
 expr_stmt|;
+comment|/// PostIncLoop - When non-null, expanded addrecs referring to the given
+comment|/// loop expanded in post-inc mode. For example, expanding {1,+,1}<L> in
+comment|/// post-inc mode returns the add instruction that adds one to the phi
+comment|/// for {0,+,1}<L>, as opposed to a new phi starting at 1. This is only
+comment|/// supported in non-canonical mode.
+specifier|const
+name|Loop
+modifier|*
+name|PostIncLoop
+decl_stmt|;
+comment|/// IVIncInsertPos - When this is non-null, addrecs expanded in the
+comment|/// loop it indicates should be inserted with increments at
+comment|/// IVIncInsertPos.
+specifier|const
+name|Loop
+modifier|*
+name|IVIncInsertLoop
+decl_stmt|;
+comment|/// IVIncInsertPos - When expanding addrecs in the IVIncInsertLoop loop,
+comment|/// insert the IV increment at this position.
+name|Instruction
+modifier|*
+name|IVIncInsertPos
+decl_stmt|;
+comment|/// CanonicalMode - When true, expressions are expanded in "canonical"
+comment|/// form. In particular, addrecs are expanded as arithmetic based on
+comment|/// a canonical induction variable. When false, expression are expanded
+comment|/// in a more literal form.
+name|bool
+name|CanonicalMode
+decl_stmt|;
+name|protected
+label|:
 typedef|typedef
 name|IRBuilder
 operator|<
@@ -165,6 +202,7 @@ operator|>
 expr_stmt|;
 name|public
 label|:
+comment|/// SCEVExpander - Construct a SCEVExpander in "canonical" mode.
 name|explicit
 name|SCEVExpander
 argument_list|(
@@ -176,6 +214,21 @@ operator|:
 name|SE
 argument_list|(
 name|se
+argument_list|)
+operator|,
+name|PostIncLoop
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|IVIncInsertLoop
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|CanonicalMode
+argument_list|(
+name|true
 argument_list|)
 operator|,
 name|Builder
@@ -235,9 +288,26 @@ name|Ty
 parameter_list|,
 name|Instruction
 modifier|*
-name|IP
+name|I
 parameter_list|)
 block|{
+name|BasicBlock
+operator|::
+name|iterator
+name|IP
+operator|=
+name|I
+expr_stmt|;
+while|while
+condition|(
+name|isInsertedInstruction
+argument_list|(
+name|IP
+argument_list|)
+condition|)
+operator|++
+name|IP
+expr_stmt|;
 name|Builder
 operator|.
 name|SetInsertPoint
@@ -258,6 +328,75 @@ argument_list|,
 name|Ty
 argument_list|)
 return|;
+block|}
+comment|/// setIVIncInsertPos - Set the current IV increment loop and position.
+name|void
+name|setIVIncInsertPos
+parameter_list|(
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+name|Instruction
+modifier|*
+name|Pos
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|CanonicalMode
+operator|&&
+literal|"IV increment positions are not supported in CanonicalMode"
+argument_list|)
+expr_stmt|;
+name|IVIncInsertLoop
+operator|=
+name|L
+expr_stmt|;
+name|IVIncInsertPos
+operator|=
+name|Pos
+expr_stmt|;
+block|}
+comment|/// setPostInc - If L is non-null, enable post-inc expansion for addrecs
+comment|/// referring to the given loop. If L is null, disable post-inc expansion
+comment|/// completely. Post-inc expansion is only supported in non-canonical
+comment|/// mode.
+name|void
+name|setPostInc
+parameter_list|(
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|CanonicalMode
+operator|&&
+literal|"Post-inc expansion is not supported in CanonicalMode"
+argument_list|)
+expr_stmt|;
+name|PostIncLoop
+operator|=
+name|L
+expr_stmt|;
+block|}
+comment|/// disableCanonicalMode - Disable the behavior of expanding expressions in
+comment|/// canonical form rather than in a more literal form. Non-canonical mode
+comment|/// is useful for late optimization passes.
+name|void
+name|disableCanonicalMode
+parameter_list|()
+block|{
+name|CanonicalMode
+operator|=
+name|false
+expr_stmt|;
 block|}
 name|private
 label|:
@@ -542,6 +681,61 @@ name|getValue
 argument_list|()
 return|;
 block|}
+name|void
+name|rememberInstruction
+parameter_list|(
+name|Value
+modifier|*
+name|I
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|PostIncLoop
+condition|)
+name|InsertedValues
+operator|.
+name|insert
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
+block|}
+name|Value
+modifier|*
+name|expandAddRecExprLiterally
+parameter_list|(
+specifier|const
+name|SCEVAddRecExpr
+modifier|*
+parameter_list|)
+function_decl|;
+name|PHINode
+modifier|*
+name|getAddRecExprPHILiterally
+parameter_list|(
+specifier|const
+name|SCEVAddRecExpr
+modifier|*
+name|Normalized
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+specifier|const
+name|Type
+modifier|*
+name|ExpandTy
+parameter_list|,
+specifier|const
+name|Type
+modifier|*
+name|IntTy
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

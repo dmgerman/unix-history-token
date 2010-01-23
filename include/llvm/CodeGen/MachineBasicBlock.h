@@ -1489,6 +1489,18 @@ name|bool
 name|isCond
 parameter_list|)
 function_decl|;
+comment|/// findDebugLoc - find the next valid DebugLoc starting at MBBI, skipping
+comment|/// any DEBUG_VALUE instructions.  Return UnknownLoc if there is none.
+name|DebugLoc
+name|findDebugLoc
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+operator|&
+name|MBBI
+argument_list|)
+decl_stmt|;
 comment|// Debugging methods.
 name|void
 name|dump

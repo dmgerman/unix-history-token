@@ -82,12 +82,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -103,13 +97,16 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|StringRef
-decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// AnalysisUsage - Represent the analysis usage information of a pass.  This
 comment|// tracks analyses that the pass REQUIRES (must be available when the pass
@@ -719,13 +716,10 @@ condition|)
 return|return
 literal|0
 return|;
-return|return
-name|dynamic_cast
-operator|<
-name|AnalysisType
+name|Pass
 operator|*
-operator|>
-operator|(
+name|ResultPass
+operator|=
 name|Resolver
 operator|->
 name|getAnalysisIfAvailable
@@ -734,7 +728,31 @@ name|PI
 argument_list|,
 name|true
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ResultPass
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+comment|// Because the AnalysisType may not be a subclass of pass (for
+comment|// AnalysisGroups), we use getAdjustedAnalysisPointer here to potentially
+comment|// adjust the return pointer (because the class may multiply inherit, once
+comment|// from pass, once from AnalysisType).
+return|return
+operator|(
+name|AnalysisType
+operator|*
 operator|)
+name|ResultPass
+operator|->
+name|getAdjustedAnalysisPointer
+argument_list|(
+name|PI
+argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -846,33 +864,21 @@ literal|"'required' by pass!"
 argument_list|)
 block|;
 comment|// Because the AnalysisType may not be a subclass of pass (for
-comment|// AnalysisGroups), we must use dynamic_cast here to potentially adjust the
-comment|// return pointer (because the class may multiply inherit, once from pass,
-comment|// once from AnalysisType).
-comment|//
-name|AnalysisType
-operator|*
-name|Result
-operator|=
-name|dynamic_cast
-operator|<
-name|AnalysisType
-operator|*
-operator|>
-operator|(
-name|ResultPass
-operator|)
-block|;
-name|assert
-argument_list|(
-name|Result
-operator|&&
-literal|"Pass does not implement interface required!"
-argument_list|)
-block|;
+comment|// AnalysisGroups), we use getAdjustedAnalysisPointer here to potentially
+comment|// adjust the return pointer (because the class may multiply inherit, once
+comment|// from pass, once from AnalysisType).
 return|return
 operator|*
-name|Result
+operator|(
+name|AnalysisType
+operator|*
+operator|)
+name|ResultPass
+operator|->
+name|getAdjustedAnalysisPointer
+argument_list|(
+name|PI
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -991,33 +997,21 @@ literal|"Unable to find requested analysis info"
 argument_list|)
 block|;
 comment|// Because the AnalysisType may not be a subclass of pass (for
-comment|// AnalysisGroups), we must use dynamic_cast here to potentially adjust the
-comment|// return pointer (because the class may multiply inherit, once from pass,
-comment|// once from AnalysisType).
-comment|//
-name|AnalysisType
-operator|*
-name|Result
-operator|=
-name|dynamic_cast
-operator|<
-name|AnalysisType
-operator|*
-operator|>
-operator|(
-name|ResultPass
-operator|)
-block|;
-name|assert
-argument_list|(
-name|Result
-operator|&&
-literal|"Pass does not implement interface required!"
-argument_list|)
-block|;
+comment|// AnalysisGroups), we use getAdjustedAnalysisPointer here to potentially
+comment|// adjust the return pointer (because the class may multiply inherit, once
+comment|// from pass, once from AnalysisType).
 return|return
 operator|*
-name|Result
+operator|(
+name|AnalysisType
+operator|*
+operator|)
+name|ResultPass
+operator|->
+name|getAdjustedAnalysisPointer
+argument_list|(
+name|PI
+argument_list|)
 return|;
 block|}
 end_expr_stmt

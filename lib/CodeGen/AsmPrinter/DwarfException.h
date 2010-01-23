@@ -118,15 +118,15 @@ name|class
 name|DwarfException
 range|:
 name|public
-name|Dwarf
+name|DwarfPrinter
 block|{   struct
 name|FunctionEHFrameInfo
 block|{
-name|std
-operator|::
-name|string
-name|FnName
+name|MCSymbol
+operator|*
+name|FunctionEHSym
 block|;
+comment|// L_foo.eh
 name|unsigned
 name|Number
 block|;
@@ -154,7 +154,7 @@ name|function
 block|;
 name|FunctionEHFrameInfo
 argument_list|(
-argument|const std::string&FN
+argument|MCSymbol *EHSym
 argument_list|,
 argument|unsigned Num
 argument_list|,
@@ -169,9 +169,9 @@ argument_list|,
 argument|const Function *f
 argument_list|)
 operator|:
-name|FnName
+name|FunctionEHSym
 argument_list|(
-name|FN
+name|EHSym
 argument_list|)
 block|,
 name|Number

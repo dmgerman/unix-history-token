@@ -311,6 +311,25 @@ return|return
 name|PassID
 return|;
 block|}
+comment|/// Return true if this PassID implements the specified ID pointer.
+name|bool
+name|isPassID
+argument_list|(
+name|void
+operator|*
+name|IDPtr
+argument_list|)
+decl|const
+block|{
+return|return
+name|PassID
+operator|==
+operator|(
+name|intptr_t
+operator|)
+name|IDPtr
+return|;
+block|}
 comment|/// isAnalysisGroup - Return true if this is an analysis group, not a normal
 comment|/// pass.
 comment|///

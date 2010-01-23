@@ -170,17 +170,26 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+name|virtual
+operator|~
+name|PassNameParser
+argument_list|()
+expr_stmt|;
 name|void
 name|initialize
 argument_list|(
-argument|cl::Option&O
+name|cl
+operator|::
+name|Option
+operator|&
+name|O
 argument_list|)
 block|{
 name|Opt
 operator|=
 operator|&
 name|O
-block|;
+expr_stmt|;
 name|cl
 operator|::
 name|parser
@@ -194,11 +203,12 @@ name|initialize
 argument_list|(
 name|O
 argument_list|)
-block|;
+expr_stmt|;
 comment|// Add all of the passes to the map that got initialized before 'this' did.
 name|enumeratePasses
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
 comment|// ignorablePassImpl - Can be overriden in subclasses to refine the list of
 comment|// which passes we want to include.
 comment|//
@@ -206,9 +216,12 @@ name|virtual
 name|bool
 name|ignorablePassImpl
 argument_list|(
-argument|const PassInfo *P
-argument_list|)
 specifier|const
+name|PassInfo
+operator|*
+name|P
+argument_list|)
+decl|const
 block|{
 return|return
 name|false

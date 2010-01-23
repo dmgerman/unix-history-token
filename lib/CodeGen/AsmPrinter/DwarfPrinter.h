@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/Support/FormattedStream.h"
 end_include
 
 begin_include
@@ -115,7 +115,13 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
-name|Dwarf
+name|MCSymbol
+decl_stmt|;
+name|class
+name|Twine
+decl_stmt|;
+name|class
+name|DwarfPrinter
 block|{
 name|protected
 label|:
@@ -123,64 +129,54 @@ comment|//===-------------------------------------------------------------==---=
 comment|// Core attributes used by the DWARF printer.
 comment|//
 comment|/// O - Stream to .s file.
-comment|///
 name|raw_ostream
 modifier|&
 name|O
 decl_stmt|;
 comment|/// Asm - Target of Dwarf emission.
-comment|///
 name|AsmPrinter
 modifier|*
 name|Asm
 decl_stmt|;
 comment|/// MAI - Target asm information.
-comment|///
 specifier|const
 name|MCAsmInfo
 modifier|*
 name|MAI
 decl_stmt|;
 comment|/// TD - Target data.
-comment|///
 specifier|const
 name|TargetData
 modifier|*
 name|TD
 decl_stmt|;
 comment|/// RI - Register Information.
-comment|///
 specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|RI
 decl_stmt|;
 comment|/// M - Current module.
-comment|///
 name|Module
 modifier|*
 name|M
 decl_stmt|;
 comment|/// MF - Current machine function.
-comment|///
 name|MachineFunction
 modifier|*
 name|MF
 decl_stmt|;
 comment|/// MMI - Collected machine module information.
-comment|///
 name|MachineModuleInfo
 modifier|*
 name|MMI
 decl_stmt|;
 comment|/// SubprogramCount - The running count of functions being compiled.
-comment|///
 name|unsigned
 name|SubprogramCount
 decl_stmt|;
 comment|/// Flavor - A unique string indicating what dwarf producer this is, used to
 comment|/// unique labels.
-comment|///
 specifier|const
 name|char
 modifier|*
@@ -188,11 +184,10 @@ specifier|const
 name|Flavor
 decl_stmt|;
 comment|/// SetCounter - A unique number for each '.set' directive.
-comment|///
 name|unsigned
 name|SetCounter
 decl_stmt|;
-name|Dwarf
+name|DwarfPrinter
 argument_list|(
 name|raw_ostream
 operator|&
@@ -273,6 +268,72 @@ name|bool
 name|isInSection
 operator|=
 name|false
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// EOL - Print a newline character to asm stream.  If a comment is present
+comment|/// then it will be printed first.  Comments should not contain '\n'.
+name|void
+name|EOL
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|Comment
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// EmitEncodingByte - Emit a .byte 42 directive that corresponds to an
+comment|/// encoding.  If verbose assembly output is enabled, we output comments
+comment|/// describing the encoding.  Desc is a string saying what the encoding is
+comment|/// specifying (e.g. "LSDA").
+name|void
+name|EmitEncodingByte
+parameter_list|(
+name|unsigned
+name|Val
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Desc
+parameter_list|)
+function_decl|;
+comment|/// EmitCFAByte - Emit a .byte 42 directive for a DW_CFA_xxx value.
+name|void
+name|EmitCFAByte
+parameter_list|(
+name|unsigned
+name|Val
+parameter_list|)
+function_decl|;
+comment|/// EmitSLEB128 - emit the specified signed leb128 value.
+name|void
+name|EmitSLEB128
+argument_list|(
+name|int
+name|Value
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Desc
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// EmitULEB128 - emit the specified unsigned leb128 value.
+name|void
+name|EmitULEB128
+argument_list|(
+name|unsigned
+name|Value
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Desc
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -444,6 +505,26 @@ operator|::
 name|string
 operator|&
 name|Name
+argument_list|,
+name|bool
+name|IsPCRelative
+operator|=
+name|false
+argument_list|,
+name|bool
+name|Force32Bit
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|EmitReference
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
 argument_list|,
 name|bool
 name|IsPCRelative

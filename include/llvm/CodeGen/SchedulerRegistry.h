@@ -304,6 +304,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// createBURRListDAGScheduler - This creates a bottom up register usage
+end_comment
+
+begin_comment
+comment|/// reduction list scheduler that schedules in source code order when possible.
+end_comment
+
+begin_decl_stmt
+name|ScheduleDAGSDNodes
+modifier|*
+name|createSourceListDAGScheduler
+argument_list|(
+name|SelectionDAGISel
+operator|*
+name|IS
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// createTDListDAGScheduler - This creates a top-down list scheduler with
 end_comment
 

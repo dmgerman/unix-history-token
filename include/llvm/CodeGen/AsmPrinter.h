@@ -174,6 +174,9 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|DwarfWriter
 decl_stmt|;
 name|class
@@ -184,6 +187,9 @@ name|MCAsmInfo
 decl_stmt|;
 name|class
 name|TargetLoweringObjectFile
+decl_stmt|;
+name|class
+name|Twine
 decl_stmt|;
 name|class
 name|Type
@@ -327,14 +333,13 @@ name|Mangler
 modifier|*
 name|Mang
 decl_stmt|;
-comment|/// Cache of mangled name for current function. This is recalculated at the
+comment|/// The symbol for the current function. This is recalculated at the
 comment|/// beginning of each call to runOnMachineFunction().
 comment|///
-name|std
-operator|::
-name|string
-name|CurrentFnName
-expr_stmt|;
+name|MCSymbol
+modifier|*
+name|CurrentFnSym
+decl_stmt|;
 comment|/// getCurrentSection() - Return the current section we are emitting to.
 specifier|const
 name|MCSection
@@ -368,7 +373,9 @@ name|Counter
 decl_stmt|;
 comment|// Private state for processDebugLoc()
 name|mutable
-name|DebugLocTuple
+specifier|const
+name|MDNode
+modifier|*
 name|PrevDLT
 decl_stmt|;
 name|protected
@@ -548,20 +555,6 @@ modifier|*
 name|ExtraCode
 parameter_list|)
 function_decl|;
-comment|/// PrintGlobalVariable - Emit the specified global variable and its
-comment|/// initializer to the output stream.
-name|virtual
-name|void
-name|PrintGlobalVariable
-parameter_list|(
-specifier|const
-name|GlobalVariable
-modifier|*
-name|GV
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 comment|/// SetupMachineFunction - This should be called when a new MachineFunction
 comment|/// is being processed from runOnMachineFunction.
 name|void
@@ -611,6 +604,17 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
+comment|/// EmitGlobalVariable - Emit the specified global variable to the .s file.
+name|virtual
+name|void
+name|EmitGlobalVariable
+parameter_list|(
+specifier|const
+name|GlobalVariable
+modifier|*
+name|GV
+parameter_list|)
+function_decl|;
 comment|/// EmitSpecialLLVMGlobal - Check to see if the specified global is a
 comment|/// special global used by LLVM.  If so, emit it and return true, otherwise
 comment|/// do nothing and return false.
@@ -626,102 +630,8 @@ function_decl|;
 name|public
 label|:
 comment|//===------------------------------------------------------------------===//
-comment|/// LEB 128 number encoding.
-comment|/// PrintULEB128 - Print a series of hexidecimal values(separated by commas)
-comment|/// representing an unsigned leb128 value.
-name|void
-name|PrintULEB128
-argument_list|(
-name|unsigned
-name|Value
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// PrintSLEB128 - Print a series of hexidecimal values(separated by commas)
-comment|/// representing a signed leb128 value.
-name|void
-name|PrintSLEB128
-argument_list|(
-name|int
-name|Value
-argument_list|)
-decl|const
-decl_stmt|;
-comment|//===------------------------------------------------------------------===//
 comment|// Emission and print routines
 comment|//
-comment|/// PrintHex - Print a value as a hexidecimal value.
-comment|///
-name|void
-name|PrintHex
-argument_list|(
-name|int
-name|Value
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// EOL - Print a newline character to asm stream.  If a comment is present
-comment|/// then it will be printed first.  Comments should not contain '\n'.
-name|void
-name|EOL
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|EOL
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Comment
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|EOL
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|Comment
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|EOL
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|Comment
-argument_list|,
-name|unsigned
-name|Encoding
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// EmitULEB128Bytes - Emit an assembler byte data directive to compose an
-comment|/// unsigned leb128 value.
-name|void
-name|EmitULEB128Bytes
-argument_list|(
-name|unsigned
-name|Value
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// EmitSLEB128Bytes - print an assembler byte data directive to compose a
-comment|/// signed leb128 value.
-name|void
-name|EmitSLEB128Bytes
-argument_list|(
-name|int
-name|Value
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// EmitInt8 - Emit a byte directive and value.
 comment|///
 name|void
@@ -762,31 +672,6 @@ name|Value
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// EmitString - Emit a string with quotes and a null terminator.
-comment|/// Special characters are emitted properly.
-comment|/// @verbatim (Eg. '\t') @endverbatim
-name|void
-name|EmitString
-argument_list|(
-specifier|const
-name|StringRef
-name|String
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|EmitString
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|String
-argument_list|,
-name|unsigned
-name|Size
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// EmitFile - Emit a .file directive.
 name|void
 name|EmitFile
@@ -794,11 +679,7 @@ argument_list|(
 name|unsigned
 name|Number
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|Name
 argument_list|)
 decl|const
@@ -888,14 +769,49 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// EmitComments - Pretty-print comments for basic blocks
-name|void
-name|EmitComments
+comment|/// GetGlobalValueSymbol - Return the MCSymbol for the specified global
+comment|/// value.
+name|MCSymbol
+modifier|*
+name|GetGlobalValueSymbol
 argument_list|(
 specifier|const
-name|MachineBasicBlock
-operator|&
-name|MBB
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// GetSymbolWithGlobalValueBase - Return the MCSymbol for a symbol with
+comment|/// global value name as its base, with the specified suffix, and where the
+comment|/// symbol is forced to have private linkage if ForcePrivate is true.
+name|MCSymbol
+modifier|*
+name|GetSymbolWithGlobalValueBase
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|StringRef
+name|Suffix
+argument_list|,
+name|bool
+name|ForcePrivate
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// GetExternalSymbolSymbol - Return the MCSymbol for the specified
+comment|/// ExternalSymbol.
+name|MCSymbol
+modifier|*
+name|GetExternalSymbolSymbol
+argument_list|(
+name|StringRef
+name|Sym
 argument_list|)
 decl|const
 decl_stmt|;
@@ -907,6 +823,31 @@ name|GetMBBSymbol
 argument_list|(
 name|unsigned
 name|MBBID
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// GetCPISymbol - Return the symbol for the specified constant pool entry.
+name|MCSymbol
+modifier|*
+name|GetCPISymbol
+argument_list|(
+name|unsigned
+name|CPID
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// GetJTISymbol - Return the symbol for the specified jump table entry.
+name|MCSymbol
+modifier|*
+name|GetJTISymbol
+argument_list|(
+name|unsigned
+name|JTID
+argument_list|,
+name|bool
+name|isLinkerPrivate
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -966,47 +907,7 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
-name|protected
-label|:
-comment|/// EmitZeros - Emit a block of zeros.
-comment|///
-name|void
-name|EmitZeros
-argument_list|(
-name|uint64_t
-name|NumZeros
-argument_list|,
-name|unsigned
-name|AddrSpace
-operator|=
-literal|0
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// EmitString - Emit a zero-byte-terminated string constant.
-comment|///
-name|virtual
-name|void
-name|EmitString
-argument_list|(
-specifier|const
-name|ConstantArray
-operator|*
-name|CVA
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// EmitConstantValueOnly - Print out the specified constant, without a
-comment|/// storage class.  Only constants of first-class type are allowed here.
-name|void
-name|EmitConstantValueOnly
-parameter_list|(
-specifier|const
-name|Constant
-modifier|*
-name|CV
-parameter_list|)
-function_decl|;
+comment|// Data emission.
 comment|/// EmitGlobalConstant - Print a general LLVM constant to the .s file.
 name|void
 name|EmitGlobalConstant
@@ -1022,6 +923,8 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+name|protected
+label|:
 name|virtual
 name|void
 name|EmitMachineConstantPoolValue
@@ -1132,33 +1035,14 @@ name|uid
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// printDataDirective - This method prints the asm directive for the
-comment|/// specified type.
-name|void
-name|printDataDirective
-parameter_list|(
-specifier|const
-name|Type
-modifier|*
-name|type
-parameter_list|,
-name|unsigned
-name|AddrSpace
-init|=
-literal|0
-parameter_list|)
-function_decl|;
 comment|/// printVisibility - This prints visibility information about symbol, if
 comment|/// this is suported by the target.
 name|void
 name|printVisibility
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+name|MCSymbol
+operator|*
+name|Sym
 argument_list|,
 name|unsigned
 name|Visibility
@@ -1190,63 +1074,6 @@ parameter_list|(
 name|Constant
 modifier|*
 name|List
-parameter_list|)
-function_decl|;
-name|void
-name|EmitGlobalConstantStruct
-parameter_list|(
-specifier|const
-name|ConstantStruct
-modifier|*
-name|CVS
-parameter_list|,
-name|unsigned
-name|AddrSpace
-parameter_list|)
-function_decl|;
-name|void
-name|EmitGlobalConstantArray
-parameter_list|(
-specifier|const
-name|ConstantArray
-modifier|*
-name|CVA
-parameter_list|,
-name|unsigned
-name|AddrSpace
-parameter_list|)
-function_decl|;
-name|void
-name|EmitGlobalConstantVector
-parameter_list|(
-specifier|const
-name|ConstantVector
-modifier|*
-name|CP
-parameter_list|)
-function_decl|;
-name|void
-name|EmitGlobalConstantFP
-parameter_list|(
-specifier|const
-name|ConstantFP
-modifier|*
-name|CFP
-parameter_list|,
-name|unsigned
-name|AddrSpace
-parameter_list|)
-function_decl|;
-name|void
-name|EmitGlobalConstantLargeInt
-parameter_list|(
-specifier|const
-name|ConstantInt
-modifier|*
-name|CI
-parameter_list|,
-name|unsigned
-name|AddrSpace
 parameter_list|)
 function_decl|;
 name|GCMetadataPrinter

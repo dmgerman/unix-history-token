@@ -959,6 +959,16 @@ block|;
 specifier|const
 name|MCSection
 operator|*
+name|DataCommonSection
+block|;
+specifier|const
+name|MCSection
+operator|*
+name|DataBSSSection
+block|;
+specifier|const
+name|MCSection
+operator|*
 name|FourByteConstantSection
 block|;
 specifier|const

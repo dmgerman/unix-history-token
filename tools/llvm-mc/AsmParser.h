@@ -115,6 +115,9 @@ name|class
 name|AsmCond
 decl_stmt|;
 name|class
+name|AsmToken
+decl_stmt|;
+name|class
 name|MCContext
 decl_stmt|;
 name|class
@@ -131,6 +134,9 @@ name|MCAsmInfo
 decl_stmt|;
 name|class
 name|MCValue
+decl_stmt|;
+name|class
+name|SourceMgr
 decl_stmt|;
 name|class
 name|TargetAsmParser
@@ -157,9 +163,18 @@ name|MCStreamer
 operator|&
 name|Out
 block|;
+name|SourceMgr
+operator|&
+name|SrcMgr
+block|;
 name|TargetAsmParser
 operator|*
 name|TargetParser
+block|;
+comment|/// This is the current buffer index we're lexing from as managed by the
+comment|/// SourceMgr object.
+name|int
+name|CurBuffer
 block|;
 name|AsmCond
 name|TheCondState
@@ -318,7 +333,12 @@ argument_list|,
 argument|const Twine&Msg
 argument_list|)
 block|;
-name|virtual
+specifier|const
+name|AsmToken
+operator|&
+name|Lex
+argument_list|()
+block|;
 name|bool
 name|ParseExpression
 argument_list|(
@@ -331,6 +351,21 @@ argument_list|)
 block|;
 name|virtual
 name|bool
+name|ParseExpression
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+operator|&
+name|Res
+argument_list|,
+name|SMLoc
+operator|&
+name|EndLoc
+argument_list|)
+block|;
+name|virtual
+name|bool
 name|ParseParenExpression
 argument_list|(
 specifier|const
@@ -338,6 +373,10 @@ name|MCExpr
 operator|*
 operator|&
 name|Res
+argument_list|,
+name|SMLoc
+operator|&
+name|EndLoc
 argument_list|)
 block|;
 name|virtual
@@ -390,6 +429,29 @@ operator|*
 name|Msg
 argument_list|)
 block|;
+name|void
+name|PrintMessage
+argument_list|(
+argument|SMLoc Loc
+argument_list|,
+argument|const std::string&Msg
+argument_list|,
+argument|const char *Type
+argument_list|)
+specifier|const
+block|;
+comment|/// EnterIncludeFile - Enter the specified file. This returns true on failure.
+name|bool
+name|EnterIncludeFile
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Filename
+argument_list|)
+block|;
 name|bool
 name|ParseConditionalAssemblyDirectives
 argument_list|(
@@ -419,6 +481,10 @@ name|MCExpr
 operator|*
 operator|&
 name|Res
+argument_list|,
+name|SMLoc
+operator|&
+name|EndLoc
 argument_list|)
 block|;
 name|bool
@@ -427,6 +493,8 @@ argument_list|(
 argument|unsigned Precedence
 argument_list|,
 argument|const MCExpr *&Res
+argument_list|,
+argument|SMLoc&EndLoc
 argument_list|)
 block|;
 name|bool
@@ -437,6 +505,10 @@ name|MCExpr
 operator|*
 operator|&
 name|Res
+argument_list|,
+name|SMLoc
+operator|&
+name|EndLoc
 argument_list|)
 block|;
 comment|/// ParseIdentifier - Parse an identifier or string (as a quoted identifier)

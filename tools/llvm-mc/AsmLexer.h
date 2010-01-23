@@ -103,9 +103,6 @@ name|class
 name|MemoryBuffer
 decl_stmt|;
 name|class
-name|SourceMgr
-decl_stmt|;
-name|class
 name|SMLoc
 decl_stmt|;
 name|class
@@ -118,10 +115,6 @@ range|:
 name|public
 name|MCAsmLexer
 block|{
-name|SourceMgr
-operator|&
-name|SrcMgr
-block|;
 specifier|const
 name|MCAsmInfo
 operator|&
@@ -141,11 +134,6 @@ specifier|const
 name|char
 operator|*
 name|TokStart
-block|;
-comment|/// This is the current buffer index we're lexing from as managed by the
-comment|/// SourceMgr object.
-name|int
-name|CurBuffer
 block|;
 name|void
 name|operator
@@ -177,10 +165,6 @@ name|public
 operator|:
 name|AsmLexer
 argument_list|(
-name|SourceMgr
-operator|&
-name|SrcMgr
-argument_list|,
 specifier|const
 name|MCAsmInfo
 operator|&
@@ -190,6 +174,22 @@ block|;
 operator|~
 name|AsmLexer
 argument_list|()
+block|;
+name|void
+name|setBuffer
+argument_list|(
+specifier|const
+name|MemoryBuffer
+operator|*
+name|buf
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|ptr
+operator|=
+name|NULL
+argument_list|)
 block|;
 name|SMLoc
 name|getLoc
@@ -206,29 +206,17 @@ argument_list|(
 argument|char Char
 argument_list|)
 block|;
-comment|/// EnterIncludeFile - Enter the specified file. This returns true on failure.
-name|bool
-name|EnterIncludeFile
-argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|MCAsmInfo
 operator|&
-name|Filename
-argument_list|)
-block|;
-name|void
-name|PrintMessage
-argument_list|(
-argument|SMLoc Loc
-argument_list|,
-argument|const std::string&Msg
-argument_list|,
-argument|const char *Type
-argument_list|)
+name|getMAI
+argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|MAI
+return|;
+block|}
 name|private
 operator|:
 name|int

@@ -443,13 +443,6 @@ modifier|*
 name|tli
 parameter_list|)
 function_decl|;
-comment|/// createMaxStackAlignmentCalculatorPass() - Determine the maximum required
-comment|/// alignment for a function.
-name|FunctionPass
-modifier|*
-name|createMaxStackAlignmentCalculatorPass
-parameter_list|()
-function_decl|;
 block|}
 end_decl_stmt
 

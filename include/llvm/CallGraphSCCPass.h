@@ -126,6 +126,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_CallGraphSCC
+argument_list|,
 argument|pid
 argument_list|)
 block|{}
@@ -139,6 +141,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_CallGraphSCC
+argument_list|,
 argument|pid
 argument_list|)
 block|{}

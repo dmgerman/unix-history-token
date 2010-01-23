@@ -1473,6 +1473,72 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// areLoadsFromSameBasePtr - This is used by the pre-regalloc scheduler
+comment|/// to determine if two loads are loading from the same base address. It
+comment|/// should only return true if the base pointers are the same and the
+comment|/// only differences between the two addresses are the offset. It also returns
+comment|/// the offsets by reference.
+name|virtual
+name|bool
+name|areLoadsFromSameBasePtr
+argument_list|(
+name|SDNode
+operator|*
+name|Load1
+argument_list|,
+name|SDNode
+operator|*
+name|Load2
+argument_list|,
+name|int64_t
+operator|&
+name|Offset1
+argument_list|,
+name|int64_t
+operator|&
+name|Offset2
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
+comment|/// determine (in conjuction with areLoadsFromSameBasePtr) if two loads should
+comment|/// be scheduled togther. On some targets if two loads are loading from
+comment|/// addresses in the same cache line, it's better if they are scheduled
+comment|/// together. This function takes two integers that represent the load offsets
+comment|/// from the common base address. It returns true if it decides it's desirable
+comment|/// to schedule the two loads together. "NumLoads" is the number of loads that
+comment|/// have already been scheduled after Load1.
+name|virtual
+name|bool
+name|shouldScheduleLoadsNear
+argument_list|(
+name|SDNode
+operator|*
+name|Load1
+argument_list|,
+name|SDNode
+operator|*
+name|Load2
+argument_list|,
+name|int64_t
+name|Offset1
+argument_list|,
+name|int64_t
+name|Offset2
+argument_list|,
+name|unsigned
+name|NumLoads
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// ReverseBranchCondition - Reverses the branch condition of the specified
 comment|/// condition list, returning false on success and true if it cannot be
 comment|/// reversed.

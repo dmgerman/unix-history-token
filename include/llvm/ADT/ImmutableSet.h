@@ -201,17 +201,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
-operator|<
-name|ImutAVLTree
-operator|*
-operator|>
-operator|(
 name|Left
-operator|&
-operator|~
-name|LeftFlags
-operator|)
 return|;
 block|}
 comment|/// getRight - Returns a pointer to the right subtree.  This value is
@@ -894,7 +884,7 @@ operator|)
 operator|+
 literal|1
 operator|&&
-literal|"Height calculation wrong."
+literal|"Height calculation wrong"
 argument_list|)
 block|;
 name|assert
@@ -915,7 +905,7 @@ operator|)
 operator|<=
 literal|2
 operator|&&
-literal|"Balancing invariant violated."
+literal|"Balancing invariant violated"
 argument_list|)
 block|;
 name|assert
@@ -948,7 +938,7 @@ argument_list|()
 argument_list|)
 argument_list|)
 operator|&&
-literal|"Value in left child is not less that current value."
+literal|"Value in left child is not less that current value"
 argument_list|)
 block|;
 name|assert
@@ -981,7 +971,7 @@ argument_list|()
 argument_list|)
 argument_list|)
 operator|&&
-literal|"Current value is not less that value of right child."
+literal|"Current value is not less that value of right child"
 argument_list|)
 block|;
 return|return
@@ -1035,7 +1025,8 @@ label|:
 end_label
 
 begin_decl_stmt
-name|uintptr_t
+name|ImutAVLTree
+modifier|*
 name|Left
 decl_stmt|;
 end_decl_stmt
@@ -1050,6 +1041,24 @@ end_decl_stmt
 begin_decl_stmt
 name|unsigned
 name|Height
+range|:
+literal|28
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|Mutable
+range|:
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|CachedDigest
+range|:
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1082,24 +1091,6 @@ name|private
 label|:
 end_label
 
-begin_enum
-enum|enum
-block|{
-name|Mutable
-init|=
-literal|0x1
-block|,
-name|NoCachedDigest
-init|=
-literal|0x2
-block|,
-name|LeftFlags
-init|=
-literal|0x3
-block|}
-enum|;
-end_enum
-
 begin_comment
 comment|/// ImutAVLTree - Internal constructor that is only called by
 end_comment
@@ -1125,19 +1116,7 @@ begin_expr_stmt
 unit|:
 name|Left
 argument_list|(
-name|reinterpret_cast
-operator|<
-name|uintptr_t
-operator|>
-operator|(
 name|l
-operator|)
-operator||
-operator|(
-name|Mutable
-operator||
-name|NoCachedDigest
-operator|)
 argument_list|)
 operator|,
 name|Right
@@ -1148,6 +1127,16 @@ operator|,
 name|Height
 argument_list|(
 name|height
+argument_list|)
+operator|,
+name|Mutable
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|CachedDigest
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|Value
@@ -1172,8 +1161,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Left
-operator|&
 name|Mutable
 return|;
 block|}
@@ -1194,12 +1181,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-operator|(
-name|Left
-operator|&
-name|NoCachedDigest
-operator|)
+name|CachedDigest
 return|;
 block|}
 end_expr_stmt
@@ -1265,10 +1247,9 @@ operator|&&
 literal|"Mutable flag already removed."
 argument_list|)
 expr_stmt|;
-name|Left
-operator|&=
-operator|~
 name|Mutable
+operator|=
+name|false
 expr_stmt|;
 block|}
 end_function
@@ -1291,10 +1272,9 @@ operator|&&
 literal|"NoCachedDigest flag already removed."
 argument_list|)
 expr_stmt|;
-name|Left
-operator|&=
-operator|~
-name|NoCachedDigest
+name|CachedDigest
+operator|=
+name|true
 expr_stmt|;
 block|}
 end_function
@@ -1326,15 +1306,11 @@ argument_list|)
 expr_stmt|;
 name|Left
 operator|=
-name|reinterpret_cast
-operator|<
-name|uintptr_t
-operator|>
-operator|(
 name|NewLeft
-operator|)
-operator||
-name|LeftFlags
+expr_stmt|;
+name|CachedDigest
+operator|=
+name|false
 expr_stmt|;
 block|}
 end_function
@@ -1368,12 +1344,9 @@ name|Right
 operator|=
 name|NewRight
 expr_stmt|;
-comment|// Set the NoCachedDigest flag.
-name|Left
+name|CachedDigest
 operator|=
-name|Left
-operator||
-name|NoCachedDigest
+name|false
 expr_stmt|;
 block|}
 end_function
@@ -2269,7 +2242,7 @@ argument_list|(
 name|L
 argument_list|)
 operator|&&
-literal|"Left tree cannot be empty to have a height>= 2."
+literal|"Left tree cannot be empty to have a height>= 2"
 argument_list|)
 expr_stmt|;
 name|TreeTy
@@ -2327,7 +2300,7 @@ argument_list|(
 name|LR
 argument_list|)
 operator|&&
-literal|"LR cannot be empty because it has a height>= 1."
+literal|"LR cannot be empty because it has a height>= 1"
 argument_list|)
 expr_stmt|;
 name|TreeTy
@@ -2391,7 +2364,7 @@ argument_list|(
 name|R
 argument_list|)
 operator|&&
-literal|"Right tree cannot be empty to have a height>= 2."
+literal|"Right tree cannot be empty to have a height>= 2"
 argument_list|)
 expr_stmt|;
 name|TreeTy
@@ -2449,7 +2422,7 @@ argument_list|(
 name|RL
 argument_list|)
 operator|&&
-literal|"RL cannot be empty because it has a height>= 1."
+literal|"RL cannot be empty because it has a height>= 1"
 argument_list|)
 expr_stmt|;
 name|TreeTy
@@ -5664,7 +5637,6 @@ comment|//===--------------------------------------------------===//
 end_comment
 
 begin_expr_stmt
-specifier|inline
 name|unsigned
 name|getHeight
 argument_list|()

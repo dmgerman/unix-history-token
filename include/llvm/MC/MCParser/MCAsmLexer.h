@@ -55,6 +55,12 @@ directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SMLoc.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -64,9 +70,6 @@ name|MCAsmLexer
 decl_stmt|;
 name|class
 name|MCInst
-decl_stmt|;
-name|class
-name|SMLoc
 decl_stmt|;
 name|class
 name|Target
@@ -92,6 +95,9 @@ name|String
 block|,
 comment|// Integer values.
 name|Integer
+block|,
+comment|// Register values (stored in IntVal).  Only used by TargetAsmLexer.
+name|Register
 block|,
 comment|// No-value.
 name|EndOfStatement
@@ -335,6 +341,32 @@ return|return
 name|IntVal
 return|;
 block|}
+comment|/// getRegVal - Get the register number for the current token, which should
+comment|/// be a register.
+name|unsigned
+name|getRegVal
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Register
+operator|&&
+literal|"This token isn't a register!"
+argument_list|)
+block|;
+return|return
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|IntVal
+operator|)
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -358,6 +390,15 @@ comment|/// The current token, stored in the base class for faster access.
 name|AsmToken
 name|CurTok
 decl_stmt|;
+comment|/// The location and description of the current error
+name|SMLoc
+name|ErrLoc
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|Err
+expr_stmt|;
 name|MCAsmLexer
 argument_list|(
 specifier|const
@@ -389,6 +430,31 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+name|void
+name|SetError
+argument_list|(
+specifier|const
+name|SMLoc
+operator|&
+name|errLoc
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|err
+argument_list|)
+block|{
+name|ErrLoc
+operator|=
+name|errLoc
+expr_stmt|;
+name|Err
+operator|=
+name|err
+expr_stmt|;
+block|}
 name|public
 label|:
 name|virtual
@@ -422,6 +488,30 @@ parameter_list|()
 block|{
 return|return
 name|CurTok
+return|;
+block|}
+comment|/// getErrLoc - Get the current error location
+specifier|const
+name|SMLoc
+modifier|&
+name|getErrLoc
+parameter_list|()
+block|{
+return|return
+name|ErrLoc
+return|;
+block|}
+comment|/// getErr - Get the current error string
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getErr
+argument_list|()
+block|{
+return|return
+name|Err
 return|;
 block|}
 comment|/// getKind - Get the kind of current token.

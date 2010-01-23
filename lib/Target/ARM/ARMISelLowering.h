@@ -169,6 +169,9 @@ comment|// ARM conditional move instructions.
 name|CNEG
 block|,
 comment|// ARM conditional negate instructions.
+name|RBIT
+block|,
+comment|// ARM bitreverse instruction
 name|FTOSI
 block|,
 comment|// FP to sint within a FP register.

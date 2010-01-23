@@ -300,16 +300,6 @@ operator|<<
 literal|24
 decl_stmt|;
 comment|///< Naked function
-specifier|const
-name|Attributes
-name|InlineHint
-init|=
-literal|1
-operator|<<
-literal|25
-decl_stmt|;
-comment|///< source said inlining was
-comment|///desirable
 comment|/// @brief Attributes that only apply to function parameters.
 specifier|const
 name|Attributes
@@ -352,8 +342,6 @@ operator||
 name|NoImplicitFloat
 operator||
 name|Naked
-operator||
-name|InlineHint
 decl_stmt|;
 comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
 specifier|const

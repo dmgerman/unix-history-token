@@ -103,10 +103,13 @@ name|class
 name|AsmPrinter
 decl_stmt|;
 name|class
-name|Dwarf
+name|DwarfPrinter
 decl_stmt|;
 name|class
 name|TargetData
+decl_stmt|;
+name|class
+name|MCSymbol
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// DIEAbbrevData - Dwarf abbreviation data, describes the one attribute of a
@@ -373,7 +376,7 @@ comment|///
 name|void
 name|Emit
 argument_list|(
-argument|const AsmPrinter *Asm
+argument|const DwarfPrinter *DP
 argument_list|)
 specifier|const
 block|;
@@ -844,7 +847,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-name|Dwarf
+name|DwarfPrinter
 operator|*
 name|D
 argument_list|,
@@ -1067,7 +1070,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|Dwarf *D
+argument|DwarfPrinter *D
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1166,7 +1169,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|Dwarf *D
+argument|DwarfPrinter *D
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1282,7 +1285,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|Dwarf *D
+argument|DwarfPrinter *D
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1354,10 +1357,9 @@ name|public
 name|DIEValue
 block|{
 specifier|const
-name|std
-operator|::
-name|string
-name|Label
+name|MCSymbol
+operator|*
+name|Sym
 block|;
 name|public
 operator|:
@@ -1365,11 +1367,9 @@ name|explicit
 name|DIEObjectLabel
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|L
+name|MCSymbol
+operator|*
+name|S
 argument_list|)
 operator|:
 name|DIEValue
@@ -1377,9 +1377,9 @@ argument_list|(
 name|isAsIsLabel
 argument_list|)
 block|,
-name|Label
+name|Sym
 argument_list|(
-argument|L
+argument|S
 argument_list|)
 block|{}
 comment|/// EmitValue - Emit label value.
@@ -1388,7 +1388,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|Dwarf *D
+argument|DwarfPrinter *D
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1521,7 +1521,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|Dwarf *D
+argument|DwarfPrinter *D
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1636,7 +1636,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|Dwarf *D
+argument|DwarfPrinter *D
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1758,7 +1758,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|Dwarf *D
+argument|DwarfPrinter *D
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1943,7 +1943,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-name|Dwarf
+name|DwarfPrinter
 operator|*
 name|D
 argument_list|,

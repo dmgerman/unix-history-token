@@ -299,6 +299,24 @@ operator|:
 literal|0
 return|;
 block|}
+comment|/// getLSDAEncoding - Returns the LSDA pointer encoding. The choices are
+comment|/// 4-byte, 8-byte, and target default. The CIE is hard-coded to indicate that
+comment|/// the LSDA pointer in the FDE section is an "sdata4", and should be encoded
+comment|/// as a 4-byte pointer by default. However, some systems may require a
+comment|/// different size due to bugs or other conditions. We will default to a
+comment|/// 4-byte encoding unless the system tells us otherwise.
+comment|///
+comment|/// FIXME: This call-back isn't good! We should be using the correct encoding
+comment|/// regardless of the system. However, there are some systems which have bugs
+comment|/// that prevent this from occuring.
+name|virtual
+name|DwarfLSDAEncoding
+operator|::
+name|Encoding
+name|getLSDAEncoding
+argument_list|()
+specifier|const
+block|;
 comment|// Set up the pass pipeline.
 name|virtual
 name|bool

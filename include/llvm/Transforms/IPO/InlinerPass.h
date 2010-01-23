@@ -177,6 +177,17 @@ return|return
 name|InlineThreshold
 return|;
 block|}
+comment|/// Calculate the inline threshold for given Caller. This threshold is lower
+comment|/// if Caller is marked with OptimizeForSize and -inline-threshold is not
+comment|/// given on the comand line.
+comment|///
+name|unsigned
+name|getInlineThreshold
+argument_list|(
+argument|Function* Caller
+argument_list|)
+specifier|const
+block|;
 comment|/// getInlineCost - This method must be implemented by the subclass to
 comment|/// determine the cost of inlining the specified call site.  If the cost
 comment|/// returned is greater than the current inline threshold, the call site is

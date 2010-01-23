@@ -65,6 +65,12 @@ directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCDirectives.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -97,7 +103,13 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
+name|Twine
+decl_stmt|;
+name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|formatted_raw_ostream
 decl_stmt|;
 comment|/// MCStreamer - Streaming machine code generation interface.  This interface
 comment|/// is intended to provide a programatic interface that is very similar to the
@@ -111,65 +123,6 @@ comment|///
 name|class
 name|MCStreamer
 block|{
-name|public
-label|:
-enum|enum
-name|SymbolAttr
-block|{
-name|Global
-block|,
-comment|/// .globl
-name|Hidden
-block|,
-comment|/// .hidden (ELF)
-name|IndirectSymbol
-block|,
-comment|/// .indirect_symbol (Apple)
-name|Internal
-block|,
-comment|/// .internal (ELF)
-name|LazyReference
-block|,
-comment|/// .lazy_reference (Apple)
-name|NoDeadStrip
-block|,
-comment|/// .no_dead_strip (Apple)
-name|PrivateExtern
-block|,
-comment|/// .private_extern (Apple)
-name|Protected
-block|,
-comment|/// .protected (ELF)
-name|Reference
-block|,
-comment|/// .reference (Apple)
-name|Weak
-block|,
-comment|/// .weak
-name|WeakDefinition
-block|,
-comment|/// .weak_definition (Apple)
-name|WeakReference
-block|,
-comment|/// .weak_reference (Apple)
-name|SymbolAttrFirst
-init|=
-name|Global
-block|,
-name|SymbolAttrLast
-init|=
-name|WeakReference
-block|}
-enum|;
-enum|enum
-name|AssemblerFlag
-block|{
-name|SubsectionsViaSymbols
-comment|/// .subsections_via_symbols (Apple)
-block|}
-enum|;
-name|private
-label|:
 name|MCContext
 modifier|&
 name|Context
@@ -226,6 +179,41 @@ return|return
 name|Context
 return|;
 block|}
+comment|/// @name Assembly File Formatting.
+comment|/// @{
+comment|/// AddComment - Add a comment that can be emitted to the generated .s
+comment|/// file if applicable as a QoI issue to make the output of the compiler
+comment|/// more readable.  This only affects the MCAsmStreamer, and only when
+comment|/// verbose assembly output is enabled.
+comment|///
+comment|/// If the comment includes embedded \n's, they will each get the comment
+comment|/// prefix as appropriate.  The added comment should not end with a \n.
+name|virtual
+name|void
+name|AddComment
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|T
+parameter_list|)
+block|{}
+comment|/// GetCommentOS - Return a raw_ostream that comments can be written to.
+comment|/// Unlike AddComment, you are required to terminate comments with \n if you
+comment|/// use this method.
+name|virtual
+name|raw_ostream
+modifier|&
+name|GetCommentOS
+parameter_list|()
+function_decl|;
+comment|/// AddBlankLine - Emit a blank line to a .s file to pretty it up.
+name|virtual
+name|void
+name|AddBlankLine
+parameter_list|()
+block|{}
+comment|/// @}
 comment|/// @name Symbol& Section Management
 comment|/// @{
 comment|/// getCurrentSection - Return the current seciton that the streamer is
@@ -281,7 +269,7 @@ name|virtual
 name|void
 name|EmitAssemblerFlag
 parameter_list|(
-name|AssemblerFlag
+name|MCAssemblerFlag
 name|Flag
 parameter_list|)
 init|=
@@ -323,7 +311,7 @@ name|MCSymbol
 modifier|*
 name|Symbol
 parameter_list|,
-name|SymbolAttr
+name|MCSymbolAttr
 name|Attribute
 parameter_list|)
 init|=
@@ -347,12 +335,12 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitCommonSymbol - Emit a common or local common symbol.
+comment|/// EmitCommonSymbol - Emit a common symbol.
 comment|///
 comment|/// @param Symbol - The common symbol to emit.
 comment|/// @param Size - The size of the common symbol.
 comment|/// @param ByteAlignment - The alignment of the symbol if
-comment|/// non-zero. This must be a power of 2 on some targets.
+comment|/// non-zero. This must be a power of 2.
 name|virtual
 name|void
 name|EmitCommonSymbol
@@ -361,11 +349,29 @@ name|MCSymbol
 modifier|*
 name|Symbol
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|Size
 parameter_list|,
 name|unsigned
 name|ByteAlignment
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EmitLocalCommonSymbol - Emit a local common (.lcomm) symbol.
+comment|///
+comment|/// @param Symbol - The common symbol to emit.
+comment|/// @param Size - The size of the common symbol.
+name|virtual
+name|void
+name|EmitLocalCommonSymbol
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|,
+name|uint64_t
+name|Size
 parameter_list|)
 init|=
 literal|0
@@ -418,6 +424,9 @@ name|EmitBytes
 parameter_list|(
 name|StringRef
 name|Data
+parameter_list|,
+name|unsigned
+name|AddrSpace
 parameter_list|)
 init|=
 literal|0
@@ -442,10 +451,67 @@ name|Value
 parameter_list|,
 name|unsigned
 name|Size
+parameter_list|,
+name|unsigned
+name|AddrSpace
 parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// EmitIntValue - Special case of EmitValue that avoids the client having
+comment|/// to pass in a MCExpr for constant integers.
+name|virtual
+name|void
+name|EmitIntValue
+parameter_list|(
+name|uint64_t
+name|Value
+parameter_list|,
+name|unsigned
+name|Size
+parameter_list|,
+name|unsigned
+name|AddrSpace
+parameter_list|)
+function_decl|;
+comment|/// EmitFill - Emit NumBytes bytes worth of the value specified by
+comment|/// FillValue.  This implements directives such as '.space'.
+name|virtual
+name|void
+name|EmitFill
+parameter_list|(
+name|uint64_t
+name|NumBytes
+parameter_list|,
+name|uint8_t
+name|FillValue
+parameter_list|,
+name|unsigned
+name|AddrSpace
+parameter_list|)
+function_decl|;
+comment|/// EmitZeros - Emit NumBytes worth of zeros.  This is a convenience
+comment|/// function that just wraps EmitFill.
+name|void
+name|EmitZeros
+parameter_list|(
+name|uint64_t
+name|NumBytes
+parameter_list|,
+name|unsigned
+name|AddrSpace
+parameter_list|)
+block|{
+name|EmitFill
+argument_list|(
+name|NumBytes
+argument_list|,
+literal|0
+argument_list|,
+name|AddrSpace
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// EmitValueToAlignment - Emit some number of copies of @param Value until
 comment|/// the byte alignment @param ByteAlignment is reached.
 comment|///
@@ -561,7 +627,7 @@ name|MCContext
 modifier|&
 name|Ctx
 parameter_list|,
-name|raw_ostream
+name|formatted_raw_ostream
 modifier|&
 name|OS
 parameter_list|,
@@ -569,6 +635,12 @@ specifier|const
 name|MCAsmInfo
 modifier|&
 name|MAI
+parameter_list|,
+name|bool
+name|isLittleEndian
+parameter_list|,
+name|bool
+name|isVerboseAsm
 parameter_list|,
 name|MCInstPrinter
 modifier|*

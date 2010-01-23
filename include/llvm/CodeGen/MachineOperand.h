@@ -1842,12 +1842,6 @@ parameter_list|(
 name|MDNode
 modifier|*
 name|Meta
-parameter_list|,
-name|unsigned
-name|char
-name|TargetFlags
-init|=
-literal|0
 parameter_list|)
 block|{
 name|MachineOperand
@@ -1865,13 +1859,6 @@ operator|.
 name|MD
 operator|=
 name|Meta
-expr_stmt|;
-name|Op
-operator|.
-name|setTargetFlags
-argument_list|(
-name|TargetFlags
-argument_list|)
 expr_stmt|;
 return|return
 name|Op

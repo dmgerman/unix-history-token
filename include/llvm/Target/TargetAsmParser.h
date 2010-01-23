@@ -48,9 +48,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCAsmParser
-decl_stmt|;
-name|class
 name|MCInst
 decl_stmt|;
 name|class

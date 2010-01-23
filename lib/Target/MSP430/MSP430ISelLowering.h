@@ -304,6 +304,57 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
+comment|/// isTruncateFree - Return true if it's free to truncate a value of type
+comment|/// Ty1 to type Ty2. e.g. On msp430 it's free to truncate a i16 value in
+comment|/// register R15W to i8 by referencing its sub-register R15B.
+name|virtual
+name|bool
+name|isTruncateFree
+argument_list|(
+argument|const Type *Ty1
+argument_list|,
+argument|const Type *Ty2
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isTruncateFree
+argument_list|(
+argument|EVT VT1
+argument_list|,
+argument|EVT VT2
+argument_list|)
+specifier|const
+block|;
+comment|/// isZExtFree - Return true if any actual instruction that defines a value
+comment|/// of type Ty1 implicit zero-extends the value to Ty2 in the result
+comment|/// register. This does not necessarily include registers defined in unknown
+comment|/// ways, such as incoming arguments, or copies from unknown virtual
+comment|/// registers. Also, if isTruncateFree(Ty2, Ty1) is true, this does not
+comment|/// necessarily apply to truncate instructions. e.g. on msp430, all
+comment|/// instructions that define 8-bit values implicit zero-extend the result
+comment|/// out to 16 bits.
+name|virtual
+name|bool
+name|isZExtFree
+argument_list|(
+argument|const Type *Ty1
+argument_list|,
+argument|const Type *Ty2
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isZExtFree
+argument_list|(
+argument|EVT VT1
+argument_list|,
+argument|EVT VT2
+argument_list|)
+specifier|const
+block|;
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter

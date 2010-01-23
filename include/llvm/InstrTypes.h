@@ -2662,7 +2662,6 @@ comment|//                               CmpInst Class
 comment|//===----------------------------------------------------------------------===//
 comment|/// This class is the base class for the comparison instructions.
 comment|/// @brief Abstract base class of comparison instructions.
-comment|// FIXME: why not derive from BinaryOperator?
 name|class
 name|CmpInst
 operator|:
@@ -2722,6 +2721,13 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
+name|virtual
+name|void
+name|Anchor
+argument_list|()
+specifier|const
+block|;
+comment|// Out of line virtual method.
 name|public
 operator|:
 comment|/// This enumeration lists the possible predicates for CmpInst subclasses.

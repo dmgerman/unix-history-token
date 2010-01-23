@@ -141,6 +141,11 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
+name|FunctionPass
+modifier|*
+name|createMSP430BranchSelectionPass
+parameter_list|()
+function_decl|;
 specifier|extern
 name|Target
 name|TheMSP430Target

@@ -1669,6 +1669,13 @@ operator|~
 name|raw_svector_ostream
 argument_list|()
 block|;
+comment|/// resync - This is called when the SmallVector we're appending to is changed
+comment|/// outside of the raw_svector_ostream's control.  It is only safe to do this
+comment|/// if the raw_svector_ostream has previously been flushed.
+name|void
+name|resync
+argument_list|()
+block|;
 comment|/// str - Flushes the stream contents to the target vector and return a
 comment|/// StringRef for the vector contents.
 name|StringRef

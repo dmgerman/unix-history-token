@@ -217,6 +217,23 @@ comment|/// BBPassManager
 name|PMT_Last
 block|}
 enum|;
+comment|// Different types of passes.
+enum|enum
+name|PassKind
+block|{
+name|PT_BasicBlock
+block|,
+name|PT_Loop
+block|,
+name|PT_Function
+block|,
+name|PT_CallGraphSCC
+block|,
+name|PT_Module
+block|,
+name|PT_PassManager
+block|}
+enum|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// Pass interface - Implemented by all 'passes'.  Subclass this if you are an
 comment|/// interprocedural optimization or you do not fit into any of the more
@@ -232,6 +249,9 @@ decl_stmt|;
 comment|// Used to resolve analysis
 name|intptr_t
 name|PassID
+decl_stmt|;
+name|PassKind
+name|Kind
 decl_stmt|;
 name|void
 name|operator
@@ -256,6 +276,8 @@ label|:
 name|explicit
 name|Pass
 argument_list|(
+argument|PassKind K
+argument_list|,
 argument|intptr_t pid
 argument_list|)
 block|:
@@ -266,7 +288,12 @@ argument_list|)
 operator|,
 name|PassID
 argument_list|(
-argument|pid
+name|pid
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+argument|K
 argument_list|)
 block|{
 name|assert
@@ -279,10 +306,9 @@ block|;   }
 name|explicit
 name|Pass
 argument_list|(
-specifier|const
-name|void
-operator|*
-name|pid
+argument|PassKind K
+argument_list|,
+argument|const void *pid
 argument_list|)
 operator|:
 name|Resolver
@@ -292,7 +318,15 @@ argument_list|)
 operator|,
 name|PassID
 argument_list|(
-argument|(intptr_t)pid
+operator|(
+name|intptr_t
+operator|)
+name|pid
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+argument|K
 argument_list|)
 block|{
 name|assert
@@ -307,6 +341,15 @@ operator|~
 name|Pass
 argument_list|()
 expr_stmt|;
+name|PassKind
+name|getPassKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
 comment|/// getPassName - Return a nice clean name for a pass.  This usually
 comment|/// implemented in terms of the name that is registered by one of the
 comment|/// Registration templates, but can be overloaded directly.
@@ -450,6 +493,45 @@ name|void
 name|releaseMemory
 parameter_list|()
 function_decl|;
+comment|/// getAdjustedAnalysisPointer - This method is used when a pass implements
+comment|/// an analysis interface through multiple inheritance.  If needed, it should
+comment|/// override this to adjust the this pointer as needed for the specified pass
+comment|/// info.
+name|virtual
+name|void
+modifier|*
+name|getAdjustedAnalysisPointer
+parameter_list|(
+specifier|const
+name|PassInfo
+modifier|*
+name|PI
+parameter_list|)
+block|{
+return|return
+name|this
+return|;
+block|}
+name|virtual
+name|ImmutablePass
+modifier|*
+name|getAsImmutablePass
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+name|PMDataManager
+modifier|*
+name|getAsPMDataManager
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// verifyAnalysis() - This member can be implemented by a analysis pass to
 comment|/// check state of analysis information.
 name|virtual
@@ -669,6 +751,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_Module
+argument_list|,
 argument|pid
 argument_list|)
 block|{}
@@ -683,6 +767,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_Module
+argument_list|,
 argument|pid
 argument_list|)
 block|{}
@@ -717,6 +803,16 @@ name|void
 name|initializePass
 argument_list|()
 block|;
+name|virtual
+name|ImmutablePass
+operator|*
+name|getAsImmutablePass
+argument_list|()
+block|{
+return|return
+name|this
+return|;
+block|}
 comment|/// ImmutablePasses are never run.
 comment|///
 name|bool
@@ -786,6 +882,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_Function
+argument_list|,
 argument|pid
 argument_list|)
 block|{}
@@ -800,6 +898,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_Function
+argument_list|,
 argument|pid
 argument_list|)
 block|{}
@@ -906,6 +1006,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_BasicBlock
+argument_list|,
 argument|pid
 argument_list|)
 block|{}
@@ -920,6 +1022,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_BasicBlock
+argument_list|,
 argument|pid
 argument_list|)
 block|{}

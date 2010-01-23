@@ -354,6 +354,13 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|canRealignStack
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|needsStackRealignment
 argument_list|(
 argument|const MachineFunction&MF

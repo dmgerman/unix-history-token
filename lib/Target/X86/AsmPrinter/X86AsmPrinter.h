@@ -615,15 +615,6 @@ argument|unsigned Op
 argument_list|)
 block|;
 name|void
-name|PrintGlobalVariable
-argument_list|(
-specifier|const
-name|GlobalVariable
-operator|*
-name|GVar
-argument_list|)
-block|;
-name|void
 name|PrintPICBaseSymbol
 argument_list|()
 specifier|const

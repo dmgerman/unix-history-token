@@ -274,6 +274,27 @@ name|NoIllegalOperations
 comment|// Combine may only create legal operations and types.
 block|}
 enum|;
+name|class
+name|SelectionDAG
+decl_stmt|;
+name|void
+name|checkForCycles
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|void
+name|checkForCycles
+parameter_list|(
+specifier|const
+name|SelectionDAG
+modifier|*
+name|DAG
+parameter_list|)
+function_decl|;
 comment|/// SelectionDAG class - This is used to represent a portion of an LLVM function
 comment|/// in a low-level Data Dependence DAG representation suitable for instruction
 comment|/// selection.  This DAG is constructed as the first step of instruction
@@ -798,10 +819,39 @@ operator|&&
 literal|"DAG root value is not a chain!"
 argument_list|)
 expr_stmt|;
-return|return
+if|if
+condition|(
+name|N
+operator|.
+name|getNode
+argument_list|()
+condition|)
+name|checkForCycles
+argument_list|(
+name|N
+operator|.
+name|getNode
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|Root
 operator|=
 name|N
+expr_stmt|;
+if|if
+condition|(
+name|N
+operator|.
+name|getNode
+argument_list|()
+condition|)
+name|checkForCycles
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
+return|return
+name|Root
 return|;
 block|}
 comment|/// Combine - This iterates over the nodes in the SelectionDAG, folding

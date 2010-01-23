@@ -82,9 +82,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCAsmInfo
-decl_stmt|;
-name|class
 name|MCExpr
 decl_stmt|;
 name|class
@@ -97,7 +94,8 @@ name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// MCSymbol - Instances of this class represent a symbol name in the MC file,
-comment|/// and MCSymbols are created and unique'd by the MCContext class.
+comment|/// and MCSymbols are created and unique'd by the MCContext class.  MCSymbols
+comment|/// should only be constructed with valid names for the object file.
 comment|///
 comment|/// If the symbol is defined/emitted into the current translation unit, the
 comment|/// Section member is set to indicate what section it lives in.  Otherwise, if
@@ -379,11 +377,6 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
@@ -393,27 +386,35 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// printMangledName - Print the specified string in mangled form if it uses
-comment|/// any unusual characters.
-specifier|static
-name|void
-name|printMangledName
-parameter_list|(
-name|StringRef
-name|Str
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-specifier|const
-name|MCAsmInfo
-modifier|*
-name|MAI
-parameter_list|)
-function_decl|;
 block|}
 empty_stmt|;
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|MCSymbol
+operator|&
+name|Sym
+operator|)
+block|{
+name|Sym
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
 block|}
 end_decl_stmt
 

@@ -114,6 +114,15 @@ name|Triple
 operator|&
 name|Triple
 argument_list|)
+block|;
+name|virtual
+name|MCSection
+operator|*
+name|getNonexecutableStackSection
+argument_list|(
+argument|MCContext&Ctx
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 name|struct

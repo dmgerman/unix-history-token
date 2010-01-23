@@ -138,6 +138,18 @@ comment|/// local).
 comment|/// BSS - Zero initialized writeable data.
 name|BSS
 block|,
+comment|/// BSSLocal - This is BSS (zero initialized and writable) data
+comment|/// which has local linkage.
+name|BSSLocal
+block|,
+comment|/// BSSExtern - This is BSS data with normal external linkage.
+name|BSSExtern
+block|,
+comment|/// Common - Data with common linkage.  These represent tentative
+comment|/// definitions, which always have a zero initializer and are never
+comment|/// marked 'constant'.
+name|Common
+block|,
 comment|/// DataRel - This is the most general form of data that is written
 comment|/// to by the program, it can have random relocations to arbitrary
 comment|/// globals.
@@ -381,6 +393,9 @@ return|return
 name|isBSS
 argument_list|()
 operator|||
+name|isCommon
+argument_list|()
+operator|||
 name|isDataRel
 argument_list|()
 operator|||
@@ -397,6 +412,47 @@ return|return
 name|K
 operator|==
 name|BSS
+operator|||
+name|K
+operator|==
+name|BSSLocal
+operator|||
+name|K
+operator|==
+name|BSSExtern
+return|;
+block|}
+name|bool
+name|isBSSLocal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|K
+operator|==
+name|BSSLocal
+return|;
+block|}
+name|bool
+name|isBSSExtern
+argument_list|()
+specifier|const
+block|{
+return|return
+name|K
+operator|==
+name|BSSExtern
+return|;
+block|}
+name|bool
+name|isCommon
+argument_list|()
+specifier|const
+block|{
+return|return
+name|K
+operator|==
+name|Common
 return|;
 block|}
 name|bool
@@ -648,6 +704,42 @@ return|return
 name|get
 argument_list|(
 name|BSS
+argument_list|)
+return|;
+block|}
+specifier|static
+name|SectionKind
+name|getBSSLocal
+parameter_list|()
+block|{
+return|return
+name|get
+argument_list|(
+name|BSSLocal
+argument_list|)
+return|;
+block|}
+specifier|static
+name|SectionKind
+name|getBSSExtern
+parameter_list|()
+block|{
+return|return
+name|get
+argument_list|(
+name|BSSExtern
+argument_list|)
+return|;
+block|}
+specifier|static
+name|SectionKind
+name|getCommon
+parameter_list|()
+block|{
+return|return
+name|get
+argument_list|(
+name|Common
 argument_list|)
 return|;
 block|}

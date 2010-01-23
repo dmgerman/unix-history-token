@@ -680,6 +680,18 @@ argument|const IVStrideUse&U
 argument_list|)
 specifier|const
 block|;
+comment|/// getCanonicalExpr - Return a SCEV expression which computes the
+comment|/// value of the SCEV of the given IVStrideUse, ignoring the
+comment|/// isUseOfPostIncrementedValue flag.
+specifier|const
+name|SCEV
+operator|*
+name|getCanonicalExpr
+argument_list|(
+argument|const IVStrideUse&U
+argument_list|)
+specifier|const
+block|;
 name|void
 name|print
 argument_list|(

@@ -121,78 +121,14 @@ name|class
 name|SymbolTableListTraits
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|// MetadataBase  - A base class for MDNode and MDString.
-name|class
-name|MetadataBase
-range|:
-name|public
-name|Value
-block|{
-name|protected
-operator|:
-name|MetadataBase
-argument_list|(
-argument|const Type *Ty
-argument_list|,
-argument|unsigned scid
-argument_list|)
-operator|:
-name|Value
-argument_list|(
-argument|Ty
-argument_list|,
-argument|scid
-argument_list|)
-block|{}
-name|public
-operator|:
-comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const MetadataBase *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
-block|{
-return|return
-name|V
-operator|->
-name|getValueID
-argument_list|()
-operator|==
-name|MDStringVal
-operator|||
-name|V
-operator|->
-name|getValueID
-argument_list|()
-operator|==
-name|MDNodeVal
-return|;
-block|}
-expr|}
-block|;
-comment|//===----------------------------------------------------------------------===//
 comment|/// MDString - a single uniqued string.
 comment|/// These are used to efficiently contain a byte sequence for metadata.
 comment|/// MDString is always unnamd.
 name|class
 name|MDString
-operator|:
+range|:
 name|public
-name|MetadataBase
+name|Value
 block|{
 name|MDString
 argument_list|(
@@ -329,19 +265,19 @@ operator|==
 name|MDStringVal
 return|;
 block|}
-expr|}
-block|;
+block|}
+empty_stmt|;
 name|class
 name|MDNodeOperand
-block|;
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// MDNode - a tuple of other values.
 name|class
 name|MDNode
-operator|:
+range|:
 name|public
-name|MetadataBase
-block|,
+name|Value
+decl_stmt|,
 name|public
 name|FoldingSetNode
 block|{
@@ -351,35 +287,35 @@ specifier|const
 name|MDNode
 operator|&
 argument_list|)
-block|;
+expr_stmt|;
 comment|// DO NOT IMPLEMENT
 name|void
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|MDNode
 operator|&
 operator|)
-block|;
+decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|friend
 name|class
 name|MDNodeOperand
-block|;
+decl_stmt|;
 comment|/// NumOperands - This many 'MDNodeOperand' items are co-allocated onto the
 comment|/// end of this MDNode.
 name|unsigned
 name|NumOperands
-block|;
+decl_stmt|;
 comment|// Subclass data enums.
-block|enum
+enum|enum
 block|{
 comment|/// FunctionLocalBit - This bit is set if this MDNode is function local.
 comment|/// This is true when it (potentially transitively) contains a reference to
 comment|/// something in a function, like an argument, basicblock, or instruction.
 name|FunctionLocalBit
-operator|=
+init|=
 literal|1
 operator|<<
 literal|0
@@ -387,7 +323,7 @@ block|,
 comment|/// NotUniquedBit - This is set on MDNodes that are not uniqued because they
 comment|/// have a null perand.
 name|NotUniquedBit
-operator|=
+init|=
 literal|1
 operator|<<
 literal|1
@@ -395,115 +331,147 @@ block|,
 comment|/// DestroyFlag - This bit is set by destroy() so the destructor can assert
 comment|/// that the node isn't being destroyed with a plain 'delete'.
 name|DestroyFlag
-operator|=
+init|=
 literal|1
 operator|<<
 literal|2
 block|}
-block|;
+enum|;
 comment|// FunctionLocal enums.
-block|enum
+enum|enum
 name|FunctionLocalness
 block|{
 name|FL_Unknown
-operator|=
+init|=
 operator|-
 literal|1
 block|,
 name|FL_No
-operator|=
+init|=
 literal|0
 block|,
 name|FL_Yes
-operator|=
+init|=
 literal|1
 block|}
-block|;
+enum|;
 comment|// Replace each instance of F from the operand list of this node with T.
 name|void
 name|replaceOperand
-argument_list|(
+parameter_list|(
 name|MDNodeOperand
-operator|*
+modifier|*
 name|Op
-argument_list|,
+parameter_list|,
 name|Value
-operator|*
+modifier|*
 name|NewVal
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 operator|~
 name|MDNode
 argument_list|()
-block|;
+expr_stmt|;
 name|protected
-operator|:
+label|:
 name|explicit
 name|MDNode
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|Value *const *Vals
-argument_list|,
-argument|unsigned NumVals
-argument_list|,
-argument|bool isFunctionLocal
-argument_list|)
-block|;
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|,
+name|Value
+modifier|*
+specifier|const
+modifier|*
+name|Vals
+parameter_list|,
+name|unsigned
+name|NumVals
+parameter_list|,
+name|bool
+name|isFunctionLocal
+parameter_list|)
+function_decl|;
 specifier|static
 name|MDNode
-operator|*
+modifier|*
 name|getMDNode
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|Value *const *Vals
-argument_list|,
-argument|unsigned NumVals
-argument_list|,
-argument|FunctionLocalness FL
-argument_list|)
-block|;
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|,
+name|Value
+modifier|*
+specifier|const
+modifier|*
+name|Vals
+parameter_list|,
+name|unsigned
+name|NumVals
+parameter_list|,
+name|FunctionLocalness
+name|FL
+parameter_list|)
+function_decl|;
 name|public
-operator|:
+label|:
 comment|// Constructors and destructors.
 specifier|static
 name|MDNode
-operator|*
+modifier|*
 name|get
-argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|Value *const *Vals
-argument_list|,
-argument|unsigned NumVals
-argument_list|)
-block|;
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|,
+name|Value
+modifier|*
+specifier|const
+modifier|*
+name|Vals
+parameter_list|,
+name|unsigned
+name|NumVals
+parameter_list|)
+function_decl|;
 comment|// getWhenValsUnresolved - Construct MDNode determining function-localness
 comment|// from isFunctionLocal argument, not by analyzing Vals.
 specifier|static
 name|MDNode
-operator|*
+modifier|*
 name|getWhenValsUnresolved
-argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|Value *const *Vals
-argument_list|,
-argument|unsigned NumVals
-argument_list|,
-argument|bool isFunctionLocal
-argument_list|)
-block|;
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|,
+name|Value
+modifier|*
+specifier|const
+modifier|*
+name|Vals
+parameter_list|,
+name|unsigned
+name|NumVals
+parameter_list|,
+name|bool
+name|isFunctionLocal
+parameter_list|)
+function_decl|;
 comment|/// getOperand - Return specified operand.
 name|Value
-operator|*
+modifier|*
 name|getOperand
 argument_list|(
-argument|unsigned i
+name|unsigned
+name|i
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// getNumOperands - Return number of MDNode operands.
 name|unsigned
 name|getNumOperands
@@ -536,35 +504,41 @@ return|;
 block|}
 comment|// getFunction - If this metadata is function-local and recursively has a
 comment|// function-local operand, return the first such operand's parent function.
-comment|// Otherwise, return null.
+comment|// Otherwise, return null. getFunction() should not be used for performance-
+comment|// critical code because it recursively visits all the MDNode's operands.
+specifier|const
 name|Function
 operator|*
 name|getFunction
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|// destroy - Delete this node.  Only when there are no uses.
 name|void
 name|destroy
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// Profile - calculate a unique identifier for this MDNode to collapse
 comment|/// duplicates
 name|void
 name|Profile
 argument_list|(
-argument|FoldingSetNodeID&ID
+name|FoldingSetNodeID
+operator|&
+name|ID
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const MDNode *
-argument_list|)
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
@@ -573,9 +547,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|V
@@ -587,7 +564,7 @@ name|MDNodeVal
 return|;
 block|}
 name|private
-operator|:
+label|:
 name|bool
 name|isNotUniqued
 argument_list|()
@@ -606,7 +583,7 @@ return|;
 block|}
 name|void
 name|setIsNotUniqued
-argument_list|()
+parameter_list|()
 block|{
 name|setValueSubclassData
 argument_list|(
@@ -615,14 +592,17 @@ argument_list|()
 operator||
 name|NotUniquedBit
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
 comment|// any future subclasses cannot accidentally use it.
 name|void
 name|setValueSubclassData
-argument_list|(
-argument|unsigned short D
-argument_list|)
+parameter_list|(
+name|unsigned
+name|short
+name|D
+parameter_list|)
 block|{
 name|Value
 operator|::
@@ -630,111 +610,141 @@ name|setValueSubclassData
 argument_list|(
 name|D
 argument_list|)
-block|;   }
-expr|}
-block|;
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// NamedMDNode - a tuple of MDNodes.
 comment|/// NamedMDNode is always named. All NamedMDNode operand has a type of metadata.
 name|class
 name|NamedMDNode
-operator|:
+range|:
 name|public
 name|Value
-block|,
+decl_stmt|,
 name|public
 name|ilist_node
-operator|<
+decl|<
 name|NamedMDNode
-operator|>
+decl|>
 block|{
 name|friend
 name|class
 name|SymbolTableListTraits
 operator|<
 name|NamedMDNode
-block|,
+operator|,
 name|Module
 operator|>
-block|;
+expr_stmt|;
 name|friend
-expr|struct
+block|struct
 name|ilist_traits
 operator|<
 name|NamedMDNode
 operator|>
-block|;
+expr_stmt|;
 name|friend
 name|class
 name|LLVMContextImpl
-block|;
+decl_stmt|;
 name|NamedMDNode
 argument_list|(
 specifier|const
 name|NamedMDNode
 operator|&
 argument_list|)
-block|;
+expr_stmt|;
 comment|// DO NOT IMPLEMENT
 name|std
 operator|::
 name|string
 name|Name
-block|;
+expr_stmt|;
 name|Module
-operator|*
+modifier|*
 name|Parent
-block|;
+decl_stmt|;
 name|void
-operator|*
+modifier|*
 name|Operands
-block|;
+decl_stmt|;
 comment|// SmallVector<WeakVH<MDNode>, 4>
 name|void
 name|setParent
-argument_list|(
-argument|Module *M
-argument_list|)
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|)
 block|{
 name|Parent
 operator|=
 name|M
-block|; }
+expr_stmt|;
+block|}
 name|protected
-operator|:
+label|:
 name|explicit
 name|NamedMDNode
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|const Twine&N
-argument_list|,
-argument|MDNode*const *Vals
-argument_list|,
-argument|unsigned NumVals
-argument_list|,
-argument|Module *M =
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|N
+parameter_list|,
+name|MDNode
+modifier|*
+specifier|const
+modifier|*
+name|Vals
+parameter_list|,
+name|unsigned
+name|NumVals
+parameter_list|,
+name|Module
+modifier|*
+name|M
+init|=
 literal|0
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|public
-operator|:
+label|:
 specifier|static
 name|NamedMDNode
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|const Twine&N
-argument_list|,
-argument|MDNode *const *MDs
-argument_list|,
-argument|unsigned NumMDs
-argument_list|,
-argument|Module *M =
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|N
+parameter_list|,
+name|MDNode
+modifier|*
+specifier|const
+modifier|*
+name|MDs
+parameter_list|,
+name|unsigned
+name|NumMDs
+parameter_list|,
+name|Module
+modifier|*
+name|M
+init|=
 literal|0
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|new
@@ -754,43 +764,43 @@ return|;
 block|}
 specifier|static
 name|NamedMDNode
-operator|*
+modifier|*
 name|Create
-argument_list|(
+parameter_list|(
 specifier|const
 name|NamedMDNode
-operator|*
+modifier|*
 name|NMD
-argument_list|,
+parameter_list|,
 name|Module
-operator|*
+modifier|*
 name|M
-operator|=
+init|=
 literal|0
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// eraseFromParent - Drop all references and remove the node from parent
 comment|/// module.
 name|void
 name|eraseFromParent
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// dropAllReferences - Remove all uses and clear node vector.
 name|void
 name|dropAllReferences
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// ~NamedMDNode - Destroy NamedMDNode.
 operator|~
 name|NamedMDNode
 argument_list|()
-block|;
+expr_stmt|;
 comment|/// getParent - Get the module that holds this named metadata collection.
 specifier|inline
 name|Module
-operator|*
+modifier|*
 name|getParent
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Parent
@@ -810,52 +820,55 @@ return|;
 block|}
 comment|/// getOperand - Return specified operand.
 name|MDNode
-operator|*
+modifier|*
 name|getOperand
 argument_list|(
-argument|unsigned i
+name|unsigned
+name|i
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// getNumOperands - Return the number of NamedMDNode operands.
 name|unsigned
 name|getNumOperands
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// addOperand - Add metadata operand.
 name|void
 name|addOperand
-argument_list|(
+parameter_list|(
 name|MDNode
-operator|*
+modifier|*
 name|M
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// setName - Set the name of this named metadata.
 name|void
 name|setName
-argument_list|(
+parameter_list|(
 specifier|const
 name|Twine
-operator|&
+modifier|&
 name|NewName
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// getName - Return a constant reference to this named metadata's name.
 name|StringRef
 name|getName
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const NamedMDNode *
-argument_list|)
+parameter_list|(
+specifier|const
+name|NamedMDNode
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
@@ -864,9 +877,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|V
@@ -877,8 +893,9 @@ operator|==
 name|NamedMDNodeVal
 return|;
 block|}
-expr|}
-block|;  }
+block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

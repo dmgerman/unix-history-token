@@ -581,7 +581,7 @@ name|class
 name|SCEVCallbackVH
 block|;
 name|friend
-expr|struct
+name|class
 name|SCEVExpander
 block|;
 comment|/// F - The function we are analyzing.
@@ -601,6 +601,12 @@ comment|///
 name|TargetData
 operator|*
 name|TD
+block|;
+comment|/// DT - The dominator tree.
+comment|///
+name|DominatorTree
+operator|*
+name|DT
 block|;
 comment|/// CouldNotCompute - This SCEV is used to represent unknown trip
 comment|/// counts and things.

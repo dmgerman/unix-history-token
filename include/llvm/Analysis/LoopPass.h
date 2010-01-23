@@ -116,6 +116,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_Loop
+argument_list|,
 argument|pid
 argument_list|)
 block|{}
@@ -129,6 +131,8 @@ argument_list|)
 operator|:
 name|Pass
 argument_list|(
+argument|PT_Loop
+argument_list|,
 argument|pid
 argument_list|)
 block|{}
@@ -291,6 +295,26 @@ specifier|const
 block|{
 return|return
 literal|"Loop Pass Manager"
+return|;
+block|}
+name|virtual
+name|PMDataManager
+operator|*
+name|getAsPMDataManager
+argument_list|()
+block|{
+return|return
+name|this
+return|;
+block|}
+name|virtual
+name|Pass
+operator|*
+name|getAsPass
+argument_list|()
+block|{
+return|return
+name|this
 return|;
 block|}
 comment|/// Print passes managed by this manager

@@ -54,6 +54,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AsmToken
+decl_stmt|;
+name|class
 name|MCAsmLexer
 decl_stmt|;
 name|class
@@ -172,6 +175,24 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Lex - Get the next AsmToken in the stream, possibly handling file
+comment|/// inclusion first.
+name|virtual
+specifier|const
+name|AsmToken
+modifier|&
+name|Lex
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|/// getTok - Get the current AsmToken from the stream.
+specifier|const
+name|AsmToken
+modifier|&
+name|getTok
+parameter_list|()
+function_decl|;
 comment|/// ParseExpression - Parse an arbitrary expression.
 comment|///
 comment|/// @param Res - The value of the expression. The result is undefined
@@ -186,9 +207,23 @@ name|MCExpr
 modifier|*
 modifier|&
 name|Res
+parameter_list|,
+name|SMLoc
+modifier|&
+name|EndLoc
 parameter_list|)
 init|=
 literal|0
+function_decl|;
+name|bool
+name|ParseExpression
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+modifier|&
+name|Res
+parameter_list|)
 function_decl|;
 comment|/// ParseParenExpression - Parse an arbitrary expression, assuming that an
 comment|/// initial '(' has already been consumed.
@@ -205,6 +240,10 @@ name|MCExpr
 modifier|*
 modifier|&
 name|Res
+parameter_list|,
+name|SMLoc
+modifier|&
+name|EndLoc
 parameter_list|)
 init|=
 literal|0

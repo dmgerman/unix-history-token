@@ -197,6 +197,15 @@ operator|>
 expr|struct
 name|ilist_traits
 expr_stmt|;
+name|void
+name|checkForCycles
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 comment|/// SDVTList - This represents a list of ValueType's that has been intern'd by
 comment|/// a SelectionDAG.  Instances of this simple value class are returned by
 comment|/// SelectionDAG::getVTList(...).
@@ -3329,6 +3338,101 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// printrFull - Print a SelectionDAG node and all children down to
+end_comment
+
+begin_comment
+comment|/// the leaves.  The given SelectionDAG allows target-specific nodes
+end_comment
+
+begin_comment
+comment|/// to be printed in human-readable form.  Unlike printr, this will
+end_comment
+
+begin_comment
+comment|/// print the whole DAG, including children that appear multiple
+end_comment
+
+begin_comment
+comment|/// times.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|void
+name|printrFull
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|,
+specifier|const
+name|SelectionDAG
+operator|*
+name|G
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// printrWithDepth - Print a SelectionDAG node and children up to
+end_comment
+
+begin_comment
+comment|/// depth "depth."  The given SelectionDAG allows target-specific
+end_comment
+
+begin_comment
+comment|/// nodes to be printed in human-readable form.  Unlike printr, this
+end_comment
+
+begin_comment
+comment|/// will print children that appear multiple times wherever they are
+end_comment
+
+begin_comment
+comment|/// used.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|void
+name|printrWithDepth
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|,
+specifier|const
+name|SelectionDAG
+operator|*
+name|G
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|depth
+operator|=
+literal|100
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// dump - Dump this node, for debugging.
+end_comment
+
 begin_expr_stmt
 name|void
 name|dump
@@ -3337,6 +3441,10 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// dumpr - Dump (recursively) this node and its use-def subgraph.
+end_comment
+
 begin_expr_stmt
 name|void
 name|dumpr
@@ -3344,6 +3452,18 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// dump - Dump this node, for debugging.
+end_comment
+
+begin_comment
+comment|/// The given SelectionDAG allows target-specific nodes to be printed
+end_comment
+
+begin_comment
+comment|/// in human-readable form.
+end_comment
 
 begin_decl_stmt
 name|void
@@ -3358,6 +3478,18 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// dumpr - Dump (recursively) this node and its use-def subgraph.
+end_comment
+
+begin_comment
+comment|/// The given SelectionDAG allows target-specific nodes to be printed
+end_comment
+
+begin_comment
+comment|/// in human-readable form.
+end_comment
+
 begin_decl_stmt
 name|void
 name|dumpr
@@ -3366,6 +3498,81 @@ specifier|const
 name|SelectionDAG
 operator|*
 name|G
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// dumprFull - printrFull to dbgs().  The given SelectionDAG allows
+end_comment
+
+begin_comment
+comment|/// target-specific nodes to be printed in human-readable form.
+end_comment
+
+begin_comment
+comment|/// Unlike dumpr, this will print the whole DAG, including children
+end_comment
+
+begin_comment
+comment|/// that appear multiple times.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|void
+name|dumprFull
+argument_list|(
+specifier|const
+name|SelectionDAG
+operator|*
+name|G
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// dumprWithDepth - printrWithDepth to dbgs().  The given
+end_comment
+
+begin_comment
+comment|/// SelectionDAG allows target-specific nodes to be printed in
+end_comment
+
+begin_comment
+comment|/// human-readable form.  Unlike dumpr, this will print children
+end_comment
+
+begin_comment
+comment|/// that appear multiple times wherever they are used.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|void
+name|dumprWithDepth
+argument_list|(
+specifier|const
+name|SelectionDAG
+operator|*
+name|G
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|depth
+operator|=
+literal|100
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3579,6 +3786,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|checkForCycles
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -3695,6 +3907,11 @@ block|;
 name|OperandList
 operator|=
 name|Ops
+block|;
+name|checkForCycles
+argument_list|(
+name|this
+argument_list|)
 block|;   }
 comment|/// InitOperands - Initialize the operands list of this with 2 operands.
 name|void
@@ -3754,6 +3971,11 @@ block|;
 name|OperandList
 operator|=
 name|Ops
+block|;
+name|checkForCycles
+argument_list|(
+name|this
+argument_list|)
 block|;   }
 comment|/// InitOperands - Initialize the operands list of this with 3 operands.
 name|void
@@ -3835,6 +4057,11 @@ block|;
 name|OperandList
 operator|=
 name|Ops
+block|;
+name|checkForCycles
+argument_list|(
+name|this
+argument_list|)
 block|;   }
 comment|/// InitOperands - Initialize the operands list of this with 4 operands.
 name|void
@@ -3938,6 +4165,11 @@ block|;
 name|OperandList
 operator|=
 name|Ops
+block|;
+name|checkForCycles
+argument_list|(
+name|this
+argument_list|)
 block|;   }
 comment|/// InitOperands - Initialize the operands list of this with N operands.
 name|void
@@ -3999,6 +4231,14 @@ begin_expr_stmt
 name|OperandList
 operator|=
 name|Ops
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|checkForCycles
+argument_list|(
+name|this
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

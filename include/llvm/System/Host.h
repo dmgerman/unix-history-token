@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -130,6 +136,27 @@ name|string
 name|getHostCPUName
 argument_list|()
 expr_stmt|;
+comment|/// getHostCPUFeatures - Get the LLVM names for the host CPU features.
+comment|/// The particular format of the names are target dependent, and suitable for
+comment|/// passing as -mattr to the target which matches the host.
+comment|///
+comment|/// \param Features - A string mapping feature names to either
+comment|/// true (if enabled) or false (if disabled). This routine makes no guarantees
+comment|/// about exactly which features may appear in this map, except that they are
+comment|/// all valid LLVM feature names.
+comment|///
+comment|/// \return - True on success.
+name|bool
+name|getHostCPUFeatures
+argument_list|(
+name|StringMap
+operator|<
+name|bool
+operator|>
+operator|&
+name|Features
+argument_list|)
+decl_stmt|;
 block|}
 block|}
 end_decl_stmt

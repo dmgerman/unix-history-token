@@ -1330,6 +1330,30 @@ return|return
 literal|" + "
 return|;
 block|}
+name|virtual
+specifier|const
+name|Type
+operator|*
+name|getType
+argument_list|()
+specifier|const
+block|{
+comment|// Use the type of the last operand, which is likely to be a pointer
+comment|// type, if there is one. This doesn't usually matter, but it can help
+comment|// reduce casts when the expressions are expanded.
+return|return
+name|getOperand
+argument_list|(
+name|getNumOperands
+argument_list|()
+operator|-
+literal|1
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

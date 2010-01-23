@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ValueMap.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -257,7 +257,7 @@ name|class
 name|DwarfDebug
 range|:
 name|public
-name|Dwarf
+name|DwarfPrinter
 block|{
 comment|//===--------------------------------------------------------------------===//
 comment|// Attributes used to construct specific Dwarf sections.
@@ -454,7 +454,7 @@ name|CurrentFnDbgScope
 block|;
 comment|/// DbgScopeMap - Tracks the scopes in the current function.
 comment|///
-name|ValueMap
+name|DenseMap
 operator|<
 name|MDNode
 operator|*
@@ -466,7 +466,7 @@ name|DbgScopeMap
 block|;
 comment|/// ConcreteScopes - Tracks the concrete scopees in the current function.
 comment|/// These scopes are also included in DbgScopeMap.
-name|ValueMap
+name|DenseMap
 operator|<
 name|MDNode
 operator|*
@@ -478,7 +478,7 @@ name|ConcreteScopes
 block|;
 comment|/// AbstractScopes - Tracks the abstract scopes a module. These scopes are
 comment|/// not included DbgScopeMap.
-name|ValueMap
+name|DenseMap
 operator|<
 name|MDNode
 operator|*
@@ -498,7 +498,7 @@ operator|>
 name|AbstractScopesList
 block|;
 comment|/// AbstractVariables - Collection on abstract variables.
-name|ValueMap
+name|DenseMap
 operator|<
 name|MDNode
 operator|*
@@ -524,7 +524,8 @@ operator|<
 name|DIE
 operator|*
 block|,
-name|WeakVH
+name|MDNode
+operator|*
 operator|>
 name|ContainingTypeMap
 block|;
@@ -600,7 +601,7 @@ operator|*
 operator|>
 name|InlineInfoLabels
 expr_stmt|;
-name|ValueMap
+name|DenseMap
 operator|<
 name|MDNode
 operator|*
@@ -883,25 +884,23 @@ comment|/// addObjectLabel - Add an non-Dwarf label attribute data and value.
 comment|///
 name|void
 name|addObjectLabel
-argument_list|(
+parameter_list|(
 name|DIE
-operator|*
+modifier|*
 name|Die
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Attribute
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Form
-argument_list|,
+parameter_list|,
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Label
-argument_list|)
-decl_stmt|;
+name|MCSymbol
+modifier|*
+name|Sym
+parameter_list|)
+function_decl|;
 comment|/// addSectionOffset - Add a section offset label attribute data and value.
 comment|///
 name|void

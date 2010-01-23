@@ -565,7 +565,7 @@ name|void
 name|EnumerateMetadata
 parameter_list|(
 specifier|const
-name|MetadataBase
+name|Value
 modifier|*
 name|MD
 parameter_list|)

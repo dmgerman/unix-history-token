@@ -92,7 +92,7 @@ name|unsigned
 name|Flags
 block|;
 comment|/// IsExplicit - Indicates that this section comes from globals with an
-comment|/// explicit section specfied.
+comment|/// explicit section specified.
 name|bool
 name|IsExplicit
 block|;
@@ -164,7 +164,7 @@ comment|/// should be printed before the section name
 name|bool
 name|ShouldOmitSectionDirective
 argument_list|(
-argument|const char *Name
+argument|StringRef Name
 argument_list|,
 argument|const MCAsmInfo&MAI
 argument_list|)

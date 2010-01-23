@@ -1003,13 +1003,6 @@ name|x
 operator|)
 specifier|const
 block|{
-return|return
-name|idx
-operator|>
-name|x
-operator|.
-name|idx
-return|;
 name|assert
 argument_list|(
 name|Term
@@ -1020,11 +1013,19 @@ name|Term
 operator|&&
 literal|"Cannot compare iterators of different blocks!"
 argument_list|)
-expr_stmt|;
+block|;
+return|return
+name|idx
+operator|>
+name|x
+operator|.
+name|idx
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}    inline
+specifier|inline
 name|_Self
 operator|&
 name|operator

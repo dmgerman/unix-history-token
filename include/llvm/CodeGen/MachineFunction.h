@@ -110,6 +110,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|DILocation
+decl_stmt|;
+name|class
 name|Value
 decl_stmt|;
 name|class
@@ -599,30 +602,6 @@ name|this
 argument_list|)
 expr_stmt|;
 block|}
-name|assert
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|dynamic_cast
-operator|<
-name|Ty
-operator|*
-operator|>
-operator|(
-name|MFInfo
-operator|)
-operator|==
-operator|(
-name|void
-operator|*
-operator|)
-name|MFInfo
-operator|&&
-literal|"Invalid concrete type or multiple inheritence for getInfo"
-argument_list|)
-expr_stmt|;
 return|return
 name|static_cast
 operator|<
@@ -1383,9 +1362,9 @@ expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Debug location.
 comment|//
-comment|/// getDebugLocTuple - Get the DebugLocTuple for a given DebugLoc object.
-name|DebugLocTuple
-name|getDebugLocTuple
+comment|/// getDILocation - Get the DILocation for a given DebugLoc object.
+name|DILocation
+name|getDILocation
 argument_list|(
 name|DebugLoc
 name|DL
@@ -1428,45 +1407,15 @@ name|DebugLocInfo
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// GraphTraits specializations for function basic block graphs (CFGs)
-end_comment
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Provide specializations of GraphTraits to be able to treat a
-end_comment
-
-begin_comment
 comment|// machine function as a graph of machine basic blocks... these are
-end_comment
-
-begin_comment
 comment|// the same as the machine basic block iterators, except that the root
-end_comment
-
-begin_comment
 comment|// node is implicitly the first node of the function.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1500,30 +1449,19 @@ name|front
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// nodes_iterator/begin/end - Allow iteration over all nodes in the graph
-end_comment
-
-begin_typedef
 typedef|typedef
 name|MachineFunction
 operator|::
 name|iterator
 name|nodes_iterator
 expr_stmt|;
-end_typedef
-
-begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_begin
-parameter_list|(
-name|MachineFunction
-modifier|*
-name|F
-parameter_list|)
+argument_list|(
+argument|MachineFunction *F
+argument_list|)
 block|{
 return|return
 name|F
@@ -1532,17 +1470,12 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_end
-parameter_list|(
-name|MachineFunction
-modifier|*
-name|F
-parameter_list|)
+argument_list|(
+argument|MachineFunction *F
+argument_list|)
 block|{
 return|return
 name|F
@@ -1551,10 +1484,8 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
-unit|};
+block|}
+empty_stmt|;
 name|template
 operator|<
 operator|>
@@ -1590,31 +1521,19 @@ name|front
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// nodes_iterator/begin/end - Allow iteration over all nodes in the graph
-end_comment
-
-begin_typedef
 typedef|typedef
 name|MachineFunction
 operator|::
 name|const_iterator
 name|nodes_iterator
 expr_stmt|;
-end_typedef
-
-begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_begin
-parameter_list|(
-specifier|const
-name|MachineFunction
-modifier|*
-name|F
-parameter_list|)
+argument_list|(
+argument|const MachineFunction *F
+argument_list|)
 block|{
 return|return
 name|F
@@ -1623,18 +1542,12 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_end
-parameter_list|(
-specifier|const
-name|MachineFunction
-modifier|*
-name|F
-parameter_list|)
+argument_list|(
+argument|const MachineFunction *F
+argument_list|)
 block|{
 return|return
 name|F
@@ -1643,30 +1556,13 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+block|}
+empty_stmt|;
 comment|// Provide specializations of GraphTraits to be able to treat a function as a
-end_comment
-
-begin_comment
 comment|// graph of basic blocks... and to walk it in inverse order.  Inverse order for
-end_comment
-
-begin_comment
 comment|// a function is considered to be when traversing the predecessor edges of a BB
-end_comment
-
-begin_comment
 comment|// instead of the successor edges.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1708,10 +1604,8 @@ name|front
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -1755,10 +1649,11 @@ name|front
 argument_list|()
 return|;
 block|}
-end_expr_stmt
+expr|}
+block|;  }
+end_decl_stmt
 
 begin_comment
-unit|};  }
 comment|// End llvm namespace
 end_comment
 

@@ -123,6 +123,9 @@ name|class
 name|MCInstPrinter
 decl_stmt|;
 name|class
+name|TargetAsmLexer
+decl_stmt|;
+name|class
 name|TargetAsmParser
 decl_stmt|;
 name|class
@@ -235,6 +238,24 @@ operator|,
 name|bool
 name|VerboseAsm
 operator|)
+argument_list|;     typedef
+name|TargetAsmLexer
+operator|*
+call|(
+modifier|*
+name|AsmLexerCtorTy
+call|)
+argument_list|(
+specifier|const
+name|Target
+operator|&
+name|T
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|&
+name|MAI
+argument_list|)
 argument_list|;     typedef
 name|TargetAsmParser
 operator|*
@@ -351,8 +372,13 @@ comment|/// if registered.
 name|AsmPrinterCtorTy
 name|AsmPrinterCtorFn
 argument_list|;
-comment|/// AsmParserCtorFn - Construction function for this target's AsmParser,
+comment|/// AsmLexerCtorFn - Construction function for this target's TargetAsmLexer,
 comment|/// if registered.
+name|AsmLexerCtorTy
+name|AsmLexerCtorFn
+argument_list|;
+comment|/// AsmParserCtorFn - Construction function for this target's
+comment|/// TargetAsmParser, if registered.
 name|AsmParserCtorTy
 name|AsmParserCtorFn
 argument_list|;
@@ -622,6 +648,37 @@ argument_list|,
 name|MAI
 argument_list|,
 name|Verbose
+argument_list|)
+return|;
+block|}
+comment|/// createAsmLexer - Create a target specific assembly lexer.
+comment|///
+name|TargetAsmLexer
+modifier|*
+name|createAsmLexer
+argument_list|(
+specifier|const
+name|MCAsmInfo
+operator|&
+name|MAI
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|AsmLexerCtorFn
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|AsmLexerCtorFn
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|MAI
 argument_list|)
 return|;
 block|}
@@ -1361,6 +1418,73 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// RegisterAsmLexer - Register a TargetAsmLexer implementation for the
+end_comment
+
+begin_comment
+comment|/// given target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct an AsmPrinter for the target.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterAsmLexer
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|AsmLexerCtorTy
+name|Fn
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|T
+operator|.
+name|AsmLexerCtorFn
+condition|)
+name|T
+operator|.
+name|AsmLexerCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// RegisterAsmParser - Register a TargetAsmParser implementation for the
 end_comment
 
@@ -2054,6 +2178,87 @@ argument_list|,
 name|MAI
 argument_list|,
 name|Verbose
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// RegisterAsmLexer - Helper template for registering a target specific
+end_comment
+
+begin_comment
+comment|/// assembly lexer, for use in the target machine initialization
+end_comment
+
+begin_comment
+comment|/// function. Usage:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// extern "C" void LLVMInitializeFooAsmLexer() {
+end_comment
+
+begin_comment
+comment|///   extern Target TheFooTarget;
+end_comment
+
+begin_comment
+comment|///   RegisterAsmLexer<FooAsmLexer> X(TheFooTarget);
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|AsmLexerImpl
+operator|>
+expr|struct
+name|RegisterAsmLexer
+block|{
+name|RegisterAsmLexer
+argument_list|(
+argument|Target&T
+argument_list|)
+block|{
+name|TargetRegistry
+operator|::
+name|RegisterAsmLexer
+argument_list|(
+name|T
+argument_list|,
+operator|&
+name|Allocator
+argument_list|)
+block|;     }
+name|private
+operator|:
+specifier|static
+name|TargetAsmLexer
+operator|*
+name|Allocator
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|const MCAsmInfo&MAI
+argument_list|)
+block|{
+return|return
+name|new
+name|AsmLexerImpl
+argument_list|(
+name|T
+argument_list|,
+name|MAI
 argument_list|)
 return|;
 block|}

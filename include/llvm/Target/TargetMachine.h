@@ -214,6 +214,21 @@ comment|// -O3
 block|}
 enum|;
 block|}
+comment|// Specify if we should encode the LSDA pointer in the FDE as 4- or 8-bytes.
+name|namespace
+name|DwarfLSDAEncoding
+block|{
+enum|enum
+name|Encoding
+block|{
+name|Default
+block|,
+name|FourByte
+block|,
+name|EightByte
+block|}
+enum|;
+block|}
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetMachine - Primary interface to the complete machine description for
@@ -377,31 +392,6 @@ name|getSubtarget
 argument_list|()
 specifier|const
 block|{
-specifier|const
-name|TargetSubtarget
-operator|*
-name|TST
-operator|=
-name|getSubtargetImpl
-argument_list|()
-block|;
-name|assert
-argument_list|(
-name|TST
-operator|&&
-name|dynamic_cast
-operator|<
-specifier|const
-name|STC
-operator|*
-operator|>
-operator|(
-name|TST
-operator|)
-operator|&&
-literal|"Not the right kind of subtarget!"
-argument_list|)
-block|;
 return|return
 operator|*
 name|static_cast
@@ -411,7 +401,8 @@ name|STC
 operator|*
 operator|>
 operator|(
-name|TST
+name|getSubtargetImpl
+argument_list|()
 operator|)
 return|;
 block|}
@@ -562,6 +553,30 @@ parameter_list|(
 name|bool
 parameter_list|)
 function_decl|;
+comment|/// getLSDAEncoding - Returns the LSDA pointer encoding. The choices are
+comment|/// 4-byte, 8-byte, and target default. The CIE is hard-coded to indicate that
+comment|/// the LSDA pointer in the FDE section is an "sdata4", and should be encoded
+comment|/// as a 4-byte pointer by default. However, some systems may require a
+comment|/// different size due to bugs or other conditions. We will default to a
+comment|/// 4-byte encoding unless the system tells us otherwise.
+comment|///
+comment|/// FIXME: This call-back isn't good! We should be using the correct encoding
+comment|/// regardless of the system. However, there are some systems which have bugs
+comment|/// that prevent this from occuring.
+name|virtual
+name|DwarfLSDAEncoding
+operator|::
+name|Encoding
+name|getLSDAEncoding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfLSDAEncoding
+operator|::
+name|Default
+return|;
+block|}
 comment|/// CodeGenFileType - These enums are meant to be passed into
 comment|/// addPassesToEmitFile to indicate what type of file to emit.
 enum|enum
@@ -1162,6 +1177,25 @@ name|Level
 argument_list|,
 name|bool
 comment|/* VerboseAsmDefault */
+argument_list|,
+name|formatted_raw_ostream
+operator|&
+argument_list|)
+block|;
+comment|/// addObjectFileEmitter - Helper function which creates a target specific
+comment|/// object files emitter, if available.  This interface is temporary, for
+comment|/// bringing up MCAssembler-based object file emitters.
+comment|///
+comment|/// \return Returns 'false' on success.
+name|bool
+name|addObjectFileEmitter
+argument_list|(
+name|PassManagerBase
+operator|&
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
 argument_list|,
 name|formatted_raw_ostream
 operator|&

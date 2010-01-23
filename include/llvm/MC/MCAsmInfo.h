@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCDirectives.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -77,6 +83,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MCSection
+decl_stmt|;
+name|class
+name|MCContext
+decl_stmt|;
 comment|/// MCAsmInfo - This class is intended to be used as a base class for asm
 comment|/// properties and features specific to the target.
 name|namespace
@@ -101,23 +113,26 @@ label|:
 comment|//===------------------------------------------------------------------===//
 comment|// Properties to be set by the target writer, used to configure asm printer.
 comment|//
-comment|/// ZeroFillDirective - Directive for emitting a global to the ZeroFill
-comment|/// section on this target.  Null if this target doesn't support zerofill.
-specifier|const
-name|char
-modifier|*
-name|ZeroFillDirective
+comment|/// HasSubsectionsViaSymbols - True if this target has the MachO
+comment|/// .subsections_via_symbols directive.
+name|bool
+name|HasSubsectionsViaSymbols
 decl_stmt|;
-comment|// Default is null.
-comment|/// NonexecutableStackDirective - Directive for declaring to the
-comment|/// linker and beyond that the emitted code does not require stack
-comment|/// memory to be executable.
-specifier|const
-name|char
-modifier|*
-name|NonexecutableStackDirective
+comment|// Default is false.
+comment|/// HasMachoZeroFillDirective - True if this is a MachO target that supports
+comment|/// the macho-specific .zerofill directive for emitting BSS Symbols.
+name|bool
+name|HasMachoZeroFillDirective
 decl_stmt|;
-comment|// Default is null.
+comment|// Default is false.
+comment|/// HasStaticCtorDtorReferenceInStaticMode - True if the compiler should
+comment|/// emit a ".reference .constructors_used" or ".reference .destructors_used"
+comment|/// directive after the a static ctor/dtor list.  This directive is only
+comment|/// emitted in Static relocation model.
+name|bool
+name|HasStaticCtorDtorReferenceInStaticMode
+decl_stmt|;
+comment|// Default is false.
 comment|/// NeedsSet - True if target asm treats expressions in data directives
 comment|/// as linktime-relocatable.  For assembly-time computation, we need to
 comment|/// use a .set.  Thus:
@@ -232,12 +247,6 @@ modifier|*
 name|ZeroDirective
 decl_stmt|;
 comment|// Defaults to "\t.zero\t"
-specifier|const
-name|char
-modifier|*
-name|ZeroDirectiveSuffix
-decl_stmt|;
-comment|// Defaults to ""
 comment|/// AsciiDirective - This directive allows emission of an ascii string with
 comment|/// the standard C escape characters embedded into it.
 specifier|const
@@ -390,23 +399,12 @@ modifier|*
 name|SetDirective
 decl_stmt|;
 comment|// Defaults to null.
-comment|/// LCOMMDirective - This is the name of a directive (if supported) that can
-comment|/// be used to efficiently declare a local (internal) block of zero
-comment|/// initialized data in the .bss/.data section.  The syntax expected is:
-comment|/// @verbatim<LCOMMDirective> SYMBOLNAME LENGTHINBYTES, ALIGNMENT
-comment|/// @endverbatim
-specifier|const
-name|char
-modifier|*
-name|LCOMMDirective
+comment|/// HasLCOMMDirective - This is true if the target supports the .lcomm
+comment|/// directive.
+name|bool
+name|HasLCOMMDirective
 decl_stmt|;
-comment|// Defaults to null.
-specifier|const
-name|char
-modifier|*
-name|COMMDirective
-decl_stmt|;
-comment|// Defaults to "\t.comm\t".
+comment|// Defaults to false.
 comment|/// COMMDirectiveTakesAlignment - True if COMMDirective take a third
 comment|/// argument that specifies the alignment of the declaration.
 name|bool
@@ -425,15 +423,12 @@ name|bool
 name|HasSingleParameterDotFile
 decl_stmt|;
 comment|// Defaults to true.
-comment|/// UsedDirective - This directive, if non-null, is used to declare a global
-comment|/// as being used somehow that the assembler can't see.  This prevents dead
-comment|/// code elimination on some targets.
-specifier|const
-name|char
-modifier|*
-name|UsedDirective
+comment|/// HasNoDeadStrip - True if this target supports the MachO .no_dead_strip
+comment|/// directive.
+name|bool
+name|HasNoDeadStrip
 decl_stmt|;
-comment|// Defaults to NULL.
+comment|// Defaults to false.
 comment|/// WeakRefDirective - This directive, if non-null, is used to declare a
 comment|/// global as being a weak undefined symbol.
 specifier|const
@@ -450,22 +445,26 @@ modifier|*
 name|WeakDefDirective
 decl_stmt|;
 comment|// Defaults to NULL.
-comment|/// HiddenDirective - This directive, if non-null, is used to declare a
-comment|/// global or function as having hidden visibility.
+comment|/// LinkOnceDirective - This directive, if non-null is used to declare a
+comment|/// global as being a weak defined symbol.  This is used on cygwin/mingw.
 specifier|const
 name|char
 modifier|*
-name|HiddenDirective
+name|LinkOnceDirective
 decl_stmt|;
-comment|// Defaults to "\t.hidden\t".
-comment|/// ProtectedDirective - This directive, if non-null, is used to declare a
-comment|/// global or function as having protected visibility.
-specifier|const
-name|char
-modifier|*
-name|ProtectedDirective
+comment|// Defaults to NULL.
+comment|/// HiddenVisibilityAttr - This attribute, if not MCSA_Invalid, is used to
+comment|/// declare a symbol as having hidden visibility.
+name|MCSymbolAttr
+name|HiddenVisibilityAttr
 decl_stmt|;
-comment|// Defaults to "\t.protected\t".
+comment|// Defaults to MCSA_Hidden.
+comment|/// ProtectedVisibilityAttr - This attribute, if not MCSA_Invalid, is used
+comment|/// to declare a symbol as having protected visibility.
+name|MCSymbolAttr
+name|ProtectedVisibilityAttr
+decl_stmt|;
+comment|// Defaults to MCSA_Protected
 comment|//===--- Dwarf Emission Directives -----------------------------------===//
 comment|/// AbsoluteDebugSectionOffsets - True if we should emit abolute section
 comment|/// offsets for debug information.
@@ -560,8 +559,7 @@ operator|~
 name|MCAsmInfo
 argument_list|()
 expr_stmt|;
-comment|/// getSLEB128Size - Compute the number of bytes required for a signed
-comment|/// leb128 value.
+comment|// FIXME: move these methods to DwarfPrinter when the JIT stops using them.
 specifier|static
 name|unsigned
 name|getSLEB128Size
@@ -570,8 +568,6 @@ name|int
 name|Value
 parameter_list|)
 function_decl|;
-comment|/// getULEB128Size - Compute the number of bytes required for an unsigned
-comment|/// leb128 value.
 specifier|static
 name|unsigned
 name|getULEB128Size
@@ -580,6 +576,15 @@ name|unsigned
 name|Value
 parameter_list|)
 function_decl|;
+name|bool
+name|hasSubsectionsViaSymbols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSubsectionsViaSymbols
+return|;
+block|}
 comment|// Data directive accessors.
 comment|//
 specifier|const
@@ -690,6 +695,24 @@ name|AS
 argument_list|)
 return|;
 block|}
+comment|/// getNonexecutableStackSection - Targets can implement this method to
+comment|/// specify a section to switch to if the translation unit doesn't have any
+comment|/// trampolines that require an executable stack.
+name|virtual
+name|MCSection
+modifier|*
+name|getNonexecutableStackSection
+argument_list|(
+name|MCContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 name|bool
 name|usesSunStyleELFSectionSwitchSyntax
 argument_list|()
@@ -710,26 +733,22 @@ return|;
 block|}
 comment|// Accessors.
 comment|//
-specifier|const
-name|char
-operator|*
-name|getZeroFillDirective
+name|bool
+name|hasMachoZeroFillDirective
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ZeroFillDirective
+name|HasMachoZeroFillDirective
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getNonexecutableStackDirective
+name|bool
+name|hasStaticCtorDtorReferenceInStaticMode
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NonexecutableStackDirective
+name|HasStaticCtorDtorReferenceInStaticMode
 return|;
 block|}
 name|bool
@@ -886,17 +905,6 @@ block|}
 specifier|const
 name|char
 operator|*
-name|getZeroDirectiveSuffix
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ZeroDirectiveSuffix
-return|;
-block|}
-specifier|const
-name|char
-operator|*
 name|getAsciiDirective
 argument_list|()
 specifier|const
@@ -996,26 +1004,13 @@ return|return
 name|SetDirective
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getLCOMMDirective
+name|bool
+name|hasLCOMMDirective
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LCOMMDirective
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getCOMMDirective
-argument_list|()
-specifier|const
-block|{
-return|return
-name|COMMDirective
+name|HasLCOMMDirective
 return|;
 block|}
 name|bool
@@ -1045,15 +1040,13 @@ return|return
 name|HasSingleParameterDotFile
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getUsedDirective
+name|bool
+name|hasNoDeadStrip
 argument_list|()
 specifier|const
 block|{
 return|return
-name|UsedDirective
+name|HasNoDeadStrip
 return|;
 block|}
 specifier|const
@@ -1081,23 +1074,30 @@ block|}
 specifier|const
 name|char
 operator|*
-name|getHiddenDirective
+name|getLinkOnceDirective
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HiddenDirective
+name|LinkOnceDirective
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getProtectedDirective
+name|MCSymbolAttr
+name|getHiddenVisibilityAttr
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ProtectedDirective
+name|HiddenVisibilityAttr
+return|;
+block|}
+name|MCSymbolAttr
+name|getProtectedVisibilityAttr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ProtectedVisibilityAttr
 return|;
 block|}
 name|bool

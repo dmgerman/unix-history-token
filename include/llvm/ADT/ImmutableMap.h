@@ -1315,7 +1315,6 @@ comment|//===--------------------------------------------------===//
 end_comment
 
 begin_expr_stmt
-specifier|inline
 name|unsigned
 name|getHeight
 argument_list|()
