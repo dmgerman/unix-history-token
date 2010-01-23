@@ -1657,6 +1657,8 @@ label|:
 name|vfs_unbusy
 argument_list|(
 name|mp
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
@@ -2140,6 +2142,8 @@ condition|)
 name|vfs_unbusy
 argument_list|(
 name|mp
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
