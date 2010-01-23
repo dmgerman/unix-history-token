@@ -2892,9 +2892,6 @@ name|mtx
 modifier|*
 name|lock
 decl_stmt|;
-name|spinlock_enter
-argument_list|()
-expr_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
@@ -2977,9 +2974,6 @@ name|uintptr_t
 operator|)
 name|new
 argument_list|)
-expr_stmt|;
-name|spinlock_exit
-argument_list|()
 expr_stmt|;
 block|}
 end_function

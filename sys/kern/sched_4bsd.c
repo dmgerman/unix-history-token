@@ -3368,6 +3368,11 @@ name|flags
 parameter_list|)
 block|{
 name|struct
+name|mtx
+modifier|*
+name|tmtx
+decl_stmt|;
+name|struct
 name|td_sched
 modifier|*
 name|ts
@@ -3377,6 +3382,10 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|tmtx
+operator|=
+name|NULL
+expr_stmt|;
 name|ts
 operator|=
 name|td
@@ -3396,7 +3405,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Switch to the sched lock to fix things up and pick 	 * a new thread. 	 */
+comment|/*  	 * Switch to the sched lock to fix things up and pick 	 * a new thread. 	 * Block the td_lock in order to avoid breaking the critical path. 	 */
 if|if
 condition|(
 name|td
@@ -3413,7 +3422,9 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|thread_unlock
+name|tmtx
+operator|=
+name|thread_lock_block
 argument_list|(
 name|td
 argument_list|)
@@ -3667,6 +3678,12 @@ name|td
 argument_list|,
 name|newtd
 argument_list|,
+name|tmtx
+operator|!=
+name|NULL
+condition|?
+name|tmtx
+else|:
 name|td
 operator|->
 name|td_lock
