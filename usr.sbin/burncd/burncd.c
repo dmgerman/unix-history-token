@@ -618,7 +618,7 @@ name|EX_USAGE
 argument_list|,
 literal|"Invalid speed: %s"
 argument_list|,
-name|optarg
+name|env_speed
 argument_list|)
 expr_stmt|;
 if|if
