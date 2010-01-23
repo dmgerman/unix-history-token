@@ -982,8 +982,10 @@ expr|struct
 name|zip
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
