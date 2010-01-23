@@ -602,31 +602,6 @@ name|CFG_K0_UNCACHED
 value|2
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_SB1
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CFG_K0_COHERENT
-value|5
-end_define
-
-begin_comment
-comment|/* cacheable coherent */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -634,10 +609,12 @@ name|CFG_K0_CACHED
 value|3
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|CFG_K0_MASK
+value|0x7
+end_define
 
 begin_comment
 comment|/*  * The bits in the context register.  */

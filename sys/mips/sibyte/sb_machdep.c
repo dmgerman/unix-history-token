@@ -785,6 +785,45 @@ block|{  }
 end_function
 
 begin_function
+specifier|static
+name|void
+name|kseg0_map_coherent
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint32_t
+name|config
+decl_stmt|;
+specifier|const
+name|int
+name|CFG_K0_COHERENT
+init|=
+literal|5
+decl_stmt|;
+name|config
+operator|=
+name|mips_rd_config
+argument_list|()
+expr_stmt|;
+name|config
+operator|&=
+operator|~
+name|CFG_K0_MASK
+expr_stmt|;
+name|config
+operator||=
+name|CFG_K0_COHERENT
+expr_stmt|;
+name|mips_wr_config
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|platform_start
 parameter_list|(
@@ -804,6 +843,10 @@ block|{
 name|vm_offset_t
 name|kernend
 decl_stmt|;
+comment|/* 	 * Make sure that kseg0 is mapped cacheable-coherent 	 */
+name|kseg0_map_coherent
+argument_list|()
+expr_stmt|;
 comment|/* clear the BSS and SBSS segments */
 name|memset
 argument_list|(
