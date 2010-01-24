@@ -3449,6 +3449,17 @@ if|if
 condition|(
 name|newtd
 condition|)
+block|{
+name|MPASS
+argument_list|(
+name|newtd
+operator|->
+name|td_lock
+operator|==
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|newtd
 operator|->
 name|td_flags
@@ -3461,6 +3472,7 @@ operator|&
 name|TDF_NEEDRESCHED
 operator|)
 expr_stmt|;
+block|}
 name|td
 operator|->
 name|td_lastcpu
@@ -3606,7 +3618,6 @@ operator|=
 name|choosethread
 argument_list|()
 expr_stmt|;
-block|}
 name|MPASS
 argument_list|(
 name|newtd
@@ -3617,6 +3628,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|td
