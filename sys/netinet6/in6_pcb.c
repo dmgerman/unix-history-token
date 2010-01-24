@@ -1491,7 +1491,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Do not update this earlier, in case we return with an error. 	 * 	 * XXX: this in6_selectsrc result might replace the bound local 	 * aaddress with the address specified by setsockopt(IPV6_PKTINFO). 	 * Is it the intended behavior? 	 */
+comment|/* 	 * Do not update this earlier, in case we return with an error. 	 * 	 * XXX: this in6_selectsrc result might replace the bound local 	 * address with the address specified by setsockopt(IPV6_PKTINFO). 	 * Is it the intended behavior? 	 */
 operator|*
 name|plocal_addr6
 operator|=
