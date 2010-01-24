@@ -2124,37 +2124,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/md5.h>
-end_include
-
-begin_comment
-comment|/* map standard crypto API names */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD5_Init
-value|MD5Init
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD5_Update
-value|MD5Update
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD5_Final
-value|MD5Final
-end_define
-
 begin_endif
 endif|#
 directive|endif
