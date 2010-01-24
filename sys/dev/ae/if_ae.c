@@ -2201,6 +2201,9 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|ifp
 operator|->
