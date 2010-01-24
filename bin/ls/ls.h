@@ -10,6 +10,27 @@ name|NO_PRINT
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HUMANVALSTR_LEN
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVSTR_LEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVSTR_HEX_LEN
+value|15
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|long
@@ -252,9 +273,6 @@ name|list
 decl_stmt|;
 name|u_long
 name|btotal
-decl_stmt|;
-name|int
-name|bcfile
 decl_stmt|;
 name|int
 name|entries
