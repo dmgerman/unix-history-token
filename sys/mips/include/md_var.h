@@ -56,6 +56,13 @@ name|kstack0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|kernel_kseg0_end
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|MipsSaveCurFPState
@@ -246,6 +253,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|mips_proc0_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mips_postboot_fixup
 parameter_list|(
 name|void
 parameter_list|)
