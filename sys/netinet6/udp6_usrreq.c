@@ -2080,6 +2080,8 @@ name|laddr
 decl_stmt|,
 modifier|*
 name|faddr
+decl_stmt|,
+name|in6a
 decl_stmt|;
 name|struct
 name|sockaddr_in6
@@ -2380,7 +2382,7 @@ name|faddr
 argument_list|)
 condition|)
 block|{
-name|laddr
+name|error
 operator|=
 name|in6_selectsrc
 argument_list|(
@@ -2400,9 +2402,16 @@ operator|&
 name|oifp
 argument_list|,
 operator|&
-name|error
+name|in6a
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|release
+goto|;
 if|if
 condition|(
 name|oifp
@@ -2430,6 +2439,11 @@ goto|goto
 name|release
 goto|;
 block|}
+name|laddr
+operator|=
+operator|&
+name|in6a
+expr_stmt|;
 block|}
 else|else
 name|laddr

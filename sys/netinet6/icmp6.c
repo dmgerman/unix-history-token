@@ -8654,8 +8654,10 @@ name|struct
 name|in6_addr
 name|origdst
 decl_stmt|,
-modifier|*
 name|src
+decl_stmt|,
+modifier|*
+name|srcp
 init|=
 name|NULL
 decl_stmt|;
@@ -9002,7 +9004,7 @@ name|IN6_IFF_NOTREADY
 operator|)
 operator|)
 condition|)
-name|src
+name|srcp
 operator|=
 operator|&
 name|ia
@@ -9086,7 +9088,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|src
+name|srcp
 operator|=
 operator|&
 name|ia
@@ -9100,7 +9102,7 @@ block|}
 block|}
 if|if
 condition|(
-name|src
+name|srcp
 operator|==
 name|NULL
 condition|)
@@ -9163,7 +9165,7 @@ name|ro
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|src
+name|e
 operator|=
 name|in6_selectsrc
 argument_list|(
@@ -9183,7 +9185,7 @@ operator|&
 name|outif
 argument_list|,
 operator|&
-name|e
+name|src
 argument_list|)
 expr_stmt|;
 if|if
@@ -9202,9 +9204,7 @@ expr_stmt|;
 comment|/* XXX: we could use this */
 if|if
 condition|(
-name|src
-operator|==
-name|NULL
+name|e
 condition|)
 block|{
 name|char
@@ -9239,13 +9239,18 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|srcp
+operator|=
+operator|&
+name|src
+expr_stmt|;
 block|}
 name|ip6
 operator|->
 name|ip6_src
 operator|=
 operator|*
-name|src
+name|srcp
 expr_stmt|;
 name|ip6
 operator|->

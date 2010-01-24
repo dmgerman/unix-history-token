@@ -4945,7 +4945,6 @@ name|nam
 decl_stmt|;
 name|struct
 name|in6_addr
-modifier|*
 name|addr6
 decl_stmt|;
 name|int
@@ -5042,6 +5041,7 @@ operator|->
 name|in6p_laddr
 argument_list|)
 condition|?
+operator|&
 name|addr6
 else|:
 operator|&
@@ -5079,7 +5079,6 @@ name|inp
 operator|->
 name|in6p_laddr
 operator|=
-operator|*
 name|addr6
 expr_stmt|;
 name|inp

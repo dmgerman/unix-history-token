@@ -1422,7 +1422,6 @@ literal|0
 decl_stmt|;
 name|struct
 name|in6_addr
-modifier|*
 name|in6a
 decl_stmt|;
 name|va_list
@@ -1711,10 +1710,7 @@ operator|*
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Source address selection. 	 */
-if|if
-condition|(
-operator|(
-name|in6a
+name|error
 operator|=
 name|in6_selectsrc
 argument_list|(
@@ -1734,27 +1730,16 @@ operator|&
 name|oifp
 argument_list|,
 operator|&
-name|error
+name|in6a
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-literal|0
 condition|)
-name|error
-operator|=
-name|EADDRNOTAVAIL
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 name|error
 operator|=
 name|prison_get_ip6
@@ -1763,6 +1748,7 @@ name|in6p
 operator|->
 name|inp_cred
 argument_list|,
+operator|&
 name|in6a
 argument_list|)
 expr_stmt|;
@@ -1779,7 +1765,6 @@ name|ip6
 operator|->
 name|ip6_src
 operator|=
-operator|*
 name|in6a
 expr_stmt|;
 if|if
@@ -3137,10 +3122,7 @@ name|nam
 decl_stmt|;
 name|struct
 name|in6_addr
-modifier|*
 name|in6a
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|ifnet
@@ -3267,7 +3249,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 comment|/* Source address selection. XXX: need pcblookup? */
-name|in6a
+name|error
 operator|=
 name|in6_selectsrc
 argument_list|(
@@ -3289,14 +3271,12 @@ operator|&
 name|ifp
 argument_list|,
 operator|&
-name|error
+name|in6a
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|in6a
-operator|==
-name|NULL
+name|error
 condition|)
 block|{
 name|INP_WUNLOCK
@@ -3313,10 +3293,6 @@ expr_stmt|;
 return|return
 operator|(
 name|error
-condition|?
-name|error
-else|:
-name|EADDRNOTAVAIL
 operator|)
 return|;
 block|}
@@ -3375,7 +3351,6 @@ name|inp
 operator|->
 name|in6p_laddr
 operator|=
-operator|*
 name|in6a
 expr_stmt|;
 name|soisconnected

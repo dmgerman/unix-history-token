@@ -1221,7 +1221,6 @@ parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
-modifier|*
 name|plocal_addr6
 parameter_list|)
 block|{
@@ -1254,6 +1253,10 @@ name|int
 name|scope_ambiguous
 init|=
 literal|0
+decl_stmt|;
+name|struct
+name|in6_addr
+name|in6a
 decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
@@ -1393,9 +1396,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * XXX: in6_selectsrc might replace the bound local address 	 * with the address specified by setsockopt(IPV6_PKTINFO). 	 * Is it the intended behavior? 	 */
-operator|*
-name|plocal_addr6
+name|error
 operator|=
 name|in6_selectsrc
 argument_list|(
@@ -1417,9 +1418,18 @@ operator|&
 name|ifp
 argument_list|,
 operator|&
-name|error
+name|in6a
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|ifp
@@ -1451,30 +1461,12 @@ name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
+comment|/* 	 * Do not update this earlier, in case we return with an error. 	 * 	 * XXX: this in6_selectsrc result might replace the bound local 	 * aaddress with the address specified by setsockopt(IPV6_PKTINFO). 	 * Is it the intended behavior? 	 */
 operator|*
 name|plocal_addr6
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|error
 operator|=
-name|EADDRNOTAVAIL
+name|in6a
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 comment|/* 	 * Don't do pcblookup call here; return interface in 	 * plocal_addr6 	 * and exit to caller, that will do the lookup. 	 */
 return|return
 operator|(
@@ -1509,11 +1501,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|struct
-name|in6_addr
-modifier|*
-name|addr6
-decl_stmt|;
 specifier|register
 name|struct
 name|sockaddr_in6
@@ -1526,6 +1513,10 @@ name|sockaddr_in6
 operator|*
 operator|)
 name|nam
+decl_stmt|;
+name|struct
+name|in6_addr
+name|addr6
 decl_stmt|;
 name|int
 name|error
@@ -1591,6 +1582,7 @@ operator|->
 name|in6p_laddr
 argument_list|)
 condition|?
+operator|&
 name|addr6
 else|:
 operator|&
@@ -1666,7 +1658,6 @@ name|inp
 operator|->
 name|in6p_laddr
 operator|=
-operator|*
 name|addr6
 expr_stmt|;
 block|}
