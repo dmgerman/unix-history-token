@@ -370,9 +370,7 @@ begin_function_decl
 name|void
 name|kthread_suspend_check
 parameter_list|(
-name|struct
-name|thread
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

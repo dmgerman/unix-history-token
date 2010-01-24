@@ -1261,6 +1261,18 @@ name|int
 name|timo
 parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
+comment|/* 	 * td_pflags should not be ready by any other thread different by 	 * curthread, but as long as this flag is invariant during the 	 * thread lifetime, it is ok to check for it now. 	 */
 if|if
 condition|(
 operator|(
@@ -1273,13 +1285,17 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
+comment|/* 	 * The caller of the primitive should have already checked that the 	 * thread is up and running, thus not being blocked by other 	 * conditions. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|thread_lock
 argument_list|(
 name|td
@@ -1296,22 +1312,19 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If it's stopped for some other reason, 	 * kick it to notice our request  	 * or we'll end up timing out 	 */
-name|wakeup
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-comment|/* traditional  place for kernel threads to sleep on */
-comment|/* XXX ?? */
 return|return
 operator|(
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|td
 operator|->
 name|td_flags
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_mtx
 argument_list|,
 name|PPAUSE
 operator||
@@ -1327,7 +1340,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * let the kthread it can keep going again.  */
+comment|/*  * Resume a thread previously put asleep with kthread_suspend().  */
 end_comment
 
 begin_function
@@ -1340,6 +1353,18 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
+comment|/* 	 * td_pflags should not be ready by any other thread different by 	 * curthread, but as long as this flag is invariant during the 	 * thread lifetime, it is ok to check for it now. 	 */
 if|if
 condition|(
 operator|(
@@ -1352,13 +1377,16 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|thread_lock
 argument_list|(
 name|td
@@ -1381,7 +1409,12 @@ argument_list|(
 operator|&
 name|td
 operator|->
-name|td_name
+name|td_flags
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1399,13 +1432,53 @@ end_comment
 begin_function
 name|void
 name|kthread_suspend_check
-parameter_list|(
+parameter_list|()
+block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-block|{
+decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_KTHREAD
+operator|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"%s: curthread is not a valid kthread"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+comment|/* 	 * As long as the double-lock protection is used when accessing the 	 * TDF_KTH_SUSP flag, synchronizing the read operation via proc mutex 	 * is fine. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|td
@@ -1415,7 +1488,6 @@ operator|&
 name|TDF_KTH_SUSP
 condition|)
 block|{
-comment|/* 		 * let the caller know we got the message then sleep 		 */
 name|wakeup
 argument_list|(
 operator|&
@@ -1424,12 +1496,17 @@ operator|->
 name|td_flags
 argument_list|)
 expr_stmt|;
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|td
 operator|->
-name|td_name
+name|td_flags
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_mtx
 argument_list|,
 name|PPAUSE
 argument_list|,
@@ -1439,6 +1516,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
