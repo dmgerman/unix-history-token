@@ -515,11 +515,6 @@ operator|=
 name|tcp_init
 block|,
 operator|.
-name|pr_fasttimo
-operator|=
-name|tcp_fasttimo
-block|,
-operator|.
 name|pr_slowtimo
 operator|=
 name|tcp_slowtimo
