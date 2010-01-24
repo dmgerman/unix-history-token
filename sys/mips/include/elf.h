@@ -1331,6 +1331,17 @@ name|ET_DYN_LOAD_ADDR
 value|0x0120000
 end_define
 
+begin_comment
+comment|/*  * Constant to mark start of symtab/strtab saved by trampoline  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMTAB_MAGIC
+value|0x64656267
+end_define
+
 begin_endif
 endif|#
 directive|endif
