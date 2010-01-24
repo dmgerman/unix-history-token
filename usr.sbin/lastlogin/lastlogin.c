@@ -45,12 +45,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -159,12 +153,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|setpassent
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Keep passwd file pointers open */
 comment|/* Process usernames given on the command line. */
 if|if
 condition|(
@@ -296,12 +284,6 @@ name|endutxent
 argument_list|()
 expr_stmt|;
 block|}
-name|setpassent
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Close passwd file pointers */
 name|exit
 argument_list|(
 literal|0
