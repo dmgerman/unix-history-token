@@ -443,8 +443,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|mips_generic_reset
-argument_list|()
+name|oct_write64
+argument_list|(
+name|OCTEON_CIU_SOFT_RST
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3743,7 +3747,20 @@ condition|(
 name|app_desc_ptr
 operator|->
 name|desc_version
-operator|==
+operator|<
+literal|6
+condition|)
+name|panic
+argument_list|(
+literal|"Your boot code is too old to be supported.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|app_desc_ptr
+operator|->
+name|desc_version
+operator|>=
 literal|6
 condition|)
 name|bad_desc

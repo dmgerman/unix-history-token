@@ -2058,6 +2058,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OCTEON_CIU_SOFT_RST
+value|OCTEON_ADD_IO_SEG(0x0001070000000740ull)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCTEON_OCTEON_DID_TAG
 value|12ULL
 end_define
