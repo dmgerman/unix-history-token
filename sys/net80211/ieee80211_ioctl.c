@@ -16352,7 +16352,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-name|if_purgemaddrs
+name|if_delallmulti
 argument_list|(
 name|parent
 argument_list|)
@@ -16401,6 +16401,18 @@ argument|&ifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
 argument_list|)
+block|{
+if|if
+condition|(
+name|ifma
+operator|->
+name|ifma_addr
+operator|->
+name|sa_family
+operator|!=
+name|AF_LINK
+condition|)
+continue|continue;
 operator|(
 name|void
 operator|)
@@ -16415,6 +16427,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|parent
 operator|->
