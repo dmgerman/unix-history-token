@@ -653,11 +653,7 @@ index|]
 operator|+=
 name|MIPS_KSEG0_TO_PHYS
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-operator|&
-name|end
+name|kernel_kseg0_end
 argument_list|)
 expr_stmt|;
 block|}
@@ -840,9 +836,6 @@ name|__register_t
 name|a3
 parameter_list|)
 block|{
-name|vm_offset_t
-name|kernend
-decl_stmt|;
 comment|/* 	 * Make sure that kseg0 is mapped cacheable-coherent 	 */
 name|kseg0_map_coherent
 argument_list|()
@@ -868,16 +861,8 @@ operator|&
 name|edata
 argument_list|)
 expr_stmt|;
-name|kernend
-operator|=
-name|round_page
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-operator|&
-name|end
-argument_list|)
+name|mips_postboot_fixup
+argument_list|()
 expr_stmt|;
 comment|/* Initialize pcpu stuff */
 name|mips_pcpu0_init

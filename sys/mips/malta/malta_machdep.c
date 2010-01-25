@@ -651,11 +651,7 @@ index|]
 operator|=
 name|MIPS_KSEG0_TO_PHYS
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-operator|&
-name|end
+name|kernel_kseg0_end
 argument_list|)
 expr_stmt|;
 name|phys_avail
@@ -1017,14 +1013,11 @@ decl_stmt|;
 comment|/* clear the BSS and SBSS segments */
 name|kernend
 operator|=
-name|round_page
-argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
 operator|&
 name|end
-argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
@@ -1043,6 +1036,9 @@ operator|&
 name|edata
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|mips_postboot_fixup
+argument_list|()
 expr_stmt|;
 name|mips_pcpu0_init
 argument_list|()
