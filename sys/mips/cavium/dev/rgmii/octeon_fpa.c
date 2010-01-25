@@ -59,9 +59,12 @@ directive|include
 file|"octeon_fpa.h"
 end_include
 
-begin_comment
-comment|//#define FPA_DEBUG 1
-end_comment
+begin_define
+define|#
+directive|define
+name|FPA_DEBUG
+value|1
+end_define
 
 begin_comment
 comment|/*  * octeon_dump_fpa  *  */
@@ -491,9 +494,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|//#define FPA_DEBUG_TERSE 1
-end_comment
+begin_define
+define|#
+directive|define
+name|FPA_DEBUG_TERSE
+value|1
+end_define
 
 begin_comment
 comment|/*  * octeon_fpa_fill_pool_mem  *  * Fill the specified FPA pool with elem_num number of  * elements of size elem_size_words * 8  */
@@ -654,7 +660,7 @@ directive|ifdef
 name|FPA_DEBUG
 name|printf
 argument_list|(
-literal|" %% Huge MemBlock  0x%X   Bytes %u\n"
+literal|" %% Huge MemBlock  %p   Bytes %u\n"
 argument_list|,
 name|memory
 argument_list|,
@@ -679,7 +685,7 @@ directive|ifdef
 name|FPA_DEBUG_TERSE
 name|printf
 argument_list|(
-literal|"FPA fill: %u  Count: %u  SizeBytes: %u  SizeBytesAligned: %u  1st: 0x%X = %p\n"
+literal|"FPA fill: %u  Count: %u  SizeBytes: %u  SizeBytesAligned: %u  1st: %p = 0x%X\n"
 argument_list|,
 name|pool
 argument_list|,
@@ -733,7 +739,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" %% Block %d:  0x%X  Phys 0x%X   Bytes %u\n"
+literal|" %% Block %d:  %p  Phys 0x%X   Bytes %u\n"
 argument_list|,
 name|block
 argument_list|,
