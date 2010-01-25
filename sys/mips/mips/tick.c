@@ -743,30 +743,18 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TARGET_OCTEON
-end_ifdef
-
-begin_decl_stmt
-name|int64_t
-name|wheel_run
-init|=
+begin_if
+if|#
+directive|if
 literal|0
-decl_stmt|;
-end_decl_stmt
+end_if
 
-begin_function_decl
-name|void
-name|octeon_led_run_wheel
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* TARGET_OCTEON */
+end_comment
 
 begin_endif
+unit|int64_t wheel_run = 0;  void octeon_led_run_wheel();
 endif|#
 directive|endif
 end_endif
@@ -986,29 +974,12 @@ block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TARGET_OCTEON
-comment|/* Run the FreeBSD display once every hz ticks  */
-name|wheel_run
-operator|+=
-name|cycles_per_tick
-expr_stmt|;
-if|if
-condition|(
-name|wheel_run
-operator|>=
-name|cycles_per_sec
-condition|)
-block|{
-name|wheel_run
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
-name|octeon_led_run_wheel
-argument_list|()
-expr_stmt|;
-block|}
+comment|/* TARGET_OCTEON */
+comment|/* Run the FreeBSD display once every hz ticks  */
+block|wheel_run += cycles_per_tick; 	if (wheel_run>= cycles_per_sec) { 		wheel_run = 0; 		octeon_led_run_wheel(); 	}
 endif|#
 directive|endif
 return|return
