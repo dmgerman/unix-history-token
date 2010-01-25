@@ -915,6 +915,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * The kernel virtual address (KVA) of the level 4 page table page is always  * within the direct map (DMAP) region.  */
+end_comment
+
 begin_struct
 struct|struct
 name|pmap
