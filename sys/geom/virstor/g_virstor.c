@@ -409,7 +409,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|write_metadata
 parameter_list|(
 name|struct
@@ -5232,12 +5232,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Utility function: encode& write metadata. Assumes topology lock is  * held.  */
+comment|/**  * Utility function: encode& write metadata. Assumes topology lock is  * held.  *  * There is no useful way of recovering from errors in this function,  * not involving panicking the kernel. If the metadata cannot be written  * the most we can do is notify the operator and hope he spots it and  * replaces the broken drive.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|write_metadata
 parameter_list|(
 name|struct
@@ -5321,11 +5321,24 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
+block|{
+name|LOG_MSG
+argument_list|(
+name|LVL_ERROR
+argument_list|,
+literal|"g_access(0,1,0) failed for %s: %d"
+argument_list|,
+name|cp
+operator|->
+name|provider
+operator|->
+name|name
+argument_list|,
 name|error
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|pp
 operator|=
 name|cp
@@ -5398,11 +5411,27 @@ argument_list|,
 name|M_GVIRSTOR
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
+name|error
+operator|!=
 literal|0
-operator|)
-return|;
+condition|)
+name|LOG_MSG
+argument_list|(
+name|LVL_ERROR
+argument_list|,
+literal|"Error %d writing metadata to %s"
+argument_list|,
+name|error
+argument_list|,
+name|cp
+operator|->
+name|provider
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
