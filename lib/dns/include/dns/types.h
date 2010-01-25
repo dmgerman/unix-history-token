@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: types.h,v 1.130.50.3.12.1 2009/11/18 23:58:04 marka Exp $ */
+comment|/* $Id: types.h,v 1.130.50.3.12.2 2009/12/31 20:29:21 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -1285,6 +1285,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x) == dns_trust_pending_answer || \ 					 (x) == dns_trust_pending_additional)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_TRUST_ADDITIONAL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == dns_trust_additional || \ 					 (x) == dns_trust_pending_additional)
 end_define
 
 begin_define

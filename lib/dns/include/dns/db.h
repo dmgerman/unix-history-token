@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: db.h,v 1.93.50.3 2009/01/18 23:25:17 marka Exp $ */
+comment|/* $Id: db.h,v 1.93.50.3.12.1 2009/12/31 21:44:37 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -961,56 +961,63 @@ begin_define
 define|#
 directive|define
 name|DNS_DBFIND_GLUEOK
-value|0x01
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_VALIDATEGLUE
-value|0x02
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_NOWILD
-value|0x04
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_PENDINGOK
-value|0x08
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_NOEXACT
-value|0x10
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_FORCENSEC
-value|0x20
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_COVERINGNSEC
-value|0x40
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_FORCENSEC3
-value|0x80
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_DBFIND_ADDITIONALOK
+value|0x0100
 end_define
 
 begin_comment
