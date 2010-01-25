@@ -8180,16 +8180,6 @@ argument_list|(
 name|dvp
 argument_list|)
 decl_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|CRED_TO_VNET
-argument_list|(
-name|curthread
-operator|->
-name|td_ucred
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Oops, not for me.. 	 */
 if|if
 condition|(
@@ -8214,9 +8204,6 @@ name|cnp
 argument_list|,
 name|vap
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -8245,9 +8232,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -8848,9 +8832,6 @@ operator|)
 operator|->
 name|n_mtx
 argument_list|)
-expr_stmt|;
-name|CURVNET_RESTORE
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
