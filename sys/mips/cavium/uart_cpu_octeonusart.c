@@ -446,7 +446,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|bus_space
 name|octeon_uart_tag

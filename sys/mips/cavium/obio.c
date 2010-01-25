@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2001, 2002, 2003 Wasabi Systems, Inc.  * All rights
 end_comment
 
 begin_comment
-comment|/*  * On-board device autoconfiguration support for Intel IQ80321  * evaluation boards.  */
+comment|/*  * On-board device autoconfiguration support for Cavium OCTEON 1 family of  * SoC devices.  */
 end_comment
 
 begin_include
@@ -84,6 +84,14 @@ include|#
 directive|include
 file|<mips/cavium/obiovar.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|bus_space
+name|octeon_uart_tag
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -422,9 +430,8 @@ name|oba_rman
 expr_stmt|;
 name|bt
 operator|=
-name|sc
-operator|->
-name|oba_st
+operator|&
+name|octeon_uart_tag
 expr_stmt|;
 name|bh
 operator|=
