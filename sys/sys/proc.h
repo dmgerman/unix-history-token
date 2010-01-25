@@ -616,6 +616,10 @@ name|int
 name|td_slptick
 decl_stmt|;
 comment|/* (t) Time at sleep. */
+name|int
+name|td_blktick
+decl_stmt|;
+comment|/* (t) Time spent blocked. */
 name|struct
 name|rusage
 name|td_ru

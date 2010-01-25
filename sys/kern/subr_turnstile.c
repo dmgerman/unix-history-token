@@ -2980,6 +2980,12 @@ name|lock
 operator|->
 name|lo_name
 expr_stmt|;
+name|td
+operator|->
+name|td_blktick
+operator|=
+name|ticks
+expr_stmt|;
 name|TD_SET_LOCK
 argument_list|(
 name|td
@@ -3875,6 +3881,12 @@ operator|->
 name|td_lockname
 operator|=
 name|NULL
+expr_stmt|;
+name|td
+operator|->
+name|td_blktick
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
