@@ -612,7 +612,7 @@ name|u_int
 name|td_estcpu
 decl_stmt|;
 comment|/* (t) estimated cpu utilization */
-name|u_int
+name|int
 name|td_slptick
 decl_stmt|;
 comment|/* (t) Time at sleep. */
