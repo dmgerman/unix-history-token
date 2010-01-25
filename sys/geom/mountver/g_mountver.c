@@ -400,11 +400,6 @@ name|bp
 parameter_list|)
 block|{
 name|struct
-name|g_mountver_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
 name|g_geom
 modifier|*
 name|gp
@@ -438,12 +433,6 @@ operator|->
 name|bio_from
 operator|->
 name|geom
-expr_stmt|;
-name|sc
-operator|=
-name|gp
-operator|->
-name|softc
 expr_stmt|;
 name|pbp
 operator|=
