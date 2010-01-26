@@ -7292,6 +7292,12 @@ name|next_eop
 operator|=
 name|last
 expr_stmt|;
+name|txr
+operator|->
+name|watchdog_time
+operator|=
+name|ticks
+expr_stmt|;
 comment|/* 	 * Advance the Transmit Descriptor Tail (TDT), this tells the E1000 	 * that this frame is available to transmit. 	 */
 name|bus_dmamap_sync
 argument_list|(
