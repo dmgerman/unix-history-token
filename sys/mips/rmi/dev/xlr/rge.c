@@ -8503,6 +8503,8 @@ specifier|static
 specifier|volatile
 name|uint32_t
 name|g_tx_frm_tx_ok
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -9303,6 +9305,25 @@ block|}
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|g_tx_frm_tx_ok
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|rge_tx_bkp_func
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
