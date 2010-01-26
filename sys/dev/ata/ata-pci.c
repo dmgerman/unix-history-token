@@ -4614,6 +4614,12 @@ return|return
 literal|"Marvell"
 return|;
 case|case
+name|ATA_MARVELL2_ID
+case|:
+return|return
+literal|"Marvell"
+return|;
+case|case
 name|ATA_NATIONAL_ID
 case|:
 return|return

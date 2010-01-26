@@ -644,6 +644,9 @@ block|{
 name|uint32_t
 name|id
 decl_stmt|;
+name|uint8_t
+name|rev
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -680,6 +683,10 @@ define|#
 directive|define
 name|AHCI_Q_EDGEIS
 value|64
+define|#
+directive|define
+name|AHCI_Q_SATA2
+value|128
 block|}
 name|ahci_ids
 index|[]
@@ -687,6 +694,8 @@ init|=
 block|{
 block|{
 literal|0x43801002
+block|,
+literal|0x00
 block|,
 literal|"ATI IXP600"
 block|,
@@ -696,6 +705,8 @@ block|,
 block|{
 literal|0x43901002
 block|,
+literal|0x00
+block|,
 literal|"ATI IXP700"
 block|,
 literal|0
@@ -703,6 +714,8 @@ block|}
 block|,
 block|{
 literal|0x43911002
+block|,
+literal|0x00
 block|,
 literal|"ATI IXP700"
 block|,
@@ -712,6 +725,8 @@ block|,
 block|{
 literal|0x43921002
 block|,
+literal|0x00
+block|,
 literal|"ATI IXP700"
 block|,
 literal|0
@@ -719,6 +734,8 @@ block|}
 block|,
 block|{
 literal|0x43931002
+block|,
+literal|0x00
 block|,
 literal|"ATI IXP700"
 block|,
@@ -728,6 +745,8 @@ block|,
 block|{
 literal|0x43941002
 block|,
+literal|0x00
+block|,
 literal|"ATI IXP800"
 block|,
 literal|0
@@ -735,6 +754,8 @@ block|}
 block|,
 block|{
 literal|0x43951002
+block|,
+literal|0x00
 block|,
 literal|"ATI IXP800"
 block|,
@@ -744,6 +765,8 @@ block|,
 block|{
 literal|0x26528086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH6"
 block|,
 name|AHCI_Q_NOFORCE
@@ -751,6 +774,8 @@ block|}
 block|,
 block|{
 literal|0x26538086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH6M"
 block|,
@@ -760,6 +785,8 @@ block|,
 block|{
 literal|0x26818086
 block|,
+literal|0x00
+block|,
 literal|"Intel ESB2"
 block|,
 literal|0
@@ -767,6 +794,8 @@ block|}
 block|,
 block|{
 literal|0x26828086
+block|,
+literal|0x00
 block|,
 literal|"Intel ESB2"
 block|,
@@ -776,6 +805,8 @@ block|,
 block|{
 literal|0x26838086
 block|,
+literal|0x00
+block|,
 literal|"Intel ESB2"
 block|,
 literal|0
@@ -783,6 +814,8 @@ block|}
 block|,
 block|{
 literal|0x27c18086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH7"
 block|,
@@ -792,6 +825,8 @@ block|,
 block|{
 literal|0x27c38086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH7"
 block|,
 literal|0
@@ -799,6 +834,8 @@ block|}
 block|,
 block|{
 literal|0x27c58086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH7M"
 block|,
@@ -808,6 +845,8 @@ block|,
 block|{
 literal|0x27c68086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH7M"
 block|,
 literal|0
@@ -815,6 +854,8 @@ block|}
 block|,
 block|{
 literal|0x28218086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH8"
 block|,
@@ -824,6 +865,8 @@ block|,
 block|{
 literal|0x28228086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH8"
 block|,
 literal|0
@@ -831,6 +874,8 @@ block|}
 block|,
 block|{
 literal|0x28248086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH8"
 block|,
@@ -840,6 +885,8 @@ block|,
 block|{
 literal|0x28298086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH8M"
 block|,
 literal|0
@@ -847,6 +894,8 @@ block|}
 block|,
 block|{
 literal|0x282a8086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH8M"
 block|,
@@ -856,6 +905,8 @@ block|,
 block|{
 literal|0x29228086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH9"
 block|,
 literal|0
@@ -863,6 +914,8 @@ block|}
 block|,
 block|{
 literal|0x29238086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH9"
 block|,
@@ -872,6 +925,8 @@ block|,
 block|{
 literal|0x29248086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH9"
 block|,
 literal|0
@@ -879,6 +934,8 @@ block|}
 block|,
 block|{
 literal|0x29258086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH9"
 block|,
@@ -888,6 +945,8 @@ block|,
 block|{
 literal|0x29278086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH9"
 block|,
 literal|0
@@ -895,6 +954,8 @@ block|}
 block|,
 block|{
 literal|0x29298086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH9M"
 block|,
@@ -904,6 +965,8 @@ block|,
 block|{
 literal|0x292a8086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH9M"
 block|,
 literal|0
@@ -911,6 +974,8 @@ block|}
 block|,
 block|{
 literal|0x292b8086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH9M"
 block|,
@@ -920,6 +985,8 @@ block|,
 block|{
 literal|0x292c8086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH9M"
 block|,
 literal|0
@@ -927,6 +994,8 @@ block|}
 block|,
 block|{
 literal|0x292f8086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH9M"
 block|,
@@ -936,6 +1005,8 @@ block|,
 block|{
 literal|0x294d8086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH9"
 block|,
 literal|0
@@ -943,6 +1014,8 @@ block|}
 block|,
 block|{
 literal|0x294e8086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH9M"
 block|,
@@ -952,6 +1025,8 @@ block|,
 block|{
 literal|0x3a058086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH10"
 block|,
 literal|0
@@ -959,6 +1034,8 @@ block|}
 block|,
 block|{
 literal|0x3a228086
+block|,
+literal|0x00
 block|,
 literal|"Intel ICH10"
 block|,
@@ -968,6 +1045,8 @@ block|,
 block|{
 literal|0x3a258086
 block|,
+literal|0x00
+block|,
 literal|"Intel ICH10"
 block|,
 literal|0
@@ -975,6 +1054,8 @@ block|}
 block|,
 block|{
 literal|0x3b228086
+block|,
+literal|0x00
 block|,
 literal|"Intel PCH"
 block|,
@@ -984,6 +1065,8 @@ block|,
 block|{
 literal|0x3b238086
 block|,
+literal|0x00
+block|,
 literal|"Intel PCH"
 block|,
 literal|0
@@ -991,6 +1074,8 @@ block|}
 block|,
 block|{
 literal|0x3b248086
+block|,
+literal|0x00
 block|,
 literal|"Intel PCH"
 block|,
@@ -1000,6 +1085,8 @@ block|,
 block|{
 literal|0x3b258086
 block|,
+literal|0x00
+block|,
 literal|"Intel PCH"
 block|,
 literal|0
@@ -1007,6 +1094,8 @@ block|}
 block|,
 block|{
 literal|0x3b298086
+block|,
+literal|0x00
 block|,
 literal|"Intel PCH"
 block|,
@@ -1016,6 +1105,8 @@ block|,
 block|{
 literal|0x3b2b8086
 block|,
+literal|0x00
+block|,
 literal|"Intel PCH"
 block|,
 literal|0
@@ -1023,6 +1114,8 @@ block|}
 block|,
 block|{
 literal|0x3b2c8086
+block|,
+literal|0x00
 block|,
 literal|"Intel PCH"
 block|,
@@ -1032,6 +1125,8 @@ block|,
 block|{
 literal|0x3b2f8086
 block|,
+literal|0x00
+block|,
 literal|"Intel PCH"
 block|,
 literal|0
@@ -1039,6 +1134,8 @@ block|}
 block|,
 block|{
 literal|0x2361197b
+block|,
+literal|0x00
 block|,
 literal|"JMicron JMB361"
 block|,
@@ -1048,6 +1145,8 @@ block|,
 block|{
 literal|0x2363197b
 block|,
+literal|0x00
+block|,
 literal|"JMicron JMB363"
 block|,
 name|AHCI_Q_NOFORCE
@@ -1055,6 +1154,8 @@ block|}
 block|,
 block|{
 literal|0x2365197b
+block|,
+literal|0x00
 block|,
 literal|"JMicron JMB365"
 block|,
@@ -1064,6 +1165,8 @@ block|,
 block|{
 literal|0x2366197b
 block|,
+literal|0x00
+block|,
 literal|"JMicron JMB366"
 block|,
 name|AHCI_Q_NOFORCE
@@ -1072,6 +1175,8 @@ block|,
 block|{
 literal|0x2368197b
 block|,
+literal|0x00
+block|,
 literal|"JMicron JMB368"
 block|,
 name|AHCI_Q_NOFORCE
@@ -1079,6 +1184,8 @@ block|}
 block|,
 block|{
 literal|0x611111ab
+block|,
+literal|0x00
 block|,
 literal|"Marvell 88SX6111"
 block|,
@@ -1092,6 +1199,8 @@ block|,
 block|{
 literal|0x612111ab
 block|,
+literal|0x00
+block|,
 literal|"Marvell 88SX6121"
 block|,
 name|AHCI_Q_NOFORCE
@@ -1103,6 +1212,8 @@ block|}
 block|,
 block|{
 literal|0x614111ab
+block|,
+literal|0x00
 block|,
 literal|"Marvell 88SX6141"
 block|,
@@ -1116,6 +1227,8 @@ block|,
 block|{
 literal|0x614511ab
 block|,
+literal|0x00
+block|,
 literal|"Marvell 88SX6145"
 block|,
 name|AHCI_Q_NOFORCE
@@ -1126,7 +1239,31 @@ name|AHCI_Q_EDGEIS
 block|}
 block|,
 block|{
+literal|0x91231b4b
+block|,
+literal|0x11
+block|,
+literal|"Marvell 88SE912x"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x91231b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE912x"
+block|,
+name|AHCI_Q_EDGEIS
+operator||
+name|AHCI_Q_SATA2
+block|}
+block|,
+block|{
 literal|0x044c10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
@@ -1136,6 +1273,8 @@ block|,
 block|{
 literal|0x044d10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP65"
 block|,
 literal|0
@@ -1143,6 +1282,8 @@ block|}
 block|,
 block|{
 literal|0x044e10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
@@ -1152,6 +1293,8 @@ block|,
 block|{
 literal|0x044f10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP65"
 block|,
 literal|0
@@ -1159,6 +1302,8 @@ block|}
 block|,
 block|{
 literal|0x045c10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
@@ -1168,6 +1313,8 @@ block|,
 block|{
 literal|0x045d10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP65"
 block|,
 literal|0
@@ -1175,6 +1322,8 @@ block|}
 block|,
 block|{
 literal|0x045e10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
@@ -1184,6 +1333,8 @@ block|,
 block|{
 literal|0x045f10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP65"
 block|,
 literal|0
@@ -1191,6 +1342,8 @@ block|}
 block|,
 block|{
 literal|0x055010de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
@@ -1200,6 +1353,8 @@ block|,
 block|{
 literal|0x055110de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP67"
 block|,
 literal|0
@@ -1207,6 +1362,8 @@ block|}
 block|,
 block|{
 literal|0x055210de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
@@ -1216,6 +1373,8 @@ block|,
 block|{
 literal|0x055310de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP67"
 block|,
 literal|0
@@ -1223,6 +1382,8 @@ block|}
 block|,
 block|{
 literal|0x055410de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
@@ -1232,6 +1393,8 @@ block|,
 block|{
 literal|0x055510de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP67"
 block|,
 literal|0
@@ -1239,6 +1402,8 @@ block|}
 block|,
 block|{
 literal|0x055610de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
@@ -1248,6 +1413,8 @@ block|,
 block|{
 literal|0x055710de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP67"
 block|,
 literal|0
@@ -1255,6 +1422,8 @@ block|}
 block|,
 block|{
 literal|0x055810de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
@@ -1264,6 +1433,8 @@ block|,
 block|{
 literal|0x055910de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP67"
 block|,
 literal|0
@@ -1271,6 +1442,8 @@ block|}
 block|,
 block|{
 literal|0x055A10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
@@ -1280,6 +1453,8 @@ block|,
 block|{
 literal|0x055B10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP67"
 block|,
 literal|0
@@ -1287,6 +1462,8 @@ block|}
 block|,
 block|{
 literal|0x058410de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
@@ -1296,6 +1473,8 @@ block|,
 block|{
 literal|0x07f010de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP73"
 block|,
 literal|0
@@ -1303,6 +1482,8 @@ block|}
 block|,
 block|{
 literal|0x07f110de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
@@ -1312,6 +1493,8 @@ block|,
 block|{
 literal|0x07f210de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP73"
 block|,
 literal|0
@@ -1319,6 +1502,8 @@ block|}
 block|,
 block|{
 literal|0x07f310de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
@@ -1328,6 +1513,8 @@ block|,
 block|{
 literal|0x07f410de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP73"
 block|,
 literal|0
@@ -1335,6 +1522,8 @@ block|}
 block|,
 block|{
 literal|0x07f510de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
@@ -1344,6 +1533,8 @@ block|,
 block|{
 literal|0x07f610de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP73"
 block|,
 literal|0
@@ -1351,6 +1542,8 @@ block|}
 block|,
 block|{
 literal|0x07f710de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
@@ -1360,6 +1553,8 @@ block|,
 block|{
 literal|0x07f810de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP73"
 block|,
 literal|0
@@ -1367,6 +1562,8 @@ block|}
 block|,
 block|{
 literal|0x07f910de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
@@ -1376,6 +1573,8 @@ block|,
 block|{
 literal|0x07fa10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP73"
 block|,
 literal|0
@@ -1383,6 +1582,8 @@ block|}
 block|,
 block|{
 literal|0x07fb10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
@@ -1392,6 +1593,8 @@ block|,
 block|{
 literal|0x0ad010de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP77"
 block|,
 literal|0
@@ -1399,6 +1602,8 @@ block|}
 block|,
 block|{
 literal|0x0ad110de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
@@ -1408,6 +1613,8 @@ block|,
 block|{
 literal|0x0ad210de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP77"
 block|,
 literal|0
@@ -1415,6 +1622,8 @@ block|}
 block|,
 block|{
 literal|0x0ad310de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
@@ -1424,6 +1633,8 @@ block|,
 block|{
 literal|0x0ad410de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP77"
 block|,
 literal|0
@@ -1431,6 +1642,8 @@ block|}
 block|,
 block|{
 literal|0x0ad510de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
@@ -1440,6 +1653,8 @@ block|,
 block|{
 literal|0x0ad610de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP77"
 block|,
 literal|0
@@ -1447,6 +1662,8 @@ block|}
 block|,
 block|{
 literal|0x0ad710de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
@@ -1456,6 +1673,8 @@ block|,
 block|{
 literal|0x0ad810de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP77"
 block|,
 literal|0
@@ -1463,6 +1682,8 @@ block|}
 block|,
 block|{
 literal|0x0ad910de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
@@ -1472,6 +1693,8 @@ block|,
 block|{
 literal|0x0ada10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP77"
 block|,
 literal|0
@@ -1479,6 +1702,8 @@ block|}
 block|,
 block|{
 literal|0x0adb10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
@@ -1488,6 +1713,8 @@ block|,
 block|{
 literal|0x0ab410de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP79"
 block|,
 literal|0
@@ -1495,6 +1722,8 @@ block|}
 block|,
 block|{
 literal|0x0ab510de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
@@ -1504,6 +1733,8 @@ block|,
 block|{
 literal|0x0ab610de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP79"
 block|,
 literal|0
@@ -1511,6 +1742,8 @@ block|}
 block|,
 block|{
 literal|0x0ab710de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
@@ -1520,6 +1753,8 @@ block|,
 block|{
 literal|0x0ab810de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP79"
 block|,
 literal|0
@@ -1527,6 +1762,8 @@ block|}
 block|,
 block|{
 literal|0x0ab910de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
@@ -1536,6 +1773,8 @@ block|,
 block|{
 literal|0x0aba10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP79"
 block|,
 literal|0
@@ -1543,6 +1782,8 @@ block|}
 block|,
 block|{
 literal|0x0abb10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
@@ -1552,6 +1793,8 @@ block|,
 block|{
 literal|0x0abc10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP79"
 block|,
 literal|0
@@ -1559,6 +1802,8 @@ block|}
 block|,
 block|{
 literal|0x0abd10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
@@ -1568,6 +1813,8 @@ block|,
 block|{
 literal|0x0abe10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP79"
 block|,
 literal|0
@@ -1575,6 +1822,8 @@ block|}
 block|,
 block|{
 literal|0x0abf10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
@@ -1584,6 +1833,8 @@ block|,
 block|{
 literal|0x0d8410de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP89"
 block|,
 literal|0
@@ -1591,6 +1842,8 @@ block|}
 block|,
 block|{
 literal|0x0d8510de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
@@ -1600,6 +1853,8 @@ block|,
 block|{
 literal|0x0d8610de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP89"
 block|,
 literal|0
@@ -1607,6 +1862,8 @@ block|}
 block|,
 block|{
 literal|0x0d8710de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
@@ -1616,6 +1873,8 @@ block|,
 block|{
 literal|0x0d8810de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP89"
 block|,
 literal|0
@@ -1623,6 +1882,8 @@ block|}
 block|,
 block|{
 literal|0x0d8910de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
@@ -1632,6 +1893,8 @@ block|,
 block|{
 literal|0x0d8a10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP89"
 block|,
 literal|0
@@ -1639,6 +1902,8 @@ block|}
 block|,
 block|{
 literal|0x0d8b10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
@@ -1648,6 +1913,8 @@ block|,
 block|{
 literal|0x0d8c10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP89"
 block|,
 literal|0
@@ -1655,6 +1922,8 @@ block|}
 block|,
 block|{
 literal|0x0d8d10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
@@ -1664,6 +1933,8 @@ block|,
 block|{
 literal|0x0d8e10de
 block|,
+literal|0x00
+block|,
 literal|"NVIDIA MCP89"
 block|,
 literal|0
@@ -1671,6 +1942,8 @@ block|}
 block|,
 block|{
 literal|0x0d8f10de
+block|,
+literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
@@ -1680,6 +1953,8 @@ block|,
 block|{
 literal|0x33491106
 block|,
+literal|0x00
+block|,
 literal|"VIA VT8251"
 block|,
 literal|0
@@ -1687,6 +1962,8 @@ block|}
 block|,
 block|{
 literal|0x62871106
+block|,
+literal|0x00
 block|,
 literal|"VIA VT8251"
 block|,
@@ -1696,6 +1973,8 @@ block|,
 block|{
 literal|0x11841039
 block|,
+literal|0x00
+block|,
 literal|"SiS 966"
 block|,
 literal|0
@@ -1703,6 +1982,8 @@ block|}
 block|,
 block|{
 literal|0x11851039
+block|,
+literal|0x00
 block|,
 literal|"SiS 968"
 block|,
@@ -1712,13 +1993,17 @@ block|,
 block|{
 literal|0x01861039
 block|,
+literal|0x00
+block|,
 literal|"SiS 968"
 block|,
 literal|0
 block|}
 block|,
 block|{
-literal|0
+literal|0x00000000
+block|,
+literal|0x00
 block|,
 name|NULL
 block|,
@@ -1754,6 +2039,14 @@ name|uint32_t
 name|devid
 init|=
 name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|uint8_t
+name|revid
+init|=
+name|pci_get_revid
 argument_list|(
 name|dev
 argument_list|)
@@ -1816,6 +2109,15 @@ operator|.
 name|id
 operator|==
 name|devid
+operator|&&
+name|ahci_ids
+index|[
+name|i
+index|]
+operator|.
+name|rev
+operator|<=
+name|revid
 operator|&&
 operator|(
 name|valid
@@ -1948,6 +2250,14 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|uint8_t
+name|revid
+init|=
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1995,6 +2305,15 @@ operator|.
 name|id
 operator|==
 name|devid
+operator|&&
+name|ahci_ids
+index|[
+name|i
+index|]
+operator|.
+name|rev
+operator|<=
+name|revid
 condition|)
 block|{
 name|snprintf
@@ -2084,6 +2403,14 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|uint8_t
+name|revid
+init|=
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|u_int32_t
 name|version
 decl_stmt|;
@@ -2108,6 +2435,7 @@ name|id
 operator|!=
 literal|0
 operator|&&
+operator|(
 name|ahci_ids
 index|[
 name|i
@@ -2116,6 +2444,16 @@ operator|.
 name|id
 operator|!=
 name|devid
+operator|||
+name|ahci_ids
+index|[
+name|i
+index|]
+operator|.
+name|rev
+operator|>
+name|revid
+operator|)
 condition|)
 name|i
 operator|++
@@ -5494,6 +5832,18 @@ condition|)
 name|sata_rev
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_SATA2
+condition|)
+name|sata_rev
+operator|=
+literal|2
 expr_stmt|;
 name|resource_int_value
 argument_list|(

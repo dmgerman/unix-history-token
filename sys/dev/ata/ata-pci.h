@@ -1280,6 +1280,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_MARVELL2_ID
+value|0x1b4b
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_MICRON_ID
 value|0x1042
 end_define
