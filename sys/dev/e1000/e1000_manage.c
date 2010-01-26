@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -249,19 +249,17 @@ parameter_list|)
 block|{
 name|u32
 name|fwsm
-decl_stmt|;
-name|DEBUGFUNC
-argument_list|(
-literal|"e1000_check_mng_mode_generic"
-argument_list|)
-expr_stmt|;
-name|fwsm
-operator|=
+init|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
 name|E1000_FWSM
+argument_list|)
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_check_mng_mode_generic"
 argument_list|)
 expr_stmt|;
 return|return
@@ -332,15 +330,18 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
-name|bool
-name|tx_filter
-init|=
-name|TRUE
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_enable_tx_pkt_filtering_generic"
 argument_list|)
+expr_stmt|;
+name|hw
+operator|->
+name|mac
+operator|.
+name|tx_pkt_filtering
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* No manageability, no filtering */
 if|if
@@ -358,7 +359,11 @@ name|hw
 argument_list|)
 condition|)
 block|{
-name|tx_filter
+name|hw
+operator|->
+name|mac
+operator|.
+name|tx_pkt_filtering
 operator|=
 name|FALSE
 expr_stmt|;
@@ -387,7 +392,11 @@ operator|!=
 name|E1000_SUCCESS
 condition|)
 block|{
-name|tx_filter
+name|hw
+operator|->
+name|mac
+operator|.
+name|tx_pkt_filtering
 operator|=
 name|FALSE
 expr_stmt|;
@@ -467,24 +476,33 @@ expr_stmt|;
 comment|/* 	 * If either the checksums or signature don't match, then 	 * the cookie area isn't considered valid, in which case we 	 * take the safe route of assuming Tx filtering is enabled. 	 */
 if|if
 condition|(
+operator|(
 name|hdr_csum
 operator|!=
 name|csum
-condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|hdr
 operator|->
 name|signature
 operator|!=
 name|E1000_IAMT_SIGNATURE
+operator|)
 condition|)
+block|{
+name|hw
+operator|->
+name|mac
+operator|.
+name|tx_pkt_filtering
+operator|=
+name|TRUE
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* Cookie area is valid, make the final check for filtering. */
 if|if
 condition|(
@@ -497,22 +515,27 @@ operator|&
 name|E1000_MNG_DHCP_COOKIE_STATUS_PARSING
 operator|)
 condition|)
-name|tx_filter
-operator|=
-name|FALSE
-expr_stmt|;
-name|out
-label|:
+block|{
 name|hw
 operator|->
 name|mac
 operator|.
 name|tx_pkt_filtering
 operator|=
-name|tx_filter
+name|FALSE
 expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|out
+label|:
 return|return
-name|tx_filter
+name|hw
+operator|->
+name|mac
+operator|.
+name|tx_pkt_filtering
 return|;
 block|}
 end_function
@@ -1142,7 +1165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_enable_mng_pass_thru - Enable processing of ARP's  *  @hw: pointer to the HW structure  *  *  Verifies the hardware needs to allow ARPs to be processed by the host.  **/
+comment|/**  *  e1000_enable_mng_pass_thru - Check if management passthrough is needed  *  @hw: pointer to the HW structure  *  *  Verifies the hardware needs to leave interface enabled so that frames can  *  be directed to and from the management interface.  **/
 end_comment
 
 begin_function
@@ -1201,13 +1224,6 @@ operator|(
 name|manc
 operator|&
 name|E1000_MANC_RCV_TCO_EN
-operator|)
-operator|||
-operator|!
-operator|(
-name|manc
-operator|&
-name|E1000_MANC_EN_MAC_ADDR_FILTER
 operator|)
 condition|)
 goto|goto

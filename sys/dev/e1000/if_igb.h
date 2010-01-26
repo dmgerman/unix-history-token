@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|IGB_DEFAULT_TXD
-value|1024
+value|256
 end_define
 
 begin_define
@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|IGB_DEFAULT_RXD
-value|1024
+value|256
 end_define
 
 begin_define
@@ -247,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|IGB_RX_PTHRESH
-value|16
+value|(hw->mac.type<= e1000_82576 ? 16 : 8)
 end_define
 
 begin_define
@@ -262,6 +262,27 @@ define|#
 directive|define
 name|IGB_RX_WTHRESH
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_PTHRESH
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_HTHRESH
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_WTHRESH
+value|((hw->mac.type == e1000_82576&& \                                           adapter->msix_mem) ? 1 : 16)
 end_define
 
 begin_define
@@ -595,28 +616,46 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Interrupt Moderation parameters  */
+comment|/* Define the starting Interrupt rate per Queue */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGB_LOW_LATENCY
-value|128
+name|IGB_INTS_PER_SEC
+value|8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGB_AVE_LATENCY
-value|450
+name|IGB_DEFAULT_ITR
+value|1000000000/(IGB_INTS_PER_SEC * 256)
+end_define
+
+begin_comment
+comment|/* Header split codes for get_buf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_HEADER
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGB_BULK_LATENCY
-value|1200
+name|IGB_CLEAN_PAYLOAD
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_BOTH
+value|(IGB_CLEAN_HEADER | IGB_CLEAN_PAYLOAD)
 end_define
 
 begin_define
@@ -686,7 +725,66 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Transmit ring: one per tx queue  */
+comment|/* ** Driver queue struct: this is the interrupt container **  for the associated tx and rx ring. */
+end_comment
+
+begin_struct
+struct|struct
+name|igb_queue
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
+name|u32
+name|msix
+decl_stmt|;
+comment|/* This queue's MSIX vector */
+name|u32
+name|eims
+decl_stmt|;
+comment|/* This queue's EIMS bit */
+name|u32
+name|eitr_setting
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|void
+modifier|*
+name|tag
+decl_stmt|;
+name|struct
+name|tx_ring
+modifier|*
+name|txr
+decl_stmt|;
+name|struct
+name|rx_ring
+modifier|*
+name|rxr
+decl_stmt|;
+name|struct
+name|task
+name|que_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+name|u64
+name|irqs
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Transmit ring: one per queue  */
 end_comment
 
 begin_struct
@@ -701,14 +799,6 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|u32
-name|msix
-decl_stmt|;
-comment|/* This ring's MSIX vector */
-name|u32
-name|eims
-decl_stmt|;
-comment|/* This ring's EIMS bit */
 name|struct
 name|mtx
 name|tx_mtx
@@ -723,21 +813,10 @@ name|struct
 name|igb_dma_alloc
 name|txdma
 decl_stmt|;
-comment|/* bus_dma glue for tx desc */
 name|struct
 name|e1000_tx_desc
 modifier|*
 name|tx_base
-decl_stmt|;
-name|struct
-name|task
-name|tx_task
-decl_stmt|;
-comment|/* cleanup tasklet */
-name|struct
-name|taskqueue
-modifier|*
-name|tq
 decl_stmt|;
 name|u32
 name|next_avail_desc
@@ -769,15 +848,11 @@ directive|endif
 name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
-comment|/* dma tag for tx */
-name|struct
-name|resource
-modifier|*
-name|res
+name|u32
+name|bytes
 decl_stmt|;
-name|void
-modifier|*
-name|tag
+name|u32
+name|packets
 decl_stmt|;
 name|bool
 name|watchdog_check
@@ -789,9 +864,6 @@ name|u64
 name|no_desc_avail
 decl_stmt|;
 name|u64
-name|tx_irq
-decl_stmt|;
-name|u64
 name|tx_packets
 decl_stmt|;
 block|}
@@ -799,7 +871,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Receive ring: one per rx queue  */
+comment|/*  * Receive ring: one per queue  */
 end_comment
 
 begin_struct
@@ -814,19 +886,10 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|u32
-name|msix
-decl_stmt|;
-comment|/* This ring's MSIX vector */
-name|u32
-name|eims
-decl_stmt|;
-comment|/* This ring's EIMS bit */
 name|struct
 name|igb_dma_alloc
 name|rxdma
 decl_stmt|;
-comment|/* bus_dma glue for tx desc */
 name|union
 name|e1000_adv_rx_desc
 modifier|*
@@ -842,15 +905,8 @@ decl_stmt|;
 name|bool
 name|hdr_split
 decl_stmt|;
-name|struct
-name|task
-name|rx_task
-decl_stmt|;
-comment|/* cleanup tasklet */
-name|struct
-name|taskqueue
-modifier|*
-name|tq
+name|bool
+name|discard
 decl_stmt|;
 name|struct
 name|mtx
@@ -874,11 +930,18 @@ modifier|*
 name|rx_buffers
 decl_stmt|;
 name|bus_dma_tag_t
-name|rxtag
+name|rx_htag
 decl_stmt|;
-comment|/* dma tag for tx */
+comment|/* dma tag for rx head */
 name|bus_dmamap_t
-name|spare_map
+name|rx_hspare_map
+decl_stmt|;
+name|bus_dma_tag_t
+name|rx_ptag
+decl_stmt|;
+comment|/* dma tag for rx packet */
+name|bus_dmamap_t
+name|rx_pspare_map
 decl_stmt|;
 comment|/* 	 * First/last mbuf pointers, for 	 * collecting multisegment RX packets. 	 */
 name|struct
@@ -895,23 +958,14 @@ name|u32
 name|bytes
 decl_stmt|;
 name|u32
-name|eitr_setting
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|res
-decl_stmt|;
-name|void
-modifier|*
-name|tag
+name|packets
 decl_stmt|;
 comment|/* Soft stats */
 name|u64
-name|rx_irq
+name|rx_split_packets
 decl_stmt|;
 name|u64
-name|rx_split_packets
+name|rx_discarded
 decl_stmt|;
 name|u64
 name|rx_packets
@@ -936,7 +990,6 @@ name|struct
 name|e1000_hw
 name|hw
 decl_stmt|;
-comment|/* FreeBSD operating-system-specific structures. */
 name|struct
 name|e1000_osdep
 name|osdep
@@ -1047,6 +1100,12 @@ decl_stmt|;
 name|u32
 name|smartspeed
 decl_stmt|;
+comment|/* Interface queues */
+name|struct
+name|igb_queue
+modifier|*
+name|queues
+decl_stmt|;
 comment|/* 	 * Transmit rings 	 */
 name|struct
 name|tx_ring
@@ -1055,9 +1114,6 @@ name|tx_rings
 decl_stmt|;
 name|u16
 name|num_tx_desc
-decl_stmt|;
-name|u32
-name|txd_cmd
 decl_stmt|;
 comment|/*  	 * Receive rings 	 */
 name|struct
@@ -1216,7 +1272,11 @@ modifier|*
 name|m_pack
 decl_stmt|;
 name|bus_dmamap_t
-name|map
+name|head_map
+decl_stmt|;
+comment|/* bus_dma map for packet */
+name|bus_dmamap_t
+name|pack_map
 decl_stmt|;
 comment|/* bus_dma map for packet */
 block|}
@@ -1249,61 +1309,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGB_TX_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->tx_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_RX_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->rx_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IGB_CORE_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_lock(&(_sc)->core_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_TX_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->tx_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_TX_TRYLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_trylock(&(_sc)->tx_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_RX_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->rx_mtx)
 end_define
 
 begin_define
@@ -1319,6 +1329,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|IGB_CORE_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->core_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IGB_TX_UNLOCK
 parameter_list|(
 name|_sc
@@ -1329,21 +1369,51 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGB_RX_UNLOCK
+name|IGB_TX_TRYLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_unlock(&(_sc)->rx_mtx)
+value|mtx_trylock(&(_sc)->tx_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGB_CORE_LOCK_ASSERT
+name|IGB_TX_LOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&(_sc)->core_mtx, MA_OWNED)
+value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_RX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_RX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_RX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->rx_mtx)
 end_define
 
 begin_define

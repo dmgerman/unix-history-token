@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -277,14 +277,6 @@ name|mac
 operator|->
 name|ops
 operator|.
-name|mta_set
-operator|=
-name|e1000_null_mta_set
-expr_stmt|;
-name|mac
-operator|->
-name|ops
-operator|.
 name|rar_set
 operator|=
 name|e1000_rar_set_generic
@@ -459,32 +451,6 @@ block|{
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_null_write_vfta"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_comment
-comment|/**  *  e1000_null_set_mta - No-op function, return void  *  @hw: pointer to the HW structure  **/
-end_comment
-
-begin_function
-name|void
-name|e1000_null_mta_set
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|,
-name|u32
-name|a
-parameter_list|)
-block|{
-name|DEBUGFUNC
-argument_list|(
-literal|"e1000_null_mta_set"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1592,98 +1558,6 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mta_set_generic - Set multicast filter table address  *  @hw: pointer to the HW structure  *  @hash_value: determines the MTA register and bit to set  *  *  The multicast table address is a register array of 32-bit registers.  *  The hash_value is used to determine what register the bit is in, the  *  current value is read, the new bit is OR'd in and the new value is  *  written back into the register.  **/
-end_comment
-
-begin_function
-name|void
-name|e1000_mta_set_generic
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|,
-name|u32
-name|hash_value
-parameter_list|)
-block|{
-name|u32
-name|hash_bit
-decl_stmt|,
-name|hash_reg
-decl_stmt|,
-name|mta
-decl_stmt|;
-name|DEBUGFUNC
-argument_list|(
-literal|"e1000_mta_set_generic"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * The MTA is a register array of 32-bit registers. It is 	 * treated like an array of (32*mta_reg_count) bits.  We want to 	 * set bit BitArray[hash_value]. So we figure out what register 	 * the bit is in, read it, OR in the new bit, then write 	 * back the new value.  The (hw->mac.mta_reg_count - 1) serves as a 	 * mask to bits 31:5 of the hash value which gives us the 	 * register we're modifying.  The hash bit within that register 	 * is determined by the lower 5 bits of the hash value. 	 */
-name|hash_reg
-operator|=
-operator|(
-name|hash_value
-operator|>>
-literal|5
-operator|)
-operator|&
-operator|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|mta_reg_count
-operator|-
-literal|1
-operator|)
-expr_stmt|;
-name|hash_bit
-operator|=
-name|hash_value
-operator|&
-literal|0x1F
-expr_stmt|;
-name|mta
-operator|=
-name|E1000_READ_REG_ARRAY
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_MTA
-argument_list|,
-name|hash_reg
-argument_list|)
-expr_stmt|;
-name|mta
-operator||=
-operator|(
-literal|1
-operator|<<
-name|hash_bit
-operator|)
-expr_stmt|;
-name|E1000_WRITE_REG_ARRAY
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_MTA
-argument_list|,
-name|hash_reg
-argument_list|,
-name|mta
-argument_list|)
-expr_stmt|;
-name|E1000_WRITE_FLUSH
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/**  *  e1000_update_mc_addr_list_generic - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  *  Updates entire Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  **/
 end_comment
 
@@ -1861,7 +1735,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_hash_mc_addr_generic - Generate a multicast hash value  *  @hw: pointer to the HW structure  *  @mc_addr: pointer to a multicast address  *  *  Generates a multicast address hash value which is used to determine  *  the multicast filter table array address and new table value.  See  *  e1000_mta_set_generic()  **/
+comment|/**  *  e1000_hash_mc_addr_generic - Generate a multicast hash value  *  @hw: pointer to the HW structure  *  @mc_addr: pointer to a multicast address  *  *  Generates a multicast address hash value which is used to determine  *  the multicast filter table array address and new table value.  **/
 end_comment
 
 begin_function
@@ -2521,7 +2395,11 @@ name|out
 goto|;
 block|}
 comment|/* 	 * Auto-Neg is enabled.  Auto Speed Detection takes care 	 * of MAC speed/duplex configuration.  So we only need to 	 * configure Collision Distance in the MAC. 	 */
-name|e1000_config_collision_dist_generic
+name|mac
+operator|->
+name|ops
+operator|.
+name|config_collision_dist
 argument_list|(
 name|hw
 argument_list|)
@@ -3427,6 +3305,16 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
+name|struct
+name|e1000_mac_info
+modifier|*
+name|mac
+init|=
+operator|&
+name|hw
+operator|->
+name|mac
+decl_stmt|;
 name|u32
 name|ctrl
 decl_stmt|;
@@ -3455,7 +3343,11 @@ operator|&=
 operator|~
 name|E1000_CTRL_LRST
 expr_stmt|;
-name|e1000_config_collision_dist_generic
+name|mac
+operator|->
+name|ops
+operator|.
+name|config_collision_dist
 argument_list|(
 name|hw
 argument_list|)
@@ -3547,7 +3439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_config_collision_dist_generic - Configure collision distance  *  @hw: pointer to the HW structure  *  *  Configures the collision distance to the default value and is used  *  during link setup. Currently no func pointer exists and all  *  implementations are handled in the generic version of this function.  **/
+comment|/**  *  e1000_config_collision_dist_generic - Configure collision distance  *  @hw: pointer to the HW structure  *  *  Configures the collision distance to the default value and is used  *  during link setup.  **/
 end_comment
 
 begin_function
@@ -3702,10 +3594,8 @@ expr_stmt|;
 comment|/* 		 * AutoNeg failed to achieve a link, so we'll call 		 * mac->check_for_link. This routine will force the 		 * link up if we detect a signal. This will allow us to 		 * communicate with non-autonegotiating link partners. 		 */
 name|ret_val
 operator|=
-name|hw
-operator|->
 name|mac
-operator|.
+operator|->
 name|ops
 operator|.
 name|check_for_link
@@ -3819,7 +3709,7 @@ break|break;
 case|case
 name|e1000_fc_rx_pause
 case|:
-comment|/* 		 * Rx Flow control is enabled and Tx Flow control is disabled 		 * by a software over-ride. Since there really isn't a way to 		 * advertise that we are capable of Rx Pause ONLY, we will 		 * advertise that we support both symmetric and asymmetric RX 		 * PAUSE.  Later, we will disable the adapter's ability to send 		 * PAUSE frames. 		 */
+comment|/* 		 * Rx Flow control is enabled and Tx Flow control is disabled 		 * by a software over-ride. Since there really isn't a way to 		 * advertise that we are capable of Rx Pause ONLY, we will 		 * advertise that we support both symmetric and asymmetric Rx 		 * PAUSE.  Later, we will disable the adapter's ability to send 		 * PAUSE frames. 		 */
 name|txcw
 operator|=
 operator|(
@@ -3914,11 +3804,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
 name|u32
 name|fcrtl
 init|=
@@ -3994,7 +3879,7 @@ name|fcrth
 argument_list|)
 expr_stmt|;
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -4570,7 +4455,7 @@ expr_stmt|;
 name|DEBUGOUT
 argument_list|(
 literal|"Flow Control = "
-literal|"RX PAUSE frames only.\r\n"
+literal|"Rx PAUSE frames only.\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4615,7 +4500,7 @@ name|e1000_fc_tx_pause
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"Flow Control = TX PAUSE frames only.\r\n"
+literal|"Flow Control = Tx PAUSE frames only.\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4659,7 +4544,7 @@ name|e1000_fc_rx_pause
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"Flow Control = RX PAUSE frames only.\r\n"
+literal|"Flow Control = Rx PAUSE frames only.\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5808,38 +5693,11 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_cleanup_led_generic"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|ops
-operator|.
-name|cleanup_led
-operator|!=
-name|e1000_cleanup_led_generic
-condition|)
-block|{
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_CONFIG
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -5853,10 +5711,8 @@ operator|.
 name|ledctl_default
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -6351,9 +6207,6 @@ operator|=
 operator|-
 name|E1000_ERR_MASTER_REQUESTS_PENDING
 expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
 name|out
 label|:

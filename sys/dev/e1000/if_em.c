@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -11640,6 +11640,9 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEVICE_POLLING
 name|taskqueue_enqueue
 argument_list|(
 name|adapter
@@ -11652,6 +11655,8 @@ operator|->
 name|rxtx_task
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|em_update_link_status
 argument_list|(
 name|adapter
@@ -13367,8 +13372,8 @@ name|DEVICE_POLLING
 argument|ifp->if_capabilities |= IFCAP_POLLING;
 endif|#
 directive|endif
-comment|/* Enable All WOL methods by default */
-argument|if (adapter->wol) { 		ifp->if_capabilities |= IFCAP_WOL; 		ifp->if_capenable |= IFCAP_WOL; 	}
+comment|/* Limit WOL to MAGIC, not clear others are used */
+argument|if (adapter->wol) { 		ifp->if_capabilities |= IFCAP_WOL_MAGIC; 		ifp->if_capenable |= IFCAP_WOL_MAGIC; 	}
 comment|/* 	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
 argument|ifmedia_init(&adapter->media, IFM_IMASK, 	    em_media_change, em_media_status); 	if ((adapter->hw.phy.media_type == e1000_media_type_fiber) || 	    (adapter->hw.phy.media_type == e1000_media_type_internal_serdes)) { 		u_char fiber_type = IFM_1000_SX;
 comment|/* default type */
@@ -13964,7 +13969,7 @@ argument|if (adapter->rx_buffer_area != NULL) { 		rx_buffer = adapter->rx_buffer
 literal|0
 argument|; i< adapter->num_rx_desc; i++, rx_buffer++) { 			if (rx_buffer->m_head != NULL) { 				bus_dmamap_sync(adapter->rxtag, rx_buffer->map, 				    BUS_DMASYNC_POSTREAD); 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 				m_freem(rx_buffer->m_head); 				rx_buffer->m_head = NULL; 			} else if (rx_buffer->map != NULL) 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 			if (rx_buffer->map != NULL) { 				bus_dmamap_destroy(adapter->rxtag, 				    rx_buffer->map); 				rx_buffer->map = NULL; 			} 		} 	}  	if (adapter->rx_buffer_area != NULL) { 		free(adapter->rx_buffer_area, M_DEVBUF); 		adapter->rx_buffer_area = NULL; 	}  	if (adapter->rxtag != NULL) { 		bus_dma_tag_destroy(adapter->rxtag); 		adapter->rxtag = NULL; 	} }
 comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *    *  For polling we also now return the number of cleaned packets  *********************************************************************/
-argument|static int em_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp = adapter->ifp; 	struct mbuf	*mp; 	u8		status, accept_frame =
+argument|static int em_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
 literal|0
 argument|, eop =
 literal|0
