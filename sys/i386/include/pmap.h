@@ -1721,6 +1721,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pmap_cache_bits
+parameter_list|(
+name|int
+name|mode
+parameter_list|,
+name|boolean_t
+name|is_pde
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pmap_change_attr
 parameter_list|(
 name|vm_offset_t
@@ -1909,6 +1922,17 @@ name|void
 name|pmap_invalidate_cache
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_invalidate_cache_range
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
