@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2004, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: comm.c,v 8.67 2006/11/02 17:54:44 ca Exp $"
+literal|"@(#)$Id: comm.c,v 8.70 2009/12/16 16:33:48 ca Exp $"
 argument_list|)
 end_macro
 
@@ -66,12 +66,6 @@ name|MILTER_MAX_DATA_SIZE
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|_FFR_MAXDATASIZE
-end_if
-
 begin_comment
 comment|/* **  SMFI_SETMAXDATASIZE -- set limit for milter data read/write. ** **	Parameters: **		sz -- new limit. ** **	Returns: **		old limit */
 end_comment
@@ -102,15 +96,6 @@ name|old
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MAXDATASIZE */
-end_comment
 
 begin_comment
 comment|/* **  MI_RD_CMD -- read a command ** **	Parameters: **		sd -- socket descriptor **		timeout -- maximum time to wait **		cmd -- single character command read from sd **		rlen -- pointer to length of result **		name -- name of milter ** **	Returns: **		buffer with rest of command **		(malloc()ed here, should be free()d) **		hack: encode error in cmd */
@@ -387,9 +372,11 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: mi_rd_cmd: select returned %d: %s"
+literal|"%s: mi_rd_cmd: %s() returned %d: %s"
 argument_list|,
 name|name
+argument_list|,
+name|MI_POLLSELECT
 argument_list|,
 name|ret
 argument_list|,
@@ -774,9 +761,11 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: mi_rd_cmd: select returned %d: %s"
+literal|"%s: mi_rd_cmd: %s() returned %d: %s"
 argument_list|,
 name|name
+argument_list|,
+name|MI_POLLSELECT
 argument_list|,
 name|ret
 argument_list|,
@@ -1122,8 +1111,6 @@ decl_stmt|;
 block|{
 name|size_t
 name|sl
-decl_stmt|,
-name|i
 decl_stmt|;
 name|ssize_t
 name|l
@@ -1204,10 +1191,6 @@ operator|(
 name|char
 operator|)
 name|cmd
-expr_stmt|;
-name|i
-operator|=
-literal|0
 expr_stmt|;
 name|sl
 operator|=

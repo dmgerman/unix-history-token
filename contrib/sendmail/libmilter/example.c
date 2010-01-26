@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $Id: example.c,v 8.3 2006/12/20 21:22:34 ca Exp $  */
+comment|/*  *  Copyright (c) 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $Id: example.c,v 8.4 2008/07/22 15:12:47 ca Exp $  */
 end_comment
 
 begin_comment
@@ -906,7 +906,7 @@ name|mlfi_data
 block|,
 comment|/* DATA command filter */
 name|mlfi_negotiate
-comment|/* option negotation at connection startup */
+comment|/* option negotiation at connection startup */
 block|}
 decl_stmt|;
 end_decl_stmt

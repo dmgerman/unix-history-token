@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: praliases.c,v 8.94 2007/05/11 18:50:36 ca Exp $"
+literal|"@(#)$Id: praliases.c,v 8.96 2008/07/10 20:13:10 ca Exp $"
 argument_list|)
 end_macro
 
@@ -454,7 +454,8 @@ name|smioerr
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"usage: praliases [-C cffile] [-f aliasfile]\n"
+literal|"usage: praliases [-C cffile] [-f aliasfile]"
+literal|" [key ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
