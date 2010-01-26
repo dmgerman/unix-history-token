@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.282 2008/01/31 18:48:29 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.284 2008/08/06 05:26:24 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3078,6 +3078,35 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 comment|/* Log collection information. */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|92
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"collect: e_id=%s, EF_LOGSENDER=%d, LogLevel=%d\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|bitset
+argument_list|(
+name|EF_LOGSENDER
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+argument_list|,
+name|LogLevel
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bitset

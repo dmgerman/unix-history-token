@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1059 2008/02/15 23:19:58 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1068 2009/12/18 17:08:01 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -3801,7 +3801,7 @@ define|#
 directive|define
 name|MAXOUTLEN
 value|8192
-comment|/* length of output buffer */
+comment|/* length of output buffer, should be 2^n */
 comment|/* functions */
 specifier|extern
 name|char
@@ -5968,6 +5968,23 @@ name|int
 name|e_features
 decl_stmt|;
 comment|/* server features */
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
+define|#
+directive|define
+name|ENHSC_LEN
+value|11
+name|char
+name|e_enhsc
+index|[
+name|ENHSC_LEN
+index|]
+decl_stmt|;
+comment|/* enhanced status code */
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ENHSC */
 block|}
 struct|;
 end_struct
@@ -6426,7 +6443,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|dropenvelope
 name|__P
 argument_list|(
@@ -9895,6 +9912,17 @@ begin_comment
 comment|/* queue run */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MD_CHECKCONFIG
+value|'C'
+end_define
+
+begin_comment
+comment|/* check configuration file */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -11793,6 +11821,8 @@ operator|,
 name|unsigned
 name|long
 operator|,
+name|long
+operator|,
 name|bool
 operator|,
 name|char
@@ -12093,6 +12123,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* TLS server options */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|Srv_SSL_Options
+decl_stmt|,
+name|Clt_SSL_Options
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SSL options */
 end_comment
 
 begin_endif
@@ -12653,6 +12696,32 @@ end_decl_stmt
 
 begin_comment
 comment|/* min delivery interval */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_EXPDELAY
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|MaxQueueAge
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max delivery interval */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_EXPDELAY */
 end_comment
 
 begin_decl_stmt
@@ -14165,17 +14234,6 @@ begin_comment
 comment|/* substitution for<lwsp> */
 end_comment
 
-begin_decl_stmt
-name|EXTERN
-name|int
-name|BadRcptThrottle
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Throttle rejected RCPTs per SMTP message */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -14211,6 +14269,56 @@ end_endif
 
 begin_comment
 comment|/* _FFR_BADRCPT_SHUTDOWN */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|BadRcptThrottle
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Throttle rejected RCPTs per SMTP message */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_RCPTTHROTDELAY
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|unsigned
+name|int
+name|BadRcptThrottleDelay
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* delay for BadRcptThrottle */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BadRcptThrottleDelay
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_RCPTTHROTDELAY */
 end_comment
 
 begin_decl_stmt

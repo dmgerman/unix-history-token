@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.269 2007/06/06 17:26:12 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.277 2009/11/06 00:57:06 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1960,14 +1960,6 @@ modifier|*
 name|where
 decl_stmt|;
 block|{
-name|time_t
-name|writestart
-init|=
-operator|(
-name|time_t
-operator|)
-literal|0
-decl_stmt|;
 name|ssize_t
 name|sl
 decl_stmt|,
@@ -2028,9 +2020,10 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
+block|{
 name|sm_dprintf
 argument_list|(
-literal|"milter_write(%s): length %ld out of range\n"
+literal|"milter_write(%s): length %ld out of range, cmd=%c\n"
 argument_list|,
 name|m
 operator|->
@@ -2040,8 +2033,25 @@ operator|(
 name|long
 operator|)
 name|len
+argument_list|,
+name|command
 argument_list|)
 expr_stmt|;
+name|sm_dprintf
+argument_list|(
+literal|"milter_write(%s): buf=%s\n"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|str2prt
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|MilterLogLevel
@@ -2056,7 +2066,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_write(%s): length %ld out of range"
+literal|"milter_write(%s): length %ld out of range, cmd=%c"
 argument_list|,
 name|m
 operator|->
@@ -2066,6 +2076,8 @@ operator|(
 name|long
 operator|)
 name|len
+argument_list|,
+name|command
 argument_list|)
 expr_stmt|;
 name|milter_error
@@ -2292,12 +2304,6 @@ name|to
 operator|>
 literal|0
 condition|)
-block|{
-name|writestart
-operator|=
-name|curtime
-argument_list|()
-expr_stmt|;
 name|MILTER_TIMEOUT
 argument_list|(
 literal|"write"
@@ -2311,7 +2317,6 @@ argument_list|,
 name|where
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* write the vector(s) */
 name|i
 operator|=
@@ -6434,6 +6439,8 @@ block|,
 if|#
 directive|if
 name|_FFR_MAXDATASIZE
+operator|||
+name|_FFR_MDS_NEGOTIATE
 define|#
 directive|define
 name|MO_MAXDATASIZE
@@ -6446,7 +6453,7 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MAXDATASIZE */
+comment|/* _FFR_MAXDATASIZE || _FFR_MDS_NEGOTIATE */
 block|{
 name|NULL
 block|,
@@ -6673,9 +6680,14 @@ break|break;
 if|#
 directive|if
 name|_FFR_MAXDATASIZE
+operator|||
+name|_FFR_MDS_NEGOTIATE
 case|case
 name|MO_MAXDATASIZE
 case|:
+if|#
+directive|if
+name|_FFR_MDS_NEGOTIATE
 name|MilterMaxDataSize
 operator|=
 operator|(
@@ -6686,10 +6698,74 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|MilterMaxDataSize
+operator|!=
+name|MILTER_MDS_64K
+operator|&&
+name|MilterMaxDataSize
+operator|!=
+name|MILTER_MDS_256K
+operator|&&
+name|MilterMaxDataSize
+operator|!=
+name|MILTER_MDS_1M
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"WARNING: Milter.%s=%d, allowed are only %d, %d, and %d"
+argument_list|,
+name|name
+argument_list|,
+name|MilterMaxDataSize
+argument_list|,
+name|MILTER_MDS_64K
+argument_list|,
+name|MILTER_MDS_256K
+argument_list|,
+name|MILTER_MDS_1M
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterMaxDataSize
+operator|<
+name|MILTER_MDS_64K
+condition|)
+name|MilterMaxDataSize
+operator|=
+name|MILTER_MDS_64K
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|MilterMaxDataSize
+operator|<
+name|MILTER_MDS_256K
+condition|)
+name|MilterMaxDataSize
+operator|=
+name|MILTER_MDS_256K
+expr_stmt|;
+else|else
+name|MilterMaxDataSize
+operator|=
+name|MILTER_MDS_1M
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_MDS_NEGOTIATE */
 break|break;
 endif|#
 directive|endif
-comment|/* _FFR_MAXDATASIZE */
+comment|/* _FFR_MAXDATASIZE || _FFR_MDS_NEGOTIATE */
 case|case
 name|MO_MACROS_CONNECT
 case|:
@@ -9515,6 +9591,33 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* _FFR_MILTER_CHECK */
+if|#
+directive|if
+name|_FFR_MDS_NEGOTIATE
+if|if
+condition|(
+name|MilterMaxDataSize
+operator|==
+name|MILTER_MDS_256K
+condition|)
+name|mta_prot_flags
+operator||=
+name|SMFIP_MDS_256K
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|MilterMaxDataSize
+operator|==
+name|MILTER_MDS_1M
+condition|)
+name|mta_prot_flags
+operator||=
+name|SMFIP_MDS_1M
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MDS_NEGOTIATE */
 name|fvers
 operator|=
 name|htonl
@@ -10179,6 +10282,124 @@ goto|goto
 name|error
 goto|;
 block|}
+if|#
+directive|if
+name|_FFR_MDS_NEGOTIATE
+comment|/* use a table instead of sequence? */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|SMFIP_MDS_1M
+argument_list|,
+name|m
+operator|->
+name|mf_pflags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|MilterMaxDataSize
+operator|!=
+name|MILTER_MDS_1M
+condition|)
+block|{
+comment|/* this should not happen... */
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"WARNING: Milter.maxdatasize: configured=%d, set by libmilter=%d"
+argument_list|,
+name|MilterMaxDataSize
+argument_list|,
+name|MILTER_MDS_1M
+argument_list|)
+expr_stmt|;
+name|MilterMaxDataSize
+operator|=
+name|MILTER_MDS_1M
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|SMFIP_MDS_256K
+argument_list|,
+name|m
+operator|->
+name|mf_pflags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|MilterMaxDataSize
+operator|!=
+name|MILTER_MDS_256K
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"WARNING: Milter.maxdatasize: configured=%d, set by libmilter=%d"
+argument_list|,
+name|MilterMaxDataSize
+argument_list|,
+name|MILTER_MDS_256K
+argument_list|)
+expr_stmt|;
+name|MilterMaxDataSize
+operator|=
+name|MILTER_MDS_256K
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|MilterMaxDataSize
+operator|!=
+name|MILTER_MDS_64K
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"WARNING: Milter.maxdatasize: configured=%d, set by libmilter=%d"
+argument_list|,
+name|MilterMaxDataSize
+argument_list|,
+name|MILTER_MDS_64K
+argument_list|)
+expr_stmt|;
+name|MilterMaxDataSize
+operator|=
+name|MILTER_MDS_64K
+expr_stmt|;
+block|}
+name|m
+operator|->
+name|mf_pflags
+operator|&=
+operator|~
+name|SMFI_INTERNAL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MDS_NEGOTIATE */
 comment|/* check for protocol feature mismatch */
 if|if
 condition|(
@@ -13399,7 +13620,11 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
 name|nelem
+operator|+
+literal|1
+operator|)
 operator|*
 operator|(
 sizeof|sizeof
@@ -15206,7 +15431,7 @@ else|:
 literal|"negotiate"
 argument_list|)
 expr_stmt|;
-comment|/* if negotation failure, close socket */
+comment|/* if negotiation failure, close socket */
 name|milter_error
 argument_list|(
 name|m
@@ -17227,7 +17452,7 @@ index|]
 argument_list|,
 name|e
 argument_list|,
-literal|"body"
+literal|"eom"
 argument_list|)
 expr_stmt|;
 if|if

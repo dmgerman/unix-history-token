@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.83 2007/04/23 22:22:50 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.84 2008/09/02 05:37:06 ca Exp $"
 argument_list|)
 end_macro
 
@@ -179,11 +179,31 @@ expr_stmt|;
 comment|/* compare milter version with hard coded version */
 if|if
 condition|(
+operator|(
+name|SM_LM_VRS_MAJOR
+argument_list|(
 name|smfi
 operator|->
 name|xxfi_version
+argument_list|)
 operator|!=
+name|SM_LM_VRS_MAJOR
+argument_list|(
 name|SMFI_VERSION
+argument_list|)
+operator|||
+name|SM_LM_VRS_MINOR
+argument_list|(
+name|smfi
+operator|->
+name|xxfi_version
+argument_list|)
+operator|!=
+name|SM_LM_VRS_MINOR
+argument_list|(
+name|SMFI_VERSION
+argument_list|)
+operator|)
 operator|&&
 name|smfi
 operator|->
