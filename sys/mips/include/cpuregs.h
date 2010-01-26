@@ -220,15 +220,16 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/*  * Pick a reasonable default based on the "typical" spacing described in the  * "CP0 Hazards" chapter of MIPS Architecture Book Vol III.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|COP0_SYNC
+value|ssnop; ssnop; ssnop; ssnop; ssnop
 end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
 
 begin_endif
 endif|#
