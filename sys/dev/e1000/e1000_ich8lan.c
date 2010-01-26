@@ -2286,17 +2286,6 @@ operator|=
 name|e1000_led_off_ich8lan
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NAHUM4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|NAHUM5
-argument_list|)
 case|case
 name|e1000_pchlan
 case|:
@@ -2369,9 +2358,6 @@ operator|=
 name|e1000_led_off_pchlan
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(NAHUM4) || defined(NAHUM5) */
 default|default:
 break|break;
 block|}
@@ -2664,17 +2650,6 @@ operator|=
 name|e1000_init_phy_params_ich8lan
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NAHUM4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|NAHUM5
-argument_list|)
 case|case
 name|e1000_pchlan
 case|:
@@ -2689,9 +2664,6 @@ operator|=
 name|e1000_init_phy_params_pchlan
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(NAHUM4) || defined(NAHUM5) */
 default|default:
 break|break;
 block|}
@@ -3354,17 +3326,6 @@ name|cnf_base_addr
 operator|>>=
 name|E1000_EXTCNF_CTRL_EXT_CNF_POINTER_SHIFT
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NAHUM4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|NAHUM5
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -3460,9 +3421,6 @@ goto|goto
 name|out
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* defined(NAHUM4) || defined(NAHUM5) */
 comment|/* Configure LCD from extended configuration region. */
 comment|/* cnf_base_addr is in DWORD */
 name|word_addr
@@ -10127,53 +10085,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NAHUM4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|NAHUM5
-argument_list|)
-comment|/* Dummy read to clear the phy wakeup bit after lcd reset */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NAHUM4
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|NAHUM5
-argument_list|)
-if|if
-condition|(
-operator|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_pchlan
-operator|)
-operator|||
-operator|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_pch2lan
-operator|)
-condition|)
-else|#
-directive|else
 if|if
 condition|(
 name|hw
@@ -10184,8 +10095,6 @@ name|type
 operator|==
 name|e1000_pchlan
 condition|)
-endif|#
-directive|endif
 name|hw
 operator|->
 name|phy
@@ -10202,9 +10111,6 @@ operator|&
 name|reg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(NAHUM4) || defined(NAHUM5) */
 name|ret_val
 operator|=
 name|e1000_sw_lcd_config_ich8lan
