@@ -285,14 +285,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
-name|struct
-name|pcpu
-name|pcpu0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 modifier|*
@@ -2851,14 +2843,6 @@ expr_stmt|;
 name|bootverbose
 operator|=
 literal|1
-expr_stmt|;
-name|cpuid_to_pcpu
-index|[
-literal|0
-index|]
-operator|=
-operator|&
-name|pcpu0
 expr_stmt|;
 comment|/* 	 * For some reason on the cn38xx simulator ebase register is set to 	 * 0x80001000 at bootup time.  Move it back to the default, but 	 * when we move to having support for multiple executives, we need 	 * to rethink this. 	 */
 name|mips_wr_ebase
