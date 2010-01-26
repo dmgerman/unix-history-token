@@ -1637,9 +1637,11 @@ modifier|*
 name|printfn
 call|)
 argument_list|(
-literal|") ra %x sz %d\n"
+literal|") ra %x sp %x sz %d\n"
 argument_list|,
 name|ra
+argument_list|,
+name|sp
 argument_list|,
 name|stksize
 argument_list|)
