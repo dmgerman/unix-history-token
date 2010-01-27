@@ -1941,19 +1941,14 @@ literal|1
 argument_list|)
 name|SYSMAP
 argument_list|(
-name|caddr_t
+argument|caddr_t
 argument_list|,
-name|CMAP3
+argument|CMAP3
 argument_list|,
-name|CADDR3
+argument|CADDR3
 argument_list|,
 literal|1
 argument_list|)
-operator|*
-name|CMAP3
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Crashdump maps. 	 */
 name|SYSMAP
 argument_list|(
@@ -2026,6 +2021,8 @@ name|PAGE_SHIFT
 operator|)
 operator|)
 operator||
+name|pgeflag
+operator||
 name|PG_RW
 operator||
 name|PG_V
@@ -2047,28 +2044,24 @@ expr_stmt|;
 comment|/* 	 * ptemap is used for pmap_pte_quick 	 */
 name|SYSMAP
 argument_list|(
-name|pt_entry_t
-operator|*
+argument|pt_entry_t *
 argument_list|,
-name|PMAP1
+argument|PMAP1
 argument_list|,
-name|PADDR1
+argument|PADDR1
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
 name|SYSMAP
 argument_list|(
-name|pt_entry_t
-operator|*
+argument|pt_entry_t *
 argument_list|,
-name|PMAP2
+argument|PMAP2
 argument_list|,
-name|PADDR2
+argument|PADDR2
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -2084,11 +2077,6 @@ expr_stmt|;
 name|virtual_avail
 operator|=
 name|va
-expr_stmt|;
-operator|*
-name|CMAP1
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * Leave in place an identity mapping (virt == phys) for the low 1 MB 	 * physical memory region that is used by the ACPI wakeup code.  This 	 * mapping must not have PG_G set.  	 */
 ifdef|#
@@ -2407,9 +2395,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|pd_entry_t
-name|pdir
-decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|pte
@@ -2419,9 +2404,6 @@ name|va
 decl_stmt|,
 name|endva
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|pgeflag
@@ -2429,12 +2411,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|i
-operator|=
-name|KERNLOAD
-operator|/
-name|NBPDR
-expr_stmt|;
 name|endva
 operator|=
 name|KERNBASE
@@ -2459,46 +2435,19 @@ operator|<
 name|endva
 condition|)
 block|{
-name|pdir
-operator|=
-name|kernel_pmap
-operator|->
-name|pm_pdir
-index|[
-name|KPTDI
-operator|+
-name|i
-index|]
-expr_stmt|;
-name|pdir
+name|pdir_pde
+argument_list|(
+name|PTD
+argument_list|,
+name|va
+argument_list|)
 operator||=
 name|pgeflag
-expr_stmt|;
-name|kernel_pmap
-operator|->
-name|pm_pdir
-index|[
-name|KPTDI
-operator|+
-name|i
-index|]
-operator|=
-name|PTD
-index|[
-name|KPTDI
-operator|+
-name|i
-index|]
-operator|=
-name|pdir
 expr_stmt|;
 name|invltlb
 argument_list|()
 expr_stmt|;
 comment|/* Play it safe, invltlb() every time */
-name|i
-operator|++
-expr_stmt|;
 name|va
 operator|+=
 name|NBPDR
@@ -7902,6 +7851,8 @@ argument_list|,
 name|kernel_vm_end
 argument_list|)
 operator|=
+name|pgeflag
+operator||
 name|newpdir
 expr_stmt|;
 name|updated_PTD
@@ -10569,7 +10520,28 @@ argument_list|(
 name|mpte
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Temporarily map the page table page (mpte) into the kernel's 	 * address space at either PADDR1 or PADDR2. 	 */
+comment|/* 	 * If the page mapping is in the kernel's address space, then the 	 * KPTmap can provide access to the page table page.  Otherwise, 	 * temporarily map the page table page (mpte) into the kernel's 	 * address space at either PADDR1 or PADDR2.  	 */
+if|if
+condition|(
+name|va
+operator|>=
+name|KERNBASE
+condition|)
+name|firstpte
+operator|=
+operator|&
+name|KPTmap
+index|[
+name|i386_btop
+argument_list|(
+name|trunc_4mpage
+argument_list|(
+name|va
+argument_list|)
+argument_list|)
+index|]
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|curthread
@@ -10872,7 +10844,7 @@ operator|==
 name|kernel_pmap
 condition|)
 block|{
-comment|/* 		 * A harmless race exists between this loop and the bcopy() 		 * in pmap_pinit() that initializes the kernel segment of 		 * the new page table.  Specifically, that bcopy() may copy 		 * the new PDE from the PTD, which is first in allpmaps, to 		 * the new page table before this loop updates that new 		 * page table. 		 */
+comment|/* 		 * A harmless race exists between this loop and the bcopy() 		 * in pmap_pinit() that initializes the kernel segment of 		 * the new page table directory.  Specifically, that bcopy() 		 * may copy the new PDE from the PTD to the new page table 		 * before this loop updates that new page table. 		 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
