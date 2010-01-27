@@ -16159,6 +16159,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|mag_rack
 operator|=
