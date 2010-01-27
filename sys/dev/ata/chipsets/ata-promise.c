@@ -4083,6 +4083,9 @@ operator|=
 operator|(
 name|uint32_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ctlr
 operator|->
 name|chipset_data
