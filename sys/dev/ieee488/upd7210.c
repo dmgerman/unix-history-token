@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 Poul-Henning Kamp<phk@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * High-level driver for µPD7210 based GPIB cards.  *  */
+comment|/*-  * Copyright (c) 2005 Poul-Henning Kamp<phk@FreeBSD.org>  * Copyright (c) 2010 Joerg Wunsch<joerg@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * High-level driver for µPD7210 based GPIB cards.  *  */
 end_comment
 
 begin_include
@@ -362,6 +362,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|isr1
+operator|!=
+literal|0
+operator|||
+name|isr2
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|u
 operator|->
 name|busy
@@ -388,9 +399,30 @@ block|{
 if|#
 directive|if
 literal|0
-block|printf("upd7210intr [%02x %02x %02x", 		    upd7210_rd(u, DIR), isr1, isr2); 		printf(" %02x %02x %02x %02x %02x] ", 		    upd7210_rd(u, SPSR), 		    upd7210_rd(u, ADSR), 		    upd7210_rd(u, CPTR), 		    upd7210_rd(u, ADR0), 		    upd7210_rd(u, ADR1)); 		upd7210_print_isr(isr1, isr2); 		printf("\n");
+block|printf("upd7210intr [%02x %02x %02x", 			       upd7210_rd(u, DIR), isr1, isr2); 			printf(" %02x %02x %02x %02x %02x] ", 			       upd7210_rd(u, SPSR), 			       upd7210_rd(u, ADSR), 			       upd7210_rd(u, CPTR), 			       upd7210_rd(u, ADR0), 		    upd7210_rd(u, ADR1)); 			upd7210_print_isr(isr1, isr2); 			printf("\n");
 endif|#
 directive|endif
+block|}
+comment|/* 		 * "special interrupt handling" 		 * 		 * In order to implement shared IRQs, the original 		 * PCIIa uses IO locations 0x2f0 + (IRQ#) as an output 		 * location.  If an ISR for a particular card has 		 * detected this card triggered the IRQ, it must reset 		 * the card's IRQ by writing (anything) to that IO 		 * location. 		 * 		 * Some clones apparently don't implement this 		 * feature, but National Instrument cards do. 		 */
+if|if
+condition|(
+name|u
+operator|->
+name|irq_clear_res
+operator|!=
+name|NULL
+condition|)
+name|bus_write_1
+argument_list|(
+name|u
+operator|->
+name|irq_clear_res
+argument_list|,
+literal|0
+argument_list|,
+literal|42
+argument_list|)
+expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(

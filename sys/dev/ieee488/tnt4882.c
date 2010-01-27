@@ -1654,6 +1654,15 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* No "special interrupt handling" needed here. */
+name|sc
+operator|->
+name|upd7210
+operator|.
+name|irq_clear_res
+operator|=
+name|NULL
+expr_stmt|;
 name|upd7210attach
 argument_list|(
 operator|&
