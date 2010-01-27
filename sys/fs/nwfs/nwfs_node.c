@@ -622,12 +622,9 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|VI_LOCK
 argument_list|(
-operator|&
 name|vp
-operator|->
-name|v_interlock
 argument_list|)
 expr_stmt|;
 name|sx_xunlock
