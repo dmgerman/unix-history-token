@@ -2018,11 +2018,15 @@ name|oldpcb
 argument_list|)
 condition|)
 block|{
+name|atomic_store_rel_ptr
+argument_list|(
+operator|&
 name|old
 operator|->
 name|td_lock
-operator|=
+argument_list|,
 name|mtx
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
