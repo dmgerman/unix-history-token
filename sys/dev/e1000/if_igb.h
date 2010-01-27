@@ -1027,6 +1027,10 @@ decl_stmt|;
 name|int
 name|link_mask
 decl_stmt|;
+name|struct
+name|task
+name|link_task
+decl_stmt|;
 name|int
 name|link_irq
 decl_stmt|;
@@ -1067,7 +1071,7 @@ name|taskqueue
 modifier|*
 name|tq
 decl_stmt|;
-comment|/* private task queue */
+comment|/* adapter task queue */
 name|u16
 name|num_queues
 decl_stmt|;
