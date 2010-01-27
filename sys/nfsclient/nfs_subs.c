@@ -1486,7 +1486,7 @@ index|[
 name|i
 index|]
 operator|=
-name|NULL
+name|NFSIOD_NOT_AVAILABLE
 expr_stmt|;
 name|nfs_iodmount
 index|[
@@ -1584,6 +1584,8 @@ name|nfs_iodwant
 index|[
 name|i
 index|]
+operator|==
+name|NFSIOD_AVAILABLE
 condition|)
 name|wakeup
 argument_list|(

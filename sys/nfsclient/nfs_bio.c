@@ -6322,6 +6322,8 @@ name|nfs_iodwant
 index|[
 name|iod
 index|]
+operator|==
+name|NFSIOD_AVAILABLE
 condition|)
 block|{
 name|gotiod
@@ -6340,7 +6342,9 @@ block|{
 name|iod
 operator|=
 name|nfs_nfsiodnew
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6378,7 +6382,7 @@ index|[
 name|iod
 index|]
 operator|=
-name|NULL
+name|NFSIOD_NOT_AVAILABLE
 expr_stmt|;
 name|nfs_iodmount
 index|[

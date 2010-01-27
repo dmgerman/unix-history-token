@@ -991,9 +991,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|proc
-modifier|*
+name|enum
+name|nfsiod_state
 name|nfs_iodwant
 index|[
 name|NFS_MAXASYNCDAEMON
