@@ -1063,6 +1063,25 @@ comment|/* interface departure */
 end_comment
 
 begin_comment
+comment|/*  * Buffer with length to be used in SIOCGIFDESCR/SIOCSIFDESCR requests  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifreq_buffer
+block|{
+name|size_t
+name|length
+decl_stmt|;
+name|void
+modifier|*
+name|buffer
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Interface request structure used for socket  * ioctl's.  All interface ioctl's must have parameter  * definitions which begin with ifr_name.  The  * remainder may be interface specific.  */
 end_comment
 
@@ -1090,6 +1109,10 @@ decl_stmt|;
 name|struct
 name|sockaddr
 name|ifru_broadaddr
+decl_stmt|;
+name|struct
+name|ifreq_buffer
+name|ifru_buffer
 decl_stmt|;
 name|short
 name|ifru_flags
@@ -1142,6 +1165,11 @@ directive|define
 name|ifr_broadaddr
 value|ifr_ifru.ifru_broadaddr
 comment|/* broadcast address */
+define|#
+directive|define
+name|ifr_buffer
+value|ifr_ifru.ifru_buffer
+comment|/* user supplied buffer with its length */
 define|#
 directive|define
 name|ifr_flags

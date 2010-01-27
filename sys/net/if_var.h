@@ -684,11 +684,16 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|if_description
+decl_stmt|;
+comment|/* interface description */
 name|void
 modifier|*
 name|if_pspare
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
 name|int
