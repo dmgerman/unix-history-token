@@ -870,6 +870,7 @@ name|tx_fifo_timer
 decl_stmt|;
 name|bool
 name|watchdog_check
+decl_stmt|;
 name|int
 name|watchdog_time
 decl_stmt|;
