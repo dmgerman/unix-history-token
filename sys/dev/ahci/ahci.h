@@ -1524,7 +1524,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AHCI_P_CMD_ISP
+name|AHCI_P_CMD_MPSP
 value|0x00080000
 end_define
 
@@ -1533,6 +1533,27 @@ define|#
 directive|define
 name|AHCI_P_CMD_CPD
 value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_CMD_ESP
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_CMD_FBSCP
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_CMD_APSTE
+value|0x00800000
 end_define
 
 begin_define
@@ -1659,6 +1680,69 @@ define|#
 directive|define
 name|AHCI_P_FBS
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_EN
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DEC
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_SDE
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DEV
+value|0x00000f00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DEV_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_ADO
+value|0x0000f000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_ADO_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DWE
+value|0x000f0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DWE_SHIFT
+value|16
 end_define
 
 begin_comment
@@ -2080,6 +2164,10 @@ name|uint32_t
 name|caps2
 decl_stmt|;
 comment|/* Controller capabilities */
+name|uint32_t
+name|chcaps
+decl_stmt|;
+comment|/* Channel capabilities */
 name|int
 name|quirks
 decl_stmt|;
@@ -2119,6 +2207,10 @@ name|int
 name|pm_present
 decl_stmt|;
 comment|/* PM presence reported */
+name|int
+name|fbs_enabled
+decl_stmt|;
+comment|/* FIS-based switching enabled */
 name|uint32_t
 name|oslots
 decl_stmt|;
@@ -2131,14 +2223,36 @@ name|uint32_t
 name|aslots
 decl_stmt|;
 comment|/* Slots with atomic commands  */
+name|uint32_t
+name|eslots
+decl_stmt|;
+comment|/* Slots in error */
 name|int
 name|numrslots
 decl_stmt|;
 comment|/* Number of running slots */
 name|int
+name|numrslotspd
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Number of running slots per dev */
+name|int
 name|numtslots
 decl_stmt|;
 comment|/* Number of tagged slots */
+name|int
+name|numtslotspd
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Number of tagged slots per dev */
+name|int
+name|numhslots
+decl_stmt|;
+comment|/* Number of holden slots */
 name|int
 name|readlog
 decl_stmt|;
