@@ -41,14 +41,6 @@ name|bus_size_t
 name|oba_size
 decl_stmt|;
 comment|/* size of device */
-name|int
-name|oba_width
-decl_stmt|;
-comment|/* bus width */
-name|int
-name|oba_irq
-decl_stmt|;
-comment|/* XINT interrupt bit # */
 name|struct
 name|rman
 name|oba_rman
@@ -60,14 +52,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|bus_space
-name|obio_bs_tag
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
