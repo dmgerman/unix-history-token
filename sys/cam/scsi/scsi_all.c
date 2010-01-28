@@ -13840,7 +13840,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 if|if
 condition|(
 name|bootverbose
@@ -14247,6 +14247,7 @@ directive|ifdef
 name|_KERNEL
 name|struct
 name|ccb_getdev
+modifier|*
 name|cgd
 decl_stmt|;
 endif|#
@@ -14255,12 +14256,34 @@ comment|/* _KERNEL */
 ifdef|#
 directive|ifdef
 name|_KERNEL
+if|if
+condition|(
+operator|(
+name|cgd
+operator|=
+operator|(
+expr|struct
+name|ccb_getdev
+operator|*
+operator|)
+name|xpt_alloc_ccb_nowait
+argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* 	 * Get the device information. 	 */
 name|xpt_setup_ccb
 argument_list|(
 operator|&
 name|cgd
-operator|.
+operator|->
 name|ccb_h
 argument_list|,
 name|csio
@@ -14273,7 +14296,7 @@ name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
-operator|.
+operator|->
 name|ccb_h
 operator|.
 name|func_code
@@ -14287,7 +14310,6 @@ expr|union
 name|ccb
 operator|*
 operator|)
-operator|&
 name|cgd
 argument_list|)
 expr_stmt|;
@@ -14295,7 +14317,7 @@ comment|/* 	 * If the device is unconfigured, just pretend that it is a hard 	 *
 if|if
 condition|(
 name|cgd
-operator|.
+operator|->
 name|ccb_h
 operator|.
 name|status
@@ -14303,7 +14325,7 @@ operator|==
 name|CAM_DEV_NOT_THERE
 condition|)
 name|cgd
-operator|.
+operator|->
 name|inq_data
 operator|.
 name|device
@@ -14314,7 +14336,7 @@ name|inq_data
 operator|=
 operator|&
 name|cgd
-operator|.
+operator|->
 name|inq_data
 expr_stmt|;
 else|#
@@ -14501,6 +14523,7 @@ directive|ifdef
 name|_KERNEL
 name|struct
 name|ccb_getdev
+modifier|*
 name|cgd
 decl_stmt|;
 endif|#
@@ -14624,12 +14647,34 @@ comment|/* _KERNEL/!_KERNEL */
 ifdef|#
 directive|ifdef
 name|_KERNEL
+if|if
+condition|(
+operator|(
+name|cgd
+operator|=
+operator|(
+expr|struct
+name|ccb_getdev
+operator|*
+operator|)
+name|xpt_alloc_ccb_nowait
+argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* 	 * Get the device information. 	 */
 name|xpt_setup_ccb
 argument_list|(
 operator|&
 name|cgd
-operator|.
+operator|->
 name|ccb_h
 argument_list|,
 name|csio
@@ -14642,7 +14687,7 @@ name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
-operator|.
+operator|->
 name|ccb_h
 operator|.
 name|func_code
@@ -14656,7 +14701,6 @@ expr|union
 name|ccb
 operator|*
 operator|)
-operator|&
 name|cgd
 argument_list|)
 expr_stmt|;
@@ -14664,7 +14708,7 @@ comment|/* 	 * If the device is unconfigured, just pretend that it is a hard 	 *
 if|if
 condition|(
 name|cgd
-operator|.
+operator|->
 name|ccb_h
 operator|.
 name|status
@@ -14672,7 +14716,7 @@ operator|==
 name|CAM_DEV_NOT_THERE
 condition|)
 name|cgd
-operator|.
+operator|->
 name|inq_data
 operator|.
 name|device
@@ -14683,7 +14727,7 @@ name|inq_data
 operator|=
 operator|&
 name|cgd
-operator|.
+operator|->
 name|inq_data
 expr_stmt|;
 else|#
@@ -14772,12 +14816,30 @@ name|flags
 operator|&
 name|CAM_SENSE_PHYS
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|xpt_free_ccb
+argument_list|(
+operator|(
+expr|union
+name|ccb
+operator|*
+operator|)
+name|cgd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 else|else
 block|{
 comment|/*  			 * bcopy the pointer to avoid unaligned access 			 * errors on finicky architectures.  We don't 			 * ensure that the sense data is pointer aligned. 			 */
@@ -14814,12 +14876,30 @@ name|flags
 operator|&
 name|CAM_SENSE_PHYS
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|xpt_free_ccb
+argument_list|(
+operator|(
+expr|union
+name|ccb
+operator|*
+operator|)
+name|cgd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 else|else
 name|sense
 operator|=
@@ -14852,6 +14932,13 @@ name|flags
 operator|&
 name|SSD_KEY
 expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"SCSI sense: "
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|error_code
@@ -14864,7 +14951,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"Deferred Error: "
+literal|"Deferred error: "
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -15108,13 +15195,11 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|" asc:%x,%x\n%s%s"
+literal|" asc:%x,%x (%s)"
 argument_list|,
 name|asc
 argument_list|,
 name|ascq
-argument_list|,
-name|path_str
 argument_list|,
 name|asc_desc
 argument_list|)
@@ -15338,7 +15423,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"Sense Error Code 0x%x"
+literal|"Error code 0x%x"
 argument_list|,
 name|sense
 operator|->
@@ -15379,6 +15464,22 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|xpt_free_ccb
+argument_list|(
+operator|(
+expr|union
+name|ccb
+operator|*
+operator|)
+name|cgd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _KERNEL/!_KERNEL */
 return|return
 operator|(
 literal|0

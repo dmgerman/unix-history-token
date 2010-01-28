@@ -1858,6 +1858,9 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
+index|[
+literal|0
+index|]
 operator|--
 expr_stmt|;
 name|softc
@@ -4053,8 +4056,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_DEV
 argument_list|)
 expr_stmt|;
 else|else
@@ -4062,8 +4064,7 @@ name|cdschedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_DEV
 argument_list|)
 expr_stmt|;
 return|return
@@ -4777,6 +4778,9 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
+index|[
+literal|0
+index|]
 operator|>
 literal|0
 condition|)
@@ -4787,6 +4791,9 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
+index|[
+literal|0
+index|]
 operator|--
 expr_stmt|;
 name|changer
@@ -4945,6 +4952,9 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
+index|[
+literal|0
+index|]
 operator|++
 expr_stmt|;
 name|softc
@@ -6202,7 +6212,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|1
+name|cd_retry_count
 argument_list|,
 name|cddone
 argument_list|,
@@ -11969,7 +11979,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|1
+name|cd_retry_count
 argument_list|,
 name|cddone
 argument_list|,
@@ -12726,7 +12736,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|1
+name|cd_retry_count
 argument_list|,
 name|cddone
 argument_list|,
@@ -13794,7 +13804,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -14001,7 +14011,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -14264,7 +14274,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -14696,7 +14706,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -14998,7 +15008,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|2
+name|cd_retry_count
 argument_list|,
 name|cddone
 argument_list|,
@@ -15124,7 +15134,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15315,7 +15325,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15485,7 +15495,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15623,7 +15633,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15718,7 +15728,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15851,7 +15861,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -16153,7 +16163,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -16926,7 +16936,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -17297,7 +17307,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone

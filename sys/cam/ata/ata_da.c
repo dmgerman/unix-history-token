@@ -3081,7 +3081,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-name|CAM_PRIORITY_NORMAL
+name|CAM_PRIORITY_NONE
 argument_list|)
 expr_stmt|;
 name|cpi

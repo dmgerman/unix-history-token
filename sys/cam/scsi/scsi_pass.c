@@ -2078,8 +2078,6 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * If the user wants us to perform any error recovery, then honor 	 * that request.  Otherwise, it's up to the user to perform any 	 * error recovery. 	 */
-name|error
-operator|=
 name|cam_periph_runccb
 argument_list|(
 name|ccb
@@ -2158,7 +2156,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}

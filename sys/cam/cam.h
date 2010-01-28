@@ -110,7 +110,31 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Priority information for a CAM structure.  The generation number is  * incremented everytime a new entry is entered into the queue giving round  * robin per priority level scheduling.  */
+comment|/*  * Priority information for a CAM structure.   */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CAM_RL_HOST
+block|,
+name|CAM_RL_BUS
+block|,
+name|CAM_RL_XPT
+block|,
+name|CAM_RL_DEV
+block|,
+name|CAM_RL_NORMAL
+block|,
+name|CAM_RL_VALUES
+block|}
+name|cam_rl
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * The generation number is incremented everytime a new entry is entered into  * the queue giving round robin per priority level scheduling.  */
 end_comment
 
 begin_typedef
@@ -122,20 +146,35 @@ name|priority
 decl_stmt|;
 define|#
 directive|define
+name|CAM_PRIORITY_HOST
+value|((CAM_RL_HOST<< 8) + 0x80)
+define|#
+directive|define
 name|CAM_PRIORITY_BUS
-value|0
+value|((CAM_RL_BUS<< 8) + 0x80)
+define|#
+directive|define
+name|CAM_PRIORITY_XPT
+value|((CAM_RL_XPT<< 8) + 0x80)
 define|#
 directive|define
 name|CAM_PRIORITY_DEV
-value|0
+value|((CAM_RL_DEV<< 8) + 0x80)
 define|#
 directive|define
 name|CAM_PRIORITY_NORMAL
-value|1
+value|((CAM_RL_NORMAL<< 8) + 0x80)
 define|#
 directive|define
 name|CAM_PRIORITY_NONE
 value|(u_int32_t)-1
+define|#
+directive|define
+name|CAM_PRIORITY_TO_RL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 8)
 name|u_int32_t
 name|generation
 decl_stmt|;

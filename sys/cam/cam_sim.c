@@ -212,6 +212,8 @@ argument_list|)
 argument_list|,
 name|M_CAMSIM
 argument_list|,
+name|M_ZERO
+operator||
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -299,6 +301,13 @@ name|devq
 operator|=
 name|queue
 expr_stmt|;
+name|sim
+operator|->
+name|max_ccbs
+operator|=
+literal|8
+expr_stmt|;
+comment|/* Reserve for management purposes. */
 name|sim
 operator|->
 name|mtx
