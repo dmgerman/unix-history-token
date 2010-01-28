@@ -8860,6 +8860,12 @@ name|PTE_W
 operator||
 name|PTE_CACHE
 expr_stmt|;
+name|sysm
+operator|->
+name|valid1
+operator|=
+literal|1
+expr_stmt|;
 name|pmap_TLB_update_kernel
 argument_list|(
 operator|(
@@ -8873,12 +8879,6 @@ name|sysm
 operator|->
 name|CMAP1
 argument_list|)
-expr_stmt|;
-name|sysm
-operator|->
-name|valid1
-operator|=
-literal|1
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -9749,7 +9749,7 @@ name|sysm
 operator|->
 name|valid2
 operator|=
-literal|2
+literal|1
 expr_stmt|;
 name|va_dst
 operator|=
