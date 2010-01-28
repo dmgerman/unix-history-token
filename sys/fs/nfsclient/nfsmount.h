@@ -149,17 +149,6 @@ name|nm_tprintf_delay
 decl_stmt|;
 comment|/* interval for messages */
 comment|/* Newnfs additions */
-name|int
-name|nm_iothreadcnt
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|nm_iodwant
-index|[
-name|NFS_MAXRAHEAD
-index|]
-decl_stmt|;
 name|struct
 name|nfsclclient
 modifier|*

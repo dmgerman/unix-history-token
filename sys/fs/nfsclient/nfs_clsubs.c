@@ -197,9 +197,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|proc
-modifier|*
+name|enum
+name|nfsiod_state
 name|ncl_iodwant
 index|[
 name|NFS_MAXRAHEAD
@@ -258,7 +257,7 @@ directive|if
 literal|0
 block|int i;
 comment|/* 	 * Tell all nfsiod processes to exit. Clear ncl_iodmax, and wakeup 	 * any sleeping nfsiods so they check ncl_iodmax and exit. 	 */
-block|mtx_lock(&ncl_iod_mutex); 	ncl_iodmax = 0; 	for (i = 0; i< ncl_numasync; i++) 		if (ncl_iodwant[i]) 			wakeup(&ncl_iodwant[i]);
+block|mtx_lock(&ncl_iod_mutex); 	ncl_iodmax = 0; 	for (i = 0; i< ncl_numasync; i++) 		if (ncl_iodwant[i] == NFSIOD_AVAILABLE) 			wakeup(&ncl_iodwant[i]);
 comment|/* The last nfsiod to exit will wake us up when ncl_numasync hits 0 */
 block|while (ncl_numasync) 		msleep(&ncl_numasync,&ncl_iod_mutex, PWAIT, "ioddie", 0); 	mtx_unlock(&ncl_iod_mutex); 	ncl_nhuninit(); 	return (0);
 else|#
@@ -1686,7 +1685,7 @@ index|[
 name|i
 index|]
 operator|=
-name|NULL
+name|NFSIOD_NOT_AVAILABLE
 expr_stmt|;
 name|ncl_iodmount
 index|[
