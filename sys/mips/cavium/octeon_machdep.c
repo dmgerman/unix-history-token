@@ -2820,6 +2820,10 @@ block|{
 name|uint64_t
 name|platform_counter_freq
 decl_stmt|;
+name|boothowto
+operator||=
+name|RB_SINGLE
+expr_stmt|;
 comment|/* Initialize pcpu stuff */
 name|mips_pcpu0_init
 argument_list|()
