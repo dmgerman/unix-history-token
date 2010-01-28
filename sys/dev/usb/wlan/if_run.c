@@ -4051,16 +4051,13 @@ operator|==
 literal|100
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: timeout waiting for NIC to initialize\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"timeout waiting for NIC to initialize\n"
 argument_list|)
 expr_stmt|;
 name|RUN_UNLOCK
@@ -4078,17 +4075,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: MAC/BBP RT%04X (rev 0x%04X), RF %s (MIMO %dT%dR), "
-literal|"address %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"MAC/BBP RT%04X (rev 0x%04X), RF %s (MIMO %dT%dR), address %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -4139,16 +4132,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: could not load 8051 microcode\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"could not load 8051 microcode\n"
 argument_list|)
 expr_stmt|;
 name|RUN_UNLOCK
@@ -4183,16 +4173,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: can not if_alloc()\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5431,20 +5418,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: failed loadfirmware of file %s (error %d)\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"failed loadfirmware of file %s\n"
 argument_list|,
 literal|"runfw"
-argument_list|,
-name|ENOENT
 argument_list|)
 expr_stmt|;
 return|return
@@ -5460,16 +5442,13 @@ operator|!=
 literal|8192
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: invalid firmware size (should be 8KB)\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"invalid firmware size (should be 8KB)\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5534,30 +5513,24 @@ name|base
 operator|+=
 literal|4096
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: You are using firmware RT3071.\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"loading RT3071 firmware\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
-argument_list|(
-literal|"%s: You are using firmware RT2870.\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"loading RT2870 firmware\n"
 argument_list|)
 expr_stmt|;
 comment|/* cheap sanity check */
@@ -5582,16 +5555,13 @@ literal|0xffffff0210280210
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: firmware checksum failed\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"firmware checksum failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5707,16 +5677,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: firmware reset failed\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"firmware reset failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5819,16 +5786,13 @@ operator|==
 literal|1000
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: timeout waiting for MCU to initialize\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"timeout waiting for MCU to initialize\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -22663,16 +22627,13 @@ operator|==
 literal|100
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: timeout waiting for DMA engine\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"timeout waiting for DMA engine\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -22749,16 +22710,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: could not reset chipset\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"could not reset chipset\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -23024,16 +22982,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: could not initialize BBP\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"could not initialize BBP\n"
 argument_list|)
 expr_stmt|;
 goto|goto
