@@ -1409,7 +1409,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1000
+literal|100000
 argument_list|)
 expr_stmt|;
 name|reset
@@ -1435,7 +1435,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1000
+literal|100000
 argument_list|)
 expr_stmt|;
 comment|/* Init PCI windows */
@@ -1497,7 +1497,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1000
+literal|100000
 argument_list|)
 expr_stmt|;
 name|ar71xx_pci_check_bus_error
