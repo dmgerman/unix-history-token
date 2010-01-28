@@ -6,6 +6,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -1187,13 +1201,9 @@ operator|(
 name|driver_filter_t
 operator|*
 operator|)
-name|NULL
-argument_list|,
-operator|(
-name|driver_intr_t
-operator|*
-operator|)
 name|msgring_process_fast_intr
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

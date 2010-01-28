@@ -2366,7 +2366,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|msgring_process_fast_intr
 parameter_list|(
 name|void
@@ -2421,7 +2421,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|msgring_process_fast_intr
 parameter_list|(
 name|void
@@ -2516,6 +2516,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+return|return
+name|FILTER_HANDLED
+return|;
 block|}
 end_function
 
