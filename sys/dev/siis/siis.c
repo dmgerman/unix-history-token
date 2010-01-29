@@ -4486,6 +4486,11 @@ name|ccb
 decl_stmt|;
 if|if
 condition|(
+name|bootverbose
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 operator|(
 name|status
@@ -4517,10 +4522,6 @@ name|ATA_SS_IPM_ACTIVE
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -4528,18 +4529,8 @@ argument_list|,
 literal|"CONNECT requested\n"
 argument_list|)
 expr_stmt|;
-name|siis_reset
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 block|}
 else|else
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -4547,13 +4538,12 @@ argument_list|,
 literal|"DISCONNECT requested\n"
 argument_list|)
 expr_stmt|;
-name|ch
-operator|->
-name|devices
-operator|=
-literal|0
-expr_stmt|;
 block|}
+name|siis_reset
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
