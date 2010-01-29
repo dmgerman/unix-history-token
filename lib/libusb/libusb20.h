@@ -928,6 +928,15 @@ name|pdev
 parameter_list|)
 function_decl|;
 name|int
+name|libusb20_dev_check_connected
+parameter_list|(
+name|struct
+name|libusb20_device
+modifier|*
+name|pdev
+parameter_list|)
+function_decl|;
+name|int
 name|libusb20_dev_set_power_mode
 parameter_list|(
 name|struct
