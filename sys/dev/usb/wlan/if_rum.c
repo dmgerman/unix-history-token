@@ -481,6 +481,13 @@ argument_list|)
 block|,
 name|RUM_DEV
 argument_list|(
+name|EDIMAX
+argument_list|,
+name|EW7318USG
+argument_list|)
+block|,
+name|RUM_DEV
+argument_list|(
 name|DLINK2
 argument_list|,
 name|DWLG122C1
