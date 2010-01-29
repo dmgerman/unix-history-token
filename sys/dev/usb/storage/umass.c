@@ -11706,7 +11706,37 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-comment|/* 		 * the wire protocol failed and will have recovered 		 * (hopefully).  We return an error to CAM and let CAM retry 		 * the command if necessary. 		 */
+comment|/* 		 * The wire protocol failed and will hopefully have 		 * recovered. We return an error to CAM and let CAM 		 * retry the command if necessary. In case of SCSI IO 		 * commands we ask the CAM layer to check the 		 * condition first. This is a quick hack to make 		 * certain devices work. 		 */
+if|if
+condition|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|==
+name|XPT_SCSI_IO
+condition|)
+block|{
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_SCSI_STATUS_ERROR
+expr_stmt|;
+name|ccb
+operator|->
+name|csio
+operator|.
+name|scsi_status
+operator|=
+name|SCSI_STATUS_CHECK_COND
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ccb
 operator|->
 name|ccb_h
@@ -11715,6 +11745,7 @@ name|status
 operator|=
 name|CAM_REQ_CMP_ERR
 expr_stmt|;
+block|}
 name|xpt_done
 argument_list|(
 name|ccb
