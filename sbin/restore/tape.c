@@ -2115,7 +2115,7 @@ name|sprintf
 argument_list|(
 name|volno
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|newvol
 argument_list|)
@@ -2292,8 +2292,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong volume (%ld)\n"
+literal|"Wrong volume (%jd)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tmpbuf
 operator|.
 name|c_volume
@@ -2391,10 +2394,16 @@ name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"last rec %qd, tape starts with %qd\n"
+literal|"last rec %jd, tape starts with %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|prevtapea
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tmpbuf
 operator|.
 name|c_tapea
@@ -2828,8 +2837,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Level %ld dump of %s on %s:%s\n"
+literal|"Level %jd dump of %s on %s:%s\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|spcl
 operator|.
 name|c_level
@@ -6436,7 +6448,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"partial block read: %d should be %d\n"
+literal|"partial block read: %ld should be %ld\n"
 argument_list|,
 name|rd
 argument_list|,
@@ -7285,8 +7297,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"begins with record %qd"
+literal|"begins with record %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|header
 operator|->
 name|c_firstrec

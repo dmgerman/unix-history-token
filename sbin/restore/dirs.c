@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -570,10 +576,13 @@ name|sprintf
 argument_list|(
 name|dirfile
 argument_list|,
-literal|"%s/rstdir%ld"
+literal|"%s/rstdir%jd"
 argument_list|,
 name|tmpdir
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|dumpdate
 argument_list|)
 expr_stmt|;
@@ -590,7 +599,6 @@ condition|)
 block|{
 operator|(
 name|void
-operator|*
 operator|)
 name|strcat
 argument_list|(
@@ -683,10 +691,13 @@ name|sprintf
 argument_list|(
 name|modefile
 argument_list|,
-literal|"%s/rstmode%ld"
+literal|"%s/rstmode%jd"
 argument_list|,
 name|tmpdir
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|dumpdate
 argument_list|)
 expr_stmt|;
@@ -703,7 +714,6 @@ condition|)
 block|{
 operator|(
 name|void
-operator|*
 operator|)
 name|strcat
 argument_list|(
@@ -1285,7 +1295,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s%s: name exceeds %d char\n"
+literal|"%s%s: name exceeds %zu char\n"
 argument_list|,
 name|locname
 argument_list|,
@@ -1834,7 +1844,7 @@ name|vprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"reclen less than DIRSIZ (%d< %d) "
+literal|"reclen less than DIRSIZ (%d< %zu) "
 argument_list|,
 name|dp
 operator|->
@@ -2848,10 +2858,13 @@ name|sprintf
 argument_list|(
 name|modefile
 argument_list|,
-literal|"%s/rstmode%ld"
+literal|"%s/rstmode%jd"
 argument_list|,
 name|tmpdir
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|dumpdate
 argument_list|)
 expr_stmt|;

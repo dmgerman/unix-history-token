@@ -285,7 +285,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|struct
 name|arglist
@@ -1191,7 +1191,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|size_t
 name|size
 parameter_list|,
 name|struct
@@ -1817,7 +1817,7 @@ name|char
 modifier|*
 name|canonname
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
