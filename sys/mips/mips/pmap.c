@@ -8141,6 +8141,9 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
+name|int
+name|int_level
+decl_stmt|;
 if|if
 condition|(
 name|i
@@ -8207,6 +8210,8 @@ modifier|*
 name|sysm
 decl_stmt|;
 comment|/* If this is used other than for dumps, we may need to leave 		 * interrupts disasbled on return. If crash dumps don't work when 		 * we get to this point, we might want to consider this (leaving things 		 * disabled as a starting point ;-) 	 	 */
+name|int_level
+operator|=
 name|disableintr
 argument_list|()
 expr_stmt|;
@@ -8274,8 +8279,10 @@ name|sysm
 operator|->
 name|CADDR1
 expr_stmt|;
-name|enableintr
-argument_list|()
+name|restoreintr
+argument_list|(
+name|int_level
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -8300,6 +8307,9 @@ parameter_list|)
 block|{
 name|int
 name|cpu
+decl_stmt|;
+name|int
+name|int_level
 decl_stmt|;
 name|struct
 name|local_sysmaps
@@ -8338,6 +8348,8 @@ operator|->
 name|valid1
 condition|)
 block|{
+name|int_level
+operator|=
 name|disableintr
 argument_list|()
 expr_stmt|;
@@ -8351,8 +8363,10 @@ operator|->
 name|CADDR1
 argument_list|)
 expr_stmt|;
-name|enableintr
-argument_list|()
+name|restoreintr
+argument_list|(
+name|int_level
+argument_list|)
 expr_stmt|;
 name|sysm
 operator|->
@@ -8695,6 +8709,9 @@ argument_list|(
 name|m
 argument_list|)
 decl_stmt|;
+name|int
+name|int_level
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|VM_ALLOC_WIRED_TLB_PG_POOL
@@ -8854,6 +8871,8 @@ expr_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
+name|int_level
+operator|=
 name|disableintr
 argument_list|()
 expr_stmt|;
@@ -8915,8 +8934,10 @@ operator|->
 name|CADDR1
 argument_list|)
 expr_stmt|;
-name|enableintr
-argument_list|()
+name|restoreintr
+argument_list|(
+name|int_level
+argument_list|)
 expr_stmt|;
 name|sysm
 operator|->
@@ -8970,6 +8991,9 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
+decl_stmt|;
+name|int
+name|int_level
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -9136,6 +9160,8 @@ argument_list|(
 name|sysm
 argument_list|)
 expr_stmt|;
+name|int_level
+operator|=
 name|disableintr
 argument_list|()
 expr_stmt|;
@@ -9206,8 +9232,10 @@ operator|->
 name|CADDR1
 argument_list|)
 expr_stmt|;
-name|enableintr
-argument_list|()
+name|restoreintr
+argument_list|(
+name|int_level
+argument_list|)
 expr_stmt|;
 name|sysm
 operator|->
@@ -9251,6 +9279,9 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
+decl_stmt|;
+name|int
+name|int_level
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -9368,6 +9399,8 @@ argument_list|(
 name|sysm
 argument_list|)
 expr_stmt|;
+name|int_level
+operator|=
 name|disableintr
 argument_list|()
 expr_stmt|;
@@ -9432,8 +9465,10 @@ operator|->
 name|CADDR1
 argument_list|)
 expr_stmt|;
-name|enableintr
-argument_list|()
+name|restoreintr
+argument_list|(
+name|int_level
+argument_list|)
 expr_stmt|;
 name|sysm
 operator|->
@@ -9494,6 +9529,9 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|dst
 argument_list|)
+decl_stmt|;
+name|int
+name|int_level
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -9728,6 +9766,8 @@ expr_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
+name|int_level
+operator|=
 name|disableintr
 argument_list|()
 expr_stmt|;
@@ -10035,8 +10075,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|enableintr
-argument_list|()
+name|restoreintr
+argument_list|(
+name|int_level
+argument_list|)
 expr_stmt|;
 name|sched_unpin
 argument_list|()
