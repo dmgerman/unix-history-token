@@ -2971,7 +2971,7 @@ argument_list|(
 name|vap
 argument_list|)
 condition|)
-name|ieee80211_radiotap_tx
+name|ieee80211_radiotap_rx
 argument_list|(
 name|vap
 argument_list|,
