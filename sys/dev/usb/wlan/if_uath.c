@@ -726,6 +726,13 @@ argument_list|)
 block|,
 name|UATH_DEV
 argument_list|(
+name|NETGEAR3
+argument_list|,
+name|WPN111_2
+argument_list|)
+block|,
+name|UATH_DEV
+argument_list|(
 name|UMEDIA
 argument_list|,
 name|TEW444UBEU
