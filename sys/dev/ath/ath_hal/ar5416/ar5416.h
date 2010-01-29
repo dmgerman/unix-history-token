@@ -116,6 +116,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR9285_CCA_MAX_GOOD_VALUE
+value|-118
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR5416_SPUR_RSSI_THRESH
 value|40
 end_define

@@ -444,6 +444,11 @@ name|void
 name|ar5416InitNfHistBuff
 parameter_list|(
 name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|struct
 name|ar5212NfCalHist
 modifier|*
 name|h

@@ -1685,6 +1685,8 @@ expr_stmt|;
 comment|/* Anti Noise Immunity */
 name|ar5416InitNfHistBuff
 argument_list|(
+name|ah
+argument_list|,
 name|AH5416
 argument_list|(
 name|ah
