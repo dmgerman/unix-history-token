@@ -35,9 +35,11 @@ comment|/* next ASID to alloc */
 value|\ 	u_int32_t	pc_asid_generation;
 comment|/* current ASID generation */
 value|\ 	u_int		pc_pending_ipis;
-comment|/* the IPIs pending to this CPU */
-value|\ 	void		*pc_boot_stack;
 end_define
+
+begin_comment
+comment|/* IPIs pending to this CPU */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -45,53 +47,30 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|pcpu
+begin_decl_stmt
+specifier|extern
+name|char
+name|pcpu_space
+index|[
+name|MAXCPU
+index|]
+index|[
+name|PAGE_SIZE
 operator|*
-name|get_pcpup
-argument_list|(
-argument|void
-argument_list|)
-block|{
-comment|/* 	 * FREEBSD_DEVELOPERS_FIXME 	 * In multiprocessor case, store/retrieve the pcpu structure 	 * address for current CPU in scratch register for fast access. 	 * 	 * In this routine, read the scratch register to retrieve the PCPU 	 * structure for this CPU 	 */
-block|struct
-name|pcpu
-operator|*
-name|ret
-block|;
-comment|/* ret should contain the pointer to the PCPU structure for this CPU */
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-block|}
-end_expr_stmt
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|PCPUP
-value|((struct pcpu *)get_pcpup())
+name|PCPU_ADDR
+parameter_list|(
+name|cpu
+parameter_list|)
+value|(struct pcpu *)(pcpu_space[(cpu)])
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Uni processor systems */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -108,15 +87,6 @@ directive|define
 name|PCPUP
 value|pcpup
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
 
 begin_define
 define|#
