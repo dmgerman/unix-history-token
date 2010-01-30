@@ -264,7 +264,9 @@ argument_list|)
 name|cdevsw_gt_post_list
 operator|=
 name|SLIST_HEAD_INITIALIZER
-argument_list|()
+argument_list|(
+name|cdevsw_gt_post_list
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

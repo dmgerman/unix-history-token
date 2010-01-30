@@ -163,7 +163,6 @@ name|accept_filtlsthd
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|accept_filtlsthd
 argument_list|)
 expr_stmt|;
