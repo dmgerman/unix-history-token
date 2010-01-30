@@ -311,7 +311,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"6.9.24"
+literal|"6.9.25"
 decl_stmt|;
 end_decl_stmt
 
@@ -6658,6 +6658,24 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|mask
+operator|&
+name|IFCAP_VLAN_HWFILTER
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_capenable
+operator|^=
+name|IFCAP_VLAN_HWFILTER
+expr_stmt|;
+name|reinit
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|mask
 operator|&
@@ -7093,11 +7111,6 @@ argument_list|,
 name|ETHERTYPE_VLAN
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|700029
 if|if
 condition|(
 name|ifp
@@ -7106,6 +7119,22 @@ name|if_capenable
 operator|&
 name|IFCAP_VLAN_HWTAGGING
 condition|)
+block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_VLAN_HWFILTER
+condition|)
+comment|/* Use real VLAN Filter support */
+name|em_setup_vlan_hw_support
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 name|u32
 name|ctrl
@@ -7139,16 +7168,7 @@ name|ctrl
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* Use real VLAN Filter support */
-name|em_setup_vlan_hw_support
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+block|}
 comment|/* Set hardware offload abilities */
 name|ifp
 operator|->
@@ -13370,8 +13390,10 @@ comment|/* 	 * By default only enable on PCI-E, this 	 * can be overriden by ifc
 argument|if (adapter->hw.mac.type>= e1000_82571) 		ifp->if_capenable |= IFCAP_TSO4;
 endif|#
 directive|endif
-comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
-argument|ifp->if_data.ifi_hdrlen = sizeof(struct ether_vlan_header); 	ifp->if_capabilities |= IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU; 	ifp->if_capenable |= IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU;
+comment|/* 	 * Tell the upper layer(s) we 	 * support full VLAN capability 	 */
+argument|ifp->if_data.ifi_hdrlen = sizeof(struct ether_vlan_header); 	ifp->if_capabilities |= IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU; 	ifp->if_capenable |= (IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING);
+comment|/* 	** Dont turn this on by default, if vlans are 	** created on another pseudo device (eg. lagg) 	** then vlan events are not passed thru, breaking 	** operation, but with HW FILTER off it works. If 	** using vlans directly on the em driver you can 	** enable this and get full hardware tag filtering.  	*/
+argument|ifp->if_capabilities |= IFCAP_VLAN_HWFILTER;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
