@@ -76,6 +76,11 @@ parameter_list|(
 name|acl_t
 modifier|*
 name|prev_acl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
 parameter_list|)
 block|{
 name|acl_entry_t
@@ -122,7 +127,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"acl_dup() failed"
+literal|"%s: acl_dup() failed"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 if|if
@@ -144,7 +151,9 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"acl_calc_mask() failed"
+literal|"%s: acl_calc_mask() failed"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 name|acl_free
@@ -203,7 +212,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"acl_get_tag_type() failed"
+literal|"%s: acl_get_tag_type() failed"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 if|if
@@ -228,7 +239,9 @@ block|}
 comment|/* 		 * If no mask entry is specified, the -n option is specified, 		 * and no ACL mask entry exists in the ACL associated with the 		 * file, then write an error message to standard error and 		 * continue with the next file. 		 */
 name|warnx
 argument_list|(
-literal|"warning: no mask entry"
+literal|"%s: warning: no mask entry"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 name|acl_free

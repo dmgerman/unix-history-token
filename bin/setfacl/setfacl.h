@@ -81,23 +81,27 @@ begin_comment
 comment|/* remove acl's (-xX) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OP_REMOVE_BY_NUMBER
+value|0x04
+end_define
+
 begin_comment
-comment|/* ACL types for the acl array */
+comment|/* remove acl's (-xX) by acl entry number */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACCESS_ACL
-value|0
+name|OP_ADD_ACL
+value|0x05
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_ACL
-value|1
-end_define
+begin_comment
+comment|/* add acls entries at a given position */
+end_comment
 
 begin_comment
 comment|/* TAILQ entry for acl operations */
@@ -112,6 +116,9 @@ name|op
 decl_stmt|;
 name|acl_t
 name|acl
+decl_stmt|;
+name|uint
+name|entry_number
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
@@ -202,6 +209,33 @@ parameter_list|,
 name|acl_t
 modifier|*
 name|prev_acl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|add_acl
+parameter_list|(
+name|acl_t
+name|acl
+parameter_list|,
+name|uint
+name|entry_number
+parameter_list|,
+name|acl_t
+modifier|*
+name|prev_acl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -220,6 +254,30 @@ parameter_list|,
 name|acl_t
 modifier|*
 name|prev_acl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|remove_by_number
+parameter_list|(
+name|uint
+name|entry_number
+parameter_list|,
+name|acl_t
+modifier|*
+name|prev_acl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -231,6 +289,11 @@ parameter_list|(
 name|acl_t
 modifier|*
 name|prev_acl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -242,6 +305,11 @@ parameter_list|(
 name|acl_t
 modifier|*
 name|prev_acl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -257,6 +325,11 @@ parameter_list|(
 name|acl_t
 modifier|*
 name|prev_acl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -277,12 +350,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|acl_type_t
-name|acl_type
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|uint
 name|have_mask
 decl_stmt|;
@@ -297,12 +364,6 @@ end_decl_stmt
 begin_decl_stmt
 name|uint
 name|have_stdin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uint
-name|h_flag
 decl_stmt|;
 end_decl_stmt
 
