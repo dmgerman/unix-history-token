@@ -759,6 +759,18 @@ value|pmap_kextract((vm_offset_t)(va))
 end_define
 
 begin_comment
+comment|/*  * KPTmap is a linear mapping of the kernel page table.  It differs from the  * recursive mapping in two ways: (1) it only provides access to kernel page  * table pages, and not user page table pages, and (2) it provides access to  * a kernel page table page after the corresponding virtual addresses have  * been promoted to a 2/4MB page mapping.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|pt_entry_t
+modifier|*
+name|KPTmap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		kernel virtual address.  */
 end_comment
 
@@ -808,13 +820,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Beware of a concurrent promotion that changes the PDE at 		 * this point!  For example, vtopte() must not be used to 		 * access the PTE because it would use the new PDE.  It is, 		 * however, safe to use the old PDE because the page table 		 * page is preserved by the promotion. 		 */
 name|pa
 operator|=
-operator|*
-name|vtopte
+name|KPTmap
+index|[
+name|i386_btop
 argument_list|(
 name|va
 argument_list|)
+index|]
 expr_stmt|;
 name|pa
 operator|=
@@ -832,7 +847,9 @@ operator|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|pa
+operator|)
 return|;
 block|}
 end_function
