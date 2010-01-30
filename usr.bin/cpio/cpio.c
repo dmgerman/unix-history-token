@@ -1379,6 +1379,16 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'V'
+case|:
+comment|/* GNU cpio */
+name|cpio
+operator|->
+name|dot
+operator|++
+expr_stmt|;
+break|break;
+case|case
 name|OPTION_VERSION
 case|:
 comment|/* GNU convention */
@@ -1576,6 +1586,23 @@ literal|0
 argument_list|,
 literal|"Option -l requires -p"
 argument_list|)
+expr_stmt|;
+comment|/* -v overrides -V */
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+operator|&&
+name|cpio
+operator|->
+name|verbose
+condition|)
+name|cpio
+operator|->
+name|dot
+operator|=
+literal|0
 expr_stmt|;
 comment|/* TODO: Flag other nonsensical combinations. */
 switch|switch
@@ -1812,7 +1839,7 @@ init|=
 literal|"First option must be a mode specifier:\n"
 literal|"  -i Input  -o Output  -p Pass\n"
 literal|"Common Options:\n"
-literal|"  -v    Verbose\n"
+literal|"  -v  Verbose filenames    -V  one dot per file\n"
 literal|"Create: %p -o [options]< [list of files]> [archive]\n"
 ifdef|#
 directive|ifdef
@@ -2436,6 +2463,19 @@ argument_list|(
 name|cpio
 operator|->
 name|archive
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3108,6 +3148,19 @@ argument_list|,
 literal|"%s"
 argument_list|,
 name|destpath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"."
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Option_link only makes sense in pass mode and for 	 * regular files.  Also note: if a link operation fails 	 * because of cross-device restrictions, we'll fall back 	 * to copy mode for that entry. 	 * 	 * TODO: Test other cpio implementations to see if they 	 * hard-link anything other than regular files here. 	 */
@@ -4059,11 +4112,24 @@ name|verbose
 condition|)
 name|fprintf
 argument_list|(
-name|stdout
+name|stderr
 argument_list|,
 literal|"%s\n"
 argument_list|,
 name|destpath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"."
 argument_list|)
 expr_stmt|;
 if|if
@@ -4161,6 +4227,19 @@ operator|=
 name|archive_read_close
 argument_list|(
 name|a
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5350,6 +5429,19 @@ argument_list|(
 name|cpio
 operator|->
 name|archive
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if

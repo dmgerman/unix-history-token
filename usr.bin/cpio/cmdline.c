@@ -125,7 +125,7 @@ name|char
 modifier|*
 name|short_options
 init|=
-literal|"0AaBC:F:O:cdE:f:H:hijLlmnopR:rtuvW:yZz"
+literal|"0AaBC:F:O:cdE:f:H:hijLlmnopR:rtuvVW:yZz"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,14 @@ block|,
 literal|0
 block|,
 literal|'o'
+block|}
+block|,
+block|{
+literal|"dot"
+block|,
+literal|0
+block|,
+literal|'V'
 block|}
 block|,
 block|{
