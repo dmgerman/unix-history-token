@@ -158,7 +158,7 @@ operator|)
 return|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
