@@ -148,6 +148,10 @@ name|int
 name|nm_tprintf_delay
 decl_stmt|;
 comment|/* interval for messages */
+name|int
+name|nm_negnametimeo
+decl_stmt|;
+comment|/* timeout for -ve entries (sec) */
 comment|/* Newnfs additions */
 name|struct
 name|nfsclclient
@@ -284,6 +288,24 @@ name|mp
 parameter_list|)
 value|((struct nfsmount *)((mp)->mnt_data))
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_DEFAULT_NEGNAMETIMEO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_DEFAULT_NEGNAMETIMEO
+value|60
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
