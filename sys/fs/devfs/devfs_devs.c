@@ -239,7 +239,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Helper sysctl for devname(3).  We're given a struct cdev * and return  * the name, if any, registered by the device driver.  */
+comment|/*  * Helper sysctl for devname(3).  We're given a dev_t and return the  * name, if any, registered by the device driver.  */
 end_comment
 
 begin_function
@@ -260,6 +260,11 @@ name|struct
 name|cdev_priv
 modifier|*
 name|cdp
+decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|dev
 decl_stmt|;
 name|error
 operator|=
@@ -296,7 +301,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	ud ^ devfs_random(); */
+name|dev
+operator|=
+name|NULL
+expr_stmt|;
 name|dev_lock
 argument_list|()
 expr_stmt|;
@@ -316,13 +324,27 @@ name|cdp_inode
 operator|==
 name|ud
 condition|)
+block|{
+name|dev
+operator|=
+operator|&
+name|cdp
+operator|->
+name|cdp_c
+expr_stmt|;
+name|dev_refl
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|dev_unlock
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|cdp
+name|dev
 operator|==
 name|NULL
 condition|)
@@ -331,31 +353,31 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-return|return
-operator|(
+name|error
+operator|=
 name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-name|cdp
+name|dev
 operator|->
-name|cdp_c
-operator|.
 name|si_name
 argument_list|,
 name|strlen
 argument_list|(
-name|cdp
+name|dev
 operator|->
-name|cdp_c
-operator|.
 name|si_name
 argument_list|)
 operator|+
 literal|1
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+name|dev_rel
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
