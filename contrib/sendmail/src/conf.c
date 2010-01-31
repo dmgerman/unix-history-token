@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1141 2008/04/14 02:09:35 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1153 2009/12/18 17:25:12 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1779,6 +1779,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* REQUIRES_DIR_FSYNC */
+if|#
+directive|if
+name|_FFR_RCPTTHROTDELAY
+name|BadRcptThrottleDelay
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_RCPTTHROTDELAY */
 name|ConnectionRateWindowSize
 operator|=
 literal|60
@@ -3323,7 +3333,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -4164,13 +4174,23 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SM_NSSWITCH_DELIMS
+define|#
+directive|define
+name|SM_NSSWITCH_DELIMS
+value|" \t"
+endif|#
+directive|endif
+comment|/* SM_NSSWITCH_DELIMS */
 name|p
 operator|=
 name|strpbrk
 argument_list|(
 name|buf
 argument_list|,
-literal|" \t"
+name|SM_NSSWITCH_DELIMS
 argument_list|)
 expr_stmt|;
 if|if
@@ -4219,6 +4239,12 @@ continue|continue;
 block|}
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -4335,6 +4361,12 @@ literal|'\0'
 expr_stmt|;
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -9990,6 +10022,8 @@ index|]
 operator|.
 name|d_name
 argument_list|,
+name|CurrentLA
+argument_list|,
 name|limit
 argument_list|)
 expr_stmt|;
@@ -14096,6 +14130,24 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_TESTS
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|4
+argument_list|,
+literal|101
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+endif|#
+directive|endif
+comment|/* _FFR_TESTS */
 if|if
 condition|(
 name|MinBlocksFree
@@ -16082,6 +16134,11 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 name|c
@@ -16232,6 +16289,11 @@ control|)
 block|{
 if|if
 condition|(
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+operator|&&
 name|isdigit
 argument_list|(
 name|c
@@ -16244,6 +16306,11 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+operator|&&
 name|isalpha
 argument_list|(
 name|c
@@ -23303,6 +23370,15 @@ directive|endif
 comment|/* _FFR_CATCH_BROKEN_MTAS */
 if|#
 directive|if
+name|_FFR_CHECKCONFIG
+comment|/* New OpMode to check the configuration file */
+literal|"_FFR_CHECKCONFIG"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CHECKCONFIG */
+if|#
+directive|if
 name|_FFR_CHK_QUEUE
 comment|/* Stricter checks about queue directory permissions. */
 literal|"_FFR_CHK_QUEUE"
@@ -23431,6 +23507,15 @@ directive|endif
 comment|/* _FFR_EIGHT_BIT_ADDR_OK */
 if|#
 directive|if
+name|_FFR_EXPDELAY
+comment|/* exponential queue delay */
+literal|"_FFR_EXPDELAY"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_EXPDELAY */
+if|#
+directive|if
 name|_FFR_EXTRA_MAP_CHECK
 comment|/* perform extra checks on $( $) in R lines */
 literal|"_FFR_EXTRA_MAP_CHECK"
@@ -23522,6 +23607,15 @@ directive|endif
 comment|/* _FFR_IGNORE_EXT_ON_HELO */
 if|#
 directive|if
+name|_FFR_LINUX_MHNL
+comment|/* Set MAXHOSTNAMELEN to 256 (Linux) */
+literal|"_FFR_LINUX_MHNL"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_LINUX_MHNL */
+if|#
+directive|if
 name|_FFR_LOCAL_DAEMON
 comment|/* Local daemon mode (-bl) which only accepts loopback connections */
 literal|"_FFR_LOCAL_DAEMON"
@@ -23529,6 +23623,14 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_LOCAL_DAEMON */
+if|#
+directive|if
+name|_FFR_MAIL_MACRO
+literal|"_FFR_MAIL_MACRO"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MAIL_MACRO */
 if|#
 directive|if
 name|_FFR_MAXDATASIZE
@@ -23558,6 +23660,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_MAX_SLEEP_TIME */
+if|#
+directive|if
+name|_FFR_MDS_NEGOTIATE
+comment|/* MaxDataSize negotation with libmilter */
+literal|"_FFR_MDS_NEGOTIATE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MDS_NEGOTIATE */
 if|#
 directive|if
 name|_FFR_MEMSTAT
@@ -23593,6 +23704,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_MILTER_CHECK_REJECTIONS_TOO */
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
+comment|/* extract enhanced status code from milter replies for dsn= logging */
+literal|"_FFR_MILTER_ENHSC"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ENHSC */
 if|#
 directive|if
 name|_FFR_MIME7TO8_OLD
@@ -23713,6 +23833,14 @@ directive|endif
 comment|/* _FFR_QUEUE_SCHED_DBG */
 if|#
 directive|if
+name|_FFR_RCPTTHROTDELAY
+comment|/* configurable delay for BadRcptThrottle */
+literal|"_FFR_RCPTTHROTDELAY"
+endif|#
+directive|endif
+comment|/* _FFR_RCPTTHROTDELAY */
+if|#
+directive|if
 name|_FFR_REDIRECTEMPTY
 comment|/* 	**  envelope<> can't be sent to mailing lists, only owner- 	**  send spam of this type to owner- of the list 	**  ----  to stop spam from going to mailing lists. 	*/
 literal|"_FFR_REDIRECTEMPTY"
@@ -23811,6 +23939,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SS_PER_DAEMON */
+if|#
+directive|if
+name|_FFR_TESTS
+comment|/* enable some test code */
+literal|"_FFR_TESTS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_TESTS */
 if|#
 directive|if
 name|_FFR_TIMERS

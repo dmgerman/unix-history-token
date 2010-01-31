@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 8.117 2008/01/31 18:48:29 ca Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.118 2008/07/22 15:12:48 ca Exp $"
 argument_list|)
 end_macro
 
@@ -951,7 +951,7 @@ name|fp
 operator|->
 name|f_cookie
 decl_stmt|;
-comment|/* 	**  Fetch the maximum input buffer size for sasl_encode(). 	**  This can be less than the size set in attemptauth() 	**  due to a negotation with the other side, e.g., 	**  Cyrus IMAP lmtp program sets maxbuf=4096, 	**  digestmd5 substracts 25 and hence we'll get 4071 	**  instead of 8192 (MAXOUTLEN). 	**  Hack (for now): simply reduce the size, callers are (must be) 	**  able to deal with that and invoke sasl_write() again with 	**  the rest of the data. 	**  Note: it would be better to store this value in the context 	**  after the negotiation. 	*/
+comment|/* 	**  Fetch the maximum input buffer size for sasl_encode(). 	**  This can be less than the size set in attemptauth() 	**  due to a negotiation with the other side, e.g., 	**  Cyrus IMAP lmtp program sets maxbuf=4096, 	**  digestmd5 substracts 25 and hence we'll get 4071 	**  instead of 8192 (MAXOUTLEN). 	**  Hack (for now): simply reduce the size, callers are (must be) 	**  able to deal with that and invoke sasl_write() again with 	**  the rest of the data. 	**  Note: it would be better to store this value in the context 	**  after the negotiation. 	*/
 name|result
 operator|=
 name|sasl_getprop

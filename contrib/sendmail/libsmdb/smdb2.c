@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2003, 2009 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb2.c,v 8.79 2003/06/13 21:33:11 ca Exp $"
+literal|"@(#)$Id: smdb2.c,v 8.80 2009/11/12 23:07:49 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2423,15 +2423,6 @@ operator|=
 name|smdb_malloc_database
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|smdb_db
-operator|==
-name|NULL
-condition|)
-return|return
-name|SMDBE_MALLOC
-return|;
 name|db2
 operator|=
 name|smdb2_malloc_database
@@ -2442,10 +2433,27 @@ condition|(
 name|db2
 operator|==
 name|NULL
+operator|||
+name|smdb_db
+operator|==
+name|NULL
 condition|)
+block|{
+name|smdb_unlock_file
+argument_list|(
+name|lock_fd
+argument_list|)
+expr_stmt|;
+name|smdb_free_database
+argument_list|(
+name|smdb_db
+argument_list|)
+expr_stmt|;
+comment|/* ok to be NULL */
 return|return
 name|SMDBE_MALLOC
 return|;
+block|}
 name|db2
 operator|->
 name|smdb2_lock_fd

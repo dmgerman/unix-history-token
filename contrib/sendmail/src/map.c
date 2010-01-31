@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.699 2007/10/10 00:06:45 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.705 2009/08/11 22:22:40 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2927,6 +2927,8 @@ decl_stmt|;
 specifier|auto
 name|int
 name|status
+init|=
+name|EX_UNAVAILABLE
 decl_stmt|;
 name|char
 modifier|*
@@ -7256,7 +7258,7 @@ if|if
 condition|(
 operator|(
 name|omode
-operator|&&
+operator|&
 name|O_ACCMODE
 operator|)
 operator|==
@@ -10542,7 +10544,7 @@ if|if
 condition|(
 operator|(
 name|omode
-operator|&&
+operator|&
 name|O_ACCMODE
 operator|)
 operator|==
@@ -15213,6 +15215,52 @@ name|id
 operator|=
 literal|"localhost"
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|74
+argument_list|,
+literal|104
+argument_list|)
+condition|)
+block|{
+specifier|extern
+name|MAPCLASS
+name|NullMapClass
+decl_stmt|;
+comment|/* debug mode: don't actually open an LDAP connection */
+name|map
+operator|->
+name|map_orgclass
+operator|=
+name|map
+operator|->
+name|map_class
+expr_stmt|;
+name|map
+operator|->
+name|map_class
+operator|=
+operator|&
+name|NullMapClass
+expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator||=
+name|MF_OPEN
+expr_stmt|;
+name|map
+operator|->
+name|map_pid
+operator|=
+name|CurrentPid
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
 comment|/* No connection yet, connect */
 if|if
 condition|(
@@ -15560,6 +15608,13 @@ condition|)
 block|{
 if|if
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+operator|(
 name|islower
 argument_list|(
 operator|*
@@ -15571,6 +15626,7 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -15586,6 +15642,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isupper
 argument_list|(
 operator|*
@@ -17592,6 +17654,18 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_LDAP_NETWORK_TIMEOUT
+name|lmap
+operator|->
+name|ldap_networktmo
+operator|=
+literal|120
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_NETWORK_TIMEOUT */
 for|for
 control|(
 init|;
@@ -17899,8 +17973,6 @@ continue|continue;
 name|lmap
 operator|->
 name|ldap_networktmo
-operator|.
-name|tv_sec
 operator|=
 name|atoi
 argument_list|(
@@ -28711,6 +28783,30 @@ return|return;
 block|}
 end_function
 
+begin_decl_stmt
+name|MAPCLASS
+name|NullMapClass
+init|=
+block|{
+literal|"null-map"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|null_map_lookup
+block|,
+name|null_map_store
+block|,
+name|null_map_open
+block|,
+name|null_map_close
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  BOGUS stubs */
 end_comment
@@ -31561,11 +31657,19 @@ name|NOQID
 argument_list|,
 literal|"arith_map: unknown operator %c"
 argument_list|,
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|name
+argument_list|)
+operator|&&
 name|isprint
 argument_list|(
 operator|*
 name|name
 argument_list|)
+operator|)
 condition|?
 operator|*
 name|name

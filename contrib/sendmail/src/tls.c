@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2000-2006, 2008, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.107 2006/10/12 21:35:11 ca Exp $"
+literal|"@(#)$Id: tls.c,v 8.114 2009/08/10 15:11:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1943,7 +1943,7 @@ value|if (ex&& ok) \ 	{ \ 		r = tls_safe_f(var, sff, srv); \ 		if (r) \ 			statu
 end_define
 
 begin_comment
-comment|/* **  INITTLS -- initialize TLS ** **	Parameters: **		ctx -- pointer to context **		req -- requirements for initialization (see sendmail.h) **		srv -- server side? **		certfile -- filename of certificate **		keyfile -- filename of private key **		cacertpath -- path to CAs **		cacertfile -- file with CA(s) **		dhparam -- parameters for DH ** **	Returns: **		succeeded? */
+comment|/* **  INITTLS -- initialize TLS ** **	Parameters: **		ctx -- pointer to context **		req -- requirements for initialization (see sendmail.h) **		options -- options **		srv -- server side? **		certfile -- filename of certificate **		keyfile -- filename of private key **		cacertpath -- path to CAs **		cacertfile -- file with CA(s) **		dhparam -- parameters for DH ** **	Returns: **		succeeded? */
 end_comment
 
 begin_comment
@@ -2006,6 +2006,8 @@ name|ctx
 parameter_list|,
 name|req
 parameter_list|,
+name|options
+parameter_list|,
 name|srv
 parameter_list|,
 name|certfile
@@ -2026,6 +2028,9 @@ decl_stmt|;
 name|unsigned
 name|long
 name|req
+decl_stmt|;
+name|long
+name|options
 decl_stmt|;
 name|bool
 name|srv
@@ -2074,8 +2079,6 @@ name|long
 name|sff
 decl_stmt|,
 name|status
-decl_stmt|,
-name|options
 decl_stmt|;
 name|char
 modifier|*
@@ -2522,6 +2525,7 @@ name|dhparam
 operator|==
 name|NULL
 condition|)
+block|{
 name|dhparam
 operator|=
 name|srv
@@ -2530,6 +2534,17 @@ literal|"1"
 else|:
 literal|"5"
 expr_stmt|;
+name|req
+operator||=
+operator|(
+name|srv
+condition|?
+name|TLS_I_DH1024
+else|:
+name|TLS_I_DH512
+operator|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3631,11 +3646,6 @@ endif|#
 directive|endif
 comment|/* _FFR_TLS_1 */
 comment|/* SSL_CTX_set_quiet_shutdown(*ctx, 1); violation of standard? */
-name|options
-operator|=
-name|SSL_OP_ALL
-expr_stmt|;
-comment|/* bug compatibility? */
 if|#
 directive|if
 name|SM_SSL_OP_TLS_BLOCK_PADDING_BUG
@@ -4659,6 +4669,13 @@ name|unsigned
 name|int
 name|n
 decl_stmt|;
+name|X509_NAME
+modifier|*
+name|subj
+decl_stmt|,
+modifier|*
+name|issuer
+decl_stmt|;
 name|unsigned
 name|char
 name|md
@@ -4672,12 +4689,23 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-name|X509_NAME_oneline
-argument_list|(
+name|subj
+operator|=
 name|X509_get_subject_name
 argument_list|(
 name|cert
 argument_list|)
+expr_stmt|;
+name|issuer
+operator|=
+name|X509_get_issuer_name
+argument_list|(
+name|cert
+argument_list|)
+expr_stmt|;
+name|X509_NAME_oneline
+argument_list|(
+name|subj
 argument_list|,
 name|buf
 argument_list|,
@@ -4708,10 +4736,7 @@ argument_list|)
 expr_stmt|;
 name|X509_NAME_oneline
 argument_list|(
-name|X509_get_issuer_name
-argument_list|(
-name|cert
-argument_list|)
+name|issuer
 argument_list|,
 name|buf
 argument_list|,
@@ -4740,21 +4765,31 @@ literal|"<>\")"
 argument_list|)
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|CHECK_X509_NAME
+parameter_list|(
+name|which
+parameter_list|)
+define|\
+value|do {	\ 		if (r == -1)	\ 		{		\ 			sm_strlcpy(buf, "BadCertificateUnknown", sizeof(buf)); \ 			if (LogLevel> 7)	\ 				sm_syslog(LOG_INFO, NOQID,	\ 					"STARTTLS=%s, relay=%.100s, field=%s, status=failed to extract CN",	\ 					who,	\ 					host == NULL ? "local" : host,	\ 					which);	\ 		}		\ 		else if ((size_t)r>= sizeof(buf) - 1)	\ 		{		\ 			sm_strlcpy(buf, "BadCertificateTooLong", sizeof(buf)); \ 			if (LogLevel> 7)	\ 				sm_syslog(LOG_INFO, NOQID,	\ 					"STARTTLS=%s, relay=%.100s, field=%s, status=CN too long",	\ 					who,	\ 					host == NULL ? "local" : host,	\ 					which);	\ 		}		\ 		else if ((size_t)r> strlen(buf))	\ 		{		\ 			sm_strlcpy(buf, "BadCertificateContainsNUL",	\ 				sizeof(buf));	\ 			if (LogLevel> 7)	\ 				sm_syslog(LOG_INFO, NOQID,	\ 					"STARTTLS=%s, relay=%.100s, field=%s, status=CN contains NUL",	\ 					who,	\ 					host == NULL ? "local" : host,	\ 					which);	\ 		}		\ 	} while (0)
+name|r
+operator|=
 name|X509_NAME_get_text_by_NID
 argument_list|(
-name|X509_get_subject_name
-argument_list|(
-name|cert
-argument_list|)
+name|subj
 argument_list|,
 name|NID_commonName
 argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+name|CHECK_X509_NAME
+argument_list|(
+literal|"cn_subject"
 argument_list|)
 expr_stmt|;
 name|macdefine
@@ -4776,21 +4811,23 @@ literal|"<>\")"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
 name|X509_NAME_get_text_by_NID
 argument_list|(
-name|X509_get_issuer_name
-argument_list|(
-name|cert
-argument_list|)
+name|issuer
 argument_list|,
 name|NID_commonName
 argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+name|CHECK_X509_NAME
+argument_list|(
+literal|"cn_issuer"
 argument_list|)
 expr_stmt|;
 name|macdefine
@@ -6137,6 +6174,7 @@ block|{
 name|int
 name|ok
 decl_stmt|;
+comment|/* 	**  man SSL_CTX_set_cert_verify_callback(): 	**  callback should return 1 to indicate verification success 	**  and 0 to indicate verification failure. 	*/
 name|ok
 operator|=
 name|X509_verify_cert
@@ -6147,7 +6185,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ok
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -6167,13 +6205,9 @@ argument_list|,
 literal|"TLS"
 argument_list|)
 return|;
-return|return
-literal|1
-return|;
-comment|/* override it */
 block|}
 return|return
-name|ok
+literal|1
 return|;
 block|}
 end_function
