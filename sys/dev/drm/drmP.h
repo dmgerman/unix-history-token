@@ -171,6 +171,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -178,6 +184,12 @@ begin_include
 include|#
 directive|include
 file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
@@ -208,6 +220,18 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_object.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_page.h>
 end_include
 
 begin_include
