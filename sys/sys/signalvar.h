@@ -275,12 +275,9 @@ name|SIG_CATCH
 value|((__sighandler_t *)2)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIG_HOLD
-value|((__sighandler_t *)3)
-end_define
+begin_comment
+comment|/* #define SIG_HOLD        ((__sighandler_t *)3) See signal.h */
+end_comment
 
 begin_comment
 comment|/*  * get signal action for process and signal; currently only for current process  */
