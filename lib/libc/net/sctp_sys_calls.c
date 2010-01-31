@@ -4114,7 +4114,6 @@ name|no_end_cx
 operator|=
 literal|1
 expr_stmt|;
-empty_stmt|;
 goto|goto
 name|continue_send
 goto|;
