@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.38 2007/03/27 18:53:48 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.39 2009/11/06 00:57:08 ca Exp $  */
 end_comment
 
 begin_comment
@@ -92,6 +92,42 @@ end_define
 
 begin_comment
 comment|/* default milter command data limit */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_MDS_NEGOTIATE
+end_if
+
+begin_define
+define|#
+directive|define
+name|MILTER_MDS_64K
+value|((64 * 1024) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MILTER_MDS_256K
+value|((256 * 1024) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MILTER_MDS_1M
+value|((1024 * 1024) - 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MDS_NEGOTIATE */
 end_comment
 
 begin_comment
@@ -821,6 +857,32 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SMFIP_MDS_256K
+value|0x10000000L
+end_define
+
+begin_comment
+comment|/* MILTER_MAX_DATA_SIZE=256K */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIP_MDS_1M
+value|0x20000000L
+end_define
+
+begin_comment
+comment|/* MILTER_MAX_DATA_SIZE=1M */
+end_comment
+
+begin_comment
+comment|/* #define SMFIP_	0x40000000L	reserved: see SMFI_INTERNAL*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SMFI_V1_PROT
 value|0x0000003FL
 end_define
@@ -850,6 +912,39 @@ directive|define
 name|SMFI_CURR_PROT
 value|0x001FFFFFL
 end_define
+
+begin_comment
+comment|/* internal flags: only used between MTA and libmilter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFI_INTERNAL
+value|0x70000000L
+end_define
+
+begin_if
+if|#
+directive|if
+name|_FFR_MILTER_CHECK
+end_if
+
+begin_define
+define|#
+directive|define
+name|SMFIP_TEST
+value|0x80000000L
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MILTER_CHECK */
+end_comment
 
 begin_endif
 endif|#
