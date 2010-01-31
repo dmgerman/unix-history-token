@@ -3408,10 +3408,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove any multicast network addresses from an interface.  */
+comment|/*  * Remove any multicast network addresses from an interface when an ifnet  * is going away.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|if_purgemaddrs
 parameter_list|(
@@ -12930,6 +12931,62 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Delete all multicast group membership for an interface.  * Should be used to quickly flush all multicast filters.  */
+end_comment
+
+begin_function
+name|void
+name|if_delallmulti
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|struct
+name|ifmultiaddr
+modifier|*
+name|ifma
+decl_stmt|;
+name|struct
+name|ifmultiaddr
+modifier|*
+name|next
+decl_stmt|;
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|ifma
+argument_list|,
+argument|&ifp->if_multiaddrs
+argument_list|,
+argument|ifma_link
+argument_list|,
+argument|next
+argument_list|)
+name|if_delmulti_locked
+argument_list|(
+name|ifp
+argument_list|,
+name|ifma
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

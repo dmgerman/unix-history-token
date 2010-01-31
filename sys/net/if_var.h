@@ -3247,7 +3247,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|if_purgemaddrs
+name|if_delallmulti
 parameter_list|(
 name|struct
 name|ifnet
