@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.1015 2007/10/17 21:35:30 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.1020 2009/12/18 17:08:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2592,6 +2592,9 @@ name|e_flags
 operator||=
 name|EF_INQUEUE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|e
@@ -2634,6 +2637,9 @@ name|e_flags
 operator||=
 name|EF_INQUEUE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|ee
@@ -2690,6 +2696,9 @@ name|e_flags
 operator||=
 name|EF_INQUEUE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|e
@@ -2742,6 +2751,9 @@ name|e_flags
 operator||=
 name|EF_INQUEUE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|ee
@@ -3188,6 +3200,9 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|e
@@ -3236,6 +3251,9 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|ee
@@ -5292,7 +5310,7 @@ argument_list|(
 name|rpath
 argument_list|)
 operator|>
-name|MAXSHORTSTR
+name|MAXNAME
 condition|)
 block|{
 name|rpath
@@ -11988,7 +12006,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-comment|/* 					**  TLS negotation failed, what to do? 					**  fall back to unencrypted connection 					**  or abort? How to decide? 					**  set a macro and call a ruleset. 					*/
+comment|/* 					**  TLS negotiation failed, what to do? 					**  fall back to unencrypted connection 					**  or abort? How to decide? 					**  set a macro and call a ruleset. 					*/
 name|mci
 operator|->
 name|mci_flags
@@ -12101,7 +12119,7 @@ name|SuprErrs
 operator|=
 name|true
 expr_stmt|;
-comment|/* 			**  rcode == EX_SOFTWARE is special: 			**  the TLS negotation failed 			**  we have to drop the connection no matter what 			**  However, we call tls_server to give it the chance 			**  to log the problem and return an appropriate 			**  error code. 			*/
+comment|/* 			**  rcode == EX_SOFTWARE is special: 			**  the TLS negotiation failed 			**  we have to drop the connection no matter what 			**  However, we call tls_server to give it the chance 			**  to log the problem and return an appropriate 			**  error code. 			*/
 if|if
 condition|(
 name|rscheck
@@ -24731,6 +24749,8 @@ name|clt_ctx
 argument_list|,
 name|TLS_I_CLT
 argument_list|,
+name|Clt_SSL_Options
+argument_list|,
 name|false
 argument_list|,
 name|CltCertFile
@@ -24815,6 +24835,34 @@ condition|)
 return|return
 name|EX_TEMPFAIL
 return|;
+if|#
+directive|if
+name|USE_OPENSSL_ENGINE
+if|if
+condition|(
+operator|!
+name|SSL_set_engine
+argument_list|(
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"STARTTLS=client, SSL_set_engine=failed"
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_TEMPFAIL
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* USE_OPENSSL_ENGINE */
 name|smtpmessage
 argument_list|(
 literal|"STARTTLS"

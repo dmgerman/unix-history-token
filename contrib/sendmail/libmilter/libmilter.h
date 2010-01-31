@@ -53,7 +53,7 @@ name|SM_IDSTR
 argument_list|(
 argument|MilterlId
 argument_list|,
-literal|"@(#)$Id: libmilter.h,v 8.74 2006/12/19 18:19:52 ca Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.77 2008/11/25 18:28:18 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1294,6 +1294,19 @@ operator|(
 name|SMFICTX_PTR
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mi_clr_ctx
+name|__P
+argument_list|(
+operator|(
+name|SMFICTX_PTR
 operator|)
 argument_list|)
 decl_stmt|;

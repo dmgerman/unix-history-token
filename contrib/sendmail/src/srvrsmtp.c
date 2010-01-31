@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.975 2008/03/31 16:32:13 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.989 2009/12/18 17:08:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1814,9 +1814,9 @@ parameter_list|)
 define|\
 value|do								\ {								\
 comment|/* abort milter filters */
-value|\ 	MILTER_ABORT(e);					\ 								\ 	if (smtp.sm_nrcpts> 0)					\ 	{							\ 		logundelrcpts(e, cmd, 10, false);		\ 		smtp.sm_nrcpts = 0;				\ 		macdefine(&e->e_macro, A_PERM,			\ 			  macid("{nrcpts}"), "0");		\ 	}							\ 								\ 	e->e_sendqueue = NULL;					\ 	e->e_flags |= EF_CLRQUEUE;				\ 								\ 	if (LogLevel> 4&& bitset(EF_LOGSENDER, e->e_flags))	\ 		logsender(e, NULL);				\ 	e->e_flags&= ~EF_LOGSENDER;				\ 								\
+value|\ 	MILTER_ABORT(e);					\ 								\ 	if (smtp.sm_nrcpts> 0)					\ 	{							\ 		logundelrcpts(e, cmd, 10, false);		\ 		smtp.sm_nrcpts = 0;				\ 		macdefine(&e->e_macro, A_PERM,			\ 			  macid("{nrcpts}"), "0");		\ 	}							\ 								\ 	e->e_sendqueue = NULL;					\ 	e->e_flags |= EF_CLRQUEUE;				\ 								\ 	if (tTd(92, 2))						\ 		sm_dprintf("CLEAR_STATE: e_id=%s, EF_LOGSENDER=%d, LogLevel=%d\n",\ 			e->e_id, bitset(EF_LOGSENDER, e->e_flags), LogLevel);\ 	if (LogLevel> 4&& bitset(EF_LOGSENDER, e->e_flags))	\ 		logsender(e, NULL);				\ 	e->e_flags&= ~EF_LOGSENDER;				\ 								\
 comment|/* clean up a bit */
-value|\ 	smtp.sm_gotmail = false;				\ 	SuprErrs = true;					\ 	dropenvelope(e, true, false);				\ 	sm_rpool_free(e->e_rpool);				\ 	e = newenvelope(e, CurEnv, sm_rpool_new_x(NULL));	\ 	CurEnv = e;						\ 	e->e_features = features;				\ 								\
+value|\ 	smtp.sm_gotmail = false;				\ 	SuprErrs = true;					\ 	(void) dropenvelope(e, true, false);			\ 	sm_rpool_free(e->e_rpool);				\ 	e = newenvelope(e, CurEnv, sm_rpool_new_x(NULL));	\ 	CurEnv = e;						\ 	e->e_features = features;				\ 								\
 comment|/* put back discard bit */
 value|\ 	if (smtp.sm_discard)					\ 		e->e_flags |= EF_DISCARD;			\ 								\
 comment|/* restore connection quarantining */
@@ -3498,6 +3498,44 @@ comment|/* SASL */
 if|#
 directive|if
 name|STARTTLS
+if|#
+directive|if
+name|USE_OPENSSL_ENGINE
+if|if
+condition|(
+name|tls_ok_srv
+operator|&&
+name|bitset
+argument_list|(
+name|SRV_OFFER_TLS
+argument_list|,
+name|features
+argument_list|)
+operator|&&
+operator|!
+name|SSL_set_engine
+argument_list|(
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"STARTTLS=server, SSL_set_engine=failed"
+argument_list|)
+expr_stmt|;
+name|tls_ok_srv
+operator|=
+name|false
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* USE_OPENSSL_ENGINE */
 name|set_tls_rd_tmo
 argument_list|(
 name|TimeOuts
@@ -5111,7 +5149,9 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"unauthorized PIPELINING, sleeping"
+literal|"unauthorized PIPELINING, sleeping, relay=%.100s"
+argument_list|,
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -5770,11 +5810,13 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"AUTH encode64 error [%d for \"%s\"]"
+literal|"AUTH encode64 error [%d for \"%s\"], relay=%.100s"
 argument_list|,
 name|result
 argument_list|,
 name|out
+argument_list|,
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 comment|/* start over? */
@@ -5847,7 +5889,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"AUTH failure (%s): %s (%d) %s"
+literal|"AUTH failure (%s): %s (%d) %s, relay=%.100s"
 argument_list|,
 name|auth_type
 argument_list|,
@@ -5871,8 +5913,7 @@ name|sasl_errdetail
 argument_list|(
 name|conn
 argument_list|)
-argument_list|)
-expr_stmt|;
+argument_list|,
 else|#
 directive|else
 comment|/* SASL>= 20000 */
@@ -5883,11 +5924,13 @@ condition|?
 literal|""
 else|:
 name|errstr
-block|)
-empty_stmt|;
+argument_list|,
 endif|#
 directive|endif
 comment|/* SASL>= 20000 */
+name|CurSmtpClient
+argument_list|)
+expr_stmt|;
 name|RESET_SASLCONN
 expr_stmt|;
 name|authenticating
@@ -6680,11 +6723,13 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"AUTH decode64 error [%d for \"%s\"]"
+literal|"AUTH decode64 error [%d for \"%s\"], relay=%.100s"
 argument_list|,
 name|result
 argument_list|,
 name|q
+argument_list|,
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 comment|/* start over? */
@@ -6821,7 +6866,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"AUTH failure (%s): %s (%d) %s"
+literal|"AUTH failure (%s): %s (%d) %s, relay=%.100s"
 argument_list|,
 name|p
 argument_list|,
@@ -6845,17 +6890,18 @@ name|sasl_errdetail
 argument_list|(
 name|conn
 argument_list|)
-argument_list|)
-expr_stmt|;
+argument_list|,
 else|#
 directive|else
 comment|/* SASL>= 20000 */
 name|errstr
-block|)
-empty_stmt|;
+argument_list|,
 endif|#
 directive|endif
 comment|/* SASL>= 20000 */
+name|CurSmtpClient
+argument_list|)
+expr_stmt|;
 name|RESET_SASLCONN
 expr_stmt|;
 break|break;
@@ -7352,7 +7398,7 @@ name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"STARTTLS=server, error: accept failed=%d, SSL_error=%d, errno=%d, retry=%d"
+literal|"STARTTLS=server, error: accept failed=%d, SSL_error=%d, errno=%d, retry=%d, relay=%.100s"
 argument_list|,
 name|r
 argument_list|,
@@ -7361,6 +7407,8 @@ argument_list|,
 name|errno
 argument_list|,
 name|i
+argument_list|,
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 if|if
@@ -9855,7 +9903,7 @@ directive|endif
 if|#
 directive|if
 name|_FFR_BADRCPT_SHUTDOWN
-comment|/* 			**  hack to deal with hack, see below: 			**  n_badrcpts is increased is limit is reached. 			*/
+comment|/* 			**  hack to deal with hack, see below: 			**  n_badrcpts is increased if limit is reached. 			*/
 name|n_badrcpts_adj
 operator|=
 operator|(
@@ -9999,13 +10047,13 @@ expr_stmt|;
 block|}
 name|NBADRCPTS
 expr_stmt|;
-comment|/* 				**  Don't use exponential backoff for now. 				**  Some servers will open more connections 				**  and actually overload the receiver even 				**  more. 				*/
+comment|/* 				**  Don't use exponential backoff for now. 				**  Some systems will open more connections 				**  and actually overload the receiver even 				**  more. 				*/
 operator|(
 name|void
 operator|)
 name|sleep
 argument_list|(
-literal|1
+name|BadRcptThrottleDelay
 argument_list|)
 expr_stmt|;
 block|}
@@ -12451,6 +12499,35 @@ directive|endif
 comment|/* MILTER */
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|92
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"QUIT: e_id=%s, EF_LOGSENDER=%d, LogLevel=%d\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|bitset
+argument_list|(
+name|EF_LOGSENDER
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+argument_list|,
+name|LogLevel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|LogLevel
 operator|>
 literal|4
@@ -12944,29 +13021,21 @@ endif|#
 directive|endif
 comment|/* SASL */
 block|}
-end_function
-
-begin_macro
 name|SM_EXCEPT
 argument_list|(
 argument|exc
 argument_list|,
 literal|"[!F]*"
 argument_list|)
-end_macro
-
-begin_block
 block|{
 comment|/* 		**  The only possible exception is "E:mta.quickabort". 		**  There is nothing to do except fall through and loop. 		*/
 block|}
-end_block
-
-begin_expr_stmt
 name|SM_END_TRY
-end_expr_stmt
+block|}
+block|}
+end_function
 
 begin_comment
-unit|} }
 comment|/* **  SMTP_DATA -- implement the SMTP DATA command. ** **	Parameters: **		smtp -- status of SMTP connection. **		e -- envelope. ** **	Returns: **		true iff SMTP session can continue. ** **	Side Effects: **		possibly sends message. */
 end_comment
 
@@ -13210,6 +13279,35 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
+if|if
+condition|(
+name|ISSMTPCODE
+argument_list|(
+name|response
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|extenhsc
+argument_list|(
+name|response
+operator|+
+literal|4
+argument_list|,
+literal|' '
+argument_list|,
+name|e
+operator|->
+name|e_enhsc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ENHSC */
 name|usrerr
 argument_list|(
 name|response
@@ -13279,6 +13377,31 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
+argument_list|(
+name|e
+operator|->
+name|e_enhsc
+argument_list|,
+literal|"5.7.1"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|e
+operator|->
+name|e_enhsc
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ENHSC */
 name|usrerr
 argument_list|(
 literal|"550 5.7.1 Command rejected"
@@ -13342,6 +13465,28 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
+operator|(
+name|void
+operator|)
+name|extenhsc
+argument_list|(
+name|MSG_TEMPFAIL
+operator|+
+literal|4
+argument_list|,
+literal|' '
+argument_list|,
+name|e
+operator|->
+name|e_enhsc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ENHSC */
 name|usrerr
 argument_list|(
 name|MSG_TEMPFAIL
@@ -13665,10 +13810,67 @@ name|milteraccept
 operator|=
 name|false
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
+if|if
+condition|(
+name|ISSMTPCODE
+argument_list|(
+name|response
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|extenhsc
+argument_list|(
+name|response
+operator|+
+literal|4
+argument_list|,
+literal|' '
+argument_list|,
+name|e
+operator|->
+name|e_enhsc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ENHSC */
 name|usrerr
 argument_list|(
 name|response
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|response
+argument_list|,
+literal|"421 "
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|response
+argument_list|,
+literal|"421-"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|rv
+operator|=
+name|false
 expr_stmt|;
 break|break;
 case|case
@@ -13758,6 +13960,28 @@ name|milteraccept
 operator|=
 name|false
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
+operator|(
+name|void
+operator|)
+name|extenhsc
+argument_list|(
+name|MSG_TEMPFAIL
+operator|+
+literal|4
+argument_list|,
+literal|' '
+argument_list|,
+name|e
+operator|->
+name|e_enhsc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ENHSC */
 name|usrerr
 argument_list|(
 name|MSG_TEMPFAIL
@@ -14797,6 +15021,35 @@ name|abortmessage
 label|:
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|92
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"abortmessage: e_id=%s, EF_LOGSENDER=%d, LogLevel=%d\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|bitset
+argument_list|(
+name|EF_LOGSENDER
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+argument_list|,
+name|LogLevel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|LogLevel
 operator|>
 literal|4
@@ -14845,6 +15098,9 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|e
@@ -14889,6 +15145,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|ee
@@ -14909,6 +15168,9 @@ operator|->
 name|e_sendmode
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|ee
@@ -15154,6 +15416,33 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
+operator|(
+name|a
+operator|->
+name|q_status
+operator|==
+name|NULL
+operator|&&
+name|e
+operator|->
+name|e_enhsc
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|)
+condition|?
+name|e
+operator|->
+name|e_enhsc
+else|:
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ENHSC */
 name|a
 operator|->
 name|q_status
@@ -18252,6 +18541,8 @@ operator|&
 name|srv_ctx
 argument_list|,
 name|TLS_Srv_Opts
+argument_list|,
+name|Srv_SSL_Options
 argument_list|,
 name|true
 argument_list|,
