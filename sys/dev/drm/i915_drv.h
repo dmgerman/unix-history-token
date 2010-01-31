@@ -36,6 +36,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"dev/drm/drm_mm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/i915_reg.h"
 end_include
 
@@ -702,15 +708,10 @@ index|]
 decl_stmt|;
 struct|struct
 block|{
-ifdef|#
-directive|ifdef
-name|__linux__
 name|struct
 name|drm_mm
 name|gtt_space
 decl_stmt|;
-endif|#
-directive|endif
 comment|/** 		 * List of objects currently involved in rendering from the 		 * ringbuffer. 		 * 		 * A reference is held on the buffer while on this list. 		 */
 name|struct
 name|list_head

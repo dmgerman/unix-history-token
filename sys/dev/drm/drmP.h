@@ -359,12 +359,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dev/drm/drm_linux_list.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"dev/drm/drm_atomic.h"
 end_include
 
@@ -372,6 +366,12 @@ begin_include
 include|#
 directive|include
 file|"dev/drm/drm_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/drm_linux_list.h"
 end_include
 
 begin_include
@@ -714,6 +714,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|DRM_MEM_MM
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|DRM_MEM_HASHTAB
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_hw_drm
@@ -1003,6 +1019,30 @@ end_define
 begin_comment
 comment|/* nothing */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|unlikely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|container_of
+parameter_list|(
+name|ptr
+parameter_list|,
+name|type
+parameter_list|,
+name|member
+parameter_list|)
+value|({			\ 	__typeof( ((type *)0)->member ) *__mptr = (ptr);	\ 	(type *)( (char *)__mptr - offsetof(type,member) );})
+end_define
 
 begin_enum
 enum|enum
