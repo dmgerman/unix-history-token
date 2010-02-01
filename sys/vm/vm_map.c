@@ -4367,7 +4367,7 @@ operator|==
 name|NULL
 operator|||
 operator|(
-name|cow
+name|protoeflags
 operator|&
 name|MAP_ENTRY_NEEDS_COPY
 operator|)
