@@ -25,6 +25,12 @@ directive|include
 file|"opt_inet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_altq.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -7561,6 +7567,7 @@ argument_list|,
 name|E1000_ICR
 argument_list|)
 expr_stmt|;
+comment|/* Link status change */
 if|if
 condition|(
 name|reg_icr
@@ -7572,14 +7579,6 @@ name|E1000_ICR_LSC
 operator|)
 condition|)
 block|{
-name|callout_stop
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|timer
-argument_list|)
-expr_stmt|;
 name|adapter
 operator|->
 name|hw
@@ -7595,21 +7594,18 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|callout_reset
-argument_list|(
+block|}
+if|if
+condition|(
+name|reg_icr
 operator|&
+name|E1000_ICR_RXO
+condition|)
 name|adapter
 operator|->
-name|timer
-argument_list|,
-name|hz
-argument_list|,
-name|em_local_timer
-argument_list|,
-name|adapter
-argument_list|)
+name|rx_overruns
+operator|++
 expr_stmt|;
-block|}
 block|}
 name|EM_CORE_UNLOCK
 argument_list|(
