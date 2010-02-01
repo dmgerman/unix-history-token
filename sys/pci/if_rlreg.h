@@ -1043,6 +1043,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_HWREV_8103E
+value|0x34C00000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_HWREV_8168_SPIN2
 value|0x38000000
 end_define
