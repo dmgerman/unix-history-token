@@ -48,12 +48,6 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/upa.h>
-end_include
-
 begin_comment
 comment|/*  * Nexus and SBus spaces are non-cached and big endian  * (except for RAM and PROM)  *  * PCI spaces are non-cached and little endian  */
 end_comment
@@ -173,10 +167,6 @@ directive|define
 name|BUS_SPACE_UNRESTRICTED
 value|(~0)
 end_define
-
-begin_comment
-comment|/*  * Access methods for bus resources and address space.  */
-end_comment
 
 begin_struct
 struct|struct
@@ -362,7 +352,7 @@ name|bus_size_t
 name|size
 name|__unused
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_comment
@@ -379,7 +369,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|while (t->f == NULL)						\ 		t = t->bst_parent;						\ 	return (*(t)->f)
+value|while (t->f == NULL)						\ 		t = t->bst_parent;					\ 	return (*(t)->f)
 end_define
 
 begin_function
@@ -569,13 +559,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BUS_HANDLE_MIN
-value|UPA_MEMSTART
-end_define
-
-begin_define
-define|#
-directive|define
 name|__BUS_DEBUG_ACCESS
 parameter_list|(
 name|h
@@ -586,7 +569,7 @@ name|desc
 parameter_list|,
 name|sz
 parameter_list|)
-value|do {				\ 	CTR4(KTR_BUS, "bus space: %s %d: handle %#lx, offset %#lx",	\ 	    (desc), (sz), (h), (o));					\ 	if ((h) + (o)< BUS_HANDLE_MIN)					\ 		panic("bus space access at %#lx out of range",		\ 		    (h) + (o));						\ } while (0)
+value|do {				\ 	CTR4(KTR_BUS, "bus space: %s %d: handle %#lx, offset %#lx",	\ 	    (desc), (sz), (h), (o));					\ } while (0)
 end_define
 
 begin_else
@@ -1597,7 +1580,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|a
 parameter_list|,
@@ -1649,7 +1632,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|a
 parameter_list|,
@@ -1702,7 +1685,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|a
 parameter_list|,
@@ -1755,7 +1738,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|a
 parameter_list|,
@@ -1809,7 +1792,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|a
 parameter_list|,
@@ -1862,7 +1845,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|a
 parameter_list|,
@@ -1916,7 +1899,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|a
 parameter_list|,
@@ -1970,7 +1953,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|a
 parameter_list|,
@@ -2024,7 +2007,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|v
 parameter_list|,
 name|bus_size_t
@@ -2072,7 +2055,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 name|v
 parameter_list|,
 name|bus_size_t
@@ -2121,7 +2104,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 name|v
 parameter_list|,
 name|bus_size_t
@@ -2170,7 +2153,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int64_t
+name|uint64_t
 name|v
 parameter_list|,
 name|bus_size_t
@@ -3432,7 +3415,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|a
 parameter_list|,
@@ -3484,7 +3467,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|a
 parameter_list|,
@@ -3537,7 +3520,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|a
 parameter_list|,
@@ -3590,7 +3573,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|a
 parameter_list|,
@@ -3644,7 +3627,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|a
 parameter_list|,
@@ -3697,7 +3680,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|a
 parameter_list|,
@@ -3751,7 +3734,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|a
 parameter_list|,
@@ -3805,7 +3788,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|a
 parameter_list|,
@@ -3859,7 +3842,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|v
 parameter_list|,
 name|bus_size_t
@@ -3907,7 +3890,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int16_t
+name|uint16_t
 name|v
 parameter_list|,
 name|bus_size_t
@@ -3956,7 +3939,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int32_t
+name|uint32_t
 name|v
 parameter_list|,
 name|bus_size_t
@@ -4005,7 +3988,7 @@ name|bus_size_t
 name|o
 parameter_list|,
 specifier|const
-name|u_int64_t
+name|uint64_t
 name|v
 parameter_list|,
 name|bus_size_t
