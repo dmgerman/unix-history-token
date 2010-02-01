@@ -2746,46 +2746,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Probe device for MII interface to PHY */
-name|DEBUGOUT
-argument_list|(
-name|NVE_DEBUG_INIT
-argument_list|,
-literal|"nve: do mii_phy_probe\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mii_phy_probe
-argument_list|(
-name|dev
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|miibus
-argument_list|,
-name|nve_ifmedia_upd
-argument_list|,
-name|nve_ifmedia_sts
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"MII without any phy!\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 comment|/* Setup interface parameters */
 name|ifp
 operator|->
@@ -2905,6 +2865,46 @@ name|if_capenable
 operator||=
 name|IFCAP_VLAN_MTU
 expr_stmt|;
+comment|/* Probe device for MII interface to PHY */
+name|DEBUGOUT
+argument_list|(
+name|NVE_DEBUG_INIT
+argument_list|,
+literal|"nve: do mii_phy_probe\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mii_phy_probe
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|miibus
+argument_list|,
+name|nve_ifmedia_upd
+argument_list|,
+name|nve_ifmedia_sts
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"MII without any phy!\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* Attach to OS's managers. */
 name|ether_ifattach
 argument_list|(
