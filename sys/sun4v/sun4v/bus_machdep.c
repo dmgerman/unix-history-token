@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of Cali
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  * Copyright 2001 by Thomas Moestl<tmm@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	8.6 (Berkeley) 1/14/94  *	from: NetBSD: machdep.c,v 1.111 2001/09/15 07:13:40 eeh Exp  *	and  * 	from: FreeBSD: src/sys/i386/i386/busdma_machdep.c,v 1.24 2001/08/15  */
+comment|/*-  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  * Copyright 2001 by Thomas Moestl<tmm@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	8.6 (Berkeley) 1/14/94  *	from: NetBSD: machdep.c,v 1.111 2001/09/15 07:13:40 eeh Exp  *	and  *	from: FreeBSD: src/sys/i386/i386/busdma_machdep.c,v 1.24 2001/08/15  */
 end_comment
 
 begin_include
@@ -176,10 +176,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ASI's for bus access. */
+comment|/* ASIs for bus access */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|int
 name|bus_type_asi
 index|[]
@@ -206,6 +207,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|bus_stream_asi
 index|[]
@@ -611,7 +613,7 @@ name|dt_segments
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Take into account any restrictions imposed by our parent tag */
+comment|/* Take into account any restrictions imposed by our parent tag. */
 if|if
 condition|(
 name|parent
@@ -2017,7 +2019,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"nexus_dmamap_load_uio: USERSPACE but no proc"
+literal|"%s: USERSPACE but no proc"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2368,7 +2372,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * XXX: Use contigmalloc until it is merged into this facility 		 * and handles multi-seg allocations.  Nobody is doing multi-seg 		 * allocations yet though. 		 */
+comment|/* 		 * XXX use contigmalloc until it is merged into this 		 * facility and handles multi-seg allocations.  Nobody 		 * is doing multi-seg allocations yet though. 		 */
 operator|*
 name|vaddr
 operator|=
@@ -2629,7 +2633,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fake up a bus tag, for use by console drivers in early boot when the regular  * means to allocate resources are not yet available.  * Addr is the physical address of the desired start of the handle.  */
+comment|/*  * Fake up a bus tag, for use by console drivers in early boot when the  * regular means to allocate resources are not yet available.  * Addr is the physical address of the desired start of the handle.  */
 end_comment
 
 begin_function
