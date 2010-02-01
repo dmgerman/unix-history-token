@@ -12781,7 +12781,7 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-name|PAGE_SIZE
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -15604,7 +15604,7 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-name|PAGE_SIZE
+literal|1
 argument_list|,
 literal|0
 argument_list|,
