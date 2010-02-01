@@ -337,10 +337,8 @@ decl_stmt|;
 name|int
 name|sc_busnr
 decl_stmt|;
-name|int
-name|sc_pcie
-range|:
-literal|1
+name|uint8_t
+name|sc_pcie_cap
 decl_stmt|;
 comment|/* Devices that need special attention. */
 name|int
@@ -763,7 +761,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_pcie
+name|sc_pcie_cap
 condition|)
 name|addr
 operator||=
@@ -974,7 +972,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_pcie
+name|sc_pcie_cap
 condition|)
 name|addr
 operator||=
@@ -1139,7 +1137,7 @@ operator|(
 operator|(
 name|sc
 operator|->
-name|sc_pcie
+name|sc_pcie_cap
 operator|)
 condition|?
 literal|0
@@ -1198,7 +1196,7 @@ operator|&&
 operator|!
 name|sc
 operator|->
-name|sc_pcie
+name|sc_pcie_cap
 operator|&&
 name|slot
 operator|<
@@ -1321,7 +1319,7 @@ operator|&&
 operator|!
 name|sc
 operator|->
-name|sc_pcie
+name|sc_pcie_cap
 operator|&&
 name|slot
 operator|<
@@ -1386,6 +1384,9 @@ name|devtype
 decl_stmt|;
 name|uint32_t
 name|cfgreg
+decl_stmt|;
+name|uint8_t
+name|capptr
 decl_stmt|;
 name|int
 name|error
@@ -1620,7 +1621,7 @@ name|type
 operator|=
 literal|"PCI"
 expr_stmt|;
-name|cfgreg
+name|capptr
 operator|=
 name|pci_ocp_cfgread
 argument_list|(
@@ -1639,7 +1640,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|cfgreg
+name|capptr
 operator|!=
 literal|0
 condition|)
@@ -1656,7 +1657,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|cfgreg
+name|capptr
 argument_list|,
 literal|2
 argument_list|)
@@ -1687,13 +1688,13 @@ literal|"PCI Express"
 expr_stmt|;
 name|sc
 operator|->
-name|sc_pcie
+name|sc_pcie_cap
 operator|=
-literal|1
+name|capptr
 expr_stmt|;
 break|break;
 block|}
-name|cfgreg
+name|capptr
 operator|=
 operator|(
 name|cfgreg
@@ -4143,7 +4144,7 @@ operator|=
 operator|(
 name|sc
 operator|->
-name|sc_pcie
+name|sc_pcie_cap
 operator|)
 condition|?
 literal|1
