@@ -45,7 +45,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|LITTLE_ENDIAN
-name|u_int
+name|u_char
 name|ip_hl
 range|:
 literal|4
@@ -63,7 +63,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int
+name|u_char
 name|ip_v
 range|:
 literal|4
@@ -558,7 +558,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|LITTLE_ENDIAN
-name|u_int
+name|u_char
 name|ipt_flg
 range|:
 literal|4
@@ -576,7 +576,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int
+name|u_char
 name|ipt_oflw
 range|:
 literal|4

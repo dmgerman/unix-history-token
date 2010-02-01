@@ -85,7 +85,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|LITTLE_ENDIAN
-name|u_int
+name|u_char
 name|th_x2
 range|:
 literal|4
@@ -103,7 +103,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int
+name|u_char
 name|th_off
 range|:
 literal|4
