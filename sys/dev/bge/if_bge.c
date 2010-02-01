@@ -15407,9 +15407,9 @@ name|devctl
 operator|&=
 operator|~
 operator|(
-literal|0x0010
+name|PCIM_EXP_CTL_RELAXED_ORD_ENABLE
 operator||
-literal|0x0800
+name|PCIM_EXP_CTL_NOSNOOP_ENABLE
 operator|)
 expr_stmt|;
 comment|/* Set PCIE max payload size to 128. */
@@ -15444,7 +15444,13 @@ name|bge_expcap
 operator|+
 name|PCIR_EXPRESS_DEVICE_STA
 argument_list|,
-literal|0
+name|PCIM_EXP_STA_CORRECTABLE_ERROR
+operator||
+name|PCIM_EXP_STA_NON_FATAL_ERROR
+operator||
+name|PCIM_EXP_STA_FATAL_ERROR
+operator||
+name|PCIM_EXP_STA_UNSUPPORTED_REQ
 argument_list|,
 literal|2
 argument_list|)
