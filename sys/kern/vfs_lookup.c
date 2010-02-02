@@ -637,7 +637,14 @@ operator|->
 name|ni_pathlen
 argument_list|)
 expr_stmt|;
-comment|/* If we are auditing the kernel pathname, save the user pathname. */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * If we are auditing the kernel pathname, save the user 		 * pathname. 		 */
 if|if
 condition|(
 name|cnp
@@ -672,6 +679,7 @@ operator|->
 name|cn_pnbuf
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Don't allow empty pathnames. 	 */
 if|if
 condition|(
