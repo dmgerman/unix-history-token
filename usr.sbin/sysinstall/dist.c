@@ -3993,6 +3993,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* Assume no docs for non-interactive installs. */
+if|if
+condition|(
+name|variable_get
+argument_list|(
+name|VAR_NONINTERACTIVE
+argument_list|)
+condition|)
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
+return|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
