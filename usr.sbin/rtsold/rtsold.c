@@ -3495,13 +3495,6 @@ expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
-name|argv
-index|[
-name|n
-index|]
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 if|if
 condition|(
