@@ -196,6 +196,18 @@ literal|1
 argument_list|,
 name|USAGE_OPTFMT
 argument_list|,
+literal|"-a"
+argument_list|,
+literal|"Require server to authenticate itself to us"
+argument_list|)
+expr_stmt|;
+name|lprintf
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|USAGE_OPTFMT
+argument_list|,
 literal|"-A addr"
 argument_list|,
 literal|"Bind local socket to a specific address"
@@ -477,6 +489,8 @@ decl_stmt|,
 name|retries
 decl_stmt|,
 name|status
+decl_stmt|,
+name|reqauth
 decl_stmt|;
 name|time_t
 name|nexttry
@@ -545,6 +559,10 @@ name|overridemask
 operator|=
 literal|0
 expr_stmt|;
+name|reqauth
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -556,7 +574,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"146A:b:c:d:gh:i:kl:L:p:P:r:svzZ"
+literal|"146aA:b:c:d:gh:i:kl:L:p:P:r:svzZ"
 argument_list|)
 operator|)
 operator|!=
@@ -591,6 +609,15 @@ case|:
 name|family
 operator|=
 name|AF_INET6
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+comment|/* Require server authentication */
+name|reqauth
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1405,6 +1432,12 @@ operator|->
 name|deletelim
 operator|=
 name|deletelim
+expr_stmt|;
+name|config
+operator|->
+name|reqauth
+operator|=
+name|reqauth
 expr_stmt|;
 name|lprintf
 argument_list|(

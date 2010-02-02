@@ -398,6 +398,9 @@ decl_stmt|;
 name|fattr_support_t
 name|fasupport
 decl_stmt|;
+name|int
+name|reqauth
+decl_stmt|;
 block|}
 struct|;
 end_struct
