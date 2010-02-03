@@ -1158,11 +1158,15 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+comment|/* XXX for VESA only */
+name|int
+name|vi_line_width
+decl_stmt|;
 comment|/* reserved */
 name|u_char
 name|vi_reserved
 index|[
-literal|64
+literal|60
 index|]
 decl_stmt|;
 name|vm_offset_t
