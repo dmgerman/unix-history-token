@@ -604,9 +604,9 @@ name|stack
 parameter_list|)
 block|{
 name|size_t
-name|new_size
-decl_stmt|,
 name|i
+decl_stmt|,
+name|new_size
 decl_stmt|;
 if|if
 condition|(

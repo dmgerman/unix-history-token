@@ -198,13 +198,13 @@ modifier|*
 name|fname
 parameter_list|)
 block|{
-name|FILE
-modifier|*
-name|file
-decl_stmt|;
 name|struct
 name|stat
 name|st
+decl_stmt|;
+name|FILE
+modifier|*
+name|file
 decl_stmt|;
 name|file
 operator|=
@@ -324,8 +324,7 @@ name|bool
 name|extended_regs
 init|=
 name|false
-decl_stmt|;
-name|bool
+decl_stmt|,
 name|preproc_done
 init|=
 name|false
