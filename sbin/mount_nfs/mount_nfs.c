@@ -494,6 +494,7 @@ enum|;
 end_enum
 
 begin_function_decl
+specifier|static
 name|int
 name|fallback_mount
 parameter_list|(
@@ -512,6 +513,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sec_name_to_num
 parameter_list|(
@@ -523,6 +525,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|sec_num_to_name
@@ -534,6 +537,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|getnfsargs
 parameter_list|(
@@ -558,6 +562,7 @@ comment|/* void	set_rpc_maxgrouplist(int); */
 end_comment
 
 begin_function_decl
+specifier|static
 name|struct
 name|netconfig
 modifier|*
@@ -572,6 +577,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -587,6 +593,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 argument_list|(
@@ -597,6 +604,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|xdr_dir
 parameter_list|(
@@ -610,6 +618,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|xdr_fh
 parameter_list|(
@@ -624,6 +633,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|enum
 name|tryret
 name|nfs_tryproto
@@ -660,6 +670,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|enum
 name|tryret
 name|returncode
@@ -672,16 +683,6 @@ name|struct
 name|rpc_err
 modifier|*
 name|rpcerr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|getosreldate
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2509,6 +2510,7 @@ comment|/*  * XXX: This function is provided for backwards  *      compatibility
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fallback_mount
 parameter_list|(
@@ -4028,6 +4030,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sec_name_to_num
 parameter_list|(
@@ -4106,6 +4109,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|sec_num_to_name
@@ -4161,6 +4165,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|getnfsargs
 parameter_list|(
@@ -4888,6 +4893,7 @@ comment|/*  * Try to set up the NFS arguments according to the address  * family
 end_comment
 
 begin_function
+specifier|static
 name|enum
 name|tryret
 name|nfs_tryproto
@@ -6132,6 +6138,7 @@ comment|/*  * Catagorise a RPC return status and error into an `enum tryret'  * 
 end_comment
 
 begin_function
+specifier|static
 name|enum
 name|tryret
 name|returncode
@@ -6226,6 +6233,7 @@ comment|/*  * Look up a netid based on an address family and socket type.  * `af
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -6295,6 +6303,7 @@ comment|/*  * Look up a netconfig entry based on a netid, and cache the result s
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|netconfig
 modifier|*
@@ -6445,6 +6454,7 @@ comment|/*  * xdr routines for mount rpc's  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|xdr_dir
 parameter_list|(
@@ -6474,6 +6484,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|xdr_fh
 parameter_list|(
@@ -6765,9 +6776,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
