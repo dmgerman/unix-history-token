@@ -99,6 +99,22 @@ directive|include
 file|"iscontrol.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|pukeText
+parameter_list|(
+name|char
+modifier|*
+name|it
+parameter_list|,
+name|pdu_t
+modifier|*
+name|pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|xmitpdu
@@ -607,6 +623,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pukeText
 parameter_list|(
