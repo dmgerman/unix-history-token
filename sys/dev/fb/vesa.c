@@ -6708,7 +6708,10 @@ name|vesa_adp
 operator|->
 name|va_window
 operator|=
-name|BIOS_PADDRTOVADDR
+operator|(
+name|vm_offset_t
+operator|)
+name|x86bios_offset
 argument_list|(
 name|info
 operator|.
