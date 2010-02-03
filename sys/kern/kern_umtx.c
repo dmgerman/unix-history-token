@@ -11728,6 +11728,23 @@ operator|->
 name|uq_key
 argument_list|)
 expr_stmt|;
+comment|/* 		 * re-read the state, in case it changed between the try-lock above 		 * and the check below 		 */
+name|state
+operator|=
+name|fuword32
+argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|int32_t
+operator|*
+argument_list|,
+operator|&
+name|rwlock
+operator|->
+name|rw_state
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* set read contention bit */
 while|while
 condition|(
@@ -12464,6 +12481,23 @@ operator|&
 name|uq
 operator|->
 name|uq_key
+argument_list|)
+expr_stmt|;
+comment|/* 		 * re-read the state, in case it changed between the try-lock above 		 * and the check below 		 */
+name|state
+operator|=
+name|fuword32
+argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|int32_t
+operator|*
+argument_list|,
+operator|&
+name|rwlock
+operator|->
+name|rw_state
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
