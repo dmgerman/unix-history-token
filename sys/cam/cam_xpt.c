@@ -588,7 +588,7 @@ specifier|static
 name|int
 name|xpt_power_down
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
