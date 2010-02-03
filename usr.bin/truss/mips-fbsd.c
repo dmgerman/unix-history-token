@@ -541,11 +541,30 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|fsc
+operator|.
+name|args
+operator|=
+name|malloc
+argument_list|(
+operator|(
+literal|1
+operator|+
+name|nargs
+operator|)
+operator|*
+expr|sizeof
+operator|(
+name|unsigned
+name|long
+operator|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|// XXX
-block|fsc.args = malloc((1+nargs) * sizeof(unsigned long));   iorequest.piod_op = PIOD_READ_D;   iorequest.piod_offs = (void *)parm_offset;   iorequest.piod_addr = fsc.args;   iorequest.piod_len = (1+nargs) * sizeof(unsigned long);   ptrace(PT_IO, cpid, (caddr_t)&iorequest, 0);   if (iorequest.piod_len == 0)     return;
+block|iorequest.piod_op = PIOD_READ_D;   iorequest.piod_offs = (void *)parm_offset;   iorequest.piod_addr = fsc.args;   iorequest.piod_len = (1+nargs) * sizeof(unsigned long);   ptrace(PT_IO, cpid, (caddr_t)&iorequest, 0);   if (iorequest.piod_len == 0)     return;
 else|#
 directive|else
 name|iorequest
