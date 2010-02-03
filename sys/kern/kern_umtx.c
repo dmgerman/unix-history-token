@@ -13585,7 +13585,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * The magic thing is we should set c_has_waiters to 1 before 	 * releasing user mutex. 	 */
+comment|/* 	 * set waiters byte and sleep. 	 */
 name|suword32
 argument_list|(
 name|__DEVOLATILE
