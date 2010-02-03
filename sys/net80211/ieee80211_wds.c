@@ -1612,7 +1612,10 @@ name|int
 name|hdrspace
 decl_stmt|,
 name|need_tap
+init|=
+literal|1
 decl_stmt|;
+comment|/* mbuf need to be tapped. */
 name|uint8_t
 name|dir
 decl_stmt|,
@@ -1690,11 +1693,6 @@ literal|"null node"
 operator|)
 argument_list|)
 expr_stmt|;
-name|need_tap
-operator|=
-literal|1
-expr_stmt|;
-comment|/* mbuf need to be tapped. */
 name|type
 operator|=
 operator|-
