@@ -445,7 +445,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|dtwalk
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|nddates
 operator|++
 expr_stmt|;
