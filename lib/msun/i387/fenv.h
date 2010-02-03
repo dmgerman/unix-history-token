@@ -395,7 +395,7 @@ block|{
 name|fenv_t
 name|__env
 decl_stmt|;
-name|int
+name|__uint32_t
 name|__mxcsr
 decl_stmt|;
 if|if
@@ -475,9 +475,10 @@ name|int
 name|__excepts
 parameter_list|)
 block|{
-name|int
+name|__uint32_t
 name|__mxcsr
-decl_stmt|,
+decl_stmt|;
+name|__uint16_t
 name|__status
 decl_stmt|;
 name|__fnstsw
@@ -556,9 +557,10 @@ name|int
 name|__excepts
 parameter_list|)
 block|{
-name|int
+name|__uint32_t
 name|__mxcsr
-decl_stmt|,
+decl_stmt|;
+name|__uint16_t
 name|__status
 decl_stmt|;
 name|__fnstsw
@@ -606,7 +608,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|__uint16_t
 name|__control
 decl_stmt|;
 comment|/* 	 * We assume that the x87 and the SSE unit agree on the 	 * rounding mode.  Reading the control word on the x87 turns 	 * out to be about 5 times faster than reading it on the SSE 	 * unit on an Opteron 244. 	 */
@@ -636,9 +638,10 @@ name|int
 name|__round
 parameter_list|)
 block|{
-name|int
+name|__uint32_t
 name|__mxcsr
-decl_stmt|,
+decl_stmt|;
+name|__uint16_t
 name|__control
 decl_stmt|;
 if|if
@@ -755,7 +758,7 @@ init|=
 operator|*
 name|__envp
 decl_stmt|;
-name|int
+name|__uint32_t
 name|__mxcsr
 decl_stmt|;
 name|__mxcsr
@@ -843,7 +846,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|__uint16_t
 name|__control
 decl_stmt|;
 comment|/* 	 * We assume that the masks for the x87 and the SSE unit are 	 * the same. 	 */
