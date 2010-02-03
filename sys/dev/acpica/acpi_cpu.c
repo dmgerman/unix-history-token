@@ -2030,6 +2030,16 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* status */
+name|cap_set
+index|[
+literal|1
+index|]
+operator|=
+name|sc
+operator|->
+name|cpu_features
+expr_stmt|;
 name|AcpiEvaluateObject
 argument_list|(
 name|sc
