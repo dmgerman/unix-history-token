@@ -2856,6 +2856,13 @@ name|device_fail
 label|:
 if|if
 condition|(
+operator|(
+operator|!
+name|softc
+operator|->
+name|restart
+operator|)
+operator|&&
 name|cam_periph_error
 argument_list|(
 name|done_ccb
