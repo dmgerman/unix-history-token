@@ -137,6 +137,17 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_comment
+comment|/* Always use the speaker, let the open fail if -p is selected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEAKER
+value|"/dev/speaker"
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
