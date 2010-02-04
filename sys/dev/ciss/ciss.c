@@ -13924,6 +13924,14 @@ name|ccb_h
 operator|.
 name|status
 operator||=
+name|CAM_RELEASE_SIMQ
+expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator||=
 name|CAM_REQUEUE_REQ
 expr_stmt|;
 return|return
@@ -14221,13 +14229,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-name|EINPROGRESS
-condition|)
-block|{
 name|csio
 operator|->
 name|ccb_h
@@ -14236,6 +14237,13 @@ name|status
 operator||=
 name|CAM_RELEASE_SIMQ
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EINPROGRESS
+condition|)
+block|{
 name|error
 operator|=
 literal|0
@@ -14386,7 +14394,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator|=
+operator||=
 name|CAM_SEL_TIMEOUT
 expr_stmt|;
 name|xpt_done
@@ -14435,7 +14443,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator|=
+operator||=
 name|CAM_SEL_TIMEOUT
 expr_stmt|;
 name|xpt_done
@@ -14512,7 +14520,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator|=
+operator||=
 name|CAM_REQ_CMP
 expr_stmt|;
 name|xpt_done
@@ -14740,7 +14748,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator|=
+operator||=
 name|CAM_REQ_CMP_ERR
 expr_stmt|;
 break|break;
@@ -14761,7 +14769,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator|=
+operator||=
 name|CAM_REQ_CMP
 expr_stmt|;
 break|break;
@@ -14836,7 +14844,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator|=
+operator||=
 name|CAM_SCSI_STATUS_ERROR
 operator||
 name|CAM_AUTOSNS_VALID
@@ -14896,7 +14904,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator|=
+operator||=
 name|CAM_SCSI_BUSY
 expr_stmt|;
 break|break;
@@ -14917,7 +14925,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator|=
+operator||=
 name|CAM_REQ_CMP_ERR
 expr_stmt|;
 break|break;
@@ -14929,15 +14937,6 @@ name|sc
 argument_list|,
 name|csio
 argument_list|)
-expr_stmt|;
-comment|/* tell CAM we're ready for more commands */
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator||=
-name|CAM_RELEASE_SIMQ
 expr_stmt|;
 name|ciss_release_request
 argument_list|(
