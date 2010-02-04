@@ -3590,6 +3590,8 @@ name|ctio
 operator|->
 name|ct_syshandle
 operator|=
+name|hdp
+operator|->
 name|handle
 operator|&
 literal|0xffff
@@ -18965,6 +18967,8 @@ condition|(
 operator|!
 name|ISP_VALID_TGT_HANDLE
 argument_list|(
+name|isp
+argument_list|,
 name|handle
 argument_list|)
 condition|)
