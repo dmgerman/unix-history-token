@@ -28629,6 +28629,12 @@ argument_list|,
 name|iphlen
 argument_list|)
 expr_stmt|;
+name|sh
+operator|->
+name|checksum
+operator|=
+name|check
+expr_stmt|;
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_recvswcrc
@@ -28805,12 +28811,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|sh
-operator|->
-name|checksum
-operator|=
-name|calc_check
-expr_stmt|;
 name|sctp_skip_csum_4
 label|:
 comment|/* destination port of 0 is illegal, based on RFC2960. */
