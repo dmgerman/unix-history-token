@@ -120,8 +120,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|bool
 name|interactive
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|EditLine
+modifier|*
+name|el
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|History
+modifier|*
+name|hist
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|HistEvent
+name|he
 decl_stmt|;
 end_decl_stmt
 
