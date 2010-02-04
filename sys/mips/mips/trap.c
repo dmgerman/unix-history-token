@@ -37,6 +37,12 @@ directive|include
 file|"opt_global.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_ktrace.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -3093,7 +3099,7 @@ if|if
 condition|(
 name|KTRPOINT
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|KTR_SYSRET
 argument_list|)
