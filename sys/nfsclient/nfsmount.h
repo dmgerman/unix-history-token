@@ -225,6 +225,10 @@ name|gss_OID
 name|nm_mech_oid
 decl_stmt|;
 comment|/* OID of selected GSS-API mechanism */
+name|int
+name|nm_negnametimeo
+decl_stmt|;
+comment|/* timeout for -ve entries (sec) */
 comment|/* NFSv4 */
 name|uint64_t
 name|nm_clientid
@@ -294,6 +298,24 @@ define|#
 directive|define
 name|NFS_TPRINTF_DELAY
 value|30
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_DEFAULT_NEGNAMETIMEO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_DEFAULT_NEGNAMETIMEO
+value|60
 end_define
 
 begin_endif
