@@ -1931,7 +1931,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"lapic: Divisor %lu, Frequency %lu hz\n"
+literal|"lapic: Divisor %lu, Frequency %lu Hz\n"
 argument_list|,
 name|lapic_timer_divisor
 argument_list|,

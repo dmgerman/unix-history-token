@@ -11875,7 +11875,7 @@ name|mly_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"CPU: %s @ %dMHZ\n"
+literal|"CPU: %s @ %dMHz\n"
 argument_list|,
 name|mly_describe_code
 argument_list|(
