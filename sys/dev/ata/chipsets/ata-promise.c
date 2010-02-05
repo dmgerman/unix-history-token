@@ -5287,6 +5287,13 @@ name|devices
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|ch
+operator|->
+name|devices
+operator|=
+literal|0
+expr_stmt|;
 comment|/* reset and enable plug/unplug intr */
 name|ATA_OUTL
 argument_list|(
