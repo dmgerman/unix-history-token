@@ -264,13 +264,11 @@ name|res
 operator|==
 name|NULL
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"Cannot allocate resource for config space accesses."
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Allocate KVA for accessing PCI config space. 	 */
 name|va
 operator|=
@@ -317,7 +315,6 @@ condition|;
 operator|++
 name|n
 control|)
-block|{
 name|zbpci_config_space
 index|[
 name|n
@@ -331,7 +328,6 @@ name|n
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-block|}
 comment|/* 	 * Sibyte has the PCI bus hierarchy rooted at bus 0 and HT-PCI 	 * hierarchy rooted at bus 1. 	 */
 if|if
 condition|(
@@ -346,13 +342,11 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"zbpci_attach: could not add pci bus 0.\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|device_add_child
@@ -366,18 +360,15 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"zbpci_attach: could not add pci bus 1.\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -385,7 +376,6 @@ argument_list|,
 literal|"attached.\n"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|bus_generic_attach
