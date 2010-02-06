@@ -1491,9 +1491,10 @@ name|text
 operator|=
 name|s
 expr_stmt|;
-comment|/* 			 * We could roll this to a function, to handle it as 			 * a regular variable function callback, but why bother? 			 */
+comment|/* 			 * We could roll this to a function, to handle it as 			 * a regular variable function callback, but why bother? 			 * 			 * Note: this assumes iflag is not set to 1 initially. 			 * As part of init(), this is called before arguments 			 * are looked at. 			 */
 if|if
 condition|(
+operator|(
 name|vp
 operator|==
 operator|&
@@ -1509,6 +1510,11 @@ operator|!
 name|mpathset
 argument_list|()
 operator|)
+operator|)
+operator|&&
+name|iflag
+operator|==
+literal|1
 condition|)
 name|chkmail
 argument_list|(
