@@ -763,7 +763,7 @@ parameter_list|,
 name|UINT32
 name|width
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -919,7 +919,7 @@ parameter_list|,
 name|u_int
 name|addr
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|val
 parameter_list|,
@@ -940,7 +940,7 @@ parameter_list|,
 name|u_int
 name|addr
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|val
 parameter_list|,
 name|int
@@ -2536,7 +2536,7 @@ parameter_list|,
 name|u_int
 name|addr
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|val
 parameter_list|,
@@ -2609,7 +2609,7 @@ parameter_list|,
 name|u_int
 name|addr
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|val
 parameter_list|,
 name|int
@@ -3113,7 +3113,7 @@ parameter_list|,
 name|UINT32
 name|width
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -3334,7 +3334,7 @@ name|Value
 operator||=
 operator|(
 operator|(
-name|ACPI_INTEGER
+name|UINT64
 operator|)
 name|EcData
 operator|)

@@ -786,7 +786,7 @@ name|error
 decl_stmt|,
 name|to
 decl_stmt|;
-name|ACPI_INTEGER
+name|UINT64
 name|val
 decl_stmt|;
 name|ACPI_SERIAL_ASSERT
@@ -1096,7 +1096,7 @@ name|uint16_t
 name|len
 parameter_list|)
 block|{
-name|ACPI_INTEGER
+name|UINT64
 name|val
 decl_stmt|;
 name|uint8_t

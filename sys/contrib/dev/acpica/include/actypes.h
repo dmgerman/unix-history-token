@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2010, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -981,40 +981,6 @@ name|UINT64_OVERLAY
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|uint32_struct
-block|{
-name|UINT32
-name|Lo
-decl_stmt|;
-name|UINT32
-name|Hi
-decl_stmt|;
-block|}
-name|UINT32_STRUCT
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Acpi integer width. In ACPI version 1, integers are 32 bits. In ACPI  * version 2, integers are 64 bits. Note that this pertains to the ACPI integer  * type only, not other integers used in the implementation of the ACPI CA  * subsystem.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|UINT64
-name|ACPI_INTEGER
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ACPI_INTEGER_MAX
-value|ACPI_UINT64_MAX
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1088,6 +1054,24 @@ define|#
 directive|define
 name|ACPI_DO_NOT_WAIT
 value|0
+end_define
+
+begin_comment
+comment|/*  * Obsolete: Acpi integer width. In ACPI version 1 (1996), integers are 32 bits.  * In ACPI version 2 (2000) and later, integers are 64 bits. Note that this  * pertains to the ACPI integer type only, not to other integers used in the  * implementation of the ACPICA subsystem.  *  * 01/2010: This type is obsolete and has been removed from the entire ACPICA  * code base. It remains here for compatibility with device drivers that use  * the type. However, it will be removed in the future.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT64
+name|ACPI_INTEGER
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTEGER_MAX
+value|ACPI_UINT64_MAX
 end_define
 
 begin_comment
@@ -2490,8 +2474,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_ADR_SPACE_DATA_TABLE
+name|ACPI_ADR_SPACE_IPMI
 value|(ACPI_ADR_SPACE_TYPE) 7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADR_SPACE_DATA_TABLE
+value|(ACPI_ADR_SPACE_TYPE) 8
 end_define
 
 begin_define
@@ -2727,7 +2718,7 @@ name|ACPI_OBJECT_TYPE
 name|Type
 decl_stmt|;
 comment|/* ACPI_TYPE_INTEGER */
-name|ACPI_INTEGER
+name|UINT64
 name|Value
 decl_stmt|;
 comment|/* The actual number */
@@ -3167,9 +3158,6 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Object
 parameter_list|,
-name|UINT32
-name|Function
-parameter_list|,
 name|void
 modifier|*
 name|Data
@@ -3296,7 +3284,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -3403,22 +3391,23 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Length of _HID, _UID, _CID, and UUID values */
+comment|/* Length of 32-bit EISAID values when converted back to a string */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_DEVICE_ID_LENGTH
-value|0x09
+name|ACPI_EISAID_STRING_SIZE
+value|8
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_CID_LENGTH
-value|48
-end_define
+begin_comment
+comment|/* Includes null terminator */
+end_comment
+
+begin_comment
+comment|/* Length of UUID (string) values */
+end_comment
 
 begin_define
 define|#
@@ -3428,7 +3417,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Common string version of device HIDs and UIDs */
+comment|/* Structures used for device/processor HID, UID, CID */
 end_comment
 
 begin_typedef
@@ -3436,103 +3425,178 @@ typedef|typedef
 struct|struct
 name|acpi_device_id
 block|{
+name|UINT32
+name|Length
+decl_stmt|;
+comment|/* Length of string + null */
 name|char
-name|Value
-index|[
-name|ACPI_DEVICE_ID_LENGTH
-index|]
+modifier|*
+name|String
 decl_stmt|;
 block|}
 name|ACPI_DEVICE_ID
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_device_id_list
+block|{
+name|UINT32
+name|Count
+decl_stmt|;
+comment|/* Number of IDs in Ids array */
+name|UINT32
+name|ListSize
+decl_stmt|;
+comment|/* Size of list, including ID strings */
+name|ACPI_DEVICE_ID
+name|Ids
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* ID array */
+block|}
+name|ACPI_DEVICE_ID_LIST
+typedef|;
+end_typedef
+
 begin_comment
-comment|/* Common string version of device CIDs */
+comment|/*  * Structure returned from AcpiGetObjectInfo.  * Optimized for both 32- and 64-bit builds  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_compatible_id
-block|{
-name|char
-name|Value
-index|[
-name|ACPI_MAX_CID_LENGTH
-index|]
-decl_stmt|;
-block|}
-name|ACPI_COMPATIBLE_ID
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_compatible_id_list
+name|acpi_device_info
 block|{
 name|UINT32
-name|Count
+name|InfoSize
 decl_stmt|;
+comment|/* Size of info, including ID strings */
 name|UINT32
-name|Size
+name|Name
 decl_stmt|;
-name|ACPI_COMPATIBLE_ID
-name|Id
+comment|/* ACPI object Name */
+name|ACPI_OBJECT_TYPE
+name|Type
+decl_stmt|;
+comment|/* ACPI object Type */
+name|UINT8
+name|ParamCount
+decl_stmt|;
+comment|/* If a method, required parameter count */
+name|UINT8
+name|Valid
+decl_stmt|;
+comment|/* Indicates which optional fields are valid */
+name|UINT8
+name|Flags
+decl_stmt|;
+comment|/* Miscellaneous info */
+name|UINT8
+name|HighestDstates
 index|[
-literal|1
+literal|4
 index|]
 decl_stmt|;
+comment|/* _SxD values: 0xFF indicates not valid */
+name|UINT8
+name|LowestDstates
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* _SxW values: 0xFF indicates not valid */
+name|UINT32
+name|CurrentStatus
+decl_stmt|;
+comment|/* _STA value */
+name|UINT64
+name|Address
+decl_stmt|;
+comment|/* _ADR value */
+name|ACPI_DEVICE_ID
+name|HardwareId
+decl_stmt|;
+comment|/* _HID value */
+name|ACPI_DEVICE_ID
+name|UniqueId
+decl_stmt|;
+comment|/* _UID value */
+name|ACPI_DEVICE_ID_LIST
+name|CompatibleIdList
+decl_stmt|;
+comment|/* _CID list<must be last> */
 block|}
-name|ACPI_COMPATIBLE_ID_LIST
+name|ACPI_DEVICE_INFO
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* Structure and flags for AcpiGetObjectInfo */
+comment|/* Values for Flags field above (AcpiGetObjectInfo) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_ROOT_BRIDGE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Flags for Valid field above (AcpiGetObjectInfo) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_STA
-value|0x0001
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_ADR
-value|0x0002
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_HID
-value|0x0004
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_UID
-value|0x0008
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_CID
-value|0x0010
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_SXDS
-value|0x0020
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_VALID_SXWS
+value|0x40
 end_define
 
 begin_comment
@@ -3584,83 +3648,6 @@ directive|define
 name|ACPI_STA_BATTERY_PRESENT
 value|0x10
 end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_COMMON_OBJ_INFO
-define|\
-value|ACPI_OBJECT_TYPE                Type;
-comment|/* ACPI object type */
-value|\     ACPI_NAME                       Name
-end_define
-
-begin_comment
-comment|/* ACPI object Name */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_obj_info_header
-block|{
-name|ACPI_COMMON_OBJ_INFO
-expr_stmt|;
-block|}
-name|ACPI_OBJ_INFO_HEADER
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Structure returned from Get Object Info */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_device_info
-block|{
-name|ACPI_COMMON_OBJ_INFO
-expr_stmt|;
-name|UINT32
-name|ParamCount
-decl_stmt|;
-comment|/* If a method, required parameter count */
-name|UINT32
-name|Valid
-decl_stmt|;
-comment|/* Indicates which fields below are valid */
-name|UINT32
-name|CurrentStatus
-decl_stmt|;
-comment|/* _STA value */
-name|ACPI_INTEGER
-name|Address
-decl_stmt|;
-comment|/* _ADR value if any */
-name|ACPI_DEVICE_ID
-name|HardwareId
-decl_stmt|;
-comment|/* _HID value if any */
-name|ACPI_DEVICE_ID
-name|UniqueId
-decl_stmt|;
-comment|/* _UID value if any */
-name|UINT8
-name|HighestDstates
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* _SxD values: 0xFF indicates not valid */
-name|ACPI_COMPATIBLE_ID_LIST
-name|CompatibilityId
-decl_stmt|;
-comment|/* List of _CIDs if any */
-block|}
-name|ACPI_DEVICE_INFO
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Context structs for address space handlers */

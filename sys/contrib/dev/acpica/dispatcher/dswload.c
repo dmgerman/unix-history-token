@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2010, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -406,6 +406,8 @@ block|{
 comment|/*              * Table disassembly:              * Target of Scope() not found. Generate an External for it, and              * insert the name into the namespace.              */
 name|AcpiDmAddToExternalList
 argument_list|(
+name|Op
+argument_list|,
 name|Path
 argument_list|,
 name|ACPI_TYPE_DEVICE
@@ -497,15 +499,19 @@ case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/*              * These types we will allow, but we will change the type. This              * enables some existing code of the form:              *              *  Name (DEB, 0)              *  Scope (DEB) { ... }              *              * Note: silently change the type here. On the second pass, we will report              * a warning              */
+comment|/*              * These types we will allow, but we will change the type.              * This enables some existing code of the form:              *              *  Name (DEB, 0)              *  Scope (DEB) { ... }              *              * Note: silently change the type here. On the second pass,              * we will report a warning              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Type override - [%4.4s] had invalid type (%s) for Scope operator, changed to (Scope)\n"
+literal|"Type override - [%4.4s] had invalid type (%s) "
+literal|"for Scope operator, changed to type ANY\n"
 operator|,
-name|Path
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -540,7 +546,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid type (%s) for target of Scope operator [%4.4s] (Cannot override)"
+literal|"Invalid type (%s) for target of "
+literal|"Scope operator [%4.4s] (Cannot override)"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -549,7 +556,10 @@ operator|->
 name|Type
 argument_list|)
 operator|,
-name|Path
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1587,71 +1597,6 @@ operator|)
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|ACPI_ENABLE_MODULE_LEVEL_CODE
-if|if
-condition|(
-operator|(
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|Class
-operator|==
-name|AML_CLASS_EXECUTE
-operator|)
-operator|||
-operator|(
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|Class
-operator|==
-name|AML_CLASS_CONTROL
-operator|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_DISPATCH
-operator|,
-literal|"Begin/EXEC: %s (fl %8.8X)\n"
-operator|,
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|Name
-operator|,
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|Flags
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Executing a type1 or type2 opcode outside of a method */
-name|Status
-operator|=
-name|AcpiDsExecBeginOp
-argument_list|(
-name|WalkState
-argument_list|,
-name|OutOp
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -1807,7 +1752,59 @@ break|break;
 case|case
 name|AML_SCOPE_OP
 case|:
-comment|/*          * The Path is an object reference to an existing object.          * Don't enter the name into the namespace, but look it up          * for use later.          */
+comment|/* Special case for Scope(\) -> refers to the Root node */
+if|if
+condition|(
+name|Op
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Named
+operator|.
+name|Node
+operator|==
+name|AcpiGbl_RootNode
+operator|)
+condition|)
+block|{
+name|Node
+operator|=
+name|Op
+operator|->
+name|Named
+operator|.
+name|Node
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiDsScopeStackPush
+argument_list|(
+name|Node
+argument_list|,
+name|ObjectType
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/*              * The Path is an object reference to an existing object.              * Don't enter the name into the namespace, but look it up              * for use later.              */
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -1882,6 +1879,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/*          * We must check to make sure that the target is          * one of the opcodes that actually opens a scope          */
 switch|switch
 condition|(
@@ -1920,15 +1918,19 @@ case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/*              * These types we will allow, but we will change the type. This              * enables some existing code of the form:              *              *  Name (DEB, 0)              *  Scope (DEB) { ... }              */
+comment|/*              * These types we will allow, but we will change the type.              * This enables some existing code of the form:              *              *  Name (DEB, 0)              *  Scope (DEB) { ... }              */
 name|ACPI_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Type override - [%4.4s] had invalid type (%s) for Scope operator, changed to (Scope)"
+literal|"Type override - [%4.4s] had invalid type (%s) "
+literal|"for Scope operator, changed to type ANY\n"
 operator|,
-name|BufferPtr
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -1963,7 +1965,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid type (%s) for target of Scope operator [%4.4s]"
+literal|"Invalid type (%s) for target of "
+literal|"Scope operator [%4.4s] (Cannot override)"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -1972,7 +1975,10 @@ operator|->
 name|Type
 argument_list|)
 operator|,
-name|BufferPtr
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2082,12 +2088,25 @@ block|{
 comment|/* Execution mode, node cannot already exist, node is temporary */
 name|Flags
 operator||=
-operator|(
 name|ACPI_NS_ERROR_IF_FOUND
-operator||
-name|ACPI_NS_TEMPORARY
-operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|WalkState
+operator|->
+name|ParseFlags
+operator|&
+name|ACPI_PARSE_MODULE_LEVEL
+operator|)
+condition|)
+block|{
+name|Flags
+operator||=
+name|ACPI_NS_TEMPORARY
+expr_stmt|;
+block|}
 block|}
 comment|/* Add new entry or lookup existing entry */
 name|Status
@@ -2329,75 +2348,6 @@ name|AML_NSOBJECT
 operator|)
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|ACPI_NO_METHOD_EXECUTION
-ifdef|#
-directive|ifdef
-name|ACPI_ENABLE_MODULE_LEVEL_CODE
-comment|/* No namespace object. Executable opcode? */
-if|if
-condition|(
-operator|(
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|Class
-operator|==
-name|AML_CLASS_EXECUTE
-operator|)
-operator|||
-operator|(
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|Class
-operator|==
-name|AML_CLASS_CONTROL
-operator|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_DISPATCH
-operator|,
-literal|"End/EXEC:   %s (fl %8.8X)\n"
-operator|,
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|Name
-operator|,
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|Flags
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Executing a type1 or type2 opcode outside of a method */
-name|Status
-operator|=
-name|AcpiDsExecEndOp
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -2880,7 +2830,7 @@ operator|=
 name|REGION_DATA_TABLE
 expr_stmt|;
 block|}
-comment|/*              * If we are executing a method, initialize the region              */
+comment|/*              * The OpRegion is not fully parsed at this time. The only valid              * argument is the SpaceId. (We must save the address of the              * AML of the address and length operands)              *              * If we have a valid region, initialize it. The namespace is              * unlocked at this point.              *              * Need to unlock interpreter if it is locked (if we are running              * a control method), in order to allow _REG methods to be run              * during AcpiEvInitializeRegion.              */
 if|if
 condition|(
 name|WalkState
@@ -2888,6 +2838,7 @@ operator|->
 name|MethodNode
 condition|)
 block|{
+comment|/*                  * Executing a method: initialize the region and unlock                  * the interpreter                  */
 name|Status
 operator|=
 name|AcpiExCreateRegion
@@ -2923,9 +2874,10 @@ name|Status
 operator|)
 return|;
 block|}
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
 block|}
-comment|/*              * The OpRegion is not fully parsed at this time. Only valid              * argument is the SpaceId. (We must save the address of the              * AML of the address and length operands)              */
-comment|/*              * If we have a valid region, initialize it              * Namespace is NOT locked at this point.              *              * TBD: need to unlock interpreter if it is locked, in order              * to allow _REG methods to be run.              */
 name|Status
 operator|=
 name|AcpiEvInitializeRegion
@@ -2938,6 +2890,17 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|WalkState
+operator|->
+name|MethodNode
+condition|)
+block|{
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ACPI_FAILURE

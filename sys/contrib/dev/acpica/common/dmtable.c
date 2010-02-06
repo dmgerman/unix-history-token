@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2010, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -75,6 +75,10 @@ name|UINT8
 modifier|*
 name|Target
 parameter_list|,
+name|char
+modifier|*
+name|RepairedName
+parameter_list|,
 name|UINT32
 name|Count
 parameter_list|)
@@ -136,6 +140,8 @@ literal|"Reserved Memory Region"
 block|,
 literal|"Root Port ATS Capability"
 block|,
+literal|"Remapping Hardware Static Affinity"
+block|,
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
 block|}
@@ -151,18 +157,21 @@ name|AcpiDmHestSubnames
 index|[]
 init|=
 block|{
-literal|"XPF Machine Check Exception"
+literal|"IA-32 Machine Check Exception"
 block|,
-literal|"XPF Corrected Machine Check"
+literal|"IA-32 Corrected Machine Check"
 block|,
-literal|"NOT USED???"
+literal|"IA-32 Non-Maskable Interrupt"
 block|,
-literal|"XPF Non-Maskable Interrupt"
+literal|"Unknown SubTable Type"
 block|,
-literal|"IPF Corrected Machine Check"
+comment|/* 3 - Reserved */
+literal|"Unknown SubTable Type"
 block|,
-literal|"IPF Corrected Platform Error"
+comment|/* 4 - Reserved */
+literal|"Unknown SubTable Type"
 block|,
+comment|/* 5 - Reserved */
 literal|"PCI Express Root Port AER"
 block|,
 literal|"PCI Express AER (AER Endpoint)"
@@ -271,6 +280,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmIvrsSubnames
+index|[]
+init|=
+block|{
+literal|"Hardware Definition Block"
+block|,
+literal|"Memory Definition Block"
+block|,
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -309,7 +337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * ACPI Table Data, indexed by signature.  *  * Simple tables have only a TableInfo structure, complex tables have a handler.  * This table must be NULL terminated. RSDP and FACS are special-cased  * elsewhere.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * ACPI Table Data, indexed by signature.  *  * Each entry contains: Signature, Table Info, Handler, Description  *  * Simple tables have only a TableInfo structure, complex tables have a handler.  * This table must be NULL terminated. RSDP and FACS are special-cased  * elsewhere.  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -440,6 +468,16 @@ literal|"High Precision Event Timer table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_IVRS
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpIvrs
+block|,
+literal|"I/O Virtualization Reporting Structure"
+block|}
+block|,
+block|{
 name|ACPI_SIG_MADT
 block|,
 name|NULL
@@ -457,6 +495,16 @@ block|,
 name|AcpiDmDumpMcfg
 block|,
 literal|"Memory Mapped Configuration table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_MSCT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpMsct
+block|,
+literal|"Maximum System Characteristics Table"
 block|}
 block|,
 block|{
@@ -537,6 +585,36 @@ block|,
 name|NULL
 block|,
 literal|"Trusted Computing Platform Alliance table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_UEFI
+block|,
+name|AcpiDmTableInfoUefi
+block|,
+name|NULL
+block|,
+literal|"UEFI Boot Optimization Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_WAET
+block|,
+name|AcpiDmTableInfoWaet
+block|,
+name|NULL
+block|,
+literal|"Windows ACPI Emulated Devices Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_WDAT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpWdat
+block|,
+literal|"Watchdog Action Table"
 block|}
 block|,
 block|{
@@ -1100,10 +1178,21 @@ name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Name
+decl_stmt|;
 name|BOOLEAN
 name|LastOutputBlankLine
 init|=
 name|FALSE
+decl_stmt|;
+name|char
+name|RepairedName
+index|[
+literal|8
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -1207,6 +1296,9 @@ case|case
 name|ACPI_DMT_SPACEID
 case|:
 case|case
+name|ACPI_DMT_IVRS
+case|:
+case|case
 name|ACPI_DMT_MADT
 case|:
 case|case
@@ -1287,6 +1379,14 @@ case|:
 name|ByteLength
 operator|=
 literal|8
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_BUF16
+case|:
+name|ByteLength
+operator|=
+literal|16
 expr_stmt|;
 break|break;
 case|case
@@ -1601,11 +1701,46 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_BUF16
+case|:
+comment|/* Buffer of length 16 */
+for|for
+control|(
+name|Temp8
+operator|=
+literal|0
+init|;
+name|Temp8
+operator|<
+literal|16
+condition|;
+name|Temp8
+operator|++
+control|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X,"
+argument_list|,
+name|Target
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_STRING
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s\n"
+literal|"\"%s\"\n"
 argument_list|,
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1624,14 +1759,16 @@ name|AcpiDmCheckAscii
 argument_list|(
 name|Target
 argument_list|,
+name|RepairedName
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\"%4.4s\"    "
+literal|"\"%.4s\"    "
 argument_list|,
-name|Target
+name|RepairedName
 argument_list|)
 expr_stmt|;
 name|TableData
@@ -1674,14 +1811,16 @@ name|AcpiDmCheckAscii
 argument_list|(
 name|Target
 argument_list|,
+name|RepairedName
+argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\"%4.4s\"\n"
+literal|"\"%.4s\"\n"
 argument_list|,
-name|Target
+name|RepairedName
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1692,14 +1831,16 @@ name|AcpiDmCheckAscii
 argument_list|(
 name|Target
 argument_list|,
+name|RepairedName
+argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\"%6.6s\"\n"
+literal|"\"%.6s\"\n"
 argument_list|,
-name|Target
+name|RepairedName
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1710,14 +1851,16 @@ name|AcpiDmCheckAscii
 argument_list|(
 name|Target
 argument_list|,
+name|RepairedName
+argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\"%8.8s\"\n"
+literal|"\"%.8s\"\n"
 argument_list|,
-name|Target
+name|RepairedName
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1799,14 +1942,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiDmDumpTable
 argument_list|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|,
-name|Table
-argument_list|)
-operator|->
-name|Length
+name|TableLength
 argument_list|,
 name|CurrentOffset
 argument_list|,
@@ -1963,14 +2099,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiDmDumpTable
 argument_list|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|,
-name|Table
-argument_list|)
-operator|->
-name|Length
+name|TableLength
 argument_list|,
 name|CurrentOffset
 argument_list|,
@@ -2135,6 +2264,69 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_IVRS
+case|:
+comment|/* IVRS subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+switch|switch
+condition|(
+name|Temp8
+condition|)
+block|{
+case|case
+name|ACPI_IVRS_TYPE_HARDWARE
+case|:
+name|Name
+operator|=
+name|AcpiDmIvrsSubnames
+index|[
+literal|0
+index|]
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_IVRS_TYPE_MEMORY1
+case|:
+case|case
+name|ACPI_IVRS_TYPE_MEMORY2
+case|:
+case|case
+name|ACPI_IVRS_TYPE_MEMORY3
+case|:
+name|Name
+operator|=
+name|AcpiDmIvrsSubnames
+index|[
+literal|1
+index|]
+expr_stmt|;
+break|break;
+default|default:
+name|Name
+operator|=
+name|AcpiDmIvrsSubnames
+index|[
+literal|2
+index|]
+expr_stmt|;
+break|break;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X<%s>\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_EXIT
 case|:
 return|return
@@ -2204,6 +2396,10 @@ name|UINT8
 modifier|*
 name|Name
 parameter_list|,
+name|char
+modifier|*
+name|RepairedName
+parameter_list|,
 name|UINT32
 name|Count
 parameter_list|)
@@ -2225,6 +2421,19 @@ name|i
 operator|++
 control|)
 block|{
+name|RepairedName
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|char
+operator|)
+name|Name
+index|[
+name|i
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2232,7 +2441,12 @@ name|Name
 index|[
 name|i
 index|]
-operator|||
+condition|)
+block|{
+return|return;
+block|}
+if|if
+condition|(
 operator|!
 name|isprint
 argument_list|(
@@ -2243,7 +2457,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|Name
+name|RepairedName
 index|[
 name|i
 index|]

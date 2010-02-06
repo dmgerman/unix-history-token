@@ -285,13 +285,13 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|ACPI_INTEGER
+name|UINT64
 name|acpi_panasonic_sinf
 parameter_list|(
 name|ACPI_HANDLE
 name|h
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|index
 parameter_list|)
 function_decl|;
@@ -305,10 +305,10 @@ parameter_list|(
 name|ACPI_HANDLE
 name|h
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|index
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|val
 parameter_list|)
 function_decl|;
@@ -1135,13 +1135,13 @@ end_function
 
 begin_function
 specifier|static
-name|ACPI_INTEGER
+name|UINT64
 name|acpi_panasonic_sinf
 parameter_list|(
 name|ACPI_HANDLE
 name|h
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|index
 parameter_list|)
 block|{
@@ -1152,7 +1152,7 @@ name|ACPI_OBJECT
 modifier|*
 name|res
 decl_stmt|;
-name|ACPI_INTEGER
+name|UINT64
 name|ret
 decl_stmt|;
 name|ACPI_SERIAL_ASSERT
@@ -1245,10 +1245,10 @@ parameter_list|(
 name|ACPI_HANDLE
 name|h
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|index
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|val
 parameter_list|)
 block|{
@@ -1707,7 +1707,7 @@ name|ACPI_OBJECT
 modifier|*
 name|res
 decl_stmt|;
-name|ACPI_INTEGER
+name|UINT64
 name|val
 decl_stmt|;
 name|int

@@ -2437,7 +2437,7 @@ name|int
 name|method
 parameter_list|)
 block|{
-name|ACPI_INTEGER
+name|UINT64
 name|val_ec
 decl_stmt|;
 name|int
@@ -2968,7 +2968,7 @@ name|val
 decl_stmt|,
 name|step
 decl_stmt|;
-name|ACPI_INTEGER
+name|UINT64
 name|val_ec
 decl_stmt|;
 name|ACPI_OBJECT

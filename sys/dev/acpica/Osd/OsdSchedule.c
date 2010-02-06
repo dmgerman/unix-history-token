@@ -755,7 +755,7 @@ begin_function
 name|void
 name|AcpiOsSleep
 parameter_list|(
-name|ACPI_INTEGER
+name|UINT64
 name|Milliseconds
 parameter_list|)
 block|{

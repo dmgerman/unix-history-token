@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2009, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2010, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -248,7 +248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * DATA STRUCTURE:  ReservedMethods  *  * DESCRIPTION:     Contains all reserved methods and names as defined in the  *                  ACPI specification.  Used during the analysis phase to  *                  ensure that reserved methods have the required number of  *                  arguments and the proper return type.  *  * Each entry in the table contains the following items:  *  * Name         - The ACPI reserved name  * Args         - Number of arguments to the method  * Flags        - Whether this method must return a value or not  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * DATA STRUCTURE:  ReservedMethods  *  * DESCRIPTION:     Contains all reserved methods and names as defined in the  *                  ACPI specification.  Used during the analysis phase to  *                  ensure that reserved methods have the required number of  *                  arguments and the proper return type.  *  * Each entry in the table contains the following items:  *  * Name         - The ACPI reserved name  * Args         - Number of arguments to the method  * Flags        - Whether this method must return a value or not. Or if the  *                name is a resource descriptor label.  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -480,6 +480,15 @@ block|}
 block|,
 comment|/* Acpi 3.0 */
 block|{
+literal|"_ART"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_ASI"
 block|,
 literal|0
@@ -528,6 +537,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_BCT"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_BDN"
 block|,
 literal|0
@@ -552,6 +570,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_BIX"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_BLT"
 block|,
 literal|3
@@ -568,6 +595,15 @@ block|,
 name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
+block|{
+literal|"_BMA"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_BMC"
 block|,
@@ -586,6 +622,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 comment|/* Acpi 3.0 */
+block|{
+literal|"_BMS"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_BQC"
 block|,
@@ -629,6 +674,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 comment|/* Acpi 3.0 */
+block|{
+literal|"_CDM"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_CID"
 block|,
@@ -777,6 +831,15 @@ block|}
 block|,
 comment|/* Acpi 3.0 */
 block|{
+literal|"_DTI"
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_EC_"
 block|,
 literal|0
@@ -873,6 +936,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_FIF"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_FIX"
 block|,
 literal|0
@@ -880,6 +952,51 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_FPS"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_FSL"
+block|,
+literal|1
+block|,
+literal|0
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_FST"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_GAI"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_GHL"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_GL_"
 block|,
@@ -1084,6 +1201,15 @@ name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
 block|{
+literal|"_MBM"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_MEM"
 block|,
 literal|0
@@ -1125,6 +1251,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_MSM"
+block|,
+literal|4
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_MTP"
 block|,
 literal|0
@@ -1132,6 +1267,15 @@ block|,
 name|ASL_RSVD_RESOURCE_NAME
 block|}
 block|,
+block|{
+literal|"_NTT"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_OFF"
 block|,
@@ -1183,6 +1327,15 @@ block|}
 block|,
 comment|/* Acpi 3.0 */
 block|{
+literal|"_PAI"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_PCL"
 block|,
 literal|0
@@ -1207,6 +1360,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_PDL"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_PIC"
 block|,
 literal|1
@@ -1214,6 +1376,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"_PIF"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_PLD"
 block|,
@@ -1223,6 +1394,33 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 comment|/* Acpi 3.0 */
+block|{
+literal|"_PMC"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_PMD"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_PMM"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_PPC"
 block|,
@@ -1264,6 +1462,24 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_PR3"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_PRL"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_PRS"
 block|,
@@ -1386,6 +1602,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_PTP"
+block|,
+literal|2
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_PTS"
 block|,
 literal|1
@@ -1393,6 +1618,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"_PUR"
+block|,
+literal|0
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_PXM"
 block|,
@@ -1651,6 +1885,15 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 block|{
+literal|"_SHL"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_SHR"
 block|,
 literal|0
@@ -1733,6 +1976,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"_STP"
+block|,
+literal|2
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
 literal|"_STR"
 block|,
 literal|0
@@ -1740,6 +1992,15 @@ block|,
 name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
+block|{
+literal|"_STV"
+block|,
+literal|2
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_SUN"
 block|,
@@ -1782,6 +2043,24 @@ name|ASL_RSVD_RETURN_VALUE
 block|}
 block|,
 comment|/* Acpi 3.0b */
+block|{
+literal|"_TIP"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
+block|{
+literal|"_TIV"
+block|,
+literal|1
+block|,
+name|ASL_RSVD_RETURN_VALUE
+block|}
+block|,
+comment|/* Acpi 4.0 */
 block|{
 literal|"_TMP"
 block|,
@@ -4417,6 +4696,18 @@ argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
 name|REGION_IO
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* REGIONSPACE_IPMI */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_RAW_DATA_BYTE
+argument_list|,
+name|REGION_IPMI
 argument_list|,
 literal|0
 argument_list|,
