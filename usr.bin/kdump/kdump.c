@@ -880,8 +880,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6d %6d %-8.*s Events dropped.\n"
+literal|"%6jd %6jd %-8.*s Events dropped.\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ktr_header
 operator|.
 name|ktr_pid
@@ -892,6 +895,9 @@ name|ktr_tid
 operator|>
 literal|0
 condition|?
+operator|(
+name|intmax_t
+operator|)
 name|ktr_header
 operator|.
 name|ktr_tid
@@ -922,8 +928,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6d %-8.*s Events dropped.\n"
+literal|"%6jd %-8.*s Events dropped.\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ktr_header
 operator|.
 name|ktr_pid
@@ -1433,8 +1442,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6d %6d %-8.*s "
+literal|"%6jd %6jd %-8.*s "
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|kth
 operator|->
 name|ktr_pid
@@ -1445,6 +1457,9 @@ name|ktr_tid
 operator|>
 literal|0
 condition|?
+operator|(
+name|intmax_t
+operator|)
 name|kth
 operator|->
 name|ktr_tid
@@ -1464,8 +1479,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6d %-8.*s "
+literal|"%6jd %-8.*s "
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|kth
 operator|->
 name|ktr_pid
@@ -1549,8 +1567,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ld.%06ld "
+literal|"%jd.%06ld "
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|kth
 operator|->
 name|ktr_time
@@ -4802,8 +4823,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ret
 argument_list|)
 expr_stmt|;
@@ -7214,8 +7238,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%ld"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|statp
 operator|->
 name|st_atimespec
@@ -7302,8 +7329,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%ld"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|statp
 operator|->
 name|st_mtimespec
@@ -7390,8 +7420,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%ld"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|statp
 operator|->
 name|st_ctimespec
@@ -7478,8 +7511,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%ld"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|statp
 operator|->
 name|st_birthtimespec
