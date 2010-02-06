@@ -1276,6 +1276,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|msi_create_source
 parameter_list|(
