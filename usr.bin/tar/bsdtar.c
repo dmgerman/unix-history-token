@@ -1196,9 +1196,6 @@ case|case
 literal|'j'
 case|:
 comment|/* GNU tar */
-if|#
-directive|if
-name|HAVE_LIBBZ2
 if|if
 condition|(
 name|bsdtar
@@ -1228,28 +1225,11 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"bzip2 compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'J'
 case|:
 comment|/* GNU tar 1.21 and later */
-if|#
-directive|if
-name|HAVE_LIBLZMA
 if|if
 condition|(
 name|bsdtar
@@ -1279,20 +1259,6 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"xz compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'k'
@@ -1342,9 +1308,6 @@ break|break;
 case|case
 name|OPTION_LZMA
 case|:
-if|#
-directive|if
-name|HAVE_LIBLZMA
 if|if
 condition|(
 name|bsdtar
@@ -1374,20 +1337,6 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"lzma compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'m'
@@ -1979,9 +1928,6 @@ case|case
 literal|'y'
 case|:
 comment|/* FreeBSD version of GNU tar */
-if|#
-directive|if
-name|HAVE_LIBBZ2
 if|if
 condition|(
 name|bsdtar
@@ -2011,20 +1957,6 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"bzip2 compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'Z'
@@ -2064,9 +1996,6 @@ case|case
 literal|'z'
 case|:
 comment|/* GNU tar, star, many others */
-if|#
-directive|if
-name|HAVE_LIBZ
 if|if
 condition|(
 name|bsdtar
@@ -2096,20 +2025,6 @@ name|create_compression
 operator|=
 name|opt
 expr_stmt|;
-else|#
-directive|else
-name|bsdtar_warnc
-argument_list|(
-literal|0
-argument_list|,
-literal|"gzip compression not supported by this version of bsdtar"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|OPTION_USE_COMPRESS_PROGRAM
