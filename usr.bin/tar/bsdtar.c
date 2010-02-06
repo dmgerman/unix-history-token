@@ -754,7 +754,7 @@ literal|0
 operator|||
 name|t
 operator|>
-literal|1024
+literal|8192
 condition|)
 name|bsdtar_errc
 argument_list|(
@@ -762,7 +762,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"Argument to -b is out of range (1..1024)"
+literal|"Argument to -b is out of range (1..8192)"
 argument_list|)
 expr_stmt|;
 name|bsdtar
