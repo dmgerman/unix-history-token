@@ -248,6 +248,12 @@ directive|include
 file|"bsdtar.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"err.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -506,8 +512,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -543,8 +547,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -605,8 +607,6 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -618,8 +618,6 @@ else|#
 directive|else
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -676,8 +674,6 @@ name|ARCHIVE_OK
 condition|)
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -710,8 +706,6 @@ block|{
 comment|/* Retryable error: try again */
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Retrying..."
@@ -934,8 +928,6 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -963,8 +955,6 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -992,8 +982,6 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -1225,8 +1213,6 @@ name|ARCHIVE_OK
 condition|)
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
