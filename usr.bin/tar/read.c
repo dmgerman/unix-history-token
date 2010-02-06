@@ -677,6 +677,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
+literal|"%s"
+argument_list|,
 name|archive_error_string
 argument_list|(
 name|a

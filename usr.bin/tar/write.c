@@ -1025,6 +1025,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
+literal|"%s"
+argument_list|,
 name|archive_error_string
 argument_list|(
 name|a
@@ -1049,6 +1051,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|"%s"
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -1080,7 +1084,7 @@ modifier|*
 name|bsdtar
 parameter_list|)
 block|{
-name|off_t
+name|int64_t
 name|end_offset
 decl_stmt|;
 name|int
@@ -1381,6 +1385,8 @@ name|format
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|bsdtar
@@ -1391,8 +1397,18 @@ name|end_offset
 argument_list|,
 name|SEEK_SET
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|bsdtar_errc
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Could not seek to archive end"
+argument_list|)
 expr_stmt|;
-comment|/* XXX check return val XXX */
 if|if
 condition|(
 name|ARCHIVE_OK
@@ -1411,6 +1427,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|"%s"
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -1436,6 +1454,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|"%s"
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -1478,7 +1498,7 @@ modifier|*
 name|bsdtar
 parameter_list|)
 block|{
-name|off_t
+name|int64_t
 name|end_offset
 decl_stmt|;
 name|struct
@@ -1785,6 +1805,8 @@ argument_list|,
 name|DEFAULT_BYTES_PER_BLOCK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|bsdtar
@@ -1795,14 +1817,16 @@ name|end_offset
 argument_list|,
 name|SEEK_SET
 argument_list|)
-expr_stmt|;
-name|ftruncate
+operator|<
+literal|0
+condition|)
+name|bsdtar_errc
 argument_list|(
-name|bsdtar
-operator|->
-name|fd
+literal|1
 argument_list|,
-name|end_offset
+name|errno
+argument_list|,
+literal|"Could not seek to archive end"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1823,6 +1847,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|"%s"
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -1848,6 +1874,8 @@ argument_list|(
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|"%s"
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -2138,9 +2166,9 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-literal|1
-argument_list|,
 literal|0
+argument_list|,
+literal|"%s"
 argument_list|,
 literal|"Missing argument for -C"
 argument_list|)
@@ -2683,10 +2711,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|archive_errno
-argument_list|(
-name|ina
-argument_list|)
+name|rc
+operator|!=
+name|ARCHIVE_OK
 condition|)
 block|{
 name|bsdtar_warnc
@@ -3014,7 +3041,7 @@ decl_stmt|;
 name|ssize_t
 name|bytes_written
 decl_stmt|;
-name|off_t
+name|int64_t
 name|progress
 init|=
 literal|0
@@ -3540,6 +3567,8 @@ name|bsdtar
 operator|->
 name|diskreader
 argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -4196,7 +4225,7 @@ decl_stmt|;
 name|ssize_t
 name|bytes_written
 decl_stmt|;
-name|off_t
+name|int64_t
 name|progress
 init|=
 literal|0
