@@ -2562,7 +2562,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-E Erase previuos disk content\n"
+literal|"\t-E Erase previous disk content\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2597,7 +2597,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-R regression test, supress random factors\n"
+literal|"\t-R regression test, suppress random factors\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
