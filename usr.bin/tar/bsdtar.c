@@ -306,6 +306,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MINGW32__
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|_CRT_glob
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disable broken CRT globbing. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
