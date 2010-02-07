@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: ncache.h,v 1.25 2008/09/25 04:02:39 tbox Exp $ */
+comment|/* $Id: ncache.h,v 1.25.142.1 2009/12/31 20:29:21 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -120,7 +120,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Convert the authority data from 'message' into a negative cache  * rdataset, and store it in 'cache' at 'node' with a TTL limited to  * 'maxttl'.  *  * The 'covers' argument is the RR type whose nonexistence we are caching,  * or dns_rdatatype_any when caching a NXDOMAIN response.  *  * 'optout' indicates a DNS_RATASETATTR_OPTOUT should be set.  *  * Note:  *\li	If 'addedrdataset' is not NULL, then it will be attached to the added  *	rdataset.  See dns_db_addrdataset() for more details.  *  * Requires:  *\li	'message' is a valid message with a properly formatting negative cache  *	authority section.  *  *\li	The requirements of dns_db_addrdataset() apply to 'cache', 'node',  *	'now', and 'addedrdataset'.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *  *\li	Any result code of dns_db_addrdataset() is a possible result code  *	of dns_ncache_add().  */
+comment|/*%<  * Convert the authority data from 'message' into a negative cache  * rdataset, and store it in 'cache' at 'node' with a TTL limited to  * 'maxttl'.  *  * The 'covers' argument is the RR type whose nonexistence we are caching,  * or dns_rdatatype_any when caching a NXDOMAIN response.  *  * 'optout' indicates a DNS_RDATASETATTR_OPTOUT should be set.  *  * Note:  *\li	If 'addedrdataset' is not NULL, then it will be attached to the added  *	rdataset.  See dns_db_addrdataset() for more details.  *  * Requires:  *\li	'message' is a valid message with a properly formatting negative cache  *	authority section.  *  *\li	The requirements of dns_db_addrdataset() apply to 'cache', 'node',  *	'now', and 'addedrdataset'.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *  *\li	Any result code of dns_db_addrdataset() is a possible result code  *	of dns_ncache_add().  */
 end_comment
 
 begin_function_decl
