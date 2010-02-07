@@ -415,7 +415,8 @@ decl_stmt|;
 comment|/* linked to name */
 block|}
 name|HD_TAR
-typedef|;
+name|__aligned
+typedef|(1);
 end_typedef
 
 begin_ifdef
@@ -659,7 +660,8 @@ decl_stmt|;
 comment|/* linked to name */
 block|}
 name|HD_USTAR
-typedef|;
+name|__aligned
+typedef|(1);
 end_typedef
 
 end_unit
