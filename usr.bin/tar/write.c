@@ -329,13 +329,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tree.h"
+file|"err.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"err.h"
+file|"tree.h"
 end_include
 
 begin_comment
@@ -3439,13 +3439,14 @@ name|lst
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * If user has asked us not to cross mount points, 		 * then don't descend into into a dir on a different 		 * device. 		 */
+comment|/* 		 * Are we about to cross to a new filesystem? 		 */
 if|if
 condition|(
 operator|!
 name|dev_recorded
 condition|)
 block|{
+comment|/* This is the initial file system. */
 name|first_dev
 operator|=
 name|lst
@@ -3457,6 +3458,29 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|lst
+operator|->
+name|st_dev
+operator|==
+name|first_dev
+condition|)
+block|{
+comment|/* The starting file system is always acceptable. */
+block|}
+elseif|else
+if|if
+condition|(
+name|descend
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* We're not descending, so no need to check. */
+block|}
+elseif|else
 if|if
 condition|(
 name|bsdtar
@@ -3464,18 +3488,16 @@ operator|->
 name|option_dont_traverse_mounts
 condition|)
 block|{
-if|if
-condition|(
-name|lst
-operator|->
-name|st_dev
-operator|!=
-name|first_dev
-condition|)
+comment|/* User has asked us not to cross mount points. */
 name|descend
 operator|=
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* We're prepared to cross a mount point. */
+comment|/* XXX TODO: check whether this filesystem is 			 * synthetic and/or local.  Add a new 			 * --local-only option to skip non-local 			 * filesystems.  Skip synthetic filesystems 			 * regardless. 			 * 			 * The results should be cached, since 			 * tree.c doesn't usually visit a directory 			 * and the directory contents together.  A simple 			 * move-to-front list should perform quite well. 			 * 			 * This is going to be heavily OS dependent: 			 * FreeBSD's statfs() in conjunction with getvfsbyname() 			 * provides all of this; NetBSD's statvfs() does 			 * most of it; other systems will vary. 			 */
 block|}
 comment|/* 		 * In -u mode, check that the file is newer than what's 		 * already in the archive; in all modes, obey --newerXXX flags. 		 */
 if|if
