@@ -239,6 +239,12 @@ directive|include
 file|"err.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"matching.h"
+end_include
+
 begin_comment
 comment|/*  * Per POSIX.1-1988, tar defaults to reading/writing archives to/from  * the default tape device for the system.  Pick something reasonable here.  */
 end_comment
@@ -1035,9 +1041,12 @@ case|:
 comment|/* GNU tar */
 if|if
 condition|(
-name|exclude
+name|lafe_exclude
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 name|bsdtar
 operator|->
@@ -1175,9 +1184,12 @@ case|:
 comment|/* 			 * Noone else has the @archive extension, so 			 * noone else needs this to filter entries 			 * when transforming archives. 			 */
 if|if
 condition|(
-name|include
+name|lafe_include
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 name|bsdtar
 operator|->
@@ -1895,9 +1907,12 @@ case|:
 comment|/* GNU tar */
 if|if
 condition|(
-name|exclude_from_file
+name|lafe_exclude_from_file
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|,
 name|bsdtar
 operator|->
@@ -2413,9 +2428,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|cleanup_exclusions
+name|lafe_cleanup_exclusions
 argument_list|(
+operator|&
 name|bsdtar
+operator|->
+name|matching
 argument_list|)
 expr_stmt|;
 if|#
