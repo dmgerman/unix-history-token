@@ -88,26 +88,12 @@ end_macro
 begin_define
 define|#
 directive|define
-name|ACPI_SONY_GET_BRIGHTNESS
-value|"GBRT"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SONY_SET_BRIGHTNESS
-value|"SBRT"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_SONY_GET_PID
 value|"GPID"
 end_define
 
 begin_comment
-comment|/*  * SNY5001  *  [GS]BRT [GS]PBR [GS]CTR [GS]PCR [GS]CMI [CDPW GCDP]? GWDP PWAK PWRN   *  */
+comment|/*  * SNY5001  *   This is the ACPI handle for the "Sony Notebook Control" driver under  *   Windows.  *   It provides several methods within the ACPI namespace, including:  *  [GS]BRT [GS]PBR [GS]CTR [GS]PCR [GS]CMI [CDPW GCDP]? GWDP PWAK PWRN   *  * SNY6001  *   This is the ACPI handle for the "Sony Programmable I/O" driver under  *   Windows.  *   It is not yet supported by this driver, but provides control over the  *   power to the bluetooth, built-in camera and HSDPA modem devices in some  *   laptops, and also allows some control of the fan speed.  */
 end_comment
 
 begin_struct
@@ -158,13 +144,33 @@ literal|"Display Brightness"
 block|}
 block|,
 block|{
-literal|"ctr"
+literal|"brightness_default"
+block|,
+literal|"GPBR"
+block|,
+literal|"SPBR"
+block|,
+literal|"Default Display Brightness"
+block|}
+block|,
+block|{
+literal|"contrast"
 block|,
 literal|"GCTR"
 block|,
 literal|"SCTR"
 block|,
-literal|"??"
+literal|"Display Contrast"
+block|}
+block|,
+block|{
+literal|"bass_gain"
+block|,
+literal|"GMGB"
+block|,
+literal|"SMGB"
+block|,
+literal|"Multimedia Bass Gain"
 block|}
 block|,
 block|{
@@ -180,7 +186,7 @@ block|,
 if|#
 directive|if
 literal|0
-block|{ "cmi", "GCMI", "SCMI", "????"},
+block|{ "cmi", "GCMI", "SCMI", "???"},
 endif|#
 directive|endif
 block|{
@@ -190,7 +196,7 @@ literal|"GWDP"
 block|,
 name|NULL
 block|,
-literal|"?????"
+literal|"???"
 block|}
 block|,
 block|{
@@ -212,6 +218,16 @@ block|,
 literal|"AZPW"
 block|,
 literal|"Audio Power"
+block|}
+block|,
+block|{
+literal|"lnp"
+block|,
+literal|"GLNP"
+block|,
+literal|"LNPW"
+block|,
+literal|"LAN Power"
 block|}
 block|,
 block|{
