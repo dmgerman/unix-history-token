@@ -395,6 +395,8 @@ condition|)
 block|{
 name|sb_enable_intsrc
 argument_list|(
+literal|0
+argument_list|,
 name|map
 operator|->
 name|intsrc

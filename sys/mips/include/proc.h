@@ -35,6 +35,8 @@ name|int
 name|md_upte
 index|[
 name|KSTACK_PAGES
+operator|-
+literal|1
 index|]
 decl_stmt|;
 comment|/* ptes for mapping u pcb */

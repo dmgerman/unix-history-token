@@ -10008,7 +10008,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|isp_save_xs_tgt
+name|isp_allocate_xs_tgt
 argument_list|(
 name|isp
 argument_list|,
@@ -23105,12 +23105,13 @@ expr_stmt|;
 if|if
 condition|(
 name|handle
+operator|!=
+name|ISP_HANDLE_FREE
 condition|)
 block|{
-comment|/* 		 * Make sure the command is *really* dead before we 		 * release the handle (and DMA resources) for reuse. 		 */
-operator|(
-name|void
-operator|)
+comment|/* 		 * Try and make sure the command is really dead before 		 * we release the handle (and DMA resources) for reuse. 		 * 		 * If we are successful in aborting the command then 		 * we're done here because we'll get the command returned 		 * back separately. 		 */
+if|if
+condition|(
 name|isp_control
 argument_list|(
 name|isp
@@ -23119,8 +23120,33 @@ name|ISPCTL_ABORT_CMD
 argument_list|,
 name|xs
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return;
+block|}
+comment|/* 		 * Note that after calling the above, the command may in 		 * fact have been completed. 		 */
+name|xs
+operator|=
+name|isp_find_xs
+argument_list|(
+name|isp
+argument_list|,
+name|handle
+argument_list|)
 expr_stmt|;
-comment|/* 		 * After this point, the comamnd is really dead. 		 */
+comment|/* 		 * If the command no longer exists, then we won't 		 * be able to find the xs again with this handle. 		 */
+if|if
+condition|(
+name|xs
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
+comment|/* 		 * After this point, the command is really dead. 		 */
 if|if
 condition|(
 name|XS_XFRLEN
@@ -23146,15 +23172,15 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
-name|xpt_print
+name|isp_prt
 argument_list|(
-name|xs
-operator|->
-name|ccb_h
-operator|.
-name|path
+name|isp
 argument_list|,
-literal|"watchdog timeout for handle 0x%x\n"
+name|ISP_LOGERR
+argument_list|,
+literal|"%s: timeout for handle 0x%x"
+argument_list|,
+name|__func__
 argument_list|,
 name|handle
 argument_list|)

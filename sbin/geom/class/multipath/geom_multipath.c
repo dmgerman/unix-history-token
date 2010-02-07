@@ -180,6 +180,20 @@ literal|"[-v] name prov ..."
 block|}
 block|,
 block|{
+literal|"destroy"
+block|,
+name|G_FLAG_VERBOSE
+block|,
+name|NULL
+block|,
+name|G_NULL_OPTS
+block|,
+name|NULL
+block|,
+literal|"[-v] prov ..."
+block|}
+block|,
+block|{
 literal|"clear"
 block|,
 name|G_FLAG_VERBOSE

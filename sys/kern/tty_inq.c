@@ -75,72 +75,6 @@ begin_comment
 comment|/*  * TTY input queue buffering.  *  * Unlike the output queue, the input queue has more features that are  * needed to properly implement various features offered by the TTY  * interface:  *  * - Data can be removed from the tail of the queue, which is used to  *   implement backspace.  * - Once in a while, input has to be `canonicalized'. When ICANON is  *   turned on, this will be done after a CR has been inserted.  *   Otherwise, it should be done after any character has been inserted.  * - The input queue can store one bit per byte, called the quoting bit.  *   This bit is used by TTYDISC to make backspace work on quoted  *   characters.  *  * In most cases, there is probably less input than output, so unlike  * the outq, we'll stick to 128 byte blocks here.  */
 end_comment
 
-begin_comment
-comment|/* Statistics. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|ttyinq_nfast
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|tty_inq_nfast
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|ttyinq_nfast
-argument_list|,
-literal|0
-argument_list|,
-literal|"Unbuffered reads to userspace on input"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|ttyinq_nslow
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|tty_inq_nslow
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|ttyinq_nslow
-argument_list|,
-literal|0
-argument_list|,
-literal|"Buffered reads to userspace on input"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -583,14 +517,6 @@ operator|->
 name|ti_end
 condition|)
 block|{
-name|atomic_add_long
-argument_list|(
-operator|&
-name|ttyinq_nfast
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Fast path: zero copy. Remove the first block, 			 * so we can unlock the TTY temporarily. 			 */
 name|TTYINQ_REMOVE_HEAD
 argument_list|(
@@ -682,14 +608,6 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
-name|atomic_add_long
-argument_list|(
-operator|&
-name|ttyinq_nslow
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Slow path: store data in a temporary buffer. 			 */
 name|memcpy
 argument_list|(

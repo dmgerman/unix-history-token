@@ -3381,7 +3381,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"NOP ommand failed (%x)"
+literal|"NOP command failed (%x)"
 argument_list|,
 name|mbs
 operator|.
@@ -23345,7 +23345,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|isp_save_xs
+name|isp_allocate_xs
 argument_list|(
 name|isp
 argument_list|,
@@ -27371,29 +27371,15 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
-name|sp
-operator|->
-name|req_handle
-operator|!=
-name|ISP_SPCL_HANDLE
-operator|)
-operator|&&
-operator|(
-name|sp
-operator|->
-name|req_handle
-operator|>
+operator|!
+name|ISP_VALID_HANDLE
+argument_list|(
 name|isp
-operator|->
-name|isp_maxcmds
-operator|||
+argument_list|,
 name|sp
 operator|->
 name|req_handle
-operator|<
-literal|1
-operator|)
+argument_list|)
 condition|)
 block|{
 name|isp_prt
@@ -27402,7 +27388,7 @@ name|isp
 argument_list|,
 name|ISP_LOGERR
 argument_list|,
-literal|"bad request handle %d (type 0x%x)"
+literal|"bad request handle 0x%x (iocb type 0x%x)"
 argument_list|,
 name|sp
 operator|->
@@ -27491,12 +27477,6 @@ operator|&&
 name|ts
 operator|!=
 name|RQCS_RESET_OCCURRED
-operator|&&
-name|sp
-operator|->
-name|req_handle
-operator|!=
-name|ISP_SPCL_HANDLE
 condition|)
 block|{
 name|isp_prt
@@ -29838,7 +29818,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 			 * We've had problems with data corruption occuring on 			 * commands that complete (with no apparent error) after 			 * we receive a LIP. This has been observed mostly on 			 * Local Loop topologies. To be safe, let's just mark 			 * all active commands as dead. 			 */
+comment|/* 			 * We've had problems with data corruption occuring on 			 * commands that complete (with no apparent error) after 			 * we receive a LIP. This has been observed mostly on 			 * Local Loop topologies. To be safe, let's just mark 			 * all active initiator commands as dead. 			 */
 if|if
 condition|(
 name|topo
@@ -29877,8 +29857,13 @@ name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
-name|xs
+name|isp_hdl_t
+modifier|*
+name|hdp
+decl_stmt|;
+name|hdp
 operator|=
+operator|&
 name|isp
 operator|->
 name|isp_xflist
@@ -29888,13 +29873,24 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|xs
-operator|==
-name|NULL
+name|ISP_H2HT
+argument_list|(
+name|hdp
+operator|->
+name|handle
+argument_list|)
+operator|!=
+name|ISP_HANDLE_INITIATOR
 condition|)
 block|{
 continue|continue;
 block|}
+name|xs
+operator|=
+name|hdp
+operator|->
+name|cmd
+expr_stmt|;
 if|if
 condition|(
 name|XS_CHANNEL

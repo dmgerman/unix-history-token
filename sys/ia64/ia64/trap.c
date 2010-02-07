@@ -3089,7 +3089,7 @@ block|}
 case|case
 name|IA64_VEC_LOWER_PRIVILEGE_TRANSFER
 case|:
-comment|/* 		 * The lower-privilege transfer trap is used by the EPC 		 * syscall code to trigger re-entry into the kernel when the 		 * process should be single stepped. The problem is that 		 * there's no way to set single stepping directly without 		 * using the rfi instruction. So instead we enable the 		 * lower-privilege transfer trap and when we get here we 		 * know that the process is about to enter userland (and 		 * has already lowered its privilege). 		 * However, there's another gotcha. When the process has 		 * lowered it's privilege it's still running in the gateway 		 * page. If we enable single stepping, we'll be stepping 		 * the code in the gateway page. In and by itself this is 		 * not a problem, but it's an address debuggers won't know 		 * anything about. Hence, it can only cause confusion. 		 * We know that we need to branch to get out of the gateway 		 * page, so what we do here is enable the taken branch 		 * trap and just let the process continue. When we branch 		 * out of the gateway page we'll get back into the kernel 		 * and then we enable single stepping. 		 * Since this a rather round-about way of enabling single 		 * stepping, don't make things complicated even more by 		 * calling userret() and do_ast(). We do that later... 		 */
+comment|/* 		 * The lower-privilege transfer trap is used by the EPC 		 * syscall code to trigger re-entry into the kernel when the 		 * process should be single stepped. The problem is that 		 * there's no way to set single stepping directly without 		 * using the rfi instruction. So instead we enable the 		 * lower-privilege transfer trap and when we get here we 		 * know that the process is about to enter userland (and 		 * has already lowered its privilege). 		 * However, there's another gotcha. When the process has 		 * lowered it's privilege it's still running in the gateway 		 * page. If we enable single stepping, we'll be stepping 		 * the code in the gateway page. In and by itself this is 		 * not a problem, but it's an address debuggers won't know 		 * anything about. Hence, it can only cause confusion. 		 * We know that we need to branch to get out of the gateway 		 * page, so what we do here is enable the taken branch 		 * trap and just let the process continue. When we branch 		 * out of the gateway page we'll get back into the kernel 		 * and then we enable single stepping. 		 * Since this a rather round-about way of enabling single 		 * stepping, don't make things even more complicated by 		 * calling userret() and do_ast(). We do that later... 		 */
 name|tf
 operator|->
 name|tf_special
@@ -3111,7 +3111,7 @@ return|return;
 case|case
 name|IA64_VEC_TAKEN_BRANCH_TRAP
 case|:
-comment|/* 		 * Don't assume there aren't any branches other than the 		 * branch that takes us out of the gateway page. Check the 		 * iip and raise SIGTRAP only when it's an user address. 		 */
+comment|/* 		 * Don't assume there aren't any branches other than the 		 * branch that takes us out of the gateway page. Check the 		 * iip and enable single stepping only when it's an user 		 * address. 		 */
 if|if
 condition|(
 name|tf
@@ -3132,11 +3132,15 @@ operator|&=
 operator|~
 name|IA64_PSR_TB
 expr_stmt|;
-name|sig
-operator|=
-name|SIGTRAP
+name|tf
+operator|->
+name|tf_special
+operator|.
+name|psr
+operator||=
+name|IA64_PSR_SS
 expr_stmt|;
-break|break;
+return|return;
 case|case
 name|IA64_VEC_IA32_EXCEPTION
 case|:

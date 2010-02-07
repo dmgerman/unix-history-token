@@ -242,6 +242,8 @@ name|struct
 name|uidinfo
 modifier|*
 name|uip
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(

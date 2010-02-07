@@ -1526,17 +1526,6 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * Special Internal Handle for IOCBs  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_SPCL_HANDLE
-value|0xa5dead5a
-end_define
-
-begin_comment
 comment|/*  * Command Structure Definitions  */
 end_comment
 

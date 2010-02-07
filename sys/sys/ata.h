@@ -97,6 +97,10 @@ directive|define
 name|ATA_DRQ_FAST
 value|0x0040
 comment|/* accel 50 us delay */
+define|#
+directive|define
+name|ATA_RESP_INCOMPLETE
+value|0x0004
 comment|/*001*/
 name|u_int16_t
 name|cylinders
@@ -1683,6 +1687,39 @@ end_define
 
 begin_comment
 comment|/* disable write cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_ENAB_PUIS
+value|0x06
+end_define
+
+begin_comment
+comment|/* enable PUIS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_DIS_PUIS
+value|0x86
+end_define
+
+begin_comment
+comment|/* disable PUIS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_PUIS_SPINUP
+value|0x07
+end_define
+
+begin_comment
+comment|/* PUIS spin-up */
 end_comment
 
 begin_define

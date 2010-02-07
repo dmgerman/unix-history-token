@@ -425,6 +425,22 @@ argument_list|,
 literal|"SIOCGVH"
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+name|carpr
+operator|.
+name|carpr_key
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|carpr
+operator|.
+name|carpr_key
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX Should hash the password into the key here, perhaps? */
 name|strlcpy
 argument_list|(

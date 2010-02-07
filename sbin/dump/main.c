@@ -3803,6 +3803,12 @@ operator|=
 name|flagsp
 expr_stmt|;
 block|}
+else|else
+name|free
+argument_list|(
+name|flagsp
+argument_list|)
+expr_stmt|;
 comment|/* Copy remaining arguments. */
 while|while
 condition|(

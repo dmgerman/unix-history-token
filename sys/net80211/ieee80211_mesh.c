@@ -7337,6 +7337,7 @@ name|meshid
 operator|!=
 name|NULL
 condition|)
+block|{
 name|IEEE80211_VERIFY_ELEMENT
 argument_list|(
 argument|meshid
@@ -7356,6 +7357,7 @@ argument_list|,
 argument|return
 argument_list|)
 empty_stmt|;
+block|}
 comment|/* XXX find a better class or define it's own */
 name|IEEE80211_NOTE_MAC
 argument_list|(

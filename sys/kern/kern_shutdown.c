@@ -612,6 +612,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|SHUTDOWN_PRI_FIRST
+operator|+
+literal|100
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_REGISTER

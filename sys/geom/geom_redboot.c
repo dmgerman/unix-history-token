@@ -1172,6 +1172,17 @@ literal|"cfi"
 argument_list|,
 literal|3
 argument_list|)
+operator|&&
+name|strncmp
+argument_list|(
+name|pp
+operator|->
+name|name
+argument_list|,
+literal|"flash/spi"
+argument_list|,
+literal|9
+argument_list|)
 condition|)
 return|return
 operator|(
