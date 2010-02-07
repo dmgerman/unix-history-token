@@ -122,23 +122,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_FNMATCH_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<fnmatch.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_GRP_H
 end_ifdef
 
@@ -2538,6 +2521,7 @@ comment|/*  * Archive names specified in file.  *  * Unless --null was specified
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|archive_names_from_file
 parameter_list|(
@@ -3340,6 +3324,8 @@ argument_list|(
 name|tree
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|int
@@ -3889,13 +3875,12 @@ expr_stmt|;
 comment|/* Non-regular files get archived with zero size. */
 if|if
 condition|(
-operator|!
-name|S_ISREG
+name|archive_entry_filetype
 argument_list|(
-name|st
-operator|->
-name|st_mode
+name|entry
 argument_list|)
+operator|!=
+name|AE_IFREG
 condition|)
 name|archive_entry_set_size
 argument_list|(
@@ -4501,6 +4486,7 @@ comment|/*  * Test if the specified file is new enough to include in the archive
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|new_enough
 parameter_list|(
@@ -4925,6 +4911,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_for_append
 parameter_list|(
