@@ -1310,17 +1310,27 @@ name|V_ip6_use_defzone
 value|VNET(ip6_use_defzone)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|pfil_head
+argument_list|,
 name|inet6_pfil_hook
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* packet filter hooks */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|V_inet6_pfil_hook
+value|VNET(inet6_pfil_hook)
+end_define
 
 begin_decl_stmt
 specifier|extern

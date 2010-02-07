@@ -1278,17 +1278,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|struct
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
 name|pfil_head
+argument_list|,
 name|inet_pfil_hook
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* packet filter hooks */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|V_inet_pfil_hook
+value|VNET(inet_pfil_hook)
+end_define
 
 begin_function_decl
 name|void
@@ -1312,12 +1322,12 @@ name|ip_fw_args
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-specifier|extern
+begin_typedef
+typedef|typedef
 name|int
 function_decl|(
 modifier|*
-name|ip_fw_chk_ptr
+name|ip_fw_chk_ptr_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -1326,14 +1336,14 @@ modifier|*
 name|args
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
 
-begin_function_decl
-specifier|extern
+begin_typedef
+typedef|typedef
 name|int
 function_decl|(
 modifier|*
-name|ip_fw_ctl_ptr
+name|ip_fw_ctl_ptr_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -1341,7 +1351,41 @@ name|sockopt
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|ip_fw_chk_ptr_t
+argument_list|,
+name|ip_fw_chk_ptr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|ip_fw_ctl_ptr_t
+argument_list|,
+name|ip_fw_ctl_ptr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ip_fw_chk_ptr
+value|VNET(ip_fw_chk_ptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip_fw_ctl_ptr
+value|VNET(ip_fw_ctl_ptr)
+end_define
 
 begin_function_decl
 specifier|extern
