@@ -341,6 +341,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SYSCTL_DESCR
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -358,6 +364,11 @@ literal|"debug collection for aic79xx controllers"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -377,6 +388,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SYSCTL_DESCR
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -394,6 +411,11 @@ literal|"Fatal errors"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
