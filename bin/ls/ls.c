@@ -456,6 +456,17 @@ comment|/* long listing format */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|f_nofollow
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't follow symbolic link arguments */
+end_comment
+
+begin_decl_stmt
 name|int
 name|f_nonprint
 decl_stmt|;
@@ -1112,6 +1123,10 @@ name|fts_options
 operator||=
 name|FTS_COMFOLLOW
 expr_stmt|;
+name|f_nofollow
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'G'
@@ -1138,6 +1153,10 @@ name|fts_options
 operator||=
 name|FTS_LOGICAL
 expr_stmt|;
+name|f_nofollow
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'P'
@@ -1155,6 +1174,10 @@ expr_stmt|;
 name|fts_options
 operator||=
 name|FTS_PHYSICAL
+expr_stmt|;
+name|f_nofollow
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1642,9 +1665,12 @@ name|fts_options
 operator||=
 name|FTS_NOSTAT
 expr_stmt|;
-comment|/* 	 * If not -F, -d or -l options, follow any symbolic links listed on 	 * the command line. 	 */
+comment|/* 	 * If not -F, -P, -d or -l options, follow any symbolic links listed on 	 * the command line. 	 */
 if|if
 condition|(
+operator|!
+name|f_nofollow
+operator|&&
 operator|!
 name|f_longform
 operator|&&
