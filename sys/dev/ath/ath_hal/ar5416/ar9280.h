@@ -62,7 +62,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR9285_DEFAULT_RXCHAINMASK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR9280_DEFAULT_TXCHAINMASK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR9285_DEFAULT_TXCHAINMASK
 value|1
 end_define
 
