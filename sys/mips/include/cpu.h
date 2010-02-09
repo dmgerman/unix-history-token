@@ -471,6 +471,26 @@ name|HW_INT_MASK
 value|(ALL_INT_MASK& ~SOFT_INT_MASK)
 end_define
 
+begin_define
+define|#
+directive|define
+name|soft_int_mask
+parameter_list|(
+name|softintr
+parameter_list|)
+value|(1<< ((softintr) + 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|hard_int_mask
+parameter_list|(
+name|hardintr
+parameter_list|)
+value|(1<< ((hardintr) + 10))
+end_define
+
 begin_comment
 comment|/*  * The bits in the cause register.  *  *	CR_BR_DELAY	Exception happened in branch delay slot.  *	CR_COP_ERR	Coprocessor error.  *	CR_IP		Interrupt pending bits defined below.  *	CR_EXC_CODE	The exception type (see exception codes below).  */
 end_comment

@@ -152,6 +152,33 @@ parameter_list|)
 value|(++PCPUP->pc_ ## member)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_comment
+comment|/*  * Instantiate the wired TLB entry at PCPU_TLB_ENTRY to map 'pcpu' at 'pcpup'.  */
+end_comment
+
+begin_function_decl
+name|void
+name|mips_pcpu_tlb_init
+parameter_list|(
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
