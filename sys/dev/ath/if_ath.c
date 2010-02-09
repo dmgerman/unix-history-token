@@ -10592,8 +10592,6 @@ return|return
 literal|0
 return|;
 block|}
-operator|*
-operator|/
 if|if
 condition|(
 name|vap
