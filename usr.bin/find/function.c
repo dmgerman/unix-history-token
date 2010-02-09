@@ -89,12 +89,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/timeb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dirent.h>
 end_include
 
@@ -5187,13 +5181,6 @@ operator|=
 name|get_date
 argument_list|(
 name|fn_or_tspec
-argument_list|,
-operator|(
-expr|struct
-name|timeb
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

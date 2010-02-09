@@ -100,21 +100,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct_decl
-struct_decl|struct
-name|timeb
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|time_t
 name|get_date
 parameter_list|(
 name|char
-modifier|*
-parameter_list|,
-name|struct
-name|timeb
 modifier|*
 parameter_list|)
 function_decl|;
