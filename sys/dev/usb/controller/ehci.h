@@ -1558,6 +1558,11 @@ directive|define
 name|EHCI_SCFLG_LOSTINTRBUG
 value|0x0040
 comment|/* workaround for VIA / ATI chipsets */
+define|#
+directive|define
+name|EHCI_SCFLG_IAADBUG
+value|0x0080
+comment|/* workaround for nVidia chipsets */
 name|uint8_t
 name|sc_offs
 decl_stmt|;
