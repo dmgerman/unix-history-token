@@ -111,6 +111,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|noutputs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* how much outputs before we exit */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|numeric_addr
 decl_stmt|;
 end_decl_stmt
