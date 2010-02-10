@@ -3579,7 +3579,7 @@ argument_list|,
 name|HAL_CIPHER_CLR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for multicast key sarch support. 	 */
+comment|/* 	 * Check for multicast key search support. 	 */
 if|if
 condition|(
 name|ath_hal_hasmcastkeysearch
