@@ -1967,7 +1967,7 @@ name|uq
 operator|->
 name|uq_key
 argument_list|,
-name|UMTX_SHARED_QUEUE
+name|q
 argument_list|)
 expr_stmt|;
 if|if
