@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/hwfunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -118,24 +124,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uint64_t
 name|cycles_per_tick
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uint64_t
 name|cycles_per_usec
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uint64_t
-name|cycles_per_sec
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|uint64_t
 name|cycles_per_hz
 decl_stmt|,
@@ -146,6 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int32_t
 name|counter_upper
 init|=
@@ -154,29 +158,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int32_t
 name|counter_lower_last
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tick_started
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|platform_initclocks
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_struct
 struct|struct
@@ -330,22 +318,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|tick_started
-condition|)
-block|{
 name|tc_init
 argument_list|(
 operator|&
 name|counter_timecounter
 argument_list|)
 expr_stmt|;
-name|tick_started
-operator|++
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -480,10 +458,6 @@ operator|*
 literal|1000
 operator|)
 expr_stmt|;
-name|cycles_per_sec
-operator|=
-name|counter_freq
-expr_stmt|;
 name|counter_timecounter
 operator|.
 name|tc_frequency
@@ -493,8 +467,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"hz=%d cyl_per_tick:%jd cyl_per_usec:%jd freq:%jd "
-literal|"cyl_per_hz:%jd cyl_per_stathz:%jd cyl_per_profhz:%jd "
-literal|"cyl_per_sec:%jd\n"
+literal|"cyl_per_hz:%jd cyl_per_stathz:%jd cyl_per_profhz:%jd\n"
 argument_list|,
 name|hz
 argument_list|,
@@ -509,8 +482,6 @@ argument_list|,
 name|cycles_per_stathz
 argument_list|,
 name|cycles_per_profhz
-argument_list|,
-name|cycles_per_sec
 argument_list|)
 expr_stmt|;
 name|set_cputicker
@@ -1009,7 +980,7 @@ directive|if
 literal|0
 comment|/* TARGET_OCTEON */
 comment|/* Run the FreeBSD display once every hz ticks  */
-block|wheel_run += cycles_per_tick; 	if (wheel_run>= cycles_per_sec) { 		wheel_run = 0; 		octeon_led_run_wheel(); 	}
+block|wheel_run += cycles_per_tick; 	if (wheel_run>= cycles_per_usec * 1000000ULL) { 		wheel_run = 0; 		octeon_led_run_wheel(); 	}
 endif|#
 directive|endif
 return|return
