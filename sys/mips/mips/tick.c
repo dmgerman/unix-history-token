@@ -138,6 +138,10 @@ end_decl_stmt
 begin_decl_stmt
 name|uint64_t
 name|cycles_per_hz
+decl_stmt|,
+name|cycles_per_stathz
+decl_stmt|,
+name|cycles_per_profhz
 decl_stmt|;
 end_decl_stmt
 
@@ -416,6 +420,14 @@ name|int
 name|double_count
 parameter_list|)
 block|{
+name|stathz
+operator|=
+name|hz
+expr_stmt|;
+name|profhz
+operator|=
+name|hz
+expr_stmt|;
 comment|/* 	 * XXX: Do not use printf here: uart code 8250 may use DELAY so this 	 * function should  be called before cninit. 	 */
 name|counter_freq
 operator|=
@@ -444,6 +456,18 @@ name|counter_freq
 operator|/
 name|hz
 expr_stmt|;
+name|cycles_per_stathz
+operator|=
+name|counter_freq
+operator|/
+name|stathz
+expr_stmt|;
+name|cycles_per_profhz
+operator|=
+name|counter_freq
+operator|/
+name|profhz
+expr_stmt|;
 name|cycles_per_usec
 operator|=
 name|counter_freq
@@ -468,7 +492,9 @@ name|counter_freq
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"hz=%d cyl_per_hz:%jd cyl_per_usec:%jd freq:%jd cyl_per_hz:%jd cyl_per_sec:%jd\n"
+literal|"hz=%d cyl_per_tick:%jd cyl_per_usec:%jd freq:%jd "
+literal|"cyl_per_hz:%jd cyl_per_stathz:%jd cyl_per_profhz:%jd "
+literal|"cyl_per_sec:%jd\n"
 argument_list|,
 name|hz
 argument_list|,
@@ -479,6 +505,10 @@ argument_list|,
 name|counter_freq
 argument_list|,
 name|cycles_per_hz
+argument_list|,
+name|cycles_per_stathz
+argument_list|,
+name|cycles_per_profhz
 argument_list|,
 name|cycles_per_sec
 argument_list|)
@@ -900,7 +930,7 @@ name|cpu_ticks
 operator|->
 name|stat_ticks
 operator|+=
-name|stathz
+name|cycles_per_tick
 expr_stmt|;
 if|if
 condition|(
@@ -908,14 +938,14 @@ name|cpu_ticks
 operator|->
 name|stat_ticks
 operator|>=
-name|cycles_per_hz
+name|cycles_per_stathz
 condition|)
 block|{
 name|cpu_ticks
 operator|->
 name|stat_ticks
 operator|-=
-name|cycles_per_hz
+name|cycles_per_stathz
 expr_stmt|;
 name|statclock
 argument_list|(
@@ -933,7 +963,7 @@ name|cpu_ticks
 operator|->
 name|prof_ticks
 operator|+=
-name|profhz
+name|cycles_per_tick
 expr_stmt|;
 if|if
 condition|(
@@ -941,14 +971,14 @@ name|cpu_ticks
 operator|->
 name|prof_ticks
 operator|>=
-name|cycles_per_hz
+name|cycles_per_profhz
 condition|)
 block|{
 name|cpu_ticks
 operator|->
 name|prof_ticks
 operator|-=
-name|cycles_per_hz
+name|cycles_per_profhz
 expr_stmt|;
 if|if
 condition|(
