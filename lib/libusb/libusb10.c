@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -40,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -58,19 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/filio.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
 end_include
 
 begin_include
@@ -309,6 +303,9 @@ modifier|*
 name|debug
 decl_stmt|;
 name|int
+name|flag
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|ctx
@@ -469,11 +466,13 @@ operator|)
 return|;
 block|}
 comment|/* set non-blocking mode on the control pipe to avoid deadlock */
-name|ret
+name|flag
 operator|=
 literal|1
 expr_stmt|;
-name|ioctl
+name|ret
+operator|=
+name|fcntl
 argument_list|(
 name|ctx
 operator|->
@@ -482,17 +481,29 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|FIONBIO
+name|O_NONBLOCK
 argument_list|,
 operator|&
-name|ret
+name|flag
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
 name|ret
+operator|!=
+operator|-
+literal|1
+operator|&&
+literal|"Couldn't set O_NONBLOCK for ctx->ctrl_pipe[0]"
+argument_list|)
+expr_stmt|;
+name|flag
 operator|=
 literal|1
 expr_stmt|;
-name|ioctl
+name|ret
+operator|=
+name|fcntl
 argument_list|(
 name|ctx
 operator|->
@@ -501,10 +512,20 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|FIONBIO
+name|O_NONBLOCK
 argument_list|,
 operator|&
+name|flag
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|ret
+operator|!=
+operator|-
+literal|1
+operator|&&
+literal|"Couldn't set O_NONBLOCK for ctx->ctrl_pipe[1]"
 argument_list|)
 expr_stmt|;
 name|libusb10_add_pollfd
