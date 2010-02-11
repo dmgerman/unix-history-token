@@ -177,29 +177,40 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* -G */
+comment|/* -G or -F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAG_DO_ANNOTATE
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* -m */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAG_DO_TOP
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* -T */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FLAG_DO_ANALYSIS
-value|0x00008000
+value|0x00020000
 end_define
 
 begin_comment
-comment|/* -g or -G */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLAG_WANTS_MAPPINGS
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* -m */
+comment|/* -g or -G or -m or -T */
 end_comment
 
 begin_define
@@ -220,8 +231,23 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_DISPLAY_HEIGHT
-value|23
+value|256
 end_define
+
+begin_comment
+comment|/* file virtual height */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_DISPLAY_WIDTH
+value|1024
+end_define
+
+begin_comment
+comment|/* file virtual width */
+end_comment
 
 begin_define
 define|#
@@ -340,13 +366,84 @@ define|#
 directive|define
 name|PMCSTAT_PRINT_ENTRY
 parameter_list|(
-name|A
-parameter_list|,
 name|T
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 		(void) fprintf((A)->pa_printfile, "%-9s", T);		\ 		(void) fprintf((A)->pa_printfile, " "  __VA_ARGS__);	\ 		(void) fprintf((A)->pa_printfile, "\n");		\ 	} while (0)
+value|do {					\ 		(void) fprintf(args.pa_printfile, "%-9s", T);		\ 		(void) fprintf(args.pa_printfile, " "  __VA_ARGS__);	\ 		(void) fprintf(args.pa_printfile, "\n");		\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCSTAT_PL_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCSTAT_PL_CALLGRAPH
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCSTAT_PL_GPROF
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCSTAT_PL_ANNOTATE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCSTAT_PL_CALLTREE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCSTAT_TOP_DELTA
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCSTAT_TOP_ACCUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|min
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|((A)< (B) ? (A) : (B))
+end_define
+
+begin_define
+define|#
+directive|define
+name|max
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|((A)> (B) ? (A) : (B))
 end_define
 
 begin_enum
@@ -459,6 +556,14 @@ name|pa_required
 decl_stmt|;
 comment|/* required features */
 name|int
+name|pa_pplugin
+decl_stmt|;
+comment|/* pre-processing plugin */
+name|int
+name|pa_plugin
+decl_stmt|;
+comment|/* analysis plugin */
+name|int
 name|pa_verbosity
 decl_stmt|;
 comment|/* verbosity level */
@@ -527,6 +632,26 @@ name|pa_cpumask
 decl_stmt|;
 comment|/* filter for CPUs analysed */
 name|int
+name|pa_ctdumpinstr
+decl_stmt|;
+comment|/* dump instructions with calltree */
+name|int
+name|pa_topmode
+decl_stmt|;
+comment|/* delta or accumulative */
+name|int
+name|pa_toptty
+decl_stmt|;
+comment|/* output to tty or file */
+name|int
+name|pa_topcolor
+decl_stmt|;
+comment|/* terminal support color */
+name|int
+name|pa_mergepmc
+decl_stmt|;
+comment|/* merge PMC with same name */
+name|int
 name|pa_argc
 decl_stmt|;
 name|char
@@ -549,9 +674,42 @@ argument_list|)
 name|pa_targets
 expr_stmt|;
 block|}
-name|args
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pmcstat_displayheight
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current terminal height */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pmcstat_displaywidth
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current terminal width */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pmcstat_args
+name|args
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* command line args */
+end_comment
 
 begin_comment
 comment|/* Function prototypes */
@@ -561,10 +719,7 @@ begin_function_decl
 name|void
 name|pmcstat_attach_pmcs
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -573,10 +728,7 @@ begin_function_decl
 name|void
 name|pmcstat_cleanup
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -585,11 +737,6 @@ begin_function_decl
 name|void
 name|pmcstat_clone_event_descriptor
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
-parameter_list|,
 name|struct
 name|pmcstat_ev
 modifier|*
@@ -605,10 +752,7 @@ begin_function_decl
 name|int
 name|pmcstat_close_log
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -617,10 +761,7 @@ begin_function_decl
 name|void
 name|pmcstat_create_process
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -629,11 +770,6 @@ begin_function_decl
 name|void
 name|pmcstat_find_targets
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -646,10 +782,7 @@ begin_function_decl
 name|void
 name|pmcstat_initialize_logging
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -658,10 +791,7 @@ begin_function_decl
 name|void
 name|pmcstat_kill_process
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -685,10 +815,7 @@ begin_function_decl
 name|void
 name|pmcstat_print_counters
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -697,10 +824,7 @@ begin_function_decl
 name|void
 name|pmcstat_print_headers
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -709,10 +833,7 @@ begin_function_decl
 name|void
 name|pmcstat_print_pmcs
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -730,10 +851,7 @@ begin_function_decl
 name|void
 name|pmcstat_shutdown_logging
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -742,10 +860,7 @@ begin_function_decl
 name|void
 name|pmcstat_start_pmcs
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|_a
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -763,10 +878,36 @@ begin_function_decl
 name|int
 name|pmcstat_process_log
 parameter_list|(
-name|struct
-name|pmcstat_args
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmcstat_keypress_log
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmcstat_display_log
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmcstat_pluginconfigure_log
+parameter_list|(
+name|char
 modifier|*
-name|_a
+name|_opt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -779,6 +920,15 @@ specifier|const
 name|char
 modifier|*
 name|_a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmcstat_topexit
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

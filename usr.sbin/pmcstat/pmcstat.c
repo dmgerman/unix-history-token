@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -229,6 +235,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|pmcstat_displaywidth
+init|=
+name|DEFAULT_DISPLAY_WIDTH
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|pmcstat_sockpair
 index|[
 name|NSOCKPAIRFD
@@ -257,14 +271,18 @@ name|pmcstat_plist
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|pmcstat_args
+name|args
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|pmcstat_attach_pmcs
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -289,7 +307,7 @@ name|STAILQ_FOREACH
 argument_list|(
 argument|ev
 argument_list|,
-argument|&a->pa_events
+argument|&args.pa_events
 argument_list|,
 argument|ev_next
 argument_list|)
@@ -308,7 +326,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|pt
 argument_list|,
-argument|&a->pa_targets
+argument|&args.pa_targets
 argument_list|,
 argument|pt_next
 argument_list|)
@@ -377,10 +395,7 @@ begin_function
 name|void
 name|pmcstat_cleanup
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -396,7 +411,7 @@ name|STAILQ_FOREACH_SAFE
 argument_list|(
 argument|ev
 argument_list|,
-argument|&a->pa_events
+argument|&args.pa_events
 argument_list|,
 argument|ev_next
 argument_list|,
@@ -482,8 +497,8 @@ expr_stmt|;
 name|STAILQ_REMOVE
 argument_list|(
 operator|&
-name|a
-operator|->
+name|args
+operator|.
 name|pa_events
 argument_list|,
 name|ev
@@ -502,8 +517,8 @@ block|}
 comment|/* de-configure the log file if present. */
 if|if
 condition|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_flags
 operator|&
 operator|(
@@ -523,20 +538,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_logparser
 condition|)
 block|{
 name|pmclog_close
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_logparser
 argument_list|)
 expr_stmt|;
-name|a
-operator|->
+name|args
+operator|.
 name|pa_logparser
 operator|=
 name|NULL
@@ -544,8 +559,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_flags
 operator|&
 operator|(
@@ -555,9 +570,7 @@ name|FLAG_HAS_OUTPUT_LOGFILE
 operator|)
 condition|)
 name|pmcstat_shutdown_logging
-argument_list|(
-name|a
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -566,11 +579,6 @@ begin_function
 name|void
 name|pmcstat_clone_event_descriptor
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
-parameter_list|,
 name|struct
 name|pmcstat_ev
 modifier|*
@@ -724,8 +732,8 @@ expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|a
-operator|->
+name|args
+operator|.
 name|pa_events
 argument_list|,
 name|ev_clone
@@ -750,10 +758,7 @@ begin_function
 name|void
 name|pmcstat_create_process
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
+name|void
 parameter_list|)
 block|{
 name|char
@@ -892,12 +897,12 @@ comment|/* exec() the program requested */
 name|execvp
 argument_list|(
 operator|*
-name|a
-operator|->
+name|args
+operator|.
 name|pa_argv
 argument_list|,
-name|a
-operator|->
+name|args
+operator|.
 name|pa_argv
 argument_list|)
 expr_stmt|;
@@ -917,8 +922,8 @@ argument_list|,
 literal|"ERROR: execvp \"%s\" failed"
 argument_list|,
 operator|*
-name|a
-operator|->
+name|args
+operator|.
 name|pa_argv
 argument_list|)
 expr_stmt|;
@@ -1021,8 +1026,8 @@ expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|a
-operator|->
+name|args
+operator|.
 name|pa_targets
 argument_list|,
 name|pt
@@ -1063,11 +1068,6 @@ begin_function
 name|void
 name|pmcstat_find_targets
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1162,8 +1162,8 @@ expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|a
-operator|->
+name|args
+operator|.
 name|pa_targets
 argument_list|,
 name|pt
@@ -1370,8 +1370,8 @@ expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|a
-operator|->
+name|args
+operator|.
 name|pa_targets
 argument_list|,
 name|pt
@@ -1539,10 +1539,7 @@ begin_function
 name|void
 name|pmcstat_kill_process
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -1552,8 +1549,8 @@ name|pt
 decl_stmt|;
 name|assert
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_flags
 operator|&
 name|FLAG_HAS_COMMANDLINE
@@ -1565,8 +1562,8 @@ operator|=
 name|SLIST_FIRST
 argument_list|(
 operator|&
-name|a
-operator|->
+name|args
+operator|.
 name|pa_targets
 argument_list|)
 expr_stmt|;
@@ -1604,10 +1601,7 @@ begin_function
 name|void
 name|pmcstat_start_pmcs
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -1659,9 +1653,7 @@ name|ev_name
 argument_list|)
 expr_stmt|;
 name|pmcstat_cleanup
-argument_list|(
-name|a
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -1677,10 +1669,7 @@ begin_function
 name|void
 name|pmcstat_print_headers
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -1698,8 +1687,8 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_printfile
 argument_list|,
 name|PRINT_HEADER_PREFIX
@@ -1709,7 +1698,7 @@ name|STAILQ_FOREACH
 argument_list|(
 argument|ev
 argument_list|,
-argument|&a->pa_events
+argument|&args.pa_events
 argument_list|,
 argument|ev_next
 argument_list|)
@@ -1750,8 +1739,8 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_printfile
 argument_list|,
 literal|"%*s"
@@ -1786,8 +1775,8 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_printfile
 argument_list|,
 literal|"s/%02d/%-*s "
@@ -1811,8 +1800,8 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_printfile
 argument_list|,
 literal|"p/%*s "
@@ -1830,8 +1819,8 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_printfile
 argument_list|)
 expr_stmt|;
@@ -1842,10 +1831,7 @@ begin_function
 name|void
 name|pmcstat_print_counters
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
+name|void
 parameter_list|)
 block|{
 name|int
@@ -1872,7 +1858,7 @@ name|STAILQ_FOREACH
 argument_list|(
 argument|ev
 argument_list|,
-argument|&a->pa_events
+argument|&args.pa_events
 argument_list|,
 argument|ev_next
 argument_list|)
@@ -1919,8 +1905,8 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_printfile
 argument_list|,
 literal|"%*ju "
@@ -1973,8 +1959,8 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_printfile
 argument_list|)
 expr_stmt|;
@@ -1989,10 +1975,7 @@ begin_function
 name|void
 name|pmcstat_print_pmcs
 parameter_list|(
-name|struct
-name|pmcstat_args
-modifier|*
-name|a
+name|void
 parameter_list|)
 block|{
 specifier|static
@@ -2015,8 +1998,8 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_printfile
 argument_list|,
 literal|"\n"
@@ -2034,26 +2017,22 @@ operator|==
 literal|1
 condition|)
 name|pmcstat_print_headers
-argument_list|(
-name|a
-argument_list|)
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
 operator|)
 name|fprintf
 argument_list|(
-name|a
-operator|->
+name|args
+operator|.
 name|pa_printfile
 argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 name|pmcstat_print_counters
-argument_list|(
-name|a
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -2126,6 +2105,8 @@ literal|"\t Options include:\n"
 literal|"\t -C\t\t (toggle) show cumulative counts\n"
 literal|"\t -D path\t create profiles in directory \"path\"\n"
 literal|"\t -E\t\t (toggle) show counts at process exit\n"
+literal|"\t -F file\t write a system-wide callgraph (Kcachegrind format)"
+literal|" to \"file\"\n"
 literal|"\t -G file\t write a system-wide callgraph to \"file\"\n"
 literal|"\t -M file\t print executable/gmon file map to \"file\"\n"
 literal|"\t -N\t\t (toggle) capture callchains\n"
@@ -2133,9 +2114,11 @@ literal|"\t -O file\t send log output to \"file\"\n"
 literal|"\t -P spec\t allocate a process-private sampling PMC\n"
 literal|"\t -R file\t read events from \"file\"\n"
 literal|"\t -S spec\t allocate a system-wide sampling PMC\n"
+literal|"\t -T\t\t start in top mode\n"
 literal|"\t -W\t\t (toggle) show counts per context switch\n"
 literal|"\t -c cpu-list\t set cpus for subsequent system-wide PMCs\n"
 literal|"\t -d\t\t (toggle) track descendants\n"
+literal|"\t -f spec\t pass \"spec\" to as plugin option\n"
 literal|"\t -g\t\t produce gprof(1) compatible profiles\n"
 literal|"\t -k dir\t\t set the path to the kernel\n"
 literal|"\t -n rate\t set sampling rate\n"
@@ -2150,6 +2133,38 @@ literal|"\t -v\t\t increase verbosity\n"
 literal|"\t -w secs\t set printing time interval\n"
 literal|"\t -z depth\t limit callchain display depth"
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * At exit handler for top mode  */
+end_comment
+
+begin_function
+name|void
+name|pmcstat_topexit
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|args
+operator|.
+name|pa_toptty
+condition|)
+return|return;
+comment|/* 	 * Shutdown ncurses. 	 */
+name|clrtoeol
+argument_list|()
+expr_stmt|;
+name|refresh
+argument_list|()
+expr_stmt|;
+name|endwin
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2218,6 +2233,11 @@ index|]
 decl_stmt|;
 name|int
 name|use_cumulative_counts
+decl_stmt|;
+name|short
+name|cf
+decl_stmt|,
+name|cb
 decl_stmt|;
 name|uint32_t
 name|cpumask
@@ -2398,6 +2418,48 @@ name|pa_outputpath
 operator|=
 name|NULL
 expr_stmt|;
+name|args
+operator|.
+name|pa_pplugin
+operator|=
+name|PMCSTAT_PL_NONE
+expr_stmt|;
+name|args
+operator|.
+name|pa_plugin
+operator|=
+name|PMCSTAT_PL_NONE
+expr_stmt|;
+name|args
+operator|.
+name|pa_ctdumpinstr
+operator|=
+literal|1
+expr_stmt|;
+name|args
+operator|.
+name|pa_topmode
+operator|=
+name|PMCSTAT_TOP_DELTA
+expr_stmt|;
+name|args
+operator|.
+name|pa_toptty
+operator|=
+literal|0
+expr_stmt|;
+name|args
+operator|.
+name|pa_topcolor
+operator|=
+literal|0
+expr_stmt|;
+name|args
+operator|.
+name|pa_mergepmc
+operator|=
+literal|0
+expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -2539,7 +2601,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CD:EG:M:NO:P:R:S:Wc:dgk:m:n:o:p:qr:s:t:vw:z:"
+literal|"CD:EF:G:M:NO:P:R:S:TWc:df:gk:m:n:o:p:qr:s:t:vw:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -2697,6 +2759,52 @@ name|FLAG_HAS_PROCESS_PMCS
 expr_stmt|;
 break|break;
 case|case
+literal|'F'
+case|:
+comment|/* produce a system-wide calltree */
+name|args
+operator|.
+name|pa_flags
+operator||=
+name|FLAG_DO_CALLGRAPHS
+expr_stmt|;
+name|args
+operator|.
+name|pa_plugin
+operator|=
+name|PMCSTAT_PL_CALLTREE
+expr_stmt|;
+name|graphfilename
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+comment|/* plugins options */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_plugin
+operator|==
+name|PMCSTAT_PL_NONE
+condition|)
+name|err
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: Need -g/-G/-m/-T."
+argument_list|)
+expr_stmt|;
+name|pmcstat_pluginconfigure_log
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'G'
 case|:
 comment|/* produce a system-wide callgraph */
@@ -2705,6 +2813,12 @@ operator|.
 name|pa_flags
 operator||=
 name|FLAG_DO_CALLGRAPHS
+expr_stmt|;
+name|args
+operator|.
+name|pa_plugin
+operator|=
+name|PMCSTAT_PL_CALLGRAPH
 expr_stmt|;
 name|graphfilename
 operator|=
@@ -2720,6 +2834,18 @@ operator|.
 name|pa_flags
 operator||=
 name|FLAG_DO_GPROF
+expr_stmt|;
+name|args
+operator|.
+name|pa_pplugin
+operator|=
+name|PMCSTAT_PL_CALLGRAPH
+expr_stmt|;
+name|args
+operator|.
+name|pa_plugin
+operator|=
+name|PMCSTAT_PL_GPROF
 expr_stmt|;
 break|break;
 case|case
@@ -2762,7 +2888,13 @@ name|args
 operator|.
 name|pa_flags
 operator||=
-name|FLAG_WANTS_MAPPINGS
+name|FLAG_DO_ANNOTATE
+expr_stmt|;
+name|args
+operator|.
+name|pa_plugin
+operator|=
+name|PMCSTAT_PL_ANNOTATE
 expr_stmt|;
 name|graphfilename
 operator|=
@@ -3186,9 +3318,6 @@ literal|'S'
 condition|)
 name|pmcstat_clone_event_descriptor
 argument_list|(
-operator|&
-name|args
-argument_list|,
 name|ev
 argument_list|,
 name|cpumask
@@ -3409,9 +3538,6 @@ case|:
 comment|/* target pid or process name */
 name|pmcstat_find_targets
 argument_list|(
-operator|&
-name|args
-argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
@@ -3426,6 +3552,49 @@ operator|.
 name|pa_required
 operator||=
 name|FLAG_HAS_PROCESS_PMCS
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+comment|/* top mode */
+name|args
+operator|.
+name|pa_flags
+operator||=
+name|FLAG_DO_TOP
+expr_stmt|;
+name|args
+operator|.
+name|pa_plugin
+operator|=
+name|PMCSTAT_PL_CALLGRAPH
+expr_stmt|;
+name|args
+operator|.
+name|pa_ctdumpinstr
+operator|=
+literal|0
+expr_stmt|;
+name|args
+operator|.
+name|pa_mergepmc
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|args
+operator|.
+name|pa_printfile
+operator|==
+name|stderr
+condition|)
+name|args
+operator|.
+name|pa_printfile
+operator|=
+name|stdout
 expr_stmt|;
 break|break;
 case|case
@@ -3478,12 +3647,6 @@ operator|.
 name|pa_flags
 operator||=
 name|FLAG_HAS_WAIT_INTERVAL
-expr_stmt|;
-name|args
-operator|.
-name|pa_required
-operator||=
-name|FLAG_HAS_COUNTING_PMCS
 expr_stmt|;
 name|args
 operator|.
@@ -3619,7 +3782,9 @@ name|FLAG_DO_GPROF
 operator||
 name|FLAG_DO_CALLGRAPHS
 operator||
-name|FLAG_WANTS_MAPPINGS
+name|FLAG_DO_ANNOTATE
+operator||
+name|FLAG_DO_TOP
 operator|)
 condition|)
 name|args
@@ -3655,7 +3820,7 @@ name|args
 operator|.
 name|pa_flags
 operator|&
-name|FLAG_WANTS_MAPPINGS
+name|FLAG_DO_ANNOTATE
 operator|&&
 name|args
 operator|.
@@ -3677,7 +3842,7 @@ name|args
 operator|.
 name|pa_flags
 operator|&
-name|FLAG_WANTS_MAPPINGS
+name|FLAG_DO_ANNOTATE
 operator|&&
 name|args
 operator|.
@@ -3973,7 +4138,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -C, -W, -o and -w require at "
+literal|"ERROR: options -C, -W and -o require at "
 literal|"least one counting mode PMC to be specified."
 argument_list|)
 expr_stmt|;
@@ -4006,7 +4171,7 @@ literal|"ERROR: options -N, -n and -O require at "
 literal|"least one sampling mode PMC to be specified."
 argument_list|)
 expr_stmt|;
-comment|/* check if -g/-G are being used correctly */
+comment|/* check if -g/-G/-m/-T are being used correctly */
 if|if
 condition|(
 operator|(
@@ -4034,7 +4199,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -g/-G require sampling PMCs "
+literal|"ERROR: options -g/-G/-m/-T require sampling PMCs "
 literal|"or -R to be specified."
 argument_list|)
 expr_stmt|;
@@ -4067,7 +4232,7 @@ literal|"ERROR: option -O is used only with options "
 literal|"-E, -P, -S and -W."
 argument_list|)
 expr_stmt|;
-comment|/* -k kernel path require -g/-G or -R */
+comment|/* -k kernel path require -g/-G/-m/-T or -R */
 if|if
 condition|(
 operator|(
@@ -4102,7 +4267,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -k is only used with -g/-R."
+literal|"ERROR: option -k is only used with -g/-R/-m/-T."
 argument_list|)
 expr_stmt|;
 comment|/* -D only applies to gprof output mode (-g) */
@@ -4167,6 +4332,32 @@ argument_list|(
 name|EX_USAGE
 argument_list|,
 literal|"ERROR: option -M is only used with -g/-R."
+argument_list|)
+expr_stmt|;
+comment|/* -T is incompatible with -R (replay logfile is a TODO) */
+if|if
+condition|(
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_TOP
+operator|)
+operator|&&
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_READ_LOGFILE
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"ERROR: option -T is incompatible with -R."
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Disallow textual output of sampling PMCs if counting PMCs 	 * have also been asked for, mostly because the combined output 	 * is difficult to make sense of. 	 */
@@ -4459,7 +4650,7 @@ name|args
 operator|.
 name|pa_flags
 operator|&
-name|FLAG_WANTS_MAPPINGS
+name|FLAG_DO_ANNOTATE
 condition|)
 block|{
 name|args
@@ -4521,10 +4712,7 @@ operator||=
 name|FLAG_DO_PRINT
 expr_stmt|;
 name|pmcstat_initialize_logging
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|args
 operator|.
@@ -4564,16 +4752,10 @@ literal|"ERROR: Cannot create parser"
 argument_list|)
 expr_stmt|;
 name|pmcstat_process_log
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|pmcstat_shutdown_logging
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -4771,11 +4953,25 @@ name|args
 operator|.
 name|pa_flags
 operator||=
-operator|(
 name|FLAG_HAS_PIPE
-operator||
-name|FLAG_DO_PRINT
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_TOP
 operator|)
+operator|==
+literal|0
+condition|)
+name|args
+operator|.
+name|pa_flags
+operator||=
+name|FLAG_DO_PRINT
 expr_stmt|;
 name|args
 operator|.
@@ -5082,6 +5278,14 @@ name|ws_row
 operator|-
 literal|1
 expr_stmt|;
+name|pmcstat_displaywidth
+operator|=
+name|ws
+operator|.
+name|ws_col
+operator|-
+literal|1
+expr_stmt|;
 name|EV_SET
 argument_list|(
 operator|&
@@ -5126,6 +5330,71 @@ name|EX_OSERR
 argument_list|,
 literal|"ERROR: Cannot register kevent for "
 literal|"SIGWINCH"
+argument_list|)
+expr_stmt|;
+name|args
+operator|.
+name|pa_toptty
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* 	 * Listen to key input in top mode. 	 */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_TOP
+condition|)
+block|{
+name|EV_SET
+argument_list|(
+operator|&
+name|kev
+argument_list|,
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|,
+name|EVFILT_READ
+argument_list|,
+name|EV_ADD
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kevent
+argument_list|(
+name|pmcstat_kq
+argument_list|,
+operator|&
+name|kev
+argument_list|,
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot register kevent"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5265,9 +5534,10 @@ argument_list|,
 literal|"ERROR: Cannot register kevent for SIGCHLD"
 argument_list|)
 expr_stmt|;
-comment|/* setup a timer if we have counting mode PMCs needing to be printed */
+comment|/*  	 * Setup a timer if we have counting mode PMCs needing to be printed or 	 * top mode plugin is active. 	 */
 if|if
 condition|(
+operator|(
 operator|(
 name|args
 operator|.
@@ -5285,6 +5555,15 @@ name|FLAG_HAS_OUTPUT_LOGFILE
 operator|)
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_TOP
+operator|)
 condition|)
 block|{
 name|EV_SET
@@ -5348,10 +5627,7 @@ operator|&
 name|FLAG_HAS_COMMANDLINE
 condition|)
 name|pmcstat_create_process
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5413,10 +5689,7 @@ operator|&
 name|FLAG_HAS_PROCESS_PMCS
 condition|)
 name|pmcstat_attach_pmcs
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5436,10 +5709,7 @@ block|}
 block|}
 comment|/* start the pmcs */
 name|pmcstat_start_pmcs
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* start the (commandline) process if needed */
 if|if
@@ -5461,7 +5731,11 @@ name|args
 operator|.
 name|pa_flags
 operator|&
+operator|(
 name|FLAG_DO_PRINT
+operator||
+name|FLAG_DO_TOP
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -5477,10 +5751,7 @@ operator|)
 operator|)
 condition|)
 name|pmcstat_initialize_logging
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Handle SIGINT using the kqueue loop */
 name|sa
@@ -5527,6 +5798,133 @@ argument_list|,
 literal|"ERROR: Cannot install signal handler"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Setup the top mode display. 	 */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_TOP
+condition|)
+block|{
+name|args
+operator|.
+name|pa_flags
+operator|&=
+operator|~
+name|FLAG_DO_PRINT
+expr_stmt|;
+if|if
+condition|(
+name|args
+operator|.
+name|pa_toptty
+condition|)
+block|{
+comment|/* 			 * Init ncurses. 			 */
+name|initscr
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|has_colors
+argument_list|()
+operator|==
+name|TRUE
+condition|)
+block|{
+name|args
+operator|.
+name|pa_topcolor
+operator|=
+literal|1
+expr_stmt|;
+name|start_color
+argument_list|()
+expr_stmt|;
+name|use_default_colors
+argument_list|()
+expr_stmt|;
+name|pair_content
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|cf
+argument_list|,
+operator|&
+name|cb
+argument_list|)
+expr_stmt|;
+name|init_pair
+argument_list|(
+literal|1
+argument_list|,
+name|COLOR_RED
+argument_list|,
+name|cb
+argument_list|)
+expr_stmt|;
+name|init_pair
+argument_list|(
+literal|2
+argument_list|,
+name|COLOR_YELLOW
+argument_list|,
+name|cb
+argument_list|)
+expr_stmt|;
+name|init_pair
+argument_list|(
+literal|3
+argument_list|,
+name|COLOR_GREEN
+argument_list|,
+name|cb
+argument_list|)
+expr_stmt|;
+block|}
+name|cbreak
+argument_list|()
+expr_stmt|;
+name|noecho
+argument_list|()
+expr_stmt|;
+name|nonl
+argument_list|()
+expr_stmt|;
+name|nodelay
+argument_list|(
+name|stdscr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|intrflush
+argument_list|(
+name|stdscr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|keypad
+argument_list|(
+name|stdscr
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|clear
+argument_list|()
+expr_stmt|;
+name|atexit
+argument_list|(
+name|pmcstat_topexit
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * loop till either the target process (if any) exits, or we 	 * are killed by a SIGINT. 	 */
 name|runstate
 operator|=
@@ -5624,10 +6022,7 @@ condition|)
 name|runstate
 operator|=
 name|pmcstat_close_log
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 else|else
 name|runstate
@@ -5643,13 +6038,37 @@ case|case
 name|EVFILT_READ
 case|:
 comment|/* log file data is present */
+if|if
+condition|(
+name|kev
+operator|.
+name|ident
+operator|==
+operator|(
+name|unsigned
+operator|)
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|pmcstat_keypress_log
+argument_list|()
+condition|)
+name|runstate
+operator|=
+name|pmcstat_close_log
+argument_list|()
+expr_stmt|;
+block|}
+else|else
 name|runstate
 operator|=
 name|pmcstat_process_log
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -5706,10 +6125,7 @@ block|{
 name|runstate
 operator|=
 name|pmcstat_close_log
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5724,10 +6140,7 @@ name|FLAG_DO_ANALYSIS
 operator|)
 condition|)
 name|pmcstat_process_log
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|do_print
@@ -5760,10 +6173,7 @@ operator|&
 name|FLAG_HAS_COMMANDLINE
 condition|)
 name|pmcstat_kill_process
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Close the pipe to self, if present. */
 if|if
@@ -5835,6 +6245,14 @@ name|ws_row
 operator|-
 literal|1
 expr_stmt|;
+name|pmcstat_displaywidth
+operator|=
+name|ws
+operator|.
+name|ws_col
+operator|-
+literal|1
+expr_stmt|;
 block|}
 else|else
 name|assert
@@ -5856,7 +6274,10 @@ block|}
 if|if
 condition|(
 name|do_print
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|args
 operator|.
@@ -5869,10 +6290,7 @@ literal|0
 condition|)
 block|{
 name|pmcstat_print_pmcs
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5903,6 +6321,18 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_TOP
+condition|)
+name|pmcstat_display_log
+argument_list|()
+expr_stmt|;
 name|do_print
 operator|=
 literal|0
@@ -5916,6 +6346,31 @@ operator|!=
 name|PMCSTAT_FINISHED
 condition|)
 do|;
+if|if
+condition|(
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_TOP
+operator|)
+operator|&&
+name|args
+operator|.
+name|pa_toptty
+condition|)
+block|{
+name|pmcstat_topexit
+argument_list|()
+expr_stmt|;
+name|args
+operator|.
+name|pa_toptty
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* flush any pending log entries */
 if|if
 condition|(
@@ -5933,10 +6388,7 @@ name|pmc_flush_logfile
 argument_list|()
 expr_stmt|;
 name|pmcstat_cleanup
-argument_list|(
-operator|&
-name|args
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
