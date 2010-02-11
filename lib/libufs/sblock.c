@@ -350,7 +350,7 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 name|ERROR
