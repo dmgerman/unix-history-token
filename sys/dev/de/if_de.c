@@ -11571,7 +11571,6 @@ name|mi_reset_offset
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
 name|mi
 operator|->
 name|mi_phyaddr

@@ -605,7 +605,6 @@ decl_stmt|,
 modifier|*
 name|b_tmp
 decl_stmt|;
-empty_stmt|;
 name|LIBALIAS_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;

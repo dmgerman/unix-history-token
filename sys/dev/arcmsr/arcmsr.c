@@ -8967,7 +8967,6 @@ name|csio
 operator|.
 name|data_ptr
 decl_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|pccb

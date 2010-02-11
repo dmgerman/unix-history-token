@@ -9986,7 +9986,6 @@ argument_list|)
 condition|)
 block|{
 continue|continue;
-empty_stmt|;
 block|}
 if|if
 condition|(

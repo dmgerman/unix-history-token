@@ -3091,7 +3091,6 @@ argument_list|,
 literal|"can't allocate FIB DMA tag\n"
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 return|return
 operator|(
 name|ENOMEM

@@ -390,6 +390,13 @@ name|FCP_RSPLEN_VALID
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|FCP_MAX_RSPLEN
+value|0x08
+end_define
+
 begin_comment
 comment|/*  * FCP Response Code Definitions  * Source: NCITS T10, Project 1144D, Revision 08 (aka FCP2r08)  */
 end_comment
@@ -441,6 +448,20 @@ define|#
 directive|define
 name|FCP_RSPNS_TMF_FAILED
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_RSPNS_TMF_SUCCEEDED
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCP_RSPNS_TMF_INCORRECT_LUN
+value|9
 end_define
 
 begin_comment

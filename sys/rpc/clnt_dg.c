@@ -1135,7 +1135,6 @@ operator|&
 name|xdrs
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 comment|/* 	 * By default, closeit is always FALSE. It is users responsibility 	 * to do a close on it, else the user may use clnt_control 	 * to let clnt_destroy do it for him/her. 	 */
 name|cu
 operator|->

@@ -627,7 +627,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-empty_stmt|;
 name|desc
 operator|=
 name|pdq_eisa_match

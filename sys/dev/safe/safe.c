@@ -9497,7 +9497,6 @@ argument_list|,
 name|SAFE_PE_DMACFG
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|v
 operator|&=
 operator|~

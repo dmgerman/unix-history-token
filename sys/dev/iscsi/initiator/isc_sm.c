@@ -1772,7 +1772,7 @@ directive|if
 literal|0
 block|{
 comment|/* 	   | this code is only for debugging. 	   */
-block|sn_t	*sn =&sp->sn; 	  if(sp->cws == 0) { 	       if((sp->flags& ISC_STALLED) == 0) { 		    sdebug(4, "window closed: max=0x%x exp=0x%x opcode=0x%x cmd=0x%x cws=%d.", 			   sn->maxCmd, sn->expCmd, bhs->opcode, sn->cmd, sp->cws); 		    sp->flags |= ISC_STALLED; 	       } else  	       if(sp->flags& ISC_STALLED) { 		    sdebug(4, "window opened: max=0x%x exp=0x%x opcode=0x%x cmd=0x%x cws=%d.", 			   sn->maxCmd, sn->expCmd, bhs->opcode, sn->cmd, sp->cws); 		    sp->flags&= ~ISC_STALLED;; 	       } 	  }      }
+block|sn_t	*sn =&sp->sn; 	  if(sp->cws == 0) { 	       if((sp->flags& ISC_STALLED) == 0) { 		    sdebug(4, "window closed: max=0x%x exp=0x%x opcode=0x%x cmd=0x%x cws=%d.", 			   sn->maxCmd, sn->expCmd, bhs->opcode, sn->cmd, sp->cws); 		    sp->flags |= ISC_STALLED; 	       } else  	       if(sp->flags& ISC_STALLED) { 		    sdebug(4, "window opened: max=0x%x exp=0x%x opcode=0x%x cmd=0x%x cws=%d.", 			   sn->maxCmd, sn->expCmd, bhs->opcode, sn->cmd, sp->cws); 		    sp->flags&= ~ISC_STALLED; 	       } 	  }      }
 endif|#
 directive|endif
 ifdef|#

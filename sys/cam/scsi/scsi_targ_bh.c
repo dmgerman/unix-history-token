@@ -1884,7 +1884,6 @@ argument_list|(
 literal|"targdtor - impossible init level"
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 case|case
 literal|1
 case|:

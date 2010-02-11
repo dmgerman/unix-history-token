@@ -11839,7 +11839,6 @@ name|GoingSRBCnt
 operator|=
 literal|0
 expr_stmt|;
-empty_stmt|;
 name|pdcb
 operator|->
 name|pGoingSRB

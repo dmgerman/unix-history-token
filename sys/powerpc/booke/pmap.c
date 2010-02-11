@@ -10059,7 +10059,6 @@ name|pte_t
 modifier|*
 name|pte
 decl_stmt|;
-empty_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -12076,7 +12075,7 @@ name|mas7
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("isync; tlbwe; isync; msync");
-comment|//debugf("tlb1_write_entry: e\n");;
+comment|//debugf("tlb1_write_entry: e\n");
 block|}
 end_function
 

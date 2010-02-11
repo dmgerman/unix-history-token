@@ -15646,7 +15646,6 @@ condition|)
 return|return
 name|err
 return|;
-empty_stmt|;
 name|bytes
 operator|=
 name|rx_ring_entries
@@ -15691,7 +15690,6 @@ condition|)
 return|return
 name|err
 return|;
-empty_stmt|;
 comment|/* allocate the rx host info rings */
 name|bytes
 operator|=
@@ -15737,7 +15735,6 @@ condition|)
 return|return
 name|err
 return|;
-empty_stmt|;
 name|bytes
 operator|=
 name|rx_ring_entries
@@ -15782,7 +15779,6 @@ condition|)
 return|return
 name|err
 return|;
-empty_stmt|;
 comment|/* allocate the rx busdma resources */
 name|err
 operator|=
@@ -15857,7 +15853,6 @@ expr_stmt|;
 return|return
 name|err
 return|;
-empty_stmt|;
 block|}
 name|err
 operator|=
@@ -15957,7 +15952,6 @@ expr_stmt|;
 return|return
 name|err
 return|;
-empty_stmt|;
 block|}
 for|for
 control|(
@@ -16023,7 +16017,6 @@ expr_stmt|;
 return|return
 name|err
 return|;
-empty_stmt|;
 block|}
 block|}
 name|err
@@ -16067,7 +16060,6 @@ expr_stmt|;
 return|return
 name|err
 return|;
-empty_stmt|;
 block|}
 for|for
 control|(
@@ -16133,7 +16125,6 @@ expr_stmt|;
 return|return
 name|err
 return|;
-empty_stmt|;
 block|}
 block|}
 name|err
@@ -16177,7 +16168,6 @@ expr_stmt|;
 return|return
 name|err
 return|;
-empty_stmt|;
 block|}
 comment|/* now allocate TX resouces */
 ifndef|#
@@ -16277,7 +16267,6 @@ condition|)
 return|return
 name|err
 return|;
-empty_stmt|;
 comment|/* ensure req_list entries are aligned to 8 bytes */
 name|ss
 operator|->
@@ -16359,7 +16348,6 @@ condition|)
 return|return
 name|err
 return|;
-empty_stmt|;
 comment|/* allocate the tx host info ring */
 name|bytes
 operator|=
@@ -16405,7 +16393,6 @@ condition|)
 return|return
 name|err
 return|;
-empty_stmt|;
 comment|/* allocate the tx busdma resources */
 name|err
 operator|=
@@ -16492,7 +16479,6 @@ expr_stmt|;
 return|return
 name|err
 return|;
-empty_stmt|;
 block|}
 comment|/* now use these tags to setup dmamaps for each slot 	   in the ring */
 for|for
@@ -16559,7 +16545,6 @@ expr_stmt|;
 return|return
 name|err
 return|;
-empty_stmt|;
 block|}
 block|}
 return|return

@@ -4791,7 +4791,6 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-empty_stmt|;
 name|prb
 operator|->
 name|fis
@@ -4807,7 +4806,6 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-empty_stmt|;
 name|prb
 operator|->
 name|fis
@@ -4823,7 +4821,6 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|ata_siiprb_issue_cmd

@@ -65,7 +65,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|isp_save_xs
+name|isp_allocate_xs
 parameter_list|(
 name|ispsoftc_t
 modifier|*
@@ -109,6 +109,9 @@ begin_function_decl
 name|uint32_t
 name|isp_handle_index
 parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;
@@ -1251,19 +1254,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|IS_TARGET_HANDLE
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x8000)
-end_define
-
 begin_function_decl
 name|int
-name|isp_save_xs_tgt
+name|isp_allocate_xs_tgt
 parameter_list|(
 name|ispsoftc_t
 modifier|*

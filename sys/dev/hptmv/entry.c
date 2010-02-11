@@ -6532,7 +6532,6 @@ block|{
 return|return
 name|ENXIO
 return|;
-empty_stmt|;
 block|}
 if|if
 condition|(

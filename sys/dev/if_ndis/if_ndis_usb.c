@@ -882,7 +882,6 @@ name|ndisusb_ep
 modifier|*
 name|ne
 decl_stmt|;
-empty_stmt|;
 name|sc
 operator|->
 name|ndisusb_status

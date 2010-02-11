@@ -2847,7 +2847,6 @@ name|rdp
 operator|->
 name|interleave
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|bp

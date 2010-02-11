@@ -2037,7 +2037,6 @@ name|noop
 goto|;
 comment|/* no port - hence not a protocol we care about */
 break|break;
-empty_stmt|;
 block|}
 operator|*
 name|protop

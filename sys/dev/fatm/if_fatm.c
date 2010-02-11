@@ -4043,7 +4043,6 @@ name|cb
 operator|=
 name|NULL
 expr_stmt|;
-empty_stmt|;
 name|H_SETSTAT
 argument_list|(
 name|q

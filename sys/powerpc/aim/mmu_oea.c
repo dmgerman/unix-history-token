@@ -4629,7 +4629,6 @@ argument_list|,
 name|pa
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|pa
 operator|+=
 name|PAGE_SIZE
@@ -4705,7 +4704,6 @@ argument_list|,
 name|pa
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|pa
 operator|+=
 name|PAGE_SIZE
@@ -4775,7 +4773,6 @@ argument_list|,
 name|pa
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|pa
 operator|+=
 name|PAGE_SIZE
