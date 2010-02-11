@@ -175,9 +175,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|proc
-modifier|*
+name|enum
+name|nfsiod_state
 name|ncl_iodwant
 index|[
 name|NFS_MAXRAHEAD
@@ -6387,6 +6386,8 @@ name|ncl_iodwant
 index|[
 name|iod
 index|]
+operator|==
+name|NFSIOD_AVAILABLE
 condition|)
 block|{
 name|gotiod
@@ -6405,7 +6406,9 @@ block|{
 name|iod
 operator|=
 name|ncl_nfsiodnew
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6443,7 +6446,7 @@ index|[
 name|iod
 index|]
 operator|=
-name|NULL
+name|NFSIOD_NOT_AVAILABLE
 expr_stmt|;
 name|ncl_iodmount
 index|[

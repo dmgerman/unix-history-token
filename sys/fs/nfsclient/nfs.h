@@ -98,6 +98,29 @@ value|(VFSTONFS((v)->v_mount)->nm_flag& (NFSMNT_NFSV3 | NFSMNT_NFSV4))
 end_define
 
 begin_comment
+comment|/*  * NFS iod threads can be in one of these three states once spawned.  * NFSIOD_NOT_AVAILABLE - Cannot be assigned an I/O operation at this time.  * NFSIOD_AVAILABLE - Available to be assigned an I/O operation.  * NFSIOD_CREATED_FOR_NFS_ASYNCIO - Newly created for nfs_asyncio() and  *	will be used by the thread that called nfs_asyncio().  */
+end_comment
+
+begin_enum
+enum|enum
+name|nfsiod_state
+block|{
+name|NFSIOD_NOT_AVAILABLE
+init|=
+literal|0
+block|,
+name|NFSIOD_AVAILABLE
+init|=
+literal|1
+block|,
+name|NFSIOD_CREATED_FOR_NFS_ASYNCIO
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Function prototypes.  */
 end_comment
 
@@ -515,7 +538,7 @@ begin_function_decl
 name|int
 name|ncl_nfsiodnew
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
