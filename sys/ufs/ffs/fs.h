@@ -612,7 +612,7 @@ name|int32_t
 name|fs_nindir
 decl_stmt|;
 comment|/* value of NINDIR */
-name|int32_t
+name|u_int32_t
 name|fs_inopb
 decl_stmt|;
 comment|/* value of INOPB */
