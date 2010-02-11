@@ -489,11 +489,14 @@ begin_struct
 struct|struct
 name|ptrace_vm_entry
 block|{
-name|void
-modifier|*
-name|pve_cookie
+name|int
+name|pve_entry
 decl_stmt|;
-comment|/* Token used to iterate. */
+comment|/* Entry number used for iteration. */
+name|int
+name|pve_timestamp
+decl_stmt|;
+comment|/* Generation number of VM map. */
 name|u_long
 name|pve_start
 decl_stmt|;
@@ -514,6 +517,14 @@ name|u_int
 name|pve_pathlen
 decl_stmt|;
 comment|/* Size of path. */
+name|long
+name|pve_fileid
+decl_stmt|;
+comment|/* File ID. */
+name|uint32_t
+name|pve_fsid
+decl_stmt|;
+comment|/* File system ID. */
 name|char
 modifier|*
 name|pve_path
