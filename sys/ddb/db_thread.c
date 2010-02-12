@@ -109,7 +109,7 @@ name|p_pid
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"[thread pid %d tid %ld ]\n"
+literal|"[ thread pid %d tid %ld ]\n"
 argument_list|,
 name|pid
 argument_list|,
