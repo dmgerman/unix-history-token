@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -382,6 +388,13 @@ name|int
 name|cflags
 init|=
 name|REG_EXTENDED
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|quiet
 decl_stmt|;
 end_decl_stmt
 
@@ -861,6 +874,10 @@ name|pidfilelock
 operator|=
 literal|0
 expr_stmt|;
+name|quiet
+operator|=
+literal|0
+expr_stmt|;
 name|execf
 operator|=
 name|NULL
@@ -880,7 +897,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"DF:G:ILM:N:P:SU:ad:fg:ij:lnos:t:u:vx"
+literal|"DF:G:ILM:N:P:SU:ad:fg:ij:lnoqs:t:u:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -1131,6 +1148,22 @@ operator|=
 literal|1
 expr_stmt|;
 name|criteria
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+if|if
+condition|(
+operator|!
+name|pgrep
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|quiet
 operator|=
 literal|1
 expr_stmt|;
@@ -2562,7 +2595,7 @@ name|pgrep
 condition|)
 name|ustr
 operator|=
-literal|"[-LSfilnovx] [-d delim]"
+literal|"[-LSfilnoqvx] [-d delim]"
 expr_stmt|;
 else|else
 name|ustr
@@ -2608,6 +2641,18 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+if|if
+condition|(
+name|quiet
+condition|)
+block|{
+name|assert
+argument_list|(
+name|pgrep
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -2870,6 +2915,11 @@ argument_list|(
 name|kp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"%s"
