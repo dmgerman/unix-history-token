@@ -3455,7 +3455,7 @@ operator|=
 operator|&
 name|isp
 operator|->
-name|isp_tgt_xflist
+name|isp_tgtlist
 index|[
 name|tmp
 index|]
@@ -18967,6 +18967,8 @@ condition|(
 operator|!
 name|ISP_VALID_TGT_HANDLE
 argument_list|(
+name|isp
+argument_list|,
 name|handle
 argument_list|)
 condition|)
