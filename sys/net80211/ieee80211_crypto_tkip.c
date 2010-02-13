@@ -654,6 +654,12 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* TSC starts at 1 */
+name|ctx
+operator|->
+name|rx_phase1_done
+operator|=
+literal|0
+expr_stmt|;
 return|return
 literal|1
 return|;

@@ -1225,7 +1225,7 @@ name|NULL
 argument_list|,
 name|numthreads
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1233,7 +1233,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"pthread_mutex_init"
+literal|"pthread_barrier_init"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1293,7 +1293,7 @@ index|[
 name|i
 index|]
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1462,7 +1462,7 @@ name|hwd_thread
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err

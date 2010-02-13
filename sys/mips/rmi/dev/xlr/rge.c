@@ -2968,6 +2968,13 @@ name|len1
 expr_stmt|;
 if|if
 condition|(
+name|len2
+operator|==
+literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
 name|nfrag
 operator|>=
 name|XLR_MAX_TX_FRAGS

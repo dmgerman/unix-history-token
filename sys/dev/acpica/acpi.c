@@ -7746,22 +7746,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OBJECTS
 operator|,
-literal|"first bus_generic_attach\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|bus_generic_attach
-argument_list|(
-name|bus
-argument_list|)
-expr_stmt|;
-comment|/*      * Some of these children may have attached others as part of their attach      * process (eg. the root PCI bus driver), so rescan.      */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_OBJECTS
-operator|,
-literal|"second bus_generic_attach\n"
+literal|"acpi bus_generic_attach\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7821,6 +7806,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|type
+operator|==
+name|ACPI_TYPE_PROCESSOR
+condition|)
+operator|*
+name|order
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|acpi_MatchHid
 argument_list|(
 name|handle
@@ -7838,7 +7835,7 @@ condition|)
 operator|*
 name|order
 operator|=
-literal|1
+literal|2
 expr_stmt|;
 elseif|else
 if|if
@@ -7853,7 +7850,7 @@ condition|)
 operator|*
 name|order
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 elseif|else
 if|if
@@ -7868,19 +7865,7 @@ condition|)
 operator|*
 name|order
 operator|=
-literal|3
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|type
-operator|==
-name|ACPI_TYPE_PROCESSOR
-condition|)
-operator|*
-name|order
-operator|=
-literal|100000
+literal|4
 expr_stmt|;
 block|}
 end_function

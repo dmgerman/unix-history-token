@@ -1149,7 +1149,7 @@ argument_list|(
 operator|&
 name|threaded_mtx
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1171,7 +1171,7 @@ argument_list|(
 operator|&
 name|threaded_cond
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1189,7 +1189,7 @@ argument_list|(
 operator|&
 name|threaded_mtx
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1315,7 +1315,7 @@ name|threaded_mtx
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1340,7 +1340,7 @@ argument_list|,
 operator|&
 name|fd2
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1358,7 +1358,7 @@ argument_list|(
 operator|&
 name|threaded_mtx
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1385,7 +1385,7 @@ argument_list|,
 operator|&
 name|threaded_mtx
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1404,7 +1404,7 @@ argument_list|(
 operator|&
 name|threaded_mtx
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1542,7 +1542,7 @@ name|thread
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err

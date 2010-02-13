@@ -876,7 +876,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uname [-aimnprsv]\n"
+literal|"usage: uname [-aimnoprsv]\n"
 argument_list|)
 expr_stmt|;
 name|exit

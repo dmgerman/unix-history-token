@@ -22,13 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
+file|<stdint.h>
 end_include
 
 begin_include

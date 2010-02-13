@@ -1629,6 +1629,15 @@ name|PAGE_SIZE
 operator|*
 literal|2
 expr_stmt|;
+comment|/* 	 * Initialize the wired TLB entry mapping the pcpu region for 	 * the BSP at 'pcpup'. Up until this point we were operating 	 * with the 'pcpup' for the BSP pointing to a virtual address 	 * in KSEG0 so there was no need for a TLB mapping. 	 */
+name|mips_pcpu_tlb_init
+argument_list|(
+name|PCPU_ADDR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose

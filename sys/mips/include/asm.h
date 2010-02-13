@@ -1385,27 +1385,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_comment
-comment|/* 	 * FREEBSD_DEVELOPERS_FIXME 	 * In multiprocessor case, store/retrieve the pcpu structure 	 * address for current CPU in scratch register for fast access. 	 */
-end_comment
-
-begin_error
-error|#
-directive|error
-literal|"Write GET_CPU_PCPU for SMP"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1416,11 +1395,6 @@ parameter_list|)
 define|\
 value|lw	reg, _C_LABEL(pcpup);
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Description of the setjmp buffer  *  * word  0	magic number	(dependant on creator)  *       1	RA  *       2	S0  *       3	S1  *       4	S2  *       5	S3  *       6	S4  *       7	S5  *       8	S6  *       9	S7  *       10	SP  *       11	S8  *       12	signal mask	(dependant on magic)  *       13	(con't)  *       14	(con't)  *       15	(con't)  *  * The magic number number identifies the jmp_buf and  * how the buffer was created as well as providing  * a sanity check  *  */

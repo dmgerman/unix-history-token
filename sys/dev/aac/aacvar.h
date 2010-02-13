@@ -1122,10 +1122,6 @@ name|AAC_HWIF_STRONGARM
 value|1
 define|#
 directive|define
-name|AAC_HWIF_FALCON
-value|2
-define|#
-directive|define
 name|AAC_HWIF_RKT
 value|3
 define|#

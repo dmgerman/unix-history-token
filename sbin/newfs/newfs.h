@@ -10,6 +10,64 @@ file|<libufs.h>
 end_include
 
 begin_comment
+comment|/*  * The following two constants set the default block and fragment sizes.  * Both constants must be a power of 2 and meet the following constraints:  *	MINBSIZE<= DESBLKSIZE<= MAXBSIZE  *	sectorsize<= DESFRAGSIZE<= DESBLKSIZE  *	DESBLKSIZE / DESFRAGSIZE<= 8  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DFL_FRAGSIZE
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFL_BLKSIZE
+value|16384
+end_define
+
+begin_comment
+comment|/*  * Cylinder groups may have up to MAXBLKSPERCG blocks. The actual  * number used depends upon how much information can be stored  * in a cylinder group map which must fit in a single file system  * block. The default is to use as many as possible blocks per group.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXBLKSPERCG
+value|0x7fffffff
+end_define
+
+begin_comment
+comment|/* desired fs_fpg ("infinity") */
+end_comment
+
+begin_comment
+comment|/*  * MAXBLKPG determines the maximum number of data blocks which are  * placed in a single cylinder group. The default is one indirect  * block worth of data blocks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXBLKPG
+parameter_list|(
+name|bsize
+parameter_list|)
+value|((bsize) / sizeof(ufs2_daddr_t))
+end_define
+
+begin_comment
+comment|/*  * Each file system has a number of inodes statically allocated.  * We allocate one inode slot per NFPI fragments, expecting this  * to be far more than we will ever need.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFPI
+value|4
+end_define
+
+begin_comment
 comment|/*  * variables set up by front end.  */
 end_comment
 

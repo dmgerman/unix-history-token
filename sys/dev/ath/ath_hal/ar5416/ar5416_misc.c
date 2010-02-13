@@ -67,7 +67,7 @@ file|"ar5416/ar5416phy.h"
 end_include
 
 begin_comment
-comment|/*  * Return the wireless modes (a,b,g,t) supported by hardware.  *  * This value is what is actually supported by the hardware  * and is unaffected by regulatory/country code settings.  *  */
+comment|/*  * Return the wireless modes (a,b,g,n,t) supported by hardware.  *  * This value is what is actually supported by the hardware  * and is unaffected by regulatory/country code settings.  *  */
 end_comment
 
 begin_function

@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
