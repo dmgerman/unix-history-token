@@ -126,6 +126,7 @@ name|time
 decl_stmt|;
 comment|/* time in ms to extend cookie */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1501,6 +1502,7 @@ name|uint16_t
 name|reserved
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
