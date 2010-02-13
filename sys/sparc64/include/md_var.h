@@ -100,6 +100,26 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|cpu_cpuid_prop
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|cpu_get_mid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|cpu_identify
 parameter_list|(
