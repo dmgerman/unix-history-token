@@ -7944,6 +7944,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|entry
+operator|->
+name|eflags
+operator||=
+name|MAP_ENTRY_WIRE_SKIPPED
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7969,12 +7975,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|entry
-operator|->
-name|eflags
-operator||=
-name|MAP_ENTRY_WIRE_SKIPPED
-expr_stmt|;
 goto|goto
 name|next_entry
 goto|;
