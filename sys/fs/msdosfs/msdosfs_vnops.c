@@ -5392,9 +5392,7 @@ name|dosdirtemplate
 init|=
 block|{
 block|{
-literal|".       "
-block|,
-literal|"   "
+literal|".          "
 block|,
 comment|/* the . entry */
 name|ATTR_DIRECTORY
@@ -5465,9 +5463,7 @@ comment|/* filesize */
 block|}
 block|,
 block|{
-literal|"..      "
-block|,
-literal|"   "
+literal|"..         "
 block|,
 comment|/* the .. entry */
 name|ATTR_DIRECTORY
@@ -7426,6 +7422,8 @@ operator|!=
 name|winChksum
 argument_list|(
 name|dentp
+operator|->
+name|deName
 argument_list|)
 condition|)
 block|{

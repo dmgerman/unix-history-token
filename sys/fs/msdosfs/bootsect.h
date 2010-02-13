@@ -11,6 +11,18 @@ begin_comment
 comment|/*-  * Written by Paul Popelka (paulp@uts.amdahl.com)  *  * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *  * This software is provided "as is".  *  * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *  * October 1992  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FS_MSDOSFS_BOOTSECT_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_FS_MSDOSFS_BOOTSECT_H_
+end_define
+
 begin_comment
 comment|/*  * Format of a boot sector.  This is the first sector on a DOS floppy disk  * or the fist sector of a partition on a hard disk.  But, it is not the  * first sector of a partitioned hard disk.  */
 end_comment
@@ -346,6 +358,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_FS_MSDOSFS_BOOTSECT_H_ */
+end_comment
 
 end_unit
 
