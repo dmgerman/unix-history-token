@@ -3176,8 +3176,8 @@ condition|(
 name|vo
 operator|->
 name|handle
-operator|==
-name|NULL
+operator|!=
+name|handle
 condition|)
 block|{
 name|ACPI_SERIAL_END
@@ -3211,8 +3211,6 @@ name|level
 operator|=
 name|vo_get_brightness
 argument_list|(
-name|vo
-operator|->
 name|handle
 argument_list|)
 expr_stmt|;
@@ -3313,8 +3311,6 @@ condition|)
 block|{
 name|vo_set_brightness
 argument_list|(
-name|vo
-operator|->
 name|handle
 argument_list|,
 name|new_level
@@ -3331,16 +3327,14 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s: unknown notify event 0x%x\n"
+literal|"unknown notify event 0x%x from %s\n"
+argument_list|,
+name|notify
 argument_list|,
 name|acpi_name
 argument_list|(
-name|vo
-operator|->
 name|handle
 argument_list|)
-argument_list|,
-name|notify
 argument_list|)
 expr_stmt|;
 block|}
