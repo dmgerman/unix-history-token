@@ -10,25 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -46,25 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
+file|<unistd.h>
 end_include
 
 begin_include

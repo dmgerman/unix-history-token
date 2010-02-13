@@ -22,19 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -52,7 +40,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/endian.h>
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_ifdef
