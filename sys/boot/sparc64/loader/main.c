@@ -2884,7 +2884,7 @@ condition|)
 name|panic
 argument_list|(
 literal|"%s: can't enter dTLB slot %d data "
-literal|"%#lx va %#lx index %d"
+literal|"%#lx va %#lx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2940,7 +2940,7 @@ condition|)
 name|panic
 argument_list|(
 literal|"%s: can't enter iTLB slot %d data "
-literal|"%#lx va %#lx index %d"
+literal|"%#lx va %#lxd"
 argument_list|,
 name|__func__
 argument_list|,
