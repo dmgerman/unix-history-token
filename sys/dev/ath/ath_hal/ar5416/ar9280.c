@@ -777,15 +777,6 @@ index|]
 operator|=
 name|nf
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|AR_SREV_KITE
-argument_list|(
-name|ah
-argument_list|)
-condition|)
-block|{
 name|nf
 operator|=
 name|MS
@@ -838,7 +829,6 @@ index|]
 operator|=
 name|nf
 expr_stmt|;
-block|}
 name|nf
 operator|=
 name|MS
@@ -891,14 +881,6 @@ index|]
 operator|=
 name|nf
 expr_stmt|;
-if|if
-condition|(
-name|AR_SREV_KITE
-argument_list|(
-name|ah
-argument_list|)
-condition|)
-block|{
 name|nf
 operator|=
 name|MS
@@ -951,7 +933,6 @@ index|]
 operator|=
 name|nf
 expr_stmt|;
-block|}
 block|}
 end_function
 
