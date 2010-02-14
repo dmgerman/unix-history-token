@@ -42,31 +42,35 @@ struct|struct
 name|bootblock
 block|{
 name|u_int
-name|BytesPerSec
+name|bpbBytesPerSec
 decl_stmt|;
 comment|/* bytes per sector */
 name|u_int
-name|SecPerClust
+name|bpbSecPerClust
 decl_stmt|;
 comment|/* sectors per cluster */
 name|u_int
-name|ResSectors
+name|bpbResSectors
 decl_stmt|;
 comment|/* number of reserved sectors */
 name|u_int
-name|FATs
+name|bpbFATs
 decl_stmt|;
-comment|/* number of FATs */
+comment|/* number of bpbFATs */
 name|u_int
-name|RootDirEnts
+name|bpbRootDirEnts
 decl_stmt|;
 comment|/* number of root directory entries */
+name|u_int32_t
+name|bpbSectors
+decl_stmt|;
+comment|/* total number of sectors */
 name|u_int
-name|Media
+name|bpbMedia
 decl_stmt|;
 comment|/* media descriptor */
 name|u_int
-name|FATsmall
+name|bpbFATsmall
 decl_stmt|;
 comment|/* number of sectors per FAT */
 name|u_int
@@ -74,39 +78,29 @@ name|SecPerTrack
 decl_stmt|;
 comment|/* sectors per track */
 name|u_int
-name|Heads
+name|bpbHeads
 decl_stmt|;
 comment|/* number of heads */
 name|u_int32_t
-name|HiddenSecs
+name|bpbHiddenSecs
 decl_stmt|;
 comment|/* # of hidden sectors */
 name|u_int32_t
-name|Sectors
+name|bpbHugeSectors
 decl_stmt|;
-comment|/* total number of sectors */
-define|#
-directive|define
-name|FAT32
-value|1
-comment|/* this is a FAT32 file system */
-comment|/* 					 * Maybe, we should separate out 					 * various parts of FAT32?	XXX 					 */
-name|u_int32_t
-name|HugeSectors
+comment|/* # of sectors if bpbbpbSectors == 0 */
+name|cl_t
+name|bpbRootClust
 decl_stmt|;
-comment|/* # of sectors if bpbSectors == 0 */
+comment|/* Start of Root Directory */
 name|u_int
-name|FSInfo
+name|bpbFSInfo
 decl_stmt|;
 comment|/* FSInfo sector */
 name|u_int
-name|Backup
+name|bpbBackup
 decl_stmt|;
 comment|/* Backup of Bootblocks */
-name|cl_t
-name|RootCl
-decl_stmt|;
-comment|/* Start of Root Directory */
 name|cl_t
 name|FSFree
 decl_stmt|;
@@ -120,6 +114,12 @@ name|u_int
 name|flags
 decl_stmt|;
 comment|/* some flags: */
+define|#
+directive|define
+name|FAT32
+value|1
+comment|/* this is a FAT32 file system */
+comment|/* 					 * Maybe, we should separate out 					 * various parts of FAT32?	XXX 					 */
 name|int
 name|ValidFat
 decl_stmt|;
