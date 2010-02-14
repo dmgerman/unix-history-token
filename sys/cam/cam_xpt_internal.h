@@ -565,18 +565,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|xpt_run_dev_sendq
-parameter_list|(
-name|struct
-name|cam_eb
-modifier|*
-name|bus
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|xpt_schedule_dev
 parameter_list|(

@@ -4787,8 +4787,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_DEV
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Schedule a periodic event to occasionally send an 	 * ordered tag to a device. 	 */

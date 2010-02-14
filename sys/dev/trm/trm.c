@@ -3361,29 +3361,6 @@ name|pccb
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 		 * (Re)Scan the SCSI Bus  	 	 * Rescan the given bus, or bus/target/lun  		 */
-case|case
-name|XPT_SCAN_BUS
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_SCAN_BUS \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
 comment|/* 		 * Get EDT entries matching the given pattern   		 */
 case|case
 name|XPT_DEV_MATCH
@@ -3541,29 +3518,6 @@ case|:
 name|TRM_DPRINTF
 argument_list|(
 literal|" XPT_TERM_IO \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * Scan Logical Unit  		 */
-case|case
-name|XPT_SCAN_LUN
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_SCAN_LUN \n"
 argument_list|)
 expr_stmt|;
 name|pccb

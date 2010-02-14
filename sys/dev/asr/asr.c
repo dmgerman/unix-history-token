@@ -130,12 +130,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/cam_xpt_periph.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/scsi/scsi_all.h>
 end_include
 

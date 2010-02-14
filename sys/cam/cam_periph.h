@@ -69,6 +69,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|periphdriver_init
+parameter_list|(
+name|int
+name|level
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_include
 include|#
 directive|include
@@ -318,6 +328,10 @@ define|#
 directive|define
 name|CAM_PERIPH_RECOVERY_INPROG
 value|0x20
+define|#
+directive|define
+name|CAM_PERIPH_SENSE_INPROG
+value|0x40
 name|u_int32_t
 name|immediate_priority
 decl_stmt|;
@@ -670,6 +684,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|cam_freeze_devq_arg
+parameter_list|(
+name|struct
+name|cam_path
+modifier|*
+name|path
+parameter_list|,
+name|u_int32_t
+name|flags
+parameter_list|,
+name|uint32_t
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int32_t
 name|cam_release_devq
 parameter_list|(
@@ -685,7 +717,7 @@ name|u_int32_t
 name|opening_reduction
 parameter_list|,
 name|u_int32_t
-name|timeout
+name|arg
 parameter_list|,
 name|int
 name|getcount_only

@@ -1084,7 +1084,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"CMD: %s: %s"
+literal|"%s. ACB: %s"
 argument_list|,
 name|ata_op_string
 argument_list|(
@@ -1141,7 +1141,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"ATA Status: %02x (%s%s%s%s%s%s%s%s)"
+literal|"ATA status: %02x (%s%s%s%s%s%s%s%s)"
 argument_list|,
 name|ataio
 operator|->
@@ -1277,7 +1277,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|", Error: %02x (%s%s%s%s%s%s%s%s)"
+literal|", error: %02x (%s%s%s%s%s%s%s%s)"
 argument_list|,
 name|ataio
 operator|->

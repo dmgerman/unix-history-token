@@ -1295,8 +1295,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_DEV
 argument_list|)
 expr_stmt|;
 return|return

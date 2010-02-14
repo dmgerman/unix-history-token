@@ -1360,7 +1360,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"CAM Status: Unknown (%#x)\n"
+literal|"CAM status: Unknown (%#x)\n"
 argument_list|,
 name|ccb
 operator|->
@@ -1375,7 +1375,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"CAM Status: %s\n"
+literal|"CAM status: %s\n"
 argument_list|,
 name|entry
 operator|->
@@ -1526,7 +1526,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"SCSI Status: %s\n"
+literal|"SCSI status: %s\n"
 argument_list|,
 name|scsi_status_string
 argument_list|(

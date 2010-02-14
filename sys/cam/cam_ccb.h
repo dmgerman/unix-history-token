@@ -430,7 +430,7 @@ name|XPT_REL_SIMQ
 init|=
 literal|0x05
 block|,
-comment|/* Release a frozen SIM queue */
+comment|/* Release a frozen device queue */
 name|XPT_SASYNC_CB
 init|=
 literal|0x06
@@ -474,6 +474,11 @@ init|=
 literal|0x0c
 block|,
 comment|/* Device statistics (error counts, etc.) */
+name|XPT_FREEZE_QUEUE
+init|=
+literal|0x0d
+block|,
+comment|/* Freeze device queue */
 comment|/* SCSI Control Functions: 0x10->0x1F */
 name|XPT_ABORT
 init|=
@@ -2270,12 +2275,17 @@ define|#
 directive|define
 name|RELSIM_RELEASE_AFTER_QEMPTY
 value|0x08
+define|#
+directive|define
+name|RELSIM_RELEASE_RUNLEVEL
+value|0x10
 name|u_int32_t
 name|openings
 decl_stmt|;
 name|u_int32_t
 name|release_timeout
 decl_stmt|;
+comment|/* Abstract argument. */
 name|u_int32_t
 name|qfrozen_cnt
 decl_stmt|;
