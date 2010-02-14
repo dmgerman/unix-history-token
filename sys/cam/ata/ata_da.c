@@ -417,10 +417,6 @@ name|disk
 modifier|*
 name|disk
 decl_stmt|;
-name|union
-name|ccb
-name|saved_ccb
-decl_stmt|;
 name|struct
 name|task
 name|sysctl_task
@@ -5277,10 +5273,7 @@ name|cam_flags
 argument_list|,
 name|sense_flags
 argument_list|,
-operator|&
-name|softc
-operator|->
-name|saved_ccb
+name|NULL
 argument_list|)
 operator|)
 return|;

@@ -313,10 +313,6 @@ define|#
 directive|define
 name|PMP_EV_RESCAN
 value|2
-name|union
-name|ccb
-name|saved_ccb
-decl_stmt|;
 name|struct
 name|task
 name|sysctl_task
@@ -2475,10 +2471,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|&
-name|softc
-operator|->
-name|saved_ccb
+name|NULL
 argument_list|)
 operator|==
 name|ERESTART
