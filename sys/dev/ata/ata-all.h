@@ -2922,6 +2922,9 @@ decl_stmt|;
 name|u_int
 name|bytecount
 decl_stmt|;
+name|u_int
+name|atapi
+decl_stmt|;
 block|}
 struct|;
 end_struct

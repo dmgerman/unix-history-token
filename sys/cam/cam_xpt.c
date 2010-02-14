@@ -5575,6 +5575,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ata
+operator|->
+name|valid
+operator|&
+name|CTS_ATA_VALID_ATAPI
+operator|)
+operator|&&
+name|ata
+operator|->
+name|atapi
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"ATAPI %dbytes, "
+argument_list|,
+name|ata
+operator|->
+name|atapi
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ata
 operator|->
 name|valid
@@ -5583,7 +5608,7 @@ name|CTS_ATA_VALID_BYTECOUNT
 condition|)
 name|printf
 argument_list|(
-literal|"PIO size %dbytes"
+literal|"PIO %dbytes"
 argument_list|,
 name|ata
 operator|->
@@ -5669,6 +5694,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sata
+operator|->
+name|valid
+operator|&
+name|CTS_ATA_VALID_ATAPI
+operator|)
+operator|&&
+name|sata
+operator|->
+name|atapi
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"ATAPI %dbytes, "
+argument_list|,
+name|sata
+operator|->
+name|atapi
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|sata
 operator|->
 name|valid
@@ -5677,7 +5727,7 @@ name|CTS_SATA_VALID_BYTECOUNT
 condition|)
 name|printf
 argument_list|(
-literal|"PIO size %dbytes"
+literal|"PIO %dbytes"
 argument_list|,
 name|sata
 operator|->

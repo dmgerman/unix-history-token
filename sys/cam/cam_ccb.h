@@ -2738,6 +2738,10 @@ define|#
 directive|define
 name|CTS_ATA_VALID_BYTECOUNT
 value|0x02
+define|#
+directive|define
+name|CTS_ATA_VALID_ATAPI
+value|0x20
 name|int
 name|mode
 decl_stmt|;
@@ -2746,6 +2750,10 @@ name|u_int
 name|bytecount
 decl_stmt|;
 comment|/* Length of PIO transaction */
+name|u_int
+name|atapi
+decl_stmt|;
+comment|/* Length of ATAPI CDB */
 block|}
 struct|;
 end_struct
@@ -2778,6 +2786,10 @@ define|#
 directive|define
 name|CTS_SATA_VALID_TAGS
 value|0x10
+define|#
+directive|define
+name|CTS_SATA_VALID_ATAPI
+value|0x20
 name|int
 name|mode
 decl_stmt|;
@@ -2798,6 +2810,10 @@ name|u_int
 name|tags
 decl_stmt|;
 comment|/* Number of allowed tags */
+name|u_int
+name|atapi
+decl_stmt|;
+comment|/* Length of ATAPI CDB */
 block|}
 struct|;
 end_struct
