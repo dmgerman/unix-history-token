@@ -795,6 +795,30 @@ literal|"SETFEATURES DISABLE WCACHE"
 operator|)
 return|;
 case|case
+literal|0x06
+case|:
+return|return
+operator|(
+literal|"SETFEATURES ENABLE PUIS"
+operator|)
+return|;
+case|case
+literal|0x86
+case|:
+return|return
+operator|(
+literal|"SETFEATURES DISABLE PUIS"
+operator|)
+return|;
+case|case
+literal|0x07
+case|:
+return|return
+operator|(
+literal|"SETFEATURES SPIN-UP"
+operator|)
+return|;
+case|case
 literal|0xaa
 case|:
 return|return
