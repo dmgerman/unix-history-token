@@ -94,7 +94,7 @@ name|struct
 name|bootblock
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|cl_t
 parameter_list|,
@@ -117,7 +117,7 @@ parameter_list|,
 name|cl_t
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -154,7 +154,7 @@ name|struct
 name|bootblock
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|u_char
 modifier|*
@@ -492,7 +492,7 @@ name|bootblock
 modifier|*
 name|boot
 parameter_list|,
-name|int
+name|u_int
 name|fat
 parameter_list|,
 name|cl_t
@@ -651,7 +651,7 @@ name|bootblock
 modifier|*
 name|boot
 parameter_list|,
-name|int
+name|u_int
 name|no
 parameter_list|,
 name|u_char
@@ -737,6 +737,9 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|read
 argument_list|(
 name|fs
@@ -804,7 +807,7 @@ name|bootblock
 modifier|*
 name|boot
 parameter_list|,
-name|int
+name|u_int
 name|no
 parameter_list|,
 name|struct
@@ -833,6 +836,9 @@ name|int
 name|ret
 init|=
 name|FSOK
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 name|boot
 operator|->
@@ -864,12 +870,14 @@ name|FSFATAL
 return|;
 name|fat
 operator|=
-name|calloc
+name|malloc
 argument_list|(
+name|len
+operator|=
 name|boot
 operator|->
 name|NumClusters
-argument_list|,
+operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -898,6 +906,18 @@ return|return
 name|FSFATAL
 return|;
 block|}
+operator|(
+name|void
+operator|)
+name|memset
+argument_list|(
+name|fat
+argument_list|,
+literal|0
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|buffer
@@ -1522,6 +1542,25 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|&
+name|FSFATAL
+condition|)
+block|{
+name|free
+argument_list|(
+name|fat
+argument_list|)
+expr_stmt|;
+operator|*
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
 operator|*
 name|fp
 operator|=
@@ -1595,7 +1634,7 @@ name|cl_t
 modifier|*
 name|cp2
 parameter_list|,
-name|int
+name|u_int
 name|fatnum
 parameter_list|)
 block|{
@@ -1701,7 +1740,7 @@ return|;
 block|}
 name|pwarn
 argument_list|(
-literal|"Cluster %u is marked %s in FAT 0, %s in FAT %d\n"
+literal|"Cluster %u is marked %s in FAT 0, %s in FAT %u\n"
 argument_list|,
 name|cl
 argument_list|,
@@ -1746,7 +1785,7 @@ name|ask
 argument_list|(
 literal|0
 argument_list|,
-literal|"Use FAT %d's entry"
+literal|"Use FAT %u's entry"
 argument_list|,
 name|fatnum
 argument_list|)
@@ -1790,7 +1829,7 @@ name|ask
 argument_list|(
 literal|0
 argument_list|,
-literal|"Use continuation from FAT %d"
+literal|"Use continuation from FAT %u"
 argument_list|,
 name|fatnum
 argument_list|)
@@ -1845,7 +1884,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"Cluster %u continues with cluster %u in FAT 0, but is marked %s in FAT %d\n"
+literal|"Cluster %u continues with cluster %u in FAT 0, but is marked %s in FAT %u\n"
 argument_list|,
 name|cl
 argument_list|,
@@ -1909,7 +1948,7 @@ return|;
 block|}
 name|pwarn
 argument_list|(
-literal|"Cluster %u continues with cluster %u in FAT 0, but with cluster %u in FAT %d\n"
+literal|"Cluster %u continues with cluster %u in FAT 0, but with cluster %u in FAT %u\n"
 argument_list|,
 name|cl
 argument_list|,
@@ -1948,7 +1987,7 @@ name|ask
 argument_list|(
 literal|0
 argument_list|,
-literal|"Use continuation from FAT %d"
+literal|"Use continuation from FAT %u"
 argument_list|,
 name|fatnum
 argument_list|)
@@ -1993,7 +2032,7 @@ name|fatEntry
 modifier|*
 name|second
 parameter_list|,
-name|int
+name|u_int
 name|fatnum
 parameter_list|)
 block|{
@@ -2733,10 +2772,10 @@ decl_stmt|;
 name|cl_t
 name|cl
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
-name|u_int32_t
+name|size_t
 name|fatsz
 decl_stmt|;
 name|off_t
@@ -3303,6 +3342,9 @@ argument_list|)
 operator|!=
 name|off
 operator|||
+operator|(
+name|size_t
+operator|)
 name|write
 argument_list|(
 name|fs
@@ -3565,82 +3607,6 @@ name|ret
 operator|=
 literal|1
 expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|boot
-operator|->
-name|NumFree
-operator|&&
-name|fat
-index|[
-name|boot
-operator|->
-name|FSNext
-index|]
-operator|.
-name|next
-operator|!=
-name|CLUST_FREE
-condition|)
-block|{
-name|pwarn
-argument_list|(
-literal|"Next free cluster in FSInfo block (%u) not free\n"
-argument_list|,
-name|boot
-operator|->
-name|FSNext
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ask
-argument_list|(
-literal|1
-argument_list|,
-literal|"Fix"
-argument_list|)
-condition|)
-for|for
-control|(
-name|head
-operator|=
-name|CLUST_FIRST
-init|;
-name|head
-operator|<
-name|boot
-operator|->
-name|NumClusters
-condition|;
-name|head
-operator|++
-control|)
-if|if
-condition|(
-name|fat
-index|[
-name|head
-index|]
-operator|.
-name|next
-operator|==
-name|CLUST_FREE
-condition|)
-block|{
-name|boot
-operator|->
-name|FSNext
-operator|=
-name|head
-expr_stmt|;
-name|ret
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 block|}
 block|}
 if|if

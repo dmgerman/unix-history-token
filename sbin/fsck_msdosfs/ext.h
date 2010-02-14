@@ -229,7 +229,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Some unrecoverable error occured */
+comment|/* Some unrecoverable error occurred */
 end_comment
 
 begin_define
@@ -255,7 +255,7 @@ comment|/* Fix file system FAT */
 end_comment
 
 begin_comment
-comment|/*  * read a boot block in a machine independend fashion and translate  * it into our struct bootblock.  */
+comment|/*  * read a boot block in a machine independent fashion and translate  * it into our struct bootblock.  */
 end_comment
 
 begin_function_decl
@@ -302,7 +302,7 @@ name|struct
 name|bootblock
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|struct
 name|fatEntry
@@ -313,7 +313,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Check two FAT copies for consistency and merge changes into the  * first if neccessary.  */
+comment|/*  * Check two FAT copies for consistency and merge changes into the  * first if necessary.  */
 end_comment
 
 begin_function_decl
@@ -332,7 +332,7 @@ name|struct
 name|fatEntry
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
