@@ -218,6 +218,10 @@ name|time_t
 name|n_dmtime
 decl_stmt|;
 comment|/* Prev dir modify time. */
+name|int
+name|n_dmtime_ticks
+decl_stmt|;
+comment|/* Tick of -ve cache entry */
 name|time_t
 name|n_expiry
 decl_stmt|;
