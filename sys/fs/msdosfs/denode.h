@@ -343,20 +343,6 @@ define|\
 value|(bcopy((dep)->de_Name, (dp)->deName, 11),	\ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 (dp)->deLowerCase = (dep)->de_LowerCase,	\ 	 (dp)->deCHundredth = (dep)->de_CHun,		\ 	 putushort((dp)->deCTime, (dep)->de_CTime),	\ 	 putushort((dp)->deCDate, (dep)->de_CDate),	\ 	 putushort((dp)->deADate, (dep)->de_ADate),	\ 	 putushort((dp)->deMTime, (dep)->de_MTime),	\ 	 putushort((dp)->deMDate, (dep)->de_MDate),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize,			\ 	     ((dep)->de_Attributes& ATTR_DIRECTORY) ? 0 : (dep)->de_FileSize), \ 	 putushort((dp)->deHighClust, (dep)->de_StartCluster>> 16))
 end_define
 
-begin_define
-define|#
-directive|define
-name|de_forw
-value|de_chain[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|de_back
-value|de_chain[1]
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

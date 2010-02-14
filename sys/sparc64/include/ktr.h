@@ -21,12 +21,6 @@ directive|include
 file|<sys/ktr.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/upa.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -37,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|KTR_CPU
-value|UPA_CR_GET_MID(ldxa(0, ASI_UPA_CONFIG_REG))
+value|PCPU_GET(mid)
 end_define
 
 begin_else
@@ -103,7 +97,7 @@ parameter_list|,
 name|l2
 parameter_list|)
 define|\
-value|.sect	.rodata ; \ l1:	.asciz	desc ; \ 	.previous ; \ 	SET(ktr_idx, r2, r1) ; \ 	lduw	[r1], r2 ; \ l2:	add	r2, 1, r3 ; \ 	set	KTR_ENTRIES - 1, r1 ; \ 	and	r3, r1, r3 ; \ 	set	ktr_idx, r1 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne	%icc, l2 ## b ; \ 	 mov	r3, r2 ; \ 	SET(ktr_buf, r3, r1) ; \ 	mulx	r2, KTR_SIZEOF, r2 ; \ 	add	r1, r2, r1 ; \ 	rd	%tick, r2 ; \ 	stx	r2, [r1 + KTR_TIMESTAMP] ; \ 	UPA_GET_MID(r2) ; \ 	stw	r2, [r1 + KTR_CPU] ; \ 	stw	%g0, [r1 + KTR_LINE] ; \ 	stx	%g0, [r1 + KTR_FILE] ; \ 	SET(l1 ## b, r3, r2) ; \ 	stx	r2, [r1 + KTR_DESC]
+value|.sect	.rodata ; \ l1:	.asciz	desc ; \ 	.previous ; \ 	SET(ktr_idx, r2, r1) ; \ 	lduw	[r1], r2 ; \ l2:	add	r2, 1, r3 ; \ 	set	KTR_ENTRIES - 1, r1 ; \ 	and	r3, r1, r3 ; \ 	set	ktr_idx, r1 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne	%icc, l2 ## b ; \ 	 mov	r3, r2 ; \ 	SET(ktr_buf, r3, r1) ; \ 	mulx	r2, KTR_SIZEOF, r2 ; \ 	add	r1, r2, r1 ; \ 	rd	%tick, r2 ; \ 	stx	r2, [r1 + KTR_TIMESTAMP] ; \ 	lduw	[PCPU(MID)], r2 ; \ 	stw	r2, [r1 + KTR_CPU] ; \ 	stw	%g0, [r1 + KTR_LINE] ; \ 	stx	%g0, [r1 + KTR_FILE] ; \ 	SET(l1 ## b, r3, r2) ; \ 	stx	r2, [r1 + KTR_DESC]
 end_define
 
 begin_define
@@ -128,7 +122,7 @@ parameter_list|,
 name|l3
 parameter_list|)
 define|\
-value|set	mask, r1 ; \ 	TEST(ktr_mask, r1, r2, r2, l3) ; \ 	UPA_GET_MID(r1) ; \ 	mov	1, r2 ; \ 	sllx	r2, r1, r1 ; \ 	TEST(ktr_cpumask, r1, r2, r3, l3) ; \ 	ATR(desc, r1, r2, r3, l1, l2)
+value|set	mask, r1 ; \ 	TEST(ktr_mask, r1, r2, r2, l3) ; \ 	lduw	[PCPU(MID)], r1 ; \ 	mov	1, r2 ; \ 	sllx	r2, r1, r1 ; \ 	TEST(ktr_cpumask, r1, r2, r3, l3) ; \ 	ATR(desc, r1, r2, r3, l1, l2)
 end_define
 
 begin_endif

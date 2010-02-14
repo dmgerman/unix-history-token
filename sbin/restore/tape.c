@@ -1163,6 +1163,9 @@ operator|!
 name|pipein
 operator|&&
 operator|!
+name|pipecmdin
+operator|&&
+operator|!
 name|bflag
 condition|)
 name|findtapeblksize

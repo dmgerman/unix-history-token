@@ -863,6 +863,8 @@ operator|==
 name|winChksum
 argument_list|(
 name|dep
+operator|->
+name|deName
 argument_list|)
 operator|)
 expr_stmt|;
@@ -1915,6 +1917,8 @@ init|=
 name|winChksum
 argument_list|(
 name|ndep
+operator|->
+name|deName
 argument_list|)
 decl_stmt|;
 specifier|const

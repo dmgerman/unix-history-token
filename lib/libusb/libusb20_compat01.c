@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdlib.h>
 end_include
 
 begin_include

@@ -168,6 +168,15 @@ index|[
 literal|0
 index|]
 operator|.
+name|n_type
+operator|=
+name|N_UNDF
+expr_stmt|;
+name|nl
+index|[
+literal|0
+index|]
+operator|.
 name|n_name
 operator|=
 operator|(
