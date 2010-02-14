@@ -170,17 +170,19 @@ name|eflag
 decl_stmt|,
 name|hflag
 decl_stmt|,
-name|Nflag
-decl_stmt|,
-name|nflag
-decl_stmt|,
-name|oflag
+name|iflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
+name|Nflag
+decl_stmt|,
+name|nflag
+decl_stmt|,
+name|oflag
+decl_stmt|,
 name|qflag
 decl_stmt|,
 name|xflag
@@ -310,7 +312,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bdehNnoqx] name[=value] ..."
+literal|"usage: sysctl [-bdehiNnoqx] name[=value] ..."
 argument_list|,
 literal|"       sysctl [-bdehNnoqx] -a"
 argument_list|)
@@ -371,7 +373,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AabdehNnoqwxX"
+literal|"AabdehiNnoqwxX"
 argument_list|)
 operator|)
 operator|!=
@@ -431,6 +433,14 @@ case|case
 literal|'h'
 case|:
 name|hflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|iflag
 operator|=
 literal|1
 expr_stmt|;
@@ -745,6 +755,11 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|iflag
+condition|)
+return|return;
 if|if
 condition|(
 name|qflag
