@@ -1014,6 +1014,15 @@ name|UFTDI_DEV
 argument_list|(
 name|FTDI
 argument_list|,
+name|SERIAL_4232H
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
 name|SERIAL_8U232AM
 argument_list|,
 literal|8U232AM
