@@ -3973,6 +3973,12 @@ name|cn
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
 name|brelse
 argument_list|(
 name|bp
