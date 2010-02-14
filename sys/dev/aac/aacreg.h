@@ -4142,7 +4142,7 @@ index|]
 decl_stmt|;
 name|struct
 name|aac_sg_table
-name|sg_map32
+name|sg_map
 decl_stmt|;
 block|}
 struct|;

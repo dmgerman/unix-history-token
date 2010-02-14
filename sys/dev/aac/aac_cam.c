@@ -1987,7 +1987,7 @@ name|ScsiPortCommand
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgCount
 operator|=
@@ -1995,7 +1995,7 @@ literal|1
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgEntry
 index|[
@@ -2016,7 +2016,7 @@ name|data_ptr
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgEntry
 index|[
@@ -2060,7 +2060,7 @@ operator|=
 operator|&
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 expr_stmt|;
 block|}
 block|}
@@ -2078,7 +2078,7 @@ else|else
 block|{
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgCount
 operator|=
@@ -2086,7 +2086,7 @@ literal|0
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgEntry
 index|[
