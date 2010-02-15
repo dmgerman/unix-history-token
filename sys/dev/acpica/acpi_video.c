@@ -523,7 +523,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VID_NOTIFY_CYC_BRN
+name|VID_NOTIFY_CYCLE_BRN
 value|0x85
 end_define
 
@@ -544,7 +544,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VID_NOTIFY_ZRO_BRN
+name|VID_NOTIFY_ZERO_BRN
 value|0x88
 end_define
 
@@ -583,7 +583,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DOS_BRIGHTNESS_BY_BIOS
+name|DOS_BRIGHTNESS_BY_OSPM
 value|(1<< 2)
 end_define
 
@@ -1365,7 +1365,7 @@ name|handle
 argument_list|,
 name|DOS_SWITCH_BY_OSPM
 operator||
-name|DOS_BRIGHTNESS_BY_BIOS
+name|DOS_BRIGHTNESS_BY_OSPM
 argument_list|)
 expr_stmt|;
 name|acpi_video_power_profile
@@ -3202,7 +3202,7 @@ name|notify
 condition|)
 block|{
 case|case
-name|VID_NOTIFY_CYC_BRN
+name|VID_NOTIFY_CYCLE_BRN
 case|:
 if|if
 condition|(
@@ -3223,7 +3223,7 @@ case|case
 name|VID_NOTIFY_DEC_BRN
 case|:
 case|case
-name|VID_NOTIFY_ZRO_BRN
+name|VID_NOTIFY_ZERO_BRN
 case|:
 if|if
 condition|(
@@ -3280,7 +3280,7 @@ name|notify
 condition|)
 block|{
 case|case
-name|VID_NOTIFY_CYC_BRN
+name|VID_NOTIFY_CYCLE_BRN
 case|:
 for|for
 control|(
@@ -3423,7 +3423,7 @@ block|}
 block|}
 break|break;
 case|case
-name|VID_NOTIFY_ZRO_BRN
+name|VID_NOTIFY_ZERO_BRN
 case|:
 for|for
 control|(
