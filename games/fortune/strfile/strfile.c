@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Arnold.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Arnold.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -75,6 +75,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -82,12 +100,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -105,12 +117,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -123,20 +129,6 @@ end_include
 begin_comment
 comment|/*  *	This program takes a file composed of strings separated by  * lines starting with two consecutive delimiting character (default  * character is '%') and creates another file which consists of a table  * describing the file (structure from "strfile.h"), a table of seek  * pointers to the start of the strings, and the strings, each terminated  * by a null byte.  Usage:  *  *	% strfile [-iorsx] [ -cC ] sourcefile [ datafile ]  *  *	C - Allow comments marked by a double delimiter at line's beginning  *	c - Change delimiting character from '%' to 'C'  *	s - Silent.  Give no summary of data processed at the end of  *	    the run.  *	o - order the strings in alphabetic order  *	i - if ordering, ignore case  *	r - randomize the order of the strings  *	x - set rotated bit  *  *		Ken Arnold	Sept. 7, 1978 --  *  *	Added ordering options.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
 
 begin_define
 define|#
@@ -161,26 +153,8 @@ name|ptr
 parameter_list|,
 name|sz
 parameter_list|)
-value|{ \ 			if (ptr == NULL) \ 				ptr = malloc(CHUNKSIZE * sizeof *ptr); \ 			else if (((sz) + 1) % CHUNKSIZE == 0) \ 				ptr = realloc(ptr, ((sz) + CHUNKSIZE) * sizeof *ptr); \ 			if (ptr == NULL) { \ 				fprintf(stderr, "out of space\n"); \ 				exit(1); \ 			} \ 		}
+value|do { \ 			if (ptr == NULL) \ 				ptr = malloc(CHUNKSIZE * sizeof(*ptr)); \ 			else if (((sz) + 1) % CHUNKSIZE == 0) \ 				ptr = realloc(ptr, ((sz) + CHUNKSIZE) * sizeof(*ptr)); \ 			if (ptr == NULL) { \ 				fprintf(stderr, "out of space\n"); \ 				exit(1); \ 			} \ 		} while (0)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_VOID
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|void
-value|char
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -229,7 +203,7 @@ specifier|static
 name|int
 name|Cflag
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -242,7 +216,7 @@ specifier|static
 name|int
 name|Sflag
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -255,7 +229,7 @@ specifier|static
 name|int
 name|Oflag
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -268,7 +242,7 @@ specifier|static
 name|int
 name|Iflag
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -281,7 +255,7 @@ specifier|static
 name|int
 name|Rflag
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -294,7 +268,7 @@ specifier|static
 name|int
 name|Xflag
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -467,6 +441,9 @@ name|char
 modifier|*
 name|sp
 decl_stmt|,
+modifier|*
+name|nsp
+decl_stmt|,
 name|dc
 decl_stmt|;
 name|FILE
@@ -493,10 +470,6 @@ decl_stmt|;
 name|uint32_t
 name|cnt
 decl_stmt|;
-name|char
-modifier|*
-name|nsp
-decl_stmt|;
 name|STR
 modifier|*
 name|fp
@@ -508,9 +481,6 @@ index|[
 literal|257
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|setlocale
 argument_list|(
 name|LC_ALL
@@ -589,9 +559,6 @@ condition|(
 operator|!
 name|STORING_PTRS
 condition|)
-operator|(
-name|void
-operator|)
 name|fseek
 argument_list|(
 name|outf
@@ -600,9 +567,11 @@ operator|(
 name|long
 operator|)
 sizeof|sizeof
+argument_list|(
 name|Tbl
+argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Write the strings onto the file 	 */
@@ -865,7 +834,7 @@ index|]
 expr_stmt|;
 name|first
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 block|}
@@ -877,9 +846,6 @@ name|NULL
 condition|)
 do|;
 comment|/* 	 * write the tables in 	 */
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|inf
@@ -1061,9 +1027,6 @@ operator|.
 name|str_flags
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fwrite
 argument_list|(
 operator|(
@@ -1074,7 +1037,9 @@ operator|&
 name|Tbl
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|Tbl
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -1111,16 +1076,15 @@ operator|*
 name|p
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fwrite
 argument_list|(
 name|Seekpts
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|Seekpts
+argument_list|)
 argument_list|,
 operator|(
 name|size_t
@@ -1131,9 +1095,6 @@ name|outf
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|outf
@@ -1298,9 +1259,6 @@ operator|*
 operator|++
 name|argv
 condition|)
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|Outfile
@@ -1333,9 +1291,6 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|Outfile
@@ -1343,9 +1298,6 @@ argument_list|,
 name|Infile
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcat
 argument_list|(
 name|Outfile
@@ -1364,9 +1316,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1422,7 +1371,9 @@ argument_list|,
 literal|1
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|beoff
+argument_list|)
 argument_list|,
 name|fp
 argument_list|)
@@ -1505,8 +1456,10 @@ operator|.
 name|str_numstr
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|Firstch
+argument_list|)
 argument_list|,
 name|cmp_str
 argument_list|)
@@ -1539,17 +1492,11 @@ operator|++
 operator|->
 name|pos
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|Sort_1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|Sort_2
@@ -1666,13 +1613,11 @@ name|int
 name|c1
 decl_stmt|,
 name|c2
-decl_stmt|;
-name|int
+decl_stmt|,
 name|n1
 decl_stmt|,
 name|n2
-decl_stmt|;
-name|int
+decl_stmt|,
 name|r
 decl_stmt|;
 define|#
@@ -1692,7 +1637,7 @@ name|ch
 parameter_list|,
 name|nf
 parameter_list|)
-value|(ch == EOF || (ch == (unsigned char) Delimch&& nf))
+value|(ch == EOF || (ch == (unsigned char)Delimch&& nf))
 name|p1
 operator|=
 operator|(
@@ -1751,9 +1696,6 @@ operator|(
 name|r
 operator|)
 return|;
-operator|(
-name|void
-operator|)
 name|fseeko
 argument_list|(
 name|Sort_1
@@ -1762,12 +1704,9 @@ name|p1
 operator|->
 name|pos
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fseeko
 argument_list|(
 name|Sort_2
@@ -1776,16 +1715,16 @@ name|p2
 operator|->
 name|pos
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|n1
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|n2
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 while|while
 condition|(

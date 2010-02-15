@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Arnold.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Arnold.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -75,6 +75,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dirent.h>
 end_include
 
@@ -87,25 +99,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<locale.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<regex.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -123,19 +129,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<regex.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -1204,12 +1204,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
+operator|)
+return|;
 block|}
 end_function
 
@@ -1241,9 +1240,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fseeko
 argument_list|(
 name|fp
@@ -1255,7 +1251,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 for|for
@@ -1489,9 +1485,6 @@ argument_list|(
 name|Fortfile
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fseeko
 argument_list|(
 name|Fortfile
@@ -1503,7 +1496,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|nchar
@@ -1549,7 +1542,9 @@ operator|=
 name|nchar
 expr_stmt|;
 return|return
+operator|(
 name|nchar
+operator|)
 return|;
 block|}
 end_function
@@ -1958,9 +1953,11 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|i
 operator|!=
 literal|0
+operator|)
 return|;
 block|}
 else|else
@@ -2018,9 +2015,11 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|i
 operator|!=
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -2121,7 +2120,9 @@ literal|"percentages must be<= 100\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -2140,7 +2141,9 @@ literal|"percentages must be integers\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 comment|/* 			 * If the number isn't followed by a '%', then 			 * it was not a percentage, just the first part 			 * of a file name which starts with digits. 			 */
@@ -2190,7 +2193,9 @@ literal|"percentages must precede files\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 name|sp
@@ -2266,7 +2271,9 @@ name|Fortune_path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
@@ -2293,12 +2300,16 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -2461,7 +2472,9 @@ name|tpath
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 comment|/* don't recurse */
 block|}
@@ -2570,7 +2583,7 @@ name|open
 argument_list|(
 name|path
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -2703,9 +2716,11 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|i
 operator|!=
 literal|0
+operator|)
 return|;
 block|}
 comment|/* 		if (parent == NULL) 			perror(path); 		*/
@@ -2719,7 +2734,9 @@ name|tpath
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 name|DPRINTF
@@ -2850,10 +2867,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|fp
 argument_list|)
 expr_stmt|;
@@ -2863,7 +2876,9 @@ name|offensive
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 comment|/* 	 * If the user said -a, we need to make this node a pointer to 	 * both files, if there are two.  We don't need to do this if 	 * we are scanning a directory, since the scan will pick up the 	 * -o file anyway. 	 */
@@ -2983,7 +2998,9 @@ endif|#
 directive|endif
 comment|/* OK_TO_WRITE_DISK */
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -3006,15 +3023,13 @@ name|fp
 decl_stmt|;
 name|fp
 operator|=
-operator|(
-name|FILEDESC
-operator|*
-operator|)
 name|do_malloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|fp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -3092,7 +3107,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|fp
+operator|)
 return|;
 block|}
 end_function
@@ -3137,12 +3154,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|strcat
 argument_list|(
 name|new
 argument_list|,
 literal|"-o"
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3230,7 +3249,6 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-specifier|auto
 name|char
 modifier|*
 name|datfile
@@ -3274,7 +3292,7 @@ name|open
 argument_list|(
 name|offensive
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -3484,12 +3502,10 @@ name|dirent
 modifier|*
 name|dirent
 decl_stmt|;
-specifier|auto
 name|FILEDESC
 modifier|*
 name|tailp
 decl_stmt|;
-specifier|auto
 name|char
 modifier|*
 name|name
@@ -3535,7 +3551,9 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 name|tailp
@@ -3658,11 +3676,15 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -3681,8 +3703,7 @@ modifier|*
 name|file
 parameter_list|)
 block|{
-specifier|auto
-type|struct
+name|struct
 name|stat
 name|sbuf
 decl_stmt|;
@@ -3699,7 +3720,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 return|return
 operator|(
@@ -3860,7 +3883,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
@@ -3907,7 +3932,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -3938,7 +3965,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -4005,7 +4034,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
@@ -4090,7 +4121,9 @@ name|datfile
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -4176,7 +4209,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -4238,7 +4273,9 @@ operator|++
 condition|)
 do|;
 return|return
+operator|(
 name|new
+operator|)
 return|;
 block|}
 end_function
@@ -4292,7 +4329,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|new
+operator|)
 return|;
 block|}
 end_function
@@ -4961,9 +5000,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|lseek
 argument_list|(
 name|fp
@@ -4990,7 +5026,7 @@ literal|0
 index|]
 argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|read
@@ -5120,7 +5156,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|fp
+operator|)
 return|;
 block|}
 else|else
@@ -5240,7 +5278,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|fp
+operator|)
 return|;
 block|}
 block|}
@@ -5425,7 +5465,7 @@ name|fp
 operator|->
 name|datfile
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -5500,7 +5540,7 @@ name|fp
 operator|->
 name|posfile
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -5658,7 +5698,6 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
-specifier|auto
 name|int
 name|fd
 decl_stmt|;
@@ -5693,7 +5732,7 @@ name|fp
 operator|->
 name|datfile
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -6380,7 +6419,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
+operator|(
 name|new
+operator|)
 return|;
 block|}
 end_function
@@ -6440,9 +6481,10 @@ name|File_list
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Found_one
+operator|)
 return|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -6535,6 +6577,7 @@ name|str_longlen
 operator|>
 operator|(
 name|unsigned
+name|int
 operator|)
 name|maxlen
 condition|)
@@ -6549,7 +6592,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|maxlen
+operator|)
 return|;
 block|}
 end_function
