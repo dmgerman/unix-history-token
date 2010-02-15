@@ -4058,7 +4058,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_KITE || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_11)
+value|(AR_SREV_KITE_11(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_11)
 end_define
 
 begin_define
@@ -4069,7 +4069,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_KITE(ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_KITE_12)
+value|(AR_SREV_KITE(ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_12)
 end_define
 
 begin_define
@@ -4080,7 +4080,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_KITE || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_12)
+value|(AR_SREV_KITE_12(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_12)
 end_define
 
 begin_endif
