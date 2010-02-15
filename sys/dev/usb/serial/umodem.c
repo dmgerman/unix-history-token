@@ -1370,13 +1370,35 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no CM or union descriptor\n"
+literal|"Missing descriptor. "
+literal|"Assuming data interface is next.\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ctrl_iface_no
+operator|==
+literal|0xFF
+condition|)
 goto|goto
 name|detach
 goto|;
+else|else
+name|sc
+operator|->
+name|sc_data_iface_no
+operator|=
+name|sc
+operator|->
+name|sc_ctrl_iface_no
+operator|+
+literal|1
+expr_stmt|;
 block|}
+else|else
+block|{
 name|sc
 operator|->
 name|sc_data_iface_no
@@ -1388,6 +1410,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

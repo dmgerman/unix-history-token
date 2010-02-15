@@ -62,6 +62,9 @@ comment|/* device should be ignored by hid class */
 name|UQ_KBD_IGNORE
 block|,
 comment|/* device should be ignored by kbd class */
+name|UQ_KBD_BOOTPROTO
+block|,
+comment|/* device should set the boot protocol */
 name|UQ_MS_BAD_CLASS
 block|,
 comment|/* doesn't identify properly */

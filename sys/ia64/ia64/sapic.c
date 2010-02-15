@@ -81,6 +81,18 @@ directive|include
 file|<machine/sapicvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -148,14 +160,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|ia64_sapic_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int64_t
-name|ia64_lapic_address
-init|=
-name|PAL_PIB_DEFAULT_ADDR
 decl_stmt|;
 end_decl_stmt
 
@@ -784,9 +788,14 @@ name|sa
 operator|->
 name|sa_registers
 operator|=
-name|IA64_PHYS_TO_RR6
+operator|(
+name|uintptr_t
+operator|)
+name|pmap_mapdev
 argument_list|(
 name|address
+argument_list|,
+literal|1048576
 argument_list|)
 expr_stmt|;
 name|mtx_init

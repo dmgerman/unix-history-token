@@ -48,7 +48,7 @@ begin_decl_stmt
 name|int
 name|nfsrv_dolocallocks
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 

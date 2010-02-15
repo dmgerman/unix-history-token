@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997 Wolfgang Solfrank  * Copyright (c) 1995 Martin Husemann  * Some structure declaration borrowed from Paul Popelka  * (paulp@uts.amdahl.com), see /sys/msdosfs/ for reference.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Martin Husemann  *	and Wolfgang Solfrank.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *	$NetBSD: dosfs.h,v 1.4 1997/01/03 14:32:48 ws Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1995, 1996, 1997 Wolfgang Solfrank  * Copyright (c) 1995 Martin Husemann  * Some structure declaration borrowed from Paul Popelka  * (paulp@uts.amdahl.com), see /sys/msdosfs/ for reference.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *	$NetBSD: dosfs.h,v 1.4 1997/01/03 14:32:48 ws Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -42,31 +42,35 @@ struct|struct
 name|bootblock
 block|{
 name|u_int
-name|BytesPerSec
+name|bpbBytesPerSec
 decl_stmt|;
 comment|/* bytes per sector */
 name|u_int
-name|SecPerClust
+name|bpbSecPerClust
 decl_stmt|;
 comment|/* sectors per cluster */
 name|u_int
-name|ResSectors
+name|bpbResSectors
 decl_stmt|;
 comment|/* number of reserved sectors */
 name|u_int
-name|FATs
+name|bpbFATs
 decl_stmt|;
-comment|/* number of FATs */
+comment|/* number of bpbFATs */
 name|u_int
-name|RootDirEnts
+name|bpbRootDirEnts
 decl_stmt|;
 comment|/* number of root directory entries */
+name|u_int32_t
+name|bpbSectors
+decl_stmt|;
+comment|/* total number of sectors */
 name|u_int
-name|Media
+name|bpbMedia
 decl_stmt|;
 comment|/* media descriptor */
 name|u_int
-name|FATsmall
+name|bpbFATsmall
 decl_stmt|;
 comment|/* number of sectors per FAT */
 name|u_int
@@ -74,33 +78,29 @@ name|SecPerTrack
 decl_stmt|;
 comment|/* sectors per track */
 name|u_int
-name|Heads
+name|bpbHeads
 decl_stmt|;
 comment|/* number of heads */
 name|u_int32_t
-name|Sectors
-decl_stmt|;
-comment|/* total number of sectors */
-name|u_int32_t
-name|HiddenSecs
+name|bpbHiddenSecs
 decl_stmt|;
 comment|/* # of hidden sectors */
 name|u_int32_t
-name|HugeSectors
+name|bpbHugeSectors
 decl_stmt|;
-comment|/* # of sectors if bpbSectors == 0 */
+comment|/* # of sectors if bpbbpbSectors == 0 */
+name|cl_t
+name|bpbRootClust
+decl_stmt|;
+comment|/* Start of Root Directory */
 name|u_int
-name|FSInfo
+name|bpbFSInfo
 decl_stmt|;
 comment|/* FSInfo sector */
 name|u_int
-name|Backup
+name|bpbBackup
 decl_stmt|;
 comment|/* Backup of Bootblocks */
-name|cl_t
-name|RootCl
-decl_stmt|;
-comment|/* Start of Root Directory */
 name|cl_t
 name|FSFree
 decl_stmt|;

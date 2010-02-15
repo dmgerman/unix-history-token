@@ -2230,6 +2230,10 @@ name|uint32_t
 name|eslots
 decl_stmt|;
 comment|/* Slots in error */
+name|uint32_t
+name|toslots
+decl_stmt|;
+comment|/* Slots in timeout */
 name|int
 name|numrslots
 decl_stmt|;

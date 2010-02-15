@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997 Wolfgang Solfrank  * Copyright (c) 1995 Martin Husemann  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Martin Husemann  *	and Wolfgang Solfrank.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1995, 1996, 1997 Wolfgang Solfrank  * Copyright (c) 1995 Martin Husemann  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -94,7 +94,7 @@ name|struct
 name|bootblock
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|cl_t
 parameter_list|,
@@ -117,7 +117,7 @@ parameter_list|,
 name|cl_t
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -154,7 +154,7 @@ name|struct
 name|bootblock
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|u_char
 modifier|*
@@ -213,13 +213,13 @@ name|off
 operator|=
 name|boot
 operator|->
-name|ResSectors
+name|bpbResSectors
 expr_stmt|;
 name|off
 operator|*=
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 expr_stmt|;
 name|buffer
 operator|=
@@ -227,7 +227,7 @@ name|malloc
 argument_list|(
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 expr_stmt|;
 if|if
@@ -279,12 +279,12 @@ name|buffer
 argument_list|,
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 operator|!=
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 condition|)
 block|{
 name|perror
@@ -306,7 +306,7 @@ index|]
 operator|!=
 name|boot
 operator|->
-name|Media
+name|bpbMedia
 operator|||
 name|buffer
 index|[
@@ -492,7 +492,7 @@ name|bootblock
 modifier|*
 name|boot
 parameter_list|,
-name|int
+name|u_int
 name|fat
 parameter_list|,
 name|cl_t
@@ -651,7 +651,7 @@ name|bootblock
 modifier|*
 name|boot
 parameter_list|,
-name|int
+name|u_int
 name|no
 parameter_list|,
 name|u_char
@@ -674,7 +674,7 @@ name|FATsecs
 operator|*
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 expr_stmt|;
 if|if
@@ -698,7 +698,7 @@ name|off
 operator|=
 name|boot
 operator|->
-name|ResSectors
+name|bpbResSectors
 operator|+
 name|no
 operator|*
@@ -710,7 +710,7 @@ name|off
 operator|*=
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 expr_stmt|;
 if|if
 condition|(
@@ -737,6 +737,9 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|read
 argument_list|(
 name|fs
@@ -750,7 +753,7 @@ name|FATsecs
 operator|*
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 operator|!=
 name|boot
@@ -759,7 +762,7 @@ name|FATsecs
 operator|*
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 condition|)
 block|{
 name|perror
@@ -804,7 +807,7 @@ name|bootblock
 modifier|*
 name|boot
 parameter_list|,
-name|int
+name|u_int
 name|no
 parameter_list|,
 name|struct
@@ -833,6 +836,9 @@ name|int
 name|ret
 init|=
 name|FSOK
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 name|boot
 operator|->
@@ -864,12 +870,14 @@ name|FSFATAL
 return|;
 name|fat
 operator|=
-name|calloc
+name|malloc
 argument_list|(
+name|len
+operator|=
 name|boot
 operator|->
 name|NumClusters
-argument_list|,
+operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -898,6 +906,18 @@ return|return
 name|FSFATAL
 return|;
 block|}
+operator|(
+name|void
+operator|)
+name|memset
+argument_list|(
+name|fat
+argument_list|,
+literal|0
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|buffer
@@ -907,7 +927,7 @@ index|]
 operator|!=
 name|boot
 operator|->
-name|Media
+name|bpbMedia
 operator|||
 name|buffer
 index|[
@@ -1002,7 +1022,7 @@ index|]
 operator|==
 name|boot
 operator|->
-name|Media
+name|bpbMedia
 operator|&&
 name|buffer
 index|[
@@ -1522,6 +1542,25 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|&
+name|FSFATAL
+condition|)
+block|{
+name|free
+argument_list|(
+name|fat
+argument_list|)
+expr_stmt|;
+operator|*
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
 operator|*
 name|fp
 operator|=
@@ -1595,7 +1634,7 @@ name|cl_t
 modifier|*
 name|cp2
 parameter_list|,
-name|int
+name|u_int
 name|fatnum
 parameter_list|)
 block|{
@@ -1701,7 +1740,7 @@ return|;
 block|}
 name|pwarn
 argument_list|(
-literal|"Cluster %u is marked %s in FAT 0, %s in FAT %d\n"
+literal|"Cluster %u is marked %s in FAT 0, %s in FAT %u\n"
 argument_list|,
 name|cl
 argument_list|,
@@ -1746,7 +1785,7 @@ name|ask
 argument_list|(
 literal|0
 argument_list|,
-literal|"Use FAT %d's entry"
+literal|"Use FAT %u's entry"
 argument_list|,
 name|fatnum
 argument_list|)
@@ -1790,7 +1829,7 @@ name|ask
 argument_list|(
 literal|0
 argument_list|,
-literal|"Use continuation from FAT %d"
+literal|"Use continuation from FAT %u"
 argument_list|,
 name|fatnum
 argument_list|)
@@ -1845,7 +1884,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"Cluster %u continues with cluster %u in FAT 0, but is marked %s in FAT %d\n"
+literal|"Cluster %u continues with cluster %u in FAT 0, but is marked %s in FAT %u\n"
 argument_list|,
 name|cl
 argument_list|,
@@ -1909,7 +1948,7 @@ return|;
 block|}
 name|pwarn
 argument_list|(
-literal|"Cluster %u continues with cluster %u in FAT 0, but with cluster %u in FAT %d\n"
+literal|"Cluster %u continues with cluster %u in FAT 0, but with cluster %u in FAT %u\n"
 argument_list|,
 name|cl
 argument_list|,
@@ -1948,7 +1987,7 @@ name|ask
 argument_list|(
 literal|0
 argument_list|,
-literal|"Use continuation from FAT %d"
+literal|"Use continuation from FAT %u"
 argument_list|,
 name|fatnum
 argument_list|)
@@ -1993,7 +2032,7 @@ name|fatEntry
 modifier|*
 name|second
 parameter_list|,
-name|int
+name|u_int
 name|fatnum
 parameter_list|)
 block|{
@@ -2733,10 +2772,10 @@ decl_stmt|;
 name|cl_t
 name|cl
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
-name|u_int32_t
+name|size_t
 name|fatsz
 decl_stmt|;
 name|off_t
@@ -2759,7 +2798,7 @@ name|FATsecs
 operator|*
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 expr_stmt|;
 if|if
@@ -2811,7 +2850,7 @@ name|u_char
 operator|)
 name|boot
 operator|->
-name|Media
+name|bpbMedia
 expr_stmt|;
 operator|*
 name|p
@@ -3266,7 +3305,7 @@ name|i
 operator|<
 name|boot
 operator|->
-name|FATs
+name|bpbFATs
 condition|;
 name|i
 operator|++
@@ -3276,7 +3315,7 @@ name|off
 operator|=
 name|boot
 operator|->
-name|ResSectors
+name|bpbResSectors
 operator|+
 name|i
 operator|*
@@ -3288,7 +3327,7 @@ name|off
 operator|*=
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 expr_stmt|;
 if|if
 condition|(
@@ -3303,6 +3342,9 @@ argument_list|)
 operator|!=
 name|off
 operator|||
+operator|(
+name|size_t
+operator|)
 name|write
 argument_list|(
 name|fs
@@ -3512,7 +3554,7 @@ if|if
 condition|(
 name|boot
 operator|->
-name|FSInfo
+name|bpbFSInfo
 condition|)
 block|{
 name|ret
@@ -3565,82 +3607,6 @@ name|ret
 operator|=
 literal|1
 expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|boot
-operator|->
-name|NumFree
-operator|&&
-name|fat
-index|[
-name|boot
-operator|->
-name|FSNext
-index|]
-operator|.
-name|next
-operator|!=
-name|CLUST_FREE
-condition|)
-block|{
-name|pwarn
-argument_list|(
-literal|"Next free cluster in FSInfo block (%u) not free\n"
-argument_list|,
-name|boot
-operator|->
-name|FSNext
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ask
-argument_list|(
-literal|1
-argument_list|,
-literal|"Fix"
-argument_list|)
-condition|)
-for|for
-control|(
-name|head
-operator|=
-name|CLUST_FIRST
-init|;
-name|head
-operator|<
-name|boot
-operator|->
-name|NumClusters
-condition|;
-name|head
-operator|++
-control|)
-if|if
-condition|(
-name|fat
-index|[
-name|head
-index|]
-operator|.
-name|next
-operator|==
-name|CLUST_FREE
-condition|)
-block|{
-name|boot
-operator|->
-name|FSNext
-operator|=
-name|head
-expr_stmt|;
-name|ret
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 block|}
 block|}
 if|if

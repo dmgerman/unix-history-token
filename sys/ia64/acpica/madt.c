@@ -21,13 +21,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|u_int64_t
-name|ia64_lapic_address
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|struct
 name|sapic
@@ -560,7 +553,7 @@ operator|->
 name|Address
 argument_list|)
 expr_stmt|;
-name|ia64_lapic_address
+name|ia64_lapic_addr
 operator|=
 name|table
 operator|->
@@ -668,7 +661,7 @@ operator|*
 operator|)
 name|entry
 decl_stmt|;
-name|ia64_lapic_address
+name|ia64_lapic_addr
 operator|=
 name|lapic
 operator|->

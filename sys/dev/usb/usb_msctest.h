@@ -29,7 +29,9 @@ block|,
 name|MSC_EJECT_ZTESTOR
 block|,
 name|MSC_EJECT_CMOTECH
-block|}
+block|,
+name|MSC_EJECT_HUAWEI
+block|, }
 enum|;
 end_enum
 

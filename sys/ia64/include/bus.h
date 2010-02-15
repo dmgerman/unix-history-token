@@ -187,85 +187,40 @@ value|(~0)
 end_define
 
 begin_comment
-comment|/*  * Map a region of device bus space into CPU virtual address space.  */
+comment|/*  * Map and unmap a region of device bus space into CPU virtual address space.  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
 name|int
 name|bus_space_map
 parameter_list|(
 name|bus_space_tag_t
-name|bst
 parameter_list|,
 name|bus_addr_t
-name|addr
 parameter_list|,
 name|bus_size_t
-name|size
-name|__unused
 parameter_list|,
 name|int
-name|flags
-name|__unused
 parameter_list|,
 name|bus_space_handle_t
 modifier|*
-name|bshp
 parameter_list|)
-block|{
-operator|*
-name|bshp
-operator|=
-operator|(
-name|__predict_false
-argument_list|(
-name|bst
-operator|==
-name|IA64_BUS_SPACE_IO
-argument_list|)
-operator|)
-condition|?
-name|addr
-else|:
-name|IA64_PHYS_TO_RR6
-argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/*  * Unmap a region of device bus space.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
 name|void
 name|bus_space_unmap
 parameter_list|(
 name|bus_space_tag_t
-name|bst
-name|__unused
 parameter_list|,
 name|bus_space_handle_t
-name|bsh
-name|__unused
 parameter_list|,
 name|bus_size_t
 name|size
-name|__unused
 parameter_list|)
-block|{ }
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Get a new handle for a subregion of an already-mapped area of bus space.  */
