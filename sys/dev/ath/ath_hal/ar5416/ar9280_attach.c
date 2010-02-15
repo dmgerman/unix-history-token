@@ -278,25 +278,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|ar9280SpurMitigate
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-specifier|const
-name|struct
-name|ieee80211_channel
-modifier|*
-name|chan
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|void
@@ -1730,7 +1711,6 @@ value|10
 end_define
 
 begin_function
-specifier|static
 name|void
 name|ar9280SpurMitigate
 parameter_list|(
