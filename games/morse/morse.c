@@ -169,9 +169,11 @@ begin_struct
 struct|struct
 name|morsetab
 block|{
+specifier|const
 name|char
 name|inchar
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|morse
