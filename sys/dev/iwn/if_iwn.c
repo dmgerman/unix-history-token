@@ -5406,10 +5406,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|uint32_t
-name|base
-decl_stmt|;
 name|uint16_t
+name|prev
+decl_stmt|,
+name|base
+decl_stmt|,
 name|next
 decl_stmt|;
 name|int
@@ -5519,7 +5520,7 @@ operator||
 name|IWN_OTP_GP_ECC_UNCORR_STTS
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Find last valid OTP block (contains the EEPROM image) for HW 	 * without OTP shadow RAM. 	 */
+comment|/* 	 * Find the block before last block (contains the EEPROM image) 	 * for HW without OTP shadow RAM. 	 */
 if|if
 condition|(
 name|sc
@@ -5540,6 +5541,8 @@ name|IWN_OTP_GP_RELATIVE_ACCESS
 argument_list|)
 expr_stmt|;
 name|base
+operator|=
+name|prev
 operator|=
 literal|0
 expr_stmt|;
@@ -5588,6 +5591,10 @@ literal|0
 condition|)
 comment|/* End of linked-list. */
 break|break;
+name|prev
+operator|=
+name|base
+expr_stmt|;
 name|base
 operator|=
 name|le16toh
@@ -5598,7 +5605,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|base
+name|count
 operator|==
 literal|0
 operator|||
@@ -5614,7 +5621,7 @@ name|sc
 operator|->
 name|prom_base
 operator|=
-name|base
+name|prev
 operator|+
 literal|1
 expr_stmt|;
