@@ -371,6 +371,13 @@ name|CPU_SPINWAIT
 value|__asm__ volatile("pause")
 end_define
 
+begin_define
+define|#
+directive|define
+name|TLS_MODEL
+value|__attribute__((tls_model("initial-exec")))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -395,6 +402,16 @@ directive|define
 name|LG_SIZEOF_PTR
 value|3
 end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_MODEL
+end_define
+
+begin_comment
+comment|/* default */
+end_comment
 
 begin_endif
 endif|#
@@ -488,6 +505,13 @@ define|#
 directive|define
 name|CPU_SPINWAIT
 value|__asm__ volatile("pause")
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_MODEL
+value|__attribute__((tls_model("initial-exec")))
 end_define
 
 begin_endif
@@ -2957,15 +2981,7 @@ name|__thread
 name|arena_t
 modifier|*
 name|arenas_map
-name|__attribute__
-argument_list|(
-operator|(
-name|tls_model
-argument_list|(
-literal|"initial-exec"
-argument_list|)
-operator|)
-argument_list|)
+name|TLS_MODEL
 decl_stmt|;
 end_decl_stmt
 
@@ -2990,15 +3006,7 @@ name|__thread
 name|tcache_t
 modifier|*
 name|tcache_tls
-name|__attribute__
-argument_list|(
-operator|(
-name|tls_model
-argument_list|(
-literal|"initial-exec"
-argument_list|)
-operator|)
-argument_list|)
+name|TLS_MODEL
 decl_stmt|;
 end_decl_stmt
 
@@ -3031,32 +3039,37 @@ begin_comment
 comment|/*  * Used by chunk_alloc_mmap() to decide whether to attempt the fast path and  * potentially avoid some system calls.  We can get away without TLS here,  * since the state of mmap_unaligned only affects performance, rather than  * correct function.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_TLS
+end_ifndef
+
 begin_decl_stmt
 specifier|static
-ifndef|#
-directive|ifndef
-name|NO_TLS
 name|__thread
-endif|#
-directive|endif
 name|bool
 name|mmap_unaligned
-ifndef|#
-directive|ifndef
-name|NO_TLS
-name|__attribute__
-argument_list|(
-operator|(
-name|tls_model
-argument_list|(
-literal|"initial-exec"
-argument_list|)
-operator|)
-argument_list|)
-endif|#
-directive|endif
+name|TLS_MODEL
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|mmap_unaligned
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
