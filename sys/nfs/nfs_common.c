@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -248,9 +254,19 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
-name|SYSCTL_DECL
+name|SYSCTL_NODE
 argument_list|(
-name|_vfs_nfs
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nfs_common
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"NFS common support"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -265,7 +281,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_nfs_common
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -293,7 +309,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_nfs_common
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1931,6 +1947,45 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|moduledata_t
+name|nfs_common_mod
+init|=
+block|{
+literal|"nfs_common"
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DECLARE_MODULE
+argument_list|(
+name|nfs_common
+argument_list|,
+name|nfs_common_mod
+argument_list|,
+name|SI_SUB_VFS
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|nfs_common
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

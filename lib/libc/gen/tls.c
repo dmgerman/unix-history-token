@@ -581,6 +581,8 @@ argument_list|,
 name|tls_static_space
 operator|+
 name|tcbsize
+operator|-
+name|TLS_TCB_SIZE
 argument_list|)
 expr_stmt|;
 name|tls
@@ -612,8 +614,6 @@ argument_list|,
 name|oldtcb
 argument_list|,
 name|tls_static_space
-operator|+
-name|TLS_TCB_SIZE
 argument_list|)
 expr_stmt|;
 name|free

@@ -2696,6 +2696,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2717,17 +2719,6 @@ name|CAM_REQ_CMP_ERR
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|softc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -3627,6 +3618,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3655,18 +3648,6 @@ goto|goto
 name|cdregisterexit
 goto|;
 block|}
-comment|/* zero the structure */
-name|bzero
-argument_list|(
-name|nchanger
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|cdchanger
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|camq_init
@@ -6179,6 +6160,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -8448,6 +8431,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
@@ -8721,6 +8706,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
@@ -8917,6 +8904,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|lead
@@ -8932,6 +8921,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
@@ -9598,6 +9589,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
@@ -12715,6 +12708,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -12799,6 +12794,25 @@ name|rcap_buf
 operator|->
 name|length
 argument_list|)
+expr_stmt|;
+comment|/* Make sure we got at least some block size. */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|softc
+operator|->
+name|params
+operator|.
+name|blksize
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|EIO
 expr_stmt|;
 comment|/* 	 * SCSI-3 mandates that the reported blocksize shall be 2048. 	 * Older drives sometimes report funny values, trim it down to 	 * 2048, or other parts of the kernel will get confused. 	 * 	 * XXX we leave drives alone that might report 512 bytes, as 	 * well as drives reporting more weird sizes like perhaps 4K. 	 */
 if|if

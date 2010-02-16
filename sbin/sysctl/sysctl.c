@@ -1279,14 +1279,41 @@ break|break;
 case|case
 name|CTLTYPE_QUAD
 case|:
-name|sscanf
+name|quadval
+operator|=
+name|strtoq
 argument_list|(
 name|newval
 argument_list|,
-literal|"%qd"
-argument_list|,
 operator|&
-name|quadval
+name|endptr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|endptr
+operator|==
+name|newval
+operator|||
+operator|*
+name|endptr
+operator|!=
+literal|'\0'
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"invalid quad integer"
+literal|" '%s'"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|newval
 argument_list|)
 expr_stmt|;
 name|newval
@@ -1535,7 +1562,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_clockinfo %d != %d"
+literal|"S_clockinfo %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -1623,7 +1650,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_loadavg %d != %d"
+literal|"S_loadavg %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -1756,7 +1783,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_timeval %d != %d"
+literal|"S_timeval %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -1895,7 +1922,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_vmtotal %d != %d"
+literal|"S_vmtotal %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -2068,7 +2095,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"T_dev_T %d != %d"
+literal|"T_dev_T %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -2606,7 +2633,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl fmt %d %d %d"
+literal|"sysctl fmt %d %zu %d"
 argument_list|,
 name|i
 argument_list|,
@@ -2750,6 +2777,15 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Silence GCC. */
+name|umv
+operator|=
+name|mv
+operator|=
+name|intlen
+operator|=
+literal|0
+expr_stmt|;
 name|bzero
 argument_list|(
 name|buf
@@ -2832,7 +2868,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl name %d %d %d"
+literal|"sysctl name %d %zu %d"
 argument_list|,
 name|i
 argument_list|,
@@ -3118,6 +3154,9 @@ name|printf
 argument_list|(
 literal|"%.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|p
@@ -3628,7 +3667,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Format:%s Length:%d Dump:0x"
+literal|"Format:%s Length:%zu Dump:0x"
 argument_list|,
 name|fmt
 argument_list|,
@@ -3842,7 +3881,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl(getnext) %d %d"
+literal|"sysctl(getnext) %d %zu"
 argument_list|,
 name|j
 argument_list|,

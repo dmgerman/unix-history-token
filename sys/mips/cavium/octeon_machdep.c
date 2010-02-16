@@ -2747,7 +2747,7 @@ name|physmem
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nTotal DRAM Size 0x%X"
+literal|"Total DRAM Size %#X\n"
 argument_list|,
 operator|(
 name|uint32_t
@@ -2757,7 +2757,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nBank 0 = 0x%8X   ->  0x%8X"
+literal|"Bank 0 = %#08X   ->  %#08X\n"
 argument_list|,
 name|phys_avail
 index|[
@@ -2772,7 +2772,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nBank 1 = 0x%8X   ->  0x%8X\n"
+literal|"Bank 1 = %#08X   ->  %#08X\n"
 argument_list|,
 name|phys_avail
 index|[
@@ -2787,7 +2787,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nphysmem: 0x%lx"
+literal|"physmem: %#lx\n"
 argument_list|,
 name|physmem
 argument_list|)
